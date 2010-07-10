@@ -1,0 +1,26 @@
+2010-05-29  Oliver Haag  <oliver.haag@gmail.com>
+* Version 0.1.0 - First public release:
+* OpenGL accelerated scope
+* Custom widgets for level sliders (Offset, trigger, ...)
+* Markers and a zoom option that enables a second magnified scope
+* Basic export/print functionality
+* Fully customizable colors for screen/print
+* Spectrum graphs with selectable window function
+* Tables around scopes viewing settings and measurement results
+* Configurable digital phosphor mode
+* Experimental fast rate and large buffer mode
+* German translation
+
+2010-07-10  Oliver Haag  <oliver.haag@gmail.com>
+* Replaced HantekDSOIO and HantekDSOAThread by DsoControl class
+* New namespace Hantek (in directory src/hantek):
+*   Added Control class (Inherits DsoControl)
+*   Moved all Hantek DSO specific conversions into Control class
+*   Added Device class for handling usb transfers
+*   Created types.cpp/types.h with various Hantek-specific types
+*   USB transfers are handled by Control class, no direct access from elsewhere
+*   libusb 1.0 is used by default (Uses 0.1 when LIBUSB_VERSION is set to 0)
+* DsoControl class could control non-Hantek DSOs too
+* Added reference level and minimum magnitude for spectrum analysis to settings
+* Made lower timebases available
+* Spectrum and math graphs can be shown without enabling the voltage graph too

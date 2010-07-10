@@ -1,0 +1,11 @@
+To build OpenHantek from source, you need Qt 4 and FFTW 3. Under Debian or Ubuntu you can just install the packages libqt4-dev and libfftw3-dev. I don't know the package names for other distributions but they may be similar.
+
+After you've installed the requirements run the following commands inside the directory of this package:
+$ qmake
+$ make
+$ make install
+
+You can specify a prefix when running qmake:
+$ qmake PREFIX=/usr
+
+To get your DSO working under linux you have to extract the firmware using dsoextractfw and add the rules to udev. See the file INSTALL in the dsoextractfw package for details.

@@ -1,0 +1,1 @@
+OpenHantek is a free software for Hantek (Voltcraft/Darkwire/Protek/Acetech) USB DSOs based on HantekDSO. The UI is written in C++/Qt 4 and uses OpenGL to draw the graphs. It was tested with the DSO-2090, test results with other models are welcome.

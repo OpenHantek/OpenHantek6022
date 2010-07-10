@@ -1,0 +1,16 @@
+<RCC>
+    <qresource prefix="/">
+        <file alias="openhantek.png">images/openhantek.png</file>
+    </qresource>
+    <qresource prefix="/actions">
+        <file alias="open.png">images/actions/open.png</file>
+        <file alias="save.png">images/actions/save.png</file>
+        <file alias="save-as.png">images/actions/save-as.png</file>
+        <file alias="print.png">images/actions/print.png</file>
+        <file alias="export-as.png">images/actions/export-as.png</file>
+        <file alias="start.png">images/actions/start.png</file>
+        <file alias="stop.png">images/actions/stop.png</file>
+        <file alias="digitalphosphor.png">images/actions/digitalphosphor.png</file>
+        <file alias="zoom.png">images/actions/zoom.png</file>
+    </qresource>
+</RCC>
