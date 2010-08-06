@@ -174,6 +174,7 @@ void HorizontalDock::formatSelected(int index) {
 // class TriggerDock
 /// \brief Initializes the trigger settings docking window.
 /// \param settings The target settings object.
+/// \param specialTriggers The names of the special trigger sources.
 /// \param parent The parent widget.
 /// \param flags Flags for the window manager.
 TriggerDock::TriggerDock(DsoSettings *settings, const QStringList *specialTriggers, QWidget *parent, Qt::WindowFlags flags) : QDockWidget(tr("Trigger"), parent, flags) {

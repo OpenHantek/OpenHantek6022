@@ -42,6 +42,7 @@
 // class DsoWidget
 /// \brief Initializes the components of the oszilloscope-screen.
 /// \param settings The settings object containing the oscilloscope settings.
+/// \param dataAnalyzer The data analyzer that should be used as data source.
 /// \param parent The parent widget.
 /// \param flags Flags for the window manager.
 DsoWidget::DsoWidget(DsoSettings *settings, DataAnalyzer *dataAnalyzer, QWidget *parent, Qt::WindowFlags flags) : QWidget(parent, flags) {
@@ -167,8 +168,8 @@ DsoWidget::DsoWidget(DsoSettings *settings, DataAnalyzer *dataAnalyzer, QWidget 
 		tablePalette.setColor(QPalette::WindowText, this->settings->view.color.screen.voltage[channel]);
 		this->measurementNameLabel.append(new QLabel(this->settings->scope.voltage[channel].name));
 		this->measurementNameLabel[channel]->setPalette(tablePalette);
-		this->measurementCouplingLabel.append(new QLabel());
-		this->measurementCouplingLabel[channel]->setPalette(tablePalette);
+		this->measurementMiscLabel.append(new QLabel());
+		this->measurementMiscLabel[channel]->setPalette(tablePalette);
 		this->measurementGainLabel.append(new QLabel());
 		this->measurementGainLabel[channel]->setAlignment(Qt::AlignRight);
 		this->measurementGainLabel[channel]->setPalette(tablePalette);
@@ -184,12 +185,15 @@ DsoWidget::DsoWidget(DsoSettings *settings, DataAnalyzer *dataAnalyzer, QWidget 
 		this->measurementFrequencyLabel[channel]->setPalette(palette);
 		this->setMeasurementVisible(channel, this->settings->scope.voltage[channel].used);
 		this->measurementLayout->addWidget(this->measurementNameLabel[channel], channel, 0);
-		this->measurementLayout->addWidget(this->measurementCouplingLabel[channel], channel, 1);
+		this->measurementLayout->addWidget(this->measurementMiscLabel[channel], channel, 1);
 		this->measurementLayout->addWidget(this->measurementGainLabel[channel], channel, 2);
 		this->measurementLayout->addWidget(this->measurementMagnitudeLabel[channel], channel, 3);
 		this->measurementLayout->addWidget(this->measurementAmplitudeLabel[channel], channel, 4);
 		this->measurementLayout->addWidget(this->measurementFrequencyLabel[channel], channel, 5);
-		this->updateVoltageCoupling(channel);
+		if((unsigned int) channel < this->settings->scope.physicalChannels)
+			this->updateVoltageCoupling(channel);
+		else
+			this->updateMathMode();
 		this->updateVoltageDetails(channel);
 		this->updateSpectrumDetails(channel);
 	}
@@ -256,7 +260,7 @@ void DsoWidget::adaptTriggerLevelSlider(unsigned int channel) {
 /// \brief Show/Hide a line of the measurement table.
 void DsoWidget::setMeasurementVisible(unsigned int channel, bool visible) {
 	this->measurementNameLabel[channel]->setVisible(visible);
-	this->measurementCouplingLabel[channel]->setVisible(visible);
+	this->measurementMiscLabel[channel]->setVisible(visible);
 	this->measurementGainLabel[channel]->setVisible(visible);
 	this->measurementMagnitudeLabel[channel]->setVisible(visible);
 	this->measurementAmplitudeLabel[channel]->setVisible(visible);
@@ -371,8 +375,6 @@ void DsoWidget::updateTriggerSlope() {
 }
 
 /// \brief Handles sourceChanged signal from the trigger dock.
-/// \param special true for a special channel (EXT, ...) as trigger source.
-/// \param id The number of the channel, that should be used as trigger.
 void DsoWidget::updateTriggerSource() {
 	// Change the colors of the trigger sliders
 	if(this->settings->scope.trigger.special || this->settings->scope.trigger.source >= this->settings->scope.physicalChannels)
@@ -386,7 +388,7 @@ void DsoWidget::updateTriggerSource() {
 	this->updateTriggerDetails();
 }
 
-/// \brief Handles couplingChanged signal from the vertical dock.
+/// \brief Handles couplingChanged signal from the voltage dock.
 /// \param channel The channel whose coupling was changed.
 void DsoWidget::updateVoltageCoupling(unsigned int channel) {
 	if(channel >= (unsigned int) this->settings->scope.voltage.count())
@@ -395,19 +397,36 @@ void DsoWidget::updateVoltageCoupling(unsigned int channel) {
 	if(this->settings->scope.voltage[channel].used || this->settings->scope.spectrum[channel].used) {
 		switch(this->settings->scope.voltage[channel].misc) {
 			case Dso::COUPLING_AC:
-				this->measurementCouplingLabel[channel]->setText(tr("AC"));
+				this->measurementMiscLabel[channel]->setText(tr("AC"));
 				break;
 			case Dso::COUPLING_DC:
-				this->measurementCouplingLabel[channel]->setText(tr("DC"));
+				this->measurementMiscLabel[channel]->setText(tr("DC"));
 				break;
 			case Dso::COUPLING_GND:
-				this->measurementCouplingLabel[channel]->setText(tr("GND"));
+				this->measurementMiscLabel[channel]->setText(tr("GND"));
 				break;
 		}
 	}
 }
 
-/// \brief Handles gainChanged signal from the vertical dock.
+/// \brief Handles modeChanged signal from the voltage dock.
+void DsoWidget::updateMathMode() {
+	if(this->settings->scope.voltage[this->settings->scope.physicalChannels].used || this->settings->scope.spectrum[this->settings->scope.physicalChannels].used) {
+		switch(this->settings->scope.voltage[this->settings->scope.physicalChannels].misc) {
+			case Dso::MATHMODE_1ADD2:
+				this->measurementMiscLabel[this->settings->scope.physicalChannels]->setText(tr("CH1 + CH2"));
+				break;
+			case Dso::MATHMODE_1SUB2:
+				this->measurementMiscLabel[this->settings->scope.physicalChannels]->setText(tr("CH1 - CH2"));
+				break;
+			case Dso::MATHMODE_2SUB1:
+				this->measurementMiscLabel[this->settings->scope.physicalChannels]->setText(tr("CH2 - CH1"));
+				break;
+		}
+	}
+}
+
+/// \brief Handles gainChanged signal from the voltage dock.
 /// \param channel The channel whose gain was changed.
 void DsoWidget::updateVoltageGain(unsigned int channel) {
 	if(channel >= (unsigned int) this->settings->scope.voltage.count())
@@ -419,7 +438,7 @@ void DsoWidget::updateVoltageGain(unsigned int channel) {
 	this->updateVoltageDetails(channel);
 }
 
-/// \brief Handles usedChanged signal from the vertical dock.
+/// \brief Handles usedChanged signal from the voltage dock.
 /// \param channel The channel whose used-state was changed.
 /// \param used The new used-state for the channel.
 void DsoWidget::updateVoltageUsed(unsigned int channel, bool used) {
@@ -434,7 +453,6 @@ void DsoWidget::updateVoltageUsed(unsigned int channel, bool used) {
 }
 
 /// \brief Change the buffer size.
-/// \param size The size of the buffer.
 void DsoWidget::updateBufferSize() {
 	this->settingsBufferLabel->setText(tr("%1 S").arg(this->settings->scope.horizontal.samples));
 }
@@ -531,7 +549,7 @@ void DsoWidget::updateTriggerPosition(int index, double value) {
 }
 
 /// \brief Handles valueChanged signal from the trigger level slider.
-/// \param index The index of the slider.
+/// \param channel The index of the slider.
 /// \param value The new trigger level.
 void DsoWidget::updateTriggerLevel(int channel, double value) {
 	this->settings->scope.voltage[channel].trigger = value;

@@ -49,7 +49,7 @@ class DsoControl : public QThread {
 		virtual void startSampling();
 		virtual void stopSampling();
 		
-		virtual unsigned int getChannelCount() = 0;
+		virtual unsigned int getChannelCount() = 0; ///< Get the number of channels for this oscilloscope
 		
 		const QStringList *getSpecialTriggerSources();
 	
@@ -60,28 +60,28 @@ class DsoControl : public QThread {
 		QStringList specialTriggerSources; ///< Names of the special trigger sources
 		
 	signals:
-		void deviceConnected();
-		void deviceDisconnected();
-		void statusMessage(const QString &message, int timeout);
-		void samplesAvailable(const QList<double *> *data, const QList<unsigned int> *size, double samplerate, QMutex *mutex);
+		void deviceConnected(); ///< The oscilloscope device has been disconnected
+		void deviceDisconnected(); ///< The oscilloscope device has been connected
+		void statusMessage(const QString &message, int timeout); ///< Status message about the oscilloscope
+		void samplesAvailable(const QList<double *> *data, const QList<unsigned int> *size, double samplerate, QMutex *mutex); ///< New sample data is available
 	
 	public slots:
 		virtual void connectDevice();
 		virtual void disconnectDevice();
 		
-		virtual unsigned long int setSamplerate(unsigned long int samplerate) = 0;
-		virtual double setBufferSize(unsigned int size) = 0;
+		virtual unsigned long int setSamplerate(unsigned long int samplerate) = 0; ///< Set the samplerate that should be met
+		virtual double setBufferSize(unsigned int size) = 0; ///< Set the needed buffer size
 		
-		virtual int setTriggerMode(Dso::TriggerMode mode) = 0;
-		virtual int setTriggerSource(bool special, unsigned int id) = 0;
-		virtual double setTriggerLevel(unsigned int channel, double level) = 0;
-		virtual int setTriggerSlope(Dso::Slope slope) = 0;
-		virtual double setTriggerPosition(double position) = 0;
+		virtual int setTriggerMode(Dso::TriggerMode mode) = 0; ///< Set the trigger mode
+		virtual int setTriggerSource(bool special, unsigned int id) = 0; ///< Set the trigger source
+		virtual double setTriggerLevel(unsigned int channel, double level) = 0; ///< Set the trigger level for a channel
+		virtual int setTriggerSlope(Dso::Slope slope) = 0; ///< Set the slope that causes triggering
+		virtual double setTriggerPosition(double position) = 0; ///< Set the pretrigger position (0.0 = left, 1.0 = right side)
 		
-		virtual int setChannelUsed(unsigned int channel, bool used) = 0;
-		virtual int setCoupling(unsigned int channel, Dso::Coupling coupling) = 0;
-		virtual double setGain(unsigned int channel, double gain) = 0;
-		virtual double setOffset(unsigned int channel, double offset) = 0;
+		virtual int setChannelUsed(unsigned int channel, bool used) = 0; ///< Enable/disable a channel
+		virtual int setCoupling(unsigned int channel, Dso::Coupling coupling) = 0; ///< Set the coupling for a channel
+		virtual double setGain(unsigned int channel, double gain) = 0; ///< Set the gain for a channel
+		virtual double setOffset(unsigned int channel, double offset) = 0; ///< Set the graph offset of a channel
 };
 
 

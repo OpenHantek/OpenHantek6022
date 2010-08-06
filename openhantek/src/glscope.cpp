@@ -39,6 +39,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 // class GlScope
 /// \brief Initializes the scope widget.
+/// \param settings The settings that should be used.
 /// \param parent The parent widget.
 GlScope::GlScope(DsoSettings *settings, QWidget *parent) : QGLWidget(parent) {
 	this->settings = settings;

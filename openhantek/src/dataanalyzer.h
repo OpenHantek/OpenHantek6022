@@ -43,31 +43,33 @@ class QMutex;
 /// \struct SampleValues                                          dataanalyzer.h
 /// \brief Struct for a array of sample values.
 struct SampleValues {
-	double *sample;
-	unsigned int count;
-	double interval;
+	double *sample; ///< Pointer to the array holding the sampling data
+	unsigned int count; ///< Number of sample values
+	double interval; ///< The interval between two sample values
 };
 
 ////////////////////////////////////////////////////////////////////////////////
 /// \struct SampleData                                            dataanalyzer.h
 /// \brief Struct for the sample value arrays.
 struct SampleData {
-	SampleValues voltage, spectrum;
+	SampleValues voltage; ///< The time-domain voltage levels (V)
+	SampleValues spectrum; ///< The frequency-domain power levels (dB)
 };
 
 ////////////////////////////////////////////////////////////////////////////////
 /// \struct AnalyzedData                                          dataanalyzer.h
 /// \brief Struct for the analyzed data.
 struct AnalyzedData {
-	SampleData samples;
-	double frequency, amplitude;
+	SampleData samples; ///< Voltage and spectrum values
+	double frequency; ///< The frequency of the signal
+	double amplitude; ///< The amplitude of the signal
 };
 
 ////////////////////////////////////////////////////////////////////////////////
 /// \class DataAnalyzer                                           dataanalyzer.h
 /// \brief Analyzes the data from the dso.
-/// Converts the levels into volts, calculates the spectrum and saves offsets
-/// and the time-/frequencysteps between two values.
+/// Calculates the spectrum and various data about the signal and saves the
+/// time-/frequencysteps between two values.
 class DataAnalyzer : public QThread {
 	Q_OBJECT
 	
@@ -80,21 +82,20 @@ class DataAnalyzer : public QThread {
 	
 	protected:
 		void run();
-	
-	private:
-		DsoSettings *settings;
 		
-		QList<AnalyzedData *> analyzedData;
-		QMutex *analyzedDataMutex;
+		DsoSettings *settings; ///< The settings provided by the parent class
 		
-		unsigned int lastBufferSize;
-		Dso::WindowFunction lastWindow;
-		double *window;
+		QList<AnalyzedData *> analyzedData; ///< The analyzed data for each channel
+		QMutex *analyzedDataMutex; ///< A mutex for the analyzed data of all channels
 		
-		QList<double *> waitingData;
-		QList<unsigned int> waitingDataSize;
-		double waitingDataSamplerate;
-		QMutex *waitingDataMutex;
+		unsigned int lastBufferSize; ///< The buffer size of the previously analyzed data
+		Dso::WindowFunction lastWindow; ///< The previously used dft window function
+		double *window; ///< The array for the dft window factors
+		
+		QList<double *> waitingData; ///< Pointer to input data from device
+		QList<unsigned int> waitingDataSize; ///< Number of input data samples
+		double waitingDataSamplerate; ///< The samplerate of the input data
+		QMutex *waitingDataMutex; ///< A mutex for the input data
 	
 	public slots:
 		void analyze(const QList<double *> *data, const QList<unsigned int> *size, double samplerate, QMutex *mutex);

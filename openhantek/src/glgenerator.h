@@ -58,10 +58,10 @@ class GlArray {
 		unsigned long int getSize();
 		void setSize(unsigned long int size);
 		
-		GLfloat *data;
+		GLfloat *data; ///< Pointer to the array
 	
 	protected:
-		unsigned long int size;
+		unsigned long int size; ///< The array size (Number of GLfloat values)
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -94,7 +94,7 @@ class GlGenerator : public QObject {
 		void generateGraphs();
 	
 	signals:
-		void graphsGenerated();
+		void graphsGenerated(); ///< The graphs are ready to be drawn
 };
 
 

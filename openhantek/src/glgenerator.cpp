@@ -55,7 +55,7 @@ unsigned long int GlArray::getSize() {
 /// \brief Set the size of the array.
 /// Previous array contents are lost.
 /// \param size New number of array elements.
-void GlArray::setSize(unsigned long size) {
+void GlArray::setSize(unsigned long int size) {
 	if(this->size == size)
 		return;
 	

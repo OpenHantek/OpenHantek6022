@@ -84,7 +84,7 @@ namespace Hantek {
 			QStringList modelStrings; ///< The name as QString for each #Model
 			
 			// Command buffers
-			ControlBeginCommand *beginCommandControl;
+			ControlBeginCommand *beginCommandControl; ///< Buffer for the CONTROL_BEGINCOMMAND control command
 			
 			// Libusb specific variables
 #if LIBUSB_VERSION != 0
@@ -99,8 +99,8 @@ namespace Hantek {
 			int inPacketLength; ///< Packet length for the IN endpoint
 		
 		signals:
-			void connected();
-			void disconnected();
+			void connected(); ///< The device has been connected and initialized
+			void disconnected(); ///< The device has been disconnected
 			
 		public slots:
 			

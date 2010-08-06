@@ -57,8 +57,8 @@ namespace Helper {
 			unsigned int getSize() const;
 		
 		protected:
-			T *array;
-			unsigned int size;
+			T *array; ///< Pointer to the array holding the data
+			unsigned int size; ///< Size of the array (Number of variables of type T)
 	};
 	
 	/// \brief Initializes the data array.

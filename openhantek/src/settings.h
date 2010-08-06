@@ -104,7 +104,7 @@ struct DsoSettingsScope {
 };
 
 ////////////////////////////////////////////////////////////////////////////////
-/// \struct DsoColorValues                                            settings.h
+/// \struct DsoSettingsColorValues                                    settings.h
 /// \brief Holds the color values for the oscilloscope screen.
 struct DsoSettingsColorValues {
 	QColor axes; ///< X- and Y-axis and subdiv lines on them

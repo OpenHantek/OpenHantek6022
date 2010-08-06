@@ -54,7 +54,7 @@ namespace Hantek {
 	
 	//////////////////////////////////////////////////////////////////////////////
 	/// \class Control                                            hantek/control.h
-	/// \brief The DsoControl abstraction layer for Hantek USB DSOs.
+	/// \brief The DsoControl abstraction layer for %Hantek USB DSOs.
 	class Control : public DsoControl {
 		Q_OBJECT
 		
@@ -71,7 +71,7 @@ namespace Hantek {
 			int getCaptureState();
 			int getSamples();
 			
-			Device *device;
+			Device *device; ///< The USB device for the oscilloscope
 			
 			Helper::DataArray<unsigned char> *command[COMMAND_COUNT]; ///< Pointers to commands, ready to be transmitted
 			bool commandPending[COMMAND_COUNT]; ///< true, when the command should be executed
@@ -83,16 +83,16 @@ namespace Hantek {
 			unsigned short channelLevels[HANTEK_CHANNELS][GAIN_COUNT][OFFSET_COUNT];
 			
 			// Various cached settings
-			Samplerate samplerate;
-			Gain gain[HANTEK_CHANNELS];
-			double offset[HANTEK_CHANNELS];
-			double offsetReal[HANTEK_CHANNELS];
-			double triggerLevel[HANTEK_CHANNELS];
-			unsigned int bufferSize;
-			unsigned int triggerPoint;
-			Dso::TriggerMode triggerMode;
-			bool triggerSpecial;
-			unsigned int triggerSource;
+			Samplerate samplerate; ///< The samplerate id
+			Gain gain[HANTEK_CHANNELS]; ///< The gain id
+			double offset[HANTEK_CHANNELS]; ///< The current screen offset for each channel
+			double offsetReal[HANTEK_CHANNELS]; ///< The real offset for each channel (Due to quantization)
+			double triggerLevel[HANTEK_CHANNELS]; ///< The trigger level for each channel in V
+			unsigned int bufferSize; ///< The buffer size in samples
+			unsigned int triggerPoint; ///< The trigger point value
+			Dso::TriggerMode triggerMode; ///< The trigger mode
+			bool triggerSpecial; ///< true, if the trigger source is special
+			unsigned int triggerSource; ///< The trigger source
 			
 			QList<double *> samples; ///< Sample data arrays
 			QList<unsigned int> samplesSize; ///< Number of samples data array

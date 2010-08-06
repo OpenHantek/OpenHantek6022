@@ -133,7 +133,7 @@ class OpenHantekMainWindow : public QMainWindow {
 		void updateVoltageGain(unsigned int channel);
 	
 	signals:
-		void settingsChanged();
+		void settingsChanged(); ///< The settings have changed (Option dialog, loading...)
 };
 
 

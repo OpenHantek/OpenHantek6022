@@ -37,16 +37,17 @@ class QColor;
 /// \struct LevelSliderParameters                                  levelslider.h
 /// \brief Contains the color, text and value of one slider.
 struct LevelSliderParameters {
-	QColor color;
-	QString text;
-	bool visible;
+	QColor color; ///< The color of the slider and font
+	QString text; ///< The text beside the slider, a empty string disables text
+	bool visible; ///< Visibility of the slider
 	
-	double minimum, maximum;
-	double step;
-	double value;
+	double minimum; ///< Minimum (left/top) value for the slider
+	double maximum; ///< Maximum (right/bottom) value for the slider
+	double step; ///< The distance between selectable slider positions
+	double value; ///< The current value of the slider
 	
 	// Needed for moving and drawing
-	QRect rect;
+	QRect rect; ///< The area where the slider is drawn
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -101,15 +102,16 @@ class LevelSlider : public QWidget {
 		int calculateWidth();
 		int fixValue(int index);
 		
-		QList<LevelSliderParameters *> slider;
-		int pressedSlider;
-		int sliderWidth;
+		QList<LevelSliderParameters *> slider; ///< The parameters for each slider
+		int pressedSlider; ///< The currently pressed (moved) slider
+		int sliderWidth; ///< The slider width (dimension orthogonal to the sliding direction)
 		
-		Qt::ArrowType _direction;
-		int _preMargin, _postMargin;
+		Qt::ArrowType _direction; ///< The direction the sliders point to
+		int _preMargin; ///< The margin before the minimum slider position
+		int _postMargin; ///< The margin after the maximum slider position
 	
 	signals:
-		void valueChanged(int index, double value);
+		void valueChanged(int index, double value); ///< The value of a slider has changed
 };
 
 

@@ -44,7 +44,7 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 /// \namespace Hantek                                             hantek/types.h
-/// \brief All Hantek DSO device specific things.
+/// \brief All %Hantek DSO device specific things.
 namespace Hantek {
 	//////////////////////////////////////////////////////////////////////////////
 	/// \enum CommandCode                                           hantek/types.h
@@ -401,8 +401,8 @@ namespace Hantek {
 	/// \enum LevelOffset                                           hantek/types.h
 	/// \brief The array indicies for the CalibrationData.
 	enum LevelOffset {
-		OFFSET_START,
-		OFFSET_END,
+		OFFSET_START, ///< The channel level at the bottom of the scope
+		OFFSET_END, ///< The channel level at the top of the scope
 		OFFSET_COUNT
 	};
 	
@@ -410,70 +410,70 @@ namespace Hantek {
 	/// \struct FilterBits                                          hantek/types.h
 	/// \brief The bits for COMMAND_SETFILTER.
 	struct FilterBits {
-		unsigned char channel1:1;
-		unsigned char channel2:1;
-		unsigned char trigger:1;
-		unsigned char reserved:5;
+		unsigned char channel1:1; ///< Set to true when channel 1 isn't used
+		unsigned char channel2:1; ///< Set to true when channel 2 isn't used
+		unsigned char trigger:1; ///< Set to true when trigger isn't used
+		unsigned char reserved:5; ///< Unused bits
 	};
 	
 	//////////////////////////////////////////////////////////////////////////////
 	/// \union FilterByte                                           hantek/types.h
 	/// \brief Allows to read the FilterBits as unsigned char.
 	union FilterByte {
-		FilterBits bits;
-		unsigned char byte;
+		FilterBits bits; ///< Bitfield representation
+		unsigned char byte; ///< Full byte as unsigned char
 	};
 	
 	//////////////////////////////////////////////////////////////////////////////
 	/// \struct GainBits                                            hantek/types.h
-	/// \brief The gain bits for COMMAND_SETVOLTAGEANDCOUPLING.
+	/// \brief The gain bits for COMMAND_SETGAIN.
 	struct GainBits {
-		unsigned char channel1:2;
-		unsigned char channel2:2;
-		unsigned char constant:4;
+		unsigned char channel1:2; ///< Gain for CH1, 0 = 1e* V, 1 = 2e*, 2 = 5e*
+		unsigned char channel2:2; ///< Gain for CH1, 0 = 1e* V, 1 = 2e*, 2 = 5e*
+		unsigned char reserved:4; ///< Unused bits
 	};
 	
 	//////////////////////////////////////////////////////////////////////////////
 	/// \union GainByte                                             hantek/types.h
 	/// \brief Allows to read the GainBits as unsigned char.
 	union GainByte {
-		GainBits bits;
-		unsigned char byte;
+		GainBits bits; ///< Bitfield representation
+		unsigned char byte; ///< Full byte as unsigned char
 	};
 	
 	//////////////////////////////////////////////////////////////////////////////
 	/// \struct Tsr1Bits                                            hantek/types.h
 	/// \brief Trigger and samplerate bits (Byte 1).
 	struct Tsr1Bits {
-		unsigned char triggerSource:2;
-		unsigned char sampleSize:3;
-		unsigned char samplerateFast:3;
+		unsigned char triggerSource:2; ///< The trigger source, see Hantek::TriggerSource
+		unsigned char sampleSize:3; ///< Buffer size, 1 = 10240 S, 2 = 32768 S
+		unsigned char samplerateFast:3; ///< samplerate id for fast sampling rates
 	};
 	
 	//////////////////////////////////////////////////////////////////////////////
 	/// \union Tsr1Byte                                             hantek/types.h
 	/// \brief Allows to read the Tsr1Bits as unsigned char.
 	union Tsr1Byte {
-		Tsr1Bits bits;
-		unsigned char byte;
+		Tsr1Bits bits; ///< Bitfield representation.
+		unsigned char byte; ///< Full byte as unsigned char.
 	};
 	
 	//////////////////////////////////////////////////////////////////////////////
 	/// \struct Tsr2Bits                                            hantek/types.h
 	/// \brief Trigger and samplerate bits (Byte 2).
 	struct Tsr2Bits {
-		unsigned char selectedChannel:2;
-		unsigned char fastRate:1;
-		unsigned char triggerSlope:1;
-		unsigned char reserved:4;
+		unsigned char usedChannel:2; ///< Used channels, see Hantek::UsedChannels
+		unsigned char fastRate:1; ///< true, if one channels uses all buffers
+		unsigned char triggerSlope:1; ///< The trigger slope, see Dso::Slope
+		unsigned char reserved:4; ///< Unused bits
 	};
 	
 	//////////////////////////////////////////////////////////////////////////////
 	/// \union Tsr2Byte                                             hantek/types.h
 	/// \brief Allows to read the Tsr2Bits as unsigned char.
 	union Tsr2Byte {
-		Tsr2Bits bits;
-		unsigned char byte;
+		Tsr2Bits bits; ///< Bitfield representation
+		unsigned char byte; ///< Full byte as unsigned char
 	};
 	
 	//////////////////////////////////////////////////////////////////////////////
@@ -499,7 +499,7 @@ namespace Hantek {
 	class CommandSetTriggerAndSamplerate : public Helper::DataArray<unsigned char> {
 		public:
 			CommandSetTriggerAndSamplerate();
-			CommandSetTriggerAndSamplerate(unsigned short int samplerate, unsigned long int triggerPosition, unsigned char triggerSource = 0, unsigned char sampleSize = 0, unsigned char timebaseFast = 0, unsigned char selectedChannel = 0, bool fastRate = false, unsigned char triggerSlope = 0);
+			CommandSetTriggerAndSamplerate(unsigned short int samplerate, unsigned long int triggerPosition, unsigned char triggerSource = 0, unsigned char sampleSize = 0, unsigned char timebaseFast = 0, unsigned char usedChannel = 0, bool fastRate = false, unsigned char triggerSlope = 0);
 			
 			unsigned char getTriggerSource();
 			void setTriggerSource(unsigned char value);

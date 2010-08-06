@@ -24,3 +24,7 @@
 * Added reference level and minimum magnitude for spectrum analysis to settings
 * Made lower timebases available
 * Spectrum and math graphs can be shown without enabling the voltage graph too
+
+2010-08-06  Oliver Haag  <oliver.haag@gmail.com>
+* Bugfix: Mode shown below scope instead of coupling for the math channel
+* Documentation updated

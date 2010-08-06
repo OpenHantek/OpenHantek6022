@@ -51,7 +51,7 @@ class ColorBox : public QPushButton {
 		QColor color;
 	
 	signals:
-		void colorChanged(QColor color);
+		void colorChanged(QColor color); ///< The color has been changed
 };
 
 

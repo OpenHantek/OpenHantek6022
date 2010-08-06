@@ -101,17 +101,21 @@ namespace Hantek {
 	}
 	
 	/// \brief Sets the data bytes to the specified values.
-	/// \param tsr1Byte The Tsr1 value.
-	/// \param tsr2Byte The Tsr2 value.
-	/// \param timebase The new timebase value.
-	/// \param triggerPosition The new horizontal trigger position.
-	CommandSetTriggerAndSamplerate::CommandSetTriggerAndSamplerate(unsigned short int samplerate, unsigned long int triggerPosition, unsigned char triggerSource, unsigned char sampleSize, unsigned char timebaseFast, unsigned char selectedChannel, bool fastRate, unsigned char triggerSlope) : Helper::DataArray<unsigned char>(12) {
+	/// \param samplerate The samplerate value.
+	/// \param triggerPosition The trigger position value.
+	/// \param triggerSource The trigger source id (Tsr1).
+	/// \param sampleSize The buffer size id (Tsr1).
+	/// \param samplerateFast The samplerateFast value (Tsr1).
+	/// \param usedChannel The enabled channels (Tsr2).
+	/// \param fastRate The fastRate state (Tsr2).
+	/// \param triggerSlope The triggerSlope value (Tsr2).
+	CommandSetTriggerAndSamplerate::CommandSetTriggerAndSamplerate(unsigned short int samplerate, unsigned long int triggerPosition, unsigned char triggerSource, unsigned char sampleSize, unsigned char samplerateFast, unsigned char usedChannel, bool fastRate, unsigned char triggerSlope) : Helper::DataArray<unsigned char>(12) {
 		this->init();
 		
 		this->setTriggerSource(triggerSource);
 		this->setSampleSize(sampleSize);
-		this->setSamplerateFast(timebaseFast);
-		this->setUsedChannel(selectedChannel);
+		this->setSamplerateFast(samplerateFast);
+		this->setUsedChannel(usedChannel);
 		this->setFastRate(fastRate);
 		this->setTriggerSlope(triggerSlope);
 		this->setSamplerate(samplerate);
@@ -154,16 +158,16 @@ namespace Hantek {
 		((Tsr1Bits *) &(this->array[2]))->samplerateFast = value;
 	}
 	
-	/// \brief Get the selectedChannel value in Tsr2Bits.
-	/// \return The selectedChannel value.
+	/// \brief Get the usedChannel value in Tsr2Bits.
+	/// \return The usedChannel value.
 	unsigned char CommandSetTriggerAndSamplerate::getUsedChannel() {
-		return ((Tsr2Bits *) &(this->array[3]))->selectedChannel;
+		return ((Tsr2Bits *) &(this->array[3]))->usedChannel;
 	}
 	
-	/// \brief Set the selectedChannel in Tsr2Bits to the given value.
-	/// \param value The new selectedChannel value.
+	/// \brief Set the usedChannel in Tsr2Bits to the given value.
+	/// \param value The new usedChannel value.
 	void CommandSetTriggerAndSamplerate::setUsedChannel(unsigned char value) {
-		((Tsr2Bits *) &(this->array[3]))->selectedChannel = value;
+		((Tsr2Bits *) &(this->array[3]))->usedChannel = value;
 	}
 	
 	/// \brief Get the fastRate state in Tsr2Bits.
@@ -197,7 +201,7 @@ namespace Hantek {
 	}
 	
 	/// \brief Set the Samplerate to the given value.
-	/// \param timebase The new samplerate value.
+	/// \param samplerate The new samplerate value.
 	void CommandSetTriggerAndSamplerate::setSamplerate(unsigned short int samplerate) {
 		this->array[4] = (unsigned char) samplerate;
 		this->array[5] = (unsigned char) (samplerate >> 8);
@@ -325,7 +329,7 @@ namespace Hantek {
 	void CommandSetGain::init() {
 		this->array[0] = COMMAND_SETGAIN;
 		this->array[1] = 0x0f;
-		((GainBits *) &(this->array[2]))->constant = 3;
+		((GainBits *) &(this->array[2]))->reserved = 3;
 	}
 	
 	
@@ -421,7 +425,7 @@ namespace Hantek {
 	/// \brief Sets the offsets to the given values.
 	/// \param channel1 The offset for channel 1.
 	/// \param channel2 The offset for channel 2.
-	/// \param ext The offset for ext. trigger.
+	/// \param trigger The offset for ext. trigger.
 	ControlSetOffset::ControlSetOffset(unsigned short int channel1, unsigned short int channel2, unsigned short int trigger) : Helper::DataArray<unsigned char>(17) {
 		this->setChannel(0, channel1);
 		this->setChannel(1, channel2);
@@ -538,7 +542,7 @@ namespace Hantek {
 	
 	/// \brief Set the coupling relay for the given channel.
 	/// \param channel The channel that should be set.
-	/// \param below true, if the coupling of the channel should be DC.
+	/// \param dc true, if the coupling of the channel should be DC.
 	void ControlSetRelays::setCoupling(unsigned int channel, bool dc) {
 		if(channel == 0)
 			this->array[3] = dc ? 0xfd : 0x02;
@@ -553,7 +557,7 @@ namespace Hantek {
 	}
 	
 	/// \brief Set the external trigger relay.
-	/// \param below true, if the trigger should be external (EXT-Connector).
+	/// \param ext true, if the trigger should be external (EXT-Connector).
 	void ControlSetRelays::setTrigger(bool ext) {
 		this->array[7] = ext ? 0xfe : 0x01;
 	}

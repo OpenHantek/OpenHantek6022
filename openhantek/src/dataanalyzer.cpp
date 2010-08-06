@@ -40,7 +40,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 // class HorizontalDock
 /// \brief Initializes the buffers and other variables.
-/// \param settings The target settings object.
+/// \param settings The settings that should be used.
 /// \param parent The parent widget.
 DataAnalyzer::DataAnalyzer(DsoSettings *settings, QObject *parent) : QThread(parent) {
 	this->settings = settings;
@@ -359,6 +359,11 @@ void DataAnalyzer::run() {
 	this->analyzedDataMutex->unlock();
 }
 
+/// \brief Starts the analyzing of new input data.
+/// \param data The data arrays with the input data.
+/// \param size The sizes of the data arrays.
+/// \param samplerate The samplerate for all input data.
+/// \param mutex The mutex for all input data.
 void DataAnalyzer::analyze(const QList<double *> *data, const QList<unsigned int> *size, double samplerate, QMutex *mutex) {
 	// Previous analysis still running, drop the new data
 	if(this->isRunning())

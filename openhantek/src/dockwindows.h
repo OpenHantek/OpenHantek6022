@@ -58,15 +58,22 @@ class HorizontalDock : public QDockWidget {
 	protected:
 		void closeEvent(QCloseEvent *event);
 		
-		QGridLayout *dockLayout;
-		QWidget *dockWidget;
-		QLabel *timebaseLabel, *frequencybaseLabel, *formatLabel;
-		QComboBox *timebaseComboBox, *frequencybaseComboBox, *formatComboBox;
+		QGridLayout *dockLayout; ///< The main layout for the dock window
+		QWidget *dockWidget; ///< The main widget for the dock window
+		QLabel *timebaseLabel; ///< The label for the timebase combobox
+		QLabel *frequencybaseLabel; ///< The label for the frequencybase combobox
+		QLabel *formatLabel; ///< The label for the format combobox
+		QComboBox *timebaseComboBox; ///< Selects the timebase for voltage graphs
+		QComboBox *frequencybaseComboBox; ///< Selects the frequencybase for spectrum graphs
+		QComboBox *formatComboBox; ///< Selects the way the sampled data is interpreted and shown
 		
-		DsoSettings *settings;
+		DsoSettings *settings; ///< The settings provided by the parent class
 		
-		QList<double> frequencybaseSteps, timebaseSteps;
-		QStringList frequencybaseStrings, timebaseStrings, formatStrings;
+		QList<double> frequencybaseSteps; ///< The selectable steps for the frequencybase
+		QList<double> timebaseSteps; ///< The selectable steps for the timebase
+		QStringList frequencybaseStrings; ///< String representations for the frequencybase steps
+		QStringList timebaseStrings; ///< String representations for the timebase steps
+		QStringList formatStrings; ///< Strings for the formats
 	
 	protected slots:
 		void frequencybaseSelected(int index);
@@ -74,9 +81,9 @@ class HorizontalDock : public QDockWidget {
 		void formatSelected(int index);
 	
 	signals:
-		void frequencybaseChanged(double frequencybase);
-		void timebaseChanged(double timebase);
-		void formatChanged(Dso::GraphFormat format);
+		void frequencybaseChanged(double frequencybase); ///< The frequencybase has been changed
+		void timebaseChanged(double timebase); ///< The timebase has been changed
+		void formatChanged(Dso::GraphFormat format); ///< The viewing format has been changed
 };
 
 
@@ -98,14 +105,21 @@ class TriggerDock : public QDockWidget {
 	protected:
 		void closeEvent(QCloseEvent *event);
 		
-		QGridLayout *dockLayout;
-		QWidget *dockWidget;
-		QLabel *modeLabel, *sweepLabel, *sourceLabel, *slopeLabel;
-		QComboBox *modeComboBox, *sweepComboBox, *sourceComboBox, *slopeComboBox;
+		QGridLayout *dockLayout; ///< The main layout for the dock window
+		QWidget *dockWidget; ///< The main widget for the dock window
+		QLabel *modeLabel; ///< The label for the trigger mode combobox
+		QLabel *sourceLabel; ///< The label for the trigger source combobox
+		QLabel *slopeLabel; ///< The label for the trigger slope combobox
+		QComboBox *modeComboBox; ///< Select the triggering mode
+		QComboBox *sourceComboBox; ///< Select the source for triggering
+		QComboBox *slopeComboBox; ///< Select the slope that causes triggering
 		
-		DsoSettings *settings;
+		DsoSettings *settings; ///< The settings provided by the parent class
 		
-		QStringList modeStrings, sourceStandardStrings, sourceSpecialStrings, slopeStrings;
+		QStringList modeStrings; ///< Strings for the trigger modes
+		QStringList sourceStandardStrings; ///< Strings for the standard trigger sources
+		QStringList sourceSpecialStrings; ///< Strings for the special trigger sources
+		QStringList slopeStrings; ///< Strings for the trigger slopes
 	
 	protected slots:
 		void modeSelected(int index);
@@ -113,9 +127,9 @@ class TriggerDock : public QDockWidget {
 		void sourceSelected(int index);
 	
 	signals:
-		void modeChanged(Dso::TriggerMode);
-		void sourceChanged(bool special, unsigned int id);
-		void slopeChanged(Dso::Slope);
+		void modeChanged(Dso::TriggerMode); ///< The trigger mode has been changed
+		void sourceChanged(bool special, unsigned int id); ///< The trigger source has been changed
+		void slopeChanged(Dso::Slope); ///< The trigger slope has been changed
 };
 
 
@@ -139,17 +153,18 @@ class VoltageDock : public QDockWidget {
 	protected:
 		void closeEvent(QCloseEvent *event);
 		
-		QGridLayout *dockLayout;
-		QWidget *dockWidget;
-		QList<QCheckBox *> usedCheckBox;
-		QList<QComboBox *> gainComboBox, miscComboBox;
+		QGridLayout *dockLayout; ///< The main layout for the dock window
+		QWidget *dockWidget; ///< The main widget for the dock window
+		QList<QCheckBox *> usedCheckBox; ///< Enable/disable a specific channel
+		QList<QComboBox *> gainComboBox; ///< Select the vertical gain for the channels
+		QList<QComboBox *> miscComboBox; ///< Select coupling for real and mode for math channels
 		
-		DsoSettings *settings;
+		DsoSettings *settings; ///< The settings provided by the parent class
 		
-		QStringList couplingStrings;
-		QStringList modeStrings;
-		QList<double> gainSteps;
-		QStringList gainStrings;
+		QStringList couplingStrings; ///< The strings for the couplings
+		QStringList modeStrings; ///< The strings for the math mode
+		QList<double> gainSteps; ///< The selectable gain steps
+		QStringList gainStrings; ///< String representations for the gain steps
 	
 	protected slots:
 		void gainSelected(int index);
@@ -157,10 +172,10 @@ class VoltageDock : public QDockWidget {
 		void usedSwitched(bool checked);
 	
 	signals:
-		void couplingChanged(unsigned int channel, Dso::Coupling coupling);
-		void gainChanged(unsigned int channel, double gain);
-		void modeChanged(Dso::MathMode mode);
-		void usedChanged(unsigned int channel, bool used);
+		void couplingChanged(unsigned int channel, Dso::Coupling coupling); ///< A coupling has been selected
+		void gainChanged(unsigned int channel, double gain); ///< A gain has been selected
+		void modeChanged(Dso::MathMode mode); ///< The mode for the math channels has been changed
+		void usedChanged(unsigned int channel, bool used); ///< A channel has been enabled/disabled
 };
 
 
@@ -182,23 +197,23 @@ class SpectrumDock : public QDockWidget {
 	protected:
 		void closeEvent(QCloseEvent *event);
 		
-		QGridLayout *dockLayout;
-		QWidget *dockWidget;
-		QList<QCheckBox *> usedCheckBox;
-		QList<QComboBox *> magnitudeComboBox;
+		QGridLayout *dockLayout; ///< The main layout for the dock window
+		QWidget *dockWidget; ///< The main widget for the dock window
+		QList<QCheckBox *> usedCheckBox; ///< Enable/disable spectrum for a channel
+		QList<QComboBox *> magnitudeComboBox; ///< Select the vertical magnitude for the spectrums
 		
-		DsoSettings *settings;
+		DsoSettings *settings; ///< The settings provided by the parent class
 		
-		QList<double> magnitudeSteps;
-		QStringList magnitudeStrings;
+		QList<double> magnitudeSteps; ///< The selectable magnitude steps
+		QStringList magnitudeStrings; ///< String representations for the magnitude steps
 	
 	public slots:
 		void magnitudeSelected(int index);
 		void usedSwitched(bool checked);
 	
 	signals:
-		void magnitudeChanged(unsigned int channel, double magnitude);
-		void usedChanged(unsigned int channel, bool used);
+		void magnitudeChanged(unsigned int channel, double magnitude); ///< A magnitude has been selected
+		void usedChanged(unsigned int channel, bool used); ///< A spectrum has been enabled/disabled
 };
 
 

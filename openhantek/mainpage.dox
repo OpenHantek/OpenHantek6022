@@ -3,7 +3,7 @@
 \mainpage OpenHantek Developer Documentation
 
 \section sec_introduction Introduction
-OpenHantek is a free software for Hantek (Voltcraft/Darkwire/Protek/Acetech) USB DSOs based on HantekDSO. The UI is written in C++/Qt 4 and uses OpenGL to draw the graphs.
+OpenHantek is a free software for %Hantek (Voltcraft/Darkwire/Protek/Acetech) USB DSOs based on HantekDSO. The UI is written in C++/Qt 4 and uses OpenGL to draw the graphs.
 
 \section sec_compiling Compiling from source
 \subsection ssec_dependencies Dependencies

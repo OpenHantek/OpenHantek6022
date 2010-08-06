@@ -218,6 +218,8 @@ double LevelSlider::maximum(int index) const {
 }
 
 /// \brief Set the maximal value of the sliders.
+/// \param index The index of the slider whose limits should be set.
+/// \param minimum The value a slider has at the bottommost/leftmost position.
 /// \param maximum The value a slider has at the topmost/rightmost position.
 /// \return -1 on error, fixValue result on success.
 int LevelSlider::setLimits(int index, double minimum, double maximum) {
@@ -235,6 +237,7 @@ int LevelSlider::setLimits(int index, double minimum, double maximum) {
 }
 
 /// \brief Return the step width of the sliders.
+/// \param index The index of the slider whose step width should be returned.
 /// \return The distance between the selectable slider positions.
 double LevelSlider::step(int index) const {
 	if(index < 0 || index >= this->slider.count())
@@ -244,7 +247,8 @@ double LevelSlider::step(int index) const {
 }
 
 /// \brief Set the step width of the sliders.
-/// \param maximum The distance between the selectable slider positions.
+/// \param index The index of the slider whose step width should be set.
+/// \param step The distance between the selectable slider positions.
 /// \return The new step width.
 double LevelSlider::setStep(int index, double step) {
 	if(index < 0 || index >= this->slider.count())

@@ -41,9 +41,9 @@
 #define CONFIG_FILE "HKEY_CURRENT_USER\\Software\\paranoiacs.net\\OpenHantek"
 #endif*/
 
-#define CONFIG_LIST_WIDTH            128
-#define CONFIG_LIST_ITEMHEIGHT        80
-#define CONFIG_LIST_ICONSIZE          48
+#define CONFIG_LIST_WIDTH            128 ///< The width of the page selection widget
+#define CONFIG_LIST_ITEMHEIGHT        80 ///< The height of one item in the page selection widget
+#define CONFIG_LIST_ICONSIZE          48 ///< The icon size in the page selection widget
 
 
 class DsoConfigAnalysisPage;

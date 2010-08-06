@@ -45,16 +45,6 @@ namespace Dso {
 	};
 	
 	//////////////////////////////////////////////////////////////////////////////
-	/// \enum ChannelType                                              constants.h
-	/// \brief All channels that can be displayed.
-	/// \todo Get rid of this enum, get the channel count from the oscilloscope
-	/*enum ChannelType {
-		CHANNELTYPE_CH,                     ///< First real channel
-		CHANNELTYPE_MATH = PHYS_CHANNEL_COUNT, ///< The math channel
-		CHANNEL_COUNT                       ///< The total number of channels
-	};*/
-	
-	//////////////////////////////////////////////////////////////////////////////
 	/// \enum GraphFormat                                              constants.h
 	/// \brief The possible viewing formats for the graphs on the scope.
 	enum GraphFormat {

@@ -454,7 +454,7 @@ namespace Hantek {
 	
 	/// \brief Enables/disables filtering of the given channel.
 	/// \param channel The channel that should be set.
-	/// \param filtered true if the channel should be filtered.
+	/// \param used true if the channel should be sampled.
 	/// \return 0 on success, -1 on invalid channel.
 	int Control::setChannelUsed(unsigned int channel, bool used) {
 		if(channel >= HANTEK_CHANNELS)
@@ -495,6 +495,7 @@ namespace Hantek {
 	}
 	
 	/// \brief Sets the gain for the given channel.
+	/// \param channel The channel that should be set.
 	/// \param gain The gain that should be met (V/div).
 	/// \return The gain that has been set, -1.0 on invalid channel.
 	double Control::setGain(unsigned int channel, double gain) {
@@ -636,7 +637,7 @@ namespace Hantek {
 	}
 	
 	/// \brief Set the trigger position.
-	/// \param level The new trigger position (0.0 - 1.0).
+	/// \param position The new trigger position (0.0 - 1.0).
 	/// \return The trigger position that has been set.
 	double Control::setTriggerPosition(double position) {
 		// Calculate the position value (Varying start point, measured in samples)
