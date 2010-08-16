@@ -1,0 +1,8 @@
+2010-05-29  Oliver Haag  <oliver.haag@gmail.com>
+* Version 0.6.0:
+* Fixed bug on 64-bit architectures
+* Added files needed for building
+
+2010-08-16  Oliver Haag  <oliver.haag@gmail.com>
+* Version 0.6.1:
+* USB-devices can be used by any user in the plugdev group now

@@ -1,0 +1,13 @@
+To build dsoextractfw from source, you need bfd. Under Debian or Ubuntu you can just install the package libbfd-dev. I don't know the package names for other distributions but they may be similar.
+
+After you've installed the requirements run the following commands inside the directory of this package:
+$ ./configure
+$ make
+
+Now place the DSO*1.SYS file that came with the windows driver for your oscilloscope into the same directory and run:
+$ ./dsoextractfw
+
+This should create two .hex files. Copy them to /usr/local/share/hantekdso/ and copy the 90-hantek-dso.rules file to /etc/udev/rules.d/. To load the firmware you have to install fxload.
+After restarting udev your oscilloscope should be initialized automatically after connecting it to the computer (You have to reconnect it after installing this package).
+
+If you can't run OpenHantek as normal user, you have too add your user to the plugdev group.

@@ -1,0 +1,8 @@
+AC_INIT(dsoextractfw.c)
+AM_INIT_AUTOMAKE([dsoextractfw], [0.6.0])
+AC_PROG_CC
+AC_PROG_INSTALL
+AC_HEADER_STDC
+AC_CHECK_HEADERS([stdio.h malloc.h string.h bfd.h])
+AC_DEFINE([PACKAGE_NAME], ["dsoextractfw"])
+AC_OUTPUT(Makefile)
