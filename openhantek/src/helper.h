@@ -27,7 +27,30 @@
 #define HELPER_H
 
 
+#include <cerrno>
+
 #include <QString>
+
+
+#if LIBUSB_VERSION == 0
+#define LIBUSB_SUCCESS                                         0
+#define LIBUSB_ERROR_IO                                     -EIO
+#define LIBUSB_ERROR_INVALID_PARAM                       -EINVAL
+#define LIBUSB_ERROR_ACCESS                              -EACCES
+#define LIBUSB_ERROR_NO_DEVICE                            -ENXIO
+#define LIBUSB_ERROR_NOT_FOUND                           -ENOENT
+#define LIBUSB_ERROR_BUSY                                 -EBUSY
+#define LIBUSB_ERROR_TIMEOUT                          -ETIMEDOUT
+#define LIBUSB_ERROR_OVERFLOW                             -EFBIG
+#define LIBUSB_ERROR_PIPE                                 -EPIPE
+#define LIBUSB_ERROR_INTERRUPTED                          -EINTR
+#define LIBUSB_ERROR_NO_MEM                              -ENOMEM
+#define LIBUSB_ERROR_NOT_SUPPORTED                       -ENOSYS
+
+#define LIBUSB_ENDPOINT_IN                       USB_ENDPOINT_IN
+#define LIBUSB_ENDPOINT_OUT                     USB_ENDPOINT_OUT
+#define LIBUSB_REQUEST_TYPE_VENDOR               USB_TYPE_VENDOR
+#endif
 
 
 namespace Helper {

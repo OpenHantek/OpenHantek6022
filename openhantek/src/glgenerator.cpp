@@ -59,9 +59,8 @@ void GlArray::setSize(unsigned long int size) {
 	if(this->size == size)
 		return;
 	
-	if(this->data) {
+	if(this->data)
 		delete[] this->data;
-	}
 	if(size)
 		this->data = new GLfloat[size];
 	else
@@ -140,7 +139,7 @@ void GlGenerator::generateGraphs() {
 		case Dso::GRAPHFORMAT_TY:
 			// Add graphs for channels
 			for(int mode = Dso::CHANNELMODE_VOLTAGE; mode < Dso::CHANNELMODE_COUNT; mode++) {
-				for(int channel = 0 ; channel < this->settings->scope.voltage.count(); channel++) {
+				for(int channel = 0; channel < this->settings->scope.voltage.count(); channel++) {
 					// Check if this channel is used and available at the data analyzer
 					if(((mode == Dso::CHANNELMODE_VOLTAGE) ? this->settings->scope.voltage[channel].used : this->settings->scope.spectrum[channel].used) && this->dataAnalyzer->data(channel)->samples.voltage.sample) {
 						// Check if the sample count has changed
@@ -188,6 +187,41 @@ void GlGenerator::generateGraphs() {
 			break;
 			
 		case Dso::GRAPHFORMAT_XY:
+			for(int channel = 0; channel < this->settings->scope.voltage.count(); channel ++) {
+				// For even channel numbers check if this channel is used and this and the following channel are available at the data analyzer
+				if(channel % 2 == 0 && channel + 1 < this->settings->scope.voltage.count() && this->settings->scope.voltage[channel].used && this->dataAnalyzer->data(channel)->samples.voltage.sample && this->dataAnalyzer->data(channel + 1)->samples.voltage.sample) {
+					// Check if the sample count has changed
+					unsigned int neededSize = qMin(this->dataAnalyzer->data(channel)->samples.voltage.count, this->dataAnalyzer->data(channel + 1)->samples.voltage.count) * 2;
+					for(int index = 0; index < this->digitalPhosphorDepth; index++) {
+						if(this->vaChannel[Dso::CHANNELMODE_VOLTAGE][channel][index]->getSize() != neededSize)
+							this->vaChannel[Dso::CHANNELMODE_VOLTAGE][channel][index]->setSize(0);
+					}
+					
+					// Check if the array is allocated
+					if(!this->vaChannel[Dso::CHANNELMODE_VOLTAGE][channel].first()->data)
+						this->vaChannel[Dso::CHANNELMODE_VOLTAGE][channel].first()->setSize(neededSize);
+					
+					GLfloat *vaNewChannel = this->vaChannel[Dso::CHANNELMODE_VOLTAGE][channel].first()->data;
+					
+					// Fill vector array
+					unsigned int arrayPosition = 0;
+					unsigned int xChannel = channel;
+					unsigned int yChannel = channel + 1;
+					for(unsigned int position = 0; position < this->dataAnalyzer->data(channel)->samples.voltage.count; position++) {
+						vaNewChannel[arrayPosition++] = this->dataAnalyzer->data(xChannel)->samples.voltage.sample[position] / this->settings->scope.voltage[xChannel].gain + this->settings->scope.voltage[xChannel].offset;
+						vaNewChannel[arrayPosition++] = this->dataAnalyzer->data(yChannel)->samples.voltage.sample[position] / this->settings->scope.voltage[yChannel].gain + this->settings->scope.voltage[yChannel].offset;
+					}
+				}
+				else {
+					// Delete all vector arrays
+					for(int index = 0; index < this->digitalPhosphorDepth; index++)
+						this->vaChannel[Dso::CHANNELMODE_VOLTAGE][channel][index]->setSize(0);
+				}
+				
+				// Delete all spectrum graphs
+				for(int index = 0; index < this->digitalPhosphorDepth; index++)
+					this->vaChannel[Dso::CHANNELMODE_SPECTRUM][channel][index]->setSize(0);
+			}
 			break;
 	}
 	

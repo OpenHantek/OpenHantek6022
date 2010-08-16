@@ -28,3 +28,8 @@
 2010-08-06  Oliver Haag  <oliver.haag@gmail.com>
 * Bugfix: Mode shown below scope instead of coupling for the math channel
 * Documentation updated
+
+2010-08-16  Oliver Haag  <oliver.haag@gmail.com>
+* Completed libusb 0.1 downwards compatibility mode (env LIBUSB_VERSION=0)
+* Bugfix: Grid of scopes drawn even if there aren't any graphs available
+* Implemented basics of the XY-mode

@@ -80,7 +80,7 @@ UI_DIR = build/ui
 MOC_DIR = build/moc
 
 # Include directory
-QMAKE_CXXFLAGS += "-iquote src"
+QMAKE_CXXFLAGS += "-iquote $${IN_PWD}/src"
 
 # libusb version
 LIBUSB_VERSION = $$(LIBUSB_VERSION)
@@ -88,7 +88,6 @@ contains(LIBUSB_VERSION, 0):LIBS += -lusb
 else { 
     LIBUSB_VERSION = 1
     LIBS += -lusb-1.0
-    DEFINES += LIBUSB_VERSION=1
 }
 DEFINES += LIBUSB_VERSION=$${LIBUSB_VERSION}
 
@@ -141,4 +140,4 @@ doxygen.commands = rm \
 doxygen.depends = $${SOURCES} \
     $${HEADERS} \
     $${DOXYFILES}
-QMAKE_EXTRA_UNIX_TARGETS += doxygen
+QMAKE_EXTRA_TARGETS += doxygen

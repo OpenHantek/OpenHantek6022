@@ -70,9 +70,7 @@ namespace Hantek {
 			int bulkCommand(Helper::DataArray<unsigned char> *command, int attempts = HANTEK_ATTEMPTS_DEFAULT);
 			int bulkReadMulti(unsigned char *data, unsigned int length, int attempts = HANTEK_ATTEMPTS_DEFAULT);
 			
-#if LIBUSB_VERSION != 0
 			int controlTransfer(unsigned char type, unsigned char request, unsigned char *data, unsigned int length, int value, int index, int attempts = HANTEK_ATTEMPTS_DEFAULT);
-#endif
 			int controlWrite(unsigned char request, unsigned char *data, unsigned int length, int value = 0, int index = 0, int attempts = HANTEK_ATTEMPTS_DEFAULT);
 			int controlRead(unsigned char request, unsigned char *data, unsigned int length, int value = 0, int index = 0, int attempts = HANTEK_ATTEMPTS_DEFAULT);
 			
@@ -91,8 +89,13 @@ namespace Hantek {
 			libusb_context *context; ///< The usb context used for this device
 #endif
 			Model model; ///< The model of the connected oscilloscope
+#if LIBUSB_VERSION == 0
+			usb_dev_handle *handle; ///< The USB handle for the oscilloscope
+			usb_device_descriptor descriptor; ///< The device descriptor of the oscilloscope
+#else
 			libusb_device_handle *handle; ///< The USB handle for the oscilloscope
 			libusb_device_descriptor descriptor; ///< The device descriptor of the oscilloscope
+#endif
 			int interface; ///< The number of the claimed interface
 			int error; ///< The libusb error, that happened on initialization
 			int outPacketLength; ///< Packet length for the OUT endpoint

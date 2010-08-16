@@ -70,68 +70,84 @@ void GlScope::initializeGL() {
 
 /// \brief Draw the graphs and the grid.
 void GlScope::paintGL() {
-	if(!this->generator || !this->isVisible())
+	if(!this->isVisible())
 		return;
 	
 	// Clear OpenGL buffer and configure settings
 	glClear(GL_COLOR_BUFFER_BIT);
 	glLineWidth(1);
-	if(this->settings->view.antialiasing) {
-		glEnable(GL_POINT_SMOOTH);
-		glEnable(GL_LINE_SMOOTH);
-		glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
-	}
 	
-	// Apply zoom settings via matrix transformation
-	if(this->zoomed) {
-		glPushMatrix();
-		glScalef(DIVS_TIME / fabs(this->settings->scope.horizontal.marker[1] - this->settings->scope.horizontal.marker[0]), 1.0, 1.0);
-		glTranslatef(-(this->settings->scope.horizontal.marker[0] + this->settings->scope.horizontal.marker[1]) / 2, 0.0, 0.0);
-	}
-	
-	// Values we need for the fading of the digital phosphor
-	double *fadingFactor = new double[this->generator->digitalPhosphorDepth];
-	fadingFactor[0] = 100;
-	double fadingRatio = pow(10.0, 2.0 / this->generator->digitalPhosphorDepth);
-	for(int index = 1; index < this->generator->digitalPhosphorDepth; index++)
-		fadingFactor[index] = fadingFactor[index - 1] * fadingRatio;
-	
-	switch(this->settings->scope.horizontal.format) {
-		case Dso::GRAPHFORMAT_TY: {
-			// Real and virtual channels
-			for(int mode = Dso::CHANNELMODE_VOLTAGE; mode < Dso::CHANNELMODE_COUNT; mode++) {
-				for(int channel = 0; channel < this->settings->scope.voltage.count(); channel++) {
-					if((mode == Dso::CHANNELMODE_VOLTAGE) ? this->settings->scope.voltage[channel].used : this->settings->scope.spectrum[channel].used) {
-						// Draw graph for all available depths
-						for(int index = this->generator->digitalPhosphorDepth - 1; index >= 0; index--) {
-							if(this->generator->vaChannel[mode][channel][index]->data) {
-								if(mode == Dso::CHANNELMODE_VOLTAGE)
-									this->qglColor(this->settings->view.color.screen.voltage[channel].darker(fadingFactor[index]));
-								else
-									this->qglColor(this->settings->view.color.screen.spectrum[channel].darker(fadingFactor[index]));
-								glVertexPointer(2, GL_FLOAT, 0, this->generator->vaChannel[mode][channel][index]->data);
-								glDrawArrays((this->settings->view.interpolation == INTERPOLATION_OFF) ? GL_POINTS : GL_LINE_STRIP, 0, this->generator->vaChannel[mode][channel][index]->getSize() / 2);
+	// Draw the graphs
+	if(this->generator && this->generator->digitalPhosphorDepth > 0) {
+		if(this->settings->view.antialiasing) {
+			glEnable(GL_POINT_SMOOTH);
+			glEnable(GL_LINE_SMOOTH);
+			glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
+		}
+		
+		// Apply zoom settings via matrix transformation
+		if(this->zoomed) {
+			glPushMatrix();
+			glScalef(DIVS_TIME / fabs(this->settings->scope.horizontal.marker[1] - this->settings->scope.horizontal.marker[0]), 1.0, 1.0);
+			glTranslatef(-(this->settings->scope.horizontal.marker[0] + this->settings->scope.horizontal.marker[1]) / 2, 0.0, 0.0);
+		}
+		
+		// Values we need for the fading of the digital phosphor
+		double *fadingFactor = new double[this->generator->digitalPhosphorDepth];
+		fadingFactor[0] = 100;
+		double fadingRatio = pow(10.0, 2.0 / this->generator->digitalPhosphorDepth);
+		for(int index = 1; index < this->generator->digitalPhosphorDepth; index++)
+			fadingFactor[index] = fadingFactor[index - 1] * fadingRatio;
+		
+		switch(this->settings->scope.horizontal.format) {
+			case Dso::GRAPHFORMAT_TY:
+				// Real and virtual channels
+				for(int mode = Dso::CHANNELMODE_VOLTAGE; mode < Dso::CHANNELMODE_COUNT; mode++) {
+					for(int channel = 0; channel < this->settings->scope.voltage.count(); channel++) {
+						if((mode == Dso::CHANNELMODE_VOLTAGE) ? this->settings->scope.voltage[channel].used : this->settings->scope.spectrum[channel].used) {
+							// Draw graph for all available depths
+							for(int index = this->generator->digitalPhosphorDepth - 1; index >= 0; index--) {
+								if(this->generator->vaChannel[mode][channel][index]->data) {
+									if(mode == Dso::CHANNELMODE_VOLTAGE)
+										this->qglColor(this->settings->view.color.screen.voltage[channel].darker(fadingFactor[index]));
+									else
+										this->qglColor(this->settings->view.color.screen.spectrum[channel].darker(fadingFactor[index]));
+									glVertexPointer(2, GL_FLOAT, 0, this->generator->vaChannel[mode][channel][index]->data);
+									glDrawArrays((this->settings->view.interpolation == INTERPOLATION_OFF) ? GL_POINTS : GL_LINE_STRIP, 0, this->generator->vaChannel[mode][channel][index]->getSize() / 2);
+								}
 							}
 						}
 					}
 				}
-			}
+				break;
 			
-			delete[] fadingFactor;
-			
-			break;
+			case Dso::GRAPHFORMAT_XY:
+				// Real and virtual channels
+				for(int channel = 0; channel < this->settings->scope.voltage.count() - 1; channel += 2) {
+					if(this->settings->scope.voltage[channel].used) {
+						// Draw graph for all available depths
+						for(int index = this->generator->digitalPhosphorDepth - 1; index >= 0; index--) {
+							if(this->generator->vaChannel[Dso::CHANNELMODE_VOLTAGE][channel][index]->data) {
+								this->qglColor(this->settings->view.color.screen.voltage[channel].darker(fadingFactor[index]));
+								glVertexPointer(2, GL_FLOAT, 0, this->generator->vaChannel[Dso::CHANNELMODE_VOLTAGE][channel][index]->data);
+								glDrawArrays((this->settings->view.interpolation == INTERPOLATION_OFF) ? GL_POINTS : GL_LINE_STRIP, 0, this->generator->vaChannel[Dso::CHANNELMODE_VOLTAGE][channel][index]->getSize() / 2);
+							}
+						}
+					}
+				}
+				break;
 		}
 		
-		case Dso::GRAPHFORMAT_XY:
-			break;
+		delete[] fadingFactor;
+		
+		glDisable(GL_POINT_SMOOTH);
+		glDisable(GL_LINE_SMOOTH);
+		
+		if(this->zoomed)
+			glPopMatrix();
 	}
 	
-	glDisable(GL_POINT_SMOOTH);
-	glDisable(GL_LINE_SMOOTH);
-	
-	if(this->zoomed)
-		glPopMatrix();
-	else {
+	if(!this->zoomed) {
 		// Draw vertical lines at marker positions
 		glEnable(GL_LINE_STIPPLE);
 		this->qglColor(this->settings->view.color.screen.markers);
