@@ -36,11 +36,13 @@ DsoControl::DsoControl(QObject *parent) : QThread(parent) {
 /// \brief Start sampling process.
 void DsoControl::startSampling() {
 	this->sampling = true;
+	emit samplingStarted();
 }
 
 /// \brief Stop sampling process.
 void DsoControl::stopSampling() {
 	this->sampling = false;
+	emit samplingStopped();
 }
 
 /// \brief Get a list of the names of the special trigger sources.

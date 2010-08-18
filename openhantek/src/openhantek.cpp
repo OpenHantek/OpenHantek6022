@@ -124,6 +124,10 @@ OpenHantekMainWindow::OpenHantekMainWindow(QWidget *parent, Qt::WindowFlags flag
 	connect(this->spectrumDock, SIGNAL(usedChanged(unsigned int, bool)), this->dsoWidget, SLOT(updateSpectrumUsed(unsigned int, bool)));
 	connect(this->spectrumDock, SIGNAL(magnitudeChanged(unsigned int, double)), this->dsoWidget, SLOT(updateSpectrumMagnitude(unsigned int)));
 	
+	// Started/stopped signals from oscilloscope	
+	connect(this->dsoControl, SIGNAL(samplingStarted()), this, SLOT(started()));
+	connect(this->dsoControl, SIGNAL(samplingStopped()), this, SLOT(stopped()));
+	
 	// Set up the oscilloscope
 	for(unsigned int channel = 0; channel < this->settings->scope.physicalChannels; channel++) {
 		this->dsoControl->setCoupling(channel, (Dso::Coupling) this->settings->scope.voltage[channel].misc);
@@ -191,10 +195,9 @@ void OpenHantekMainWindow::createActions() {
 	this->configAction->setStatusTip(tr("Configure the oscilloscope"));
 	connect(this->configAction, SIGNAL(triggered()), this, SLOT(config()));
 	
-	this->startStopAction = new QAction(QIcon(":actions/stop.png"), tr("&Stop"), this);
+	this->startStopAction = new QAction(this);
 	this->startStopAction->setShortcut(tr("Space"));
-	this->startStopAction->setStatusTip(tr("Stop the oscilloscope"));
-	connect(this->startStopAction, SIGNAL(triggered()), this, SLOT(stop()));
+	this->stopped();
 	
 	this->bufferSizeActionGroup = new QActionGroup(this);
 	connect(this->bufferSizeActionGroup, SIGNAL(selected(QAction *)), this, SLOT(bufferSizeSelected(QAction *)));
@@ -541,7 +544,7 @@ bool OpenHantekMainWindow::save() {
 	if (this->currentFile.isEmpty()) {
 		return saveAs();
 	} else {
-		return false; // TODO
+		return false; /// \todo Saving of individual setting files
 	}
 }
 
@@ -552,33 +555,27 @@ bool OpenHantekMainWindow::saveAs() {
 	if (fileName.isEmpty())
 		return false;
 
-	return false; // TODO
+	return false; /// \todo Saving of individual setting files
 }
 
-/// \brief Start the oscilloscope.
-void OpenHantekMainWindow::start() {
+/// \brief The oscilloscope started sampling.
+void OpenHantekMainWindow::started() {
 	this->startStopAction->setText(tr("&Stop"));
 	this->startStopAction->setIcon(QIcon(":actions/stop.png"));
 	this->startStopAction->setStatusTip(tr("Stop the oscilloscope"));
 	
-	disconnect(this->startStopAction, SIGNAL(triggered()), this, SLOT(start()));
-	connect(this->startStopAction, SIGNAL(triggered()), this, SLOT(stop()));
-	connect(this->dsoControl, SIGNAL(disconnected()), this, SLOT(stopped()));
-	
-	this->dsoControl->startSampling();
+	disconnect(this->startStopAction, SIGNAL(triggered()), this->dsoControl, SLOT(startSampling()));
+	connect(this->startStopAction, SIGNAL(triggered()), this->dsoControl, SLOT(stopSampling()));
 }
 
-/// \brief Stop the oscilloscope.
-void OpenHantekMainWindow::stop() {
+/// \brief The oscilloscope stopped sampling.
+void OpenHantekMainWindow::stopped() {
 	this->startStopAction->setText(tr("&Start"));
 	this->startStopAction->setIcon(QIcon(":actions/start.png"));
 	this->startStopAction->setStatusTip(tr("Start the oscilloscope"));
 	
-	disconnect(this->startStopAction, SIGNAL(triggered()), this, SLOT(stop()));
-	disconnect(this->dsoWidget, SIGNAL(stopped()), this, SLOT(stopped()));
-	connect(this->startStopAction, SIGNAL(triggered()), this, SLOT(start()));
-	
-	this->dsoControl->stopSampling();
+	disconnect(this->startStopAction, SIGNAL(triggered()), this->dsoControl, SLOT(stopSampling()));
+	connect(this->startStopAction, SIGNAL(triggered()), this->dsoControl, SLOT(startSampling()));
 }
 
 /// \brief Configure the oscilloscope.

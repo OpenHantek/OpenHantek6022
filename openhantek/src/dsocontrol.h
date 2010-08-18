@@ -46,9 +46,6 @@ class DsoControl : public QThread {
 	public:
 		DsoControl(QObject *parent = 0);
 		
-		virtual void startSampling();
-		virtual void stopSampling();
-		
 		virtual unsigned int getChannelCount() = 0; ///< Get the number of channels for this oscilloscope
 		
 		const QStringList *getSpecialTriggerSources();
@@ -62,12 +59,17 @@ class DsoControl : public QThread {
 	signals:
 		void deviceConnected(); ///< The oscilloscope device has been disconnected
 		void deviceDisconnected(); ///< The oscilloscope device has been connected
+		void samplingStarted(); ///< The oscilloscope started sampling/waiting for trigger
+		void samplingStopped(); ///< The oscilloscope stopped sampling/waiting for trigger
 		void statusMessage(const QString &message, int timeout); ///< Status message about the oscilloscope
 		void samplesAvailable(const QList<double *> *data, const QList<unsigned int> *size, double samplerate, QMutex *mutex); ///< New sample data is available
 	
 	public slots:
 		virtual void connectDevice();
 		virtual void disconnectDevice();
+		
+		virtual void startSampling();
+		virtual void stopSampling();
 		
 		virtual unsigned long int setSamplerate(unsigned long int samplerate) = 0; ///< Set the samplerate that should be met
 		virtual double setBufferSize(unsigned int size) = 0; ///< Set the needed buffer size

@@ -118,8 +118,8 @@ class OpenHantekMainWindow : public QMainWindow {
 		void digitalPhosphor(bool enabled);
 		void zoom(bool enabled);
 		// Oscilloscope control
-		void start();
-		void stop();
+		void started();
+		void stopped();
 		// Other
 		void config();
 		void about();

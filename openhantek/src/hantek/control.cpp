@@ -150,6 +150,7 @@ namespace Hantek {
 		// The control loop is running until the device is disconnected
 		int captureState = CAPTURE_WAITING;
 		bool samplingStarted = false;
+		Dso::TriggerMode lastTriggerMode = (Dso::TriggerMode) -1;
 		
 		while(captureState != LIBUSB_ERROR_NO_DEVICE && !this->terminate) {
 			// Send all pending bulk commands
@@ -196,23 +197,33 @@ namespace Hantek {
 			/// \todo Maybe the time interval could be improved...
 			this->msleep(50);
 			
-			if(!this->sampling)
+			if(!this->sampling) {
+				samplingStarted = false;
 				continue;
+			}
+			
 			captureState = this->getCaptureState();
 			switch(captureState) {
 				case CAPTURE_READY:
 				case CAPTURE_READY5200:
-					samplingStarted = false;
-					
-					errorCode = this->getSamples();
+					// Get data and process it, if we're still sampling
+					errorCode = this->getSamples(samplingStarted);
 					if(errorCode < 0)
 						qDebug("Getting sample data failed: %s", Helper::libUsbErrorString(errorCode).toLocal8Bit().data());
+					
+					// Check if we're in single trigger mode
+					if(this->triggerMode == Dso::TRIGGERMODE_SINGLE && samplingStarted)
+						this->stopSampling();
+					
+					// Sampling completed, restart it when necessary
+					samplingStarted = false;
 					
 					// Start next capture if necessary by leaving out the break statement
 					if(!this->sampling)
 						break;
+				
 				case CAPTURE_WAITING:
-					if(samplingStarted)
+					if(samplingStarted && lastTriggerMode == this->triggerMode)
 						break;
 					
 					// Start capturing
@@ -236,7 +247,9 @@ namespace Hantek {
 							captureState = LIBUSB_ERROR_NO_DEVICE;
 					}
 					samplingStarted = true;
+					lastTriggerMode = this->triggerMode;
 					break;
+				
 				case CAPTURE_SAMPLING:
 					break;
 				default:
@@ -304,91 +317,96 @@ namespace Hantek {
 	
 	/// \brief Gets sample data from the oscilloscope and converts it.
 	/// \return 0 on success, libusb error code on error.
-	int Control::getSamples() {
+	int Control::getSamples(bool process) {
 		int errorCode;
 		
+		// Request data
 		errorCode = this->device->bulkCommand(this->command[COMMAND_GETDATA], 1);
 		if(errorCode < 0)
 			return errorCode;
 		
+		// Save raw data to temporary buffer
 		unsigned int dataCount = this->bufferSize * HANTEK_CHANNELS;
 		unsigned char data[dataCount];
 		errorCode = this->device->bulkReadMulti(data, dataCount);
 		if(errorCode < 0)
 			return errorCode;
 		
-		this->samplesMutex.lock();
-		
-		// Convert channel data
-		if(((CommandSetTriggerAndSamplerate *) this->command[COMMAND_SETTRIGGERANDSAMPLERATE])->getFastRate()) {
-			// Fast rate mode, one channel is using all buffers
-			int channel;
-			if(((CommandSetTriggerAndSamplerate *) this->command[COMMAND_SETTRIGGERANDSAMPLERATE])->getUsedChannel() == USED_CH1)
-				channel = 0;
-			else
-				channel = 1;
+		// Process the data only if we want it
+		if(process) {
+			this->samplesMutex.lock();
 			
-			
-			// Clear unused channels
-			for(int channelCounter = 0; channelCounter < HANTEK_CHANNELS; channelCounter++)
-				if(channelCounter != channel && this->samples[channelCounter]) {
-					
-					delete this->samples[channelCounter];
-					this->samples[channelCounter] = 0;
-				}
-			
-			if(channel < HANTEK_CHANNELS) {
-				// Reallocate memory for samples if the sample count has changed
-				if(!this->samples[channel] || this->samplesSize[channel] != dataCount) {
-					if(this->samples[channel])
-						delete this->samples[channel];
-					this->samples[channel] = new double[dataCount];
-					this->samplesSize[channel] = dataCount;
-				}
+			// Convert channel data
+			if(((CommandSetTriggerAndSamplerate *) this->command[COMMAND_SETTRIGGERANDSAMPLERATE])->getFastRate()) {
+				// Fast rate mode, one channel is using all buffers
+				int channel;
+				if(((CommandSetTriggerAndSamplerate *) this->command[COMMAND_SETTRIGGERANDSAMPLERATE])->getUsedChannel() == USED_CH1)
+					channel = 0;
+				else
+					channel = 1;
 				
-				// Convert data from the oscilloscope and write it into the sample buffer
-				unsigned int bufferPosition = this->triggerPoint;
-				for(unsigned int realPosition = 0; realPosition < dataCount; realPosition++, bufferPosition++) {
-					if(bufferPosition >= dataCount)
-						bufferPosition %= dataCount;
-					
-					this->samples[channel][realPosition] = ((double) data[bufferPosition] / 0xff - this->offsetReal[channel]) * this->gainSteps[this->gain[channel]];
-				}
-			}
-		}
-		else {
-			// Normal mode, channel are using their separate buffers
-			unsigned char usedChannels = ((CommandSetTriggerAndSamplerate *) this->command[COMMAND_SETTRIGGERANDSAMPLERATE])->getUsedChannel();
-			for(int channel = 0; channel < HANTEK_CHANNELS; channel++) {
-				if(usedChannels == USED_CH1CH2 || channel == usedChannels) {
+				
+				// Clear unused channels
+				for(int channelCounter = 0; channelCounter < HANTEK_CHANNELS; channelCounter++)
+					if(channelCounter != channel && this->samples[channelCounter]) {
+						
+						delete this->samples[channelCounter];
+						this->samples[channelCounter] = 0;
+					}
+				
+				if(channel < HANTEK_CHANNELS) {
 					// Reallocate memory for samples if the sample count has changed
-					if(!this->samples[channel] || this->samplesSize[channel] != this->bufferSize) {
+					if(!this->samples[channel] || this->samplesSize[channel] != dataCount) {
 						if(this->samples[channel])
 							delete this->samples[channel];
-						this->samples[channel] = new double[this->bufferSize];
-						this->samplesSize[channel] = this->bufferSize;
+						this->samples[channel] = new double[dataCount];
+						this->samplesSize[channel] = dataCount;
 					}
 					
 					// Convert data from the oscilloscope and write it into the sample buffer
-					unsigned int bufferPosition = this->triggerPoint * 2;
-					for(unsigned int realPosition = 0; realPosition < this->bufferSize; realPosition++, bufferPosition += 2) {
+					unsigned int bufferPosition = this->triggerPoint;
+					for(unsigned int realPosition = 0; realPosition < dataCount; realPosition++, bufferPosition++) {
 						if(bufferPosition >= dataCount)
 							bufferPosition %= dataCount;
 						
-						this->samples[channel][realPosition] = ((double) data[bufferPosition + HANTEK_CHANNELS - 1 - channel] / 256.0 - this->offsetReal[channel]) * this->gainSteps[this->gain[channel]];
+						this->samples[channel][realPosition] = ((double) data[bufferPosition] / 0xff - this->offsetReal[channel]) * this->gainSteps[this->gain[channel]];
 					}
 				}
-				else if(this->samples[channel]) {
-					// Clear unused channels
-					delete this->samples[channel];
-					this->samples[channel] = 0;
-					this->samplesSize[channel] = 0;
+			}
+			else {
+				// Normal mode, channel are using their separate buffers
+				unsigned char usedChannels = ((CommandSetTriggerAndSamplerate *) this->command[COMMAND_SETTRIGGERANDSAMPLERATE])->getUsedChannel();
+				for(int channel = 0; channel < HANTEK_CHANNELS; channel++) {
+					if(usedChannels == USED_CH1CH2 || channel == usedChannels) {
+						// Reallocate memory for samples if the sample count has changed
+						if(!this->samples[channel] || this->samplesSize[channel] != this->bufferSize) {
+							if(this->samples[channel])
+								delete this->samples[channel];
+							this->samples[channel] = new double[this->bufferSize];
+							this->samplesSize[channel] = this->bufferSize;
+						}
+						
+						// Convert data from the oscilloscope and write it into the sample buffer
+						unsigned int bufferPosition = this->triggerPoint * 2;
+						for(unsigned int realPosition = 0; realPosition < this->bufferSize; realPosition++, bufferPosition += 2) {
+							if(bufferPosition >= dataCount)
+								bufferPosition %= dataCount;
+							
+							this->samples[channel][realPosition] = ((double) data[bufferPosition + HANTEK_CHANNELS - 1 - channel] / 256.0 - this->offsetReal[channel]) * this->gainSteps[this->gain[channel]];
+						}
+					}
+					else if(this->samples[channel]) {
+						// Clear unused channels
+						delete this->samples[channel];
+						this->samples[channel] = 0;
+						this->samplesSize[channel] = 0;
+					}
 				}
 			}
+			
+			this->samplesMutex.unlock();
+			emit samplesAvailable(&(this->samples), &(this->samplesSize), this->samplerateSteps[this->samplerate], &(this->samplesMutex));
 		}
-		
-		this->samplesMutex.unlock();
-		emit samplesAvailable(&(this->samples), &(this->samplesSize), this->samplerateSteps[this->samplerate], &(this->samplesMutex));
 		
 		return 0;
 	}
@@ -610,7 +628,7 @@ namespace Hantek {
 		// Calculate the trigger level value (0x00 - 0xfe)
 		unsigned short int levelValue = (this->offsetReal[channel] + level / this->gainSteps[this->gain[channel]]) * 0xfe + 0.5;
 		
-		if(this->triggerSpecial && channel == this->triggerSource) {
+		if(!this->triggerSpecial && channel == this->triggerSource) {
 			// SetOffset control command for trigger level
 			((ControlSetOffset *) this->control[CONTROLINDEX_SETOFFSET])->setTrigger(levelValue);
 			this->controlPending[CONTROLINDEX_SETOFFSET] = true;

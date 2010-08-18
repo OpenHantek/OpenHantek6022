@@ -33,3 +33,7 @@
 * Completed libusb 0.1 downwards compatibility mode (env LIBUSB_VERSION=0)
 * Bugfix: Grid of scopes drawn even if there aren't any graphs available
 * Implemented basics of the XY-mode
+
+2010-08-18  Oliver Haag  <oliver.haag@gmail.com>
+* Bugfix: Trigger levels weren't sent to the oscilloscope
+* Implemented single trigger mode

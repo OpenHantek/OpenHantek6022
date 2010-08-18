@@ -69,7 +69,7 @@ namespace Hantek {
 			
 			unsigned int calculateTriggerPoint(unsigned int value);
 			int getCaptureState();
-			int getSamples();
+			int getSamples(bool process);
 			
 			Device *device; ///< The USB device for the oscilloscope
 			
