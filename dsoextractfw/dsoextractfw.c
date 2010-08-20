@@ -2,7 +2,7 @@
 //
 //  OpenHantek
 //  dsoextractfw.c
-//  Copyright (C) 2008, 2009  Oleg Khudyakov
+//  Copyright (C) 2008  Oleg Khudyakov
 //  prcoder@potrebitel.ru
 //  Copyright (C) 2010  Oliver Haag
 //  oliver.haag@gmail.com
@@ -39,28 +39,35 @@ int extractFirmware(const char* model);
 
 int writeSRecords(const char *filename, unsigned char *ptr, bfd_size_type len)
 {
-	unsigned char n, *p, crc=0;
+	unsigned char n, *p, crc=0, eof;
 	bfd_size_type  i, t;
 	FILE *f;
-	
+
 	if ((f=fopen(filename, "wt")) == NULL)
 	{
 		perror("Cant' open file for writing");
 		fclose(f);
 		return -1;
 	}
-	
+
 	for(t=0; t <len; t+=22)
 	{
+		eof = -1; // Always check for End of File Record
 		p = ptr + t;
 		n = *p;
 		fprintf(f, ":%02X", n);
+		if(n != 0)
+			eof = 0;
 		crc = *p++;
 		p++;
 		fprintf(f, "%04X", *(unsigned short *)p);
+		if(*(unsigned short *)p != 0)
+			eof = 0;
 		crc += *p++;
 		crc += *p++;
 		fprintf(f, "%02X", *p);
+		if(*p != 0x01)
+			eof = 0;
 		crc += *p++;
 		for(i=0; i<n; i++)
 		{
@@ -69,9 +76,12 @@ int writeSRecords(const char *filename, unsigned char *ptr, bfd_size_type len)
 		}
 		crc = 1 + ~crc;
 		fprintf(f, "%02X\n", crc);
+		
+		if(eof)
+			break;
 	}
 	fclose(f);
-	
+
 	return 0;
 }
 

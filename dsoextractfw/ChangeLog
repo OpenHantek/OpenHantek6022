@@ -6,3 +6,6 @@
 2010-08-16  Oliver Haag  <oliver.haag@gmail.com>
 * Version 0.6.1:
 * USB-devices can be used by any user in the plugdev group now
+
+2010-08-20  Oliver Haag  <oliver.haag@gmail.com>
+* Added checking for End of File Record to the hex-writing routine
