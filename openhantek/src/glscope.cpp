@@ -113,7 +113,7 @@ void GlScope::paintGL() {
 									else
 										this->qglColor(this->settings->view.color.screen.spectrum[channel].darker(fadingFactor[index]));
 									glVertexPointer(2, GL_FLOAT, 0, this->generator->vaChannel[mode][channel][index]->data);
-									glDrawArrays((this->settings->view.interpolation == INTERPOLATION_OFF) ? GL_POINTS : GL_LINE_STRIP, 0, this->generator->vaChannel[mode][channel][index]->getSize() / 2);
+									glDrawArrays((this->settings->view.interpolation == Dso::INTERPOLATION_OFF) ? GL_POINTS : GL_LINE_STRIP, 0, this->generator->vaChannel[mode][channel][index]->getSize() / 2);
 								}
 							}
 						}
@@ -130,11 +130,14 @@ void GlScope::paintGL() {
 							if(this->generator->vaChannel[Dso::CHANNELMODE_VOLTAGE][channel][index]->data) {
 								this->qglColor(this->settings->view.color.screen.voltage[channel].darker(fadingFactor[index]));
 								glVertexPointer(2, GL_FLOAT, 0, this->generator->vaChannel[Dso::CHANNELMODE_VOLTAGE][channel][index]->data);
-								glDrawArrays((this->settings->view.interpolation == INTERPOLATION_OFF) ? GL_POINTS : GL_LINE_STRIP, 0, this->generator->vaChannel[Dso::CHANNELMODE_VOLTAGE][channel][index]->getSize() / 2);
+								glDrawArrays((this->settings->view.interpolation == Dso::INTERPOLATION_OFF) ? GL_POINTS : GL_LINE_STRIP, 0, this->generator->vaChannel[Dso::CHANNELMODE_VOLTAGE][channel][index]->getSize() / 2);
 							}
 						}
 					}
 				}
+				break;
+			
+			default:
 				break;
 		}
 		

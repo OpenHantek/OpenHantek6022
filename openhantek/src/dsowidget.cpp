@@ -31,6 +31,7 @@
 #include "dsowidget.h"
 
 #include "dataanalyzer.h"
+#include "dso.h"
 #include "exporter.h"
 #include "glscope.h"
 #include "helper.h"
@@ -224,7 +225,7 @@ DsoWidget::DsoWidget(DsoSettings *settings, DataAnalyzer *dataAnalyzer, QWidget 
 	
 	// Apply settings and update measured values
 	this->updateTriggerDetails();
-	this->updateBufferSize();
+	this->updateBufferSize(this->settings->scope.horizontal.samples);
 	this->updateFrequencybase();
 	this->updateTimebase();
 	this->updateZoom(this->settings->view.zoom);
@@ -244,7 +245,8 @@ DsoWidget::DsoWidget(DsoSettings *settings, DataAnalyzer *dataAnalyzer, QWidget 
 	this->connect(this->markerSlider, SIGNAL(valueChanged(int, double)), this->zoomScope, SLOT(updateGL()));
 	
 	// Connect other signals
-	this->connect(this->dataAnalyzer, SIGNAL(finished()), this, SLOT(dataAnalyzed()));
+	this->connect(this->dataAnalyzer, SIGNAL(analyzed(unsigned int)), this, SLOT(dataAnalyzed()));
+	this->connect(this->dataAnalyzer, SIGNAL(analyzed(unsigned int)), this, SLOT(updateBufferSize(unsigned int)));
 }
 
 /// \brief Stops the oscilloscope thread and the timer.
@@ -303,15 +305,9 @@ void DsoWidget::updateTriggerDetails() {
 	QPalette tablePalette = this->palette();
 	tablePalette.setColor(QPalette::WindowText, this->settings->view.color.screen.voltage[this->settings->scope.trigger.source]);
 	this->settingsTriggerLabel->setPalette(tablePalette);
-	QString slopeString;
-	if(this->settings->scope.trigger.slope == Dso::SLOPE_POSITIVE)
-		slopeString = QString::fromUtf8("\u2197");
-	else
-		slopeString = QString::fromUtf8("\u2198");
-	QString levelString;
-	levelString = Helper::valueToString(this->settings->scope.voltage[this->settings->scope.trigger.source].trigger, Helper::UNIT_VOLTS, 3);
+	QString levelString = Helper::valueToString(this->settings->scope.voltage[this->settings->scope.trigger.source].trigger, Helper::UNIT_VOLTS, 3);
 	QString pretriggerString = tr("%L1%").arg((int) (this->settings->scope.trigger.position * 100 + 0.5));
-	this->settingsTriggerLabel->setText(tr("%1  %2  %3  %4").arg(this->settings->scope.voltage[this->settings->scope.trigger.source].name, slopeString, levelString, pretriggerString));
+	this->settingsTriggerLabel->setText(tr("%1  %2  %3  %4").arg(this->settings->scope.voltage[this->settings->scope.trigger.source].name, Dso::slopeString(this->settings->scope.trigger.slope), levelString, pretriggerString));
 	
 	/// \todo This won't work for special trigger sources
 }
@@ -394,36 +390,14 @@ void DsoWidget::updateVoltageCoupling(unsigned int channel) {
 	if(channel >= (unsigned int) this->settings->scope.voltage.count())
 		return;
 	
-	if(this->settings->scope.voltage[channel].used || this->settings->scope.spectrum[channel].used) {
-		switch(this->settings->scope.voltage[channel].misc) {
-			case Dso::COUPLING_AC:
-				this->measurementMiscLabel[channel]->setText(tr("AC"));
-				break;
-			case Dso::COUPLING_DC:
-				this->measurementMiscLabel[channel]->setText(tr("DC"));
-				break;
-			case Dso::COUPLING_GND:
-				this->measurementMiscLabel[channel]->setText(tr("GND"));
-				break;
-		}
-	}
+	if(this->settings->scope.voltage[channel].used || this->settings->scope.spectrum[channel].used)
+		this->measurementMiscLabel[channel]->setText(Dso::couplingString((Dso::Coupling) this->settings->scope.voltage[channel].misc));
 }
 
 /// \brief Handles modeChanged signal from the voltage dock.
 void DsoWidget::updateMathMode() {
-	if(this->settings->scope.voltage[this->settings->scope.physicalChannels].used || this->settings->scope.spectrum[this->settings->scope.physicalChannels].used) {
-		switch(this->settings->scope.voltage[this->settings->scope.physicalChannels].misc) {
-			case Dso::MATHMODE_1ADD2:
-				this->measurementMiscLabel[this->settings->scope.physicalChannels]->setText(tr("CH1 + CH2"));
-				break;
-			case Dso::MATHMODE_1SUB2:
-				this->measurementMiscLabel[this->settings->scope.physicalChannels]->setText(tr("CH1 - CH2"));
-				break;
-			case Dso::MATHMODE_2SUB1:
-				this->measurementMiscLabel[this->settings->scope.physicalChannels]->setText(tr("CH2 - CH1"));
-				break;
-		}
-	}
+	if(this->settings->scope.voltage[this->settings->scope.physicalChannels].used || this->settings->scope.spectrum[this->settings->scope.physicalChannels].used)
+		this->measurementMiscLabel[this->settings->scope.physicalChannels]->setText(Dso::mathModeString((Dso::MathMode) this->settings->scope.voltage[this->settings->scope.physicalChannels].misc));
 }
 
 /// \brief Handles gainChanged signal from the voltage dock.
@@ -453,8 +427,8 @@ void DsoWidget::updateVoltageUsed(unsigned int channel, bool used) {
 }
 
 /// \brief Change the buffer size.
-void DsoWidget::updateBufferSize() {
-	this->settingsBufferLabel->setText(tr("%1 S").arg(this->settings->scope.horizontal.samples));
+void DsoWidget::updateBufferSize(unsigned int size) {
+	this->settingsBufferLabel->setText(tr("%1 S").arg(size));
 }
 
 /// \brief Export the oscilloscope screen to a file.

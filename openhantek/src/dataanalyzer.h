@@ -30,7 +30,7 @@
 #include <QThread>
 
 
-#include "constants.h"
+#include "dso.h"
 #include "helper.h"
 
 
@@ -78,6 +78,7 @@ class DataAnalyzer : public QThread {
 		~DataAnalyzer();
 		
 		const AnalyzedData *data(int channel) const;
+		unsigned long int sampleCount();
 		QMutex *mutex() const;
 	
 	protected:
@@ -88,7 +89,8 @@ class DataAnalyzer : public QThread {
 		QList<AnalyzedData *> analyzedData; ///< The analyzed data for each channel
 		QMutex *analyzedDataMutex; ///< A mutex for the analyzed data of all channels
 		
-		unsigned int lastBufferSize; ///< The buffer size of the previously analyzed data
+		unsigned long int lastBufferSize; ///< The buffer size of the previously analyzed data
+		unsigned long int maxSamples; ///< The maximum buffer size of the analyzed data
 		Dso::WindowFunction lastWindow; ///< The previously used dft window function
 		double *window; ///< The array for the dft window factors
 		
@@ -99,6 +101,9 @@ class DataAnalyzer : public QThread {
 	
 	public slots:
 		void analyze(const QList<double *> *data, const QList<unsigned int> *size, double samplerate, QMutex *mutex);
+	
+	signals:
+		void analyzed(unsigned int samples); ///< The data with that much samples has been analyzed
 };
 
 #endif

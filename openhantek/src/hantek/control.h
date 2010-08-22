@@ -70,6 +70,7 @@ namespace Hantek {
 			unsigned int calculateTriggerPoint(unsigned int value);
 			int getCaptureState();
 			int getSamples(bool process);
+			unsigned long int updateBufferSize(unsigned long int size);
 			
 			Device *device; ///< The USB device for the oscilloscope
 			
@@ -88,9 +89,11 @@ namespace Hantek {
 			double offset[HANTEK_CHANNELS]; ///< The current screen offset for each channel
 			double offsetReal[HANTEK_CHANNELS]; ///< The real offset for each channel (Due to quantization)
 			double triggerLevel[HANTEK_CHANNELS]; ///< The trigger level for each channel in V
+			double triggerPosition; ///< The current pretrigger position
 			unsigned int bufferSize; ///< The buffer size in samples
 			unsigned int triggerPoint; ///< The trigger point value
 			Dso::TriggerMode triggerMode; ///< The trigger mode
+			Dso::Slope triggerSlope; ///< The trigger slope
 			bool triggerSpecial; ///< true, if the trigger source is special
 			unsigned int triggerSource; ///< The trigger source
 			
@@ -105,7 +108,7 @@ namespace Hantek {
 		
 		public slots:
 			unsigned long int setSamplerate(unsigned long int samplerate);
-			double setBufferSize(unsigned int size);
+			unsigned long int setBufferSize(unsigned long int size);
 			
 			int setChannelUsed(unsigned int channel, bool used);
 			int setCoupling(unsigned int channel, Dso::Coupling coupling);

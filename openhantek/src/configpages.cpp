@@ -274,7 +274,7 @@ DsoConfigScopePage::~DsoConfigScopePage() {
 /// \brief Saves the new settings.
 void DsoConfigScopePage::saveSettings() {
 	this->settings->view.antialiasing = this->antialiasingCheckBox->isChecked();
-	this->settings->view.interpolation = (GlInterpolationMode) this->interpolationComboBox->currentIndex();
+	this->settings->view.interpolation = (Dso::InterpolationMode) this->interpolationComboBox->currentIndex();
 	this->settings->view.digitalPhosphorDepth = this->digitalPhosphorDepthSpinBox->value();
 }
 

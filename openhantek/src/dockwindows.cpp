@@ -58,7 +58,6 @@ HorizontalDock::HorizontalDock(DsoSettings *settings, QWidget *parent, Qt::Windo
 			<<  1e6 <<  2e6 <<  5e6 <<  1e7; ///< Frequencybase steps in Hz/div
 	for(QList<double>::iterator frequencybase = this->frequencybaseSteps.begin(); frequencybase != this->frequencybaseSteps.end(); ++frequencybase)
 		this->frequencybaseStrings << Helper::valueToString(*frequencybase, Helper::UNIT_HERTZ, 0);
-	this->formatStrings << tr("T - Y") << tr("X - Y");
 	
 	// Initialize elements
 	this->timebaseLabel = new QLabel(tr("Timebase"));
@@ -71,7 +70,8 @@ HorizontalDock::HorizontalDock(DsoSettings *settings, QWidget *parent, Qt::Windo
 	
 	this->formatLabel = new QLabel(tr("Format"));
 	this->formatComboBox = new QComboBox();
-	this->formatComboBox->addItems(this->formatStrings);
+	for(int format = Dso::GRAPHFORMAT_TY; format < Dso::GRAPHFORMAT_COUNT; format++)
+		this->formatComboBox->addItem(Dso::graphFormatString((Dso::GraphFormat) format));
 	
 	this->dockLayout = new QGridLayout();
 	this->dockLayout->setColumnMinimumWidth(0, 64);
@@ -181,20 +181,20 @@ TriggerDock::TriggerDock(DsoSettings *settings, const QStringList *specialTrigge
 	this->settings = settings;
 	
 	// Initialize lists for comboboxes
-	this->modeStrings << tr("Auto") << tr("Normal") << tr("Single");
 	for(unsigned int channel = 0; channel < this->settings->scope.physicalChannels; channel++)
 		this->sourceStandardStrings << tr("CH%1").arg(channel + 1);
 	this->sourceSpecialStrings << *specialTriggers;
-	this->slopeStrings << QString::fromUtf8("\u2197") << QString::fromUtf8("\u2198");
 	
 	// Initialize elements
 	this->modeLabel = new QLabel(tr("Mode"));
 	this->modeComboBox = new QComboBox();
-	this->modeComboBox->addItems(this->modeStrings);
+	for(int mode = Dso::TRIGGERMODE_AUTO; mode < Dso::TRIGGERMODE_COUNT; mode++)
+		this->modeComboBox->addItem(Dso::triggerModeString((Dso::TriggerMode) mode));
 
 	this->slopeLabel = new QLabel(tr("Slope"));
 	this->slopeComboBox = new QComboBox();
-	this->slopeComboBox->addItems(this->slopeStrings);
+	for(int slope = Dso::SLOPE_POSITIVE; slope < Dso::SLOPE_COUNT; slope++)
+		this->slopeComboBox->addItem(Dso::slopeString((Dso::Slope) slope));
 
 	this->sourceLabel = new QLabel(tr("Source"));
 	this->sourceComboBox = new QComboBox();
@@ -446,9 +446,11 @@ VoltageDock::VoltageDock(DsoSettings *settings, QWidget *parent, Qt::WindowFlags
 	this->settings = settings;
 	
 	// Initialize lists for comboboxes
-	this->couplingStrings << tr("AC") << tr("DC") << tr("GND");
+	for(int coupling = Dso::COUPLING_AC; coupling < Dso::COUPLING_COUNT; coupling++)
+		this->couplingStrings.append(Dso::couplingString((Dso::Coupling) coupling));
 	
-	this->modeStrings << tr("CH1 + CH2") << tr("CH1 - CH2") << tr("CH2 - CH1");
+	for(int mode = Dso::MATHMODE_1ADD2; mode < Dso::MATHMODE_COUNT; mode++)
+		this->modeStrings.append(Dso::mathModeString((Dso::MathMode) mode));
 	
 	this->gainSteps             << 1e-2 << 2e-2 << 5e-2 << 1e-1 << 2e-1 << 5e-1
 			<<  1e0 <<  2e0 <<  5e0;          ///< Voltage steps in V/div

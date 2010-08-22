@@ -223,6 +223,9 @@ void GlGenerator::generateGraphs() {
 					this->vaChannel[Dso::CHANNELMODE_SPECTRUM][channel][index]->setSize(0);
 			}
 			break;
+		
+		default:
+			break;
 	}
 	
 	this->dataAnalyzer->mutex()->unlock();

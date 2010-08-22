@@ -137,6 +137,7 @@ namespace Hantek {
 		///     <td>...</td>
 		///   </tr>
 		/// </table>
+		/// Because of the 9 bit data model, the DSO-5200 transmits an additional MSB for each sample afterwards.
 		COMMAND_GETDATA,
 		
 		/// This command checks the capture state:
@@ -146,7 +147,7 @@ namespace Hantek {
 		///     <td>0x00</td>
 		///   </tr>
 		/// </table>
-		/// The oscilloscope returns it's capture state and the trigger point (Not sure about this, looks like 248 16-bit words with nearly constant values):
+		/// The oscilloscope returns it's capture state and the trigger point. Not sure about this, looks like 248 16-bit words with nearly constant values. These can be converted to the start address of the data in the buffer (See Hantek::Control::calculateTriggerPoint):
 		/// <table>
 		///   <tr>
 		///     <td>#CaptureState</td>
@@ -214,10 +215,10 @@ namespace Hantek {
 	/// \enum ControlCode                                           hantek/types.h
 	/// \brief All supported control commands.
 	enum ControlCode {
-		/// This control read/write command gives access to a #ControlValue.
-		CONTROL_VALUE = 0xA2,
+		/// The 0xa2 control read/write command gives access to a #ControlValue.
+		CONTROL_VALUE = 0xa2,
 		
-		/// This control read command gets the speed level of the USB connection:
+		/// The 0xb2 control read command gets the speed level of the USB connection:
 		/// <table>
 		///   <tr>
 		///     <td>#ConnectionSpeed</td>
@@ -232,9 +233,9 @@ namespace Hantek {
 		///     <td>0x00</td>
 		///   </tr>
 		/// </table>
-		CONTROL_GETSPEED = 0xB2,
+		CONTROL_GETSPEED = 0xb2,
 		
-		/// This control write command is sent before any bulk command:
+		/// The 0xb3 control write command is sent before any bulk command:
 		/// <table>
 		///   <tr>
 		///     <td>0x0f</td>
@@ -249,9 +250,9 @@ namespace Hantek {
 		///     <td>0x00</td>
 		///   </tr>
 		/// </table>
-		CONTROL_BEGINCOMMAND = 0xB3,
+		CONTROL_BEGINCOMMAND = 0xb3,
 		
-		/// This control write command sets the channel offsets:
+		/// The 0xb4 control write command sets the channel offsets:
 		/// <table>
 		///   <tr>
 		///     <td>Ch1Offset[1] | 0x20</td>
@@ -273,9 +274,9 @@ namespace Hantek {
 		///     <td>0x00</td>
 		///   </tr>
 		/// </table>
-		CONTROL_SETOFFSET = 0xB4,
+		CONTROL_SETOFFSET = 0xb4,
 		
-		/// This control write command sets the internal relays:
+		/// The 0xb5 control write command sets the internal relays:
 		/// <table>
 		///   <tr>
 		///     <td>0x00</td>
@@ -297,7 +298,7 @@ namespace Hantek {
 		///     <td>0x00</td>
 		///   </tr>
 		/// </table>
-		CONTROL_SETRELAYS = 0xB5
+		CONTROL_SETRELAYS = 0xb5
 	};
 	
 	//////////////////////////////////////////////////////////////////////////////
@@ -446,7 +447,7 @@ namespace Hantek {
 	/// \brief Trigger and samplerate bits (Byte 1).
 	struct Tsr1Bits {
 		unsigned char triggerSource:2; ///< The trigger source, see Hantek::TriggerSource
-		unsigned char sampleSize:3; ///< Buffer size, 1 = 10240 S, 2 = 32768 S
+		unsigned char sampleSize:3; ///< Buffer size, 0 = Roll, 1 = 10240 S, 2 = 32768 S
 		unsigned char samplerateFast:3; ///< samplerate id for fast sampling rates
 	};
 	

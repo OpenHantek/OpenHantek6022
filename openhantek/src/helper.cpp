@@ -44,33 +44,33 @@ namespace Helper {
 	QString libUsbErrorString(int error) {
 		switch(error) {
 			case LIBUSB_SUCCESS:
-				return "Success (no error)";
+				return QApplication::tr("Success (no error)");
 			case LIBUSB_ERROR_IO:
-				return "Input/output error";
+				return QApplication::tr("Input/output error");
 			case LIBUSB_ERROR_INVALID_PARAM:
-				return "Invalid parameter";
+				return QApplication::tr("Invalid parameter");
 			case LIBUSB_ERROR_ACCESS:
-				return "Access denied (insufficient permissions)";
+				return QApplication::tr("Access denied (insufficient permissions)");
 			case LIBUSB_ERROR_NO_DEVICE:
-				return "No such device (it may have been disconnected)";
+				return QApplication::tr("No such device (it may have been disconnected)");
 			case LIBUSB_ERROR_NOT_FOUND:
-				return "Entity not found";
+				return QApplication::tr("Entity not found");
 			case LIBUSB_ERROR_BUSY:
-				return "Resource busy";
+				return QApplication::tr("Resource busy");
 			case LIBUSB_ERROR_TIMEOUT:
-				return "Operation timed out";
+				return QApplication::tr("Operation timed out");
 			case LIBUSB_ERROR_OVERFLOW:
-				return "Overflow";
+				return QApplication::tr("Overflow");
 			case LIBUSB_ERROR_PIPE:
-				return "Pipe error";
+				return QApplication::tr("Pipe error");
 			case LIBUSB_ERROR_INTERRUPTED:
-				return "System call interrupted (perhaps due to signal)";
+				return QApplication::tr("System call interrupted (perhaps due to signal)");
 			case LIBUSB_ERROR_NO_MEM:
-				return "Insufficient memory";
+				return QApplication::tr("Insufficient memory");
 			case LIBUSB_ERROR_NOT_SUPPORTED:
-				return "Operation not supported or unimplemented on this platform";
+				return QApplication::tr("Operation not supported or unimplemented on this platform");
 			default:
-				return "Other error";
+				return QApplication::tr("Other error");
 		}
 	}
 	

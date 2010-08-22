@@ -139,7 +139,7 @@ OpenHantekMainWindow::OpenHantekMainWindow(QWidget *parent, Qt::WindowFlags flag
 	this->dsoControl->setBufferSize(this->settings->scope.horizontal.samples);
 	this->updateTimebase();
 	this->dsoControl->setTriggerMode(this->settings->scope.trigger.mode);
-	this->dsoControl->setTriggerPosition(this->settings->scope.trigger.position);
+	this->dsoControl->setTriggerPosition(this->settings->scope.trigger.position * this->settings->scope.horizontal.timebase * DIVS_TIME);
 	this->dsoControl->setTriggerSlope(this->settings->scope.trigger.slope);
 	this->dsoControl->setTriggerSource(this->settings->scope.trigger.special, this->settings->scope.trigger.source);
 	
@@ -432,11 +432,11 @@ void OpenHantekMainWindow::readSettings(const QString &fileName) {
 	if(settingsLoader->contains("digitalPhosphor"))
 		this->settings->view.digitalPhosphor = settingsLoader->value("digitalPhosphor").toBool();
 	if(settingsLoader->contains("interpolation"))
-		this->settings->view.interpolation = (GlInterpolationMode) settingsLoader->value("interpolation").toInt();
+		this->settings->view.interpolation = (Dso::InterpolationMode) settingsLoader->value("interpolation").toInt();
 	if(settingsLoader->contains("screenColorImages"))
-		this->settings->view.screenColorImages = (GlInterpolationMode) settingsLoader->value("screenColorImages").toBool();
+		this->settings->view.screenColorImages = (Dso::InterpolationMode) settingsLoader->value("screenColorImages").toBool();
 	if(settingsLoader->contains("zoom"))
-		this->settings->view.zoom = (GlInterpolationMode) settingsLoader->value("zoom").toBool();
+		this->settings->view.zoom = (Dso::InterpolationMode) settingsLoader->value("zoom").toBool();
 	settingsLoader->endGroup();
 	
 	delete settingsLoader;

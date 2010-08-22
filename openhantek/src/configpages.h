@@ -31,7 +31,7 @@
 
 
 #include "dsowidget.h"
-#include "constants.h"
+#include "dso.h"
 
 
 class ColorBox;

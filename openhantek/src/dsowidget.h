@@ -116,7 +116,7 @@ class DsoWidget : public QWidget {
 		void updateVoltageUsed(unsigned int channel, bool used);
 		
 		// Menus
-		void updateBufferSize();
+		void updateBufferSize(unsigned int size);
 		
 		// Export
 		bool exportAs();

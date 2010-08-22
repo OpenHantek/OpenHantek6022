@@ -31,7 +31,7 @@
 #include <QThread>
 
 
-#include "constants.h"
+#include "dso.h"
 #include "helper.h"
 
 
@@ -72,7 +72,7 @@ class DsoControl : public QThread {
 		virtual void stopSampling();
 		
 		virtual unsigned long int setSamplerate(unsigned long int samplerate) = 0; ///< Set the samplerate that should be met
-		virtual double setBufferSize(unsigned int size) = 0; ///< Set the needed buffer size
+		virtual unsigned long int setBufferSize(unsigned long int size) = 0; ///< Set the needed buffer size
 		
 		virtual int setTriggerMode(Dso::TriggerMode mode) = 0; ///< Set the trigger mode
 		virtual int setTriggerSource(bool special, unsigned int id) = 0; ///< Set the trigger source

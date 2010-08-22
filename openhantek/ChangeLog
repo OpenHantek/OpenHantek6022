@@ -37,3 +37,11 @@
 2010-08-18  Oliver Haag  <oliver.haag@gmail.com>
 * Bugfix: Trigger levels weren't sent to the oscilloscope
 * Implemented single trigger mode
+
+2010-08-22  Oliver Haag  <oliver.haag@gmail.com>
+* Bugfix: Pretrigger position wasn't initialized correctly on startup
+* Bugfix: Wrong samplerate values were sent to the oscilloscope
+* Updated exporter class
+* Moved constants.h to dso.h and added functions that return strings for enums
+* Sample buffer size above scope shows real sample count got from oscilloscope
+* Documentation updated

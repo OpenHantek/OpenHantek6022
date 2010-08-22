@@ -23,6 +23,7 @@
 
 
 #include <QImage>
+#include <QMutex>
 #include <QPainter>
 #include <QPixmap>
 #include <QPrintDialog>
@@ -32,7 +33,8 @@
 #include "exporter.h"
 
 #include "dataanalyzer.h"
-#include "glscope.h"
+#include "dso.h"
+#include "glgenerator.h"
 #include "helper.h"
 #include "settings.h"
 
@@ -84,7 +86,7 @@ bool Exporter::doExport() {
 	if(this->format < EXPORT_FORMAT_IMAGE) {
 		// We need a QPrinter for printing, pdf- and ps-export
 		paintDevice = new QPrinter(QPrinter::HighResolution);
-		((QPrinter *) paintDevice)->setOrientation(QPrinter::Landscape);
+		((QPrinter *) paintDevice)->setOrientation(this->settings->view.zoom ? QPrinter::Portrait : QPrinter::Landscape);
 		((QPrinter *) paintDevice)->setPageMargins(20, 20, 20, 20, QPrinter::Millimeter);
 		
 		if(this->format == EXPORT_FORMAT_PRINTER) {
@@ -113,38 +115,68 @@ bool Exporter::doExport() {
 	QFont font;
 	QFontMetrics fontMetrics(font, paintDevice);
 	double lineHeight = fontMetrics.height();
-	double valueColumnWidth = (double) (paintDevice->width() - lineHeight * 4) / 2;
 	
 	painter.setBrush(Qt::SolidPattern);
 	
+	this->dataAnalyzer->mutex()->lock();
+	
+	// Draw the settings table
+	double stretchBase = (double) (paintDevice->width() - lineHeight * 10) / 4;
+	
+	// Print trigger details
+	painter.setPen(colorValues->voltage[this->settings->scope.trigger.source]);
+	QString levelString = Helper::valueToString(this->settings->scope.voltage[this->settings->scope.trigger.source].trigger, Helper::UNIT_VOLTS, 3);
+	QString pretriggerString = tr("%L1%").arg((int) (this->settings->scope.trigger.position * 100 + 0.5));
+	painter.drawText(QRectF(0, 0, lineHeight * 10, lineHeight), tr("%1  %2  %3  %4").arg(this->settings->scope.voltage[this->settings->scope.trigger.source].name, Dso::slopeString(this->settings->scope.trigger.slope), levelString, pretriggerString));
+	
+	// Print sample count
+	painter.setPen(colorValues->text);
+	painter.drawText(QRectF(lineHeight * 10, 0, stretchBase, lineHeight), tr("%1 S").arg(this->dataAnalyzer->sampleCount()), QTextOption(Qt::AlignRight));
+	// Print samplerate
+	painter.drawText(QRectF(lineHeight * 10 + stretchBase, 0, stretchBase, lineHeight), Helper::valueToString(this->settings->scope.horizontal.samplerate, Helper::UNIT_SAMPLES) + tr("/s"), QTextOption(Qt::AlignRight));
+	// Print timebase
+	painter.drawText(QRectF(lineHeight * 10 + stretchBase * 2, 0, stretchBase, lineHeight), Helper::valueToString(this->settings->scope.horizontal.timebase, Helper::UNIT_SECONDS, 0) + tr("/div"), QTextOption(Qt::AlignRight));
+	// Print frequencybase
+	painter.drawText(QRectF(lineHeight * 10 + stretchBase * 3, 0, stretchBase, lineHeight), Helper::valueToString(this->settings->scope.horizontal.frequencybase, Helper::UNIT_HERTZ, 0) + tr("/div"), QTextOption(Qt::AlignRight));
+	
+	// Draw the measurement table
+	stretchBase = (double) (paintDevice->width() - lineHeight * 6) / 10;
 	int channelCount = 0;
 	for(int channel = 0; channel < this->settings->scope.voltage.count(); channel++) {
-		if(this->settings->scope.voltage[channel].used) {
+		if(this->settings->scope.voltage[channel].used || this->settings->scope.spectrum[channel].used) {
 			channelCount++;
 			double top = (double) paintDevice->height() - channelCount * lineHeight;
 			
-			painter.setPen(colorValues->voltage[channel]);
-			
 			// Print label
+			painter.setPen(colorValues->voltage[channel]);
 			painter.drawText(QRectF(0, top, lineHeight * 4, lineHeight), this->settings->scope.voltage[channel].name);
+			// Print coupling/math mode
+			if((unsigned int) channel < this->settings->scope.physicalChannels)
+				painter.drawText(QRectF(lineHeight * 4, top, lineHeight * 2, lineHeight), Dso::couplingString((Dso::Coupling) this->settings->scope.voltage[channel].misc));
+			else
+				painter.drawText(QRectF(lineHeight * 4, top, lineHeight * 2, lineHeight), Dso::mathModeString((Dso::MathMode) this->settings->scope.voltage[channel].misc));
+			
+			// Print voltage gain
+			painter.drawText(QRectF(lineHeight * 6, top, stretchBase * 2, lineHeight), Helper::valueToString(this->settings->scope.voltage[channel].gain, Helper::UNIT_VOLTS, 0) + tr("/div"), QTextOption(Qt::AlignRight));
+			// Print spectrum magnitude
+			painter.setPen(colorValues->spectrum[channel]);
+			painter.drawText(QRectF(lineHeight * 6 + stretchBase * 2, top, stretchBase * 2, lineHeight), Helper::valueToString(this->settings->scope.spectrum[channel].magnitude, Helper::UNIT_DECIBEL, 0) + tr("/div"), QTextOption(Qt::AlignRight));
 			
 			// Amplitude string representation (4 significant digits)
-			painter.drawText(QRectF(lineHeight * 4, top, valueColumnWidth, lineHeight), Helper::valueToString(this->dataAnalyzer->data(channel)->amplitude, Helper::UNIT_VOLTS, 4), QTextOption(Qt::AlignRight));
+			painter.setPen(colorValues->text);
+			painter.drawText(QRectF(lineHeight * 6 + stretchBase * 4, top, stretchBase * 3, lineHeight), Helper::valueToString(this->dataAnalyzer->data(channel)->amplitude, Helper::UNIT_VOLTS, 4), QTextOption(Qt::AlignRight));
 			// Frequency string representation (5 significant digits)
-			painter.drawText(QRectF(lineHeight * 4 + valueColumnWidth, top, valueColumnWidth, lineHeight), Helper::valueToString(this->dataAnalyzer->data(channel)->frequency, Helper::UNIT_HERTZ, 5), QTextOption(Qt::AlignRight));
+			painter.drawText(QRectF(lineHeight * 6 + stretchBase * 7, top, stretchBase * 3, lineHeight), Helper::valueToString(this->dataAnalyzer->data(channel)->frequency, Helper::UNIT_HERTZ, 5), QTextOption(Qt::AlignRight));
 		}
 	}
 	
 	// Set DIVS_TIME x DIVS_VOLTAGE matrix for oscillograph
-	double screenHeight = (double) paintDevice->height() - (channelCount + 1) * lineHeight;
-	painter.setMatrix(QMatrix((paintDevice->width() - 1) / DIVS_TIME, 0, 0, -(screenHeight - 1) / DIVS_VOLTAGE, (double) (paintDevice->width() - 1) / 2, (screenHeight - 1) / 2), false);
-
+	double screenHeight = (double) paintDevice->height() - (channelCount + 3) * lineHeight;
+	painter.setMatrix(QMatrix((paintDevice->width() - 1) / DIVS_TIME, 0, 0, -(screenHeight - 1) / DIVS_VOLTAGE, (double) (paintDevice->width() - 1) / 2, (screenHeight - 1) / 2 + lineHeight * 2), false);
 	
 	// Draw the graphs
 	painter.setRenderHint(QPainter::Antialiasing);
 	painter.setBrush(Qt::NoBrush);
-	
-	this->dataAnalyzer->mutex()->lock();
 	
 	switch(this->settings->scope.horizontal.format) {
 		case Dso::GRAPHFORMAT_TY:
@@ -190,6 +222,9 @@ bool Exporter::doExport() {
 			break;
 			
 		case Dso::GRAPHFORMAT_XY:
+			break;
+		
+		default:
 			break;
 	}
 	

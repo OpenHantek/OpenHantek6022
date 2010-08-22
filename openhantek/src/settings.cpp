@@ -27,7 +27,7 @@
 
 #include "settings.h"
 
-#include "constants.h"
+#include "dso.h"
 #include "dsowidget.h"
 
 
@@ -81,7 +81,7 @@ DsoSettings::DsoSettings() {
 	this->view.antialiasing = true;
 	this->view.digitalPhosphor = false;
 	this->view.digitalPhosphorDepth = 8;
-	this->view.interpolation = INTERPOLATION_LINEAR;
+	this->view.interpolation = Dso::INTERPOLATION_LINEAR;
 	this->view.screenColorImages = false;
 	this->view.zoom = false;
 }

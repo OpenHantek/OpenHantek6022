@@ -34,7 +34,7 @@
 #include <QObject>
 
 
-#include "constants.h"
+#include "dso.h"
 
 
 #define DIVS_TIME                  10.0 ///< Number of horizontal screen divs

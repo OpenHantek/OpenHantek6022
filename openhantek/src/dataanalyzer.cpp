@@ -72,6 +72,12 @@ const AnalyzedData *DataAnalyzer::data(int channel) const {
 	return this->analyzedData[channel];
 }
 
+/// \brief Returns the sample count of the analyzed data.
+/// \return The maximum sample count of the last analyzed data.
+unsigned long int DataAnalyzer::sampleCount() {
+	return this->maxSamples;
+}
+
 /// \brief Returns the mutex for the data.
 /// \return Mutex for the analyzed data.
 QMutex *DataAnalyzer::mutex() const {
@@ -81,6 +87,8 @@ QMutex *DataAnalyzer::mutex() const {
 /// \brief Analyzes the data from the dso.
 void DataAnalyzer::run() {
 	this->analyzedDataMutex->lock();
+	
+	unsigned long int maxSamples = 0;
 	
 	// Adapt the number of channels for analyzed data
 	for(int channel = this->analyzedData.count(); channel < this->settings->scope.voltage.count(); channel++) {
@@ -109,10 +117,13 @@ void DataAnalyzer::run() {
 			this->analyzedData[channel]->samples.voltage.interval = 1.0 / this->waitingDataSamplerate;
 			
 			unsigned int size;
-			if(channel < this->settings->scope.physicalChannels)
+			if(channel < this->settings->scope.physicalChannels) {
 				size = this->waitingDataSize[channel];
+				if(size > maxSamples)
+					maxSamples = size;
+			}
 			else
-				size = this->waitingDataSize[0];
+				size = maxSamples;
 			// Reallocate memory for samples if the sample count has changed
 			if(this->analyzedData[channel]->samples.voltage.count != size) {
 				this->analyzedData[channel]->samples.voltage.count = size;
@@ -355,6 +366,9 @@ void DataAnalyzer::run() {
 			this->analyzedData[channel]->samples.spectrum.sample = 0;
 		}
 	}
+	
+	this->maxSamples = maxSamples;
+	emit(analyzed(maxSamples));
 	
 	this->analyzedDataMutex->unlock();
 }

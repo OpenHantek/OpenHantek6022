@@ -86,7 +86,7 @@ namespace Hantek {
 		this->setSamplerate(1e6);
 		this->setBufferSize(BUFFER_SMALL);
 		this->setTriggerMode(Dso::TRIGGERMODE_NORMAL);
-		this->setTriggerPosition(0.5);
+		this->setTriggerPosition(5e3 / this->samplerateSteps[this->samplerate]);
 		this->setTriggerSlope(Dso::SLOPE_POSITIVE);
 		this->setTriggerSource(false, 0);
 		
@@ -411,19 +411,31 @@ namespace Hantek {
 		return 0;
 	}
 	
-	/// \brief Sets the size of the oscilloscopes sample buffer.
+	/// \brief Sets the size of the sample buffer without updating dependencies.
 	/// \param size The buffer size that should be met (S).
 	/// \return The buffer size that has been set.
-	double Control::setBufferSize(unsigned int size) {
+	unsigned long int Control::updateBufferSize(unsigned long int size) {
 		unsigned int sizeId = (size <= BUFFER_SMALL) ? 1 : 2;
 		
 		// SetTriggerAndSamplerate bulk command for samplerate
 		((CommandSetTriggerAndSamplerate *) this->command[COMMAND_SETTRIGGERANDSAMPLERATE])->setSampleSize(sizeId);
 		this->commandPending[COMMAND_SETTRIGGERANDSAMPLERATE] = true;
 		
-		this->setSamplerate(this->samplerateSteps[this->samplerate]);
-		
 		this->bufferSize = (sizeId == 1) ? BUFFER_SMALL : BUFFER_LARGE;
+		
+		return this->bufferSize;
+	}
+	
+	/// \brief Sets the size of the oscilloscopes sample buffer.
+	/// \param size The buffer size that should be met (S).
+	/// \return The buffer size that has been set.
+	unsigned long int Control::setBufferSize(unsigned long int size) {
+		this->updateBufferSize(size);
+		
+		this->setTriggerPosition(this->triggerPosition);
+		this->setSamplerate(this->samplerateSteps[this->samplerate]);
+		this->setTriggerSlope(this->triggerSlope);
+		
 		return this->bufferSize;
 	}
 	
@@ -441,23 +453,24 @@ namespace Hantek {
 			samplerateId = SAMPLERATE_50MS;
 		
 		// The values that are understood by the oscilloscope
+		/// \todo Check large buffer values, seem to be crap
 		static const unsigned char valueFastSmall[5] = {0, 1, 2, 3, 4};
 		static const unsigned char valueFastLarge[5] = {0, 0, 0, 2, 3};
-		static const unsigned short int valueSlowSmall[13] = {0xffff, 0xfffc, 0xfff7, 0xffe8, 0xffce, 0xff9c, 0xff07, 0xfe0d, 0xfc19, 0xf63d, 0xec79, 0xd8f1, 0xffed};
-		static const unsigned short int valueSlowLarge[13] = {0xffff, 0x0000, 0xfffc, 0xfff7, 0xffe8, 0xffce, 0xff9d, 0xff07, 0xfe0d, 0xfc19, 0xf63d, 0xec79, 0xffed}; /// \todo Check those values
+		static const unsigned short int valueSlowSmall[13] = {0xfffe, 0xfffc, 0xfff7, 0xffe8, 0xffce, 0xff9c, 0xff07, 0xfe0d, 0xfc19, 0xf63d, 0xec79, 0xd8f1, 0xffed};
+		static const unsigned short int valueSlowLarge[13] = {0xffff, 0x0000, 0xfffc, 0xfff7, 0xffe8, 0xffce, 0xff9d, 0xff07, 0xfe0d, 0xfc19, 0xf63d, 0xec79, 0xffed};
 		
 		// SetTriggerAndSamplerate bulk command for samplerate
 		CommandSetTriggerAndSamplerate *commandSetTriggerAndSamplerate = (CommandSetTriggerAndSamplerate *) this->command[COMMAND_SETTRIGGERANDSAMPLERATE];
 		
 		// Set SamplerateFast bits for high sampling rates
 		if(samplerateId <= SAMPLERATE_5MS)
-			commandSetTriggerAndSamplerate->setSamplerateFast(this->bufferSize == BUFFER_SMALL ? valueFastSmall[samplerateId] : valueFastLarge[samplerateId]);
+			commandSetTriggerAndSamplerate->setSamplerateFast(this->bufferSize == BUFFER_SMALL ? valueFastSmall[samplerateId - SAMPLERATE_100MS] : valueFastLarge[samplerateId - SAMPLERATE_100MS]);
 		else
 			commandSetTriggerAndSamplerate->setSamplerateFast(4);
 		
 		// Set normal Samplerate value for lower sampling rates
-		if(samplerateId >= SAMPLERATE_2_5MS)
-			commandSetTriggerAndSamplerate->setSamplerate(this->bufferSize == BUFFER_SMALL ? valueSlowSmall[samplerateId - SAMPLERATE_2_5MS] : valueSlowLarge[samplerateId - SAMPLERATE_2_5MS]);
+		if(samplerateId >= SAMPLERATE_10MS)
+			commandSetTriggerAndSamplerate->setSamplerate(this->bufferSize == BUFFER_SMALL ? valueSlowSmall[samplerateId - SAMPLERATE_10MS] : valueSlowLarge[samplerateId - SAMPLERATE_10MS]);
 		else
 			commandSetTriggerAndSamplerate->setSamplerate(0x0000);
 		
@@ -467,6 +480,9 @@ namespace Hantek {
 		this->commandPending[COMMAND_SETTRIGGERANDSAMPLERATE] = true;
 		
 		this->samplerate = (Samplerate) samplerateId;
+		
+		this->updateBufferSize(this->bufferSize);
+		this->setTriggerSlope(this->triggerSlope);
 		return this->samplerateSteps[samplerateId];
 	}	
 	
@@ -648,7 +664,7 @@ namespace Hantek {
 			return -1;
 		
 		// SetTriggerAndSamplerate bulk command for trigger position
-		((CommandSetTriggerAndSamplerate *) this->command[COMMAND_SETTRIGGERANDSAMPLERATE])->setTriggerSlope(slope);
+		((CommandSetTriggerAndSamplerate *) this->command[COMMAND_SETTRIGGERANDSAMPLERATE])->setTriggerSlope((this->bufferSize != BUFFER_SMALL || this->samplerate > SAMPLERATE_10MS || (SAMPLERATE_10MS - this->samplerate) % 2) ? slope : Dso::SLOPE_NEGATIVE - slope);
 		this->commandPending[COMMAND_SETTRIGGERANDSAMPLERATE] = true;
 		
 		return 0;
@@ -667,6 +683,7 @@ namespace Hantek {
 		((CommandSetTriggerAndSamplerate *) this->command[COMMAND_SETTRIGGERANDSAMPLERATE])->setTriggerPosition(positionValue);
 		this->commandPending[COMMAND_SETTRIGGERANDSAMPLERATE] = true;
 		
+		this->triggerPosition = position;
 		return (double) (positionValue - positionStart) / this->samplerateSteps[this->samplerate];
 	}
 }

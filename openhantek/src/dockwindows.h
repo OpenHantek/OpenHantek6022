@@ -31,7 +31,7 @@
 #include <QGridLayout>
 
 
-#include "constants.h"
+#include "dso.h"
 #include "settings.h"
 
 

@@ -24,11 +24,11 @@ SOURCES += src/colorbox.cpp \
     src/settings.cpp \
     src/hantek/control.cpp \
     src/hantek/device.cpp \
-    src/hantek/types.cpp
+    src/hantek/types.cpp \
+    src/dso.cpp
 HEADERS += src/colorbox.h \
     src/configdialog.h \
     src/configpages.h \
-    src/constants.h \
     src/dataanalyzer.h \
     src/dockwindows.h \
     src/dsocontrol.h \
@@ -42,7 +42,8 @@ HEADERS += src/colorbox.h \
     src/settings.h \
     src/hantek/control.h \
     src/hantek/device.h \
-    src/hantek/types.h
+    src/hantek/types.h \
+    src/dso.h
 
 # Ressource files
 RESOURCES += res/application.qrc \

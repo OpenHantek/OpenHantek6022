@@ -32,7 +32,7 @@
 #include <QString>
 
 
-#include "constants.h"
+#include "dso.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -133,7 +133,7 @@ struct DsoSettingsView {
 	bool antialiasing; ///< Antialiasing for the graphs
 	bool digitalPhosphor; ///< true slowly fades out the previous graphs
 	int digitalPhosphorDepth; ///< Number of channels shown at one time
-	GlInterpolationMode interpolation; ///< Interpolation mode for the graph
+	Dso::InterpolationMode interpolation; ///< Interpolation mode for the graph
 	bool screenColorImages; ///< true exports images with screen colors
 	bool zoom; ///< true if the magnified scope is enabled
 };
