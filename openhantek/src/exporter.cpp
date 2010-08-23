@@ -22,6 +22,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 
+#include <cmath>
+
 #include <QImage>
 #include <QMutex>
 #include <QPainter>
@@ -142,7 +144,7 @@ bool Exporter::doExport() {
 	// Draw the measurement table
 	stretchBase = (double) (paintDevice->width() - lineHeight * 6) / 10;
 	int channelCount = 0;
-	for(int channel = 0; channel < this->settings->scope.voltage.count(); channel++) {
+	for(int channel = this->settings->scope.voltage.count() - 1; channel >= 0; channel--) {
 		if(this->settings->scope.voltage[channel].used || this->settings->scope.spectrum[channel].used) {
 			channelCount++;
 			double top = (double) paintDevice->height() - channelCount * lineHeight;
@@ -170,130 +172,188 @@ bool Exporter::doExport() {
 		}
 	}
 	
+	// Draw the marker table
+	double scopeHeight;
+	stretchBase = (double) (paintDevice->width() - lineHeight * 10) / 4;
+	painter.setPen(colorValues->text);
+	
+	// Calculate variables needed for zoomed scope
+	double divs = fabs(this->settings->scope.horizontal.marker[1] - this->settings->scope.horizontal.marker[0]);
+	double time = divs * this->settings->scope.horizontal.timebase;
+	double zoomFactor = DIVS_TIME / divs;
+	double zoomOffset = (this->settings->scope.horizontal.marker[0] + this->settings->scope.horizontal.marker[1]) / 2;
+	
+	if(this->settings->view.zoom) {
+		scopeHeight = (double) (paintDevice->height() - (channelCount + 5) * lineHeight) / 2;
+		double top = 2.5 * lineHeight + scopeHeight;
+		
+		painter.drawText(QRectF(0, top, stretchBase, lineHeight), tr("Zoom x%L1").arg(DIVS_TIME / divs, -1, 'g', 3));
+		
+		painter.drawText(QRectF(lineHeight * 10, top, stretchBase, lineHeight), Helper::valueToString(time, Helper::UNIT_SECONDS, 4), QTextOption(Qt::AlignRight));
+		painter.drawText(QRectF(lineHeight * 10 + stretchBase, top, stretchBase, lineHeight), Helper::valueToString(1.0 / time, Helper::UNIT_HERTZ, 4), QTextOption(Qt::AlignRight));
+		
+		painter.drawText(QRectF(lineHeight * 10 + stretchBase * 2, top, stretchBase, lineHeight), Helper::valueToString(time / DIVS_TIME, Helper::UNIT_SECONDS, 3) + tr("/div"), QTextOption(Qt::AlignRight));
+		painter.drawText(QRectF(lineHeight * 10 + stretchBase * 3, top, stretchBase, lineHeight), Helper::valueToString(divs  * this->settings->scope.horizontal.frequencybase / DIVS_TIME, Helper::UNIT_HERTZ, 3) + tr("/div"), QTextOption(Qt::AlignRight));
+	}
+	else {
+		scopeHeight = (double) paintDevice->height() - (channelCount + 4) * lineHeight;
+		double top = 2.5 * lineHeight + scopeHeight;
+		
+		painter.drawText(QRectF(0, top, stretchBase, lineHeight), tr("Marker 1/2"));
+		
+		painter.drawText(QRectF(lineHeight * 10, top, stretchBase * 2, lineHeight), Helper::valueToString(time, Helper::UNIT_SECONDS, 4), QTextOption(Qt::AlignRight));
+		painter.drawText(QRectF(lineHeight * 10 + stretchBase * 2, top, stretchBase * 2, lineHeight), Helper::valueToString(1.0 / time, Helper::UNIT_HERTZ, 4), QTextOption(Qt::AlignRight));
+	}
+	
 	// Set DIVS_TIME x DIVS_VOLTAGE matrix for oscillograph
-	double screenHeight = (double) paintDevice->height() - (channelCount + 3) * lineHeight;
-	painter.setMatrix(QMatrix((paintDevice->width() - 1) / DIVS_TIME, 0, 0, -(screenHeight - 1) / DIVS_VOLTAGE, (double) (paintDevice->width() - 1) / 2, (screenHeight - 1) / 2 + lineHeight * 2), false);
+	painter.setMatrix(QMatrix((paintDevice->width() - 1) / DIVS_TIME, 0, 0, -(scopeHeight - 1) / DIVS_VOLTAGE, (double) (paintDevice->width() - 1) / 2, (scopeHeight - 1) / 2 + lineHeight * 1.5), false);
 	
 	// Draw the graphs
 	painter.setRenderHint(QPainter::Antialiasing);
 	painter.setBrush(Qt::NoBrush);
 	
-	switch(this->settings->scope.horizontal.format) {
-		case Dso::GRAPHFORMAT_TY:
-			// Add graphs for channels
-			for(int channel = 0 ; channel < this->settings->scope.voltage.count(); channel++) {
-				if(this->settings->scope.voltage[channel].used) {
-					painter.setPen(colorValues->voltage[channel]);
-					
-					// What's the horizontal distance between sampling points?
-					double horizontalFactor = this->dataAnalyzer->data(channel)->samples.voltage.interval / this->settings->scope.horizontal.timebase;
-					// How many samples are visible?
-					unsigned int lastPosition = DIVS_TIME / horizontalFactor;
-					if(lastPosition >= this->dataAnalyzer->data(channel)->samples.voltage.count)
-						lastPosition = this->dataAnalyzer->data(channel)->samples.voltage.count - 1;
-					
-					// Draw graph
-					QPointF *graph = new QPointF[lastPosition + 1];
-					for(unsigned int position = 0; position <= lastPosition; position++)
-						graph[position] = QPointF(position * horizontalFactor - DIVS_TIME / 2, this->dataAnalyzer->data(channel)->samples.voltage.sample[position] / this->settings->scope.voltage[channel].gain + this->settings->scope.voltage[channel].offset);
-					painter.drawPolyline(graph, lastPosition + 1);
+	for(int zoomed = 0; zoomed < (this->settings->view.zoom ? 2 : 1); zoomed++) {
+		switch(this->settings->scope.horizontal.format) {
+			case Dso::GRAPHFORMAT_TY:
+				// Add graphs for channels
+				for(int channel = 0 ; channel < this->settings->scope.voltage.count(); channel++) {
+					if(this->settings->scope.voltage[channel].used) {
+						painter.setPen(colorValues->voltage[channel]);
+						
+						// What's the horizontal distance between sampling points?
+						double horizontalFactor = this->dataAnalyzer->data(channel)->samples.voltage.interval / this->settings->scope.horizontal.timebase;
+						// How many samples are visible?
+						double centerPosition, centerOffset;
+						if(zoomed) {
+							centerPosition = (zoomOffset + DIVS_TIME / 2) / horizontalFactor;
+							centerOffset = DIVS_TIME / horizontalFactor / zoomFactor / 2;
+						}
+						else {
+							centerPosition = DIVS_TIME / 2 / horizontalFactor;
+							centerOffset = DIVS_TIME / horizontalFactor / 2;
+						}
+						unsigned int firstPosition = qMax((int) (centerPosition - centerOffset), 0);
+						unsigned int lastPosition = qMin((int) (centerPosition + centerOffset), (int) this->dataAnalyzer->data(channel)->samples.voltage.count - 1);
+						
+						// Draw graph
+						QPointF *graph = new QPointF[lastPosition - firstPosition + 1];
+						for(unsigned int position = firstPosition; position <= lastPosition; position++)
+							graph[position - firstPosition] = QPointF(position * horizontalFactor - DIVS_TIME / 2, this->dataAnalyzer->data(channel)->samples.voltage.sample[position] / this->settings->scope.voltage[channel].gain + this->settings->scope.voltage[channel].offset);
+						painter.drawPolyline(graph, lastPosition - firstPosition + 1);
+					}
 				}
-			}
-		
-			// Add spectrum graphs
-			for (int channel = 0; channel < this->settings->scope.spectrum.count(); channel++) {
-				if(this->settings->scope.spectrum[channel].used) {
-					painter.setPen(colorValues->spectrum[channel]);
-					
-					// What's the horizontal distance between sampling points?
-					double horizontalFactor = this->dataAnalyzer->data(channel)->samples.spectrum.interval / this->settings->scope.horizontal.frequencybase;
-					// How many samples are visible?
-					unsigned int lastPosition = DIVS_TIME / horizontalFactor;
-					if(lastPosition >= this->dataAnalyzer->data(channel)->samples.spectrum.count)
-						lastPosition = this->dataAnalyzer->data(channel)->samples.spectrum.count - 1;
-					
-					// Draw graph
-					QPointF *graph = new QPointF[lastPosition + 1];
-					for(unsigned int position = 0; position <= lastPosition; position++)
-						graph[position] = QPointF(position * horizontalFactor - DIVS_TIME / 2, this->dataAnalyzer->data(channel)->samples.spectrum.sample[position] / this->settings->scope.spectrum[channel].magnitude + this->settings->scope.spectrum[channel].offset);
-					painter.drawPolyline(graph, lastPosition + 1);
-				}
-			}
-			break;
 			
-		case Dso::GRAPHFORMAT_XY:
-			break;
+				// Add spectrum graphs
+				for (int channel = 0; channel < this->settings->scope.spectrum.count(); channel++) {
+					if(this->settings->scope.spectrum[channel].used) {
+						painter.setPen(colorValues->spectrum[channel]);
+						
+						// What's the horizontal distance between sampling points?
+						double horizontalFactor = this->dataAnalyzer->data(channel)->samples.spectrum.interval / this->settings->scope.horizontal.frequencybase;
+						// How many samples are visible?
+						double centerPosition, centerOffset;
+						if(zoomed) {
+							centerPosition = (zoomOffset + DIVS_TIME / 2) / horizontalFactor;
+							centerOffset = DIVS_TIME / horizontalFactor / zoomFactor / 2;
+						}
+						else {
+							centerPosition = DIVS_TIME / 2 / horizontalFactor;
+							centerOffset = DIVS_TIME / horizontalFactor / 2;
+						}
+						unsigned int firstPosition = qMax((int) (centerPosition - centerOffset), 0);
+						unsigned int lastPosition = qMin((int) (centerPosition + centerOffset), (int) this->dataAnalyzer->data(channel)->samples.spectrum.count - 1);
+						
+						// Draw graph
+						QPointF *graph = new QPointF[lastPosition - firstPosition + 1];
+						for(unsigned int position = firstPosition; position <= lastPosition; position++)
+							graph[position - firstPosition] = QPointF(position * horizontalFactor - DIVS_TIME / 2, this->dataAnalyzer->data(channel)->samples.spectrum.sample[position] / this->settings->scope.spectrum[channel].magnitude + this->settings->scope.spectrum[channel].offset);
+						painter.drawPolyline(graph, lastPosition - firstPosition + 1);
+					}
+				}
+				break;
+				
+			case Dso::GRAPHFORMAT_XY:
+				break;
+			
+			default:
+				break;
+		}
 		
-		default:
-			break;
+		// Set DIVS_TIME / zoomFactor x DIVS_VOLTAGE matrix for zoomed oscillograph
+		painter.setMatrix(QMatrix((paintDevice->width() - 1) / DIVS_TIME * zoomFactor, 0, 0, -(scopeHeight - 1) / DIVS_VOLTAGE, (double) (paintDevice->width() - 1) / 2 - zoomOffset * zoomFactor * (paintDevice->width() - 1) / DIVS_TIME, (scopeHeight - 1) * 1.5 + lineHeight * 4), false);
 	}
 	
 	this->dataAnalyzer->mutex()->unlock();
 	
-	// Draw grid
+	// Draw grids
 	painter.setRenderHint(QPainter::Antialiasing, false);
-	// Grid lines
-	painter.setPen(colorValues->grid);
-	
-	if(this->format < EXPORT_FORMAT_IMAGE) {
-		// Draw vertical lines
-		for(int div = 1; div < DIVS_TIME / 2; div++) {
-			for(int dot = 1; dot < DIVS_VOLTAGE / 2 * 5; dot++) {
-				painter.drawLine(QPointF((double) -div - 0.02, (double) -dot / 5), QPointF((double) -div + 0.02, (double) -dot / 5));
-				painter.drawLine(QPointF((double) -div - 0.02, (double) dot / 5), QPointF((double) -div + 0.02, (double) dot / 5));
-				painter.drawLine(QPointF((double) div - 0.02, (double) -dot / 5), QPointF((double) div + 0.02, (double) -dot / 5));
-				painter.drawLine(QPointF((double) div - 0.02, (double) dot / 5), QPointF((double) div + 0.02, (double) dot / 5));
-			}
-		}
-		// Draw horizontal lines
-		for(int div = 1; div < DIVS_VOLTAGE / 2; div++) {
-			for(int dot = 1; dot < DIVS_TIME / 2 * 5; dot++) {
-				painter.drawLine(QPointF((double) -dot / 5, (double) -div - 0.02), QPointF((double) -dot / 5, (double) -div + 0.02));
-				painter.drawLine(QPointF((double) dot / 5, (double) -div - 0.02), QPointF((double) dot / 5, (double) -div + 0.02));
-				painter.drawLine(QPointF((double) -dot / 5, (double) div - 0.02), QPointF((double) -dot / 5, (double) div + 0.02));
-				painter.drawLine(QPointF((double) dot / 5, (double) div - 0.02), QPointF((double) dot / 5, (double) div + 0.02));
-			}
-		}
-	}
-	else {
-		// Draw vertical lines
-		for(int div = 1; div < DIVS_TIME / 2; div++) {
-			for(int dot = 1; dot < DIVS_VOLTAGE / 2 * 5; dot++) {
-				painter.drawPoint(QPointF(-div, (double) -dot / 5));
-				painter.drawPoint(QPointF(-div, (double) dot / 5));
-				painter.drawPoint(QPointF(div, (double) -dot / 5));
-				painter.drawPoint(QPointF(div, (double) dot / 5));
-			}
-		}
-		// Draw horizontal lines
-		for(int div = 1; div < DIVS_VOLTAGE / 2; div++) {
-			for(int dot = 1; dot < DIVS_TIME / 2 * 5; dot++) {
-				if(dot % 5 == 0)
-					continue;                       // Already done by vertical lines
-				painter.drawPoint(QPointF((double) -dot / 5, -div));
-				painter.drawPoint(QPointF((double) dot / 5, -div));
-				painter.drawPoint(QPointF((double) -dot / 5, div));
-				painter.drawPoint(QPointF((double) dot / 5, div));
-			}
-		}
-	}
+	for(int zoomed = 0; zoomed < (this->settings->view.zoom ? 2 : 1); zoomed++) {
+		// Set DIVS_TIME x DIVS_VOLTAGE matrix for oscillograph
+		painter.setMatrix(QMatrix((paintDevice->width() - 1) / DIVS_TIME, 0, 0, -(scopeHeight - 1) / DIVS_VOLTAGE, (double) (paintDevice->width() - 1) / 2, (scopeHeight - 1) * (zoomed + 0.5) + lineHeight * 1.5 + lineHeight * 2.5 * zoomed), false);
 		
-	// Axes
-	painter.setPen(colorValues->axes);
-	painter.drawLine(QPointF(-DIVS_TIME / 2, 0), QPointF(DIVS_TIME / 2, 0));
-	painter.drawLine(QPointF(0, -DIVS_VOLTAGE / 2), QPointF(0, DIVS_VOLTAGE / 2));
-	for(double div = 0.2; div <= DIVS_TIME / 2; div += 0.2) {
-		painter.drawLine(QPointF(div, -0.05), QPointF(div, 0.05));
-		painter.drawLine(QPointF(-div, -0.05), QPointF(-div, 0.05));
+		// Grid lines
+		painter.setPen(colorValues->grid);
+		
+		if(this->format < EXPORT_FORMAT_IMAGE) {
+			// Draw vertical lines
+			for(int div = 1; div < DIVS_TIME / 2; div++) {
+				for(int dot = 1; dot < DIVS_VOLTAGE / 2 * 5; dot++) {
+					painter.drawLine(QPointF((double) -div - 0.02, (double) -dot / 5), QPointF((double) -div + 0.02, (double) -dot / 5));
+					painter.drawLine(QPointF((double) -div - 0.02, (double) dot / 5), QPointF((double) -div + 0.02, (double) dot / 5));
+					painter.drawLine(QPointF((double) div - 0.02, (double) -dot / 5), QPointF((double) div + 0.02, (double) -dot / 5));
+					painter.drawLine(QPointF((double) div - 0.02, (double) dot / 5), QPointF((double) div + 0.02, (double) dot / 5));
+				}
+			}
+			// Draw horizontal lines
+			for(int div = 1; div < DIVS_VOLTAGE / 2; div++) {
+				for(int dot = 1; dot < DIVS_TIME / 2 * 5; dot++) {
+					painter.drawLine(QPointF((double) -dot / 5, (double) -div - 0.02), QPointF((double) -dot / 5, (double) -div + 0.02));
+					painter.drawLine(QPointF((double) dot / 5, (double) -div - 0.02), QPointF((double) dot / 5, (double) -div + 0.02));
+					painter.drawLine(QPointF((double) -dot / 5, (double) div - 0.02), QPointF((double) -dot / 5, (double) div + 0.02));
+					painter.drawLine(QPointF((double) dot / 5, (double) div - 0.02), QPointF((double) dot / 5, (double) div + 0.02));
+				}
+			}
+		}
+		else {
+			// Draw vertical lines
+			for(int div = 1; div < DIVS_TIME / 2; div++) {
+				for(int dot = 1; dot < DIVS_VOLTAGE / 2 * 5; dot++) {
+					painter.drawPoint(QPointF(-div, (double) -dot / 5));
+					painter.drawPoint(QPointF(-div, (double) dot / 5));
+					painter.drawPoint(QPointF(div, (double) -dot / 5));
+					painter.drawPoint(QPointF(div, (double) dot / 5));
+				}
+			}
+			// Draw horizontal lines
+			for(int div = 1; div < DIVS_VOLTAGE / 2; div++) {
+				for(int dot = 1; dot < DIVS_TIME / 2 * 5; dot++) {
+					if(dot % 5 == 0)
+						continue;                       // Already done by vertical lines
+					painter.drawPoint(QPointF((double) -dot / 5, -div));
+					painter.drawPoint(QPointF((double) dot / 5, -div));
+					painter.drawPoint(QPointF((double) -dot / 5, div));
+					painter.drawPoint(QPointF((double) dot / 5, div));
+				}
+			}
+		}
+			
+		// Axes
+		painter.setPen(colorValues->axes);
+		painter.drawLine(QPointF(-DIVS_TIME / 2, 0), QPointF(DIVS_TIME / 2, 0));
+		painter.drawLine(QPointF(0, -DIVS_VOLTAGE / 2), QPointF(0, DIVS_VOLTAGE / 2));
+		for(double div = 0.2; div <= DIVS_TIME / 2; div += 0.2) {
+			painter.drawLine(QPointF(div, -0.05), QPointF(div, 0.05));
+			painter.drawLine(QPointF(-div, -0.05), QPointF(-div, 0.05));
+		}
+		for(double div = 0.2; div <= DIVS_VOLTAGE / 2; div += 0.2) {
+			painter.drawLine(QPointF(-0.05, div), QPointF(0.05, div));
+			painter.drawLine(QPointF(-0.05, -div), QPointF(0.05, -div));
+		}
+		
+		// Borders
+		painter.setPen(colorValues->border);
+		painter.drawRect(QRectF(-DIVS_TIME / 2, -DIVS_VOLTAGE / 2, DIVS_TIME, DIVS_VOLTAGE));
 	}
-	for(double div = 0.2; div <= DIVS_VOLTAGE / 2; div += 0.2) {
-		painter.drawLine(QPointF(-0.05, div), QPointF(0.05, div));
-		painter.drawLine(QPointF(-0.05, -div), QPointF(0.05, -div));
-	}
-	
-	// Borders
-	painter.setPen(colorValues->border);
-	painter.drawRect(QRectF(-DIVS_TIME / 2, -DIVS_VOLTAGE / 2, DIVS_TIME, DIVS_VOLTAGE));
 	
 	painter.end();
 	

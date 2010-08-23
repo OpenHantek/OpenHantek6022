@@ -135,9 +135,9 @@ void DsoSettings::setChannelCount(unsigned int channels) {
 			this->view.color.screen.spectrum.insert(channel, this->view.color.screen.voltage[channel].lighter());
 		// Print
 		if(this->view.color.print.voltage.count() <= channel + 1)
-			this->view.color.print.voltage.insert(channel, this->view.color.screen.voltage[channel]);
+			this->view.color.print.voltage.insert(channel, this->view.color.screen.voltage[channel].darker(120));
 		if(this->view.color.print.spectrum.count() <= channel + 1)
-			this->view.color.print.spectrum.insert(channel, this->view.color.print.voltage[channel].darker());
+			this->view.color.print.spectrum.insert(channel, this->view.color.screen.voltage[channel].darker());
 	}
 	
 	// Check if the math channel is missing

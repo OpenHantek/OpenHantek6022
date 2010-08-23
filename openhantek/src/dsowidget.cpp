@@ -278,7 +278,7 @@ void DsoWidget::setMeasurementVisible(unsigned int channel, bool visible) {
 /// \brief Update the label about the marker measurements
 void DsoWidget::updateMarkerDetails() {
 	double divs = fabs(this->settings->scope.horizontal.marker[1] - this->settings->scope.horizontal.marker[0]);
-	double time = divs  * this->settings->scope.horizontal.timebase;
+	double time = divs * this->settings->scope.horizontal.timebase;
 	
 	if(this->settings->view.zoom) {
 		this->markerInfoLabel->setText(tr("Zoom x%L1").arg(DIVS_TIME / divs, -1, 'g', 3));

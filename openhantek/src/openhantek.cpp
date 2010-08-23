@@ -405,27 +405,40 @@ void OpenHantekMainWindow::readSettings(const QString &fileName) {
 	settingsLoader->beginGroup("view");
 	// Colors
 	settingsLoader->beginGroup("color");
-	if(settingsLoader->contains("axes"))
-		this->settings->view.color.screen.axes = settingsLoader->value("axes").value<QColor>();
-	if(settingsLoader->contains("background"))
-		this->settings->view.color.screen.background = settingsLoader->value("background").value<QColor>();
-	if(settingsLoader->contains("border"))
-		this->settings->view.color.screen.border = settingsLoader->value("border").value<QColor>();
-	if(settingsLoader->contains("grid"))
-		this->settings->view.color.screen.grid = settingsLoader->value("grid").value<QColor>();
-	if(settingsLoader->contains("markers"))
-		this->settings->view.color.screen.markers = settingsLoader->value("markers").value<QColor>();
-	for(int channel = 0; channel < this->settings->scope.spectrum.count(); channel++) {
-		QString key = QString("spectrum%1").arg(channel);
-		if(settingsLoader->contains(key))
-			this->settings->view.color.screen.spectrum[channel] = settingsLoader->value(key).value<QColor>();
-	}
-	if(settingsLoader->contains("text"))
-		this->settings->view.color.screen.text = settingsLoader->value("text").value<QColor>();
-	for(int channel = 0; channel < this->settings->scope.voltage.count(); channel++) {
-		QString key = QString("voltage%1").arg(channel);
-		if(settingsLoader->contains(key))
-			this->settings->view.color.screen.voltage[channel] = settingsLoader->value(key).value<QColor>();
+	DsoSettingsColorValues *colors;
+	for(int mode = 0; mode < 2; mode++) {
+		if(mode == 0) {
+			colors = &this->settings->view.color.screen;
+			settingsLoader->beginGroup("screen");
+		}
+		else {
+			colors = &this->settings->view.color.print;
+			settingsLoader->beginGroup("print");
+		}
+		
+		if(settingsLoader->contains("axes"))
+			colors->axes = settingsLoader->value("axes").value<QColor>();
+		if(settingsLoader->contains("background"))
+			colors->background = settingsLoader->value("background").value<QColor>();
+		if(settingsLoader->contains("border"))
+			colors->border = settingsLoader->value("border").value<QColor>();
+		if(settingsLoader->contains("grid"))
+			colors->grid = settingsLoader->value("grid").value<QColor>();
+		if(settingsLoader->contains("markers"))
+			colors->markers = settingsLoader->value("markers").value<QColor>();
+		for(int channel = 0; channel < this->settings->scope.spectrum.count(); channel++) {
+			QString key = QString("spectrum%1").arg(channel);
+			if(settingsLoader->contains(key))
+				colors->spectrum[channel] = settingsLoader->value(key).value<QColor>();
+		}
+		if(settingsLoader->contains("text"))
+			colors->text = settingsLoader->value("text").value<QColor>();
+		for(int channel = 0; channel < this->settings->scope.voltage.count(); channel++) {
+			QString key = QString("voltage%1").arg(channel);
+			if(settingsLoader->contains(key))
+				colors->voltage[channel] = settingsLoader->value(key).value<QColor>();
+		}
+		settingsLoader->endGroup();
 	}
 	settingsLoader->endGroup();
 	// Other view settings
@@ -507,16 +520,29 @@ void OpenHantekMainWindow::writeSettings(const QString &fileName) {
 	// Colors
 	if(complete) {
 		settingsSaver->beginGroup("color");
-		settingsSaver->setValue("axes", this->settings->view.color.screen.axes);
-		settingsSaver->setValue("background", this->settings->view.color.screen.background);
-		settingsSaver->setValue("border", this->settings->view.color.screen.border);
-		settingsSaver->setValue("grid", this->settings->view.color.screen.grid);
-		settingsSaver->setValue("markers", this->settings->view.color.screen.markers);
-		for(int channel = 0; channel < this->settings->scope.spectrum.count(); channel++)
-			settingsSaver->setValue(QString("spectrum%1").arg(channel), this->settings->view.color.screen.spectrum[channel]);
-		settingsSaver->setValue("text", this->settings->view.color.screen.text);
-		for(int channel = 0; channel < this->settings->scope.voltage.count(); channel++)
-			settingsSaver->setValue(QString("voltage%1").arg(channel), this->settings->view.color.screen.voltage[channel]);
+		DsoSettingsColorValues *colors;
+		for(int mode = 0; mode < 2; mode++) {
+			if(mode == 0) {
+				colors = &this->settings->view.color.screen;
+				settingsSaver->beginGroup("screen");
+			}
+			else {
+				colors = &this->settings->view.color.print;
+				settingsSaver->beginGroup("print");
+			}
+			
+			settingsSaver->setValue("axes", colors->axes);
+			settingsSaver->setValue("background", colors->background);
+			settingsSaver->setValue("border", colors->border);
+			settingsSaver->setValue("grid", colors->grid);
+			settingsSaver->setValue("markers", colors->markers);
+			for(int channel = 0; channel < this->settings->scope.spectrum.count(); channel++)
+				settingsSaver->setValue(QString("spectrum%1").arg(channel), colors->spectrum[channel]);
+			settingsSaver->setValue("text", colors->text);
+			for(int channel = 0; channel < this->settings->scope.voltage.count(); channel++)
+				settingsSaver->setValue(QString("voltage%1").arg(channel), colors->voltage[channel]);
+			settingsSaver->endGroup();
+		}
 		settingsSaver->endGroup();
 	}
 	// Other view settings

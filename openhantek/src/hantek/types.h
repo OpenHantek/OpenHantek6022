@@ -208,6 +208,69 @@ namespace Hantek {
 		/// </table>
 		COMMAND_GETLOGICALDATA,
 		
+		/// This command isn't used for the DSO-2090 and DSO-5200:
+		/// <table>
+		///   <tr>
+		///     <td>0x0a</td>
+		///     <td>...</td>
+		///   </tr>
+		/// </table>
+		COMMAND_UNKNOWN_0A,
+		
+		/// This command isn't used for the DSO-2090 and DSO-5200:
+		/// <table>
+		///   <tr>
+		///     <td>0x0b</td>
+		///     <td>...</td>
+		///   </tr>
+		/// </table>
+		COMMAND_UNKNOWN_0B,
+		
+		/// This command seems to set the sampling rate for the DSO-5200:
+		/// <table>
+		///   <tr>
+		///     <td>0x0c</td>
+		///     <td>0x00</td>
+		///     <td>Samplerate[0] (?)</td>
+		///     <td>Samplerate[1] (?)</td>
+		///     <td>Unknown</td>
+		///     <td>0x00</td>
+		///   </tr>
+		/// </table>
+		COMMAND_DSO5200_0C,
+		
+		/// This command seems to set trigger settings for the DSO-5200:
+		/// <table>
+		///   <tr>
+		///     <td>0x0d</td>
+		///     <td>0x00</td>
+		///     <td>Unknown</td>
+		///     <td>Unknown</td>
+		///     <td>TriggerPoint (?)</td>
+		///     <td>0xff</td>
+		///     <td>TriggerPoint (?)</td>
+		///     <td>0xff</td>
+		///     <td>TriggerPoint (?)</td>
+		///     <td>0xff</td>
+		///   </tr>
+		/// </table>
+		COMMAND_DSO5200_0D,
+		
+		/// This command seems to set some additional settings for the DSO-5200:
+		/// <table>
+		///   <tr>
+		///     <td>0x0e</td>
+		///     <td>0x00</td>
+		///     <td>Unknown</td>
+		///     <td>0x00</td>
+		///     <td>Unknown</td>
+		///     <td>0x00</td>
+		///     <td>0x00</td>
+		///     <td>0x00</td>
+		///   </tr>
+		/// </table>
+		COMMAND_DSO5200_0E,
+		
 		COMMAND_COUNT ///< Total number of commands
 	};
 	

@@ -15,7 +15,7 @@ You need the development packages for the following libraries to build OpenHante
 	<li><a href="http://www.opengl.org/">OpenGL</a></li>
 </ul>
 
-\subsection ssec_dependencies Building
+\subsection ssec_building Building
 After installing these you can build it by running:
 <pre>
 	$ qmake
@@ -23,7 +23,7 @@ After installing these you can build it by running:
 	$ make install
 </pre>
 
-\subsection ssec_dependencies Build options
+\subsection ssec_options Build options
 You can set environment variables to set various build options (Done best by prepending env VARIABLE=value to the qmake command). The known environment variables are:
 <ul>
 	<li>
@@ -44,7 +44,7 @@ You need the tool dsoextractfw from the sourceforge page too extract the firmwar
 <pre>
 	$ make
 </pre>
-After building it you have to place the DSO*1.SYS file into the same directory and run the built binary:
+After building it, you have to place the DSO*1.SYS file into the same directory and run the built binary:
 <pre>
 	$ ./dsoextractfw
 </pre>

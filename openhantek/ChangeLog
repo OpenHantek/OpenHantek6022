@@ -45,3 +45,9 @@
 * Moved constants.h to dso.h and added functions that return strings for enums
 * Sample buffer size above scope shows real sample count got from oscilloscope
 * Documentation updated
+
+2010-08-23  Oliver Haag  <oliver.haag@gmail.com>
+* Saving color settings for printing too
+* Added zoomed scope and markers to exports
+* Darker default colors for channels in print mode
+* Added enum values for DSO-5200 bulk commands
