@@ -34,10 +34,10 @@ static const char *strHex = ".hex";
 static const char *strDriver = "1.SYS";
 static const char *strModels[] = { "DSO2090", "DSO2100", "DSO2150", "DSO2250", "DSO5200", "DSO520A", NULL };
 
-int writeSRecords(const char *filename, unsigned char *ptr, bfd_size_type len);
+int writeIntelHex(const char *filename, unsigned char *ptr, bfd_size_type len);
 int extractFirmware(const char* model);
 
-int writeSRecords(const char *filename, unsigned char *ptr, bfd_size_type len)
+int writeIntelHex(const char *filename, unsigned char *ptr, bfd_size_type len)
 {
 	unsigned char n, *p, crc=0, eof;
 	bfd_size_type  i, t;
@@ -174,13 +174,13 @@ int extractFirmware(const char* model)
 		strcat(filename, strFirmware);
 		strcat(filename, strHex);
 		printf("Writing %s\n", filename);
-		writeSRecords(filename, ptrFirmware, lenFirmware);
+		writeIntelHex(filename, ptrFirmware, lenFirmware);
 		
 		strcpy(filename, model);
 		strcat(filename, strLoader);
 		strcat(filename, strHex);
 		printf("Writing %s\n", filename);
-		writeSRecords(filename, ptrLoader, lenLoader);
+		writeIntelHex(filename, ptrLoader, lenLoader);
 		
 		free(ptrFirmware);
 		free(ptrLoader);
