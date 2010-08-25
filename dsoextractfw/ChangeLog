@@ -9,3 +9,8 @@
 
 2010-08-20  Oliver Haag  <oliver.haag@gmail.com>
 * Added checking for End of File Record to the hex-writing routine
+
+2010-08-26  Oliver Haag  <oliver.haag@gmail.com>
+* Version 0.6.2:
+* Removed Oleg from AUTHORS
+* Renamed writeSRecords to writeIntelHex
