@@ -42,9 +42,7 @@ namespace Hantek {
 		// Values for the Gain and Timebase enums
 		this->gainSteps             << 0.08 << 0.16 << 0.40 << 0.80 << 1.60 << 4.00
 				<<  8.0 << 16.0 << 40.0;
-		this->samplerateSteps                       <<  1e8 <<  5e7 << 25e6 <<  1e7
-				<<  5e6 << 25e5 <<  1e6 <<  5e5 << 25e4 <<  1e5 <<  5e4 << 25e3 <<  1e4
-				<<  5e3 << 25e2 <<  1e3;
+		this->samplerateChannelMax = 50e6;
 		
 		// Special trigger sources
 		this->specialTriggerSources << tr("EXT") << tr("EXT/10");
@@ -83,10 +81,10 @@ namespace Hantek {
 			this->setOffset(channel, 0.5);
 			this->setTriggerLevel(channel, 0.0);
 		}
-		this->setSamplerate(1e6);
 		this->setBufferSize(BUFFER_SMALL);
+		this->setSamplerate(1e6);
 		this->setTriggerMode(Dso::TRIGGERMODE_NORMAL);
-		this->setTriggerPosition(5e3 / this->samplerateSteps[this->samplerate]);
+		this->setTriggerPosition(5e3 / (this->samplerateMax / this->samplerateDivider));
 		this->setTriggerSlope(Dso::SLOPE_POSITIVE);
 		this->setTriggerSource(false, 0);
 		
@@ -135,7 +133,26 @@ namespace Hantek {
 		for(int control = 0; control < CONTROLINDEX_COUNT; control++)
 			this->controlPending[control] = true;
 		
-		// Get calibration data
+		// Maximum possible samplerate for a single channel
+		switch(this->device->getModel()) {
+			case MODEL_DSO2090:
+			case MODEL_DSO2100:
+				this->samplerateChannelMax = 50e6;
+				break;
+			case MODEL_DSO2150:
+				this->samplerateChannelMax = 75e6;
+				break;
+			case MODEL_DSO2250:
+			case MODEL_DSO5200:
+			case MODEL_DSO5200A:
+				this->samplerateChannelMax = 125e6;
+				break;
+			default:
+				this->samplerateChannelMax = 50e6;
+				break;
+		}
+		
+		// Get channel level data
 		errorCode = this->device->controlRead(CONTROL_VALUE, (unsigned char*) &(this->channelLevels), sizeof(this->channelLevels), (int) VALUE_CHANNELLEVEL);
 		if(errorCode < 0) {
 			this->device->disconnect();
@@ -146,6 +163,8 @@ namespace Hantek {
 		// Adapt offsets
 		for(unsigned int channel = 0; channel < HANTEK_CHANNELS; channel++)
 			this->setOffset(channel, this->offset[channel]);
+		this->setSamplerate(this->samplerateMax / this->samplerateDivider);
+		this->setTriggerPosition(this->triggerPosition);
 		
 		// The control loop is running until the device is disconnected
 		int captureState = CAPTURE_WAITING;
@@ -405,7 +424,7 @@ namespace Hantek {
 			}
 			
 			this->samplesMutex.unlock();
-			emit samplesAvailable(&(this->samples), &(this->samplesSize), this->samplerateSteps[this->samplerate], &(this->samplesMutex));
+			emit samplesAvailable(&(this->samples), &(this->samplesSize), (double) this->samplerateMax / this->samplerateDivider, &(this->samplesMutex));
 		}
 		
 		return 0;
@@ -415,13 +434,13 @@ namespace Hantek {
 	/// \param size The buffer size that should be met (S).
 	/// \return The buffer size that has been set.
 	unsigned long int Control::updateBufferSize(unsigned long int size) {
-		unsigned int sizeId = (size <= BUFFER_SMALL) ? 1 : 2;
+		BufferSizeId sizeId = (size <= BUFFER_SMALL) ? BUFFERID_SMALL : BUFFERID_LARGE;
 		
 		// SetTriggerAndSamplerate bulk command for samplerate
-		((CommandSetTriggerAndSamplerate *) this->command[COMMAND_SETTRIGGERANDSAMPLERATE])->setSampleSize(sizeId);
+		((CommandSetTriggerAndSamplerate *) this->command[COMMAND_SETTRIGGERANDSAMPLERATE])->setBufferSize(sizeId);
 		this->commandPending[COMMAND_SETTRIGGERANDSAMPLERATE] = true;
 		
-		this->bufferSize = (sizeId == 1) ? BUFFER_SMALL : BUFFER_LARGE;
+		this->bufferSize = (sizeId == BUFFERID_SMALL) ? BUFFER_SMALL : BUFFER_LARGE;
 		
 		return this->bufferSize;
 	}
@@ -433,7 +452,7 @@ namespace Hantek {
 		this->updateBufferSize(size);
 		
 		this->setTriggerPosition(this->triggerPosition);
-		this->setSamplerate(this->samplerateSteps[this->samplerate]);
+		this->setSamplerate(this->samplerateMax / this->samplerateDivider);
 		this->setTriggerSlope(this->triggerSlope);
 		
 		return this->bufferSize;
@@ -443,47 +462,59 @@ namespace Hantek {
 	/// \param samplerate The samplerate that should be met (S/s).
 	/// \return The samplerate that has been set.
 	unsigned long int Control::setSamplerate(unsigned long int samplerate) {
-		// Find lowest supported samplerate thats at least as high as the requested
-		int samplerateId;
-		for(samplerateId = SAMPLERATE_COUNT - 1; samplerateId > 0; samplerateId--)
-			if(this->samplerateSteps[samplerateId] >= samplerate)
-				break;
-		// Fastrate is only possible if we're not using both channels
-		if(samplerateId == SAMPLERATE_100MS && ((CommandSetTriggerAndSamplerate *) this->command[COMMAND_SETTRIGGERANDSAMPLERATE])->getUsedChannel() == USED_CH1CH2)
-			samplerateId = SAMPLERATE_50MS;
-		
-		// The values that are understood by the oscilloscope
-		/// \todo Check large buffer values, seem to be crap
-		static const unsigned char valueFastSmall[5] = {0, 1, 2, 3, 4};
-		static const unsigned char valueFastLarge[5] = {0, 0, 0, 2, 3};
-		static const unsigned short int valueSlowSmall[13] = {0xfffe, 0xfffc, 0xfff7, 0xffe8, 0xffce, 0xff9c, 0xff07, 0xfe0d, 0xfc19, 0xf63d, 0xec79, 0xd8f1, 0xffed};
-		static const unsigned short int valueSlowLarge[13] = {0xffff, 0x0000, 0xfffc, 0xfff7, 0xffe8, 0xffce, 0xff9d, 0xff07, 0xfe0d, 0xfc19, 0xf63d, 0xec79, 0xffed};
+		if(samplerate == 0)
+			return 0;
 		
 		// SetTriggerAndSamplerate bulk command for samplerate
 		CommandSetTriggerAndSamplerate *commandSetTriggerAndSamplerate = (CommandSetTriggerAndSamplerate *) this->command[COMMAND_SETTRIGGERANDSAMPLERATE];
 		
-		// Set SamplerateFast bits for high sampling rates
-		if(samplerateId <= SAMPLERATE_5MS)
-			commandSetTriggerAndSamplerate->setSamplerateFast(this->bufferSize == BUFFER_SMALL ? valueFastSmall[samplerateId - SAMPLERATE_100MS] : valueFastLarge[samplerateId - SAMPLERATE_100MS]);
-		else
-			commandSetTriggerAndSamplerate->setSamplerateFast(4);
+		// Calculate with fast rate first if only one channel is used
+		bool fastRate = false;
+		this->samplerateMax = this->samplerateChannelMax;
+		if(((CommandSetTriggerAndSamplerate *) this->command[COMMAND_SETTRIGGERANDSAMPLERATE])->getUsedChannel() != USED_CH1CH2) {
+			fastRate = true;
+			this->samplerateMax *= HANTEK_CHANNELS;
+		}
 		
-		// Set normal Samplerate value for lower sampling rates
-		if(samplerateId >= SAMPLERATE_10MS)
-			commandSetTriggerAndSamplerate->setSamplerate(this->bufferSize == BUFFER_SMALL ? valueSlowSmall[samplerateId - SAMPLERATE_10MS] : valueSlowLarge[samplerateId - SAMPLERATE_10MS]);
-		else
-			commandSetTriggerAndSamplerate->setSamplerate(0x0000);
+		// The maximum sample rate depends on the buffer size
+		switch(commandSetTriggerAndSamplerate->getBufferSize()) {
+			case BUFFERID_ROLL:
+				this->samplerateMax /= 1000;
+				break;
+			case BUFFERID_LARGE:
+				this->samplerateMax /= 2;
+				break;
+			default:
+				break;
+		}
 		
+		// Get divider that would provide the requested rate, can't be zero
+		this->samplerateDivider = qMax(this->samplerateMax / samplerate, (long unsigned int) 1);
+		
+		// Use normal mode if it would meet the rate as exactly as fast rate mode
+		if(fastRate && this->samplerateDivider % HANTEK_CHANNELS == 0) {
+			fastRate = false;
+			this->samplerateMax /= 2;
+			this->samplerateDivider /= HANTEK_CHANNELS;
+		}
+		
+		// Split the resulting divider into the values understood by the device
+		// The fast value is kept at 4 (or 3) for slow sample rates
+		long int valueSlow = qMax(((long int) this->samplerateDivider - 3) / 2, (long int) 0);
+		unsigned char valueFast = this->samplerateDivider - valueSlow * 2;
+		
+		// Store samplerate fast value
+		commandSetTriggerAndSamplerate->setSamplerateFast(valueFast);
+		// Store samplerate slow value (two's complement)
+		commandSetTriggerAndSamplerate->setSamplerateSlow(valueSlow == 0 ? 0 : 0xffff - valueSlow);
 		// Set fast rate when used
-		commandSetTriggerAndSamplerate->setFastRate(samplerateId == SAMPLERATE_100MS);
+		commandSetTriggerAndSamplerate->setFastRate(fastRate);
 		
 		this->commandPending[COMMAND_SETTRIGGERANDSAMPLERATE] = true;
 		
-		this->samplerate = (Samplerate) samplerateId;
-		
 		this->updateBufferSize(this->bufferSize);
 		this->setTriggerSlope(this->triggerSlope);
-		return this->samplerateSteps[samplerateId];
+		return this->samplerateMax / this->samplerateDivider;
 	}	
 	
 	/// \brief Enables/disables filtering of the given channel.
@@ -664,9 +695,12 @@ namespace Hantek {
 			return -1;
 		
 		// SetTriggerAndSamplerate bulk command for trigger position
-		((CommandSetTriggerAndSamplerate *) this->command[COMMAND_SETTRIGGERANDSAMPLERATE])->setTriggerSlope((this->bufferSize != BUFFER_SMALL || this->samplerate > SAMPLERATE_10MS || (SAMPLERATE_10MS - this->samplerate) % 2) ? slope : Dso::SLOPE_NEGATIVE - slope);
+		CommandSetTriggerAndSamplerate *commandSetTriggerAndSamplerate = (CommandSetTriggerAndSamplerate *) this->command[COMMAND_SETTRIGGERANDSAMPLERATE];
+		
+		commandSetTriggerAndSamplerate->setTriggerSlope((/*this->bufferSize != BUFFER_SMALL ||*/ commandSetTriggerAndSamplerate->getSamplerateFast() % 2 == 0) ? slope : Dso::SLOPE_NEGATIVE - slope);
 		this->commandPending[COMMAND_SETTRIGGERANDSAMPLERATE] = true;
 		
+		this->triggerSlope = slope;
 		return 0;
 	}
 	
@@ -677,13 +711,13 @@ namespace Hantek {
 		// Calculate the position value (Varying start point, measured in samples)
 		//unsigned long int positionRange = (this->bufferSize == BUFFER_SMALL) ? 10000 : 32768;
 		unsigned long int positionStart = (this->bufferSize == BUFFER_SMALL) ? 0x77660 : 0x78000;
-		unsigned long int positionValue = position * this->samplerateSteps[this->samplerate] + positionStart;
+		unsigned long int positionValue = position * this->samplerateMax / this->samplerateDivider + positionStart;
 		
 		// SetTriggerAndSamplerate bulk command for trigger position
 		((CommandSetTriggerAndSamplerate *) this->command[COMMAND_SETTRIGGERANDSAMPLERATE])->setTriggerPosition(positionValue);
 		this->commandPending[COMMAND_SETTRIGGERANDSAMPLERATE] = true;
 		
 		this->triggerPosition = position;
-		return (double) (positionValue - positionStart) / this->samplerateSteps[this->samplerate];
+		return (double) (positionValue - positionStart) / this->samplerateMax * this->samplerateDivider;
 	}
 }

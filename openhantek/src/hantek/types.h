@@ -73,8 +73,12 @@ namespace Hantek {
 		///     <td>0x00</td>
 		///     <td>Tsr1Bits</td>
 		///     <td>Tsr2Bits</td>
-		///     <td>Samplerate[0]</td>
-		///     <td>Samplerate[1]</td>
+		///     <td>SamplerateValue[0]</td>
+		///     <td>SamplerateValue[1]</td>
+		///   </tr>
+		/// </table>
+		/// <table>
+		///   <tr>
 		///     <td>TriggerPosition[0]</td>
 		///     <td>TriggerPosition[1]</td>
 		///     <td>0x00</td>
@@ -83,6 +87,11 @@ namespace Hantek {
 		///     <td>0x00</td>
 		///   </tr>
 		/// </table>
+		/// The samplerate is set relative to the maximum sample rate by a divider that is set in Tsr1Bits.samplerateFast and the 16-bit value in the two SamplerateValue bytes.<br />
+		/// Without using fast rate mode, the samplerate is:<br />
+		/// <i>Samplerate = SamplerateMax / (2comp(SamplerateValue) * 2 + Tsr1Bits.samplerateFast)</i><br />
+		/// SamplerateMax is 50 MHz for the DSO-2090.<br />
+		/// When using fast rate mode the resulting samplerate is twice as fast, when using the large buffer it is half as fast. When Tsr1Bits.sampleSize is 0 (Roll mode) the sampling rate is divided by 1000. Setting Tsr1Bits.samplerateFast to 0 doesn't work, the result will be the same as Tsr1Bits.samplerateFast = 1.
 		COMMAND_SETTRIGGERANDSAMPLERATE,
 		
 		/// This command forces triggering:
@@ -180,7 +189,7 @@ namespace Hantek {
 		///   <tr>
 		///     <td>0x08</td>
 		///     <td>0x0f</td>
-		///     <td>Data</td>
+		///     <td>Data | 0x01</td>
 		///     <td>0x00</td>
 		///     <td>0x00</td>
 		///     <td>0x00</td>
@@ -197,7 +206,7 @@ namespace Hantek {
 		///     <td>0x00</td>
 		///   </tr>
 		/// </table>
-		/// The oscilloscope returns the logical data:
+		/// The oscilloscope returns the logical data, which is 64 or 512 bytes long:
 		/// <table>
 		///   <tr>
 		///     <td>?</td>
@@ -233,11 +242,11 @@ namespace Hantek {
 		///     <td>0x00</td>
 		///     <td>Samplerate[0] (?)</td>
 		///     <td>Samplerate[1] (?)</td>
-		///     <td>Unknown</td>
+		///     <td>Tsr1.samplerateFast replacement (?)</td>
 		///     <td>0x00</td>
 		///   </tr>
 		/// </table>
-		COMMAND_DSO5200_0C,
+		COMMAND_SETSAMPLERATE5200,
 		
 		/// This command seems to set trigger settings for the DSO-5200:
 		/// <table>
@@ -324,6 +333,10 @@ namespace Hantek {
 		///     <td>Ch2Offset[0]</td>
 		///     <td>TriggerOffset[1] | 0x20</td>
 		///     <td>TriggerOffset[0]</td>
+		///   </tr>
+		/// </table>
+		/// <table>
+		///   <tr>
 		///     <td>0x00</td>
 		///     <td>0x00</td>
 		///     <td>0x00</td>
@@ -346,10 +359,18 @@ namespace Hantek {
 		///     <td>0x04 ^ (Ch1Gain < 1 V)</td>
 		///     <td>0x08 ^ (Ch1Gain < 100 mV)</td>
 		///     <td>0x02 ^ (Ch1Coupling == DC)</td>
+		///   </tr>
+		/// </table>
+		/// <table>
+		///   <tr>
 		///     <td>0x20 ^ (Ch2Gain < 1 V)</td>
 		///     <td>0x40 ^ (Ch2Gain < 100 mV)</td>
 		///     <td>0x10 ^ (Ch2Coupling == DC)</td>
 		///     <td>0x01 ^ (Trigger == EXT)</td>
+		///   </tr>
+		/// </table>
+		/// <table>
+		///   <tr>
 		///     <td>0x00</td>
 		///     <td>0x00</td>
 		///     <td>0x00</td>
@@ -368,9 +389,18 @@ namespace Hantek {
 	/// \enum ControlValue                                          hantek/types.h
 	/// \brief All supported values for control commands.
 	enum ControlValue {
+		/// Value 0x08 is the calibration data for the channels offsets. It holds the offset value for the top and bottom of the scope screen for every gain step on every channel. The data is stored as a three-dimensional array:<br />
+		/// <i>channelLevels[channel][#Gain][#LevelOffset]</i>
 		VALUE_CHANNELLEVEL = 0x08,
-		VALUE_DEVICEADDRESS = 0x0A,
-		VALUE_CALIBRATIONDATA = 0x60
+		
+		/// Value 0x0a is the address of the device. It has a length of one byte.
+		VALUE_DEVICEADDRESS = 0x0a,
+		
+		/// Value 0x60 seems to be some calibration data with a length of four bytes. What it is good for is unknown so far.
+		VALUE_CALIBRATIONDATA = 0x60,
+		
+		/// Value 0x70 is an additional data that is used on the DSO-5200, it's six bytes long.
+		VALUE_UNKNOWN_70 = 0x70
 	};
 	
 	//////////////////////////////////////////////////////////////////////////////
@@ -387,8 +417,8 @@ namespace Hantek {
 	/// \enum ConnectionSpeed                                       hantek/types.h
 	/// \brief The speed level of the USB connection.
 	enum ConnectionSpeed {
-		CONNECTION_FULLSPEED = 0,
-		CONNECTION_HIGHSPEED = 1
+		CONNECTION_FULLSPEED = 0, ///< FullSpeed USB, 64 byte bulk transfers
+		CONNECTION_HIGHSPEED = 1  ///< HighSpeed USB, 512 byte bulk transfers
 	};
 	
 	//////////////////////////////////////////////////////////////////////////////
@@ -440,6 +470,15 @@ namespace Hantek {
 	};
 	
 	//////////////////////////////////////////////////////////////////////////////
+	/// \enum BufferSizeId                                          hantek/types.h
+	/// \brief The size id for CommandSetTriggerAndSamplerate.
+	enum BufferSizeId {
+		BUFFERID_ROLL = 0,
+		BUFFERID_SMALL,
+		BUFFERID_LARGE
+	};
+	
+	//////////////////////////////////////////////////////////////////////////////
 	/// \enum CaptureState                                          hantek/types.h
 	/// \brief The different capture states which the oscilloscope returns.
 	enum CaptureState {
@@ -453,10 +492,10 @@ namespace Hantek {
 	/// \enum CommandIndex                                          hantek/types.h
 	/// \brief Can be set by CONTROL_BEGINCOMMAND, maybe it allows multiple commands at the same time?
 	enum CommandIndex {
-		COMMANDINDEX_0 = 0x03,
+		COMMANDINDEX_0 = 0x03, ///< Used most of the time
 		COMMANDINDEX_1 = 0x0a,
 		COMMANDINDEX_2 = 0x09,
-		COMMANDINDEX_3 = 0x01,
+		COMMANDINDEX_3 = 0x01, ///< Used for #COMMAND_SETTRIGGERANDSAMPLERATE sometimes
 		COMMANDINDEX_4 = 0x02,
 		COMMANDINDEX_5 = 0x08
 	};
@@ -511,7 +550,7 @@ namespace Hantek {
 	struct Tsr1Bits {
 		unsigned char triggerSource:2; ///< The trigger source, see Hantek::TriggerSource
 		unsigned char sampleSize:3; ///< Buffer size, 0 = Roll, 1 = 10240 S, 2 = 32768 S
-		unsigned char samplerateFast:3; ///< samplerate id for fast sampling rates
+		unsigned char samplerateFast:3; ///< samplerate value for fast sampling rates
 	};
 	
 	//////////////////////////////////////////////////////////////////////////////
@@ -528,7 +567,7 @@ namespace Hantek {
 	struct Tsr2Bits {
 		unsigned char usedChannel:2; ///< Used channels, see Hantek::UsedChannels
 		unsigned char fastRate:1; ///< true, if one channels uses all buffers
-		unsigned char triggerSlope:1; ///< The trigger slope, see Dso::Slope
+		unsigned char triggerSlope:1; ///< The trigger slope, see Dso::Slope, inverted when Tsr1Bits.samplerateFast is uneven
 		unsigned char reserved:4; ///< Unused bits
 	};
 	
@@ -567,8 +606,8 @@ namespace Hantek {
 			
 			unsigned char getTriggerSource();
 			void setTriggerSource(unsigned char value);
-			unsigned char getSampleSize();
-			void setSampleSize(unsigned char value);
+			unsigned char getBufferSize();
+			void setBufferSize(unsigned char value);
 			unsigned char getSamplerateFast();
 			void setSamplerateFast(unsigned char value);
 			unsigned char getUsedChannel();
@@ -578,7 +617,7 @@ namespace Hantek {
 			unsigned char getTriggerSlope();
 			void setTriggerSlope(unsigned char slope);
 			unsigned short int getSamplerate();
-			void setSamplerate(unsigned short int samplerate);
+			void setSamplerateSlow(unsigned short int samplerate);
 			unsigned long int getTriggerPosition();
 			void setTriggerPosition(unsigned long int position);
 		

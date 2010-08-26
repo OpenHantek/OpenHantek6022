@@ -113,12 +113,12 @@ namespace Hantek {
 		this->init();
 		
 		this->setTriggerSource(triggerSource);
-		this->setSampleSize(sampleSize);
+		this->setBufferSize(sampleSize);
 		this->setSamplerateFast(samplerateFast);
 		this->setUsedChannel(usedChannel);
 		this->setFastRate(fastRate);
 		this->setTriggerSlope(triggerSlope);
-		this->setSamplerate(samplerate);
+		this->setSamplerateSlow(samplerate);
 		this->setTriggerPosition(triggerPosition);
 	}
 	
@@ -136,13 +136,13 @@ namespace Hantek {
 	
 	/// \brief Get the sampleSize value in Tsr1Bits.
 	/// \return The sampleSize value.
-	unsigned char CommandSetTriggerAndSamplerate::getSampleSize() {
+	unsigned char CommandSetTriggerAndSamplerate::getBufferSize() {
 		return ((Tsr1Bits *) &(this->array[2]))->sampleSize;
 	}
 	
 	/// \brief Set the sampleSize in Tsr1Bits to the given value.
 	/// \param value The new sampleSize value.
-	void CommandSetTriggerAndSamplerate::setSampleSize(unsigned char value) {
+	void CommandSetTriggerAndSamplerate::setBufferSize(unsigned char value) {
 		((Tsr1Bits *) &(this->array[2]))->sampleSize = value;
 	}
 	
@@ -202,7 +202,7 @@ namespace Hantek {
 	
 	/// \brief Set the Samplerate to the given value.
 	/// \param samplerate The new samplerate value.
-	void CommandSetTriggerAndSamplerate::setSamplerate(unsigned short int samplerate) {
+	void CommandSetTriggerAndSamplerate::setSamplerateSlow(unsigned short int samplerate) {
 		this->array[4] = (unsigned char) samplerate;
 		this->array[5] = (unsigned char) (samplerate >> 8);
 	}

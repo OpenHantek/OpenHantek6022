@@ -75,6 +75,7 @@ namespace Hantek {
 			int controlRead(unsigned char request, unsigned char *data, unsigned int length, int value = 0, int index = 0, int attempts = HANTEK_ATTEMPTS_DEFAULT);
 			
 			int getConnectionSpeed();
+			Model getModel();
 		
 		protected:
 			// Lists for enums

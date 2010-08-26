@@ -51,3 +51,13 @@
 * Added zoomed scope and markers to exports
 * Darker default colors for channels in print mode
 * Added enum values for DSO-5200 bulk commands
+
+2010-08-24  Oliver Haag  <oliver.haag@gmail.com>
+* Documentation of Hantek::Device corrected
+* Hantek::Device::bulkReadMulti improved
+
+2010-08-26  Oliver Haag  <oliver.haag@gmail.com>
+* Samplerate values sent to device are calculated now, only limited by hardware
+* Added the samplerate formula to the documentation
+* Documentation updated with additional information from Oleg
+* Removed Oleg from AUTHORS

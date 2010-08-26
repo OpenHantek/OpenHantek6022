@@ -81,10 +81,12 @@ namespace Hantek {
 			bool controlPending[CONTROLINDEX_COUNT]; ///< true, when the control command should be executed
 			
 			/// Calibration data for the channel offsets
-			unsigned short channelLevels[HANTEK_CHANNELS][GAIN_COUNT][OFFSET_COUNT];
+			unsigned short int channelLevels[HANTEK_CHANNELS][GAIN_COUNT][OFFSET_COUNT];
 			
 			// Various cached settings
-			Samplerate samplerate; ///< The samplerate id
+			unsigned long int samplerateDivider; ///< The samplerate divider
+			unsigned long int samplerateMax; ///< The maximum sample rate for the current setup
+			unsigned long int samplerateChannelMax; ///< The maximum sample rate for a single channel
 			Gain gain[HANTEK_CHANNELS]; ///< The gain id
 			double offset[HANTEK_CHANNELS]; ///< The current screen offset for each channel
 			double offsetReal[HANTEK_CHANNELS]; ///< The real offset for each channel (Due to quantization)
@@ -103,8 +105,6 @@ namespace Hantek {
 			
 			// Lists for enums
 			QList<double> gainSteps; ///< Voltage steps in V/screenheight
-			QList<unsigned long int> samplerateSteps; ///< Samplerate steps in S/s
-			QList<unsigned short int> samplerateValues; ///< Values sent to the oscilloscope
 		
 		public slots:
 			unsigned long int setSamplerate(unsigned long int samplerate);
