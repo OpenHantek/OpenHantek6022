@@ -80,6 +80,8 @@ namespace Hantek {
 			unsigned char controlCode[CONTROLINDEX_COUNT]; ///< Request codes for control commands
 			bool controlPending[CONTROLINDEX_COUNT]; ///< true, when the control command should be executed
 			
+			short int commandVersion; ///< The used version of the commands
+			
 			/// Calibration data for the channel offsets
 			unsigned short int channelLevels[HANTEK_CHANNELS][GAIN_COUNT][OFFSET_COUNT];
 			
@@ -107,6 +109,8 @@ namespace Hantek {
 			QList<double> gainSteps; ///< Voltage steps in V/screenheight
 		
 		public slots:
+			virtual void connectDevice();
+			
 			unsigned long int setSamplerate(unsigned long int samplerate);
 			unsigned long int setBufferSize(unsigned long int size);
 			

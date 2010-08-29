@@ -92,6 +92,10 @@ else {
 }
 DEFINES += LIBUSB_VERSION=$${LIBUSB_VERSION}
 
+# Debug output
+CONFIG(debug, debug|release):
+	DEFINES += DEBUG
+
 # Settings for different operating systems
 unix:!macx { 
     isEmpty(PREFIX):PREFIX = /usr/local
@@ -131,13 +135,7 @@ DEFINES += VERSION=\\\"$${VERSION}\\\"
 
 # Custom target "doc" for Doxygen
 doxygen.target = doc
-doxygen.commands = rm \
-    -r \
-    doc/; \
-    env \
-    DEFINES=\"$${DEFINES}\" \
-    doxygen \
-    Doxyfile
+doxygen.commands = "rm -r doc/; env DEFINES=\"$${DEFINES}\" doxygen Doxyfile"
 doxygen.depends = $${SOURCES} \
     $${HEADERS} \
     $${DOXYFILES}

@@ -129,6 +129,8 @@ OpenHantekMainWindow::OpenHantekMainWindow(QWidget *parent, Qt::WindowFlags flag
 	connect(this->dsoControl, SIGNAL(samplingStopped()), this, SLOT(stopped()));
 	
 	// Set up the oscilloscope
+	this->dsoControl->connectDevice();
+	
 	for(unsigned int channel = 0; channel < this->settings->scope.physicalChannels; channel++) {
 		this->dsoControl->setCoupling(channel, (Dso::Coupling) this->settings->scope.voltage[channel].misc);
 		this->updateVoltageGain(channel);
@@ -143,7 +145,6 @@ OpenHantekMainWindow::OpenHantekMainWindow(QWidget *parent, Qt::WindowFlags flag
 	this->dsoControl->setTriggerSlope(this->settings->scope.trigger.slope);
 	this->dsoControl->setTriggerSource(this->settings->scope.trigger.special, this->settings->scope.trigger.source);
 	
-	this->dsoControl->connectDevice();
 	this->dsoControl->startSampling();
 }
 

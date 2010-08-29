@@ -51,234 +51,287 @@ namespace Hantek {
 	/// \brief All supported bulk commands.
 	/// Indicies given in square brackets specify byte numbers in little endian format.
 	enum CommandCode {
-		/// This command sets channel and trigger filter:
-		/// <table>
-		///   <tr>
-		///     <td>0x00</td>
-		///     <td>0x0f</td>
-		///     <td>FilterBits</td>
-		///     <td>0x00</td>
-		///     <td>0x00</td>
-		///     <td>0x00</td>
-		///     <td>0x00</td>
-		///     <td>0x00</td>
-		///   </tr>
-		/// </table>
+		/// <p>
+		///   This command sets channel and trigger filter:
+		///   <table>
+		///     <tr>
+		///       <td>0x00</td>
+		///       <td>0x0f</td>
+		///       <td>FilterBits</td>
+		///       <td>0x00</td>
+		///       <td>0x00</td>
+		///       <td>0x00</td>
+		///       <td>0x00</td>
+		///       <td>0x00</td>
+		///     </tr>
+		///   </table>
+		/// </p>
 		COMMAND_SETFILTER,
 		
-		/// This command sets trigger and timebase:
-		/// <table>
-		///   <tr>
-		///     <td>0x01</td>
-		///     <td>0x00</td>
-		///     <td>Tsr1Bits</td>
-		///     <td>Tsr2Bits</td>
-		///     <td>SamplerateValue[0]</td>
-		///     <td>SamplerateValue[1]</td>
-		///   </tr>
-		/// </table>
-		/// <table>
-		///   <tr>
-		///     <td>TriggerPosition[0]</td>
-		///     <td>TriggerPosition[1]</td>
-		///     <td>0x00</td>
-		///     <td>0x00</td>
-		///     <td>TriggerPosition[2]</td>
-		///     <td>0x00</td>
-		///   </tr>
-		/// </table>
-		/// The samplerate is set relative to the maximum sample rate by a divider that is set in Tsr1Bits.samplerateFast and the 16-bit value in the two SamplerateValue bytes.<br />
-		/// Without using fast rate mode, the samplerate is:<br />
-		/// <i>Samplerate = SamplerateMax / (2comp(SamplerateValue) * 2 + Tsr1Bits.samplerateFast)</i><br />
-		/// SamplerateMax is 50 MHz for the DSO-2090.<br />
-		/// When using fast rate mode the resulting samplerate is twice as fast, when using the large buffer it is half as fast. When Tsr1Bits.sampleSize is 0 (Roll mode) the sampling rate is divided by 1000. Setting Tsr1Bits.samplerateFast to 0 doesn't work, the result will be the same as Tsr1Bits.samplerateFast = 1.
+		/// <p>
+		///   This command sets trigger and timebase:
+		///   <table>
+		///     <tr>
+		///       <td>0x01</td>
+		///       <td>0x00</td>
+		///       <td>Tsr1Bits</td>
+		///       <td>Tsr2Bits</td>
+		///       <td>SamplerateSlow[0]</td>
+		///       <td>SamplerateSlow[1]</td>
+		///     </tr>
+		///   </table>
+		///   <table>
+		///     <tr>
+		///       <td>TriggerPosition[0]</td>
+		///       <td>TriggerPosition[1]</td>
+		///       <td>0x00</td>
+		///       <td>0x00</td>
+		///       <td>TriggerPosition[2]</td>
+		///       <td>0x00</td>
+		///     </tr>
+		///   </table>
+		/// </p>
+		/// <p>
+		///   The samplerate is set relative to the maximum sample rate by a divider that is set in Tsr1Bits.samplerateFast and the 16-bit value in the two SamplerateSlow bytes.<br />
+		///   Without using fast rate mode, the samplerate is:<br />
+		///   <i>Samplerate = SamplerateMax / (1comp(SamplerateSlow) * 2 + Tsr1Bits.samplerateFast)</i><br />
+		///   SamplerateMax is 50 MHz for the DSO-2090.<br />
+		///   When using fast rate mode the resulting samplerate is twice as fast, when using the large buffer it is half as fast. When Tsr1Bits.bufferSize is 0 (Roll mode) the sampling rate is divided by 1000. Setting Tsr1Bits.samplerateFast to 0 doesn't work, the result will be the same as Tsr1Bits.samplerateFast = 1.
+		/// </p>
+		/// <p>
+		///   The TriggerPosition sets the position of the pretrigger in samples. The left side (0 %) is 0x77660 when using the small buffer and 0x78000 when using the large buffer.
+		/// </p>
 		COMMAND_SETTRIGGERANDSAMPLERATE,
 		
-		/// This command forces triggering:
-		/// <table>
-		///   <tr>
-		///     <td>0x02</td>
-		///     <td>0x00</td>
-		///   </tr>
-		/// </table>
+		/// <p>
+		///   This command forces triggering:
+		///   <table>
+		///     <tr>
+		///       <td>0x02</td>
+		///       <td>0x00</td>
+		///     </tr>
+		///   </table>
+		/// </p>
 		COMMAND_FORCETRIGGER,
 		
-		/// This command starts to capture data:
-		/// <table>
-		///   <tr>
-		///     <td>0x03</td>
-		///     <td>0x00</td>
-		///   </tr>
-		/// </table>
+		/// <p>
+		///   This command starts to capture data:
+		///   <table>
+		///     <tr>
+		///       <td>0x03</td>
+		///       <td>0x00</td>
+		///     </tr>
+		///   </table>
+		/// </p>
 		COMMAND_STARTSAMPLING,
 		
-		/// This command sets the trigger:
-		/// <table>
-		///   <tr>
-		///     <td>0x04</td>
-		///     <td>0x00</td>
-		///   </tr>
-		/// </table>
+		/// <p>
+		///   This command sets the trigger:
+		///   <table>
+		///     <tr>
+		///       <td>0x04</td>
+		///       <td>0x00</td>
+		///     </tr>
+		///   </table>
+		/// </p>
 		COMMAND_ENABLETRIGGER,
 		
-		/// This command reads data from the hardware:
-		/// <table>
-		///   <tr>
-		///     <td>0x05</td>
-		///     <td>0x00</td>
-		///   </tr>
-		/// </table>
-		/// The oscilloscope returns the sample data, that will be split if it's larger than the IN endpoint packet length:
-		/// <table>
-		///   <tr>
-		///     <td>Sample[0]</td>
-		///     <td>...</td>
-		///     <td>Sample[511]</td>
-		///   </tr>
-		///   <tr>
-		///     <td>Sample[512]</td>
-		///     <td>...</td>
-		///     <td>Sample[1023]</td>
-		///   </tr>
-		///   <tr>
-		///     <td>Sample[1024]</td>
-		///     <td>...</td>
-		///     <td>...</td>
-		///   </tr>
-		/// </table>
-		/// Because of the 9 bit data model, the DSO-5200 transmits an additional MSB for each sample afterwards.
+		/// <p>
+		///   This command reads data from the hardware:
+		///   <table>
+		///     <tr>
+		///       <td>0x05</td>
+		///       <td>0x00</td>
+		///     </tr>
+		///   </table>
+		/// </p>
+		/// <p>
+		///   The oscilloscope returns the sample data, that will be split if it's larger than the IN endpoint packet length:
+		///   <table>
+		///     <tr>
+		///       <td>Sample[0]</td>
+		///       <td>...</td>
+		///       <td>Sample[511]</td>
+		///     </tr>
+		///     <tr>
+		///       <td>Sample[512]</td>
+		///       <td>...</td>
+		///       <td>Sample[1023]</td>
+		///     </tr>
+		///     <tr>
+		///       <td>Sample[1024]</td>
+		///       <td>...</td>
+		///       <td>...</td>
+		///     </tr>
+		///   </table>
+		///   Because of the 9 bit data model, the DSO-5200 transmits an additional MSB for each sample afterwards.
+		/// </p>
 		COMMAND_GETDATA,
 		
-		/// This command checks the capture state:
-		/// <table>
-		///   <tr>
-		///     <td>0x06</td>
-		///     <td>0x00</td>
-		///   </tr>
-		/// </table>
-		/// The oscilloscope returns it's capture state and the trigger point. Not sure about this, looks like 248 16-bit words with nearly constant values. These can be converted to the start address of the data in the buffer (See Hantek::Control::calculateTriggerPoint):
-		/// <table>
-		///   <tr>
-		///     <td>#CaptureState</td>
-		///     <td>0x00</td>
-		///     <td>TriggerPoint[0]</td>
-		///     <td>TriggerPoint[1]</td>
-		///     <td>...</td>
-		///   </tr>
-		/// </table>
+		/// <p>
+		///   This command checks the capture state:
+		///   <table>
+		///     <tr>
+		///       <td>0x06</td>
+		///       <td>0x00</td>
+		///     </tr>
+		///   </table>
+		/// </p>
+		/// <p>
+		///   The oscilloscope returns it's capture state and the trigger point. Not sure about this, looks like 248 16-bit words with nearly constant values. These can be converted to the start address of the data in the buffer (See Hantek::Control::calculateTriggerPoint):
+		///   <table>
+		///     <tr>
+		///       <td>#CaptureState</td>
+		///       <td>0x00</td>
+		///       <td>TriggerPoint[0]</td>
+		///       <td>TriggerPoint[1]</td>
+		///       <td>...</td>
+		///     </tr>
+		///   </table>
+		/// </p>
 		COMMAND_GETCAPTURESTATE,
 		
-		/// This command sets the gain:
-		/// <table>
-		///   <tr>
-		///     <td>0x07</td>
-		///     <td>0x0f</td>
-		///     <td>GainBits</td>
-		///     <td>0x00</td>
-		///     <td>0x00</td>
-		///     <td>0x00</td>
-		///     <td>0x00</td>
-		///     <td>0x00</td>
-		///   </tr>
-		/// </table>
-		/// It is usually used in combination with #CONTROL_SETRELAYS.
+		/// <p>
+		///   This command sets the gain:
+		///   <table>
+		///     <tr>
+		///       <td>0x07</td>
+		///       <td>0x0f</td>
+		///       <td>GainBits</td>
+		///       <td>0x00</td>
+		///       <td>0x00</td>
+		///       <td>0x00</td>
+		///       <td>0x00</td>
+		///       <td>0x00</td>
+		///     </tr>
+		///   </table>
+		///   It is usually used in combination with #CONTROL_SETRELAYS.
+		/// </p>
 		COMMAND_SETGAIN,
 		
-		/// This command sets the logical data (And what the hell is this?...):
-		/// <table>
-		///   <tr>
-		///     <td>0x08</td>
-		///     <td>0x0f</td>
-		///     <td>Data | 0x01</td>
-		///     <td>0x00</td>
-		///     <td>0x00</td>
-		///     <td>0x00</td>
-		///     <td>0x00</td>
-		///     <td>0x00</td>
-		///   </tr>
-		/// </table>
+		/// <p>
+		///   This command sets the logical data (And what the hell is this?...):
+		///   <table>
+		///     <tr>
+		///       <td>0x08</td>
+		///       <td>0x0f</td>
+		///       <td>Data | 0x01</td>
+		///       <td>0x00</td>
+		///       <td>0x00</td>
+		///       <td>0x00</td>
+		///       <td>0x00</td>
+		///       <td>0x00</td>
+		///     </tr>
+		///   </table>
+		/// </p>
 		COMMAND_SETLOGICALDATA,
 		
-		/// This command reads the logical data (And what the hell is this?...):
-		/// <table>
-		///   <tr>
-		///     <td>0x09</td>
-		///     <td>0x00</td>
-		///   </tr>
-		/// </table>
-		/// The oscilloscope returns the logical data, which is 64 or 512 bytes long:
-		/// <table>
-		///   <tr>
-		///     <td>?</td>
-		///     <td>?</td>
-		///     <td>?</td>
-		///     <td>...</td>
-		///   </tr>
-		/// </table>
+		/// <p>
+		///   This command reads the logical data (And what the hell is this?...):
+		///   <table>
+		///     <tr>
+		///       <td>0x09</td>
+		///       <td>0x00</td>
+		///     </tr>
+		///   </table>
+		/// </p>
+		/// <p>
+		///   The oscilloscope returns the logical data, which is 64 or 512 bytes long:
+		///   <table>
+		///     <tr>
+		///       <td>?</td>
+		///       <td>?</td>
+		///       <td>?</td>
+		///       <td>...</td>
+		///     </tr>
+		///   </table>
+		/// </p>
 		COMMAND_GETLOGICALDATA,
 		
-		/// This command isn't used for the DSO-2090 and DSO-5200:
-		/// <table>
-		///   <tr>
-		///     <td>0x0a</td>
-		///     <td>...</td>
-		///   </tr>
-		/// </table>
+		/// <p>
+		///   This command isn't used for the DSO-2090 and DSO-5200:
+		///   <table>
+		///     <tr>
+		///       <td>0x0a</td>
+		///       <td>...</td>
+		///     </tr>
+		///   </table>
+		/// </p>
 		COMMAND_UNKNOWN_0A,
 		
-		/// This command isn't used for the DSO-2090 and DSO-5200:
-		/// <table>
-		///   <tr>
-		///     <td>0x0b</td>
-		///     <td>...</td>
-		///   </tr>
-		/// </table>
+		/// <p>
+		///   This command isn't used for the DSO-2090 and DSO-5200:
+		///   <table>
+		///     <tr>
+		///       <td>0x0b</td>
+		///       <td>...</td>
+		///     </tr>
+		///   </table>
+		/// </p>
 		COMMAND_UNKNOWN_0B,
 		
-		/// This command seems to set the sampling rate for the DSO-5200:
-		/// <table>
-		///   <tr>
-		///     <td>0x0c</td>
-		///     <td>0x00</td>
-		///     <td>Samplerate[0] (?)</td>
-		///     <td>Samplerate[1] (?)</td>
-		///     <td>Tsr1.samplerateFast replacement (?)</td>
-		///     <td>0x00</td>
-		///   </tr>
-		/// </table>
+		/// <p>
+		///   This command sets the sampling rate for the DSO-5200:
+		///   <table>
+		///     <tr>
+		///       <td>0x0c</td>
+		///       <td>0x00</td>
+		///       <td>SamplerateSlow[0]</td>
+		///       <td>SamplerateSlow[1]</td>
+		///       <td>SamplerateFast</td>
+		///       <td>0x00</td>
+		///     </tr>
+		///   </table>
+		/// </p>
+		/// <p>
+		///   The values are similar to the ones used on the DSO-2090. The formula is a bit different here:<br />
+		///   <i>Samplerate = SamplerateMax / (2comp(SamplerateSlow) * 2 + 4 - SamplerateFast)</i><br />
+		///   SamplerateMax is 125 MHz for the DSO-5200 in default configuration though, the modifications regarding fast rate and buffer size are the the same that apply for the DSO-2090.
+		/// </p>
 		COMMAND_SETSAMPLERATE5200,
 		
-		/// This command seems to set trigger settings for the DSO-5200:
-		/// <table>
-		///   <tr>
-		///     <td>0x0d</td>
-		///     <td>0x00</td>
-		///     <td>Unknown</td>
-		///     <td>Unknown</td>
-		///     <td>TriggerPoint (?)</td>
-		///     <td>0xff</td>
-		///     <td>TriggerPoint (?)</td>
-		///     <td>0xff</td>
-		///     <td>TriggerPoint (?)</td>
-		///     <td>0xff</td>
-		///   </tr>
-		/// </table>
-		COMMAND_DSO5200_0D,
+		/// <p>
+		///   This command sets the trigger position and buffer size for the DSO-5200:
+		///   <table>
+		///     <tr>
+		///       <td>0x0d</td>
+		///       <td>0x00</td>
+		///       <td>TriggerPositionPre[0]</td>
+		///       <td>TriggerPositionPre[1]</td>
+		///       <td>#DTriggerPositionUsed</td>
+		///     </tr>
+		///   </table>
+		///   <table>
+		///     <tr>
+		///       <td>0xff</td>
+		///       <td>TriggerPositionPost[0]</td>
+		///       <td>TriggerPositionPost[1]</td>
+		///       <td>DBufferBits</td>
+		///       <td>0xff</td>
+		///     </tr>
+		///   </table>
+		/// </p>
+		/// <p>
+		///   The TriggerPositionPre and TriggerPositionPost values set the pretrigger position. Both values have a range from 0xd7ff (0xc7ff for 14 kiS buffer) to 0xfffe. On the left side (0 %) the TriggerPositionPre value is minimal, on the right side (100 %) it is maximal. The TriggerPositionPost value is maximal for 0 % and minimal for 100%.
+		/// </p>
+		COMMAND_SETBUFFER5200,
 		
-		/// This command seems to set some additional settings for the DSO-5200:
-		/// <table>
-		///   <tr>
-		///     <td>0x0e</td>
-		///     <td>0x00</td>
-		///     <td>Unknown</td>
-		///     <td>0x00</td>
-		///     <td>Unknown</td>
-		///     <td>0x00</td>
-		///     <td>0x00</td>
-		///     <td>0x00</td>
-		///   </tr>
-		/// </table>
-		COMMAND_DSO5200_0E,
+		/// <p>
+		///   This command sets the channel and trigger settings for the DSO-5200:
+		///   <table>
+		///     <tr>
+		///       <td>0x0e</td>
+		///       <td>0x00</td>
+		///       <td>ETsrBits</td>
+		///       <td>0x00</td>
+		///       <td>Unknown (0x02)</td>
+		///       <td>0x00</td>
+		///       <td>0x00</td>
+		///       <td>0x00</td>
+		///     </tr>
+		///   </table>
+		/// </p>
+		COMMAND_SETTRIGGER5200,
 		
 		COMMAND_COUNT ///< Total number of commands
 	};
@@ -466,6 +519,7 @@ namespace Hantek {
 	/// \brief The size of the sample buffer.
 	enum BufferSize {
 		BUFFER_SMALL = 10240,
+		BUFFER_LARGE5200 = 14336,
 		BUFFER_LARGE = 32768
 	};
 	
@@ -473,9 +527,9 @@ namespace Hantek {
 	/// \enum BufferSizeId                                          hantek/types.h
 	/// \brief The size id for CommandSetTriggerAndSamplerate.
 	enum BufferSizeId {
-		BUFFERID_ROLL = 0,
-		BUFFERID_SMALL,
-		BUFFERID_LARGE
+		BUFFERID_ROLL = 0, ///< Used for the roll mode
+		BUFFERID_SMALL, ///< The standard buffer with 10240 samples
+		BUFFERID_LARGE ///< The large buffer, 32768 samples (14336 for DSO-5200)
 	};
 	
 	//////////////////////////////////////////////////////////////////////////////
@@ -510,6 +564,22 @@ namespace Hantek {
 	};
 	
 	//////////////////////////////////////////////////////////////////////////////
+	/// \enum DTriggerPositionUsed                                  hantek/types.h
+	/// \brief The trigger position states for the 0x0d command.
+	enum DTriggerPositionUsed {
+		DTRIGGERPOSITION_OFF = 0, ///< Used for Roll mode
+		DTRIGGERPOSITION_ON = 7 ///< Used for normal operation
+	};
+	
+	//////////////////////////////////////////////////////////////////////////////
+	/// \enum EUsedChannels                                         hantek/types.h
+	/// \brief The enabled channels in command 0x0e.
+	enum EUsedChannels {
+		EUSED_CH1 = 2, EUSED_CH2 = 3,
+		EUSED_CH1CH2 = 0
+	};
+	
+	//////////////////////////////////////////////////////////////////////////////
 	/// \struct FilterBits                                          hantek/types.h
 	/// \brief The bits for COMMAND_SETFILTER.
 	struct FilterBits {
@@ -517,14 +587,6 @@ namespace Hantek {
 		unsigned char channel2:1; ///< Set to true when channel 2 isn't used
 		unsigned char trigger:1; ///< Set to true when trigger isn't used
 		unsigned char reserved:5; ///< Unused bits
-	};
-	
-	//////////////////////////////////////////////////////////////////////////////
-	/// \union FilterByte                                           hantek/types.h
-	/// \brief Allows to read the FilterBits as unsigned char.
-	union FilterByte {
-		FilterBits bits; ///< Bitfield representation
-		unsigned char byte; ///< Full byte as unsigned char
 	};
 	
 	//////////////////////////////////////////////////////////////////////////////
@@ -537,46 +599,42 @@ namespace Hantek {
 	};
 	
 	//////////////////////////////////////////////////////////////////////////////
-	/// \union GainByte                                             hantek/types.h
-	/// \brief Allows to read the GainBits as unsigned char.
-	union GainByte {
-		GainBits bits; ///< Bitfield representation
-		unsigned char byte; ///< Full byte as unsigned char
-	};
-	
-	//////////////////////////////////////////////////////////////////////////////
 	/// \struct Tsr1Bits                                            hantek/types.h
 	/// \brief Trigger and samplerate bits (Byte 1).
 	struct Tsr1Bits {
 		unsigned char triggerSource:2; ///< The trigger source, see Hantek::TriggerSource
-		unsigned char sampleSize:3; ///< Buffer size, 0 = Roll, 1 = 10240 S, 2 = 32768 S
+		unsigned char bufferSize:3; ///< See #BufferSizeId
 		unsigned char samplerateFast:3; ///< samplerate value for fast sampling rates
-	};
-	
-	//////////////////////////////////////////////////////////////////////////////
-	/// \union Tsr1Byte                                             hantek/types.h
-	/// \brief Allows to read the Tsr1Bits as unsigned char.
-	union Tsr1Byte {
-		Tsr1Bits bits; ///< Bitfield representation.
-		unsigned char byte; ///< Full byte as unsigned char.
 	};
 	
 	//////////////////////////////////////////////////////////////////////////////
 	/// \struct Tsr2Bits                                            hantek/types.h
 	/// \brief Trigger and samplerate bits (Byte 2).
 	struct Tsr2Bits {
-		unsigned char usedChannel:2; ///< Used channels, see Hantek::UsedChannels
+		unsigned char usedChannels:2; ///< Used channels, see Hantek::UsedChannels
 		unsigned char fastRate:1; ///< true, if one channels uses all buffers
 		unsigned char triggerSlope:1; ///< The trigger slope, see Dso::Slope, inverted when Tsr1Bits.samplerateFast is uneven
 		unsigned char reserved:4; ///< Unused bits
 	};
 	
 	//////////////////////////////////////////////////////////////////////////////
-	/// \union Tsr2Byte                                             hantek/types.h
-	/// \brief Allows to read the Tsr2Bits as unsigned char.
-	union Tsr2Byte {
-		Tsr2Bits bits; ///< Bitfield representation
-		unsigned char byte; ///< Full byte as unsigned char
+	/// \struct DBufferBits                                         hantek/types.h
+	/// \brief Buffer mode bits for 0x0d command.
+	struct DBufferBits {
+		unsigned char triggerPositionUsed:3; ///< See #DTriggerPositionUsed
+		unsigned char bufferSize:3; ///< See #BufferSizeId
+		unsigned char reserved:2; ///< Unused bits
+	};
+	
+	//////////////////////////////////////////////////////////////////////////////
+	/// \struct ETsrBits                                            hantek/types.h
+	/// \brief Trigger and samplerate bits for 0x0e command.
+	struct ETsrBits {
+		unsigned char fastRate:1; ///< false, if one channels uses all buffers
+		unsigned char usedChannels:2; ///< Used channels, see Hantek::EUsedChannels
+		unsigned char triggerSource:2; ///< The trigger source, see Hantek::TriggerSource
+		unsigned char triggerSlope:2; ///< The trigger slope, see Dso::Slope
+		unsigned char triggerPulse:1; ///< Pulses are causing trigger events
 	};
 	
 	//////////////////////////////////////////////////////////////////////////////
@@ -602,7 +660,7 @@ namespace Hantek {
 	class CommandSetTriggerAndSamplerate : public Helper::DataArray<unsigned char> {
 		public:
 			CommandSetTriggerAndSamplerate();
-			CommandSetTriggerAndSamplerate(unsigned short int samplerate, unsigned long int triggerPosition, unsigned char triggerSource = 0, unsigned char sampleSize = 0, unsigned char timebaseFast = 0, unsigned char usedChannel = 0, bool fastRate = false, unsigned char triggerSlope = 0);
+			CommandSetTriggerAndSamplerate(unsigned short int samplerateSlow, unsigned long int triggerPosition, unsigned char triggerSource = 0, unsigned char bufferSize = 0, unsigned char samplerateFast = 0, unsigned char usedChannels = 0, bool fastRate = false, unsigned char triggerSlope = 0);
 			
 			unsigned char getTriggerSource();
 			void setTriggerSource(unsigned char value);
@@ -610,13 +668,13 @@ namespace Hantek {
 			void setBufferSize(unsigned char value);
 			unsigned char getSamplerateFast();
 			void setSamplerateFast(unsigned char value);
-			unsigned char getUsedChannel();
-			void setUsedChannel(unsigned char value);
+			unsigned char getUsedChannels();
+			void setUsedChannels(unsigned char value);
 			bool getFastRate();
 			void setFastRate(bool fastRate);
 			unsigned char getTriggerSlope();
 			void setTriggerSlope(unsigned char slope);
-			unsigned short int getSamplerate();
+			unsigned short int getSamplerateSlow();
 			void setSamplerateSlow(unsigned short int samplerate);
 			unsigned long int getTriggerPosition();
 			void setTriggerPosition(unsigned long int position);
@@ -770,6 +828,69 @@ namespace Hantek {
 			void setCoupling(unsigned int channel, bool dc);
 			bool getTrigger();
 			void setTrigger(bool ext);
+	};
+	
+	//////////////////////////////////////////////////////////////////////////////
+	/// \class CommandSetSamplerate5200                             hantek/types.h
+	/// \brief The COMMAND_SETSAMPLERATE5200 builder.
+	class CommandSetSamplerate5200 : public Helper::DataArray<unsigned char> {
+		public:
+			CommandSetSamplerate5200();
+			CommandSetSamplerate5200(unsigned short int samplerateSlow, unsigned char samplerateFast);
+			
+			unsigned char getSamplerateFast();
+			void setSamplerateFast(unsigned char value);
+			unsigned short int getSamplerateSlow();
+			void setSamplerateSlow(unsigned short int samplerate);
+		
+		private:
+			void init();
+	};
+	
+	//////////////////////////////////////////////////////////////////////////////
+	/// \class CommandSetBuffer5200                                 hantek/types.h
+	/// \brief The COMMAND_SETBUFFER5200 builder.
+	class CommandSetBuffer5200 : public Helper::DataArray<unsigned char> {
+		public:
+			CommandSetBuffer5200();
+			CommandSetBuffer5200(unsigned short int triggerPositionPre, unsigned short int triggerPositionPost, unsigned char usedPre = 0, unsigned char usedPost = 0, unsigned char bufferSize = 0);
+			
+			unsigned short int getTriggerPositionPre();
+			void setTriggerPositionPre(unsigned short int value);
+			unsigned short int getTriggerPositionPost();
+			void setTriggerPositionPost(unsigned short int value);
+			unsigned char getUsedPre();
+			void setUsedPre(unsigned char value);
+			unsigned char getUsedPost();
+			void setUsedPost(unsigned char value);
+			unsigned char getBufferSize();
+			void setBufferSize(unsigned char value);
+		
+		private:
+			void init();
+	};
+	
+	//////////////////////////////////////////////////////////////////////////////
+	/// \class CommandSetTrigger5200                                hantek/types.h
+	/// \brief The COMMAND_SETTRIGGER5200 builder.
+	class CommandSetTrigger5200 : public Helper::DataArray<unsigned char> {
+		public:
+			CommandSetTrigger5200();
+			CommandSetTrigger5200(unsigned char triggerSource, unsigned char usedChannels, bool fastRate = false, unsigned char triggerSlope = 0, unsigned char triggerPulse = 0);
+			
+			unsigned char getTriggerSource();
+			void setTriggerSource(unsigned char value);
+			unsigned char getUsedChannels();
+			void setUsedChannels(unsigned char value);
+			bool getFastRate();
+			void setFastRate(bool fastRate);
+			unsigned char getTriggerSlope();
+			void setTriggerSlope(unsigned char slope);
+			bool getTriggerPulse();
+			void setTriggerPulse(bool pulse);
+		
+		private:
+			void init();
 	};
 }
 

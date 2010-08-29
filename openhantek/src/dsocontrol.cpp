@@ -52,6 +52,7 @@ const QStringList *DsoControl::getSpecialTriggerSources() {
 
 /// \brief Try to connect to the oscilloscope.
 void DsoControl::connectDevice() {
+	this->sampling = false;
 	this->terminate = false;
 	this->start();
 }

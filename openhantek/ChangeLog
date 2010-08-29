@@ -61,3 +61,10 @@
 * Added the samplerate formula to the documentation
 * Documentation updated with additional information from Oleg
 * Removed Oleg from AUTHORS
+
+2010-08-29  Oliver Haag  <oliver.haag@gmail.com>
+* DSO details are known after Hantek::Control::connectDevice() is executed
+* Removed useless initialization in Hantek::Control
+* DSO is started after the settings have been transferred
+* Added additional debug messages when building as debug binary
+* Added support for DSO-5200
