@@ -43,6 +43,13 @@ namespace Hantek {
 		this->gainSteps             << 0.08 << 0.16 << 0.40 << 0.80 << 1.60 << 4.00
 				<<  8.0 << 16.0 << 40.0;
 		this->samplerateChannelMax = 50e6;
+		this->samplerateMax = this->samplerateChannelMax;
+		this->samplerateDivider = 1;
+		this->triggerPosition = 0;
+		this->triggerSlope = Dso::SLOPE_POSITIVE;
+		this->triggerSpecial = false;
+		this->triggerSource = 0;
+		this->commandVersion = 0;
 		
 		// Special trigger sources
 		this->specialTriggerSources << tr("EXT") << tr("EXT/10");
@@ -62,11 +69,17 @@ namespace Hantek {
 		this->command[COMMAND_SETBUFFER5200] = new CommandSetBuffer5200();
 		this->command[COMMAND_SETTRIGGER5200] = new CommandSetTrigger5200();
 		
+		for(int command = 0; command < COMMAND_COUNT; command++)
+			this->commandPending[command] = false;
+		
 		// Transmission-ready control commands
 		this->control[CONTROLINDEX_SETOFFSET] = new ControlSetOffset();
 		this->controlCode[CONTROLINDEX_SETOFFSET] = CONTROL_SETOFFSET;
 		this->control[CONTROLINDEX_SETRELAYS] = new ControlSetRelays();
 		this->controlCode[CONTROLINDEX_SETRELAYS] = CONTROL_SETRELAYS;
+		
+		for(int control = 0; control < CONTROLINDEX_COUNT; control++)
+			this->controlPending[control] = false;
 		
 		// Channel level data
 		for(unsigned int channel = 0; channel < HANTEK_CHANNELS; channel++) {
@@ -115,10 +128,7 @@ namespace Hantek {
 					continue;
 				
 #ifdef DEBUG
-				QString hexDump, hexByte;
-				for(unsigned int index = 0; index < this->command[command]->getSize(); index++)
-					hexDump.append(hexByte.sprintf(" %02x", this->command[command]->data()[index]));
-				qDebug("Sending bulk command:%s", hexDump.toLocal8Bit().data());
+				qDebug("Sending bulk command:%s", Helper::hexDump(this->command[command]->data(), this->command[command]->getSize()).toLocal8Bit().data());
 #endif
 				
 				errorCode = this->device->bulkCommand(this->command[command]);
@@ -142,10 +152,7 @@ namespace Hantek {
 					continue;
 				
 #ifdef DEBUG
-				QString hexDump, hexByte;
-				for(unsigned int index = 0; index < this->control[control]->getSize(); index++)
-					hexDump.append(hexByte.sprintf(" %02x", this->control[control]->data()[index]));
-				qDebug("Sending control command 0x%02x:%s", control, hexDump.toLocal8Bit().data());
+				qDebug("Sending control command 0x%02x:%s", control, Helper::hexDump(this->control[control]->data(), this->control[control]->getSize()).toLocal8Bit().data());
 #endif
 				
 				errorCode = this->device->controlWrite(this->controlCode[control], this->control[control]->data(), this->control[control]->getSize());
@@ -172,7 +179,14 @@ namespace Hantek {
 				continue;
 			}
 			
+#ifdef DEBUG
+			int lastCaptureState = captureState;
+#endif
 			captureState = this->getCaptureState();
+#ifdef DEBUG
+			if(captureState != lastCaptureState)
+				qDebug("Capture state changed to %d", captureState);
+#endif
 			switch(captureState) {
 				case CAPTURE_READY:
 				case CAPTURE_READY5200:
@@ -203,6 +217,10 @@ namespace Hantek {
 							captureState = LIBUSB_ERROR_NO_DEVICE;
 						break;
 					}
+#ifdef DEBUG
+					qDebug("Starting to capture");
+#endif
+					
 					// Enable trigger
 					errorCode = this->device->bulkCommand(this->command[COMMAND_ENABLETRIGGER]);
 					if(errorCode < 0) {
@@ -210,11 +228,18 @@ namespace Hantek {
 							captureState = LIBUSB_ERROR_NO_DEVICE;
 						break;
 					}
+#ifdef DEBUG
+					qDebug("Enabling trigger");
+#endif
+					
 					if(this->triggerMode == Dso::TRIGGERMODE_AUTO) {
 						// Force triggering
 						errorCode = this->device->bulkCommand(this->command[COMMAND_FORCETRIGGER]);
 						if(errorCode == LIBUSB_ERROR_NO_DEVICE)
 							captureState = LIBUSB_ERROR_NO_DEVICE;
+#ifdef DEBUG
+					qDebug("Forcing trigger");
+#endif
 					}
 					samplingStarted = true;
 					lastTriggerMode = this->triggerMode;
@@ -519,6 +544,8 @@ namespace Hantek {
 				this->samplerateChannelMax = 125e6;
 				break;
 		}
+		this->samplerateMax = this->samplerateChannelMax;
+		this->samplerateDivider = 1;
 		
 		// Get channel level data
 		errorCode = this->device->controlRead(CONTROL_VALUE, (unsigned char*) &(this->channelLevels), sizeof(this->channelLevels), (int) VALUE_CHANNELLEVEL);
@@ -535,6 +562,9 @@ namespace Hantek {
 	/// \param size The buffer size that should be met (S).
 	/// \return The buffer size that has been set.
 	unsigned long int Control::setBufferSize(unsigned long int size) {
+		if(!this->device->isConnected())
+			return 0;
+		
 		this->updateBufferSize(size);
 		
 		this->setTriggerPosition(this->triggerPosition);
@@ -548,7 +578,7 @@ namespace Hantek {
 	/// \param samplerate The samplerate that should be met (S/s).
 	/// \return The samplerate that has been set.
 	unsigned long int Control::setSamplerate(unsigned long int samplerate) {
-		if(samplerate == 0)
+		if(!this->device->isConnected() || samplerate == 0)
 			return 0;
 		
 		// Pointers to needed commands
@@ -629,6 +659,9 @@ namespace Hantek {
 	/// \param used true if the channel should be sampled.
 	/// \return 0 on success, -1 on invalid channel.
 	int Control::setChannelUsed(unsigned int channel, bool used) {
+		if(!this->device->isConnected())
+			return -2;
+		
 		if(channel >= HANTEK_CHANNELS)
 			return -1;
 		
@@ -673,6 +706,9 @@ namespace Hantek {
 	/// \param coupling The new coupling for the channel.
 	/// \return 0 on success, -1 on invalid channel.
 	int Control::setCoupling(unsigned int channel, Dso::Coupling coupling) {
+		if(!this->device->isConnected())
+			return -2;
+		
 		if(channel >= HANTEK_CHANNELS)
 			return -1;
 		
@@ -686,10 +722,13 @@ namespace Hantek {
 	/// \brief Sets the gain for the given channel.
 	/// \param channel The channel that should be set.
 	/// \param gain The gain that should be met (V/div).
-	/// \return The gain that has been set, -1.0 on invalid channel.
+	/// \return The gain that has been set, -1 on invalid channel.
 	double Control::setGain(unsigned int channel, double gain) {
+		if(!this->device->isConnected())
+			return -2;
+		
 		if(channel >= HANTEK_CHANNELS)
-			return -1.0;
+			return -1;
 		
 		// Find lowest gain voltage thats at least as high as the requested
 		int gainId;
@@ -719,8 +758,11 @@ namespace Hantek {
 	/// \param offset The new offset value (0.0 - 1.0).
 	/// \return The offset that has been set, -1.0 on invalid channel.
 	double Control::setOffset(unsigned int channel, double offset) {
+		if(!this->device->isConnected())
+			return -2;
+		
 		if(channel >= HANTEK_CHANNELS)
-			return -1.0;
+			return -1;
 		
 		// Calculate the offset value (The range is given by the calibration data)
 		unsigned short int minimum = this->channelLevels[channel][this->gain[channel]][OFFSET_START] >> 8;
@@ -743,6 +785,9 @@ namespace Hantek {
 	/// \brief Set the trigger mode.
 	/// \return 0 on success, -1 on invalid mode.
 	int Control::setTriggerMode(Dso::TriggerMode mode) {
+		if(!this->device->isConnected())
+			return -2;
+		
 		if(mode < Dso::TRIGGERMODE_AUTO || mode > Dso::TRIGGERMODE_SINGLE)
 			return -1;
 		
@@ -755,6 +800,9 @@ namespace Hantek {
 	/// \param id The number of the channel, that should be used as trigger.
 	/// \return 0 on success, -1 on invalid channel.
 	int Control::setTriggerSource(bool special, unsigned int id) {
+		if(!this->device->isConnected())
+			return -2;
+		
 		if((!special && id >= HANTEK_CHANNELS) || (special && id >= HANTEK_SPECIAL_CHANNELS))
 			return -1;
 		
@@ -803,6 +851,9 @@ namespace Hantek {
 	/// \param level The new trigger level (V).
 	/// \return The trigger level that has been set, -1.0 on invalid channel.
 	double Control::setTriggerLevel(unsigned int channel, double level) {
+		if(!this->device->isConnected())
+			return -2;
+		
 		if(channel >= HANTEK_CHANNELS)
 			return -1.0;
 		
@@ -825,6 +876,9 @@ namespace Hantek {
 	/// \param slope The Slope that should cause a trigger.
 	/// \return 0 on success, -1 on invalid slope.
 	int Control::setTriggerSlope(Dso::Slope slope) {
+		if(!this->device->isConnected())
+			return -2;
+		
 		if(slope != Dso::SLOPE_NEGATIVE && slope != Dso::SLOPE_POSITIVE)
 			return -1;
 		
@@ -853,6 +907,9 @@ namespace Hantek {
 	/// \param position The new trigger position (in s).
 	/// \return The trigger position that has been set.
 	double Control::setTriggerPosition(double position) {
+		if(!this->device->isConnected())
+			return -2;
+		
 		// All trigger position are measured in samples
 		unsigned long int positionSamples = position * this->samplerateMax / this->samplerateDivider;
 		
@@ -885,4 +942,60 @@ namespace Hantek {
 		this->triggerPosition = position;
 		return (double) positionSamples / this->samplerateMax * this->samplerateDivider;
 	}
+	
+#ifdef DEBUG
+	/// \brief Sends bulk/control commands directly.
+	/// \param command The command as string (Has to be parsed).
+	/// \return 0 on success, -1 on unknown command, -2 on syntax error.
+	int Control::stringCommand(QString command) {
+		if(!this->device->isConnected())
+			return -3;
+		
+		QStringList commandParts = command.split(' ', QString::SkipEmptyParts);
+		
+		if(commandParts.count() >= 1) {
+			if(commandParts[0] == "send") {
+				if(commandParts.count() >= 2) {
+					if(commandParts[1] == "bulk") {
+						QString data = command.section(' ', 2, -1, QString::SectionSkipEmpty);
+						unsigned char commandCode = 0;
+						
+						// Read command code (First byte)
+						Helper::hexParse(data, &commandCode, 1);
+						if(commandCode > COMMAND_COUNT)
+							return -2;
+						
+						// Update bulk command and mark as pending
+						Helper::hexParse(data, this->command[commandCode]->data(), this->command[commandCode]->getSize());
+						this->commandPending[commandCode] = true;
+						return 0;
+					}
+					else if(commandParts[1] == "control") {
+						if(commandParts.count() <= 1)
+							return -2;
+						
+						// Get control code from third part
+						unsigned char controlCode = commandParts[2].toUShort();
+						int control;
+						for(control = 0; control < CONTROLINDEX_COUNT; control++) {
+							if(this->controlCode[control] == controlCode)
+								break;
+						}
+						if(control >= CONTROLINDEX_COUNT)
+							return -2;
+						
+						QString data = command.section(' ', 3, -1, QString::SectionSkipEmpty);
+						
+						// Update control command and mark as pending
+						Helper::hexParse(data, this->control[control]->data(), this->control[control]->getSize());
+						this->controlPending[control] = true;
+						return 0;
+					}
+				}
+			}
+		}
+		
+		return -1;
+	}
+#endif
 }

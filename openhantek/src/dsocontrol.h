@@ -84,6 +84,10 @@ class DsoControl : public QThread {
 		virtual int setCoupling(unsigned int channel, Dso::Coupling coupling) = 0; ///< Set the coupling for a channel
 		virtual double setGain(unsigned int channel, double gain) = 0; ///< Set the gain for a channel
 		virtual double setOffset(unsigned int channel, double offset) = 0; ///< Set the graph offset of a channel
+		
+#ifdef DEBUG
+		virtual int stringCommand(QString command) = 0; ///< Sends commands directly, for debugging
+#endif
 };
 
 

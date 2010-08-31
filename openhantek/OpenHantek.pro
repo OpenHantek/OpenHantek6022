@@ -85,7 +85,7 @@ QMAKE_CXXFLAGS += "-iquote $${IN_PWD}/src"
 
 # libusb version
 LIBUSB_VERSION = $$(LIBUSB_VERSION)
-contains(LIBUSB_VERSION, 0):LIBS += -lusb
+contains(LIBUSB_VERSION, 0): LIBS += -lusb
 else { 
     LIBUSB_VERSION = 1
     LIBS += -lusb-1.0
@@ -93,8 +93,7 @@ else {
 DEFINES += LIBUSB_VERSION=$${LIBUSB_VERSION}
 
 # Debug output
-CONFIG(debug, debug|release):
-	DEFINES += DEBUG
+CONFIG(debug, debug|release): DEFINES += DEBUG
 
 # Settings for different operating systems
 unix:!macx { 

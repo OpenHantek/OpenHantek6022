@@ -68,3 +68,8 @@
 * DSO is started after the settings have been transferred
 * Added additional debug messages when building as debug binary
 * Added support for DSO-5200
+
+2010-08-31  Oliver Haag  <oliver.haag@gmail.com>
+* Added manual command sending with Shift+C when bulding as debug binary
+* Fixed some uninitialized values in Hantek::Control
+* Added debug messages for capture state when building as debug binary

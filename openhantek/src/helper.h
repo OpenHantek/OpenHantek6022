@@ -66,6 +66,11 @@ namespace Helper {
 	QString libUsbErrorString(int error);
 	QString valueToString(double value, Unit unit, int precision = -1);
 	
+#ifdef DEBUG
+	QString hexDump(unsigned char *data, unsigned int length);
+	unsigned int hexParse(const QString dump, unsigned char *data, unsigned int length);
+#endif	
+	
 	//////////////////////////////////////////////////////////////////////////////
 	/// \class DataArray                                                  helper.h
 	/// \brief A class template for a simple array with a fixed size.

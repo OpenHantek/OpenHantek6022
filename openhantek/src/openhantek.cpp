@@ -235,6 +235,11 @@ void OpenHantekMainWindow::createActions() {
 	this->aboutQtAction = new QAction(tr("About &Qt"), this);
 	this->aboutQtAction->setStatusTip(tr("Show the Qt library's About box"));
 	connect(this->aboutQtAction, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
+	
+#ifdef DEBUG
+	this->commandAction = new QAction(tr("Send command"), this);
+	this->commandAction->setShortcut(tr("Shift+C"));
+#endif
 }
 
 /// \brief Create the menus and menuitems.
@@ -257,6 +262,9 @@ void OpenHantekMainWindow::createMenus() {
 	this->oscilloscopeMenu->addAction(this->configAction);
 	this->oscilloscopeMenu->addSeparator();
 	this->oscilloscopeMenu->addAction(this->startStopAction);
+#ifdef DEBUG
+	this->oscilloscopeMenu->addAction(this->commandAction);
+#endif
 	this->oscilloscopeMenu->addSeparator();
 	this->bufferSizeMenu = this->oscilloscopeMenu->addMenu(tr("&Buffer size"));
 	this->bufferSizeMenu->addAction(this->bufferSizeSmallAction);
@@ -289,17 +297,21 @@ void OpenHantekMainWindow::createToolBars() {
 
 /// \brief Create the status bar.
 void OpenHantekMainWindow::createStatusBar() {
-	// Progressbar inside the status bar
-	/*this->progressBar = new QProgressBar();
-	this->progressBar->setMinimumWidth(100);
-	this->progressBar->setRange(0, 256);
-	this->progressBar->setValue(0);
-	this->progressBar->setTextVisible(true);
-	this->progressBar->hide();*/
+#ifdef DEBUG
+	// Command field inside the status bar
+	this->commandEdit = new QLineEdit();
+	this->commandEdit->hide();
 
-	//this->statusBar()->addPermanentWidget(this->progressBar);
-
+	this->statusBar()->addPermanentWidget(this->commandEdit, 1);
+#endif
+	
 	this->statusBar()->showMessage(tr("Ready"));
+	
+#ifdef DEBUG
+	connect(this->commandAction, SIGNAL(triggered()), this->commandEdit, SLOT(show()));
+	connect(this->commandAction, SIGNAL(triggered()), this->commandEdit, SLOT(setFocus()));
+	connect(this->commandEdit, SIGNAL(returnPressed()), this, SLOT(sendCommand()));
+#endif
 }
 
 /// \brief Create all docking windows.
@@ -692,3 +704,16 @@ void OpenHantekMainWindow::updateVoltageGain(unsigned int channel) {
 	
 	this->dsoControl->setGain(channel, this->settings->scope.voltage[channel].gain * DIVS_VOLTAGE);
 }
+
+#ifdef DEBUG
+/// \brief Send the command in the commandEdit to the oscilloscope.
+void OpenHantekMainWindow::sendCommand() {
+	int errorCode = this->dsoControl->stringCommand(this->commandEdit->text());
+	
+	this->commandEdit->hide();
+	this->commandEdit->clear();
+	
+	if(errorCode < 0)
+		this->statusBar()->showMessage(tr("Invalid command"), 3000);
+}
+#endif

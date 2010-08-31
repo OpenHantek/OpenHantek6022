@@ -31,6 +31,7 @@
 
 
 class QActionGroup;
+class QLineEdit;
 
 class DataAnalyzer;
 class DsoControl;
@@ -81,6 +82,10 @@ class OpenHantekMainWindow : public QMainWindow {
 		QAction *digitalPhosphorAction, *zoomAction;
 		
 		QAction *aboutAction, *aboutQtAction;
+		
+#ifdef DEBUG
+		QAction *commandAction;
+#endif
 
 		// Menus
 		QMenu *fileMenu;
@@ -100,6 +105,11 @@ class OpenHantekMainWindow : public QMainWindow {
 		// Central widgets
 		DsoWidget *dsoWidget;
 		
+		// Other widgets
+#ifdef DEBUG
+		QLineEdit *commandEdit;
+#endif
+		
 		// Data handling classes
 		DataAnalyzer *dataAnalyzer;
 		DsoControl *dsoControl;
@@ -107,6 +117,7 @@ class OpenHantekMainWindow : public QMainWindow {
 		// Other variables
 		QString currentFile;
 		
+		// Settings used for the whole program
 		DsoSettings *settings;
 		
 	private slots:
@@ -131,6 +142,10 @@ class OpenHantekMainWindow : public QMainWindow {
 		void updateTimebase();
 		void updateUsed(unsigned int channel);
 		void updateVoltageGain(unsigned int channel);
+		
+#ifdef DEBUG
+		void sendCommand();
+#endif
 	
 	signals:
 		void settingsChanged(); ///< The settings have changed (Option dialog, loading...)

@@ -142,4 +142,49 @@ namespace Helper {
 				return QString();
 		}
 	}
+	
+#ifdef DEBUG
+	/// \brief Returns the hex dump for the given data.
+	/// \param data Pointer to the data bytes that should be dumped.
+	/// \param length The length of the data array in bytes.
+	/// \return String with the hex dump of the data.
+	QString hexDump(unsigned char *data, unsigned int length) {
+		QString dumpString, byteString;
+		
+		for(unsigned int index = 0; index < length; index++)
+			dumpString.append(byteString.sprintf(" %02x", data[index]));
+		
+		return dumpString;
+	}
+	
+	/// \brief Returns the hex dump for the given data.
+	/// \param dump The string with the hex dump of the data.
+	/// \param data Pointer to the address where the data bytes should be saved.
+	/// \param length The maximum length of the data array in bytes.
+	/// \return The length of the saved data.
+	unsigned int hexParse(const QString dump, unsigned char *data, unsigned int length) {
+		QString dumpString = dump;
+		dumpString.remove(' ');
+		QString byteString;
+		unsigned int index;
+		
+		for(index = 0; index < length; index++) {
+			byteString = dumpString.mid(index * 2, 2);
+			
+			// Check if we reached the end of the string
+			if(byteString.isNull())
+				break;
+			
+			// Check for parsing errors
+			bool ok;
+			unsigned char byte = (unsigned char) byteString.toUShort(&ok, 16);
+			if(!ok)
+				break;
+			
+			data[index] = byte;
+		}
+		
+		return index;
+	}
+#endif
 }

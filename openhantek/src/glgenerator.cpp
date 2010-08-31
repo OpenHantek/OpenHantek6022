@@ -79,6 +79,7 @@ GlGenerator::GlGenerator(DsoSettings *settings, QObject *parent) : QObject(paren
 	this->settings = settings;
 	
 	this->dataAnalyzer = 0;
+	this->digitalPhosphorDepth = 0;
 	
 	this->generateGrid();
 }
