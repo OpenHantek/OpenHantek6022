@@ -58,6 +58,7 @@ DISTFILES += ChangeLog \
     COPYING \
     INSTALL \
     res/images/*.png \
+    res/images/*.icns \
     res/images/*.svg \
     translations/*.qm \
     translations/*.ts \
@@ -105,7 +106,7 @@ unix:!macx {
     translations.path = $${PREFIX}/share/apps/openhantek/translations
     INCLUDEPATH += /usr/include/libusb
     DEFINES += QMAKE_TRANSLATIONS_PATH=\\\"$${translations.path}\\\" \
-        OS_UNIX
+        OS_UNIX VERSION=\\\"$${VERSION}\\\"
 }
 macx { 
     isEmpty(PREFIX):PREFIX = OpenHantek.app
@@ -114,8 +115,11 @@ macx {
     # Installation directories
     target.path = $${PREFIX}/Contents/MacOS
     translations.path = $${PREFIX}/Contents/Resources/translations
-    DEFINES += QMAKE_TRANSLATIONS_PATH=\\\"Contents/Resources/translations\\\" \
-        OS_DARWIN
+    INCLUDEPATH += src
+    LIBS += -framework IOKit -framework CoreFoundation
+    ICON = res/images/openhantek.icns
+    DEFINES += QMAKE_TRANSLATIONS_PATH=\"Contents/Resources/translations\" \
+        OS_DARWIN VERSION=\"$${VERSION}\"
 }
 win32 { 
     isEmpty(PREFIX):PREFIX = OpenHantek
@@ -125,12 +129,11 @@ win32 {
     target.path = $${PREFIX}
     translations.path = $${PREFIX}/translations
     DEFINES += QMAKE_TRANSLATIONS_PATH=\\\"translations\\\" \
-        OS_WINDOWS
+        OS_WINDOWS VERSION=\\\"$${VERSION}\\\"
 }
 translations.files += translations/*.qm
 INSTALLS += target \
     translations
-DEFINES += VERSION=\\\"$${VERSION}\\\"
 
 # Custom target "doc" for Doxygen
 doxygen.target = doc

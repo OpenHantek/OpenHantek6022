@@ -443,6 +443,7 @@ bool DsoWidget::exportAs() {
 	
 	QFileDialog fileDialog((QWidget *) this->parent(), tr("Export file..."), QString(), filters.join(";;"));
 	fileDialog.setFileMode(QFileDialog::AnyFile);
+	fileDialog.setAcceptMode(QFileDialog::AcceptSave);
 	if(fileDialog.exec() != QDialog::Accepted)
 		return false;
 	

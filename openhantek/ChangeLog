@@ -78,3 +78,6 @@
 * Made export dialog title translatable
 * Fixed export shortcut
 * Added csv export
+
+2010-09-15  Oliver Haag  <oliver.haag@gmail.com>
+* Added OSX patches by Florian Schirmer <jolt@tuxbox.org>, thanks :)
