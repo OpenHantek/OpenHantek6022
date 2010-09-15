@@ -182,7 +182,7 @@ void OpenHantekMainWindow::createActions() {
 	connect(this->printAction, SIGNAL(triggered()), this->dsoWidget, SLOT(print()));
 
 	this->exportAsAction = new QAction(QIcon(":actions/export-as.png"), tr("&Export as..."), this);
-	this->saveAction->setShortcut(tr("Ctrl+E"));
+	this->exportAsAction->setShortcut(tr("Ctrl+E"));
 	this->exportAsAction->setStatusTip(tr("Export the oscilloscope data to a file"));
 	connect(this->exportAsAction, SIGNAL(triggered()), this->dsoWidget, SLOT(exportAs()));
 

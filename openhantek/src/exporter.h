@@ -41,7 +41,8 @@ class DataAnalyzer;
 enum ExportFormat {
 	EXPORT_FORMAT_PRINTER,
 	EXPORT_FORMAT_PDF, EXPORT_FORMAT_PS,
-	EXPORT_FORMAT_IMAGE
+	EXPORT_FORMAT_IMAGE,
+	EXPORT_FORMAT_CSV
 };
 
 ////////////////////////////////////////////////////////////////////////////////

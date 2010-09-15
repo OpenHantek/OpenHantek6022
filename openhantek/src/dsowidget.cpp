@@ -441,7 +441,7 @@ bool DsoWidget::exportAs() {
 			<< tr("Image (*.png *.xpm *.jpg)")
 			<< tr("Comma-Separated Values (*.csv)");
 	
-	QFileDialog fileDialog((QWidget *) this->parent(), "Export file...", QString(), filters.join(";;"));
+	QFileDialog fileDialog((QWidget *) this->parent(), tr("Export file..."), QString(), filters.join(";;"));
 	fileDialog.setFileMode(QFileDialog::AnyFile);
 	if(fileDialog.exec() != QDialog::Accepted)
 		return false;
