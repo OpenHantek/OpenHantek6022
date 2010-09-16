@@ -387,5 +387,7 @@ bool Exporter::doExport() {
 		}
 		
 		csvFile.close();
+		
+		return true;
 	}
 }

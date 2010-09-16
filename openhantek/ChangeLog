@@ -81,3 +81,7 @@
 
 2010-09-15  Oliver Haag  <oliver.haag@gmail.com>
 * Added OSX patches by Florian Schirmer <jolt@tuxbox.org>, thanks :)
+
+2010-09-16  Oliver Haag  <oliver.haag@gmail.com>
+* Added csv export return value to doExport method
+* Fixed DSO-2150 samplerates

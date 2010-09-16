@@ -43,6 +43,7 @@ namespace Hantek {
 		this->gainSteps             << 0.08 << 0.16 << 0.40 << 0.80 << 1.60 << 4.00
 				<<  8.0 << 16.0 << 40.0;
 		this->samplerateChannelMax = 50e6;
+		this->samplerateFastMax = 100e6;
 		this->samplerateMax = this->samplerateChannelMax;
 		this->samplerateDivider = 1;
 		this->triggerPosition = 0;
@@ -534,14 +535,17 @@ namespace Hantek {
 			case MODEL_DSO2090:
 			case MODEL_DSO2100:
 				this->samplerateChannelMax = 50e6;
+				this->samplerateFastMax = 100e6;
 				break;
 			
 			case MODEL_DSO2150:
-				this->samplerateChannelMax = 75e6;
+				this->samplerateChannelMax = 50e6;
+				this->samplerateFastMax = 150e6;
 				break;
 			
 			default:
 				this->samplerateChannelMax = 125e6;
+				this->samplerateFastMax = 250e6;
 				break;
 		}
 		this->samplerateMax = this->samplerateChannelMax;
@@ -592,7 +596,7 @@ namespace Hantek {
 		this->samplerateMax = this->samplerateChannelMax;
 		if((this->commandVersion == 0) ? (commandSetTriggerAndSamplerate->getUsedChannels() != USED_CH1CH2) : (commandSetTrigger5200->getUsedChannels() != EUSED_CH1CH2)) {
 			fastRate = true;
-			this->samplerateMax *= HANTEK_CHANNELS;
+			this->samplerateMax = this->samplerateFastMax;
 		}
 		
 		// The maximum sample rate depends on the buffer size
