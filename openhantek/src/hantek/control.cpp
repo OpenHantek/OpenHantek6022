@@ -416,7 +416,7 @@ namespace Hantek {
 								if(bufferPosition >= dataCount)
 									bufferPosition %= dataCount;
 								
-								this->samples[channel][realPosition] = ((double) (data[bufferPosition + HANTEK_CHANNELS - 1 - channel] + (data[dataCount + bufferPosition + HANTEK_CHANNELS - 1 - channel] << 8)) / 0x1ff - this->offsetReal[channel]) * this->gainSteps[this->gain[channel]];
+								this->samples[channel][realPosition] = ((double) ((unsigned short int) data[bufferPosition + HANTEK_CHANNELS - 1 - channel] + ((unsigned short int) data[dataCount + bufferPosition + HANTEK_CHANNELS - 1 - channel] << 8)) / 0x1ff - this->offsetReal[channel]) * this->gainSteps[this->gain[channel]];
 							}
 						}
 						else {
