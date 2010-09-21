@@ -177,7 +177,7 @@ void OpenHantekMainWindow::createActions() {
 	connect(this->saveAsAction, SIGNAL(triggered()), this, SLOT(saveAs()));
 
 	this->printAction = new QAction(QIcon(":actions/print.png"), tr("&Print..."), this);
-	this->saveAction->setShortcut(tr("Ctrl+P"));
+	this->printAction->setShortcut(tr("Ctrl+P"));
 	this->printAction->setStatusTip(tr("Print the oscilloscope screen"));
 	connect(this->printAction, SIGNAL(triggered()), this->dsoWidget, SLOT(print()));
 

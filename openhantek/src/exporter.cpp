@@ -66,7 +66,7 @@ void Exporter::setFilename(QString filename) {
 
 /// \brief Set the output format.
 void Exporter::setFormat(ExportFormat format) {
-	if(format >= EXPORT_FORMAT_PRINTER && format <= EXPORT_FORMAT_IMAGE)
+	if(format >= EXPORT_FORMAT_PRINTER && format <= EXPORT_FORMAT_CSV)
 		this->format = format;
 }
 
@@ -379,7 +379,7 @@ bool Exporter::doExport() {
 				
 				// And now all sample values in volts
 				for(unsigned int position = 0; position < this->dataAnalyzer->data(channel)->samples.voltage.count; position++)
-					csvStream << "\"," << this->dataAnalyzer->data(channel)->samples.voltage.sample[position];
+					csvStream << "," << this->dataAnalyzer->data(channel)->samples.voltage.sample[position];
 				
 				// Finally a newline
 				csvStream << '\n';

@@ -381,7 +381,7 @@ namespace Hantek {
 							if(bufferPosition >= dataCount)
 								bufferPosition %= dataCount;
 							
-							this->samples[channel][realPosition] = ((double) (data[bufferPosition] + (data[dataCount + bufferPosition] << 8)) / 0x1ff - this->offsetReal[channel]) * this->gainSteps[this->gain[channel]];
+							this->samples[channel][realPosition] = ((double) ((unsigned short int) data[bufferPosition] + ((unsigned short int) data[dataCount + bufferPosition] << 8)) / 0x1ff - this->offsetReal[channel]) * this->gainSteps[this->gain[channel]];
 						}
 					}
 					else {
@@ -600,25 +600,32 @@ namespace Hantek {
 		}
 		
 		// The maximum sample rate depends on the buffer size
+		unsigned int bufferDivider = 1;
 		switch((this->commandVersion == 0) ? commandSetTriggerAndSamplerate->getBufferSize() : commandSetBuffer5200->getBufferSize()) {
 			case BUFFERID_ROLL:
-				this->samplerateMax /= 1000;
+				bufferDivider = 1000;
 				break;
 			case BUFFERID_LARGE:
-				this->samplerateMax /= 2;
+				bufferDivider = 2;
 				break;
 			default:
 				break;
 		}
 		
 		// Get divider that would provide the requested rate, can't be zero
+		this->samplerateMax /= bufferDivider;
 		this->samplerateDivider = qMax(this->samplerateMax / samplerate, (long unsigned int) 1);
 		
-		// Use normal mode if it would meet the rate as exactly as fast rate mode
-		if(fastRate && this->samplerateDivider % HANTEK_CHANNELS == 0) {
-			fastRate = false;
-			this->samplerateMax /= 2;
-			this->samplerateDivider /= HANTEK_CHANNELS;
+		// Use normal mode if we need valueSlow or it would meet the rate at least as exactly as fast rate mode
+		if(fastRate) {
+			unsigned long int slowSamplerate = this->samplerateChannelMax / bufferDivider;
+			unsigned long int slowDivider = qMax(slowSamplerate / samplerate, (long unsigned int) 1);
+			
+			if(this->samplerateDivider > 4 || (qAbs((double) slowSamplerate / slowDivider - samplerate) <= qAbs(((double) this->samplerateMax / this->samplerateDivider) - samplerate))) {
+				fastRate = false;
+				this->samplerateMax = slowSamplerate;
+				this->samplerateDivider = slowDivider;
+			}
 		}
 		
 		// Split the resulting divider into the values understood by the device

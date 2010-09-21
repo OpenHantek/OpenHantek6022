@@ -85,3 +85,10 @@
 2010-09-16  Oliver Haag  <oliver.haag@gmail.com>
 * Added csv export return value to doExport method
 * Fixed DSO-2150 samplerates
+
+2010-09-21  Oliver Haag  <oliver.haag@gmail.com>
+* Fixed print shortcut
+* Made samplerate calculation more flexible
+* DSO-5200 data conversion bugfix
+* Exporter::setFormat not filtering CSV format out anymore
+* Removed misplaced " before voltages in exported CSV file

@@ -96,7 +96,7 @@ namespace Hantek {
 		///   Without using fast rate mode, the samplerate is:<br />
 		///   <i>Samplerate = SamplerateMax / (1comp(SamplerateSlow) * 2 + Tsr1Bits.samplerateFast)</i><br />
 		///   SamplerateMax is 50 MHz for the DSO-2090.<br />
-		///   When using fast rate mode the resulting samplerate is twice as fast, when using the large buffer it is half as fast. When Tsr1Bits.bufferSize is 0 (Roll mode) the sampling rate is divided by 1000. Setting Tsr1Bits.samplerateFast to 0 doesn't work, the result will be the same as Tsr1Bits.samplerateFast = 1.
+		///   When using fast rate mode the resulting samplerate is twice (For DSO-2150 three times) as fast, when using the large buffer it is half as fast. When Tsr1Bits.bufferSize is 0 (Roll mode) the sampling rate is divided by 1000. Setting Tsr1Bits.samplerateFast to 0 doesn't work, the result will be the same as Tsr1Bits.samplerateFast = 1. SamplerateSlow can't be used together with fast rate mode, the result is always the the same as SlowValue = 0.
 		/// </p>
 		/// <p>
 		///   The TriggerPosition sets the position of the pretrigger in samples. The left side (0 %) is 0x77660 when using the small buffer and 0x78000 when using the large buffer.
