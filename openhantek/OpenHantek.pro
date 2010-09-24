@@ -51,7 +51,8 @@ RESOURCES += res/application.qrc \
 
 # Doxygen files
 DOXYFILES += Doxyfile \
-    mainpage.dox
+    mainpage.dox \
+    roadmap.dox
 
 # Files copied into the distribution package
 DISTFILES += ChangeLog \

@@ -1,0 +1,26 @@
+/**
+
+\page roadmap Development Roadmap
+
+\section sec_0_1 OpenHantek 0.1.0
+Released May 30, 2010
+<ul>
+	<li>Basic functionality</li>
+	<li>%Hantek DSO-2090 support</li>
+</ul>
+
+\section sec_0_2 OpenHantek 0.2.0
+Planned October, 2010
+<ul>
+	<li>New USB routines</li>
+	<li>%Hantek DSO-2150 and DSO-5200 support</li>
+</ul>
+
+\section sec_0_3 OpenHantek 0.3.0
+Planned Q1/Q2, 2011
+<ul>
+	<li>%Hantek DSO-2250 support</li>
+	<li>USB hotplugging</li>
+</ul>
+
+**/
