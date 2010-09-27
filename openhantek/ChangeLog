@@ -92,3 +92,8 @@
 * DSO-5200 data conversion bugfix
 * Exporter::setFormat not filtering CSV format out anymore
 * Removed misplaced " before voltages in exported CSV file
+
+2010-09-27  Oliver Haag  <oliver.haag@gmail.com>
+* Some bugfixes for the DSO-5200
+* Simplified trigger point calculation and correct handling for fast rate mode
+* Recalculating pretrigger position after samplerate changes

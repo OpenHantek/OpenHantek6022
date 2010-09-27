@@ -286,7 +286,7 @@ namespace Hantek {
 		/// <p>
 		///   The values are similar to the ones used on the DSO-2090. The formula is a bit different here:<br />
 		///   <i>Samplerate = SamplerateMax / (2comp(SamplerateSlow) * 2 + 4 - SamplerateFast)</i><br />
-		///   SamplerateMax is 125 MHz for the DSO-5200 in default configuration though, the modifications regarding fast rate and buffer size are the the same that apply for the DSO-2090.
+		///   SamplerateMax is 100 MS/s for the DSO-5200 in default configuration and 250 MS/s in fast rate mode though, the modifications regarding buffer size are the the same that apply for the DSO-2090.
 		/// </p>
 		COMMAND_SETSAMPLERATE5200,
 		
@@ -340,101 +340,114 @@ namespace Hantek {
 	/// \enum ControlCode                                           hantek/types.h
 	/// \brief All supported control commands.
 	enum ControlCode {
-		/// The 0xa2 control read/write command gives access to a #ControlValue.
+		/// <p>
+		///   The 0xa2 control read/write command gives access to a #ControlValue.
+		/// </p>
 		CONTROL_VALUE = 0xa2,
 		
-		/// The 0xb2 control read command gets the speed level of the USB connection:
-		/// <table>
-		///   <tr>
-		///     <td>#ConnectionSpeed</td>
-		///     <td>0x00</td>
-		///     <td>0x00</td>
-		///     <td>0x00</td>
-		///     <td>0x00</td>
-		///     <td>0x00</td>
-		///     <td>0x00</td>
-		///     <td>0x00</td>
-		///     <td>0x00</td>
-		///     <td>0x00</td>
-		///   </tr>
-		/// </table>
+		/// <p>
+		///   The 0xb2 control read command gets the speed level of the USB connection:
+		///   <table>
+		///     <tr>
+		///       <td>#ConnectionSpeed</td>
+		///       <td>0x00</td>
+		///       <td>0x00</td>
+		///       <td>0x00</td>
+		///       <td>0x00</td>
+		///       <td>0x00</td>
+		///       <td>0x00</td>
+		///       <td>0x00</td>
+		///       <td>0x00</td>
+		///       <td>0x00</td>
+		///     </tr>
+		///   </table>
+		/// </p>
 		CONTROL_GETSPEED = 0xb2,
 		
-		/// The 0xb3 control write command is sent before any bulk command:
-		/// <table>
-		///   <tr>
-		///     <td>0x0f</td>
-		///     <td>#CommandIndex</td>
-		///     <td>#CommandIndex</td>
-		///     <td>#CommandIndex</td>
-		///     <td>0x00</td>
-		///     <td>0x00</td>
-		///     <td>0x00</td>
-		///     <td>0x00</td>
-		///     <td>0x00</td>
-		///     <td>0x00</td>
-		///   </tr>
-		/// </table>
+		/// <p>
+		///   The 0xb3 control write command is sent before any bulk command:
+		///   <table>
+		///     <tr>
+		///       <td>0x0f</td>
+		///       <td>#CommandIndex</td>
+		///       <td>#CommandIndex</td>
+		///       <td>#CommandIndex</td>
+		///       <td>0x00</td>
+		///       <td>0x00</td>
+		///       <td>0x00</td>
+		///       <td>0x00</td>
+		///       <td>0x00</td>
+		///       <td>0x00</td>
+		///     </tr>
+		///   </table>
+		/// </p>
 		CONTROL_BEGINCOMMAND = 0xb3,
 		
-		/// The 0xb4 control write command sets the channel offsets:
-		/// <table>
-		///   <tr>
-		///     <td>Ch1Offset[1] | 0x20</td>
-		///     <td>Ch1Offset[0]</td>
-		///     <td>Ch2Offset[1] | 0x20</td>
-		///     <td>Ch2Offset[0]</td>
-		///     <td>TriggerOffset[1] | 0x20</td>
-		///     <td>TriggerOffset[0]</td>
-		///   </tr>
-		/// </table>
-		/// <table>
-		///   <tr>
-		///     <td>0x00</td>
-		///     <td>0x00</td>
-		///     <td>0x00</td>
-		///     <td>0x00</td>
-		///     <td>0x00</td>
-		///     <td>0x00</td>
-		///     <td>0x00</td>
-		///     <td>0x00</td>
-		///     <td>0x00</td>
-		///     <td>0x00</td>
-		///     <td>0x00</td>
-		///   </tr>
-		/// </table>
+		/// <p>
+		///   The 0xb4 control write command sets the channel offsets:
+		///   <table>
+		///     <tr>
+		///       <td>Ch1Offset[1]</td>
+		///       <td>Ch1Offset[0]</td>
+		///       <td>Ch2Offset[1]</td>
+		///       <td>Ch2Offset[0]</td>
+		///       <td>TriggerOffset[1]</td>
+		///       <td>TriggerOffset[0]</td>
+		///     </tr>
+		///   </table>
+		///   <table>
+		///     <tr>
+		///       <td>0x00</td>
+		///       <td>0x00</td>
+		///       <td>0x00</td>
+		///       <td>0x00</td>
+		///       <td>0x00</td>
+		///       <td>0x00</td>
+		///       <td>0x00</td>
+		///       <td>0x00</td>
+		///       <td>0x00</td>
+		///       <td>0x00</td>
+		///       <td>0x00</td>
+		///     </tr>
+		///   </table>
+		/// </p>
 		CONTROL_SETOFFSET = 0xb4,
 		
-		/// The 0xb5 control write command sets the internal relays:
-		/// <table>
-		///   <tr>
-		///     <td>0x00</td>
-		///     <td>0x04 ^ (Ch1Gain < 1 V)</td>
-		///     <td>0x08 ^ (Ch1Gain < 100 mV)</td>
-		///     <td>0x02 ^ (Ch1Coupling == DC)</td>
-		///   </tr>
-		/// </table>
-		/// <table>
-		///   <tr>
-		///     <td>0x20 ^ (Ch2Gain < 1 V)</td>
-		///     <td>0x40 ^ (Ch2Gain < 100 mV)</td>
-		///     <td>0x10 ^ (Ch2Coupling == DC)</td>
-		///     <td>0x01 ^ (Trigger == EXT)</td>
-		///   </tr>
-		/// </table>
-		/// <table>
-		///   <tr>
-		///     <td>0x00</td>
-		///     <td>0x00</td>
-		///     <td>0x00</td>
-		///     <td>0x00</td>
-		///     <td>0x00</td>
-		///     <td>0x00</td>
-		///     <td>0x00</td>
-		///     <td>0x00</td>
-		///     <td>0x00</td>
-		///   </tr>
-		/// </table>
+		/// <p>
+		///   The 0xb5 control write command sets the internal relays:
+		///   <table>
+		///     <tr>
+		///       <td>0x00</td>
+		///       <td>0x04 ^ (Ch1Gain < 1 V)</td>
+		///       <td>0x08 ^ (Ch1Gain < 100 mV)</td>
+		///       <td>0x02 ^ (Ch1Coupling == DC)</td>
+		///     </tr>
+		///   </table>
+		///   <table>
+		///     <tr>
+		///       <td>0x20 ^ (Ch2Gain < 1 V)</td>
+		///       <td>0x40 ^ (Ch2Gain < 100 mV)</td>
+		///       <td>0x10 ^ (Ch2Coupling == DC)</td>
+		///       <td>0x01 ^ (Trigger == EXT)</td>
+		///     </tr>
+		///   </table>
+		///   <table>
+		///     <tr>
+		///       <td>0x00</td>
+		///       <td>0x00</td>
+		///       <td>0x00</td>
+		///       <td>0x00</td>
+		///       <td>0x00</td>
+		///       <td>0x00</td>
+		///       <td>0x00</td>
+		///       <td>0x00</td>
+		///       <td>0x00</td>
+		///     </tr>
+		///   </table>
+		/// </p>
+		/// <p>
+		///   The limits are <= instead of < for the 10 bit models, since those support voltages up to 10 V.
+		/// </p>
 		CONTROL_SETRELAYS = 0xb5
 	};
 	
@@ -572,14 +585,6 @@ namespace Hantek {
 	};
 	
 	//////////////////////////////////////////////////////////////////////////////
-	/// \enum EUsedChannels                                         hantek/types.h
-	/// \brief The enabled channels in command 0x0e.
-	enum EUsedChannels {
-		EUSED_CH1 = 2, EUSED_CH2 = 3,
-		EUSED_CH1CH2 = 0
-	};
-	
-	//////////////////////////////////////////////////////////////////////////////
 	/// \struct FilterBits                                          hantek/types.h
 	/// \brief The bits for COMMAND_SETFILTER.
 	struct FilterBits {
@@ -631,7 +636,7 @@ namespace Hantek {
 	/// \brief Trigger and samplerate bits for 0x0e command.
 	struct ETsrBits {
 		unsigned char fastRate:1; ///< false, if one channels uses all buffers
-		unsigned char usedChannels:2; ///< Used channels, see Hantek::EUsedChannels
+		unsigned char usedChannels:2; ///< Used channels, see Hantek::UsedChannels
 		unsigned char triggerSource:2; ///< The trigger source, see Hantek::TriggerSource
 		unsigned char triggerSlope:2; ///< The trigger slope, see Dso::Slope
 		unsigned char triggerPulse:1; ///< Pulses are causing trigger events

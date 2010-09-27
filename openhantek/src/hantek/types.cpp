@@ -437,9 +437,9 @@ namespace Hantek {
 	/// \return The channel offset value.
 	unsigned short int ControlSetOffset::getChannel(unsigned int channel) {
 		if(channel == 0)
-			return ((this->array[0] & 0xdf) << 8) | this->array[1];
+			return ((this->array[0] & 0x0f) << 8) | this->array[1];
 		else
-			return ((this->array[2] & 0xdf) << 8) | this->array[3];
+			return ((this->array[2] & 0x0f) << 8) | this->array[3];
 	}
 	
 	/// \brief Set the offset for the given channel.
@@ -447,11 +447,11 @@ namespace Hantek {
 	/// \param offset The new channel offset value.
 	void ControlSetOffset::setChannel(unsigned int channel, unsigned short int offset) {
 		if(channel == 0) {
-			this->array[0] = (unsigned char) (offset >> 8) | 0x20;
+			this->array[0] = (unsigned char) (offset >> 8);
 			this->array[1] = (unsigned char) offset;
 		}
 		else {
-			this->array[2] = (unsigned char) (offset >> 8) | 0x20;
+			this->array[2] = (unsigned char) (offset >> 8);
 			this->array[3] = (unsigned char) offset;
 		}
 	}
@@ -459,13 +459,13 @@ namespace Hantek {
 	/// \brief Get the trigger level.
 	/// \return The trigger level value.
 	unsigned short int ControlSetOffset::getTrigger() {
-		return ((this->array[4] & 0xdf) << 8) | this->array[5];
+		return ((this->array[4] & 0x0f) << 8) | this->array[5];
 	}
 	
 	/// \brief Set the trigger level.
 	/// \param level The new trigger level value.
 	void ControlSetOffset::setTrigger(unsigned short int level) {
-		this->array[4] = (unsigned char) (level >> 8) | 0x20;
+		this->array[4] = (unsigned char) (level >> 8);
 		this->array[5] = (unsigned char) level;
 	}
 	
@@ -707,7 +707,7 @@ namespace Hantek {
 	//////////////////////////////////////////////////////////////////////////////
 	// class CommandSetTrigger5200
 	/// \brief Sets the data array to the default values.
-	CommandSetTrigger5200::CommandSetTrigger5200() : Helper::DataArray<unsigned char>(10) {
+	CommandSetTrigger5200::CommandSetTrigger5200() : Helper::DataArray<unsigned char>(8) {
 		this->init();
 	}
 	
@@ -740,13 +740,13 @@ namespace Hantek {
 	}
 	
 	/// \brief Get the usedChannels value in ETsrBits.
-	/// \return The #EUsedChannels value.
+	/// \return The #UsedChannels value.
 	unsigned char CommandSetTrigger5200::getUsedChannels() {
 		return ((ETsrBits *) &(this->array[2]))->usedChannels;
 	}
 	
 	/// \brief Set the usedChannels in ETsrBits to the given value.
-	/// \param value The new #EUsedChannels value.
+	/// \param value The new #UsedChannels value.
 	void CommandSetTrigger5200::setUsedChannels(unsigned char value) {
 		((ETsrBits *) &(this->array[2]))->usedChannels = value;
 	}

@@ -676,6 +676,9 @@ void OpenHantekMainWindow::updateOffset(unsigned int channel) {
 void OpenHantekMainWindow::updateTimebase() {
 	this->settings->scope.horizontal.samplerate = this->dsoControl->setSamplerate(1e3 / this->settings->scope.horizontal.timebase);
 	this->dsoWidget->updateSamplerate();
+	
+	// The trigger position should be kept at the same place but the timebase has changed
+	this->dsoControl->setTriggerPosition(this->settings->scope.trigger.position * this->settings->scope.horizontal.timebase * DIVS_TIME);
 }
 
 /// \brief Sets the state of the given oscilloscope channel.

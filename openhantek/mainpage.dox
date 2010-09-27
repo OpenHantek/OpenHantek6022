@@ -37,7 +37,7 @@ You can set environment variables to set various build options (Done best by pre
 </ul>
 
 \section sec_firmware Installation of the firmware
-\subsection ssec_drivers Gettings the Windows drivers
+\subsection ssec_drivers Getting the Windows drivers
 Before using OpenHantek you have to extract the firmware from the official Windows drivers. You can get them from the <a href="http://www.hantek.ru/download.html">Hantek website</a> (<a href="http://translate.google.com/translate?sl=ru&tl=en&u=http%3A%2F%2Fwww.hantek.ru%2Fdownload.html">English translation</a>).
 \subsection ssec_dsoextractfw The firmware extraction tool
 You need the tool dsoextractfw from the sourceforge page too extract the firmware. You have to install libbfd development files and build it by typing:

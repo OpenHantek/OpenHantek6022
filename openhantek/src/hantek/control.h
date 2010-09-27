@@ -67,7 +67,7 @@ namespace Hantek {
 		protected:
 			void run();
 			
-			unsigned int calculateTriggerPoint(unsigned int value);
+			unsigned short int calculateTriggerPoint(unsigned short int value);
 			int getCaptureState();
 			int getSamples(bool process);
 			unsigned long int updateBufferSize(unsigned long int size);
@@ -91,6 +91,7 @@ namespace Hantek {
 			unsigned long int samplerateChannelMax; ///< The maximum sample rate for a single channel
 			unsigned long int samplerateFastMax; ///< The maximum sample rate for fast rate mode
 			Gain gain[HANTEK_CHANNELS]; ///< The gain id
+			unsigned short int sampleRange[HANTEK_CHANNELS]; ///< The sample values at the top of the screen
 			double offset[HANTEK_CHANNELS]; ///< The current screen offset for each channel
 			double offsetReal[HANTEK_CHANNELS]; ///< The real offset for each channel (Due to quantization)
 			double triggerLevel[HANTEK_CHANNELS]; ///< The trigger level for each channel in V
