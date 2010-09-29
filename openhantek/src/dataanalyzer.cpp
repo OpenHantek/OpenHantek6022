@@ -184,55 +184,10 @@ void DataAnalyzer::run() {
 	// Lower priority for spectrum calculation
 	this->setPriority(QThread::LowPriority);
 	
-	// Calculate peak-to-peak voltage and frequency
-	for(int channel = 0; channel < this->analyzedData.count(); channel++) {
-		if(this->settings->scope.voltage[channel].used && this->analyzedData[channel]->samples.voltage.sample) {
-			bool aboveTrigger = this->analyzedData[channel]->samples.voltage.sample[0] > this->settings->scope.voltage[channel].trigger;
-			double minimalVoltage, maximalVoltage;
-			unsigned int firstTrigger = 0, lastTrigger = 0;
-			int triggerCount = -1;
-			this->analyzedData[channel]->amplitude = 0;
-			minimalVoltage = maximalVoltage = this->analyzedData[channel]->samples.voltage.sample[0];
-			
-			for(unsigned int position = 0; position < this->analyzedData[channel]->samples.voltage.count; position++) {
-				// Check trigger condition
-				if(aboveTrigger != (this->analyzedData[channel]->samples.voltage.sample[position] > this->settings->scope.voltage[channel].trigger)) {
-					aboveTrigger = this->analyzedData[channel]->samples.voltage.sample[position] > this->settings->scope.voltage[channel].trigger;
-					// We measure the time between two trigger slopes
-					if(aboveTrigger == (this->settings->scope.trigger.slope == Dso::SLOPE_POSITIVE)) {
-						triggerCount++;
-						if(triggerCount == 0)
-							firstTrigger = position;
-						else
-							this->analyzedData[channel]->amplitude += maximalVoltage - minimalVoltage;
-						minimalVoltage = this->analyzedData[channel]->samples.voltage.sample[position];
-						maximalVoltage = this->analyzedData[channel]->samples.voltage.sample[position];
-						lastTrigger = position;
-					}
-				}
-				else {                          // Get minimal and maximal voltage
-					if(this->analyzedData[channel]->samples.voltage.sample[position] < minimalVoltage)
-						minimalVoltage = this->analyzedData[channel]->samples.voltage.sample[position];
-					else if(this->analyzedData[channel]->samples.voltage.sample[position] > maximalVoltage)
-						maximalVoltage = this->analyzedData[channel]->samples.voltage.sample[position];
-				}
-			}
-			
-			// Calculate values
-			if(triggerCount >= 0) {
-				this->analyzedData[channel]->amplitude /= triggerCount;
-				this->analyzedData[channel]->frequency = (double) triggerCount / (lastTrigger - firstTrigger) / this->analyzedData[channel]->samples.voltage.interval;
-			}
-			else {
-				this->analyzedData[channel]->amplitude = maximalVoltage - minimalVoltage;
-				this->analyzedData[channel]->frequency = 0;
-			}
-		}
-	}
 	
-	// Calculate spectrums
+	// Calculate frequencies, peak-to-peak voltages and spectrums
 	for(int channel = 0; channel < this->analyzedData.count(); channel++) {
-		if(this->settings->scope.spectrum[channel].used && this->analyzedData[channel]->samples.voltage.sample) {
+		if(this->analyzedData[channel]->samples.voltage.sample) {
 			// Calculate new window
 			if(this->lastWindow != this->settings->scope.spectrumWindow || this->lastBufferSize != this->analyzedData[channel]->samples.voltage.count) {
 				if(this->lastBufferSize != this->analyzedData[channel]->samples.voltage.count) {
@@ -325,9 +280,12 @@ void DataAnalyzer::run() {
 			// Set sampling interval
 			this->analyzedData[channel]->samples.spectrum.interval = 1.0 / this->analyzedData[channel]->samples.voltage.interval / this->analyzedData[channel]->samples.voltage.count;
 			
+			// Number of real/complex samples
+			unsigned int dftLength = this->analyzedData[channel]->samples.voltage.count / 2;
+			
 			// Reallocate memory for samples if the sample count has changed
-			if(this->analyzedData[channel]->samples.spectrum.count != this->analyzedData[channel]->samples.voltage.count / 2) {
-				this->analyzedData[channel]->samples.spectrum.count = this->analyzedData[channel]->samples.voltage.count / 2;
+			if(this->analyzedData[channel]->samples.spectrum.count != dftLength) {
+				this->analyzedData[channel]->samples.spectrum.count = dftLength;
 				if(this->analyzedData[channel]->samples.spectrum.sample)
 					delete[] this->analyzedData[channel]->samples.spectrum.sample;
 				this->analyzedData[channel]->samples.spectrum.sample = new double[this->analyzedData[channel]->samples.voltage.count];
@@ -339,23 +297,98 @@ void DataAnalyzer::run() {
 				windowedValues[position] = this->window[position] * this->analyzedData[channel]->samples.voltage.sample[position];
 			
 			// Do discrete real to half-complex transformation
-			// TODO: Reuse plan and use FFTW_MEASURE to get fastest algorithm
+			/// \todo Check if buffer size is multiple of 2
+			/// \todo Reuse plan and use FFTW_MEASURE to get fastest algorithm
 			fftw_plan fftPlan = fftw_plan_r2r_1d(this->analyzedData[channel]->samples.voltage.count, windowedValues, this->analyzedData[channel]->samples.spectrum.sample, FFTW_R2HC, FFTW_ESTIMATE);
 			fftw_execute(fftPlan);
 			fftw_destroy_plan(fftPlan);
 			
-			// Deallocate sample buffer
-			delete[] windowedValues;
+			// Do an autocorrelation to get the frequency of the signal
+			double *conjugateComplex = windowedValues; // Reuse the windowedValues buffer
 			
-			// Convert values into dB (Relative to the reference level)
-			double offset = 60 - this->settings->scope.spectrumReference - 20 * log10(sqrt(this->analyzedData[channel]->samples.spectrum.count));
-			double offsetLimit = this->settings->scope.spectrumLimit - this->settings->scope.spectrumReference;
-			for(unsigned int position = 0; position < this->analyzedData[channel]->samples.spectrum.count; position++) {
-				this->analyzedData[channel]->samples.spectrum.sample[position] = 20 * log10(fabs(this->analyzedData[channel]->samples.spectrum.sample[position])) + offset;
-				
-				// Check if this value has to be limited
-				if(offsetLimit > this->analyzedData[channel]->samples.spectrum.sample[position])
-					this->analyzedData[channel]->samples.spectrum.sample[position] = offsetLimit;
+			// Real values
+			unsigned int position;
+			double correctionFactor = 1.0 / dftLength / dftLength;
+			conjugateComplex[0] = (this->analyzedData[channel]->samples.spectrum.sample[0] * this->analyzedData[channel]->samples.spectrum.sample[0]) * correctionFactor;
+			for(position = 1; position < dftLength; position++)
+				conjugateComplex[position] = (this->analyzedData[channel]->samples.spectrum.sample[position] * this->analyzedData[channel]->samples.spectrum.sample[position] + this->analyzedData[channel]->samples.spectrum.sample[this->analyzedData[channel]->samples.voltage.count - position] * this->analyzedData[channel]->samples.spectrum.sample[this->analyzedData[channel]->samples.voltage.count - position]) * correctionFactor;
+			// Complex values, all zero for autocorrelation
+			conjugateComplex[dftLength] = (this->analyzedData[channel]->samples.spectrum.sample[dftLength] * this->analyzedData[channel]->samples.spectrum.sample[dftLength]) * correctionFactor;
+			for(position++; position < this->analyzedData[channel]->samples.voltage.count; position++)
+				conjugateComplex[position] = 0;
+			
+			// Do half-complex to real inverse transformation
+			double *correlation = new double[this->analyzedData[channel]->samples.voltage.count];
+			fftPlan = fftw_plan_r2r_1d(this->analyzedData[channel]->samples.voltage.count, conjugateComplex, correlation, FFTW_HC2R, FFTW_ESTIMATE);
+			fftw_execute(fftPlan);
+			fftw_destroy_plan(fftPlan);
+			delete[] conjugateComplex;
+			
+			// Calculate peak-to-peak voltage
+			double minimalVoltage, maximalVoltage;
+			minimalVoltage = maximalVoltage = this->analyzedData[channel]->samples.voltage.sample[0];
+			
+			for(unsigned int position = 1; position < this->analyzedData[channel]->samples.voltage.count; position++) {
+				if(this->analyzedData[channel]->samples.voltage.sample[position] < minimalVoltage)
+					minimalVoltage = this->analyzedData[channel]->samples.voltage.sample[position];
+				else if(this->analyzedData[channel]->samples.voltage.sample[position] > maximalVoltage)
+					maximalVoltage = this->analyzedData[channel]->samples.voltage.sample[position];
+			}
+			
+			this->analyzedData[channel]->amplitude = maximalVoltage - minimalVoltage;
+			
+			// Get the frequency from the correlation results
+			double correlationLimit = pow(sqrt(maximalVoltage - minimalVoltage) / 2, 4);
+			bool newPeak = false; // Ignore correlation without offset (position = 0)
+			double bestPeak = 0, lastPeak = 0;
+			unsigned int bestPeakPosition = 0, currentPeakPosition = 0;
+			
+			for(unsigned int position = 1; position < this->analyzedData[channel]->samples.voltage.count; position++) {
+				if(correlation[position] < correlationLimit) {
+					// Check if there was a good peak before
+					if(currentPeakPosition) {
+						// Is this really a better correlation and not just a secondary peak of the first one?
+						if(lastPeak > bestPeak * 1.2) {
+							bestPeak = lastPeak;
+							bestPeakPosition = currentPeakPosition;
+						}
+						currentPeakPosition = 0;
+					}
+					newPeak = true;
+				}
+				else if((currentPeakPosition || newPeak) && correlation[position] > lastPeak) {
+					// We want this peak, store it
+					lastPeak = correlation[position];
+					currentPeakPosition = position;
+					newPeak = false;
+				}
+			}
+			delete[] correlation;
+			
+			// Check if there's a possible peak available that wasn't finished
+			if(currentPeakPosition && currentPeakPosition < this->analyzedData[channel]->samples.voltage.count - 1 && lastPeak > bestPeak * 1.2) {
+				bestPeak = lastPeak;
+				bestPeakPosition = currentPeakPosition;
+			}
+			
+			// Calculate the frequency in Hz
+			if(bestPeakPosition)
+				this->analyzedData[channel]->frequency = 1.0 / (this->analyzedData[channel]->samples.voltage.interval * bestPeakPosition);
+			else
+				this->analyzedData[channel]->frequency = 0;
+			
+			// Finally calculate the real spectrum if we want it
+			if(this->settings->scope.spectrum[channel].used) {
+				// Convert values into dB (Relative to the reference level)
+				double offset = 60 - this->settings->scope.spectrumReference - 20 * log10(dftLength);
+				double offsetLimit = this->settings->scope.spectrumLimit - this->settings->scope.spectrumReference;
+				for(unsigned int position = 0; position < this->analyzedData[channel]->samples.spectrum.count; position++) {
+					this->analyzedData[channel]->samples.spectrum.sample[position] = 20 * log10(fabs(this->analyzedData[channel]->samples.spectrum.sample[position])) + offset;
+					
+					// Check if this value has to be limited
+					if(offsetLimit > this->analyzedData[channel]->samples.spectrum.sample[position])
+						this->analyzedData[channel]->samples.spectrum.sample[position] = offsetLimit;
+				}
 			}
 		}
 		else if(this->analyzedData[channel]->samples.spectrum.sample) {

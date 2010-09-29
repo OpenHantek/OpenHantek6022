@@ -97,3 +97,8 @@
 * Some bugfixes for the DSO-5200
 * Simplified trigger point calculation and correct handling for fast rate mode
 * Recalculating pretrigger position after samplerate changes
+
+2010-09-29  Oliver Haag  <oliver.haag@gmail.com>
+* Added spectrums to exported csv files
+* Using autocorrelation for frequency detection now
+* Some undefined value bugfixes

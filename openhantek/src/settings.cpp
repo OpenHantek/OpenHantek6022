@@ -56,8 +56,8 @@ DsoSettings::DsoSettings() {
 	this->scope.trigger.special = false;
 	// General
 	this->scope.physicalChannels = 0;
-	this->scope.spectrumLimit = 0.0;
-	this->scope.spectrumReference = 20.0;
+	this->scope.spectrumLimit = -20.0;
+	this->scope.spectrumReference = 0.0;
 	this->scope.spectrumWindow = Dso::WINDOW_HANN;
 	
 	

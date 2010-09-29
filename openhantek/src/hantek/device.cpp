@@ -165,10 +165,11 @@ namespace Hantek {
 			libusb_close(this->handle);
 		
 		ssize_t deviceCount = libusb_get_device_list(this->context, &deviceList);
-		if (deviceCount < 0)
+		if(deviceCount < 0)
 			return tr("Failed to get device list: %3").arg(Helper::libUsbErrorString(errorCode));
 		
 		// Iterate through all usb devices
+		this->model = MODEL_UNKNOWN;
 		for(ssize_t deviceIterator = 0; deviceIterator < deviceCount; deviceIterator++) {
 			device = deviceList[deviceIterator];
 			// Get device descriptor

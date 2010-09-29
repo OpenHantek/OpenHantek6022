@@ -745,7 +745,7 @@ namespace Hantek {
 				scalerId = gainId % 3;
 				this->sampleRange[channel] = 0xff;
 				break;
-			case 1:
+			default:
 				/// \todo Use calibration data to get the DSO-5200 sample ranges
 				if(gainId == GAIN_10MV) {
 					scalerId = 1;
@@ -909,7 +909,7 @@ namespace Hantek {
 				maximum = 0xfd;
 				break;
 			
-			case 1:
+			default:
 				// The range is the same as used for the offsets for 10 bit models
 				minimum = ((unsigned short int) *((unsigned char *) &(this->channelLevels[channel][this->gain[channel]][OFFSET_START])) << 8) + *((unsigned char *) &(this->channelLevels[channel][this->gain[channel]][OFFSET_START]) + 1);
 				maximum = ((unsigned short int) *((unsigned char *) &(this->channelLevels[channel][this->gain[channel]][OFFSET_START])) << 8) + *((unsigned char *) &(this->channelLevels[channel][this->gain[channel]][OFFSET_END]) + 1);

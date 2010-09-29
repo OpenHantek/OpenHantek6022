@@ -384,6 +384,18 @@ bool Exporter::doExport() {
 				// Finally a newline
 				csvStream << '\n';
 			}
+			
+			if(this->settings->scope.spectrum[channel].used) {
+				// Start with channel name and the sample interval
+				csvStream << "\"" << this->settings->scope.spectrum[channel].name << "\"," << this->dataAnalyzer->data(channel)->samples.spectrum.interval;
+				
+				// And now all magnitudes in dB
+				for(unsigned int position = 0; position < this->dataAnalyzer->data(channel)->samples.spectrum.count; position++)
+					csvStream << "," << this->dataAnalyzer->data(channel)->samples.spectrum.sample[position];
+				
+				// Finally a newline
+				csvStream << '\n';
+			}
 		}
 		
 		csvFile.close();
