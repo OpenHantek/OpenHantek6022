@@ -14,3 +14,9 @@
 * Version 0.6.2:
 * Removed Oleg from AUTHORS
 * Renamed writeSRecords to writeIntelHex
+
+2010-11-17  Oliver Haag  <oliver.haag@gmail.com>
+* Patches by Romuald Conty <neomilium@gmail.com>:
+* Updated configure.in
+* Removed "warning: "PACKAGE_NAME" redefined" during make
+* Error if bfd (libbfd) is not usable
