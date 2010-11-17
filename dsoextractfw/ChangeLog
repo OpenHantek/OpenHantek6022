@@ -22,3 +22,4 @@
 * Error if bfd (libbfd) is not usable
 * Silent make if available
 * Fixed DSO-2100 USB vid/pid
+* Added --with-firmware-dir configure option and udev-rules file generation

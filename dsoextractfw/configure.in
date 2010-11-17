@@ -23,5 +23,21 @@ AC_CHECK_HEADERS([malloc.h string.h])
 # Checks for library functions.
 AC_FUNC_MALLOC
 
-AC_CONFIG_FILES([Makefile])
+# Add --with-firmware-dir= option
+# FIXME According to Autoconf manual, we shouldn't do substitution that way but I'm not able to expand ${prefix} even using Makefile...
+# SEE http://www.gnu.org/software/hello/manual/autoconf/External-Software.html
+AC_ARG_WITH( [firmware-dir],
+	[AC_HELP_STRING([--with-firmware-dir=DIR], [directory to install hantek firmwares [/usr/local/share]])],
+	[with_firmware_dir=$(echo "$withval" | sed -e 's!/$!!')],
+	[with_firmware_dir="/usr/local/share"],
+)
+
+hantekfirmwaredir="$with_firmware_dir/hantekdso"
+AC_SUBST(hantekfirmwaredir)
+
+AC_CONFIG_FILES(
+	[Makefile]
+	[90-hantek-dso.rules]
+)
+
 AC_OUTPUT
