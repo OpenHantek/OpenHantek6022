@@ -21,3 +21,4 @@
 * Removed "warning: "PACKAGE_NAME" redefined" during make
 * Error if bfd (libbfd) is not usable
 * Silent make if available
+* Fixed DSO-2100 USB vid/pid

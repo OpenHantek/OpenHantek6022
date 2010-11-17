@@ -3,8 +3,8 @@ SUBSYSTEM=="usb", ACTION=="add", ENV{DEVTYPE}=="usb_device", ENV{PRODUCT}=="4b4/
 SYSFS{idVendor}=="04b5", SYSFS{idProduct}=="2090", MODE="0660", GROUP="plugdev"
 
 # Hantek DSO-2100
-SUBSYSTEM=="usb", ACTION=="add", ENV{DEVTYPE}=="usb_device", ENV{PRODUCT}=="4b4/2100/*", RUN+="/sbin/fxload -t fx2 -I /usr/local/share/hantekdso/DSO2100_firmware.hex -s /usr/local/share/hantekdso/DSO2100_loader.hex -D $env{DEVNAME}"
-SYSFS{idVendor}=="04b5", SYSFS{idProduct}=="2100", MODE="0660", GROUP="plugdev"
+SUBSYSTEM=="usb", ACTION=="add", ENV{DEVTYPE}=="usb_device", ENV{PRODUCT}=="547/1006/*", RUN+="/sbin/fxload -t an21 -I /usr/local/share/hantekdso/DSO2100_firmware.hex -s /usr/local/share/hantekdso/DSO2100_loader.hex -D $env{DEVNAME}"
+SYSFS{idVendor}=="0547", SYSFS{idProduct}=="1002", MODE="0660", GROUP="plugdev"
 
 # Hantek DSO-2150
 SUBSYSTEM=="usb", ACTION=="add", ENV{DEVTYPE}=="usb_device", ENV{PRODUCT}=="4b4/2150/*", RUN+="/sbin/fxload -t fx2 -I /usr/local/share/hantekdso/DSO2150_firmware.hex -s /usr/local/share/hantekdso/DSO2150_loader.hex -D $env{DEVNAME}"
