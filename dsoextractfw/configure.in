@@ -4,6 +4,9 @@ AC_CONFIG_SRCDIR([dsoextractfw.c])
 # Generates a config.h
 #AC_CONFIG_HEADERS([config.h])
 
+# Silent make output if available
+m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES([yes])])
+
 AM_INIT_AUTOMAKE
 
 # Checks for programs.
