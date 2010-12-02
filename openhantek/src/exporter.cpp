@@ -51,7 +51,6 @@ Exporter::Exporter(DsoSettings *settings, DataAnalyzer *dataAnalyzer, QWidget *p
 	this->dataAnalyzer = dataAnalyzer;
 	
 	this->format = EXPORT_FORMAT_PRINTER;
-	this->size = QSize(640, 480);
 }
 
 /// \brief Cleans up everything.
@@ -68,12 +67,6 @@ void Exporter::setFilename(QString filename) {
 void Exporter::setFormat(ExportFormat format) {
 	if(format >= EXPORT_FORMAT_PRINTER && format <= EXPORT_FORMAT_CSV)
 		this->format = format;
-}
-
-/// \brief Set the size for the output image.
-void Exporter::setSize(QSize size) {
-	if(size.isValid())
-		this->size = size;
 }
 
 /// \brief Print the document (May be a file too)
@@ -109,7 +102,7 @@ bool Exporter::doExport() {
 		}
 		else {
 			// We need a QPixmap for image-export
-			paintDevice = new QPixmap(this->size);
+			paintDevice = new QPixmap(this->settings->options.imageSize);
 			((QPixmap *) paintDevice)->fill(colorValues->background);
 		}
 		

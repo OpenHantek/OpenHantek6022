@@ -48,6 +48,7 @@
 
 class DsoConfigAnalysisPage;
 class DsoConfigColorsPage;
+class DsoConfigFilesPage;
 class DsoConfigScopePage;
 class DsoSettings;
 
@@ -89,6 +90,7 @@ class DsoConfigDialog : public QDialog {
 		
 		DsoConfigAnalysisPage *analysisPage;
 		DsoConfigColorsPage *colorsPage;
+		DsoConfigFilesPage *filesPage;
 		DsoConfigScopePage *scopePage;
 		
 		QPushButton *acceptButton, *applyButton, *rejectButton;

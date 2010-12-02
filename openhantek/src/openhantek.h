@@ -67,8 +67,12 @@ class OpenHantekMainWindow : public QMainWindow {
 		void createDockWindows();
 
 		// Settings
-		void readSettings(const QString &fileName = QString());
-		void writeSettings(const QString &fileName = QString());
+		int readSettings(const QString &fileName = QString());
+		int writeSettings(const QString &fileName = QString());
+		
+		// Window translation events
+		void moveEvent(QMoveEvent * event);
+		void resizeEvent(QResizeEvent * event);
 
 		// Actions
 		QAction *newAction, *openAction, *saveAction, *saveAsAction;
@@ -122,9 +126,9 @@ class OpenHantekMainWindow : public QMainWindow {
 		
 	private slots:
 		// File operations
-		void open();
-		bool save();
-		bool saveAs();
+		int open();
+		int save();
+		int saveAs();
 		// View
 		void digitalPhosphor(bool enabled);
 		void zoom(bool enabled);

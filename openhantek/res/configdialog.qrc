@@ -1,8 +1,8 @@
-<!DOCTYPE RCC>
-<RCC version="1.0">
-	<qresource prefix="/config" >
-		<file alias="analysis.png" >images/config/analysis.png</file>
-		<file alias="colors.png" >images/config/colors.png</file>
-		<file alias="scope.png" >images/config/scope.png</file>
-	</qresource>
+<RCC>
+    <qresource prefix="/config">
+        <file alias="analysis.png">images/config/analysis.png</file>
+        <file alias="colors.png">images/config/colors.png</file>
+        <file alias="scope.png">images/config/scope.png</file>
+        <file alias="files.png">images/config/files.png</file>
+    </qresource>
 </RCC>

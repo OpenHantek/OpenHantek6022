@@ -223,6 +223,68 @@ void DsoConfigColorsPage::saveSettings() {
 
 
 ////////////////////////////////////////////////////////////////////////////////
+// class DsoConfigFilesPage
+/// \brief Creates the widgets and sets their initial value.
+/// \param settings The target settings object.
+/// \param parent The parent widget.
+DsoConfigFilesPage::DsoConfigFilesPage(DsoSettings *settings, QWidget *parent) : QWidget(parent) {
+	this->settings = settings;
+	
+	// Initialize elements
+	this->saveOnExitCheckBox = new QCheckBox(tr("Save default settings on exit"));
+	this->saveOnExitCheckBox->setChecked(this->settings->options.alwaysSave);
+	this->saveNowButton = new QPushButton(tr("Save default settings now"));
+	
+	this->configurationLayout = new QVBoxLayout();
+	this->configurationLayout->addWidget(this->saveOnExitCheckBox, 0);
+	this->configurationLayout->addWidget(this->saveNowButton, 1);
+	
+	this->configurationGroup = new QGroupBox(tr("Configuration"));
+	this->configurationGroup->setLayout(this->configurationLayout);
+	
+	this->imageWidthLabel = new QLabel(tr("Image width"));
+	this->imageWidthSpinBox = new QSpinBox();
+	this->imageWidthSpinBox->setMinimum(100);
+	this->imageWidthSpinBox->setMaximum(9999);
+	this->imageWidthSpinBox->setValue(this->settings->options.imageSize.width());
+	this->imageHeightLabel = new QLabel(tr("Image height"));
+	this->imageHeightSpinBox = new QSpinBox();
+	this->imageHeightSpinBox->setMinimum(100);
+	this->imageHeightSpinBox->setMaximum(9999);
+	this->imageHeightSpinBox->setValue(this->settings->options.imageSize.height());
+	
+	this->exportLayout = new QGridLayout();
+	this->exportLayout->addWidget(this->imageWidthLabel, 0, 0);
+	this->exportLayout->addWidget(this->imageWidthSpinBox, 0, 1);
+	this->exportLayout->addWidget(this->imageHeightLabel, 1, 0);
+	this->exportLayout->addWidget(this->imageHeightSpinBox, 1, 1);
+	
+	this->exportGroup = new QGroupBox(tr("Export"));
+	this->exportGroup->setLayout(this->exportLayout);
+	
+	this->mainLayout = new QVBoxLayout();
+	this->mainLayout->addWidget(this->configurationGroup);
+	this->mainLayout->addWidget(this->exportGroup);
+	this->mainLayout->addStretch(1);
+	
+	this->setLayout(this->mainLayout);
+	
+	connect(this->saveNowButton, SIGNAL(clicked()), this->settings, SLOT(save()));
+}
+
+/// \brief Cleans up the widget.
+DsoConfigFilesPage::~DsoConfigFilesPage() {
+}
+
+/// \brief Saves the new settings.
+void DsoConfigFilesPage::saveSettings() {
+	this->settings->options.alwaysSave = this->saveOnExitCheckBox->isChecked();
+	this->settings->options.imageSize.setWidth(this->imageWidthSpinBox->value());
+	this->settings->options.imageSize.setHeight(this->imageHeightSpinBox->value());
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
 // class DsoConfigScopePage
 /// \brief Creates the widgets and sets their initial value.
 /// \param settings The target settings object.
@@ -277,4 +339,3 @@ void DsoConfigScopePage::saveSettings() {
 	this->settings->view.interpolation = (Dso::InterpolationMode) this->interpolationComboBox->currentIndex();
 	this->settings->view.digitalPhosphorDepth = this->digitalPhosphorDepthSpinBox->value();
 }
-

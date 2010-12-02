@@ -57,7 +57,6 @@ class Exporter : public QObject {
 		
 		void setFilename(QString filename);
 		void setFormat(ExportFormat format);
-		void setSize(QSize size);
 		
 		bool doExport();
 	

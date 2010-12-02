@@ -29,6 +29,9 @@
 
 #include <QColor>
 #include <QList>
+#include <QObject>
+#include <QPoint>
+#include <QSize>
 #include <QString>
 
 
@@ -40,6 +43,9 @@
 /// \brief Holds the general options of the program.
 struct DsoSettingsOptions {
 	bool alwaysSave; ///< Always save the settings on exit
+	QSize imageSize; ///< Size of exported images in pixels
+	QPoint windowPosition; ///< Position of the main window
+	QSize windowSize; ///< Size of the main window
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -141,9 +147,11 @@ struct DsoSettingsView {
 ////////////////////////////////////////////////////////////////////////////////
 /// \class DsoSettings                                                settings.h
 /// \brief Holds the settings of the program.
-class DsoSettings {
+class DsoSettings : public QObject {
+	Q_OBJECT
+	
 	public:
-		DsoSettings();
+		DsoSettings(QWidget *parent = 0);
 		~DsoSettings();
 		
 		void setChannelCount(unsigned int channels);
@@ -151,6 +159,11 @@ class DsoSettings {
 		DsoSettingsOptions options; ///< General options of the program
 		DsoSettingsScope scope; ///< All oscilloscope related settings
 		DsoSettingsView view; ///< All view related settings
+	
+	public slots:
+		// Saving to and loading from configuration files
+		int load(const QString &fileName = QString());
+		int save(const QString &fileName = QString());
 };
 
 

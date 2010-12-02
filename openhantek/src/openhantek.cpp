@@ -32,7 +32,6 @@
 #include <QMenuBar>
 #include <QMessageBox>
 #include <QToolBar>
-#include <QSettings>
 #include <QStatusBar>
 
 
@@ -62,10 +61,6 @@ OpenHantekMainWindow::OpenHantekMainWindow(QWidget *parent, Qt::WindowFlags flag
 	this->setWindowIcon(QIcon(":openhantek.png"));
 	this->setWindowTitle(tr("OpenHantek"));
 	
-	// Default window dimensions
-	//this->move(152, 144);
-	this->resize(720, 480);
-	
 	// Create the controller for the oscilloscope, provides channel count for settings
 	this->dsoControl = new Hantek::Control();
 	
@@ -73,6 +68,7 @@ OpenHantekMainWindow::OpenHantekMainWindow(QWidget *parent, Qt::WindowFlags flag
 	this->settings = new DsoSettings();
 	this->settings->setChannelCount(this->dsoControl->getChannelCount());
 	this->readSettings();
+	this->applySettings();
 	
 	// Create dock windows before the dso widget, they fix messed up settings
 	this->createDockWindows();
@@ -155,7 +151,8 @@ OpenHantekMainWindow::~OpenHantekMainWindow() {
 /// \brief Save the settings before exiting.
 /// \param event The close event that should be handled.
 void OpenHantekMainWindow::closeEvent(QCloseEvent *event) {
-	this->writeSettings();
+	if(this->settings->options.alwaysSave)
+		this->writeSettings();
 	
 	QMainWindow::closeEvent(event);
 }
@@ -330,271 +327,74 @@ void OpenHantekMainWindow::createDockWindows()
 	//viewMenu->addAction(this->horizontalDock->toggleViewAction());
 }
 
-/// \brief Read the settings from the last session.
+/// \brief Read the settings from an ini file.
 /// \param fileName Optional filename to export the settings to a specific file.
-void OpenHantekMainWindow::readSettings(const QString &fileName) {
-	// Use main configuration if the fileName wasn't set
-	QSettings *settingsLoader;
-	if(fileName.isEmpty())
-		settingsLoader = new QSettings(this);
-	else
-		settingsLoader = new QSettings(fileName, QSettings::IniFormat, this);
-
-	// Window size and position
-	settingsLoader->beginGroup("window");
-	if(settingsLoader->contains("pos"))
-		this->move(settingsLoader->value("pos").toPoint());
-	if(settingsLoader->contains("size"))
-		this->resize(settingsLoader->value("size").toSize());
-	settingsLoader->endGroup();
+/// \return 0 on success, negative on error.
+int OpenHantekMainWindow::readSettings(const QString &fileName) {
+	int status = this->settings->load(fileName);
 	
-	// Oszilloskope settings
-	settingsLoader->beginGroup("scope");
-	// Horizontal axis
-	settingsLoader->beginGroup("horizontal");
-	if(settingsLoader->contains("format"))
-		this->settings->scope.horizontal.format = (Dso::GraphFormat) settingsLoader->value("format").toInt();
-	if(settingsLoader->contains("frequencybase"))
-		this->settings->scope.horizontal.frequencybase = settingsLoader->value("frequencybase").toDouble();
-	for(int marker = 0; marker < 2; marker++) {
-		QString name;
-		name = QString("marker%1").arg(marker);
-		if(settingsLoader->contains(name))
-			this->settings->scope.horizontal.marker[marker] = settingsLoader->value(name).toDouble();
-	}
-	if(settingsLoader->contains("timebase"))
-		this->settings->scope.horizontal.timebase = settingsLoader->value("timebase").toDouble();
-	settingsLoader->endGroup();
-	// Trigger
-	settingsLoader->beginGroup("trigger");
-	if(settingsLoader->contains("filter"))
-		this->settings->scope.trigger.filter = settingsLoader->value("filter").toBool();
-	if(settingsLoader->contains("mode"))
-		this->settings->scope.trigger.mode = (Dso::TriggerMode) settingsLoader->value("mode").toInt();
-	if(settingsLoader->contains("position"))
-		this->settings->scope.trigger.position = settingsLoader->value("position").toDouble();
-	if(settingsLoader->contains("slope"))
-		this->settings->scope.trigger.slope = (Dso::Slope) settingsLoader->value("slope").toInt();
-	if(settingsLoader->contains("source"))
-		this->settings->scope.trigger.source = settingsLoader->value("source").toInt();
-	if(settingsLoader->contains("special"))
-		this->settings->scope.trigger.special = settingsLoader->value("special").toInt();
-	settingsLoader->endGroup();
-	// Spectrum
-	for(int channel = 0; channel < this->settings->scope.spectrum.count(); channel++) {
-		settingsLoader->beginGroup(QString("spectrum%1").arg(channel));
-		if(settingsLoader->contains("magnitude"))
-			this->settings->scope.spectrum[channel].magnitude = settingsLoader->value("magnitude").toDouble();
-		if(settingsLoader->contains("offset"))
-			this->settings->scope.spectrum[channel].offset = settingsLoader->value("offset").toDouble();
-		if(settingsLoader->contains("used"))
-			this->settings->scope.spectrum[channel].used = settingsLoader->value("used").toBool();
-		settingsLoader->endGroup();
-	}
-	// Vertical axis
-	for(int channel = 0; channel < this->settings->scope.voltage.count(); channel++) {
-		settingsLoader->beginGroup(QString("vertical%1").arg(channel));
-		if(settingsLoader->contains("gain"))
-			this->settings->scope.voltage[channel].gain = settingsLoader->value("gain").toDouble();
-		if(settingsLoader->contains("misc"))
-			this->settings->scope.voltage[channel].misc = settingsLoader->value("misc").toInt();
-		if(settingsLoader->contains("offset"))
-			this->settings->scope.voltage[channel].offset = settingsLoader->value("offset").toDouble();
-		if(settingsLoader->contains("trigger"))
-			this->settings->scope.voltage[channel].trigger = settingsLoader->value("trigger").toDouble();
-		if(settingsLoader->contains("used"))
-			this->settings->scope.voltage[channel].used = settingsLoader->value("used").toBool();
-		settingsLoader->endGroup();
-	}
-	if(settingsLoader->contains("spectrumLimit"))
-		this->settings->scope.spectrumLimit = settingsLoader->value("spectrumLimit").toDouble();
-	if(settingsLoader->contains("spectrumReference"))
-		this->settings->scope.spectrumReference = settingsLoader->value("spectrumReference").toDouble();
-	if(settingsLoader->contains("spectrumWindow"))
-		this->settings->scope.spectrumWindow = (Dso::WindowFunction) settingsLoader->value("spectrumWindow").toInt();
-	settingsLoader->endGroup();
+	if(status == 0)
+		emit(settingsChanged());
 	
-	// View
-	settingsLoader->beginGroup("view");
-	// Colors
-	settingsLoader->beginGroup("color");
-	DsoSettingsColorValues *colors;
-	for(int mode = 0; mode < 2; mode++) {
-		if(mode == 0) {
-			colors = &this->settings->view.color.screen;
-			settingsLoader->beginGroup("screen");
-		}
-		else {
-			colors = &this->settings->view.color.print;
-			settingsLoader->beginGroup("print");
-		}
-		
-		if(settingsLoader->contains("axes"))
-			colors->axes = settingsLoader->value("axes").value<QColor>();
-		if(settingsLoader->contains("background"))
-			colors->background = settingsLoader->value("background").value<QColor>();
-		if(settingsLoader->contains("border"))
-			colors->border = settingsLoader->value("border").value<QColor>();
-		if(settingsLoader->contains("grid"))
-			colors->grid = settingsLoader->value("grid").value<QColor>();
-		if(settingsLoader->contains("markers"))
-			colors->markers = settingsLoader->value("markers").value<QColor>();
-		for(int channel = 0; channel < this->settings->scope.spectrum.count(); channel++) {
-			QString key = QString("spectrum%1").arg(channel);
-			if(settingsLoader->contains(key))
-				colors->spectrum[channel] = settingsLoader->value(key).value<QColor>();
-		}
-		if(settingsLoader->contains("text"))
-			colors->text = settingsLoader->value("text").value<QColor>();
-		for(int channel = 0; channel < this->settings->scope.voltage.count(); channel++) {
-			QString key = QString("voltage%1").arg(channel);
-			if(settingsLoader->contains(key))
-				colors->voltage[channel] = settingsLoader->value(key).value<QColor>();
-		}
-		settingsLoader->endGroup();
-	}
-	settingsLoader->endGroup();
-	// Other view settings
-	if(settingsLoader->contains("digitalPhosphor"))
-		this->settings->view.digitalPhosphor = settingsLoader->value("digitalPhosphor").toBool();
-	if(settingsLoader->contains("interpolation"))
-		this->settings->view.interpolation = (Dso::InterpolationMode) settingsLoader->value("interpolation").toInt();
-	if(settingsLoader->contains("screenColorImages"))
-		this->settings->view.screenColorImages = (Dso::InterpolationMode) settingsLoader->value("screenColorImages").toBool();
-	if(settingsLoader->contains("zoom"))
-		this->settings->view.zoom = (Dso::InterpolationMode) settingsLoader->value("zoom").toBool();
-	settingsLoader->endGroup();
-	
-	delete settingsLoader;
-
-	emit(settingsChanged());
+	return status;
 }
 
 /// \brief Save the settings to the harddisk.
-void OpenHantekMainWindow::writeSettings(const QString &fileName) {
-	// Use main configuration and save everything if the fileName wasn't set
-	QSettings *settingsSaver;
-	bool complete = fileName.isEmpty();
-	if(complete)
-		settingsSaver = new QSettings(this);
-	else
-		settingsSaver = new QSettings(fileName, QSettings::IniFormat, this);
-
-	if(complete) {
-		// Window size and position
-		settingsSaver->beginGroup("window");
-		settingsSaver->setValue("pos", this->pos());
-		settingsSaver->setValue("size", this->size());
-		settingsSaver->endGroup();
-	}
-	// Oszilloskope settings
-	settingsSaver->beginGroup("scope");
-	// Horizontal axis
-	settingsSaver->beginGroup("horizontal");
-	settingsSaver->setValue("format", this->settings->scope.horizontal.format);
-	settingsSaver->setValue("frequencybase", this->settings->scope.horizontal.frequencybase);
-	for(int marker = 0; marker < 2; marker++)
-		settingsSaver->setValue(QString("marker%1").arg(marker), this->settings->scope.horizontal.marker[marker]);
-	settingsSaver->setValue("timebase", this->settings->scope.horizontal.timebase);
-	settingsSaver->endGroup();
-	// Trigger
-	settingsSaver->beginGroup("trigger");
-	settingsSaver->setValue("filter", this->settings->scope.trigger.filter);
-	settingsSaver->setValue("mode", this->settings->scope.trigger.mode);
-	settingsSaver->setValue("position", this->settings->scope.trigger.position);
-	settingsSaver->setValue("slope", this->settings->scope.trigger.slope);
-	settingsSaver->setValue("source", this->settings->scope.trigger.source);
-	settingsSaver->endGroup();
-	// Spectrum
-	for(int channel = 0; channel < this->settings->scope.spectrum.count(); channel++) {
-		settingsSaver->beginGroup(QString("spectrum%1").arg(channel));
-		settingsSaver->setValue("magnitude", this->settings->scope.spectrum[channel].magnitude);
-		settingsSaver->setValue("offset", this->settings->scope.spectrum[channel].offset);
-		settingsSaver->setValue("used", this->settings->scope.spectrum[channel].used);
-		settingsSaver->endGroup();
-	}
-	// Vertical axis
-	for(int channel = 0; channel < this->settings->scope.voltage.count(); channel++) {
-		settingsSaver->beginGroup(QString("vertical%1").arg(channel));
-		settingsSaver->setValue("gain", this->settings->scope.voltage[channel].gain);
-		settingsSaver->setValue("misc", this->settings->scope.voltage[channel].misc);
-		settingsSaver->setValue("offset", this->settings->scope.voltage[channel].offset);
-		settingsSaver->setValue("trigger", this->settings->scope.voltage[channel].trigger);
-		settingsSaver->setValue("used", this->settings->scope.voltage[channel].used);
-		settingsSaver->endGroup();
-	}
-	settingsSaver->setValue("spectrumLimit", this->settings->scope.spectrumLimit);
-	settingsSaver->setValue("spectrumReference", this->settings->scope.spectrumReference);
-	settingsSaver->setValue("spectrumWindow", this->settings->scope.spectrumWindow);
-	settingsSaver->endGroup();
-	
-	// View
-	settingsSaver->beginGroup("view");
-	// Colors
-	if(complete) {
-		settingsSaver->beginGroup("color");
-		DsoSettingsColorValues *colors;
-		for(int mode = 0; mode < 2; mode++) {
-			if(mode == 0) {
-				colors = &this->settings->view.color.screen;
-				settingsSaver->beginGroup("screen");
-			}
-			else {
-				colors = &this->settings->view.color.print;
-				settingsSaver->beginGroup("print");
-			}
-			
-			settingsSaver->setValue("axes", colors->axes);
-			settingsSaver->setValue("background", colors->background);
-			settingsSaver->setValue("border", colors->border);
-			settingsSaver->setValue("grid", colors->grid);
-			settingsSaver->setValue("markers", colors->markers);
-			for(int channel = 0; channel < this->settings->scope.spectrum.count(); channel++)
-				settingsSaver->setValue(QString("spectrum%1").arg(channel), colors->spectrum[channel]);
-			settingsSaver->setValue("text", colors->text);
-			for(int channel = 0; channel < this->settings->scope.voltage.count(); channel++)
-				settingsSaver->setValue(QString("voltage%1").arg(channel), colors->voltage[channel]);
-			settingsSaver->endGroup();
-		}
-		settingsSaver->endGroup();
-	}
-	// Other view settings
-	settingsSaver->setValue("digitalPhosphor", this->settings->view.digitalPhosphor);
-	if(complete) {
-		settingsSaver->setValue("interpolation", this->settings->view.interpolation);
-		settingsSaver->setValue("screenColorImages", this->settings->view.screenColorImages);
-	}
-	settingsSaver->setValue("zoom", this->settings->view.zoom);
-	settingsSaver->endGroup();
-	
-	delete settingsSaver;
+/// \param fileName Optional filename to read the settings from an ini file.
+/// \return 0 on success, negative on error.
+int OpenHantekMainWindow::writeSettings(const QString &fileName) {
+	return this->settings->save(fileName);
 }
 
-/// \brief Open a existing file.
-void OpenHantekMainWindow::open() {
-	QString fileName = QFileDialog::getOpenFileName(this, tr("Open file"), "", "*.xml");
+/// \brief Called everytime the window is moved.
+/// \param event The move event, it isn't used here though.
+void OpenHantekMainWindow::moveEvent(QMoveEvent *event) {
+	Q_UNUSED(event);
+	
+	this->settings->options.windowPosition = this->pos();
+}
+
+/// \brief Called everytime the window is resized.
+/// \param event The resize event, it isn't used here though.
+void OpenHantekMainWindow::resizeEvent(QResizeEvent *event) {
+	Q_UNUSED(event);
+	
+	this->settings->options.windowSize = this->size();
+}
+
+/// \brief Open a configuration file.
+/// \return 0 on success, 1 on user abort, negative on error.
+int OpenHantekMainWindow::open() {
+	QString fileName = QFileDialog::getOpenFileName(this, tr("Open file"), "", tr("Settings (*.ini)"));
+	
 	if(!fileName.isEmpty())
-		return; // TODO
+		return this->readSettings(fileName);
+	else
+		return 1;
 }
 
-/// \brief Save the file.
-/// \return true if the file was saved, false if not.
-bool OpenHantekMainWindow::save() {
-	if (this->currentFile.isEmpty()) {
+/// \brief Save the current configuration to a file.
+/// \return 0 on success, negative on error.
+int OpenHantekMainWindow::save() {
+	if (this->currentFile.isEmpty())
 		return saveAs();
-	} else {
-		return false; /// \todo Saving of individual setting files
-	}
+	else
+		return this->writeSettings(this->currentFile);
 }
 
-/// \brief Save the mapping to another filename.
-/// \return true if the file was saved, false if not.
-bool OpenHantekMainWindow::saveAs() {
-	QString fileName = QFileDialog::getSaveFileName(this, tr("Save settings..."), "", "*.xml");
+/// \brief Save the configuration to another filename.
+/// \return 0 on success, 1 on user abort, negative on error.
+int OpenHantekMainWindow::saveAs() {
+	QString fileName = QFileDialog::getSaveFileName(this, tr("Save settings"), "", tr("Settings (*.ini)"));
 	if (fileName.isEmpty())
-		return false;
-
-	return false; /// \todo Saving of individual setting files
+		return 1;
+	
+	int status = this->writeSettings(fileName);
+	
+	if(status == 0)
+		this->currentFile = fileName;
+	
+	return status;
 }
 
 /// \brief The oscilloscope started sampling.
@@ -654,6 +454,8 @@ void OpenHantekMainWindow::about() {
 
 /// \brief The settings have changed.
 void OpenHantekMainWindow::applySettings() {
+	this->move(this->settings->options.windowPosition);
+	this->resize(this->settings->options.windowSize);
 }
 
 /// \brief Apply new buffer size to settings.

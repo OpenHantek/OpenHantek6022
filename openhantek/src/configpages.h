@@ -115,6 +115,40 @@ class DsoConfigColorsPage : public QWidget {
 
 
 ////////////////////////////////////////////////////////////////////////////////
+/// \class DsoConfigFilesPage                                      configpages.h
+/// \brief Config page for file loading/saving.
+class DsoConfigFilesPage : public QWidget {
+	Q_OBJECT
+	
+	public:
+		DsoConfigFilesPage(DsoSettings *settings, QWidget *parent = 0);
+		~DsoConfigFilesPage();
+	
+	public slots:
+		void saveSettings();
+	
+	private:
+		DsoSettings *settings;
+		
+		QVBoxLayout *mainLayout;
+		
+		QGroupBox *configurationGroup;
+		QVBoxLayout *configurationLayout;
+		QCheckBox *saveOnExitCheckBox;
+		QPushButton *saveNowButton;
+		
+		QGroupBox *exportGroup;
+		QGridLayout *exportLayout;
+		QLabel *imageWidthLabel;
+		QSpinBox *imageWidthSpinBox;
+		QLabel *imageHeightLabel;
+		QSpinBox *imageHeightSpinBox;
+	
+	private slots:
+};
+
+
+////////////////////////////////////////////////////////////////////////////////
 /// \class DsoConfigScopePage                                      configpages.h
 /// \brief Config page for the scope screen.
 class DsoConfigScopePage : public QWidget {

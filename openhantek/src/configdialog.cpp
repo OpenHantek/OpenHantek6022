@@ -58,10 +58,12 @@ DsoConfigDialog::DsoConfigDialog(DsoSettings *settings, QWidget *parent, Qt::Win
 	
 	this->analysisPage = new DsoConfigAnalysisPage(this->settings);
 	this->colorsPage = new DsoConfigColorsPage(this->settings);
+	this->filesPage = new DsoConfigFilesPage(this->settings);
 	this->scopePage = new DsoConfigScopePage(this->settings);
 	this->pagesWidget = new QStackedWidget;
 	this->pagesWidget->addWidget(this->analysisPage);
 	this->pagesWidget->addWidget(this->colorsPage);
+	this->pagesWidget->addWidget(this->filesPage);
 	this->pagesWidget->addWidget(this->scopePage);
 	
 	this->acceptButton = new QPushButton(tr("&Ok"));
@@ -109,6 +111,10 @@ void DsoConfigDialog::createIcons() {
 	colorsButton->setIcon(QIcon(":config/colors.png"));
 	colorsButton->setText(tr("Colors"));
 	
+	QListWidgetItem *filesButton = new QListWidgetItem(contentsWidget);
+	filesButton->setIcon(QIcon(":config/files.png"));
+	filesButton->setText(tr("Files"));
+	
 	QListWidgetItem *scopeButton = new QListWidgetItem(contentsWidget);
 	scopeButton->setIcon(QIcon(":config/scope.png"));
 	scopeButton->setText(tr("Scope"));
@@ -127,6 +133,7 @@ void DsoConfigDialog::accept() {
 void DsoConfigDialog::apply() {
 	this->analysisPage->saveSettings();
 	this->colorsPage->saveSettings();
+	this->filesPage->saveSettings();
 	this->scopePage->saveSettings();
 }
 
