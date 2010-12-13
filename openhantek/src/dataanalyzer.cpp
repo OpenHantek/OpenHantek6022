@@ -338,42 +338,23 @@ void DataAnalyzer::run() {
 			this->analyzedData[channel]->amplitude = maximalVoltage - minimalVoltage;
 			
 			// Get the frequency from the correlation results
-			double correlationLimit = pow(sqrt(maximalVoltage - minimalVoltage) / 2, 4);
-			bool newPeak = false; // Ignore correlation without offset (position = 0)
-			double bestPeak = 0, lastPeak = 0;
-			unsigned int bestPeakPosition = 0, currentPeakPosition = 0;
+			double minimumCorrelation = correlation[0];
+			double peakCorrelation = 0;
+			unsigned int peakPosition = 0;
 			
-			for(unsigned int position = 1; position < this->analyzedData[channel]->samples.voltage.count; position++) {
-				if(correlation[position] < correlationLimit) {
-					// Check if there was a good peak before
-					if(currentPeakPosition) {
-						// Is this really a better correlation and not just a secondary peak of the first one?
-						if(lastPeak > bestPeak * 1.2) {
-							bestPeak = lastPeak;
-							bestPeakPosition = currentPeakPosition;
-						}
-						currentPeakPosition = 0;
-					}
-					newPeak = true;
+			for(unsigned int position = 1; position < this->analyzedData[channel]->samples.voltage.count / 2; position++) {
+				if(correlation[position] > peakCorrelation && correlation[position] > minimumCorrelation * 2) {
+					peakCorrelation = correlation[position];
+					peakPosition = position;
 				}
-				else if((currentPeakPosition || newPeak) && correlation[position] > lastPeak) {
-					// We want this peak, store it
-					lastPeak = correlation[position];
-					currentPeakPosition = position;
-					newPeak = false;
-				}
+				else if(correlation[position] < minimumCorrelation)
+					minimumCorrelation = correlation[position];
 			}
 			delete[] correlation;
 			
-			// Check if there's a possible peak available that wasn't finished
-			if(currentPeakPosition && currentPeakPosition < this->analyzedData[channel]->samples.voltage.count - 1 && lastPeak > bestPeak * 1.2) {
-				bestPeak = lastPeak;
-				bestPeakPosition = currentPeakPosition;
-			}
-			
 			// Calculate the frequency in Hz
-			if(bestPeakPosition)
-				this->analyzedData[channel]->frequency = 1.0 / (this->analyzedData[channel]->samples.voltage.interval * bestPeakPosition);
+			if(peakPosition)
+				this->analyzedData[channel]->frequency = 1.0 / (this->analyzedData[channel]->samples.voltage.interval * peakPosition);
 			else
 				this->analyzedData[channel]->frequency = 0;
 			
