@@ -102,3 +102,6 @@
 * Added spectrums to exported csv files
 * Using autocorrelation for frequency detection now
 * Some undefined value bugfixes
+
+2010-12-13  Oliver Haag  <oliver.haag@gmail.com>
+* Triggermode Auto working correctly now

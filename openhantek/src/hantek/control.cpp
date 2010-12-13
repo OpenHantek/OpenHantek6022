@@ -115,7 +115,7 @@ namespace Hantek {
 	
 	/// \brief Handles all USB things until the device gets disconnected.
 	void Control::run() {
-		int errorCode;
+		int errorCode, waitCounter = 0;
 		
 		// The control loop is running until the device is disconnected
 		int captureState = CAPTURE_WAITING;
@@ -208,8 +208,24 @@ namespace Hantek {
 						break;
 				
 				case CAPTURE_WAITING:
-					if(samplingStarted && lastTriggerMode == this->triggerMode)
-						break;
+					if(samplingStarted && lastTriggerMode == this->triggerMode) {
+						waitCounter++;
+						
+						if(this->triggerMode == Dso::TRIGGERMODE_AUTO) {
+							if(waitCounter > (double) this->samplerateDivider / this->samplerateMax * this->bufferSize * 20 + 2) {
+								// Force triggering
+								errorCode = this->device->bulkCommand(this->command[COMMAND_FORCETRIGGER]);
+								if(errorCode == LIBUSB_ERROR_NO_DEVICE)
+									captureState = LIBUSB_ERROR_NO_DEVICE;
+		#ifdef DEBUG
+							qDebug("Forcing trigger");
+		#endif
+							}
+						}
+						
+						if(waitCounter < 80)
+							break;
+					}
 					
 					// Start capturing
 					errorCode = this->device->bulkCommand(this->command[COMMAND_STARTSAMPLING]);
@@ -233,16 +249,8 @@ namespace Hantek {
 					qDebug("Enabling trigger");
 #endif
 					
-					if(this->triggerMode == Dso::TRIGGERMODE_AUTO) {
-						// Force triggering
-						errorCode = this->device->bulkCommand(this->command[COMMAND_FORCETRIGGER]);
-						if(errorCode == LIBUSB_ERROR_NO_DEVICE)
-							captureState = LIBUSB_ERROR_NO_DEVICE;
-#ifdef DEBUG
-					qDebug("Forcing trigger");
-#endif
-					}
 					samplingStarted = true;
+					waitCounter = 0;
 					lastTriggerMode = this->triggerMode;
 					break;
 				
