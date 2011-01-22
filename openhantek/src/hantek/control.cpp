@@ -115,7 +115,7 @@ namespace Hantek {
 	
 	/// \brief Handles all USB things until the device gets disconnected.
 	void Control::run() {
-		int errorCode, waitCounter = 0;
+		int errorCode, cycleCounter = 0, startCycle = 0;
 		
 		// The control loop is running until the device is disconnected
 		int captureState = CAPTURE_WAITING;
@@ -171,9 +171,10 @@ namespace Hantek {
 			if(captureState == LIBUSB_ERROR_NO_DEVICE)
 				break;
 			
-			// Check the current oscilloscope state every 50 ms
-			/// \todo Maybe the time interval could be improved...
-			this->msleep(50);
+			// Check the current oscilloscope state everytime 25% of the buffer should be refilled
+			// Not more often than every 10 ms though
+			int cycleTime = qMax(this->samplerateDivider * this->bufferSize * 250 / this->samplerateMax, (long unsigned int) 10);
+			this->msleep(cycleTime);
 			
 			if(!this->sampling) {
 				samplingStarted = false;
@@ -209,21 +210,31 @@ namespace Hantek {
 				
 				case CAPTURE_WAITING:
 					if(samplingStarted && lastTriggerMode == this->triggerMode) {
-						waitCounter++;
+						cycleCounter++;
 						
-						if(this->triggerMode == Dso::TRIGGERMODE_AUTO) {
-							if(waitCounter > (double) this->samplerateDivider / this->samplerateMax * this->bufferSize * 20 + 2) {
-								// Force triggering
-								errorCode = this->device->bulkCommand(this->command[COMMAND_FORCETRIGGER]);
+						if(cycleCounter == startCycle) {
+							// Buffer refilled completely since start of sampling, enable the trigger now
+							errorCode = this->device->bulkCommand(this->command[COMMAND_ENABLETRIGGER]);
+							if(errorCode < 0) {
 								if(errorCode == LIBUSB_ERROR_NO_DEVICE)
 									captureState = LIBUSB_ERROR_NO_DEVICE;
+								break;
+							}
+		#ifdef DEBUG
+							qDebug("Enabling trigger");
+		#endif
+						}
+						else if(cycleCounter >= 8 + startCycle && this->triggerMode == Dso::TRIGGERMODE_AUTO) {
+							// Force triggering
+							errorCode = this->device->bulkCommand(this->command[COMMAND_FORCETRIGGER]);
+							if(errorCode == LIBUSB_ERROR_NO_DEVICE)
+								captureState = LIBUSB_ERROR_NO_DEVICE;
 		#ifdef DEBUG
 							qDebug("Forcing trigger");
 		#endif
-							}
 						}
 						
-						if(waitCounter < 80)
+						if(cycleCounter < 50 || cycleCounter < 4000 / cycleTime)
 							break;
 					}
 					
@@ -238,19 +249,9 @@ namespace Hantek {
 					qDebug("Starting to capture");
 #endif
 					
-					// Enable trigger
-					errorCode = this->device->bulkCommand(this->command[COMMAND_ENABLETRIGGER]);
-					if(errorCode < 0) {
-						if(errorCode == LIBUSB_ERROR_NO_DEVICE)
-							captureState = LIBUSB_ERROR_NO_DEVICE;
-						break;
-					}
-#ifdef DEBUG
-					qDebug("Enabling trigger");
-#endif
-					
 					samplingStarted = true;
-					waitCounter = 0;
+					cycleCounter = 0;
+					startCycle = this->triggerPosition * 1000 / cycleTime + 1;
 					lastTriggerMode = this->triggerMode;
 					break;
 				
@@ -373,7 +374,7 @@ namespace Hantek {
 					}
 					
 					// Convert data from the oscilloscope and write it into the sample buffer
-					unsigned int bufferPosition = this->triggerPoint * 2;
+					unsigned int bufferPosition = (this->triggerPoint + 1) * 2;
 					if(using10Bits) {
 						// Additional 2 most significant bits after the normal data
 						unsigned int extraBitsPosition; // Track the position of the extra bits in the additional byte
@@ -412,7 +413,7 @@ namespace Hantek {
 						}
 						
 						// Convert data from the oscilloscope and write it into the sample buffer
-						unsigned int bufferPosition = this->triggerPoint * 2;
+						unsigned int bufferPosition = (this->triggerPoint + 1) * 2;
 						if(using10Bits) {
 							// Additional 2 most significant bits after the normal data
 							for(unsigned int realPosition = 0; realPosition < channelDataCount; realPosition++, bufferPosition += 2) {
@@ -665,7 +666,6 @@ namespace Hantek {
 		
 		this->updateBufferSize(this->bufferSize);
 		this->setTriggerPosition(this->triggerPosition);
-		this->setTriggerSlope(this->triggerSlope);
 		return this->samplerateMax / this->samplerateDivider;
 	}	
 	
@@ -955,7 +955,7 @@ namespace Hantek {
 				// SetTriggerAndSamplerate bulk command for trigger slope
 				CommandSetTriggerAndSamplerate *commandSetTriggerAndSamplerate = (CommandSetTriggerAndSamplerate *) this->command[COMMAND_SETTRIGGERANDSAMPLERATE];
 				
-				commandSetTriggerAndSamplerate->setTriggerSlope((/*this->bufferSize != BUFFER_SMALL ||*/ commandSetTriggerAndSamplerate->getSamplerateFast() % 2 == 0) ? slope : Dso::SLOPE_NEGATIVE - slope);
+				commandSetTriggerAndSamplerate->setTriggerSlope(slope);
 				this->commandPending[COMMAND_SETTRIGGERANDSAMPLERATE] = true;
 				break;
 			}
@@ -988,10 +988,10 @@ namespace Hantek {
 					positionSamples /= HANTEK_CHANNELS;
 				
 				// Calculate the position value (Start point depending on buffer size)
-				unsigned long int positionStart = (this->bufferSize == BUFFER_SMALL) ? 0x77660 : 0x78000;
+				unsigned long int position = 0x7ffff - this->bufferSize + positionSamples;
 				
 				// SetTriggerAndSamplerate bulk command for trigger position
-				((CommandSetTriggerAndSamplerate *) this->command[COMMAND_SETTRIGGERANDSAMPLERATE])->setTriggerPosition(positionStart + positionSamples);
+				((CommandSetTriggerAndSamplerate *) this->command[COMMAND_SETTRIGGERANDSAMPLERATE])->setTriggerPosition(position);
 				this->commandPending[COMMAND_SETTRIGGERANDSAMPLERATE] = true;
 				
 				break;

@@ -106,3 +106,11 @@
 2010-12-13  Oliver Haag  <oliver.haag@gmail.com>
 * Triggermode Auto working correctly now
 * Improved frequency detection routine
+
+2011-01-22  Oliver Haag  <oliver.haag@gmail.com>
+* Storing positions of docking windows and toolbars in settings now
+* Added submenu to show/hide docking windows and toolbars to the View menu
+
+2011-01-22  Oliver Haag  <oliver.haag@gmail.com>
+* Fixed bug with wrong pretrigger position when using a DSO-2090
+* Improved timing of the Hantek DSO sampling routine
