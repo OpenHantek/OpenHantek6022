@@ -390,14 +390,12 @@ void DsoWidget::updateVoltageCoupling(unsigned int channel) {
 	if(channel >= (unsigned int) this->settings->scope.voltage.count())
 		return;
 	
-	if(this->settings->scope.voltage[channel].used || this->settings->scope.spectrum[channel].used)
-		this->measurementMiscLabel[channel]->setText(Dso::couplingString((Dso::Coupling) this->settings->scope.voltage[channel].misc));
+	this->measurementMiscLabel[channel]->setText(Dso::couplingString((Dso::Coupling) this->settings->scope.voltage[channel].misc));
 }
 
 /// \brief Handles modeChanged signal from the voltage dock.
 void DsoWidget::updateMathMode() {
-	if(this->settings->scope.voltage[this->settings->scope.physicalChannels].used || this->settings->scope.spectrum[this->settings->scope.physicalChannels].used)
-		this->measurementMiscLabel[this->settings->scope.physicalChannels]->setText(Dso::mathModeString((Dso::MathMode) this->settings->scope.voltage[this->settings->scope.physicalChannels].misc));
+	this->measurementMiscLabel[this->settings->scope.physicalChannels]->setText(Dso::mathModeString((Dso::MathMode) this->settings->scope.voltage[this->settings->scope.physicalChannels].misc));
 }
 
 /// \brief Handles gainChanged signal from the voltage dock.

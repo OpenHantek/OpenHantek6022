@@ -112,5 +112,6 @@
 * Added submenu to show/hide docking windows and toolbars to the View menu
 
 2011-01-22  Oliver Haag  <oliver.haag@gmail.com>
-* Fixed bug with wrong pretrigger position when using a DSO-2090
+* Bugfix: Wrong pretrigger position when using a DSO-2090
 * Improved timing of the Hantek DSO sampling routine
+* Bugfix: Wrong misc field in measurement table after enabling a channel
