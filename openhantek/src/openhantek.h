@@ -4,7 +4,7 @@
 /// \file openhantek.h
 /// \brief Declares the HantekDsoMainWindow class.
 //
-//  Copyright (C) 2010  Oliver Haag
+//  Copyright (C) 2010, 2011  Oliver Haag
 //  oliver.haag@gmail.com
 //
 //  This program is free software: you can redistribute it and/or modify it
@@ -93,7 +93,7 @@ class OpenHantekMainWindow : public QMainWindow {
 
 		// Menus
 		QMenu *fileMenu;
-		QMenu *viewMenu;
+		QMenu *viewMenu, *dockMenu, *toolbarMenu;
 		QMenu *oscilloscopeMenu, *bufferSizeMenu;
 		QMenu *helpMenu;
 
@@ -139,7 +139,9 @@ class OpenHantekMainWindow : public QMainWindow {
 		void config();
 		void about();
 		
+		// Settings management
 		void applySettings();
+		void updateSettings();
 		
 		void bufferSizeSelected(QAction *action);
 		void updateOffset(unsigned int channel);

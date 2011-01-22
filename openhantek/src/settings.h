@@ -4,7 +4,7 @@
 /// \file settings.h
 /// \brief Declares the DsoSettings class.
 //
-//  Copyright (C) 2010  Oliver Haag
+//  Copyright (C) 2010, 2011  Oliver Haag
 //  oliver.haag@gmail.com
 //
 //  This program is free software: you can redistribute it and/or modify it
@@ -39,13 +39,50 @@
 
 
 ////////////////////////////////////////////////////////////////////////////////
+/// \struct DsoSettingsOptionsWindowPanel                             settings.h
+/// \brief Holds the position and state of a docking window or toolbar.
+struct DsoSettingsOptionsWindowPanel {
+	bool floating; ///< true, if the panel is floating
+	QPoint position; ///< Position of the panel
+	bool visible; ///< true, if the panel is shown
+};
+
+////////////////////////////////////////////////////////////////////////////////
+/// \struct DsoSettingsOptionsWindowDock                              settings.h
+/// \brief Holds the layout of the docking windows.
+struct DsoSettingsOptionsWindowDock {
+	DsoSettingsOptionsWindowPanel horizontal; ///< "Horizontal" docking window
+	DsoSettingsOptionsWindowPanel spectrum; ///< "Spectrum" docking window
+	DsoSettingsOptionsWindowPanel trigger; ///< "Trigger" docking window
+	DsoSettingsOptionsWindowPanel voltage; ///< "Voltage" docking window
+};
+
+////////////////////////////////////////////////////////////////////////////////
+/// \struct DsoSettingsOptionsWindowToolbar                           settings.h
+/// \brief Holds the layout of the toolbars.
+struct DsoSettingsOptionsWindowToolbar {
+	DsoSettingsOptionsWindowPanel file; ///< "File" toolbar
+	DsoSettingsOptionsWindowPanel oscilloscope; ///< "Oscilloscope" toolbar
+	DsoSettingsOptionsWindowPanel view; ///< The "View" toolbar
+};
+
+////////////////////////////////////////////////////////////////////////////////
+/// \struct DsoSettingsOptionsWindow                                  settings.h
+/// \brief Holds the layout of the main window.
+struct DsoSettingsOptionsWindow {
+	QPoint position; ///< Position of the main window
+	QSize size; ///< Size of the main window
+	DsoSettingsOptionsWindowDock dock; ///< Docking windows
+	DsoSettingsOptionsWindowToolbar toolbar; ///< Toolbars
+};
+
+////////////////////////////////////////////////////////////////////////////////
 /// \struct DsoSettingsOptions                                        settings.h
 /// \brief Holds the general options of the program.
 struct DsoSettingsOptions {
 	bool alwaysSave; ///< Always save the settings on exit
 	QSize imageSize; ///< Size of exported images in pixels
-	QPoint windowPosition; ///< Position of the main window
-	QSize windowSize; ///< Size of the main window
+	DsoSettingsOptionsWindow window; ///< Window layout
 };
 
 ////////////////////////////////////////////////////////////////////////////////

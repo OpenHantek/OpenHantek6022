@@ -3,7 +3,7 @@
 //  OpenHantek
 //  openhantek.cpp
 //
-//  Copyright (C) 2010  Oliver Haag
+//  Copyright (C) 2010, 2011  Oliver Haag
 //  oliver.haag@gmail.com
 //
 //  This program is free software: you can redistribute it and/or modify it
@@ -68,7 +68,6 @@ OpenHantekMainWindow::OpenHantekMainWindow(QWidget *parent, Qt::WindowFlags flag
 	this->settings = new DsoSettings();
 	this->settings->setChannelCount(this->dsoControl->getChannelCount());
 	this->readSettings();
-	this->applySettings();
 	
 	// Create dock windows before the dso widget, they fix messed up settings
 	this->createDockWindows();
@@ -82,9 +81,16 @@ OpenHantekMainWindow::OpenHantekMainWindow(QWidget *parent, Qt::WindowFlags flag
 	
 	// Subroutines for window elements
 	this->createActions();
-	this->createMenus();
 	this->createToolBars();
+	this->createMenus();
 	this->createStatusBar();
+	
+	// Apply the settings after the gui is initialized
+	this->applySettings();
+	
+	// Update stored window size and position
+	this->settings->options.window.position = this->pos();
+	this->settings->options.window.size = this->size();
 	
 	// Connect general signals
 	connect(this, SIGNAL(settingsChanged()), this, SLOT(applySettings()));
@@ -254,6 +260,16 @@ void OpenHantekMainWindow::createMenus() {
 	this->viewMenu = this->menuBar()->addMenu(tr("&View"));
 	this->viewMenu->addAction(this->digitalPhosphorAction);
 	this->viewMenu->addAction(this->zoomAction);
+	this->viewMenu->addSeparator();
+	this->dockMenu = this->viewMenu->addMenu(tr("&Docking windows"));
+	this->dockMenu->addAction(this->horizontalDock->toggleViewAction());
+	this->dockMenu->addAction(this->spectrumDock->toggleViewAction());
+	this->dockMenu->addAction(this->triggerDock->toggleViewAction());
+	this->dockMenu->addAction(this->voltageDock->toggleViewAction());
+	this->toolbarMenu = this->viewMenu->addMenu(tr("&Toolbars"));
+	this->toolbarMenu->addAction(this->fileToolBar->toggleViewAction());
+	this->toolbarMenu->addAction(this->oscilloscopeToolBar->toggleViewAction());
+	this->toolbarMenu->addAction(this->viewToolBar->toggleViewAction());
 
 	this->oscilloscopeMenu = this->menuBar()->addMenu(tr("&Oscilloscope"));
 	this->oscilloscopeMenu->addAction(this->configAction);
@@ -318,13 +334,6 @@ void OpenHantekMainWindow::createDockWindows()
 	this->triggerDock = new TriggerDock(this->settings, this->dsoControl->getSpecialTriggerSources());
 	this->spectrumDock = new SpectrumDock(this->settings);
 	this->voltageDock = new VoltageDock(this->settings);
-	
-	this->addDockWidget(Qt::RightDockWidgetArea, this->horizontalDock);
-	this->addDockWidget(Qt::RightDockWidgetArea, this->triggerDock);
-	this->addDockWidget(Qt::RightDockWidgetArea, this->voltageDock);
-	this->addDockWidget(Qt::RightDockWidgetArea, this->spectrumDock);
-	
-	//viewMenu->addAction(this->horizontalDock->toggleViewAction());
 }
 
 /// \brief Read the settings from an ini file.
@@ -343,6 +352,8 @@ int OpenHantekMainWindow::readSettings(const QString &fileName) {
 /// \param fileName Optional filename to read the settings from an ini file.
 /// \return 0 on success, negative on error.
 int OpenHantekMainWindow::writeSettings(const QString &fileName) {
+	this->updateSettings();
+	
 	return this->settings->save(fileName);
 }
 
@@ -351,7 +362,7 @@ int OpenHantekMainWindow::writeSettings(const QString &fileName) {
 void OpenHantekMainWindow::moveEvent(QMoveEvent *event) {
 	Q_UNUSED(event);
 	
-	this->settings->options.windowPosition = this->pos();
+	this->settings->options.window.position = this->pos();
 }
 
 /// \brief Called everytime the window is resized.
@@ -359,7 +370,7 @@ void OpenHantekMainWindow::moveEvent(QMoveEvent *event) {
 void OpenHantekMainWindow::resizeEvent(QResizeEvent *event) {
 	Q_UNUSED(event);
 	
-	this->settings->options.windowSize = this->size();
+	this->settings->options.window.size = this->size();
 }
 
 /// \brief Open a configuration file.
@@ -419,6 +430,8 @@ void OpenHantekMainWindow::stopped() {
 
 /// \brief Configure the oscilloscope.
 void OpenHantekMainWindow::config() {
+	this->updateSettings();
+	
 	DsoConfigDialog configDialog(this->settings, this);
 	if(configDialog.exec() == QDialog::Accepted)
 		this->settingsChanged();
@@ -448,14 +461,121 @@ void OpenHantekMainWindow::zoom(bool enabled) {
 void OpenHantekMainWindow::about() {
 	QMessageBox::about(this, tr("About OpenHantek %1").arg(VERSION), tr(
 		"<p>This is a open source software for Hantek USB oscilloscopes.</p>"
-		"<p>Copyright &copy; 2010 Oliver Haag &lt;oliver.haag@gmail.com&gt;</p>"
+		"<p>Copyright &copy; 2010, 2011 Oliver Haag &lt;oliver.haag@gmail.com&gt;</p>"
 	));
 }
 
 /// \brief The settings have changed.
 void OpenHantekMainWindow::applySettings() {
-	this->move(this->settings->options.windowPosition);
-	this->resize(this->settings->options.windowSize);
+	// Main window
+	if(!this->settings->options.window.position.isNull())
+		this->move(this->settings->options.window.position);
+	if(!this->settings->options.window.size.isNull())
+		this->resize(this->settings->options.window.size);
+	
+	// Docking windows
+	QList<QDockWidget *> docks;
+	docks.append(this->horizontalDock);
+	docks.append(this->spectrumDock);
+	docks.append(this->triggerDock);
+	docks.append(this->voltageDock);
+	
+	QList<DsoSettingsOptionsWindowPanel *> dockSettings;
+	dockSettings.append(&(this->settings->options.window.dock.horizontal));
+	dockSettings.append(&(this->settings->options.window.dock.spectrum));
+	dockSettings.append(&(this->settings->options.window.dock.trigger));
+	dockSettings.append(&(this->settings->options.window.dock.voltage));
+	
+	QList<int> docked[2]; // Docks docked on the sides of the main window
+	
+	for(int dockId = 0; dockId < docks.size(); dockId++) {
+		docks[dockId]->setVisible(dockSettings[dockId]->visible);
+		docks[dockId]->setFloating(dockSettings[dockId]->floating);
+		if(!dockSettings[dockId]->position.isNull()) {
+			if(dockSettings[dockId]->floating) {
+				docks[dockId]->move(dockSettings[dockId]->position);
+			}
+			else {
+				// Check in which order the docking windows where placed
+				int side = (dockSettings[dockId]->position.x() == 0) ? 0 : 1;
+				int index = 0;
+				while(index < docked[side].size() && dockSettings[docked[side][index]]->position.y() < dockSettings[dockId]->position.y())
+					index++;
+				docked[side].insert(index, dockId);
+				//docks[dockId]->setVisible(false);
+			}
+		}
+		else {
+			this->addDockWidget(Qt::RightDockWidgetArea, docks[dockId]);
+		}
+	}
+	
+	// Put the docked docking windows into the main window
+	for(int position = 0; position < docked[0].size(); position++)
+		this->addDockWidget(Qt::LeftDockWidgetArea, docks[docked[0][position]]);
+	for(int position = 0; position < docked[1].size(); position++)
+		this->addDockWidget(Qt::RightDockWidgetArea, docks[docked[1][position]]);
+	
+	// Toolbars
+	QList<QToolBar *> toolbars;
+	toolbars.append(this->fileToolBar);
+	toolbars.append(this->oscilloscopeToolBar);
+	toolbars.append(this->viewToolBar);
+	
+	QList<DsoSettingsOptionsWindowPanel *> toolbarSettings;
+	toolbarSettings.append(&(this->settings->options.window.toolbar.file));
+	toolbarSettings.append(&(this->settings->options.window.toolbar.oscilloscope));
+	toolbarSettings.append(&(this->settings->options.window.toolbar.view));
+	
+	for(int toolbarId = 0; toolbarId < toolbars.size(); toolbarId++) {
+		toolbars[toolbarId]->setVisible(toolbarSettings[toolbarId]->visible);
+		//toolbars[toolbarId]->setFloating(toolbarSettings[toolbarId]->floating); // setFloating missing, a bug in Qt?
+		if(!toolbarSettings[toolbarId]->position.isNull())
+			toolbars[toolbarId]->move(toolbarSettings[toolbarId]->position);
+	}
+}
+
+/// \brief Update the window layout in the settings.
+void OpenHantekMainWindow::updateSettings() {
+	// Main window
+	this->settings->options.window.position = this->pos();
+	this->settings->options.window.size = this->size();
+	
+	// Docking windows
+	QList<QDockWidget *> docks;
+	docks.append(this->horizontalDock);
+	docks.append(this->spectrumDock);
+	docks.append(this->triggerDock);
+	docks.append(this->voltageDock);
+	
+	QList<DsoSettingsOptionsWindowPanel *> dockSettings;
+	dockSettings.append(&(this->settings->options.window.dock.horizontal));
+	dockSettings.append(&(this->settings->options.window.dock.spectrum));
+	dockSettings.append(&(this->settings->options.window.dock.trigger));
+	dockSettings.append(&(this->settings->options.window.dock.voltage));
+	
+	for(int dockId = 0; dockId < docks.size(); dockId++) {
+		dockSettings[dockId]->floating = docks[dockId]->isFloating();
+		dockSettings[dockId]->position = docks[dockId]->pos();
+		dockSettings[dockId]->visible = docks[dockId]->isVisible();
+	}
+	
+	// Toolbars
+	QList<QToolBar *> toolbars;
+	toolbars.append(this->fileToolBar);
+	toolbars.append(this->oscilloscopeToolBar);
+	toolbars.append(this->viewToolBar);
+	
+	QList<DsoSettingsOptionsWindowPanel *> toolbarSettings;
+	toolbarSettings.append(&(this->settings->options.window.toolbar.file));
+	toolbarSettings.append(&(this->settings->options.window.toolbar.oscilloscope));
+	toolbarSettings.append(&(this->settings->options.window.toolbar.view));
+	
+	for(int toolbarId = 0; toolbarId < toolbars.size(); toolbarId++) {
+		toolbarSettings[toolbarId]->floating = toolbars[toolbarId]->isFloating();
+		toolbarSettings[toolbarId]->position = toolbars[toolbarId]->pos();
+		toolbarSettings[toolbarId]->visible = toolbars[toolbarId]->isVisible();
+	}
 }
 
 /// \brief Apply new buffer size to settings.
