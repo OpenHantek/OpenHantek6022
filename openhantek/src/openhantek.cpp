@@ -292,7 +292,8 @@ void OpenHantekMainWindow::createMenus() {
 
 /// \brief Create the toolbars and their buttons.
 void OpenHantekMainWindow::createToolBars() {
-	this->fileToolBar = this->addToolBar(tr("File"));
+	this->fileToolBar = new QToolBar(tr("File"));
+	this->fileToolBar->setAllowedAreas(Qt::TopToolBarArea);
 	this->fileToolBar->addAction(this->openAction);
 	this->fileToolBar->addAction(this->saveAction);
 	this->fileToolBar->addAction(this->saveAsAction);
@@ -300,10 +301,10 @@ void OpenHantekMainWindow::createToolBars() {
 	this->fileToolBar->addAction(this->printAction);
 	this->fileToolBar->addAction(this->exportAsAction);
 	
-	this->oscilloscopeToolBar = this->addToolBar(tr("Oscilloscope"));
+	this->oscilloscopeToolBar = new QToolBar(tr("Oscilloscope"));
 	this->oscilloscopeToolBar->addAction(this->startStopAction);
 	
-	this->viewToolBar = this->addToolBar(tr("View"));
+	this->viewToolBar = new QToolBar(tr("View"));
 	this->viewToolBar->addAction(this->digitalPhosphorAction);
 	this->viewToolBar->addAction(this->zoomAction);
 }
@@ -476,33 +477,33 @@ void OpenHantekMainWindow::applySettings() {
 	// Docking windows
 	QList<QDockWidget *> docks;
 	docks.append(this->horizontalDock);
-	docks.append(this->spectrumDock);
 	docks.append(this->triggerDock);
 	docks.append(this->voltageDock);
+	docks.append(this->spectrumDock);
 	
 	QList<DsoSettingsOptionsWindowPanel *> dockSettings;
 	dockSettings.append(&(this->settings->options.window.dock.horizontal));
-	dockSettings.append(&(this->settings->options.window.dock.spectrum));
 	dockSettings.append(&(this->settings->options.window.dock.trigger));
 	dockSettings.append(&(this->settings->options.window.dock.voltage));
+	dockSettings.append(&(this->settings->options.window.dock.spectrum));
 	
-	QList<int> docked[2]; // Docks docked on the sides of the main window
+	QList<int> dockedWindows[2]; // Docks docked on the sides of the main window
 	
 	for(int dockId = 0; dockId < docks.size(); dockId++) {
 		docks[dockId]->setVisible(dockSettings[dockId]->visible);
-		docks[dockId]->setFloating(dockSettings[dockId]->floating);
 		if(!dockSettings[dockId]->position.isNull()) {
 			if(dockSettings[dockId]->floating) {
+				this->addDockWidget(Qt::RightDockWidgetArea, docks[dockId]);
+				docks[dockId]->setFloating(dockSettings[dockId]->floating);
 				docks[dockId]->move(dockSettings[dockId]->position);
 			}
 			else {
 				// Check in which order the docking windows where placed
-				int side = (dockSettings[dockId]->position.x() == 0) ? 0 : 1;
+				int side = (dockSettings[dockId]->position.x() < this->settings->options.window.size.width() / 2) ? 0 : 1;
 				int index = 0;
-				while(index < docked[side].size() && dockSettings[docked[side][index]]->position.y() < dockSettings[dockId]->position.y())
+				while(index < dockedWindows[side].size() && dockSettings[dockedWindows[side][index]]->position.y() <= dockSettings[dockId]->position.y())
 					index++;
-				docked[side].insert(index, dockId);
-				//docks[dockId]->setVisible(false);
+				dockedWindows[side].insert(index, dockId);
 			}
 		}
 		else {
@@ -511,10 +512,10 @@ void OpenHantekMainWindow::applySettings() {
 	}
 	
 	// Put the docked docking windows into the main window
-	for(int position = 0; position < docked[0].size(); position++)
-		this->addDockWidget(Qt::LeftDockWidgetArea, docks[docked[0][position]]);
-	for(int position = 0; position < docked[1].size(); position++)
-		this->addDockWidget(Qt::RightDockWidgetArea, docks[docked[1][position]]);
+	for(int position = 0; position < dockedWindows[0].size(); position++)
+		this->addDockWidget(Qt::LeftDockWidgetArea, docks[dockedWindows[0][position]]);
+	for(int position = 0; position < dockedWindows[1].size(); position++)
+		this->addDockWidget(Qt::RightDockWidgetArea, docks[dockedWindows[1][position]]);
 	
 	// Toolbars
 	QList<QToolBar *> toolbars;
@@ -527,12 +528,31 @@ void OpenHantekMainWindow::applySettings() {
 	toolbarSettings.append(&(this->settings->options.window.toolbar.oscilloscope));
 	toolbarSettings.append(&(this->settings->options.window.toolbar.view));
 	
+	QList<int> dockedToolbars; // Docks docked on the sides of the main window
+	
 	for(int toolbarId = 0; toolbarId < toolbars.size(); toolbarId++) {
 		toolbars[toolbarId]->setVisible(toolbarSettings[toolbarId]->visible);
 		//toolbars[toolbarId]->setFloating(toolbarSettings[toolbarId]->floating); // setFloating missing, a bug in Qt?
-		if(!toolbarSettings[toolbarId]->position.isNull())
-			toolbars[toolbarId]->move(toolbarSettings[toolbarId]->position);
+		if(!toolbarSettings[toolbarId]->position.isNull() && !toolbarSettings[toolbarId]->floating) {
+			/*if(toolbarSettings[toolbarId]->floating) {
+				toolbars[toolbarId]->move(toolbarSettings[toolbarId]->position);
+			}
+			else*/ {
+				// Check in which order the toolbars where placed
+				int index = 0;
+				while(index < dockedToolbars.size() && toolbarSettings[dockedToolbars[index]]->position.x() <= toolbarSettings[toolbarId]->position.x())
+					index++;
+				dockedToolbars.insert(index, toolbarId);
+			}
+		}
+		else {
+			this->addToolBar(toolbars[toolbarId]);
+		}
 	}
+	
+	// Put the docked toolbars into the main window
+	for(int position = 0; position < dockedToolbars.size(); position++)
+		this->addToolBar(toolbars[dockedToolbars[position]]);
 }
 
 /// \brief Update the window layout in the settings.

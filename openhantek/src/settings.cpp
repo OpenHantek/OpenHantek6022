@@ -41,7 +41,7 @@ DsoSettings::DsoSettings(QWidget *parent) : QObject(parent) {
 	this->options.imageSize = QSize(640, 480);
 	// Main window
 	this->options.window.position = QPoint();
-	this->options.window.size = QSize();
+	this->options.window.size = QSize(800, 600);
 	// Docking windows and toolbars
 	QList<DsoSettingsOptionsWindowPanel *> panels;
 	panels.append(&(this->options.window.dock.horizontal));
