@@ -79,7 +79,7 @@ namespace Hantek {
 		if(errorCode >= 0)
 			errorCode = usb_find_devices();
 		if(errorCode < 0)
-			return tr("Failed to get device list: %3").arg(Helper::libUsbErrorString(errorCode));
+			return tr("Failed to get device list: %1").arg(Helper::libUsbErrorString(errorCode));
 		
 		struct usb_device *device = NULL;
 		
@@ -166,7 +166,7 @@ namespace Hantek {
 		
 		ssize_t deviceCount = libusb_get_device_list(this->context, &deviceList);
 		if(deviceCount < 0)
-			return tr("Failed to get device list: %3").arg(Helper::libUsbErrorString(errorCode));
+			return tr("Failed to get device list: %1").arg(Helper::libUsbErrorString(errorCode));
 		
 		// Iterate through all usb devices
 		this->model = MODEL_UNKNOWN;
