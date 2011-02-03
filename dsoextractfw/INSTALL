@@ -5,7 +5,7 @@ $ ./configure
 $ make
 
 Now place the DSO*1.SYS file that came with the windows driver for your oscilloscope into the same directory and run:
-$ ./dsoextractfw
+$ ./dsoextractfw <driver file>
 
 This should create two .hex files. Copy them to /usr/local/share/hantekdso/ and copy the 90-hantek-dso.rules file to /etc/udev/rules.d/. To load the firmware you have to install fxload.
 After restarting udev your oscilloscope should be initialized automatically after connecting it to the computer (You have to reconnect it after installing this package).

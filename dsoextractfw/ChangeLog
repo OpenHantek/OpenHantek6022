@@ -23,3 +23,7 @@
 * Silent make if available
 * Fixed DSO-2100 USB vid/pid
 * Added --with-firmware-dir configure option and udev-rules file generation
+
+2011-02-03  Oliver Haag  <oliver.haag@gmail.com>
+* Input files are given as commandline parameters (Not hardcoded anymore)
+* Cleaned up the code
