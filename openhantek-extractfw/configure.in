@@ -1,5 +1,5 @@
-AC_INIT([dsoextract], [0.6.2], [oliver.haag@gmail.com])
-AC_CONFIG_SRCDIR([dsoextractfw.c])
+AC_INIT([openhantek-extractfw], [0.7.0], [oliver.haag@gmail.com])
+AC_CONFIG_SRCDIR([extractfw.c])
 
 # Generates a config.h
 #AC_CONFIG_HEADERS([config.h])
@@ -32,12 +32,12 @@ AC_ARG_WITH( [firmware-dir],
 	[with_firmware_dir="/usr/local/share"],
 )
 
-hantekfirmwaredir="$with_firmware_dir/hantekdso"
+hantekfirmwaredir="$with_firmware_dir/hantek"
 AC_SUBST(hantekfirmwaredir)
 
 AC_CONFIG_FILES(
 	[Makefile]
-	[90-hantek-dso.rules]
+	[90-hantek.rules]
 )
 
 AC_OUTPUT

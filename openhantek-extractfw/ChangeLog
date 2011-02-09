@@ -27,3 +27,8 @@
 2011-02-03  Oliver Haag  <oliver.haag@gmail.com>
 * Input files are given as commandline parameters (Not hardcoded anymore)
 * Cleaned up the code
+
+2011-02-08  Oliver Haag  <oliver.haag@gmail.com>
+* Version 0.7.0:
+* Renamed this extraction tool to openhantek-extractfw
+* Added fwget.sh for automatic driver download and firmware extraction
