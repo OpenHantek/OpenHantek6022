@@ -121,3 +121,8 @@
 
 2011-01-25  Oliver Haag  <oliver.haag@gmail.com>
 * German translation updated
+
+2011-02-09  Oliver Haag  <oliver.haag@gmail.com>
+* Version 0.2.0:
+* Updated version information
+* Updated Doxygen mainpage and roadmap

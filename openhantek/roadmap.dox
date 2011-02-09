@@ -10,17 +10,18 @@ Released May 30, 2010
 </ul>
 
 \section sec_0_2 OpenHantek 0.2.0
-Planned October, 2010
+Released February 9, 2011
 <ul>
 	<li>New USB routines</li>
 	<li>%Hantek DSO-2150 and DSO-5200 support</li>
 </ul>
 
 \section sec_0_3 OpenHantek 0.3.0
-Planned Q1/Q2, 2011
+Planned Q2/Q3, 2011
 <ul>
 	<li>%Hantek DSO-2250 support</li>
 	<li>USB hotplugging</li>
+	<li>Improved zoom functionality</li>
 </ul>
 
 **/

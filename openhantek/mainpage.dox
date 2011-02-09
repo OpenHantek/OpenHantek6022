@@ -38,19 +38,23 @@ You can set environment variables to set various build options (Done best by pre
 
 \section sec_firmware Installation of the firmware
 \subsection ssec_drivers Getting the Windows drivers
-Before using OpenHantek you have to extract the firmware from the official Windows drivers. You can get them from the <a href="http://www.hantek.ru/download.html">Hantek website</a> (<a href="http://translate.google.com/translate?sl=ru&tl=en&u=http%3A%2F%2Fwww.hantek.ru%2Fdownload.html">English translation</a>).
-\subsection ssec_dsoextractfw The firmware extraction tool
-You need the tool dsoextractfw from the sourceforge page too extract the firmware. You have to install libbfd development files and build it by typing:
+Before using OpenHantek you have to extract the firmware from the official Windows drivers. You can get them from the <a href="http://www.hantek.ru/download.html">Hantek website</a> (<a href="http://translate.google.com/translate?sl=ru&tl=en&u=http%3A%2F%2Fwww.hantek.ru%2Fdownload.html">English translation</a>) or automatically download them with the script fwget.sh.
+\subsection ssec_extractfw The firmware extraction tool
+You need the tool openhantek-extractfw from the sourceforge page too extract the firmware. You have to install libbfd development files and build it by typing:
 <pre>
 	$ make
 </pre>
-After building it, you have to place the DSO*1.SYS file into the same directory and run the built binary:
+After building it, you can just run the fwget.sh script inside the openhantek-extractfw directory:
 <pre>
-	$ ./dsoextractfw
+	$ sudo ./fwget.sh /usr/local/share/hantek/
 </pre>
-This should create two .hex files.
+You can also do it manually by placing the DSO*1.SYS file into the same directory and running the built binary:
+<pre>
+	$ ./openhantek-extractfw <driver file>
+</pre>
+This should create two .hex files that should be placed into /usr/local/share/hantek/.
 \subsection ssec_firmware Installing the firmware
-Place the extracted .hex files into /usr/local/share/hantekdso/ and copy the 90-hantek-dso.rules file to /etc/udev/rules.d/. To load the firmware you have to install fxload.<br />
+Copy the 90-hantek.rules file to /etc/udev/rules.d/. To load the firmware you have to install fxload.<br />
 After restarting udev your oscilloscope should be initialized automatically after connecting it to the computer (You have to reconnect it after installing this package).<br />
 If you can't run OpenHantek as normal user, you have too add your user to the plugdev group.
 

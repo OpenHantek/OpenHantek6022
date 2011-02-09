@@ -69,7 +69,7 @@ DISTFILES += ChangeLog \
 TRANSLATIONS += translations/openhantek_de.ts
 
 # Program version
-VERSION = 0.2.0-pre
+VERSION = 0.2.0
 
 # Destination directory for built binaries
 DESTDIR = bin
