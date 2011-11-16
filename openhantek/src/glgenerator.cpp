@@ -86,7 +86,7 @@ GlGenerator::GlGenerator(DsoSettings *settings, QObject *parent) : QObject(paren
 
 /// \brief Deletes OpenGL objects.
 GlGenerator::~GlGenerator() {
-	delete[] this->vaChannel;
+	// todo: Clean up vaChannel
 }
 
 /// \brief Set the data analyzer whose data will be drawn.

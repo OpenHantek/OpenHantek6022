@@ -96,6 +96,7 @@ DEFINES += LIBUSB_VERSION=$${LIBUSB_VERSION}
 
 # Debug output
 CONFIG(debug, debug|release): DEFINES += DEBUG
+else: DEFINES += QT_NO_DEBUG_OUTPUT
 
 # Settings for different operating systems
 unix:!macx { 

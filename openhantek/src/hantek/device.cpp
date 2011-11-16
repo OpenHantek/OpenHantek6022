@@ -99,13 +99,6 @@ namespace Hantek {
 			}
 		}
 		
-		/// \todo Use 9 bit data model of DSO-5200(A)
-		/* if ((deviceModel == DSO_5200) || (deviceModel == DSO_5200A))
-		{
-			extraBitsData = true;
-			qDebug("Using a 9-bita data model");
-		}*/
-		
 		if(this->model >= 0) {
 			// Open device
 			deviceAddress = QString("%1:%2").arg(device->bus->location, 3, 10, QLatin1Char('0')).arg(device->devnum, 3, 10, QLatin1Char('0'));

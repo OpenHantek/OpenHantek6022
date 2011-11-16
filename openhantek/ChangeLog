@@ -126,3 +126,7 @@
 * Version 0.2.0:
 * Updated version information
 * Updated Doxygen mainpage and roadmap
+
+2011-11-16 Oliver Haag  <oliver.haag@gmail.com>
+* Redesign of Hantek::Control to make it easier to add support for new models
+* Removed buggy destructor from GlGenerator, proper cleanup still missing

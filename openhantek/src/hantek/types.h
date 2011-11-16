@@ -47,10 +47,10 @@
 /// \brief All %Hantek DSO device specific things.
 namespace Hantek {
 	//////////////////////////////////////////////////////////////////////////////
-	/// \enum CommandCode                                           hantek/types.h
+	/// \enum BulkCode                                              hantek/types.h
 	/// \brief All supported bulk commands.
 	/// Indicies given in square brackets specify byte numbers in little endian format.
-	enum CommandCode {
+	enum BulkCode {
 		/// <p>
 		///   This command sets channel and trigger filter:
 		///   <table>
@@ -66,7 +66,7 @@ namespace Hantek {
 		///     </tr>
 		///   </table>
 		/// </p>
-		COMMAND_SETFILTER,
+		BULK_SETFILTER,
 		
 		/// <p>
 		///   This command sets trigger and timebase:
@@ -101,7 +101,7 @@ namespace Hantek {
 		/// <p>
 		///   The TriggerPosition sets the position of the pretrigger in samples. The left side (0 %) is 0x77660 when using the small buffer and 0x78000 when using the large buffer.
 		/// </p>
-		COMMAND_SETTRIGGERANDSAMPLERATE,
+		BULK_SETTRIGGERANDSAMPLERATE,
 		
 		/// <p>
 		///   This command forces triggering:
@@ -112,7 +112,7 @@ namespace Hantek {
 		///     </tr>
 		///   </table>
 		/// </p>
-		COMMAND_FORCETRIGGER,
+		BULK_FORCETRIGGER,
 		
 		/// <p>
 		///   This command starts to capture data:
@@ -123,7 +123,7 @@ namespace Hantek {
 		///     </tr>
 		///   </table>
 		/// </p>
-		COMMAND_STARTSAMPLING,
+		BULK_STARTSAMPLING,
 		
 		/// <p>
 		///   This command sets the trigger:
@@ -134,7 +134,7 @@ namespace Hantek {
 		///     </tr>
 		///   </table>
 		/// </p>
-		COMMAND_ENABLETRIGGER,
+		BULK_ENABLETRIGGER,
 		
 		/// <p>
 		///   This command reads data from the hardware:
@@ -160,13 +160,27 @@ namespace Hantek {
 		///     </tr>
 		///     <tr>
 		///       <td>Sample[1024]</td>
-		///       <td>...</td>
-		///       <td>...</td>
+		///       <td colspan="2">...</td>
 		///     </tr>
 		///   </table>
-		///   Because of the 9 bit data model, the DSO-5200 transmits an additional MSB for each sample afterwards.
+		///   Because of the 10 bit data model, the DSO-5200 transmits the two extra bits for each sample afterwards:
+		///   <table>
+		///     <tr>
+		///       <td>Extra[0] << 2 | Extra[1]</td>
+		///       <td>0</td>
+		///       <td>Extra[2] << 2 | Extra[3]</td>
+		///       <td>0</td>
+		///       <td>...</td>
+		///       <td>Extra[510] << 2 | Extra[511]</td>
+		///       <td>0</td>
+		///     </tr>
+		///     <tr>
+		///       <td>Extra[512] << 2 | Extra[513]</td>
+		///       <td colspan="6">...</td>
+		///     </tr>
+		///   </table>
 		/// </p>
-		COMMAND_GETDATA,
+		BULK_GETDATA,
 		
 		/// <p>
 		///   This command checks the capture state:
@@ -189,7 +203,7 @@ namespace Hantek {
 		///     </tr>
 		///   </table>
 		/// </p>
-		COMMAND_GETCAPTURESTATE,
+		BULK_GETCAPTURESTATE,
 		
 		/// <p>
 		///   This command sets the gain:
@@ -207,10 +221,10 @@ namespace Hantek {
 		///   </table>
 		///   It is usually used in combination with #CONTROL_SETRELAYS.
 		/// </p>
-		COMMAND_SETGAIN,
+		BULK_SETGAIN,
 		
 		/// <p>
-		///   This command sets the logical data (And what the hell is this?...):
+		///   This command sets the logical data (Not used in official Hantek software):
 		///   <table>
 		///     <tr>
 		///       <td>0x08</td>
@@ -224,10 +238,10 @@ namespace Hantek {
 		///     </tr>
 		///   </table>
 		/// </p>
-		COMMAND_SETLOGICALDATA,
+		BULK_SETLOGICALDATA,
 		
 		/// <p>
-		///   This command reads the logical data (And what the hell is this?...):
+		///   This command reads the logical data (Not used in official Hantek software):
 		///   <table>
 		///     <tr>
 		///       <td>0x09</td>
@@ -236,17 +250,15 @@ namespace Hantek {
 		///   </table>
 		/// </p>
 		/// <p>
-		///   The oscilloscope returns the logical data, which is 64 or 512 bytes long:
+		///   The oscilloscope returns the logical data, which contains valid data in the first byte although it is 64 or 512 bytes long:
 		///   <table>
 		///     <tr>
-		///       <td>?</td>
-		///       <td>?</td>
-		///       <td>?</td>
+		///       <td>Data</td>
 		///       <td>...</td>
 		///     </tr>
 		///   </table>
 		/// </p>
-		COMMAND_GETLOGICALDATA,
+		BULK_GETLOGICALDATA,
 		
 		/// <p>
 		///   This command isn't used for the DSO-2090 and DSO-5200:
@@ -257,7 +269,7 @@ namespace Hantek {
 		///     </tr>
 		///   </table>
 		/// </p>
-		COMMAND_UNKNOWN_0A,
+		BULK_UNKNOWN_0A,
 		
 		/// <p>
 		///   This command isn't used for the DSO-2090 and DSO-5200:
@@ -268,7 +280,7 @@ namespace Hantek {
 		///     </tr>
 		///   </table>
 		/// </p>
-		COMMAND_UNKNOWN_0B,
+		BULK_UNKNOWN_0B,
 		
 		/// <p>
 		///   This command sets the sampling rate for the DSO-5200:
@@ -288,7 +300,7 @@ namespace Hantek {
 		///   <i>Samplerate = SamplerateMax / (2comp(SamplerateSlow) * 2 + 4 - SamplerateFast)</i><br />
 		///   SamplerateMax is 100 MS/s for the DSO-5200 in default configuration and 250 MS/s in fast rate mode though, the modifications regarding buffer size are the the same that apply for the DSO-2090.
 		/// </p>
-		COMMAND_SETSAMPLERATE5200,
+		BULK_SETSAMPLERATE5200,
 		
 		/// <p>
 		///   This command sets the trigger position and buffer size for the DSO-5200:
@@ -314,7 +326,7 @@ namespace Hantek {
 		/// <p>
 		///   The TriggerPositionPre and TriggerPositionPost values set the pretrigger position. Both values have a range from 0xd7ff (0xc7ff for 14 kiS buffer) to 0xfffe. On the left side (0 %) the TriggerPositionPre value is minimal, on the right side (100 %) it is maximal. The TriggerPositionPost value is maximal for 0 % and minimal for 100%.
 		/// </p>
-		COMMAND_SETBUFFER5200,
+		BULK_SETBUFFER5200,
 		
 		/// <p>
 		///   This command sets the channel and trigger settings for the DSO-5200:
@@ -331,9 +343,9 @@ namespace Hantek {
 		///     </tr>
 		///   </table>
 		/// </p>
-		COMMAND_SETTRIGGER5200,
+		BULK_SETTRIGGER5200,
 		
-		COMMAND_COUNT ///< Total number of commands
+		BULK_COUNT ///< Total number of commands
 	};
 	
 	//////////////////////////////////////////////////////////////////////////////
@@ -457,16 +469,16 @@ namespace Hantek {
 	enum ControlValue {
 		/// Value 0x08 is the calibration data for the channels offsets. It holds the offset value for the top and bottom of the scope screen for every gain step on every channel. The data is stored as a three-dimensional array:<br />
 		/// <i>channelLevels[channel][#Gain][#LevelOffset]</i>
-		VALUE_CHANNELLEVEL = 0x08,
+		VALUE_OFFSETLIMITS = 0x08,
 		
 		/// Value 0x0a is the address of the device. It has a length of one byte.
 		VALUE_DEVICEADDRESS = 0x0a,
 		
-		/// Value 0x60 seems to be some calibration data with a length of four bytes. What it is good for is unknown so far.
+		/// Value 0x60 is the calibration data for the fast rate mode on the DSO-5200. It's used to correct the level differences between the two merged channels to avoid .
 		VALUE_CALIBRATIONDATA = 0x60,
 		
-		/// Value 0x70 is an additional data that is used on the DSO-5200, it's six bytes long.
-		VALUE_UNKNOWN_70 = 0x70
+		/// Value 0x70 contains correction values for the ETS functionality of the DSO-5200.
+		VALUE_VOLTAGELIMITS = 0x70
 	};
 	
 	//////////////////////////////////////////////////////////////////////////////
@@ -556,13 +568,13 @@ namespace Hantek {
 	};
 	
 	//////////////////////////////////////////////////////////////////////////////
-	/// \enum CommandIndex                                          hantek/types.h
+	/// \enum BulkIndex                                             hantek/types.h
 	/// \brief Can be set by CONTROL_BEGINCOMMAND, maybe it allows multiple commands at the same time?
-	enum CommandIndex {
+	enum BulkIndex {
 		COMMANDINDEX_0 = 0x03, ///< Used most of the time
 		COMMANDINDEX_1 = 0x0a,
 		COMMANDINDEX_2 = 0x09,
-		COMMANDINDEX_3 = 0x01, ///< Used for #COMMAND_SETTRIGGERANDSAMPLERATE sometimes
+		COMMANDINDEX_3 = 0x01, ///< Used for #BULK_SETTRIGGERANDSAMPLERATE sometimes
 		COMMANDINDEX_4 = 0x02,
 		COMMANDINDEX_5 = 0x08
 	};
@@ -586,7 +598,7 @@ namespace Hantek {
 	
 	//////////////////////////////////////////////////////////////////////////////
 	/// \struct FilterBits                                          hantek/types.h
-	/// \brief The bits for COMMAND_SETFILTER.
+	/// \brief The bits for BULK_SETFILTER.
 	struct FilterBits {
 		unsigned char channel1:1; ///< Set to true when channel 1 isn't used
 		unsigned char channel2:1; ///< Set to true when channel 2 isn't used
@@ -596,7 +608,7 @@ namespace Hantek {
 	
 	//////////////////////////////////////////////////////////////////////////////
 	/// \struct GainBits                                            hantek/types.h
-	/// \brief The gain bits for COMMAND_SETGAIN.
+	/// \brief The gain bits for BULK_SETGAIN.
 	struct GainBits {
 		unsigned char channel1:2; ///< Gain for CH1, 0 = 1e* V, 1 = 2e*, 2 = 5e*
 		unsigned char channel2:2; ///< Gain for CH1, 0 = 1e* V, 1 = 2e*, 2 = 5e*
@@ -643,12 +655,12 @@ namespace Hantek {
 	};
 	
 	//////////////////////////////////////////////////////////////////////////////
-	/// \class CommandSetFilter                                     hantek/types.h
-	/// \brief The COMMAND_SETFILTER builder.
-	class CommandSetFilter : public Helper::DataArray<unsigned char> {
+	/// \class BulkSetFilter                                        hantek/types.h
+	/// \brief The BULK_SETFILTER builder.
+	class BulkSetFilter : public Helper::DataArray<unsigned char> {
 		public:
-			CommandSetFilter();
-			CommandSetFilter(bool channel1, bool channel2, bool trigger);
+			BulkSetFilter();
+			BulkSetFilter(bool channel1, bool channel2, bool trigger);
 			
 			bool getChannel(unsigned int channel);
 			void setChannel(unsigned int channel, bool filtered);
@@ -660,12 +672,12 @@ namespace Hantek {
 	};
 	
 	//////////////////////////////////////////////////////////////////////////////
-	/// \class CommandSetTriggerAndSamplerate                       hantek/types.h
-	/// \brief The COMMAND_SETTRIGGERANDSAMPLERATE builder.
-	class CommandSetTriggerAndSamplerate : public Helper::DataArray<unsigned char> {
+	/// \class BulkSetTriggerAndSamplerate                          hantek/types.h
+	/// \brief The BULK_SETTRIGGERANDSAMPLERATE builder.
+	class BulkSetTriggerAndSamplerate : public Helper::DataArray<unsigned char> {
 		public:
-			CommandSetTriggerAndSamplerate();
-			CommandSetTriggerAndSamplerate(unsigned short int samplerateSlow, unsigned long int triggerPosition, unsigned char triggerSource = 0, unsigned char bufferSize = 0, unsigned char samplerateFast = 0, unsigned char usedChannels = 0, bool fastRate = false, unsigned char triggerSlope = 0);
+			BulkSetTriggerAndSamplerate();
+			BulkSetTriggerAndSamplerate(unsigned short int samplerateSlow, unsigned long int triggerPosition, unsigned char triggerSource = 0, unsigned char bufferSize = 0, unsigned char samplerateFast = 0, unsigned char usedChannels = 0, bool fastRate = false, unsigned char triggerSlope = 0);
 			
 			unsigned char getTriggerSource();
 			void setTriggerSource(unsigned char value);
@@ -689,63 +701,63 @@ namespace Hantek {
 	};
 	
 	//////////////////////////////////////////////////////////////////////////////
-	/// \class CommandForceTrigger                                  hantek/types.h
-	/// \brief The COMMAND_FORCETRIGGER builder.
-	class CommandForceTrigger : public Helper::DataArray<unsigned char> {
+	/// \class BulkForceTrigger                                     hantek/types.h
+	/// \brief The BULK_FORCETRIGGER builder.
+	class BulkForceTrigger : public Helper::DataArray<unsigned char> {
 		public:
-			CommandForceTrigger();
+			BulkForceTrigger();
 	};
 	
 	//////////////////////////////////////////////////////////////////////////////
-	/// \class CommandCaptureStart                                  hantek/types.h
-	/// \brief The COMMAND_CAPTURESTART builder.
-	class CommandCaptureStart : public Helper::DataArray<unsigned char> {
+	/// \class BulkCaptureStart                                     hantek/types.h
+	/// \brief The BULK_CAPTURESTART builder.
+	class BulkCaptureStart : public Helper::DataArray<unsigned char> {
 		public:
-			CommandCaptureStart();
+			BulkCaptureStart();
 	};
 	
 	//////////////////////////////////////////////////////////////////////////////
-	/// \class CommandTriggerEnabled                                hantek/types.h
-	/// \brief The COMMAND_TRIGGERENABLED builder.
-	class CommandTriggerEnabled : public Helper::DataArray<unsigned char> {
+	/// \class BulkTriggerEnabled                                   hantek/types.h
+	/// \brief The BULK_TRIGGERENABLED builder.
+	class BulkTriggerEnabled : public Helper::DataArray<unsigned char> {
 		public:
-			CommandTriggerEnabled();
+			BulkTriggerEnabled();
 	};
 	
 	//////////////////////////////////////////////////////////////////////////////
-	/// \class CommandGetData                                       hantek/types.h
-	/// \brief The COMMAND_GETDATA builder.
-	class CommandGetData : public Helper::DataArray<unsigned char> {
+	/// \class BulkGetData                                          hantek/types.h
+	/// \brief The BULK_GETDATA builder.
+	class BulkGetData : public Helper::DataArray<unsigned char> {
 		public:
-			CommandGetData();
+			BulkGetData();
 	};
 	
 	//////////////////////////////////////////////////////////////////////////////
-	/// \class CommandGetCaptureState                               hantek/types.h
-	/// \brief The COMMAND_GETCAPTURESTATE builder.
-	class CommandGetCaptureState : public Helper::DataArray<unsigned char> {
+	/// \class BulkGetCaptureState                                  hantek/types.h
+	/// \brief The BULK_GETCAPTURESTATE builder.
+	class BulkGetCaptureState : public Helper::DataArray<unsigned char> {
 		public:
-			CommandGetCaptureState();
+			BulkGetCaptureState();
 	};
 	
 	//////////////////////////////////////////////////////////////////////////////
-	/// \class ResponseGetCaptureState                              hantek/types.h
-	/// \brief The parser for the COMMAND_GETCAPTURESTATE response.
-	class ResponseGetCaptureState : public Helper::DataArray<unsigned char> {
+	/// \class BulkResponseGetCaptureState                          hantek/types.h
+	/// \brief The parser for the BULK_GETCAPTURESTATE response.
+	class BulkResponseGetCaptureState : public Helper::DataArray<unsigned char> {
 		public:
-			ResponseGetCaptureState();
+			BulkResponseGetCaptureState();
 			
 			CaptureState getCaptureState();
 			unsigned int getTriggerPoint();
 	};
 	
 	//////////////////////////////////////////////////////////////////////////////
-	/// \class CommandSetGain                                       hantek/types.h
-	/// \brief The COMMAND_SETGAIN builder.
-	class CommandSetGain : public Helper::DataArray<unsigned char> {
+	/// \class BulkSetGain                                          hantek/types.h
+	/// \brief The BULK_SETGAIN builder.
+	class BulkSetGain : public Helper::DataArray<unsigned char> {
 		public:
-			CommandSetGain();
-			CommandSetGain(unsigned char channel1, unsigned char channel2);
+			BulkSetGain();
+			BulkSetGain(unsigned char channel1, unsigned char channel2);
 			
 			unsigned char getGain(unsigned int channel);
 			void setGain(unsigned int channel, unsigned char value);
@@ -755,12 +767,12 @@ namespace Hantek {
 	};
 	
 	//////////////////////////////////////////////////////////////////////////////
-	/// \class CommandSetLogicalData                                hantek/types.h
-	/// \brief The COMMAND_SETLOGICALDATA builder.
-	class CommandSetLogicalData : public Helper::DataArray<unsigned char> {
+	/// \class BulkSetLogicalData                                   hantek/types.h
+	/// \brief The BULK_SETLOGICALDATA builder.
+	class BulkSetLogicalData : public Helper::DataArray<unsigned char> {
 		public:
-			CommandSetLogicalData();
-			CommandSetLogicalData(unsigned char data);
+			BulkSetLogicalData();
+			BulkSetLogicalData(unsigned char data);
 			
 			unsigned char getData();
 			void setData(unsigned char data);
@@ -770,11 +782,74 @@ namespace Hantek {
 	};
 	
 	//////////////////////////////////////////////////////////////////////////////
-	/// \class CommandGetLogicalData                                hantek/types.h
-	/// \brief The COMMAND_GETLOGICALDATA builder.
-	class CommandGetLogicalData : public Helper::DataArray<unsigned char> {
+	/// \class BulkGetLogicalData                                   hantek/types.h
+	/// \brief The BULK_GETLOGICALDATA builder.
+	class BulkGetLogicalData : public Helper::DataArray<unsigned char> {
 		public:
-			CommandGetLogicalData();
+			BulkGetLogicalData();
+	};
+	
+	//////////////////////////////////////////////////////////////////////////////
+	/// \class BulkSetSamplerate5200                                hantek/types.h
+	/// \brief The BULK_SETSAMPLERATE5200 builder.
+	class BulkSetSamplerate5200 : public Helper::DataArray<unsigned char> {
+		public:
+			BulkSetSamplerate5200();
+			BulkSetSamplerate5200(unsigned short int samplerateSlow, unsigned char samplerateFast);
+			
+			unsigned char getSamplerateFast();
+			void setSamplerateFast(unsigned char value);
+			unsigned short int getSamplerateSlow();
+			void setSamplerateSlow(unsigned short int samplerate);
+		
+		private:
+			void init();
+	};
+	
+	//////////////////////////////////////////////////////////////////////////////
+	/// \class BulkSetBuffer5200                                    hantek/types.h
+	/// \brief The BULK_SETBUFFER5200 builder.
+	class BulkSetBuffer5200 : public Helper::DataArray<unsigned char> {
+		public:
+			BulkSetBuffer5200();
+			BulkSetBuffer5200(unsigned short int triggerPositionPre, unsigned short int triggerPositionPost, unsigned char usedPre = 0, unsigned char usedPost = 0, unsigned char bufferSize = 0);
+			
+			unsigned short int getTriggerPositionPre();
+			void setTriggerPositionPre(unsigned short int value);
+			unsigned short int getTriggerPositionPost();
+			void setTriggerPositionPost(unsigned short int value);
+			unsigned char getUsedPre();
+			void setUsedPre(unsigned char value);
+			unsigned char getUsedPost();
+			void setUsedPost(unsigned char value);
+			unsigned char getBufferSize();
+			void setBufferSize(unsigned char value);
+		
+		private:
+			void init();
+	};
+	
+	//////////////////////////////////////////////////////////////////////////////
+	/// \class BulkSetTrigger5200                                   hantek/types.h
+	/// \brief The BULK_SETTRIGGER5200 builder.
+	class BulkSetTrigger5200 : public Helper::DataArray<unsigned char> {
+		public:
+			BulkSetTrigger5200();
+			BulkSetTrigger5200(unsigned char triggerSource, unsigned char usedChannels, bool fastRate = false, unsigned char triggerSlope = 0, unsigned char triggerPulse = 0);
+			
+			unsigned char getTriggerSource();
+			void setTriggerSource(unsigned char value);
+			unsigned char getUsedChannels();
+			void setUsedChannels(unsigned char value);
+			bool getFastRate();
+			void setFastRate(bool fastRate);
+			unsigned char getTriggerSlope();
+			void setTriggerSlope(unsigned char slope);
+			bool getTriggerPulse();
+			void setTriggerPulse(bool pulse);
+		
+		private:
+			void init();
 	};
 	
 	//////////////////////////////////////////////////////////////////////////////
@@ -792,10 +867,10 @@ namespace Hantek {
 	/// \brief The CONTROL_BEGINCOMMAND builder.
 	class ControlBeginCommand : public Helper::DataArray<unsigned char> {
 		public:
-			ControlBeginCommand(CommandIndex index = COMMANDINDEX_0);
+			ControlBeginCommand(BulkIndex index = COMMANDINDEX_0);
 			
-			CommandIndex getIndex();
-			void setIndex(CommandIndex index);
+			BulkIndex getIndex();
+			void setIndex(BulkIndex index);
 		
 		private:
 			void init();
@@ -833,69 +908,6 @@ namespace Hantek {
 			void setCoupling(unsigned int channel, bool dc);
 			bool getTrigger();
 			void setTrigger(bool ext);
-	};
-	
-	//////////////////////////////////////////////////////////////////////////////
-	/// \class CommandSetSamplerate5200                             hantek/types.h
-	/// \brief The COMMAND_SETSAMPLERATE5200 builder.
-	class CommandSetSamplerate5200 : public Helper::DataArray<unsigned char> {
-		public:
-			CommandSetSamplerate5200();
-			CommandSetSamplerate5200(unsigned short int samplerateSlow, unsigned char samplerateFast);
-			
-			unsigned char getSamplerateFast();
-			void setSamplerateFast(unsigned char value);
-			unsigned short int getSamplerateSlow();
-			void setSamplerateSlow(unsigned short int samplerate);
-		
-		private:
-			void init();
-	};
-	
-	//////////////////////////////////////////////////////////////////////////////
-	/// \class CommandSetBuffer5200                                 hantek/types.h
-	/// \brief The COMMAND_SETBUFFER5200 builder.
-	class CommandSetBuffer5200 : public Helper::DataArray<unsigned char> {
-		public:
-			CommandSetBuffer5200();
-			CommandSetBuffer5200(unsigned short int triggerPositionPre, unsigned short int triggerPositionPost, unsigned char usedPre = 0, unsigned char usedPost = 0, unsigned char bufferSize = 0);
-			
-			unsigned short int getTriggerPositionPre();
-			void setTriggerPositionPre(unsigned short int value);
-			unsigned short int getTriggerPositionPost();
-			void setTriggerPositionPost(unsigned short int value);
-			unsigned char getUsedPre();
-			void setUsedPre(unsigned char value);
-			unsigned char getUsedPost();
-			void setUsedPost(unsigned char value);
-			unsigned char getBufferSize();
-			void setBufferSize(unsigned char value);
-		
-		private:
-			void init();
-	};
-	
-	//////////////////////////////////////////////////////////////////////////////
-	/// \class CommandSetTrigger5200                                hantek/types.h
-	/// \brief The COMMAND_SETTRIGGER5200 builder.
-	class CommandSetTrigger5200 : public Helper::DataArray<unsigned char> {
-		public:
-			CommandSetTrigger5200();
-			CommandSetTrigger5200(unsigned char triggerSource, unsigned char usedChannels, bool fastRate = false, unsigned char triggerSlope = 0, unsigned char triggerPulse = 0);
-			
-			unsigned char getTriggerSource();
-			void setTriggerSource(unsigned char value);
-			unsigned char getUsedChannels();
-			void setUsedChannels(unsigned char value);
-			bool getFastRate();
-			void setFastRate(bool fastRate);
-			unsigned char getTriggerSlope();
-			void setTriggerSlope(unsigned char slope);
-			bool getTriggerPulse();
-			void setTriggerPulse(bool pulse);
-		
-		private:
-			void init();
 	};
 }
 

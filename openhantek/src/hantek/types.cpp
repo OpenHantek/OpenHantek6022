@@ -32,9 +32,9 @@
 
 namespace Hantek {
 	//////////////////////////////////////////////////////////////////////////////
-	// class CommandSetFilter
+	// class BulkSetFilter
 	/// \brief Sets the data array to the default values.
-	CommandSetFilter::CommandSetFilter() : Helper::DataArray<unsigned char>(8) {
+	BulkSetFilter::BulkSetFilter() : Helper::DataArray<unsigned char>(8) {
 		this->init();
 	}
 	
@@ -42,7 +42,7 @@ namespace Hantek {
 	/// \param channel1 true if channel 1 is filtered.
 	/// \param channel2 true if channel 2 is filtered.
 	/// \param trigger true if trigger is filtered.
-	CommandSetFilter::CommandSetFilter(bool channel1, bool channel2, bool trigger) : Helper::DataArray<unsigned char>(8) {
+	BulkSetFilter::BulkSetFilter(bool channel1, bool channel2, bool trigger) : Helper::DataArray<unsigned char>(8) {
 		this->init();
 		
 		this->setChannel(0, channel1);
@@ -53,7 +53,7 @@ namespace Hantek {
 	/// \brief Gets the filtering state of one channel.
 	/// \param channel The channel whose filtering state should be returned.
 	/// \return The filtering state of the channel.
-	bool CommandSetFilter::getChannel(unsigned int channel) {
+	bool BulkSetFilter::getChannel(unsigned int channel) {
 		FilterBits *filterBits = (FilterBits *) &(this->array[2]);
 		if(channel == 0)
 			return filterBits->channel1 == 1;
@@ -64,7 +64,7 @@ namespace Hantek {
 	/// \brief Enables/disables filtering of one channel.
 	/// \param channel The channel that should be set.
 	/// \param filtered true if the channel should be filtered.
-	void CommandSetFilter::setChannel(unsigned int channel, bool filtered) {
+	void BulkSetFilter::setChannel(unsigned int channel, bool filtered) {
 		FilterBits *filterBits = (FilterBits *) &(this->array[2]);
 		if(channel == 0)
 			filterBits->channel1 = filtered ? 1 : 0;
@@ -74,29 +74,29 @@ namespace Hantek {
 	
 	/// \brief Gets the filtering state for the trigger.
 	/// \return The filtering state of the trigger.
-	bool CommandSetFilter::getTrigger() {
+	bool BulkSetFilter::getTrigger() {
 		return ((FilterBits *) &(this->array[2]))->trigger == 1;
 	}
 	
 	/// \brief Enables/disables filtering for the trigger.
 	/// \param filtered true if the trigger should be filtered.
-	void CommandSetFilter::setTrigger(bool filtered) {
+	void BulkSetFilter::setTrigger(bool filtered) {
 		FilterBits *filterBits = (FilterBits *) &(this->array[2]);
 		
 		filterBits->trigger = filtered ? 1 : 0;
 	}
 	
 	/// \brief Initialize the array to the needed values.
-	void CommandSetFilter::init() {
-		this->array[0] = COMMAND_SETFILTER;
+	void BulkSetFilter::init() {
+		this->array[0] = BULK_SETFILTER;
 		this->array[1] = 0x0f;
 	}
 	
 	
 	//////////////////////////////////////////////////////////////////////////////
-	// class CommandSetTriggerAndSamplerate
+	// class BulkSetTriggerAndSamplerate
 	/// \brief Sets the data array to the default values.
-	CommandSetTriggerAndSamplerate::CommandSetTriggerAndSamplerate() : Helper::DataArray<unsigned char>(12) {
+	BulkSetTriggerAndSamplerate::BulkSetTriggerAndSamplerate() : Helper::DataArray<unsigned char>(12) {
 		this->init();
 	}
 	
@@ -109,7 +109,7 @@ namespace Hantek {
 	/// \param usedChannels The enabled channels (Tsr2).
 	/// \param fastRate The fastRate state (Tsr2).
 	/// \param triggerSlope The triggerSlope value (Tsr2).
-	CommandSetTriggerAndSamplerate::CommandSetTriggerAndSamplerate(unsigned short int samplerateSlow, unsigned long int triggerPosition, unsigned char triggerSource, unsigned char bufferSize, unsigned char samplerateFast, unsigned char usedChannels, bool fastRate, unsigned char triggerSlope) : Helper::DataArray<unsigned char>(12) {
+	BulkSetTriggerAndSamplerate::BulkSetTriggerAndSamplerate(unsigned short int samplerateSlow, unsigned long int triggerPosition, unsigned char triggerSource, unsigned char bufferSize, unsigned char samplerateFast, unsigned char usedChannels, bool fastRate, unsigned char triggerSlope) : Helper::DataArray<unsigned char>(12) {
 		this->init();
 		
 		this->setTriggerSource(triggerSource);
@@ -124,179 +124,179 @@ namespace Hantek {
 	
 	/// \brief Get the triggerSource value in Tsr1Bits.
 	/// \return The triggerSource value.
-	unsigned char CommandSetTriggerAndSamplerate::getTriggerSource() {
+	unsigned char BulkSetTriggerAndSamplerate::getTriggerSource() {
 		return ((Tsr1Bits *) &(this->array[2]))->triggerSource;
 	}
 	
 	/// \brief Set the triggerSource in Tsr1Bits to the given value.
 	/// \param value The new triggerSource value.
-	void CommandSetTriggerAndSamplerate::setTriggerSource(unsigned char value) {
+	void BulkSetTriggerAndSamplerate::setTriggerSource(unsigned char value) {
 		((Tsr1Bits *) &(this->array[2]))->triggerSource = value;
 	}
 	
 	/// \brief Get the bufferSize value in Tsr1Bits.
 	/// \return The #BufferSizeId value.
-	unsigned char CommandSetTriggerAndSamplerate::getBufferSize() {
+	unsigned char BulkSetTriggerAndSamplerate::getBufferSize() {
 		return ((Tsr1Bits *) &(this->array[2]))->bufferSize;
 	}
 	
 	/// \brief Set the bufferSize in Tsr1Bits to the given value.
 	/// \param value The new #BufferSizeId value.
-	void CommandSetTriggerAndSamplerate::setBufferSize(unsigned char value) {
+	void BulkSetTriggerAndSamplerate::setBufferSize(unsigned char value) {
 		((Tsr1Bits *) &(this->array[2]))->bufferSize = value;
 	}
 	
 	/// \brief Get the samplerateFast value in Tsr1Bits.
 	/// \return The samplerateFast value.
-	unsigned char CommandSetTriggerAndSamplerate::getSamplerateFast() {
+	unsigned char BulkSetTriggerAndSamplerate::getSamplerateFast() {
 		return ((Tsr1Bits *) &(this->array[2]))->samplerateFast;
 	}
 	
 	/// \brief Set the samplerateFast in Tsr1Bits to the given value.
 	/// \param value The new samplerateFast value.
-	void CommandSetTriggerAndSamplerate::setSamplerateFast(unsigned char value) {
+	void BulkSetTriggerAndSamplerate::setSamplerateFast(unsigned char value) {
 		((Tsr1Bits *) &(this->array[2]))->samplerateFast = value;
 	}
 	
 	/// \brief Get the usedChannels value in Tsr2Bits.
 	/// \return The usedChannels value.
-	unsigned char CommandSetTriggerAndSamplerate::getUsedChannels() {
+	unsigned char BulkSetTriggerAndSamplerate::getUsedChannels() {
 		return ((Tsr2Bits *) &(this->array[3]))->usedChannels;
 	}
 	
 	/// \brief Set the usedChannels in Tsr2Bits to the given value.
 	/// \param value The new usedChannels value.
-	void CommandSetTriggerAndSamplerate::setUsedChannels(unsigned char value) {
+	void BulkSetTriggerAndSamplerate::setUsedChannels(unsigned char value) {
 		((Tsr2Bits *) &(this->array[3]))->usedChannels = value;
 	}
 	
 	/// \brief Get the fastRate state in Tsr2Bits.
 	/// \return The fastRate state.
-	bool CommandSetTriggerAndSamplerate::getFastRate() {
+	bool BulkSetTriggerAndSamplerate::getFastRate() {
 		return ((Tsr2Bits *) &(this->array[3]))->fastRate == 1;
 	}
 	
 	/// \brief Set the fastRate in Tsr2Bits to the given state.
 	/// \param fastRate The new fastRate state.
-	void CommandSetTriggerAndSamplerate::setFastRate(bool fastRate) {
+	void BulkSetTriggerAndSamplerate::setFastRate(bool fastRate) {
 		((Tsr2Bits *) &(this->array[3]))->fastRate = fastRate ? 1 : 0;
 	}
 	
 	/// \brief Get the triggerSlope value in Tsr2Bits.
 	/// \return The triggerSlope value.
-	unsigned char CommandSetTriggerAndSamplerate::getTriggerSlope() {
+	unsigned char BulkSetTriggerAndSamplerate::getTriggerSlope() {
 		return ((Tsr2Bits *) &(this->array[3]))->triggerSlope;
 	}
 	
 	/// \brief Set the triggerSlope in Tsr2Bits to the given value.
 	/// \param slope The new triggerSlope value.
-	void CommandSetTriggerAndSamplerate::setTriggerSlope(unsigned char slope) {
+	void BulkSetTriggerAndSamplerate::setTriggerSlope(unsigned char slope) {
 		((Tsr2Bits *) &(this->array[3]))->triggerSlope = slope;
 	}
 	
 	/// \brief Get the SamplerateSlow value.
 	/// \return The SamplerateSlow value.
-	unsigned short int CommandSetTriggerAndSamplerate::getSamplerateSlow() {
+	unsigned short int BulkSetTriggerAndSamplerate::getSamplerateSlow() {
 		return (unsigned short int) this->array[4] | ((unsigned short int) this->array[5] << 8);
 	}
 	
 	/// \brief Set the SamplerateSlow to the given value.
 	/// \param samplerate The new SamplerateSlow value.
-	void CommandSetTriggerAndSamplerate::setSamplerateSlow(unsigned short int samplerate) {
+	void BulkSetTriggerAndSamplerate::setSamplerateSlow(unsigned short int samplerate) {
 		this->array[4] = (unsigned char) samplerate;
 		this->array[5] = (unsigned char) (samplerate >> 8);
 	}
 	
 	/// \brief Get the TriggerPosition value.
 	/// \return The horizontal trigger position.
-	unsigned long int CommandSetTriggerAndSamplerate::getTriggerPosition() {
+	unsigned long int BulkSetTriggerAndSamplerate::getTriggerPosition() {
 		return (unsigned long int) this->array[6] | ((unsigned long int) this->array[7] << 8) | ((unsigned long int) this->array[10] << 16);
 	}
 	
 	/// \brief Set the TriggerPosition to the given value.
 	/// \param position The new horizontal trigger position.
-	void CommandSetTriggerAndSamplerate::setTriggerPosition(unsigned long int position) {
+	void BulkSetTriggerAndSamplerate::setTriggerPosition(unsigned long int position) {
 		this->array[6] = (unsigned char) position;
 		this->array[7] = (unsigned char) (position >> 8);
 		this->array[10] = (unsigned char) (position >> 16);
 	}
 	
 	/// \brief Initialize the array to the needed values.
-	void CommandSetTriggerAndSamplerate::init() {
-		this->array[0] = COMMAND_SETTRIGGERANDSAMPLERATE;
+	void BulkSetTriggerAndSamplerate::init() {
+		this->array[0] = BULK_SETTRIGGERANDSAMPLERATE;
 	}
 	
 	
 	//////////////////////////////////////////////////////////////////////////////
-	// class CommandForceTrigger
+	// class BulkForceTrigger
 	/// \brief Sets the data array to needed values.
-	CommandForceTrigger::CommandForceTrigger() : Helper::DataArray<unsigned char>(2) {
-		this->array[0] = COMMAND_FORCETRIGGER;
+	BulkForceTrigger::BulkForceTrigger() : Helper::DataArray<unsigned char>(2) {
+		this->array[0] = BULK_FORCETRIGGER;
 	}
 	
 	
 	//////////////////////////////////////////////////////////////////////////////
-	// class CommandCaptureStart
+	// class BulkCaptureStart
 	/// \brief Sets the data array to needed values.
-	CommandCaptureStart::CommandCaptureStart() : Helper::DataArray<unsigned char>(2) {
-		this->array[0] = COMMAND_STARTSAMPLING;
+	BulkCaptureStart::BulkCaptureStart() : Helper::DataArray<unsigned char>(2) {
+		this->array[0] = BULK_STARTSAMPLING;
 	}
 	
 	
 	//////////////////////////////////////////////////////////////////////////////
-	// class CommandTriggerEnabled
+	// class BulkTriggerEnabled
 	/// \brief Sets the data array to needed values.
-	CommandTriggerEnabled::CommandTriggerEnabled() : Helper::DataArray<unsigned char>(2) {
-		this->array[0] = COMMAND_ENABLETRIGGER;
+	BulkTriggerEnabled::BulkTriggerEnabled() : Helper::DataArray<unsigned char>(2) {
+		this->array[0] = BULK_ENABLETRIGGER;
 	}
 	
 	
 	//////////////////////////////////////////////////////////////////////////////
-	// class CommandGetData
+	// class BulkGetData
 	/// \brief Sets the data array to needed values.
-	CommandGetData::CommandGetData() : Helper::DataArray<unsigned char>(2) {
-		this->array[0] = COMMAND_GETDATA;
+	BulkGetData::BulkGetData() : Helper::DataArray<unsigned char>(2) {
+		this->array[0] = BULK_GETDATA;
 	}
 	
 	
 	//////////////////////////////////////////////////////////////////////////////
-	// class CommandGetCaptureState
+	// class BulkGetCaptureState
 	/// \brief Sets the data array to needed values.
-	CommandGetCaptureState::CommandGetCaptureState() : Helper::DataArray<unsigned char>(2) {
-		this->array[0] = COMMAND_GETCAPTURESTATE;
+	BulkGetCaptureState::BulkGetCaptureState() : Helper::DataArray<unsigned char>(2) {
+		this->array[0] = BULK_GETCAPTURESTATE;
 	}
 	
 	
 	//////////////////////////////////////////////////////////////////////////////
-	// class ResponseGetCaptureState
+	// class BulkResponseGetCaptureState
 	/// \brief Initializes the array.
-	ResponseGetCaptureState::ResponseGetCaptureState() : Helper::DataArray<unsigned char>(512) {
+	BulkResponseGetCaptureState::BulkResponseGetCaptureState() : Helper::DataArray<unsigned char>(512) {
 	}
 	
 	/// \brief Gets the capture state.
 	/// \return The CaptureState of the oscilloscope.
-	CaptureState ResponseGetCaptureState::getCaptureState() {
+	CaptureState BulkResponseGetCaptureState::getCaptureState() {
 		return (CaptureState) this->array[0];
 	}
 	
 	/// \brief Gets the trigger point.
 	/// \return The trigger point for the captured samples.
-	unsigned int ResponseGetCaptureState::getTriggerPoint() {
+	unsigned int BulkResponseGetCaptureState::getTriggerPoint() {
 		return this->array[2] | (this->array[3] << 8);
 	}
 	
 	
 	//////////////////////////////////////////////////////////////////////////////
-	// class CommandSetGain
+	// class BulkSetGain
 	/// \brief Sets the data array to needed values.
-	CommandSetGain::CommandSetGain() : Helper::DataArray<unsigned char>(8) {
+	BulkSetGain::BulkSetGain() : Helper::DataArray<unsigned char>(8) {
 		this->init();
 	}
 	
 	/// \brief Sets the gain to the given values.
 	/// \param channel1 The gain value for channel 1.
 	/// \param channel2 The gain value for channel 2.
-	CommandSetGain::CommandSetGain(unsigned char channel1, unsigned char channel2) : Helper::DataArray<unsigned char>(8) {
+	BulkSetGain::BulkSetGain(unsigned char channel1, unsigned char channel2) : Helper::DataArray<unsigned char>(8) {
 		this->init();
 		
 		this->setGain(0, channel1);
@@ -306,7 +306,7 @@ namespace Hantek {
 	/// \brief Get the gain for the given channel.
 	/// \param channel The channel whose gain should be returned.
 	/// \returns The gain value.
-	unsigned char CommandSetGain::getGain(unsigned int channel) {
+	unsigned char BulkSetGain::getGain(unsigned int channel) {
 		GainBits *gainBits = (GainBits *) &(this->array[2]);
 		if(channel == 0)
 			return gainBits->channel1;
@@ -317,7 +317,7 @@ namespace Hantek {
 	/// \brief Set the gain for the given channel.
 	/// \param channel The channel that should be set.
 	/// \param value The new gain value for the channel.
-	void CommandSetGain::setGain(unsigned int channel, unsigned char value) {
+	void BulkSetGain::setGain(unsigned int channel, unsigned char value) {
 		GainBits *gainBits = (GainBits *) &(this->array[2]);
 		if(channel == 0)
 			gainBits->channel1 = value;
@@ -326,23 +326,23 @@ namespace Hantek {
 	}
 	
 	/// \brief Initialize the array to the needed values.
-	void CommandSetGain::init() {
-		this->array[0] = COMMAND_SETGAIN;
+	void BulkSetGain::init() {
+		this->array[0] = BULK_SETGAIN;
 		this->array[1] = 0x0f;
 		((GainBits *) &(this->array[2]))->reserved = 3;
 	}
 	
 	
 	//////////////////////////////////////////////////////////////////////////////
-	// class CommandSetLogicalData
+	// class BulkSetLogicalData
 	/// \brief Sets the data array to needed values.
-	CommandSetLogicalData::CommandSetLogicalData() : Helper::DataArray<unsigned char>(8) {
+	BulkSetLogicalData::BulkSetLogicalData() : Helper::DataArray<unsigned char>(8) {
 		this->init();
 	}
 	
 	/// \brief Sets the data to the given value.
 	/// \param data The data byte.
-	CommandSetLogicalData::CommandSetLogicalData(unsigned char data) : Helper::DataArray<unsigned char>(8) {
+	BulkSetLogicalData::BulkSetLogicalData(unsigned char data) : Helper::DataArray<unsigned char>(8) {
 		this->init();
 		
 		this->setData(data);
@@ -350,33 +350,33 @@ namespace Hantek {
 	
 	/// \brief Gets the data.
 	/// \returns The data byte.
-	unsigned char CommandSetLogicalData::getData() {
+	unsigned char BulkSetLogicalData::getData() {
 		return this->array[2];
 	}
 	
 	/// \brief Sets the data to the given value.
 	/// \param data The new data byte.
-	void CommandSetLogicalData::setData(unsigned char data) {
+	void BulkSetLogicalData::setData(unsigned char data) {
 		this->array[2] = data;
 	}
 	
 	/// \brief Initialize the array to the needed values.
-	void CommandSetLogicalData::init() {
-		this->array[0] = COMMAND_SETLOGICALDATA;
+	void BulkSetLogicalData::init() {
+		this->array[0] = BULK_SETLOGICALDATA;
 		this->array[1] = 0x0f;
 	}
 	
 	
 	//////////////////////////////////////////////////////////////////////////////
-	// class CommandGetLogicalData
+	// class BulkGetLogicalData
 	/// \brief Sets the data array to needed values.
-	CommandGetLogicalData::CommandGetLogicalData() : Helper::DataArray<unsigned char>(2) {
-		this->array[0] = COMMAND_GETLOGICALDATA;
+	BulkGetLogicalData::BulkGetLogicalData() : Helper::DataArray<unsigned char>(2) {
+		this->array[0] = BULK_GETLOGICALDATA;
 	}
 	
 	
 	//////////////////////////////////////////////////////////////////////////////
-	// class ControlGetSpeed
+	// class BulkGetSpeed
 	/// \brief Initializes the array.
 	ControlGetSpeed::ControlGetSpeed() : Helper::DataArray<unsigned char>(10) {
 	}
@@ -389,10 +389,10 @@ namespace Hantek {
 	
 	
 	//////////////////////////////////////////////////////////////////////////////
-	// class ControlBeginCommand
+	// class BulkBeginCommand
 	/// \brief Sets the command index to the given value.
 	/// \param index The CommandIndex for the command.
-	ControlBeginCommand::ControlBeginCommand(CommandIndex index) : Helper::DataArray<unsigned char>(10) {
+	ControlBeginCommand::ControlBeginCommand(BulkIndex index) : Helper::DataArray<unsigned char>(10) {
 		this->init();
 		
 		this->setIndex(index);
@@ -400,13 +400,13 @@ namespace Hantek {
 	
 	/// \brief Gets the command index.
 	/// \return The CommandIndex for the command.
-	CommandIndex ControlBeginCommand::getIndex() {
-		return (CommandIndex) this->array[1];
+	BulkIndex ControlBeginCommand::getIndex() {
+		return (BulkIndex) this->array[1];
 	}
 	
 	/// \brief Sets the command index to the given value.
 	/// \param index The new CommandIndex for the command.
-	void ControlBeginCommand::setIndex(CommandIndex index) {
+	void ControlBeginCommand::setIndex(BulkIndex index) {
 		memset(&(this->array[1]), (unsigned char) index, 3);
 	}
 	
@@ -417,7 +417,7 @@ namespace Hantek {
 	
 	
 	//////////////////////////////////////////////////////////////////////////////
-	// class ControlSetOffset
+	// class BulkSetOffset
 	/// \brief Sets the data array to the default values.
 	ControlSetOffset::ControlSetOffset() : Helper::DataArray<unsigned char>(17) {
 	}
@@ -471,7 +471,7 @@ namespace Hantek {
 	
 	
 	//////////////////////////////////////////////////////////////////////////////
-	// class ControlSetRelays
+	// class BulkSetRelays
 	/// \brief Sets all relay states.
 	/// \param ch1Below1V Sets the state of the Channel 1 below 1 V relay.
 	/// \param ch1Below100mV Sets the state of the Channel 1 below 100 mV relay.
@@ -564,16 +564,16 @@ namespace Hantek {
 	
 	
 	//////////////////////////////////////////////////////////////////////////////
-	// class CommandSetSamplerate5200
+	// class BulkSetSamplerate5200
 	/// \brief Sets the data array to the default values.
-	CommandSetSamplerate5200::CommandSetSamplerate5200() : Helper::DataArray<unsigned char>(6) {
+	BulkSetSamplerate5200::BulkSetSamplerate5200() : Helper::DataArray<unsigned char>(6) {
 		this->init();
 	}
 	
 	/// \brief Sets the data bytes to the specified values.
 	/// \param samplerateSlow The SamplerateSlow value.
 	/// \param samplerateFast The SamplerateFast value.
-	CommandSetSamplerate5200::CommandSetSamplerate5200(unsigned short int samplerateSlow, unsigned char samplerateFast) : Helper::DataArray<unsigned char>(6) {
+	BulkSetSamplerate5200::BulkSetSamplerate5200(unsigned short int samplerateSlow, unsigned char samplerateFast) : Helper::DataArray<unsigned char>(6) {
 		this->init();
 		
 		this->setSamplerateFast(samplerateFast);
@@ -582,39 +582,39 @@ namespace Hantek {
 	
 	/// \brief Get the SamplerateFast value.
 	/// \return The SamplerateFast value.
-	unsigned char CommandSetSamplerate5200::getSamplerateFast() {
+	unsigned char BulkSetSamplerate5200::getSamplerateFast() {
 		return this->array[4];
 	}
 	
 	/// \brief Set the SamplerateFast to the given value.
 	/// \param value The new SamplerateFast value.
-	void CommandSetSamplerate5200::setSamplerateFast(unsigned char value) {
+	void BulkSetSamplerate5200::setSamplerateFast(unsigned char value) {
 		this->array[4] = value;
 	}
 	
 	/// \brief Get the SamplerateSlow value.
 	/// \return The SamplerateSlow value.
-	unsigned short int CommandSetSamplerate5200::getSamplerateSlow() {
+	unsigned short int BulkSetSamplerate5200::getSamplerateSlow() {
 		return (unsigned short int) this->array[2] | ((unsigned short int) this->array[3] << 8);
 	}
 	
 	/// \brief Set the SamplerateSlow to the given value.
 	/// \param samplerate The new SamplerateSlow value.
-	void CommandSetSamplerate5200::setSamplerateSlow(unsigned short int samplerate) {
+	void BulkSetSamplerate5200::setSamplerateSlow(unsigned short int samplerate) {
 		this->array[2] = (unsigned char) samplerate;
 		this->array[3] = (unsigned char) (samplerate >> 8);
 	}
 	
 	/// \brief Initialize the array to the needed values.
-	void CommandSetSamplerate5200::init() {
-		this->array[0] = COMMAND_SETSAMPLERATE5200;
+	void BulkSetSamplerate5200::init() {
+		this->array[0] = BULK_SETSAMPLERATE5200;
 	}
 	
 	
 	//////////////////////////////////////////////////////////////////////////////
-	// class CommandSetBuffer5200
+	// class BulkSetBuffer5200
 	/// \brief Sets the data array to the default values.
-	CommandSetBuffer5200::CommandSetBuffer5200() : Helper::DataArray<unsigned char>(10) {
+	BulkSetBuffer5200::BulkSetBuffer5200() : Helper::DataArray<unsigned char>(10) {
 		this->init();
 	}
 	
@@ -624,7 +624,7 @@ namespace Hantek {
 	/// \param usedPre The TriggerPositionUsedPre value.
 	/// \param usedPost The TriggerPositionUsedPost value.
 	/// \param bufferSize The #BufferSizeId value.
-	CommandSetBuffer5200::CommandSetBuffer5200(unsigned short int triggerPositionPre, unsigned short int triggerPositionPost, unsigned char usedPre, unsigned char usedPost, unsigned char bufferSize) : Helper::DataArray<unsigned char>(10) {
+	BulkSetBuffer5200::BulkSetBuffer5200(unsigned short int triggerPositionPre, unsigned short int triggerPositionPost, unsigned char usedPre, unsigned char usedPost, unsigned char bufferSize) : Helper::DataArray<unsigned char>(10) {
 		this->init();
 		
 		this->setTriggerPositionPre(triggerPositionPre);
@@ -636,78 +636,78 @@ namespace Hantek {
 	
 	/// \brief Get the TriggerPositionPre value.
 	/// \return The TriggerPositionPre value.
-	unsigned short int CommandSetBuffer5200::getTriggerPositionPre() {
+	unsigned short int BulkSetBuffer5200::getTriggerPositionPre() {
 		return (unsigned short int) this->array[2] | ((unsigned short int) this->array[3] << 8);
 	}
 	
 	/// \brief Set the TriggerPositionPre to the given value.
 	/// \param position The new TriggerPositionPre value.
-	void CommandSetBuffer5200::setTriggerPositionPre(unsigned short int position) {
+	void BulkSetBuffer5200::setTriggerPositionPre(unsigned short int position) {
 		this->array[2] = (unsigned char) position;
 		this->array[3] = (unsigned char) (position >> 8);
 	}
 	
 	/// \brief Get the TriggerPositionPost value.
 	/// \return The TriggerPositionPost value.
-	unsigned short int CommandSetBuffer5200::getTriggerPositionPost() {
+	unsigned short int BulkSetBuffer5200::getTriggerPositionPost() {
 		return (unsigned short int) this->array[6] | ((unsigned short int) this->array[7] << 8);
 	}
 	
 	/// \brief Set the TriggerPositionPost to the given value.
 	/// \param position The new TriggerPositionPost value.
-	void CommandSetBuffer5200::setTriggerPositionPost(unsigned short int position) {
+	void BulkSetBuffer5200::setTriggerPositionPost(unsigned short int position) {
 		this->array[6] = (unsigned char) position;
 		this->array[7] = (unsigned char) (position >> 8);
 	}
 	
 	/// \brief Get the TriggerPositionUsedPre value.
 	/// \return The #DTriggerPositionUsed value for the pre position.
-	unsigned char CommandSetBuffer5200::getUsedPre() {
+	unsigned char BulkSetBuffer5200::getUsedPre() {
 		return this->array[4];
 	}
 	
 	/// \brief Set the TriggerPositionUsedPre to the given value.
 	/// \param value The new #DTriggerPositionUsed value for the pre position.
-	void CommandSetBuffer5200::setUsedPre(unsigned char value) {
+	void BulkSetBuffer5200::setUsedPre(unsigned char value) {
 		this->array[4] = value;
 	}
 	
 	/// \brief Get the TriggerPositionUsedPost value.
 	/// \return The #DTriggerPositionUsed value for the post position.
-	unsigned char CommandSetBuffer5200::getUsedPost() {
+	unsigned char BulkSetBuffer5200::getUsedPost() {
 		return ((DBufferBits *) &(this->array[8]))->triggerPositionUsed;
 	}
 	
 	/// \brief Set the TriggerPositionUsedPost to the given value.
 	/// \param value The new #DTriggerPositionUsed value for the post position.
-	void CommandSetBuffer5200::setUsedPost(unsigned char value) {
+	void BulkSetBuffer5200::setUsedPost(unsigned char value) {
 		((DBufferBits *) &(this->array[8]))->triggerPositionUsed = value;
 	}
 	
 	/// \brief Get the bufferSize value in DBufferBits.
 	/// \return The #BufferSizeId value.
-	unsigned char CommandSetBuffer5200::getBufferSize() {
+	unsigned char BulkSetBuffer5200::getBufferSize() {
 		return ((DBufferBits *) &(this->array[8]))->bufferSize;
 	}
 	
 	/// \brief Set the bufferSize in DBufferBits to the given value.
 	/// \param value The new #BufferSizeId value.
-	void CommandSetBuffer5200::setBufferSize(unsigned char value) {
+	void BulkSetBuffer5200::setBufferSize(unsigned char value) {
 		((DBufferBits *) &(this->array[8]))->bufferSize = value;
 	}
 	
 	/// \brief Initialize the array to the needed values.
-	void CommandSetBuffer5200::init() {
-		this->array[0] = COMMAND_SETBUFFER5200;
+	void BulkSetBuffer5200::init() {
+		this->array[0] = BULK_SETBUFFER5200;
 		this->array[5] = 0xff;
 		this->array[9] = 0xff;
 	}
 	
 	
 	//////////////////////////////////////////////////////////////////////////////
-	// class CommandSetTrigger5200
+	// class BulkSetTrigger5200
 	/// \brief Sets the data array to the default values.
-	CommandSetTrigger5200::CommandSetTrigger5200() : Helper::DataArray<unsigned char>(8) {
+	BulkSetTrigger5200::BulkSetTrigger5200() : Helper::DataArray<unsigned char>(8) {
 		this->init();
 	}
 	
@@ -717,7 +717,7 @@ namespace Hantek {
 	/// \param fastRate The fastRate state.
 	/// \param triggerSlope The triggerSlope value.
 	/// \param triggerPulse The triggerPulse value.
-	CommandSetTrigger5200::CommandSetTrigger5200(unsigned char triggerSource, unsigned char usedChannels, bool fastRate, unsigned char triggerSlope, unsigned char triggerPulse) : Helper::DataArray<unsigned char>(8) {
+	BulkSetTrigger5200::BulkSetTrigger5200(unsigned char triggerSource, unsigned char usedChannels, bool fastRate, unsigned char triggerSlope, unsigned char triggerPulse) : Helper::DataArray<unsigned char>(8) {
 		this->init();
 		
 		this->setTriggerSource(triggerSource);
@@ -729,67 +729,67 @@ namespace Hantek {
 	
 	/// \brief Get the triggerSource value in ETsrBits.
 	/// \return The #TriggerSource value.
-	unsigned char CommandSetTrigger5200::getTriggerSource() {
+	unsigned char BulkSetTrigger5200::getTriggerSource() {
 		return ((ETsrBits *) &(this->array[2]))->triggerSource;
 	}
 	
 	/// \brief Set the triggerSource in ETsrBits to the given value.
 	/// \param value The new #TriggerSource value.
-	void CommandSetTrigger5200::setTriggerSource(unsigned char value) {
+	void BulkSetTrigger5200::setTriggerSource(unsigned char value) {
 		((ETsrBits *) &(this->array[2]))->triggerSource = value;
 	}
 	
 	/// \brief Get the usedChannels value in ETsrBits.
 	/// \return The #UsedChannels value.
-	unsigned char CommandSetTrigger5200::getUsedChannels() {
+	unsigned char BulkSetTrigger5200::getUsedChannels() {
 		return ((ETsrBits *) &(this->array[2]))->usedChannels;
 	}
 	
 	/// \brief Set the usedChannels in ETsrBits to the given value.
 	/// \param value The new #UsedChannels value.
-	void CommandSetTrigger5200::setUsedChannels(unsigned char value) {
+	void BulkSetTrigger5200::setUsedChannels(unsigned char value) {
 		((ETsrBits *) &(this->array[2]))->usedChannels = value;
 	}
 	
 	/// \brief Get the fastRate state in ETsrBits.
 	/// \return The fastRate state (Already inverted).
-	bool CommandSetTrigger5200::getFastRate() {
+	bool BulkSetTrigger5200::getFastRate() {
 		return ((ETsrBits *) &(this->array[2]))->fastRate == 0;
 	}
 	
 	/// \brief Set the fastRate in ETsrBits to the given state.
 	/// \param fastRate The new fastRate state (Automatically inverted).
-	void CommandSetTrigger5200::setFastRate(bool fastRate) {
+	void BulkSetTrigger5200::setFastRate(bool fastRate) {
 		((ETsrBits *) &(this->array[2]))->fastRate = fastRate ? 0 : 1;
 	}
 	
 	/// \brief Get the triggerSlope value in ETsrBits.
 	/// \return The triggerSlope value.
-	unsigned char CommandSetTrigger5200::getTriggerSlope() {
+	unsigned char BulkSetTrigger5200::getTriggerSlope() {
 		return ((ETsrBits *) &(this->array[2]))->triggerSlope;
 	}
 	
 	/// \brief Set the triggerSlope in ETsrBits to the given value.
 	/// \param slope The new triggerSlope value.
-	void CommandSetTrigger5200::setTriggerSlope(unsigned char slope) {
+	void BulkSetTrigger5200::setTriggerSlope(unsigned char slope) {
 		((ETsrBits *) &(this->array[2]))->triggerSlope = slope;
 	}
 	
 	/// \brief Get the triggerPulse state in ETsrBits.
 	/// \return The triggerPulse state.
-	bool CommandSetTrigger5200::getTriggerPulse() {
+	bool BulkSetTrigger5200::getTriggerPulse() {
 		return ((ETsrBits *) &(this->array[2]))->triggerPulse == 1;
 	}
 	
 	/// \brief Set the triggerPulse in ETsrBits to the given state.
 	/// \param pulse The new triggerPulse state.
-	void CommandSetTrigger5200::setTriggerPulse(bool pulse) {
+	void BulkSetTrigger5200::setTriggerPulse(bool pulse) {
 		((ETsrBits *) &(this->array[2]))->triggerPulse = pulse ? 1 : 0;
 	}
 	
 	/// \brief Initialize the array to the needed values.
-	void CommandSetTrigger5200::init() {
-		this->array[0] = COMMAND_SETTRIGGER5200;
+	void BulkSetTrigger5200::init() {
+		this->array[0] = BULK_SETTRIGGER5200;
 		this->array[4] = 0x02;
 	}
 }

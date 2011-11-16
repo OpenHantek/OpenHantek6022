@@ -50,13 +50,13 @@ HorizontalDock::HorizontalDock(DsoSettings *settings, QWidget *parent, Qt::Windo
 			<< 1e-3 << 2e-3 << 4e-3 << 1e-2 << 2e-2 << 4e-2 << 1e-1 << 2e-1 << 4e-1
 			<<  1e0 <<  2e0 <<  4e0 <<  1e1 <<  2e1 <<  4e1 <<  6e1 << 12e1 << 24e1
 			<<  6e2 << 12e2 << 24e2 << 36e2;  ///< Timebase steps in seconds/div
-	for(QList<double>::iterator timebase = this->timebaseSteps.begin(); timebase != this->timebaseSteps.end(); ++timebase)
+	for(QList<double>::iterator timebase = this->timebaseSteps.begin(); timebase != this->timebaseSteps.end(); timebase++)
 		this->timebaseStrings << Helper::valueToString(*timebase, Helper::UNIT_SECONDS, 0);
 	this->frequencybaseSteps
 			<<  1.0 <<  2.0 <<  5.0 <<  1e1 <<  2e1 <<  5e1 <<  1e2 <<  2e2 <<  5e2
 			<<  1e3 <<  2e3 <<  5e3 <<  1e4 <<  2e4 <<  4e4 <<  1e5 <<  2e5 <<  5e5
 			<<  1e6 <<  2e6 <<  5e6 <<  1e7; ///< Frequencybase steps in Hz/div
-	for(QList<double>::iterator frequencybase = this->frequencybaseSteps.begin(); frequencybase != this->frequencybaseSteps.end(); ++frequencybase)
+	for(QList<double>::iterator frequencybase = this->frequencybaseSteps.begin(); frequencybase != this->frequencybaseSteps.end(); frequencybase++)
 		this->frequencybaseStrings << Helper::valueToString(*frequencybase, Helper::UNIT_HERTZ, 0);
 	
 	// Initialize elements
@@ -323,7 +323,7 @@ SpectrumDock::SpectrumDock(DsoSettings *settings, QWidget *parent, Qt::WindowFla
 	// Initialize lists for comboboxes
 	this->magnitudeSteps                <<  1e0 <<  2e0 <<  3e0 <<  6e0
 			<<  1e1 <<  2e1 <<  3e1 <<  6e1 <<  1e2 <<  2e2 <<  3e2 <<  6e2; ///< Magnitude steps in dB/div
-	for(QList<double>::iterator magnitude = this->magnitudeSteps.begin(); magnitude != this->magnitudeSteps.end(); ++magnitude)
+	for(QList<double>::iterator magnitude = this->magnitudeSteps.begin(); magnitude != this->magnitudeSteps.end(); magnitude++)
 		this->magnitudeStrings << Helper::valueToString(*magnitude, Helper::UNIT_DECIBEL, 0);
 	
 	// Initialize elements
