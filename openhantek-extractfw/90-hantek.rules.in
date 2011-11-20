@@ -1,23 +1,23 @@
 # Hantek DSO-2090
 SUBSYSTEM=="usb", ACTION=="add", ENV{DEVTYPE}=="usb_device", ENV{PRODUCT}=="4b4/2090/*", RUN+="/sbin/fxload -t fx2 -I @hantekfirmwaredir@/dso2090-firmware.hex -s @hantekfirmwaredir@/dso2090-loader.hex -D $env{DEVNAME}"
-SYSFS{idVendor}=="04b5", SYSFS{idProduct}=="2090", MODE="0660", GROUP="plugdev"
+ATTRS{idVendor}=="04b5", ATTRS{idProduct}=="2090", MODE="0660", GROUP="plugdev"
 
 # Hantek DSO-2100
 SUBSYSTEM=="usb", ACTION=="add", ENV{DEVTYPE}=="usb_device", ENV{PRODUCT}=="547/1006/*", RUN+="/sbin/fxload -t an21 -I @hantekfirmwaredir@/dso2100-firmware.hex -s @hantekfirmwaredir@/dso2100-loader.hex -D $env{DEVNAME}"
-SYSFS{idVendor}=="0547", SYSFS{idProduct}=="1002", MODE="0660", GROUP="plugdev"
+ATTRS{idVendor}=="0547", ATTRS{idProduct}=="1002", MODE="0660", GROUP="plugdev"
 
 # Hantek DSO-2150
 SUBSYSTEM=="usb", ACTION=="add", ENV{DEVTYPE}=="usb_device", ENV{PRODUCT}=="4b4/2150/*", RUN+="/sbin/fxload -t fx2 -I @hantekfirmwaredir@/dso2150-firmware.hex -s @hantekfirmwaredir@/dso2150-loader.hex -D $env{DEVNAME}"
-SYSFS{idVendor}=="04b5", SYSFS{idProduct}=="2150", MODE="0660", GROUP="plugdev"
+ATTRS{idVendor}=="04b5", ATTRS{idProduct}=="2150", MODE="0660", GROUP="plugdev"
 
 # Hantek DSO-2250
 SUBSYSTEM=="usb", ACTION=="add", ENV{DEVTYPE}=="usb_device", ENV{PRODUCT}=="4b4/2250/*", RUN+="/sbin/fxload -t fx2 -I @hantekfirmwaredir@/dso2250-firmware.hex -s @hantekfirmwaredir@/dso2250-loader.hex -D $env{DEVNAME}"
-SYSFS{idVendor}=="04b5", SYSFS{idProduct}=="2250", MODE="0660", GROUP="plugdev"
+ATTRS{idVendor}=="04b5", ATTRS{idProduct}=="2250", MODE="0660", GROUP="plugdev"
 
 # Hantek DSO-5200
 SUBSYSTEM=="usb", ACTION=="add", ENV{DEVTYPE}=="usb_device", ENV{PRODUCT}=="4b4/5200/*", RUN+="/sbin/fxload -t fx2 -I @hantekfirmwaredir@/dso5200-firmware.hex -s @hantekfirmwaredir@/dso5200-loader.hex -D $env{DEVNAME}"
-SYSFS{idVendor}=="04b5", SYSFS{idProduct}=="5200", MODE="0660", GROUP="plugdev"
+ATTRS{idVendor}=="04b5", ATTRS{idProduct}=="5200", MODE="0660", GROUP="plugdev"
 
 # Hantek DSO-5200A
-SUBSYSTEM=="usb", ACTION=="add", ENV{DEVTYPE}=="usb_device", ENV{PRODUCT}=="4b4/520A/*", RUN+="/sbin/fxload -t fx2 -I @hantekfirmwaredir@/dso520a-firmware.hex -s @hantekfirmwaredir@/dso520a-loader.hex -D $env{DEVNAME}"
-SYSFS{idVendor}=="04b5", SYSFS{idProduct}=="520A", MODE="0660", GROUP="plugdev"
+SUBSYSTEM=="usb", ACTION=="add", ENV{DEVTYPE}=="usb_device", ENV{PRODUCT}=="4b4/520a/*", RUN+="/sbin/fxload -t fx2 -I @hantekfirmwaredir@/dso520a-firmware.hex -s @hantekfirmwaredir@/dso520a-loader.hex -D $env{DEVNAME}"
+ATTRS{idVendor}=="04b5", ATTRS{idProduct}=="520a", MODE="0660", GROUP="plugdev"
