@@ -130,3 +130,6 @@
 2011-11-16 Oliver Haag  <oliver.haag@gmail.com>
 * Redesign of Hantek::Control to make it easier to add support for new models
 * Removed buggy destructor from GlGenerator, proper cleanup still missing
+
+2011-11-16 Oliver Haag  <oliver.haag@gmail.com>
+* Bugfix: Copy-paste in Hantek::Control::setOffset, thanks to tinosnitso
