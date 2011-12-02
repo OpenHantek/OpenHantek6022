@@ -500,29 +500,6 @@ namespace Hantek {
 	};
 	
 	//////////////////////////////////////////////////////////////////////////////
-	/// \enum Samplerate                                            hantek/types.h
-	/// \brief The different samplerates supported by Hantek DSOs.
-	enum Samplerate {
-		SAMPLERATE_100MS,
-		SAMPLERATE_50MS, SAMPLERATE_25MS, SAMPLERATE_10MS,
-		SAMPLERATE_5MS, SAMPLERATE_2_5MS, SAMPLERATE_1MS,
-		SAMPLERATE_500KS, SAMPLERATE_250KS, SAMPLERATE_100KS,
-		SAMPLERATE_50KS, SAMPLERATE_25KS, SAMPLERATE_10KS,
-		SAMPLERATE_5KS, SAMPLERATE_2_5KS, SAMPLERATE_1KS,
-		SAMPLERATE_COUNT
-	};
-	
-	//////////////////////////////////////////////////////////////////////////////
-	/// \enum Gain                                                  hantek/types.h
-	/// \brief The different gain steps supported by Hantek DSOs.
-	enum Gain {
-		GAIN_10MV, GAIN_20MV, GAIN_50MV,
-		GAIN_100MV, GAIN_200MV, GAIN_500MV,
-		GAIN_1V, GAIN_2V, GAIN_5V,
-		GAIN_COUNT
-	};
-	
-	//////////////////////////////////////////////////////////////////////////////
 	/// \enum UsedChannels                                          hantek/types.h
 	/// \brief The enabled channels.
 	enum UsedChannels {

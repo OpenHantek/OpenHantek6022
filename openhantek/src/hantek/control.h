@@ -119,9 +119,11 @@ namespace Hantek {
 		
 		// Calibration
 		/// The sample values at the top of the screen
-		unsigned short int voltageLimit[HANTEK_CHANNELS][GAIN_COUNT];
-		/// Calibration data for the channel offsets
-		unsigned short int offsetLimit[HANTEK_CHANNELS][GAIN_COUNT][OFFSET_COUNT];
+		QList<unsigned short int> voltageLimit[HANTEK_CHANNELS];
+		/// The index of the selected gain on the hardware
+		QList<unsigned char> gainIndex;
+		/// Calibration data for the channel offsets \todo Should probably be a QList too
+		unsigned short int offsetLimit[HANTEK_CHANNELS][9][OFFSET_COUNT];
 	};
 	
 	//////////////////////////////////////////////////////////////////////////////
@@ -151,7 +153,7 @@ namespace Hantek {
 	/// \struct ControlSettingsSamplerate                         hantek/control.h
 	/// \brief Stores the current amplification settings of the device.
 	struct ControlSettingsVoltage {
-		Gain gain; ///< The gain id
+		unsigned int gain; ///< The gain id
 		double offset; ///< The screen offset for each channel
 		double offsetReal; ///< The real offset for each channel (Due to quantization)
 		bool used; ///< true, if the channel is used

@@ -52,16 +52,13 @@ namespace Hantek {
 		this->specification.command.values.offsetLimits = VALUE_OFFSETLIMITS;
 		this->specification.command.values.voltageLimits = (ControlValue) -1;
 		
-		this->specification.gainSteps       << 0.08 << 0.16 << 0.40 << 0.80 << 1.60
-				<< 4.00 <<  8.0 << 16.0 << 40.0;
-		
 		this->specification.samplerate.single.base = 50e6;
 		this->specification.samplerate.single.max = 50e6;
 		this->specification.samplerate.multi.base = 100e6;
 		this->specification.samplerate.multi.max = 100e6;
 		
 		for(unsigned int channel = 0; channel < HANTEK_CHANNELS; channel++) {
-			for(unsigned int gainId = 0; gainId < GAIN_COUNT; gainId++) {
+			for(unsigned int gainId = 0; gainId < 9; gainId++) {
 				this->specification.offsetLimit[channel][gainId][OFFSET_START] = 0x0000;
 				this->specification.offsetLimit[channel][gainId][OFFSET_END] = 0xffff;
 			}
@@ -589,6 +586,9 @@ namespace Hantek {
 		// Maximum possible samplerate for a single channel and dividers for buffer sizes
 		this->specification.bufferDividers.clear();
 		this->specification.bufferSizes.clear();
+		this->specification.gainSteps.clear();
+		for(int channel = 0; channel < HANTEK_CHANNELS; channel++)
+			this->specification.voltageLimit[channel].clear();
 		
 		switch(this->device->getModel()) {
 			case MODEL_DSO2250:
@@ -600,6 +600,14 @@ namespace Hantek {
 				this->specification.samplerate.multi.max = 250e6;
 				this->specification.bufferDividers << 1000 << 1 << 2;
 				this->specification.bufferSizes << ULONG_MAX << 10240 << 14336;
+				this->specification.gainSteps
+					<< 0.16 << 0.40 << 0.80 << 1.60 << 4.00 <<  8.0 << 16.0 << 40.0 << 80.0;
+				/// \todo Use calibration data to get the DSO-5200(A) sample ranges
+				for(int channel = 0; channel < HANTEK_CHANNELS; channel++)
+					this->specification.voltageLimit[channel]
+					<<  368 <<  454 <<  908 <<  368 <<  454 <<  908 <<  368 <<  454 <<  908;
+				this->specification.gainIndex
+					<<    1 <<    0 <<    0 <<    1 <<    0 <<    0 <<    1 <<    0 <<    0;
 				break;
 			
 			case MODEL_DSO2150:
@@ -609,6 +617,13 @@ namespace Hantek {
 				this->specification.samplerate.multi.max = 150e6;
 				this->specification.bufferDividers << 1000 << 1 << 2;
 				this->specification.bufferSizes << ULONG_MAX << 10240 << 32768;
+				this->specification.gainSteps
+					<< 0.08 << 0.16 << 0.40 << 0.80 << 1.60 << 4.00 <<  8.0 << 16.0 << 40.0;
+				for(int channel = 0; channel < HANTEK_CHANNELS; channel++)
+					this->specification.voltageLimit[channel]
+					<<  255 <<  255 <<  255 <<  255 <<  255 <<  255 <<  255 <<  255 <<  255;
+				this->specification.gainIndex
+					<<    0 <<    1 <<    2 <<    0 <<    1 <<    2 <<    0 <<    1 <<    2;
 				break;
 			
 			default:
@@ -618,6 +633,13 @@ namespace Hantek {
 				this->specification.samplerate.multi.max = 100e6;
 				this->specification.bufferDividers << 1000 << 1 << 2;
 				this->specification.bufferSizes << ULONG_MAX << 10240 << 32768;
+				this->specification.gainSteps
+					<< 0.08 << 0.16 << 0.40 << 0.80 << 1.60 << 4.00 <<  8.0 << 16.0 << 40.0;
+				for(int channel = 0; channel < HANTEK_CHANNELS; channel++)
+					this->specification.voltageLimit[channel]
+					<<  255 <<  255 <<  255 <<  255 <<  255 <<  255 <<  255 <<  255 <<  255;
+				this->specification.gainIndex
+					<<    0 <<    1 <<    2 <<    0 <<    1 <<    2 <<    0 <<    1 <<    2;
 				break;
 		}
 		this->settings.samplerate.limits = &(this->specification.samplerate.single);
@@ -812,64 +834,21 @@ namespace Hantek {
 		
 		// Find lowest gain voltage thats at least as high as the requested
 		int gainId;
-		for(gainId = 0; gainId < GAIN_COUNT - 1; gainId++)
+		for(gainId = 0; gainId < this->specification.gainSteps.count() - 1; gainId++)
 			if(this->specification.gainSteps[gainId] >= gain)
 				break;
 		
-		// Get the voltage scaler id and it's sample range for this gain
-		int scalerId;
-		switch(this->device->getModel()) {
-			case MODEL_DSO5200:
-			case MODEL_DSO5200A:
-				/// \todo Use calibration data to get the DSO-5200(A) sample ranges
-				if(gainId == GAIN_10MV) {
-					scalerId = 1;
-					this->specification.voltageLimit[channel][gainId] = 184;
-				}
-				else {
-					switch(gainId % 3) {
-						case 1:
-							scalerId = 1;
-							this->specification.voltageLimit[channel][gainId] = 368;
-							break;
-						case 2:
-							scalerId = 0;
-							this->specification.voltageLimit[channel][gainId] = 454;
-							break;
-						default:
-							scalerId = 0;
-							this->specification.voltageLimit[channel][gainId] = 908;
-							break;
-					}
-				}
-				break;
-			
-			default:
-				scalerId = gainId % 3;
-				this->specification.voltageLimit[channel][gainId] = 0xff;
-				break;
-		}
-		
 		// SetGain bulk command for gain
-		((BulkSetGain *) this->command[BULK_SETGAIN])->setGain(channel, scalerId);
+		((BulkSetGain *) this->command[BULK_SETGAIN])->setGain(channel, this->specification.gainIndex[gainId]);
 		this->commandPending[BULK_SETGAIN] = true;
 		
 		// SetRelays control command for gain relays
 		ControlSetRelays *controlSetRelays = (ControlSetRelays *) this->control[CONTROLINDEX_SETRELAYS];
-		switch(this->device->getModel()) {
-			case MODEL_DSO5200:
-			case MODEL_DSO5200A:
-				controlSetRelays->setBelow1V(channel, gainId <= GAIN_1V);
-				controlSetRelays->setBelow100mV(channel, gainId <= GAIN_100MV);
-				break;
-			default:
-				controlSetRelays->setBelow1V(channel, gainId < GAIN_1V);
-				controlSetRelays->setBelow100mV(channel, gainId < GAIN_100MV);
-				break;
-		}
+		controlSetRelays->setBelow1V(channel, gainId < 3);
+		controlSetRelays->setBelow100mV(channel, gainId < 6);
 		this->controlPending[CONTROLINDEX_SETRELAYS] = true;
 		
-		this->settings.voltage[channel].gain = (Gain) gainId;
+		this->settings.voltage[channel].gain = gainId;
 		
 		this->setOffset(channel, this->settings.voltage[channel].offset);
 		
@@ -988,7 +967,7 @@ namespace Hantek {
 			case MODEL_DSO5200A:
 				// The range is the same as used for the offsets for 10 bit models
 				minimum = ((unsigned short int) *((unsigned char *) &(this->specification.offsetLimit[channel][this->settings.voltage[channel].gain][OFFSET_START])) << 8) + *((unsigned char *) &(this->specification.offsetLimit[channel][this->settings.voltage[channel].gain][OFFSET_START]) + 1);
-				maximum = ((unsigned short int) *((unsigned char *) &(this->specification.offsetLimit[channel][this->settings.voltage[channel].gain][OFFSET_START])) << 8) + *((unsigned char *) &(this->specification.offsetLimit[channel][this->settings.voltage[channel].gain][OFFSET_END]) + 1);
+				maximum = ((unsigned short int) *((unsigned char *) &(this->specification.offsetLimit[channel][this->settings.voltage[channel].gain][OFFSET_END])) << 8) + *((unsigned char *) &(this->specification.offsetLimit[channel][this->settings.voltage[channel].gain][OFFSET_END]) + 1);
 				break;
 			
 			default:
