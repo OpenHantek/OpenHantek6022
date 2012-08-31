@@ -50,7 +50,7 @@ After building it, you can just run the fwget.sh script inside the openhantek-ex
 </pre>
 You can also do it manually by placing the DSO*1.SYS file into the same directory and running the built binary:
 <pre>
-	$ ./openhantek-extractfw <driver file>
+	$ ./openhantek-extractfw &lt;driver file&gt;
 </pre>
 This should create two .hex files that should be placed into /usr/local/share/hantek/.
 \subsection ssec_firmware Installing the firmware

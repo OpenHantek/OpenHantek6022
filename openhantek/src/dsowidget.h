@@ -110,7 +110,7 @@ class DsoWidget : public QWidget {
 		void updateSpectrumUsed(unsigned int channel, bool used);
 		
 		// Vertical axis
-    void updateVoltageCoupling(unsigned int channel);
+		void updateVoltageCoupling(unsigned int channel);
 		void updateMathMode();
 		void updateVoltageGain(unsigned int channel);
 		void updateVoltageUsed(unsigned int channel, bool used);

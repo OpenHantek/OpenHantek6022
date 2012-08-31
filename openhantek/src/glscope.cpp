@@ -181,10 +181,15 @@ void GlScope::paintGL() {
 /// \param height The new height of the widget.
 void GlScope::resizeGL(int width, int height) {
 	glViewport(0, 0, (GLint) width, (GLint) height);
-	//glViewport(1, 0, (GLint) width - 1, (GLint) height - 1);
+
 	glMatrixMode(GL_PROJECTION);
+
+	// Set axes to div-scale and apply correction for exact pixelization
 	glLoadIdentity();
-	glOrtho(-DIVS_TIME / 2, DIVS_TIME / 2, -DIVS_VOLTAGE / 2, DIVS_VOLTAGE / 2, -1.0, 1.0);
+	GLdouble pixelizationWidthCorrection = (width > 0) ? (GLdouble) width / (width - 1) : 1;
+	GLdouble pixelizationHeightCorrection = (height > 0) ? (GLdouble) height / (height - 1) : 1;
+	glOrtho(-(DIVS_TIME / 2) * pixelizationWidthCorrection, (DIVS_TIME / 2) * pixelizationWidthCorrection, -(DIVS_VOLTAGE / 2) * pixelizationHeightCorrection, (DIVS_VOLTAGE / 2) * pixelizationHeightCorrection, -1.0, 1.0);
+
 	glMatrixMode(GL_MODELVIEW);
 }
 

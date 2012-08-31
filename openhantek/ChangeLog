@@ -136,3 +136,10 @@
 
 2011-12-02 Oliver Haag  <oliver.haag@gmail.com>
 * Moved values needed to control gain into lists, initialized in connectDevice
+
+2012-07-08 Oliver Haag  <oliver.haag@gmail.com>
+* Exact pixelation in GlScope and LevelSlider
+
+2012-09-01 Oliver Haag  <oliver.haag@gmail.com>
+* Updated documentation with first DSO-2250 details
+* General documentation improvements

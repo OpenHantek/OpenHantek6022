@@ -79,8 +79,8 @@ namespace Hantek {
 		
 		protected:
 			// Lists for enums
-			QList<unsigned short int> modelIds; ///< Product ID for each #Model
-			QStringList modelStrings; ///< The name as QString for each #Model
+			QList<unsigned short int> modelIds; ///< Product ID for each ::Model
+			QStringList modelStrings; ///< The name as QString for each ::Model
 			
 			// Command buffers
 			ControlBeginCommand *beginCommandControl; ///< Buffer for the CONTROL_BEGINCOMMAND control command

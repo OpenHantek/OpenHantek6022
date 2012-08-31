@@ -460,7 +460,7 @@ namespace Hantek {
 	}
 	
 	/// \brief Gets the speed of the connection.
-	/// \return The #ConnectionSpeed of the USB connection.
+	/// \return The ::ConnectionSpeed of the USB connection.
 	int Device::getConnectionSpeed() {
 		int errorCode;
 		ControlGetSpeed response;
@@ -473,7 +473,7 @@ namespace Hantek {
 	}
 	
 	/// \brief Get the oscilloscope model.
-	/// \return The #Model of the connected Hantek DSO.
+	/// \return The ::Model of the connected Hantek DSO.
 	Model Device::getModel() {
 		return this->model;
 	}

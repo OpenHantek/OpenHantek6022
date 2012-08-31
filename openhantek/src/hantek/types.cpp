@@ -135,13 +135,13 @@ namespace Hantek {
 	}
 	
 	/// \brief Get the bufferSize value in Tsr1Bits.
-	/// \return The #BufferSizeId value.
+	/// \return The ::BufferSizeId value.
 	unsigned char BulkSetTriggerAndSamplerate::getBufferSize() {
 		return ((Tsr1Bits *) &(this->array[2]))->bufferSize;
 	}
 	
 	/// \brief Set the bufferSize in Tsr1Bits to the given value.
-	/// \param value The new #BufferSizeId value.
+	/// \param value The new ::BufferSizeId value.
 	void BulkSetTriggerAndSamplerate::setBufferSize(unsigned char value) {
 		((Tsr1Bits *) &(this->array[2]))->bufferSize = value;
 	}
@@ -623,7 +623,7 @@ namespace Hantek {
 	/// \param triggerPositionPost The TriggerPositionPost value.
 	/// \param usedPre The TriggerPositionUsedPre value.
 	/// \param usedPost The TriggerPositionUsedPost value.
-	/// \param bufferSize The #BufferSizeId value.
+	/// \param bufferSize The ::BufferSizeId value.
 	BulkSetBuffer5200::BulkSetBuffer5200(unsigned short int triggerPositionPre, unsigned short int triggerPositionPost, unsigned char usedPre, unsigned char usedPost, unsigned char bufferSize) : Helper::DataArray<unsigned char>(10) {
 		this->init();
 		
@@ -661,37 +661,37 @@ namespace Hantek {
 	}
 	
 	/// \brief Get the TriggerPositionUsedPre value.
-	/// \return The #DTriggerPositionUsed value for the pre position.
+	/// \return The ::DTriggerPositionUsed value for the pre position.
 	unsigned char BulkSetBuffer5200::getUsedPre() {
 		return this->array[4];
 	}
 	
 	/// \brief Set the TriggerPositionUsedPre to the given value.
-	/// \param value The new #DTriggerPositionUsed value for the pre position.
+	/// \param value The new ::DTriggerPositionUsed value for the pre position.
 	void BulkSetBuffer5200::setUsedPre(unsigned char value) {
 		this->array[4] = value;
 	}
 	
 	/// \brief Get the TriggerPositionUsedPost value.
-	/// \return The #DTriggerPositionUsed value for the post position.
+	/// \return The ::DTriggerPositionUsed value for the post position.
 	unsigned char BulkSetBuffer5200::getUsedPost() {
 		return ((DBufferBits *) &(this->array[8]))->triggerPositionUsed;
 	}
 	
 	/// \brief Set the TriggerPositionUsedPost to the given value.
-	/// \param value The new #DTriggerPositionUsed value for the post position.
+	/// \param value The new ::DTriggerPositionUsed value for the post position.
 	void BulkSetBuffer5200::setUsedPost(unsigned char value) {
 		((DBufferBits *) &(this->array[8]))->triggerPositionUsed = value;
 	}
 	
 	/// \brief Get the bufferSize value in DBufferBits.
-	/// \return The #BufferSizeId value.
+	/// \return The ::BufferSizeId value.
 	unsigned char BulkSetBuffer5200::getBufferSize() {
 		return ((DBufferBits *) &(this->array[8]))->bufferSize;
 	}
 	
 	/// \brief Set the bufferSize in DBufferBits to the given value.
-	/// \param value The new #BufferSizeId value.
+	/// \param value The new ::BufferSizeId value.
 	void BulkSetBuffer5200::setBufferSize(unsigned char value) {
 		((DBufferBits *) &(this->array[8]))->bufferSize = value;
 	}
@@ -728,25 +728,25 @@ namespace Hantek {
 	}
 	
 	/// \brief Get the triggerSource value in ETsrBits.
-	/// \return The #TriggerSource value.
+	/// \return The ::TriggerSource value.
 	unsigned char BulkSetTrigger5200::getTriggerSource() {
 		return ((ETsrBits *) &(this->array[2]))->triggerSource;
 	}
 	
 	/// \brief Set the triggerSource in ETsrBits to the given value.
-	/// \param value The new #TriggerSource value.
+	/// \param value The new ::TriggerSource value.
 	void BulkSetTrigger5200::setTriggerSource(unsigned char value) {
 		((ETsrBits *) &(this->array[2]))->triggerSource = value;
 	}
 	
 	/// \brief Get the usedChannels value in ETsrBits.
-	/// \return The #UsedChannels value.
+	/// \return The ::UsedChannels value.
 	unsigned char BulkSetTrigger5200::getUsedChannels() {
 		return ((ETsrBits *) &(this->array[2]))->usedChannels;
 	}
 	
 	/// \brief Set the usedChannels in ETsrBits to the given value.
-	/// \param value The new #UsedChannels value.
+	/// \param value The new ::UsedChannels value.
 	void BulkSetTrigger5200::setUsedChannels(unsigned char value) {
 		((ETsrBits *) &(this->array[2]))->usedChannels = value;
 	}

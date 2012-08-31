@@ -72,7 +72,7 @@ namespace Hantek {
 	};
 	
 	//////////////////////////////////////////////////////////////////////////////
-	/// \struct ControlSpecificationCommandsControlValues         hantek/control.h
+	/// \struct ControlSpecificationCommandsValues                hantek/control.h
 	/// \brief Stores the control value codes used for this device.
 	struct ControlSpecificationCommandsValues {
 		ControlValue offsetLimits; ///< Code for channel offset limits
@@ -137,7 +137,7 @@ namespace Hantek {
 	};
 	
 	//////////////////////////////////////////////////////////////////////////////
-	/// \struct ControlSettingsSamplerate                         hantek/control.h
+	/// \struct ControlSettingsTrigger                            hantek/control.h
 	/// \brief Stores the current trigger settings of the device.
 	struct ControlSettingsTrigger {
 		double level[HANTEK_CHANNELS]; ///< The trigger level for each channel in V
@@ -150,7 +150,7 @@ namespace Hantek {
 	};
 	
 	//////////////////////////////////////////////////////////////////////////////
-	/// \struct ControlSettingsSamplerate                         hantek/control.h
+	/// \struct ControlSettingsVoltage                            hantek/control.h
 	/// \brief Stores the current amplification settings of the device.
 	struct ControlSettingsVoltage {
 		unsigned int gain; ///< The gain id

@@ -310,13 +310,12 @@ void GlGenerator::generateGrid() {
 	
 	// Border
 	this->vaGrid[2].setSize(4 * 2);
-	// The 1e-4 offsets avoid that the border is outside our drawing area
-	this->vaGrid[2].data[0] = -DIVS_TIME / 2 + 1e-4;
-	this->vaGrid[2].data[1] = -DIVS_VOLTAGE / 2 + 1e-4;
-	this->vaGrid[2].data[2] = DIVS_TIME / 2 - 1e-4;
-	this->vaGrid[2].data[3] = -DIVS_VOLTAGE / 2 + 1e-4;
-	this->vaGrid[2].data[4] = DIVS_TIME / 2 - 1e-4;
-	this->vaGrid[2].data[5] = DIVS_VOLTAGE / 2 - 1e-4;
-	this->vaGrid[2].data[6] = -DIVS_TIME / 2 + 1e-4;
-	this->vaGrid[2].data[7] = DIVS_VOLTAGE / 2 - 1e-4;
+	this->vaGrid[2].data[0] = -DIVS_TIME / 2;
+	this->vaGrid[2].data[1] = -DIVS_VOLTAGE / 2;
+	this->vaGrid[2].data[2] = DIVS_TIME / 2;
+	this->vaGrid[2].data[3] = -DIVS_VOLTAGE / 2;
+	this->vaGrid[2].data[4] = DIVS_TIME / 2;
+	this->vaGrid[2].data[5] = DIVS_VOLTAGE / 2;
+	this->vaGrid[2].data[6] = -DIVS_TIME / 2;
+	this->vaGrid[2].data[7] = DIVS_VOLTAGE / 2;
 }

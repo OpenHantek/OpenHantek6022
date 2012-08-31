@@ -30,7 +30,7 @@
 
 namespace Dso {
 	/// \brief Return string representation of the given channel mode.
-	/// \param mode The #ChannelMode that should be returned as string.
+	/// \param mode The ::ChannelMode that should be returned as string.
 	/// \return The string that should be used in labels etc., empty when invalid.
 	QString channelModeString(ChannelMode mode) {
 		switch(mode) {
@@ -44,7 +44,7 @@ namespace Dso {
 	}
 	
 	/// \brief Return string representation of the given graph format.
-	/// \param format The #GraphFormat that should be returned as string.
+	/// \param format The ::GraphFormat that should be returned as string.
 	/// \return The string that should be used in labels etc.
 	QString graphFormatString(GraphFormat format) {
 		switch(format) {
@@ -58,7 +58,7 @@ namespace Dso {
 	}
 	
 	/// \brief Return string representation of the given channel coupling.
-	/// \param coupling The #Coupling that should be returned as string.
+	/// \param coupling The ::Coupling that should be returned as string.
 	/// \return The string that should be used in labels etc.
 	QString couplingString(Coupling coupling) {
 		switch(coupling) {
@@ -74,7 +74,7 @@ namespace Dso {
 	}
 	
 	/// \brief Return string representation of the given math mode.
-	/// \param mode The #MathMode that should be returned as string.
+	/// \param mode The ::MathMode that should be returned as string.
 	/// \return The string that should be used in labels etc.
 	QString mathModeString(MathMode mode) {
 		switch(mode) {
@@ -90,7 +90,7 @@ namespace Dso {
 	}
 	
 	/// \brief Return string representation of the given trigger mode.
-	/// \param mode The #TriggerMode that should be returned as string.
+	/// \param mode The ::TriggerMode that should be returned as string.
 	/// \return The string that should be used in labels etc.
 	QString triggerModeString(TriggerMode mode) {
 		switch(mode) {
@@ -106,7 +106,7 @@ namespace Dso {
 	}
 	
 	/// \brief Return string representation of the given trigger slope.
-	/// \param slope The #Slope that should be returned as string.
+	/// \param slope The ::Slope that should be returned as string.
 	/// \return The string that should be used in labels etc.
 	QString slopeString(Slope slope) {
 		switch(slope) {
@@ -120,7 +120,7 @@ namespace Dso {
 	}
 	
 	/// \brief Return string representation of the given dft window function.
-	/// \param window The #WindowFunction that should be returned as string.
+	/// \param window The ::WindowFunction that should be returned as string.
 	/// \return The string that should be used in labels etc.
 	QString windowFunctionString(WindowFunction window) {
 		switch(window) {
@@ -160,7 +160,7 @@ namespace Dso {
 	}
 	
 	/// \brief Return string representation of the given graph interpolation mode.
-	/// \param interpolation The #InterpolationMode that should be returned as string.
+	/// \param interpolation The ::InterpolationMode that should be returned as string.
 	/// \return The string that should be used in labels etc.
 	QString interpolationModeString(InterpolationMode interpolation) {
 		switch(interpolation) {

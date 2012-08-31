@@ -285,14 +285,14 @@ namespace Hantek {
 	/// \param value The data value that contains the trigger point.
 	/// \return The calculated trigger point for the given data.
 	unsigned short int Control::calculateTriggerPoint(unsigned short int value) {
-    unsigned short int result = value;
-    
+		unsigned short int result = value;
+
 		// Each set bit inverts all bits with a lower value
 		for(unsigned short int bitValue = 1; bitValue; bitValue <<= 1)
 			if(result & bitValue)
 				result ^= bitValue - 1;
-		
-    return result;
+
+		return result;
 	}
 	
 	/// \brief Gets the current state.
@@ -546,7 +546,6 @@ namespace Hantek {
 		// Determine the command version we need for this model
 		bool unsupported = false;
 		switch(this->device->getModel()) {
-			case MODEL_DSO2100:
 			case MODEL_DSO2150:
 				unsupported = true;
 			

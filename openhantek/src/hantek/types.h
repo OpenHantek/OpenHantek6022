@@ -51,6 +51,7 @@ namespace Hantek {
 	/// \brief All supported bulk commands.
 	/// Indicies given in square brackets specify byte numbers in little endian format.
 	enum BulkCode {
+		/// <em>[::MODEL_DSO2090, ::MODEL_DSO2150, ::MODEL_DSO2250, ::MODEL_DSO5200, ::MODEL_DSO5200A]</em>
 		/// <p>
 		///   This command sets channel and trigger filter:
 		///   <table>
@@ -66,8 +67,10 @@ namespace Hantek {
 		///     </tr>
 		///   </table>
 		/// </p>
+		/// <p><br /></p>
 		BULK_SETFILTER,
 		
+		/// <em>[::MODEL_DSO2090, ::MODEL_DSO2150]</em>
 		/// <p>
 		///   This command sets trigger and timebase:
 		///   <table>
@@ -101,8 +104,10 @@ namespace Hantek {
 		/// <p>
 		///   The TriggerPosition sets the position of the pretrigger in samples. The left side (0 %) is 0x77660 when using the small buffer and 0x78000 when using the large buffer.
 		/// </p>
+		/// <p><br /></p>
 		BULK_SETTRIGGERANDSAMPLERATE,
 		
+		/// <em>[::MODEL_DSO2090, ::MODEL_DSO2150, ::MODEL_DSO2250, ::MODEL_DSO5200, ::MODEL_DSO5200A]</em>
 		/// <p>
 		///   This command forces triggering:
 		///   <table>
@@ -112,8 +117,10 @@ namespace Hantek {
 		///     </tr>
 		///   </table>
 		/// </p>
+		/// <p><br /></p>
 		BULK_FORCETRIGGER,
 		
+		/// <em>[::MODEL_DSO2090, ::MODEL_DSO2150, ::MODEL_DSO2250, ::MODEL_DSO5200, ::MODEL_DSO5200A]</em>
 		/// <p>
 		///   This command starts to capture data:
 		///   <table>
@@ -123,8 +130,10 @@ namespace Hantek {
 		///     </tr>
 		///   </table>
 		/// </p>
+		/// <p><br /></p>
 		BULK_STARTSAMPLING,
 		
+		/// <em>[::MODEL_DSO2090, ::MODEL_DSO2150, ::MODEL_DSO2250, ::MODEL_DSO5200, ::MODEL_DSO5200A]</em>
 		/// <p>
 		///   This command sets the trigger:
 		///   <table>
@@ -134,8 +143,10 @@ namespace Hantek {
 		///     </tr>
 		///   </table>
 		/// </p>
+		/// <p><br /></p>
 		BULK_ENABLETRIGGER,
 		
+		/// <em>[::MODEL_DSO2090, ::MODEL_DSO2150, ::MODEL_DSO2250, ::MODEL_DSO5200, ::MODEL_DSO5200A]</em>
 		/// <p>
 		///   This command reads data from the hardware:
 		///   <table>
@@ -180,8 +191,10 @@ namespace Hantek {
 		///     </tr>
 		///   </table>
 		/// </p>
+		/// <p><br /></p>
 		BULK_GETDATA,
 		
+		/// <em>[::MODEL_DSO2090, ::MODEL_DSO2150, ::MODEL_DSO2250, ::MODEL_DSO5200, ::MODEL_DSO5200A]</em>
 		/// <p>
 		///   This command checks the capture state:
 		///   <table>
@@ -195,7 +208,7 @@ namespace Hantek {
 		///   The oscilloscope returns it's capture state and the trigger point. Not sure about this, looks like 248 16-bit words with nearly constant values. These can be converted to the start address of the data in the buffer (See Hantek::Control::calculateTriggerPoint):
 		///   <table>
 		///     <tr>
-		///       <td>#CaptureState</td>
+		///       <td>::CaptureState</td>
 		///       <td>0x00</td>
 		///       <td>TriggerPoint[0]</td>
 		///       <td>TriggerPoint[1]</td>
@@ -203,8 +216,10 @@ namespace Hantek {
 		///     </tr>
 		///   </table>
 		/// </p>
+		/// <p><br /></p>
 		BULK_GETCAPTURESTATE,
 		
+		/// <em>[::MODEL_DSO2090, ::MODEL_DSO2150, ::MODEL_DSO2250, ::MODEL_DSO5200, ::MODEL_DSO5200A]</em>
 		/// <p>
 		///   This command sets the gain:
 		///   <table>
@@ -219,10 +234,12 @@ namespace Hantek {
 		///       <td>0x00</td>
 		///     </tr>
 		///   </table>
-		///   It is usually used in combination with #CONTROL_SETRELAYS.
+		///   It is usually used in combination with ::CONTROL_SETRELAYS.
 		/// </p>
+		/// <p><br /></p>
 		BULK_SETGAIN,
 		
+		/// <em>[]</em>
 		/// <p>
 		///   This command sets the logical data (Not used in official Hantek software):
 		///   <table>
@@ -238,8 +255,10 @@ namespace Hantek {
 		///     </tr>
 		///   </table>
 		/// </p>
+		/// <p><br /></p>
 		BULK_SETLOGICALDATA,
 		
+		/// <em>[::MODEL_DSO2250]</em>
 		/// <p>
 		///   This command reads the logical data (Not used in official Hantek software):
 		///   <table>
@@ -258,10 +277,12 @@ namespace Hantek {
 		///     </tr>
 		///   </table>
 		/// </p>
+		/// <p><br /></p>
 		BULK_GETLOGICALDATA,
 		
+		/// <em>[]</em>
 		/// <p>
-		///   This command isn't used for the DSO-2090 and DSO-5200:
+		///   This command isn't used for any supported model:
 		///   <table>
 		///     <tr>
 		///       <td>0x0a</td>
@@ -269,19 +290,25 @@ namespace Hantek {
 		///     </tr>
 		///   </table>
 		/// </p>
+		/// <p><br /></p>
 		BULK_UNKNOWN_0A,
-		
+
+		/// <em>[::MODEL_DSO2250]</em>
 		/// <p>
-		///   This command isn't used for the DSO-2090 and DSO-5200:
+		///   This command is used for the DSO-2250:
 		///   <table>
 		///     <tr>
 		///       <td>0x0b</td>
-		///       <td>...</td>
+		///       <td>0x00</td>
+		///       <td>(unknown)</td>
+		///       <td>0x00</td>
 		///     </tr>
 		///   </table>
 		/// </p>
+		/// <p><br /></p>
 		BULK_UNKNOWN_0B,
-		
+
+		/// <em>[::MODEL_DSO2250, ::MODEL_DSO5200, ::MODEL_DSO5200A]</em>
 		/// <p>
 		///   This command sets the sampling rate for the DSO-5200:
 		///   <table>
@@ -296,12 +323,14 @@ namespace Hantek {
 		///   </table>
 		/// </p>
 		/// <p>
-		///   The values are similar to the ones used on the DSO-2090. The formula is a bit different here:<br />
+		///   The values are similar to the ones used with ::BULK_SETTRIGGERANDSAMPLERATE. The formula is a bit different here:<br />
 		///   <i>Samplerate = SamplerateMax / (2comp(SamplerateSlow) * 2 + 4 - SamplerateFast)</i><br />
 		///   SamplerateMax is 100 MS/s for the DSO-5200 in default configuration and 250 MS/s in fast rate mode though, the modifications regarding buffer size are the the same that apply for the DSO-2090.
 		/// </p>
+		/// <p><br /></p>
 		BULK_SETSAMPLERATE5200,
 		
+		/// <em>[::MODEL_DSO2250, ::MODEL_DSO5200, ::MODEL_DSO5200A]</em>
 		/// <p>
 		///   This command sets the trigger position and buffer size for the DSO-5200:
 		///   <table>
@@ -310,7 +339,7 @@ namespace Hantek {
 		///       <td>0x00</td>
 		///       <td>TriggerPositionPre[0]</td>
 		///       <td>TriggerPositionPre[1]</td>
-		///       <td>#DTriggerPositionUsed</td>
+		///       <td>::DTriggerPositionUsed</td>
 		///     </tr>
 		///   </table>
 		///   <table>
@@ -326,8 +355,10 @@ namespace Hantek {
 		/// <p>
 		///   The TriggerPositionPre and TriggerPositionPost values set the pretrigger position. Both values have a range from 0xd7ff (0xc7ff for 14 kiS buffer) to 0xfffe. On the left side (0 %) the TriggerPositionPre value is minimal, on the right side (100 %) it is maximal. The TriggerPositionPost value is maximal for 0 % and minimal for 100%.
 		/// </p>
+		/// <p><br /></p>
 		BULK_SETBUFFER5200,
 		
+		/// <em>[::MODEL_DSO2250, ::MODEL_DSO5200, ::MODEL_DSO5200A]</em>
 		/// <p>
 		///   This command sets the channel and trigger settings for the DSO-5200:
 		///   <table>
@@ -343,25 +374,56 @@ namespace Hantek {
 		///     </tr>
 		///   </table>
 		/// </p>
+		/// <p><br /></p>
 		BULK_SETTRIGGER5200,
-		
-		BULK_COUNT ///< Total number of commands
+
+		/// <em>[::MODEL_DSO2250]</em>
+		/// <p>
+		///   This command is used for the DSO-2250:
+		///   <table>
+		///     <tr>
+		///       <td>0x0f</td>
+		///       <td>0x00</td>
+		///       <td>(unknown)</td>
+		///       <td>(unknown)</td>
+		///       <td>(unknown)</td>
+		///       <td>(unknown)</td>
+		///     </tr>
+		///   </table>
+		///   <table>
+		///     <tr>
+		///       <td>(unknown)</td>
+		///       <td>(unknown)</td>
+		///       <td>(unknown)</td>
+		///       <td>(unknown)</td>
+		///       <td>(unknown)</td>
+		///       <td>(unknown)</td>
+		///     </tr>
+		///   </table>
+		/// </p>
+		/// <p><br /></p>
+		BULK_UNKNOWN_0F,
+
+		BULK_COUNT
 	};
 	
 	//////////////////////////////////////////////////////////////////////////////
 	/// \enum ControlCode                                           hantek/types.h
 	/// \brief All supported control commands.
 	enum ControlCode {
+		/// <em>[::MODEL_DSO2090, ::MODEL_DSO2150, ::MODEL_DSO2250, ::MODEL_DSO5200, ::MODEL_DSO5200A]</em>
 		/// <p>
-		///   The 0xa2 control read/write command gives access to a #ControlValue.
+		///   The 0xa2 control read/write command gives access to a ::ControlValue.
 		/// </p>
+		/// <p><br /></p>
 		CONTROL_VALUE = 0xa2,
 		
+		/// <em>[::MODEL_DSO2090, ::MODEL_DSO2150, ::MODEL_DSO2250, ::MODEL_DSO5200, ::MODEL_DSO5200A]</em>
 		/// <p>
 		///   The 0xb2 control read command gets the speed level of the USB connection:
 		///   <table>
 		///     <tr>
-		///       <td>#ConnectionSpeed</td>
+		///       <td>::ConnectionSpeed</td>
 		///       <td>0x00</td>
 		///       <td>0x00</td>
 		///       <td>0x00</td>
@@ -374,16 +436,18 @@ namespace Hantek {
 		///     </tr>
 		///   </table>
 		/// </p>
+		/// <p><br /></p>
 		CONTROL_GETSPEED = 0xb2,
 		
+		/// <em>[::MODEL_DSO2090, ::MODEL_DSO2150, ::MODEL_DSO2250, ::MODEL_DSO5200, ::MODEL_DSO5200A]</em>
 		/// <p>
 		///   The 0xb3 control write command is sent before any bulk command:
 		///   <table>
 		///     <tr>
 		///       <td>0x0f</td>
-		///       <td>#CommandIndex</td>
-		///       <td>#CommandIndex</td>
-		///       <td>#CommandIndex</td>
+		///       <td>::BulkIndex</td>
+		///       <td>::BulkIndex</td>
+		///       <td>::BulkIndex</td>
 		///       <td>0x00</td>
 		///       <td>0x00</td>
 		///       <td>0x00</td>
@@ -393,8 +457,10 @@ namespace Hantek {
 		///     </tr>
 		///   </table>
 		/// </p>
+		/// <p><br /></p>
 		CONTROL_BEGINCOMMAND = 0xb3,
 		
+		/// <em>[::MODEL_DSO2090, ::MODEL_DSO2150, ::MODEL_DSO2250, ::MODEL_DSO5200, ::MODEL_DSO5200A]</em>
 		/// <p>
 		///   The 0xb4 control write command sets the channel offsets:
 		///   <table>
@@ -423,8 +489,10 @@ namespace Hantek {
 		///     </tr>
 		///   </table>
 		/// </p>
+		/// <p><br /></p>
 		CONTROL_SETOFFSET = 0xb4,
 		
+		/// <em>[::MODEL_DSO2090, ::MODEL_DSO2150, ::MODEL_DSO2250, ::MODEL_DSO5200, ::MODEL_DSO5200A]</em>
 		/// <p>
 		///   The 0xb5 control write command sets the internal relays:
 		///   <table>
@@ -460,6 +528,7 @@ namespace Hantek {
 		/// <p>
 		///   The limits are <= instead of < for the 10 bit models, since those support voltages up to 10 V.
 		/// </p>
+		/// <p><br /></p>
 		CONTROL_SETRELAYS = 0xb5
 	};
 	
@@ -467,17 +536,33 @@ namespace Hantek {
 	/// \enum ControlValue                                          hantek/types.h
 	/// \brief All supported values for control commands.
 	enum ControlValue {
+		/// <em>[::MODEL_DSO2090, ::MODEL_DSO2150, ::MODEL_DSO2250, ::MODEL_DSO5200, ::MODEL_DSO5200A]</em>
+		/// <p>
 		/// Value 0x08 is the calibration data for the channels offsets. It holds the offset value for the top and bottom of the scope screen for every gain step on every channel. The data is stored as a three-dimensional array:<br />
-		/// <i>channelLevels[channel][#Gain][#LevelOffset]</i>
+		/// <i>channelLevels[channel][GainId][::LevelOffset]</i>
+		/// </p>
+		/// <p><br /></p>
 		VALUE_OFFSETLIMITS = 0x08,
 		
+		/// <em>[::MODEL_DSO2090, ::MODEL_DSO2150, ::MODEL_DSO2250, ::MODEL_DSO5200, ::MODEL_DSO5200A]</em>
+		/// <p>
 		/// Value 0x0a is the address of the device. It has a length of one byte.
+		/// </p>
+		/// <p><br /></p>
 		VALUE_DEVICEADDRESS = 0x0a,
 		
-		/// Value 0x60 is the calibration data for the fast rate mode on the DSO-5200. It's used to correct the level differences between the two merged channels to avoid .
+		/// <em>[::MODEL_DSO2250, ::MODEL_DSO5200, ::MODEL_DSO5200A]</em>
+		/// <p>
+		/// Value 0x60 is the calibration data for the fast rate mode on the DSO-2250, DSO-5200 and DSO-5200A. It's used to correct the level differences between the two merged channels to avoid deterministic noise.
+		/// </p>
+		/// <p><br /></p>
 		VALUE_CALIBRATIONDATA = 0x60,
 		
-		/// Value 0x70 contains correction values for the ETS functionality of the DSO-5200.
+		/// <em>[::MODEL_DSO5200, ::MODEL_DSO5200A]</em>
+		/// <p>
+		/// Value 0x70 contains correction values for the ETS functionality of the DSO-5200 and DSO-5200A.
+		/// </p>
+		/// <p><br /></p>
 		VALUE_VOLTAGELIMITS = 0x70
 	};
 	
@@ -485,9 +570,12 @@ namespace Hantek {
 	/// \enum Model                                                 hantek/types.h
 	/// \brief All supported Hantek DSO models.
 	enum Model {
-		MODEL_UNKNOWN = -1,
-		MODEL_DSO2090, MODEL_DSO2100, MODEL_DSO2150, MODEL_DSO2250,
-		MODEL_DSO5200, MODEL_DSO5200A,
+		MODEL_UNKNOWN = -1, ///< Unknown model
+		MODEL_DSO2090,      ///< %Hantek DSO-2090 USB
+		MODEL_DSO2150,      ///< %Hantek DSO-2150 USB
+		MODEL_DSO2250,      ///< %Hantek DSO-2250 USB
+		MODEL_DSO5200,      ///< %Hantek DSO-5200 USB
+		MODEL_DSO5200A,     ///< %Hantek DSO-5200A USB
 		MODEL_COUNT
 	};
 	
@@ -551,7 +639,7 @@ namespace Hantek {
 		COMMANDINDEX_0 = 0x03, ///< Used most of the time
 		COMMANDINDEX_1 = 0x0a,
 		COMMANDINDEX_2 = 0x09,
-		COMMANDINDEX_3 = 0x01, ///< Used for #BULK_SETTRIGGERANDSAMPLERATE sometimes
+		COMMANDINDEX_3 = 0x01, ///< Used for ::BULK_SETTRIGGERANDSAMPLERATE sometimes
 		COMMANDINDEX_4 = 0x02,
 		COMMANDINDEX_5 = 0x08
 	};
@@ -597,7 +685,7 @@ namespace Hantek {
 	/// \brief Trigger and samplerate bits (Byte 1).
 	struct Tsr1Bits {
 		unsigned char triggerSource:2; ///< The trigger source, see Hantek::TriggerSource
-		unsigned char bufferSize:3; ///< See #BufferSizeId
+		unsigned char bufferSize:3; ///< See ::BufferSizeId
 		unsigned char samplerateFast:3; ///< samplerate value for fast sampling rates
 	};
 	
@@ -615,8 +703,8 @@ namespace Hantek {
 	/// \struct DBufferBits                                         hantek/types.h
 	/// \brief Buffer mode bits for 0x0d command.
 	struct DBufferBits {
-		unsigned char triggerPositionUsed:3; ///< See #DTriggerPositionUsed
-		unsigned char bufferSize:3; ///< See #BufferSizeId
+		unsigned char triggerPositionUsed:3; ///< See ::DTriggerPositionUsed
+		unsigned char bufferSize:3; ///< See ::BufferSizeId
 		unsigned char reserved:2; ///< Unused bits
 	};
 	
