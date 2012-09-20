@@ -104,16 +104,16 @@ namespace Hantek {
 	/// \param samplerateSlow The SamplerateSlow value.
 	/// \param triggerPosition The trigger position value.
 	/// \param triggerSource The trigger source id (Tsr1).
-	/// \param bufferSize The buffer size id (Tsr1).
+	/// \param recordLength The record length id (Tsr1).
 	/// \param samplerateFast The samplerateFast value (Tsr1).
 	/// \param usedChannels The enabled channels (Tsr2).
 	/// \param fastRate The fastRate state (Tsr2).
 	/// \param triggerSlope The triggerSlope value (Tsr2).
-	BulkSetTriggerAndSamplerate::BulkSetTriggerAndSamplerate(unsigned short int samplerateSlow, unsigned long int triggerPosition, unsigned char triggerSource, unsigned char bufferSize, unsigned char samplerateFast, unsigned char usedChannels, bool fastRate, unsigned char triggerSlope) : Helper::DataArray<unsigned char>(12) {
+	BulkSetTriggerAndSamplerate::BulkSetTriggerAndSamplerate(unsigned short int samplerateSlow, unsigned long int triggerPosition, unsigned char triggerSource, unsigned char recordLength, unsigned char samplerateFast, unsigned char usedChannels, bool fastRate, unsigned char triggerSlope) : Helper::DataArray<unsigned char>(12) {
 		this->init();
 		
 		this->setTriggerSource(triggerSource);
-		this->setBufferSize(bufferSize);
+		this->setRecordLength(recordLength);
 		this->setSamplerateFast(samplerateFast);
 		this->setUsedChannels(usedChannels);
 		this->setFastRate(fastRate);
@@ -134,16 +134,16 @@ namespace Hantek {
 		((Tsr1Bits *) &(this->array[2]))->triggerSource = value;
 	}
 	
-	/// \brief Get the bufferSize value in Tsr1Bits.
-	/// \return The ::BufferSizeId value.
-	unsigned char BulkSetTriggerAndSamplerate::getBufferSize() {
-		return ((Tsr1Bits *) &(this->array[2]))->bufferSize;
+	/// \brief Get the recordLength value in Tsr1Bits.
+	/// \return The ::RecordLengthId value.
+	unsigned char BulkSetTriggerAndSamplerate::getRecordLength() {
+		return ((Tsr1Bits *) &(this->array[2]))->recordLength;
 	}
 	
-	/// \brief Set the bufferSize in Tsr1Bits to the given value.
-	/// \param value The new ::BufferSizeId value.
-	void BulkSetTriggerAndSamplerate::setBufferSize(unsigned char value) {
-		((Tsr1Bits *) &(this->array[2]))->bufferSize = value;
+	/// \brief Set the recordLength in Tsr1Bits to the given value.
+	/// \param value The new ::RecordLengthId value.
+	void BulkSetTriggerAndSamplerate::setRecordLength(unsigned char value) {
+		((Tsr1Bits *) &(this->array[2]))->recordLength = value;
 	}
 	
 	/// \brief Get the samplerateFast value in Tsr1Bits.
@@ -376,190 +376,94 @@ namespace Hantek {
 	
 	
 	//////////////////////////////////////////////////////////////////////////////
-	// class BulkGetSpeed
-	/// \brief Initializes the array.
-	ControlGetSpeed::ControlGetSpeed() : Helper::DataArray<unsigned char>(10) {
+	// class BulkSetFilter2250
+	/// \brief Sets the data array to needed values.
+	BulkSetFilter2250::BulkSetFilter2250() : Helper::DataArray<unsigned char>(4) {
+		this->init();
 	}
 	
-	/// \brief Gets the speed of the connection.
-	/// \return The speed level of the USB connection.
-	ConnectionSpeed ControlGetSpeed::getSpeed() {
-		return (ConnectionSpeed) this->array[0];
-	}
-	
-	
-	//////////////////////////////////////////////////////////////////////////////
-	// class BulkBeginCommand
-	/// \brief Sets the command index to the given value.
-	/// \param index The CommandIndex for the command.
-	ControlBeginCommand::ControlBeginCommand(BulkIndex index) : Helper::DataArray<unsigned char>(10) {
+	/// \brief Sets the used channels.
+	/// \param channel1 true if channel 1 is filtered.
+	/// \param channel2 true if channel 2 is filtered.
+	BulkSetFilter2250::BulkSetFilter2250(bool channel1, bool channel2) : Helper::DataArray<unsigned char>(4) {
 		this->init();
 		
-		this->setIndex(index);
+		this->setChannel(0, channel1);
+		this->setChannel(1, channel2);
 	}
 	
-	/// \brief Gets the command index.
-	/// \return The CommandIndex for the command.
-	BulkIndex ControlBeginCommand::getIndex() {
-		return (BulkIndex) this->array[1];
+	/// \brief Gets the filtering state of one channel.
+	/// \param channel The channel whose filtering state should be returned.
+	/// \return The filtering state of the channel.
+	bool BulkSetFilter2250::getChannel(unsigned int channel) {
+		FilterBits *filterBits = (FilterBits *) &(this->array[2]);
+		if(channel == 0)
+			return filterBits->channel1 == 1;
+		else
+			return filterBits->channel2 == 1;
 	}
 	
-	/// \brief Sets the command index to the given value.
-	/// \param index The new CommandIndex for the command.
-	void ControlBeginCommand::setIndex(BulkIndex index) {
-		memset(&(this->array[1]), (unsigned char) index, 3);
+	/// \brief Enables/disables filtering of one channel.
+	/// \param channel The channel that should be set.
+	/// \param filtered true if the channel should be filtered.
+	void BulkSetFilter2250::setChannel(unsigned int channel, bool filtered) {
+		FilterBits *filterBits = (FilterBits *) &(this->array[2]);
+		if(channel == 0)
+			filterBits->channel1 = filtered ? 1 : 0;
+		else
+			filterBits->channel2 = filtered ? 1 : 0;
 	}
 	
 	/// \brief Initialize the array to the needed values.
-	void ControlBeginCommand::init() {
-		this->array[0] = 0x0f;
+	void BulkSetFilter2250::init() {
+		this->array[0] = BULK_BSETFILTER;
 	}
 	
 	
 	//////////////////////////////////////////////////////////////////////////////
-	// class BulkSetOffset
-	/// \brief Sets the data array to the default values.
-	ControlSetOffset::ControlSetOffset() : Helper::DataArray<unsigned char>(17) {
+	// class BulkSetTrigger2250
+	/// \brief Sets the data array to needed values.
+	BulkSetTrigger2250::BulkSetTrigger2250() : Helper::DataArray<unsigned char>(8) {
+		this->init();
 	}
 	
-	/// \brief Sets the offsets to the given values.
-	/// \param channel1 The offset for channel 1.
-	/// \param channel2 The offset for channel 2.
-	/// \param trigger The offset for ext. trigger.
-	ControlSetOffset::ControlSetOffset(unsigned short int channel1, unsigned short int channel2, unsigned short int trigger) : Helper::DataArray<unsigned char>(17) {
-		this->setChannel(0, channel1);
-		this->setChannel(1, channel2);
-		this->setTrigger(trigger);
+	/// \brief Sets the used channels.
+	/// \param triggerSource The trigger source id (CTriggerBits).
+	/// \param triggerSlope The triggerSlope value (CTriggerBits).
+	BulkSetTrigger2250::BulkSetTrigger2250(unsigned char triggerSource, unsigned char triggerSlope) : Helper::DataArray<unsigned char>(8) {
+		this->init();
+		
+		this->setTriggerSource(triggerSource);
+		this->setTriggerSlope(triggerSlope);
+	}
+			
+	/// \brief Get the triggerSource value in CTriggerBits.
+	/// \return The triggerSource value.
+	unsigned char BulkSetTrigger2250::getTriggerSource() {
+		return ((CTriggerBits *) &(this->array[2]))->triggerSource;
 	}
 	
-	/// \brief Get the offset for the given channel.
-	/// \param channel The channel whose offset should be returned.
-	/// \return The channel offset value.
-	unsigned short int ControlSetOffset::getChannel(unsigned int channel) {
-		if(channel == 0)
-			return ((this->array[0] & 0x0f) << 8) | this->array[1];
-		else
-			return ((this->array[2] & 0x0f) << 8) | this->array[3];
+	/// \brief Set the triggerSource in CTriggerBits to the given value.
+	/// \param value The new triggerSource value.
+	void BulkSetTrigger2250::setTriggerSource(unsigned char value) {
+		((CTriggerBits *) &(this->array[2]))->triggerSource = value;
 	}
 	
-	/// \brief Set the offset for the given channel.
-	/// \param channel The channel that should be set.
-	/// \param offset The new channel offset value.
-	void ControlSetOffset::setChannel(unsigned int channel, unsigned short int offset) {
-		if(channel == 0) {
-			this->array[0] = (unsigned char) (offset >> 8);
-			this->array[1] = (unsigned char) offset;
-		}
-		else {
-			this->array[2] = (unsigned char) (offset >> 8);
-			this->array[3] = (unsigned char) offset;
-		}
+	/// \brief Get the triggerSlope value in CTriggerBits.
+	/// \return The triggerSlope value.
+	unsigned char BulkSetTrigger2250::getTriggerSlope() {
+		return ((CTriggerBits *) &(this->array[2]))->triggerSlope;
 	}
 	
-	/// \brief Get the trigger level.
-	/// \return The trigger level value.
-	unsigned short int ControlSetOffset::getTrigger() {
-		return ((this->array[4] & 0x0f) << 8) | this->array[5];
+	/// \brief Set the triggerSlope in CTriggerBits to the given value.
+	/// \param slope The new triggerSlope value.
+	void BulkSetTrigger2250::setTriggerSlope(unsigned char slope) {
+		((CTriggerBits *) &(this->array[2]))->triggerSlope = slope;
 	}
-	
-	/// \brief Set the trigger level.
-	/// \param level The new trigger level value.
-	void ControlSetOffset::setTrigger(unsigned short int level) {
-		this->array[4] = (unsigned char) (level >> 8);
-		this->array[5] = (unsigned char) level;
-	}
-	
-	
-	//////////////////////////////////////////////////////////////////////////////
-	// class BulkSetRelays
-	/// \brief Sets all relay states.
-	/// \param ch1Below1V Sets the state of the Channel 1 below 1 V relay.
-	/// \param ch1Below100mV Sets the state of the Channel 1 below 100 mV relay.
-	/// \param ch1CouplingDC Sets the state of the Channel 1 coupling relay.
-	/// \param ch2Below1V Sets the state of the Channel 2 below 1 V relay.
-	/// \param ch2Below100mV Sets the state of the Channel 2 below 100 mV relay.
-	/// \param ch2CouplingDC Sets the state of the Channel 2 coupling relay.
-	/// \param triggerExt Sets the state of the external trigger relay.
-	ControlSetRelays::ControlSetRelays(bool ch1Below1V, bool ch1Below100mV, bool ch1CouplingDC, bool ch2Below1V, bool ch2Below100mV, bool ch2CouplingDC, bool triggerExt) : Helper::DataArray<unsigned char>(17) {
-		this->setBelow1V(0, ch1Below1V);
-		this->setBelow100mV(0, ch1Below100mV);
-		this->setCoupling(0, ch1CouplingDC);
-		this->setBelow1V(1, ch2Below1V);
-		this->setBelow100mV(1, ch2Below100mV);
-		this->setCoupling(1, ch2CouplingDC);
-		this->setTrigger(triggerExt);
-	}
-	
-	/// \brief Get the below 1 V relay state for the given channel.
-	/// \param channel The channel whose relay state should be returned.
-	/// \return true, if the gain of the channel is below 1 V.
-	bool ControlSetRelays::getBelow1V(unsigned int channel) {
-		if(channel == 0)
-			return (this->array[1] & 0x04) == 0x00;
-		else
-			return (this->array[4] & 0x20) == 0x00;
-	}
-	
-	/// \brief Set the below 1 V relay for the given channel.
-	/// \param channel The channel that should be set.
-	/// \param below true, if the gain of the channel should be below 1 V.
-	void ControlSetRelays::setBelow1V(unsigned int channel, bool below) {
-		if(channel == 0)
-			this->array[1] = below ? 0xfb : 0x04;
-		else
-			this->array[4] = below ? 0xdf : 0x20;
-	}
-	
-	/// \brief Get the below 1 V relay state for the given channel.
-	/// \param channel The channel whose relay state should be returned.
-	/// \return true, if the gain of the channel is below 1 V.
-	bool ControlSetRelays::getBelow100mV(unsigned int channel) {
-		if(channel == 0)
-			return (this->array[2] & 0x08) == 0x00;
-		else
-			return (this->array[5] & 0x40) == 0x00;
-	}
-	
-	/// \brief Set the below 100 mV relay for the given channel.
-	/// \param channel The channel that should be set.
-	/// \param below true, if the gain of the channel should be below 100 mV.
-	void ControlSetRelays::setBelow100mV(unsigned int channel, bool below) {
-		if(channel == 0)
-			this->array[2] = below ? 0xf7 : 0x08;
-		else
-			this->array[5] = below ? 0xbf : 0x40;
-	}
-	
-	/// \brief Get the coupling relay state for the given channel.
-	/// \param channel The channel whose relay state should be returned.
-	/// \return true, if the coupling of the channel is DC.
-	bool ControlSetRelays::getCoupling(unsigned int channel) {
-		if(channel == 0)
-			return (this->array[3] & 0x02) == 0x00;
-		else
-			return (this->array[6] & 0x10) == 0x00;
-	}
-	
-	/// \brief Set the coupling relay for the given channel.
-	/// \param channel The channel that should be set.
-	/// \param dc true, if the coupling of the channel should be DC.
-	void ControlSetRelays::setCoupling(unsigned int channel, bool dc) {
-		if(channel == 0)
-			this->array[3] = dc ? 0xfd : 0x02;
-		else
-			this->array[6] = dc ? 0xef : 0x10;
-	}
-	
-	/// \brief Get the external trigger relay state.
-	/// \return true, if the trigger is external (EXT-Connector).
-	bool ControlSetRelays::getTrigger() {
-		return (this->array[7] & 0x01) == 0x00;
-	}
-	
-	/// \brief Set the external trigger relay.
-	/// \param ext true, if the trigger should be external (EXT-Connector).
-	void ControlSetRelays::setTrigger(bool ext) {
-		this->array[7] = ext ? 0xfe : 0x01;
+		
+	/// \brief Initialize the array to the needed values.
+	void BulkSetTrigger2250::init() {
+		this->array[0] = BULK_CSETTRIGGERORSAMPLERATE;
 	}
 	
 	
@@ -607,7 +511,40 @@ namespace Hantek {
 	
 	/// \brief Initialize the array to the needed values.
 	void BulkSetSamplerate5200::init() {
-		this->array[0] = BULK_SETSAMPLERATE5200;
+		this->array[0] = BULK_CSETTRIGGERORSAMPLERATE;
+	}
+	
+	
+	//////////////////////////////////////////////////////////////////////////////
+	// class BulkSetBuffer2250
+	/// \brief Sets the data array to the default values.
+	BulkSetRecordLength2250::BulkSetRecordLength2250() : Helper::DataArray<unsigned char>(4) {
+		this->init();
+	}
+	
+	/// \brief Sets the data bytes to the specified values.
+	/// \param recordLength The ::RecordLengthId value.
+	BulkSetRecordLength2250::BulkSetRecordLength2250(unsigned char recordLength) : Helper::DataArray<unsigned char>(4) {
+		this->init();
+		
+		this->setRecordLength(recordLength);
+	}
+	
+	/// \brief Get the ::RecordLengthId value.
+	/// \return The ::RecordLengthId value.
+	unsigned char BulkSetRecordLength2250::getRecordLength() {
+		return this->array[2];
+	}
+	
+	/// \brief Set the ::RecordLengthId to the given value.
+	/// \param value The new ::RecordLengthId value.
+	void BulkSetRecordLength2250::setRecordLength(unsigned char value) {
+		this->array[2] = value;
+	}
+	
+	/// \brief Initialize the array to the needed values.
+	void BulkSetRecordLength2250::init() {
+		this->array[0] = BULK_DSETBUFFER;
 	}
 	
 	
@@ -623,15 +560,15 @@ namespace Hantek {
 	/// \param triggerPositionPost The TriggerPositionPost value.
 	/// \param usedPre The TriggerPositionUsedPre value.
 	/// \param usedPost The TriggerPositionUsedPost value.
-	/// \param bufferSize The ::BufferSizeId value.
-	BulkSetBuffer5200::BulkSetBuffer5200(unsigned short int triggerPositionPre, unsigned short int triggerPositionPost, unsigned char usedPre, unsigned char usedPost, unsigned char bufferSize) : Helper::DataArray<unsigned char>(10) {
+	/// \param recordLength The ::RecordLengthId value.
+	BulkSetBuffer5200::BulkSetBuffer5200(unsigned short int triggerPositionPre, unsigned short int triggerPositionPost, unsigned char usedPre, unsigned char usedPost, unsigned char recordLength) : Helper::DataArray<unsigned char>(10) {
 		this->init();
 		
 		this->setTriggerPositionPre(triggerPositionPre);
 		this->setTriggerPositionPost(triggerPositionPost);
 		this->setUsedPre(usedPre);
 		this->setUsedPost(usedPost);
-		this->setBufferSize(bufferSize);
+		this->setRecordLength(recordLength);
 	}
 	
 	/// \brief Get the TriggerPositionPre value.
@@ -684,23 +621,85 @@ namespace Hantek {
 		((DBufferBits *) &(this->array[8]))->triggerPositionUsed = value;
 	}
 	
-	/// \brief Get the bufferSize value in DBufferBits.
-	/// \return The ::BufferSizeId value.
-	unsigned char BulkSetBuffer5200::getBufferSize() {
-		return ((DBufferBits *) &(this->array[8]))->bufferSize;
+	/// \brief Get the recordLength value in DBufferBits.
+	/// \return The ::RecordLengthId value.
+	unsigned char BulkSetBuffer5200::getRecordLength() {
+		return ((DBufferBits *) &(this->array[8]))->recordLength;
 	}
 	
-	/// \brief Set the bufferSize in DBufferBits to the given value.
-	/// \param value The new ::BufferSizeId value.
-	void BulkSetBuffer5200::setBufferSize(unsigned char value) {
-		((DBufferBits *) &(this->array[8]))->bufferSize = value;
+	/// \brief Set the recordLength in DBufferBits to the given value.
+	/// \param value The new ::RecordLengthId value.
+	void BulkSetBuffer5200::setRecordLength(unsigned char value) {
+		((DBufferBits *) &(this->array[8]))->recordLength = value;
 	}
 	
 	/// \brief Initialize the array to the needed values.
 	void BulkSetBuffer5200::init() {
-		this->array[0] = BULK_SETBUFFER5200;
+		this->array[0] = BULK_DSETBUFFER;
 		this->array[5] = 0xff;
 		this->array[9] = 0xff;
+	}
+	
+	
+	//////////////////////////////////////////////////////////////////////////////
+	// class BulkSetSamplerate2250
+	/// \brief Sets the data array to the default values.
+	BulkSetSamplerate2250::BulkSetSamplerate2250() : Helper::DataArray<unsigned char>(8) {
+		this->init();
+	}
+	
+	/// \brief Sets the data bytes to the specified values.
+	/// \param fastRate The fastRate state (ESamplerateBits).
+	/// \param samplerateFast The SamplerateFast value (ESamplerateBits).
+	/// \param samplerateSlow The SamplerateSlow value.
+	BulkSetSamplerate2250::BulkSetSamplerate2250(bool fastRate, unsigned char samplerateFast, unsigned short int samplerateSlow) : Helper::DataArray<unsigned char>(8) {
+		this->init();
+		
+		this->setFastRate(fastRate);
+		this->setSamplerateFast(samplerateFast);
+		this->setSamplerateSlow(samplerateSlow);
+	}
+	
+	/// \brief Get the fastRate state in ESamplerateBits.
+	/// \return The fastRate state.
+	bool BulkSetSamplerate2250::getFastRate() {
+		return ((ESamplerateBits *) &(this->array[2]))->fastRate == 1;
+	}
+	
+	/// \brief Set the fastRate in ESamplerateBits to the given state.
+	/// \param fastRate The new fastRate state.
+	void BulkSetSamplerate2250::setFastRate(bool fastRate) {
+		((ESamplerateBits *) &(this->array[2]))->fastRate = fastRate ? 1 : 0;
+	}
+	
+	/// \brief Get the samplerateFast value in ESamplerateBits.
+	/// \return The samplerateFast value in ESamplerateBits.
+	unsigned char BulkSetSamplerate2250::getSamplerateFast() {
+		return ((ESamplerateBits *) &(this->array[2]))->samplerateFast;
+	}
+	
+	/// \brief Set the samplerateFast in ESamplerateBits to the given value.
+	/// \param value The new samplerateFast value.
+	void BulkSetSamplerate2250::setSamplerateFast(unsigned char value) {
+		((ESamplerateBits *) &(this->array[2]))->samplerateFast = value;
+	}
+	
+	/// \brief Get the SamplerateSlow value.
+	/// \return The SamplerateSlow value.
+	unsigned short int BulkSetSamplerate2250::getSamplerateSlow() {
+		return (unsigned short int) this->array[4] | ((unsigned short int) this->array[5] << 8);
+	}
+	
+	/// \brief Set the SamplerateSlow to the given value.
+	/// \param samplerate The new SamplerateSlow value.
+	void BulkSetSamplerate2250::setSamplerateSlow(unsigned short int samplerate) {
+		this->array[4] = (unsigned char) samplerate;
+		this->array[5] = (unsigned char) (samplerate >> 8);
+	}
+	
+	/// \brief Initialize the array to the needed values.
+	void BulkSetSamplerate2250::init() {
+		this->array[0] = BULK_ESETTRIGGERORSAMPLERATE;
 	}
 	
 	
@@ -789,7 +788,301 @@ namespace Hantek {
 	
 	/// \brief Initialize the array to the needed values.
 	void BulkSetTrigger5200::init() {
-		this->array[0] = BULK_SETTRIGGER5200;
+		this->array[0] = BULK_ESETTRIGGERORSAMPLERATE;
 		this->array[4] = 0x02;
+	}
+	
+	
+	//////////////////////////////////////////////////////////////////////////////
+	/// \class BulkSetBuffer2250                                    hantek/types.h
+	/// \brief The DSO-2250 BULK_FSETBUFFER builder.
+	/// \brief Sets the data array to the default values.
+	BulkSetBuffer2250::BulkSetBuffer2250() : Helper::DataArray<unsigned char>(10) {
+		this->init();
+	}
+	
+	/// \brief Sets the data bytes to the specified values.
+	/// \param triggerPositionPre The TriggerPositionPre value.
+	/// \param triggerPositionPost The TriggerPositionPost value.
+	/// \param usedPre The TriggerPositionUsedPre value.
+	/// \param usedPost The TriggerPositionUsedPost value.
+	/// \param largeBuffer The largeBuffer state.
+	/// \param slowBuffer The slowBuffer state.
+	BulkSetBuffer2250::BulkSetBuffer2250(unsigned short int triggerPositionPre, unsigned short int triggerPositionPost, unsigned char usedPre, unsigned char usedPost, bool largeBuffer, bool slowBuffer) : Helper::DataArray<unsigned char>(10) {
+		this->init();
+		
+		this->setTriggerPositionPre(triggerPositionPre);
+		this->setTriggerPositionPost(triggerPositionPost);
+		this->setUsedPre(usedPre);
+		this->setUsedPost(usedPost);
+		this->setLargeBuffer(largeBuffer);
+		this->setSlowBuffer(slowBuffer);
+	}
+	
+	/// \brief Get the TriggerPositionPre value.
+	/// \return The TriggerPositionPre value.
+	unsigned short int BulkSetBuffer2250::getTriggerPositionPre() {
+		return (unsigned short int) this->array[2] | ((unsigned short int) this->array[3] << 8);
+	}
+	
+	/// \brief Set the TriggerPositionPre to the given value.
+	/// \param position The new TriggerPositionPre value.
+	void BulkSetBuffer2250::setTriggerPositionPre(unsigned short int position) {
+		this->array[2] = (unsigned char) position;
+		this->array[3] = (unsigned char) (position >> 8);
+	}
+	
+	/// \brief Get the TriggerPositionPost value.
+	/// \return The TriggerPositionPost value.
+	unsigned short int BulkSetBuffer2250::getTriggerPositionPost() {
+		return (unsigned short int) this->array[6] | ((unsigned short int) this->array[7] << 8);
+	}
+	
+	/// \brief Set the TriggerPositionPost to the given value.
+	/// \param position The new TriggerPositionPost value.
+	void BulkSetBuffer2250::setTriggerPositionPost(unsigned short int position) {
+		this->array[6] = (unsigned char) position;
+		this->array[7] = (unsigned char) (position >> 8);
+	}
+	
+	/// \brief Get the TriggerPositionUsedPre value.
+	/// \return The ::DTriggerPositionUsed value for the pre position.
+	unsigned char BulkSetBuffer2250::getUsedPre() {
+		return ((FBuffer1Bits *) &(this->array[4]))->triggerPositionUsed;
+	}
+	
+	/// \brief Set the TriggerPositionUsedPre to the given value.
+	/// \param value The new ::DTriggerPositionUsed value for the pre position.
+	void BulkSetBuffer2250::setUsedPre(unsigned char value) {
+		((FBuffer1Bits *) &(this->array[4]))->triggerPositionUsed = value;
+	}
+	
+	/// \brief Get the TriggerPositionUsedPost value.
+	/// \return The ::DTriggerPositionUsed value for the post position.
+	unsigned char BulkSetBuffer2250::getUsedPost() {
+		return ((FBuffer1Bits *) &(this->array[8]))->triggerPositionUsed;
+	}
+	
+	/// \brief Set the TriggerPositionUsedPost to the given value.
+	/// \param value The new ::DTriggerPositionUsed value for the post position.
+	void BulkSetBuffer2250::setUsedPost(unsigned char value) {
+		((FBuffer1Bits *) &(this->array[8]))->triggerPositionUsed = value;
+	}
+	
+	/// \brief Get the largeBuffer state in FBuffer1Bits.
+	/// \return The largeBuffer state.
+	bool BulkSetBuffer2250::getLargeBuffer() {
+		return ((FBuffer1Bits *) &(this->array[2]))->largeBuffer == 0;
+	}
+	
+	/// \brief Set the largeBuffer in FBuffer1Bits to the given state.
+	/// \param largeBuffer The new largeBuffer state.
+	void BulkSetBuffer2250::setLargeBuffer(bool largeBuffer) {
+		((FBuffer1Bits *) &(this->array[2]))->largeBuffer = largeBuffer ? 0 : 1;
+	}
+	
+	/// \brief Get the slowBuffer state in FBuffer2Bits.
+	/// \return The slowBuffer state.
+	bool BulkSetBuffer2250::getSlowBuffer() {
+		return ((FBuffer2Bits *) &(this->array[2]))->slowBuffer == 1;
+	}
+	
+	/// \brief Set the slowBuffer in FBuffer2Bits to the given state.
+	/// \param slowBuffer The new slowBuffer state.
+	void BulkSetBuffer2250::setSlowBuffer(bool slowBuffer) {
+		((FBuffer2Bits *) &(this->array[2]))->slowBuffer = slowBuffer ? 1 : 0;
+	}
+	
+	/// \brief Initialize the array to the needed values.
+	void BulkSetBuffer2250::init() {
+		this->array[0] = BULK_FSETBUFFER;
+	}
+	
+	
+	//////////////////////////////////////////////////////////////////////////////
+	// class ControlGetSpeed
+	/// \brief Initializes the array.
+	ControlGetSpeed::ControlGetSpeed() : Helper::DataArray<unsigned char>(10) {
+	}
+	
+	/// \brief Gets the speed of the connection.
+	/// \return The speed level of the USB connection.
+	ConnectionSpeed ControlGetSpeed::getSpeed() {
+		return (ConnectionSpeed) this->array[0];
+	}
+	
+	
+	//////////////////////////////////////////////////////////////////////////////
+	// class ControlBeginCommand
+	/// \brief Sets the command index to the given value.
+	/// \param index The CommandIndex for the command.
+	ControlBeginCommand::ControlBeginCommand(BulkIndex index) : Helper::DataArray<unsigned char>(10) {
+		this->init();
+		
+		this->setIndex(index);
+	}
+	
+	/// \brief Gets the command index.
+	/// \return The CommandIndex for the command.
+	BulkIndex ControlBeginCommand::getIndex() {
+		return (BulkIndex) this->array[1];
+	}
+	
+	/// \brief Sets the command index to the given value.
+	/// \param index The new CommandIndex for the command.
+	void ControlBeginCommand::setIndex(BulkIndex index) {
+		memset(&(this->array[1]), (unsigned char) index, 3);
+	}
+	
+	/// \brief Initialize the array to the needed values.
+	void ControlBeginCommand::init() {
+		this->array[0] = 0x0f;
+	}
+	
+	
+	//////////////////////////////////////////////////////////////////////////////
+	// class ControlSetOffset
+	/// \brief Sets the data array to the default values.
+	ControlSetOffset::ControlSetOffset() : Helper::DataArray<unsigned char>(17) {
+	}
+	
+	/// \brief Sets the offsets to the given values.
+	/// \param channel1 The offset for channel 1.
+	/// \param channel2 The offset for channel 2.
+	/// \param trigger The offset for ext. trigger.
+	ControlSetOffset::ControlSetOffset(unsigned short int channel1, unsigned short int channel2, unsigned short int trigger) : Helper::DataArray<unsigned char>(17) {
+		this->setChannel(0, channel1);
+		this->setChannel(1, channel2);
+		this->setTrigger(trigger);
+	}
+	
+	/// \brief Get the offset for the given channel.
+	/// \param channel The channel whose offset should be returned.
+	/// \return The channel offset value.
+	unsigned short int ControlSetOffset::getChannel(unsigned int channel) {
+		if(channel == 0)
+			return ((this->array[0] & 0x0f) << 8) | this->array[1];
+		else
+			return ((this->array[2] & 0x0f) << 8) | this->array[3];
+	}
+	
+	/// \brief Set the offset for the given channel.
+	/// \param channel The channel that should be set.
+	/// \param offset The new channel offset value.
+	void ControlSetOffset::setChannel(unsigned int channel, unsigned short int offset) {
+		if(channel == 0) {
+			this->array[0] = (unsigned char) (offset >> 8);
+			this->array[1] = (unsigned char) offset;
+		}
+		else {
+			this->array[2] = (unsigned char) (offset >> 8);
+			this->array[3] = (unsigned char) offset;
+		}
+	}
+	
+	/// \brief Get the trigger level.
+	/// \return The trigger level value.
+	unsigned short int ControlSetOffset::getTrigger() {
+		return ((this->array[4] & 0x0f) << 8) | this->array[5];
+	}
+	
+	/// \brief Set the trigger level.
+	/// \param level The new trigger level value.
+	void ControlSetOffset::setTrigger(unsigned short int level) {
+		this->array[4] = (unsigned char) (level >> 8);
+		this->array[5] = (unsigned char) level;
+	}
+	
+	
+	//////////////////////////////////////////////////////////////////////////////
+	// class ControlSetRelays
+	/// \brief Sets all relay states.
+	/// \param ch1Below1V Sets the state of the Channel 1 below 1 V relay.
+	/// \param ch1Below100mV Sets the state of the Channel 1 below 100 mV relay.
+	/// \param ch1CouplingDC Sets the state of the Channel 1 coupling relay.
+	/// \param ch2Below1V Sets the state of the Channel 2 below 1 V relay.
+	/// \param ch2Below100mV Sets the state of the Channel 2 below 100 mV relay.
+	/// \param ch2CouplingDC Sets the state of the Channel 2 coupling relay.
+	/// \param triggerExt Sets the state of the external trigger relay.
+	ControlSetRelays::ControlSetRelays(bool ch1Below1V, bool ch1Below100mV, bool ch1CouplingDC, bool ch2Below1V, bool ch2Below100mV, bool ch2CouplingDC, bool triggerExt) : Helper::DataArray<unsigned char>(17) {
+		this->setBelow1V(0, ch1Below1V);
+		this->setBelow100mV(0, ch1Below100mV);
+		this->setCoupling(0, ch1CouplingDC);
+		this->setBelow1V(1, ch2Below1V);
+		this->setBelow100mV(1, ch2Below100mV);
+		this->setCoupling(1, ch2CouplingDC);
+		this->setTrigger(triggerExt);
+	}
+	
+	/// \brief Get the below 1 V relay state for the given channel.
+	/// \param channel The channel whose relay state should be returned.
+	/// \return true, if the gain of the channel is below 1 V.
+	bool ControlSetRelays::getBelow1V(unsigned int channel) {
+		if(channel == 0)
+			return (this->array[1] & 0x04) == 0x00;
+		else
+			return (this->array[4] & 0x20) == 0x00;
+	}
+	
+	/// \brief Set the below 1 V relay for the given channel.
+	/// \param channel The channel that should be set.
+	/// \param below true, if the gain of the channel should be below 1 V.
+	void ControlSetRelays::setBelow1V(unsigned int channel, bool below) {
+		if(channel == 0)
+			this->array[1] = below ? 0xfb : 0x04;
+		else
+			this->array[4] = below ? 0xdf : 0x20;
+	}
+	
+	/// \brief Get the below 1 V relay state for the given channel.
+	/// \param channel The channel whose relay state should be returned.
+	/// \return true, if the gain of the channel is below 1 V.
+	bool ControlSetRelays::getBelow100mV(unsigned int channel) {
+		if(channel == 0)
+			return (this->array[2] & 0x08) == 0x00;
+		else
+			return (this->array[5] & 0x40) == 0x00;
+	}
+	
+	/// \brief Set the below 100 mV relay for the given channel.
+	/// \param channel The channel that should be set.
+	/// \param below true, if the gain of the channel should be below 100 mV.
+	void ControlSetRelays::setBelow100mV(unsigned int channel, bool below) {
+		if(channel == 0)
+			this->array[2] = below ? 0xf7 : 0x08;
+		else
+			this->array[5] = below ? 0xbf : 0x40;
+	}
+	
+	/// \brief Get the coupling relay state for the given channel.
+	/// \param channel The channel whose relay state should be returned.
+	/// \return true, if the coupling of the channel is DC.
+	bool ControlSetRelays::getCoupling(unsigned int channel) {
+		if(channel == 0)
+			return (this->array[3] & 0x02) == 0x00;
+		else
+			return (this->array[6] & 0x10) == 0x00;
+	}
+	
+	/// \brief Set the coupling relay for the given channel.
+	/// \param channel The channel that should be set.
+	/// \param dc true, if the coupling of the channel should be DC.
+	void ControlSetRelays::setCoupling(unsigned int channel, bool dc) {
+		if(channel == 0)
+			this->array[3] = dc ? 0xfd : 0x02;
+		else
+			this->array[6] = dc ? 0xef : 0x10;
+	}
+	
+	/// \brief Get the external trigger relay state.
+	/// \return true, if the trigger is external (EXT-Connector).
+	bool ControlSetRelays::getTrigger() {
+		return (this->array[7] & 0x01) == 0x00;
+	}
+	
+	/// \brief Set the external trigger relay.
+	/// \param ext true, if the trigger should be external (EXT-Connector).
+	void ControlSetRelays::setTrigger(bool ext) {
+		this->array[7] = ext ? 0xfe : 0x01;
 	}
 }

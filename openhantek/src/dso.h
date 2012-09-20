@@ -38,6 +38,16 @@
 /// \brief All DSO specific things for different modes and so on.
 namespace Dso {
 	//////////////////////////////////////////////////////////////////////////////
+	/// \enum ErrorCode                                           hantek/control.h
+	/// \brief The return codes for device control methods.
+	enum ErrorCode {
+		ERROR_NONE = 0, ///< Successful operation
+		ERROR_CONNECTION = -1, ///< Device not connected or communication error
+		ERROR_UNSUPPORTED = -2, ///< Not supported by this device
+		ERROR_PARAMETER = -3 ///< Parameter out of range
+	};
+	
+	//////////////////////////////////////////////////////////////////////////////
 	/// \enum ChannelMode                                                    dso.h
 	/// \brief The channel display modes.
 	enum ChannelMode {

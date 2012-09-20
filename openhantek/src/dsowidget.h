@@ -69,8 +69,8 @@ class DsoWidget : public QWidget {
 		
 		QHBoxLayout *settingsLayout; ///< The table for the settings info
 		QLabel *settingsTriggerLabel; ///< The trigger details
-		QLabel *settingsBufferLabel; ///< The buffer size
-		QLabel *settingsRateLabel; ///< The samplerate
+		QLabel *settingsRecordLengthLabel; ///< The record length
+		QLabel *settingsSamplerateLabel; ///< The samplerate
 		QLabel *settingsTimebaseLabel; ///< The timebase of the main scope
 		QLabel *settingsFrequencybaseLabel; ///< The frequencybase of the main scope
 		
@@ -116,7 +116,7 @@ class DsoWidget : public QWidget {
 		void updateVoltageUsed(unsigned int channel, bool used);
 		
 		// Menus
-		void updateBufferSize(unsigned int size);
+		void updateRecordLength(unsigned int size);
 		
 		// Export
 		bool exportAs();

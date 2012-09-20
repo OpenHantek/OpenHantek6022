@@ -72,13 +72,13 @@ class DsoControl : public QThread {
 		virtual void stopSampling();
 		
 		virtual unsigned long int setSamplerate(unsigned long int samplerate) = 0; ///< Set the samplerate that should be met
-		virtual unsigned long int setBufferSize(unsigned long int size) = 0; ///< Set the needed buffer size
+		virtual unsigned long int setRecordLength(unsigned long int size) = 0; ///< Set the required record length
 		
 		virtual int setTriggerMode(Dso::TriggerMode mode) = 0; ///< Set the trigger mode
 		virtual int setTriggerSource(bool special, unsigned int id) = 0; ///< Set the trigger source
 		virtual double setTriggerLevel(unsigned int channel, double level) = 0; ///< Set the trigger level for a channel
 		virtual int setTriggerSlope(Dso::Slope slope) = 0; ///< Set the slope that causes triggering
-		virtual double setTriggerPosition(double position) = 0; ///< Set the pretrigger position (0.0 = left, 1.0 = right side)
+		virtual double setPretriggerPosition(double position) = 0; ///< Set the pretrigger position (0.0 = left, 1.0 = right side)
 		
 		virtual int setChannelUsed(unsigned int channel, bool used) = 0; ///< Enable/disable a channel
 		virtual int setCoupling(unsigned int channel, Dso::Coupling coupling) = 0; ///< Set the coupling for a channel

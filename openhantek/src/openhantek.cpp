@@ -140,10 +140,10 @@ OpenHantekMainWindow::OpenHantekMainWindow(QWidget *parent, Qt::WindowFlags flag
 		this->dsoControl->setTriggerLevel(channel, this->settings->scope.voltage[channel].trigger);
 	}
 	this->updateUsed(this->settings->scope.physicalChannels);
-	this->dsoControl->setBufferSize(this->settings->scope.horizontal.samples);
+	this->dsoControl->setRecordLength(this->settings->scope.horizontal.samples);
 	this->updateTimebase();
 	this->dsoControl->setTriggerMode(this->settings->scope.trigger.mode);
-	this->dsoControl->setTriggerPosition(this->settings->scope.trigger.position * this->settings->scope.horizontal.timebase * DIVS_TIME);
+	this->dsoControl->setPretriggerPosition(this->settings->scope.trigger.position * this->settings->scope.horizontal.timebase * DIVS_TIME);
 	this->dsoControl->setTriggerSlope(this->settings->scope.trigger.slope);
 	this->dsoControl->setTriggerSource(this->settings->scope.trigger.special, this->settings->scope.trigger.source);
 	
@@ -203,20 +203,20 @@ void OpenHantekMainWindow::createActions() {
 	this->startStopAction->setShortcut(tr("Space"));
 	this->stopped();
 	
-	this->bufferSizeActionGroup = new QActionGroup(this);
-	connect(this->bufferSizeActionGroup, SIGNAL(selected(QAction *)), this, SLOT(bufferSizeSelected(QAction *)));
+	this->recordLengthActionGroup = new QActionGroup(this);
+	connect(this->recordLengthActionGroup, SIGNAL(selected(QAction *)), this, SLOT(recordLengthSelected(QAction *)));
 	
-	this->bufferSizeSmallAction = new QAction(tr("&Small"), this);
-	this->bufferSizeSmallAction->setActionGroup(this->bufferSizeActionGroup);
-	this->bufferSizeSmallAction->setCheckable(true);
-	this->bufferSizeSmallAction->setChecked(this->settings->scope.horizontal.samples == Hantek::BUFFER_SMALL);
-	this->bufferSizeSmallAction->setStatusTip(tr("10240 Samples"));
+	this->recordLengthSmallAction = new QAction(tr("&Small"), this);
+	this->recordLengthSmallAction->setActionGroup(this->recordLengthActionGroup);
+	this->recordLengthSmallAction->setCheckable(true);
+	this->recordLengthSmallAction->setChecked(this->settings->scope.horizontal.samples == 10240);
+	this->recordLengthSmallAction->setStatusTip(tr("10240 Samples"));
 
-	this->bufferSizeLargeAction = new QAction(tr("&Large"), this);
-	this->bufferSizeLargeAction->setActionGroup(this->bufferSizeActionGroup);
-	this->bufferSizeLargeAction->setCheckable(true);
-	this->bufferSizeLargeAction->setChecked(this->settings->scope.horizontal.samples == Hantek::BUFFER_LARGE);
-	this->bufferSizeLargeAction->setStatusTip(tr("32768 Samples"));
+	this->recordLengthLargeAction = new QAction(tr("&Large"), this);
+	this->recordLengthLargeAction->setActionGroup(this->recordLengthActionGroup);
+	this->recordLengthLargeAction->setCheckable(true);
+	this->recordLengthLargeAction->setChecked(this->settings->scope.horizontal.samples != 10240);
+	this->recordLengthLargeAction->setStatusTip(tr("32768 Samples"));
 
 	this->digitalPhosphorAction = new QAction(QIcon(":actions/digitalphosphor.png"), tr("Digital &phosphor"), this);
 	this->digitalPhosphorAction->setCheckable(true);
@@ -279,9 +279,9 @@ void OpenHantekMainWindow::createMenus() {
 	this->oscilloscopeMenu->addAction(this->commandAction);
 #endif
 	this->oscilloscopeMenu->addSeparator();
-	this->bufferSizeMenu = this->oscilloscopeMenu->addMenu(tr("&Buffer size"));
-	this->bufferSizeMenu->addAction(this->bufferSizeSmallAction);
-	this->bufferSizeMenu->addAction(this->bufferSizeLargeAction);
+	this->recordLengthMenu = this->oscilloscopeMenu->addMenu(tr("&Record length"));
+	this->recordLengthMenu->addAction(this->recordLengthSmallAction);
+	this->recordLengthMenu->addAction(this->recordLengthLargeAction);
 
 	this->menuBar()->addSeparator();
 
@@ -598,11 +598,11 @@ void OpenHantekMainWindow::updateSettings() {
 	}
 }
 
-/// \brief Apply new buffer size to settings.
-/// \param action The selected buffer size menu item.
-void OpenHantekMainWindow::bufferSizeSelected(QAction *action) {
-	this->settings->scope.horizontal.samples = (action == this->bufferSizeSmallAction) ? Hantek::BUFFER_SMALL : Hantek::BUFFER_LARGE;
-	this->dsoControl->setBufferSize(this->settings->scope.horizontal.samples);
+/// \brief Apply new record length to settings.
+/// \param action The selected record length menu item.
+void OpenHantekMainWindow::recordLengthSelected(QAction *action) {
+	this->settings->scope.horizontal.samples = (action == this->recordLengthSmallAction) ? 10240 : 32768;
+	this->dsoControl->setRecordLength(this->settings->scope.horizontal.samples);
 }
 
 /// \brief Sets the offset of the oscilloscope for the given channel.
@@ -620,7 +620,7 @@ void OpenHantekMainWindow::updateTimebase() {
 	this->dsoWidget->updateSamplerate();
 	
 	// The trigger position should be kept at the same place but the timebase has changed
-	this->dsoControl->setTriggerPosition(this->settings->scope.trigger.position * this->settings->scope.horizontal.timebase * DIVS_TIME);
+	this->dsoControl->setPretriggerPosition(this->settings->scope.trigger.position * this->settings->scope.horizontal.timebase * DIVS_TIME);
 }
 
 /// \brief Sets the state of the given oscilloscope channel.

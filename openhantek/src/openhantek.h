@@ -81,8 +81,8 @@ class OpenHantekMainWindow : public QMainWindow {
 		
 		QAction *configAction;
 		QAction *startStopAction;
-		QActionGroup *bufferSizeActionGroup;
-		QAction *bufferSizeSmallAction, *bufferSizeLargeAction;
+		QActionGroup *recordLengthActionGroup;
+		QAction *recordLengthSmallAction, *recordLengthLargeAction;
 		QAction *digitalPhosphorAction, *zoomAction;
 		
 		QAction *aboutAction, *aboutQtAction;
@@ -94,7 +94,7 @@ class OpenHantekMainWindow : public QMainWindow {
 		// Menus
 		QMenu *fileMenu;
 		QMenu *viewMenu, *dockMenu, *toolbarMenu;
-		QMenu *oscilloscopeMenu, *bufferSizeMenu;
+		QMenu *oscilloscopeMenu, *recordLengthMenu;
 		QMenu *helpMenu;
 
 		// Toolbars
@@ -143,7 +143,7 @@ class OpenHantekMainWindow : public QMainWindow {
 		void applySettings();
 		void updateSettings();
 		
-		void bufferSizeSelected(QAction *action);
+		void recordLengthSelected(QAction *action);
 		void updateOffset(unsigned int channel);
 		void updateTimebase();
 		void updateUsed(unsigned int channel);

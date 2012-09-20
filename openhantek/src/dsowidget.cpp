@@ -114,12 +114,12 @@ DsoWidget::DsoWidget(DsoSettings *settings, DataAnalyzer *dataAnalyzer, QWidget 
 	// The table for the settings
 	this->settingsTriggerLabel = new QLabel();
 	this->settingsTriggerLabel->setMinimumWidth(160);
-	this->settingsBufferLabel = new QLabel();
-	this->settingsBufferLabel->setAlignment(Qt::AlignRight);
-	this->settingsBufferLabel->setPalette(palette);
-	this->settingsRateLabel = new QLabel();
-	this->settingsRateLabel->setAlignment(Qt::AlignRight);
-	this->settingsRateLabel->setPalette(palette);
+	this->settingsRecordLengthLabel = new QLabel();
+	this->settingsRecordLengthLabel->setAlignment(Qt::AlignRight);
+	this->settingsRecordLengthLabel->setPalette(palette);
+	this->settingsSamplerateLabel = new QLabel();
+	this->settingsSamplerateLabel->setAlignment(Qt::AlignRight);
+	this->settingsSamplerateLabel->setPalette(palette);
 	this->settingsTimebaseLabel = new QLabel();
 	this->settingsTimebaseLabel->setAlignment(Qt::AlignRight);
 	this->settingsTimebaseLabel->setPalette(palette);
@@ -128,8 +128,8 @@ DsoWidget::DsoWidget(DsoSettings *settings, DataAnalyzer *dataAnalyzer, QWidget 
 	this->settingsFrequencybaseLabel->setPalette(palette);
 	this->settingsLayout = new QHBoxLayout();
 	this->settingsLayout->addWidget(this->settingsTriggerLabel);
-	this->settingsLayout->addWidget(this->settingsBufferLabel, 1);
-	this->settingsLayout->addWidget(this->settingsRateLabel, 1);
+	this->settingsLayout->addWidget(this->settingsRecordLengthLabel, 1);
+	this->settingsLayout->addWidget(this->settingsSamplerateLabel, 1);
 	this->settingsLayout->addWidget(this->settingsTimebaseLabel, 1);
 	this->settingsLayout->addWidget(this->settingsFrequencybaseLabel, 1);
 	
@@ -225,7 +225,7 @@ DsoWidget::DsoWidget(DsoSettings *settings, DataAnalyzer *dataAnalyzer, QWidget 
 	
 	// Apply settings and update measured values
 	this->updateTriggerDetails();
-	this->updateBufferSize(this->settings->scope.horizontal.samples);
+	this->updateRecordLength(this->settings->scope.horizontal.samples);
 	this->updateFrequencybase();
 	this->updateTimebase();
 	this->updateZoom(this->settings->view.zoom);
@@ -246,7 +246,7 @@ DsoWidget::DsoWidget(DsoSettings *settings, DataAnalyzer *dataAnalyzer, QWidget 
 	
 	// Connect other signals
 	this->connect(this->dataAnalyzer, SIGNAL(analyzed(unsigned int)), this, SLOT(dataAnalyzed()));
-	this->connect(this->dataAnalyzer, SIGNAL(analyzed(unsigned int)), this, SLOT(updateBufferSize(unsigned int)));
+	this->connect(this->dataAnalyzer, SIGNAL(analyzed(unsigned int)), this, SLOT(updateRecordLength(unsigned int)));
 }
 
 /// \brief Stops the oscilloscope thread and the timer.
@@ -332,7 +332,7 @@ void DsoWidget::updateFrequencybase() {
 
 /// \brief Updates the samplerate field after changing the samplerate.
 void DsoWidget::updateSamplerate() {
-	this->settingsRateLabel->setText(Helper::valueToString(this->settings->scope.horizontal.samplerate, Helper::UNIT_SAMPLES) + tr("/s"));
+	this->settingsSamplerateLabel->setText(Helper::valueToString(this->settings->scope.horizontal.samplerate, Helper::UNIT_SAMPLES) + tr("/s"));
 }
 
 /// \brief Handles timebaseChanged signal from the horizontal dock.
@@ -424,9 +424,9 @@ void DsoWidget::updateVoltageUsed(unsigned int channel, bool used) {
 	this->updateVoltageDetails(channel);
 }
 
-/// \brief Change the buffer size.
-void DsoWidget::updateBufferSize(unsigned int size) {
-	this->settingsBufferLabel->setText(tr("%1 S").arg(size));
+/// \brief Change the record length.
+void DsoWidget::updateRecordLength(unsigned int size) {
+	this->settingsRecordLengthLabel->setText(tr("%1 S").arg(size));
 }
 
 /// \brief Export the oscilloscope screen to a file.

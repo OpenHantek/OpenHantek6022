@@ -59,8 +59,9 @@ namespace Hantek {
 		BulkCode setFilter; ///< Command for setting used channels
 		BulkCode setSamplerate; ///< Command for samplerate settings
 		BulkCode setGain; ///< Command for gain settings (Usually in combination with CONTROL_SETRELAYS)
-		BulkCode setBuffer; ///< Command for buffer settings
+		BulkCode setRecordLength; ///< Command for buffer settings
 		BulkCode setTrigger; ///< Command for trigger settings
+		BulkCode setPretrigger; ///< Command for pretrigger settings
 	};
 	
 	//////////////////////////////////////////////////////////////////////////////
@@ -113,8 +114,8 @@ namespace Hantek {
 		
 		// Limits
 		ControlSpecificationSamplerate samplerate; ///< The samplerate specifications
-		QList<unsigned long int> bufferSizes; ///< Available buffer sizes, ULONG_MAX means rolling
-		QList<unsigned long int> bufferDividers; ///< Samplerate dividers for buffer sizes
+		QList<unsigned long int> recordLengths; ///< Available record lengths, ULONG_MAX means rolling
+		QList<unsigned long int> bufferDividers; ///< Samplerate dividers for record lengths
 		QList<double> gainSteps; ///< Available voltage steps in V/screenheight
 		
 		// Calibration
@@ -166,7 +167,7 @@ namespace Hantek {
 		ControlSettingsSamplerate samplerate; ///< The samplerate settings
 		ControlSettingsVoltage voltage[HANTEK_CHANNELS]; ///< The amplification settings
 		ControlSettingsTrigger trigger; ///< The trigger settings
-		unsigned int bufferSizeId; ///< The id in the buffer size array
+		unsigned int recordLengthId; ///< The id in the record length array
 		unsigned short int usedChannels; ///< Number of activated channels
 	};
 	
@@ -188,7 +189,7 @@ namespace Hantek {
 			unsigned short int calculateTriggerPoint(unsigned short int value);
 			int getCaptureState();
 			int getSamples(bool process);
-			unsigned long int updateBufferSize(unsigned long int size);
+			unsigned long int updateRecordLength(unsigned long int size);
 			
 			// Communication with device
 			Device *device; ///< The USB device for the oscilloscope
@@ -212,7 +213,7 @@ namespace Hantek {
 			virtual void connectDevice();
 			
 			unsigned long int setSamplerate(unsigned long int samplerate = 0);
-			unsigned long int setBufferSize(unsigned long int size);
+			unsigned long int setRecordLength(unsigned long int size);
 			
 			int setChannelUsed(unsigned int channel, bool used);
 			int setCoupling(unsigned int channel, Dso::Coupling coupling);
@@ -223,7 +224,7 @@ namespace Hantek {
 			int setTriggerSource(bool special, unsigned int id);
 			double setTriggerLevel(unsigned int channel, double level);
 			int setTriggerSlope(Dso::Slope slope);
-			double setTriggerPosition(double position);
+			double setPretriggerPosition(double position);
 			
 #ifdef DEBUG
 			int stringCommand(QString command);

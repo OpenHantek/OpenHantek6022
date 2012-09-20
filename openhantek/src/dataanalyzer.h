@@ -89,8 +89,8 @@ class DataAnalyzer : public QThread {
 		QList<AnalyzedData *> analyzedData; ///< The analyzed data for each channel
 		QMutex *analyzedDataMutex; ///< A mutex for the analyzed data of all channels
 		
-		unsigned long int lastBufferSize; ///< The buffer size of the previously analyzed data
-		unsigned long int maxSamples; ///< The maximum buffer size of the analyzed data
+		unsigned long int lastRecordLength; ///< The record length of the previously analyzed data
+		unsigned long int maxSamples; ///< The maximum record length of the analyzed data
 		Dso::WindowFunction lastWindow; ///< The previously used dft window function
 		double *window; ///< The array for the dft window factors
 		

@@ -45,7 +45,7 @@
 DataAnalyzer::DataAnalyzer(DsoSettings *settings, QObject *parent) : QThread(parent) {
 	this->settings = settings;
 	
-	this->lastBufferSize = 0;
+	this->lastRecordLength = 0;
 	this->lastWindow = (Dso::WindowFunction) -1;
 	this->window = 0;
 	
@@ -189,33 +189,33 @@ void DataAnalyzer::run() {
 	for(int channel = 0; channel < this->analyzedData.count(); channel++) {
 		if(this->analyzedData[channel]->samples.voltage.sample) {
 			// Calculate new window
-			if(this->lastWindow != this->settings->scope.spectrumWindow || this->lastBufferSize != this->analyzedData[channel]->samples.voltage.count) {
-				if(this->lastBufferSize != this->analyzedData[channel]->samples.voltage.count) {
-					this->lastBufferSize = this->analyzedData[channel]->samples.voltage.count;
+			if(this->lastWindow != this->settings->scope.spectrumWindow || this->lastRecordLength != this->analyzedData[channel]->samples.voltage.count) {
+				if(this->lastRecordLength != this->analyzedData[channel]->samples.voltage.count) {
+					this->lastRecordLength = this->analyzedData[channel]->samples.voltage.count;
 					
 					if(this->window)
 						fftw_free(this->window);
-					this->window = (double *) fftw_malloc(sizeof(double) * this->lastBufferSize);
+					this->window = (double *) fftw_malloc(sizeof(double) * this->lastRecordLength);
 				}
 				
-				unsigned int windowEnd = this->lastBufferSize - 1;
+				unsigned int windowEnd = this->lastRecordLength - 1;
 				this->lastWindow = this->settings->scope.spectrumWindow;
 				
 				switch(this->settings->scope.spectrumWindow) {
 					case Dso::WINDOW_HAMMING:
-						for(unsigned int windowPosition = 0; windowPosition < this->lastBufferSize; windowPosition++)
+						for(unsigned int windowPosition = 0; windowPosition < this->lastRecordLength; windowPosition++)
 							*(this->window + windowPosition) = 0.54 - 0.46 * cos(2.0 * M_PI * windowPosition / windowEnd);
 						break;
 					case Dso::WINDOW_HANN:
-						for(unsigned int windowPosition = 0; windowPosition < this->lastBufferSize; windowPosition++)
+						for(unsigned int windowPosition = 0; windowPosition < this->lastRecordLength; windowPosition++)
 							*(this->window + windowPosition) = 0.5 * (1.0 - cos(2.0 * M_PI * windowPosition / windowEnd));
 						break;
 					case Dso::WINDOW_COSINE:
-						for(unsigned int windowPosition = 0; windowPosition < this->lastBufferSize; windowPosition++)
+						for(unsigned int windowPosition = 0; windowPosition < this->lastRecordLength; windowPosition++)
 							*(this->window + windowPosition) = sin(M_PI * windowPosition / windowEnd);
 						break;
 					case Dso::WINDOW_LANCZOS:
-						for(unsigned int windowPosition = 0; windowPosition < this->lastBufferSize; windowPosition++) {
+						for(unsigned int windowPosition = 0; windowPosition < this->lastRecordLength; windowPosition++) {
 							double sincParameter = (2.0 * windowPosition / windowEnd - 1.0) * M_PI;
 							if(sincParameter == 0)
 								*(this->window + windowPosition) = 1;
@@ -224,55 +224,55 @@ void DataAnalyzer::run() {
 						}
 						break;
 					case Dso::WINDOW_BARTLETT:
-						for(unsigned int windowPosition = 0; windowPosition < this->lastBufferSize; windowPosition++)
+						for(unsigned int windowPosition = 0; windowPosition < this->lastRecordLength; windowPosition++)
 							*(this->window + windowPosition) = 2.0 / windowEnd * (windowEnd / 2 - abs(windowPosition - windowEnd / 2));
 						break;
 					case Dso::WINDOW_TRIANGULAR:
-						for(unsigned int windowPosition = 0; windowPosition < this->lastBufferSize; windowPosition++)
-							*(this->window + windowPosition) = 2.0 / this->lastBufferSize * (this->lastBufferSize / 2 - abs(windowPosition - windowEnd / 2));
+						for(unsigned int windowPosition = 0; windowPosition < this->lastRecordLength; windowPosition++)
+							*(this->window + windowPosition) = 2.0 / this->lastRecordLength * (this->lastRecordLength / 2 - abs(windowPosition - windowEnd / 2));
 						break;
 					case Dso::WINDOW_GAUSS:
 						{
 							double sigma = 0.4;
-							for(unsigned int windowPosition = 0; windowPosition < this->lastBufferSize; windowPosition++)
+							for(unsigned int windowPosition = 0; windowPosition < this->lastRecordLength; windowPosition++)
 								*(this->window + windowPosition) = exp(-0.5 * pow(((windowPosition - windowEnd / 2) / (sigma * windowEnd / 2)), 2));
 						}
 						break;
 					case Dso::WINDOW_BARTLETTHANN:
-						for(unsigned int windowPosition = 0; windowPosition < this->lastBufferSize; windowPosition++)
+						for(unsigned int windowPosition = 0; windowPosition < this->lastRecordLength; windowPosition++)
 							*(this->window + windowPosition) = 0.62 - 0.48 * abs(windowPosition / windowEnd - 0.5) - 0.38 * cos(2.0 * M_PI * windowPosition / windowEnd);
 						break;
 					case Dso::WINDOW_BLACKMAN:
 						{
 							double alpha = 0.16;
-							for(unsigned int windowPosition = 0; windowPosition < this->lastBufferSize; windowPosition++)
+							for(unsigned int windowPosition = 0; windowPosition < this->lastRecordLength; windowPosition++)
 								*(this->window + windowPosition) = (1 - alpha) / 2 - 0.5 * cos(2.0 * M_PI * windowPosition / windowEnd) + alpha / 2 * cos(4.0 * M_PI * windowPosition / windowEnd);
 						}
 						break;
 					//case WINDOW_KAISER:
 						// TODO
 						//double alpha = 3.0;
-						//for(unsigned int windowPosition = 0; windowPosition < this->lastBufferSize; windowPosition++)
+						//for(unsigned int windowPosition = 0; windowPosition < this->lastRecordLength; windowPosition++)
 							//*(this->window + windowPosition) = ;
 						//break;
 					case Dso::WINDOW_NUTTALL:
-						for(unsigned int windowPosition = 0; windowPosition < this->lastBufferSize; windowPosition++)
+						for(unsigned int windowPosition = 0; windowPosition < this->lastRecordLength; windowPosition++)
 							*(this->window + windowPosition) = 0.355768 - 0.487396 * cos(2 * M_PI * windowPosition / windowEnd) + 0.144232 * cos(4 * M_PI * windowPosition / windowEnd) - 0.012604 * cos(6 * M_PI * windowPosition / windowEnd);
 						break;
 					case Dso::WINDOW_BLACKMANHARRIS:
-						for(unsigned int windowPosition = 0; windowPosition < this->lastBufferSize; windowPosition++)
+						for(unsigned int windowPosition = 0; windowPosition < this->lastRecordLength; windowPosition++)
 							*(this->window + windowPosition) = 0.35875 - 0.48829 * cos(2 * M_PI * windowPosition / windowEnd) + 0.14128 * cos(4 * M_PI * windowPosition / windowEnd) - 0.01168 * cos(6 * M_PI * windowPosition / windowEnd);
 						break;
 					case Dso::WINDOW_BLACKMANNUTTALL:
-						for(unsigned int windowPosition = 0; windowPosition < this->lastBufferSize; windowPosition++)
+						for(unsigned int windowPosition = 0; windowPosition < this->lastRecordLength; windowPosition++)
 							*(this->window + windowPosition) = 0.3635819 - 0.4891775 * cos(2 * M_PI * windowPosition / windowEnd) + 0.1365995 * cos(4 * M_PI * windowPosition / windowEnd) - 0.0106411 * cos(6 * M_PI * windowPosition / windowEnd);
 						break;
 					case Dso::WINDOW_FLATTOP:
-						for(unsigned int windowPosition = 0; windowPosition < this->lastBufferSize; windowPosition++)
+						for(unsigned int windowPosition = 0; windowPosition < this->lastRecordLength; windowPosition++)
 							*(this->window + windowPosition) = 1.0 - 1.93 * cos(2 * M_PI * windowPosition / windowEnd) + 1.29 * cos(4 * M_PI * windowPosition / windowEnd) - 0.388 * cos(6 * M_PI * windowPosition / windowEnd) + 0.032 * cos(8 * M_PI * windowPosition / windowEnd);
 						break;
 					default: // Dso::WINDOW_RECTANGULAR
-						for(unsigned int windowPosition = 0; windowPosition < this->lastBufferSize; windowPosition++)
+						for(unsigned int windowPosition = 0; windowPosition < this->lastRecordLength; windowPosition++)
 							*(this->window + windowPosition) = 1.0;
 				}
 			}
@@ -297,7 +297,7 @@ void DataAnalyzer::run() {
 				windowedValues[position] = this->window[position] * this->analyzedData[channel]->samples.voltage.sample[position];
 			
 			// Do discrete real to half-complex transformation
-			/// \todo Check if buffer size is multiple of 2
+			/// \todo Check if record length is multiple of 2
 			/// \todo Reuse plan and use FFTW_MEASURE to get fastest algorithm
 			fftw_plan fftPlan = fftw_plan_r2r_1d(this->analyzedData[channel]->samples.voltage.count, windowedValues, this->analyzedData[channel]->samples.spectrum.sample, FFTW_R2HC, FFTW_ESTIMATE);
 			fftw_execute(fftPlan);

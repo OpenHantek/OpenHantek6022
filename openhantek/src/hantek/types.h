@@ -51,7 +51,7 @@ namespace Hantek {
 	/// \brief All supported bulk commands.
 	/// Indicies given in square brackets specify byte numbers in little endian format.
 	enum BulkCode {
-		/// <em>[::MODEL_DSO2090, ::MODEL_DSO2150, ::MODEL_DSO2250, ::MODEL_DSO5200, ::MODEL_DSO5200A]</em>
+		/// BulkSetFilter [<em>::MODEL_DSO2090, ::MODEL_DSO2150, ::MODEL_DSO5200, ::MODEL_DSO5200A</em>]
 		/// <p>
 		///   This command sets channel and trigger filter:
 		///   <table>
@@ -70,7 +70,7 @@ namespace Hantek {
 		/// <p><br /></p>
 		BULK_SETFILTER,
 		
-		/// <em>[::MODEL_DSO2090, ::MODEL_DSO2150]</em>
+		/// BulkSetTriggerAndSamplerate [<em>::MODEL_DSO2090, ::MODEL_DSO2150</em>]
 		/// <p>
 		///   This command sets trigger and timebase:
 		///   <table>
@@ -99,7 +99,7 @@ namespace Hantek {
 		///   Without using fast rate mode, the samplerate is:<br />
 		///   <i>Samplerate = SamplerateMax / (1comp(SamplerateSlow) * 2 + Tsr1Bits.samplerateFast)</i><br />
 		///   SamplerateMax is 50 MHz for the DSO-2090.<br />
-		///   When using fast rate mode the resulting samplerate is twice (For DSO-2150 three times) as fast, when using the large buffer it is half as fast. When Tsr1Bits.bufferSize is 0 (Roll mode) the sampling rate is divided by 1000. Setting Tsr1Bits.samplerateFast to 0 doesn't work, the result will be the same as Tsr1Bits.samplerateFast = 1. SamplerateSlow can't be used together with fast rate mode, the result is always the the same as SlowValue = 0.
+		///   When using fast rate mode the resulting samplerate is twice (For DSO-2150 three times) as fast, when using the large buffer it is half as fast. When Tsr1Bits.recordLength is 0 (Roll mode) the sampling rate is divided by 1000. Setting Tsr1Bits.samplerateFast to 0 doesn't work, the result will be the same as Tsr1Bits.samplerateFast = 1. SamplerateSlow can't be used together with fast rate mode, the result is always the the same as SlowValue = 0.
 		/// </p>
 		/// <p>
 		///   The TriggerPosition sets the position of the pretrigger in samples. The left side (0 %) is 0x77660 when using the small buffer and 0x78000 when using the large buffer.
@@ -107,7 +107,7 @@ namespace Hantek {
 		/// <p><br /></p>
 		BULK_SETTRIGGERANDSAMPLERATE,
 		
-		/// <em>[::MODEL_DSO2090, ::MODEL_DSO2150, ::MODEL_DSO2250, ::MODEL_DSO5200, ::MODEL_DSO5200A]</em>
+		/// BulkForceTrigger [<em>::MODEL_DSO2090, ::MODEL_DSO2150, ::MODEL_DSO2250, ::MODEL_DSO5200, ::MODEL_DSO5200A</em>]
 		/// <p>
 		///   This command forces triggering:
 		///   <table>
@@ -120,7 +120,7 @@ namespace Hantek {
 		/// <p><br /></p>
 		BULK_FORCETRIGGER,
 		
-		/// <em>[::MODEL_DSO2090, ::MODEL_DSO2150, ::MODEL_DSO2250, ::MODEL_DSO5200, ::MODEL_DSO5200A]</em>
+		/// BulkCaptureStart [<em>::MODEL_DSO2090, ::MODEL_DSO2150, ::MODEL_DSO2250, ::MODEL_DSO5200, ::MODEL_DSO5200A</em>]
 		/// <p>
 		///   This command starts to capture data:
 		///   <table>
@@ -133,7 +133,7 @@ namespace Hantek {
 		/// <p><br /></p>
 		BULK_STARTSAMPLING,
 		
-		/// <em>[::MODEL_DSO2090, ::MODEL_DSO2150, ::MODEL_DSO2250, ::MODEL_DSO5200, ::MODEL_DSO5200A]</em>
+		/// BulkTriggerEnabled [<em>::MODEL_DSO2090, ::MODEL_DSO2150, ::MODEL_DSO2250, ::MODEL_DSO5200, ::MODEL_DSO5200A</em>]
 		/// <p>
 		///   This command sets the trigger:
 		///   <table>
@@ -146,7 +146,7 @@ namespace Hantek {
 		/// <p><br /></p>
 		BULK_ENABLETRIGGER,
 		
-		/// <em>[::MODEL_DSO2090, ::MODEL_DSO2150, ::MODEL_DSO2250, ::MODEL_DSO5200, ::MODEL_DSO5200A]</em>
+		/// BulkGetData [<em>::MODEL_DSO2090, ::MODEL_DSO2150, ::MODEL_DSO2250, ::MODEL_DSO5200, ::MODEL_DSO5200A</em>]
 		/// <p>
 		///   This command reads data from the hardware:
 		///   <table>
@@ -194,7 +194,7 @@ namespace Hantek {
 		/// <p><br /></p>
 		BULK_GETDATA,
 		
-		/// <em>[::MODEL_DSO2090, ::MODEL_DSO2150, ::MODEL_DSO2250, ::MODEL_DSO5200, ::MODEL_DSO5200A]</em>
+		/// BulkGetCaptureState [<em>::MODEL_DSO2090, ::MODEL_DSO2150, ::MODEL_DSO2250, ::MODEL_DSO5200, ::MODEL_DSO5200A</em>]
 		/// <p>
 		///   This command checks the capture state:
 		///   <table>
@@ -219,7 +219,7 @@ namespace Hantek {
 		/// <p><br /></p>
 		BULK_GETCAPTURESTATE,
 		
-		/// <em>[::MODEL_DSO2090, ::MODEL_DSO2150, ::MODEL_DSO2250, ::MODEL_DSO5200, ::MODEL_DSO5200A]</em>
+		/// BulkSetGain [<em>::MODEL_DSO2090, ::MODEL_DSO2150, ::MODEL_DSO2250, ::MODEL_DSO5200, ::MODEL_DSO5200A</em>]
 		/// <p>
 		///   This command sets the gain:
 		///   <table>
@@ -239,9 +239,9 @@ namespace Hantek {
 		/// <p><br /></p>
 		BULK_SETGAIN,
 		
-		/// <em>[]</em>
+		/// BulkSetLogicalData [<em></em>]
 		/// <p>
-		///   This command sets the logical data (Not used in official Hantek software):
+		///   This command sets the logical data (Not used in official %Hantek software):
 		///   <table>
 		///     <tr>
 		///       <td>0x08</td>
@@ -258,9 +258,9 @@ namespace Hantek {
 		/// <p><br /></p>
 		BULK_SETLOGICALDATA,
 		
-		/// <em>[::MODEL_DSO2250]</em>
+		/// BulkGetLogicalData [<em></em>]
 		/// <p>
-		///   This command reads the logical data (Not used in official Hantek software):
+		///   This command reads the logical data (Not used in official %Hantek software):
 		///   <table>
 		///     <tr>
 		///       <td>0x09</td>
@@ -280,7 +280,7 @@ namespace Hantek {
 		/// <p><br /></p>
 		BULK_GETLOGICALDATA,
 		
-		/// <em>[]</em>
+		/// [<em></em>]
 		/// <p>
 		///   This command isn't used for any supported model:
 		///   <table>
@@ -291,24 +291,41 @@ namespace Hantek {
 		///   </table>
 		/// </p>
 		/// <p><br /></p>
-		BULK_UNKNOWN_0A,
+		BULK_AUNKNOWN,
 
-		/// <em>[::MODEL_DSO2250]</em>
+		/// BulkSetFilter2250 [<em>::MODEL_DSO2250</em>]
 		/// <p>
-		///   This command is used for the DSO-2250:
+		///   This command sets the activated channels for the DSO-2250:
 		///   <table>
 		///     <tr>
 		///       <td>0x0b</td>
 		///       <td>0x00</td>
-		///       <td>(unknown)</td>
+		///       <td>::UsedChannels</td>
 		///       <td>0x00</td>
 		///     </tr>
 		///   </table>
 		/// </p>
 		/// <p><br /></p>
-		BULK_UNKNOWN_0B,
+		BULK_BSETFILTER,
 
-		/// <em>[::MODEL_DSO2250, ::MODEL_DSO5200, ::MODEL_DSO5200A]</em>
+		/// BulkSetTrigger2250 [<em>::MODEL_DSO2250</em>]
+		/// <p>
+		///   This command sets the trigger source for the DSO-2250:
+		///   <table>
+		///     <tr>
+		///       <td>0x0c</td>
+		///       <td>0x0f</td>
+		///       <td>CTriggerBits</td>
+		///       <td>0x00</td>
+		///       <td>0x02</td>
+		///       <td>0x00</td>
+		///       <td>0x00</td>
+		///       <td>0x00</td>
+		///     </tr>
+		///   </table>
+		/// </p>
+		/// <p><br /></p>
+		/// BulkSetSamplerate5200 [<em>::MODEL_DSO5200, ::MODEL_DSO5200A</em>]
 		/// <p>
 		///   This command sets the sampling rate for the DSO-5200:
 		///   <table>
@@ -325,14 +342,27 @@ namespace Hantek {
 		/// <p>
 		///   The values are similar to the ones used with ::BULK_SETTRIGGERANDSAMPLERATE. The formula is a bit different here:<br />
 		///   <i>Samplerate = SamplerateMax / (2comp(SamplerateSlow) * 2 + 4 - SamplerateFast)</i><br />
-		///   SamplerateMax is 100 MS/s for the DSO-5200 in default configuration and 250 MS/s in fast rate mode though, the modifications regarding buffer size are the the same that apply for the DSO-2090.
+		///   SamplerateMax is 100 MS/s for the DSO-5200 in default configuration and 250 MS/s in fast rate mode though, the modifications regarding record length are the the same that apply for the DSO-2090.
 		/// </p>
 		/// <p><br /></p>
-		BULK_SETSAMPLERATE5200,
-		
-		/// <em>[::MODEL_DSO2250, ::MODEL_DSO5200, ::MODEL_DSO5200A]</em>
+		BULK_CSETTRIGGERORSAMPLERATE,
+
+		/// BulkSetRecordLength2250 [<em>::MODEL_DSO2250</em>]
 		/// <p>
-		///   This command sets the trigger position and buffer size for the DSO-5200:
+		///   This command sets the record length for the DSO-2250:
+		///   <table>
+		///     <tr>
+		///       <td>0x0d</td>
+		///       <td>0x00</td>
+		///       <td>::RecordLengthId</td>
+		///       <td>0x00</td>
+		///     </tr>
+		///   </table>
+		/// </p>
+		/// <p><br /></p>
+		/// BulkSetBuffer5200 [<em>::MODEL_DSO5200, ::MODEL_DSO5200A</em>]
+		/// <p>
+		///   This command sets the trigger position and record length for the DSO-5200:
 		///   <table>
 		///     <tr>
 		///       <td>0x0d</td>
@@ -356,18 +386,40 @@ namespace Hantek {
 		///   The TriggerPositionPre and TriggerPositionPost values set the pretrigger position. Both values have a range from 0xd7ff (0xc7ff for 14 kiS buffer) to 0xfffe. On the left side (0 %) the TriggerPositionPre value is minimal, on the right side (100 %) it is maximal. The TriggerPositionPost value is maximal for 0 % and minimal for 100%.
 		/// </p>
 		/// <p><br /></p>
-		BULK_SETBUFFER5200,
+		BULK_DSETBUFFER,
 		
-		/// <em>[::MODEL_DSO2250, ::MODEL_DSO5200, ::MODEL_DSO5200A]</em>
+		/// BulkSetSamplerate2250 [<em>::MODEL_DSO2250</em>]
 		/// <p>
-		///   This command sets the channel and trigger settings for the DSO-5200:
+		///   This command sets the samplerate:
+		///   <table>
+		///     <tr>
+		///       <td>0x0e</td>
+		///       <td>0x00</td>
+		///       <td>ESamplerateBits</td>
+		///       <td>0x00</td>
+		///       <td>SamplerateSlow[0]</td>
+		///       <td>SamplerateSlow[1]</td>
+		///       <td>0x00</td>
+		///       <td>0x00</td>
+		///     </tr>
+		///   </table>
+		/// </p>
+		/// <p>
+		///   The values are similar to the ones used with ::BULK_SETTRIGGERANDSAMPLERATE. The formula is a bit different here:<br />
+		///   <i>Samplerate = SamplerateMax / (2comp(SamplerateSlow) * 2 + ESamplerateBits.samplerateFast)</i><br />
+		///   SamplerateMax is 100 MS/s for the DSO-2250 in default configuration and 250 MS/s in fast rate mode though, the modifications regarding record length are the the same that apply for the DSO-2090.
+		/// </p>
+		/// <p><br /></p>
+		/// BulkSetTrigger5200 [<em>::MODEL_DSO5200, ::MODEL_DSO5200A</em>]
+		/// <p>
+		///   This command sets the channel and trigger settings:
 		///   <table>
 		///     <tr>
 		///       <td>0x0e</td>
 		///       <td>0x00</td>
 		///       <td>ETsrBits</td>
 		///       <td>0x00</td>
-		///       <td>Unknown (0x02)</td>
+		///       <td>0x00</td>
 		///       <td>0x00</td>
 		///       <td>0x00</td>
 		///       <td>0x00</td>
@@ -375,34 +427,37 @@ namespace Hantek {
 		///   </table>
 		/// </p>
 		/// <p><br /></p>
-		BULK_SETTRIGGER5200,
+		BULK_ESETTRIGGERORSAMPLERATE,
 
-		/// <em>[::MODEL_DSO2250]</em>
+		/// BulkSetBuffer2250 [<em>::MODEL_DSO2250</em>]
 		/// <p>
-		///   This command is used for the DSO-2250:
+		///   This command sets the trigger position and buffer configuration for the DSO-2250:
 		///   <table>
 		///     <tr>
 		///       <td>0x0f</td>
 		///       <td>0x00</td>
-		///       <td>(unknown)</td>
-		///       <td>(unknown)</td>
-		///       <td>(unknown)</td>
-		///       <td>(unknown)</td>
+		///       <td>TriggerPositionPre[0]</td>
+		///       <td>TriggerPositionPre[1]</td>
+		///       <td>FBuffer1Bits</td>
+		///       <td>0x00</td>
 		///     </tr>
 		///   </table>
 		///   <table>
 		///     <tr>
-		///       <td>(unknown)</td>
-		///       <td>(unknown)</td>
-		///       <td>(unknown)</td>
-		///       <td>(unknown)</td>
-		///       <td>(unknown)</td>
-		///       <td>(unknown)</td>
+		///       <td>TriggerPositionPost[0]</td>
+		///       <td>TriggerPositionPost[1]</td>
+		///       <td>FBuffer1Bits</td>
+		///       <td>0x00</td>
+		///       <td>FBuffer2Bits</td>
+		///       <td>0x00</td>
 		///     </tr>
 		///   </table>
 		/// </p>
+		/// <p>
+		///   The TriggerPositionPre and TriggerPositionPost values set the pretrigger position. Both values have a range from 0xd7ff (0xc7ff for 14 kiS buffer) to 0xfffe. On the left side (0 %) the TriggerPositionPre value is minimal, on the right side (100 %) it is maximal. The TriggerPositionPost value is maximal for 0 % and minimal for 100%.
+		/// </p>
 		/// <p><br /></p>
-		BULK_UNKNOWN_0F,
+		BULK_FSETBUFFER,
 
 		BULK_COUNT
 	};
@@ -556,14 +611,14 @@ namespace Hantek {
 		/// Value 0x60 is the calibration data for the fast rate mode on the DSO-2250, DSO-5200 and DSO-5200A. It's used to correct the level differences between the two merged channels to avoid deterministic noise.
 		/// </p>
 		/// <p><br /></p>
-		VALUE_CALIBRATIONDATA = 0x60,
+		VALUE_FASTRATECALIBRATION = 0x60,
 		
 		/// <em>[::MODEL_DSO5200, ::MODEL_DSO5200A]</em>
 		/// <p>
 		/// Value 0x70 contains correction values for the ETS functionality of the DSO-5200 and DSO-5200A.
 		/// </p>
 		/// <p><br /></p>
-		VALUE_VOLTAGELIMITS = 0x70
+		VALUE_ETSCORRECTION = 0x70
 	};
 	
 	//////////////////////////////////////////////////////////////////////////////
@@ -591,8 +646,10 @@ namespace Hantek {
 	/// \enum UsedChannels                                          hantek/types.h
 	/// \brief The enabled channels.
 	enum UsedChannels {
-		USED_CH1, USED_CH2,
-		USED_CH1CH2
+		USED_CH1,    ///< Only channel 1 is activated
+		USED_CH2,    ///< Only channel 2 is activated
+		USED_CH1CH2, ///< Channel 1 and 2 are both activated
+		USED_NONE    ///< No channels are activated
 	};
 	
 	//////////////////////////////////////////////////////////////////////////////
@@ -605,21 +662,12 @@ namespace Hantek {
 	};
 	
 	//////////////////////////////////////////////////////////////////////////////
-	/// \enum BufferSize                                            hantek/types.h
-	/// \brief The size of the sample buffer.
-	enum BufferSize {
-		BUFFER_SMALL = 10240,
-		BUFFER_LARGE5200 = 14336,
-		BUFFER_LARGE = 32768
-	};
-	
-	//////////////////////////////////////////////////////////////////////////////
-	/// \enum BufferSizeId                                          hantek/types.h
+	/// \enum RecordLengthId                                        hantek/types.h
 	/// \brief The size id for CommandSetTriggerAndSamplerate.
-	enum BufferSizeId {
-		BUFFERID_ROLL = 0, ///< Used for the roll mode
-		BUFFERID_SMALL, ///< The standard buffer with 10240 samples
-		BUFFERID_LARGE ///< The large buffer, 32768 samples (14336 for DSO-5200)
+	enum RecordLengthId {
+		RECORDLENGTHID_ROLL = 0, ///< Used for the roll mode
+		RECORDLENGTHID_SMALL, ///< The standard buffer with 10240 samples
+		RECORDLENGTHID_LARGE ///< The large buffer, 32768 samples (14336 for DSO-5200)
 	};
 	
 	//////////////////////////////////////////////////////////////////////////////
@@ -662,6 +710,14 @@ namespace Hantek {
 	};
 	
 	//////////////////////////////////////////////////////////////////////////////
+	/// \enum FTriggerPositionUsed                                  hantek/types.h
+	/// \brief The trigger position states for the 0x0f command.
+	enum FTriggerPositionUsed {
+		FTRIGGERPOSITION_OFF = 0, ///< Used for Roll mode
+		FTRIGGERPOSITION_ON = 3 ///< Used for normal operation
+	};
+	
+	//////////////////////////////////////////////////////////////////////////////
 	/// \struct FilterBits                                          hantek/types.h
 	/// \brief The bits for BULK_SETFILTER.
 	struct FilterBits {
@@ -685,7 +741,7 @@ namespace Hantek {
 	/// \brief Trigger and samplerate bits (Byte 1).
 	struct Tsr1Bits {
 		unsigned char triggerSource:2; ///< The trigger source, see Hantek::TriggerSource
-		unsigned char bufferSize:3; ///< See ::BufferSizeId
+		unsigned char recordLength:3; ///< See ::RecordLengthId
 		unsigned char samplerateFast:3; ///< samplerate value for fast sampling rates
 	};
 	
@@ -700,23 +756,58 @@ namespace Hantek {
 	};
 	
 	//////////////////////////////////////////////////////////////////////////////
+	/// \struct CTriggerBits                                        hantek/types.h
+	/// \brief Trigger bits for 0x0c command.
+	struct CTriggerBits {
+		unsigned char triggerSource:2; ///< The trigger source, see Hantek::TriggerSource
+		unsigned char triggerSlope:1; ///< The trigger slope, see Dso::Slope
+		unsigned char reserved:5; ///< Unused bits
+	};
+
+	//////////////////////////////////////////////////////////////////////////////
 	/// \struct DBufferBits                                         hantek/types.h
 	/// \brief Buffer mode bits for 0x0d command.
 	struct DBufferBits {
 		unsigned char triggerPositionUsed:3; ///< See ::DTriggerPositionUsed
-		unsigned char bufferSize:3; ///< See ::BufferSizeId
+		unsigned char recordLength:3; ///< See ::RecordLengthId
 		unsigned char reserved:2; ///< Unused bits
 	};
 	
 	//////////////////////////////////////////////////////////////////////////////
+	/// \struct ESamplerateBits                                     hantek/types.h
+	/// \brief Samplerate bits for DSO-2250 0x0e command.
+	struct ESamplerateBits {
+		unsigned char fastRate:1; ///< false, if one channels uses all buffers
+		unsigned char samplerateFast:3; ///< samplerate value for fast sampling rates
+		unsigned char reserved:4; ///< Unused bits
+	};
+	
+	//////////////////////////////////////////////////////////////////////////////
 	/// \struct ETsrBits                                            hantek/types.h
-	/// \brief Trigger and samplerate bits for 0x0e command.
+	/// \brief Trigger and samplerate bits for DSO-5200/DSO-5200A 0x0e command.
 	struct ETsrBits {
 		unsigned char fastRate:1; ///< false, if one channels uses all buffers
 		unsigned char usedChannels:2; ///< Used channels, see Hantek::UsedChannels
 		unsigned char triggerSource:2; ///< The trigger source, see Hantek::TriggerSource
 		unsigned char triggerSlope:2; ///< The trigger slope, see Dso::Slope
 		unsigned char triggerPulse:1; ///< Pulses are causing trigger events
+	};
+	
+	//////////////////////////////////////////////////////////////////////////////
+	/// \struct FBuffer1Bits                                        hantek/types.h
+	/// \brief Buffer mode bits for 0x0f command (Byte 1).
+	struct FBuffer1Bits {
+		unsigned char triggerPositionUsed:2; ///< See ::DTriggerPositionUsed
+		unsigned char largeBuffer:1; ///< false, if ::RecordLengthId is ::RECORDLENGTHID_LARGE
+		unsigned char reserved:5; ///< Unused bits
+	};
+	
+	//////////////////////////////////////////////////////////////////////////////
+	/// \struct FBuffer2Bits                                        hantek/types.h
+	/// \brief Buffer mode bits for 0x0f command (Byte 2).
+	struct FBuffer2Bits {
+		unsigned char reserved:7; ///< Unused bits
+		unsigned char slowBuffer:1; ///< false, if ::RecordLengthId is ::RECORDLENGTHID_SMALL
 	};
 	
 	//////////////////////////////////////////////////////////////////////////////
@@ -742,12 +833,12 @@ namespace Hantek {
 	class BulkSetTriggerAndSamplerate : public Helper::DataArray<unsigned char> {
 		public:
 			BulkSetTriggerAndSamplerate();
-			BulkSetTriggerAndSamplerate(unsigned short int samplerateSlow, unsigned long int triggerPosition, unsigned char triggerSource = 0, unsigned char bufferSize = 0, unsigned char samplerateFast = 0, unsigned char usedChannels = 0, bool fastRate = false, unsigned char triggerSlope = 0);
+			BulkSetTriggerAndSamplerate(unsigned short int samplerateSlow, unsigned long int triggerPosition, unsigned char triggerSource = 0, unsigned char recordLength = 0, unsigned char samplerateFast = 0, unsigned char usedChannels = 0, bool fastRate = false, unsigned char triggerSlope = 0);
 			
 			unsigned char getTriggerSource();
 			void setTriggerSource(unsigned char value);
-			unsigned char getBufferSize();
-			void setBufferSize(unsigned char value);
+			unsigned char getRecordLength();
+			void setRecordLength(unsigned char value);
 			unsigned char getSamplerateFast();
 			void setSamplerateFast(unsigned char value);
 			unsigned char getUsedChannels();
@@ -855,8 +946,40 @@ namespace Hantek {
 	};
 	
 	//////////////////////////////////////////////////////////////////////////////
+	/// \class BulkSetFilter2250                                    hantek/types.h
+	/// \brief The DSO-5200/DSO-5200A BULK_BSETFILTER builder.
+	class BulkSetFilter2250 : public Helper::DataArray<unsigned char> {
+		public:
+			BulkSetFilter2250();
+			BulkSetFilter2250(bool channel1, bool channel2);
+			
+			bool getChannel(unsigned int channel);
+			void setChannel(unsigned int channel, bool filtered);
+		
+		private:
+			void init();
+	};
+	
+	//////////////////////////////////////////////////////////////////////////////
+	/// \class BulkSetTrigger2250                                   hantek/types.h
+	/// \brief The DSO-2250 BULK_CSETTRIGGERORSAMPLERATE builder.
+	class BulkSetTrigger2250 : public Helper::DataArray<unsigned char> {
+		public:
+			BulkSetTrigger2250();
+			BulkSetTrigger2250(unsigned char triggerSource, unsigned char triggerSlope);
+			
+			unsigned char getTriggerSource();
+			void setTriggerSource(unsigned char value);
+			unsigned char getTriggerSlope();
+			void setTriggerSlope(unsigned char slope);
+		
+		private:
+			void init();
+	};
+	
+	//////////////////////////////////////////////////////////////////////////////
 	/// \class BulkSetSamplerate5200                                hantek/types.h
-	/// \brief The BULK_SETSAMPLERATE5200 builder.
+	/// \brief The DSO-5200/DSO-5200A BULK_CSETTRIGGERORSAMPLERATE builder.
 	class BulkSetSamplerate5200 : public Helper::DataArray<unsigned char> {
 		public:
 			BulkSetSamplerate5200();
@@ -872,12 +995,27 @@ namespace Hantek {
 	};
 	
 	//////////////////////////////////////////////////////////////////////////////
+	/// \class BulkSetRecordLength2250                              hantek/types.h
+	/// \brief The DSO-2250 BULK_DSETBUFFER builder.
+	class BulkSetRecordLength2250 : public Helper::DataArray<unsigned char> {
+		public:
+			BulkSetRecordLength2250();
+			BulkSetRecordLength2250(unsigned char recordLength);
+			
+			unsigned char getRecordLength();
+			void setRecordLength(unsigned char value);
+		
+		private:
+			void init();
+	};
+	
+	//////////////////////////////////////////////////////////////////////////////
 	/// \class BulkSetBuffer5200                                    hantek/types.h
-	/// \brief The BULK_SETBUFFER5200 builder.
+	/// \brief The DSO-5200/DSO-5200A BULK_DSETBUFFER builder.
 	class BulkSetBuffer5200 : public Helper::DataArray<unsigned char> {
 		public:
 			BulkSetBuffer5200();
-			BulkSetBuffer5200(unsigned short int triggerPositionPre, unsigned short int triggerPositionPost, unsigned char usedPre = 0, unsigned char usedPost = 0, unsigned char bufferSize = 0);
+			BulkSetBuffer5200(unsigned short int triggerPositionPre, unsigned short int triggerPositionPost, unsigned char usedPre = 0, unsigned char usedPost = 0, unsigned char recordLength = 0);
 			
 			unsigned short int getTriggerPositionPre();
 			void setTriggerPositionPre(unsigned short int value);
@@ -887,8 +1025,27 @@ namespace Hantek {
 			void setUsedPre(unsigned char value);
 			unsigned char getUsedPost();
 			void setUsedPost(unsigned char value);
-			unsigned char getBufferSize();
-			void setBufferSize(unsigned char value);
+			unsigned char getRecordLength();
+			void setRecordLength(unsigned char value);
+		
+		private:
+			void init();
+	};
+	
+	//////////////////////////////////////////////////////////////////////////////
+	/// \class BulkSetSamplerate2250                                hantek/types.h
+	/// \brief The DSO-2250 BULK_ESETTRIGGERORSAMPLERATE builder.
+	class BulkSetSamplerate2250 : public Helper::DataArray<unsigned char> {
+		public:
+			BulkSetSamplerate2250();
+			BulkSetSamplerate2250(bool fastRate, unsigned char samplerateFast = 0, unsigned short int samplerateSlow = 0);
+			
+			bool getFastRate();
+			void setFastRate(bool fastRate);
+			unsigned char getSamplerateFast();
+			void setSamplerateFast(unsigned char value);
+			unsigned short int getSamplerateSlow();
+			void setSamplerateSlow(unsigned short int samplerate);
 		
 		private:
 			void init();
@@ -896,7 +1053,7 @@ namespace Hantek {
 	
 	//////////////////////////////////////////////////////////////////////////////
 	/// \class BulkSetTrigger5200                                   hantek/types.h
-	/// \brief The BULK_SETTRIGGER5200 builder.
+	/// \brief The DSO-5200/DSO-5200A BULK_ESETTRIGGERORSAMPLERATE builder.
 	class BulkSetTrigger5200 : public Helper::DataArray<unsigned char> {
 		public:
 			BulkSetTrigger5200();
@@ -912,6 +1069,31 @@ namespace Hantek {
 			void setTriggerSlope(unsigned char slope);
 			bool getTriggerPulse();
 			void setTriggerPulse(bool pulse);
+		
+		private:
+			void init();
+	};
+	
+	//////////////////////////////////////////////////////////////////////////////
+	/// \class BulkSetBuffer2250                                    hantek/types.h
+	/// \brief The DSO-2250 BULK_FSETBUFFER builder.
+	class BulkSetBuffer2250 : public Helper::DataArray<unsigned char> {
+		public:
+			BulkSetBuffer2250();
+			BulkSetBuffer2250(unsigned short int triggerPositionPre, unsigned short int triggerPositionPost, unsigned char usedPre = 0, unsigned char usedPost = 0, bool largeBuffer = false, bool slowBuffer = false);
+			
+			unsigned short int getTriggerPositionPre();
+			void setTriggerPositionPre(unsigned short int value);
+			unsigned short int getTriggerPositionPost();
+			void setTriggerPositionPost(unsigned short int value);
+			unsigned char getUsedPre();
+			void setUsedPre(unsigned char value);
+			unsigned char getUsedPost();
+			void setUsedPost(unsigned char value);
+			bool getLargeBuffer();
+			void setLargeBuffer(bool largeBuffer);
+			bool getSlowBuffer();
+			void setSlowBuffer(bool slowBuffer);
 		
 		private:
 			void init();
