@@ -583,6 +583,7 @@ namespace Hantek {
 				this->command[BULK_CSETTRIGGERORSAMPLERATE] = new BulkSetTrigger2250();
 				this->command[BULK_DSETBUFFER] = new BulkSetRecordLength2250();
 				this->command[BULK_ESETTRIGGERORSAMPLERATE] = new BulkSetSamplerate2250();
+				this->command[BULK_FSETBUFFER] = new BulkSetBuffer2250();
 				this->specification.command.bulk.setRecordLength = BULK_DSETBUFFER;
 				this->specification.command.bulk.setFilter = BULK_BSETFILTER;
 				this->specification.command.bulk.setSamplerate = BULK_ESETTRIGGERORSAMPLERATE;
@@ -593,6 +594,7 @@ namespace Hantek {
 				this->commandPending[BULK_CSETTRIGGERORSAMPLERATE] = true;
 				this->commandPending[BULK_DSETBUFFER] = true;
 				this->commandPending[BULK_ESETTRIGGERORSAMPLERATE] = true;
+				this->commandPending[BULK_FSETBUFFER] = true;
 				
 				break;
 			

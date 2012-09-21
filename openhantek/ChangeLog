@@ -144,6 +144,10 @@
 * Updated documentation with first DSO-2250 details
 * General documentation improvements
 
-2012-09-01 Oliver Haag  <oliver.haag@gmail.com>
+2012-09-20 Oliver Haag  <oliver.haag@gmail.com>
 * First attempt to add DSO-2250 support
 * More documentation updates
+
+2012-09-21 Oliver Haag  <oliver.haag@gmail.com>
+* Bugfix: Uninitialized bulk command pointer for BULK_FSETBUFFER
+* Bugfix: Slot setTriggerPosition wasn't renamed
