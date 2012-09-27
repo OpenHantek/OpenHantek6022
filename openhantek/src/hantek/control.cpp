@@ -42,15 +42,15 @@ namespace Hantek {
 	/// \param parent The parent widget.
 	Control::Control(QObject *parent) : DsoControl(parent) {
 		// Use DSO-2090 specification as default
-		this->specification.command.bulk.setRecordLength = BULK_SETTRIGGERANDSAMPLERATE;
-		this->specification.command.bulk.setFilter = BULK_SETFILTER;
-		this->specification.command.bulk.setGain = BULK_SETGAIN;
-		this->specification.command.bulk.setSamplerate = BULK_SETTRIGGERANDSAMPLERATE;
-		this->specification.command.bulk.setTrigger = BULK_SETTRIGGERANDSAMPLERATE;
-		this->specification.command.bulk.setPretrigger = BULK_SETTRIGGERANDSAMPLERATE;
-		this->specification.command.control.setOffset = CONTROL_SETOFFSET;
-		this->specification.command.control.setRelays = CONTROL_SETRELAYS;
-		this->specification.command.values.offsetLimits = VALUE_OFFSETLIMITS;
+		this->specification.command.bulk.setRecordLength = (BulkCode) -1;
+		this->specification.command.bulk.setFilter = (BulkCode) -1;
+		this->specification.command.bulk.setGain = (BulkCode) -1;
+		this->specification.command.bulk.setSamplerate = (BulkCode) -1;
+		this->specification.command.bulk.setTrigger = (BulkCode) -1;
+		this->specification.command.bulk.setPretrigger = (BulkCode) -1;
+		this->specification.command.control.setOffset = (ControlCode) -1;
+		this->specification.command.control.setRelays = (ControlCode) -1;
+		this->specification.command.values.offsetLimits = (ControlValue) -1;
 		this->specification.command.values.voltageLimits = (ControlValue) -1;
 		
 		this->specification.samplerate.single.base = 50e6;
@@ -551,12 +551,12 @@ namespace Hantek {
 		this->command[BULK_GETCAPTURESTATE] = new BulkGetCaptureState();
 		this->command[BULK_SETGAIN] = new BulkSetGain();
 		// Initialize the command versions to the ones used on the DSO-2090
-		this->specification.command.bulk.setRecordLength = BULK_SETTRIGGERANDSAMPLERATE;
-		this->specification.command.bulk.setFilter = BULK_SETFILTER;
+		this->specification.command.bulk.setRecordLength = (BulkCode) -1;
+		this->specification.command.bulk.setFilter = (BulkCode) -1;
 		this->specification.command.bulk.setGain = BULK_SETGAIN;
-		this->specification.command.bulk.setSamplerate = BULK_SETTRIGGERANDSAMPLERATE;
-		this->specification.command.bulk.setTrigger = BULK_SETTRIGGERANDSAMPLERATE;
-		this->specification.command.bulk.setPretrigger = BULK_SETTRIGGERANDSAMPLERATE;
+		this->specification.command.bulk.setSamplerate = (BulkCode) -1;
+		this->specification.command.bulk.setTrigger = (BulkCode) -1;
+		this->specification.command.bulk.setPretrigger = (BulkCode) -1;
 		this->specification.command.control.setOffset = CONTROL_SETOFFSET;
 		this->specification.command.control.setRelays = CONTROL_SETRELAYS;
 		this->specification.command.values.offsetLimits = VALUE_OFFSETLIMITS;
@@ -572,6 +572,11 @@ namespace Hantek {
 				// Instantiate additional commands for the DSO-2090
 				this->command[BULK_SETFILTER] = new BulkSetFilter();
 				this->command[BULK_SETTRIGGERANDSAMPLERATE] = new BulkSetTriggerAndSamplerate();
+				this->specification.command.bulk.setRecordLength = BULK_SETTRIGGERANDSAMPLERATE;
+				this->specification.command.bulk.setFilter = BULK_SETFILTER;
+				this->specification.command.bulk.setSamplerate = BULK_SETTRIGGERANDSAMPLERATE;
+				this->specification.command.bulk.setTrigger = BULK_SETTRIGGERANDSAMPLERATE;
+				this->specification.command.bulk.setPretrigger = BULK_SETTRIGGERANDSAMPLERATE;
 				// Initialize those as pending
 				this->commandPending[BULK_SETFILTER] = true;
 				this->commandPending[BULK_SETTRIGGERANDSAMPLERATE] = true;
