@@ -141,7 +141,7 @@ bool Exporter::doExport() {
 		stretchBase = (double) (paintDevice->width() - lineHeight * 6) / 10;
 		int channelCount = 0;
 		for(int channel = this->settings->scope.voltage.count() - 1; channel >= 0; channel--) {
-			if(this->settings->scope.voltage[channel].used || this->settings->scope.spectrum[channel].used) {
+			if((this->settings->scope.voltage[channel].used || this->settings->scope.spectrum[channel].used) && this->dataAnalyzer->data(channel)) {
 				channelCount++;
 				double top = (double) paintDevice->height() - channelCount * lineHeight;
 				
@@ -213,7 +213,7 @@ bool Exporter::doExport() {
 				case Dso::GRAPHFORMAT_TY:
 					// Add graphs for channels
 					for(int channel = 0 ; channel < this->settings->scope.voltage.count(); channel++) {
-						if(this->settings->scope.voltage[channel].used) {
+						if(this->settings->scope.voltage[channel].used && this->dataAnalyzer->data(channel)) {
 							painter.setPen(colorValues->voltage[channel]);
 							
 							// What's the horizontal distance between sampling points?
@@ -241,7 +241,7 @@ bool Exporter::doExport() {
 				
 					// Add spectrum graphs
 					for (int channel = 0; channel < this->settings->scope.spectrum.count(); channel++) {
-						if(this->settings->scope.spectrum[channel].used) {
+						if(this->settings->scope.spectrum[channel].used && this->dataAnalyzer->data(channel)) {
 							painter.setPen(colorValues->spectrum[channel]);
 							
 							// What's the horizontal distance between sampling points?
@@ -366,28 +366,30 @@ bool Exporter::doExport() {
 		QTextStream csvStream(&csvFile);
 		
 		for(int channel = 0 ; channel < this->settings->scope.voltage.count(); channel++) {
-			if(this->settings->scope.voltage[channel].used) {
-				// Start with channel name and the sample interval
-				csvStream << "\"" << this->settings->scope.voltage[channel].name << "\"," << this->dataAnalyzer->data(channel)->samples.voltage.interval;
+			if(this->dataAnalyzer->data(channel)) {
+				if(this->settings->scope.voltage[channel].used) {
+					// Start with channel name and the sample interval
+					csvStream << "\"" << this->settings->scope.voltage[channel].name << "\"," << this->dataAnalyzer->data(channel)->samples.voltage.interval;
+					
+					// And now all sample values in volts
+					for(unsigned int position = 0; position < this->dataAnalyzer->data(channel)->samples.voltage.count; position++)
+						csvStream << "," << this->dataAnalyzer->data(channel)->samples.voltage.sample[position];
+					
+					// Finally a newline
+					csvStream << '\n';
+				}
 				
-				// And now all sample values in volts
-				for(unsigned int position = 0; position < this->dataAnalyzer->data(channel)->samples.voltage.count; position++)
-					csvStream << "," << this->dataAnalyzer->data(channel)->samples.voltage.sample[position];
-				
-				// Finally a newline
-				csvStream << '\n';
-			}
-			
-			if(this->settings->scope.spectrum[channel].used) {
-				// Start with channel name and the sample interval
-				csvStream << "\"" << this->settings->scope.spectrum[channel].name << "\"," << this->dataAnalyzer->data(channel)->samples.spectrum.interval;
-				
-				// And now all magnitudes in dB
-				for(unsigned int position = 0; position < this->dataAnalyzer->data(channel)->samples.spectrum.count; position++)
-					csvStream << "," << this->dataAnalyzer->data(channel)->samples.spectrum.sample[position];
-				
-				// Finally a newline
-				csvStream << '\n';
+				if(this->settings->scope.spectrum[channel].used) {
+					// Start with channel name and the sample interval
+					csvStream << "\"" << this->settings->scope.spectrum[channel].name << "\"," << this->dataAnalyzer->data(channel)->samples.spectrum.interval;
+					
+					// And now all magnitudes in dB
+					for(unsigned int position = 0; position < this->dataAnalyzer->data(channel)->samples.spectrum.count; position++)
+						csvStream << "," << this->dataAnalyzer->data(channel)->samples.spectrum.sample[position];
+					
+					// Finally a newline
+					csvStream << '\n';
+				}
 			}
 		}
 		

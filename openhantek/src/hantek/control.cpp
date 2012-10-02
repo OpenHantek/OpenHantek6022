@@ -322,11 +322,8 @@ namespace Hantek {
 		// Save raw data to temporary buffer
 		unsigned int dataCount = this->specification.recordLengths[this->settings.recordLengthId] * HANTEK_CHANNELS;
 		unsigned int dataLength = dataCount;
-		bool using10Bits = false;
-		if(this->device->getModel() == MODEL_DSO5200 || this->device->getModel() == MODEL_DSO5200A) {
-			using10Bits = true;
+		if(this->specification.sampleSize > 8)
 			dataLength *= 2;
-		}
 		
 		unsigned char data[dataLength];
 		errorCode = this->device->bulkReadMulti(data, dataLength);
@@ -337,44 +334,21 @@ namespace Hantek {
 		if(process) {
 			// How much data did we really receive?
 			dataLength = errorCode;
-			if(using10Bits)
+			if(this->specification.sampleSize > 8)
 				dataCount = dataLength / 2;
 			else
 				dataCount = dataLength;
 			
 			this->samplesMutex.lock();
 			
-			// Get oscilloscope settings
-			bool fastRate = false;
-			UsedChannels usedChannels = USED_NONE;
-			switch(this->specification.command.bulk.setTrigger) {
-				case BULK_SETTRIGGERANDSAMPLERATE:
-					fastRate = ((BulkSetTriggerAndSamplerate *) this->command[BULK_SETTRIGGERANDSAMPLERATE])->getFastRate();
-					usedChannels = (UsedChannels) ((BulkSetTriggerAndSamplerate *) this->command[BULK_SETTRIGGERANDSAMPLERATE])->getUsedChannels();
-					break;
-				
-				case BULK_CSETTRIGGERORSAMPLERATE:
-					fastRate = ((BulkSetTrigger5200 *) this->command[BULK_ESETTRIGGERORSAMPLERATE])->getFastRate();
-					usedChannels = (UsedChannels) ((BulkSetTrigger5200 *) this->command[BULK_ESETTRIGGERORSAMPLERATE])->getUsedChannels();
-					break;
-				
-				case BULK_ESETTRIGGERORSAMPLERATE:
-					fastRate = ((BulkSetTrigger5200 *) this->command[BULK_ESETTRIGGERORSAMPLERATE])->getFastRate();
-					usedChannels = (UsedChannels) ((BulkSetTrigger5200 *) this->command[BULK_ESETTRIGGERORSAMPLERATE])->getUsedChannels();
-					break;
-				
-				default:
-					break;
-			}
-			
 			// Convert channel data
-			if(fastRate) {
+			if(this->settings.samplerate.limits == &this->specification.samplerate.single) {
 				// Fast rate mode, one channel is using all buffers
-				int channel;
-				if(usedChannels == USED_CH1)
-					channel = 0;
-				else
-					channel = 1;
+				int channel = 0;
+				for(; channel < HANTEK_CHANNELS; ++channel) {
+					if(this->settings.voltage[0].used)
+						break;
+				}
 				
 				// Clear unused channels
 				for(int channelCounter = 0; channelCounter < HANTEK_CHANNELS; channelCounter++)
@@ -395,9 +369,11 @@ namespace Hantek {
 					
 					// Convert data from the oscilloscope and write it into the sample buffer
 					unsigned int bufferPosition = (this->settings.trigger.point + 1) * 2;
-					if(using10Bits) {
-						// Additional 2 most significant bits after the normal data
+					if(this->specification.sampleSize > 8) {
+						// Additional most significant bits after the normal data
 						unsigned int extraBitsPosition; // Track the position of the extra bits in the additional byte
+						unsigned int extraBitsSize = this->specification.sampleSize - 8; // Number of extra bits
+						unsigned short int extraBitsMask = (0x00ff << extraBitsSize) & 0xff00; // Mask for extra bits extraction
 						
 						for(unsigned int realPosition = 0; realPosition < dataCount; realPosition++, bufferPosition++) {
 							if(bufferPosition >= dataCount)
@@ -405,7 +381,7 @@ namespace Hantek {
 							
 							extraBitsPosition = bufferPosition % HANTEK_CHANNELS;
 							
-							this->samples[channel][realPosition] = ((double) ((unsigned short int) data[bufferPosition] + (((unsigned short int) data[dataCount + bufferPosition - extraBitsPosition] << (8 - (HANTEK_CHANNELS - 1 - extraBitsPosition) * 2)) & 0x0200)) / this->specification.voltageLimit[HANTEK_CHANNELS - 1 - extraBitsPosition][this->settings.voltage[channel].gain] - this->settings.voltage[channel].offsetReal) * this->specification.gainSteps[this->settings.voltage[channel].gain];
+							this->samples[channel][realPosition] = ((double) ((unsigned short int) data[bufferPosition] + (((unsigned short int) data[dataCount + bufferPosition - extraBitsPosition] << (8 - (HANTEK_CHANNELS - 1 - extraBitsPosition) * extraBitsSize)) & extraBitsMask)) / this->specification.voltageLimit[channel][this->settings.voltage[channel].gain] - this->settings.voltage[channel].offsetReal) * this->specification.gainSteps[this->settings.voltage[channel].gain];
 						}
 					}
 					else {
@@ -423,7 +399,7 @@ namespace Hantek {
 				unsigned int channelDataCount = dataCount / HANTEK_CHANNELS;
 				
 				for(int channel = 0; channel < HANTEK_CHANNELS; channel++) {
-					if(usedChannels == USED_CH1CH2 || channel == usedChannels) {
+					if(this->settings.voltage[channel].used) {
 						// Reallocate memory for samples if the sample count has changed
 						if(!this->samples[channel] || this->samplesSize[channel] != channelDataCount) {
 							if(this->samples[channel])
@@ -434,13 +410,17 @@ namespace Hantek {
 						
 						// Convert data from the oscilloscope and write it into the sample buffer
 						unsigned int bufferPosition = (this->settings.trigger.point + 1) * 2;
-						if(using10Bits) {
-							// Additional 2 most significant bits after the normal data
+						if(this->specification.sampleSize > 8) {
+							// Additional most significant bits after the normal data
+							unsigned int extraBitsSize = this->specification.sampleSize - 8; // Number of extra bits
+							unsigned short int extraBitsMask = (0x00ff << extraBitsSize) & 0xff00; // Mask for extra bits extraction
+							unsigned int extraBitsIndex = 8 - channel * 2; // Bit position offset for extra bits extraction
+							
 							for(unsigned int realPosition = 0; realPosition < channelDataCount; realPosition++, bufferPosition += 2) {
 								if(bufferPosition >= dataCount)
 									bufferPosition %= dataCount;
 								
-								this->samples[channel][realPosition] = ((double) ((unsigned short int) data[bufferPosition + HANTEK_CHANNELS - 1 - channel] + (((unsigned short int) data[dataCount + bufferPosition] << (8 - channel * 2)) & 0x0200)) / this->specification.voltageLimit[channel][this->settings.voltage[channel].gain] - this->settings.voltage[channel].offsetReal) * this->specification.gainSteps[this->settings.voltage[channel].gain];
+								this->samples[channel][realPosition] = ((double) ((unsigned short int) data[bufferPosition + HANTEK_CHANNELS - 1 - channel] + (((unsigned short int) data[dataCount + bufferPosition] << extraBitsIndex) & extraBitsMask)) / this->specification.voltageLimit[channel][this->settings.voltage[channel].gain] - this->settings.voltage[channel].offsetReal) * this->specification.gainSteps[this->settings.voltage[channel].gain];
 							}
 						}
 						else {
@@ -659,6 +639,7 @@ namespace Hantek {
 					<<  368 <<  454 <<  908 <<  368 <<  454 <<  908 <<  368 <<  454 <<  908;
 				this->specification.gainIndex
 					<<    1 <<    0 <<    0 <<    1 <<    0 <<    0 <<    1 <<    0 <<    0;
+				this->specification.sampleSize = 10;
 				break;
 			
 			case MODEL_DSO2250:
@@ -675,6 +656,7 @@ namespace Hantek {
 					<<  255 <<  255 <<  255 <<  255 <<  255 <<  255 <<  255 <<  255 <<  255;
 				this->specification.gainIndex
 					<<    0 <<    1 <<    2 <<    0 <<    1 <<    2 <<    0 <<    1 <<    2;
+				this->specification.sampleSize = 8;
 				break;
 			
 			case MODEL_DSO2150:
@@ -691,6 +673,7 @@ namespace Hantek {
 					<<  255 <<  255 <<  255 <<  255 <<  255 <<  255 <<  255 <<  255 <<  255;
 				this->specification.gainIndex
 					<<    0 <<    1 <<    2 <<    0 <<    1 <<    2 <<    0 <<    1 <<    2;
+				this->specification.sampleSize = 8;
 				break;
 			
 			default:
@@ -707,6 +690,7 @@ namespace Hantek {
 					<<  255 <<  255 <<  255 <<  255 <<  255 <<  255 <<  255 <<  255 <<  255;
 				this->specification.gainIndex
 					<<    0 <<    1 <<    2 <<    0 <<    1 <<    2 <<    0 <<    1 <<    2;
+				this->specification.sampleSize = 8;
 				break;
 		}
 		this->settings.samplerate.limits = &(this->specification.samplerate.single);
@@ -855,21 +839,13 @@ namespace Hantek {
 		if(channel >= HANTEK_CHANNELS)
 			return Dso::ERROR_PARAMETER;
 		
-		unsigned char usedChannels = USED_CH1;
-		
+		// Channel filtering commands
 		switch(this->specification.command.bulk.setFilter) {
 			case BULK_SETFILTER: {
 				// SetFilter bulk command for channel filter (used has to be inverted!)
 				BulkSetFilter *commandSetFilter = (BulkSetFilter *) this->command[BULK_SETFILTER];
 				commandSetFilter->setChannel(channel, !used);
 				this->commandPending[BULK_SETFILTER] = true;
-				
-				if(!commandSetFilter->getChannel(1)) {
-					if(commandSetFilter->getChannel(0))
-						usedChannels = USED_CH2;
-					else
-						usedChannels = USED_CH1CH2;
-				}
 				
 				break;
 			}
@@ -885,7 +861,26 @@ namespace Hantek {
 				return Dso::ERROR_UNSUPPORTED;
 		}
 		
+		// Update settings
+		this->settings.voltage[channel].used = used;
+		unsigned int channelCount = 0;
+		for(int channelCounter = 0; channelCounter < HANTEK_CHANNELS; ++channelCounter) {
+			if(this->settings.voltage[channelCounter].used)
+				++channelCount;
+		}
+		this->settings.usedChannels = channelCount;
+		
+		// Additional UsedChannels field for all models except DSO-2250
 		if(this->specification.command.bulk.setTrigger == BULK_SETTRIGGERANDSAMPLERATE || this->specification.command.bulk.setTrigger == BULK_ESETTRIGGERORSAMPLERATE) {
+			unsigned char usedChannels = USED_CH1;
+			
+			if(this->settings.voltage[1].used) {
+				if(this->settings.voltage[0].used)
+					usedChannels = USED_CH1CH2;
+				else
+					usedChannels = USED_CH2;
+			}
+			
 			switch(this->specification.command.bulk.setTrigger) {
 				case BULK_SETTRIGGERANDSAMPLERATE: {
 					// SetTriggerAndSamplerate bulk command for trigger source
@@ -1119,9 +1114,7 @@ namespace Hantek {
 		switch(this->specification.command.bulk.setTrigger) {
 			case BULK_SETTRIGGERANDSAMPLERATE: {
 				// SetTriggerAndSamplerate bulk command for trigger slope
-				BulkSetTriggerAndSamplerate *commandSetTriggerAndSamplerate = (BulkSetTriggerAndSamplerate *) this->command[BULK_SETTRIGGERANDSAMPLERATE];
-				
-				commandSetTriggerAndSamplerate->setTriggerSlope(slope);
+				((BulkSetTriggerAndSamplerate *) this->command[BULK_SETTRIGGERANDSAMPLERATE])->setTriggerSlope(slope);
 				this->commandPending[BULK_SETTRIGGERANDSAMPLERATE] = true;
 				break;
 			}
@@ -1154,13 +1147,12 @@ namespace Hantek {
 		
 		// All trigger positions are measured in samples
 		unsigned long int positionSamples = position * this->settings.samplerate.current;
+		// Fast rate mode uses both channels
+		if(this->settings.samplerate.limits == &this->specification.samplerate.single)
+			positionSamples /= HANTEK_CHANNELS;
 		
 		switch(this->specification.command.bulk.setPretrigger) {
 			case BULK_SETTRIGGERANDSAMPLERATE: {
-				// Fast rate mode uses both channels
-				if(((BulkSetTriggerAndSamplerate *) this->command[BULK_SETTRIGGERANDSAMPLERATE])->getFastRate())
-					positionSamples /= HANTEK_CHANNELS;
-				
 				// Calculate the position value (Start point depending on record length)
 				unsigned long int position = 0x7ffff - this->specification.recordLengths[this->settings.recordLengthId] + positionSamples;
 				
@@ -1171,10 +1163,6 @@ namespace Hantek {
 				break;
 			}
 			case BULK_FSETBUFFER: {
-				// Fast rate mode uses both channels
-				if(((BulkSetSamplerate2250 *) this->command[BULK_ESETTRIGGERORSAMPLERATE])->getFastRate())
-					positionSamples /= HANTEK_CHANNELS;
-				
 				// Calculate the position values (Inverse, maximum is 0xffff)
 				unsigned short int positionPre = 0xffff - this->specification.recordLengths[this->settings.recordLengthId] + positionSamples;
 				unsigned short int positionPost = 0xffff - positionSamples;
@@ -1188,10 +1176,6 @@ namespace Hantek {
 				break;
 			}
 			case BULK_ESETTRIGGERORSAMPLERATE: {
-				// Fast rate mode uses both channels
-				if(((BulkSetTrigger5200 *) this->command[BULK_ESETTRIGGERORSAMPLERATE])->getFastRate())
-					positionSamples /= HANTEK_CHANNELS;
-				
 				// Calculate the position values (Inverse, maximum is 0xffff)
 				unsigned short int positionPre = 0xffff - this->specification.recordLengths[this->settings.recordLengthId] + positionSamples;
 				unsigned short int positionPost = 0xffff - positionSamples;

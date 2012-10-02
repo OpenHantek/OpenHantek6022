@@ -142,7 +142,7 @@ void GlGenerator::generateGraphs() {
 			for(int mode = Dso::CHANNELMODE_VOLTAGE; mode < Dso::CHANNELMODE_COUNT; mode++) {
 				for(int channel = 0; channel < this->settings->scope.voltage.count(); channel++) {
 					// Check if this channel is used and available at the data analyzer
-					if(((mode == Dso::CHANNELMODE_VOLTAGE) ? this->settings->scope.voltage[channel].used : this->settings->scope.spectrum[channel].used) && this->dataAnalyzer->data(channel)->samples.voltage.sample) {
+					if(((mode == Dso::CHANNELMODE_VOLTAGE) ? this->settings->scope.voltage[channel].used : this->settings->scope.spectrum[channel].used) && this->dataAnalyzer->data(channel) && this->dataAnalyzer->data(channel)->samples.voltage.sample) {
 						// Check if the sample count has changed
 						unsigned int neededSize = ((mode == Dso::CHANNELMODE_VOLTAGE) ? this->dataAnalyzer->data(channel)->samples.voltage.count : this->dataAnalyzer->data(channel)->samples.spectrum.count) * 2;
 						for(int index = 0; index < this->digitalPhosphorDepth; index++) {
@@ -190,7 +190,7 @@ void GlGenerator::generateGraphs() {
 		case Dso::GRAPHFORMAT_XY:
 			for(int channel = 0; channel < this->settings->scope.voltage.count(); channel ++) {
 				// For even channel numbers check if this channel is used and this and the following channel are available at the data analyzer
-				if(channel % 2 == 0 && channel + 1 < this->settings->scope.voltage.count() && this->settings->scope.voltage[channel].used && this->dataAnalyzer->data(channel)->samples.voltage.sample && this->dataAnalyzer->data(channel + 1)->samples.voltage.sample) {
+				if(channel % 2 == 0 && channel + 1 < this->settings->scope.voltage.count() && this->settings->scope.voltage[channel].used && this->dataAnalyzer->data(channel) && this->dataAnalyzer->data(channel)->samples.voltage.sample && this->dataAnalyzer->data(channel + 1) && this->dataAnalyzer->data(channel + 1)->samples.voltage.sample) {
 					// Check if the sample count has changed
 					unsigned int neededSize = qMin(this->dataAnalyzer->data(channel)->samples.voltage.count, this->dataAnalyzer->data(channel + 1)->samples.voltage.count) * 2;
 					for(int index = 0; index < this->digitalPhosphorDepth; index++) {

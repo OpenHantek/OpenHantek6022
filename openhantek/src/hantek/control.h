@@ -117,6 +117,7 @@ namespace Hantek {
 		QList<unsigned long int> recordLengths; ///< Available record lengths, ULONG_MAX means rolling
 		QList<unsigned long int> bufferDividers; ///< Samplerate dividers for record lengths
 		QList<double> gainSteps; ///< Available voltage steps in V/screenheight
+		unsigned char sampleSize; ///< Number of bits per sample
 		
 		// Calibration
 		/// The sample values at the top of the screen

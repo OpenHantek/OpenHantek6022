@@ -482,7 +482,7 @@ void DsoWidget::updateZoom(bool enabled) {
 /// \brief Prints analyzed data.
 void DsoWidget::dataAnalyzed() {
 	for(int channel = 0; channel < this->settings->scope.voltage.count(); channel++) {
-		if(this->settings->scope.voltage[channel].used) {			
+		if(this->settings->scope.voltage[channel].used && this->dataAnalyzer->data(channel)) {			
 			// Amplitude string representation (4 significant digits)
 			this->measurementAmplitudeLabel[channel]->setText(Helper::valueToString(this->dataAnalyzer->data(channel)->amplitude, Helper::UNIT_VOLTS, 4));
 			// Frequency string representation (5 significant digits)

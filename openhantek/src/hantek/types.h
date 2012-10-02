@@ -300,7 +300,7 @@ namespace Hantek {
 		///     <tr>
 		///       <td>0x0b</td>
 		///       <td>0x00</td>
-		///       <td>::UsedChannels</td>
+		///       <td>FilterBits</td>
 		///       <td>0x00</td>
 		///     </tr>
 		///   </table>

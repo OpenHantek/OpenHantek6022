@@ -151,3 +151,10 @@
 2012-09-21 Oliver Haag  <oliver.haag@gmail.com>
 * Bugfix: Uninitialized bulk command pointer for BULK_FSETBUFFER
 * Bugfix: Slot setTriggerPosition wasn't renamed
+
+2012-10-01 Oliver Haag  <oliver.haag@gmail.com>
+* Bugfix: Wrong bit mask for extra bits in Hantek::Control::getData
+
+2012-10-02 Oliver Haag  <oliver.haag@gmail.com>
+* Bugfix: Hantek::Control redesign missing for used channels
+* Bugfix: Always check DataAnalyzer::data for null pointer
