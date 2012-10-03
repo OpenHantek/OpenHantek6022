@@ -199,11 +199,16 @@ namespace Hantek {
 #endif
 			switch(captureState) {
 				case CAPTURE_READY:
+				case CAPTURE_READY2250:
 				case CAPTURE_READY5200:
 					// Get data and process it, if we're still sampling
 					errorCode = this->getSamples(samplingStarted);
 					if(errorCode < 0)
 						qWarning("Getting sample data failed: %s", Helper::libUsbErrorString(errorCode).toLocal8Bit().data());
+#ifdef DEBUG
+					else
+						qDebug("Received %d B of sampling data", errorCode);
+#endif
 					
 					// Check if we're in single trigger mode
 					if(this->settings.trigger.mode == Dso::TRIGGERMODE_SINGLE && samplingStarted)
@@ -310,7 +315,7 @@ namespace Hantek {
 	}
 	
 	/// \brief Gets sample data from the oscilloscope and converts it.
-	/// \return 0 on success, libusb error code on error.
+	/// \return sample count on success, libusb error code on error.
 	int Control::getSamples(bool process) {
 		int errorCode;
 		
@@ -445,7 +450,7 @@ namespace Hantek {
 			emit samplesAvailable(&(this->samples), &(this->samplesSize), this->settings.samplerate.current, &(this->samplesMutex));
 		}
 		
-		return 0;
+		return errorCode;
 	}
 	
 	/// \brief Sets the size of the sample buffer without updating dependencies.

@@ -158,3 +158,6 @@
 2012-10-02 Oliver Haag  <oliver.haag@gmail.com>
 * Bugfix: Hantek::Control redesign missing for used channels
 * Bugfix: Always check DataAnalyzer::data for null pointer
+
+2012-10-03 Oliver Haag  <oliver.haag@gmail.com>
+* Bugfix: Add CAPTURE_READY2250 for the DSO-2250

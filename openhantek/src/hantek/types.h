@@ -674,10 +674,11 @@ namespace Hantek {
 	/// \enum CaptureState                                          hantek/types.h
 	/// \brief The different capture states which the oscilloscope returns.
 	enum CaptureState {
-		CAPTURE_WAITING = 0,
-		CAPTURE_SAMPLING = 1,
-		CAPTURE_READY = 2,
-		CAPTURE_READY5200 = 7
+		CAPTURE_WAITING = 0, ///< The scope is waiting for a trigger event
+		CAPTURE_SAMPLING = 1, ///< The scope is sampling data after triggering
+		CAPTURE_READY = 2, ///< Sampling data is available (DSO-2090/DSO-2150)
+		CAPTURE_READY2250 = 3, ///< Sampling data is available (DSO-2250)
+		CAPTURE_READY5200 = 7 ///< Sampling data is available (DSO-5200/DSO-5200A)
 	};
 	
 	//////////////////////////////////////////////////////////////////////////////
