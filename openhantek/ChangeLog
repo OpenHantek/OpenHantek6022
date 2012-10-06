@@ -161,3 +161,6 @@
 
 2012-10-03 Oliver Haag  <oliver.haag@gmail.com>
 * Bugfix: Add CAPTURE_READY2250 for the DSO-2250
+
+2012-10-07 Oliver Haag  <oliver.haag@gmail.com>
+* Ignore errors after first packet was received by Hantek::Device::bulkReadMulti

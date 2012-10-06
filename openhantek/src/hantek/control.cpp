@@ -193,8 +193,10 @@ namespace Hantek {
 			int lastCaptureState = captureState;
 #endif
 			captureState = this->getCaptureState();
+			if(captureState < 0)
+				qWarning("Getting capture state failed: %s", Helper::libUsbErrorString(captureState).toLocal8Bit().data());
 #ifdef DEBUG
-			if(captureState != lastCaptureState)
+			else if(captureState != lastCaptureState)
 				qDebug("Capture state changed to %d", captureState);
 #endif
 			switch(captureState) {
@@ -271,8 +273,6 @@ namespace Hantek {
 				case CAPTURE_SAMPLING:
 					break;
 				default:
-					if(captureState < 0)
-						qWarning("Getting capture state failed: %s", Helper::libUsbErrorString(captureState).toLocal8Bit().data());
 					break;
 			}
 		}

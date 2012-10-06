@@ -397,10 +397,10 @@ namespace Hantek {
 				received += errorCode;
 		}
 		
-		if(errorCode < 0)
-			return errorCode;
-		else
+		if(received > 0)
 			return received;
+		else
+			return errorCode;
 	}
 	
 	/// \brief Control transfer to the oscilloscope.
