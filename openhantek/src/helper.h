@@ -93,7 +93,7 @@ namespace Helper {
 	/// \param size Size of the data array.
 	template <class T> DataArray<T>::DataArray(unsigned int size) {
 		this->array = new T[size];
-		for(unsigned int index = 0; index < size; index++)
+		for(unsigned int index = 0; index < size; ++index)
 			this->array[index] = 0;
 		this->size = size;
 	}

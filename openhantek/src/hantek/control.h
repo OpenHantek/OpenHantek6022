@@ -133,7 +133,6 @@ namespace Hantek {
 	/// \brief Stores the current samplerate settings of the device.
 	struct ControlSettingsSamplerate {
 		ControlSamplerateLimits *limits; ///< The samplerate limits
-		//unsigned long int divider; ///< The fixed samplerate divider
 		unsigned long int downsampling; ///< The variable downsampling factor
 		double current; ///< The current samplerate
 	};
@@ -144,7 +143,7 @@ namespace Hantek {
 	struct ControlSettingsTrigger {
 		double level[HANTEK_CHANNELS]; ///< The trigger level for each channel in V
 		double position; ///< The current pretrigger position
-		unsigned int point; ///< The trigger point value
+		unsigned int point; ///< The trigger position in Hantek coding
 		Dso::TriggerMode mode; ///< The trigger mode
 		Dso::Slope slope; ///< The trigger slope
 		bool special; ///< true, if the trigger source is special

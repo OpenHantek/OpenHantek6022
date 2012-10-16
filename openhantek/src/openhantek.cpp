@@ -133,7 +133,7 @@ OpenHantekMainWindow::OpenHantekMainWindow(QWidget *parent, Qt::WindowFlags flag
 	// Set up the oscilloscope
 	this->dsoControl->connectDevice();
 	
-	for(unsigned int channel = 0; channel < this->settings->scope.physicalChannels; channel++) {
+	for(unsigned int channel = 0; channel < this->settings->scope.physicalChannels; ++channel) {
 		this->dsoControl->setCoupling(channel, (Dso::Coupling) this->settings->scope.voltage[channel].misc);
 		this->updateVoltageGain(channel);
 		this->updateOffset(channel);
@@ -489,7 +489,7 @@ void OpenHantekMainWindow::applySettings() {
 	
 	QList<int> dockedWindows[2]; // Docks docked on the sides of the main window
 	
-	for(int dockId = 0; dockId < docks.size(); dockId++) {
+	for(int dockId = 0; dockId < docks.size(); ++dockId) {
 		docks[dockId]->setVisible(dockSettings[dockId]->visible);
 		if(!dockSettings[dockId]->position.isNull()) {
 			if(dockSettings[dockId]->floating) {
@@ -502,7 +502,7 @@ void OpenHantekMainWindow::applySettings() {
 				int side = (dockSettings[dockId]->position.x() < this->settings->options.window.size.width() / 2) ? 0 : 1;
 				int index = 0;
 				while(index < dockedWindows[side].size() && dockSettings[dockedWindows[side][index]]->position.y() <= dockSettings[dockId]->position.y())
-					index++;
+					++index;
 				dockedWindows[side].insert(index, dockId);
 			}
 		}
@@ -512,9 +512,9 @@ void OpenHantekMainWindow::applySettings() {
 	}
 	
 	// Put the docked docking windows into the main window
-	for(int position = 0; position < dockedWindows[0].size(); position++)
+	for(int position = 0; position < dockedWindows[0].size(); ++position)
 		this->addDockWidget(Qt::LeftDockWidgetArea, docks[dockedWindows[0][position]]);
-	for(int position = 0; position < dockedWindows[1].size(); position++)
+	for(int position = 0; position < dockedWindows[1].size(); ++position)
 		this->addDockWidget(Qt::RightDockWidgetArea, docks[dockedWindows[1][position]]);
 	
 	// Toolbars
@@ -530,7 +530,7 @@ void OpenHantekMainWindow::applySettings() {
 	
 	QList<int> dockedToolbars; // Docks docked on the sides of the main window
 	
-	for(int toolbarId = 0; toolbarId < toolbars.size(); toolbarId++) {
+	for(int toolbarId = 0; toolbarId < toolbars.size(); ++toolbarId) {
 		toolbars[toolbarId]->setVisible(toolbarSettings[toolbarId]->visible);
 		//toolbars[toolbarId]->setFloating(toolbarSettings[toolbarId]->floating); // setFloating missing, a bug in Qt?
 		if(!toolbarSettings[toolbarId]->position.isNull() && !toolbarSettings[toolbarId]->floating) {
@@ -541,7 +541,7 @@ void OpenHantekMainWindow::applySettings() {
 				// Check in which order the toolbars where placed
 				int index = 0;
 				while(index < dockedToolbars.size() && toolbarSettings[dockedToolbars[index]]->position.x() <= toolbarSettings[toolbarId]->position.x())
-					index++;
+					++index;
 				dockedToolbars.insert(index, toolbarId);
 			}
 		}
@@ -551,7 +551,7 @@ void OpenHantekMainWindow::applySettings() {
 	}
 	
 	// Put the docked toolbars into the main window
-	for(int position = 0; position < dockedToolbars.size(); position++)
+	for(int position = 0; position < dockedToolbars.size(); ++position)
 		this->addToolBar(toolbars[dockedToolbars[position]]);
 }
 
@@ -574,7 +574,7 @@ void OpenHantekMainWindow::updateSettings() {
 	dockSettings.append(&(this->settings->options.window.dock.trigger));
 	dockSettings.append(&(this->settings->options.window.dock.voltage));
 	
-	for(int dockId = 0; dockId < docks.size(); dockId++) {
+	for(int dockId = 0; dockId < docks.size(); ++dockId) {
 		dockSettings[dockId]->floating = docks[dockId]->isFloating();
 		dockSettings[dockId]->position = docks[dockId]->pos();
 		dockSettings[dockId]->visible = docks[dockId]->isVisible();
@@ -591,7 +591,7 @@ void OpenHantekMainWindow::updateSettings() {
 	toolbarSettings.append(&(this->settings->options.window.toolbar.oscilloscope));
 	toolbarSettings.append(&(this->settings->options.window.toolbar.view));
 	
-	for(int toolbarId = 0; toolbarId < toolbars.size(); toolbarId++) {
+	for(int toolbarId = 0; toolbarId < toolbars.size(); ++toolbarId) {
 		toolbarSettings[toolbarId]->floating = toolbars[toolbarId]->isFloating();
 		toolbarSettings[toolbarId]->position = toolbars[toolbarId]->pos();
 		toolbarSettings[toolbarId]->visible = toolbars[toolbarId]->isVisible();
@@ -636,7 +636,7 @@ void OpenHantekMainWindow::updateUsed(unsigned int channel) {
 		this->dsoControl->setChannelUsed(channel, mathUsed | this->settings->scope.voltage[channel].used | this->settings->scope.spectrum[channel].used);
 	// Math channel, update all channels
 	else if(channel == this->settings->scope.physicalChannels) {
-		for(unsigned int channelCounter = 0; channelCounter < this->settings->scope.physicalChannels; channelCounter++)
+		for(unsigned int channelCounter = 0; channelCounter < this->settings->scope.physicalChannels; ++channelCounter)
 			this->dsoControl->setChannelUsed(channelCounter, mathUsed | this->settings->scope.voltage[channelCounter].used | this->settings->scope.spectrum[channelCounter].used);
 	}
 }

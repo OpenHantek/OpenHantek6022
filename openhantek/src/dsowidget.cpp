@@ -66,7 +66,7 @@ DsoWidget::DsoWidget(DsoSettings *settings, DataAnalyzer *dataAnalyzer, QWidget 
 	
 	// The offset sliders for all possible channels
 	this->offsetSlider = new LevelSlider(Qt::RightArrow);
-	for(int channel = 0; channel < this->settings->scope.voltage.count(); channel++) {
+	for(int channel = 0; channel < this->settings->scope.voltage.count(); ++channel) {
 		this->offsetSlider->addSlider(this->settings->scope.voltage[channel].name, channel);
 		this->offsetSlider->setColor(channel, this->settings->view.color.screen.voltage[channel]);
 		this->offsetSlider->setLimits(channel, -DIVS_VOLTAGE / 2, DIVS_VOLTAGE / 2);
@@ -74,7 +74,7 @@ DsoWidget::DsoWidget(DsoSettings *settings, DataAnalyzer *dataAnalyzer, QWidget 
 		this->offsetSlider->setValue(channel, this->settings->scope.voltage[channel].offset);
 		this->offsetSlider->setVisible(channel, this->settings->scope.voltage[channel].used);
 	}
-	for(int channel = 0; channel < this->settings->scope.voltage.count(); channel++) {
+	for(int channel = 0; channel < this->settings->scope.voltage.count(); ++channel) {
 		this->offsetSlider->addSlider(this->settings->scope.spectrum[channel].name, this->settings->scope.voltage.count() + channel);
 		this->offsetSlider->setColor(this->settings->scope.voltage.count() + channel, this->settings->view.color.screen.spectrum[channel]);
 		this->offsetSlider->setLimits(this->settings->scope.voltage.count() + channel, -DIVS_VOLTAGE / 2, DIVS_VOLTAGE / 2);
@@ -93,7 +93,7 @@ DsoWidget::DsoWidget(DsoSettings *settings, DataAnalyzer *dataAnalyzer, QWidget 
 	
 	// The sliders for the trigger levels
 	this->triggerLevelSlider = new LevelSlider(Qt::LeftArrow);
-	for(int channel = 0; channel < (int) this->settings->scope.physicalChannels; channel++) {
+	for(int channel = 0; channel < (int) this->settings->scope.physicalChannels; ++channel) {
 		this->triggerLevelSlider->addSlider(channel);
 		this->triggerLevelSlider->setColor(channel, (!this->settings->scope.trigger.special && channel == (int) this->settings->scope.trigger.source) ? this->settings->view.color.screen.voltage[channel] : this->settings->view.color.screen.voltage[channel].darker());
 		this->adaptTriggerLevelSlider(channel);
@@ -103,7 +103,7 @@ DsoWidget::DsoWidget(DsoSettings *settings, DataAnalyzer *dataAnalyzer, QWidget 
 	
 	// The marker slider
 	this->markerSlider = new LevelSlider(Qt::UpArrow);
-	for(int marker = 0; marker < MARKER_COUNT; marker++) {
+	for(int marker = 0; marker < MARKER_COUNT; ++marker) {
 		this->markerSlider->addSlider(QString::number(marker + 1), marker);
 		this->markerSlider->setLimits(marker, -DIVS_TIME / 2, DIVS_TIME / 2);
 		this->markerSlider->setStep(marker, 0.2);
@@ -165,7 +165,7 @@ DsoWidget::DsoWidget(DsoSettings *settings, DataAnalyzer *dataAnalyzer, QWidget 
 	this->measurementLayout->setColumnStretch(3, 2);
 	this->measurementLayout->setColumnStretch(4, 3);
 	this->measurementLayout->setColumnStretch(5, 3);
-	for(int channel = 0; channel < this->settings->scope.voltage.count(); channel++) {
+	for(int channel = 0; channel < this->settings->scope.voltage.count(); ++channel) {
 		tablePalette.setColor(QPalette::WindowText, this->settings->view.color.screen.voltage[channel]);
 		this->measurementNameLabel.append(new QLabel(this->settings->scope.voltage[channel].name));
 		this->measurementNameLabel[channel]->setPalette(tablePalette);
@@ -378,7 +378,7 @@ void DsoWidget::updateTriggerSource() {
 	else
 		this->triggerPositionSlider->setColor(0, this->settings->view.color.screen.voltage[this->settings->scope.trigger.source]);
 	
-	for(int channel = 0; channel < (int) this->settings->scope.physicalChannels; channel++)
+	for(int channel = 0; channel < (int) this->settings->scope.physicalChannels; ++channel)
 		this->triggerLevelSlider->setColor(channel, (!this->settings->scope.trigger.special && channel == (int) this->settings->scope.trigger.source) ? this->settings->view.color.screen.voltage[channel] : this->settings->view.color.screen.voltage[channel].darker());
 	
 	this->updateTriggerDetails();
@@ -439,13 +439,13 @@ bool DsoWidget::exportAs() {
 			<< tr("Image (*.png *.xpm *.jpg)")
 			<< tr("Comma-Separated Values (*.csv)");
 	
-	QFileDialog fileDialog((QWidget *) this->parent(), tr("Export file..."), QString(), filters.join(";;"));
+	QFileDialog fileDialog(static_cast<QWidget *>(this->parent()), tr("Export file..."), QString(), filters.join(";;"));
 	fileDialog.setFileMode(QFileDialog::AnyFile);
 	fileDialog.setAcceptMode(QFileDialog::AcceptSave);
 	if(fileDialog.exec() != QDialog::Accepted)
 		return false;
 	
-	Exporter exporter(this->settings, this->dataAnalyzer, (QWidget *) this->parent());
+	Exporter exporter(this->settings, this->dataAnalyzer, static_cast<QWidget *>(this->parent()));
 	exporter.setFilename(fileDialog.selectedFiles().first());
 	exporter.setFormat((ExportFormat) (EXPORT_FORMAT_PDF + filters.indexOf(fileDialog.selectedFilter())));
 	
@@ -455,7 +455,7 @@ bool DsoWidget::exportAs() {
 /// \brief Print the oscilloscope screen.
 /// \return true if the document was sent to the printer successfully.
 bool DsoWidget::print() {
-	Exporter exporter(this->settings, this->dataAnalyzer, (QWidget *) this->parent());
+	Exporter exporter(this->settings, this->dataAnalyzer, static_cast<QWidget *>(this->parent()));
 	exporter.setFormat(EXPORT_FORMAT_PRINTER);
 	
 	return exporter.doExport();
@@ -481,7 +481,7 @@ void DsoWidget::updateZoom(bool enabled) {
 
 /// \brief Prints analyzed data.
 void DsoWidget::dataAnalyzed() {
-	for(int channel = 0; channel < this->settings->scope.voltage.count(); channel++) {
+	for(int channel = 0; channel < this->settings->scope.voltage.count(); ++channel) {
 		if(this->settings->scope.voltage[channel].used && this->dataAnalyzer->data(channel)) {			
 			// Amplitude string representation (4 significant digits)
 			this->measurementAmplitudeLabel[channel]->setText(Helper::valueToString(this->dataAnalyzer->data(channel)->amplitude, Helper::UNIT_VOLTS, 4));

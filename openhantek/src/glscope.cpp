@@ -96,14 +96,14 @@ void GlScope::paintGL() {
 		double *fadingFactor = new double[this->generator->digitalPhosphorDepth];
 		fadingFactor[0] = 100;
 		double fadingRatio = pow(10.0, 2.0 / this->generator->digitalPhosphorDepth);
-		for(int index = 1; index < this->generator->digitalPhosphorDepth; index++)
+		for(int index = 1; index < this->generator->digitalPhosphorDepth; ++index)
 			fadingFactor[index] = fadingFactor[index - 1] * fadingRatio;
 		
 		switch(this->settings->scope.horizontal.format) {
 			case Dso::GRAPHFORMAT_TY:
 				// Real and virtual channels
-				for(int mode = Dso::CHANNELMODE_VOLTAGE; mode < Dso::CHANNELMODE_COUNT; mode++) {
-					for(int channel = 0; channel < this->settings->scope.voltage.count(); channel++) {
+				for(int mode = Dso::CHANNELMODE_VOLTAGE; mode < Dso::CHANNELMODE_COUNT; ++mode) {
+					for(int channel = 0; channel < this->settings->scope.voltage.count(); ++channel) {
 						if((mode == Dso::CHANNELMODE_VOLTAGE) ? this->settings->scope.voltage[channel].used : this->settings->scope.spectrum[channel].used) {
 							// Draw graph for all available depths
 							for(int index = this->generator->digitalPhosphorDepth - 1; index >= 0; index--) {
@@ -155,7 +155,7 @@ void GlScope::paintGL() {
 		glEnable(GL_LINE_STIPPLE);
 		this->qglColor(this->settings->view.color.screen.markers);
 		
-		for(int marker = 0; marker < MARKER_COUNT; marker++) {
+		for(int marker = 0; marker < MARKER_COUNT; ++marker) {
 			if(!this->vaMarker[marker].data) {
 				this->vaMarker[marker].setSize(2 * 2);
 				this->vaMarker[marker].data[1] = - DIVS_VOLTAGE;

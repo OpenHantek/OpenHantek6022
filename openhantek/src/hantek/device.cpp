@@ -51,6 +51,9 @@ namespace Hantek {
 		this->handle = 0;
 		this->interface = -1;
 		
+		this->outPacketLength = 0;
+		this->inPacketLength = 0;
+		
 #if LIBUSB_VERSION == 0
 		usb_init();
 		this->error = LIBUSB_SUCCESS;
@@ -107,7 +110,7 @@ namespace Hantek {
 				struct usb_config_descriptor *configDescriptor = device->config;
 				struct usb_interface *interface;
 				struct usb_interface_descriptor *interfaceDescriptor;
-				for(int interfaceIndex = 0; interfaceIndex < configDescriptor->bNumInterfaces; interfaceIndex++) {
+				for(int interfaceIndex = 0; interfaceIndex < configDescriptor->bNumInterfaces; ++interfaceIndex) {
 					interface = &configDescriptor->interface[interfaceIndex];
 					if(interface->num_altsetting < 1)
 						continue;
@@ -128,7 +131,7 @@ namespace Hantek {
 							usb_endpoint_descriptor *endpointDescriptor;
 							this->outPacketLength = 0;
 							this->inPacketLength = 0;
-							for (int endpoint = 0; endpoint < interfaceDescriptor->bNumEndpoints; endpoint++) {
+							for (int endpoint = 0; endpoint < interfaceDescriptor->bNumEndpoints; ++endpoint) {
 								endpointDescriptor = &interfaceDescriptor->endpoint[endpoint];
 								switch(endpointDescriptor->bEndpointAddress) {
 									case HANTEK_EP_OUT:
@@ -163,7 +166,7 @@ namespace Hantek {
 		
 		// Iterate through all usb devices
 		this->model = MODEL_UNKNOWN;
-		for(ssize_t deviceIterator = 0; deviceIterator < deviceCount; deviceIterator++) {
+		for(ssize_t deviceIterator = 0; deviceIterator < deviceCount; ++deviceIterator) {
 			device = deviceList[deviceIterator];
 			// Get device descriptor
 			if(libusb_get_device_descriptor(device, &(this->descriptor)) < 0)
@@ -188,7 +191,7 @@ namespace Hantek {
 				
 				// Search for the needed interface
 				libusb_get_config_descriptor(device, 0, &configDescriptor);
-				for(int interfaceIndex = 0; interfaceIndex < (int) configDescriptor->bNumInterfaces; interfaceIndex++) {
+				for(int interfaceIndex = 0; interfaceIndex < (int) configDescriptor->bNumInterfaces; ++interfaceIndex) {
 					interface = &configDescriptor->interface[interfaceIndex];
 					if(interface->num_altsetting < 1)
 						continue;
@@ -209,7 +212,7 @@ namespace Hantek {
 							const libusb_endpoint_descriptor *endpointDescriptor;
 							this->outPacketLength = 0;
 							this->inPacketLength = 0;
-							for (int endpoint = 0; endpoint < interfaceDescriptor->bNumEndpoints; endpoint++) {
+							for (int endpoint = 0; endpoint < interfaceDescriptor->bNumEndpoints; ++endpoint) {
 								endpointDescriptor = &(interfaceDescriptor->endpoint[endpoint]);
 								switch(endpointDescriptor->bEndpointAddress) {
 									case HANTEK_EP_OUT:
@@ -285,7 +288,7 @@ namespace Hantek {
 		
 		int errorCode = LIBUSB_ERROR_TIMEOUT;
 		int transferred;
-		for(int attempt = 0; (attempt < attempts || attempts == -1) && errorCode == LIBUSB_ERROR_TIMEOUT; attempt++)
+		for(int attempt = 0; (attempt < attempts || attempts == -1) && errorCode == LIBUSB_ERROR_TIMEOUT; ++attempt)
 			errorCode = libusb_bulk_transfer(this->handle, endpoint, data, length, &transferred, HANTEK_TIMEOUT);
 		
 		if(errorCode == LIBUSB_ERROR_NO_DEVICE)
@@ -312,7 +315,7 @@ namespace Hantek {
 		
 #if LIBUSB_VERSION == 0
 		errorCode = LIBUSB_ERROR_TIMEOUT;
-		for(int attempt = 0; (attempt < attempts || attempts == -1) && errorCode == LIBUSB_ERROR_TIMEOUT; attempt++)
+		for(int attempt = 0; (attempt < attempts || attempts == -1) && errorCode == LIBUSB_ERROR_TIMEOUT; ++attempt)
 			errorCode = usb_bulk_write(this->handle, HANTEK_EP_OUT, (char *) data, length, HANTEK_TIMEOUT);
 		
 		if(errorCode == LIBUSB_ERROR_NO_DEVICE)
@@ -339,7 +342,7 @@ namespace Hantek {
 		
 #if LIBUSB_VERSION == 0
 		errorCode = LIBUSB_ERROR_TIMEOUT;
-		for(int attempt = 0; (attempt < attempts || attempts == -1) && errorCode == LIBUSB_ERROR_TIMEOUT; attempt++)
+		for(int attempt = 0; (attempt < attempts || attempts == -1) && errorCode == LIBUSB_ERROR_TIMEOUT; ++attempt)
 			errorCode = usb_bulk_read(this->handle, HANTEK_EP_IN, (char *) data, length, HANTEK_TIMEOUT);
 		
 		if(errorCode == LIBUSB_ERROR_NO_DEVICE)
@@ -385,10 +388,10 @@ namespace Hantek {
 		
 		errorCode = this->inPacketLength;
 		unsigned int packet, received = 0;
-		for(packet = 0; received < length && errorCode == this->inPacketLength; packet++) {
+		for(packet = 0; received < length && errorCode == this->inPacketLength; ++packet) {
 #if LIBUSB_VERSION == 0
 			errorCode = LIBUSB_ERROR_TIMEOUT;
-			for(int attempt = 0; (attempt < attempts || attempts == -1) && errorCode == LIBUSB_ERROR_TIMEOUT; attempt++)
+			for(int attempt = 0; (attempt < attempts || attempts == -1) && errorCode == LIBUSB_ERROR_TIMEOUT; ++attempt)
 				errorCode = usb_bulk_read(this->handle, HANTEK_EP_IN, (char *) data + packet * this->inPacketLength, qMin(length - received, (unsigned int) this->inPacketLength), HANTEK_TIMEOUT);
 #else
 			errorCode = this->bulkTransfer(HANTEK_EP_IN, data + packet * this->inPacketLength, qMin(length - received, (unsigned int) this->inPacketLength), attempts);
@@ -417,7 +420,7 @@ namespace Hantek {
 			return LIBUSB_ERROR_NO_DEVICE;
 		
 		int errorCode = LIBUSB_ERROR_TIMEOUT;
-		for(int attempt = 0; (attempt < attempts || attempts == -1) && errorCode == LIBUSB_ERROR_TIMEOUT; attempt++)
+		for(int attempt = 0; (attempt < attempts || attempts == -1) && errorCode == LIBUSB_ERROR_TIMEOUT; ++attempt)
 #if LIBUSB_VERSION == 0
 			errorCode = usb_control_msg(this->handle, type, request, value, index, (char *) data, length, HANTEK_TIMEOUT);
 #else
@@ -441,7 +444,7 @@ namespace Hantek {
 		if(!this->handle)
 			return LIBUSB_ERROR_NO_DEVICE;
 		
-		return this->controlTransfer(LIBUSB_REQUEST_TYPE_VENDOR | LIBUSB_ENDPOINT_OUT, request,  data, length, value, index,attempts);
+		return this->controlTransfer(LIBUSB_REQUEST_TYPE_VENDOR | LIBUSB_ENDPOINT_OUT, request,  data, length, value, index, attempts);
 	}
 	
 	/// \brief Control read to the oscilloscope.

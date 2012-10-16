@@ -164,3 +164,8 @@
 
 2012-10-07 Oliver Haag  <oliver.haag@gmail.com>
 * Ignore errors after first packet was received by Hantek::Device::bulkReadMulti
+
+2012-10-17 Oliver Haag  <oliver.haag@gmail.com>
+* Change back workaround for Mac OS that is most probably not required anymore
+* Various performance improvements and small fixes
+* New cppcheck build target

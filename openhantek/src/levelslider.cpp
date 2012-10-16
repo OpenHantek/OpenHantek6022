@@ -353,7 +353,7 @@ void LevelSlider::mousePressEvent(QMouseEvent *event) {
 	}
 	
 	this->pressedSlider = -1;
-	for(int sliderId = 0; sliderId < this->slider.count(); sliderId++) {
+	for(int sliderId = 0; sliderId < this->slider.count(); ++sliderId) {
 		if(this->slider[sliderId]->visible && this->slider[sliderId]->rect.contains(event->pos())) {
 			this->pressedSlider = sliderId;
 			break;
@@ -400,7 +400,7 @@ void LevelSlider::paintEvent(QPaintEvent *event) {
 	
 	QList<LevelSliderParameters *>::iterator slider = this->slider.end();
 	while(slider != this->slider.begin()) {
-		slider--;
+		--slider;
 		
 		if(!(*slider)->visible)
 			continue;
@@ -475,7 +475,7 @@ void LevelSlider::paintEvent(QPaintEvent *event) {
 void LevelSlider::resizeEvent(QResizeEvent *event) {
 	Q_UNUSED(event);
 	
-	for(int sliderId = 0; sliderId < this->slider.count(); sliderId++)
+	for(int sliderId = 0; sliderId < this->slider.count(); ++sliderId)
 		this->calculateRect(sliderId);
 	
 	this->repaint();

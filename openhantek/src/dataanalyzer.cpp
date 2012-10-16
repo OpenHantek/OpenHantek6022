@@ -50,15 +50,22 @@ DataAnalyzer::DataAnalyzer(DsoSettings *settings, QObject *parent) : QThread(par
 	this->window = 0;
 	
 	this->analyzedDataMutex = new QMutex();
+	
+	this->maxSamples = 0;
+	
+	this->waitingDataSamplerate = 0.0;
+	this->waitingDataMutex = 0;
 }
 
 /// \brief Deallocates the buffers.
 DataAnalyzer::~DataAnalyzer() {
-	for(int channel = 0; channel < this->analyzedData.count(); channel++) {
-		if(this->analyzedData[channel]->samples.voltage.sample)
-			delete[] this->analyzedData[channel]->samples.voltage.sample;
-		if(this->analyzedData[channel]->samples.spectrum.sample)
-			delete[] this->analyzedData[channel]->samples.spectrum.sample;
+	for(int channel = 0; channel < this->analyzedData.count(); ++channel) {
+		AnalyzedData *channelData = this->analyzedData[channel];
+		
+		if(channelData->samples.voltage.sample)
+			delete[] channelData->samples.voltage.sample;
+		if(channelData->samples.spectrum.sample)
+			delete[] channelData->samples.spectrum.sample;
 	}
 }
 
@@ -89,32 +96,48 @@ void DataAnalyzer::run() {
 	this->analyzedDataMutex->lock();
 	
 	unsigned long int maxSamples = 0;
+	unsigned int channelCount = (unsigned int) this->settings->scope.voltage.count();
 	
 	// Adapt the number of channels for analyzed data
-	for(int channel = this->analyzedData.count(); channel < this->settings->scope.voltage.count(); channel++) {
-		this->analyzedData.append(new AnalyzedData);
-		this->analyzedData[channel]->samples.voltage.count = 0;
-		this->analyzedData[channel]->samples.voltage.interval = 0;
-		this->analyzedData[channel]->samples.voltage.sample = 0;
-		this->analyzedData[channel]->samples.spectrum.count = 0;
-		this->analyzedData[channel]->samples.spectrum.interval = 0;
-		this->analyzedData[channel]->samples.spectrum.sample = 0;
-		this->analyzedData[channel]->amplitude = 0;
-		this->analyzedData[channel]->frequency = 0;
+	for(unsigned int channel = this->analyzedData.count(); channel < channelCount; ++channel) {
+		AnalyzedData *channelData = new AnalyzedData;
+		channelData->samples.voltage.count = 0;
+		channelData->samples.voltage.interval = 0;
+		channelData->samples.voltage.sample = 0;
+		channelData->samples.spectrum.count = 0;
+		channelData->samples.spectrum.interval = 0;
+		channelData->samples.spectrum.sample = 0;
+		channelData->amplitude = 0;
+		channelData->frequency = 0;
+		this->analyzedData.append(channelData);
 	}
-	for(int channel = this->settings->scope.voltage.count(); channel < this->analyzedData.count(); channel++) {
-		if(this->analyzedData.last()->samples.voltage.sample)
-			delete[] this->analyzedData.last()->samples.voltage.sample;
-		if(this->analyzedData.last()->samples.spectrum.sample)
-			delete[] this->analyzedData.last()->samples.spectrum.sample;
+	for(unsigned int channel = this->analyzedData.count(); channel > channelCount; --channel) {
+		AnalyzedData *channelData = this->analyzedData.last();
+		if(channelData->samples.voltage.sample)
+			delete[] channelData->samples.voltage.sample;
+		if(channelData->samples.spectrum.sample)
+			delete[] channelData->samples.spectrum.sample;
 		this->analyzedData.removeLast();
 	}
 	
-	for(unsigned int channel = 0; channel < (unsigned int) this->analyzedData.count(); channel++) {
-		// Check if we got data for this channel or if it's a math channel that can be calculated
-		if(((channel < this->settings->scope.physicalChannels) && channel < (unsigned int) this->waitingData.count() && this->waitingData[channel]) || ((channel >= this->settings->scope.physicalChannels) && (this->settings->scope.voltage[channel].used || this->settings->scope.spectrum[channel].used) && this->analyzedData.count() >= 2 && this->analyzedData[0]->samples.voltage.sample && this->analyzedData[1]->samples.voltage.sample)) {
+	for(unsigned int channel = 0; channel < channelCount; ++channel) {
+		AnalyzedData *channelData = this->analyzedData[channel];
+		
+		if( // Check...
+			( // ...if we got data for this channel...
+				channel < this->settings->scope.physicalChannels &&
+				channel < (unsigned int) this->waitingData.count() &&
+				this->waitingData[channel]) ||
+			( // ...or if it's a math channel that can be calculated
+				channel >= this->settings->scope.physicalChannels &&
+				(this->settings->scope.voltage[channel].used || this->settings->scope.spectrum[channel].used) &&
+				this->analyzedData.count() >= 2 &&
+				this->analyzedData[0]->samples.voltage.sample &&
+				this->analyzedData[1]->samples.voltage.sample
+			)
+		) {
 			// Set sampling interval
-			this->analyzedData[channel]->samples.voltage.interval = 1.0 / this->waitingDataSamplerate;
+			channelData->samples.voltage.interval = 1.0 / this->waitingDataSamplerate;
 			
 			unsigned int size;
 			if(channel < this->settings->scope.physicalChannels) {
@@ -125,19 +148,19 @@ void DataAnalyzer::run() {
 			else
 				size = maxSamples;
 			// Reallocate memory for samples if the sample count has changed
-			if(this->analyzedData[channel]->samples.voltage.count != size) {
-				this->analyzedData[channel]->samples.voltage.count = size;
-				if(this->analyzedData[channel]->samples.voltage.sample)
-					delete[] this->analyzedData[channel]->samples.voltage.sample;
-				this->analyzedData[channel]->samples.voltage.sample = new double[size];
+			if(channelData->samples.voltage.count != size) {
+				channelData->samples.voltage.count = size;
+				if(channelData->samples.voltage.sample)
+					delete[] channelData->samples.voltage.sample;
+				channelData->samples.voltage.sample = new double[size];
 			}
 			
 			// Physical channels
 			if(channel < this->settings->scope.physicalChannels) {
 				// Copy the buffer of the oscilloscope into the sample buffer
 				if(channel < (unsigned int) this->waitingData.count())
-					for(unsigned int position = 0; position < this->waitingDataSize[channel]; position++)
-						this->analyzedData[channel]->samples.voltage.sample[position] = this->waitingData[channel][position];
+					for(unsigned int position = 0; position < this->waitingDataSize[channel]; ++position)
+						channelData->samples.voltage.sample[position] = this->waitingData[channel][position];
 			}
 			// Math channel
 			else {
@@ -153,7 +176,7 @@ void DataAnalyzer::run() {
 				}
 				
 				// Calculate values and write them into the sample buffer
-				for(unsigned int realPosition = 0; realPosition < this->analyzedData[this->settings->scope.physicalChannels]->samples.voltage.count; realPosition++) {
+				for(unsigned int realPosition = 0; realPosition < this->analyzedData[this->settings->scope.physicalChannels]->samples.voltage.count; ++realPosition) {
 					switch(this->settings->scope.voltage[this->settings->scope.physicalChannels].misc) {
 						case Dso::MATHMODE_1ADD2:
 							this->analyzedData[this->settings->scope.physicalChannels]->samples.voltage.sample[realPosition] = this->analyzedData[0]->samples.voltage.sample[realPosition] + this->analyzedData[1]->samples.voltage.sample[realPosition];
@@ -170,11 +193,11 @@ void DataAnalyzer::run() {
 		}
 		else {
 			// Clear unused channels
-			this->analyzedData[channel]->samples.voltage.count = 0;
+			channelData->samples.voltage.count = 0;
 			this->analyzedData[this->settings->scope.physicalChannels]->samples.voltage.interval = 0;
-			if(this->analyzedData[channel]->samples.voltage.sample) {
-				delete[] this->analyzedData[channel]->samples.voltage.sample;
-				this->analyzedData[channel]->samples.voltage.sample = 0;
+			if(channelData->samples.voltage.sample) {
+				delete[] channelData->samples.voltage.sample;
+				channelData->samples.voltage.sample = 0;
 			}
 		}
 	}
@@ -186,12 +209,14 @@ void DataAnalyzer::run() {
 	
 	
 	// Calculate frequencies, peak-to-peak voltages and spectrums
-	for(int channel = 0; channel < this->analyzedData.count(); channel++) {
-		if(this->analyzedData[channel]->samples.voltage.sample) {
+	for(int channel = 0; channel < this->analyzedData.count(); ++channel) {
+		AnalyzedData *channelData = this->analyzedData[channel];
+		
+		if(channelData->samples.voltage.sample) {
 			// Calculate new window
-			if(this->lastWindow != this->settings->scope.spectrumWindow || this->lastRecordLength != this->analyzedData[channel]->samples.voltage.count) {
-				if(this->lastRecordLength != this->analyzedData[channel]->samples.voltage.count) {
-					this->lastRecordLength = this->analyzedData[channel]->samples.voltage.count;
+			if(this->lastWindow != this->settings->scope.spectrumWindow || this->lastRecordLength != channelData->samples.voltage.count) {
+				if(this->lastRecordLength != channelData->samples.voltage.count) {
+					this->lastRecordLength = channelData->samples.voltage.count;
 					
 					if(this->window)
 						fftw_free(this->window);
@@ -203,19 +228,19 @@ void DataAnalyzer::run() {
 				
 				switch(this->settings->scope.spectrumWindow) {
 					case Dso::WINDOW_HAMMING:
-						for(unsigned int windowPosition = 0; windowPosition < this->lastRecordLength; windowPosition++)
+						for(unsigned int windowPosition = 0; windowPosition < this->lastRecordLength; ++windowPosition)
 							*(this->window + windowPosition) = 0.54 - 0.46 * cos(2.0 * M_PI * windowPosition / windowEnd);
 						break;
 					case Dso::WINDOW_HANN:
-						for(unsigned int windowPosition = 0; windowPosition < this->lastRecordLength; windowPosition++)
+						for(unsigned int windowPosition = 0; windowPosition < this->lastRecordLength; ++windowPosition)
 							*(this->window + windowPosition) = 0.5 * (1.0 - cos(2.0 * M_PI * windowPosition / windowEnd));
 						break;
 					case Dso::WINDOW_COSINE:
-						for(unsigned int windowPosition = 0; windowPosition < this->lastRecordLength; windowPosition++)
+						for(unsigned int windowPosition = 0; windowPosition < this->lastRecordLength; ++windowPosition)
 							*(this->window + windowPosition) = sin(M_PI * windowPosition / windowEnd);
 						break;
 					case Dso::WINDOW_LANCZOS:
-						for(unsigned int windowPosition = 0; windowPosition < this->lastRecordLength; windowPosition++) {
+						for(unsigned int windowPosition = 0; windowPosition < this->lastRecordLength; ++windowPosition) {
 							double sincParameter = (2.0 * windowPosition / windowEnd - 1.0) * M_PI;
 							if(sincParameter == 0)
 								*(this->window + windowPosition) = 1;
@@ -224,82 +249,82 @@ void DataAnalyzer::run() {
 						}
 						break;
 					case Dso::WINDOW_BARTLETT:
-						for(unsigned int windowPosition = 0; windowPosition < this->lastRecordLength; windowPosition++)
+						for(unsigned int windowPosition = 0; windowPosition < this->lastRecordLength; ++windowPosition)
 							*(this->window + windowPosition) = 2.0 / windowEnd * (windowEnd / 2 - abs(windowPosition - windowEnd / 2));
 						break;
 					case Dso::WINDOW_TRIANGULAR:
-						for(unsigned int windowPosition = 0; windowPosition < this->lastRecordLength; windowPosition++)
+						for(unsigned int windowPosition = 0; windowPosition < this->lastRecordLength; ++windowPosition)
 							*(this->window + windowPosition) = 2.0 / this->lastRecordLength * (this->lastRecordLength / 2 - abs(windowPosition - windowEnd / 2));
 						break;
 					case Dso::WINDOW_GAUSS:
 						{
 							double sigma = 0.4;
-							for(unsigned int windowPosition = 0; windowPosition < this->lastRecordLength; windowPosition++)
+							for(unsigned int windowPosition = 0; windowPosition < this->lastRecordLength; ++windowPosition)
 								*(this->window + windowPosition) = exp(-0.5 * pow(((windowPosition - windowEnd / 2) / (sigma * windowEnd / 2)), 2));
 						}
 						break;
 					case Dso::WINDOW_BARTLETTHANN:
-						for(unsigned int windowPosition = 0; windowPosition < this->lastRecordLength; windowPosition++)
+						for(unsigned int windowPosition = 0; windowPosition < this->lastRecordLength; ++windowPosition)
 							*(this->window + windowPosition) = 0.62 - 0.48 * abs(windowPosition / windowEnd - 0.5) - 0.38 * cos(2.0 * M_PI * windowPosition / windowEnd);
 						break;
 					case Dso::WINDOW_BLACKMAN:
 						{
 							double alpha = 0.16;
-							for(unsigned int windowPosition = 0; windowPosition < this->lastRecordLength; windowPosition++)
+							for(unsigned int windowPosition = 0; windowPosition < this->lastRecordLength; ++windowPosition)
 								*(this->window + windowPosition) = (1 - alpha) / 2 - 0.5 * cos(2.0 * M_PI * windowPosition / windowEnd) + alpha / 2 * cos(4.0 * M_PI * windowPosition / windowEnd);
 						}
 						break;
 					//case WINDOW_KAISER:
 						// TODO
 						//double alpha = 3.0;
-						//for(unsigned int windowPosition = 0; windowPosition < this->lastRecordLength; windowPosition++)
+						//for(unsigned int windowPosition = 0; windowPosition < this->lastRecordLength; ++windowPosition)
 							//*(this->window + windowPosition) = ;
 						//break;
 					case Dso::WINDOW_NUTTALL:
-						for(unsigned int windowPosition = 0; windowPosition < this->lastRecordLength; windowPosition++)
+						for(unsigned int windowPosition = 0; windowPosition < this->lastRecordLength; ++windowPosition)
 							*(this->window + windowPosition) = 0.355768 - 0.487396 * cos(2 * M_PI * windowPosition / windowEnd) + 0.144232 * cos(4 * M_PI * windowPosition / windowEnd) - 0.012604 * cos(6 * M_PI * windowPosition / windowEnd);
 						break;
 					case Dso::WINDOW_BLACKMANHARRIS:
-						for(unsigned int windowPosition = 0; windowPosition < this->lastRecordLength; windowPosition++)
+						for(unsigned int windowPosition = 0; windowPosition < this->lastRecordLength; ++windowPosition)
 							*(this->window + windowPosition) = 0.35875 - 0.48829 * cos(2 * M_PI * windowPosition / windowEnd) + 0.14128 * cos(4 * M_PI * windowPosition / windowEnd) - 0.01168 * cos(6 * M_PI * windowPosition / windowEnd);
 						break;
 					case Dso::WINDOW_BLACKMANNUTTALL:
-						for(unsigned int windowPosition = 0; windowPosition < this->lastRecordLength; windowPosition++)
+						for(unsigned int windowPosition = 0; windowPosition < this->lastRecordLength; ++windowPosition)
 							*(this->window + windowPosition) = 0.3635819 - 0.4891775 * cos(2 * M_PI * windowPosition / windowEnd) + 0.1365995 * cos(4 * M_PI * windowPosition / windowEnd) - 0.0106411 * cos(6 * M_PI * windowPosition / windowEnd);
 						break;
 					case Dso::WINDOW_FLATTOP:
-						for(unsigned int windowPosition = 0; windowPosition < this->lastRecordLength; windowPosition++)
+						for(unsigned int windowPosition = 0; windowPosition < this->lastRecordLength; ++windowPosition)
 							*(this->window + windowPosition) = 1.0 - 1.93 * cos(2 * M_PI * windowPosition / windowEnd) + 1.29 * cos(4 * M_PI * windowPosition / windowEnd) - 0.388 * cos(6 * M_PI * windowPosition / windowEnd) + 0.032 * cos(8 * M_PI * windowPosition / windowEnd);
 						break;
 					default: // Dso::WINDOW_RECTANGULAR
-						for(unsigned int windowPosition = 0; windowPosition < this->lastRecordLength; windowPosition++)
+						for(unsigned int windowPosition = 0; windowPosition < this->lastRecordLength; ++windowPosition)
 							*(this->window + windowPosition) = 1.0;
 				}
 			}
 			
 			// Set sampling interval
-			this->analyzedData[channel]->samples.spectrum.interval = 1.0 / this->analyzedData[channel]->samples.voltage.interval / this->analyzedData[channel]->samples.voltage.count;
+			channelData->samples.spectrum.interval = 1.0 / channelData->samples.voltage.interval / channelData->samples.voltage.count;
 			
 			// Number of real/complex samples
-			unsigned int dftLength = this->analyzedData[channel]->samples.voltage.count / 2;
+			unsigned int dftLength = channelData->samples.voltage.count / 2;
 			
 			// Reallocate memory for samples if the sample count has changed
-			if(this->analyzedData[channel]->samples.spectrum.count != dftLength) {
-				this->analyzedData[channel]->samples.spectrum.count = dftLength;
-				if(this->analyzedData[channel]->samples.spectrum.sample)
-					delete[] this->analyzedData[channel]->samples.spectrum.sample;
-				this->analyzedData[channel]->samples.spectrum.sample = new double[this->analyzedData[channel]->samples.voltage.count];
+			if(channelData->samples.spectrum.count != dftLength) {
+				channelData->samples.spectrum.count = dftLength;
+				if(channelData->samples.spectrum.sample)
+					delete[] channelData->samples.spectrum.sample;
+				channelData->samples.spectrum.sample = new double[channelData->samples.voltage.count];
 			}
 			
 			// Create sample buffer and apply window
-			double *windowedValues = new double[this->analyzedData[channel]->samples.voltage.count];
-			for(unsigned int position = 0; position < this->analyzedData[channel]->samples.voltage.count; position++)
-				windowedValues[position] = this->window[position] * this->analyzedData[channel]->samples.voltage.sample[position];
+			double *windowedValues = new double[channelData->samples.voltage.count];
+			for(unsigned int position = 0; position < channelData->samples.voltage.count; ++position)
+				windowedValues[position] = this->window[position] * channelData->samples.voltage.sample[position];
 			
 			// Do discrete real to half-complex transformation
 			/// \todo Check if record length is multiple of 2
 			/// \todo Reuse plan and use FFTW_MEASURE to get fastest algorithm
-			fftw_plan fftPlan = fftw_plan_r2r_1d(this->analyzedData[channel]->samples.voltage.count, windowedValues, this->analyzedData[channel]->samples.spectrum.sample, FFTW_R2HC, FFTW_ESTIMATE);
+			fftw_plan fftPlan = fftw_plan_r2r_1d(channelData->samples.voltage.count, windowedValues, channelData->samples.spectrum.sample, FFTW_R2HC, FFTW_ESTIMATE);
 			fftw_execute(fftPlan);
 			fftw_destroy_plan(fftPlan);
 			
@@ -309,40 +334,40 @@ void DataAnalyzer::run() {
 			// Real values
 			unsigned int position;
 			double correctionFactor = 1.0 / dftLength / dftLength;
-			conjugateComplex[0] = (this->analyzedData[channel]->samples.spectrum.sample[0] * this->analyzedData[channel]->samples.spectrum.sample[0]) * correctionFactor;
-			for(position = 1; position < dftLength; position++)
-				conjugateComplex[position] = (this->analyzedData[channel]->samples.spectrum.sample[position] * this->analyzedData[channel]->samples.spectrum.sample[position] + this->analyzedData[channel]->samples.spectrum.sample[this->analyzedData[channel]->samples.voltage.count - position] * this->analyzedData[channel]->samples.spectrum.sample[this->analyzedData[channel]->samples.voltage.count - position]) * correctionFactor;
+			conjugateComplex[0] = (channelData->samples.spectrum.sample[0] * channelData->samples.spectrum.sample[0]) * correctionFactor;
+			for(position = 1; position < dftLength; ++position)
+				conjugateComplex[position] = (channelData->samples.spectrum.sample[position] * channelData->samples.spectrum.sample[position] + channelData->samples.spectrum.sample[channelData->samples.voltage.count - position] * channelData->samples.spectrum.sample[channelData->samples.voltage.count - position]) * correctionFactor;
 			// Complex values, all zero for autocorrelation
-			conjugateComplex[dftLength] = (this->analyzedData[channel]->samples.spectrum.sample[dftLength] * this->analyzedData[channel]->samples.spectrum.sample[dftLength]) * correctionFactor;
-			for(position++; position < this->analyzedData[channel]->samples.voltage.count; position++)
+			conjugateComplex[dftLength] = (channelData->samples.spectrum.sample[dftLength] * channelData->samples.spectrum.sample[dftLength]) * correctionFactor;
+			for(++position; position < channelData->samples.voltage.count; ++position)
 				conjugateComplex[position] = 0;
 			
 			// Do half-complex to real inverse transformation
-			double *correlation = new double[this->analyzedData[channel]->samples.voltage.count];
-			fftPlan = fftw_plan_r2r_1d(this->analyzedData[channel]->samples.voltage.count, conjugateComplex, correlation, FFTW_HC2R, FFTW_ESTIMATE);
+			double *correlation = new double[channelData->samples.voltage.count];
+			fftPlan = fftw_plan_r2r_1d(channelData->samples.voltage.count, conjugateComplex, correlation, FFTW_HC2R, FFTW_ESTIMATE);
 			fftw_execute(fftPlan);
 			fftw_destroy_plan(fftPlan);
 			delete[] conjugateComplex;
 			
 			// Calculate peak-to-peak voltage
 			double minimalVoltage, maximalVoltage;
-			minimalVoltage = maximalVoltage = this->analyzedData[channel]->samples.voltage.sample[0];
+			minimalVoltage = maximalVoltage = channelData->samples.voltage.sample[0];
 			
-			for(unsigned int position = 1; position < this->analyzedData[channel]->samples.voltage.count; position++) {
-				if(this->analyzedData[channel]->samples.voltage.sample[position] < minimalVoltage)
-					minimalVoltage = this->analyzedData[channel]->samples.voltage.sample[position];
-				else if(this->analyzedData[channel]->samples.voltage.sample[position] > maximalVoltage)
-					maximalVoltage = this->analyzedData[channel]->samples.voltage.sample[position];
+			for(unsigned int position = 1; position < channelData->samples.voltage.count; ++position) {
+				if(channelData->samples.voltage.sample[position] < minimalVoltage)
+					minimalVoltage = channelData->samples.voltage.sample[position];
+				else if(channelData->samples.voltage.sample[position] > maximalVoltage)
+					maximalVoltage = channelData->samples.voltage.sample[position];
 			}
 			
-			this->analyzedData[channel]->amplitude = maximalVoltage - minimalVoltage;
+			channelData->amplitude = maximalVoltage - minimalVoltage;
 			
 			// Get the frequency from the correlation results
 			double minimumCorrelation = correlation[0];
 			double peakCorrelation = 0;
 			unsigned int peakPosition = 0;
 			
-			for(unsigned int position = 1; position < this->analyzedData[channel]->samples.voltage.count / 2; position++) {
+			for(unsigned int position = 1; position < channelData->samples.voltage.count / 2; ++position) {
 				if(correlation[position] > peakCorrelation && correlation[position] > minimumCorrelation * 2) {
 					peakCorrelation = correlation[position];
 					peakPosition = position;
@@ -354,30 +379,30 @@ void DataAnalyzer::run() {
 			
 			// Calculate the frequency in Hz
 			if(peakPosition)
-				this->analyzedData[channel]->frequency = 1.0 / (this->analyzedData[channel]->samples.voltage.interval * peakPosition);
+				channelData->frequency = 1.0 / (channelData->samples.voltage.interval * peakPosition);
 			else
-				this->analyzedData[channel]->frequency = 0;
+				channelData->frequency = 0;
 			
 			// Finally calculate the real spectrum if we want it
 			if(this->settings->scope.spectrum[channel].used) {
 				// Convert values into dB (Relative to the reference level)
 				double offset = 60 - this->settings->scope.spectrumReference - 20 * log10(dftLength);
 				double offsetLimit = this->settings->scope.spectrumLimit - this->settings->scope.spectrumReference;
-				for(unsigned int position = 0; position < this->analyzedData[channel]->samples.spectrum.count; position++) {
-					this->analyzedData[channel]->samples.spectrum.sample[position] = 20 * log10(fabs(this->analyzedData[channel]->samples.spectrum.sample[position])) + offset;
+				for(unsigned int position = 0; position < channelData->samples.spectrum.count; ++position) {
+					channelData->samples.spectrum.sample[position] = 20 * log10(fabs(channelData->samples.spectrum.sample[position])) + offset;
 					
 					// Check if this value has to be limited
-					if(offsetLimit > this->analyzedData[channel]->samples.spectrum.sample[position])
-						this->analyzedData[channel]->samples.spectrum.sample[position] = offsetLimit;
+					if(offsetLimit > channelData->samples.spectrum.sample[position])
+						channelData->samples.spectrum.sample[position] = offsetLimit;
 				}
 			}
 		}
-		else if(this->analyzedData[channel]->samples.spectrum.sample) {
+		else if(channelData->samples.spectrum.sample) {
 			// Clear unused channels
-			this->analyzedData[channel]->samples.spectrum.count = 0;
-			this->analyzedData[channel]->samples.spectrum.interval = 0;
-			delete[] this->analyzedData[channel]->samples.spectrum.sample;
-			this->analyzedData[channel]->samples.spectrum.sample = 0;
+			channelData->samples.spectrum.count = 0;
+			channelData->samples.spectrum.interval = 0;
+			delete[] channelData->samples.spectrum.sample;
+			channelData->samples.spectrum.sample = 0;
 		}
 	}
 	

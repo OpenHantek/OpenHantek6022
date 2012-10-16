@@ -50,13 +50,13 @@ HorizontalDock::HorizontalDock(DsoSettings *settings, QWidget *parent, Qt::Windo
 			<< 1e-3 << 2e-3 << 4e-3 << 1e-2 << 2e-2 << 4e-2 << 1e-1 << 2e-1 << 4e-1
 			<<  1e0 <<  2e0 <<  4e0 <<  1e1 <<  2e1 <<  4e1 <<  6e1 << 12e1 << 24e1
 			<<  6e2 << 12e2 << 24e2 << 36e2;  ///< Timebase steps in seconds/div
-	for(QList<double>::iterator timebase = this->timebaseSteps.begin(); timebase != this->timebaseSteps.end(); timebase++)
+	for(QList<double>::iterator timebase = this->timebaseSteps.begin(); timebase != this->timebaseSteps.end(); ++timebase)
 		this->timebaseStrings << Helper::valueToString(*timebase, Helper::UNIT_SECONDS, 0);
 	this->frequencybaseSteps
 			<<  1.0 <<  2.0 <<  5.0 <<  1e1 <<  2e1 <<  5e1 <<  1e2 <<  2e2 <<  5e2
 			<<  1e3 <<  2e3 <<  5e3 <<  1e4 <<  2e4 <<  4e4 <<  1e5 <<  2e5 <<  5e5
 			<<  1e6 <<  2e6 <<  5e6 <<  1e7; ///< Frequencybase steps in Hz/div
-	for(QList<double>::iterator frequencybase = this->frequencybaseSteps.begin(); frequencybase != this->frequencybaseSteps.end(); frequencybase++)
+	for(QList<double>::iterator frequencybase = this->frequencybaseSteps.begin(); frequencybase != this->frequencybaseSteps.end(); ++frequencybase)
 		this->frequencybaseStrings << Helper::valueToString(*frequencybase, Helper::UNIT_HERTZ, 0);
 	
 	// Initialize elements
@@ -70,7 +70,7 @@ HorizontalDock::HorizontalDock(DsoSettings *settings, QWidget *parent, Qt::Windo
 	
 	this->formatLabel = new QLabel(tr("Format"));
 	this->formatComboBox = new QComboBox();
-	for(int format = Dso::GRAPHFORMAT_TY; format < Dso::GRAPHFORMAT_COUNT; format++)
+	for(int format = Dso::GRAPHFORMAT_TY; format < Dso::GRAPHFORMAT_COUNT; ++format)
 		this->formatComboBox->addItem(Dso::graphFormatString((Dso::GraphFormat) format));
 	
 	this->dockLayout = new QGridLayout();
@@ -181,19 +181,19 @@ TriggerDock::TriggerDock(DsoSettings *settings, const QStringList *specialTrigge
 	this->settings = settings;
 	
 	// Initialize lists for comboboxes
-	for(unsigned int channel = 0; channel < this->settings->scope.physicalChannels; channel++)
+	for(unsigned int channel = 0; channel < this->settings->scope.physicalChannels; ++channel)
 		this->sourceStandardStrings << tr("CH%1").arg(channel + 1);
 	this->sourceSpecialStrings << *specialTriggers;
 	
 	// Initialize elements
 	this->modeLabel = new QLabel(tr("Mode"));
 	this->modeComboBox = new QComboBox();
-	for(int mode = Dso::TRIGGERMODE_AUTO; mode < Dso::TRIGGERMODE_COUNT; mode++)
+	for(int mode = Dso::TRIGGERMODE_AUTO; mode < Dso::TRIGGERMODE_COUNT; ++mode)
 		this->modeComboBox->addItem(Dso::triggerModeString((Dso::TriggerMode) mode));
 
 	this->slopeLabel = new QLabel(tr("Slope"));
 	this->slopeComboBox = new QComboBox();
-	for(int slope = Dso::SLOPE_POSITIVE; slope < Dso::SLOPE_COUNT; slope++)
+	for(int slope = Dso::SLOPE_POSITIVE; slope < Dso::SLOPE_COUNT; ++slope)
 		this->slopeComboBox->addItem(Dso::slopeString((Dso::Slope) slope));
 
 	this->sourceLabel = new QLabel(tr("Source"));
@@ -323,11 +323,11 @@ SpectrumDock::SpectrumDock(DsoSettings *settings, QWidget *parent, Qt::WindowFla
 	// Initialize lists for comboboxes
 	this->magnitudeSteps                <<  1e0 <<  2e0 <<  3e0 <<  6e0
 			<<  1e1 <<  2e1 <<  3e1 <<  6e1 <<  1e2 <<  2e2 <<  3e2 <<  6e2; ///< Magnitude steps in dB/div
-	for(QList<double>::iterator magnitude = this->magnitudeSteps.begin(); magnitude != this->magnitudeSteps.end(); magnitude++)
+	for(QList<double>::iterator magnitude = this->magnitudeSteps.begin(); magnitude != this->magnitudeSteps.end(); ++magnitude)
 		this->magnitudeStrings << Helper::valueToString(*magnitude, Helper::UNIT_DECIBEL, 0);
 	
 	// Initialize elements
-	for(int channel = 0; channel < this->settings->scope.voltage.count(); channel++) {
+	for(int channel = 0; channel < this->settings->scope.voltage.count(); ++channel) {
 		this->magnitudeComboBox.append(new QComboBox());
 		this->magnitudeComboBox[channel]->addItems(this->magnitudeStrings);
 		
@@ -337,7 +337,7 @@ SpectrumDock::SpectrumDock(DsoSettings *settings, QWidget *parent, Qt::WindowFla
 	this->dockLayout = new QGridLayout();
 	this->dockLayout->setColumnMinimumWidth(0, 64);
 	this->dockLayout->setColumnStretch(1, 1);
-	for(int channel = 0; channel < this->settings->scope.voltage.count(); channel++) {
+	for(int channel = 0; channel < this->settings->scope.voltage.count(); ++channel) {
 		this->dockLayout->addWidget(this->usedCheckBox[channel], channel, 0);
 		this->dockLayout->addWidget(this->magnitudeComboBox[channel], channel, 1);
 	}
@@ -349,13 +349,13 @@ SpectrumDock::SpectrumDock(DsoSettings *settings, QWidget *parent, Qt::WindowFla
 	this->setWidget(this->dockWidget);
 	
 	// Connect signals and slots
-	for(int channel = 0; channel < this->settings->scope.voltage.count(); channel++) {
+	for(int channel = 0; channel < this->settings->scope.voltage.count(); ++channel) {
 		connect(this->magnitudeComboBox[channel], SIGNAL(currentIndexChanged(int)), this, SLOT(magnitudeSelected(int)));
 		connect(this->usedCheckBox[channel], SIGNAL(toggled(bool)), this, SLOT(usedSwitched(bool)));
 	}
 	
 	// Set values
-	for(int channel = 0; channel < this->settings->scope.voltage.count(); channel++) {
+	for(int channel = 0; channel < this->settings->scope.voltage.count(); ++channel) {
 		this->setMagnitude(channel, this->settings->scope.spectrum[channel].magnitude);
 		this->setUsed(channel, this->settings->scope.spectrum[channel].used);
 	}
@@ -407,7 +407,7 @@ void SpectrumDock::magnitudeSelected(int index) {
 	int channel;
 	
 	// Which combobox was it?
-	for(channel = 0; channel < this->settings->scope.voltage.count(); channel++)
+	for(channel = 0; channel < this->settings->scope.voltage.count(); ++channel)
 		if(this->sender() == this->magnitudeComboBox[channel])
 			break;
 	
@@ -424,7 +424,7 @@ void SpectrumDock::usedSwitched(bool checked) {
 	int channel;
 	
 	// Which checkbox was it?
-	for(channel = 0; channel < this->settings->scope.voltage.count(); channel++)
+	for(channel = 0; channel < this->settings->scope.voltage.count(); ++channel)
 		if(this->sender() == this->usedCheckBox[channel])
 			break;
 	
@@ -446,19 +446,19 @@ VoltageDock::VoltageDock(DsoSettings *settings, QWidget *parent, Qt::WindowFlags
 	this->settings = settings;
 	
 	// Initialize lists for comboboxes
-	for(int coupling = Dso::COUPLING_AC; coupling < Dso::COUPLING_COUNT; coupling++)
+	for(int coupling = Dso::COUPLING_AC; coupling < Dso::COUPLING_COUNT; ++coupling)
 		this->couplingStrings.append(Dso::couplingString((Dso::Coupling) coupling));
 	
-	for(int mode = Dso::MATHMODE_1ADD2; mode < Dso::MATHMODE_COUNT; mode++)
+	for(int mode = Dso::MATHMODE_1ADD2; mode < Dso::MATHMODE_COUNT; ++mode)
 		this->modeStrings.append(Dso::mathModeString((Dso::MathMode) mode));
 	
 	this->gainSteps             << 1e-2 << 2e-2 << 5e-2 << 1e-1 << 2e-1 << 5e-1
 			<<  1e0 <<  2e0 <<  5e0;          ///< Voltage steps in V/div
-	for(QList<double>::iterator gain = this->gainSteps.begin(); gain != this->gainSteps.end(); gain++)
+	for(QList<double>::iterator gain = this->gainSteps.begin(); gain != this->gainSteps.end(); ++gain)
 		this->gainStrings << Helper::valueToString(*gain, Helper::UNIT_VOLTS, 0);
 	
 	// Initialize elements
-	for(int channel = 0; channel < this->settings->scope.voltage.count(); channel++) {
+	for(int channel = 0; channel < this->settings->scope.voltage.count(); ++channel) {
 		this->miscComboBox.append(new QComboBox());
 		if(channel < (int) this->settings->scope.physicalChannels)
 			this->miscComboBox[channel]->addItems(this->couplingStrings);
@@ -474,7 +474,7 @@ VoltageDock::VoltageDock(DsoSettings *settings, QWidget *parent, Qt::WindowFlags
 	this->dockLayout = new QGridLayout();
 	this->dockLayout->setColumnMinimumWidth(0, 64);
 	this->dockLayout->setColumnStretch(1, 1);
-	for(int channel = 0; channel < this->settings->scope.voltage.count(); channel++) {
+	for(int channel = 0; channel < this->settings->scope.voltage.count(); ++channel) {
 		this->dockLayout->addWidget(this->usedCheckBox[channel], channel * 2, 0);
 		this->dockLayout->addWidget(this->gainComboBox[channel], channel * 2, 1);
 		this->dockLayout->addWidget(this->miscComboBox[channel], channel * 2 + 1, 1);
@@ -487,14 +487,14 @@ VoltageDock::VoltageDock(DsoSettings *settings, QWidget *parent, Qt::WindowFlags
 	this->setWidget(this->dockWidget);
 	
 	// Connect signals and slots
-	for(int channel = 0; channel < this->settings->scope.voltage.count(); channel++) {
+	for(int channel = 0; channel < this->settings->scope.voltage.count(); ++channel) {
 		connect(this->gainComboBox[channel], SIGNAL(currentIndexChanged(int)), this, SLOT(gainSelected(int)));
 		connect(this->miscComboBox[channel], SIGNAL(currentIndexChanged(int)), this, SLOT(miscSelected(int)));
 		connect(this->usedCheckBox[channel], SIGNAL(toggled(bool)), this, SLOT(usedSwitched(bool)));
 	}
 	
 	// Set values
-	for(int channel = 0; channel < this->settings->scope.voltage.count(); channel++) {
+	for(int channel = 0; channel < this->settings->scope.voltage.count(); ++channel) {
 		if(channel < (int) this->settings->scope.physicalChannels)
 			this->setCoupling(channel, (Dso::Coupling) this->settings->scope.voltage[channel].misc);
 		else
@@ -576,7 +576,7 @@ void VoltageDock::gainSelected(int index) {
 	int channel;
 	
 	// Which combobox was it?
-	for(channel = 0; channel < this->settings->scope.voltage.count(); channel++)
+	for(channel = 0; channel < this->settings->scope.voltage.count(); ++channel)
 		if(this->sender() == this->gainComboBox[channel])
 			break;
 	
@@ -594,7 +594,7 @@ void VoltageDock::miscSelected(int index) {
 	int channel;
 	
 	// Which combobox was it?
-	for(channel = 0; channel < this->settings->scope.voltage.count(); channel++)
+	for(channel = 0; channel < this->settings->scope.voltage.count(); ++channel)
 		if(this->sender() == this->miscComboBox[channel])
 			break;
 	
@@ -614,7 +614,7 @@ void VoltageDock::usedSwitched(bool checked) {
 	int channel;
 	
 	// Which checkbox was it?
-	for(channel = 0; channel < this->settings->scope.voltage.count(); channel++)
+	for(channel = 0; channel < this->settings->scope.voltage.count(); ++channel)
 		if(this->sender() == this->usedCheckBox[channel])
 			break;
 	

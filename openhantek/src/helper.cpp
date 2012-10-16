@@ -151,7 +151,7 @@ namespace Helper {
 	QString hexDump(unsigned char *data, unsigned int length) {
 		QString dumpString, byteString;
 		
-		for(unsigned int index = 0; index < length; index++)
+		for(unsigned int index = 0; index < length; ++index)
 			dumpString.append(byteString.sprintf(" %02x", data[index]));
 		
 		return dumpString;
@@ -168,7 +168,7 @@ namespace Helper {
 		QString byteString;
 		unsigned int index;
 		
-		for(index = 0; index < length; index++) {
+		for(index = 0; index < length; ++index) {
 			byteString = dumpString.mid(index * 2, 2);
 			
 			// Check if we reached the end of the string

@@ -51,7 +51,7 @@ DsoSettings::DsoSettings(QWidget *parent) : QObject(parent) {
 	panels.append(&(this->options.window.toolbar.file));
 	panels.append(&(this->options.window.toolbar.oscilloscope));
 	panels.append(&(this->options.window.toolbar.view));
-	for(int panelId = 0; panelId < panels.size(); panelId++) {
+	for(int panelId = 0; panelId < panels.size(); ++panelId) {
 		panels[panelId]->floating = false;
 		panels[panelId]->position = QPoint();
 		panels[panelId]->visible = true;
@@ -126,7 +126,7 @@ void DsoSettings::setChannelCount(unsigned int channels) {
 		this->scope.spectrum.removeAt(channel);
 	
 	// Add new channels to the list
-	for(int channel = 0; channel < (int) channels; channel++) {
+	for(int channel = 0; channel < (int) channels; ++channel) {
 		// Oscilloscope settings
 		// Spectrum
 		if(this->scope.spectrum.count() <= channel + 1) {
@@ -218,7 +218,7 @@ int DsoSettings::load(const QString &fileName) {
 	docks.append(&(this->options.window.dock.voltage));
 	QStringList dockNames;
 	dockNames << "horizontal" << "spectrum" << "trigger" << "voltage";
-	for(int dockId = 0; dockId < docks.size(); dockId++) {
+	for(int dockId = 0; dockId < docks.size(); ++dockId) {
 		settingsLoader->beginGroup(dockNames[dockId]);
 		if(settingsLoader->contains("floating"))
 			docks[dockId]->floating = settingsLoader->value("floating").toBool();
@@ -236,7 +236,7 @@ int DsoSettings::load(const QString &fileName) {
 	toolbars.append(&(this->options.window.toolbar.view));
 	QStringList toolbarNames;
 	toolbarNames << "file" << "oscilloscope" << "view";
-	for(int toolbarId = 0; toolbarId < toolbars.size(); toolbarId++) {
+	for(int toolbarId = 0; toolbarId < toolbars.size(); ++toolbarId) {
 		settingsLoader->beginGroup(toolbarNames[toolbarId]);
 		if(settingsLoader->contains("floating"))
 			toolbars[toolbarId]->floating = settingsLoader->value("floating").toBool();
@@ -268,7 +268,7 @@ int DsoSettings::load(const QString &fileName) {
 		this->scope.horizontal.format = (Dso::GraphFormat) settingsLoader->value("format").toInt();
 	if(settingsLoader->contains("frequencybase"))
 		this->scope.horizontal.frequencybase = settingsLoader->value("frequencybase").toDouble();
-	for(int marker = 0; marker < 2; marker++) {
+	for(int marker = 0; marker < 2; ++marker) {
 		QString name;
 		name = QString("marker%1").arg(marker);
 		if(settingsLoader->contains(name))
@@ -293,7 +293,7 @@ int DsoSettings::load(const QString &fileName) {
 		this->scope.trigger.special = settingsLoader->value("special").toInt();
 	settingsLoader->endGroup();
 	// Spectrum
-	for(int channel = 0; channel < this->scope.spectrum.count(); channel++) {
+	for(int channel = 0; channel < this->scope.spectrum.count(); ++channel) {
 		settingsLoader->beginGroup(QString("spectrum%1").arg(channel));
 		if(settingsLoader->contains("magnitude"))
 			this->scope.spectrum[channel].magnitude = settingsLoader->value("magnitude").toDouble();
@@ -304,7 +304,7 @@ int DsoSettings::load(const QString &fileName) {
 		settingsLoader->endGroup();
 	}
 	// Vertical axis
-	for(int channel = 0; channel < this->scope.voltage.count(); channel++) {
+	for(int channel = 0; channel < this->scope.voltage.count(); ++channel) {
 		settingsLoader->beginGroup(QString("vertical%1").arg(channel));
 		if(settingsLoader->contains("gain"))
 			this->scope.voltage[channel].gain = settingsLoader->value("gain").toDouble();
@@ -331,7 +331,7 @@ int DsoSettings::load(const QString &fileName) {
 	// Colors
 	settingsLoader->beginGroup("color");
 	DsoSettingsColorValues *colors;
-	for(int mode = 0; mode < 2; mode++) {
+	for(int mode = 0; mode < 2; ++mode) {
 		if(mode == 0) {
 			colors = &this->view.color.screen;
 			settingsLoader->beginGroup("screen");
@@ -351,14 +351,14 @@ int DsoSettings::load(const QString &fileName) {
 			colors->grid = settingsLoader->value("grid").value<QColor>();
 		if(settingsLoader->contains("markers"))
 			colors->markers = settingsLoader->value("markers").value<QColor>();
-		for(int channel = 0; channel < this->scope.spectrum.count(); channel++) {
+		for(int channel = 0; channel < this->scope.spectrum.count(); ++channel) {
 			QString key = QString("spectrum%1").arg(channel);
 			if(settingsLoader->contains(key))
 				colors->spectrum[channel] = settingsLoader->value(key).value<QColor>();
 		}
 		if(settingsLoader->contains("text"))
 			colors->text = settingsLoader->value("text").value<QColor>();
-		for(int channel = 0; channel < this->scope.voltage.count(); channel++) {
+		for(int channel = 0; channel < this->scope.voltage.count(); ++channel) {
 			QString key = QString("voltage%1").arg(channel);
 			if(settingsLoader->contains(key))
 				colors->voltage[channel] = settingsLoader->value(key).value<QColor>();
@@ -409,7 +409,7 @@ int DsoSettings::save(const QString &fileName) {
 		docks.append(&(this->options.window.dock.voltage));
 		QStringList dockNames;
 		dockNames << "horizontal" << "spectrum" << "trigger" << "voltage";
-		for(int dockId = 0; dockId < docks.size(); dockId++) {
+		for(int dockId = 0; dockId < docks.size(); ++dockId) {
 			settingsSaver->beginGroup(dockNames[dockId]);
 			settingsSaver->setValue("floating", docks[dockId]->floating);
 			settingsSaver->setValue("position", docks[dockId]->position);
@@ -424,7 +424,7 @@ int DsoSettings::save(const QString &fileName) {
 		toolbars.append(&(this->options.window.toolbar.view));
 		QStringList toolbarNames;
 		toolbarNames << "file" << "oscilloscope" << "view";
-		for(int toolbarId = 0; toolbarId < toolbars.size(); toolbarId++) {
+		for(int toolbarId = 0; toolbarId < toolbars.size(); ++toolbarId) {
 			settingsSaver->beginGroup(toolbarNames[toolbarId]);
 			settingsSaver->setValue("floating", toolbars[toolbarId]->floating);
 			settingsSaver->setValue("position", toolbars[toolbarId]->position);
@@ -446,7 +446,7 @@ int DsoSettings::save(const QString &fileName) {
 	settingsSaver->beginGroup("horizontal");
 	settingsSaver->setValue("format", this->scope.horizontal.format);
 	settingsSaver->setValue("frequencybase", this->scope.horizontal.frequencybase);
-	for(int marker = 0; marker < 2; marker++)
+	for(int marker = 0; marker < 2; ++marker)
 		settingsSaver->setValue(QString("marker%1").arg(marker), this->scope.horizontal.marker[marker]);
 	settingsSaver->setValue("timebase", this->scope.horizontal.timebase);
 	settingsSaver->endGroup();
@@ -459,7 +459,7 @@ int DsoSettings::save(const QString &fileName) {
 	settingsSaver->setValue("source", this->scope.trigger.source);
 	settingsSaver->endGroup();
 	// Spectrum
-	for(int channel = 0; channel < this->scope.spectrum.count(); channel++) {
+	for(int channel = 0; channel < this->scope.spectrum.count(); ++channel) {
 		settingsSaver->beginGroup(QString("spectrum%1").arg(channel));
 		settingsSaver->setValue("magnitude", this->scope.spectrum[channel].magnitude);
 		settingsSaver->setValue("offset", this->scope.spectrum[channel].offset);
@@ -467,7 +467,7 @@ int DsoSettings::save(const QString &fileName) {
 		settingsSaver->endGroup();
 	}
 	// Vertical axis
-	for(int channel = 0; channel < this->scope.voltage.count(); channel++) {
+	for(int channel = 0; channel < this->scope.voltage.count(); ++channel) {
 		settingsSaver->beginGroup(QString("vertical%1").arg(channel));
 		settingsSaver->setValue("gain", this->scope.voltage[channel].gain);
 		settingsSaver->setValue("misc", this->scope.voltage[channel].misc);
@@ -487,7 +487,7 @@ int DsoSettings::save(const QString &fileName) {
 	if(complete) {
 		settingsSaver->beginGroup("color");
 		DsoSettingsColorValues *colors;
-		for(int mode = 0; mode < 2; mode++) {
+		for(int mode = 0; mode < 2; ++mode) {
 			if(mode == 0) {
 				colors = &this->view.color.screen;
 				settingsSaver->beginGroup("screen");
@@ -502,10 +502,10 @@ int DsoSettings::save(const QString &fileName) {
 			settingsSaver->setValue("border", colors->border);
 			settingsSaver->setValue("grid", colors->grid);
 			settingsSaver->setValue("markers", colors->markers);
-			for(int channel = 0; channel < this->scope.spectrum.count(); channel++)
+			for(int channel = 0; channel < this->scope.spectrum.count(); ++channel)
 				settingsSaver->setValue(QString("spectrum%1").arg(channel), colors->spectrum[channel]);
 			settingsSaver->setValue("text", colors->text);
-			for(int channel = 0; channel < this->scope.voltage.count(); channel++)
+			for(int channel = 0; channel < this->scope.voltage.count(); ++channel)
 				settingsSaver->setValue(QString("voltage%1").arg(channel), colors->voltage[channel]);
 			settingsSaver->endGroup();
 		}

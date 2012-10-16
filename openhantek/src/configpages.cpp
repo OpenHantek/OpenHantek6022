@@ -170,7 +170,7 @@ DsoConfigColorsPage::DsoConfigColorsPage(DsoSettings *settings, QWidget *parent)
 	this->channelLabel->setAlignment(Qt::AlignHCenter);
 	this->spectrumLabel = new QLabel(tr("Spectrum"));
 	this->spectrumLabel->setAlignment(Qt::AlignHCenter);
-	for(int channel = 0; channel < this->settings->scope.voltage.count(); channel++) {
+	for(int channel = 0; channel < this->settings->scope.voltage.count(); ++channel) {
 		this->colorLabel.append(new QLabel(this->settings->scope.voltage[channel].name));
 		this->channelColorBox.append(new ColorBox(this->settings->view.color.screen.voltage[channel]));
 		this->spectrumColorBox.append(new ColorBox(this->settings->view.color.screen.spectrum[channel]));
@@ -182,7 +182,7 @@ DsoConfigColorsPage::DsoConfigColorsPage(DsoSettings *settings, QWidget *parent)
 	this->graphLayout->setColumnMinimumWidth(2, 80);
 	this->graphLayout->addWidget(this->channelLabel, 0, 1);
 	this->graphLayout->addWidget(this->spectrumLabel, 0, 2);
-	for(int channel = 0; channel < this->settings->scope.voltage.count(); channel++) {
+	for(int channel = 0; channel < this->settings->scope.voltage.count(); ++channel) {
 		this->graphLayout->addWidget(this->colorLabel[channel], channel + 1, 0);
 		this->graphLayout->addWidget(this->channelColorBox[channel], channel + 1, 1);
 		this->graphLayout->addWidget(this->spectrumColorBox[channel], channel + 1, 2);
@@ -215,7 +215,7 @@ void DsoConfigColorsPage::saveSettings() {
 	this->settings->view.color.screen.text = this->textColorBox->getColor();
 	
 	// Graph category
-	for(int channel = 0; channel < this->settings->scope.voltage.count(); channel++) {
+	for(int channel = 0; channel < this->settings->scope.voltage.count(); ++channel) {
 		this->settings->view.color.screen.voltage[channel] = this->channelColorBox[channel]->getColor();
 		this->settings->view.color.screen.spectrum[channel] = this->spectrumColorBox[channel]->getColor();
 	}
