@@ -282,7 +282,7 @@ namespace Hantek {
 	/// \brief Gets the trigger point.
 	/// \return The trigger point for the captured samples.
 	unsigned int BulkResponseGetCaptureState::getTriggerPoint() {
-		return this->array[2] | (this->array[3] << 8);
+		return this->array[2] | (this->array[3] << 8) | (this->array[1] << 16);
 	}
 	
 	
@@ -650,14 +650,14 @@ namespace Hantek {
 	
 	/// \brief Sets the data bytes to the specified values.
 	/// \param fastRate The fastRate state (ESamplerateBits).
-	/// \param samplerateFast The SamplerateFast value (ESamplerateBits).
-	/// \param samplerateSlow The SamplerateSlow value.
-	BulkSetSamplerate2250::BulkSetSamplerate2250(bool fastRate, unsigned char samplerateFast, unsigned short int samplerateSlow) : Helper::DataArray<unsigned char>(8) {
+	/// \param downsampling The downsampling state (ESamplerateBits).
+	/// \param samplerate The Samplerate value.
+	BulkSetSamplerate2250::BulkSetSamplerate2250(bool fastRate, bool downsampling, unsigned short int samplerate) : Helper::DataArray<unsigned char>(8) {
 		this->init();
 		
 		this->setFastRate(fastRate);
-		this->setSamplerateFast(samplerateFast);
-		this->setSamplerateSlow(samplerateSlow);
+		this->setDownsampling(downsampling);
+		this->setSamplerate(samplerate);
 	}
 	
 	/// \brief Get the fastRate state in ESamplerateBits.
@@ -672,27 +672,27 @@ namespace Hantek {
 		((ESamplerateBits *) &(this->array[2]))->fastRate = fastRate ? 1 : 0;
 	}
 	
-	/// \brief Get the samplerateFast value in ESamplerateBits.
-	/// \return The samplerateFast value in ESamplerateBits.
-	unsigned char BulkSetSamplerate2250::getSamplerateFast() {
-		return ((ESamplerateBits *) &(this->array[2]))->samplerateFast;
+	/// \brief Get the downsampling state in ESamplerateBits.
+	/// \return The samplerateFast state.
+	bool BulkSetSamplerate2250::getDownsampling() {
+		return ((ESamplerateBits *) &(this->array[2]))->downsampling == 1;
 	}
 	
 	/// \brief Set the samplerateFast in ESamplerateBits to the given value.
 	/// \param value The new samplerateFast value.
-	void BulkSetSamplerate2250::setSamplerateFast(unsigned char value) {
-		((ESamplerateBits *) &(this->array[2]))->samplerateFast = value;
+	void BulkSetSamplerate2250::setDownsampling(bool downsampling) {
+		((ESamplerateBits *) &(this->array[2]))->downsampling = downsampling ? 1 : 0;
 	}
 	
-	/// \brief Get the SamplerateSlow value.
-	/// \return The SamplerateSlow value.
-	unsigned short int BulkSetSamplerate2250::getSamplerateSlow() {
+	/// \brief Get the Samplerate value.
+	/// \return The Samplerate value.
+	unsigned short int BulkSetSamplerate2250::getSamplerate() {
 		return (unsigned short int) this->array[4] | ((unsigned short int) this->array[5] << 8);
 	}
 	
-	/// \brief Set the SamplerateSlow to the given value.
-	/// \param samplerate The new SamplerateSlow value.
-	void BulkSetSamplerate2250::setSamplerateSlow(unsigned short int samplerate) {
+	/// \brief Set the Samplerate to the given value.
+	/// \param samplerate The new Samplerate value.
+	void BulkSetSamplerate2250::setSamplerate(unsigned short int samplerate) {
 		this->array[4] = (unsigned char) samplerate;
 		this->array[5] = (unsigned char) (samplerate >> 8);
 	}
@@ -804,93 +804,39 @@ namespace Hantek {
 	/// \brief Sets the data bytes to the specified values.
 	/// \param triggerPositionPre The TriggerPositionPre value.
 	/// \param triggerPositionPost The TriggerPositionPost value.
-	/// \param usedPre The TriggerPositionUsedPre value.
-	/// \param usedPost The TriggerPositionUsedPost value.
-	/// \param largeBuffer The largeBuffer state.
-	/// \param slowBuffer The slowBuffer state.
-	BulkSetBuffer2250::BulkSetBuffer2250(unsigned short int triggerPositionPre, unsigned short int triggerPositionPost, unsigned char usedPre, unsigned char usedPost, bool largeBuffer, bool slowBuffer) : Helper::DataArray<unsigned char>(10) {
+	BulkSetBuffer2250::BulkSetBuffer2250(unsigned long int triggerPositionPre, unsigned long int triggerPositionPost) : Helper::DataArray<unsigned char>(12) {
 		this->init();
 		
 		this->setTriggerPositionPre(triggerPositionPre);
 		this->setTriggerPositionPost(triggerPositionPost);
-		this->setUsedPre(usedPre);
-		this->setUsedPost(usedPost);
-		this->setLargeBuffer(largeBuffer);
-		this->setSlowBuffer(slowBuffer);
-	}
-	
-	/// \brief Get the TriggerPositionPre value.
-	/// \return The TriggerPositionPre value.
-	unsigned short int BulkSetBuffer2250::getTriggerPositionPre() {
-		return (unsigned short int) this->array[2] | ((unsigned short int) this->array[3] << 8);
-	}
-	
-	/// \brief Set the TriggerPositionPre to the given value.
-	/// \param position The new TriggerPositionPre value.
-	void BulkSetBuffer2250::setTriggerPositionPre(unsigned short int position) {
-		this->array[2] = (unsigned char) position;
-		this->array[3] = (unsigned char) (position >> 8);
 	}
 	
 	/// \brief Get the TriggerPositionPost value.
 	/// \return The TriggerPositionPost value.
-	unsigned short int BulkSetBuffer2250::getTriggerPositionPost() {
-		return (unsigned short int) this->array[6] | ((unsigned short int) this->array[7] << 8);
+	unsigned long int BulkSetBuffer2250::getTriggerPositionPost() {
+		return (unsigned long int) this->array[2] | ((unsigned long int) this->array[3] << 8) | ((unsigned long int) this->array[4] << 16);
 	}
 	
 	/// \brief Set the TriggerPositionPost to the given value.
 	/// \param position The new TriggerPositionPost value.
-	void BulkSetBuffer2250::setTriggerPositionPost(unsigned short int position) {
+	void BulkSetBuffer2250::setTriggerPositionPost(unsigned long int position) {
+		this->array[2] = (unsigned char) position;
+		this->array[3] = (unsigned char) (position >> 8);
+		this->array[4] = (unsigned char) (position >> 16);
+	}
+	
+	/// \brief Get the TriggerPositionPre value.
+	/// \return The TriggerPositionPre value.
+	unsigned long int BulkSetBuffer2250::getTriggerPositionPre() {
+		return (unsigned long int) this->array[6] | ((unsigned short int) this->array[7] << 8) | ((unsigned short int) this->array[8] << 16);
+	}
+	
+	/// \brief Set the TriggerPositionPre to the given value.
+	/// \param position The new TriggerPositionPre value.
+	void BulkSetBuffer2250::setTriggerPositionPre(unsigned long int position) {
 		this->array[6] = (unsigned char) position;
 		this->array[7] = (unsigned char) (position >> 8);
-	}
-	
-	/// \brief Get the TriggerPositionUsedPre value.
-	/// \return The ::DTriggerPositionUsed value for the pre position.
-	unsigned char BulkSetBuffer2250::getUsedPre() {
-		return ((FBuffer1Bits *) &(this->array[4]))->triggerPositionUsed;
-	}
-	
-	/// \brief Set the TriggerPositionUsedPre to the given value.
-	/// \param value The new ::DTriggerPositionUsed value for the pre position.
-	void BulkSetBuffer2250::setUsedPre(unsigned char value) {
-		((FBuffer1Bits *) &(this->array[4]))->triggerPositionUsed = value;
-	}
-	
-	/// \brief Get the TriggerPositionUsedPost value.
-	/// \return The ::DTriggerPositionUsed value for the post position.
-	unsigned char BulkSetBuffer2250::getUsedPost() {
-		return ((FBuffer1Bits *) &(this->array[8]))->triggerPositionUsed;
-	}
-	
-	/// \brief Set the TriggerPositionUsedPost to the given value.
-	/// \param value The new ::DTriggerPositionUsed value for the post position.
-	void BulkSetBuffer2250::setUsedPost(unsigned char value) {
-		((FBuffer1Bits *) &(this->array[8]))->triggerPositionUsed = value;
-	}
-	
-	/// \brief Get the largeBuffer state in FBuffer1Bits.
-	/// \return The largeBuffer state.
-	bool BulkSetBuffer2250::getLargeBuffer() {
-		return ((FBuffer1Bits *) &(this->array[2]))->largeBuffer == 0;
-	}
-	
-	/// \brief Set the largeBuffer in FBuffer1Bits to the given state.
-	/// \param largeBuffer The new largeBuffer state.
-	void BulkSetBuffer2250::setLargeBuffer(bool largeBuffer) {
-		((FBuffer1Bits *) &(this->array[2]))->largeBuffer = largeBuffer ? 0 : 1;
-	}
-	
-	/// \brief Get the slowBuffer state in FBuffer2Bits.
-	/// \return The slowBuffer state.
-	bool BulkSetBuffer2250::getSlowBuffer() {
-		return ((FBuffer2Bits *) &(this->array[2]))->slowBuffer == 1;
-	}
-	
-	/// \brief Set the slowBuffer in FBuffer2Bits to the given state.
-	/// \param slowBuffer The new slowBuffer state.
-	void BulkSetBuffer2250::setSlowBuffer(bool slowBuffer) {
-		((FBuffer2Bits *) &(this->array[2]))->slowBuffer = slowBuffer ? 1 : 0;
+		this->array[8] = (unsigned char) (position >> 16);
 	}
 	
 	/// \brief Initialize the array to the needed values.

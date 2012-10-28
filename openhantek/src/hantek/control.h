@@ -134,7 +134,7 @@ namespace Hantek {
 	struct ControlSettingsSamplerate {
 		ControlSamplerateLimits *limits; ///< The samplerate limits
 		unsigned long int downsampling; ///< The variable downsampling factor
-		double current; ///< The current samplerate
+		unsigned long int current; ///< The current samplerate
 	};
 	
 	//////////////////////////////////////////////////////////////////////////////
@@ -186,7 +186,7 @@ namespace Hantek {
 		protected:
 			void run();
 			
-			unsigned short int calculateTriggerPoint(unsigned short int value);
+			unsigned long int calculateTriggerPoint(unsigned long int value);
 			int getCaptureState();
 			int getSamples(bool process);
 			unsigned long int updateRecordLength(unsigned long int size);

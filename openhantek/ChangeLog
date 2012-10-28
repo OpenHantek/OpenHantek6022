@@ -169,3 +169,7 @@
 * Change back workaround for Mac OS that is most probably not required anymore
 * Various performance improvements and small fixes
 * New cppcheck build target
+
+2012-10-28 Oliver Haag  <oliver.haag@gmail.com>
+* Bugfix: DSO-2250 support, thanks to Dmitry Kolyadintsev
+* Bugfix: Remove invalid divider for large buffers

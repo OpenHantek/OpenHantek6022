@@ -779,7 +779,7 @@ namespace Hantek {
 	/// \brief Samplerate bits for DSO-2250 0x0e command.
 	struct ESamplerateBits {
 		unsigned char fastRate:1; ///< false, if one channels uses all buffers
-		unsigned char samplerateFast:3; ///< samplerate value for fast sampling rates
+		unsigned char downsampling:1; ///< true, if the downsampler is activated
 		unsigned char reserved:4; ///< Unused bits
 	};
 	
@@ -948,7 +948,7 @@ namespace Hantek {
 	
 	//////////////////////////////////////////////////////////////////////////////
 	/// \class BulkSetFilter2250                                    hantek/types.h
-	/// \brief The DSO-5200/DSO-5200A BULK_BSETFILTER builder.
+	/// \brief The DSO-2250 BULK_BSETFILTER builder.
 	class BulkSetFilter2250 : public Helper::DataArray<unsigned char> {
 		public:
 			BulkSetFilter2250();
@@ -1039,14 +1039,14 @@ namespace Hantek {
 	class BulkSetSamplerate2250 : public Helper::DataArray<unsigned char> {
 		public:
 			BulkSetSamplerate2250();
-			BulkSetSamplerate2250(bool fastRate, unsigned char samplerateFast = 0, unsigned short int samplerateSlow = 0);
+			BulkSetSamplerate2250(bool fastRate, bool downsampling = false, unsigned short int samplerate = 0);
 			
 			bool getFastRate();
 			void setFastRate(bool fastRate);
-			unsigned char getSamplerateFast();
-			void setSamplerateFast(unsigned char value);
-			unsigned short int getSamplerateSlow();
-			void setSamplerateSlow(unsigned short int samplerate);
+			bool getDownsampling();
+			void setDownsampling(bool downsampling);
+			unsigned short int getSamplerate();
+			void setSamplerate(unsigned short int samplerate);
 		
 		private:
 			void init();
@@ -1081,20 +1081,12 @@ namespace Hantek {
 	class BulkSetBuffer2250 : public Helper::DataArray<unsigned char> {
 		public:
 			BulkSetBuffer2250();
-			BulkSetBuffer2250(unsigned short int triggerPositionPre, unsigned short int triggerPositionPost, unsigned char usedPre = 0, unsigned char usedPost = 0, bool largeBuffer = false, bool slowBuffer = false);
+			BulkSetBuffer2250(unsigned long int triggerPositionPre, unsigned long int triggerPositionPost);
 			
-			unsigned short int getTriggerPositionPre();
-			void setTriggerPositionPre(unsigned short int value);
-			unsigned short int getTriggerPositionPost();
-			void setTriggerPositionPost(unsigned short int value);
-			unsigned char getUsedPre();
-			void setUsedPre(unsigned char value);
-			unsigned char getUsedPost();
-			void setUsedPost(unsigned char value);
-			bool getLargeBuffer();
-			void setLargeBuffer(bool largeBuffer);
-			bool getSlowBuffer();
-			void setSlowBuffer(bool slowBuffer);
+			unsigned long int getTriggerPositionPost();
+			void setTriggerPositionPost(unsigned long int value);
+			unsigned long int getTriggerPositionPre();
+			void setTriggerPositionPre(unsigned long int value);
 		
 		private:
 			void init();
