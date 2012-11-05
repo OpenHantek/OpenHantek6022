@@ -1176,8 +1176,8 @@ namespace Hantek {
 			}
 			case BULK_FSETBUFFER: {
 				// Calculate the position values (Inverse, maximum is 0x7ffff)
-				unsigned short int positionPre = 0x7ffff - this->specification.recordLengths[this->settings.recordLengthId] + positionSamples;
-				unsigned short int positionPost = 0x7ffff - positionSamples;
+				unsigned long int positionPre = 0x7fffful - this->specification.recordLengths[this->settings.recordLengthId] + positionSamples;
+				unsigned long int positionPost = 0x7fffful - positionSamples;
 				
 				// SetBuffer2250 bulk command for trigger position
 				BulkSetBuffer2250 *commandSetBuffer2250 = static_cast<BulkSetBuffer2250 *>(this->command[BULK_FSETBUFFER]);

@@ -173,3 +173,6 @@
 2012-10-28 Oliver Haag  <oliver.haag@gmail.com>
 * Bugfix: DSO-2250 support, thanks to Dmitry Kolyadintsev
 * Bugfix: Remove invalid divider for large buffers
+
+2012-11-05 Oliver Haag  <oliver.haag@gmail.com>
+* Bugfix: short instead of long int for DSO-2250 trigger offset
