@@ -673,13 +673,13 @@ namespace Hantek {
 	}
 	
 	/// \brief Get the downsampling state in ESamplerateBits.
-	/// \return The samplerateFast state.
+	/// \return The downsampling state.
 	bool BulkSetSamplerate2250::getDownsampling() {
 		return ((ESamplerateBits *) &(this->array[2]))->downsampling == 1;
 	}
 	
-	/// \brief Set the samplerateFast in ESamplerateBits to the given value.
-	/// \param value The new samplerateFast value.
+	/// \brief Set the downsampling in ESamplerateBits to the given state.
+	/// \param downsampling The new downsampling state.
 	void BulkSetSamplerate2250::setDownsampling(bool downsampling) {
 		((ESamplerateBits *) &(this->array[2]))->downsampling = downsampling ? 1 : 0;
 	}

@@ -64,7 +64,9 @@ namespace Helper {
 	};
 	
 	QString libUsbErrorString(int error);
+	
 	QString valueToString(double value, Unit unit, int precision = -1);
+	double stringToValue(const QString &text, Unit unit, bool *ok = 0);
 	
 #ifdef DEBUG
 	QString hexDump(unsigned char *data, unsigned int length);

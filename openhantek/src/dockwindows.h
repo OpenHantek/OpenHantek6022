@@ -39,6 +39,8 @@ class QLabel;
 class QCheckBox;
 class QComboBox;
 
+class SiSpinBox;
+
 
 ////////////////////////////////////////////////////////////////////////////////
 /// \class HorizontalDock                                          dockwindows.h
@@ -51,8 +53,8 @@ class HorizontalDock : public QDockWidget {
 		HorizontalDock(DsoSettings *settings, QWidget *parent = 0, Qt::WindowFlags flags = 0);
 		~HorizontalDock();
 		
-		int setFrequencybase(double timebase);
-		int setTimebase(double timebase);
+		void setFrequencybase(double timebase);
+		void setTimebase(double timebase);
 		int setFormat(Dso::GraphFormat format);
 	
 	protected:
@@ -63,21 +65,17 @@ class HorizontalDock : public QDockWidget {
 		QLabel *timebaseLabel; ///< The label for the timebase combobox
 		QLabel *frequencybaseLabel; ///< The label for the frequencybase combobox
 		QLabel *formatLabel; ///< The label for the format combobox
-		QComboBox *timebaseComboBox; ///< Selects the timebase for voltage graphs
-		QComboBox *frequencybaseComboBox; ///< Selects the frequencybase for spectrum graphs
+		SiSpinBox *timebaseSiSpinBox; ///< Selects the timebase for voltage graphs
+		SiSpinBox *frequencybaseSiSpinBox; ///< Selects the frequencybase for spectrum graphs
 		QComboBox *formatComboBox; ///< Selects the way the sampled data is interpreted and shown
 		
 		DsoSettings *settings; ///< The settings provided by the parent class
 		
-		QList<double> frequencybaseSteps; ///< The selectable steps for the frequencybase
-		QList<double> timebaseSteps; ///< The selectable steps for the timebase
-		QStringList frequencybaseStrings; ///< String representations for the frequencybase steps
-		QStringList timebaseStrings; ///< String representations for the timebase steps
 		QStringList formatStrings; ///< Strings for the formats
 	
 	protected slots:
-		void frequencybaseSelected(int index);
-		void timebaseSelected(int index);
+		void frequencybaseSelected(double frequencybase);
+		void timebaseSelected(double timebase);
 		void formatSelected(int index);
 	
 	signals:

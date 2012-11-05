@@ -26,6 +26,7 @@ SOURCES += \
 	src/configpages.cpp \
 	src/dataanalyzer.cpp \
 	src/dockwindows.cpp \
+	src/dso.cpp \
 	src/dsocontrol.cpp \
 	src/dsowidget.cpp \
 	src/exporter.cpp \
@@ -36,16 +37,17 @@ SOURCES += \
 	src/main.cpp \
 	src/openhantek.cpp \
 	src/settings.cpp \
+	src/sispinbox.cpp \
 	src/hantek/control.cpp \
 	src/hantek/device.cpp \
-	src/hantek/types.cpp \
-	src/dso.cpp
+	src/hantek/types.cpp
 HEADERS += \
 	src/colorbox.h \
 	src/configdialog.h \
 	src/configpages.h \
 	src/dataanalyzer.h \
 	src/dockwindows.h \
+	src/dso.h \
 	src/dsocontrol.h \
 	src/dsowidget.h \
 	src/exporter.h \
@@ -55,10 +57,10 @@ HEADERS += \
 	src/levelslider.h \
 	src/openhantek.h \
 	src/settings.h \
+	src/sispinbox.h \
 	src/hantek/control.h \
 	src/hantek/device.h \
-	src/hantek/types.h \
-	src/dso.h
+	src/hantek/types.h
 
 # Ressource files
 RESOURCES += \

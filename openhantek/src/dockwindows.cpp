@@ -32,6 +32,7 @@
 #include "dockwindows.h"
 
 #include "settings.h"
+#include "sispinbox.h"
 #include "helper.h"
 
 
@@ -44,29 +45,20 @@
 HorizontalDock::HorizontalDock(DsoSettings *settings, QWidget *parent, Qt::WindowFlags flags) : QDockWidget(tr("Horizontal"), parent, flags) {
 	this->settings = settings;
 	
-	// Initialize lists for comboboxes
-	this->timebaseSteps         << 1e-8 << 2e-8 << 4e-8 << 1e-7 << 2e-7 << 4e-7
-			<< 1e-6 << 2e-6 << 4e-6 << 1e-5 << 2e-5 << 4e-5 << 1e-4 << 2e-4 << 4e-4
-			<< 1e-3 << 2e-3 << 4e-3 << 1e-2 << 2e-2 << 4e-2 << 1e-1 << 2e-1 << 4e-1
-			<<  1e0 <<  2e0 <<  4e0 <<  1e1 <<  2e1 <<  4e1 <<  6e1 << 12e1 << 24e1
-			<<  6e2 << 12e2 << 24e2 << 36e2;  ///< Timebase steps in seconds/div
-	for(QList<double>::iterator timebase = this->timebaseSteps.begin(); timebase != this->timebaseSteps.end(); ++timebase)
-		this->timebaseStrings << Helper::valueToString(*timebase, Helper::UNIT_SECONDS, 0);
-	this->frequencybaseSteps
-			<<  1.0 <<  2.0 <<  5.0 <<  1e1 <<  2e1 <<  5e1 <<  1e2 <<  2e2 <<  5e2
-			<<  1e3 <<  2e3 <<  5e3 <<  1e4 <<  2e4 <<  4e4 <<  1e5 <<  2e5 <<  5e5
-			<<  1e6 <<  2e6 <<  5e6 <<  1e7; ///< Frequencybase steps in Hz/div
-	for(QList<double>::iterator frequencybase = this->frequencybaseSteps.begin(); frequencybase != this->frequencybaseSteps.end(); ++frequencybase)
-		this->frequencybaseStrings << Helper::valueToString(*frequencybase, Helper::UNIT_HERTZ, 0);
-	
 	// Initialize elements
 	this->timebaseLabel = new QLabel(tr("Timebase"));
-	this->timebaseComboBox = new QComboBox();
-	this->timebaseComboBox->addItems(this->timebaseStrings);
+	this->timebaseSiSpinBox = new SiSpinBox(Helper::UNIT_SECONDS);
+	this->timebaseSiSpinBox->setMinimum(1e-9);
+	this->timebaseSiSpinBox->setMaximum(3.6e3);
+	
+	QList<double> frequencybaseSteps;
+	frequencybaseSteps << 1.0 << 2.0 << 5.0 << 10.0;
 	
 	this->frequencybaseLabel = new QLabel(tr("Frequencybase"));
-	this->frequencybaseComboBox = new QComboBox();
-	this->frequencybaseComboBox->addItems(this->frequencybaseStrings);
+	this->frequencybaseSiSpinBox = new SiSpinBox(Helper::UNIT_HERTZ);
+	this->frequencybaseSiSpinBox->setSteps(frequencybaseSteps);
+	this->frequencybaseSiSpinBox->setMinimum(1.0);
+	this->frequencybaseSiSpinBox->setMaximum(100e6);
 	
 	this->formatLabel = new QLabel(tr("Format"));
 	this->formatComboBox = new QComboBox();
@@ -77,9 +69,9 @@ HorizontalDock::HorizontalDock(DsoSettings *settings, QWidget *parent, Qt::Windo
 	this->dockLayout->setColumnMinimumWidth(0, 64);
 	this->dockLayout->setColumnStretch(1, 1);
 	this->dockLayout->addWidget(this->timebaseLabel, 0, 0);
-	this->dockLayout->addWidget(this->timebaseComboBox, 0, 1);
+	this->dockLayout->addWidget(this->timebaseSiSpinBox, 0, 1);
 	this->dockLayout->addWidget(this->frequencybaseLabel, 1, 0);
-	this->dockLayout->addWidget(this->frequencybaseComboBox, 1, 1);
+	this->dockLayout->addWidget(this->frequencybaseSiSpinBox, 1, 1);
 	this->dockLayout->addWidget(this->formatLabel, 2, 0);
 	this->dockLayout->addWidget(this->formatComboBox, 2, 1);
 	
@@ -90,8 +82,8 @@ HorizontalDock::HorizontalDock(DsoSettings *settings, QWidget *parent, Qt::Windo
 	this->setWidget(this->dockWidget);
 	
 	// Connect signals and slots
-	connect(this->frequencybaseComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(frequencybaseSelected(int)));
-	connect(this->timebaseComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(timebaseSelected(int)));
+	connect(this->frequencybaseSiSpinBox, SIGNAL(valueChanged(double)), this, SLOT(frequencybaseSelected(double)));
+	connect(this->timebaseSiSpinBox, SIGNAL(valueChanged(double)), this, SLOT(timebaseSelected(double)));
 	connect(this->formatComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(formatSelected(int)));
 	
 	// Set values
@@ -114,26 +106,14 @@ void HorizontalDock::closeEvent(QCloseEvent *event) {
 
 /// \brief Changes the frequencybase if the new value is supported.
 /// \param frequencybase The frequencybase in hertz.
-/// \return Index of frequencybase-value, -1 on error.
-int HorizontalDock::setFrequencybase(double frequencybase) {
-	int index = this->frequencybaseSteps.indexOf(frequencybase);
-	
-	if(index != -1)
-		this->frequencybaseComboBox->setCurrentIndex(index);
-	
-	return index;
+void HorizontalDock::setFrequencybase(double frequencybase) {
+	this->frequencybaseSiSpinBox->setValue(frequencybase);
 }
 
 /// \brief Changes the timebase if the new value is supported.
 /// \param timebase The timebase in seconds.
-/// \return Index of timebase-value, -1 on error.
-int HorizontalDock::setTimebase(double timebase) {
-	int index = this->timebaseSteps.indexOf(timebase);
-	
-	if(index != -1)
-		this->timebaseComboBox->setCurrentIndex(index);
-	
-	return index;
+void HorizontalDock::setTimebase(double timebase) {
+	this->timebaseSiSpinBox->setValue(timebase);
 }
 
 /// \brief Changes the format if the new value is supported.
@@ -149,17 +129,17 @@ int HorizontalDock::setFormat(Dso::GraphFormat format) {
 }
 
 /// \brief Called when the frequencybase combo box changes it's value.
-/// \param index The index of the combo box item.
-void HorizontalDock::frequencybaseSelected(int index) {
-	this->settings->scope.horizontal.frequencybase = this->frequencybaseSteps.at(index);
-	emit frequencybaseChanged(this->settings->scope.horizontal.frequencybase);
+/// \param frequencybase The frequencybase in hertz.
+void HorizontalDock::frequencybaseSelected(double frequencybase) {
+	this->settings->scope.horizontal.frequencybase = frequencybase;
+	emit frequencybaseChanged(frequencybase);
 }
 
 /// \brief Called when the timebase combo box changes it's value.
-/// \param index The index of the combo box item.
-void HorizontalDock::timebaseSelected(int index) {
-	this->settings->scope.horizontal.timebase = this->timebaseSteps.at(index);
-	emit timebaseChanged(this->settings->scope.horizontal.timebase);
+/// \param timebase The timebase in seconds.
+void HorizontalDock::timebaseSelected(double timebase) {
+	this->settings->scope.horizontal.timebase = timebase;
+	emit timebaseChanged(timebase);
 }
 
 /// \brief Called when the format combo box changes it's value.

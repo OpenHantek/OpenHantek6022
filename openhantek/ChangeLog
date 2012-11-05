@@ -176,3 +176,7 @@
 
 2012-11-05 Oliver Haag  <oliver.haag@gmail.com>
 * Bugfix: short instead of long int for DSO-2250 trigger offset
+
+2012-11-05 Oliver Haag  <oliver.haag@gmail.com>
+* Added new SiSpinBox
+* Replaced ComboBox with SiSpinBox for time- and frequencybase
