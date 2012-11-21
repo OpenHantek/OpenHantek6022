@@ -86,7 +86,9 @@ DISTFILES += \
 	$${DOXYFILES}
 
 # Translations
-TRANSLATIONS += translations/openhantek_de.ts
+TRANSLATIONS += \
+	translations/openhantek_de.ts \
+	translations/openhantek_pt.ts
 
 # Program version
 VERSION = 0.2.0
@@ -171,6 +173,18 @@ translations.files += translations/*.qm
 INSTALLS += \
 	target \
 	translations
+
+# Custom compiler "lrelease" for qm generation
+isEmpty(QMAKE_LRELEASE) {
+	win32: QMAKE_LRELEASE = $$[QT_INSTALL_BINS]\lrelease.exe
+	else: QMAKE_LRELEASE = $$[QT_INSTALL_BINS]/lrelease
+}
+lrelease.input = TRANSLATIONS
+lrelease.output = ${QMAKE_FILE_PATH}/${QMAKE_FILE_BASE}.qm
+lrelease.commands = $$QMAKE_LRELEASE ${QMAKE_FILE_IN} -qm ${QMAKE_FILE_PATH}/${QMAKE_FILE_BASE}.qm
+lrelease.CONFIG += no_link
+QMAKE_EXTRA_COMPILERS += lrelease
+PRE_TARGETDEPS += compiler_lrelease_make_all
 
 # Custom target "cppcheck" for Cppcheck
 INCLUDEPARAMETERS = $$surround($${INCLUDEPATH} $${INCLUDEPATH_QUOTE}, "-I \"", "\"")
