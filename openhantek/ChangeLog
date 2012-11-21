@@ -180,3 +180,6 @@
 2012-11-05 Oliver Haag  <oliver.haag@gmail.com>
 * Added new SiSpinBox
 * Replaced ComboBox with SiSpinBox for time- and frequencybase
+
+2012-11-21 Oliver Haag  <oliver.haag@gmail.com>
+* Bugfix: DSO-2250 detection failed

@@ -40,10 +40,8 @@ namespace Hantek {
 	/// \param parent The parent widget.
 	Device::Device(QObject *parent) : QObject(parent) {
 		// Product ids and names for the Model enum
-		this->modelIds << 0x2090 << 0x2100 << 0x2150 << 0x2250
-				<< 0x5200 << 0x520A;
-		this->modelStrings << "DSO-2090" << "DSO-2100" << "DSO-2150" << "DSO-2250"
-				<< "DSO-5200" << "DSO-5200A";
+		this->modelIds << 0x2090 << 0x2150 << 0x2250 << 0x5200 << 0x520A;
+		this->modelStrings << "DSO-2090" << "DSO-2150" << "DSO-2250" << "DSO-5200" << "DSO-5200A";
 		this->model = MODEL_UNKNOWN;
 		
 		this->beginCommandControl = new ControlBeginCommand();
