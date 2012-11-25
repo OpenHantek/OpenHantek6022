@@ -95,15 +95,15 @@ class DataAnalyzer : public QThread {
 		double *window; ///< The array for the dft window factors
 		
 		QList<double *> waitingData; ///< Pointer to input data from device
-		QList<unsigned int> waitingDataSize; ///< Number of input data samples
+		QList<unsigned long int> waitingDataSize; ///< Number of input data samples
 		double waitingDataSamplerate; ///< The samplerate of the input data
 		QMutex *waitingDataMutex; ///< A mutex for the input data
 	
 	public slots:
-		void analyze(const QList<double *> *data, const QList<unsigned int> *size, double samplerate, QMutex *mutex);
+		void analyze(const QList<double *> *data, const QList<unsigned long int> *size, double samplerate, QMutex *mutex);
 	
 	signals:
-		void analyzed(unsigned int samples); ///< The data with that much samples has been analyzed
+		void analyzed(unsigned long samples); ///< The data with that much samples has been analyzed
 };
 
 #endif

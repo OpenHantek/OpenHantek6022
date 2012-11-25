@@ -17,11 +17,18 @@ Released February 9, 2011
 </ul>
 
 \section sec_0_3 OpenHantek 0.3.0
-Planned Q2/Q3, 2011
+Planned Q1, 2013
 <ul>
 	<li>%Hantek DSO-2250 support</li>
-	<li>USB hotplugging</li>
+	<li>Proper support for different record lengths</li>
+	<li>Arbitrary samplerate support</li>
+</ul>
+
+\section sec_0_4 OpenHantek 0.4.0
+<ul>
 	<li>Improved zoom functionality</li>
+	<li>Self alignment routines</li>
+	<li>USB hotplugging</li>
 </ul>
 
 **/

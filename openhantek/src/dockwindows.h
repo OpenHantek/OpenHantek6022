@@ -54,7 +54,9 @@ class HorizontalDock : public QDockWidget {
 		~HorizontalDock();
 		
 		void setFrequencybase(double timebase);
+		void setSamplerate(double samplerate);
 		void setTimebase(double timebase);
+		void setRecordLength(unsigned long int recordLength);
 		int setFormat(Dso::GraphFormat format);
 	
 	protected:
@@ -62,25 +64,39 @@ class HorizontalDock : public QDockWidget {
 		
 		QGridLayout *dockLayout; ///< The main layout for the dock window
 		QWidget *dockWidget; ///< The main widget for the dock window
-		QLabel *timebaseLabel; ///< The label for the timebase combobox
-		QLabel *frequencybaseLabel; ///< The label for the frequencybase combobox
+		QLabel *samplerateLabel; ///< The label for the samplerate spinbox
+		QLabel *timebaseLabel; ///< The label for the timebase spinbox
+		QLabel *frequencybaseLabel; ///< The label for the frequencybase spinbox
+		QLabel *recordLengthLabel; ///< The label for the record length combobox
 		QLabel *formatLabel; ///< The label for the format combobox
+		SiSpinBox *samplerateSiSpinBox; ///< Selects the samplerate for aquisitions
 		SiSpinBox *timebaseSiSpinBox; ///< Selects the timebase for voltage graphs
 		SiSpinBox *frequencybaseSiSpinBox; ///< Selects the frequencybase for spectrum graphs
+		QComboBox *recordLengthComboBox; ///< Selects the record length for aquisitions
 		QComboBox *formatComboBox; ///< Selects the way the sampled data is interpreted and shown
 		
 		DsoSettings *settings; ///< The settings provided by the parent class
 		
 		QStringList formatStrings; ///< Strings for the formats
+		
+		bool suppressSignals; ///< Disable changed-signals temporarily
 	
+	public slots:
+		void availableRecordLengthsChanged(const QList<unsigned long int> &recordLengths);
+		void samplerateLimitsChanged(double minimum, double maximum);
+		
 	protected slots:
 		void frequencybaseSelected(double frequencybase);
+		void samplerateSelected(double samplerate);
 		void timebaseSelected(double timebase);
+		void recordLengthSelected(int index);
 		void formatSelected(int index);
 	
 	signals:
 		void frequencybaseChanged(double frequencybase); ///< The frequencybase has been changed
+		void samplerateChanged(double samplerate); ///< The samplerate has been changed
 		void timebaseChanged(double timebase); ///< The timebase has been changed
+		void recordLengthChanged(unsigned long recordLength); ///< The recordd length has been changed
 		void formatChanged(Dso::GraphFormat format); ///< The viewing format has been changed
 };
 

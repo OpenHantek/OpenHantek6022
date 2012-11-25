@@ -93,8 +93,9 @@ struct DsoSettingsScopeHorizontal {
 	double frequencybase; ///< Frequencybase in Hz/div
 	double marker[2]; ///< Marker positions in div
 	double timebase; ///< Timebase in s/div
-	unsigned long int samples; ///< Sample count
-	unsigned long int samplerate; ///< The samplerate of the oscilloscope in S
+	unsigned long int recordLength; ///< Sample count
+	double samplerate; ///< The samplerate of the oscilloscope in S
+	bool samplerateSet; ///< The samplerate was set by the user, not the timebase
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -105,8 +106,8 @@ struct DsoSettingsScopeTrigger {
 	Dso::TriggerMode mode; ///< Automatic, normal or single trigger
 	double position; ///< Horizontal position for pretrigger
 	Dso::Slope slope; ///< Rising or falling edge causes trigger
-	bool special; ///< true if the trigger source is not a standard channel
 	unsigned int source; ///< Channel that is used as trigger source
+	bool special; ///< true if the trigger source is not a standard channel
 };
 
 ////////////////////////////////////////////////////////////////////////////////

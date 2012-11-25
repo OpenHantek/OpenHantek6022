@@ -64,8 +64,9 @@ DsoSettings::DsoSettings(QWidget *parent) : QObject(parent) {
 	this->scope.horizontal.marker[0] = -1.0;
 	this->scope.horizontal.marker[1] = 1.0;
 	this->scope.horizontal.timebase = 1e-3;
-	this->scope.horizontal.samples = 10240;
+	this->scope.horizontal.recordLength = 0;
 	this->scope.horizontal.samplerate = 1e6;
+	this->scope.horizontal.samplerateSet = false;
 	// Trigger
 	this->scope.trigger.filter = true;
 	this->scope.trigger.mode = Dso::TRIGGERMODE_NORMAL;
@@ -276,6 +277,12 @@ int DsoSettings::load(const QString &fileName) {
 	}
 	if(settingsLoader->contains("timebase"))
 		this->scope.horizontal.timebase = settingsLoader->value("timebase").toDouble();
+	if(settingsLoader->contains("recordLength"))
+		this->scope.horizontal.recordLength = settingsLoader->value("recordLength").toUInt();
+	if(settingsLoader->contains("samplerate"))
+		this->scope.horizontal.samplerate = settingsLoader->value("samplerate").toDouble();
+	if(settingsLoader->contains("samplerateSet"))
+		this->scope.horizontal.samplerateSet = settingsLoader->value("samplerateSet").toBool();
 	settingsLoader->endGroup();
 	// Trigger
 	settingsLoader->beginGroup("trigger");
@@ -449,6 +456,9 @@ int DsoSettings::save(const QString &fileName) {
 	for(int marker = 0; marker < 2; ++marker)
 		settingsSaver->setValue(QString("marker%1").arg(marker), this->scope.horizontal.marker[marker]);
 	settingsSaver->setValue("timebase", this->scope.horizontal.timebase);
+	settingsSaver->setValue("recordLength", (unsigned int) this->scope.horizontal.recordLength);
+	settingsSaver->setValue("samplerate", this->scope.horizontal.samplerate);
+	settingsSaver->setValue("samplerateSet", this->scope.horizontal.samplerateSet);
 	settingsSaver->endGroup();
 	// Trigger
 	settingsSaver->beginGroup("trigger");
@@ -457,6 +467,7 @@ int DsoSettings::save(const QString &fileName) {
 	settingsSaver->setValue("position", this->scope.trigger.position);
 	settingsSaver->setValue("slope", this->scope.trigger.slope);
 	settingsSaver->setValue("source", this->scope.trigger.source);
+	settingsSaver->setValue("special", this->scope.trigger.special);
 	settingsSaver->endGroup();
 	// Spectrum
 	for(int channel = 0; channel < this->scope.spectrum.count(); ++channel) {

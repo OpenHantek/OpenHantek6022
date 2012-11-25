@@ -4,10 +4,8 @@
 /// \file hantek/device.h
 /// \brief Declares the Hantek::Device class.
 //
-//  Copyright (C) 2008, 2009  Oleg Khudyakov
-//  prcoder@potrebitel.ru
-//  Copyright (C) 2010  Oliver Haag
-//  oliver.haag@gmail.com
+/// \copyright (c) 2008, 2009 Oleg Khudyakov <prcoder@potrebitel.ru>
+/// \copyright (c) 2010 - 2012 Oliver Haag <oliver.haag@gmail.com>
 //
 //  This program is free software: you can redistribute it and/or modify it
 //  under the terms of the GNU General Public License as published by the Free
@@ -62,17 +60,17 @@ namespace Hantek {
 			
 			// Various methods to handle USB transfers
 #if LIBUSB_VERSION != 0
-			int bulkTransfer(unsigned char endpoint, unsigned char *data, unsigned int length, int attempts = HANTEK_ATTEMPTS_DEFAULT);
+			int bulkTransfer(unsigned char endpoint, unsigned char *data, unsigned long int length, int attempts = HANTEK_ATTEMPTS, unsigned int timeout = HANTEK_TIMEOUT);
 #endif
-			int bulkWrite(unsigned char *data, unsigned int length, int attempts = HANTEK_ATTEMPTS_DEFAULT);
-			int bulkRead(unsigned char *data, unsigned int length, int attempts = HANTEK_ATTEMPTS_DEFAULT);
+			int bulkWrite(unsigned char *data, unsigned long int length, int attempts = HANTEK_ATTEMPTS);
+			int bulkRead(unsigned char *data, unsigned long int length, int attempts = HANTEK_ATTEMPTS);
 			
-			int bulkCommand(Helper::DataArray<unsigned char> *command, int attempts = HANTEK_ATTEMPTS_DEFAULT);
-			int bulkReadMulti(unsigned char *data, unsigned int length, int attempts = HANTEK_ATTEMPTS_DEFAULT);
+			int bulkCommand(Helper::DataArray<unsigned char> *command, int attempts = HANTEK_ATTEMPTS);
+			int bulkReadMulti(unsigned char *data, unsigned long int length, int attempts = HANTEK_ATTEMPTS_MULTI);
 			
-			int controlTransfer(unsigned char type, unsigned char request, unsigned char *data, unsigned int length, int value, int index, int attempts = HANTEK_ATTEMPTS_DEFAULT);
-			int controlWrite(unsigned char request, unsigned char *data, unsigned int length, int value = 0, int index = 0, int attempts = HANTEK_ATTEMPTS_DEFAULT);
-			int controlRead(unsigned char request, unsigned char *data, unsigned int length, int value = 0, int index = 0, int attempts = HANTEK_ATTEMPTS_DEFAULT);
+			int controlTransfer(unsigned char type, unsigned char request, unsigned char *data, unsigned long int length, int value, int index, int attempts = HANTEK_ATTEMPTS);
+			int controlWrite(unsigned char request, unsigned char *data, unsigned long int length, int value = 0, int index = 0, int attempts = HANTEK_ATTEMPTS);
+			int controlRead(unsigned char request, unsigned char *data, unsigned long int length, int value = 0, int index = 0, int attempts = HANTEK_ATTEMPTS);
 			
 			int getConnectionSpeed();
 			Model getModel();

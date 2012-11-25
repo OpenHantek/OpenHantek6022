@@ -101,24 +101,26 @@ namespace Hantek {
 	}
 	
 	/// \brief Sets the data bytes to the specified values.
-	/// \param samplerateSlow The SamplerateSlow value.
+	/// \param downsampler The Downsampler value.
 	/// \param triggerPosition The trigger position value.
 	/// \param triggerSource The trigger source id (Tsr1).
 	/// \param recordLength The record length id (Tsr1).
-	/// \param samplerateFast The samplerateFast value (Tsr1).
+	/// \param samplerateId The samplerateId value (Tsr1).
+	/// \param downsamplingMode The downsamplingMode value (Tsr1).
 	/// \param usedChannels The enabled channels (Tsr2).
 	/// \param fastRate The fastRate state (Tsr2).
 	/// \param triggerSlope The triggerSlope value (Tsr2).
-	BulkSetTriggerAndSamplerate::BulkSetTriggerAndSamplerate(unsigned short int samplerateSlow, unsigned long int triggerPosition, unsigned char triggerSource, unsigned char recordLength, unsigned char samplerateFast, unsigned char usedChannels, bool fastRate, unsigned char triggerSlope) : Helper::DataArray<unsigned char>(12) {
+	BulkSetTriggerAndSamplerate::BulkSetTriggerAndSamplerate(unsigned short int downsampler, unsigned long int triggerPosition, unsigned char triggerSource, unsigned char recordLength, unsigned char samplerateId, bool downsamplingMode, unsigned char usedChannels, bool fastRate, unsigned char triggerSlope) : Helper::DataArray<unsigned char>(12) {
 		this->init();
 		
 		this->setTriggerSource(triggerSource);
 		this->setRecordLength(recordLength);
-		this->setSamplerateFast(samplerateFast);
+		this->setSamplerateId(samplerateId);
+		this->setDownsamplingMode(downsamplingMode);
 		this->setUsedChannels(usedChannels);
 		this->setFastRate(fastRate);
 		this->setTriggerSlope(triggerSlope);
-		this->setSamplerateSlow(samplerateSlow);
+		this->setDownsampler(downsampler);
 		this->setTriggerPosition(triggerPosition);
 	}
 	
@@ -146,16 +148,28 @@ namespace Hantek {
 		((Tsr1Bits *) &(this->array[2]))->recordLength = value;
 	}
 	
-	/// \brief Get the samplerateFast value in Tsr1Bits.
-	/// \return The samplerateFast value.
-	unsigned char BulkSetTriggerAndSamplerate::getSamplerateFast() {
-		return ((Tsr1Bits *) &(this->array[2]))->samplerateFast;
+	/// \brief Get the samplerateId value in Tsr1Bits.
+	/// \return The samplerateId value.
+	unsigned char BulkSetTriggerAndSamplerate::getSamplerateId() {
+		return ((Tsr1Bits *) &(this->array[2]))->samplerateId;
 	}
 	
-	/// \brief Set the samplerateFast in Tsr1Bits to the given value.
-	/// \param value The new samplerateFast value.
-	void BulkSetTriggerAndSamplerate::setSamplerateFast(unsigned char value) {
-		((Tsr1Bits *) &(this->array[2]))->samplerateFast = value;
+	/// \brief Set the samplerateId in Tsr1Bits to the given value.
+	/// \param value The new samplerateId value.
+	void BulkSetTriggerAndSamplerate::setSamplerateId(unsigned char value) {
+		((Tsr1Bits *) &(this->array[2]))->samplerateId = value;
+	}
+	
+	/// \brief Get the downsamplerMode value in Tsr1Bits.
+	/// \return The downsamplerMode value.
+	bool BulkSetTriggerAndSamplerate::getDownsamplingMode() {
+		return ((Tsr1Bits *) &(this->array[2]))->downsamplingMode == 1;
+	}
+	
+	/// \brief Set the downsamplerMode in Tsr1Bits to the given value.
+	/// \param downsampling The new downsamplerMode value.
+	void BulkSetTriggerAndSamplerate::setDownsamplingMode(bool downsampling) {
+		((Tsr1Bits *) &(this->array[2]))->downsamplingMode = downsampling ? 1 : 0;
 	}
 	
 	/// \brief Get the usedChannels value in Tsr2Bits.
@@ -194,17 +208,17 @@ namespace Hantek {
 		((Tsr2Bits *) &(this->array[3]))->triggerSlope = slope;
 	}
 	
-	/// \brief Get the SamplerateSlow value.
-	/// \return The SamplerateSlow value.
-	unsigned short int BulkSetTriggerAndSamplerate::getSamplerateSlow() {
+	/// \brief Get the Downsampler value.
+	/// \return The Downsampler value.
+	unsigned short int BulkSetTriggerAndSamplerate::getDownsampler() {
 		return (unsigned short int) this->array[4] | ((unsigned short int) this->array[5] << 8);
 	}
 	
-	/// \brief Set the SamplerateSlow to the given value.
-	/// \param samplerate The new SamplerateSlow value.
-	void BulkSetTriggerAndSamplerate::setSamplerateSlow(unsigned short int samplerate) {
-		this->array[4] = (unsigned char) samplerate;
-		this->array[5] = (unsigned char) (samplerate >> 8);
+	/// \brief Set the Downsampler to the given value.
+	/// \param downsampler The new Downsampler value.
+	void BulkSetTriggerAndSamplerate::setDownsampler(unsigned short int downsampler) {
+		this->array[4] = (unsigned char) downsampler;
+		this->array[5] = (unsigned char) (downsampler >> 8);
 	}
 	
 	/// \brief Get the TriggerPosition value.
@@ -328,8 +342,6 @@ namespace Hantek {
 	/// \brief Initialize the array to the needed values.
 	void BulkSetGain::init() {
 		this->array[0] = BULK_SETGAIN;
-		this->array[1] = 0x0f;
-		((GainBits *) &(this->array[2]))->reserved = 3;
 	}
 	
 	
@@ -363,7 +375,6 @@ namespace Hantek {
 	/// \brief Initialize the array to the needed values.
 	void BulkSetLogicalData::init() {
 		this->array[0] = BULK_SETLOGICALDATA;
-		this->array[1] = 0x0f;
 	}
 	
 	
@@ -378,45 +389,33 @@ namespace Hantek {
 	//////////////////////////////////////////////////////////////////////////////
 	// class BulkSetFilter2250
 	/// \brief Sets the data array to needed values.
-	BulkSetFilter2250::BulkSetFilter2250() : Helper::DataArray<unsigned char>(4) {
+	BulkSetChannels2250::BulkSetChannels2250() : Helper::DataArray<unsigned char>(4) {
 		this->init();
 	}
 	
 	/// \brief Sets the used channels.
-	/// \param channel1 true if channel 1 is filtered.
-	/// \param channel2 true if channel 2 is filtered.
-	BulkSetFilter2250::BulkSetFilter2250(bool channel1, bool channel2) : Helper::DataArray<unsigned char>(4) {
+	/// \param usedChannels The UsedChannels value.
+	BulkSetChannels2250::BulkSetChannels2250(unsigned char usedChannels) : Helper::DataArray<unsigned char>(4) {
 		this->init();
 		
-		this->setChannel(0, channel1);
-		this->setChannel(1, channel2);
+		this->setUsedChannels(usedChannels);
 	}
 	
-	/// \brief Gets the filtering state of one channel.
-	/// \param channel The channel whose filtering state should be returned.
-	/// \return The filtering state of the channel.
-	bool BulkSetFilter2250::getChannel(unsigned int channel) {
-		FilterBits *filterBits = (FilterBits *) &(this->array[2]);
-		if(channel == 0)
-			return filterBits->channel1 == 1;
-		else
-			return filterBits->channel2 == 1;
+	/// \brief Get the UsedChannels value
+	/// \return The UsedChannels value.
+	unsigned char BulkSetChannels2250::getUsedChannels() {
+		return this->array[2];
 	}
 	
-	/// \brief Enables/disables filtering of one channel.
-	/// \param channel The channel that should be set.
-	/// \param filtered true if the channel should be filtered.
-	void BulkSetFilter2250::setChannel(unsigned int channel, bool filtered) {
-		FilterBits *filterBits = (FilterBits *) &(this->array[2]);
-		if(channel == 0)
-			filterBits->channel1 = filtered ? 1 : 0;
-		else
-			filterBits->channel2 = filtered ? 1 : 0;
+	/// \brief Set the UsedChannels to the given value.
+	/// \param value The new UsedChannels value.
+	void BulkSetChannels2250::setUsedChannels(unsigned char value) {
+		this->array[2] = value;
 	}
 	
 	/// \brief Initialize the array to the needed values.
-	void BulkSetFilter2250::init() {
-		this->array[0] = BULK_BSETFILTER;
+	void BulkSetChannels2250::init() {
+		this->array[0] = BULK_BSETCHANNELS;
 	}
 	
 	

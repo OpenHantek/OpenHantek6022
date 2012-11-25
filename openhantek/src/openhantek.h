@@ -65,6 +65,10 @@ class OpenHantekMainWindow : public QMainWindow {
 		void createToolBars();
 		void createStatusBar();
 		void createDockWindows();
+		
+		// Device management
+		void connectSignals();
+		void initializeDevice();
 
 		// Settings
 		int readSettings(const QString &fileName = QString());
@@ -81,8 +85,6 @@ class OpenHantekMainWindow : public QMainWindow {
 		
 		QAction *configAction;
 		QAction *startStopAction;
-		QActionGroup *recordLengthActionGroup;
-		QAction *recordLengthSmallAction, *recordLengthLargeAction;
 		QAction *digitalPhosphorAction, *zoomAction;
 		
 		QAction *aboutAction, *aboutQtAction;
@@ -94,7 +96,7 @@ class OpenHantekMainWindow : public QMainWindow {
 		// Menus
 		QMenu *fileMenu;
 		QMenu *viewMenu, *dockMenu, *toolbarMenu;
-		QMenu *oscilloscopeMenu, *recordLengthMenu;
+		QMenu *oscilloscopeMenu;
 		QMenu *helpMenu;
 
 		// Toolbars
@@ -143,9 +145,12 @@ class OpenHantekMainWindow : public QMainWindow {
 		void applySettings();
 		void updateSettings();
 		
-		void recordLengthSelected(QAction *action);
+		void recordTimeChanged(double duration);
+		void samplerateChanged(double samplerate);
+		void recordLengthSelected(unsigned long recordLength);
+		void samplerateSelected();
+		void timebaseSelected();
 		void updateOffset(unsigned int channel);
-		void updateTimebase();
 		void updateUsed(unsigned int channel);
 		void updateVoltageGain(unsigned int channel);
 		

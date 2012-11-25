@@ -139,7 +139,7 @@ void DataAnalyzer::run() {
 			// Set sampling interval
 			channelData->samples.voltage.interval = 1.0 / this->waitingDataSamplerate;
 			
-			unsigned int size;
+			unsigned long int size;
 			if(channel < this->settings->scope.physicalChannels) {
 				size = this->waitingDataSize[channel];
 				if(size > maxSamples)
@@ -159,7 +159,7 @@ void DataAnalyzer::run() {
 			if(channel < this->settings->scope.physicalChannels) {
 				// Copy the buffer of the oscilloscope into the sample buffer
 				if(channel < (unsigned int) this->waitingData.count())
-					for(unsigned int position = 0; position < this->waitingDataSize[channel]; ++position)
+					for(unsigned long int position = 0; position < this->waitingDataSize[channel]; ++position)
 						channelData->samples.voltage.sample[position] = this->waitingData[channel][position];
 			}
 			// Math channel
@@ -176,7 +176,7 @@ void DataAnalyzer::run() {
 				}
 				
 				// Calculate values and write them into the sample buffer
-				for(unsigned int realPosition = 0; realPosition < this->analyzedData[this->settings->scope.physicalChannels]->samples.voltage.count; ++realPosition) {
+				for(unsigned long int realPosition = 0; realPosition < this->analyzedData[this->settings->scope.physicalChannels]->samples.voltage.count; ++realPosition) {
 					switch(this->settings->scope.voltage[this->settings->scope.physicalChannels].misc) {
 						case Dso::MATHMODE_1ADD2:
 							this->analyzedData[this->settings->scope.physicalChannels]->samples.voltage.sample[realPosition] = this->analyzedData[0]->samples.voltage.sample[realPosition] + this->analyzedData[1]->samples.voltage.sample[realPosition];
@@ -223,24 +223,24 @@ void DataAnalyzer::run() {
 					this->window = (double *) fftw_malloc(sizeof(double) * this->lastRecordLength);
 				}
 				
-				unsigned int windowEnd = this->lastRecordLength - 1;
+				unsigned long int windowEnd = this->lastRecordLength - 1;
 				this->lastWindow = this->settings->scope.spectrumWindow;
 				
 				switch(this->settings->scope.spectrumWindow) {
 					case Dso::WINDOW_HAMMING:
-						for(unsigned int windowPosition = 0; windowPosition < this->lastRecordLength; ++windowPosition)
+						for(unsigned long int windowPosition = 0; windowPosition < this->lastRecordLength; ++windowPosition)
 							*(this->window + windowPosition) = 0.54 - 0.46 * cos(2.0 * M_PI * windowPosition / windowEnd);
 						break;
 					case Dso::WINDOW_HANN:
-						for(unsigned int windowPosition = 0; windowPosition < this->lastRecordLength; ++windowPosition)
+						for(unsigned long int windowPosition = 0; windowPosition < this->lastRecordLength; ++windowPosition)
 							*(this->window + windowPosition) = 0.5 * (1.0 - cos(2.0 * M_PI * windowPosition / windowEnd));
 						break;
 					case Dso::WINDOW_COSINE:
-						for(unsigned int windowPosition = 0; windowPosition < this->lastRecordLength; ++windowPosition)
+						for(unsigned long int windowPosition = 0; windowPosition < this->lastRecordLength; ++windowPosition)
 							*(this->window + windowPosition) = sin(M_PI * windowPosition / windowEnd);
 						break;
 					case Dso::WINDOW_LANCZOS:
-						for(unsigned int windowPosition = 0; windowPosition < this->lastRecordLength; ++windowPosition) {
+						for(unsigned long int windowPosition = 0; windowPosition < this->lastRecordLength; ++windowPosition) {
 							double sincParameter = (2.0 * windowPosition / windowEnd - 1.0) * M_PI;
 							if(sincParameter == 0)
 								*(this->window + windowPosition) = 1;
@@ -249,55 +249,55 @@ void DataAnalyzer::run() {
 						}
 						break;
 					case Dso::WINDOW_BARTLETT:
-						for(unsigned int windowPosition = 0; windowPosition < this->lastRecordLength; ++windowPosition)
+						for(unsigned long int windowPosition = 0; windowPosition < this->lastRecordLength; ++windowPosition)
 							*(this->window + windowPosition) = 2.0 / windowEnd * (windowEnd / 2 - abs(windowPosition - windowEnd / 2));
 						break;
 					case Dso::WINDOW_TRIANGULAR:
-						for(unsigned int windowPosition = 0; windowPosition < this->lastRecordLength; ++windowPosition)
+						for(unsigned long int windowPosition = 0; windowPosition < this->lastRecordLength; ++windowPosition)
 							*(this->window + windowPosition) = 2.0 / this->lastRecordLength * (this->lastRecordLength / 2 - abs(windowPosition - windowEnd / 2));
 						break;
 					case Dso::WINDOW_GAUSS:
 						{
 							double sigma = 0.4;
-							for(unsigned int windowPosition = 0; windowPosition < this->lastRecordLength; ++windowPosition)
+							for(unsigned long int windowPosition = 0; windowPosition < this->lastRecordLength; ++windowPosition)
 								*(this->window + windowPosition) = exp(-0.5 * pow(((windowPosition - windowEnd / 2) / (sigma * windowEnd / 2)), 2));
 						}
 						break;
 					case Dso::WINDOW_BARTLETTHANN:
-						for(unsigned int windowPosition = 0; windowPosition < this->lastRecordLength; ++windowPosition)
+						for(unsigned long int windowPosition = 0; windowPosition < this->lastRecordLength; ++windowPosition)
 							*(this->window + windowPosition) = 0.62 - 0.48 * abs(windowPosition / windowEnd - 0.5) - 0.38 * cos(2.0 * M_PI * windowPosition / windowEnd);
 						break;
 					case Dso::WINDOW_BLACKMAN:
 						{
 							double alpha = 0.16;
-							for(unsigned int windowPosition = 0; windowPosition < this->lastRecordLength; ++windowPosition)
+							for(unsigned long int windowPosition = 0; windowPosition < this->lastRecordLength; ++windowPosition)
 								*(this->window + windowPosition) = (1 - alpha) / 2 - 0.5 * cos(2.0 * M_PI * windowPosition / windowEnd) + alpha / 2 * cos(4.0 * M_PI * windowPosition / windowEnd);
 						}
 						break;
 					//case WINDOW_KAISER:
 						// TODO
 						//double alpha = 3.0;
-						//for(unsigned int windowPosition = 0; windowPosition < this->lastRecordLength; ++windowPosition)
+						//for(unsigned long int windowPosition = 0; windowPosition < this->lastRecordLength; ++windowPosition)
 							//*(this->window + windowPosition) = ;
 						//break;
 					case Dso::WINDOW_NUTTALL:
-						for(unsigned int windowPosition = 0; windowPosition < this->lastRecordLength; ++windowPosition)
+						for(unsigned long int windowPosition = 0; windowPosition < this->lastRecordLength; ++windowPosition)
 							*(this->window + windowPosition) = 0.355768 - 0.487396 * cos(2 * M_PI * windowPosition / windowEnd) + 0.144232 * cos(4 * M_PI * windowPosition / windowEnd) - 0.012604 * cos(6 * M_PI * windowPosition / windowEnd);
 						break;
 					case Dso::WINDOW_BLACKMANHARRIS:
-						for(unsigned int windowPosition = 0; windowPosition < this->lastRecordLength; ++windowPosition)
+						for(unsigned long int windowPosition = 0; windowPosition < this->lastRecordLength; ++windowPosition)
 							*(this->window + windowPosition) = 0.35875 - 0.48829 * cos(2 * M_PI * windowPosition / windowEnd) + 0.14128 * cos(4 * M_PI * windowPosition / windowEnd) - 0.01168 * cos(6 * M_PI * windowPosition / windowEnd);
 						break;
 					case Dso::WINDOW_BLACKMANNUTTALL:
-						for(unsigned int windowPosition = 0; windowPosition < this->lastRecordLength; ++windowPosition)
+						for(unsigned long int windowPosition = 0; windowPosition < this->lastRecordLength; ++windowPosition)
 							*(this->window + windowPosition) = 0.3635819 - 0.4891775 * cos(2 * M_PI * windowPosition / windowEnd) + 0.1365995 * cos(4 * M_PI * windowPosition / windowEnd) - 0.0106411 * cos(6 * M_PI * windowPosition / windowEnd);
 						break;
 					case Dso::WINDOW_FLATTOP:
-						for(unsigned int windowPosition = 0; windowPosition < this->lastRecordLength; ++windowPosition)
+						for(unsigned long int windowPosition = 0; windowPosition < this->lastRecordLength; ++windowPosition)
 							*(this->window + windowPosition) = 1.0 - 1.93 * cos(2 * M_PI * windowPosition / windowEnd) + 1.29 * cos(4 * M_PI * windowPosition / windowEnd) - 0.388 * cos(6 * M_PI * windowPosition / windowEnd) + 0.032 * cos(8 * M_PI * windowPosition / windowEnd);
 						break;
 					default: // Dso::WINDOW_RECTANGULAR
-						for(unsigned int windowPosition = 0; windowPosition < this->lastRecordLength; ++windowPosition)
+						for(unsigned long int windowPosition = 0; windowPosition < this->lastRecordLength; ++windowPosition)
 							*(this->window + windowPosition) = 1.0;
 				}
 			}
@@ -306,7 +306,7 @@ void DataAnalyzer::run() {
 			channelData->samples.spectrum.interval = 1.0 / channelData->samples.voltage.interval / channelData->samples.voltage.count;
 			
 			// Number of real/complex samples
-			unsigned int dftLength = channelData->samples.voltage.count / 2;
+			unsigned long int dftLength = channelData->samples.voltage.count / 2;
 			
 			// Reallocate memory for samples if the sample count has changed
 			if(channelData->samples.spectrum.count != dftLength) {
@@ -318,7 +318,7 @@ void DataAnalyzer::run() {
 			
 			// Create sample buffer and apply window
 			double *windowedValues = new double[channelData->samples.voltage.count];
-			for(unsigned int position = 0; position < channelData->samples.voltage.count; ++position)
+			for(unsigned long int position = 0; position < channelData->samples.voltage.count; ++position)
 				windowedValues[position] = this->window[position] * channelData->samples.voltage.sample[position];
 			
 			// Do discrete real to half-complex transformation
@@ -332,7 +332,7 @@ void DataAnalyzer::run() {
 			double *conjugateComplex = windowedValues; // Reuse the windowedValues buffer
 			
 			// Real values
-			unsigned int position;
+			unsigned long int position;
 			double correctionFactor = 1.0 / dftLength / dftLength;
 			conjugateComplex[0] = (channelData->samples.spectrum.sample[0] * channelData->samples.spectrum.sample[0]) * correctionFactor;
 			for(position = 1; position < dftLength; ++position)
@@ -353,7 +353,7 @@ void DataAnalyzer::run() {
 			double minimalVoltage, maximalVoltage;
 			minimalVoltage = maximalVoltage = channelData->samples.voltage.sample[0];
 			
-			for(unsigned int position = 1; position < channelData->samples.voltage.count; ++position) {
+			for(unsigned long int position = 1; position < channelData->samples.voltage.count; ++position) {
 				if(channelData->samples.voltage.sample[position] < minimalVoltage)
 					minimalVoltage = channelData->samples.voltage.sample[position];
 				else if(channelData->samples.voltage.sample[position] > maximalVoltage)
@@ -365,9 +365,9 @@ void DataAnalyzer::run() {
 			// Get the frequency from the correlation results
 			double minimumCorrelation = correlation[0];
 			double peakCorrelation = 0;
-			unsigned int peakPosition = 0;
+			unsigned long int peakPosition = 0;
 			
-			for(unsigned int position = 1; position < channelData->samples.voltage.count / 2; ++position) {
+			for(unsigned long int position = 1; position < channelData->samples.voltage.count / 2; ++position) {
 				if(correlation[position] > peakCorrelation && correlation[position] > minimumCorrelation * 2) {
 					peakCorrelation = correlation[position];
 					peakPosition = position;
@@ -388,7 +388,7 @@ void DataAnalyzer::run() {
 				// Convert values into dB (Relative to the reference level)
 				double offset = 60 - this->settings->scope.spectrumReference - 20 * log10(dftLength);
 				double offsetLimit = this->settings->scope.spectrumLimit - this->settings->scope.spectrumReference;
-				for(unsigned int position = 0; position < channelData->samples.spectrum.count; ++position) {
+				for(unsigned long int position = 0; position < channelData->samples.spectrum.count; ++position) {
 					channelData->samples.spectrum.sample[position] = 20 * log10(fabs(channelData->samples.spectrum.sample[position])) + offset;
 					
 					// Check if this value has to be limited
@@ -417,7 +417,7 @@ void DataAnalyzer::run() {
 /// \param size The sizes of the data arrays.
 /// \param samplerate The samplerate for all input data.
 /// \param mutex The mutex for all input data.
-void DataAnalyzer::analyze(const QList<double *> *data, const QList<unsigned int> *size, double samplerate, QMutex *mutex) {
+void DataAnalyzer::analyze(const QList<double *> *data, const QList<unsigned long int> *size, double samplerate, QMutex *mutex) {
 	// Previous analysis still running, drop the new data
 	if(this->isRunning())
 		return;

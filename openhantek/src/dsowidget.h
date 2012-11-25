@@ -96,9 +96,9 @@ class DsoWidget : public QWidget {
 	public slots:
 		// Horizontal axis
 		//void horizontalFormatChanged(HorizontalFormat format);
-		void updateFrequencybase();
-		void updateSamplerate();
-		void updateTimebase();
+		void updateFrequencybase(double frequencybase);
+		void updateSamplerate(double samplerate);
+		void updateTimebase(double timebase);
 		
 		// Trigger
 		void updateTriggerMode();
@@ -116,7 +116,7 @@ class DsoWidget : public QWidget {
 		void updateVoltageUsed(unsigned int channel, bool used);
 		
 		// Menus
-		void updateRecordLength(unsigned int size);
+		void updateRecordLength(unsigned long size);
 		
 		// Export
 		bool exportAs();

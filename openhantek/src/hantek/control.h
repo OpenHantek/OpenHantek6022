@@ -6,7 +6,7 @@
 //
 //  Copyright (C) 2008, 2009  Oleg Khudyakov
 //  prcoder@potrebitel.ru
-//  Copyright (C) 2010, 2011  Oliver Haag
+//  Copyright (C) 2010 - 2012  Oliver Haag
 //  oliver.haag@gmail.com
 //
 //  This program is free software: you can redistribute it and/or modify it
@@ -56,7 +56,7 @@ namespace Hantek {
 	/// \struct ControlSpecificationCommandsBulk                  hantek/control.h
 	/// \brief Stores the bulk command codes used for this device.
 	struct ControlSpecificationCommandsBulk {
-		BulkCode setFilter; ///< Command for setting used channels
+		BulkCode setChannels; ///< Command for setting used channels
 		BulkCode setSamplerate; ///< Command for samplerate settings
 		BulkCode setGain; ///< Command for gain settings (Usually in combination with CONTROL_SETRELAYS)
 		BulkCode setRecordLength; ///< Command for buffer settings
@@ -95,6 +95,8 @@ namespace Hantek {
 	struct ControlSamplerateLimits {
 		unsigned long int base; ///< The base for sample rate calculations
 		unsigned long int max; ///< The maximum sample rate
+		unsigned long int maxDownsampler; ///< The maximum downsampling ratio
+		QList<unsigned long int> recordLengths; ///< Available record lengths, ULONG_MAX means rolling
 	};
 	
 	//////////////////////////////////////////////////////////////////////////////
@@ -114,7 +116,6 @@ namespace Hantek {
 		
 		// Limits
 		ControlSpecificationSamplerate samplerate; ///< The samplerate specifications
-		QList<unsigned long int> recordLengths; ///< Available record lengths, ULONG_MAX means rolling
 		QList<unsigned long int> bufferDividers; ///< Samplerate dividers for record lengths
 		QList<double> gainSteps; ///< Available voltage steps in V/screenheight
 		unsigned char sampleSize; ///< Number of bits per sample
@@ -129,12 +130,22 @@ namespace Hantek {
 	};
 	
 	//////////////////////////////////////////////////////////////////////////////
+	/// \struct ControlSettingsSamplerateTarget                   hantek/control.h
+	/// \brief Stores the target samplerate settings of the device.
+	struct ControlSettingsSamplerateTarget {
+		double samplerate; ///< The target samplerate set via setSamplerate
+		double duration; ///< The target record time set via setRecordTime
+		bool samplerateSet; ///< true means samplerate was set last, false duration
+	};
+	
+	//////////////////////////////////////////////////////////////////////////////
 	/// \struct ControlSettingsSamplerate                         hantek/control.h
 	/// \brief Stores the current samplerate settings of the device.
 	struct ControlSettingsSamplerate {
+		ControlSettingsSamplerateTarget target; ///< The target samplerate values
 		ControlSamplerateLimits *limits; ///< The samplerate limits
-		unsigned long int downsampling; ///< The variable downsampling factor
-		unsigned long int current; ///< The current samplerate
+		unsigned long int downsampler; ///< The variable downsampling factor
+		double current; ///< The current samplerate
 	};
 	
 	//////////////////////////////////////////////////////////////////////////////
@@ -182,6 +193,9 @@ namespace Hantek {
 			~Control();
 			
 			unsigned int getChannelCount();
+			QList<unsigned long int> *getAvailableRecordLengths();
+			double getMinSamplerate();
+			double getMaxSamplerate();
 		
 		protected:
 			void run();
@@ -189,7 +203,10 @@ namespace Hantek {
 			unsigned long int calculateTriggerPoint(unsigned long int value);
 			int getCaptureState();
 			int getSamples(bool process);
+			double getBestSamplerate(double samplerate, bool fastRate = false, bool maximum = false, unsigned long int *downsampler = 0);
 			unsigned long int updateRecordLength(unsigned long int size);
+			unsigned long int updateSamplerate(unsigned long int downsampler, bool fastRate);
+			void restoreTargets();
 			
 			// Communication with device
 			Device *device; ///< The USB device for the oscilloscope
@@ -206,14 +223,16 @@ namespace Hantek {
 			
 			// Results
 			QList<double *> samples; ///< Sample data arrays
-			QList<unsigned int> samplesSize; ///< Number of samples data array
+			QList<unsigned long int> samplesSize; ///< Number of samples data array
+			unsigned long int previousSampleCount; ///< The expected total number of samples at the last check before sampling started
 			QMutex samplesMutex; ///< Mutex for the sample data
 		
 		public slots:
 			virtual void connectDevice();
 			
-			unsigned long int setSamplerate(unsigned long int samplerate = 0);
 			unsigned long int setRecordLength(unsigned long int size);
+			double setSamplerate(double samplerate = 0.0);
+			double setRecordTime(double duration = 0.0);
 			
 			int setChannelUsed(unsigned int channel, bool used);
 			int setCoupling(unsigned int channel, Dso::Coupling coupling);

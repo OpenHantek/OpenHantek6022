@@ -92,61 +92,12 @@ OpenHantekMainWindow::OpenHantekMainWindow(QWidget *parent, Qt::WindowFlags flag
 	this->settings->options.window.position = this->pos();
 	this->settings->options.window.size = this->size();
 	
-	// Connect general signals
-	connect(this, SIGNAL(settingsChanged()), this, SLOT(applySettings()));
-	//connect(this->dsoWidget, SIGNAL(stopped()), this, SLOT(stopped()));
-	connect(this->dsoControl, SIGNAL(statusMessage(QString, int)), this->statusBar(), SLOT(showMessage(QString, int)));
-	connect(this->dsoControl, SIGNAL(samplesAvailable(const QList<double *> *, const QList<unsigned int> *, double, QMutex *)), this->dataAnalyzer, SLOT(analyze(const QList<double *> *, const QList<unsigned int> *, double, QMutex *)));
-	
-	// Connect signals to DSO controller and widget
-	//connect(this->horizontalDock, SIGNAL(formatChanged(HorizontalFormat)), this->dsoWidget, SLOT(horizontalFormatChanged(HorizontalFormat)));
-	connect(this->horizontalDock, SIGNAL(timebaseChanged(double)), this, SLOT(updateTimebase()));
-	connect(this->horizontalDock, SIGNAL(timebaseChanged(double)), this->dsoWidget, SLOT(updateTimebase()));
-	connect(this->horizontalDock, SIGNAL(frequencybaseChanged(double)), this->dsoWidget, SLOT(updateFrequencybase()));
-	
-	connect(this->triggerDock, SIGNAL(modeChanged(Dso::TriggerMode)), this->dsoControl, SLOT(setTriggerMode(Dso::TriggerMode)));
-	connect(this->triggerDock, SIGNAL(modeChanged(Dso::TriggerMode)), this->dsoWidget, SLOT(updateTriggerMode()));
-	connect(this->triggerDock, SIGNAL(sourceChanged(bool, unsigned int)), this->dsoControl, SLOT(setTriggerSource(bool, unsigned int)));
-	connect(this->triggerDock, SIGNAL(sourceChanged(bool, unsigned int)), this->dsoWidget, SLOT(updateTriggerSource()));
-	connect(this->triggerDock, SIGNAL(slopeChanged(Dso::Slope)), this->dsoControl, SLOT(setTriggerSlope(Dso::Slope)));
-	connect(this->triggerDock, SIGNAL(slopeChanged(Dso::Slope)), this->dsoWidget, SLOT(updateTriggerSlope()));
-	connect(this->dsoWidget, SIGNAL(triggerPositionChanged(double)), this->dsoControl, SLOT(setPretriggerPosition(double)));
-	connect(this->dsoWidget, SIGNAL(triggerLevelChanged(unsigned int, double)), this->dsoControl, SLOT(setTriggerLevel(unsigned int, double)));
-	
-	connect(this->voltageDock, SIGNAL(usedChanged(unsigned int, bool)), this, SLOT(updateUsed(unsigned int)));
-	connect(this->voltageDock, SIGNAL(usedChanged(unsigned int, bool)), this->dsoWidget, SLOT(updateVoltageUsed(unsigned int, bool)));
-	connect(this->voltageDock, SIGNAL(couplingChanged(unsigned int, Dso::Coupling)), this->dsoControl, SLOT(setCoupling(unsigned int, Dso::Coupling)));
-	connect(this->voltageDock, SIGNAL(couplingChanged(unsigned int, Dso::Coupling)), this->dsoWidget, SLOT(updateVoltageCoupling(unsigned int)));
-	connect(this->voltageDock, SIGNAL(modeChanged(Dso::MathMode)), this->dsoWidget, SLOT(updateMathMode()));
-	connect(this->voltageDock, SIGNAL(gainChanged(unsigned int, double)), this, SLOT(updateVoltageGain(unsigned int)));
-	connect(this->voltageDock, SIGNAL(gainChanged(unsigned int, double)), this->dsoWidget, SLOT(updateVoltageGain(unsigned int)));
-	connect(this->dsoWidget, SIGNAL(offsetChanged(unsigned int, double)), this, SLOT(updateOffset(unsigned int)));
-	
-	connect(this->spectrumDock, SIGNAL(usedChanged(unsigned int, bool)), this, SLOT(updateUsed(unsigned int)));
-	connect(this->spectrumDock, SIGNAL(usedChanged(unsigned int, bool)), this->dsoWidget, SLOT(updateSpectrumUsed(unsigned int, bool)));
-	connect(this->spectrumDock, SIGNAL(magnitudeChanged(unsigned int, double)), this->dsoWidget, SLOT(updateSpectrumMagnitude(unsigned int)));
-	
-	// Started/stopped signals from oscilloscope	
-	connect(this->dsoControl, SIGNAL(samplingStarted()), this, SLOT(started()));
-	connect(this->dsoControl, SIGNAL(samplingStopped()), this, SLOT(stopped()));
+	// Connect all signals
+	this->connectSignals();
 	
 	// Set up the oscilloscope
 	this->dsoControl->connectDevice();
-	
-	for(unsigned int channel = 0; channel < this->settings->scope.physicalChannels; ++channel) {
-		this->dsoControl->setCoupling(channel, (Dso::Coupling) this->settings->scope.voltage[channel].misc);
-		this->updateVoltageGain(channel);
-		this->updateOffset(channel);
-		this->dsoControl->setTriggerLevel(channel, this->settings->scope.voltage[channel].trigger);
-	}
-	this->updateUsed(this->settings->scope.physicalChannels);
-	this->dsoControl->setRecordLength(this->settings->scope.horizontal.samples);
-	this->updateTimebase();
-	this->dsoControl->setTriggerMode(this->settings->scope.trigger.mode);
-	this->dsoControl->setPretriggerPosition(this->settings->scope.trigger.position * this->settings->scope.horizontal.timebase * DIVS_TIME);
-	this->dsoControl->setTriggerSlope(this->settings->scope.trigger.slope);
-	this->dsoControl->setTriggerSource(this->settings->scope.trigger.special, this->settings->scope.trigger.source);
-	
+	this->initializeDevice();
 	this->dsoControl->startSampling();
 }
 
@@ -202,21 +153,6 @@ void OpenHantekMainWindow::createActions() {
 	this->startStopAction = new QAction(this);
 	this->startStopAction->setShortcut(tr("Space"));
 	this->stopped();
-	
-	this->recordLengthActionGroup = new QActionGroup(this);
-	connect(this->recordLengthActionGroup, SIGNAL(selected(QAction *)), this, SLOT(recordLengthSelected(QAction *)));
-	
-	this->recordLengthSmallAction = new QAction(tr("&Small"), this);
-	this->recordLengthSmallAction->setActionGroup(this->recordLengthActionGroup);
-	this->recordLengthSmallAction->setCheckable(true);
-	this->recordLengthSmallAction->setChecked(this->settings->scope.horizontal.samples == 10240);
-	this->recordLengthSmallAction->setStatusTip(tr("10240 Samples"));
-
-	this->recordLengthLargeAction = new QAction(tr("&Large"), this);
-	this->recordLengthLargeAction->setActionGroup(this->recordLengthActionGroup);
-	this->recordLengthLargeAction->setCheckable(true);
-	this->recordLengthLargeAction->setChecked(this->settings->scope.horizontal.samples != 10240);
-	this->recordLengthLargeAction->setStatusTip(tr("32768 Samples"));
 
 	this->digitalPhosphorAction = new QAction(QIcon(":actions/digitalphosphor.png"), tr("Digital &phosphor"), this);
 	this->digitalPhosphorAction->setCheckable(true);
@@ -276,12 +212,9 @@ void OpenHantekMainWindow::createMenus() {
 	this->oscilloscopeMenu->addSeparator();
 	this->oscilloscopeMenu->addAction(this->startStopAction);
 #ifdef DEBUG
+	this->oscilloscopeMenu->addSeparator();
 	this->oscilloscopeMenu->addAction(this->commandAction);
 #endif
-	this->oscilloscopeMenu->addSeparator();
-	this->recordLengthMenu = this->oscilloscopeMenu->addMenu(tr("&Record length"));
-	this->recordLengthMenu->addAction(this->recordLengthSmallAction);
-	this->recordLengthMenu->addAction(this->recordLengthLargeAction);
 
 	this->menuBar()->addSeparator();
 
@@ -335,6 +268,82 @@ void OpenHantekMainWindow::createDockWindows()
 	this->triggerDock = new TriggerDock(this->settings, this->dsoControl->getSpecialTriggerSources());
 	this->spectrumDock = new SpectrumDock(this->settings);
 	this->voltageDock = new VoltageDock(this->settings);
+}
+
+/// \brief Connect general signals and device management signals.
+void OpenHantekMainWindow::connectSignals() {
+	// Connect general signals
+	connect(this, SIGNAL(settingsChanged()), this, SLOT(applySettings()));
+	//connect(this->dsoWidget, SIGNAL(stopped()), this, SLOT(stopped()));
+	connect(this->dsoControl, SIGNAL(statusMessage(QString, int)), this->statusBar(), SLOT(showMessage(QString, int)));
+	connect(this->dsoControl, SIGNAL(samplesAvailable(const QList<double *> *, const QList<unsigned long int> *, double, QMutex *)), this->dataAnalyzer, SLOT(analyze(const QList<double *> *, const QList<unsigned long int> *, double, QMutex *)));
+	
+	// Connect signals to DSO controller and widget
+	connect(this->horizontalDock, SIGNAL(samplerateChanged(double)), this, SLOT(samplerateSelected()));
+	connect(this->horizontalDock, SIGNAL(timebaseChanged(double)), this, SLOT(timebaseSelected()));
+	connect(this->horizontalDock, SIGNAL(frequencybaseChanged(double)), this->dsoWidget, SLOT(updateFrequencybase(double)));
+	connect(this->horizontalDock, SIGNAL(recordLengthChanged(unsigned long)), this, SLOT(recordLengthSelected(unsigned long)));
+	//connect(this->horizontalDock, SIGNAL(formatChanged(HorizontalFormat)), this->dsoWidget, SLOT(horizontalFormatChanged(HorizontalFormat)));
+	
+	connect(this->triggerDock, SIGNAL(modeChanged(Dso::TriggerMode)), this->dsoControl, SLOT(setTriggerMode(Dso::TriggerMode)));
+	connect(this->triggerDock, SIGNAL(modeChanged(Dso::TriggerMode)), this->dsoWidget, SLOT(updateTriggerMode()));
+	connect(this->triggerDock, SIGNAL(sourceChanged(bool, unsigned int)), this->dsoControl, SLOT(setTriggerSource(bool, unsigned int)));
+	connect(this->triggerDock, SIGNAL(sourceChanged(bool, unsigned int)), this->dsoWidget, SLOT(updateTriggerSource()));
+	connect(this->triggerDock, SIGNAL(slopeChanged(Dso::Slope)), this->dsoControl, SLOT(setTriggerSlope(Dso::Slope)));
+	connect(this->triggerDock, SIGNAL(slopeChanged(Dso::Slope)), this->dsoWidget, SLOT(updateTriggerSlope()));
+	connect(this->dsoWidget, SIGNAL(triggerPositionChanged(double)), this->dsoControl, SLOT(setPretriggerPosition(double)));
+	connect(this->dsoWidget, SIGNAL(triggerLevelChanged(unsigned int, double)), this->dsoControl, SLOT(setTriggerLevel(unsigned int, double)));
+	
+	connect(this->voltageDock, SIGNAL(usedChanged(unsigned int, bool)), this, SLOT(updateUsed(unsigned int)));
+	connect(this->voltageDock, SIGNAL(usedChanged(unsigned int, bool)), this->dsoWidget, SLOT(updateVoltageUsed(unsigned int, bool)));
+	connect(this->voltageDock, SIGNAL(couplingChanged(unsigned int, Dso::Coupling)), this->dsoControl, SLOT(setCoupling(unsigned int, Dso::Coupling)));
+	connect(this->voltageDock, SIGNAL(couplingChanged(unsigned int, Dso::Coupling)), this->dsoWidget, SLOT(updateVoltageCoupling(unsigned int)));
+	connect(this->voltageDock, SIGNAL(modeChanged(Dso::MathMode)), this->dsoWidget, SLOT(updateMathMode()));
+	connect(this->voltageDock, SIGNAL(gainChanged(unsigned int, double)), this, SLOT(updateVoltageGain(unsigned int)));
+	connect(this->voltageDock, SIGNAL(gainChanged(unsigned int, double)), this->dsoWidget, SLOT(updateVoltageGain(unsigned int)));
+	connect(this->dsoWidget, SIGNAL(offsetChanged(unsigned int, double)), this, SLOT(updateOffset(unsigned int)));
+	
+	connect(this->spectrumDock, SIGNAL(usedChanged(unsigned int, bool)), this, SLOT(updateUsed(unsigned int)));
+	connect(this->spectrumDock, SIGNAL(usedChanged(unsigned int, bool)), this->dsoWidget, SLOT(updateSpectrumUsed(unsigned int, bool)));
+	connect(this->spectrumDock, SIGNAL(magnitudeChanged(unsigned int, double)), this->dsoWidget, SLOT(updateSpectrumMagnitude(unsigned int)));
+	
+	// Started/stopped signals from oscilloscope	
+	connect(this->dsoControl, SIGNAL(samplingStarted()), this, SLOT(started()));
+	connect(this->dsoControl, SIGNAL(samplingStopped()), this, SLOT(stopped()));
+	
+	//connect(this->dsoControl, SIGNAL(recordLengthChanged(unsigned long)), this, SLOT(recordLengthChanged()));
+	connect(this->dsoControl, SIGNAL(recordTimeChanged(double)), this, SLOT(recordTimeChanged(double)));
+	connect(this->dsoControl, SIGNAL(samplerateChanged(double)), this, SLOT(samplerateChanged(double)));
+	
+	connect(this->dsoControl, SIGNAL(availableRecordLengthsChanged(QList<unsigned long int>)), this->horizontalDock, SLOT(availableRecordLengthsChanged(QList<unsigned long int>)));
+	connect(this->dsoControl, SIGNAL(samplerateLimitsChanged(double, double)), this->horizontalDock, SLOT(samplerateLimitsChanged(double, double)));
+}
+
+/// \brief Initialize the device with the current settings.
+void OpenHantekMainWindow::initializeDevice() {
+	for(unsigned int channel = 0; channel < this->settings->scope.physicalChannels; ++channel) {
+		this->dsoControl->setCoupling(channel, (Dso::Coupling) this->settings->scope.voltage[channel].misc);
+		this->updateVoltageGain(channel);
+		this->updateOffset(channel);
+		this->dsoControl->setTriggerLevel(channel, this->settings->scope.voltage[channel].trigger);
+	}
+	this->updateUsed(this->settings->scope.physicalChannels);
+	if(this->dsoControl->getAvailableRecordLengths()->isEmpty())
+		this->dsoControl->setRecordLength(this->settings->scope.horizontal.recordLength);
+	else
+		this->dsoControl->setRecordLength(this->dsoControl->getAvailableRecordLengths()->indexOf(this->settings->scope.horizontal.recordLength));
+	if(this->settings->scope.horizontal.samplerateSet)
+		this->samplerateSelected();
+	else
+		this->timebaseSelected();
+	this->dsoControl->setTriggerMode(this->settings->scope.trigger.mode);
+	this->dsoControl->setPretriggerPosition(this->settings->scope.trigger.position * this->settings->scope.horizontal.timebase * DIVS_TIME);
+	this->dsoControl->setTriggerSlope(this->settings->scope.trigger.slope);
+	this->dsoControl->setTriggerSource(this->settings->scope.trigger.special, this->settings->scope.trigger.source);
+	
+	// Apply the limits to the dock widgets
+	this->horizontalDock->availableRecordLengthsChanged(*this->dsoControl->getAvailableRecordLengths());
+	this->horizontalDock->samplerateLimitsChanged(this->dsoControl->getMinSamplerate(), this->dsoControl->getMaxSamplerate());
 }
 
 /// \brief Read the settings from an ini file.
@@ -598,11 +607,47 @@ void OpenHantekMainWindow::updateSettings() {
 	}
 }
 
+/// \brief The oscilloscope changed the record time.
+/// \param duration The new record time duration in seconds.
+void OpenHantekMainWindow::recordTimeChanged(double duration) {
+	if(this->settings->scope.horizontal.samplerateSet) {
+		// The samplerate was set, let's adapt the timebase accordingly
+		this->settings->scope.horizontal.timebase = duration / DIVS_TIME;
+		this->horizontalDock->setTimebase(this->settings->scope.horizontal.timebase);
+	}
+	
+	// The trigger position should be kept at the same place but the timebase has changed
+	this->dsoControl->setPretriggerPosition(this->settings->scope.trigger.position * this->settings->scope.horizontal.timebase * DIVS_TIME);
+	
+	this->dsoWidget->updateTimebase(this->settings->scope.horizontal.timebase);
+}
+
+/// \brief The oscilloscope changed the samplerate.
+/// \param samplerate The new samplerate in samples per second.
+void OpenHantekMainWindow::samplerateChanged(double samplerate) {
+	if(!this->settings->scope.horizontal.samplerateSet) {
+		// The timebase was set, let's adapt the samplerate accordingly
+		this->settings->scope.horizontal.samplerate = samplerate;
+		this->horizontalDock->setSamplerate(samplerate);
+	}
+	
+	this->dsoWidget->updateSamplerate(samplerate);
+}
+
 /// \brief Apply new record length to settings.
-/// \param action The selected record length menu item.
-void OpenHantekMainWindow::recordLengthSelected(QAction *action) {
-	this->settings->scope.horizontal.samples = (action == this->recordLengthSmallAction) ? 10240 : 32768;
-	this->dsoControl->setRecordLength(this->settings->scope.horizontal.samples);
+/// \param recordLength The selected record length in samples.
+void OpenHantekMainWindow::recordLengthSelected(unsigned long recordLength) {
+	this->dsoControl->setRecordLength(recordLength);
+}
+
+/// \brief Sets the samplerate of the oscilloscope.
+void OpenHantekMainWindow::samplerateSelected() {
+	this->dsoControl->setSamplerate(this->settings->scope.horizontal.samplerate);
+}
+
+/// \brief Sets the record time of the oscilloscope.
+void OpenHantekMainWindow::timebaseSelected() {
+	this->dsoControl->setRecordTime(this->settings->scope.horizontal.timebase * DIVS_TIME);
 }
 
 /// \brief Sets the offset of the oscilloscope for the given channel.
@@ -612,15 +657,6 @@ void OpenHantekMainWindow::updateOffset(unsigned int channel) {
 		return;
 	
 	this->dsoControl->setOffset(channel, (this->settings->scope.voltage[channel].offset / DIVS_VOLTAGE) + 0.5);
-}
-
-/// \brief Sets the samplerate of the oscilloscope.
-void OpenHantekMainWindow::updateTimebase() {
-	this->settings->scope.horizontal.samplerate = this->dsoControl->setSamplerate(1e3 / this->settings->scope.horizontal.timebase);
-	this->dsoWidget->updateSamplerate();
-	
-	// The trigger position should be kept at the same place but the timebase has changed
-	this->dsoControl->setPretriggerPosition(this->settings->scope.trigger.position * this->settings->scope.horizontal.timebase * DIVS_TIME);
 }
 
 /// \brief Sets the state of the given oscilloscope channel.

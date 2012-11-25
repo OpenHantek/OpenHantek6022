@@ -5,7 +5,7 @@
 //
 //  Copyright (C) 2008, 2009  Oleg Khudyakov
 //  prcoder@potrebitel.ru
-//  Copyright (C) 2010, 2011  Oliver Haag
+//  Copyright (C) 2010 - 2012  Oliver Haag
 //  oliver.haag@gmail.com
 //
 //  This program is free software: you can redistribute it and/or modify it
@@ -24,6 +24,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 
+#include <cmath>
 #include <limits>
 
 #include <QList>
@@ -43,7 +44,7 @@ namespace Hantek {
 	Control::Control(QObject *parent) : DsoControl(parent) {
 		// Use DSO-2090 specification as default
 		this->specification.command.bulk.setRecordLength = (BulkCode) -1;
-		this->specification.command.bulk.setFilter = (BulkCode) -1;
+		this->specification.command.bulk.setChannels = (BulkCode) -1;
 		this->specification.command.bulk.setGain = (BulkCode) -1;
 		this->specification.command.bulk.setSamplerate = (BulkCode) -1;
 		this->specification.command.bulk.setTrigger = (BulkCode) -1;
@@ -53,12 +54,12 @@ namespace Hantek {
 		this->specification.command.values.offsetLimits = (ControlValue) -1;
 		this->specification.command.values.voltageLimits = (ControlValue) -1;
 		
-		this->specification.recordLengths << 0;
-		
 		this->specification.samplerate.single.base = 50e6;
 		this->specification.samplerate.single.max = 50e6;
+		this->specification.samplerate.single.recordLengths << 0;
 		this->specification.samplerate.multi.base = 100e6;
 		this->specification.samplerate.multi.max = 100e6;
+		this->specification.samplerate.multi.recordLengths << 0;
 		
 		for(unsigned int channel = 0; channel < HANTEK_CHANNELS; ++channel) {
 			for(unsigned int gainId = 0; gainId < 9; ++gainId) {
@@ -69,8 +70,8 @@ namespace Hantek {
 		
 		// Set settings to default values
 		this->settings.samplerate.limits = &(this->specification.samplerate.single);
-		this->settings.samplerate.downsampling = 1;
-		this->settings.samplerate.current = 0.0;
+		this->settings.samplerate.downsampler = 1;
+		this->settings.samplerate.current = 1e8;
 		this->settings.trigger.position = 0;
 		this->settings.trigger.point = 0;
 		this->settings.trigger.mode = Dso::TRIGGERMODE_NORMAL;
@@ -114,6 +115,8 @@ namespace Hantek {
 			this->samplesSize.append(0);
 		}
 		
+		this->previousSampleCount = 0;
+		
 		connect(this->device, SIGNAL(disconnected()), this, SLOT(disconnectDevice()));
 	}
 	
@@ -132,6 +135,25 @@ namespace Hantek {
 	/// \return The number of physical channels.
 	unsigned int Control::getChannelCount() {
 		return HANTEK_CHANNELS;
+	}
+	
+	/// \brief Get available record lengths for this oscilloscope.
+	/// \return The number of physical channels, empty list for continuous.
+	QList<unsigned long int> *Control::getAvailableRecordLengths() {
+		return &this->settings.samplerate.limits->recordLengths;
+	}
+	
+	/// \brief Get minimum samplerate for this oscilloscope.
+	/// \return The minimum samplerate for the current configuration in S/s.
+	double Control::getMinSamplerate() {
+		return (double) this->specification.samplerate.single.base / this->specification.samplerate.single.maxDownsampler;
+	}
+
+	/// \brief Get maximum samplerate for this oscilloscope.
+	/// \return The maximum samplerate for the current configuration in S/s.
+	double Control::getMaxSamplerate() {
+		ControlSamplerateLimits *limits = (this->settings.usedChannels <= 1) ? &this->specification.samplerate.multi : &this->specification.samplerate.single;
+		return limits->max;
 	}
 	
 	/// \brief Handles all USB things until the device gets disconnected.
@@ -194,7 +216,7 @@ namespace Hantek {
 			
 			// Check the current oscilloscope state everytime 25% of the time the buffer should be refilled
 			// Not more often than every 10 ms though
-			int cycleTime = qMax((unsigned long int) (this->specification.recordLengths[this->settings.recordLengthId] / this->settings.samplerate.current * 250), 10lu);
+			int cycleTime = qMax((unsigned long int) (this->settings.samplerate.limits->recordLengths[this->settings.recordLengthId] / this->settings.samplerate.current * 250), 10lu);
 			this->msleep(cycleTime);
 			
 			if(!this->sampling) {
@@ -237,6 +259,12 @@ namespace Hantek {
 						break;
 				
 				case CAPTURE_WAITING:
+					// Sampling hasn't started, update the expected sample count
+					if(this->settings.samplerate.limits == &this->specification.samplerate.multi)
+						this->previousSampleCount = this->specification.samplerate.multi.recordLengths[this->settings.recordLengthId];
+					else
+						this->previousSampleCount = this->specification.samplerate.single.recordLengths[this->settings.recordLengthId] * HANTEK_CHANNELS;
+					
 					if(samplingStarted && lastTriggerMode == this->settings.trigger.mode) {
 						++cycleCounter;
 						
@@ -338,8 +366,24 @@ namespace Hantek {
 			return errorCode;
 		
 		// Save raw data to temporary buffer
-		unsigned int dataCount = this->specification.recordLengths[this->settings.recordLengthId] * HANTEK_CHANNELS;
-		unsigned int dataLength = dataCount;
+		bool fastRate = this->settings.samplerate.limits == &this->specification.samplerate.multi;
+		
+		unsigned long int totalSampleCount = fastRate ? this->specification.samplerate.multi.recordLengths[this->settings.recordLengthId] : this->specification.samplerate.single.recordLengths[this->settings.recordLengthId] * HANTEK_CHANNELS;
+		
+		// To make sure no samples will remain in the scope buffer, also check the sample count before the last sampling started
+		if(totalSampleCount < this->previousSampleCount) {
+			unsigned long int currentSampleCount = totalSampleCount;
+			totalSampleCount = this->previousSampleCount;
+			this->previousSampleCount = currentSampleCount; // Using sampleCount as temporary buffer since it was set to totalSampleCount
+		}
+		else {
+			this->previousSampleCount = totalSampleCount;
+		}
+		
+		unsigned long int sampleCount = totalSampleCount;
+		if(!fastRate)
+			sampleCount /= HANTEK_CHANNELS;
+		unsigned long int dataLength = totalSampleCount;
 		if(this->specification.sampleSize > 8)
 			dataLength *= 2;
 		
@@ -353,18 +397,19 @@ namespace Hantek {
 			// How much data did we really receive?
 			dataLength = errorCode;
 			if(this->specification.sampleSize > 8)
-				dataCount = dataLength / 2;
+				totalSampleCount = dataLength / 2;
 			else
-				dataCount = dataLength;
+				totalSampleCount = dataLength;
 			
 			this->samplesMutex.lock();
 			
 			// Convert channel data
-			if(this->settings.samplerate.limits == &this->specification.samplerate.multi) {
+			if(fastRate) {
 				// Fast rate mode, one channel is using all buffers
+				sampleCount = totalSampleCount;
 				int channel = 0;
 				for(; channel < HANTEK_CHANNELS; ++channel) {
-					if(this->settings.voltage[0].used)
+					if(this->settings.voltage[channel].used)
 						break;
 				}
 				
@@ -378,34 +423,34 @@ namespace Hantek {
 				
 				if(channel < HANTEK_CHANNELS) {
 					// Reallocate memory for samples if the sample count has changed
-					if(!this->samples[channel] || this->samplesSize[channel] != dataCount) {
+					if(!this->samples[channel] || this->samplesSize[channel] != sampleCount) {
 						if(this->samples[channel])
 							delete this->samples[channel];
-						this->samples[channel] = new double[dataCount];
-						this->samplesSize[channel] = dataCount;
+						this->samples[channel] = new double[sampleCount];
+						this->samplesSize[channel] = sampleCount;
 					}
 					
 					// Convert data from the oscilloscope and write it into the sample buffer
-					unsigned int bufferPosition = (this->settings.trigger.point + 1) * 2;
+					unsigned long int bufferPosition = this->settings.trigger.point * 2;
 					if(this->specification.sampleSize > 8) {
 						// Additional most significant bits after the normal data
 						unsigned int extraBitsPosition; // Track the position of the extra bits in the additional byte
 						unsigned int extraBitsSize = this->specification.sampleSize - 8; // Number of extra bits
 						unsigned short int extraBitsMask = (0x00ff << extraBitsSize) & 0xff00; // Mask for extra bits extraction
 						
-						for(unsigned int realPosition = 0; realPosition < dataCount; ++realPosition, ++bufferPosition) {
-							if(bufferPosition >= dataCount)
-								bufferPosition %= dataCount;
+						for(unsigned long int realPosition = 0; realPosition < sampleCount; ++realPosition, ++bufferPosition) {
+							if(bufferPosition >= sampleCount)
+								bufferPosition %= sampleCount;
 							
 							extraBitsPosition = bufferPosition % HANTEK_CHANNELS;
 							
-							this->samples[channel][realPosition] = ((double) ((unsigned short int) data[bufferPosition] + (((unsigned short int) data[dataCount + bufferPosition - extraBitsPosition] << (8 - (HANTEK_CHANNELS - 1 - extraBitsPosition) * extraBitsSize)) & extraBitsMask)) / this->specification.voltageLimit[channel][this->settings.voltage[channel].gain] - this->settings.voltage[channel].offsetReal) * this->specification.gainSteps[this->settings.voltage[channel].gain];
+							this->samples[channel][realPosition] = ((double) ((unsigned short int) data[bufferPosition] + (((unsigned short int) data[sampleCount + bufferPosition - extraBitsPosition] << (8 - (HANTEK_CHANNELS - 1 - extraBitsPosition) * extraBitsSize)) & extraBitsMask)) / this->specification.voltageLimit[channel][this->settings.voltage[channel].gain] - this->settings.voltage[channel].offsetReal) * this->specification.gainSteps[this->settings.voltage[channel].gain];
 						}
 					}
 					else {
-						for(unsigned int realPosition = 0; realPosition < dataCount; ++realPosition, ++bufferPosition) {
-							if(bufferPosition >= dataCount)
-								bufferPosition %= dataCount;
+						for(unsigned long int realPosition = 0; realPosition < sampleCount; ++realPosition, ++bufferPosition) {
+							if(bufferPosition >= sampleCount)
+								bufferPosition %= sampleCount;
 							
 							this->samples[channel][realPosition] = ((double) data[bufferPosition] / this->specification.voltageLimit[channel][this->settings.voltage[channel].gain] - this->settings.voltage[channel].offsetReal) * this->specification.gainSteps[this->settings.voltage[channel].gain];
 						}
@@ -414,39 +459,39 @@ namespace Hantek {
 			}
 			else {
 				// Normal mode, channels are using their separate buffers
-				unsigned int channelDataCount = dataCount / HANTEK_CHANNELS;
-				
+				sampleCount = totalSampleCount / HANTEK_CHANNELS;
 				for(int channel = 0; channel < HANTEK_CHANNELS; ++channel) {
 					if(this->settings.voltage[channel].used) {
 						// Reallocate memory for samples if the sample count has changed
-						if(!this->samples[channel] || this->samplesSize[channel] != channelDataCount) {
+						if(!this->samples[channel] || this->samplesSize[channel] != sampleCount) {
 							if(this->samples[channel])
 								delete this->samples[channel];
-							this->samples[channel] = new double[channelDataCount];
-							this->samplesSize[channel] = channelDataCount;
+							this->samples[channel] = new double[sampleCount];
+							this->samplesSize[channel] = sampleCount;
 						}
 						
 						// Convert data from the oscilloscope and write it into the sample buffer
-						unsigned int bufferPosition = (this->settings.trigger.point + 1) * 2;
+						unsigned long int bufferPosition = this->settings.trigger.point * 2;
 						if(this->specification.sampleSize > 8) {
 							// Additional most significant bits after the normal data
 							unsigned int extraBitsSize = this->specification.sampleSize - 8; // Number of extra bits
 							unsigned short int extraBitsMask = (0x00ff << extraBitsSize) & 0xff00; // Mask for extra bits extraction
 							unsigned int extraBitsIndex = 8 - channel * 2; // Bit position offset for extra bits extraction
 							
-							for(unsigned int realPosition = 0; realPosition < channelDataCount; ++realPosition, bufferPosition += 2) {
-								if(bufferPosition >= dataCount)
-									bufferPosition %= dataCount;
+							for(unsigned long int realPosition = 0; realPosition < sampleCount; ++realPosition, bufferPosition += HANTEK_CHANNELS) {
+								if(bufferPosition >= totalSampleCount)
+									bufferPosition %= totalSampleCount;
 								
-								this->samples[channel][realPosition] = ((double) ((unsigned short int) data[bufferPosition + HANTEK_CHANNELS - 1 - channel] + (((unsigned short int) data[dataCount + bufferPosition] << extraBitsIndex) & extraBitsMask)) / this->specification.voltageLimit[channel][this->settings.voltage[channel].gain] - this->settings.voltage[channel].offsetReal) * this->specification.gainSteps[this->settings.voltage[channel].gain];
+								this->samples[channel][realPosition] = ((double) ((unsigned short int) data[bufferPosition + HANTEK_CHANNELS - 1 - channel] + (((unsigned short int) data[totalSampleCount + bufferPosition] << extraBitsIndex) & extraBitsMask)) / this->specification.voltageLimit[channel][this->settings.voltage[channel].gain] - this->settings.voltage[channel].offsetReal) * this->specification.gainSteps[this->settings.voltage[channel].gain];
 							}
 						}
 						else {
-							for(unsigned int realPosition = 0; realPosition < channelDataCount; ++realPosition, bufferPosition += 2) {
-								if(bufferPosition >= dataCount)
-									bufferPosition %= dataCount;
+							bufferPosition += HANTEK_CHANNELS - 1 - channel;
+							for(unsigned long int realPosition = 0; realPosition < sampleCount; ++realPosition, bufferPosition += HANTEK_CHANNELS) {
+								if(bufferPosition >= totalSampleCount)
+									bufferPosition %= totalSampleCount;
 								
-								this->samples[channel][realPosition] = ((double) data[bufferPosition + HANTEK_CHANNELS - 1 - channel] / this->specification.voltageLimit[channel][this->settings.voltage[channel].gain] - this->settings.voltage[channel].offsetReal) * this->specification.gainSteps[this->settings.voltage[channel].gain];
+								this->samples[channel][realPosition] = ((double) data[bufferPosition] / this->specification.voltageLimit[channel][this->settings.voltage[channel].gain] - this->settings.voltage[channel].offsetReal) * this->specification.gainSteps[this->settings.voltage[channel].gain];
 							}
 						}
 					}
@@ -466,29 +511,112 @@ namespace Hantek {
 		return errorCode;
 	}
 	
-	/// \brief Sets the size of the sample buffer without updating dependencies.
-	/// \param size The record length that should be met (S).
-	/// \return The record length that has been set, 0 on error.
-	unsigned long int Control::updateRecordLength(unsigned long int size) {
-		// Get the record length supporting the highest samplerate while meeting the requirement
-		int bestSizeId = -1;
-		for(int sizeId = 0; sizeId < this->specification.recordLengths.count(); ++sizeId) {
-			if(this->specification.recordLengths[sizeId] >= size) {
-				// We meet the size-requirement, check if we provide the highest possible samplerate
-				if(bestSizeId == -1 || this->specification.recordLengths[bestSizeId] < size || this->specification.bufferDividers[sizeId] < this->specification.bufferDividers[bestSizeId])
-					bestSizeId = sizeId;
-			}
-			else {
-				// We don't meet the size-requirement, but maybe we're still the one coming closest
-				if(bestSizeId == -1 || this->specification.recordLengths[sizeId] > this->specification.recordLengths[bestSizeId])
-					bestSizeId = sizeId;
-			}
+	/// \brief Calculated the nearest samplerate supported by the oscilloscope.
+	/// \param samplerate The target samplerate, that should be met as good as possible.
+	/// \param fastRate true, if the fast rate mode is enabled.
+	/// \param maximum The target samplerate is the maximum allowed when true, the minimum otherwise.
+	/// \param downsampler Pointer to where the selected downsampling factor should be written.
+	/// \return The nearest samplerate supported, 0.0 on error.
+	double Control::getBestSamplerate(double samplerate, bool fastRate, bool maximum, unsigned long int *downsampler) {
+		// Abort if the input value is invalid
+		if(samplerate <= 0.0)
+			return 0.0;
+		
+		double bestSamplerate = 0.0;
+		
+		// Get samplerate specifications for this mode and model
+		ControlSamplerateLimits *limits;
+		if(fastRate)
+			limits = &(this->specification.samplerate.multi);
+		else
+			limits = &(this->specification.samplerate.single);
+		
+		// Get downsampling factor that would provide the requested rate
+		double bestDownsampler = (double) limits->base / this->specification.bufferDividers[this->settings.recordLengthId] / samplerate;
+		// Base samplerate sufficient, or is the maximum better?
+		if(bestDownsampler < 1.0 && (samplerate <= limits->max / this->specification.bufferDividers[this->settings.recordLengthId] || !maximum)) {
+			bestDownsampler = 0.0;
+			bestSamplerate = limits->max / this->specification.bufferDividers[this->settings.recordLengthId];
 		}
+		else {
+			switch(this->specification.command.bulk.setSamplerate) {
+				case BULK_SETTRIGGERANDSAMPLERATE:
+					// DSO-2090 supports the downsampling factors 1, 2, 4 and 5 using valueFast or all even values above using valueSlow
+					if((maximum && bestDownsampler <= 5.0) || (!maximum && bestDownsampler < 6.0)) {
+						// valueFast is used
+						if(maximum) {
+							// The samplerate shall not be higher, so we round up
+							bestDownsampler = ceil(bestDownsampler);
+							if(bestDownsampler > 2.0) // 3 and 4 not possible with the DSO-2090
+								bestDownsampler = 5.0;
+						}
+						else {
+							// The samplerate shall not be lower, so we round down
+							bestDownsampler = floor(bestDownsampler);
+							if(bestDownsampler > 2.0 && bestDownsampler < 5.0) // 3 and 4 not possible with the DSO-2090
+								bestDownsampler = 2.0;
+						}
+					}
+					else {
+						// valueSlow is used
+						if(maximum) {
+							bestDownsampler = ceil(bestDownsampler / 2.0) * 2.0; // Round up to next even value
+						}
+						else {
+							bestDownsampler = floor(bestDownsampler / 2.0) * 2.0; // Round down to next even value
+						}
+						if(bestDownsampler > 2.0 * 0x10001) // Check for overflow
+							bestDownsampler = 2.0 * 0x10001;
+					}
+					break;
+				
+				case BULK_CSETTRIGGERORSAMPLERATE:
+					// DSO-5200 may not supports all downsampling factors, requires testing
+					if(maximum) {
+						bestDownsampler = ceil(bestDownsampler); // Round up to next integer value
+					}
+					else {
+						bestDownsampler = floor(bestDownsampler); // Round down to next integer value
+					}
+					break;
+				
+				case BULK_ESETTRIGGERORSAMPLERATE:
+					// DSO-2250 doesn't have a fast value, so it supports all downsampling factors
+					if(maximum) {
+						bestDownsampler = ceil(bestDownsampler); // Round up to next integer value
+					}
+					else {
+						bestDownsampler = floor(bestDownsampler); // Round down to next integer value
+					}
+					break;
+				
+				default:
+					return 0.0;
+			}
+			
+			// Limit maximum downsampler value to avoid overflows in the sent commands
+			if(bestDownsampler > limits->maxDownsampler)
+				bestDownsampler = limits->maxDownsampler;
+		
+			bestSamplerate = limits->base / bestDownsampler / this->specification.bufferDividers[this->settings.recordLengthId];
+		}
+		
+		if(downsampler)
+			*downsampler = (unsigned long int) bestDownsampler;
+		return bestSamplerate;
+	}
+	
+	/// \brief Sets the size of the sample buffer without updating dependencies.
+	/// \param index The record length index that should be set.
+	/// \return The record length that has been set, 0 on error.
+	unsigned long int Control::updateRecordLength(unsigned long int index) {
+		if(index >= (unsigned long int) this->settings.samplerate.limits->recordLengths.size())
+			return 0;
 		
 		switch(this->specification.command.bulk.setRecordLength) {
 			case BULK_SETTRIGGERANDSAMPLERATE:
 				// SetTriggerAndSamplerate bulk command for record length
-				static_cast<BulkSetTriggerAndSamplerate *>(this->command[BULK_SETTRIGGERANDSAMPLERATE])->setRecordLength(bestSizeId);
+				static_cast<BulkSetTriggerAndSamplerate *>(this->command[BULK_SETTRIGGERANDSAMPLERATE])->setRecordLength(index);
 				this->commandPending[BULK_SETTRIGGERANDSAMPLERATE] = true;
 				
 				break;
@@ -498,7 +626,7 @@ namespace Hantek {
 					// Pointers to needed commands
 					BulkSetRecordLength2250 *commandSetRecordLength2250 = static_cast<BulkSetRecordLength2250 *>(this->command[BULK_DSETBUFFER]);
 					
-					commandSetRecordLength2250->setRecordLength(bestSizeId);
+					commandSetRecordLength2250->setRecordLength(index);
 				}
 				else {
 					// SetBuffer5200 bulk command for record length
@@ -506,7 +634,7 @@ namespace Hantek {
 					
 					commandSetBuffer5200->setUsedPre(DTRIGGERPOSITION_ON);
 					commandSetBuffer5200->setUsedPost(DTRIGGERPOSITION_ON);
-					commandSetBuffer5200->setRecordLength(bestSizeId);
+					commandSetBuffer5200->setRecordLength(index);
 				}
 				
 				this->commandPending[BULK_DSETBUFFER] = true;
@@ -517,9 +645,136 @@ namespace Hantek {
 				return 0;
 		}
 		
-		this->settings.recordLengthId = bestSizeId;
+		this->settings.recordLengthId = index;
 		
-		return this->specification.recordLengths[this->settings.recordLengthId];
+		return this->settings.samplerate.limits->recordLengths[index];
+	}
+	
+	/// \brief Sets the samplerate based on the parameters calculated by Control::getBestSamplerate.
+	/// \param downsampler The downsampling factor.
+	/// \param fastRate true, if one channel uses all buffers.
+	/// \return The downsampling factor that has been set.
+	unsigned long int Control::updateSamplerate(unsigned long int downsampler, bool fastRate) {
+		// Set the calculated samplerate
+		switch(this->specification.command.bulk.setSamplerate) {
+			case BULK_SETTRIGGERANDSAMPLERATE: {
+				short int downsamplerValue = 0;
+				unsigned char samplerateId = 0;
+				bool downsampling = false;
+				
+				if(downsampler <= 5) {
+					// All dividers up to 5 are done using the special samplerate IDs
+					if(downsampler == 0)
+						samplerateId = 1;
+					else if(downsampler <= 2)
+						samplerateId = downsampler;
+					else { // Downsampling factors 3 and 4 are not supported
+						samplerateId = 3;
+						downsampler = 5;
+						downsamplerValue = 0xffff;
+					}
+				}
+				else {
+					// For any dividers above the downsampling factor can be set directly
+					downsampler &= ~0x0001; // Only even values possible
+					downsamplerValue = (short int) (0x10001 - (downsampler >> 1));
+					
+					downsampling = true;
+				}
+				
+				// Pointers to needed commands
+				BulkSetTriggerAndSamplerate *commandSetTriggerAndSamplerate = static_cast<BulkSetTriggerAndSamplerate *>(this->command[BULK_SETTRIGGERANDSAMPLERATE]);
+				
+				// Store if samplerate ID or downsampling factor is used
+				commandSetTriggerAndSamplerate->setDownsamplingMode(downsampling);
+				// Store samplerate ID
+				commandSetTriggerAndSamplerate->setSamplerateId(samplerateId);
+				// Store downsampling factor
+				commandSetTriggerAndSamplerate->setDownsampler(downsamplerValue);
+				// Set fast rate when used
+				commandSetTriggerAndSamplerate->setFastRate(false /*fastRate*/);
+				
+				this->commandPending[BULK_SETTRIGGERANDSAMPLERATE] = true;
+				
+				break;
+			}
+			case BULK_CSETTRIGGERORSAMPLERATE: {
+				// Split the resulting divider into the values understood by the device
+				// The fast value is kept at 4 (or 3) for slow sample rates
+				long int valueSlow = qMax(((long int) downsampler - 3) / 2, (long int) 0);
+				unsigned char valueFast = downsampler - valueSlow * 2;
+				
+				// Pointers to needed commands
+				BulkSetSamplerate5200 *commandSetSamplerate5200 = static_cast<BulkSetSamplerate5200 *>(this->command[BULK_CSETTRIGGERORSAMPLERATE]);
+				BulkSetTrigger5200 *commandSetTrigger5200 = static_cast<BulkSetTrigger5200 *>(this->command[BULK_ESETTRIGGERORSAMPLERATE]);
+				
+				// Store samplerate fast value
+				commandSetSamplerate5200->setSamplerateFast(4 - valueFast);
+				// Store samplerate slow value (two's complement)
+				commandSetSamplerate5200->setSamplerateSlow(valueSlow == 0 ? 0 : 0xffff - valueSlow);
+				// Set fast rate when used
+				commandSetTrigger5200->setFastRate(fastRate);
+				
+				this->commandPending[BULK_CSETTRIGGERORSAMPLERATE] = true;
+				this->commandPending[BULK_ESETTRIGGERORSAMPLERATE] = true;
+				
+				break;
+			}
+			case BULK_ESETTRIGGERORSAMPLERATE: {
+				// Pointers to needed commands
+				BulkSetSamplerate2250 *commandSetSamplerate2250 = static_cast<BulkSetSamplerate2250 *>(this->command[BULK_ESETTRIGGERORSAMPLERATE]);
+				
+				bool downsampling = downsampler >= 1;
+				// Store downsampler state value
+				commandSetSamplerate2250->setDownsampling(downsampling);
+				// Store samplerate value
+				commandSetSamplerate2250->setSamplerate(downsampler > 1 ? 0x10001 - downsampler : 0);
+				// Set fast rate when used
+				commandSetSamplerate2250->setFastRate(fastRate);
+				
+				this->commandPending[BULK_ESETTRIGGERORSAMPLERATE] = true;
+				
+				break;
+			}
+			default:
+				return ULONG_MAX;
+		}
+		
+		// Update settings
+		bool fastRateChanged = fastRate != (this->settings.samplerate.limits == &this->specification.samplerate.multi);
+		if(fastRateChanged) {
+			if(fastRate)
+				this->settings.samplerate.limits = &this->specification.samplerate.multi;
+			else
+				this->settings.samplerate.limits = &this->specification.samplerate.single;
+		}
+		
+		this->settings.samplerate.downsampler = downsampler;
+		if(downsampler)
+			this->settings.samplerate.current = this->settings.samplerate.limits->base / downsampler;
+		else
+			this->settings.samplerate.current = this->settings.samplerate.limits->max;
+		
+		// Update dependencies
+		this->setPretriggerPosition(this->settings.trigger.position);
+		
+		// Emit signals for changed settings
+		if(fastRateChanged) {
+			emit availableRecordLengthsChanged(this->settings.samplerate.limits->recordLengths);
+			emit recordLengthChanged(this->settings.samplerate.limits->recordLengths[this->settings.recordLengthId]);
+		}
+		emit recordTimeChanged((double) this->settings.samplerate.limits->recordLengths[this->settings.recordLengthId] / this->settings.samplerate.current);
+		emit samplerateChanged(this->settings.samplerate.current);
+		
+		return downsampler;
+	}
+	
+	/// \brief Try to connect to the oscilloscope.
+	void Control::restoreTargets() {
+		if(this->settings.samplerate.target.samplerateSet)
+			this->setSamplerate();
+		else
+			this->setRecordTime();
 	}
 	
 	/// \brief Try to connect to the oscilloscope.
@@ -545,7 +800,7 @@ namespace Hantek {
 		this->command[BULK_SETGAIN] = new BulkSetGain();
 		// Initialize the command versions to the ones used on the DSO-2090
 		this->specification.command.bulk.setRecordLength = (BulkCode) -1;
-		this->specification.command.bulk.setFilter = (BulkCode) -1;
+		this->specification.command.bulk.setChannels = (BulkCode) -1;
 		this->specification.command.bulk.setGain = BULK_SETGAIN;
 		this->specification.command.bulk.setSamplerate = (BulkCode) -1;
 		this->specification.command.bulk.setTrigger = (BulkCode) -1;
@@ -563,32 +818,30 @@ namespace Hantek {
 			
 			case MODEL_DSO2090:
 				// Instantiate additional commands for the DSO-2090
-				this->command[BULK_SETFILTER] = new BulkSetFilter();
 				this->command[BULK_SETTRIGGERANDSAMPLERATE] = new BulkSetTriggerAndSamplerate();
 				this->specification.command.bulk.setRecordLength = BULK_SETTRIGGERANDSAMPLERATE;
-				this->specification.command.bulk.setFilter = BULK_SETFILTER;
+				this->specification.command.bulk.setChannels = BULK_SETTRIGGERANDSAMPLERATE;
 				this->specification.command.bulk.setSamplerate = BULK_SETTRIGGERANDSAMPLERATE;
 				this->specification.command.bulk.setTrigger = BULK_SETTRIGGERANDSAMPLERATE;
 				this->specification.command.bulk.setPretrigger = BULK_SETTRIGGERANDSAMPLERATE;
 				// Initialize those as pending
-				this->commandPending[BULK_SETFILTER] = true;
 				this->commandPending[BULK_SETTRIGGERANDSAMPLERATE] = true;
 				break;
 			
 			case MODEL_DSO2250:
 				// Instantiate additional commands for the DSO-2250
-				this->command[BULK_BSETFILTER] = new BulkSetFilter2250();
+				this->command[BULK_BSETCHANNELS] = new BulkSetChannels2250();
 				this->command[BULK_CSETTRIGGERORSAMPLERATE] = new BulkSetTrigger2250();
 				this->command[BULK_DSETBUFFER] = new BulkSetRecordLength2250();
 				this->command[BULK_ESETTRIGGERORSAMPLERATE] = new BulkSetSamplerate2250();
 				this->command[BULK_FSETBUFFER] = new BulkSetBuffer2250();
 				this->specification.command.bulk.setRecordLength = BULK_DSETBUFFER;
-				this->specification.command.bulk.setFilter = BULK_BSETFILTER;
+				this->specification.command.bulk.setChannels = BULK_BSETCHANNELS;
 				this->specification.command.bulk.setSamplerate = BULK_ESETTRIGGERORSAMPLERATE;
 				this->specification.command.bulk.setTrigger = BULK_CSETTRIGGERORSAMPLERATE;
 				this->specification.command.bulk.setPretrigger = BULK_FSETBUFFER;
 				
-				this->commandPending[BULK_BSETFILTER] = true;
+				this->commandPending[BULK_BSETCHANNELS] = true;
 				this->commandPending[BULK_CSETTRIGGERORSAMPLERATE] = true;
 				this->commandPending[BULK_DSETBUFFER] = true;
 				this->commandPending[BULK_ESETTRIGGERORSAMPLERATE] = true;
@@ -605,6 +858,7 @@ namespace Hantek {
 				this->command[BULK_DSETBUFFER] = new BulkSetBuffer5200();
 				this->command[BULK_ESETTRIGGERORSAMPLERATE] = new BulkSetTrigger5200();
 				this->specification.command.bulk.setRecordLength = BULK_DSETBUFFER;
+				this->specification.command.bulk.setChannels = BULK_ESETTRIGGERORSAMPLERATE;
 				this->specification.command.bulk.setSamplerate = BULK_CSETTRIGGERORSAMPLERATE;
 				this->specification.command.bulk.setTrigger = BULK_ESETTRIGGERORSAMPLERATE;
 				this->specification.command.bulk.setPretrigger = BULK_ESETTRIGGERORSAMPLERATE;
@@ -630,7 +884,8 @@ namespace Hantek {
 		
 		// Maximum possible samplerate for a single channel and dividers for record lengths
 		this->specification.bufferDividers.clear();
-		this->specification.recordLengths.clear();
+		this->specification.samplerate.single.recordLengths.clear();
+		this->specification.samplerate.multi.recordLengths.clear();
 		this->specification.gainSteps.clear();
 		for(int channel = 0; channel < HANTEK_CHANNELS; ++channel)
 			this->specification.voltageLimit[channel].clear();
@@ -640,10 +895,13 @@ namespace Hantek {
 			case MODEL_DSO5200A:
 				this->specification.samplerate.single.base = 100e6;
 				this->specification.samplerate.single.max = 125e6;
+				this->specification.samplerate.single.maxDownsampler = 131072;
+				this->specification.samplerate.single.recordLengths << ULONG_MAX << 10240 << 14336;
 				this->specification.samplerate.multi.base = 200e6;
 				this->specification.samplerate.multi.max = 250e6;
+				this->specification.samplerate.multi.maxDownsampler = 131072;
+				this->specification.samplerate.multi.recordLengths << ULONG_MAX << 20480 << 28672;
 				this->specification.bufferDividers << 1000 << 1 << 1;
-				this->specification.recordLengths << ULONG_MAX << 10240 << 14336;
 				this->specification.gainSteps
 					<< 0.16 << 0.40 << 0.80 << 1.60 << 4.00 <<  8.0 << 16.0 << 40.0 << 80.0;
 				/// \todo Use calibration data to get the DSO-5200(A) sample ranges
@@ -658,10 +916,13 @@ namespace Hantek {
 			case MODEL_DSO2250:
 				this->specification.samplerate.single.base = 100e6;
 				this->specification.samplerate.single.max = 100e6;
+				this->specification.samplerate.single.maxDownsampler = 65536;
+				this->specification.samplerate.single.recordLengths << ULONG_MAX << 10240 << 524288;
 				this->specification.samplerate.multi.base = 200e6;
 				this->specification.samplerate.multi.max = 250e6;
+				this->specification.samplerate.multi.maxDownsampler = 65536;
+				this->specification.samplerate.multi.recordLengths << ULONG_MAX << 20480 << 1048576;
 				this->specification.bufferDividers << 1000 << 1 << 1;
-				this->specification.recordLengths << ULONG_MAX << 10240 << 524288;
 				this->specification.gainSteps
 					<< 0.08 << 0.16 << 0.40 << 0.80 << 1.60 << 4.00 <<  8.0 << 16.0 << 40.0;
 				for(int channel = 0; channel < HANTEK_CHANNELS; ++channel)
@@ -675,10 +936,13 @@ namespace Hantek {
 			case MODEL_DSO2150:
 				this->specification.samplerate.single.base = 50e6;
 				this->specification.samplerate.single.max = 75e6;
+				this->specification.samplerate.single.maxDownsampler = 131072;
+				this->specification.samplerate.single.recordLengths << ULONG_MAX << 10240 << 32768;
 				this->specification.samplerate.multi.base = 100e6;
 				this->specification.samplerate.multi.max = 150e6;
+				this->specification.samplerate.multi.maxDownsampler = 131072;
+				this->specification.samplerate.multi.recordLengths << ULONG_MAX << 20480 << 65536;
 				this->specification.bufferDividers << 1000 << 1 << 1;
-				this->specification.recordLengths << ULONG_MAX << 10240 << 32768;
 				this->specification.gainSteps
 					<< 0.08 << 0.16 << 0.40 << 0.80 << 1.60 << 4.00 <<  8.0 << 16.0 << 40.0;
 				for(int channel = 0; channel < HANTEK_CHANNELS; ++channel)
@@ -692,10 +956,13 @@ namespace Hantek {
 			default:
 				this->specification.samplerate.single.base = 50e6;
 				this->specification.samplerate.single.max = 50e6;
+				this->specification.samplerate.single.maxDownsampler = 131072;
+				this->specification.samplerate.single.recordLengths << ULONG_MAX << 10240 << 32768;
 				this->specification.samplerate.multi.base = 100e6;
 				this->specification.samplerate.multi.max = 100e6;
+				this->specification.samplerate.multi.maxDownsampler = 131072;
+				this->specification.samplerate.multi.recordLengths << ULONG_MAX << 20480 << 65536;
 				this->specification.bufferDividers << 1000 << 1 << 1;
-				this->specification.recordLengths << ULONG_MAX << 10240 << 32768;
 				this->specification.gainSteps
 					<< 0.08 << 0.16 << 0.40 << 0.80 << 1.60 << 4.00 <<  8.0 << 16.0 << 40.0;
 				for(int channel = 0; channel < HANTEK_CHANNELS; ++channel)
@@ -706,8 +973,10 @@ namespace Hantek {
 				this->specification.sampleSize = 8;
 				break;
 		}
+		this->settings.recordLengthId = 1;
 		this->settings.samplerate.limits = &(this->specification.samplerate.single);
-		this->settings.samplerate.downsampling = 1;
+		this->settings.samplerate.downsampler = 1;
+		this->previousSampleCount = 0;
 		
 		// Get channel level data
 		errorCode = this->device->controlRead(CONTROL_VALUE, (unsigned char *) &(this->specification.offsetLimit), sizeof(this->specification.offsetLimit), (int) VALUE_OFFSETLIMITS);
@@ -721,131 +990,78 @@ namespace Hantek {
 	}
 	
 	/// \brief Sets the size of the oscilloscopes sample buffer.
-	/// \param size The record length that should be met (S).
+	/// \param index The record length index that should be set.
 	/// \return The record length that has been set, 0 on error.
-	unsigned long int Control::setRecordLength(unsigned long int size) {
-		if(!this->device->isConnected())
+	unsigned long int Control::setRecordLength(unsigned long int index) {
+	if(!this->device->isConnected())
 			return 0;
 		
-		this->updateRecordLength(size);
+		if(!this->updateRecordLength(index))
+			return 0;
 		
-		this->setSamplerate();
+		this->restoreTargets();
 		this->setPretriggerPosition(this->settings.trigger.position);
 		
-		return this->specification.recordLengths[this->settings.recordLengthId];
+		emit recordLengthChanged(this->settings.samplerate.limits->recordLengths[this->settings.recordLengthId]);
+		return this->settings.samplerate.limits->recordLengths[this->settings.recordLengthId];
 	}
 	
 	/// \brief Sets the samplerate of the oscilloscope.
-	/// \param samplerate The samplerate that should be met (S/s).
-	/// \return The samplerate that has been set, 0 on error.
-	unsigned long int Control::setSamplerate(unsigned long int samplerate) {
-		if(!this->device->isConnected())
-			return 0;
-		
-		// Keep samplerate if no parameter was given
-		if(!samplerate)
-			samplerate = this->settings.samplerate.current;
-		// Abort samplerate calculation if we didn't get a valid value yet
-		if(!samplerate)
-			return samplerate;
-		
-		// Calculate with fast rate first if only one channel is used
-		bool fastRate = false;
-		this->settings.samplerate.limits = &(this->specification.samplerate.single);
-		if(this->settings.usedChannels <= 1) {
-			fastRate = true;
-			this->settings.samplerate.limits = &(this->specification.samplerate.multi);
+	/// \param samplerate The samplerate that should be met (S/s), 0.0 to restore current samplerate.
+	/// \return The samplerate that has been set, 0.0 on error.
+	double Control::setSamplerate(double samplerate) {
+		if(samplerate == 0.0) {
+			samplerate = this->settings.samplerate.target.samplerate;
+		}
+		else {
+			this->settings.samplerate.target.samplerate = samplerate;
+			this->settings.samplerate.target.samplerateSet = true;
 		}
 		
-		// Get downsampling factor that would provide the requested rate
-		this->settings.samplerate.downsampling = this->settings.samplerate.limits->base / this->specification.bufferDividers[this->settings.recordLengthId] / samplerate;
-		// A downsampling factor of zero will result in the maximum rate
-		if(this->settings.samplerate.downsampling)
-			this->settings.samplerate.current = this->settings.samplerate.limits->base / this->specification.bufferDividers[this->settings.recordLengthId] / this->settings.samplerate.downsampling;
-		else
-			this->settings.samplerate.current = this->settings.samplerate.limits->max / this->specification.bufferDividers[this->settings.recordLengthId];
+		// When possible, enable fast rate if it is required to reach the requested samplerate
+		bool fastRate = (this->settings.usedChannels <= 1) && (samplerate > this->specification.samplerate.single.max);
 		
-		// Maybe normal mode would be sufficient or even better than fast rate mode
-		if(fastRate) {
-			// Don't set the downsampling factor to zero (maximum rate) if we could use fast rate mode anyway
-			unsigned long int slowDownsampling = qMax(this->specification.samplerate.single.base / this->specification.bufferDividers[this->settings.recordLengthId] / samplerate, (long unsigned int) 1);
-			
-			// Use normal mode if we need valueSlow or it would meet the rate at least as exactly as fast rate mode
-			if(this->settings.samplerate.downsampling > 4 || (qAbs((double) this->specification.samplerate.single.base / this->specification.bufferDividers[this->settings.recordLengthId] / slowDownsampling - samplerate) <= qAbs((double) this->settings.samplerate.current - samplerate))) {
-				fastRate = false;
-				this->settings.samplerate.limits = &(this->specification.samplerate.single);
-				this->settings.samplerate.downsampling = slowDownsampling;
-				this->settings.samplerate.current = this->specification.samplerate.single.base / this->specification.bufferDividers[this->settings.recordLengthId] / this->settings.samplerate.downsampling;
-			}
+		// What is the nearest, at least as high samplerate the scope can provide?
+		unsigned long int downsampler = 0;
+		double bestSamplerate = getBestSamplerate(samplerate, fastRate, false, &(downsampler));
+		
+		// Set the calculated samplerate
+		if(this->updateSamplerate(downsampler, fastRate) == ULONG_MAX)
+			return 0.0;
+		else {
+			return bestSamplerate;
+		}
+	}
+	
+	/// \brief Sets the time duration of one aquisition by adapting the samplerate.
+	/// \param duration The record time duration that should be met (s), 0.0 to restore current record time.
+	/// \return The record time duration that has been set, 0.0 on error.
+	double Control::setRecordTime(double duration) {
+		if(duration == 0.0) {
+			duration = this->settings.samplerate.target.duration;
+		}
+		else {
+			this->settings.samplerate.target.duration = duration;
+			this->settings.samplerate.target.samplerateSet = false;
 		}
 		
-		switch(this->specification.command.bulk.setSamplerate) {
-			case BULK_SETTRIGGERANDSAMPLERATE: {
-				// Split the resulting divider into the values understood by the device
-				// The fast value is kept at 4 (or 3) for slow sample rates
-				long int valueSlow = qMax(((long int) this->settings.samplerate.downsampling - 3) / 2, (long int) 0);
-				unsigned char valueFast = this->settings.samplerate.downsampling - valueSlow * 2;
-				
-				// Pointers to needed commands
-				BulkSetTriggerAndSamplerate *commandSetTriggerAndSamplerate = static_cast<BulkSetTriggerAndSamplerate *>(this->command[BULK_SETTRIGGERANDSAMPLERATE]);
-				
-				// Store samplerate fast value
-				commandSetTriggerAndSamplerate->setSamplerateFast(valueFast);
-				// Store samplerate slow value (two's complement)
-				commandSetTriggerAndSamplerate->setSamplerateSlow(valueSlow == 0 ? 0 : 0xffff - valueSlow);
-				// Set fast rate when used
-				commandSetTriggerAndSamplerate->setFastRate(fastRate);
-				
-				this->commandPending[BULK_SETTRIGGERANDSAMPLERATE] = true;
-				
-				break;
-			}
-			case BULK_CSETTRIGGERORSAMPLERATE: {
-				// Split the resulting divider into the values understood by the device
-				// The fast value is kept at 4 (or 3) for slow sample rates
-				long int valueSlow = qMax(((long int) this->settings.samplerate.downsampling - 3) / 2, (long int) 0);
-				unsigned char valueFast = this->settings.samplerate.downsampling - valueSlow * 2;
-				
-				// Pointers to needed commands
-				BulkSetSamplerate5200 *commandSetSamplerate5200 = static_cast<BulkSetSamplerate5200 *>(this->command[BULK_CSETTRIGGERORSAMPLERATE]);
-				BulkSetTrigger5200 *commandSetTrigger5200 = static_cast<BulkSetTrigger5200 *>(this->command[BULK_ESETTRIGGERORSAMPLERATE]);
-				
-				// Store samplerate fast value
-				commandSetSamplerate5200->setSamplerateFast(4 - valueFast);
-				// Store samplerate slow value (two's complement)
-				commandSetSamplerate5200->setSamplerateSlow(valueSlow == 0 ? 0 : 0xffff - valueSlow);
-				// Set fast rate when used
-				commandSetTrigger5200->setFastRate(fastRate);
-				
-				this->commandPending[BULK_CSETTRIGGERORSAMPLERATE] = true;
-				this->commandPending[BULK_ESETTRIGGERORSAMPLERATE] = true;
-				
-				break;
-			}
-			case BULK_ESETTRIGGERORSAMPLERATE: {
-				// Pointers to needed commands
-				BulkSetSamplerate2250 *commandSetSamplerate2250 = static_cast<BulkSetSamplerate2250 *>(this->command[BULK_ESETTRIGGERORSAMPLERATE]);
-				
-				bool downsampling = this->settings.samplerate.downsampling > 1;
-				// Store downsampler state value
-				commandSetSamplerate2250->setDownsampling(downsampling);
-				// Store samplerate value
-				commandSetSamplerate2250->setSamplerate(downsampling ? 0x10001 - this->settings.samplerate.downsampling : 0);
-				// Set fast rate when used
-				commandSetSamplerate2250->setFastRate(fastRate);
-				
-				this->commandPending[BULK_ESETTRIGGERORSAMPLERATE] = true;
-				
-				break;
-			}
-			default:
-				return 0;
-		}
+		// Calculate the maximum samplerate that would still provide the requested duration
+		double maxSamplerate = (double) this->specification.samplerate.single.recordLengths[this->settings.recordLengthId] / duration;
 		
-		this->updateRecordLength(this->specification.recordLengths[this->settings.recordLengthId]);
-		this->setPretriggerPosition(this->settings.trigger.position);
-		return this->settings.samplerate.current;
-	}	
+		// When possible, enable fast rate if the record time can't be set that low to improve resolution
+		bool fastRate = (this->settings.usedChannels <= 1) && (maxSamplerate >= this->specification.samplerate.multi.base);
+		
+		// What is the nearest, at most as high samplerate the scope can provide?
+		unsigned long int downsampler = 0;
+		double bestSamplerate = getBestSamplerate(maxSamplerate, fastRate, true, &(downsampler));
+		
+		// Set the calculated samplerate
+		if(this->updateSamplerate(downsampler, fastRate) == ULONG_MAX)
+			return 0.0;
+		else {
+			return (double) this->settings.samplerate.limits->recordLengths[this->settings.recordLengthId] / bestSamplerate;
+		}
+	}
 	
 	/// \brief Enables/disables filtering of the given channel.
 	/// \param channel The channel that should be set.
@@ -858,28 +1074,6 @@ namespace Hantek {
 		if(channel >= HANTEK_CHANNELS)
 			return Dso::ERROR_PARAMETER;
 		
-		// Channel filtering commands
-		switch(this->specification.command.bulk.setFilter) {
-			case BULK_SETFILTER: {
-				// SetFilter bulk command for channel filter (used has to be inverted!)
-				BulkSetFilter *commandSetFilter = static_cast<BulkSetFilter *>(this->command[BULK_SETFILTER]);
-				commandSetFilter->setChannel(channel, !used);
-				this->commandPending[BULK_SETFILTER] = true;
-				
-				break;
-			}
-			case BULK_BSETFILTER: {
-				// SetFilter2250 bulk command for channel filter (used has to be inverted!)
-				BulkSetFilter2250 *commandSetFilter2250 = static_cast<BulkSetFilter2250 *>(this->command[BULK_BSETFILTER]);
-				commandSetFilter2250->setChannel(channel, !used);
-				this->commandPending[BULK_BSETFILTER] = true;
-				
-				break;
-			}
-			default:
-				return Dso::ERROR_UNSUPPORTED;
-		}
-		
 		// Update settings
 		this->settings.voltage[channel].used = used;
 		unsigned int channelCount = 0;
@@ -887,35 +1081,58 @@ namespace Hantek {
 			if(this->settings.voltage[channelCounter].used)
 				++channelCount;
 		}
-		this->settings.usedChannels = channelCount;
 		
-		// Additional UsedChannels field for all models except DSO-2250
-		if(this->specification.command.bulk.setTrigger == BULK_SETTRIGGERANDSAMPLERATE || this->specification.command.bulk.setTrigger == BULK_ESETTRIGGERORSAMPLERATE) {
-			unsigned char usedChannels = USED_CH1;
-			
-			if(this->settings.voltage[1].used) {
-				if(this->settings.voltage[0].used)
-					usedChannels = USED_CH1CH2;
+		// Calculate the UsedChannels field for the command
+		unsigned char usedChannels = USED_CH1;
+		
+		if(this->settings.voltage[1].used) {
+			if(this->settings.voltage[0].used) {
+				usedChannels = USED_CH1CH2;
+			}
+			else {
+				// DSO-2250 uses a different value for channel 2
+				if(this->specification.command.bulk.setTrigger == BULK_BSETCHANNELS)
+					usedChannels = BUSED_CH2;
 				else
 					usedChannels = USED_CH2;
 			}
-			
-			switch(this->specification.command.bulk.setTrigger) {
-				case BULK_SETTRIGGERANDSAMPLERATE: {
-					// SetTriggerAndSamplerate bulk command for trigger source
-					static_cast<BulkSetTriggerAndSamplerate *>(this->command[BULK_SETTRIGGERANDSAMPLERATE])->setUsedChannels(usedChannels);
-					this->commandPending[BULK_SETTRIGGERANDSAMPLERATE] = true;
-					break;
-				}
-				case BULK_ESETTRIGGERORSAMPLERATE: {
-					// SetTrigger5200s bulk command for trigger source
-					static_cast<BulkSetTrigger5200 *>(this->command[BULK_ESETTRIGGERORSAMPLERATE])->setUsedChannels(usedChannels);
-					this->commandPending[BULK_ESETTRIGGERORSAMPLERATE] = true;
-					break;
-				}
-				default:
-					break;
+		}
+		
+		switch(this->specification.command.bulk.setTrigger) {
+			case BULK_SETTRIGGERANDSAMPLERATE: {
+				// SetTriggerAndSamplerate bulk command for trigger source
+				static_cast<BulkSetTriggerAndSamplerate *>(this->command[BULK_SETTRIGGERANDSAMPLERATE])->setUsedChannels(usedChannels);
+				this->commandPending[BULK_SETTRIGGERANDSAMPLERATE] = true;
+				break;
 			}
+			case BULK_BSETCHANNELS: {
+				// SetChannels2250 bulk command for active channels
+				static_cast<BulkSetChannels2250 *>(this->command[BULK_BSETCHANNELS])->setUsedChannels(usedChannels);
+				this->commandPending[BULK_BSETCHANNELS] = true;
+				
+				break;
+			}
+			case BULK_ESETTRIGGERORSAMPLERATE: {
+				// SetTrigger5200s bulk command for trigger source
+				static_cast<BulkSetTrigger5200 *>(this->command[BULK_ESETTRIGGERORSAMPLERATE])->setUsedChannels(usedChannels);
+				this->commandPending[BULK_ESETTRIGGERORSAMPLERATE] = true;
+				break;
+			}
+			default:
+				break;
+		}
+		
+		// Check if fast rate mode availability changed
+		bool fastRateChanged = (this->settings.usedChannels <= 1) != (channelCount <= 1);
+		this->settings.usedChannels = channelCount;
+		
+		if(fastRateChanged) {
+			// Works only if the minimum samplerate for normal mode is lower than for fast rate mode, which is the case for all models
+			ControlSamplerateLimits *limits = (channelCount <= 1) ? &this->specification.samplerate.multi : &this->specification.samplerate.single;
+			emit samplerateLimitsChanged((double) this->specification.samplerate.single.base / this->specification.samplerate.single.maxDownsampler, limits->max);
+			
+			// Samplerate differs for fast rate mode, recalculate it
+			this->restoreTargets();
 		}
 		
 		return Dso::ERROR_NONE;
@@ -1166,7 +1383,7 @@ namespace Hantek {
 		switch(this->specification.command.bulk.setPretrigger) {
 			case BULK_SETTRIGGERANDSAMPLERATE: {
 				// Calculate the position value (Start point depending on record length)
-				unsigned long int position = 0x7ffff - this->specification.recordLengths[this->settings.recordLengthId] + positionSamples;
+				unsigned long int position = 0x7ffff - this->specification.samplerate.single.recordLengths[this->settings.recordLengthId] + positionSamples;
 				
 				// SetTriggerAndSamplerate bulk command for trigger position
 				static_cast<BulkSetTriggerAndSamplerate *>(this->command[BULK_SETTRIGGERANDSAMPLERATE])->setTriggerPosition(position);
@@ -1176,7 +1393,7 @@ namespace Hantek {
 			}
 			case BULK_FSETBUFFER: {
 				// Calculate the position values (Inverse, maximum is 0x7ffff)
-				unsigned long int positionPre = 0x7fffful - this->specification.recordLengths[this->settings.recordLengthId] + positionSamples;
+				unsigned long int positionPre = 0x7fffful - this->specification.samplerate.single.recordLengths[this->settings.recordLengthId] + positionSamples;
 				unsigned long int positionPost = 0x7fffful - positionSamples;
 				
 				// SetBuffer2250 bulk command for trigger position
@@ -1189,7 +1406,7 @@ namespace Hantek {
 			}
 			case BULK_ESETTRIGGERORSAMPLERATE: {
 				// Calculate the position values (Inverse, maximum is 0xffff)
-				unsigned short int positionPre = 0xffff - this->specification.recordLengths[this->settings.recordLengthId] + positionSamples;
+				unsigned short int positionPre = 0xffff - this->specification.samplerate.single.recordLengths[this->settings.recordLengthId] + positionSamples;
 				unsigned short int positionPost = 0xffff - positionSamples;
 				
 				// SetBuffer5200 bulk command for trigger position

@@ -183,3 +183,12 @@
 
 2012-11-21 Oliver Haag  <oliver.haag@gmail.com>
 * Bugfix: DSO-2250 detection failed
+
+2012-11-25 Oliver Haag  <oliver.haag@gmail.com>
+* Added samplerate spinbox to horizontal dock
+* Moved record length selection from menu into horizontal dock
+* Large rework to allow setting either samplerate or timebase
+* Calculate the samplerate depending on the set parameter and the record length
+* Added signals to DsoControl to update horizontal dock automatically
+* Reworks in signal connections to make this work properly
+* Bugfix: DSO-2250 used channels wasn't set
