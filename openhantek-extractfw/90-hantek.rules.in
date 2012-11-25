@@ -1,10 +1,7 @@
 # Hantek DSO-2090
 SUBSYSTEM=="usb", ACTION=="add", ENV{DEVTYPE}=="usb_device", ENV{PRODUCT}=="4b4/2090/*", RUN+="/sbin/fxload -t fx2 -I @hantekfirmwaredir@/dso2090-firmware.hex -s @hantekfirmwaredir@/dso2090-loader.hex -D $env{DEVNAME}"
+SUBSYSTEM=="usb", ACTION=="add", ENV{DEVTYPE}=="usb_device", ENV{PRODUCT}=="4b4/8613/*", RUN+="/sbin/fxload -t fx2 -I @hantekfirmwaredir@/dso2090-firmware.hex -s @hantekfirmwaredir@/dso2090-loader.hex -D $env{DEVNAME}"
 ATTRS{idVendor}=="04b5", ATTRS{idProduct}=="2090", MODE="0660", GROUP="plugdev"
-
-# Hantek DSO-2100
-SUBSYSTEM=="usb", ACTION=="add", ENV{DEVTYPE}=="usb_device", ENV{PRODUCT}=="547/1006/*", RUN+="/sbin/fxload -t an21 -I @hantekfirmwaredir@/dso2100-firmware.hex -s @hantekfirmwaredir@/dso2100-loader.hex -D $env{DEVNAME}"
-ATTRS{idVendor}=="0547", ATTRS{idProduct}=="1002", MODE="0660", GROUP="plugdev"
 
 # Hantek DSO-2150
 SUBSYSTEM=="usb", ACTION=="add", ENV{DEVTYPE}=="usb_device", ENV{PRODUCT}=="4b4/2150/*", RUN+="/sbin/fxload -t fx2 -I @hantekfirmwaredir@/dso2150-firmware.hex -s @hantekfirmwaredir@/dso2150-loader.hex -D $env{DEVNAME}"
