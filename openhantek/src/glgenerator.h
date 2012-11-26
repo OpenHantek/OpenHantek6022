@@ -55,13 +55,13 @@ class GlArray {
 		GlArray();
 		~GlArray();
 		
-		unsigned long int getSize();
-		void setSize(unsigned long int size);
+		unsigned int getSize();
+		void setSize(unsigned int size);
 		
 		GLfloat *data; ///< Pointer to the array
 	
 	protected:
-		unsigned long int size; ///< The array size (Number of GLfloat values)
+		unsigned int size; ///< The array size (Number of GLfloat values)
 };
 
 ////////////////////////////////////////////////////////////////////////////////

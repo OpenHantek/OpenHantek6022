@@ -147,8 +147,8 @@ void HorizontalDock::setTimebase(double timebase) {
 
 /// \brief Changes the record length if the new value is supported.
 /// \param recordLength The record length in samples.
-void HorizontalDock::setRecordLength(unsigned long int recordLength) {
-	int index = this->recordLengthComboBox->findData((uint) recordLength); // QVariant doesn't take unsigned long int, doesn't matter for 32 bit platforms at least
+void HorizontalDock::setRecordLength(unsigned int recordLength) {
+	int index = this->recordLengthComboBox->findData(recordLength);
 	
 	if(index != -1) {
 		this->suppressSignals = true;
@@ -173,7 +173,7 @@ int HorizontalDock::setFormat(Dso::GraphFormat format) {
 
 /// \brief Updates the available record lengths in the combo box.
 /// \param recordLengths The available record lengths for the combo box.
-void HorizontalDock::availableRecordLengthsChanged(const QList<unsigned long int> &recordLengths) {
+void HorizontalDock::availableRecordLengthsChanged(const QList<unsigned int> &recordLengths) {
 	/// \todo Empty lists should be interpreted as scope supporting continuous record length values.
 	this->recordLengthComboBox->blockSignals(true); // Avoid messing up the settings
 	this->recordLengthComboBox->setUpdatesEnabled(false);
@@ -181,13 +181,13 @@ void HorizontalDock::availableRecordLengthsChanged(const QList<unsigned long int
 	// Update existing elements to avoid unnecessary index updates
 	int index = 0;
 	for(; index < recordLengths.size(); ++index) {
-		unsigned long int recordLengthItem = recordLengths[index];
+		unsigned int recordLengthItem = recordLengths[index];
 		if(index < this->recordLengthComboBox->count()) {
-			this->recordLengthComboBox->setItemData(index, (unsigned int) recordLengthItem);
-			this->recordLengthComboBox->setItemText(index, recordLengthItem == ULONG_MAX ? tr("Roll") : Helper::valueToString(recordLengthItem, Helper::UNIT_SAMPLES, 3));
+			this->recordLengthComboBox->setItemData(index, recordLengthItem);
+			this->recordLengthComboBox->setItemText(index, recordLengthItem == UINT_MAX ? tr("Roll") : Helper::valueToString(recordLengthItem, Helper::UNIT_SAMPLES, 3));
 		}
 		else {
-			this->recordLengthComboBox->addItem(recordLengthItem == ULONG_MAX ? tr("Roll") : Helper::valueToString(recordLengthItem, Helper::UNIT_SAMPLES, 3), (uint) recordLengthItem);
+			this->recordLengthComboBox->addItem(recordLengthItem == UINT_MAX ? tr("Roll") : Helper::valueToString(recordLengthItem, Helper::UNIT_SAMPLES, 3), (uint) recordLengthItem);
 		}
 	}
 	// Remove extra elements

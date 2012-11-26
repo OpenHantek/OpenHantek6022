@@ -29,6 +29,9 @@
 #define HANTEK_TYPES_H
 
 
+#include <stdint.h>
+
+
 #include "helper.h"
 
 
@@ -738,83 +741,83 @@ namespace Hantek {
 	/// \struct FilterBits                                          hantek/types.h
 	/// \brief The bits for BULK_SETFILTER.
 	struct FilterBits {
-		unsigned char channel1:1; ///< Set to true when channel 1 isn't used
-		unsigned char channel2:1; ///< Set to true when channel 2 isn't used
-		unsigned char trigger:1; ///< Set to true when trigger isn't used
-		unsigned char reserved:5; ///< Unused bits
+		uint8_t channel1:1; ///< Set to true when channel 1 isn't used
+		uint8_t channel2:1; ///< Set to true when channel 2 isn't used
+		uint8_t trigger:1; ///< Set to true when trigger isn't used
+		uint8_t reserved:5; ///< Unused bits
 	};
 	
 	//////////////////////////////////////////////////////////////////////////////
 	/// \struct GainBits                                            hantek/types.h
 	/// \brief The gain bits for BULK_SETGAIN.
 	struct GainBits {
-		unsigned char channel1:2; ///< Gain for CH1, 0 = 1e* V, 1 = 2e*, 2 = 5e*
-		unsigned char channel2:2; ///< Gain for CH1, 0 = 1e* V, 1 = 2e*, 2 = 5e*
-		unsigned char reserved:4; ///< Unused bits
+		uint8_t channel1:2; ///< Gain for CH1, 0 = 1e* V, 1 = 2e*, 2 = 5e*
+		uint8_t channel2:2; ///< Gain for CH1, 0 = 1e* V, 1 = 2e*, 2 = 5e*
+		uint8_t reserved:4; ///< Unused bits
 	};
 	
 	//////////////////////////////////////////////////////////////////////////////
 	/// \struct Tsr1Bits                                            hantek/types.h
 	/// \brief Trigger and samplerate bits (Byte 1).
 	struct Tsr1Bits {
-		unsigned char triggerSource:2; ///< The trigger source, see Hantek::TriggerSource
-		unsigned char recordLength:3; ///< See ::RecordLengthId
-		unsigned char samplerateId:2; ///< Samplerate ID when downsampler is disabled
-		unsigned char downsamplingMode:1; ///< true, if Downsampler is used
+		uint8_t triggerSource:2; ///< The trigger source, see Hantek::TriggerSource
+		uint8_t recordLength:3; ///< See ::RecordLengthId
+		uint8_t samplerateId:2; ///< Samplerate ID when downsampler is disabled
+		uint8_t downsamplingMode:1; ///< true, if Downsampler is used
 	};
 	
 	//////////////////////////////////////////////////////////////////////////////
 	/// \struct Tsr2Bits                                            hantek/types.h
 	/// \brief Trigger and samplerate bits (Byte 2).
 	struct Tsr2Bits {
-		unsigned char usedChannels:2; ///< Used channels, see Hantek::UsedChannels
-		unsigned char fastRate:1; ///< true, if one channels uses all buffers
-		unsigned char triggerSlope:1; ///< The trigger slope, see Dso::Slope, inverted when Tsr1Bits.samplerateFast is uneven
-		unsigned char reserved:4; ///< Unused bits
+		uint8_t usedChannels:2; ///< Used channels, see Hantek::UsedChannels
+		uint8_t fastRate:1; ///< true, if one channels uses all buffers
+		uint8_t triggerSlope:1; ///< The trigger slope, see Dso::Slope, inverted when Tsr1Bits.samplerateFast is uneven
+		uint8_t reserved:4; ///< Unused bits
 	};
 	
 	//////////////////////////////////////////////////////////////////////////////
 	/// \struct CTriggerBits                                        hantek/types.h
 	/// \brief Trigger bits for 0x0c command.
 	struct CTriggerBits {
-		unsigned char triggerSource:2; ///< The trigger source, see Hantek::TriggerSource
-		unsigned char triggerSlope:1; ///< The trigger slope, see Dso::Slope
-		unsigned char reserved:5; ///< Unused bits
+		uint8_t triggerSource:2; ///< The trigger source, see Hantek::TriggerSource
+		uint8_t triggerSlope:1; ///< The trigger slope, see Dso::Slope
+		uint8_t reserved:5; ///< Unused bits
 	};
 
 	//////////////////////////////////////////////////////////////////////////////
 	/// \struct DBufferBits                                         hantek/types.h
 	/// \brief Buffer mode bits for 0x0d command.
 	struct DBufferBits {
-		unsigned char triggerPositionUsed:3; ///< See ::DTriggerPositionUsed
-		unsigned char recordLength:3; ///< See ::RecordLengthId
-		unsigned char reserved:2; ///< Unused bits
+		uint8_t triggerPositionUsed:3; ///< See ::DTriggerPositionUsed
+		uint8_t recordLength:3; ///< See ::RecordLengthId
+		uint8_t reserved:2; ///< Unused bits
 	};
 	
 	//////////////////////////////////////////////////////////////////////////////
 	/// \struct ESamplerateBits                                     hantek/types.h
 	/// \brief Samplerate bits for DSO-2250 0x0e command.
 	struct ESamplerateBits {
-		unsigned char fastRate:1; ///< false, if one channels uses all buffers
-		unsigned char downsampling:1; ///< true, if the downsampler is activated
-		unsigned char reserved:4; ///< Unused bits
+		uint8_t fastRate:1; ///< false, if one channels uses all buffers
+		uint8_t downsampling:1; ///< true, if the downsampler is activated
+		uint8_t reserved:4; ///< Unused bits
 	};
 	
 	//////////////////////////////////////////////////////////////////////////////
 	/// \struct ETsrBits                                            hantek/types.h
 	/// \brief Trigger and samplerate bits for DSO-5200/DSO-5200A 0x0e command.
 	struct ETsrBits {
-		unsigned char fastRate:1; ///< false, if one channels uses all buffers
-		unsigned char usedChannels:2; ///< Used channels, see Hantek::UsedChannels
-		unsigned char triggerSource:2; ///< The trigger source, see Hantek::TriggerSource
-		unsigned char triggerSlope:2; ///< The trigger slope, see Dso::Slope
-		unsigned char triggerPulse:1; ///< Pulses are causing trigger events
+		uint8_t fastRate:1; ///< false, if one channels uses all buffers
+		uint8_t usedChannels:2; ///< Used channels, see Hantek::UsedChannels
+		uint8_t triggerSource:2; ///< The trigger source, see Hantek::TriggerSource
+		uint8_t triggerSlope:2; ///< The trigger slope, see Dso::Slope
+		uint8_t triggerPulse:1; ///< Pulses are causing trigger events
 	};
 	
 	//////////////////////////////////////////////////////////////////////////////
 	/// \class BulkSetFilter                                        hantek/types.h
 	/// \brief The BULK_SETFILTER builder.
-	class BulkSetFilter : public Helper::DataArray<unsigned char> {
+	class BulkSetFilter : public Helper::DataArray<uint8_t> {
 		public:
 			BulkSetFilter();
 			BulkSetFilter(bool channel1, bool channel2, bool trigger);
@@ -831,29 +834,29 @@ namespace Hantek {
 	//////////////////////////////////////////////////////////////////////////////
 	/// \class BulkSetTriggerAndSamplerate                          hantek/types.h
 	/// \brief The BULK_SETTRIGGERANDSAMPLERATE builder.
-	class BulkSetTriggerAndSamplerate : public Helper::DataArray<unsigned char> {
+	class BulkSetTriggerAndSamplerate : public Helper::DataArray<uint8_t> {
 		public:
 			BulkSetTriggerAndSamplerate();
-			BulkSetTriggerAndSamplerate(unsigned short int downsampler, unsigned long int triggerPosition, unsigned char triggerSource = 0, unsigned char recordLength = 0, unsigned char samplerateId = 0, bool downsamplingMode = true, unsigned char usedChannels = 0, bool fastRate = false, unsigned char triggerSlope = 0);
+			BulkSetTriggerAndSamplerate(uint16_t downsampler, uint32_t triggerPosition, uint8_t triggerSource = 0, uint8_t recordLength = 0, uint8_t samplerateId = 0, bool downsamplingMode = true, uint8_t usedChannels = 0, bool fastRate = false, uint8_t triggerSlope = 0);
 			
-			unsigned char getTriggerSource();
-			void setTriggerSource(unsigned char value);
-			unsigned char getRecordLength();
-			void setRecordLength(unsigned char value);
-			unsigned char getSamplerateId();
-			void setSamplerateId(unsigned char value);
+			uint8_t getTriggerSource();
+			void setTriggerSource(uint8_t value);
+			uint8_t getRecordLength();
+			void setRecordLength(uint8_t value);
+			uint8_t getSamplerateId();
+			void setSamplerateId(uint8_t value);
 			bool getDownsamplingMode();
 			void setDownsamplingMode(bool downsampling);
-			unsigned char getUsedChannels();
-			void setUsedChannels(unsigned char value);
+			uint8_t getUsedChannels();
+			void setUsedChannels(uint8_t value);
 			bool getFastRate();
 			void setFastRate(bool fastRate);
-			unsigned char getTriggerSlope();
-			void setTriggerSlope(unsigned char slope);
-			unsigned short int getDownsampler();
-			void setDownsampler(unsigned short int downsampler);
-			unsigned long int getTriggerPosition();
-			void setTriggerPosition(unsigned long int position);
+			uint8_t getTriggerSlope();
+			void setTriggerSlope(uint8_t slope);
+			uint16_t getDownsampler();
+			void setDownsampler(uint16_t downsampler);
+			uint32_t getTriggerPosition();
+			void setTriggerPosition(uint32_t position);
 		
 		private:
 			void init();
@@ -862,7 +865,7 @@ namespace Hantek {
 	//////////////////////////////////////////////////////////////////////////////
 	/// \class BulkForceTrigger                                     hantek/types.h
 	/// \brief The BULK_FORCETRIGGER builder.
-	class BulkForceTrigger : public Helper::DataArray<unsigned char> {
+	class BulkForceTrigger : public Helper::DataArray<uint8_t> {
 		public:
 			BulkForceTrigger();
 	};
@@ -870,7 +873,7 @@ namespace Hantek {
 	//////////////////////////////////////////////////////////////////////////////
 	/// \class BulkCaptureStart                                     hantek/types.h
 	/// \brief The BULK_CAPTURESTART builder.
-	class BulkCaptureStart : public Helper::DataArray<unsigned char> {
+	class BulkCaptureStart : public Helper::DataArray<uint8_t> {
 		public:
 			BulkCaptureStart();
 	};
@@ -878,7 +881,7 @@ namespace Hantek {
 	//////////////////////////////////////////////////////////////////////////////
 	/// \class BulkTriggerEnabled                                   hantek/types.h
 	/// \brief The BULK_TRIGGERENABLED builder.
-	class BulkTriggerEnabled : public Helper::DataArray<unsigned char> {
+	class BulkTriggerEnabled : public Helper::DataArray<uint8_t> {
 		public:
 			BulkTriggerEnabled();
 	};
@@ -886,7 +889,7 @@ namespace Hantek {
 	//////////////////////////////////////////////////////////////////////////////
 	/// \class BulkGetData                                          hantek/types.h
 	/// \brief The BULK_GETDATA builder.
-	class BulkGetData : public Helper::DataArray<unsigned char> {
+	class BulkGetData : public Helper::DataArray<uint8_t> {
 		public:
 			BulkGetData();
 	};
@@ -894,7 +897,7 @@ namespace Hantek {
 	//////////////////////////////////////////////////////////////////////////////
 	/// \class BulkGetCaptureState                                  hantek/types.h
 	/// \brief The BULK_GETCAPTURESTATE builder.
-	class BulkGetCaptureState : public Helper::DataArray<unsigned char> {
+	class BulkGetCaptureState : public Helper::DataArray<uint8_t> {
 		public:
 			BulkGetCaptureState();
 	};
@@ -902,7 +905,7 @@ namespace Hantek {
 	//////////////////////////////////////////////////////////////////////////////
 	/// \class BulkResponseGetCaptureState                          hantek/types.h
 	/// \brief The parser for the BULK_GETCAPTURESTATE response.
-	class BulkResponseGetCaptureState : public Helper::DataArray<unsigned char> {
+	class BulkResponseGetCaptureState : public Helper::DataArray<uint8_t> {
 		public:
 			BulkResponseGetCaptureState();
 			
@@ -913,13 +916,13 @@ namespace Hantek {
 	//////////////////////////////////////////////////////////////////////////////
 	/// \class BulkSetGain                                          hantek/types.h
 	/// \brief The BULK_SETGAIN builder.
-	class BulkSetGain : public Helper::DataArray<unsigned char> {
+	class BulkSetGain : public Helper::DataArray<uint8_t> {
 		public:
 			BulkSetGain();
-			BulkSetGain(unsigned char channel1, unsigned char channel2);
+			BulkSetGain(uint8_t channel1, uint8_t channel2);
 			
-			unsigned char getGain(unsigned int channel);
-			void setGain(unsigned int channel, unsigned char value);
+			uint8_t getGain(unsigned int channel);
+			void setGain(unsigned int channel, uint8_t value);
 		
 		private:
 			void init();
@@ -928,13 +931,13 @@ namespace Hantek {
 	//////////////////////////////////////////////////////////////////////////////
 	/// \class BulkSetLogicalData                                   hantek/types.h
 	/// \brief The BULK_SETLOGICALDATA builder.
-	class BulkSetLogicalData : public Helper::DataArray<unsigned char> {
+	class BulkSetLogicalData : public Helper::DataArray<uint8_t> {
 		public:
 			BulkSetLogicalData();
-			BulkSetLogicalData(unsigned char data);
+			BulkSetLogicalData(uint8_t data);
 			
-			unsigned char getData();
-			void setData(unsigned char data);
+			uint8_t getData();
+			void setData(uint8_t data);
 		
 		private:
 			void init();
@@ -943,7 +946,7 @@ namespace Hantek {
 	//////////////////////////////////////////////////////////////////////////////
 	/// \class BulkGetLogicalData                                   hantek/types.h
 	/// \brief The BULK_GETLOGICALDATA builder.
-	class BulkGetLogicalData : public Helper::DataArray<unsigned char> {
+	class BulkGetLogicalData : public Helper::DataArray<uint8_t> {
 		public:
 			BulkGetLogicalData();
 	};
@@ -951,13 +954,13 @@ namespace Hantek {
 	//////////////////////////////////////////////////////////////////////////////
 	/// \class BulkSetChannels2250                                  hantek/types.h
 	/// \brief The DSO-2250 BULK_BSETFILTER builder.
-	class BulkSetChannels2250 : public Helper::DataArray<unsigned char> {
+	class BulkSetChannels2250 : public Helper::DataArray<uint8_t> {
 		public:
 			BulkSetChannels2250();
-			BulkSetChannels2250(unsigned char usedChannels);
+			BulkSetChannels2250(uint8_t usedChannels);
 			
-			unsigned char getUsedChannels();
-			void setUsedChannels(unsigned char value);
+			uint8_t getUsedChannels();
+			void setUsedChannels(uint8_t value);
 		
 		private:
 			void init();
@@ -966,15 +969,15 @@ namespace Hantek {
 	//////////////////////////////////////////////////////////////////////////////
 	/// \class BulkSetTrigger2250                                   hantek/types.h
 	/// \brief The DSO-2250 BULK_CSETTRIGGERORSAMPLERATE builder.
-	class BulkSetTrigger2250 : public Helper::DataArray<unsigned char> {
+	class BulkSetTrigger2250 : public Helper::DataArray<uint8_t> {
 		public:
 			BulkSetTrigger2250();
-			BulkSetTrigger2250(unsigned char triggerSource, unsigned char triggerSlope);
+			BulkSetTrigger2250(uint8_t triggerSource, uint8_t triggerSlope);
 			
-			unsigned char getTriggerSource();
-			void setTriggerSource(unsigned char value);
-			unsigned char getTriggerSlope();
-			void setTriggerSlope(unsigned char slope);
+			uint8_t getTriggerSource();
+			void setTriggerSource(uint8_t value);
+			uint8_t getTriggerSlope();
+			void setTriggerSlope(uint8_t slope);
 		
 		private:
 			void init();
@@ -983,15 +986,15 @@ namespace Hantek {
 	//////////////////////////////////////////////////////////////////////////////
 	/// \class BulkSetSamplerate5200                                hantek/types.h
 	/// \brief The DSO-5200/DSO-5200A BULK_CSETTRIGGERORSAMPLERATE builder.
-	class BulkSetSamplerate5200 : public Helper::DataArray<unsigned char> {
+	class BulkSetSamplerate5200 : public Helper::DataArray<uint8_t> {
 		public:
 			BulkSetSamplerate5200();
-			BulkSetSamplerate5200(unsigned short int samplerateSlow, unsigned char samplerateFast);
+			BulkSetSamplerate5200(uint16_t samplerateSlow, uint8_t samplerateFast);
 			
-			unsigned char getSamplerateFast();
-			void setSamplerateFast(unsigned char value);
-			unsigned short int getSamplerateSlow();
-			void setSamplerateSlow(unsigned short int samplerate);
+			uint8_t getSamplerateFast();
+			void setSamplerateFast(uint8_t value);
+			uint16_t getSamplerateSlow();
+			void setSamplerateSlow(uint16_t samplerate);
 		
 		private:
 			void init();
@@ -1000,13 +1003,13 @@ namespace Hantek {
 	//////////////////////////////////////////////////////////////////////////////
 	/// \class BulkSetRecordLength2250                              hantek/types.h
 	/// \brief The DSO-2250 BULK_DSETBUFFER builder.
-	class BulkSetRecordLength2250 : public Helper::DataArray<unsigned char> {
+	class BulkSetRecordLength2250 : public Helper::DataArray<uint8_t> {
 		public:
 			BulkSetRecordLength2250();
-			BulkSetRecordLength2250(unsigned char recordLength);
+			BulkSetRecordLength2250(uint8_t recordLength);
 			
-			unsigned char getRecordLength();
-			void setRecordLength(unsigned char value);
+			uint8_t getRecordLength();
+			void setRecordLength(uint8_t value);
 		
 		private:
 			void init();
@@ -1015,21 +1018,21 @@ namespace Hantek {
 	//////////////////////////////////////////////////////////////////////////////
 	/// \class BulkSetBuffer5200                                    hantek/types.h
 	/// \brief The DSO-5200/DSO-5200A BULK_DSETBUFFER builder.
-	class BulkSetBuffer5200 : public Helper::DataArray<unsigned char> {
+	class BulkSetBuffer5200 : public Helper::DataArray<uint8_t> {
 		public:
 			BulkSetBuffer5200();
-			BulkSetBuffer5200(unsigned short int triggerPositionPre, unsigned short int triggerPositionPost, unsigned char usedPre = 0, unsigned char usedPost = 0, unsigned char recordLength = 0);
+			BulkSetBuffer5200(uint16_t triggerPositionPre, uint16_t triggerPositionPost, uint8_t usedPre = 0, uint8_t usedPost = 0, uint8_t recordLength = 0);
 			
-			unsigned short int getTriggerPositionPre();
-			void setTriggerPositionPre(unsigned short int value);
-			unsigned short int getTriggerPositionPost();
-			void setTriggerPositionPost(unsigned short int value);
-			unsigned char getUsedPre();
-			void setUsedPre(unsigned char value);
-			unsigned char getUsedPost();
-			void setUsedPost(unsigned char value);
-			unsigned char getRecordLength();
-			void setRecordLength(unsigned char value);
+			uint16_t getTriggerPositionPre();
+			void setTriggerPositionPre(uint16_t value);
+			uint16_t getTriggerPositionPost();
+			void setTriggerPositionPost(uint16_t value);
+			uint8_t getUsedPre();
+			void setUsedPre(uint8_t value);
+			uint8_t getUsedPost();
+			void setUsedPost(uint8_t value);
+			uint8_t getRecordLength();
+			void setRecordLength(uint8_t value);
 		
 		private:
 			void init();
@@ -1038,17 +1041,17 @@ namespace Hantek {
 	//////////////////////////////////////////////////////////////////////////////
 	/// \class BulkSetSamplerate2250                                hantek/types.h
 	/// \brief The DSO-2250 BULK_ESETTRIGGERORSAMPLERATE builder.
-	class BulkSetSamplerate2250 : public Helper::DataArray<unsigned char> {
+	class BulkSetSamplerate2250 : public Helper::DataArray<uint8_t> {
 		public:
 			BulkSetSamplerate2250();
-			BulkSetSamplerate2250(bool fastRate, bool downsampling = false, unsigned short int samplerate = 0);
+			BulkSetSamplerate2250(bool fastRate, bool downsampling = false, uint16_t samplerate = 0);
 			
 			bool getFastRate();
 			void setFastRate(bool fastRate);
 			bool getDownsampling();
 			void setDownsampling(bool downsampling);
-			unsigned short int getSamplerate();
-			void setSamplerate(unsigned short int samplerate);
+			uint16_t getSamplerate();
+			void setSamplerate(uint16_t samplerate);
 		
 		private:
 			void init();
@@ -1057,19 +1060,19 @@ namespace Hantek {
 	//////////////////////////////////////////////////////////////////////////////
 	/// \class BulkSetTrigger5200                                   hantek/types.h
 	/// \brief The DSO-5200/DSO-5200A BULK_ESETTRIGGERORSAMPLERATE builder.
-	class BulkSetTrigger5200 : public Helper::DataArray<unsigned char> {
+	class BulkSetTrigger5200 : public Helper::DataArray<uint8_t> {
 		public:
 			BulkSetTrigger5200();
-			BulkSetTrigger5200(unsigned char triggerSource, unsigned char usedChannels, bool fastRate = false, unsigned char triggerSlope = 0, unsigned char triggerPulse = 0);
+			BulkSetTrigger5200(uint8_t triggerSource, uint8_t usedChannels, bool fastRate = false, uint8_t triggerSlope = 0, uint8_t triggerPulse = 0);
 			
-			unsigned char getTriggerSource();
-			void setTriggerSource(unsigned char value);
-			unsigned char getUsedChannels();
-			void setUsedChannels(unsigned char value);
+			uint8_t getTriggerSource();
+			void setTriggerSource(uint8_t value);
+			uint8_t getUsedChannels();
+			void setUsedChannels(uint8_t value);
 			bool getFastRate();
 			void setFastRate(bool fastRate);
-			unsigned char getTriggerSlope();
-			void setTriggerSlope(unsigned char slope);
+			uint8_t getTriggerSlope();
+			void setTriggerSlope(uint8_t slope);
 			bool getTriggerPulse();
 			void setTriggerPulse(bool pulse);
 		
@@ -1080,15 +1083,15 @@ namespace Hantek {
 	//////////////////////////////////////////////////////////////////////////////
 	/// \class BulkSetBuffer2250                                    hantek/types.h
 	/// \brief The DSO-2250 BULK_FSETBUFFER builder.
-	class BulkSetBuffer2250 : public Helper::DataArray<unsigned char> {
+	class BulkSetBuffer2250 : public Helper::DataArray<uint8_t> {
 		public:
 			BulkSetBuffer2250();
-			BulkSetBuffer2250(unsigned long int triggerPositionPre, unsigned long int triggerPositionPost);
+			BulkSetBuffer2250(uint32_t triggerPositionPre, uint32_t triggerPositionPost);
 			
-			unsigned long int getTriggerPositionPost();
-			void setTriggerPositionPost(unsigned long int value);
-			unsigned long int getTriggerPositionPre();
-			void setTriggerPositionPre(unsigned long int value);
+			uint32_t getTriggerPositionPost();
+			void setTriggerPositionPost(uint32_t value);
+			uint32_t getTriggerPositionPre();
+			void setTriggerPositionPre(uint32_t value);
 		
 		private:
 			void init();
@@ -1097,7 +1100,7 @@ namespace Hantek {
 	//////////////////////////////////////////////////////////////////////////////
 	/// \class ControlGetSpeed                                      hantek/types.h
 	/// \brief The CONTROL_GETSPEED parser.
-	class ControlGetSpeed : public Helper::DataArray<unsigned char> {
+	class ControlGetSpeed : public Helper::DataArray<uint8_t> {
 		public:
 			ControlGetSpeed();
 			
@@ -1107,7 +1110,7 @@ namespace Hantek {
 	//////////////////////////////////////////////////////////////////////////////
 	/// \class ControlBeginCommand                                  hantek/types.h
 	/// \brief The CONTROL_BEGINCOMMAND builder.
-	class ControlBeginCommand : public Helper::DataArray<unsigned char> {
+	class ControlBeginCommand : public Helper::DataArray<uint8_t> {
 		public:
 			ControlBeginCommand(BulkIndex index = COMMANDINDEX_0);
 			
@@ -1121,15 +1124,15 @@ namespace Hantek {
 	//////////////////////////////////////////////////////////////////////////////
 	/// \class ControlSetOffset                                     hantek/types.h
 	/// \brief The CONTROL_SETOFFSET builder.
-	class ControlSetOffset : public Helper::DataArray<unsigned char> {
+	class ControlSetOffset : public Helper::DataArray<uint8_t> {
 		public:
 			ControlSetOffset();
-			ControlSetOffset(unsigned short int channel1, unsigned short int channel2, unsigned short int trigger);
+			ControlSetOffset(uint16_t channel1, uint16_t channel2, uint16_t trigger);
 			
-			unsigned short int getChannel(unsigned int channel);
-			void setChannel(unsigned int channel, unsigned short int offset);
-			unsigned short int getTrigger();
-			void setTrigger(unsigned short int level);
+			uint16_t getChannel(unsigned int channel);
+			void setChannel(unsigned int channel, uint16_t offset);
+			uint16_t getTrigger();
+			void setTrigger(uint16_t level);
 		
 		private:
 			void init();
@@ -1138,7 +1141,7 @@ namespace Hantek {
 	//////////////////////////////////////////////////////////////////////////////
 	/// \class ControlSetRelays                                     hantek/types.h
 	/// \brief The CONTROL_SETRELAYS builder.
-	class ControlSetRelays : public Helper::DataArray<unsigned char> {
+	class ControlSetRelays : public Helper::DataArray<uint8_t> {
 		public:
 			ControlSetRelays(bool ch1Below1V = false, bool ch1Below100mV = false, bool ch1CouplingDC = false, bool ch2Below1V = false, bool ch2Below100mV = false, bool ch2CouplingDC = false, bool triggerExt = false);
 			

@@ -93,10 +93,10 @@ namespace Hantek {
 	/// \struct ControlSamplerateLimits                           hantek/control.h
 	/// \brief Stores the samplerate limits for calculations.
 	struct ControlSamplerateLimits {
-		unsigned long int base; ///< The base for sample rate calculations
-		unsigned long int max; ///< The maximum sample rate
-		unsigned long int maxDownsampler; ///< The maximum downsampling ratio
-		QList<unsigned long int> recordLengths; ///< Available record lengths, ULONG_MAX means rolling
+		double base; ///< The base for sample rate calculations
+		double max; ///< The maximum sample rate
+		unsigned int maxDownsampler; ///< The maximum downsampling ratio
+		QList<unsigned int> recordLengths; ///< Available record lengths, UINT_MAX means rolling
 	};
 	
 	//////////////////////////////////////////////////////////////////////////////
@@ -116,7 +116,7 @@ namespace Hantek {
 		
 		// Limits
 		ControlSpecificationSamplerate samplerate; ///< The samplerate specifications
-		QList<unsigned long int> bufferDividers; ///< Samplerate dividers for record lengths
+		QList<unsigned int> bufferDividers; ///< Samplerate dividers for record lengths
 		QList<double> gainSteps; ///< Available voltage steps in V/screenheight
 		unsigned char sampleSize; ///< Number of bits per sample
 		
@@ -144,7 +144,7 @@ namespace Hantek {
 	struct ControlSettingsSamplerate {
 		ControlSettingsSamplerateTarget target; ///< The target samplerate values
 		ControlSamplerateLimits *limits; ///< The samplerate limits
-		unsigned long int downsampler; ///< The variable downsampling factor
+		unsigned int downsampler; ///< The variable downsampling factor
 		double current; ///< The current samplerate
 	};
 	
@@ -193,19 +193,20 @@ namespace Hantek {
 			~Control();
 			
 			unsigned int getChannelCount();
-			QList<unsigned long int> *getAvailableRecordLengths();
+			QList<unsigned int> *getAvailableRecordLengths();
 			double getMinSamplerate();
 			double getMaxSamplerate();
 		
 		protected:
 			void run();
 			
-			unsigned long int calculateTriggerPoint(unsigned long int value);
+			unsigned int calculateTriggerPoint(unsigned int value);
 			int getCaptureState();
 			int getSamples(bool process);
-			double getBestSamplerate(double samplerate, bool fastRate = false, bool maximum = false, unsigned long int *downsampler = 0);
-			unsigned long int updateRecordLength(unsigned long int size);
-			unsigned long int updateSamplerate(unsigned long int downsampler, bool fastRate);
+			double getBestSamplerate(double samplerate, bool fastRate = false, bool maximum = false, unsigned int *downsampler = 0);
+			unsigned int getSampleCount(bool *fastRate = 0);
+			unsigned int updateRecordLength(unsigned int size);
+			unsigned int updateSamplerate(unsigned int downsampler, bool fastRate);
 			void restoreTargets();
 			
 			// Communication with device
@@ -223,14 +224,14 @@ namespace Hantek {
 			
 			// Results
 			QList<double *> samples; ///< Sample data arrays
-			QList<unsigned long int> samplesSize; ///< Number of samples data array
-			unsigned long int previousSampleCount; ///< The expected total number of samples at the last check before sampling started
+			QList<unsigned int> samplesSize; ///< Number of samples data array
+			unsigned int previousSampleCount; ///< The expected total number of samples at the last check before sampling started
 			QMutex samplesMutex; ///< Mutex for the sample data
 		
 		public slots:
 			virtual void connectDevice();
 			
-			unsigned long int setRecordLength(unsigned long int size);
+			unsigned int setRecordLength(unsigned int size);
 			double setSamplerate(double samplerate = 0.0);
 			double setRecordTime(double duration = 0.0);
 			

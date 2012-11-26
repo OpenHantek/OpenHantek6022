@@ -78,7 +78,7 @@ class DataAnalyzer : public QThread {
 		~DataAnalyzer();
 		
 		const AnalyzedData *data(int channel) const;
-		unsigned long int sampleCount();
+		unsigned int sampleCount();
 		QMutex *mutex() const;
 	
 	protected:
@@ -89,18 +89,18 @@ class DataAnalyzer : public QThread {
 		QList<AnalyzedData *> analyzedData; ///< The analyzed data for each channel
 		QMutex *analyzedDataMutex; ///< A mutex for the analyzed data of all channels
 		
-		unsigned long int lastRecordLength; ///< The record length of the previously analyzed data
-		unsigned long int maxSamples; ///< The maximum record length of the analyzed data
+		unsigned int lastRecordLength; ///< The record length of the previously analyzed data
+		unsigned int maxSamples; ///< The maximum record length of the analyzed data
 		Dso::WindowFunction lastWindow; ///< The previously used dft window function
 		double *window; ///< The array for the dft window factors
 		
 		QList<double *> waitingData; ///< Pointer to input data from device
-		QList<unsigned long int> waitingDataSize; ///< Number of input data samples
+		QList<unsigned int> waitingDataSize; ///< Number of input data samples
 		double waitingDataSamplerate; ///< The samplerate of the input data
 		QMutex *waitingDataMutex; ///< A mutex for the input data
 	
 	public slots:
-		void analyze(const QList<double *> *data, const QList<unsigned long int> *size, double samplerate, QMutex *mutex);
+		void analyze(const QList<double *> *data, const QList<unsigned int> *size, double samplerate, QMutex *mutex);
 	
 	signals:
 		void analyzed(unsigned long samples); ///< The data with that much samples has been analyzed

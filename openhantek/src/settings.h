@@ -93,7 +93,7 @@ struct DsoSettingsScopeHorizontal {
 	double frequencybase; ///< Frequencybase in Hz/div
 	double marker[2]; ///< Marker positions in div
 	double timebase; ///< Timebase in s/div
-	unsigned long int recordLength; ///< Sample count
+	unsigned int recordLength; ///< Sample count
 	double samplerate; ///< The samplerate of the oscilloscope in S
 	bool samplerateSet; ///< The samplerate was set by the user, not the timebase
 };

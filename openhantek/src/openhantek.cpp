@@ -276,7 +276,7 @@ void OpenHantekMainWindow::connectSignals() {
 	connect(this, SIGNAL(settingsChanged()), this, SLOT(applySettings()));
 	//connect(this->dsoWidget, SIGNAL(stopped()), this, SLOT(stopped()));
 	connect(this->dsoControl, SIGNAL(statusMessage(QString, int)), this->statusBar(), SLOT(showMessage(QString, int)));
-	connect(this->dsoControl, SIGNAL(samplesAvailable(const QList<double *> *, const QList<unsigned long int> *, double, QMutex *)), this->dataAnalyzer, SLOT(analyze(const QList<double *> *, const QList<unsigned long int> *, double, QMutex *)));
+	connect(this->dsoControl, SIGNAL(samplesAvailable(const QList<double *> *, const QList<unsigned int> *, double, QMutex *)), this->dataAnalyzer, SLOT(analyze(const QList<double *> *, const QList<unsigned int> *, double, QMutex *)));
 	
 	// Connect signals to DSO controller and widget
 	connect(this->horizontalDock, SIGNAL(samplerateChanged(double)), this, SLOT(samplerateSelected()));
@@ -315,7 +315,7 @@ void OpenHantekMainWindow::connectSignals() {
 	connect(this->dsoControl, SIGNAL(recordTimeChanged(double)), this, SLOT(recordTimeChanged(double)));
 	connect(this->dsoControl, SIGNAL(samplerateChanged(double)), this, SLOT(samplerateChanged(double)));
 	
-	connect(this->dsoControl, SIGNAL(availableRecordLengthsChanged(QList<unsigned long int>)), this->horizontalDock, SLOT(availableRecordLengthsChanged(QList<unsigned long int>)));
+	connect(this->dsoControl, SIGNAL(availableRecordLengthsChanged(QList<unsigned int>)), this->horizontalDock, SLOT(availableRecordLengthsChanged(QList<unsigned int>)));
 	connect(this->dsoControl, SIGNAL(samplerateLimitsChanged(double, double)), this->horizontalDock, SLOT(samplerateLimitsChanged(double, double)));
 }
 
@@ -328,14 +328,14 @@ void OpenHantekMainWindow::initializeDevice() {
 		this->dsoControl->setTriggerLevel(channel, this->settings->scope.voltage[channel].trigger);
 	}
 	this->updateUsed(this->settings->scope.physicalChannels);
-	if(this->dsoControl->getAvailableRecordLengths()->isEmpty())
-		this->dsoControl->setRecordLength(this->settings->scope.horizontal.recordLength);
-	else
-		this->dsoControl->setRecordLength(this->dsoControl->getAvailableRecordLengths()->indexOf(this->settings->scope.horizontal.recordLength));
 	if(this->settings->scope.horizontal.samplerateSet)
 		this->samplerateSelected();
 	else
 		this->timebaseSelected();
+	if(this->dsoControl->getAvailableRecordLengths()->isEmpty())
+		this->dsoControl->setRecordLength(this->settings->scope.horizontal.recordLength);
+	else
+		this->dsoControl->setRecordLength(this->dsoControl->getAvailableRecordLengths()->indexOf(this->settings->scope.horizontal.recordLength));
 	this->dsoControl->setTriggerMode(this->settings->scope.trigger.mode);
 	this->dsoControl->setPretriggerPosition(this->settings->scope.trigger.position * this->settings->scope.horizontal.timebase * DIVS_TIME);
 	this->dsoControl->setTriggerSlope(this->settings->scope.trigger.slope);

@@ -34,7 +34,7 @@ namespace Hantek {
 	//////////////////////////////////////////////////////////////////////////////
 	// class BulkSetFilter
 	/// \brief Sets the data array to the default values.
-	BulkSetFilter::BulkSetFilter() : Helper::DataArray<unsigned char>(8) {
+	BulkSetFilter::BulkSetFilter() : Helper::DataArray<uint8_t>(8) {
 		this->init();
 	}
 	
@@ -42,7 +42,7 @@ namespace Hantek {
 	/// \param channel1 true if channel 1 is filtered.
 	/// \param channel2 true if channel 2 is filtered.
 	/// \param trigger true if trigger is filtered.
-	BulkSetFilter::BulkSetFilter(bool channel1, bool channel2, bool trigger) : Helper::DataArray<unsigned char>(8) {
+	BulkSetFilter::BulkSetFilter(bool channel1, bool channel2, bool trigger) : Helper::DataArray<uint8_t>(8) {
 		this->init();
 		
 		this->setChannel(0, channel1);
@@ -96,7 +96,7 @@ namespace Hantek {
 	//////////////////////////////////////////////////////////////////////////////
 	// class BulkSetTriggerAndSamplerate
 	/// \brief Sets the data array to the default values.
-	BulkSetTriggerAndSamplerate::BulkSetTriggerAndSamplerate() : Helper::DataArray<unsigned char>(12) {
+	BulkSetTriggerAndSamplerate::BulkSetTriggerAndSamplerate() : Helper::DataArray<uint8_t>(12) {
 		this->init();
 	}
 	
@@ -110,7 +110,7 @@ namespace Hantek {
 	/// \param usedChannels The enabled channels (Tsr2).
 	/// \param fastRate The fastRate state (Tsr2).
 	/// \param triggerSlope The triggerSlope value (Tsr2).
-	BulkSetTriggerAndSamplerate::BulkSetTriggerAndSamplerate(unsigned short int downsampler, unsigned long int triggerPosition, unsigned char triggerSource, unsigned char recordLength, unsigned char samplerateId, bool downsamplingMode, unsigned char usedChannels, bool fastRate, unsigned char triggerSlope) : Helper::DataArray<unsigned char>(12) {
+	BulkSetTriggerAndSamplerate::BulkSetTriggerAndSamplerate(uint16_t downsampler, uint32_t triggerPosition, uint8_t triggerSource, uint8_t recordLength, uint8_t samplerateId, bool downsamplingMode, uint8_t usedChannels, bool fastRate, uint8_t triggerSlope) : Helper::DataArray<uint8_t>(12) {
 		this->init();
 		
 		this->setTriggerSource(triggerSource);
@@ -126,37 +126,37 @@ namespace Hantek {
 	
 	/// \brief Get the triggerSource value in Tsr1Bits.
 	/// \return The triggerSource value.
-	unsigned char BulkSetTriggerAndSamplerate::getTriggerSource() {
+	uint8_t BulkSetTriggerAndSamplerate::getTriggerSource() {
 		return ((Tsr1Bits *) &(this->array[2]))->triggerSource;
 	}
 	
 	/// \brief Set the triggerSource in Tsr1Bits to the given value.
 	/// \param value The new triggerSource value.
-	void BulkSetTriggerAndSamplerate::setTriggerSource(unsigned char value) {
+	void BulkSetTriggerAndSamplerate::setTriggerSource(uint8_t value) {
 		((Tsr1Bits *) &(this->array[2]))->triggerSource = value;
 	}
 	
 	/// \brief Get the recordLength value in Tsr1Bits.
 	/// \return The ::RecordLengthId value.
-	unsigned char BulkSetTriggerAndSamplerate::getRecordLength() {
+	uint8_t BulkSetTriggerAndSamplerate::getRecordLength() {
 		return ((Tsr1Bits *) &(this->array[2]))->recordLength;
 	}
 	
 	/// \brief Set the recordLength in Tsr1Bits to the given value.
 	/// \param value The new ::RecordLengthId value.
-	void BulkSetTriggerAndSamplerate::setRecordLength(unsigned char value) {
+	void BulkSetTriggerAndSamplerate::setRecordLength(uint8_t value) {
 		((Tsr1Bits *) &(this->array[2]))->recordLength = value;
 	}
 	
 	/// \brief Get the samplerateId value in Tsr1Bits.
 	/// \return The samplerateId value.
-	unsigned char BulkSetTriggerAndSamplerate::getSamplerateId() {
+	uint8_t BulkSetTriggerAndSamplerate::getSamplerateId() {
 		return ((Tsr1Bits *) &(this->array[2]))->samplerateId;
 	}
 	
 	/// \brief Set the samplerateId in Tsr1Bits to the given value.
 	/// \param value The new samplerateId value.
-	void BulkSetTriggerAndSamplerate::setSamplerateId(unsigned char value) {
+	void BulkSetTriggerAndSamplerate::setSamplerateId(uint8_t value) {
 		((Tsr1Bits *) &(this->array[2]))->samplerateId = value;
 	}
 	
@@ -174,13 +174,13 @@ namespace Hantek {
 	
 	/// \brief Get the usedChannels value in Tsr2Bits.
 	/// \return The usedChannels value.
-	unsigned char BulkSetTriggerAndSamplerate::getUsedChannels() {
+	uint8_t BulkSetTriggerAndSamplerate::getUsedChannels() {
 		return ((Tsr2Bits *) &(this->array[3]))->usedChannels;
 	}
 	
 	/// \brief Set the usedChannels in Tsr2Bits to the given value.
 	/// \param value The new usedChannels value.
-	void BulkSetTriggerAndSamplerate::setUsedChannels(unsigned char value) {
+	void BulkSetTriggerAndSamplerate::setUsedChannels(uint8_t value) {
 		((Tsr2Bits *) &(this->array[3]))->usedChannels = value;
 	}
 	
@@ -198,41 +198,41 @@ namespace Hantek {
 	
 	/// \brief Get the triggerSlope value in Tsr2Bits.
 	/// \return The triggerSlope value.
-	unsigned char BulkSetTriggerAndSamplerate::getTriggerSlope() {
+	uint8_t BulkSetTriggerAndSamplerate::getTriggerSlope() {
 		return ((Tsr2Bits *) &(this->array[3]))->triggerSlope;
 	}
 	
 	/// \brief Set the triggerSlope in Tsr2Bits to the given value.
 	/// \param slope The new triggerSlope value.
-	void BulkSetTriggerAndSamplerate::setTriggerSlope(unsigned char slope) {
+	void BulkSetTriggerAndSamplerate::setTriggerSlope(uint8_t slope) {
 		((Tsr2Bits *) &(this->array[3]))->triggerSlope = slope;
 	}
 	
 	/// \brief Get the Downsampler value.
 	/// \return The Downsampler value.
-	unsigned short int BulkSetTriggerAndSamplerate::getDownsampler() {
-		return (unsigned short int) this->array[4] | ((unsigned short int) this->array[5] << 8);
+	uint16_t BulkSetTriggerAndSamplerate::getDownsampler() {
+		return (uint16_t) this->array[4] | ((uint16_t) this->array[5] << 8);
 	}
 	
 	/// \brief Set the Downsampler to the given value.
 	/// \param downsampler The new Downsampler value.
-	void BulkSetTriggerAndSamplerate::setDownsampler(unsigned short int downsampler) {
-		this->array[4] = (unsigned char) downsampler;
-		this->array[5] = (unsigned char) (downsampler >> 8);
+	void BulkSetTriggerAndSamplerate::setDownsampler(uint16_t downsampler) {
+		this->array[4] = (uint8_t) downsampler;
+		this->array[5] = (uint8_t) (downsampler >> 8);
 	}
 	
 	/// \brief Get the TriggerPosition value.
 	/// \return The horizontal trigger position.
-	unsigned long int BulkSetTriggerAndSamplerate::getTriggerPosition() {
-		return (unsigned long int) this->array[6] | ((unsigned long int) this->array[7] << 8) | ((unsigned long int) this->array[10] << 16);
+	uint32_t BulkSetTriggerAndSamplerate::getTriggerPosition() {
+		return (uint32_t) this->array[6] | ((uint32_t) this->array[7] << 8) | ((uint32_t) this->array[10] << 16);
 	}
 	
 	/// \brief Set the TriggerPosition to the given value.
 	/// \param position The new horizontal trigger position.
-	void BulkSetTriggerAndSamplerate::setTriggerPosition(unsigned long int position) {
-		this->array[6] = (unsigned char) position;
-		this->array[7] = (unsigned char) (position >> 8);
-		this->array[10] = (unsigned char) (position >> 16);
+	void BulkSetTriggerAndSamplerate::setTriggerPosition(uint32_t position) {
+		this->array[6] = (uint8_t) position;
+		this->array[7] = (uint8_t) (position >> 8);
+		this->array[10] = (uint8_t) (position >> 16);
 	}
 	
 	/// \brief Initialize the array to the needed values.
@@ -244,7 +244,7 @@ namespace Hantek {
 	//////////////////////////////////////////////////////////////////////////////
 	// class BulkForceTrigger
 	/// \brief Sets the data array to needed values.
-	BulkForceTrigger::BulkForceTrigger() : Helper::DataArray<unsigned char>(2) {
+	BulkForceTrigger::BulkForceTrigger() : Helper::DataArray<uint8_t>(2) {
 		this->array[0] = BULK_FORCETRIGGER;
 	}
 	
@@ -252,7 +252,7 @@ namespace Hantek {
 	//////////////////////////////////////////////////////////////////////////////
 	// class BulkCaptureStart
 	/// \brief Sets the data array to needed values.
-	BulkCaptureStart::BulkCaptureStart() : Helper::DataArray<unsigned char>(2) {
+	BulkCaptureStart::BulkCaptureStart() : Helper::DataArray<uint8_t>(2) {
 		this->array[0] = BULK_STARTSAMPLING;
 	}
 	
@@ -260,7 +260,7 @@ namespace Hantek {
 	//////////////////////////////////////////////////////////////////////////////
 	// class BulkTriggerEnabled
 	/// \brief Sets the data array to needed values.
-	BulkTriggerEnabled::BulkTriggerEnabled() : Helper::DataArray<unsigned char>(2) {
+	BulkTriggerEnabled::BulkTriggerEnabled() : Helper::DataArray<uint8_t>(2) {
 		this->array[0] = BULK_ENABLETRIGGER;
 	}
 	
@@ -268,7 +268,7 @@ namespace Hantek {
 	//////////////////////////////////////////////////////////////////////////////
 	// class BulkGetData
 	/// \brief Sets the data array to needed values.
-	BulkGetData::BulkGetData() : Helper::DataArray<unsigned char>(2) {
+	BulkGetData::BulkGetData() : Helper::DataArray<uint8_t>(2) {
 		this->array[0] = BULK_GETDATA;
 	}
 	
@@ -276,7 +276,7 @@ namespace Hantek {
 	//////////////////////////////////////////////////////////////////////////////
 	// class BulkGetCaptureState
 	/// \brief Sets the data array to needed values.
-	BulkGetCaptureState::BulkGetCaptureState() : Helper::DataArray<unsigned char>(2) {
+	BulkGetCaptureState::BulkGetCaptureState() : Helper::DataArray<uint8_t>(2) {
 		this->array[0] = BULK_GETCAPTURESTATE;
 	}
 	
@@ -284,7 +284,7 @@ namespace Hantek {
 	//////////////////////////////////////////////////////////////////////////////
 	// class BulkResponseGetCaptureState
 	/// \brief Initializes the array.
-	BulkResponseGetCaptureState::BulkResponseGetCaptureState() : Helper::DataArray<unsigned char>(512) {
+	BulkResponseGetCaptureState::BulkResponseGetCaptureState() : Helper::DataArray<uint8_t>(512) {
 	}
 	
 	/// \brief Gets the capture state.
@@ -303,14 +303,14 @@ namespace Hantek {
 	//////////////////////////////////////////////////////////////////////////////
 	// class BulkSetGain
 	/// \brief Sets the data array to needed values.
-	BulkSetGain::BulkSetGain() : Helper::DataArray<unsigned char>(8) {
+	BulkSetGain::BulkSetGain() : Helper::DataArray<uint8_t>(8) {
 		this->init();
 	}
 	
 	/// \brief Sets the gain to the given values.
 	/// \param channel1 The gain value for channel 1.
 	/// \param channel2 The gain value for channel 2.
-	BulkSetGain::BulkSetGain(unsigned char channel1, unsigned char channel2) : Helper::DataArray<unsigned char>(8) {
+	BulkSetGain::BulkSetGain(uint8_t channel1, uint8_t channel2) : Helper::DataArray<uint8_t>(8) {
 		this->init();
 		
 		this->setGain(0, channel1);
@@ -320,7 +320,7 @@ namespace Hantek {
 	/// \brief Get the gain for the given channel.
 	/// \param channel The channel whose gain should be returned.
 	/// \returns The gain value.
-	unsigned char BulkSetGain::getGain(unsigned int channel) {
+	uint8_t BulkSetGain::getGain(unsigned int channel) {
 		GainBits *gainBits = (GainBits *) &(this->array[2]);
 		if(channel == 0)
 			return gainBits->channel1;
@@ -331,7 +331,7 @@ namespace Hantek {
 	/// \brief Set the gain for the given channel.
 	/// \param channel The channel that should be set.
 	/// \param value The new gain value for the channel.
-	void BulkSetGain::setGain(unsigned int channel, unsigned char value) {
+	void BulkSetGain::setGain(unsigned int channel, uint8_t value) {
 		GainBits *gainBits = (GainBits *) &(this->array[2]);
 		if(channel == 0)
 			gainBits->channel1 = value;
@@ -348,13 +348,13 @@ namespace Hantek {
 	//////////////////////////////////////////////////////////////////////////////
 	// class BulkSetLogicalData
 	/// \brief Sets the data array to needed values.
-	BulkSetLogicalData::BulkSetLogicalData() : Helper::DataArray<unsigned char>(8) {
+	BulkSetLogicalData::BulkSetLogicalData() : Helper::DataArray<uint8_t>(8) {
 		this->init();
 	}
 	
 	/// \brief Sets the data to the given value.
 	/// \param data The data byte.
-	BulkSetLogicalData::BulkSetLogicalData(unsigned char data) : Helper::DataArray<unsigned char>(8) {
+	BulkSetLogicalData::BulkSetLogicalData(uint8_t data) : Helper::DataArray<uint8_t>(8) {
 		this->init();
 		
 		this->setData(data);
@@ -362,13 +362,13 @@ namespace Hantek {
 	
 	/// \brief Gets the data.
 	/// \returns The data byte.
-	unsigned char BulkSetLogicalData::getData() {
+	uint8_t BulkSetLogicalData::getData() {
 		return this->array[2];
 	}
 	
 	/// \brief Sets the data to the given value.
 	/// \param data The new data byte.
-	void BulkSetLogicalData::setData(unsigned char data) {
+	void BulkSetLogicalData::setData(uint8_t data) {
 		this->array[2] = data;
 	}
 	
@@ -381,7 +381,7 @@ namespace Hantek {
 	//////////////////////////////////////////////////////////////////////////////
 	// class BulkGetLogicalData
 	/// \brief Sets the data array to needed values.
-	BulkGetLogicalData::BulkGetLogicalData() : Helper::DataArray<unsigned char>(2) {
+	BulkGetLogicalData::BulkGetLogicalData() : Helper::DataArray<uint8_t>(2) {
 		this->array[0] = BULK_GETLOGICALDATA;
 	}
 	
@@ -389,13 +389,13 @@ namespace Hantek {
 	//////////////////////////////////////////////////////////////////////////////
 	// class BulkSetFilter2250
 	/// \brief Sets the data array to needed values.
-	BulkSetChannels2250::BulkSetChannels2250() : Helper::DataArray<unsigned char>(4) {
+	BulkSetChannels2250::BulkSetChannels2250() : Helper::DataArray<uint8_t>(4) {
 		this->init();
 	}
 	
 	/// \brief Sets the used channels.
 	/// \param usedChannels The UsedChannels value.
-	BulkSetChannels2250::BulkSetChannels2250(unsigned char usedChannels) : Helper::DataArray<unsigned char>(4) {
+	BulkSetChannels2250::BulkSetChannels2250(uint8_t usedChannels) : Helper::DataArray<uint8_t>(4) {
 		this->init();
 		
 		this->setUsedChannels(usedChannels);
@@ -403,13 +403,13 @@ namespace Hantek {
 	
 	/// \brief Get the UsedChannels value
 	/// \return The UsedChannels value.
-	unsigned char BulkSetChannels2250::getUsedChannels() {
+	uint8_t BulkSetChannels2250::getUsedChannels() {
 		return this->array[2];
 	}
 	
 	/// \brief Set the UsedChannels to the given value.
 	/// \param value The new UsedChannels value.
-	void BulkSetChannels2250::setUsedChannels(unsigned char value) {
+	void BulkSetChannels2250::setUsedChannels(uint8_t value) {
 		this->array[2] = value;
 	}
 	
@@ -422,14 +422,14 @@ namespace Hantek {
 	//////////////////////////////////////////////////////////////////////////////
 	// class BulkSetTrigger2250
 	/// \brief Sets the data array to needed values.
-	BulkSetTrigger2250::BulkSetTrigger2250() : Helper::DataArray<unsigned char>(8) {
+	BulkSetTrigger2250::BulkSetTrigger2250() : Helper::DataArray<uint8_t>(8) {
 		this->init();
 	}
 	
 	/// \brief Sets the used channels.
 	/// \param triggerSource The trigger source id (CTriggerBits).
 	/// \param triggerSlope The triggerSlope value (CTriggerBits).
-	BulkSetTrigger2250::BulkSetTrigger2250(unsigned char triggerSource, unsigned char triggerSlope) : Helper::DataArray<unsigned char>(8) {
+	BulkSetTrigger2250::BulkSetTrigger2250(uint8_t triggerSource, uint8_t triggerSlope) : Helper::DataArray<uint8_t>(8) {
 		this->init();
 		
 		this->setTriggerSource(triggerSource);
@@ -438,25 +438,25 @@ namespace Hantek {
 			
 	/// \brief Get the triggerSource value in CTriggerBits.
 	/// \return The triggerSource value.
-	unsigned char BulkSetTrigger2250::getTriggerSource() {
+	uint8_t BulkSetTrigger2250::getTriggerSource() {
 		return ((CTriggerBits *) &(this->array[2]))->triggerSource;
 	}
 	
 	/// \brief Set the triggerSource in CTriggerBits to the given value.
 	/// \param value The new triggerSource value.
-	void BulkSetTrigger2250::setTriggerSource(unsigned char value) {
+	void BulkSetTrigger2250::setTriggerSource(uint8_t value) {
 		((CTriggerBits *) &(this->array[2]))->triggerSource = value;
 	}
 	
 	/// \brief Get the triggerSlope value in CTriggerBits.
 	/// \return The triggerSlope value.
-	unsigned char BulkSetTrigger2250::getTriggerSlope() {
+	uint8_t BulkSetTrigger2250::getTriggerSlope() {
 		return ((CTriggerBits *) &(this->array[2]))->triggerSlope;
 	}
 	
 	/// \brief Set the triggerSlope in CTriggerBits to the given value.
 	/// \param slope The new triggerSlope value.
-	void BulkSetTrigger2250::setTriggerSlope(unsigned char slope) {
+	void BulkSetTrigger2250::setTriggerSlope(uint8_t slope) {
 		((CTriggerBits *) &(this->array[2]))->triggerSlope = slope;
 	}
 		
@@ -469,14 +469,14 @@ namespace Hantek {
 	//////////////////////////////////////////////////////////////////////////////
 	// class BulkSetSamplerate5200
 	/// \brief Sets the data array to the default values.
-	BulkSetSamplerate5200::BulkSetSamplerate5200() : Helper::DataArray<unsigned char>(6) {
+	BulkSetSamplerate5200::BulkSetSamplerate5200() : Helper::DataArray<uint8_t>(6) {
 		this->init();
 	}
 	
 	/// \brief Sets the data bytes to the specified values.
 	/// \param samplerateSlow The SamplerateSlow value.
 	/// \param samplerateFast The SamplerateFast value.
-	BulkSetSamplerate5200::BulkSetSamplerate5200(unsigned short int samplerateSlow, unsigned char samplerateFast) : Helper::DataArray<unsigned char>(6) {
+	BulkSetSamplerate5200::BulkSetSamplerate5200(uint16_t samplerateSlow, uint8_t samplerateFast) : Helper::DataArray<uint8_t>(6) {
 		this->init();
 		
 		this->setSamplerateFast(samplerateFast);
@@ -485,27 +485,27 @@ namespace Hantek {
 	
 	/// \brief Get the SamplerateFast value.
 	/// \return The SamplerateFast value.
-	unsigned char BulkSetSamplerate5200::getSamplerateFast() {
+	uint8_t BulkSetSamplerate5200::getSamplerateFast() {
 		return this->array[4];
 	}
 	
 	/// \brief Set the SamplerateFast to the given value.
 	/// \param value The new SamplerateFast value.
-	void BulkSetSamplerate5200::setSamplerateFast(unsigned char value) {
+	void BulkSetSamplerate5200::setSamplerateFast(uint8_t value) {
 		this->array[4] = value;
 	}
 	
 	/// \brief Get the SamplerateSlow value.
 	/// \return The SamplerateSlow value.
-	unsigned short int BulkSetSamplerate5200::getSamplerateSlow() {
-		return (unsigned short int) this->array[2] | ((unsigned short int) this->array[3] << 8);
+	uint16_t BulkSetSamplerate5200::getSamplerateSlow() {
+		return (uint16_t) this->array[2] | ((uint16_t) this->array[3] << 8);
 	}
 	
 	/// \brief Set the SamplerateSlow to the given value.
 	/// \param samplerate The new SamplerateSlow value.
-	void BulkSetSamplerate5200::setSamplerateSlow(unsigned short int samplerate) {
-		this->array[2] = (unsigned char) samplerate;
-		this->array[3] = (unsigned char) (samplerate >> 8);
+	void BulkSetSamplerate5200::setSamplerateSlow(uint16_t samplerate) {
+		this->array[2] = (uint8_t) samplerate;
+		this->array[3] = (uint8_t) (samplerate >> 8);
 	}
 	
 	/// \brief Initialize the array to the needed values.
@@ -517,13 +517,13 @@ namespace Hantek {
 	//////////////////////////////////////////////////////////////////////////////
 	// class BulkSetBuffer2250
 	/// \brief Sets the data array to the default values.
-	BulkSetRecordLength2250::BulkSetRecordLength2250() : Helper::DataArray<unsigned char>(4) {
+	BulkSetRecordLength2250::BulkSetRecordLength2250() : Helper::DataArray<uint8_t>(4) {
 		this->init();
 	}
 	
 	/// \brief Sets the data bytes to the specified values.
 	/// \param recordLength The ::RecordLengthId value.
-	BulkSetRecordLength2250::BulkSetRecordLength2250(unsigned char recordLength) : Helper::DataArray<unsigned char>(4) {
+	BulkSetRecordLength2250::BulkSetRecordLength2250(uint8_t recordLength) : Helper::DataArray<uint8_t>(4) {
 		this->init();
 		
 		this->setRecordLength(recordLength);
@@ -531,13 +531,13 @@ namespace Hantek {
 	
 	/// \brief Get the ::RecordLengthId value.
 	/// \return The ::RecordLengthId value.
-	unsigned char BulkSetRecordLength2250::getRecordLength() {
+	uint8_t BulkSetRecordLength2250::getRecordLength() {
 		return this->array[2];
 	}
 	
 	/// \brief Set the ::RecordLengthId to the given value.
 	/// \param value The new ::RecordLengthId value.
-	void BulkSetRecordLength2250::setRecordLength(unsigned char value) {
+	void BulkSetRecordLength2250::setRecordLength(uint8_t value) {
 		this->array[2] = value;
 	}
 	
@@ -550,7 +550,7 @@ namespace Hantek {
 	//////////////////////////////////////////////////////////////////////////////
 	// class BulkSetBuffer5200
 	/// \brief Sets the data array to the default values.
-	BulkSetBuffer5200::BulkSetBuffer5200() : Helper::DataArray<unsigned char>(10) {
+	BulkSetBuffer5200::BulkSetBuffer5200() : Helper::DataArray<uint8_t>(10) {
 		this->init();
 	}
 	
@@ -560,7 +560,7 @@ namespace Hantek {
 	/// \param usedPre The TriggerPositionUsedPre value.
 	/// \param usedPost The TriggerPositionUsedPost value.
 	/// \param recordLength The ::RecordLengthId value.
-	BulkSetBuffer5200::BulkSetBuffer5200(unsigned short int triggerPositionPre, unsigned short int triggerPositionPost, unsigned char usedPre, unsigned char usedPost, unsigned char recordLength) : Helper::DataArray<unsigned char>(10) {
+	BulkSetBuffer5200::BulkSetBuffer5200(uint16_t triggerPositionPre, uint16_t triggerPositionPost, uint8_t usedPre, uint8_t usedPost, uint8_t recordLength) : Helper::DataArray<uint8_t>(10) {
 		this->init();
 		
 		this->setTriggerPositionPre(triggerPositionPre);
@@ -572,63 +572,63 @@ namespace Hantek {
 	
 	/// \brief Get the TriggerPositionPre value.
 	/// \return The TriggerPositionPre value.
-	unsigned short int BulkSetBuffer5200::getTriggerPositionPre() {
-		return (unsigned short int) this->array[2] | ((unsigned short int) this->array[3] << 8);
+	uint16_t BulkSetBuffer5200::getTriggerPositionPre() {
+		return (uint16_t) this->array[2] | ((uint16_t) this->array[3] << 8);
 	}
 	
 	/// \brief Set the TriggerPositionPre to the given value.
 	/// \param position The new TriggerPositionPre value.
-	void BulkSetBuffer5200::setTriggerPositionPre(unsigned short int position) {
-		this->array[2] = (unsigned char) position;
-		this->array[3] = (unsigned char) (position >> 8);
+	void BulkSetBuffer5200::setTriggerPositionPre(uint16_t position) {
+		this->array[2] = (uint8_t) position;
+		this->array[3] = (uint8_t) (position >> 8);
 	}
 	
 	/// \brief Get the TriggerPositionPost value.
 	/// \return The TriggerPositionPost value.
-	unsigned short int BulkSetBuffer5200::getTriggerPositionPost() {
-		return (unsigned short int) this->array[6] | ((unsigned short int) this->array[7] << 8);
+	uint16_t BulkSetBuffer5200::getTriggerPositionPost() {
+		return (uint16_t) this->array[6] | ((uint16_t) this->array[7] << 8);
 	}
 	
 	/// \brief Set the TriggerPositionPost to the given value.
 	/// \param position The new TriggerPositionPost value.
-	void BulkSetBuffer5200::setTriggerPositionPost(unsigned short int position) {
-		this->array[6] = (unsigned char) position;
-		this->array[7] = (unsigned char) (position >> 8);
+	void BulkSetBuffer5200::setTriggerPositionPost(uint16_t position) {
+		this->array[6] = (uint8_t) position;
+		this->array[7] = (uint8_t) (position >> 8);
 	}
 	
 	/// \brief Get the TriggerPositionUsedPre value.
 	/// \return The ::DTriggerPositionUsed value for the pre position.
-	unsigned char BulkSetBuffer5200::getUsedPre() {
+	uint8_t BulkSetBuffer5200::getUsedPre() {
 		return this->array[4];
 	}
 	
 	/// \brief Set the TriggerPositionUsedPre to the given value.
 	/// \param value The new ::DTriggerPositionUsed value for the pre position.
-	void BulkSetBuffer5200::setUsedPre(unsigned char value) {
+	void BulkSetBuffer5200::setUsedPre(uint8_t value) {
 		this->array[4] = value;
 	}
 	
 	/// \brief Get the TriggerPositionUsedPost value.
 	/// \return The ::DTriggerPositionUsed value for the post position.
-	unsigned char BulkSetBuffer5200::getUsedPost() {
+	uint8_t BulkSetBuffer5200::getUsedPost() {
 		return ((DBufferBits *) &(this->array[8]))->triggerPositionUsed;
 	}
 	
 	/// \brief Set the TriggerPositionUsedPost to the given value.
 	/// \param value The new ::DTriggerPositionUsed value for the post position.
-	void BulkSetBuffer5200::setUsedPost(unsigned char value) {
+	void BulkSetBuffer5200::setUsedPost(uint8_t value) {
 		((DBufferBits *) &(this->array[8]))->triggerPositionUsed = value;
 	}
 	
 	/// \brief Get the recordLength value in DBufferBits.
 	/// \return The ::RecordLengthId value.
-	unsigned char BulkSetBuffer5200::getRecordLength() {
+	uint8_t BulkSetBuffer5200::getRecordLength() {
 		return ((DBufferBits *) &(this->array[8]))->recordLength;
 	}
 	
 	/// \brief Set the recordLength in DBufferBits to the given value.
 	/// \param value The new ::RecordLengthId value.
-	void BulkSetBuffer5200::setRecordLength(unsigned char value) {
+	void BulkSetBuffer5200::setRecordLength(uint8_t value) {
 		((DBufferBits *) &(this->array[8]))->recordLength = value;
 	}
 	
@@ -643,7 +643,7 @@ namespace Hantek {
 	//////////////////////////////////////////////////////////////////////////////
 	// class BulkSetSamplerate2250
 	/// \brief Sets the data array to the default values.
-	BulkSetSamplerate2250::BulkSetSamplerate2250() : Helper::DataArray<unsigned char>(8) {
+	BulkSetSamplerate2250::BulkSetSamplerate2250() : Helper::DataArray<uint8_t>(8) {
 		this->init();
 	}
 	
@@ -651,7 +651,7 @@ namespace Hantek {
 	/// \param fastRate The fastRate state (ESamplerateBits).
 	/// \param downsampling The downsampling state (ESamplerateBits).
 	/// \param samplerate The Samplerate value.
-	BulkSetSamplerate2250::BulkSetSamplerate2250(bool fastRate, bool downsampling, unsigned short int samplerate) : Helper::DataArray<unsigned char>(8) {
+	BulkSetSamplerate2250::BulkSetSamplerate2250(bool fastRate, bool downsampling, uint16_t samplerate) : Helper::DataArray<uint8_t>(8) {
 		this->init();
 		
 		this->setFastRate(fastRate);
@@ -685,15 +685,15 @@ namespace Hantek {
 	
 	/// \brief Get the Samplerate value.
 	/// \return The Samplerate value.
-	unsigned short int BulkSetSamplerate2250::getSamplerate() {
-		return (unsigned short int) this->array[4] | ((unsigned short int) this->array[5] << 8);
+	uint16_t BulkSetSamplerate2250::getSamplerate() {
+		return (uint16_t) this->array[4] | ((uint16_t) this->array[5] << 8);
 	}
 	
 	/// \brief Set the Samplerate to the given value.
 	/// \param samplerate The new Samplerate value.
-	void BulkSetSamplerate2250::setSamplerate(unsigned short int samplerate) {
-		this->array[4] = (unsigned char) samplerate;
-		this->array[5] = (unsigned char) (samplerate >> 8);
+	void BulkSetSamplerate2250::setSamplerate(uint16_t samplerate) {
+		this->array[4] = (uint8_t) samplerate;
+		this->array[5] = (uint8_t) (samplerate >> 8);
 	}
 	
 	/// \brief Initialize the array to the needed values.
@@ -705,7 +705,7 @@ namespace Hantek {
 	//////////////////////////////////////////////////////////////////////////////
 	// class BulkSetTrigger5200
 	/// \brief Sets the data array to the default values.
-	BulkSetTrigger5200::BulkSetTrigger5200() : Helper::DataArray<unsigned char>(8) {
+	BulkSetTrigger5200::BulkSetTrigger5200() : Helper::DataArray<uint8_t>(8) {
 		this->init();
 	}
 	
@@ -715,7 +715,7 @@ namespace Hantek {
 	/// \param fastRate The fastRate state.
 	/// \param triggerSlope The triggerSlope value.
 	/// \param triggerPulse The triggerPulse value.
-	BulkSetTrigger5200::BulkSetTrigger5200(unsigned char triggerSource, unsigned char usedChannels, bool fastRate, unsigned char triggerSlope, unsigned char triggerPulse) : Helper::DataArray<unsigned char>(8) {
+	BulkSetTrigger5200::BulkSetTrigger5200(uint8_t triggerSource, uint8_t usedChannels, bool fastRate, uint8_t triggerSlope, uint8_t triggerPulse) : Helper::DataArray<uint8_t>(8) {
 		this->init();
 		
 		this->setTriggerSource(triggerSource);
@@ -727,25 +727,25 @@ namespace Hantek {
 	
 	/// \brief Get the triggerSource value in ETsrBits.
 	/// \return The ::TriggerSource value.
-	unsigned char BulkSetTrigger5200::getTriggerSource() {
+	uint8_t BulkSetTrigger5200::getTriggerSource() {
 		return ((ETsrBits *) &(this->array[2]))->triggerSource;
 	}
 	
 	/// \brief Set the triggerSource in ETsrBits to the given value.
 	/// \param value The new ::TriggerSource value.
-	void BulkSetTrigger5200::setTriggerSource(unsigned char value) {
+	void BulkSetTrigger5200::setTriggerSource(uint8_t value) {
 		((ETsrBits *) &(this->array[2]))->triggerSource = value;
 	}
 	
 	/// \brief Get the usedChannels value in ETsrBits.
 	/// \return The ::UsedChannels value.
-	unsigned char BulkSetTrigger5200::getUsedChannels() {
+	uint8_t BulkSetTrigger5200::getUsedChannels() {
 		return ((ETsrBits *) &(this->array[2]))->usedChannels;
 	}
 	
 	/// \brief Set the usedChannels in ETsrBits to the given value.
 	/// \param value The new ::UsedChannels value.
-	void BulkSetTrigger5200::setUsedChannels(unsigned char value) {
+	void BulkSetTrigger5200::setUsedChannels(uint8_t value) {
 		((ETsrBits *) &(this->array[2]))->usedChannels = value;
 	}
 	
@@ -763,13 +763,13 @@ namespace Hantek {
 	
 	/// \brief Get the triggerSlope value in ETsrBits.
 	/// \return The triggerSlope value.
-	unsigned char BulkSetTrigger5200::getTriggerSlope() {
+	uint8_t BulkSetTrigger5200::getTriggerSlope() {
 		return ((ETsrBits *) &(this->array[2]))->triggerSlope;
 	}
 	
 	/// \brief Set the triggerSlope in ETsrBits to the given value.
 	/// \param slope The new triggerSlope value.
-	void BulkSetTrigger5200::setTriggerSlope(unsigned char slope) {
+	void BulkSetTrigger5200::setTriggerSlope(uint8_t slope) {
 		((ETsrBits *) &(this->array[2]))->triggerSlope = slope;
 	}
 	
@@ -796,14 +796,14 @@ namespace Hantek {
 	/// \class BulkSetBuffer2250                                    hantek/types.h
 	/// \brief The DSO-2250 BULK_FSETBUFFER builder.
 	/// \brief Sets the data array to the default values.
-	BulkSetBuffer2250::BulkSetBuffer2250() : Helper::DataArray<unsigned char>(10) {
+	BulkSetBuffer2250::BulkSetBuffer2250() : Helper::DataArray<uint8_t>(10) {
 		this->init();
 	}
 	
 	/// \brief Sets the data bytes to the specified values.
 	/// \param triggerPositionPre The TriggerPositionPre value.
 	/// \param triggerPositionPost The TriggerPositionPost value.
-	BulkSetBuffer2250::BulkSetBuffer2250(unsigned long int triggerPositionPre, unsigned long int triggerPositionPost) : Helper::DataArray<unsigned char>(12) {
+	BulkSetBuffer2250::BulkSetBuffer2250(uint32_t triggerPositionPre, uint32_t triggerPositionPost) : Helper::DataArray<uint8_t>(12) {
 		this->init();
 		
 		this->setTriggerPositionPre(triggerPositionPre);
@@ -812,30 +812,30 @@ namespace Hantek {
 	
 	/// \brief Get the TriggerPositionPost value.
 	/// \return The TriggerPositionPost value.
-	unsigned long int BulkSetBuffer2250::getTriggerPositionPost() {
-		return (unsigned long int) this->array[2] | ((unsigned long int) this->array[3] << 8) | ((unsigned long int) this->array[4] << 16);
+	uint32_t BulkSetBuffer2250::getTriggerPositionPost() {
+		return (uint32_t) this->array[2] | ((uint32_t) this->array[3] << 8) | ((uint32_t) this->array[4] << 16);
 	}
 	
 	/// \brief Set the TriggerPositionPost to the given value.
 	/// \param position The new TriggerPositionPost value.
-	void BulkSetBuffer2250::setTriggerPositionPost(unsigned long int position) {
-		this->array[2] = (unsigned char) position;
-		this->array[3] = (unsigned char) (position >> 8);
-		this->array[4] = (unsigned char) (position >> 16);
+	void BulkSetBuffer2250::setTriggerPositionPost(uint32_t position) {
+		this->array[2] = (uint8_t) position;
+		this->array[3] = (uint8_t) (position >> 8);
+		this->array[4] = (uint8_t) (position >> 16);
 	}
 	
 	/// \brief Get the TriggerPositionPre value.
 	/// \return The TriggerPositionPre value.
-	unsigned long int BulkSetBuffer2250::getTriggerPositionPre() {
-		return (unsigned long int) this->array[6] | ((unsigned short int) this->array[7] << 8) | ((unsigned short int) this->array[8] << 16);
+	uint32_t BulkSetBuffer2250::getTriggerPositionPre() {
+		return (uint32_t) this->array[6] | ((uint16_t) this->array[7] << 8) | ((uint16_t) this->array[8] << 16);
 	}
 	
 	/// \brief Set the TriggerPositionPre to the given value.
 	/// \param position The new TriggerPositionPre value.
-	void BulkSetBuffer2250::setTriggerPositionPre(unsigned long int position) {
-		this->array[6] = (unsigned char) position;
-		this->array[7] = (unsigned char) (position >> 8);
-		this->array[8] = (unsigned char) (position >> 16);
+	void BulkSetBuffer2250::setTriggerPositionPre(uint32_t position) {
+		this->array[6] = (uint8_t) position;
+		this->array[7] = (uint8_t) (position >> 8);
+		this->array[8] = (uint8_t) (position >> 16);
 	}
 	
 	/// \brief Initialize the array to the needed values.
@@ -847,7 +847,7 @@ namespace Hantek {
 	//////////////////////////////////////////////////////////////////////////////
 	// class ControlGetSpeed
 	/// \brief Initializes the array.
-	ControlGetSpeed::ControlGetSpeed() : Helper::DataArray<unsigned char>(10) {
+	ControlGetSpeed::ControlGetSpeed() : Helper::DataArray<uint8_t>(10) {
 	}
 	
 	/// \brief Gets the speed of the connection.
@@ -861,7 +861,7 @@ namespace Hantek {
 	// class ControlBeginCommand
 	/// \brief Sets the command index to the given value.
 	/// \param index The CommandIndex for the command.
-	ControlBeginCommand::ControlBeginCommand(BulkIndex index) : Helper::DataArray<unsigned char>(10) {
+	ControlBeginCommand::ControlBeginCommand(BulkIndex index) : Helper::DataArray<uint8_t>(10) {
 		this->init();
 		
 		this->setIndex(index);
@@ -876,7 +876,7 @@ namespace Hantek {
 	/// \brief Sets the command index to the given value.
 	/// \param index The new CommandIndex for the command.
 	void ControlBeginCommand::setIndex(BulkIndex index) {
-		memset(&(this->array[1]), (unsigned char) index, 3);
+		memset(&(this->array[1]), (uint8_t) index, 3);
 	}
 	
 	/// \brief Initialize the array to the needed values.
@@ -888,14 +888,14 @@ namespace Hantek {
 	//////////////////////////////////////////////////////////////////////////////
 	// class ControlSetOffset
 	/// \brief Sets the data array to the default values.
-	ControlSetOffset::ControlSetOffset() : Helper::DataArray<unsigned char>(17) {
+	ControlSetOffset::ControlSetOffset() : Helper::DataArray<uint8_t>(17) {
 	}
 	
 	/// \brief Sets the offsets to the given values.
 	/// \param channel1 The offset for channel 1.
 	/// \param channel2 The offset for channel 2.
 	/// \param trigger The offset for ext. trigger.
-	ControlSetOffset::ControlSetOffset(unsigned short int channel1, unsigned short int channel2, unsigned short int trigger) : Helper::DataArray<unsigned char>(17) {
+	ControlSetOffset::ControlSetOffset(uint16_t channel1, uint16_t channel2, uint16_t trigger) : Helper::DataArray<uint8_t>(17) {
 		this->setChannel(0, channel1);
 		this->setChannel(1, channel2);
 		this->setTrigger(trigger);
@@ -904,7 +904,7 @@ namespace Hantek {
 	/// \brief Get the offset for the given channel.
 	/// \param channel The channel whose offset should be returned.
 	/// \return The channel offset value.
-	unsigned short int ControlSetOffset::getChannel(unsigned int channel) {
+	uint16_t ControlSetOffset::getChannel(unsigned int channel) {
 		if(channel == 0)
 			return ((this->array[0] & 0x0f) << 8) | this->array[1];
 		else
@@ -914,28 +914,28 @@ namespace Hantek {
 	/// \brief Set the offset for the given channel.
 	/// \param channel The channel that should be set.
 	/// \param offset The new channel offset value.
-	void ControlSetOffset::setChannel(unsigned int channel, unsigned short int offset) {
+	void ControlSetOffset::setChannel(unsigned int channel, uint16_t offset) {
 		if(channel == 0) {
-			this->array[0] = (unsigned char) (offset >> 8);
-			this->array[1] = (unsigned char) offset;
+			this->array[0] = (uint8_t) (offset >> 8);
+			this->array[1] = (uint8_t) offset;
 		}
 		else {
-			this->array[2] = (unsigned char) (offset >> 8);
-			this->array[3] = (unsigned char) offset;
+			this->array[2] = (uint8_t) (offset >> 8);
+			this->array[3] = (uint8_t) offset;
 		}
 	}
 	
 	/// \brief Get the trigger level.
 	/// \return The trigger level value.
-	unsigned short int ControlSetOffset::getTrigger() {
+	uint16_t ControlSetOffset::getTrigger() {
 		return ((this->array[4] & 0x0f) << 8) | this->array[5];
 	}
 	
 	/// \brief Set the trigger level.
 	/// \param level The new trigger level value.
-	void ControlSetOffset::setTrigger(unsigned short int level) {
-		this->array[4] = (unsigned char) (level >> 8);
-		this->array[5] = (unsigned char) level;
+	void ControlSetOffset::setTrigger(uint16_t level) {
+		this->array[4] = (uint8_t) (level >> 8);
+		this->array[5] = (uint8_t) level;
 	}
 	
 	
@@ -949,7 +949,7 @@ namespace Hantek {
 	/// \param ch2Below100mV Sets the state of the Channel 2 below 100 mV relay.
 	/// \param ch2CouplingDC Sets the state of the Channel 2 coupling relay.
 	/// \param triggerExt Sets the state of the external trigger relay.
-	ControlSetRelays::ControlSetRelays(bool ch1Below1V, bool ch1Below100mV, bool ch1CouplingDC, bool ch2Below1V, bool ch2Below100mV, bool ch2CouplingDC, bool triggerExt) : Helper::DataArray<unsigned char>(17) {
+	ControlSetRelays::ControlSetRelays(bool ch1Below1V, bool ch1Below100mV, bool ch1CouplingDC, bool ch2Below1V, bool ch2Below100mV, bool ch2CouplingDC, bool triggerExt) : Helper::DataArray<uint8_t>(17) {
 		this->setBelow1V(0, ch1Below1V);
 		this->setBelow100mV(0, ch1Below100mV);
 		this->setCoupling(0, ch1CouplingDC);

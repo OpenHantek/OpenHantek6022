@@ -48,14 +48,14 @@ GlArray::~GlArray() {
 
 /// \brief Get the size of the array.
 /// \return Number of array elements.
-unsigned long int GlArray::getSize() {
+unsigned int GlArray::getSize() {
 	return this->size;
 }
 
 /// \brief Set the size of the array.
 /// Previous array contents are lost.
 /// \param size New number of array elements.
-void GlArray::setSize(unsigned long int size) {
+void GlArray::setSize(unsigned int size) {
 	if(this->size == size)
 		return;
 	

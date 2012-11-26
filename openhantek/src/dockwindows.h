@@ -56,7 +56,7 @@ class HorizontalDock : public QDockWidget {
 		void setFrequencybase(double timebase);
 		void setSamplerate(double samplerate);
 		void setTimebase(double timebase);
-		void setRecordLength(unsigned long int recordLength);
+		void setRecordLength(unsigned int recordLength);
 		int setFormat(Dso::GraphFormat format);
 	
 	protected:
@@ -82,7 +82,7 @@ class HorizontalDock : public QDockWidget {
 		bool suppressSignals; ///< Disable changed-signals temporarily
 	
 	public slots:
-		void availableRecordLengthsChanged(const QList<unsigned long int> &recordLengths);
+		void availableRecordLengthsChanged(const QList<unsigned int> &recordLengths);
 		void samplerateLimitsChanged(double minimum, double maximum);
 		
 	protected slots:

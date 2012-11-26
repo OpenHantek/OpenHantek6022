@@ -281,7 +281,7 @@ namespace Hantek {
 	/// \param attempts The number of attempts, that are done on timeouts.
 	/// \param timeout The timeout in ms.
 	/// \return Number of transferred bytes on success, libusb error code on error.
-	int Device::bulkTransfer(unsigned char endpoint, unsigned char *data, unsigned long int length, int attempts, unsigned int timeout) {
+	int Device::bulkTransfer(unsigned char endpoint, unsigned char *data, unsigned int length, int attempts, unsigned int timeout) {
 		if(!this->handle)
 			return LIBUSB_ERROR_NO_DEVICE;
 		
@@ -304,7 +304,7 @@ namespace Hantek {
 	/// \param length The length of the packet.
 	/// \param attempts The number of attempts, that are done on timeouts.
 	/// \return Number of sent bytes on success, libusb error code on error.
-	int Device::bulkWrite(unsigned char *data, unsigned long int length, int attempts) {
+	int Device::bulkWrite(unsigned char *data, unsigned int length, int attempts) {
 		if(!this->handle)
 			return LIBUSB_ERROR_NO_DEVICE;
 		
@@ -331,7 +331,7 @@ namespace Hantek {
 	/// \param length The length of the packet.
 	/// \param attempts The number of attempts, that are done on timeouts.
 	/// \return Number of received bytes on success, libusb error code on error.
-	int Device::bulkRead(unsigned char *data, unsigned long int length, int attempts) {
+	int Device::bulkRead(unsigned char *data, unsigned int length, int attempts) {
 		if(!this->handle)
 			return LIBUSB_ERROR_NO_DEVICE;
 		
@@ -375,7 +375,7 @@ namespace Hantek {
 	/// \param length The length of data contained in the packets.
 	/// \param attempts The number of attempts, that are done on timeouts.
 	/// \return Number of received bytes on success, libusb error code on error.
-	int Device::bulkReadMulti(unsigned char *data, unsigned long int length, int attempts) {
+	int Device::bulkReadMulti(unsigned char *data, unsigned int length, int attempts) {
 		if(!this->handle)
 			return LIBUSB_ERROR_NO_DEVICE;
 		
@@ -386,14 +386,14 @@ namespace Hantek {
 			return errorCode;
 		
 		errorCode = this->inPacketLength;
-		unsigned long int packet, received = 0;
+		unsigned int packet, received = 0;
 		for(packet = 0; received < length && errorCode == this->inPacketLength; ++packet) {
 #if LIBUSB_VERSION == 0
 			errorCode = LIBUSB_ERROR_TIMEOUT;
 			for(int attempt = 0; (attempt < attempts || attempts == -1) && errorCode == LIBUSB_ERROR_TIMEOUT; ++attempt)
-				errorCode = usb_bulk_read(this->handle, HANTEK_EP_IN, (char *) data + packet * this->inPacketLength, qMin(length - received, (unsigned long int) this->inPacketLength), HANTEK_TIMEOUT);
+				errorCode = usb_bulk_read(this->handle, HANTEK_EP_IN, (char *) data + packet * this->inPacketLength, qMin(length - received, (unsigned int) this->inPacketLength), HANTEK_TIMEOUT);
 #else
-			errorCode = this->bulkTransfer(HANTEK_EP_IN, data + packet * this->inPacketLength, qMin(length - received, (unsigned long int) this->inPacketLength), attempts, HANTEK_TIMEOUT_MULTI);
+			errorCode = this->bulkTransfer(HANTEK_EP_IN, data + packet * this->inPacketLength, qMin(length - received, (unsigned int) this->inPacketLength), attempts, HANTEK_TIMEOUT_MULTI);
 #endif
 			if(errorCode > 0)
 				received += errorCode;
@@ -414,7 +414,7 @@ namespace Hantek {
 	/// \param index The index field of the packet.
 	/// \param attempts The number of attempts, that are done on timeouts.
 	/// \return Number of transferred bytes on success, libusb error code on error.
-	int Device::controlTransfer(unsigned char type, unsigned char request, unsigned char *data, unsigned long int length, int value, int index, int attempts) {
+	int Device::controlTransfer(unsigned char type, unsigned char request, unsigned char *data, unsigned int length, int value, int index, int attempts) {
 		if(!this->handle)
 			return LIBUSB_ERROR_NO_DEVICE;
 		
@@ -439,7 +439,7 @@ namespace Hantek {
 	/// \param index The index field of the packet.
 	/// \param attempts The number of attempts, that are done on timeouts.
 	/// \return Number of sent bytes on success, libusb error code on error.
-	int Device::controlWrite(unsigned char request, unsigned char *data, unsigned long int length, int value, int index, int attempts) {
+	int Device::controlWrite(unsigned char request, unsigned char *data, unsigned int length, int value, int index, int attempts) {
 		if(!this->handle)
 			return LIBUSB_ERROR_NO_DEVICE;
 		
@@ -454,7 +454,7 @@ namespace Hantek {
 	/// \param index The index field of the packet.
 	/// \param attempts The number of attempts, that are done on timeouts.
 	/// \return Number of received bytes on success, libusb error code on error.
-	int Device::controlRead(unsigned char request, unsigned char *data, unsigned long int length, int value, int index, int attempts) {
+	int Device::controlRead(unsigned char request, unsigned char *data, unsigned int length, int value, int index, int attempts) {
 		if(!this->handle)
 			return LIBUSB_ERROR_NO_DEVICE;
 		
@@ -472,6 +472,22 @@ namespace Hantek {
 			return errorCode;
 		
 		return response.getSpeed();
+	}
+	
+	/// \brief Gets the maximum size of one packet transmitted via bulk transfer.
+	/// \return The maximum packet size in bytes, -1 on error.
+	int Device::getPacketSize() {
+		switch(this->getConnectionSpeed()) {
+			case CONNECTION_FULLSPEED:
+				return 64;
+				break;
+			case CONNECTION_HIGHSPEED:
+				return 512;
+				break;
+			default:
+				return -1;
+				break;
+		}
 	}
 	
 	/// \brief Get the oscilloscope model.

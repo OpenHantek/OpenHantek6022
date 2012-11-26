@@ -456,7 +456,7 @@ int DsoSettings::save(const QString &fileName) {
 	for(int marker = 0; marker < 2; ++marker)
 		settingsSaver->setValue(QString("marker%1").arg(marker), this->scope.horizontal.marker[marker]);
 	settingsSaver->setValue("timebase", this->scope.horizontal.timebase);
-	settingsSaver->setValue("recordLength", (unsigned int) this->scope.horizontal.recordLength);
+	settingsSaver->setValue("recordLength", this->scope.horizontal.recordLength);
 	settingsSaver->setValue("samplerate", this->scope.horizontal.samplerate);
 	settingsSaver->setValue("samplerateSet", this->scope.horizontal.samplerateSet);
 	settingsSaver->endGroup();

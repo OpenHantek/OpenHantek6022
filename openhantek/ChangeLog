@@ -192,3 +192,7 @@
 * Added signals to DsoControl to update horizontal dock automatically
 * Reworks in signal connections to make this work properly
 * Bugfix: DSO-2250 used channels wasn't set
+
+2012-11-26 Oliver Haag  <oliver.haag@gmail.com>
+* Bugfix: Roll mode caused crash or hanging
+* Bugfix: DSO-2150 samplerate maximum was 100 MS/s

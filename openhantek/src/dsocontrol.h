@@ -47,7 +47,7 @@ class DsoControl : public QThread {
 		DsoControl(QObject *parent = 0);
 		
 		virtual unsigned int getChannelCount() = 0; ///< Get the number of channels for this oscilloscope
-		virtual QList<unsigned long int> *getAvailableRecordLengths() = 0; ///< Get available record lengths, empty list for continuous
+		virtual QList<unsigned int> *getAvailableRecordLengths() = 0; ///< Get available record lengths, empty list for continuous
 		virtual double getMinSamplerate() = 0; ///< The minimum samplerate supported
 		virtual double getMaxSamplerate() = 0; ///< The maximum samplerate supported
 		
@@ -65,12 +65,12 @@ class DsoControl : public QThread {
 		void samplingStarted(); ///< The oscilloscope started sampling/waiting for trigger
 		void samplingStopped(); ///< The oscilloscope stopped sampling/waiting for trigger
 		void statusMessage(const QString &message, int timeout); ///< Status message about the oscilloscope
-		void samplesAvailable(const QList<double *> *data, const QList<unsigned long int> *size, double samplerate, QMutex *mutex); ///< New sample data is available
+		void samplesAvailable(const QList<double *> *data, const QList<unsigned int> *size, double samplerate, QMutex *mutex); ///< New sample data is available
 		
 		void recordLengthChanged(unsigned long duration); ///< The record length has changed
 		void recordTimeChanged(double duration); ///< The record time duration has changed
 		void samplerateChanged(double samplerate); ///< The samplerate has changed
-		void availableRecordLengthsChanged(const QList<unsigned long int> &recordLengths); ///< The available record lengths, empty list for continuous
+		void availableRecordLengthsChanged(const QList<unsigned int> &recordLengths); ///< The available record lengths, empty list for continuous
 		void samplerateLimitsChanged(double minimum, double maximum); ///< The minimum or maximum samplerate has changed
 	
 	public slots:
@@ -80,7 +80,7 @@ class DsoControl : public QThread {
 		virtual void startSampling();
 		virtual void stopSampling();
 		
-		virtual unsigned long int setRecordLength(unsigned long int size) = 0; ///< Set record length id, minimum for continuous
+		virtual unsigned int setRecordLength(unsigned int size) = 0; ///< Set record length id, minimum for continuous
 		virtual double setSamplerate(double samplerate) = 0; ///< Set the samplerate that should be met
 		virtual double setRecordTime(double duration) = 0; ///< Set the record time duration that should be met
 		
