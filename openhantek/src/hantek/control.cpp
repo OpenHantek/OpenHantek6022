@@ -1121,14 +1121,14 @@ namespace Hantek {
 			}
 			else {
 				// DSO-2250 uses a different value for channel 2
-				if(this->specification.command.bulk.setTrigger == BULK_BSETCHANNELS)
+				if(this->specification.command.bulk.setChannels == BULK_BSETCHANNELS)
 					usedChannels = BUSED_CH2;
 				else
 					usedChannels = USED_CH2;
 			}
 		}
 		
-		switch(this->specification.command.bulk.setTrigger) {
+		switch(this->specification.command.bulk.setChannels) {
 			case BULK_SETTRIGGERANDSAMPLERATE: {
 				// SetTriggerAndSamplerate bulk command for trigger source
 				static_cast<BulkSetTriggerAndSamplerate *>(this->command[BULK_SETTRIGGERANDSAMPLERATE])->setUsedChannels(usedChannels);

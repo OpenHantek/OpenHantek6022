@@ -196,3 +196,6 @@
 2012-11-26 Oliver Haag  <oliver.haag@gmail.com>
 * Bugfix: Roll mode caused crash or hanging
 * Bugfix: DSO-2150 samplerate maximum was 100 MS/s
+
+2012-11-27 Oliver Haag  <oliver.haag@gmail.com>
+* Bugfix: Hantek::Control::setChannelUsed used setTrigger instead of setChannels
