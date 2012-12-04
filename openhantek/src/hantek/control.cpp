@@ -1040,6 +1040,9 @@ namespace Hantek {
 	/// \param samplerate The samplerate that should be met (S/s), 0.0 to restore current samplerate.
 	/// \return The samplerate that has been set, 0.0 on error.
 	double Control::setSamplerate(double samplerate) {
+		if(!this->device->isConnected())
+			return 0.0;
+		
 		if(samplerate == 0.0) {
 			samplerate = this->settings.samplerate.target.samplerate;
 		}
@@ -1067,6 +1070,9 @@ namespace Hantek {
 	/// \param duration The record time duration that should be met (s), 0.0 to restore current record time.
 	/// \return The record time duration that has been set, 0.0 on error.
 	double Control::setRecordTime(double duration) {
+		if(!this->device->isConnected())
+			return 0.0;
+		
 		if(duration == 0.0) {
 			duration = this->settings.samplerate.target.duration;
 		}

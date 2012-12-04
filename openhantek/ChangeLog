@@ -199,3 +199,7 @@
 
 2012-11-27 Oliver Haag  <oliver.haag@gmail.com>
 * Bugfix: Hantek::Control::setChannelUsed used setTrigger instead of setChannels
+
+2012-12-04 Oliver Haag  <oliver.haag@gmail.com>
+* Workaround for stacked QGLWidget on Mac OS X
+* Bugfix: Check for connected scope on setSamplerate/setRecordTime

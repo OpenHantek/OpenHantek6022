@@ -64,6 +64,12 @@ DsoWidget::DsoWidget(DsoSettings *settings, DataAnalyzer *dataAnalyzer, QWidget 
 	this->zoomScope->setGenerator(this->generator);
 	this->zoomScope->setZoomMode(true);
 	
+#ifdef OS_DARWIN
+	// Workaround for https://bugreports.qt-project.org/browse/QTBUG-8580
+	this->mainScope->hide();
+	this->mainScope->show();
+#endif
+	
 	// The offset sliders for all possible channels
 	this->offsetSlider = new LevelSlider(Qt::RightArrow);
 	for(int channel = 0; channel < this->settings->scope.voltage.count(); ++channel) {
