@@ -27,6 +27,8 @@
 #define DATAANALYZER_H
 
 
+#include <vector>
+
 #include <QThread>
 
 
@@ -43,9 +45,10 @@ class QMutex;
 /// \struct SampleValues                                          dataanalyzer.h
 /// \brief Struct for a array of sample values.
 struct SampleValues {
-	double *sample; ///< Pointer to the array holding the sampling data
-	unsigned int count; ///< Number of sample values
+	std::vector<double> sample; ///< Vector holding the sampling data
 	double interval; ///< The interval between two sample values
+	
+	SampleValues();
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -61,8 +64,10 @@ struct SampleData {
 /// \brief Struct for the analyzed data.
 struct AnalyzedData {
 	SampleData samples; ///< Voltage and spectrum values
-	double frequency; ///< The frequency of the signal
 	double amplitude; ///< The amplitude of the signal
+	double frequency; ///< The frequency of the signal
+	
+	AnalyzedData();
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -77,7 +82,7 @@ class DataAnalyzer : public QThread {
 		DataAnalyzer(DsoSettings *settings, QObject *parent = 0);
 		~DataAnalyzer();
 		
-		const AnalyzedData *data(int channel) const;
+		const AnalyzedData *data(unsigned int channel) const;
 		unsigned int sampleCount();
 		QMutex *mutex() const;
 	
@@ -86,7 +91,7 @@ class DataAnalyzer : public QThread {
 		
 		DsoSettings *settings; ///< The settings provided by the parent class
 		
-		QList<AnalyzedData *> analyzedData; ///< The analyzed data for each channel
+		std::vector<AnalyzedData> analyzedData; ///< The analyzed data for each channel
 		QMutex *analyzedDataMutex; ///< A mutex for the analyzed data of all channels
 		
 		unsigned int lastRecordLength; ///< The record length of the previously analyzed data
@@ -94,13 +99,13 @@ class DataAnalyzer : public QThread {
 		Dso::WindowFunction lastWindow; ///< The previously used dft window function
 		double *window; ///< The array for the dft window factors
 		
-		QList<double *> waitingData; ///< Pointer to input data from device
-		QList<unsigned int> waitingDataSize; ///< Number of input data samples
+		const std::vector<std::vector<double> > *waitingData; ///< Pointer to input data from device
 		double waitingDataSamplerate; ///< The samplerate of the input data
+		bool waitingDataAppend; ///< true, if waiting data should be appended
 		QMutex *waitingDataMutex; ///< A mutex for the input data
 	
 	public slots:
-		void analyze(const QList<double *> *data, const QList<unsigned int> *size, double samplerate, QMutex *mutex);
+		void analyze(const std::vector<std::vector<double> > *data, double samplerate, bool append, QMutex *mutex);
 	
 	signals:
 		void analyzed(unsigned long samples); ///< The data with that much samples has been analyzed

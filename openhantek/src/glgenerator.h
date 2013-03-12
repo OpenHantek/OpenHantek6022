@@ -29,8 +29,9 @@
 #define GLGENERATOR_H
 
 
+#include <deque>
+
 #include <QGLWidget>
-#include <QList>
 #include <QObject>
 
 
@@ -46,23 +47,6 @@ class DataAnalyzer;
 class DsoSettings;
 class GlScope;
 
-
-////////////////////////////////////////////////////////////////////////////////
-/// \class GlArray                                                 glgenerator.h
-/// \brief An array of GLfloat values and it's size.
-class GlArray {
-	public:
-		GlArray();
-		~GlArray();
-		
-		unsigned int getSize();
-		void setSize(unsigned int size);
-		
-		GLfloat *data; ///< Pointer to the array
-	
-	protected:
-		unsigned int size; ///< The array size (Number of GLfloat values)
-};
 
 ////////////////////////////////////////////////////////////////////////////////
 /// \class GlGenerator                                             glgenerator.h
@@ -85,10 +69,10 @@ class GlGenerator : public QObject {
 		DataAnalyzer *dataAnalyzer;
 		DsoSettings *settings;
 		
-		QList<QList<GlArray *> > vaChannel[Dso::CHANNELMODE_COUNT];
-		GlArray vaGrid[3];
+		std::vector<std::deque<std::vector<GLfloat> > > vaChannel[Dso::CHANNELMODE_COUNT];
+		std::vector<GLfloat> vaGrid[3];
 		
-		int digitalPhosphorDepth;
+		unsigned int digitalPhosphorDepth;
 	
 	public slots:
 		void generateGraphs();

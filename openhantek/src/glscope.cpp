@@ -96,7 +96,7 @@ void GlScope::paintGL() {
 		double *fadingFactor = new double[this->generator->digitalPhosphorDepth];
 		fadingFactor[0] = 100;
 		double fadingRatio = pow(10.0, 2.0 / this->generator->digitalPhosphorDepth);
-		for(int index = 1; index < this->generator->digitalPhosphorDepth; ++index)
+		for(unsigned int index = 1; index < this->generator->digitalPhosphorDepth; ++index)
 			fadingFactor[index] = fadingFactor[index - 1] * fadingRatio;
 		
 		switch(this->settings->scope.horizontal.format) {
@@ -107,13 +107,13 @@ void GlScope::paintGL() {
 						if((mode == Dso::CHANNELMODE_VOLTAGE) ? this->settings->scope.voltage[channel].used : this->settings->scope.spectrum[channel].used) {
 							// Draw graph for all available depths
 							for(int index = this->generator->digitalPhosphorDepth - 1; index >= 0; index--) {
-								if(this->generator->vaChannel[mode][channel][index]->data) {
+								if(!this->generator->vaChannel[mode][channel][index].empty()) {
 									if(mode == Dso::CHANNELMODE_VOLTAGE)
 										this->qglColor(this->settings->view.color.screen.voltage[channel].darker(fadingFactor[index]));
 									else
 										this->qglColor(this->settings->view.color.screen.spectrum[channel].darker(fadingFactor[index]));
-									glVertexPointer(2, GL_FLOAT, 0, this->generator->vaChannel[mode][channel][index]->data);
-									glDrawArrays((this->settings->view.interpolation == Dso::INTERPOLATION_OFF) ? GL_POINTS : GL_LINE_STRIP, 0, this->generator->vaChannel[mode][channel][index]->getSize() / 2);
+									glVertexPointer(2, GL_FLOAT, 0, &this->generator->vaChannel[mode][channel][index].front());
+									glDrawArrays((this->settings->view.interpolation == Dso::INTERPOLATION_OFF) ? GL_POINTS : GL_LINE_STRIP, 0, this->generator->vaChannel[mode][channel][index].size() / 2);
 								}
 							}
 						}
@@ -127,10 +127,10 @@ void GlScope::paintGL() {
 					if(this->settings->scope.voltage[channel].used) {
 						// Draw graph for all available depths
 						for(int index = this->generator->digitalPhosphorDepth - 1; index >= 0; index--) {
-							if(this->generator->vaChannel[Dso::CHANNELMODE_VOLTAGE][channel][index]->data) {
+							if(!this->generator->vaChannel[Dso::CHANNELMODE_VOLTAGE][channel][index].empty()) {
 								this->qglColor(this->settings->view.color.screen.voltage[channel].darker(fadingFactor[index]));
-								glVertexPointer(2, GL_FLOAT, 0, this->generator->vaChannel[Dso::CHANNELMODE_VOLTAGE][channel][index]->data);
-								glDrawArrays((this->settings->view.interpolation == Dso::INTERPOLATION_OFF) ? GL_POINTS : GL_LINE_STRIP, 0, this->generator->vaChannel[Dso::CHANNELMODE_VOLTAGE][channel][index]->getSize() / 2);
+								glVertexPointer(2, GL_FLOAT, 0, &this->generator->vaChannel[Dso::CHANNELMODE_VOLTAGE][channel][index].front());
+								glDrawArrays((this->settings->view.interpolation == Dso::INTERPOLATION_OFF) ? GL_POINTS : GL_LINE_STRIP, 0, this->generator->vaChannel[Dso::CHANNELMODE_VOLTAGE][channel][index].size() / 2);
 							}
 						}
 					}
@@ -156,17 +156,17 @@ void GlScope::paintGL() {
 		this->qglColor(this->settings->view.color.screen.markers);
 		
 		for(int marker = 0; marker < MARKER_COUNT; ++marker) {
-			if(!this->vaMarker[marker].data) {
-				this->vaMarker[marker].setSize(2 * 2);
-				this->vaMarker[marker].data[1] = - DIVS_VOLTAGE;
-				this->vaMarker[marker].data[3] = DIVS_VOLTAGE;
+			if(this->vaMarker[marker].size() != 4) {
+				this->vaMarker[marker].resize(2 * 2);
+				this->vaMarker[marker][1] = -DIVS_VOLTAGE;
+				this->vaMarker[marker][3] = DIVS_VOLTAGE;
 			}
 			
-			this->vaMarker[marker].data[0] = this->settings->scope.horizontal.marker[marker];
-			this->vaMarker[marker].data[2] = this->settings->scope.horizontal.marker[marker];
+			this->vaMarker[marker][0] = this->settings->scope.horizontal.marker[marker];
+			this->vaMarker[marker][2] = this->settings->scope.horizontal.marker[marker];
 			
-			glVertexPointer(2, GL_FLOAT, 0, this->vaMarker[marker].data);
-			glDrawArrays(GL_LINES, 0, this->vaMarker[marker].getSize() / 2);
+			glVertexPointer(2, GL_FLOAT, 0, &this->vaMarker[marker].front());
+			glDrawArrays(GL_LINES, 0, this->vaMarker[marker].size() / 2);
 		}
 		
 		glDisable(GL_LINE_STIPPLE);
@@ -215,14 +215,14 @@ void GlScope::drawGrid() {
 	
 	// Grid
 	this->qglColor(this->settings->view.color.screen.grid);
-	glVertexPointer(2, GL_FLOAT, 0, this->generator->vaGrid[0].data);
-	glDrawArrays(GL_POINTS, 0, this->generator->vaGrid[0].getSize() / 2);
+	glVertexPointer(2, GL_FLOAT, 0, &this->generator->vaGrid[0].front());
+	glDrawArrays(GL_POINTS, 0, this->generator->vaGrid[0].size() / 2);
 	// Axes
 	this->qglColor(this->settings->view.color.screen.axes);
-	glVertexPointer(2, GL_FLOAT, 0, this->generator->vaGrid[1].data);
-	glDrawArrays(GL_LINES, 0, this->generator->vaGrid[1].getSize() / 2);
+	glVertexPointer(2, GL_FLOAT, 0, &this->generator->vaGrid[1].front());
+	glDrawArrays(GL_LINES, 0, this->generator->vaGrid[1].size() / 2);
 	// Border
 	this->qglColor(this->settings->view.color.screen.border);
-	glVertexPointer(2, GL_FLOAT, 0, this->generator->vaGrid[2].data);
-	glDrawArrays(GL_LINE_LOOP, 0, this->generator->vaGrid[2].getSize() / 2);
+	glVertexPointer(2, GL_FLOAT, 0, &this->generator->vaGrid[2].front());
+	glDrawArrays(GL_LINE_LOOP, 0, this->generator->vaGrid[2].size() / 2);
 }

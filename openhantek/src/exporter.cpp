@@ -231,7 +231,7 @@ bool Exporter::doExport() {
 								centerOffset = DIVS_TIME / horizontalFactor / 2;
 							}
 							unsigned int firstPosition = qMax((int) (centerPosition - centerOffset), 0);
-							unsigned int lastPosition = qMin((int) (centerPosition + centerOffset), (int) this->dataAnalyzer->data(channel)->samples.voltage.count - 1);
+							unsigned int lastPosition = qMin((int) (centerPosition + centerOffset), (int) this->dataAnalyzer->data(channel)->samples.voltage.sample.size() - 1);
 							
 							// Draw graph
 							QPointF *graph = new QPointF[lastPosition - firstPosition + 1];
@@ -262,7 +262,7 @@ bool Exporter::doExport() {
 								centerOffset = DIVS_TIME / horizontalFactor / 2;
 							}
 							unsigned int firstPosition = qMax((int) (centerPosition - centerOffset), 0);
-							unsigned int lastPosition = qMin((int) (centerPosition + centerOffset), (int) this->dataAnalyzer->data(channel)->samples.spectrum.count - 1);
+							unsigned int lastPosition = qMin((int) (centerPosition + centerOffset), (int) this->dataAnalyzer->data(channel)->samples.spectrum.sample.size() - 1);
 							
 							// Draw graph
 							QPointF *graph = new QPointF[lastPosition - firstPosition + 1];
@@ -382,7 +382,7 @@ bool Exporter::doExport() {
 					csvStream << "\"" << this->settings->scope.voltage[channel].name << "\"," << this->dataAnalyzer->data(channel)->samples.voltage.interval;
 					
 					// And now all sample values in volts
-					for(unsigned int position = 0; position < this->dataAnalyzer->data(channel)->samples.voltage.count; ++position)
+					for(unsigned int position = 0; position < this->dataAnalyzer->data(channel)->samples.voltage.sample.size(); ++position)
 						csvStream << "," << this->dataAnalyzer->data(channel)->samples.voltage.sample[position];
 					
 					// Finally a newline
@@ -394,7 +394,7 @@ bool Exporter::doExport() {
 					csvStream << "\"" << this->settings->scope.spectrum[channel].name << "\"," << this->dataAnalyzer->data(channel)->samples.spectrum.interval;
 					
 					// And now all magnitudes in dB
-					for(unsigned int position = 0; position < this->dataAnalyzer->data(channel)->samples.spectrum.count; ++position)
+					for(unsigned int position = 0; position < this->dataAnalyzer->data(channel)->samples.spectrum.sample.size(); ++position)
 						csvStream << "," << this->dataAnalyzer->data(channel)->samples.spectrum.sample[position];
 					
 					// Finally a newline

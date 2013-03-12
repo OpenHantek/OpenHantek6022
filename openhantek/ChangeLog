@@ -203,3 +203,8 @@
 2012-12-04 Oliver Haag  <oliver.haag@gmail.com>
 * Workaround for stacked QGLWidget on Mac OS X
 * Bugfix: Check for connected scope on setSamplerate/setRecordTime
+
+2013-03-12 Oliver Haag  <oliver.haag@gmail.com>
+* Use std::vector instead of QList
+* Experimental Roll-mode support
+* QThread::msleep is too unprecise, causing problems in Roll-mode

@@ -64,7 +64,7 @@ class GlScope : public QGLWidget {
 		GlGenerator *generator;
 		DsoSettings *settings;
 		
-		GlArray vaMarker[2];
+		std::vector<GLfloat> vaMarker[2];
 		bool zoomed;
 };
 

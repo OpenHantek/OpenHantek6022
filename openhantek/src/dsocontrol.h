@@ -27,6 +27,8 @@
 #define DSOCONTROL_H
 
 
+#include <vector>
+
 #include <QStringList>
 #include <QThread>
 
@@ -65,7 +67,7 @@ class DsoControl : public QThread {
 		void samplingStarted(); ///< The oscilloscope started sampling/waiting for trigger
 		void samplingStopped(); ///< The oscilloscope stopped sampling/waiting for trigger
 		void statusMessage(const QString &message, int timeout); ///< Status message about the oscilloscope
-		void samplesAvailable(const QList<double *> *data, const QList<unsigned int> *size, double samplerate, QMutex *mutex); ///< New sample data is available
+		void samplesAvailable(const std::vector<std::vector<double> > *data, double samplerate, bool append, QMutex *mutex); ///< New sample data is available
 		
 		void recordLengthChanged(unsigned long duration); ///< The record length has changed
 		void recordTimeChanged(double duration); ///< The record time duration has changed

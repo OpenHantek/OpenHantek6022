@@ -276,7 +276,7 @@ void OpenHantekMainWindow::connectSignals() {
 	connect(this, SIGNAL(settingsChanged()), this, SLOT(applySettings()));
 	//connect(this->dsoWidget, SIGNAL(stopped()), this, SLOT(stopped()));
 	connect(this->dsoControl, SIGNAL(statusMessage(QString, int)), this->statusBar(), SLOT(showMessage(QString, int)));
-	connect(this->dsoControl, SIGNAL(samplesAvailable(const QList<double *> *, const QList<unsigned int> *, double, QMutex *)), this->dataAnalyzer, SLOT(analyze(const QList<double *> *, const QList<unsigned int> *, double, QMutex *)));
+	connect(this->dsoControl, SIGNAL(samplesAvailable(const std::vector<std::vector<double> > *, double, bool, QMutex *)), this->dataAnalyzer, SLOT(analyze(const std::vector<std::vector<double> > *, double, bool, QMutex *)));
 	
 	// Connect signals to DSO controller and widget
 	connect(this->horizontalDock, SIGNAL(samplerateChanged(double)), this, SLOT(samplerateSelected()));
@@ -334,8 +334,10 @@ void OpenHantekMainWindow::initializeDevice() {
 		this->timebaseSelected();
 	if(this->dsoControl->getAvailableRecordLengths()->isEmpty())
 		this->dsoControl->setRecordLength(this->settings->scope.horizontal.recordLength);
-	else
-		this->dsoControl->setRecordLength(this->dsoControl->getAvailableRecordLengths()->indexOf(this->settings->scope.horizontal.recordLength));
+	else {
+		int index = this->dsoControl->getAvailableRecordLengths()->indexOf(this->settings->scope.horizontal.recordLength);
+		this->dsoControl->setRecordLength(index < 0 ? 1 : index);
+	}
 	this->dsoControl->setTriggerMode(this->settings->scope.trigger.mode);
 	this->dsoControl->setPretriggerPosition(this->settings->scope.trigger.position * this->settings->scope.horizontal.timebase * DIVS_TIME);
 	this->dsoControl->setTriggerSlope(this->settings->scope.trigger.slope);
@@ -610,7 +612,7 @@ void OpenHantekMainWindow::updateSettings() {
 /// \brief The oscilloscope changed the record time.
 /// \param duration The new record time duration in seconds.
 void OpenHantekMainWindow::recordTimeChanged(double duration) {
-	if(this->settings->scope.horizontal.samplerateSet) {
+	if(this->settings->scope.horizontal.samplerateSet && this->settings->scope.horizontal.recordLength != UINT_MAX) {
 		// The samplerate was set, let's adapt the timebase accordingly
 		this->settings->scope.horizontal.timebase = duration / DIVS_TIME;
 		this->horizontalDock->setTimebase(this->settings->scope.horizontal.timebase);
@@ -625,7 +627,7 @@ void OpenHantekMainWindow::recordTimeChanged(double duration) {
 /// \brief The oscilloscope changed the samplerate.
 /// \param samplerate The new samplerate in samples per second.
 void OpenHantekMainWindow::samplerateChanged(double samplerate) {
-	if(!this->settings->scope.horizontal.samplerateSet) {
+	if(!this->settings->scope.horizontal.samplerateSet && this->settings->scope.horizontal.recordLength != UINT_MAX) {
 		// The timebase was set, let's adapt the samplerate accordingly
 		this->settings->scope.horizontal.samplerate = samplerate;
 		this->horizontalDock->setSamplerate(samplerate);

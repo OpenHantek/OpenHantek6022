@@ -53,6 +53,17 @@ namespace Hantek {
 	};
 	
 	//////////////////////////////////////////////////////////////////////////////
+	/// \enum RollState                                             hantek/types.h
+	/// \brief The states of the roll cycle (Since capture state isn't valid).
+	enum RollState {
+		ROLL_STARTSAMPLING = 0, ///< Start sampling
+		ROLL_ENABLETRIGGER = 1, ///< Enable triggering
+		ROLL_FORCETRIGGER = 2, ///< Force triggering
+		ROLL_GETDATA = 3, ///< Request sample data
+		ROLL_COUNT
+	};
+	
+	//////////////////////////////////////////////////////////////////////////////
 	/// \struct ControlSpecificationCommandsBulk                  hantek/control.h
 	/// \brief Stores the bulk command codes used for this device.
 	struct ControlSpecificationCommandsBulk {
@@ -208,6 +219,7 @@ namespace Hantek {
 			unsigned int updateRecordLength(unsigned int size);
 			unsigned int updateSamplerate(unsigned int downsampler, bool fastRate);
 			void restoreTargets();
+			void updateSamplerateLimits();
 			
 			// Communication with device
 			Device *device; ///< The USB device for the oscilloscope
@@ -223,8 +235,7 @@ namespace Hantek {
 			ControlSettings settings; ///< The current settings of the device
 			
 			// Results
-			QList<double *> samples; ///< Sample data arrays
-			QList<unsigned int> samplesSize; ///< Number of samples data array
+			std::vector<std::vector<double> > samples; ///< Sample data vectors sent to the data analyzer
 			unsigned int previousSampleCount; ///< The expected total number of samples at the last check before sampling started
 			QMutex samplesMutex; ///< Mutex for the sample data
 		

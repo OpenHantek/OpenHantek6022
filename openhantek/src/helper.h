@@ -30,6 +30,7 @@
 #include <cerrno>
 
 #include <QString>
+#include <QTime>
 
 
 #if LIBUSB_VERSION == 0
@@ -71,6 +72,13 @@ namespace Helper {
 #ifdef DEBUG
 	QString hexDump(unsigned char *data, unsigned int length);
 	unsigned int hexParse(const QString dump, unsigned char *data, unsigned int length);
+	inline void timestampDebug(QString text);
+	
+	/// \brief Print debug information with timestamp.
+	/// \param text Text that will be output via qDebug.
+	inline void timestampDebug(QString text) {
+		qDebug("%s: %s", QTime::currentTime().toString("hh:mm:ss.zzz").toAscii().constData(), text.toAscii().constData());
+	}
 #endif	
 	
 	//////////////////////////////////////////////////////////////////////////////
