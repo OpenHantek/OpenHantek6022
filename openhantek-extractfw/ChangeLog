@@ -32,3 +32,12 @@
 * Version 0.7.0:
 * Renamed this extraction tool to openhantek-extractfw
 * Added fwget.sh for automatic driver download and firmware extraction
+
+2011-11-20  Oliver Haag  <oliver.haag@gmail.com>
+* Updated deprecated used rules
+
+2012-11-25  Oliver Haag  <oliver.haag@gmail.com>
+* Added additional DSO-2090 product ID
+
+2013-03-13  Oliver Haag  <oliver.haag@gmail.com>
+* Link libbfd dependencies explicitly (Required by recent gcc/libbfd)

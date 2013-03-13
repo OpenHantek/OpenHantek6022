@@ -13,7 +13,10 @@ AM_INIT_AUTOMAKE
 AC_PROG_CC
 
 # Checks for libraries.
-AC_CHECK_LIB([bfd], [main], [], AC_MSG_ERROR([The bfd library is missing]))
+AC_CHECK_LIB([dl], [dlopen], [], AC_MSG_ERROR([libdl is missing]))
+AC_CHECK_LIB([z], [deflate], [], AC_MSG_ERROR([libz is missing]))
+AC_CHECK_LIB([iberty], [objalloc_create], [], AC_MSG_ERROR([libiberty is missing]))
+AC_CHECK_LIB([bfd], [bfd_openr], [], AC_MSG_ERROR([libbfd is missing]))
 
 # Checks for header files.
 AC_CHECK_HEADERS([malloc.h string.h])
