@@ -156,6 +156,8 @@ void GlScope::paintGL() {
 		this->qglColor(this->settings->view.color.screen.markers);
 		
 		for(int marker = 0; marker < MARKER_COUNT; ++marker) {
+			if (!this->settings->scope.horizontal.marker_visible[marker])
+				continue;
 			if(this->vaMarker[marker].size() != 4) {
 				this->vaMarker[marker].resize(2 * 2);
 				this->vaMarker[marker][1] = -DIVS_VOLTAGE;

@@ -115,6 +115,7 @@ DsoWidget::DsoWidget(DsoSettings *settings, DataAnalyzer *dataAnalyzer, QWidget 
 		this->markerSlider->setStep(marker, 0.2);
 		this->markerSlider->setValue(marker, this->settings->scope.horizontal.marker[marker]);
 		this->markerSlider->setVisible(marker, true);
+		this->settings->scope.horizontal.marker_visible[marker] = true;
 	}
 	
 	// The table for the settings
