@@ -101,6 +101,14 @@ void SiSpinBox::fixup(QString &input) const {
 void SiSpinBox::stepBy(int steps) {
 	double stepsSpan = this->steps.last() / this->steps.first();
 	int stepsCount = this->steps.size() - 1;
+	double value = 0;
+
+	// Skip if we are already at a limit or if steps is null
+	if (steps == 0 ||
+	    (steps < 0 && this->value() <= this->minimum()) ||
+	    (steps > 0 && this->value() >= this->maximum())) {
+		return;
+	}
 	
 	if(!this->steppedTo) { // No step done directly before this one, so we need to check where we are
 		// Get how often the steps have to be fully ran through
@@ -121,11 +129,16 @@ void SiSpinBox::stepBy(int steps) {
 			++this->stepId;
 	}
 	
-	this->stepId += steps;
-	int stepsId = this->stepId % stepsCount;
-	if(stepsId < 0)
-		stepsId += stepsCount;
-	double value = pow(stepsSpan, floor((double) this->stepId / stepsCount)) * this->steps[stepsId];
+	int subStep = steps / abs(steps);
+	for (int i = 0; i != steps; i += subStep) {
+		this->stepId += subStep;
+		int stepsId = this->stepId % stepsCount;
+		if(stepsId < 0)
+			stepsId += stepsCount;
+		value = pow(stepsSpan, floor((double) this->stepId / stepsCount)) * this->steps[stepsId];
+		if (value <= this->minimum() || value >= this->maximum())
+			break;
+	}
 	this->setValue(value);
 	value = this->value();
 	this->steppedTo = true;
