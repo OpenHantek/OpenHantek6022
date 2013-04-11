@@ -208,3 +208,7 @@
 * Use std::vector instead of QList
 * Experimental Roll-mode support
 * QThread::msleep is too unprecise, causing problems in Roll-mode
+
+2013-04-11 Oliver Haag  <oliver.haag@gmail.com>
+* Replaced QThread::msleep by QTimer and handler method
+* Hantek::Control sends signals after connecting the device

@@ -30,7 +30,6 @@
 /// \brief Initialize variables.
 DsoControl::DsoControl(QObject *parent) : QThread(parent) {
 	this->sampling = false;
-	this->terminate = false;
 }
 
 /// \brief Start sampling process.
@@ -53,11 +52,10 @@ const QStringList *DsoControl::getSpecialTriggerSources() {
 /// \brief Try to connect to the oscilloscope.
 void DsoControl::connectDevice() {
 	this->sampling = false;
-	this->terminate = false;
 	this->start();
 }
 
 /// \brief Disconnect the oscilloscope.
 void DsoControl::disconnectDevice() {
-	this->terminate = true;
+	this->quit();
 }

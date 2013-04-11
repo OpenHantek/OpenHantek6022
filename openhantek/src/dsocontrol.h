@@ -57,7 +57,6 @@ class DsoControl : public QThread {
 	
 	protected:
 		bool sampling; ///< true, if the oscilloscope is taking samples
-		bool terminate; ///< true, if the thread should be terminated
 		
 		QStringList specialTriggerSources; ///< Names of the special trigger sources
 		
@@ -69,11 +68,11 @@ class DsoControl : public QThread {
 		void statusMessage(const QString &message, int timeout); ///< Status message about the oscilloscope
 		void samplesAvailable(const std::vector<std::vector<double> > *data, double samplerate, bool append, QMutex *mutex); ///< New sample data is available
 		
+		void availableRecordLengthsChanged(const QList<unsigned int> &recordLengths); ///< The available record lengths, empty list for continuous
+		void samplerateLimitsChanged(double minimum, double maximum); ///< The minimum or maximum samplerate has changed
 		void recordLengthChanged(unsigned long duration); ///< The record length has changed
 		void recordTimeChanged(double duration); ///< The record time duration has changed
 		void samplerateChanged(double samplerate); ///< The samplerate has changed
-		void availableRecordLengthsChanged(const QList<unsigned int> &recordLengths); ///< The available record lengths, empty list for continuous
-		void samplerateLimitsChanged(double minimum, double maximum); ///< The minimum or maximum samplerate has changed
 	
 	public slots:
 		virtual void connectDevice();

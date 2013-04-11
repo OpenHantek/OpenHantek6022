@@ -342,10 +342,6 @@ void OpenHantekMainWindow::initializeDevice() {
 	this->dsoControl->setPretriggerPosition(this->settings->scope.trigger.position * this->settings->scope.horizontal.timebase * DIVS_TIME);
 	this->dsoControl->setTriggerSlope(this->settings->scope.trigger.slope);
 	this->dsoControl->setTriggerSource(this->settings->scope.trigger.special, this->settings->scope.trigger.source);
-	
-	// Apply the limits to the dock widgets
-	this->horizontalDock->availableRecordLengthsChanged(*this->dsoControl->getAvailableRecordLengths());
-	this->horizontalDock->samplerateLimitsChanged(this->dsoControl->getMinSamplerate(), this->dsoControl->getMaxSamplerate());
 }
 
 /// \brief Read the settings from an ini file.

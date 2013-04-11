@@ -29,7 +29,7 @@
 
 #include <QList>
 #include <QMutex>
-#include <QTime>
+#include <QTimer>
 
 
 #include "hantek/control.h"
@@ -86,7 +86,7 @@ namespace Hantek {
 			this->settings.voltage[channel].offsetReal = 0.0;
 			this->settings.voltage[channel].used = false;
 		}
-		this->settings.recordLengthId = 0;
+		this->settings.recordLengthId = 1;
 		this->settings.usedChannels = 0;
 		
 		// Special trigger sources
@@ -109,6 +109,15 @@ namespace Hantek {
 		
 		// USB device
 		this->device = new Device(this);
+		
+		// Thread execution timer
+		this->timer = 0;
+		
+		// State of the device
+		this->captureState = CAPTURE_WAITING;
+		this->rollState = 0;
+		this->samplingStarted = false;
+		this->lastTriggerMode = (Dso::TriggerMode) -1;
 		
 		// Sample buffers
 		this->samples.resize(HANTEK_CHANNELS);
@@ -156,260 +165,51 @@ namespace Hantek {
 	
 	/// \brief Handles all USB things until the device gets disconnected.
 	void Control::run() {
-		int errorCode, cycleCounter = 0, startCycle = 0;
+		// Initialize communication thread state
+		this->captureState = CAPTURE_WAITING;
+		this->rollState = 0;
+		this->samplingStarted = false;
+		this->lastTriggerMode = (Dso::TriggerMode) -1;
+		
+		this->cycleCounter = 0;
+		this->startCycle = 0;
+		
+		// Thread execution timer
+		this->timer = new QTimer(this);
+		connect(this->timer, SIGNAL(timeout()), this, SLOT(handler()), Qt::DirectConnection);
+		
+		this->updateInterval();
+		this->timer->start();
 		
 		// The control loop is running until the device is disconnected
-		int captureState = CAPTURE_WAITING;
-		int rollState = 0;
-		bool samplingStarted = false;
-		Dso::TriggerMode lastTriggerMode = (Dso::TriggerMode) -1;
+		exec();
 		
-		while(captureState != LIBUSB_ERROR_NO_DEVICE && !this->terminate) {
-			// Send all pending bulk commands
-			for(int command = 0; command < BULK_COUNT; ++command) {
-				if(!this->commandPending[command])
-					continue;
-				
-#ifdef DEBUG
-				Helper::timestampDebug(QString("Sending bulk command:%1").arg(Helper::hexDump(this->command[command]->data(), this->command[command]->getSize())));
-#endif
-				
-				errorCode = this->device->bulkCommand(this->command[command]);
-				if(errorCode < 0) {
-					qWarning("Sending bulk command %02x failed: %s", command, Helper::libUsbErrorString(errorCode).toLocal8Bit().data());
-					
-					if(errorCode == LIBUSB_ERROR_NO_DEVICE) {
-						captureState = LIBUSB_ERROR_NO_DEVICE;
-						break;
-					}
-				}
-				else
-					this->commandPending[command] = false;
-			}
-			if(captureState == LIBUSB_ERROR_NO_DEVICE)
-				break;
-			
-			// Send all pending control commands
-			for(int control = 0; control < CONTROLINDEX_COUNT; ++control) {
-				if(!this->controlPending[control])
-					continue;
-				
-#ifdef DEBUG
-				Helper::timestampDebug(QString("Sending control command %1:%2").arg(QString::number(this->controlCode[control], 16), Helper::hexDump(this->control[control]->data(), this->control[control]->getSize())));
-#endif
-				
-				errorCode = this->device->controlWrite(this->controlCode[control], this->control[control]->data(), this->control[control]->getSize());
-				if(errorCode < 0) {
-					qWarning("Sending control command %2x failed: %s", this->controlCode[control], Helper::libUsbErrorString(errorCode).toLocal8Bit().data());
-					
-					if(errorCode == LIBUSB_ERROR_NO_DEVICE) {
-						captureState = LIBUSB_ERROR_NO_DEVICE;
-						break;
-					}
-				}
-				else
-					this->controlPending[control] = false;
-			}
-			if(captureState == LIBUSB_ERROR_NO_DEVICE)
-				break;
-			
-			// Check the current oscilloscope state everytime 25% of the time the buffer should be refilled
-			// Not more often than every 10 ms though
-			int cycleTime;
-			if(this->settings.samplerate.limits->recordLengths[this->settings.recordLengthId] == UINT_MAX)
-				cycleTime = qMax((int) ((double) this->device->getPacketSize() / ((this->settings.samplerate.limits == &this->specification.samplerate.multi) ? 1 : HANTEK_CHANNELS) / this->settings.samplerate.current * 250), 1);
-			else
-				cycleTime = qMax((int) ((double) this->settings.samplerate.limits->recordLengths[this->settings.recordLengthId] / this->settings.samplerate.current * 250), 10);
-			this->msleep(cycleTime);
-			
-			if(!this->sampling) {
-				samplingStarted = false;
-				continue;
-			}
-			
-			if(this->settings.samplerate.limits->recordLengths[this->settings.recordLengthId] == UINT_MAX) {
-				// Roll mode
-				captureState = CAPTURE_WAITING;
-				
-				switch(rollState) {
-					case ROLL_STARTSAMPLING:
-						// Don't iterate through roll mode steps when stopped
-						if(!this->sampling)
-							continue;
-						
-						// Sampling hasn't started, update the expected sample count
-						this->previousSampleCount = this->getSampleCount();
-						
-						errorCode = this->device->bulkCommand(this->command[BULK_STARTSAMPLING]);
-						if(errorCode < 0) {
-							if(errorCode == LIBUSB_ERROR_NO_DEVICE)
-								captureState = LIBUSB_ERROR_NO_DEVICE;
-							break;
-						}
-#ifdef DEBUG
-						Helper::timestampDebug("Starting to capture");
-#endif
-						
-						samplingStarted = true;
-						
-						break;
-					
-					case ROLL_ENABLETRIGGER:
-						errorCode = this->device->bulkCommand(this->command[BULK_ENABLETRIGGER]);
-						if(errorCode < 0) {
-							if(errorCode == LIBUSB_ERROR_NO_DEVICE)
-								captureState = LIBUSB_ERROR_NO_DEVICE;
-							break;
-						}
-#ifdef DEBUG
-						Helper::timestampDebug("Enabling trigger");
-#endif
-						
-						break;
-					
-					case ROLL_FORCETRIGGER:
-						errorCode = this->device->bulkCommand(this->command[BULK_FORCETRIGGER]);
-						if(errorCode < 0) {
-							if(errorCode == LIBUSB_ERROR_NO_DEVICE)
-								captureState = LIBUSB_ERROR_NO_DEVICE;
-							break;
-						}
-#ifdef DEBUG
-						Helper::timestampDebug("Forcing trigger");
-#endif
-						
-						break;
-					
-					case ROLL_GETDATA:
-						// Get data and process it, if we're still sampling
-						errorCode = this->getSamples(samplingStarted);
-						if(errorCode < 0)
-							qWarning("Getting sample data failed: %s", Helper::libUsbErrorString(errorCode).toLocal8Bit().data());
-	#ifdef DEBUG
-						else
-							Helper::timestampDebug(QString("Received %1 B of sampling data").arg(errorCode));
-	#endif
-						
-						// Check if we're in single trigger mode
-						if(this->settings.trigger.mode == Dso::TRIGGERMODE_SINGLE && samplingStarted)
-							this->stopSampling();
-						
-						// Sampling completed, restart it when necessary
-						samplingStarted = false;
-						
-						break;
-					
-					default:
-#ifdef DEBUG
-						Helper::timestampDebug("Roll mode state unknown");
-#endif
-						break;
-				}
-				
-				// Go to next state, or restart if last state was reached
-				rollState = (rollState + 1) % ROLL_COUNT;
-			}
-			else {
-				// Standard mode
-				rollState = ROLL_STARTSAMPLING;
-				
-#ifdef DEBUG
-				int lastCaptureState = captureState;
-#endif
-				captureState = this->getCaptureState();
-				if(captureState < 0)
-					qWarning("Getting capture state failed: %s", Helper::libUsbErrorString(captureState).toLocal8Bit().data());
-#ifdef DEBUG
-				else if(captureState != lastCaptureState)
-					Helper::timestampDebug(QString("Capture state changed to %1").arg(captureState));
-#endif
-				switch(captureState) {
-					case CAPTURE_READY:
-					case CAPTURE_READY2250:
-					case CAPTURE_READY5200:
-						// Get data and process it, if we're still sampling
-						errorCode = this->getSamples(samplingStarted);
-						if(errorCode < 0)
-							qWarning("Getting sample data failed: %s", Helper::libUsbErrorString(errorCode).toLocal8Bit().data());
-#ifdef DEBUG
-						else
-							Helper::timestampDebug(QString("Received %1 B of sampling data").arg(errorCode));
-#endif
-						
-						// Check if we're in single trigger mode
-						if(this->settings.trigger.mode == Dso::TRIGGERMODE_SINGLE && samplingStarted)
-							this->stopSampling();
-						
-						// Sampling completed, restart it when necessary
-						samplingStarted = false;
-						
-						// Start next capture if necessary by leaving out the break statement
-						if(!this->sampling)
-							break;
-					
-					case CAPTURE_WAITING:
-						// Sampling hasn't started, update the expected sample count
-						this->previousSampleCount = this->getSampleCount();
-						
-						if(samplingStarted && lastTriggerMode == this->settings.trigger.mode) {
-							++cycleCounter;
-							
-							if(cycleCounter == startCycle && this->settings.samplerate.limits->recordLengths[this->settings.recordLengthId] != UINT_MAX) {
-								// Buffer refilled completely since start of sampling, enable the trigger now
-								errorCode = this->device->bulkCommand(this->command[BULK_ENABLETRIGGER]);
-								if(errorCode < 0) {
-									if(errorCode == LIBUSB_ERROR_NO_DEVICE)
-										captureState = LIBUSB_ERROR_NO_DEVICE;
-									break;
-								}
-#ifdef DEBUG
-								Helper::timestampDebug("Enabling trigger");
-#endif
-							}
-							else if(cycleCounter >= 8 + startCycle && this->settings.trigger.mode == Dso::TRIGGERMODE_AUTO) {
-								// Force triggering
-								errorCode = this->device->bulkCommand(this->command[BULK_FORCETRIGGER]);
-								if(errorCode < 0) {
-									if(errorCode == LIBUSB_ERROR_NO_DEVICE)
-										captureState = LIBUSB_ERROR_NO_DEVICE;
-									break;
-								}
-#ifdef DEBUG
-								Helper::timestampDebug("Forcing trigger");
-#endif
-							}
-							
-							if(cycleCounter < 20 || cycleCounter < 4000 / cycleTime)
-								break;
-						}
-						
-						// Start capturing
-						errorCode = this->device->bulkCommand(this->command[BULK_STARTSAMPLING]);
-						if(errorCode < 0) {
-							if(errorCode == LIBUSB_ERROR_NO_DEVICE)
-								captureState = LIBUSB_ERROR_NO_DEVICE;
-							break;
-						}
-#ifdef DEBUG
-						Helper::timestampDebug("Starting to capture");
-#endif
-						
-						samplingStarted = true;
-						cycleCounter = 0;
-						startCycle = this->settings.trigger.position * 1000 / cycleTime + 1;
-						lastTriggerMode = this->settings.trigger.mode;
-						break;
-					
-					case CAPTURE_SAMPLING:
-						break;
-					default:
-						break;
-				}
-			}
-		}
-		
+		this->timer->stop();
 		this->device->disconnect();
+		
+		delete this->timer;
+		this->timer = 0;
+		
 		emit statusMessage(tr("The device has been disconnected"), 0);
+	}
+	
+	/// \brief Updates the interval of the periodic thread timer.
+	void Control::updateInterval() {
+		if(!this->timer)
+			return;
+		
+		int cycleTime;
+		
+		// Check the current oscilloscope state everytime 25% of the time the buffer should be refilled
+		if(this->settings.samplerate.limits->recordLengths[this->settings.recordLengthId] == UINT_MAX)
+			cycleTime = (int) ((double) this->device->getPacketSize() / ((this->settings.samplerate.limits == &this->specification.samplerate.multi) ? 1 : HANTEK_CHANNELS) / this->settings.samplerate.current * 250);
+		else
+			cycleTime = (int) ((double) this->settings.samplerate.limits->recordLengths[this->settings.recordLengthId] / this->settings.samplerate.current * 250);
+		
+		// Not more often than every 10 ms though but at least once every second
+		cycleTime = qBound(10, cycleTime, 1000);
+		
+		this->timer->setInterval(cycleTime);
 	}
 	
 	/// \brief Calculates the trigger point from the CommandGetCaptureState data.
@@ -753,14 +553,16 @@ namespace Hantek {
 		}
 		
 		// Check if the divider has changed and adapt samplerate limits accordingly
-		if(this->specification.bufferDividers[index] != this->specification.bufferDividers[this->settings.recordLengthId]) {
+		bool bDividerChanged = this->specification.bufferDividers[index] != this->specification.bufferDividers[this->settings.recordLengthId];
+		
+		this->settings.recordLengthId = index;
+		
+		if(bDividerChanged) {
 			this->updateSamplerateLimits();
 		
 			// Samplerate dividers changed, recalculate it
 			this->restoreTargets();
 		}
-		
-		this->settings.recordLengthId = index;
 		
 		return this->settings.samplerate.limits->recordLengths[index];
 	}
@@ -1098,9 +900,6 @@ namespace Hantek {
 				this->specification.sampleSize = 8;
 				break;
 		}
-		this->settings.recordLengthId = 1;
-		this->settings.samplerate.limits = &(this->specification.samplerate.single);
-		this->settings.samplerate.downsampler = 1;
 		this->previousSampleCount = 0;
 		
 		// Get channel level data
@@ -1110,6 +909,14 @@ namespace Hantek {
 			emit statusMessage(tr("Couldn't get channel level data from oscilloscope"), 0);
 			return;
 		}
+		
+		// Emit signals for initial settings
+		emit availableRecordLengthsChanged(this->settings.samplerate.limits->recordLengths);
+		updateSamplerateLimits();
+		emit recordLengthChanged(this->settings.samplerate.limits->recordLengths[this->settings.recordLengthId]);
+		if(this->settings.samplerate.limits->recordLengths[this->settings.recordLengthId] != UINT_MAX)
+			emit recordTimeChanged((double) this->settings.samplerate.limits->recordLengths[this->settings.recordLengthId] / this->settings.samplerate.current);
+		emit samplerateChanged(this->settings.samplerate.current);
 		
 		DsoControl::connectDevice();
 	}
@@ -1620,4 +1427,252 @@ namespace Hantek {
 		return Dso::ERROR_UNSUPPORTED;
 	}
 #endif
+	
+	/// \brief Called periodically in the control thread by a timer.
+	void Control::handler() {
+		int errorCode = 0;
+		
+		// Send all pending bulk commands
+		for(int command = 0; command < BULK_COUNT; ++command) {
+			if(!this->commandPending[command])
+				continue;
+			
+#ifdef DEBUG
+			Helper::timestampDebug(QString("Sending bulk command:%1").arg(Helper::hexDump(this->command[command]->data(), this->command[command]->getSize())));
+#endif
+			
+			errorCode = this->device->bulkCommand(this->command[command]);
+			if(errorCode < 0) {
+				qWarning("Sending bulk command %02x failed: %s", command, Helper::libUsbErrorString(errorCode).toLocal8Bit().data());
+				
+				if(errorCode == LIBUSB_ERROR_NO_DEVICE) {
+					this->quit();
+					return;
+				}
+			}
+			else
+				this->commandPending[command] = false;
+		}
+		
+		// Send all pending control commands
+		for(int control = 0; control < CONTROLINDEX_COUNT; ++control) {
+			if(!this->controlPending[control])
+				continue;
+			
+#ifdef DEBUG
+			Helper::timestampDebug(QString("Sending control command %1:%2").arg(QString::number(this->controlCode[control], 16), Helper::hexDump(this->control[control]->data(), this->control[control]->getSize())));
+#endif
+			
+			errorCode = this->device->controlWrite(this->controlCode[control], this->control[control]->data(), this->control[control]->getSize());
+			if(errorCode < 0) {
+				qWarning("Sending control command %2x failed: %s", this->controlCode[control], Helper::libUsbErrorString(errorCode).toLocal8Bit().data());
+				
+				if(errorCode == LIBUSB_ERROR_NO_DEVICE) {
+					this->quit();
+					return;
+				}
+			}
+			else
+				this->controlPending[control] = false;
+		}
+		
+		// State machine for the device communication
+		if(this->settings.samplerate.limits->recordLengths[this->settings.recordLengthId] == UINT_MAX) {
+			// Roll mode
+			this->captureState = CAPTURE_WAITING;
+			bool toNextState = true;
+			
+			switch(this->rollState) {
+				case ROLL_STARTSAMPLING:
+					// Don't iterate through roll mode steps when stopped
+					if(!this->sampling) {
+						toNextState = false;
+						break;
+					}
+					
+					// Sampling hasn't started, update the expected sample count
+					this->previousSampleCount = this->getSampleCount();
+					
+					errorCode = this->device->bulkCommand(this->command[BULK_STARTSAMPLING]);
+					if(errorCode < 0) {
+						if(errorCode == LIBUSB_ERROR_NO_DEVICE) {
+							this->quit();
+							return;
+						}
+						break;
+					}
+#ifdef DEBUG
+					Helper::timestampDebug("Starting to capture");
+#endif
+					
+					this->samplingStarted = true;
+					
+					break;
+				
+				case ROLL_ENABLETRIGGER:
+					errorCode = this->device->bulkCommand(this->command[BULK_ENABLETRIGGER]);
+					if(errorCode < 0) {
+						if(errorCode == LIBUSB_ERROR_NO_DEVICE) {
+							this->quit();
+							return;
+						}
+						break;
+					}
+#ifdef DEBUG
+					Helper::timestampDebug("Enabling trigger");
+#endif
+					
+					break;
+				
+				case ROLL_FORCETRIGGER:
+					errorCode = this->device->bulkCommand(this->command[BULK_FORCETRIGGER]);
+					if(errorCode < 0) {
+						if(errorCode == LIBUSB_ERROR_NO_DEVICE) {
+							this->quit();
+							return;
+						}
+						break;
+					}
+#ifdef DEBUG
+					Helper::timestampDebug("Forcing trigger");
+#endif
+					
+					break;
+				
+				case ROLL_GETDATA:
+					// Get data and process it, if we're still sampling
+					errorCode = this->getSamples(this->samplingStarted);
+					if(errorCode < 0)
+						qWarning("Getting sample data failed: %s", Helper::libUsbErrorString(errorCode).toLocal8Bit().data());
+#ifdef DEBUG
+					else
+						Helper::timestampDebug(QString("Received %1 B of sampling data").arg(errorCode));
+#endif
+					
+					// Check if we're in single trigger mode
+					if(this->settings.trigger.mode == Dso::TRIGGERMODE_SINGLE && this->samplingStarted)
+						this->stopSampling();
+					
+					// Sampling completed, restart it when necessary
+					this->samplingStarted = false;
+					
+					break;
+				
+				default:
+#ifdef DEBUG
+					Helper::timestampDebug("Roll mode state unknown");
+#endif
+					break;
+			}
+			
+			// Go to next state, or restart if last state was reached
+			if(toNextState)
+				this->rollState = (this->rollState + 1) % ROLL_COUNT;
+		}
+		else {
+			// Standard mode
+			this->rollState = ROLL_STARTSAMPLING;
+			
+#ifdef DEBUG
+			int lastCaptureState = this->captureState;
+#endif
+			this->captureState = this->getCaptureState();
+			if(this->captureState < 0)
+				qWarning("Getting capture state failed: %s", Helper::libUsbErrorString(this->captureState).toLocal8Bit().data());
+#ifdef DEBUG
+			else if(this->captureState != lastCaptureState)
+				Helper::timestampDebug(QString("Capture state changed to %1").arg(this->captureState));
+#endif
+			switch(this->captureState) {
+				case CAPTURE_READY:
+				case CAPTURE_READY2250:
+				case CAPTURE_READY5200:
+					// Get data and process it, if we're still sampling
+					errorCode = this->getSamples(this->samplingStarted);
+					if(errorCode < 0)
+						qWarning("Getting sample data failed: %s", Helper::libUsbErrorString(errorCode).toLocal8Bit().data());
+#ifdef DEBUG
+					else
+						Helper::timestampDebug(QString("Received %1 B of sampling data").arg(errorCode));
+#endif
+					
+					// Check if we're in single trigger mode
+					if(this->settings.trigger.mode == Dso::TRIGGERMODE_SINGLE && this->samplingStarted)
+						this->stopSampling();
+					
+					// Sampling completed, restart it when necessary
+					this->samplingStarted = false;
+					
+					// Start next capture if necessary by leaving out the break statement
+					if(!this->sampling)
+						break;
+				
+				case CAPTURE_WAITING:
+					// Sampling hasn't started, update the expected sample count
+					this->previousSampleCount = this->getSampleCount();
+					
+					if(this->samplingStarted && this->lastTriggerMode == this->settings.trigger.mode) {
+						++this->cycleCounter;
+						
+						if(this->cycleCounter == this->startCycle && this->settings.samplerate.limits->recordLengths[this->settings.recordLengthId] != UINT_MAX) {
+							// Buffer refilled completely since start of sampling, enable the trigger now
+							errorCode = this->device->bulkCommand(this->command[BULK_ENABLETRIGGER]);
+							if(errorCode < 0) {
+								if(errorCode == LIBUSB_ERROR_NO_DEVICE) {
+									this->quit();
+									return;
+								}
+								break;
+							}
+#ifdef DEBUG
+							Helper::timestampDebug("Enabling trigger");
+#endif
+						}
+						else if(this->cycleCounter >= 8 + this->startCycle && this->settings.trigger.mode == Dso::TRIGGERMODE_AUTO) {
+							// Force triggering
+							errorCode = this->device->bulkCommand(this->command[BULK_FORCETRIGGER]);
+							if(errorCode < 0) {
+								if(errorCode == LIBUSB_ERROR_NO_DEVICE) {
+									this->quit();
+									return;
+								}
+								break;
+							}
+#ifdef DEBUG
+							Helper::timestampDebug("Forcing trigger");
+#endif
+						}
+						
+						if(this->cycleCounter < 20 || this->cycleCounter < 4000 / this->timer->interval())
+							break;
+					}
+					
+					// Start capturing
+					errorCode = this->device->bulkCommand(this->command[BULK_STARTSAMPLING]);
+					if(errorCode < 0) {
+						if(errorCode == LIBUSB_ERROR_NO_DEVICE) {
+							this->quit();
+							return;
+						}
+						break;
+					}
+#ifdef DEBUG
+					Helper::timestampDebug("Starting to capture");
+#endif
+					
+					this->samplingStarted = true;
+					this->cycleCounter = 0;
+					this->startCycle = this->settings.trigger.position * 1000 / this->timer->interval() + 1;
+					this->lastTriggerMode = this->settings.trigger.mode;
+					break;
+				
+				case CAPTURE_SAMPLING:
+					break;
+				default:
+					break;
+			}
+		}
+		
+		this->updateInterval();
+	}
 }

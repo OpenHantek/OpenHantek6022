@@ -37,6 +37,9 @@
 #include "hantek/types.h"
 
 
+class QTimer;
+
+
 namespace Hantek {
 	class Device;
 	
@@ -210,6 +213,7 @@ namespace Hantek {
 		
 		protected:
 			void run();
+			void updateInterval();
 			
 			unsigned int calculateTriggerPoint(unsigned int value);
 			int getCaptureState();
@@ -223,6 +227,7 @@ namespace Hantek {
 			
 			// Communication with device
 			Device *device; ///< The USB device for the oscilloscope
+			QTimer *timer; ///< Timer for periodic communication thread
 			
 			Helper::DataArray<unsigned char> *command[BULK_COUNT]; ///< Pointers to bulk commands, ready to be transmitted
 			bool commandPending[BULK_COUNT]; ///< true, when the command should be executed
@@ -238,6 +243,14 @@ namespace Hantek {
 			std::vector<std::vector<double> > samples; ///< Sample data vectors sent to the data analyzer
 			unsigned int previousSampleCount; ///< The expected total number of samples at the last check before sampling started
 			QMutex samplesMutex; ///< Mutex for the sample data
+			
+			// State of the communication thread
+			int captureState;
+			int rollState;
+			bool samplingStarted;
+			Dso::TriggerMode lastTriggerMode;
+			int cycleCounter;
+			int startCycle;
 		
 		public slots:
 			virtual void connectDevice();
@@ -260,6 +273,9 @@ namespace Hantek {
 #ifdef DEBUG
 			int stringCommand(QString command);
 #endif
+			
+		protected slots:
+			void handler();
 	};
 }
 
