@@ -1298,6 +1298,11 @@ namespace Hantek {
 		this->settings.trigger.slope = slope;
 		return Dso::ERROR_NONE;
 	}
+
+	int Control::forceTrigger() {
+		this->commandPending[BULK_FORCETRIGGER] = true;
+		return 0;
+	}
 	
 	/// \brief Set the trigger position.
 	/// \param position The new trigger position (in s).

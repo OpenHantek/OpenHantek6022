@@ -90,6 +90,7 @@ class DsoControl : public QThread {
 		virtual double setTriggerLevel(unsigned int channel, double level) = 0; ///< Set the trigger level for a channel
 		virtual int setTriggerSlope(Dso::Slope slope) = 0; ///< Set the slope that causes triggering
 		virtual double setPretriggerPosition(double position) = 0; ///< Set the pretrigger position (0.0 = left, 1.0 = right side)
+		virtual int forceTrigger() = 0;
 		
 		virtual int setChannelUsed(unsigned int channel, bool used) = 0; ///< Enable/disable a channel
 		virtual int setCoupling(unsigned int channel, Dso::Coupling coupling) = 0; ///< Set the coupling for a channel

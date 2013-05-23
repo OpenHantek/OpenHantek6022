@@ -269,6 +269,7 @@ namespace Hantek {
 			double setTriggerLevel(unsigned int channel, double level);
 			int setTriggerSlope(Dso::Slope slope);
 			double setPretriggerPosition(double position);
+			int forceTrigger();
 			
 #ifdef DEBUG
 			int stringCommand(QString command);
