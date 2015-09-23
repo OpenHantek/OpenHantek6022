@@ -445,7 +445,6 @@ bool DsoWidget::exportAs() {
 	QStringList filters;
 	filters
 			<< tr("Portable Document Format (*.pdf)")
-			<< tr("PostScript (*.ps)")
 			<< tr("Image (*.png *.xpm *.jpg)")
 			<< tr("Comma-Separated Values (*.csv)");
 	
@@ -457,7 +456,7 @@ bool DsoWidget::exportAs() {
 	
 	Exporter exporter(this->settings, this->dataAnalyzer, static_cast<QWidget *>(this->parent()));
 	exporter.setFilename(fileDialog.selectedFiles().first());
-	exporter.setFormat((ExportFormat) (EXPORT_FORMAT_PDF + filters.indexOf(fileDialog.selectedFilter())));
+    exporter.setFormat((ExportFormat) (EXPORT_FORMAT_PDF + filters.indexOf(fileDialog.selectedNameFilter())));
 	
 	return exporter.doExport();
 }

@@ -17,6 +17,7 @@ CONFIG += \
 	warn_on \
 	qt
 QT += opengl
+QT += printsupport
 LIBS += -lfftw3
 
 # Source files
