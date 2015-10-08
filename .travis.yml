@@ -1,10 +1,22 @@
 language: cpp
-
 compiler: gcc
+sudo: required
+services:
+    - docker
+
+addons:
+  apt:
+    packages:
+    - cmake
+    - qttools5-dev
+    - libusb-1.0-0-dev
+    - libfftw3-dev
+    - libqt5qml5
+    - doxygen
 
 before_install:
-    - sudo apt-get update -qq
-    - sudo apt-get install -qq cmake qtbase5-dev libqt5gui5 libqt5widgets5 qt5-qmake qtbase5-dev-tools libfftw3-dev libusb-1.0-0-dev
+  - sudo apt-get update -qq
+  - sudo apt-get install -qq qt5-default qttools5-dev-tools
 
 before_script:
     - cd openhantek
