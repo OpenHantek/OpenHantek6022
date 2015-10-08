@@ -1,6 +1,8 @@
 # OpenHantek
 OpenHantek is a free software for Hantek (Voltcraft/Darkwire/Protek/Acetech) USB digital storage oscilloscopes based on HantekDSO and has started as an alternative to the official Hantek DSO software for Linux users.
 
+<img alt="Image of main window" src="doc/screenshot_mainwindow.png">
+
 Tested models so far:
 * DSO-2090
 
