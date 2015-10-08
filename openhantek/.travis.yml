@@ -1,0 +1,16 @@
+language: cpp
+
+compiler: gcc
+
+before_install:
+    - sudo apt-get update -qq
+    - sudo apt-get install -qq cmake qtbase5-dev libqt5gui5 libqt5widgets5 qt5-qmake qtbase5-dev-tools libfftw3-dev libusb-1.0-0-dev
+
+before_script:
+    - qmake
+
+script: make
+
+notifications:
+    on_success: change
+    on_failure: always
