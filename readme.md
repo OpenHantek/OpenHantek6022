@@ -12,15 +12,16 @@ Supported operating systems:
 
 ## Building OpenHantek from source
 You need the following packages, to build OpenHantek from source:
+* CMake 2.8.12+
 * Qt 5+
 * FFTW 3+
 * libusb 1.x
 
 For debian based systems (Ubuntu, Mint) install named requirements like this:
-> apt-get install libqt4-dev libfftw3-dev
+> apt-get install cmake libqt5-dev libfftw3-dev
 
 For rpm based distributions (Fedora) use this command:
-> dnf install qt5-qtbase-gui 
+> dnf install cmake qt5-qtbase-gui qt5-qttools-devel qt5-qttranslations fftw-devel libusbx-devel
 
 After you've installed the requirements run the following commands inside the directory of this package:
 > qmake <br>
@@ -31,7 +32,7 @@ You can specify a prefix when running qmake:
 > qmake PREFIX=/usr
 
 ## Firmware
-Your DSO does not store its firmware permanently and have to be send to the device each time it is connected. Because of copyright reasons we cannot ship the firmware with this software. You have to extract the firmware using dsoextractfw and add some rules to udev:
+Your DSO does not store its firmware permanently and have to be send to the device each time it is connected. Because of copyright reasons we cannot ship the firmware with this software. You have to extract the firmware using openhantek-extractfw and add some rules to udev.
 
 ### Getting the Windows drivers
 Before using OpenHantek you have to extract the firmware from the official Windows drivers. You can get them from the <a href="http://www.hantek.ru/download.html">Hantek website</a> or automatically download them with the script _fwget.sh_.
