@@ -146,7 +146,7 @@ void DsoSettings::setChannelCount(unsigned int channels) {
 			newVoltage.name = QApplication::tr("CH%1").arg(channel + 1);
 			newVoltage.offset = 0.0;
 			newVoltage.trigger = 0.0;
-			newVoltage.used = (channel == 0);
+			newVoltage.used = false;
 			this->scope.voltage.insert(channel, newVoltage);
 		}
 		
