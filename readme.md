@@ -40,6 +40,8 @@ Before using OpenHantek you have to extract the firmware from the official Windo
 
 ### The firmware extraction tool
 Install libbfd (Ubuntu) / binutils (Fedora) and build the tool by typing:
+> automake --add-missing
+> ./configure
 > make
 
 After building it, you can just run the fwget.sh script inside the openhantek-extractfw directory:
@@ -49,6 +51,7 @@ You can also do it manually by placing the DSO*1.SYS file into the same director
 > ./openhantek-extractfw &lt;driver file&gt;
 
 This should create two .hex files that should be placed into /usr/local/share/hantek/.
+Please provide us with your extracted firmware if it works, we will upload it to the repository.
 
 ### Installing the firmware
 * Copy the 90-hantek.rules file to /etc/udev/rules.d/.
