@@ -33,28 +33,10 @@ You can specify a prefix when running qmake:
 > qmake PREFIX=/usr
 
 ## Firmware
-Your DSO does not store its firmware permanently and have to be send to the device each time it is connected. Because of copyright reasons we cannot ship the firmware with this software. You have to extract the firmware using openhantek-extractfw and add some rules to udev.
+Your DSO does not store its firmware permanently -- the firmware has to be sent to the device each time it is connected. The `firmware` directory of this project contains the binary firmware extracted from Hantek's Windows drivers, and a udev rule to upload the firmware to the device automatically each time it is plugged in.
 
-### Getting the Windows drivers
-Before using OpenHantek you have to extract the firmware from the official Windows drivers. You can get them from the <a href="http://www.hantek.ru/download.html">Hantek website</a> or automatically download them with the script _fwget.sh_.
-
-### The firmware extraction tool
-Install libbfd (Ubuntu) / binutils (Fedora) and build the tool by typing:
-> automake --add-missing
-> ./configure
-> make
-
-After building it, you can just run the fwget.sh script inside the openhantek-extractfw directory:
-> sudo ./fwget.sh /usr/local/share/hantek/
-
-You can also do it manually by placing the DSO*1.SYS file into the same directory and running the built binary:
-> ./openhantek-extractfw &lt;driver file&gt;
-
-This should create two .hex files that should be placed into /usr/local/share/hantek/.
-Please provide us with your extracted firmware if it works, we will upload it to the repository.
-
-### Installing the firmware
-* Copy the 90-hantek.rules file to /etc/udev/rules.d/.
+* Install the `firmware/*.hex` files into `/usr/local/share/hantek/`.
+* Install the `firmware/90-hantek.rules` file into `/etc/udev/rules.d/`.
 * install fxload (fxload is a program which downloads firmware to USB  devices  based  on
        AnchorChips  EZ-USB, Cypress EZ-USB FX, or Cypress EZ-USB FX2 microcontrollers.)
 * Add your current user to the **plugdev** group.
