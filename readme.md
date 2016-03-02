@@ -24,13 +24,15 @@ For debian based systems (Ubuntu, Mint) install named requirements like this:
 For rpm based distributions (Fedora) use this command:
 > dnf install cmake qt5-qtbase-gui qt5-qttools-devel qt5-qttranslations fftw-devel libusbx-devel binutils-devel libusb-1.0-0-devel
 
-After you've installed the requirements run the following commands inside the directory of this package:
-> qmake <br>
-> make <br>
+After you've installed the requirements either run **cmake-gui** or run the following commands inside the directory of this package:
+> mkdir build <br>
+> cd build <br>
+> cmake ../
+> make -j4 (for 4 concurrent compile jobs)
 > make install (optional, for installing only)
 
-You can specify a prefix when running qmake:
-> qmake PREFIX=/usr
+You can specify an install prefix when running cmake:
+> cmake -DCMAKE_INSTALL_PREFIX=/usr
 
 ## Firmware
 Your DSO does not store its firmware permanently -- the firmware has to be sent to the device each time it is connected. The `firmware` directory of this project contains the binary firmware extracted from Hantek's Windows drivers, and a udev rule to upload the firmware to the device automatically each time it is plugged in.
