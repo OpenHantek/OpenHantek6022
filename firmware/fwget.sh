@@ -14,7 +14,7 @@ done
 cd ..
 
 for f in tmp/**/*.sys; do
-    ./openhantek-extractfw $f
+    extractfw/extractfw $f
 done
 mv tmp/**/*.hex .
 rm -rf tmp
