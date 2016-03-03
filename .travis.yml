@@ -44,11 +44,11 @@ matrix:
       env: CMAKE_CXX_COMPILER=clang++-3.6
       os: linux
     - compiler: clang
-      env: CMAKE_CXX_COMPILER=/usr/bin/clang++ CMAKE_PREFIX_PATH=$(brew --prefix qt5)
+      env: CMAKE_CXX_COMPILER=/usr/bin/clang++
       os: osx
 
 before_install:
-    - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; brew install libusb fftw qt5; fi
+    - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; brew install libusb fftw qt5; export CMAKE_PREFIX_PATH=$(brew --prefix qt5); fi
 
 before_script:
     - mkdir build
@@ -66,6 +66,7 @@ notifications:
   on_failure: always
 
 deploy:
+  skip_cleanup: true
   provider: releases
   api_key:
     secure: kIX221nPUe3OM5CNeEJ1iyRg2FFpmlL7c+uxJS11+HBRcFTGCIArHoxMIUb1u289+Co0jp42BVxhpo9PaKhHhzy3iVsKM1xOty3GAr9/1KzVnvJY0dOWqO2cYks4w24WF50ii3kUtYGVKpJrsHPT8UeI2z+taYr1jBmKkoYuoWDG+3CAZytLAsOVDRPylhzSD8B+OrCHIbN1npcitEpFUMJWgvDVi6ZKsz8o6obs/NhwFEc9TBDhS7CeIoAcNt7S0WdDM4ZyHyOeYShWxL0DlZBuhvS7SVZbxy/DS/cTAyoaWqgFLQokmhsKkVIytnq40kC9kGUZvoSpfwtfnA55eElFP5sNbnjQEUaDgq8Doi+aTTc7WRmhBCJbmz6RlqPAECQzx67JuTukV7F6Ds6B34+9naV3dAhj7dnMAoIvY1UK4NhvT+w3aQNR3B93TLZfYHvAmVoZcMGEY/EqLbHdMdJ7E9YGEQQUXW/753EmulCu9/O/gEs+8DlNc1ejFUGJhQmTyJBOLupJpFanC+6mTcbSGlJLwAHxL5yuJ0x5xLzZvJ9jTJI1QFu8ZztFw6gPCBpxPVle6E/Ht3CIByoK5RtKzhJBxgYDG+k0Yaqgbp1wh1ET56xEj8GxQlTKW43Mwbt4aXAarZ11C3erab5lCQyubIUXuq0TWxJLDTfOC6I=
@@ -74,3 +75,6 @@ deploy:
     - packages/OpenHantek-Release.zip
   on:
     repo: OpenHantek/openhantek
+    branch: master
+    condition: "$CMAKE_CXX_COMPILER = clang++-3.6"
+#    tags: true
