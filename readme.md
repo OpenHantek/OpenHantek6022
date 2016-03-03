@@ -1,21 +1,20 @@
 # OpenHantek [![Build Status](https://travis-ci.org/OpenHantek/openhantek.svg)](https://travis-ci.org/OpenHantek/openhantek)
-OpenHantek is a free software for Hantek (Voltcraft/Darkwire/Protek/Acetech) USB digital storage oscilloscopes based on HantekDSO and has started as an alternative to the official Hantek DSO software for Linux users.
-
-<img alt="Image of main window" src="doc/screenshot_mainwindow.png">
-
-Tested models so far:
-* DSO-2090
+OpenHantek is a free software for Hantek (Voltcraft/Darkwire/Protek/Acetech) USB digital storage oscilloscopes based on HantekDSO and has started as an alternative to the official Hantek DSO software.
 
 Supported operating systems:
 * Linux
-* MacOSX (The lack of udev requires you to load the firmware by hand for now)
+* MacOSX
+* Windows (You need to download the [WinUSB driver files](http://libusb-winusb-wip.googlecode.com/files/winusb%20driver.zip) and customize the inf file for your device yourself at the moment)
+
+<img alt="Image of main window" width="350" src="doc/screenshot_mainwindow.png">
+<img alt="Image of main window" width="350" src="doc/screenshot_mainwindow_win.png">
 
 ## Building OpenHantek from source
 You need the following packages, to build OpenHantek from source:
 * CMake 3.0+
 * Qt 5.3+
-* FFTW 3+
-* libusb 1.x
+* FFTW 3+ (prebuild files will be downloaded on windows)
+* libusb 1.x (prebuild files will be downloaded on windows)
 * binutils-dev
 
 For debian based systems (Ubuntu, Mint) install named requirements like this:
@@ -23,6 +22,10 @@ For debian based systems (Ubuntu, Mint) install named requirements like this:
 
 For rpm based distributions (Fedora) use this command:
 > dnf install cmake qt5-qtbase-gui qt5-qttools-devel qt5-qttranslations fftw-devel libusbx-devel binutils-devel libusb-1.0-0-devel
+
+For MacOSX use homebrew
+> brew update
+> brew install libusb fftw qt5;
 
 After you've installed the requirements either run **cmake-gui** or run the following commands inside the directory of this package:
 > mkdir build <br>
