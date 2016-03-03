@@ -38,12 +38,13 @@ int main(int argc, char *argv[]) {
 	QApplication openHantekApplication(argc, argv);
 
 	QTranslator qtTranslator;
-	qtTranslator.load("qt_" + QLocale::system().name(), QLibraryInfo::location(QLibraryInfo::TranslationsPath));
-	openHantekApplication.installTranslator(&qtTranslator);
+	if (qtTranslator.load("qt_" + QLocale::system().name(), QLibraryInfo::location(QLibraryInfo::TranslationsPath)))
+		openHantekApplication.installTranslator(&qtTranslator);
 
 	QTranslator openHantekTranslator;
-	openHantekTranslator.load("openhantek_" + QLocale::system().name(), QMAKE_TRANSLATIONS_PATH);
-	openHantekApplication.installTranslator(&openHantekTranslator);
+	if (openHantekTranslator.load(QLocale(), QLatin1String("openhantek"), QLatin1String("_"), QLatin1String(":/translations")))
+		openHantekApplication.installTranslator(&openHantekTranslator);
+	
 
 	OpenHantekMainWindow *openHantekMainWindow = new OpenHantekMainWindow();
 	openHantekMainWindow->show();

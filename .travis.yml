@@ -44,7 +44,7 @@ matrix:
       env: CMAKE_CXX_COMPILER=clang++-3.6
       os: linux
     - compiler: clang
-      env: CMAKE_CXX_COMPILER=clang++-3.6
+      env: CMAKE_CXX_COMPILER=/usr/bin/clang++
       os: osx
 
 before_install:
