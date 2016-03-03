@@ -28,13 +28,7 @@
 #include <QLocale>
 #include <QStringList>
 
-#if LIBUSB_VERSION == 0
-#include <usb.h>
-#define libusb_device usb_device
-#else
 #include <libusb-1.0/libusb.h>
-#endif
-
 
 #include "helper.h"
 

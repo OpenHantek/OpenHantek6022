@@ -26,13 +26,14 @@
 #include <QLibraryInfo>
 #include <QLocale>
 #include <QTranslator>
-
+#include <iostream>
 
 #include "openhantek.h"
 
 
 /// \brief Initialize resources and translations and show the main window.
 int main(int argc, char *argv[]) {
+    std::cout << "Version " << VERSION << std::endl;
 	Q_INIT_RESOURCE(application);
 
 	QApplication openHantekApplication(argc, argv);

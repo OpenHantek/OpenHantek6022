@@ -26,18 +26,9 @@
 #ifndef HANTEK_DEVICE_H
 #define HANTEK_DEVICE_H
 
-
 #include <QObject>
 #include <QStringList>
-
-#if LIBUSB_VERSION == 0
-#include <usb.h>
-#define libusb_device_handle usb_device_handle
-#define libusb_device_descriptor usb_device_descriptor
-#else
-#include <libusb.h>
-#endif
-
+#include <libusb-1.0/libusb.h>
 
 #include "helper.h"
 #include "hantek/types.h"
@@ -59,9 +50,7 @@ namespace Hantek {
 			bool isConnected();
 			
 			// Various methods to handle USB transfers
-#if LIBUSB_VERSION != 0
 			int bulkTransfer(unsigned char endpoint, unsigned char *data, unsigned int length, int attempts = HANTEK_ATTEMPTS, unsigned int timeout = HANTEK_TIMEOUT);
-#endif
 			int bulkWrite(unsigned char *data, unsigned int length, int attempts = HANTEK_ATTEMPTS);
 			int bulkRead(unsigned char *data, unsigned int length, int attempts = HANTEK_ATTEMPTS);
 			
@@ -85,17 +74,10 @@ namespace Hantek {
 			ControlBeginCommand *beginCommandControl; ///< Buffer for the CONTROL_BEGINCOMMAND control command
 			
 			// Libusb specific variables
-#if LIBUSB_VERSION != 0
 			libusb_context *context; ///< The usb context used for this device
-#endif
 			Model model; ///< The model of the connected oscilloscope
-#if LIBUSB_VERSION == 0
-			usb_dev_handle *handle; ///< The USB handle for the oscilloscope
-			usb_device_descriptor descriptor; ///< The device descriptor of the oscilloscope
-#else
 			libusb_device_handle *handle; ///< The USB handle for the oscilloscope
 			libusb_device_descriptor descriptor; ///< The device descriptor of the oscilloscope
-#endif
 			int interface; ///< The number of the claimed interface
 			int error; ///< The libusb error, that happened on initialization
 			int outPacketLength; ///< Packet length for the OUT endpoint
