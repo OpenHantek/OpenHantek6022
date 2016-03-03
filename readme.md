@@ -1,4 +1,4 @@
-# OpenHantek [![Build Status](https://travis-ci.org/OpenHantek/openhantek.svg)](https://travis-ci.org/OpenHantek/openhantek)
+# OpenHantek [![Build Status](https://travis-ci.org/OpenHantek/openhantek.svg)](https://travis-ci.org/OpenHantek/openhantek) [![Build status](https://ci.appveyor.com/api/projects/status/9w4rd5r04ufqafr4/branch/master?svg=true)](https://ci.appveyor.com/project/davidgraeff/openhantek/branch/master)
 OpenHantek is a free software for Hantek (Voltcraft/Darkwire/Protek/Acetech) USB digital storage oscilloscopes based on HantekDSO and has started as an alternative to the official Hantek DSO software.
 
 Supported operating systems:
@@ -9,13 +9,15 @@ Supported operating systems:
 <img alt="Image of main window" width="350" src="doc/screenshot_mainwindow.png">
 <img alt="Image of main window" width="350" src="doc/screenshot_mainwindow_win.png">
 
+## Install prebuild binariy
+Navigate to the [Releases](https://github.com/OpenHantek/openhantek/releases) page 
+
 ## Building OpenHantek from source
 You need the following packages, to build OpenHantek from source:
 * CMake 3.0+
 * Qt 5.3+
 * FFTW 3+ (prebuild files will be downloaded on windows)
 * libusb 1.x (prebuild files will be downloaded on windows)
-* binutils-dev
 
 For debian based systems (Ubuntu, Mint) install named requirements like this:
 > apt-get install cmake qttools5-dev-tools libfftw3-dev binutils-dev libusb-1.0-0-dev
@@ -30,8 +32,8 @@ For MacOSX use homebrew
 After you've installed the requirements either run **cmake-gui** or run the following commands inside the directory of this package:
 > mkdir build <br>
 > cd build <br>
-> cmake ../
-> make -j4 (for 4 concurrent compile jobs)
+> cmake ../ <br>
+> make -j4 (for 4 concurrent compile jobs) <br>
 > make install (optional, for installing only)
 
 You can specify an install prefix when running cmake:
@@ -40,6 +42,7 @@ You can specify an install prefix when running cmake:
 ## Firmware
 Your DSO does not store its firmware permanently -- the firmware has to be sent to the device each time it is connected. The `firmware` directory of this project contains the binary firmware extracted from Hantek's Windows drivers, and a udev rule to upload the firmware to the device automatically each time it is plugged in.
 
+* You need binutils-dev autoconf automake fxload
 * Install the `firmware/*.hex` files into `/usr/local/share/hantek/`.
 * Install the `firmware/90-hantek.rules` file into `/etc/udev/rules.d/`.
 * install fxload (fxload is a program which downloads firmware to USB  devices  based  on

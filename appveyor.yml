@@ -1,0 +1,48 @@
+branches:
+  only:
+  - master
+
+platform:
+  - Win32
+  - x64
+  
+configuration:
+  - Release
+  
+matrix:
+  fast_finish: true
+  
+clone_folder: C:\projects\openhantek
+
+install:
+  - cinst qt-sdk-windows-x64-msvc2012_opengl cmake
+  
+os: Windows Server 2012
+
+shallow_clone: true
+
+before_build:
+  - cmd: md build
+  - cmd: cd build
+  - cmd: if "%platform%"=="Win32" set "CMAKE_GENERATOR_NAME=Visual Studio 12 2013"
+  - cmd: if "%platform%"=="x64"   set "CMAKE_GENERATOR_NAME=Visual Studio 12 2013 Win64"
+  - cmd: cmake -G "%CMAKE_GENERATOR_NAME%" -DCMAKE_BUILD_TYPE=%configuration% .
+  
+build:
+  project: C:\projects\openhantek\build\OpenHantekProject.sln
+  parallel: true
+  # MSBuild verbosity level (quiet|minimal|normal|detailed)
+  verbosity: normal
+  
+deploy:
+  - provider: GitHub
+    artifact: /packages\\*\.exe/           # upload all NuGet packages to release assets
+    draft: false
+    prerelease: false
+    on:
+      branch: master                # release from master branch only
+      appveyor_repo_tag: true       # deploy on tag push only
+
+notifications:
+  - provider: Email
+    on_build_status_changed: true
