@@ -77,7 +77,7 @@ namespace Helper {
 	/// \brief Print debug information with timestamp.
 	/// \param text Text that will be output via qDebug.
 	inline void timestampDebug(QString text) {
-		qDebug("%s: %s", QTime::currentTime().toString("hh:mm:ss.zzz").toAscii().constData(), text.toAscii().constData());
+		qDebug("%s: %s", QTime::currentTime().toString("hh:mm:ss.zzz").toLatin1().constData(), text.toLatin1().constData());
 	}
 #endif	
 	
