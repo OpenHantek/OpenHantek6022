@@ -44,7 +44,7 @@ matrix:
       env: CMAKE_CXX_COMPILER=clang++-3.6
       os: linux
     - compiler: clang
-      env: CMAKE_CXX_COMPILER=/usr/bin/clang++
+      env: CMAKE_CXX_COMPILER=/usr/bin/clang++ CMAKE_PREFIX_PATH=$(brew --prefix qt5)
       os: osx
 
 before_install:
@@ -53,7 +53,7 @@ before_install:
 before_script:
     - mkdir build
     - cd build
-    - cmake -DCMAKE_CXX_COMPILER=$CMAKE_CXX_COMPILER ../
+    - cmake -DCMAKE_CXX_COMPILER=$CMAKE_CXX_COMPILER -DCMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH ../
 
 script:
     - make
