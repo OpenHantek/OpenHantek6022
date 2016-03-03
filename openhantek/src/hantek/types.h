@@ -601,7 +601,12 @@ namespace Hantek {
 		///   The limits are <= instead of < for the 10 bit models, since those support voltages up to 10 V.
 		/// </p>
 		/// <p><br /></p>
-		CONTROL_SETRELAYS = 0xb5
+		CONTROL_SETRELAYS = 0xb5,
+
+		CONTROL_SETVOLTDIV_CH1 = 0xe0,
+		CONTROL_SETVOLTDIV_CH2 = 0xe1,
+		CONTROL_SETTIMEDIV = 0xe2,
+		CONTROL_ACQUIIRE_HARD_DATA = 0xe3
 	};
 	
 	//////////////////////////////////////////////////////////////////////////////
@@ -648,6 +653,7 @@ namespace Hantek {
 		MODEL_DSO2250,      ///< %Hantek DSO-2250 USB
 		MODEL_DSO5200,      ///< %Hantek DSO-5200 USB
 		MODEL_DSO5200A,     ///< %Hantek DSO-5200A USB
+		MODEL_DSO6022BE,    ///< %Hantek6022BE USB
 		MODEL_COUNT
 	};
 	
@@ -1153,6 +1159,45 @@ namespace Hantek {
 			void setCoupling(unsigned int channel, bool dc);
 			bool getTrigger();
 			void setTrigger(bool ext);
+	};
+
+	//////////////////////////////////////////////////////////////////////////////
+	/// \class ControlSetVoltDIV_CH1                                            hantek/types.h
+	/// \brief The CONTROL_SETVOLTDIV_CH1 builder.
+	class ControlSetVoltDIV_CH1 : public Helper::DataArray<uint8_t> {
+		public:
+			ControlSetVoltDIV_CH1();
+			void setDiv(uint8_t val);
+	};
+
+	//////////////////////////////////////////////////////////////////////////////
+	/// \class ControlSetVoltDIV_CH2                                            hantek/types.h
+	/// \brief The CONTROL_SETVOLTDIV_CH2 builder.
+	class ControlSetVoltDIV_CH2 : public Helper::DataArray<uint8_t> {
+		public:
+			ControlSetVoltDIV_CH2();
+			void setDiv(uint8_t val);
+	};
+
+
+	//////////////////////////////////////////////////////////////////////////////
+	/// \class ControlSetTimeDIV                                            hantek/types.h
+	/// \brief The CONTROL_SETTIMEDIV builder.
+	class ControlSetTimeDIV : public Helper::DataArray<uint8_t> {
+		public:
+			ControlSetTimeDIV();
+		private:
+			void init();
+	};
+
+	//////////////////////////////////////////////////////////////////////////////
+	/// \class ControlAcquireHardData                                            hantek/types.h
+	/// \brief The CONTROL_ACQUIIRE_HARD_DATA builder.
+	class ControlAcquireHardData : public Helper::DataArray<uint8_t> {
+		public:
+			ControlAcquireHardData();
+		private:
+			void init();
 	};
 }
 

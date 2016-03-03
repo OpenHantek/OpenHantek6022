@@ -230,6 +230,10 @@ namespace Hantek {
 	/// \return The current CaptureState of the oscilloscope, libusb error code on error.
 	int Control::getCaptureState() {
 		int errorCode;
+
+		// Command not supported by this model
+		if (this->device->getModel() == MODEL_DSO6022BE)
+			return CAPTURE_READY;
 		
 		errorCode = this->device->bulkCommand(this->command[BULK_GETCAPTURESTATE], 1);
 		if(errorCode < 0)
@@ -249,11 +253,13 @@ namespace Hantek {
 	/// \return sample count on success, libusb error code on error.
 	int Control::getSamples(bool process) {
 		int errorCode;
-		
-		// Request data
-		errorCode = this->device->bulkCommand(this->command[BULK_GETDATA], 1);
-		if(errorCode < 0)
-			return errorCode;
+
+		if (this->device->getModel() != MODEL_DSO6022BE) {
+			// Request data
+			errorCode = this->device->bulkCommand(this->command[BULK_GETDATA], 1);
+			if(errorCode < 0)
+				return errorCode;
+		}
 		
 		// Save raw data to temporary buffer
 		bool fastRate = false;
@@ -366,12 +372,24 @@ namespace Hantek {
 							}
 						}
 						else {
-							bufferPosition += HANTEK_CHANNELS - 1 - channel;
+							if (this->device->getModel() == MODEL_DSO6022BE)
+								bufferPosition += channel;
+							else
+								bufferPosition += HANTEK_CHANNELS - 1 - channel;
+
 							for(unsigned int realPosition = 0; realPosition < sampleCount; ++realPosition, bufferPosition += HANTEK_CHANNELS) {
 								if(bufferPosition >= totalSampleCount)
 									bufferPosition %= totalSampleCount;
-								
-								this->samples[channel][realPosition] = ((double) data[bufferPosition] / this->specification.voltageLimit[channel][this->settings.voltage[channel].gain] - this->settings.voltage[channel].offsetReal) * this->specification.gainSteps[this->settings.voltage[channel].gain];
+
+								if (this->device->getModel() == MODEL_DSO6022BE)
+									this->samples[channel][realPosition] = (((double) data[bufferPosition] - 0x83)
+										 / this->specification.voltageLimit[channel][this->settings.voltage[channel].gain])
+										* this->specification.gainSteps[this->settings.voltage[channel].gain];
+								else
+									this->samples[channel][realPosition] = ((double) data[bufferPosition]
+										 / this->specification.voltageLimit[channel][this->settings.voltage[channel].gain]
+										 - this->settings.voltage[channel].offsetReal)
+										* this->specification.gainSteps[this->settings.voltage[channel].gain];
 							}
 						}
 					}
@@ -796,6 +814,25 @@ namespace Hantek {
 				this->commandPending[BULK_ESETTRIGGERORSAMPLERATE] = true;
 				
 				break;
+
+			case MODEL_DSO6022BE:
+				// 6022BE do not support any bulk commands
+				this->control[CONTROLINDEX_SETVOLTDIV_CH1] = new ControlSetVoltDIV_CH1();
+				this->controlCode[CONTROLINDEX_SETVOLTDIV_CH1] = CONTROL_SETVOLTDIV_CH1;
+				this->controlPending[CONTROLINDEX_SETVOLTDIV_CH1] = true;
+
+				this->control[CONTROLINDEX_SETVOLTDIV_CH2] = new ControlSetVoltDIV_CH2();
+				this->controlCode[CONTROLINDEX_SETVOLTDIV_CH2] = CONTROL_SETVOLTDIV_CH2;
+				this->controlPending[CONTROLINDEX_SETVOLTDIV_CH2] = true;
+
+				this->control[CONTROLINDEX_SETTIMEDIV] = new ControlSetTimeDIV();
+				this->controlCode[CONTROLINDEX_SETTIMEDIV] = CONTROL_SETTIMEDIV;
+				this->controlPending[CONTROLINDEX_SETTIMEDIV] = true;
+
+				this->control[CONTROLINDEX_ACQUIIRE_HARD_DATA] = new ControlAcquireHardData();
+				this->controlCode[CONTROLINDEX_ACQUIIRE_HARD_DATA] = CONTROL_ACQUIIRE_HARD_DATA;
+				this->controlPending[CONTROLINDEX_ACQUIIRE_HARD_DATA] = true;
+				break;
 			
 			default:
 				this->device->disconnect();
@@ -808,6 +845,12 @@ namespace Hantek {
 		
 		for(int control = 0; control < CONTROLINDEX_COUNT; ++control)
 			this->controlPending[control] = true;
+
+    // Disable controls not supported by 6022BE
+    if (this->device->getModel() == MODEL_DSO6022BE) {
+      this->controlPending[CONTROLINDEX_SETOFFSET] = false;
+      this->controlPending[CONTROLINDEX_SETRELAYS] = false;
+    }
 		
 		// Maximum possible samplerate for a single channel and dividers for record lengths
 		this->specification.bufferDividers.clear();
@@ -880,6 +923,28 @@ namespace Hantek {
 				this->specification.sampleSize = 8;
 				break;
 			
+			case MODEL_DSO6022BE:
+				this->specification.samplerate.single.base = 48e6;
+				this->specification.samplerate.single.max = 48e6;
+				this->specification.samplerate.single.maxDownsampler = 1;
+				this->specification.samplerate.single.recordLengths << UINT_MAX << 10240 << 32768;
+				this->specification.samplerate.multi.base = 48e6;
+				this->specification.samplerate.multi.max = 48e6;
+				this->specification.samplerate.multi.maxDownsampler = 1;
+				this->specification.samplerate.multi.recordLengths << UINT_MAX << 20480 << 65536;
+				this->specification.bufferDividers << 1000 << 1 << 1;
+				this->specification.gainSteps
+					<< 0.08 << 0.16 << 0.40 << 0.80 << 1.60 << 4.00 <<  8.0 << 16.0 <<  40.0;
+				// This data was based on testing and depends on Divider.
+				for(int channel = 0; channel < HANTEK_CHANNELS; ++channel)
+					this->specification.voltageLimit[channel]
+					<<   25 <<   51 <<  103 <<  206 <<  412 << 196 <<  392 <<   784 << 1000;
+				// Divider. Tested and calculated results are different!
+				this->specification.gainDiv
+					<<   10 <<   10 <<   10 <<   10 <<   10 <<   2 <<    2 <<    2 <<    1;
+				this->specification.sampleSize = 8;
+				break;
+
 			default:
 				this->specification.samplerate.single.base = 50e6;
 				this->specification.samplerate.single.max = 50e6;
@@ -900,6 +965,9 @@ namespace Hantek {
 				this->specification.sampleSize = 8;
 				break;
 		}
+		this->settings.recordLengthId = 1;
+		this->settings.samplerate.limits = &(this->specification.samplerate.single);
+		this->settings.samplerate.downsampler = 1;
 		this->previousSampleCount = 0;
 		
 		// Get channel level data
@@ -925,7 +993,7 @@ namespace Hantek {
 	/// \param index The record length index that should be set.
 	/// \return The record length that has been set, 0 on error.
 	unsigned int Control::setRecordLength(unsigned int index) {
-		if(!this->device->isConnected())
+	if(!this->device->isConnected())
 			return 0;
 		
 		if(!this->updateRecordLength(index))
@@ -1080,7 +1148,10 @@ namespace Hantek {
 		
 		if(channel >= HANTEK_CHANNELS)
 			return Dso::ERROR_PARAMETER;
-		
+
+	//	if (this->device->getModel() == MODEL_DSO6022BE)
+	//		Dso::ERROR_NONE;
+
 		// SetRelays control command for coupling relays
 		static_cast<ControlSetRelays *>(this->control[CONTROLINDEX_SETRELAYS])->setCoupling(channel, coupling != Dso::COUPLING_AC);
 		this->controlPending[CONTROLINDEX_SETRELAYS] = true;
@@ -1228,6 +1299,9 @@ namespace Hantek {
 		
 		if(channel >= HANTEK_CHANNELS)
 			return Dso::ERROR_PARAMETER;
+
+//		if (this->device->getModel() == MODEL_DSO6022BE)
+//			return Dso::ERROR_NONE;
 		
 		// Calculate the trigger level value
 		unsigned short int minimum, maximum;
