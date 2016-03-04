@@ -940,8 +940,8 @@ namespace Hantek {
 					this->specification.voltageLimit[channel]
 					<<   25 <<   51 <<  103 <<  206 <<  412 << 196 <<  392 <<   784 << 1000;
 				// Divider. Tested and calculated results are different!
-				this->specification.gainDiv
-					<<   10 <<   10 <<   10 <<   10 <<   10 <<   2 <<    2 <<    2 <<    1;
+				//this->specification.gainDiv
+				//	<<   10 <<   10 <<   10 <<   10 <<   10 <<   2 <<    2 <<    2 <<    1;
 				this->specification.sampleSize = 8;
 				break;
 
