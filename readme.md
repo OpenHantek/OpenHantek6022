@@ -9,7 +9,7 @@ Supported operating systems:
 <img alt="Image of main window" width="350" src="doc/screenshot_mainwindow.png">
 <img alt="Image of main window" width="350" src="doc/screenshot_mainwindow_win.png">
 
-## Install prebuild binariy
+## Install prebuilt binary
 Navigate to the [Releases](https://github.com/OpenHantek/openhantek/releases) page 
 
 ## Building OpenHantek from source
