@@ -757,6 +757,7 @@ namespace Hantek {
 		
 		// Determine the command version we need for this model
 		bool unsupported = false;
+		int lastControlIndex = 0;
 		switch(this->device->getModel()) {
 			case MODEL_DSO2150:
 				unsupported = true;
@@ -769,6 +770,7 @@ namespace Hantek {
 				this->specification.command.bulk.setSamplerate = BULK_SETTRIGGERANDSAMPLERATE;
 				this->specification.command.bulk.setTrigger = BULK_SETTRIGGERANDSAMPLERATE;
 				this->specification.command.bulk.setPretrigger = BULK_SETTRIGGERANDSAMPLERATE;
+				lastControlIndex = CONTROLINDEX_SETRELAYS;
 				// Initialize those as pending
 				this->commandPending[BULK_SETTRIGGERANDSAMPLERATE] = true;
 				break;
@@ -785,6 +787,8 @@ namespace Hantek {
 				this->specification.command.bulk.setSamplerate = BULK_ESETTRIGGERORSAMPLERATE;
 				this->specification.command.bulk.setTrigger = BULK_CSETTRIGGERORSAMPLERATE;
 				this->specification.command.bulk.setPretrigger = BULK_FSETBUFFER;
+				/// \todo Test if lastControlIndex is correct
+				lastControlIndex = CONTROLINDEX_SETRELAYS;
 				
 				this->commandPending[BULK_BSETCHANNELS] = true;
 				this->commandPending[BULK_CSETTRIGGERORSAMPLERATE] = true;
@@ -808,6 +812,8 @@ namespace Hantek {
 				this->specification.command.bulk.setTrigger = BULK_ESETTRIGGERORSAMPLERATE;
 				this->specification.command.bulk.setPretrigger = BULK_ESETTRIGGERORSAMPLERATE;
 				//this->specification.command.values.voltageLimits = VALUE_ETSCORRECTION;
+				/// \todo Test if lastControlIndex is correct
+				lastControlIndex = CONTROLINDEX_SETRELAYS;
 				
 				this->commandPending[BULK_CSETTRIGGERORSAMPLERATE] = true;
 				this->commandPending[BULK_DSETBUFFER] = true;
@@ -832,6 +838,8 @@ namespace Hantek {
 				this->control[CONTROLINDEX_ACQUIIRE_HARD_DATA] = new ControlAcquireHardData();
 				this->controlCode[CONTROLINDEX_ACQUIIRE_HARD_DATA] = CONTROL_ACQUIIRE_HARD_DATA;
 				this->controlPending[CONTROLINDEX_ACQUIIRE_HARD_DATA] = true;
+				/// \todo Test if lastControlIndex is correct
+				lastControlIndex = CONTROLINDEX_ACQUIIRE_HARD_DATA; 
 				break;
 			
 			default:
@@ -843,7 +851,7 @@ namespace Hantek {
 		if(unsupported)
 			qWarning("Warning: This Hantek DSO model isn't supported officially, so it may not be working as expected. Reports about your experiences are very welcome though (Please open a feature request in the tracker at https://sf.net/projects/openhantek/ or email me directly to oliver.haag@gmail.com). If it's working perfectly I can remove this warning, if not it should be possible to get it working with your help soon.");
 		
-		for(int control = 0; control < CONTROLINDEX_COUNT; ++control)
+		for(int control = 0; control <= lastControlIndex; ++control)
 			this->controlPending[control] = true;
 
     // Disable controls not supported by 6022BE
