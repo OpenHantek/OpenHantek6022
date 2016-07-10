@@ -371,7 +371,7 @@ void DataAnalyzer::run() {
 				double offset = 60 - this->settings->scope.spectrumReference - 20 * log10(dftLength);
 				double offsetLimit = this->settings->scope.spectrumLimit - this->settings->scope.spectrumReference;
 				for(std::vector<double>::iterator spectrumIterator = channelData->samples.spectrum.sample.begin(); spectrumIterator != channelData->samples.spectrum.sample.end(); ++spectrumIterator) {
-					double value = 20 * log10(fabs(channelData->samples.spectrum.sample[position])) + offset;
+					double value = 20 * log10(fabs(*spectrumIterator)) + offset;
 					
 					// Check if this value has to be limited
 					if(offsetLimit > value)
