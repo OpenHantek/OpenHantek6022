@@ -26,7 +26,7 @@ For rpm based distributions (Fedora) use this command:
 > dnf install cmake qt5-qtbase-gui qt5-qttools-devel qt5-qttranslations fftw-devel libusbx-devel binutils-devel libusb-1.0-0-devel
 
 For MacOSX use homebrew
-> brew update
+> brew update <br>
 > brew install libusb fftw qt5;
 
 After you've installed the requirements either run **cmake-gui** or run the following commands inside the directory of this package:
