@@ -36,6 +36,11 @@ After you've installed the requirements either run **cmake-gui** or run the foll
 > make -j4 (for 4 concurrent compile jobs) <br>
 > make install (optional, for installing only)
 
+For MacOSX, the cmake command in the previous command list must include the directory where Qt5 is installed. Qt5 is installed in a directory with the same name of its version:
+> brew info qt5
+For example, if brew showed 5.7.0, the cmake command should be:
+> cmake ../ -DCMAKE_PREFIX_PATH=/usr/local/Cellar/qt5/5.7.0
+
 You can specify an install prefix when running cmake:
 > cmake -DCMAKE_INSTALL_PREFIX=/usr
 
