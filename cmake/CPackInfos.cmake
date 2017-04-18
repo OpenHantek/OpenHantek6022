@@ -5,17 +5,19 @@
 
 find_package(Git QUIET)
 
-execute_process(
-    COMMAND ${GIT_EXECUTABLE} rev-parse --short HEAD
-    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-    RESULT_VARIABLE CMD_RESULT
-    OUTPUT_VARIABLE VCS_REVISION
-    OUTPUT_STRIP_TRAILING_WHITESPACE
-    )
+if (GIT_EXECUTABLE AND EXISTS "../.git")
+    execute_process(
+        COMMAND ${GIT_EXECUTABLE} rev-parse --short HEAD
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+        RESULT_VARIABLE CMD_RESULT
+        OUTPUT_VARIABLE VCS_REVISION
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+        )
+endif()
 
 if(NOT DEFINED CMD_RESULT)
-    message(WARNING "GIT executable not found. Make your PATH environment variable point to git")
-    return()
+    set(VCS_BRANCH "master")
+    set(VCS_REVISION "na")
 else()
     execute_process(
         COMMAND ${GIT_EXECUTABLE} status
@@ -30,6 +32,8 @@ else()
     string(REPLACE "\rn" " " DESCRIBE_STATUS ${DESCRIBE_STATUS})
     string(REPLACE " " ";" DESCRIBE_STATUS ${DESCRIBE_STATUS})
     list(GET DESCRIBE_STATUS 2 VCS_BRANCH)
+
+    message(STATUS "Version: ${VCS_BRANCH}/${VCS_REVISION}")
 
 execute_process(
     COMMAND ${GIT_EXECUTABLE} config --get remote.origin.url
