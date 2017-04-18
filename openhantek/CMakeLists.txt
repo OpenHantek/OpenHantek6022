@@ -42,6 +42,6 @@ elseif(WIN32)
 endif()
 
 # install commands
-install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION ".")
+install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION "bin")
 
 include(../cmake/copy_qt5_dlls_to_bin_dir.cmake)

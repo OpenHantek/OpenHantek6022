@@ -29,7 +29,9 @@ add_subdirectory(openhantek)
 # Use CPack to make deb/rpm/zip/exe installer packages
 include(cmake/CPackInfos.cmake)
 
-install(FILES ChangeLog COPYING readme.md DESTINATION ".")
+if (WIN32)
+    install(FILES ChangeLog COPYING readme.md DESTINATION ".")
+endif()
 
 # Add auxiliary files to the project, so that these files appear in VisualStudio/QtCreator
 add_custom_target(readme SOURCES readme.md)
