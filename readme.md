@@ -9,6 +9,10 @@ Supported operating systems:
 <img alt="Image of main window" width="350" src="doc/screenshot_mainwindow.png">
 <img alt="Image of main window" width="350" src="doc/screenshot_mainwindow_win.png">
 
+Supported hantek devices:
+* DSO2xxx Series
+* DSO52xx Series
+
 ## Install prebuilt binary
 Navigate to the [Releases](https://github.com/OpenHantek/openhantek/releases) page 
 
@@ -66,3 +70,7 @@ Please use Github Issues to report any problems or enhancements or send us pull 
 [10]: http://gun.io/blog/how-to-github-fork-branch-and-pull-request
 [11]: http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html
 [12]: https://help.github.com/articles/using-pull-requests
+
+## Other open source software
+* [SigRok](www.sigrok.org)
+* [Software for the Hantek 6022BE/BL only](http://pididu.com/wordpress/basicscope/)
