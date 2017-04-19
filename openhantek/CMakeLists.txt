@@ -23,7 +23,7 @@ add_subdirectory(res)
 add_definitions(-DVERSION="${CPACK_PACKAGE_VERSION}")
 
 # make executable
-add_executable(${PROJECT_NAME} ${SRC} ${HEADERS} ${QRC} ${TRANSLATION_BIN_FILES} ${TRANSLATION_QRC} ${VS_FIX_FILES})
+add_executable(${PROJECT_NAME} ${SRC} ${HEADERS} ${QRC} ${TRANSLATION_BIN_FILES} ${TRANSLATION_QRC})
 target_link_libraries(${PROJECT_NAME} Qt5::Widgets Qt5::PrintSupport Qt5::OpenGL ${OPENGL_LIBRARIES} )
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_range_for)
 if(MSVC)

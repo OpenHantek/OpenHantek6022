@@ -1,3 +1,7 @@
+if (NOT WIN32)
+    return()
+endif()
+
 #message("Download libusb1.0")
 #if (NOT EXISTS "${CMAKE_BINARY_DIR}/libusb.7z")
 #    file(DOWNLOAD "http://downloads.sourceforge.net/project/libusb/libusb-1.0/libusb-1.0.20/libusb-1.0.20.7z?r=http%3A%2F%2Flibusb.info%2F&ts=1457005849&use_mirror=vorboss"
@@ -22,6 +26,6 @@ else()
 endif()
 
 target_link_libraries(${PROJECT_NAME} "${LIBUSB_DIR}/${ARCH}/libusb-1.0.lib")
-file(COPY "${LIBUSB_DIR}/${ARCH}/libusb-1.0.dll" DESTINATION "${CMAKE_BINARY_DIR}")
+file(COPY "${LIBUSB_DIR}/${ARCH}/libusb-1.0.dll" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/$<CONFIGURATION>/")
 
 include_directories("${LIBUSB_DIR}" "${LIBUSB_DIR}/libusb-1.0")

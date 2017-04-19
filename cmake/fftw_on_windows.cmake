@@ -1,3 +1,7 @@
+if (NOT WIN32)
+    return()
+endif()
+
 macro( CheckExitCodeAndExitIfError MSG)
   if(NOT ${ExitCode} EQUAL 0)
     message(FATAL_ERROR "Failed: ${MSG}")
@@ -39,5 +43,5 @@ CheckExitCodeAndExitIfError("lib")
 target_link_libraries(${PROJECT_NAME} "${CMAKE_BINARY_DIR}/fftw/libfftw3-3.lib")
 target_include_directories(${PROJECT_NAME} PRIVATE "${CMAKE_BINARY_DIR}/fftw")
 
-file(COPY "${CMAKE_BINARY_DIR}/fftw/libfftw3-3.dll" DESTINATION "${CMAKE_BINARY_DIR}")
+file(COPY "${CMAKE_BINARY_DIR}/fftw/libfftw3-3.dll" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/$<CONFIGURATION>/")
 file(COPY "${CMAKE_BINARY_DIR}/fftw/fftw3.h" DESTINATION "${CMAKE_SOURCE_DIR}/src")
