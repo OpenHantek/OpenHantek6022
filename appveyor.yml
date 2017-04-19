@@ -1,44 +1,47 @@
-branches:
-  only:
-  - master
-
 platform:
-  - Win32
   - x64
-  
+
 configuration:
   - Release
-  
+
 matrix:
   fast_finish: true
-  
+
 clone_folder: C:\projects\openhantek
 
 install:
-  - cinst qt-sdk-windows-x64-msvc2012_opengl cmake
+#  - cinst cmake
   
-os: Windows Server 2012
+image:
+  - Visual Studio 2015
 
 shallow_clone: true
 
 before_build:
-  - cmd: md build
-  - cmd: cd build
-  - cmd: if "%platform%"=="Win32" set "CMAKE_GENERATOR_NAME=Visual Studio 12 2013"
-  - cmd: if "%platform%"=="x64"   set "CMAKE_GENERATOR_NAME=Visual Studio 12 2013 Win64"
-  - cmd: cmake -G "%CMAKE_GENERATOR_NAME%" -DCMAKE_BUILD_TYPE=%configuration% .
+  - if [%PLATFORM%] == [x64] set QT5=C:\Qt\5.8\msvc2015_64
+  - if [%PLATFORM%] == [x64] set VSARCH=x86
+  - if [%PLATFORM%] == [x64] set "CMAKE_GENERATOR_NAME=Visual Studio 14 2015 Win64"
+  - if [%PLATFORM%] == [Win32] set QT5=C:\Qt\5.8\msvc2015
+  - if [%PLATFORM%] == [Win32] set VSARCH=x64
+  - if [%PLATFORM%] == [Win32] set "CMAKE_GENERATOR_NAME=Visual Studio 14 2015"
+  - set Path=%QT5%\bin;%Path%
+  - md build
+  - cd build
+  - call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" %VSARCH%
+  - cmake.exe -G "%CMAKE_GENERATOR_NAME%" "-DCMAKE_PREFIX_PATH=%QT5%" -DCMAKE_BUILD_TYPE=%configuration% ..
   
 build:
-  project: C:\projects\openhantek\build\OpenHantekProject.sln
-  parallel: true
-  # MSBuild verbosity level (quiet|minimal|normal|detailed)
-  verbosity: normal
+
+build_script:
+  - cmake --build . --config Release --target package
   
 deploy:
   - provider: GitHub
-    artifact: /packages\\*\.exe/           # upload all NuGet packages to release assets
+    artifact: /packages\\*\.exe/
     draft: false
     prerelease: false
+    auth_token:
+      secure: kIX221nPUe3OM5CNeEJ1iyRg2FFpmlL7c+uxJS11+HBRcFTGCIArHoxMIUb1u289+Co0jp42BVxhpo9PaKhHhzy3iVsKM1xOty3GAr9/1KzVnvJY0dOWqO2cYks4w24WF50ii3kUtYGVKpJrsHPT8UeI2z+taYr1jBmKkoYuoWDG+3CAZytLAsOVDRPylhzSD8B+OrCHIbN1npcitEpFUMJWgvDVi6ZKsz8o6obs/NhwFEc9TBDhS7CeIoAcNt7S0WdDM4ZyHyOeYShWxL0DlZBuhvS7SVZbxy/DS/cTAyoaWqgFLQokmhsKkVIytnq40kC9kGUZvoSpfwtfnA55eElFP5sNbnjQEUaDgq8Doi+aTTc7WRmhBCJbmz6RlqPAECQzx67JuTukV7F6Ds6B34+9naV3dAhj7dnMAoIvY1UK4NhvT+w3aQNR3B93TLZfYHvAmVoZcMGEY/EqLbHdMdJ7E9YGEQQUXW/753EmulCu9/O/gEs+8DlNc1ejFUGJhQmTyJBOLupJpFanC+6mTcbSGlJLwAHxL5yuJ0x5xLzZvJ9jTJI1QFu8ZztFw6gPCBpxPVle6E/Ht3CIByoK5RtKzhJBxgYDG+k0Yaqgbp1wh1ET56xEj8GxQlTKW43Mwbt4aXAarZ11C3erab5lCQyubIUXuq0TWxJLDTfOC6I=
     on:
       branch: master                # release from master branch only
       appveyor_repo_tag: true       # deploy on tag push only

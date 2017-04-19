@@ -209,7 +209,7 @@ namespace Helper {
 					return value * 1e-12;
 				else if(unitString.startsWith('n'))
 					return value * 1e-9;
-				else if(unitString.startsWith('µ'))
+				else if(unitString.startsWith("µ"))
 					return value * 1e-6;
 				else if(unitString.startsWith("min"))
 					return value * 60;

@@ -23,14 +23,13 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-
 #include <cmath>
 #include <limits>
+#include <vector>
 
 #include <QList>
 #include <QMutex>
 #include <QTimer>
-
 
 #include "hantek/control.h"
 
@@ -284,8 +283,8 @@ namespace Hantek {
 		if(this->specification.sampleSize > 8)
 			dataLength *= 2;
 		
-		unsigned char data[dataLength];
-		errorCode = this->device->bulkReadMulti(data, dataLength);
+        std::vector<unsigned char> data(dataLength);
+		errorCode = this->device->bulkReadMulti(data.data(), dataLength);
 		if(errorCode < 0)
 			return errorCode;
 		
@@ -343,7 +342,8 @@ namespace Hantek {
 							if(bufferPosition >= sampleCount)
 								bufferPosition %= sampleCount;
 							
-							this->samples[channel][realPosition] = ((double) data[bufferPosition] / this->specification.voltageLimit[channel][this->settings.voltage[channel].gain] - this->settings.voltage[channel].offsetReal) * this->specification.gainSteps[this->settings.voltage[channel].gain];
+                            double dataBuf = (double) ( (int) data[bufferPosition] );
+							this->samples[channel][realPosition] = (dataBuf / this->specification.voltageLimit[channel][this->settings.voltage[channel].gain] - this->settings.voltage[channel].offsetReal) * this->specification.gainSteps[this->settings.voltage[channel].gain];
 						}
 					}
 				}
@@ -381,15 +381,18 @@ namespace Hantek {
 								if(bufferPosition >= totalSampleCount)
 									bufferPosition %= totalSampleCount;
 
-								if (this->device->getModel() == MODEL_DSO6022BE)
-									this->samples[channel][realPosition] = (((double) data[bufferPosition] - 0x83)
+								if (this->device->getModel() == MODEL_DSO6022BE) {
+                                    double dataBuf = (double) ((int) (data[bufferPosition] - 0x83) );
+									this->samples[channel][realPosition] = (dataBuf
 										 / this->specification.voltageLimit[channel][this->settings.voltage[channel].gain])
 										* this->specification.gainSteps[this->settings.voltage[channel].gain];
-								else
-									this->samples[channel][realPosition] = ((double) data[bufferPosition]
+                                } else {
+                                    double dataBuf = (double) ((int) (data[bufferPosition]));
+									this->samples[channel][realPosition] = (dataBuf
 										 / this->specification.voltageLimit[channel][this->settings.voltage[channel].gain]
 										 - this->settings.voltage[channel].offsetReal)
 										* this->specification.gainSteps[this->settings.voltage[channel].gain];
+                                }
 							}
 						}
 					}

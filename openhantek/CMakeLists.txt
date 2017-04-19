@@ -25,7 +25,17 @@ add_definitions(-DVERSION="${CPACK_PACKAGE_VERSION}")
 # make executable
 add_executable(${PROJECT_NAME} ${SRC} ${HEADERS} ${QRC} ${TRANSLATION_BIN_FILES} ${TRANSLATION_QRC})
 target_link_libraries(${PROJECT_NAME} Qt5::Widgets Qt5::PrintSupport Qt5::OpenGL ${OPENGL_LIBRARIES} )
-#target_compile_features(${PROJECT_NAME} PRIVATE cxx_range_for)
+target_compile_features(${PROJECT_NAME} PRIVATE cxx_range_for)
+if(MSVC)
+    target_compile_options(${PROJECT_NAME} PRIVATE "/W4" "/wd4251" "/wd4127" "/wd4275" "/nologo" "/J" "/Zi")
+    target_compile_options(${PROJECT_NAME} PRIVATE "$<$<CONFIG:DEBUG>:/MDd>")
+else()
+    target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wno-long-long -pedantic)
+    target_compile_options(${PROJECT_NAME} PRIVATE "$<$<CONFIG:DEBUG>:-DDEBUG>")
+    target_compile_options(${PROJECT_NAME} PRIVATE "$<$<CONFIG:DEBUG>:-O0>")
+    target_compile_options(${PROJECT_NAME} PRIVATE "$<$<CONFIG:RELEASE>:-fno-rtti>")
+endif()
+    
 
 if (UNIX)
     find_package(libusb REQUIRED)

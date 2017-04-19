@@ -237,11 +237,11 @@ void DataAnalyzer::run() {
 						break;
 					case Dso::WINDOW_BARTLETT:
 						for(unsigned int windowPosition = 0; windowPosition < this->lastRecordLength; ++windowPosition)
-							*(this->window + windowPosition) = 2.0 / windowEnd * (windowEnd / 2 - abs(windowPosition - windowEnd / 2));
+							*(this->window + windowPosition) = 2.0 / windowEnd * (windowEnd / 2 - std::abs((double)( windowPosition - windowEnd / 2.0)));
 						break;
 					case Dso::WINDOW_TRIANGULAR:
 						for(unsigned int windowPosition = 0; windowPosition < this->lastRecordLength; ++windowPosition)
-							*(this->window + windowPosition) = 2.0 / this->lastRecordLength * (this->lastRecordLength / 2 - abs(windowPosition - windowEnd / 2));
+							*(this->window + windowPosition) = 2.0 / this->lastRecordLength * (this->lastRecordLength / 2 - std::abs((double)( windowPosition - windowEnd / 2.0)));
 						break;
 					case Dso::WINDOW_GAUSS:
 						{
@@ -252,7 +252,7 @@ void DataAnalyzer::run() {
 						break;
 					case Dso::WINDOW_BARTLETTHANN:
 						for(unsigned int windowPosition = 0; windowPosition < this->lastRecordLength; ++windowPosition)
-							*(this->window + windowPosition) = 0.62 - 0.48 * abs(windowPosition / windowEnd - 0.5) - 0.38 * cos(2.0 * M_PI * windowPosition / windowEnd);
+							*(this->window + windowPosition) = 0.62 - 0.48 * std::abs((double)( windowPosition / windowEnd - 0.5)) - 0.38 * cos(2.0 * M_PI * windowPosition / windowEnd);
 						break;
 					case Dso::WINDOW_BLACKMAN:
 						{
