@@ -31,7 +31,7 @@ CheckExitCodeAndExitIfError("tar")
 get_filename_component(_vs_bin_path "${CMAKE_LINKER}" DIRECTORY)
 
 execute_process(
-    COMMAND "${_vs_bin_path}/lib.exe" /machine:x64 /def:${CMAKE_BINARY_DIR}/fftw/libfftw3-3.def /out:${CMAKE_BINARY_DIR}/fftw/fftw3-3.lib
+    COMMAND "${_vs_bin_path}/lib.exe" /machine:x64 /def:${CMAKE_BINARY_DIR}/fftw/libfftw3-3.def /out:${CMAKE_BINARY_DIR}/fftw/libfftw3-3.lib
     WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/fftw"
     RESULT_VARIABLE ExitCode)
 CheckExitCodeAndExitIfError("lib")
