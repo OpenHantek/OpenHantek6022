@@ -14,8 +14,6 @@ addons:
     - llvm-toolchain-trusty-3.6
     packages: &native_deps
     - cmake
-    - doxygen
-    - clang-3.6
     - libusb-1.0-0-dev
     - libfftw3-dev
     - libqt5qml5
@@ -26,23 +24,20 @@ addons:
     - qttools5-dev-tools
     - gcc-5
     - g++-5
-    - gcc-4.8
-    - g++-4.8
+#    - doxygen
+#    - clang-3.6
 
 # We are testing
-# * linux with g++4.8 and g++5 and clang 3.6
+# * linux with g++5 (and clang 3.6)
 # * osx with clang 3.6
 matrix:
   include:
     - compiler: gcc
-      env: CMAKE_CXX_COMPILER=g++-4.8
-      os: linux
-    - compiler: gcc
       env: CMAKE_CXX_COMPILER=g++-5
       os: linux
-    - compiler: clang
-      env: CMAKE_CXX_COMPILER=clang++-3.6
-      os: linux
+#    - compiler: clang
+#      env: CMAKE_CXX_COMPILER=clang++-3.6
+#      os: linux
     - compiler: clang
       env: CMAKE_CXX_COMPILER=/usr/bin/clang++
       os: osx
@@ -57,7 +52,7 @@ before_script:
     - cmake -DCMAKE_CXX_COMPILER=$CMAKE_CXX_COMPILER -DCMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH ../
 
 script:
-    - make
+    - make -j4
 
 before_deploy:
     - make package
@@ -74,5 +69,5 @@ deploy:
   file: "packages/OpenHantekProject-*"
   on:
     repo: OpenHantek/openhantek
-    condition: "$CMAKE_CXX_COMPILER = clang++-3.6"
+#    condition: "$CMAKE_CXX_COMPILER = clang++-3.6"
     tags: true
