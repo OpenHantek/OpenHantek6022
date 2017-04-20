@@ -81,12 +81,14 @@ Please use Github Issues to report any problems or enhancements or send us pull 
    - Use a topic branch to easily amend a pull request later, if necessary.
    - Write [good commit messages][11].
    - Squash commits on the topic branch before opening a pull request.
-   - Use the same coding style and spacing.
+   - Use the same [coding style and spacing][13]
+     (install clang-format and use it in the root directory: `clang-format -style=llvm openhantek/src/*`).
    - Open a [pull request][12] that relates to but one subject with a clear title and description
      
 [10]: http://gun.io/blog/how-to-github-fork-branch-and-pull-request
 [11]: http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html
 [12]: https://help.github.com/articles/using-pull-requests
+[13]: http://llvm.org/docs/CodingStandards.html
 
 ## Other open source software
 * [SigRok](www.sigrok.org)
