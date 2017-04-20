@@ -22,7 +22,6 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-
 #ifndef HANTEK_DEVICE_H
 #define HANTEK_DEVICE_H
 
@@ -30,67 +29,79 @@
 #include <QStringList>
 #include <libusb-1.0/libusb.h>
 
-#include "helper.h"
 #include "hantek/types.h"
-
+#include "helper.h"
 
 namespace Hantek {
-	//////////////////////////////////////////////////////////////////////////////
-	/// \class Device                                              hantek/device.h
-	/// \brief This class handles the USB communication with the oscilloscope.
-	class Device : public QObject {
-		Q_OBJECT
-		
-		public:
-			Device(QObject *parent = 0);
-			~Device();
-			
-			QString search();
-			void disconnect();
-			bool isConnected();
-			
-			// Various methods to handle USB transfers
-			int bulkTransfer(unsigned char endpoint, unsigned char *data, unsigned int length, int attempts = HANTEK_ATTEMPTS, unsigned int timeout = HANTEK_TIMEOUT);
-			int bulkWrite(unsigned char *data, unsigned int length, int attempts = HANTEK_ATTEMPTS);
-			int bulkRead(unsigned char *data, unsigned int length, int attempts = HANTEK_ATTEMPTS);
-			
-			int bulkCommand(Helper::DataArray<unsigned char> *command, int attempts = HANTEK_ATTEMPTS);
-			int bulkReadMulti(unsigned char *data, unsigned int length, int attempts = HANTEK_ATTEMPTS_MULTI);
-			
-			int controlTransfer(unsigned char type, unsigned char request, unsigned char *data, unsigned int length, int value, int index, int attempts = HANTEK_ATTEMPTS);
-			int controlWrite(unsigned char request, unsigned char *data, unsigned int length, int value = 0, int index = 0, int attempts = HANTEK_ATTEMPTS);
-			int controlRead(unsigned char request, unsigned char *data, unsigned int length, int value = 0, int index = 0, int attempts = HANTEK_ATTEMPTS);
-			
-			int getConnectionSpeed();
-			int getPacketSize();
-			Model getModel();
-		
-		protected:
-			// Lists for enums
-			QList<unsigned short int> modelIds; ///< Product ID for each ::Model
-			QStringList modelStrings; ///< The name as QString for each ::Model
-			
-			// Command buffers
-			ControlBeginCommand *beginCommandControl; ///< Buffer for the CONTROL_BEGINCOMMAND control command
-			
-			// Libusb specific variables
-			libusb_context *context; ///< The usb context used for this device
-			Model model; ///< The model of the connected oscilloscope
-			libusb_device_handle *handle; ///< The USB handle for the oscilloscope
-			libusb_device_descriptor descriptor; ///< The device descriptor of the oscilloscope
-			int interface; ///< The number of the claimed interface
-			int error; ///< The libusb error, that happened on initialization
-			int outPacketLength; ///< Packet length for the OUT endpoint
-			int inPacketLength; ///< Packet length for the IN endpoint
-		
-		signals:
-			void connected(); ///< The device has been connected and initialized
-			void disconnected(); ///< The device has been disconnected
-			
-		public slots:
-			
-	};
-}
+//////////////////////////////////////////////////////////////////////////////
+/// \class Device                                              hantek/device.h
+/// \brief This class handles the USB communication with the oscilloscope.
+class Device : public QObject {
+  Q_OBJECT
 
+public:
+  Device(QObject *parent = 0);
+  ~Device();
+
+  QString search();
+  void disconnect();
+  bool isConnected();
+
+  // Various methods to handle USB transfers
+  int bulkTransfer(unsigned char endpoint, unsigned char *data,
+                   unsigned int length, int attempts = HANTEK_ATTEMPTS,
+                   unsigned int timeout = HANTEK_TIMEOUT);
+  int bulkWrite(unsigned char *data, unsigned int length,
+                int attempts = HANTEK_ATTEMPTS);
+  int bulkRead(unsigned char *data, unsigned int length,
+               int attempts = HANTEK_ATTEMPTS);
+
+  int bulkCommand(Helper::DataArray<unsigned char> *command,
+                  int attempts = HANTEK_ATTEMPTS);
+  int bulkReadMulti(unsigned char *data, unsigned int length,
+                    int attempts = HANTEK_ATTEMPTS_MULTI);
+
+  int controlTransfer(unsigned char type, unsigned char request,
+                      unsigned char *data, unsigned int length, int value,
+                      int index, int attempts = HANTEK_ATTEMPTS);
+  int controlWrite(unsigned char request, unsigned char *data,
+                   unsigned int length, int value = 0, int index = 0,
+                   int attempts = HANTEK_ATTEMPTS);
+  int controlRead(unsigned char request, unsigned char *data,
+                  unsigned int length, int value = 0, int index = 0,
+                  int attempts = HANTEK_ATTEMPTS);
+
+  int getConnectionSpeed();
+  int getPacketSize();
+  Model getModel();
+
+protected:
+  // Lists for enums
+  QList<unsigned short int> modelIds; ///< Product ID for each ::Model
+  QStringList modelStrings;           ///< The name as QString for each ::Model
+
+  // Command buffers
+  ControlBeginCommand *beginCommandControl; ///< Buffer for the
+                                            ///CONTROL_BEGINCOMMAND control
+                                            ///command
+
+  // Libusb specific variables
+  libusb_context *context;      ///< The usb context used for this device
+  Model model;                  ///< The model of the connected oscilloscope
+  libusb_device_handle *handle; ///< The USB handle for the oscilloscope
+  libusb_device_descriptor
+      descriptor;      ///< The device descriptor of the oscilloscope
+  int interface;       ///< The number of the claimed interface
+  int error;           ///< The libusb error, that happened on initialization
+  int outPacketLength; ///< Packet length for the OUT endpoint
+  int inPacketLength;  ///< Packet length for the IN endpoint
+
+signals:
+  void connected();    ///< The device has been connected and initialized
+  void disconnected(); ///< The device has been disconnected
+
+public slots:
+};
+}
 
 #endif

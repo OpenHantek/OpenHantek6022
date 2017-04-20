@@ -22,13 +22,10 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-
 #ifndef CONFIGDIALOG_H
 #define CONFIGDIALOG_H
 
-
 #include <QDialog>
-
 
 /*#if defined(OS_UNIX)
 #define CONFIG_PATH QDir::homePath() + "/.config/paranoiacs.net/openhantek"
@@ -37,14 +34,15 @@
 #define CONFIG_PATH QDir::homePath() + "/Library/Application Support/OpenHantek"
 #define CONFIG_FILE CONFIG_PATH "/openhantek.plist"
 #elif defined(OS_WINDOWS)
-//#define CONFIG_PATH QDir::homePath() + "" // Too hard to get and this OS sucks anyway, ignore it
+//#define CONFIG_PATH QDir::homePath() + "" // Too hard to get and this OS sucks
+anyway, ignore it
 #define CONFIG_FILE "HKEY_CURRENT_USER\\Software\\paranoiacs.net\\OpenHantek"
 #endif*/
 
-#define CONFIG_LIST_WIDTH            128 ///< The width of the page selection widget
-#define CONFIG_LIST_ITEMHEIGHT        80 ///< The height of one item in the page selection widget
-#define CONFIG_LIST_ICONSIZE          48 ///< The icon size in the page selection widget
-
+#define CONFIG_LIST_WIDTH 128 ///< The width of the page selection widget
+#define CONFIG_LIST_ITEMHEIGHT                                                 \
+  80 ///< The height of one item in the page selection widget
+#define CONFIG_LIST_ICONSIZE 48 ///< The icon size in the page selection widget
 
 class DsoConfigAnalysisPage;
 class DsoConfigColorsPage;
@@ -59,42 +57,41 @@ class QPushButton;
 class QStackedWidget;
 class QVBoxLayout;
 
-
 ////////////////////////////////////////////////////////////////////////////////
 /// \class DsoConfigDialog                                        configdialog.h
 /// \brief The dialog for the configuration options.
 class DsoConfigDialog : public QDialog {
-	Q_OBJECT
-	
-	public:
-		DsoConfigDialog(DsoSettings *settings, QWidget *parent = 0, Qt::WindowFlags flags = 0);
-		~DsoConfigDialog();
-	
-	public slots:
-		void accept();
-		void apply();
-		
-		void changePage(QListWidgetItem *current, QListWidgetItem *previous);
-	
-	private:
-		void createIcons();
-		
-		DsoSettings *settings;
-		
-		QVBoxLayout *mainLayout;
-		QHBoxLayout *horizontalLayout;
-		QHBoxLayout *buttonsLayout;
-		
-		QListWidget *contentsWidget;
-		QStackedWidget *pagesWidget;
-		
-		DsoConfigAnalysisPage *analysisPage;
-		DsoConfigColorsPage *colorsPage;
-		DsoConfigFilesPage *filesPage;
-		DsoConfigScopePage *scopePage;
-		
-		QPushButton *acceptButton, *applyButton, *rejectButton;
-};
+  Q_OBJECT
 
+public:
+  DsoConfigDialog(DsoSettings *settings, QWidget *parent = 0,
+                  Qt::WindowFlags flags = 0);
+  ~DsoConfigDialog();
+
+public slots:
+  void accept();
+  void apply();
+
+  void changePage(QListWidgetItem *current, QListWidgetItem *previous);
+
+private:
+  void createIcons();
+
+  DsoSettings *settings;
+
+  QVBoxLayout *mainLayout;
+  QHBoxLayout *horizontalLayout;
+  QHBoxLayout *buttonsLayout;
+
+  QListWidget *contentsWidget;
+  QStackedWidget *pagesWidget;
+
+  DsoConfigAnalysisPage *analysisPage;
+  DsoConfigColorsPage *colorsPage;
+  DsoConfigFilesPage *filesPage;
+  DsoConfigScopePage *scopePage;
+
+  QPushButton *acceptButton, *applyButton, *rejectButton;
+};
 
 #endif

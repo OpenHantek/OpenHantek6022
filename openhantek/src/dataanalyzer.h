@@ -22,52 +22,47 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-
 #ifndef DATAANALYZER_H
 #define DATAANALYZER_H
-
 
 #include <vector>
 
 #include <QThread>
 
-
 #include "dso.h"
 #include "helper.h"
-
 
 class DsoSettings;
 class HantekDSOAThread;
 class QMutex;
 
-
 ////////////////////////////////////////////////////////////////////////////////
 /// \struct SampleValues                                          dataanalyzer.h
 /// \brief Struct for a array of sample values.
 struct SampleValues {
-	std::vector<double> sample; ///< Vector holding the sampling data
-	double interval; ///< The interval between two sample values
-	
-	SampleValues();
+  std::vector<double> sample; ///< Vector holding the sampling data
+  double interval;            ///< The interval between two sample values
+
+  SampleValues();
 };
 
 ////////////////////////////////////////////////////////////////////////////////
 /// \struct SampleData                                            dataanalyzer.h
 /// \brief Struct for the sample value arrays.
 struct SampleData {
-	SampleValues voltage; ///< The time-domain voltage levels (V)
-	SampleValues spectrum; ///< The frequency-domain power levels (dB)
+  SampleValues voltage;  ///< The time-domain voltage levels (V)
+  SampleValues spectrum; ///< The frequency-domain power levels (dB)
 };
 
 ////////////////////////////////////////////////////////////////////////////////
 /// \struct AnalyzedData                                          dataanalyzer.h
 /// \brief Struct for the analyzed data.
 struct AnalyzedData {
-	SampleData samples; ///< Voltage and spectrum values
-	double amplitude; ///< The amplitude of the signal
-	double frequency; ///< The frequency of the signal
-	
-	AnalyzedData();
+  SampleData samples; ///< Voltage and spectrum values
+  double amplitude;   ///< The amplitude of the signal
+  double frequency;   ///< The frequency of the signal
+
+  AnalyzedData();
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -76,39 +71,44 @@ struct AnalyzedData {
 /// Calculates the spectrum and various data about the signal and saves the
 /// time-/frequencysteps between two values.
 class DataAnalyzer : public QThread {
-	Q_OBJECT
-	
-	public:
-		DataAnalyzer(DsoSettings *settings, QObject *parent = 0);
-		~DataAnalyzer();
-		
-		const AnalyzedData *data(unsigned int channel) const;
-		unsigned int sampleCount();
-		QMutex *mutex() const;
-	
-	protected:
-		void run();
-		
-		DsoSettings *settings; ///< The settings provided by the parent class
-		
-		std::vector<AnalyzedData> analyzedData; ///< The analyzed data for each channel
-		QMutex *analyzedDataMutex; ///< A mutex for the analyzed data of all channels
-		
-		unsigned int lastRecordLength; ///< The record length of the previously analyzed data
-		unsigned int maxSamples; ///< The maximum record length of the analyzed data
-		Dso::WindowFunction lastWindow; ///< The previously used dft window function
-		double *window; ///< The array for the dft window factors
-		
-		const std::vector<std::vector<double> > *waitingData; ///< Pointer to input data from device
-		double waitingDataSamplerate; ///< The samplerate of the input data
-		bool waitingDataAppend; ///< true, if waiting data should be appended
-		QMutex *waitingDataMutex; ///< A mutex for the input data
-	
-	public slots:
-		void analyze(const std::vector<std::vector<double> > *data, double samplerate, bool append, QMutex *mutex);
-	
-	signals:
-		void analyzed(unsigned long samples); ///< The data with that much samples has been analyzed
+  Q_OBJECT
+
+public:
+  DataAnalyzer(DsoSettings *settings, QObject *parent = 0);
+  ~DataAnalyzer();
+
+  const AnalyzedData *data(unsigned int channel) const;
+  unsigned int sampleCount();
+  QMutex *mutex() const;
+
+protected:
+  void run();
+
+  DsoSettings *settings; ///< The settings provided by the parent class
+
+  std::vector<AnalyzedData>
+      analyzedData;          ///< The analyzed data for each channel
+  QMutex *analyzedDataMutex; ///< A mutex for the analyzed data of all channels
+
+  unsigned int
+      lastRecordLength; ///< The record length of the previously analyzed data
+  unsigned int maxSamples; ///< The maximum record length of the analyzed data
+  Dso::WindowFunction lastWindow; ///< The previously used dft window function
+  double *window;                 ///< The array for the dft window factors
+
+  const std::vector<std::vector<double>>
+      *waitingData;             ///< Pointer to input data from device
+  double waitingDataSamplerate; ///< The samplerate of the input data
+  bool waitingDataAppend;       ///< true, if waiting data should be appended
+  QMutex *waitingDataMutex;     ///< A mutex for the input data
+
+public slots:
+  void analyze(const std::vector<std::vector<double>> *data, double samplerate,
+               bool append, QMutex *mutex);
+
+signals:
+  void analyzed(unsigned long samples); ///< The data with that much samples has
+                                        ///been analyzed
 };
 
 #endif

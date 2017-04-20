@@ -21,14 +21,11 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-
 #include <QColorDialog>
 #include <QFocusEvent>
 #include <QPushButton>
 
-
 #include "colorbox.h"
-
 
 ////////////////////////////////////////////////////////////////////////////////
 // class ColorBox
@@ -36,38 +33,37 @@
 /// \param color Initial color value.
 /// \param parent The parent widget.
 ColorBox::ColorBox(QColor color, QWidget *parent) : QPushButton(parent) {
-	this->setColor(color);
-	
-	connect(this, SIGNAL(clicked()), this, SLOT(waitForColor()));
+  this->setColor(color);
+
+  connect(this, SIGNAL(clicked()), this, SLOT(waitForColor()));
 }
 
 /// \brief Cleans up the widget.
-ColorBox::~ColorBox() {
-}
+ColorBox::~ColorBox() {}
 
 /// \brief Get the current color.
 /// \return The current color as QColor.
-const QColor ColorBox::getColor() {
-	return this->color;
-}
+const QColor ColorBox::getColor() { return this->color; }
 
 /// \brief Sets the color.
 /// \param color The new color.
 void ColorBox::setColor(QColor color) {
-	this->color = color;
-	this->setText(QString("#%1").arg((unsigned int) this->color.rgba(), 8, 16, QChar('0')));
-	this->setPalette(QPalette(this->color));
-	
-	emit colorChanged(this->color);
+  this->color = color;
+  this->setText(
+      QString("#%1").arg((unsigned int)this->color.rgba(), 8, 16, QChar('0')));
+  this->setPalette(QPalette(this->color));
+
+  emit colorChanged(this->color);
 }
 
 /// \brief Wait for the color dialog and apply chosen color.
 void ColorBox::waitForColor() {
-	this->setFocus();
-	this->setDown(true);
-	
-	QColor color = QColorDialog::getColor(this->color, this, 0, QColorDialog::ShowAlphaChannel);
-	
-	if(color.isValid())
-		this->setColor(color);
+  this->setFocus();
+  this->setDown(true);
+
+  QColor color = QColorDialog::getColor(this->color, this, 0,
+                                        QColorDialog::ShowAlphaChannel);
+
+  if (color.isValid())
+    this->setColor(color);
 }

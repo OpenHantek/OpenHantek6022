@@ -24,49 +24,43 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-
 #ifndef GLSCOPE_H
 #define GLSCOPE_H
 
-
 #include <QtOpenGL>
 
-
-#include "glgenerator.h"
 #include "dso.h"
-
+#include "glgenerator.h"
 
 class DataAnalyzer;
 class DsoSettings;
-
 
 ////////////////////////////////////////////////////////////////////////////////
 /// \class GlScope                                                     glscope.h
 /// \brief OpenGL accelerated widget that displays the oscilloscope screen.
 class GlScope : public QGLWidget {
-	Q_OBJECT
-	
-	public:
-		GlScope(DsoSettings *settings, QWidget* parent = 0);
-		~GlScope();
-		
-		void setGenerator(GlGenerator *generator);
-		void setZoomMode(bool zoomed);
-	
-	protected:
-		void initializeGL();
-		void paintGL();
-		void resizeGL(int width, int height);
-		
-		void drawGrid();
-	
-	private:
-		GlGenerator *generator;
-		DsoSettings *settings;
-		
-		std::vector<GLfloat> vaMarker[2];
-		bool zoomed;
-};
+  Q_OBJECT
 
+public:
+  GlScope(DsoSettings *settings, QWidget *parent = 0);
+  ~GlScope();
+
+  void setGenerator(GlGenerator *generator);
+  void setZoomMode(bool zoomed);
+
+protected:
+  void initializeGL();
+  void paintGL();
+  void resizeGL(int width, int height);
+
+  void drawGrid();
+
+private:
+  GlGenerator *generator;
+  DsoSettings *settings;
+
+  std::vector<GLfloat> vaMarker[2];
+  bool zoomed;
+};
 
 #endif

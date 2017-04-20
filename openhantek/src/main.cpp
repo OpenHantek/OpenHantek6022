@@ -21,7 +21,6 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-
 #include <QApplication>
 #include <QLibraryInfo>
 #include <QLocale>
@@ -30,25 +29,26 @@
 
 #include "openhantek.h"
 
-
 /// \brief Initialize resources and translations and show the main window.
 int main(int argc, char *argv[]) {
-    std::cout << "Version " << VERSION << std::endl;
-	Q_INIT_RESOURCE(application);
+  std::cout << "Version " << VERSION << std::endl;
+  Q_INIT_RESOURCE(application);
 
-	QApplication openHantekApplication(argc, argv);
+  QApplication openHantekApplication(argc, argv);
 
-	QTranslator qtTranslator;
-	if (qtTranslator.load("qt_" + QLocale::system().name(), QLibraryInfo::location(QLibraryInfo::TranslationsPath)))
-		openHantekApplication.installTranslator(&qtTranslator);
+  QTranslator qtTranslator;
+  if (qtTranslator.load("qt_" + QLocale::system().name(),
+                        QLibraryInfo::location(QLibraryInfo::TranslationsPath)))
+    openHantekApplication.installTranslator(&qtTranslator);
 
-	QTranslator openHantekTranslator;
-	if (openHantekTranslator.load(QLocale(), QLatin1String("openhantek"), QLatin1String("_"), QLatin1String(":/translations")))
-		openHantekApplication.installTranslator(&openHantekTranslator);
-	
+  QTranslator openHantekTranslator;
+  if (openHantekTranslator.load(QLocale(), QLatin1String("openhantek"),
+                                QLatin1String("_"),
+                                QLatin1String(":/translations")))
+    openHantekApplication.installTranslator(&openHantekTranslator);
 
-	OpenHantekMainWindow *openHantekMainWindow = new OpenHantekMainWindow();
-	openHantekMainWindow->show();
+  OpenHantekMainWindow *openHantekMainWindow = new OpenHantekMainWindow();
+  openHantekMainWindow->show();
 
-	return openHantekApplication.exec();
+  return openHantekApplication.exec();
 }

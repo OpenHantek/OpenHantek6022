@@ -22,17 +22,13 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-
 #ifndef CONFIGPAGES_H
 #define CONFIGPAGES_H
 
-
 #include <QWidget>
 
-
-#include "dsowidget.h"
 #include "dso.h"
-
+#include "dsowidget.h"
 
 class ColorBox;
 class DsoSettings;
@@ -42,145 +38,144 @@ class QSpinBox;
 class QStringList;
 class QLabel;
 
-
 ////////////////////////////////////////////////////////////////////////////////
 /// \class DsoConfigAnalysisPage                                   configpages.h
 /// \brief Config page for the data analysis.
 class DsoConfigAnalysisPage : public QWidget {
-	Q_OBJECT
-	
-	public:
-		DsoConfigAnalysisPage(DsoSettings *settings, QWidget *parent = 0);
-		~DsoConfigAnalysisPage();
-	
-	public slots:
-		void saveSettings();
-	
-	private:
-		DsoSettings *settings;
-		
-		QVBoxLayout *mainLayout;
-		
-		QGroupBox *spectrumGroup;
-		QGridLayout *spectrumLayout;
-		QLabel *windowFunctionLabel;
-		QComboBox *windowFunctionComboBox;
-		
-		QLabel *referenceLevelLabel;
-		QDoubleSpinBox *referenceLevelSpinBox;
-		QLabel *referenceLevelUnitLabel;
-		QHBoxLayout *referenceLevelLayout;
-		
-		QLabel *minimumMagnitudeLabel;
-		QDoubleSpinBox *minimumMagnitudeSpinBox;
-		QLabel *minimumMagnitudeUnitLabel;
-		QHBoxLayout *minimumMagnitudeLayout;
-	
-	private slots:
-};
+  Q_OBJECT
 
+public:
+  DsoConfigAnalysisPage(DsoSettings *settings, QWidget *parent = 0);
+  ~DsoConfigAnalysisPage();
+
+public slots:
+  void saveSettings();
+
+private:
+  DsoSettings *settings;
+
+  QVBoxLayout *mainLayout;
+
+  QGroupBox *spectrumGroup;
+  QGridLayout *spectrumLayout;
+  QLabel *windowFunctionLabel;
+  QComboBox *windowFunctionComboBox;
+
+  QLabel *referenceLevelLabel;
+  QDoubleSpinBox *referenceLevelSpinBox;
+  QLabel *referenceLevelUnitLabel;
+  QHBoxLayout *referenceLevelLayout;
+
+  QLabel *minimumMagnitudeLabel;
+  QDoubleSpinBox *minimumMagnitudeSpinBox;
+  QLabel *minimumMagnitudeUnitLabel;
+  QHBoxLayout *minimumMagnitudeLayout;
+
+private slots:
+};
 
 ////////////////////////////////////////////////////////////////////////////////
 /// \class DsoConfigColorsPage                                     configpages.h
 /// \brief Config page for the colors.
 class DsoConfigColorsPage : public QWidget {
-	Q_OBJECT
-	
-	public:
-		DsoConfigColorsPage(DsoSettings *settings, QWidget *parent = 0);
-		~DsoConfigColorsPage();
-	
-	public slots:
-		void saveSettings();
-	
-	private:
-		DsoSettings *settings;
-		
-		QVBoxLayout *mainLayout;
-		
-		QGroupBox *screenGroup;
-		QGridLayout *screenLayout;
-		QLabel *axesLabel, *backgroundLabel, *borderLabel, *gridLabel, *markersLabel, *textLabel;
-		ColorBox *axesColorBox, *backgroundColorBox, *borderColorBox, *gridColorBox, *markersColorBox, *textColorBox;
+  Q_OBJECT
 
-		QGroupBox *printGroup;
-		QGridLayout *printLayout;
-		QLabel *printAxesLabel, *printBackgroundLabel, *printBorderLabel, *printGridLabel, *printMarkersLabel, *printTextLabel;
-		ColorBox *printAxesColorBox, *printBackgroundColorBox, *printBorderColorBox, *printGridColorBox, *printMarkersColorBox, *printTextColorBox;
-		
-		QGroupBox *graphGroup;
-		QGridLayout *graphLayout;
-		QLabel *channelLabel, *spectrumLabel;
-		QList<QLabel *> colorLabel;
-		QList<ColorBox *> channelColorBox;
-		QList<ColorBox *> spectrumColorBox;
-	
-	private slots:
+public:
+  DsoConfigColorsPage(DsoSettings *settings, QWidget *parent = 0);
+  ~DsoConfigColorsPage();
+
+public slots:
+  void saveSettings();
+
+private:
+  DsoSettings *settings;
+
+  QVBoxLayout *mainLayout;
+
+  QGroupBox *screenGroup;
+  QGridLayout *screenLayout;
+  QLabel *axesLabel, *backgroundLabel, *borderLabel, *gridLabel, *markersLabel,
+      *textLabel;
+  ColorBox *axesColorBox, *backgroundColorBox, *borderColorBox, *gridColorBox,
+      *markersColorBox, *textColorBox;
+
+  QGroupBox *printGroup;
+  QGridLayout *printLayout;
+  QLabel *printAxesLabel, *printBackgroundLabel, *printBorderLabel,
+      *printGridLabel, *printMarkersLabel, *printTextLabel;
+  ColorBox *printAxesColorBox, *printBackgroundColorBox, *printBorderColorBox,
+      *printGridColorBox, *printMarkersColorBox, *printTextColorBox;
+
+  QGroupBox *graphGroup;
+  QGridLayout *graphLayout;
+  QLabel *channelLabel, *spectrumLabel;
+  QList<QLabel *> colorLabel;
+  QList<ColorBox *> channelColorBox;
+  QList<ColorBox *> spectrumColorBox;
+
+private slots:
 };
-
 
 ////////////////////////////////////////////////////////////////////////////////
 /// \class DsoConfigFilesPage                                      configpages.h
 /// \brief Config page for file loading/saving.
 class DsoConfigFilesPage : public QWidget {
-	Q_OBJECT
-	
-	public:
-		DsoConfigFilesPage(DsoSettings *settings, QWidget *parent = 0);
-		~DsoConfigFilesPage();
-	
-	public slots:
-		void saveSettings();
-	
-	private:
-		DsoSettings *settings;
-		
-		QVBoxLayout *mainLayout;
-		
-		QGroupBox *configurationGroup;
-		QVBoxLayout *configurationLayout;
-		QCheckBox *saveOnExitCheckBox;
-		QPushButton *saveNowButton;
-		
-		QGroupBox *exportGroup;
-		QGridLayout *exportLayout;
-		QLabel *imageWidthLabel;
-		QSpinBox *imageWidthSpinBox;
-		QLabel *imageHeightLabel;
-		QSpinBox *imageHeightSpinBox;
-	
-	private slots:
-};
+  Q_OBJECT
 
+public:
+  DsoConfigFilesPage(DsoSettings *settings, QWidget *parent = 0);
+  ~DsoConfigFilesPage();
+
+public slots:
+  void saveSettings();
+
+private:
+  DsoSettings *settings;
+
+  QVBoxLayout *mainLayout;
+
+  QGroupBox *configurationGroup;
+  QVBoxLayout *configurationLayout;
+  QCheckBox *saveOnExitCheckBox;
+  QPushButton *saveNowButton;
+
+  QGroupBox *exportGroup;
+  QGridLayout *exportLayout;
+  QLabel *imageWidthLabel;
+  QSpinBox *imageWidthSpinBox;
+  QLabel *imageHeightLabel;
+  QSpinBox *imageHeightSpinBox;
+
+private slots:
+};
 
 ////////////////////////////////////////////////////////////////////////////////
 /// \class DsoConfigScopePage                                      configpages.h
 /// \brief Config page for the scope screen.
 class DsoConfigScopePage : public QWidget {
-	Q_OBJECT
-	
-	public:
-		DsoConfigScopePage(DsoSettings *settings, QWidget *parent = 0);
-		~DsoConfigScopePage();
-	
-	public slots:
-		void saveSettings();
-	
-	private:
-		DsoSettings *settings;
-		
-		QVBoxLayout *mainLayout;
-		
-		QGroupBox *graphGroup;
-		QGridLayout *graphLayout;
-		QCheckBox *antialiasingCheckBox;
-		QLabel *digitalPhosphorDepthLabel;
-		QSpinBox *digitalPhosphorDepthSpinBox;
-		QLabel *interpolationLabel;
-		QComboBox *interpolationComboBox;
-	
-	private slots:
-};
+  Q_OBJECT
 
+public:
+  DsoConfigScopePage(DsoSettings *settings, QWidget *parent = 0);
+  ~DsoConfigScopePage();
+
+public slots:
+  void saveSettings();
+
+private:
+  DsoSettings *settings;
+
+  QVBoxLayout *mainLayout;
+
+  QGroupBox *graphGroup;
+  QGridLayout *graphLayout;
+  QCheckBox *antialiasingCheckBox;
+  QLabel *digitalPhosphorDepthLabel;
+  QSpinBox *digitalPhosphorDepthSpinBox;
+  QLabel *interpolationLabel;
+  QComboBox *interpolationComboBox;
+
+private slots:
+};
 
 #endif

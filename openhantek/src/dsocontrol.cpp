@@ -21,41 +21,37 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-
 #include "dsocontrol.h"
-
 
 ////////////////////////////////////////////////////////////////////////////////
 // class DsoControl
 /// \brief Initialize variables.
 DsoControl::DsoControl(QObject *parent) : QThread(parent) {
-	this->sampling = false;
+  this->sampling = false;
 }
 
 /// \brief Start sampling process.
 void DsoControl::startSampling() {
-	this->sampling = true;
-	emit samplingStarted();
+  this->sampling = true;
+  emit samplingStarted();
 }
 
 /// \brief Stop sampling process.
 void DsoControl::stopSampling() {
-	this->sampling = false;
-	emit samplingStopped();
+  this->sampling = false;
+  emit samplingStopped();
 }
 
 /// \brief Get a list of the names of the special trigger sources.
 const QStringList *DsoControl::getSpecialTriggerSources() {
-	return &(this->specialTriggerSources);
+  return &(this->specialTriggerSources);
 }
 
 /// \brief Try to connect to the oscilloscope.
 void DsoControl::connectDevice() {
-	this->sampling = false;
-	this->start();
+  this->sampling = false;
+  this->start();
 }
 
 /// \brief Disconnect the oscilloscope.
-void DsoControl::disconnectDevice() {
-	this->quit();
-}
+void DsoControl::disconnectDevice() { this->quit(); }
