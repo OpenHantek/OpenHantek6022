@@ -43,5 +43,11 @@ CheckExitCodeAndExitIfError("lib")
 target_link_libraries(${PROJECT_NAME} "${CMAKE_BINARY_DIR}/fftw/libfftw3-3.lib")
 target_include_directories(${PROJECT_NAME} PRIVATE "${CMAKE_BINARY_DIR}/fftw")
 
-file(COPY "${CMAKE_BINARY_DIR}/fftw/libfftw3-3.dll" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/$<CONFIGURATION>/")
 file(COPY "${CMAKE_BINARY_DIR}/fftw/fftw3.h" DESTINATION "${CMAKE_SOURCE_DIR}/src")
+
+add_custom_command(TARGET ${PROJECT_NAME}
+        POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_BINARY_DIR}/fftw/libfftw3-3.dll" $<TARGET_FILE_DIR:${PROJECT_NAME}>
+        COMMENT "Copy fftw3 dlls for ${PROJECT_NAME}"
+)
+

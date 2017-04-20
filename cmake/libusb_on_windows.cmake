@@ -26,6 +26,11 @@ else()
 endif()
 
 target_link_libraries(${PROJECT_NAME} "${LIBUSB_DIR}/${ARCH}/libusb-1.0.lib")
-file(COPY "${LIBUSB_DIR}/${ARCH}/libusb-1.0.dll" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/$<CONFIGURATION>/")
+target_include_directories(${PROJECT_NAME} PRIVATE "${LIBUSB_DIR}" "${LIBUSB_DIR}/libusb-1.0")
 
-include_directories("${LIBUSB_DIR}" "${LIBUSB_DIR}/libusb-1.0")
+add_custom_command(TARGET ${PROJECT_NAME}
+        POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${LIBUSB_DIR}/${ARCH}/libusb-1.0.dll" $<TARGET_FILE_DIR:${PROJECT_NAME}>
+        COMMENT "Copy libusb-1 dlls for ${PROJECT_NAME}"
+)
+
