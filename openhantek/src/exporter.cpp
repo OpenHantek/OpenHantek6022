@@ -216,7 +216,7 @@ bool Exporter::doExport() {
 					// Add graphs for channels
 					for(int channel = 0 ; channel < this->settings->scope.voltage.count(); ++channel) {
 						if(this->settings->scope.voltage[channel].used && this->dataAnalyzer->data(channel)) {
-							painter.setPen(colorValues->voltage[channel]);
+							painter.setPen(QPen(colorValues->voltage[channel], 0));
 							
 							// What's the horizontal distance between sampling points?
 							double horizontalFactor = this->dataAnalyzer->data(channel)->samples.voltage.interval / this->settings->scope.horizontal.timebase;
@@ -247,7 +247,7 @@ bool Exporter::doExport() {
 					// Add spectrum graphs
 					for (int channel = 0; channel < this->settings->scope.spectrum.count(); ++channel) {
 						if(this->settings->scope.spectrum[channel].used && this->dataAnalyzer->data(channel)) {
-							painter.setPen(colorValues->spectrum[channel]);
+							painter.setPen(QPen(colorValues->spectrum[channel], 0));
 							
 							// What's the horizontal distance between sampling points?
 							double horizontalFactor = this->dataAnalyzer->data(channel)->samples.spectrum.interval / this->settings->scope.horizontal.frequencybase;
@@ -296,7 +296,7 @@ bool Exporter::doExport() {
 			painter.setMatrix(QMatrix((paintDevice->width() - 1) / DIVS_TIME, 0, 0, -(scopeHeight - 1) / DIVS_VOLTAGE, (double) (paintDevice->width() - 1) / 2, (scopeHeight - 1) * (zoomed + 0.5) + lineHeight * 1.5 + lineHeight * 2.5 * zoomed), false);
 			
 			// Grid lines
-			painter.setPen(colorValues->grid);
+			painter.setPen(QPen(colorValues->grid, 0));
 			
 			if(this->format < EXPORT_FORMAT_IMAGE) {
 				// Draw vertical lines
@@ -342,7 +342,7 @@ bool Exporter::doExport() {
 			}
 				
 			// Axes
-			painter.setPen(colorValues->axes);
+			painter.setPen(QPen(colorValues->axes, 0));
 			painter.drawLine(QPointF(-DIVS_TIME / 2, 0), QPointF(DIVS_TIME / 2, 0));
 			painter.drawLine(QPointF(0, -DIVS_VOLTAGE / 2), QPointF(0, DIVS_VOLTAGE / 2));
 			for(double div = 0.2; div <= DIVS_TIME / 2; div += 0.2) {
@@ -355,7 +355,7 @@ bool Exporter::doExport() {
 			}
 			
 			// Borders
-			painter.setPen(colorValues->border);
+			painter.setPen(QPen(colorValues->border, 0));
 			painter.drawRect(QRectF(-DIVS_TIME / 2, -DIVS_VOLTAGE / 2, DIVS_TIME, DIVS_VOLTAGE));
 		}
 		

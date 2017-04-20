@@ -249,7 +249,11 @@ namespace Hantek {
 	int Device::bulkCommand(Helper::DataArray<unsigned char> *command, int attempts) {
 		if(!this->handle)
 			return LIBUSB_ERROR_NO_DEVICE;
-		
+
+		// don't send bulk command if dso6022be
+		if (this->getModel() == MODEL_DSO6022BE)
+			return 0;
+
 		// Send BeginCommand control command
 		int errorCode = this->controlWrite(CONTROL_BEGINCOMMAND, this->beginCommandControl->data(), this->beginCommandControl->getSize());
 		if(errorCode < 0)

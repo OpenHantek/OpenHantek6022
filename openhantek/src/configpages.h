@@ -102,6 +102,11 @@ class DsoConfigColorsPage : public QWidget {
 		QGridLayout *screenLayout;
 		QLabel *axesLabel, *backgroundLabel, *borderLabel, *gridLabel, *markersLabel, *textLabel;
 		ColorBox *axesColorBox, *backgroundColorBox, *borderColorBox, *gridColorBox, *markersColorBox, *textColorBox;
+
+		QGroupBox *printGroup;
+		QGridLayout *printLayout;
+		QLabel *printAxesLabel, *printBackgroundLabel, *printBorderLabel, *printGridLabel, *printMarkersLabel, *printTextLabel;
+		ColorBox *printAxesColorBox, *printBackgroundColorBox, *printBorderColorBox, *printGridColorBox, *printMarkersColorBox, *printTextColorBox;
 		
 		QGroupBox *graphGroup;
 		QGridLayout *graphLayout;

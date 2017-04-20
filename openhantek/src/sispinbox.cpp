@@ -112,9 +112,9 @@ void SiSpinBox::stepBy(int steps) {
 	
 	if(!this->steppedTo) { // No step done directly before this one, so we need to check where we are
 		// Get how often the steps have to be fully ran through
-		int stepsFully = (int) floor(log(this->value() / this->steps.first()) / log(stepsSpan));
+		int stepsFully = (this->mode == 0) ? (int) floor(log(this->value() / this->steps.first()) / log(stepsSpan)) : 0;
 		// And now the remaining multiple
-		double stepMultiple = this->value() / pow(stepsSpan, stepsFully);
+		double stepMultiple = (this->mode == 0) ? this->value() / pow(stepsSpan, stepsFully) : this->value() / this->minimum();
 		// Now get the neighbours of the current value from our steps list
 		int remainingSteps = 0;
 		for(; remainingSteps <= stepsCount; ++remainingSteps) {
@@ -132,10 +132,14 @@ void SiSpinBox::stepBy(int steps) {
 	int subStep = steps / abs(steps);
 	for (int i = 0; i != steps; i += subStep) {
 		this->stepId += subStep;
+	    if (!this->mode) {
 		int stepsId = this->stepId % stepsCount;
 		if(stepsId < 0)
 			stepsId += stepsCount;
 		value = pow(stepsSpan, floor((double) this->stepId / stepsCount)) * this->steps[stepsId];
+	    } else {
+		value = this->minimum() * this->steps[stepId];
+	    }
 		if (value <= this->minimum() || value >= this->maximum())
 			break;
 	}
@@ -167,6 +171,12 @@ void SiSpinBox::setSteps(const QList<double> &steps) {
 	this->steps = steps;
 }
 
+/// \brief Set the mode.
+/// \param mode The mode, the value 0 will have fixed interval, otherwise the value will have interval within steps itself.
+void SiSpinBox::setMode(const int mode) {
+	this->mode = mode;
+}
+
 /// \brief Generic initializations.
 void SiSpinBox::init() {
 	this->setMinimum(1e-12);
@@ -178,6 +188,7 @@ void SiSpinBox::init() {
 	
 	this->steppedTo = false;
 	this->stepId = 0;
+	this->mode = 0;
 	
 	connect(this, SIGNAL(valueChanged(double)), this, SLOT(resetSteppedTo()));
 }

@@ -84,6 +84,7 @@ class HorizontalDock : public QDockWidget {
 	public slots:
 		void availableRecordLengthsChanged(const QList<unsigned int> &recordLengths);
 		void samplerateLimitsChanged(double minimum, double maximum);
+		void samplerateSet(int mode, QList<double> sampleSteps);
 		
 	protected slots:
 		void frequencybaseSelected(double frequencybase);

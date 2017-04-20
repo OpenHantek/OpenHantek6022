@@ -210,6 +210,16 @@ void HorizontalDock::samplerateLimitsChanged(double minimum, double maximum) {
 	this->suppressSignals = false;
 }
 
+/// \brief Updates the mode and steps of the samplerate spin box.
+/// \param mode The mode value the spin box should accept.
+/// \param steps The steps value the spin box should accept.
+void HorizontalDock::samplerateSet(int mode, QList<double> steps) {
+	this->suppressSignals = true;
+	this->samplerateSiSpinBox->setMode(mode);
+	this->samplerateSiSpinBox->setSteps(steps);
+	this->suppressSignals = false;
+}
+
 /// \brief Called when the frequencybase spinbox changes its value.
 /// \param frequencybase The frequencybase in hertz.
 void HorizontalDock::frequencybaseSelected(double frequencybase) {
@@ -329,7 +339,7 @@ void TriggerDock::closeEvent(QCloseEvent *event) {
 /// \param mode The trigger mode.
 /// \return Index of mode-value, -1 on error.
 int TriggerDock::setMode(Dso::TriggerMode mode) {
-	if(mode >= Dso::TRIGGERMODE_AUTO && mode <=Dso:: TRIGGERMODE_SINGLE) {
+	if(mode >= Dso::TRIGGERMODE_AUTO && mode < Dso::TRIGGERMODE_COUNT) {
 		this->modeComboBox->setCurrentIndex(mode);
 		return mode;
 	}

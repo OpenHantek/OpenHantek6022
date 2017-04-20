@@ -143,6 +143,9 @@ namespace Hantek {
 		QList<unsigned short int> voltageLimit[HANTEK_CHANNELS];
 		/// The index of the selected gain on the hardware
 		QList<unsigned char> gainIndex;
+		QList<unsigned char> gainDiv;
+		QList<double> sampleSteps; ///< Available samplerate steps in s
+		QList<unsigned char> sampleDiv;
 		/// Calibration data for the channel offsets \todo Should probably be a QList too
 		unsigned short int offsetLimit[HANTEK_CHANNELS][9][OFFSET_COUNT];
 	};

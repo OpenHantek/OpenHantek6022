@@ -92,6 +92,7 @@ namespace Dso {
 		TRIGGERMODE_AUTO,                   ///< Automatic without trigger event
 		TRIGGERMODE_NORMAL,                 ///< Normal mode
 		TRIGGERMODE_SINGLE,                 ///< Stop after the first trigger event
+		TRIGGERMODE_SOFTWARE,               ///< Software trigger mode
 		TRIGGERMODE_COUNT                   ///< The total number of modes
 	};
 	

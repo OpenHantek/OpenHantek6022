@@ -317,6 +317,7 @@ void OpenHantekMainWindow::connectSignals() {
 	
 	connect(this->dsoControl, SIGNAL(availableRecordLengthsChanged(QList<unsigned int>)), this->horizontalDock, SLOT(availableRecordLengthsChanged(QList<unsigned int>)));
 	connect(this->dsoControl, SIGNAL(samplerateLimitsChanged(double, double)), this->horizontalDock, SLOT(samplerateLimitsChanged(double, double)));
+	connect(this->dsoControl, SIGNAL(samplerateSet(int, QList<double>)), this->horizontalDock, SLOT(samplerateSet(int, QList<double>)));
 }
 
 /// \brief Initialize the device with the current settings.

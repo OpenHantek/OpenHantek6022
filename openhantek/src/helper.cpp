@@ -192,7 +192,7 @@ namespace Helper {
 		switch(unit) {
 			case UNIT_VOLTS: {
 				// Voltage string decoding
-				if(unitString.startsWith('\265'))
+				if(unitString.startsWith("µ"))
 					return value * 1e-6;
 				else if(unitString.startsWith('m'))
 					return value * 1e-3;

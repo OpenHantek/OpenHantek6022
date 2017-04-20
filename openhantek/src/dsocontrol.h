@@ -73,6 +73,7 @@ class DsoControl : public QThread {
 		void recordLengthChanged(unsigned long duration); ///< The record length has changed
 		void recordTimeChanged(double duration); ///< The record time duration has changed
 		void samplerateChanged(double samplerate); ///< The samplerate has changed
+		void samplerateSet(int mode, QList<double> sampleSteps); ///< The samplerate has changed
 	
 	public slots:
 		virtual void connectDevice();

@@ -18,16 +18,16 @@ Navigate to the [Releases](https://github.com/OpenHantek/openhantek/releases) pa
 
 ## Building OpenHantek from source
 You need the following packages, to build OpenHantek from source:
-* CMake 3.0+
+* CMake 3.5+
 * Qt 5.3+
 * FFTW 3+ (prebuild files will be downloaded on windows)
-* libusb 1.x (prebuild files will be downloaded on windows)
+* libusb 1.x (prebuild files will be used on windows)
 
 For debian based systems (Ubuntu, Mint) install named requirements like this:
-> apt-get install cmake qttools5-dev qttools5-dev-tools libfftw3-dev binutils-dev libusb-1.0-0-dev
+> apt-get install g++ cmake qttools5-dev qttools5-dev-tools libfftw3-dev binutils-dev libusb-1.0-0-dev
 
 For rpm based distributions (Fedora) use this command:
-> dnf install cmake qt5-qtbase-gui qt5-qttools-devel qt5-qttranslations fftw-devel binutils-devel libusb-devel
+> dnf install cmake gcc-c++ qt5-qtbase-gui qt5-qttools-devel qt5-qttranslations fftw-devel binutils-devel libusb-devel
 
 For MacOSX use homebrew
 > brew update <br>
@@ -53,10 +53,27 @@ Your DSO does not store its firmware permanently -- the firmware has to be sent 
 
 * You need binutils-dev autoconf automake fxload
 * Install the `firmware/*.hex` files into `/usr/local/share/hantek/`.
+
+> mkdir -p /usr/local/share/hantek <br>
+> cp -r firmware/*.hex /usr/local/share/hantek/
+
 * Install the `firmware/90-hantek.rules` file into `/etc/udev/rules.d/`.
-* install fxload (fxload is a program which downloads firmware to USB  devices  based  on
-       AnchorChips  EZ-USB, Cypress EZ-USB FX, or Cypress EZ-USB FX2 microcontrollers.)
+
+> cp firmware/90-hantek.rules /etc/udev/rules.d/
+
+* install fxload (fxload is a program which downloads firmware to USB  devices  based on AnchorChips EZ-USB, Cypress EZ-USB FX, or Cypress EZ-USB FX2 microcontrollers.)
+
+> apt-get install fxload
+
 * Add your current user to the **plugdev** group.
+
+> usermod -a -G plugdev {user id}
+
+## For 6022BE
+You can adjust samplerate and use software triggering for 6022BE.
+   - Support 48, 24, 16, 8, 4, 2, 1 M and 500, 200, 100 k Hz samplerates with modded firmware by [jhoenicke](https://github.com/rpcope1/Hantek6022API) 
+   - Support software trigger by detecting rising or falling edge of signal. Use software trigger item on the trigger menu. For trigger level, adjust left arrow on the right-side of the graph.
+   - Note that I dropped first 1000 samples due to unstable/unusual reading.
 
 ## Contribute
 Please use Github Issues to report any problems or enhancements or send us pull requests. Some random notes:

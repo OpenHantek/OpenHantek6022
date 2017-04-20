@@ -1057,11 +1057,11 @@ namespace Hantek {
 	// class ControlSetTimeDIV
 	/// \brief Sets the data array to the default values.
 	ControlSetTimeDIV::ControlSetTimeDIV() : Helper::DataArray<uint8_t>(1) {
-		this->init();
+		this->setDiv(1);
 	}
 
-	void ControlSetTimeDIV::init() {
-		this->array[0] = 0x01;
+	void ControlSetTimeDIV::setDiv(uint8_t val) {
+		this->array[0] = val;
 	}
 
 	//////////////////////////////////////////////////////////////////////////////

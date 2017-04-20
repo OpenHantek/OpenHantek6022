@@ -100,6 +100,8 @@ namespace Dso {
 				return QApplication::tr("Normal");
 			case TRIGGERMODE_SINGLE:
 				return QApplication::tr("Single");
+			case TRIGGERMODE_SOFTWARE:
+				return QApplication::tr("Software");
 			default:
 				return QString();
 		}

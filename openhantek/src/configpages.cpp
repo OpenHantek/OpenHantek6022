@@ -165,6 +165,39 @@ DsoConfigColorsPage::DsoConfigColorsPage(DsoSettings *settings, QWidget *parent)
 	this->screenGroup = new QGroupBox(tr("Screen"));
 	this->screenGroup->setLayout(this->screenLayout);
 	
+	// Print category
+	this->printAxesLabel = new QLabel(tr("Axes"));
+	this->printAxesColorBox = new ColorBox(this->settings->view.color.print.axes);
+	this->printBackgroundLabel = new QLabel(tr("Background"));
+	this->printBackgroundColorBox = new ColorBox(this->settings->view.color.print.background);
+	this->printBorderLabel = new QLabel(tr("Border"));
+	this->printBorderColorBox = new ColorBox(this->settings->view.color.print.border);
+	this->printGridLabel = new QLabel(tr("Grid"));
+	this->printGridColorBox = new ColorBox(this->settings->view.color.print.grid);
+	this->printMarkersLabel = new QLabel(tr("Markers"));
+	this->printMarkersColorBox = new ColorBox(this->settings->view.color.print.markers);
+	this->printTextLabel = new QLabel(tr("Text"));
+	this->printTextColorBox = new ColorBox(this->settings->view.color.print.text);
+	
+	this->printLayout = new QGridLayout();
+	this->printLayout->setColumnStretch(0, 1);
+	this->printLayout->setColumnMinimumWidth(1, 80);
+	this->printLayout->addWidget(this->printBackgroundLabel, 0, 0);
+	this->printLayout->addWidget(this->printBackgroundColorBox, 0, 1);
+	this->printLayout->addWidget(this->printGridLabel, 1, 0);
+	this->printLayout->addWidget(this->printGridColorBox, 1, 1);
+	this->printLayout->addWidget(this->printAxesLabel, 2, 0);
+	this->printLayout->addWidget(this->printAxesColorBox, 2, 1);
+	this->printLayout->addWidget(this->printBorderLabel, 3, 0);
+	this->printLayout->addWidget(this->printBorderColorBox, 3, 1);
+	this->printLayout->addWidget(this->printMarkersLabel, 4, 0);
+	this->printLayout->addWidget(this->printMarkersColorBox, 4, 1);
+	this->printLayout->addWidget(this->printTextLabel, 5, 0);
+	this->printLayout->addWidget(this->printTextColorBox, 5, 1);
+	
+	this->printGroup = new QGroupBox(tr("Print"));
+	this->printGroup->setLayout(this->printLayout);
+
 	// Graph category
 	this->channelLabel = new QLabel(tr("Channel"));
 	this->channelLabel->setAlignment(Qt::AlignHCenter);
@@ -194,6 +227,7 @@ DsoConfigColorsPage::DsoConfigColorsPage(DsoSettings *settings, QWidget *parent)
 	// Main layout
 	this->mainLayout = new QVBoxLayout();
 	this->mainLayout->addWidget(this->screenGroup);
+	this->mainLayout->addWidget(this->printGroup);
 	this->mainLayout->addWidget(this->graphGroup);
 	this->mainLayout->addStretch(1);
 	
@@ -213,6 +247,14 @@ void DsoConfigColorsPage::saveSettings() {
 	this->settings->view.color.screen.grid = this->gridColorBox->getColor();
 	this->settings->view.color.screen.markers = this->markersColorBox->getColor();
 	this->settings->view.color.screen.text = this->textColorBox->getColor();
+	
+	// Print category
+	this->settings->view.color.print.axes = this->printAxesColorBox->getColor();
+	this->settings->view.color.print.background = this->printBackgroundColorBox->getColor();
+	this->settings->view.color.print.border = this->printBorderColorBox->getColor();
+	this->settings->view.color.print.grid = this->printGridColorBox->getColor();
+	this->settings->view.color.print.markers = this->printMarkersColorBox->getColor();
+	this->settings->view.color.print.text = this->printTextColorBox->getColor();
 	
 	// Graph category
 	for(int channel = 0; channel < this->settings->scope.voltage.count(); ++channel) {

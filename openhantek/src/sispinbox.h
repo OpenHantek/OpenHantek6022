@@ -56,6 +56,7 @@ class SiSpinBox : public QDoubleSpinBox
 		bool setUnit(Helper::Unit unit);
 		void setUnitPostfix(const QString &postfix);
 		void setSteps(const QList<double> &steps);
+		void setMode(const int mode);
 	
 	private:
 		void init();
@@ -63,6 +64,8 @@ class SiSpinBox : public QDoubleSpinBox
 		Helper::Unit unit; ///< The SI unit used for this spin box
 		QString unitPostfix; ///< Shown after the unit
 		QList<double> steps; ///< The steps, begins from start after last element
+		int mode; ///< The mode, fixed or constant
+
 		
 		bool steppedTo; ///< true, if the current value was reached using stepBy
 		int stepId; ///< The index of the last step reached using stepBy
