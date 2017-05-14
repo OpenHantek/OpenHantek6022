@@ -22,6 +22,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include <cmath>
+#include <algorithm>
 
 #include <QFile>
 #include <QImage>
@@ -525,47 +526,71 @@ bool Exporter::doExport() {
 
     QTextStream csvStream(&csvFile);
 
-    for (int channel = 0; channel < this->settings->scope.voltage.count();
-         ++channel) {
-      if (this->dataAnalyzer->data(channel)) {
-        if (this->settings->scope.voltage[channel].used) {
-          // Start with channel name and the sample interval
-          csvStream
-              << "\"" << this->settings->scope.voltage[channel].name << "\","
-              << this->dataAnalyzer->data(channel)->samples.voltage.interval;
+    int chCount = settings->scope.voltage.count();
+    std::vector<const SampleValues *> voltageData(size_t(chCount), nullptr);
+    std::vector<const SampleValues *> spectrumData(size_t(chCount), nullptr);
+    size_t maxRow = 0;
+    bool isSpectrumUsed = false;
+    double timeInterval = 0;
+    double freqInterval = 0;
 
-          // And now all sample values in volts
-          for (unsigned int position = 0;
-               position <
-               this->dataAnalyzer->data(channel)->samples.voltage.sample.size();
-               ++position)
-            csvStream << ","
-                      << this->dataAnalyzer->data(channel)
-                             ->samples.voltage.sample[position];
-
-          // Finally a newline
-          csvStream << '\n';
+    for (int channel = 0; channel < chCount; ++channel) {
+      if (dataAnalyzer->data(channel)) {
+        if (settings->scope.voltage[channel].used) {
+          voltageData[channel] = &(dataAnalyzer->data(channel)->samples.voltage);
+          maxRow = std::max(maxRow, voltageData[channel]->sample.size());
+          timeInterval = dataAnalyzer->data(channel)->samples.voltage.interval;
         }
-
-        if (this->settings->scope.spectrum[channel].used) {
-          // Start with channel name and the sample interval
-          csvStream
-              << "\"" << this->settings->scope.spectrum[channel].name << "\","
-              << this->dataAnalyzer->data(channel)->samples.spectrum.interval;
-
-          // And now all magnitudes in dB
-          for (unsigned int position = 0;
-               position < this->dataAnalyzer->data(channel)
-                              ->samples.spectrum.sample.size();
-               ++position)
-            csvStream << ","
-                      << this->dataAnalyzer->data(channel)
-                             ->samples.spectrum.sample[position];
-
-          // Finally a newline
-          csvStream << '\n';
+        if (settings->scope.spectrum[channel].used) {
+          spectrumData[channel] = &(dataAnalyzer->data(channel)->samples.spectrum);
+          maxRow = std::max(maxRow, spectrumData[channel]->sample.size());
+          freqInterval = dataAnalyzer->data(channel)->samples.spectrum.interval;
+          isSpectrumUsed = true;
         }
       }
+    }
+
+    // Start with channel names
+    csvStream << "\"t\"";
+    for (int channel = 0; channel < chCount; ++channel) {
+      if (voltageData[channel] != nullptr) {
+        csvStream << ",\"" << settings->scope.voltage[channel].name << "\"";
+      }
+    }
+    if (isSpectrumUsed) {
+      csvStream << ",\"f\"";
+      for (int channel = 0; channel < chCount; ++channel) {
+        if (spectrumData[channel] != nullptr) {
+          csvStream << ",\"" << settings->scope.spectrum[channel].name << "\"";
+        }
+      }
+    }
+    csvStream << "\n";
+
+    for (unsigned int row = 0; row < maxRow; ++row) {
+
+      csvStream << timeInterval * row;
+      for (int channel = 0; channel < chCount; ++channel) {
+        if (voltageData[channel] != nullptr) {
+          csvStream << ",";
+          if (row < voltageData[channel]->sample.size()) {
+            csvStream << voltageData[channel]->sample[row];
+          }
+        }
+      }
+
+      if (isSpectrumUsed) {
+        csvStream << "," << freqInterval * row;
+        for (int channel = 0; channel < chCount; ++channel) {
+          if (spectrumData[channel] != nullptr) {
+            csvStream << ",";
+            if (row < spectrumData[channel]->sample.size()) {
+              csvStream << spectrumData[channel]->sample[row];
+            }
+          }
+        }
+      }
+      csvStream << "\n";
     }
 
     csvFile.close();

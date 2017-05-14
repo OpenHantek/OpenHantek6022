@@ -266,6 +266,8 @@ int Control::getCaptureState() {
 int Control::getSamples(bool process) {
   int errorCode;
 
+  const unsigned int DROP_DSO6022_SAMPLES = 0x410;
+
   if (this->device->getModel() != MODEL_DSO6022BE) {
     // Request data
     errorCode = this->device->bulkCommand(this->command[BULK_GETDATA], 1);
@@ -393,9 +395,9 @@ int Control::getSamples(bool process) {
     } else {
       // Normal mode, channels are using their separate buffers
       sampleCount = totalSampleCount / HANTEK_CHANNELS;
-      // if device is 6022BE, drop first 1000 samples
+      // if device is 6022BE, drop first DROP_DSO6022_SAMPLES samples
       if (this->device->getModel() == MODEL_DSO6022BE)
-        sampleCount -= 1000;
+        sampleCount -= DROP_DSO6022_SAMPLES;
       for (int channel = 0; channel < HANTEK_CHANNELS; ++channel) {
         if (this->settings.voltage[channel].used) {
           // Resize sample vector
@@ -438,8 +440,8 @@ int Control::getSamples(bool process) {
           } else {
             if (this->device->getModel() == MODEL_DSO6022BE) {
               bufferPosition += channel;
-              // if device is 6022BE, offset 1000 incrementally
-              bufferPosition += 1000 * 2;
+              // if device is 6022BE, offset DROP_DSO6022_SAMPLES incrementally
+              bufferPosition += DROP_DSO6022_SAMPLES * 2;
             } else
               bufferPosition += HANTEK_CHANNELS - 1 - channel;
 

@@ -174,15 +174,17 @@ void DataAnalyzer::run() {
                       .voltage[this->settings->scope.physicalChannels]
                       .misc) {
           case Dso::MATHMODE_1ADD2:
-            *(resultIterator++) = *(ch1Iterator++) + *(ch2Iterator++);
+            *resultIterator = *ch1Iterator + *ch2Iterator;
             break;
           case Dso::MATHMODE_1SUB2:
-            *(resultIterator++) = *(ch1Iterator++) - *(ch2Iterator++);
+            *resultIterator = *ch1Iterator - *ch2Iterator;
             break;
           case Dso::MATHMODE_2SUB1:
-            *(resultIterator++) = *(ch2Iterator++) - *(ch1Iterator++);
+            *resultIterator = *ch2Iterator - *ch1Iterator;
             break;
           }
+          ++ch1Iterator;
+          ++ch2Iterator;
         }
       }
     } else {
