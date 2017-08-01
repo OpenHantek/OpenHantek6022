@@ -721,7 +721,7 @@ unsigned int Control::updateSamplerate(unsigned int downsampler,
       else { // Downsampling factors 3 and 4 are not supported
         samplerateId = 3;
         downsampler = 5;
-        downsamplerValue = 0xffff;
+        downsamplerValue = (short int)0xffff;
       }
     } else {
       // For any dividers above the downsampling factor can be set directly

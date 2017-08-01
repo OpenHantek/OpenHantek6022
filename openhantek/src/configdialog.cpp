@@ -56,6 +56,7 @@ DsoConfigDialog::DsoConfigDialog(DsoSettings *settings, QWidget *parent,
       QSize(CONFIG_LIST_WIDTH - 2 * this->contentsWidget->frameWidth(),
             CONFIG_LIST_ITEMHEIGHT));
   this->contentsWidget->setMaximumWidth(CONFIG_LIST_WIDTH);
+  this->contentsWidget->setMinimumWidth(CONFIG_LIST_WIDTH);
   this->contentsWidget->setMinimumHeight(
       CONFIG_LIST_ITEMHEIGHT * 3 + 2 * (this->contentsWidget->frameWidth()));
 

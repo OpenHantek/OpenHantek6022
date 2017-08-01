@@ -206,14 +206,16 @@ bool Exporter::doExport() {
                 tr("/div"),
             QTextOption(Qt::AlignRight));
         // Print spectrum magnitude
-        painter.setPen(colorValues->spectrum[channel]);
-        painter.drawText(QRectF(lineHeight * 6 + stretchBase * 2, top,
-                                stretchBase * 2, lineHeight),
-                         Helper::valueToString(
-                             this->settings->scope.spectrum[channel].magnitude,
-                             Helper::UNIT_DECIBEL, 0) +
-                             tr("/div"),
-                         QTextOption(Qt::AlignRight));
+        if (this->settings->scope.spectrum[channel].used) {
+            painter.setPen(colorValues->spectrum[channel]);
+            painter.drawText(QRectF(lineHeight * 6 + stretchBase * 2, top,
+                                    stretchBase * 2, lineHeight),
+                             Helper::valueToString(
+                                 this->settings->scope.spectrum[channel].magnitude,
+                                 Helper::UNIT_DECIBEL, 0) +
+                                 tr("/div"),
+                             QTextOption(Qt::AlignRight));
+        }
 
         // Amplitude string representation (4 significant digits)
         painter.setPen(colorValues->text);

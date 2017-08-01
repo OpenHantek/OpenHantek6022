@@ -92,26 +92,27 @@ private:
 
   QVBoxLayout *mainLayout;
 
-  QGroupBox *screenGroup;
-  QGridLayout *screenLayout;
+  QGroupBox *colorsGroup;
+  QGridLayout *colorsLayout;
+
+  QLabel *screenColorsLabel, *printColorsLabel;
   QLabel *axesLabel, *backgroundLabel, *borderLabel, *gridLabel, *markersLabel,
       *textLabel;
   ColorBox *axesColorBox, *backgroundColorBox, *borderColorBox, *gridColorBox,
       *markersColorBox, *textColorBox;
 
-  QGroupBox *printGroup;
-  QGridLayout *printLayout;
-  QLabel *printAxesLabel, *printBackgroundLabel, *printBorderLabel,
-      *printGridLabel, *printMarkersLabel, *printTextLabel;
   ColorBox *printAxesColorBox, *printBackgroundColorBox, *printBorderColorBox,
       *printGridColorBox, *printMarkersColorBox, *printTextColorBox;
 
-  QGroupBox *graphGroup;
-  QGridLayout *graphLayout;
-  QLabel *channelLabel, *spectrumLabel;
+  QLabel *graphLabel;
+
+  QLabel *screenChannelLabel, *screenSpectrumLabel, *printChannelLabel,
+      *printSpectrumLabel;
   QList<QLabel *> colorLabel;
-  QList<ColorBox *> channelColorBox;
-  QList<ColorBox *> spectrumColorBox;
+  QList<ColorBox *> screenChannelColorBox;
+  QList<ColorBox *> screenSpectrumColorBox;
+  QList<ColorBox *> printChannelColorBox;
+  QList<ColorBox *> printSpectrumColorBox;
 
 private slots:
 };
@@ -141,6 +142,7 @@ private:
 
   QGroupBox *exportGroup;
   QGridLayout *exportLayout;
+  QCheckBox *screenColorCheckBox;
   QLabel *imageWidthLabel;
   QSpinBox *imageWidthSpinBox;
   QLabel *imageHeightLabel;

@@ -413,8 +413,7 @@ int DsoSettings::load(const QString &fileName) {
         (Dso::InterpolationMode)settingsLoader->value("interpolation").toInt();
   if (settingsLoader->contains("screenColorImages"))
     this->view.screenColorImages =
-        (Dso::InterpolationMode)settingsLoader->value("screenColorImages")
-            .toBool();
+        settingsLoader->value("screenColorImages").toBool();
   if (settingsLoader->contains("zoom"))
     this->view.zoom =
         (Dso::InterpolationMode)settingsLoader->value("zoom").toBool();

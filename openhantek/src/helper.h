@@ -108,6 +108,7 @@ template <class T> T DataArray<T>::operator[](unsigned int index) {
 template <class T> unsigned int DataArray<T>::getSize() const {
   return this->size;
 }
-};
+
+} // namespace Helper
 
 #endif
