@@ -28,7 +28,7 @@ You need a OpenGL 3.x capable graphics card for OpenHantek.
 
 ### Install requirements on Linux
 For debian based systems (Ubuntu, Mint) install named requirements like this:
-> apt-get install g++ cmake qttools5-dev qttools5-dev-tools libfftw3-dev binutils-dev libusb-1.0-0-dev
+> apt install g++ cmake qttools5-dev qttools5-dev-tools libfftw3-dev binutils-dev libusb-1.0-0-dev libqt5opengl5-dev
 
 For rpm based distributions (Fedora) use this command:
 > dnf install cmake gcc-c++ qt5-qtbase-gui qt5-qttools-devel qt5-qttranslations fftw-devel binutils-devel libusb-devel
