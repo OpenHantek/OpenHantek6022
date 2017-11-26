@@ -51,7 +51,7 @@ public:
 
   void setFrequencybase(double timebase);
   void setSamplerate(double samplerate);
-  void setTimebase(double timebase);
+  double setTimebase(double timebase);
   void setRecordLength(unsigned int recordLength);
   int setFormat(Dso::GraphFormat format);
 
@@ -75,6 +75,7 @@ protected:
                              ///interpreted and shown
 
   DsoSettings *settings; ///< The settings provided by the parent class
+  QList<double> timebaseSteps; ///< Steps for the timebase spinbox
 
   QStringList formatStrings; ///< Strings for the formats
 

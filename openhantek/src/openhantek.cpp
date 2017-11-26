@@ -691,9 +691,8 @@ void OpenHantekMainWindow::recordTimeChanged(double duration) {
   if (this->settings->scope.horizontal.samplerateSet &&
       this->settings->scope.horizontal.recordLength != UINT_MAX) {
     // The samplerate was set, let's adapt the timebase accordingly
-    this->settings->scope.horizontal.timebase = duration / DIVS_TIME;
-    this->horizontalDock->setTimebase(
-        this->settings->scope.horizontal.timebase);
+    this->settings->scope.horizontal.timebase =
+      this->horizontalDock->setTimebase(duration / DIVS_TIME);
   }
 
   // The trigger position should be kept at the same place but the timebase has
@@ -733,6 +732,7 @@ void OpenHantekMainWindow::samplerateSelected() {
 void OpenHantekMainWindow::timebaseSelected() {
   this->dsoControl->setRecordTime(this->settings->scope.horizontal.timebase *
                                   DIVS_TIME);
+  this->dsoWidget->updateTimebase(settings->scope.horizontal.timebase);
 }
 
 /// \brief Sets the offset of the oscilloscope for the given channel.

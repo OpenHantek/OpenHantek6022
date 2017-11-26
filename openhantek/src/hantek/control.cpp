@@ -266,7 +266,8 @@ int Control::getCaptureState() {
 int Control::getSamples(bool process) {
   int errorCode;
 
-  const unsigned int DROP_DSO6022_SAMPLES = 0x410;
+  const unsigned int DROP_DSO6022_HEAD = 0x410;
+  const unsigned int DROP_DSO6022_TAIL = 0x3F0;
 
   if (this->device->getModel() != MODEL_DSO6022BE) {
     // Request data
@@ -395,13 +396,15 @@ int Control::getSamples(bool process) {
     } else {
       // Normal mode, channels are using their separate buffers
       sampleCount = totalSampleCount / HANTEK_CHANNELS;
-      // if device is 6022BE, drop first DROP_DSO6022_SAMPLES samples
+      // if device is 6022BE, drop heading & trailing samples
       if (this->device->getModel() == MODEL_DSO6022BE)
-        sampleCount -= DROP_DSO6022_SAMPLES;
+        sampleCount -= (DROP_DSO6022_HEAD + DROP_DSO6022_TAIL);
       for (int channel = 0; channel < HANTEK_CHANNELS; ++channel) {
         if (this->settings.voltage[channel].used) {
           // Resize sample vector
-          this->samples[channel].resize(sampleCount);
+          if (samples[channel].size() < sampleCount) {
+            this->samples[channel].resize(sampleCount);
+          }
 
           // Convert data from the oscilloscope and write it into the sample
           // buffer
@@ -440,8 +443,8 @@ int Control::getSamples(bool process) {
           } else {
             if (this->device->getModel() == MODEL_DSO6022BE) {
               bufferPosition += channel;
-              // if device is 6022BE, offset DROP_DSO6022_SAMPLES incrementally
-              bufferPosition += DROP_DSO6022_SAMPLES * 2;
+              // if device is 6022BE, offset DROP_DSO6022_HEAD incrementally
+              bufferPosition += DROP_DSO6022_HEAD * 2;
             } else
               bufferPosition += HANTEK_CHANNELS - 1 - channel;
 
@@ -1098,13 +1101,11 @@ void Control::connectDevice() {
     this->specification.samplerate.single.base = 1e6;
     this->specification.samplerate.single.max = 48e6;
     this->specification.samplerate.single.maxDownsampler = 10;
-    this->specification.samplerate.single.recordLengths << UINT_MAX << 10240
-                                                        << 32768;
+    this->specification.samplerate.single.recordLengths << UINT_MAX << 10240;
     this->specification.samplerate.multi.base = 1e6;
     this->specification.samplerate.multi.max = 48e6;
     this->specification.samplerate.multi.maxDownsampler = 10;
-    this->specification.samplerate.multi.recordLengths << UINT_MAX << 20480
-                                                       << 65536;
+    this->specification.samplerate.multi.recordLengths << UINT_MAX << 20480;
     this->specification.bufferDividers << 1000 << 1 << 1;
     this->specification.gainSteps << 0.08 << 0.16 << 0.40 << 0.80 << 1.60
                                   << 4.00 << 8.0 << 16.0 << 40.0;
@@ -1248,12 +1249,14 @@ double Control::setSamplerate(double samplerate) {
     this->controlPending[CONTROLINDEX_SETTIMEDIV] = true;
     this->settings.samplerate.current = samplerate;
 
+    // Provide margin for SW trigger
+    unsigned int sampleMargin = 2000;
     // Check for Roll mode
     if (this->settings.samplerate.limits
             ->recordLengths[this->settings.recordLengthId] != UINT_MAX)
       emit recordTimeChanged(
-          (double)this->settings.samplerate.limits
-              ->recordLengths[this->settings.recordLengthId] /
+          (double)(this->settings.samplerate.limits
+              ->recordLengths[this->settings.recordLengthId] - sampleMargin) /
           this->settings.samplerate.current);
     emit samplerateChanged(this->settings.samplerate.current);
 
