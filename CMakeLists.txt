@@ -9,7 +9,7 @@ ENDIF(NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
 # Find external libraries
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake/")
 
-INCLUDE_DIRECTORIES(.)
+INCLUDE_DIRECTORIES("." "/usr/local/include")
 
 # Qt Widgets based Gui with OpenGL canvas
 add_subdirectory(openhantek)
