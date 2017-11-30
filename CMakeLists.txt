@@ -18,7 +18,7 @@ add_subdirectory(openhantek)
 include(cmake/CPackInfos.cmake)
 
 if (WIN32)
-    install(FILES ChangeLog COPYING readme.md DESTINATION ".")
+    install(FILES COPYING readme.md DESTINATION ".")
 endif()
 
 # Add auxiliary files to the project, so that these files appear in VisualStudio/QtCreator
