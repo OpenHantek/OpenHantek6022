@@ -70,10 +70,6 @@ private:
   int readSettings(const QString &fileName = QString());
   int writeSettings(const QString &fileName = QString());
 
-  // Window translation events
-  void moveEvent(QMoveEvent *event);
-  void resizeEvent(QResizeEvent *event);
-
   // Actions
   QAction *newAction, *openAction, *saveAction, *saveAsAction;
   QAction *printAction, *exportAsAction;

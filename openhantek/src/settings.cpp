@@ -36,24 +36,6 @@ DsoSettings::DsoSettings(QWidget *parent) : QObject(parent) {
   // Options
   this->options.alwaysSave = true;
   this->options.imageSize = QSize(640, 480);
-  // Main window
-  this->options.window.position = QPoint();
-  this->options.window.size = QSize(800, 600);
-  // Docking windows and toolbars
-  QList<DsoSettingsOptionsWindowPanel *> panels;
-  panels.append(&(this->options.window.dock.horizontal));
-  panels.append(&(this->options.window.dock.spectrum));
-  panels.append(&(this->options.window.dock.trigger));
-  panels.append(&(this->options.window.dock.voltage));
-  panels.append(&(this->options.window.toolbar.file));
-  panels.append(&(this->options.window.toolbar.oscilloscope));
-  panels.append(&(this->options.window.toolbar.view));
-  for (int panelId = 0; panelId < panels.size(); ++panelId) {
-    panels[panelId]->floating = false;
-    panels[panelId]->position = QPoint();
-    panels[panelId]->visible = true;
-  }
-
   // Oscilloscope settings
   // Horizontal axis
   this->scope.horizontal.format = Dso::GRAPHFORMAT_TY;
@@ -213,68 +195,17 @@ int DsoSettings::load(const QString &fileName) {
   if (settingsLoader->status() != QSettings::NoError)
     return -settingsLoader->status();
 
-  // Main window layout and other general options
-  settingsLoader->beginGroup("options");
-  settingsLoader->beginGroup("window");
-  // Docking windows and toolbars
-  settingsLoader->beginGroup("docks");
-  QList<DsoSettingsOptionsWindowPanel *> docks;
-  docks.append(&(this->options.window.dock.horizontal));
-  docks.append(&(this->options.window.dock.spectrum));
-  docks.append(&(this->options.window.dock.trigger));
-  docks.append(&(this->options.window.dock.voltage));
-  QStringList dockNames;
-  dockNames << "horizontal"
-            << "spectrum"
-            << "trigger"
-            << "voltage";
-  for (int dockId = 0; dockId < docks.size(); ++dockId) {
-    settingsLoader->beginGroup(dockNames[dockId]);
-    if (settingsLoader->contains("floating"))
-      docks[dockId]->floating = settingsLoader->value("floating").toBool();
-    if (settingsLoader->contains("position"))
-      docks[dockId]->position = settingsLoader->value("position").toPoint();
-    if (settingsLoader->contains("visible"))
-      docks[dockId]->visible = settingsLoader->value("visible").toBool();
-    settingsLoader->endGroup();
-  }
-  settingsLoader->endGroup();
-  settingsLoader->beginGroup("toolbars");
-  QList<DsoSettingsOptionsWindowPanel *> toolbars;
-  toolbars.append(&(this->options.window.toolbar.file));
-  toolbars.append(&(this->options.window.toolbar.oscilloscope));
-  toolbars.append(&(this->options.window.toolbar.view));
-  QStringList toolbarNames;
-  toolbarNames << "file"
-               << "oscilloscope"
-               << "view";
-  for (int toolbarId = 0; toolbarId < toolbars.size(); ++toolbarId) {
-    settingsLoader->beginGroup(toolbarNames[toolbarId]);
-    if (settingsLoader->contains("floating"))
-      toolbars[toolbarId]->floating =
-          settingsLoader->value("floating").toBool();
-    if (settingsLoader->contains("position"))
-      toolbars[toolbarId]->position =
-          settingsLoader->value("position").toPoint();
-    if (settingsLoader->contains("visible"))
-      toolbars[toolbarId]->visible = settingsLoader->value("visible").toBool();
-    settingsLoader->endGroup();
-  }
-  settingsLoader->endGroup();
-  // Main window
-  if (settingsLoader->contains("pos"))
-    this->options.window.position = settingsLoader->value("pos").toPoint();
-  if (settingsLoader->contains("size"))
-    this->options.window.size = settingsLoader->value("size").toSize();
-  settingsLoader->endGroup();
   // General options
+  settingsLoader->beginGroup("options");
   if (settingsLoader->contains("alwaysSave"))
     this->options.alwaysSave = settingsLoader->value("alwaysSave").toBool();
   if (settingsLoader->contains("imageSize"))
     this->options.imageSize = settingsLoader->value("imageSize").toSize();
+  // If the window/* keys were found in this group, remove them from settings
+  settingsLoader->remove("window");
   settingsLoader->endGroup();
 
-  // Oszilloskope settings
+  // Oscilloscope settings
   settingsLoader->beginGroup("scope");
   // Horizontal axis
   settingsLoader->beginGroup("horizontal");
@@ -419,6 +350,11 @@ int DsoSettings::load(const QString &fileName) {
         (Dso::InterpolationMode)settingsLoader->value("zoom").toBool();
   settingsLoader->endGroup();
 
+  settingsLoader->beginGroup("window");
+  mainWindowGeometry = settingsLoader->value("geometry").toByteArray();
+  mainWindowState = settingsLoader->value("state").toByteArray();
+  settingsLoader->endGroup();
+
   delete settingsLoader;
 
   return 0;
@@ -441,48 +377,6 @@ int DsoSettings::save(const QString &fileName) {
   if (complete) {
     // Main window layout and other general options
     settingsSaver->beginGroup("options");
-    settingsSaver->beginGroup("window");
-    // Docking windows and toolbars
-    settingsSaver->beginGroup("docks");
-    QList<DsoSettingsOptionsWindowPanel *> docks;
-    docks.append(&(this->options.window.dock.horizontal));
-    docks.append(&(this->options.window.dock.spectrum));
-    docks.append(&(this->options.window.dock.trigger));
-    docks.append(&(this->options.window.dock.voltage));
-    QStringList dockNames;
-    dockNames << "horizontal"
-              << "spectrum"
-              << "trigger"
-              << "voltage";
-    for (int dockId = 0; dockId < docks.size(); ++dockId) {
-      settingsSaver->beginGroup(dockNames[dockId]);
-      settingsSaver->setValue("floating", docks[dockId]->floating);
-      settingsSaver->setValue("position", docks[dockId]->position);
-      settingsSaver->setValue("visible", docks[dockId]->visible);
-      settingsSaver->endGroup();
-    }
-    settingsSaver->endGroup();
-    settingsSaver->beginGroup("toolbars");
-    QList<DsoSettingsOptionsWindowPanel *> toolbars;
-    toolbars.append(&(this->options.window.toolbar.file));
-    toolbars.append(&(this->options.window.toolbar.oscilloscope));
-    toolbars.append(&(this->options.window.toolbar.view));
-    QStringList toolbarNames;
-    toolbarNames << "file"
-                 << "oscilloscope"
-                 << "view";
-    for (int toolbarId = 0; toolbarId < toolbars.size(); ++toolbarId) {
-      settingsSaver->beginGroup(toolbarNames[toolbarId]);
-      settingsSaver->setValue("floating", toolbars[toolbarId]->floating);
-      settingsSaver->setValue("position", toolbars[toolbarId]->position);
-      settingsSaver->setValue("visible", toolbars[toolbarId]->visible);
-      settingsSaver->endGroup();
-    }
-    settingsSaver->endGroup();
-    // Main window
-    settingsSaver->setValue("pos", this->options.window.position);
-    settingsSaver->setValue("size", this->options.window.size);
-    settingsSaver->endGroup();
     settingsSaver->setValue("alwaysSave", this->options.alwaysSave);
     settingsSaver->setValue("imageSize", this->options.imageSize);
     settingsSaver->endGroup();
@@ -574,6 +468,11 @@ int DsoSettings::save(const QString &fileName) {
     settingsSaver->setValue("screenColorImages", this->view.screenColorImages);
   }
   settingsSaver->setValue("zoom", this->view.zoom);
+  settingsSaver->endGroup();
+
+  settingsSaver->beginGroup("window");
+  settingsSaver->setValue("geometry", mainWindowGeometry);
+  settingsSaver->setValue("state", mainWindowState);
   settingsSaver->endGroup();
 
   delete settingsSaver;

@@ -35,6 +35,19 @@
 #include "settings.h"
 #include "sispinbox.h"
 
+namespace {
+
+void SetupDockWidget(QDockWidget *dockWindow, QWidget *dockWidget, QLayout *layout) {
+  dockWindow->setObjectName(dockWindow->windowTitle());
+  dockWindow->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
+  dockWidget->setLayout(layout);
+  dockWidget->setSizePolicy(QSizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed,
+                                   QSizePolicy::DefaultType));
+  dockWindow->setWidget(dockWidget);
+}
+
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 // class HorizontalDock
 /// \brief Initializes the horizontal axis docking window.
@@ -90,11 +103,8 @@ HorizontalDock::HorizontalDock(DsoSettings *settings, QWidget *parent,
   this->dockLayout->addWidget(this->formatLabel, 4, 0);
   this->dockLayout->addWidget(this->formatComboBox, 4, 1);
 
-  this->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
-
   this->dockWidget = new QWidget();
-  this->dockWidget->setLayout(this->dockLayout);
-  this->setWidget(this->dockWidget);
+  SetupDockWidget(this, dockWidget, dockLayout);
 
   // Connect signals and slots
   connect(this->samplerateSiSpinBox, SIGNAL(valueChanged(double)), this,
@@ -337,11 +347,8 @@ TriggerDock::TriggerDock(DsoSettings *settings,
   this->dockLayout->addWidget(this->slopeLabel, 2, 0);
   this->dockLayout->addWidget(this->slopeComboBox, 2, 1);
 
-  this->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
-
   this->dockWidget = new QWidget();
-  this->dockWidget->setLayout(this->dockLayout);
-  this->setWidget(this->dockWidget);
+  SetupDockWidget(this, dockWidget, dockLayout);
 
   // Connect signals and slots
   connect(this->modeComboBox, SIGNAL(currentIndexChanged(int)), this,
@@ -479,11 +486,8 @@ SpectrumDock::SpectrumDock(DsoSettings *settings, QWidget *parent,
     this->dockLayout->addWidget(this->magnitudeComboBox[channel], channel, 1);
   }
 
-  this->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
-
   this->dockWidget = new QWidget();
-  this->dockWidget->setLayout(this->dockLayout);
-  this->setWidget(this->dockWidget);
+  SetupDockWidget(this, dockWidget, dockLayout);
 
   // Connect signals and slots
   for (int channel = 0; channel < this->settings->scope.voltage.count();
@@ -630,11 +634,8 @@ VoltageDock::VoltageDock(DsoSettings *settings, QWidget *parent,
                                 1);
   }
 
-  this->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
-
   this->dockWidget = new QWidget();
-  this->dockWidget->setLayout(this->dockLayout);
-  this->setWidget(this->dockWidget);
+  SetupDockWidget(this, dockWidget, dockLayout);
 
   // Connect signals and slots
   for (int channel = 0; channel < this->settings->scope.voltage.count();

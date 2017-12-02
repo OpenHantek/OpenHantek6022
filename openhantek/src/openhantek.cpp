@@ -88,10 +88,6 @@ OpenHantekMainWindow::OpenHantekMainWindow(QWidget *parent,
   // Apply the settings after the gui is initialized
   this->applySettings();
 
-  // Update stored window size and position
-  this->settings->options.window.position = this->pos();
-  this->settings->options.window.size = this->size();
-
   // Connect all signals
   this->connectSignals();
 
@@ -233,10 +229,22 @@ void OpenHantekMainWindow::createMenus() {
   this->helpMenu->addAction(this->aboutQtAction);
 }
 
+namespace {
+
+QToolBar* CreateToolBar(const QString& title) {
+  QToolBar* newObj = new QToolBar(title);
+  newObj->setObjectName(title);
+  newObj->setAllowedAreas(Qt::TopToolBarArea | Qt::LeftToolBarArea);
+  return newObj;
+}
+
+}
+
 /// \brief Create the toolbars and their buttons.
 void OpenHantekMainWindow::createToolBars() {
-  this->fileToolBar = new QToolBar(tr("File"));
-  this->fileToolBar->setAllowedAreas(Qt::TopToolBarArea);
+
+  // File
+  this->fileToolBar = CreateToolBar(tr("File"));
   this->fileToolBar->addAction(this->openAction);
   this->fileToolBar->addAction(this->saveAction);
   this->fileToolBar->addAction(this->saveAsAction);
@@ -244,10 +252,12 @@ void OpenHantekMainWindow::createToolBars() {
   this->fileToolBar->addAction(this->printAction);
   this->fileToolBar->addAction(this->exportAsAction);
 
-  this->oscilloscopeToolBar = new QToolBar(tr("Oscilloscope"));
+  // Oscilloscope
+  this->oscilloscopeToolBar = CreateToolBar(tr("Oscilloscope"));
   this->oscilloscopeToolBar->addAction(this->startStopAction);
 
-  this->viewToolBar = new QToolBar(tr("View"));
+  // View
+  this->viewToolBar = CreateToolBar(tr("View"));
   this->viewToolBar->addAction(this->digitalPhosphorAction);
   this->viewToolBar->addAction(this->zoomAction);
 }
@@ -427,22 +437,6 @@ int OpenHantekMainWindow::writeSettings(const QString &fileName) {
   return this->settings->save(fileName);
 }
 
-/// \brief Called everytime the window is moved.
-/// \param event The move event, it isn't used here though.
-void OpenHantekMainWindow::moveEvent(QMoveEvent *event) {
-  Q_UNUSED(event);
-
-  this->settings->options.window.position = this->pos();
-}
-
-/// \brief Called everytime the window is resized.
-/// \param event The resize event, it isn't used here though.
-void OpenHantekMainWindow::resizeEvent(QResizeEvent *event) {
-  Q_UNUSED(event);
-
-  this->settings->options.window.size = this->size();
-}
-
 /// \brief Open a configuration file.
 /// \return 0 on success, 1 on user abort, negative on error.
 int OpenHantekMainWindow::open() {
@@ -546,143 +540,24 @@ void OpenHantekMainWindow::about() {
 
 /// \brief The settings have changed.
 void OpenHantekMainWindow::applySettings() {
-  // Main window
-  if (!this->settings->options.window.position.isNull())
-    this->move(this->settings->options.window.position);
-  if (!this->settings->options.window.size.isNull())
-    this->resize(this->settings->options.window.size);
+  addDockWidget(Qt::RightDockWidgetArea, horizontalDock);
+  addDockWidget(Qt::RightDockWidgetArea, triggerDock);
+  addDockWidget(Qt::RightDockWidgetArea, voltageDock);
+  addDockWidget(Qt::RightDockWidgetArea, spectrumDock);
 
-  // Docking windows
-  QList<QDockWidget *> docks;
-  docks.append(this->horizontalDock);
-  docks.append(this->triggerDock);
-  docks.append(this->voltageDock);
-  docks.append(this->spectrumDock);
+  addToolBar(fileToolBar);
+  addToolBar(oscilloscopeToolBar);
+  addToolBar(viewToolBar);
 
-  QList<DsoSettingsOptionsWindowPanel *> dockSettings;
-  dockSettings.append(&(this->settings->options.window.dock.horizontal));
-  dockSettings.append(&(this->settings->options.window.dock.trigger));
-  dockSettings.append(&(this->settings->options.window.dock.voltage));
-  dockSettings.append(&(this->settings->options.window.dock.spectrum));
-
-  QList<int> dockedWindows[2]; // Docks docked on the sides of the main window
-
-  for (int dockId = 0; dockId < docks.size(); ++dockId) {
-    docks[dockId]->setVisible(dockSettings[dockId]->visible);
-    docks[dockId]->setFloating(dockSettings[dockId]->floating);
-    if (!dockSettings[dockId]->position.isNull()) {
-      if (dockSettings[dockId]->floating) {
-        this->addDockWidget(Qt::RightDockWidgetArea, docks[dockId]);
-        docks[dockId]->move(dockSettings[dockId]->position);
-      } else {
-        // Check in which order the docking windows where placed
-        int side = (dockSettings[dockId]->position.x() <
-                    this->settings->options.window.size.width() / 2)
-                       ? 0
-                       : 1;
-        int index = 0;
-        while (index < dockedWindows[side].size() &&
-               dockSettings[dockedWindows[side][index]]->position.y() <=
-                   dockSettings[dockId]->position.y())
-          ++index;
-        dockedWindows[side].insert(index, dockId);
-      }
-    } else {
-      this->addDockWidget(Qt::RightDockWidgetArea, docks[dockId]);
-    }
-  }
-
-  // Put the docked docking windows into the main window
-  for (int position = 0; position < dockedWindows[0].size(); ++position)
-    this->addDockWidget(Qt::LeftDockWidgetArea,
-                        docks[dockedWindows[0][position]]);
-  for (int position = 0; position < dockedWindows[1].size(); ++position)
-    this->addDockWidget(Qt::RightDockWidgetArea,
-                        docks[dockedWindows[1][position]]);
-
-  // Toolbars
-  QList<QToolBar *> toolbars;
-  toolbars.append(this->fileToolBar);
-  toolbars.append(this->oscilloscopeToolBar);
-  toolbars.append(this->viewToolBar);
-
-  QList<DsoSettingsOptionsWindowPanel *> toolbarSettings;
-  toolbarSettings.append(&(this->settings->options.window.toolbar.file));
-  toolbarSettings.append(
-      &(this->settings->options.window.toolbar.oscilloscope));
-  toolbarSettings.append(&(this->settings->options.window.toolbar.view));
-
-  QList<int> dockedToolbars; // Docks docked on the sides of the main window
-
-  for (int toolbarId = 0; toolbarId < toolbars.size(); ++toolbarId) {
-    toolbars[toolbarId]->setVisible(toolbarSettings[toolbarId]->visible);
-    toolbars[toolbarId]->setWindowFlags(Qt::Tool);
-    if (!toolbarSettings[toolbarId]->position.isNull() &&
-        !toolbarSettings[toolbarId]->floating) {
-      /*if(toolbarSettings[toolbarId]->floating) {
-				toolbars[toolbarId]->move(toolbarSettings[toolbarId]->position);
-			}
-			else*/ {
-        // Check in which order the toolbars where placed
-        int index = 0;
-        while (index < dockedToolbars.size() &&
-               toolbarSettings[dockedToolbars[index]]->position.x() <=
-                   toolbarSettings[toolbarId]->position.x())
-          ++index;
-        dockedToolbars.insert(index, toolbarId);
-      }
-    } else {
-      this->addToolBar(toolbars[toolbarId]);
-    }
-  }
-
-  // Put the docked toolbars into the main window
-  for (int position = 0; position < dockedToolbars.size(); ++position)
-    this->addToolBar(toolbars[dockedToolbars[position]]);
+  restoreGeometry(settings->mainWindowGeometry);
+  restoreState(settings->mainWindowState);
 }
 
 /// \brief Update the window layout in the settings.
 void OpenHantekMainWindow::updateSettings() {
   // Main window
-  this->settings->options.window.position = this->pos();
-  this->settings->options.window.size = this->size();
-
-  // Docking windows
-  QList<QDockWidget *> docks;
-  docks.append(this->horizontalDock);
-  docks.append(this->spectrumDock);
-  docks.append(this->triggerDock);
-  docks.append(this->voltageDock);
-
-  QList<DsoSettingsOptionsWindowPanel *> dockSettings;
-  dockSettings.append(&(this->settings->options.window.dock.horizontal));
-  dockSettings.append(&(this->settings->options.window.dock.spectrum));
-  dockSettings.append(&(this->settings->options.window.dock.trigger));
-  dockSettings.append(&(this->settings->options.window.dock.voltage));
-
-  for (int dockId = 0; dockId < docks.size(); ++dockId) {
-    dockSettings[dockId]->floating = docks[dockId]->isFloating();
-    dockSettings[dockId]->position = docks[dockId]->pos();
-    dockSettings[dockId]->visible = docks[dockId]->isVisible();
-  }
-
-  // Toolbars
-  QList<QToolBar *> toolbars;
-  toolbars.append(this->fileToolBar);
-  toolbars.append(this->oscilloscopeToolBar);
-  toolbars.append(this->viewToolBar);
-
-  QList<DsoSettingsOptionsWindowPanel *> toolbarSettings;
-  toolbarSettings.append(&(this->settings->options.window.toolbar.file));
-  toolbarSettings.append(
-      &(this->settings->options.window.toolbar.oscilloscope));
-  toolbarSettings.append(&(this->settings->options.window.toolbar.view));
-
-  for (int toolbarId = 0; toolbarId < toolbars.size(); ++toolbarId) {
-    toolbarSettings[toolbarId]->floating = toolbars[toolbarId]->isFloating();
-    toolbarSettings[toolbarId]->position = toolbars[toolbarId]->pos();
-    toolbarSettings[toolbarId]->visible = toolbars[toolbarId]->isVisible();
-  }
+  settings->mainWindowGeometry = saveGeometry();
+  settings->mainWindowState = saveState();
 }
 
 /// \brief The oscilloscope changed the record time.
