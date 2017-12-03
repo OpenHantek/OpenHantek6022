@@ -4,7 +4,7 @@ OpenHantek is a free software for Hantek (Voltcraft/Darkwire/Protek/Acetech) USB
 Supported operating systems:
 * Linux
 * MacOSX
-* Windows (You need to download the [WinUSB driver files](http://libusb-winusb-wip.googlecode.com/files/winusb%20driver.zip) and customize the inf file for your device yourself at the moment)
+* Windows¹
 
 <img alt="Image of main window" width="350" src="doc/screenshot_mainwindow.png">
 <img alt="Image of main window" width="350" src="doc/screenshot_mainwindow_win.png">
@@ -65,11 +65,9 @@ Run the **CMake GUI** program and select the source directory, build directory a
 
 ## Executing OpenHantek
 
-* Linux/OSX: Add your current user to the **plugdev** group for access to USB devices:
-
-> usermod -a -G plugdev {user id}
-
 * Make sure the firmware for your DSO has been uploaded to the device before starting OpenHantek. See the next section for further information.
+
+* ¹:Install the WINUSB driver on Windows: Extract `cmake/winusb driver.zip` and customize the inf file for your device. The Vendor ID and Device ID as well as a unique GUID need to be entered.
 
 * Execute OpenHantek. On Windows, click the **OpenHantek.exe** file. On Linux/OSX on the command line in the build directory: `./bin/OpenHantek`
 
