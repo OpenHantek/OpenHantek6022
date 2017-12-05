@@ -99,7 +99,6 @@ Please use Github Issues to report any problems or enhancements or send us pull 
    - Read [how to properly contribute to open source projects on GitHub][10].
    - Create a separate branch other than *master* to easily amend changes to a pull request later, if necessary.
    - Write [good commit messages][11].
-   - [Squash commits][14] on the topic branch before opening a pull request.
    - Use the same [coding style and spacing][13]
      (install clang-format and use it in the root directory: `clang-format -style=llvm openhantek/src/*`).
    - Open a [pull request][12] with a clear title and description
@@ -108,7 +107,6 @@ Please use Github Issues to report any problems or enhancements or send us pull 
 [11]: http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html
 [12]: https://help.github.com/articles/using-pull-requests
 [13]: http://llvm.org/docs/CodingStandards.html
-[14]: https://github.com/ginatrapani/todo.txt-android/wiki/Squash-All-Commits-Related-to-a-Single-Issue-into-a-Single-Commit
 
 ## Other open source software
 * [SigRok](www.sigrok.org)
