@@ -109,5 +109,5 @@ Please use Github Issues to report any problems or enhancements or send us pull 
 [13]: http://llvm.org/docs/CodingStandards.html
 
 ## Other open source software
-* [SigRok](www.sigrok.org)
+* [SigRok](http://www.sigrok.org)
 * [Software for the Hantek 6022BE/BL only](http://pididu.com/wordpress/basicscope/)
