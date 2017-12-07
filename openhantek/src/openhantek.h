@@ -26,6 +26,7 @@
 #define HANTEKDSO_H
 
 #include <QMainWindow>
+#include <QTimer>
 
 class QActionGroup;
 class QLineEdit;
@@ -107,6 +108,9 @@ private:
 #ifdef DEBUG
   QLineEdit *commandEdit;
 #endif
+
+  // Timer for DsoControl thread
+  QTimer *timer = new QTimer();
 
   // Data handling classes
   DataAnalyzer *dataAnalyzer;

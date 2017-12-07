@@ -29,6 +29,7 @@
 #include <QLabel>
 #include <QSpinBox>
 #include <QVBoxLayout>
+#include <QComboBox>
 
 #include "configpages.h"
 

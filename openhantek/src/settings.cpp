@@ -23,6 +23,7 @@
 
 #include <QColor>
 #include <QSettings>
+#include <QApplication>
 
 #include "settings.h"
 

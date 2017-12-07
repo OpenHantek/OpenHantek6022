@@ -38,7 +38,7 @@
 /// \brief Initializes the scope widget.
 /// \param settings The settings that should be used.
 /// \param parent The parent widget.
-GlScope::GlScope(DsoSettings *settings, QWidget *parent) : QGLWidget(parent) {
+GlScope::GlScope(DsoSettings *settings, QWidget *parent) : GL_WIDGET_CLASS(parent) {
   this->settings = settings;
 
   this->generator = 0;
@@ -56,7 +56,8 @@ void GlScope::initializeGL() {
 
   glPointSize(1);
 
-  qglClearColor(this->settings->view.color.screen.background);
+  QColor bg = settings->view.color.screen.background;
+  glClearColor(bg.redF(), bg.greenF(), bg.blueF(), bg.alphaF());
 
   glShadeModel(GL_SMOOTH /*GL_FLAT*/);
   glLineStipple(1, 0x3333);
@@ -115,14 +116,15 @@ void GlScope::paintGL() {
             for (int index = this->generator->digitalPhosphorDepth - 1;
                  index >= 0; index--) {
               if (!this->generator->vaChannel[mode][channel][index].empty()) {
+                QColor trColor;
                 if (mode == Dso::CHANNELMODE_VOLTAGE)
-                  this->qglColor(
-                      this->settings->view.color.screen.voltage[channel].darker(
-                          fadingFactor[index]));
+                  trColor = settings->view.color.screen.voltage[channel]
+                      .darker(fadingFactor[index]);
                 else
-                  this->qglColor(
-                      this->settings->view.color.screen.spectrum[channel]
-                          .darker(fadingFactor[index]));
+                  trColor = settings->view.color.screen.spectrum[channel]
+                          .darker(fadingFactor[index]);
+                glColor4f(trColor.redF(), trColor.greenF(), trColor.blueF(),
+                          trColor.alphaF());
                 glVertexPointer(
                     2, GL_FLOAT, 0,
                     &this->generator->vaChannel[mode][channel][index].front());
@@ -151,9 +153,10 @@ void GlScope::paintGL() {
             if (!this->generator
                      ->vaChannel[Dso::CHANNELMODE_VOLTAGE][channel][index]
                      .empty()) {
-              this->qglColor(
-                  this->settings->view.color.screen.voltage[channel].darker(
-                      fadingFactor[index]));
+              QColor trColor = settings->view.color.screen.voltage[channel]
+                  .darker(fadingFactor[index]);
+              glColor4f(trColor.redF(), trColor.greenF(), trColor.blueF(),
+                        trColor.alphaF());
               glVertexPointer(
                   2, GL_FLOAT, 0,
                   &this->generator
@@ -190,7 +193,9 @@ void GlScope::paintGL() {
   if (!this->zoomed) {
     // Draw vertical lines at marker positions
     glEnable(GL_LINE_STIPPLE);
-    this->qglColor(this->settings->view.color.screen.markers);
+    QColor trColor = settings->view.color.screen.markers;
+    glColor4f(trColor.redF(), trColor.greenF(), trColor.blueF(),
+              trColor.alphaF());
 
     for (int marker = 0; marker < MARKER_COUNT; ++marker) {
       if (!this->settings->scope.horizontal.marker_visible[marker])
@@ -244,9 +249,9 @@ void GlScope::resizeGL(int width, int height) {
 void GlScope::setGenerator(GlGenerator *generator) {
   if (this->generator)
     disconnect(this->generator, SIGNAL(graphsGenerated()), this,
-               SLOT(updateGL()));
+               SLOT(update()));
   this->generator = generator;
-  connect(this->generator, SIGNAL(graphsGenerated()), this, SLOT(updateGL()));
+  connect(this->generator, SIGNAL(graphsGenerated()), this, SLOT(update()));
 }
 
 /// \brief Set the zoom mode for this GlScope.
@@ -258,16 +263,20 @@ void GlScope::drawGrid() {
   glDisable(GL_POINT_SMOOTH);
   glDisable(GL_LINE_SMOOTH);
 
+  QColor color;
   // Grid
-  this->qglColor(this->settings->view.color.screen.grid);
+  color = this->settings->view.color.screen.grid;
+  glColor4f(color.redF(), color.greenF(), color.blueF(), color.alphaF());
   glVertexPointer(2, GL_FLOAT, 0, &this->generator->vaGrid[0].front());
   glDrawArrays(GL_POINTS, 0, this->generator->vaGrid[0].size() / 2);
   // Axes
-  this->qglColor(this->settings->view.color.screen.axes);
+  color = settings->view.color.screen.axes;
+  glColor4f(color.redF(), color.greenF(), color.blueF(), color.alphaF());
   glVertexPointer(2, GL_FLOAT, 0, &this->generator->vaGrid[1].front());
   glDrawArrays(GL_LINES, 0, this->generator->vaGrid[1].size() / 2);
   // Border
-  this->qglColor(this->settings->view.color.screen.border);
+  color = settings->view.color.screen.border;
+  glColor4f(color.redF(), color.greenF(), color.blueF(), color.alphaF());
   glVertexPointer(2, GL_FLOAT, 0, &this->generator->vaGrid[2].front());
   glDrawArrays(GL_LINE_LOOP, 0, this->generator->vaGrid[2].size() / 2);
 }

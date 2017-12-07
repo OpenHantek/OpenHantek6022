@@ -62,7 +62,10 @@ OpenHantekMainWindow::OpenHantekMainWindow(QWidget *parent,
 
   // Create the controller for the oscilloscope, provides channel count for
   // settings
-  this->dsoControl = new Hantek::Control();
+  this->dsoControl = new Hantek::Control(timer);
+  connect(timer, SIGNAL(timeout()), dsoControl, SLOT(handler()),
+          Qt::DirectConnection);
+  timer->moveToThread(dsoControl);
 
   // Application settings
   this->settings = new DsoSettings();

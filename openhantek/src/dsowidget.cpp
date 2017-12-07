@@ -25,6 +25,8 @@
 
 #include <QGridLayout>
 #include <QTimer>
+#include <QLabel>
+#include <QFileDialog>
 
 #include "dsowidget.h"
 
@@ -297,9 +299,9 @@ DsoWidget::DsoWidget(DsoSettings *settings, DataAnalyzer *dataAnalyzer,
   this->connect(this->markerSlider, SIGNAL(valueChanged(int, double)), this,
                 SLOT(updateMarker(int, double)));
   this->connect(this->markerSlider, SIGNAL(valueChanged(int, double)),
-                this->mainScope, SLOT(updateGL()));
+                this->mainScope, SLOT(update()));
   this->connect(this->markerSlider, SIGNAL(valueChanged(int, double)),
-                this->zoomScope, SLOT(updateGL()));
+                this->zoomScope, SLOT(update()));
 
   // Connect other signals
   this->connect(this->dataAnalyzer, SIGNAL(analyzed(unsigned long)), this,

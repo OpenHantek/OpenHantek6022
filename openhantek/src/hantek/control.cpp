@@ -40,7 +40,7 @@
 namespace Hantek {
 /// \brief Initializes the command buffers and lists.
 /// \param parent The parent widget.
-Control::Control(QObject *parent) : DsoControl(parent) {
+Control::Control(QTimer *mainTimer, QObject *parent) : DsoControl(parent) {
   // Use DSO-2090 specification as default
   this->specification.command.bulk.setRecordLength = (BulkCode)-1;
   this->specification.command.bulk.setChannels = (BulkCode)-1;
@@ -109,7 +109,7 @@ Control::Control(QObject *parent) : DsoControl(parent) {
   this->device = new Device(this);
 
   // Thread execution timer
-  this->timer = 0;
+  this->timer = mainTimer;
 
   // State of the device
   this->captureState = CAPTURE_WAITING;
@@ -173,11 +173,6 @@ void Control::run() {
 
   this->cycleCounter = 0;
   this->startCycle = 0;
-
-  // Thread execution timer
-  this->timer = new QTimer(this);
-  connect(this->timer, SIGNAL(timeout()), this, SLOT(handler()),
-          Qt::DirectConnection);
 
   this->updateInterval();
   this->timer->start();

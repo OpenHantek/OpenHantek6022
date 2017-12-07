@@ -211,7 +211,7 @@ class Control : public DsoControl {
   Q_OBJECT
 
 public:
-  Control(QObject *parent = 0);
+  Control(QTimer *mainTimer, QObject *parent = 0);
   ~Control();
 
   unsigned int getChannelCount();

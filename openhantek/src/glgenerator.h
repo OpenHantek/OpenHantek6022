@@ -29,7 +29,7 @@
 
 #include <deque>
 
-#include <QGLWidget>
+#include <QGLFunctions>
 #include <QObject>
 
 #include "dso.h"

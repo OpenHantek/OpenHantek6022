@@ -35,8 +35,11 @@ class DsoSettings;
 class QCheckBox;
 class QComboBox;
 class QSpinBox;
+class QPushButton;
 class QStringList;
 class QLabel;
+class QGroupBox;
+class QDoubleSpinBox;
 
 ////////////////////////////////////////////////////////////////////////////////
 /// \class DsoConfigAnalysisPage                                   configpages.h
