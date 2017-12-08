@@ -6,9 +6,11 @@ Supported operating systems:
 * MacOSX
 * Windows¹
 
-<img alt="Image of main window" width="350" src="doc/screenshot_mainwindow.png">
-<img alt="Image of main window" width="350" src="doc/screenshot_mainwindow_win.png">
-
+<table><tr>
+    <td> <img alt="Image of main window on linux" width="100%" src="doc/screenshot_mainwindow.png"> </td>
+    <td> <img alt="Image of main window on Windows" width="100%" src="doc/screenshot_mainwindow_win.png"> </td>
+</tr></table>
+    
 Supported hantek devices:
 * DSO2xxx Series
 * DSO52xx Series
@@ -61,17 +63,34 @@ Please adjust the path to Qt5. You can find the path with the command:
 
 ### Build on Windows
 
-Run the **CMake GUI** program and select the source directory, build directory and your compiler. If your compiler is for example Visual Studio, cmake will generate a Visual Studio Project and solution file (\*.sln). Open the project and build it.
+Run the **CMake GUI** program and select the source directory, build directory and your compiler. If your compiler is for example Visual Studio, cmake will generate a Visual Studio Project and solution file (\*.sln). Open the project and build it. If you use an IDE that has inbuild support for cmake projects like QtCreator, you can just open and build this project.
 
-## Executing OpenHantek
+## Windows: Install driver
 
-* Make sure the firmware for your DSO has been uploaded to the device before starting OpenHantek. See the next section for further information.
+While we don't need an installed driver on linux and MacOS X, we do need one on Windows systems.
 
-* ¹:Install the WINUSB driver on Windows: Extract `cmake/winusb driver.zip` and customize the inf file for your device. The Vendor ID and Device ID as well as a unique GUID need to be entered.
+* Make sure your original Hantek driver is uninstalled.
+* Extract `cmake/winusb driver.zip` and customize the `libusb_device.inf` file for your device. The Vendor ID and Device ID as well as a unique GUID need to be entered like in the following example for a Hantek 6022BE.
+* Physically plug (or replug) oscilloscope into PC's. From the Windows device manager update driver for your device and point to your modified libusb_device.inf.
 
-* Execute OpenHantek. On Windows, click the **OpenHantek.exe** file. On Linux/OSX on the command line in the build directory: `./bin/OpenHantek`
+````
+; =====================================================
+; ========= START USER CONFIGURABLE SECTION ===========
+; =====================================================
 
-## Firmware
+DeviceName = "HantekDSO6022BE"
+VendorID = "VID_04B5"
+ProductID = "PID_6022"
+DeviceClassGUID = "{78a1c341-4539-11d3-b88d-00c04fad5171}"
+; Date MUST be in MM/DD/YYYY format
+Date = "08/12/2017"
+
+; =====================================================
+; ========== END USER CONFIGURABLE SECTION ============
+; =====================================================
+````
+
+## Firmware (Linux and MacOS X)
 Your DSO does not store its firmware permanently -- the firmware has to be sent to the device each time it is connected. The `firmware` directory of this project contains the binary firmware extracted from Hantek's Windows drivers, and a udev rule to upload the firmware to the device automatically each time it is plugged in.
 
 * You need binutils-dev autoconf automake fxload
