@@ -28,7 +28,7 @@
 #include <QDoubleSpinBox>
 #include <QStringList>
 
-#include "helper.h"
+#include "utils/printutils.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 /// \class SiSpinBox                                                 sispinbox.h
@@ -41,7 +41,7 @@ class SiSpinBox : public QDoubleSpinBox {
 
 public:
   explicit SiSpinBox(QWidget *parent = 0);
-  SiSpinBox(Helper::Unit unit, QWidget *parent = 0);
+  SiSpinBox(Unit unit, QWidget *parent = 0);
   ~SiSpinBox();
 
   QValidator::State validate(QString &input, int &pos) const;
@@ -49,7 +49,7 @@ public:
   QString textFromValue(double val) const;
   void fixup(QString &input) const;
   void stepBy(int steps);
-  bool setUnit(Helper::Unit unit);
+  bool setUnit(Unit unit);
   void setUnitPostfix(const QString &postfix);
   void setSteps(const QList<double> &steps);
   void setMode(const int mode);
@@ -57,7 +57,7 @@ public:
 private:
   void init();
 
-  Helper::Unit unit;   ///< The SI unit used for this spin box
+  Unit unit;   ///< The SI unit used for this spin box
   QString unitPostfix; ///< Shown after the unit
   QList<double> steps; ///< The steps, begins from start after last element
   int mode;            ///< The mode, fixed or constant

@@ -36,7 +36,7 @@ using GL_WIDGET_CLASS = QOpenGLWidget;
 using GL_WIDGET_CLASS = QGLWidget;
 #endif
 
-#include "dso.h"
+#include "definitions.h"
 #include "glgenerator.h"
 
 class DataAnalyzer;

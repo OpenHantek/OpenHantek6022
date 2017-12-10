@@ -1,44 +1,20 @@
-////////////////////////////////////////////////////////////////////////////////
-//
-//  OpenHantek
-//  hantek/types.cpp
-//
-//  Copyright (C) 2008, 2009  Oleg Khudyakov
-//  prcoder@potrebitel.ru
-//  Copyright (C) 2010  Oliver Haag
-//  oliver.haag@gmail.com
-//
-//  This program is free software: you can redistribute it and/or modify it
-//  under the terms of the GNU General Public License as published by the Free
-//  Software Foundation, either version 3 of the License, or (at your option)
-//  any later version.
-//
-//  This program is distributed in the hope that it will be useful, but WITHOUT
-//  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-//  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-//  more details.
-//
-//  You should have received a copy of the GNU General Public License along with
-//  this program.  If not, see <http://www.gnu.org/licenses/>.
-//
-////////////////////////////////////////////////////////////////////////////////
+// SPDX-License-Identifier: GPL-2.0+
 
-#include <cstring>
-
-#include "hantek/types.h"
+#include "bulkStructs.h"
 
 namespace Hantek {
+
 //////////////////////////////////////////////////////////////////////////////
 // class BulkSetFilter
 /// \brief Sets the data array to the default values.
-BulkSetFilter::BulkSetFilter() : Helper::DataArray<uint8_t>(8) { this->init(); }
+BulkSetFilter::BulkSetFilter() : DataArray<uint8_t>(8) { this->init(); }
 
 /// \brief Sets the FilterByte to the given value.
 /// \param channel1 true if channel 1 is filtered.
 /// \param channel2 true if channel 2 is filtered.
 /// \param trigger true if trigger is filtered.
 BulkSetFilter::BulkSetFilter(bool channel1, bool channel2, bool trigger)
-    : Helper::DataArray<uint8_t>(8) {
+    : DataArray<uint8_t>(8) {
   this->init();
 
   this->setChannel(0, channel1);
@@ -92,7 +68,7 @@ void BulkSetFilter::init() {
 // class BulkSetTriggerAndSamplerate
 /// \brief Sets the data array to the default values.
 BulkSetTriggerAndSamplerate::BulkSetTriggerAndSamplerate()
-    : Helper::DataArray<uint8_t>(12) {
+    : DataArray<uint8_t>(12) {
   this->init();
 }
 
@@ -110,7 +86,7 @@ BulkSetTriggerAndSamplerate::BulkSetTriggerAndSamplerate(
     uint16_t downsampler, uint32_t triggerPosition, uint8_t triggerSource,
     uint8_t recordLength, uint8_t samplerateId, bool downsamplingMode,
     uint8_t usedChannels, bool fastRate, uint8_t triggerSlope)
-    : Helper::DataArray<uint8_t>(12) {
+    : DataArray<uint8_t>(12) {
   this->init();
 
   this->setTriggerSource(triggerSource);
@@ -244,35 +220,35 @@ void BulkSetTriggerAndSamplerate::init() {
 //////////////////////////////////////////////////////////////////////////////
 // class BulkForceTrigger
 /// \brief Sets the data array to needed values.
-BulkForceTrigger::BulkForceTrigger() : Helper::DataArray<uint8_t>(2) {
+BulkForceTrigger::BulkForceTrigger() : DataArray<uint8_t>(2) {
   this->array[0] = BULK_FORCETRIGGER;
 }
 
 //////////////////////////////////////////////////////////////////////////////
 // class BulkCaptureStart
 /// \brief Sets the data array to needed values.
-BulkCaptureStart::BulkCaptureStart() : Helper::DataArray<uint8_t>(2) {
+BulkCaptureStart::BulkCaptureStart() : DataArray<uint8_t>(2) {
   this->array[0] = BULK_STARTSAMPLING;
 }
 
 //////////////////////////////////////////////////////////////////////////////
 // class BulkTriggerEnabled
 /// \brief Sets the data array to needed values.
-BulkTriggerEnabled::BulkTriggerEnabled() : Helper::DataArray<uint8_t>(2) {
+BulkTriggerEnabled::BulkTriggerEnabled() : DataArray<uint8_t>(2) {
   this->array[0] = BULK_ENABLETRIGGER;
 }
 
 //////////////////////////////////////////////////////////////////////////////
 // class BulkGetData
 /// \brief Sets the data array to needed values.
-BulkGetData::BulkGetData() : Helper::DataArray<uint8_t>(2) {
+BulkGetData::BulkGetData() : DataArray<uint8_t>(2) {
   this->array[0] = BULK_GETDATA;
 }
 
 //////////////////////////////////////////////////////////////////////////////
 // class BulkGetCaptureState
 /// \brief Sets the data array to needed values.
-BulkGetCaptureState::BulkGetCaptureState() : Helper::DataArray<uint8_t>(2) {
+BulkGetCaptureState::BulkGetCaptureState() : DataArray<uint8_t>(2) {
   this->array[0] = BULK_GETCAPTURESTATE;
 }
 
@@ -280,7 +256,7 @@ BulkGetCaptureState::BulkGetCaptureState() : Helper::DataArray<uint8_t>(2) {
 // class BulkResponseGetCaptureState
 /// \brief Initializes the array.
 BulkResponseGetCaptureState::BulkResponseGetCaptureState()
-    : Helper::DataArray<uint8_t>(512) {}
+    : DataArray<uint8_t>(512) {}
 
 /// \brief Gets the capture state.
 /// \return The CaptureState of the oscilloscope.
@@ -297,13 +273,13 @@ unsigned int BulkResponseGetCaptureState::getTriggerPoint() {
 //////////////////////////////////////////////////////////////////////////////
 // class BulkSetGain
 /// \brief Sets the data array to needed values.
-BulkSetGain::BulkSetGain() : Helper::DataArray<uint8_t>(8) { this->init(); }
+BulkSetGain::BulkSetGain() : DataArray<uint8_t>(8) { this->init(); }
 
 /// \brief Sets the gain to the given values.
 /// \param channel1 The gain value for channel 1.
 /// \param channel2 The gain value for channel 2.
 BulkSetGain::BulkSetGain(uint8_t channel1, uint8_t channel2)
-    : Helper::DataArray<uint8_t>(8) {
+    : DataArray<uint8_t>(8) {
   this->init();
 
   this->setGain(0, channel1);
@@ -338,14 +314,14 @@ void BulkSetGain::init() { this->array[0] = BULK_SETGAIN; }
 //////////////////////////////////////////////////////////////////////////////
 // class BulkSetLogicalData
 /// \brief Sets the data array to needed values.
-BulkSetLogicalData::BulkSetLogicalData() : Helper::DataArray<uint8_t>(8) {
+BulkSetLogicalData::BulkSetLogicalData() : DataArray<uint8_t>(8) {
   this->init();
 }
 
 /// \brief Sets the data to the given value.
 /// \param data The data byte.
 BulkSetLogicalData::BulkSetLogicalData(uint8_t data)
-    : Helper::DataArray<uint8_t>(8) {
+    : DataArray<uint8_t>(8) {
   this->init();
 
   this->setData(data);
@@ -365,21 +341,21 @@ void BulkSetLogicalData::init() { this->array[0] = BULK_SETLOGICALDATA; }
 //////////////////////////////////////////////////////////////////////////////
 // class BulkGetLogicalData
 /// \brief Sets the data array to needed values.
-BulkGetLogicalData::BulkGetLogicalData() : Helper::DataArray<uint8_t>(2) {
+BulkGetLogicalData::BulkGetLogicalData() : DataArray<uint8_t>(2) {
   this->array[0] = BULK_GETLOGICALDATA;
 }
 
 //////////////////////////////////////////////////////////////////////////////
 // class BulkSetFilter2250
 /// \brief Sets the data array to needed values.
-BulkSetChannels2250::BulkSetChannels2250() : Helper::DataArray<uint8_t>(4) {
+BulkSetChannels2250::BulkSetChannels2250() : DataArray<uint8_t>(4) {
   this->init();
 }
 
 /// \brief Sets the used channels.
 /// \param usedChannels The UsedChannels value.
 BulkSetChannels2250::BulkSetChannels2250(uint8_t usedChannels)
-    : Helper::DataArray<uint8_t>(4) {
+    : DataArray<uint8_t>(4) {
   this->init();
 
   this->setUsedChannels(usedChannels);
@@ -401,7 +377,7 @@ void BulkSetChannels2250::init() { this->array[0] = BULK_BSETCHANNELS; }
 //////////////////////////////////////////////////////////////////////////////
 // class BulkSetTrigger2250
 /// \brief Sets the data array to needed values.
-BulkSetTrigger2250::BulkSetTrigger2250() : Helper::DataArray<uint8_t>(8) {
+BulkSetTrigger2250::BulkSetTrigger2250() : DataArray<uint8_t>(8) {
   this->init();
 }
 
@@ -410,7 +386,7 @@ BulkSetTrigger2250::BulkSetTrigger2250() : Helper::DataArray<uint8_t>(8) {
 /// \param triggerSlope The triggerSlope value (CTriggerBits).
 BulkSetTrigger2250::BulkSetTrigger2250(uint8_t triggerSource,
                                        uint8_t triggerSlope)
-    : Helper::DataArray<uint8_t>(8) {
+    : DataArray<uint8_t>(8) {
   this->init();
 
   this->setTriggerSource(triggerSource);
@@ -449,7 +425,7 @@ void BulkSetTrigger2250::init() {
 //////////////////////////////////////////////////////////////////////////////
 // class BulkSetSamplerate5200
 /// \brief Sets the data array to the default values.
-BulkSetSamplerate5200::BulkSetSamplerate5200() : Helper::DataArray<uint8_t>(6) {
+BulkSetSamplerate5200::BulkSetSamplerate5200() : DataArray<uint8_t>(6) {
   this->init();
 }
 
@@ -458,7 +434,7 @@ BulkSetSamplerate5200::BulkSetSamplerate5200() : Helper::DataArray<uint8_t>(6) {
 /// \param samplerateFast The SamplerateFast value.
 BulkSetSamplerate5200::BulkSetSamplerate5200(uint16_t samplerateSlow,
                                              uint8_t samplerateFast)
-    : Helper::DataArray<uint8_t>(6) {
+    : DataArray<uint8_t>(6) {
   this->init();
 
   this->setSamplerateFast(samplerateFast);
@@ -497,14 +473,14 @@ void BulkSetSamplerate5200::init() {
 // class BulkSetBuffer2250
 /// \brief Sets the data array to the default values.
 BulkSetRecordLength2250::BulkSetRecordLength2250()
-    : Helper::DataArray<uint8_t>(4) {
+    : DataArray<uint8_t>(4) {
   this->init();
 }
 
 /// \brief Sets the data bytes to the specified values.
 /// \param recordLength The ::RecordLengthId value.
 BulkSetRecordLength2250::BulkSetRecordLength2250(uint8_t recordLength)
-    : Helper::DataArray<uint8_t>(4) {
+    : DataArray<uint8_t>(4) {
   this->init();
 
   this->setRecordLength(recordLength);
@@ -526,7 +502,7 @@ void BulkSetRecordLength2250::init() { this->array[0] = BULK_DSETBUFFER; }
 //////////////////////////////////////////////////////////////////////////////
 // class BulkSetBuffer5200
 /// \brief Sets the data array to the default values.
-BulkSetBuffer5200::BulkSetBuffer5200() : Helper::DataArray<uint8_t>(10) {
+BulkSetBuffer5200::BulkSetBuffer5200() : DataArray<uint8_t>(10) {
   this->init();
 }
 
@@ -540,7 +516,7 @@ BulkSetBuffer5200::BulkSetBuffer5200(uint16_t triggerPositionPre,
                                      uint16_t triggerPositionPost,
                                      uint8_t usedPre, uint8_t usedPost,
                                      uint8_t recordLength)
-    : Helper::DataArray<uint8_t>(10) {
+    : DataArray<uint8_t>(10) {
   this->init();
 
   this->setTriggerPositionPre(triggerPositionPre);
@@ -618,7 +594,7 @@ void BulkSetBuffer5200::init() {
 //////////////////////////////////////////////////////////////////////////////
 // class BulkSetSamplerate2250
 /// \brief Sets the data array to the default values.
-BulkSetSamplerate2250::BulkSetSamplerate2250() : Helper::DataArray<uint8_t>(8) {
+BulkSetSamplerate2250::BulkSetSamplerate2250() : DataArray<uint8_t>(8) {
   this->init();
 }
 
@@ -628,7 +604,7 @@ BulkSetSamplerate2250::BulkSetSamplerate2250() : Helper::DataArray<uint8_t>(8) {
 /// \param samplerate The Samplerate value.
 BulkSetSamplerate2250::BulkSetSamplerate2250(bool fastRate, bool downsampling,
                                              uint16_t samplerate)
-    : Helper::DataArray<uint8_t>(8) {
+    : DataArray<uint8_t>(8) {
   this->init();
 
   this->setFastRate(fastRate);
@@ -681,7 +657,7 @@ void BulkSetSamplerate2250::init() {
 //////////////////////////////////////////////////////////////////////////////
 // class BulkSetTrigger5200
 /// \brief Sets the data array to the default values.
-BulkSetTrigger5200::BulkSetTrigger5200() : Helper::DataArray<uint8_t>(8) {
+BulkSetTrigger5200::BulkSetTrigger5200() : DataArray<uint8_t>(8) {
   this->init();
 }
 
@@ -695,7 +671,7 @@ BulkSetTrigger5200::BulkSetTrigger5200(uint8_t triggerSource,
                                        uint8_t usedChannels, bool fastRate,
                                        uint8_t triggerSlope,
                                        uint8_t triggerPulse)
-    : Helper::DataArray<uint8_t>(8) {
+    : DataArray<uint8_t>(8) {
   this->init();
 
   this->setTriggerSource(triggerSource);
@@ -775,7 +751,7 @@ void BulkSetTrigger5200::init() {
 /// \class BulkSetBuffer2250                                    hantek/types.h
 /// \brief The DSO-2250 BULK_FSETBUFFER builder.
 /// \brief Sets the data array to the default values.
-BulkSetBuffer2250::BulkSetBuffer2250() : Helper::DataArray<uint8_t>(10) {
+BulkSetBuffer2250::BulkSetBuffer2250() : DataArray<uint8_t>(10) {
   this->init();
 }
 
@@ -784,7 +760,7 @@ BulkSetBuffer2250::BulkSetBuffer2250() : Helper::DataArray<uint8_t>(10) {
 /// \param triggerPositionPost The TriggerPositionPost value.
 BulkSetBuffer2250::BulkSetBuffer2250(uint32_t triggerPositionPre,
                                      uint32_t triggerPositionPost)
-    : Helper::DataArray<uint8_t>(12) {
+    : DataArray<uint8_t>(12) {
   this->init();
 
   this->setTriggerPositionPre(triggerPositionPre);
@@ -824,222 +800,4 @@ void BulkSetBuffer2250::setTriggerPositionPre(uint32_t position) {
 /// \brief Initialize the array to the needed values.
 void BulkSetBuffer2250::init() { this->array[0] = BULK_FSETBUFFER; }
 
-//////////////////////////////////////////////////////////////////////////////
-// class ControlGetSpeed
-/// \brief Initializes the array.
-ControlGetSpeed::ControlGetSpeed() : Helper::DataArray<uint8_t>(10) {}
-
-/// \brief Gets the speed of the connection.
-/// \return The speed level of the USB connection.
-ConnectionSpeed ControlGetSpeed::getSpeed() {
-  return (ConnectionSpeed)this->array[0];
-}
-
-//////////////////////////////////////////////////////////////////////////////
-// class ControlBeginCommand
-/// \brief Sets the command index to the given value.
-/// \param index The CommandIndex for the command.
-ControlBeginCommand::ControlBeginCommand(BulkIndex index)
-    : Helper::DataArray<uint8_t>(10) {
-  this->init();
-
-  this->setIndex(index);
-}
-
-/// \brief Gets the command index.
-/// \return The CommandIndex for the command.
-BulkIndex ControlBeginCommand::getIndex() { return (BulkIndex)this->array[1]; }
-
-/// \brief Sets the command index to the given value.
-/// \param index The new CommandIndex for the command.
-void ControlBeginCommand::setIndex(BulkIndex index) {
-  memset(&(this->array[1]), (uint8_t)index, 3);
-}
-
-/// \brief Initialize the array to the needed values.
-void ControlBeginCommand::init() { this->array[0] = 0x0f; }
-
-//////////////////////////////////////////////////////////////////////////////
-// class ControlSetOffset
-/// \brief Sets the data array to the default values.
-ControlSetOffset::ControlSetOffset() : Helper::DataArray<uint8_t>(17) {}
-
-/// \brief Sets the offsets to the given values.
-/// \param channel1 The offset for channel 1.
-/// \param channel2 The offset for channel 2.
-/// \param trigger The offset for ext. trigger.
-ControlSetOffset::ControlSetOffset(uint16_t channel1, uint16_t channel2,
-                                   uint16_t trigger)
-    : Helper::DataArray<uint8_t>(17) {
-  this->setChannel(0, channel1);
-  this->setChannel(1, channel2);
-  this->setTrigger(trigger);
-}
-
-/// \brief Get the offset for the given channel.
-/// \param channel The channel whose offset should be returned.
-/// \return The channel offset value.
-uint16_t ControlSetOffset::getChannel(unsigned int channel) {
-  if (channel == 0)
-    return ((this->array[0] & 0x0f) << 8) | this->array[1];
-  else
-    return ((this->array[2] & 0x0f) << 8) | this->array[3];
-}
-
-/// \brief Set the offset for the given channel.
-/// \param channel The channel that should be set.
-/// \param offset The new channel offset value.
-void ControlSetOffset::setChannel(unsigned int channel, uint16_t offset) {
-  if (channel == 0) {
-    this->array[0] = (uint8_t)(offset >> 8);
-    this->array[1] = (uint8_t)offset;
-  } else {
-    this->array[2] = (uint8_t)(offset >> 8);
-    this->array[3] = (uint8_t)offset;
-  }
-}
-
-/// \brief Get the trigger level.
-/// \return The trigger level value.
-uint16_t ControlSetOffset::getTrigger() {
-  return ((this->array[4] & 0x0f) << 8) | this->array[5];
-}
-
-/// \brief Set the trigger level.
-/// \param level The new trigger level value.
-void ControlSetOffset::setTrigger(uint16_t level) {
-  this->array[4] = (uint8_t)(level >> 8);
-  this->array[5] = (uint8_t)level;
-}
-
-//////////////////////////////////////////////////////////////////////////////
-// class ControlSetRelays
-/// \brief Sets all relay states.
-/// \param ch1Below1V Sets the state of the Channel 1 below 1 V relay.
-/// \param ch1Below100mV Sets the state of the Channel 1 below 100 mV relay.
-/// \param ch1CouplingDC Sets the state of the Channel 1 coupling relay.
-/// \param ch2Below1V Sets the state of the Channel 2 below 1 V relay.
-/// \param ch2Below100mV Sets the state of the Channel 2 below 100 mV relay.
-/// \param ch2CouplingDC Sets the state of the Channel 2 coupling relay.
-/// \param triggerExt Sets the state of the external trigger relay.
-ControlSetRelays::ControlSetRelays(bool ch1Below1V, bool ch1Below100mV,
-                                   bool ch1CouplingDC, bool ch2Below1V,
-                                   bool ch2Below100mV, bool ch2CouplingDC,
-                                   bool triggerExt)
-    : Helper::DataArray<uint8_t>(17) {
-  this->setBelow1V(0, ch1Below1V);
-  this->setBelow100mV(0, ch1Below100mV);
-  this->setCoupling(0, ch1CouplingDC);
-  this->setBelow1V(1, ch2Below1V);
-  this->setBelow100mV(1, ch2Below100mV);
-  this->setCoupling(1, ch2CouplingDC);
-  this->setTrigger(triggerExt);
-}
-
-/// \brief Get the below 1 V relay state for the given channel.
-/// \param channel The channel whose relay state should be returned.
-/// \return true, if the gain of the channel is below 1 V.
-bool ControlSetRelays::getBelow1V(unsigned int channel) {
-  if (channel == 0)
-    return (this->array[1] & 0x04) == 0x00;
-  else
-    return (this->array[4] & 0x20) == 0x00;
-}
-
-/// \brief Set the below 1 V relay for the given channel.
-/// \param channel The channel that should be set.
-/// \param below true, if the gain of the channel should be below 1 V.
-void ControlSetRelays::setBelow1V(unsigned int channel, bool below) {
-  if (channel == 0)
-    this->array[1] = below ? 0xfb : 0x04;
-  else
-    this->array[4] = below ? 0xdf : 0x20;
-}
-
-/// \brief Get the below 1 V relay state for the given channel.
-/// \param channel The channel whose relay state should be returned.
-/// \return true, if the gain of the channel is below 1 V.
-bool ControlSetRelays::getBelow100mV(unsigned int channel) {
-  if (channel == 0)
-    return (this->array[2] & 0x08) == 0x00;
-  else
-    return (this->array[5] & 0x40) == 0x00;
-}
-
-/// \brief Set the below 100 mV relay for the given channel.
-/// \param channel The channel that should be set.
-/// \param below true, if the gain of the channel should be below 100 mV.
-void ControlSetRelays::setBelow100mV(unsigned int channel, bool below) {
-  if (channel == 0)
-    this->array[2] = below ? 0xf7 : 0x08;
-  else
-    this->array[5] = below ? 0xbf : 0x40;
-}
-
-/// \brief Get the coupling relay state for the given channel.
-/// \param channel The channel whose relay state should be returned.
-/// \return true, if the coupling of the channel is DC.
-bool ControlSetRelays::getCoupling(unsigned int channel) {
-  if (channel == 0)
-    return (this->array[3] & 0x02) == 0x00;
-  else
-    return (this->array[6] & 0x10) == 0x00;
-}
-
-/// \brief Set the coupling relay for the given channel.
-/// \param channel The channel that should be set.
-/// \param dc true, if the coupling of the channel should be DC.
-void ControlSetRelays::setCoupling(unsigned int channel, bool dc) {
-  if (channel == 0)
-    this->array[3] = dc ? 0xfd : 0x02;
-  else
-    this->array[6] = dc ? 0xef : 0x10;
-}
-
-/// \brief Get the external trigger relay state.
-/// \return true, if the trigger is external (EXT-Connector).
-bool ControlSetRelays::getTrigger() { return (this->array[7] & 0x01) == 0x00; }
-
-/// \brief Set the external trigger relay.
-/// \param ext true, if the trigger should be external (EXT-Connector).
-void ControlSetRelays::setTrigger(bool ext) {
-  this->array[7] = ext ? 0xfe : 0x01;
-}
-
-//////////////////////////////////////////////////////////////////////////////
-// class ControlSetVoltDIV_CH1
-/// \brief Sets the data array to the default values.
-ControlSetVoltDIV_CH1::ControlSetVoltDIV_CH1() : Helper::DataArray<uint8_t>(1) {
-  this->setDiv(5);
-}
-
-void ControlSetVoltDIV_CH1::setDiv(uint8_t val) { this->array[0] = val; }
-
-//////////////////////////////////////////////////////////////////////////////
-// class ControlSetVoltDIV_CH2
-/// \brief Sets the data array to the default values.
-ControlSetVoltDIV_CH2::ControlSetVoltDIV_CH2() : Helper::DataArray<uint8_t>(1) {
-  this->setDiv(5);
-}
-
-void ControlSetVoltDIV_CH2::setDiv(uint8_t val) { this->array[0] = val; }
-
-//////////////////////////////////////////////////////////////////////////////
-// class ControlSetTimeDIV
-/// \brief Sets the data array to the default values.
-ControlSetTimeDIV::ControlSetTimeDIV() : Helper::DataArray<uint8_t>(1) {
-  this->setDiv(1);
-}
-
-void ControlSetTimeDIV::setDiv(uint8_t val) { this->array[0] = val; }
-
-//////////////////////////////////////////////////////////////////////////////
-// class ControlAcquireHardData
-/// \brief Sets the data array to the default values.
-ControlAcquireHardData::ControlAcquireHardData()
-    : Helper::DataArray<uint8_t>(1) {
-  this->init();
-}
-
-void ControlAcquireHardData::init() { this->array[0] = 0x01; }
 }

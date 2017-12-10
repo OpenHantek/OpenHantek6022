@@ -3,6 +3,7 @@
 shopt -s globstar
 
 cd "$(dirname "$0")"
+make
 rm -rf tmp
 mkdir tmp
 
@@ -14,7 +15,7 @@ done
 cd ..
 
 for f in tmp/**/*.sys; do
-    extractfw/extractfw $f
+    ./extractfw $f
 done
 mv tmp/**/*.hex .
 rm -rf tmp

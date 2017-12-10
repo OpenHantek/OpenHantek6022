@@ -27,7 +27,7 @@
 
 #include <QWidget>
 
-#include "dso.h"
+#include "definitions.h"
 #include "dsowidget.h"
 
 class ColorBox;

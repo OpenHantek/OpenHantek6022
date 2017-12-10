@@ -32,7 +32,7 @@
 #include "dataanalyzer.h"
 
 #include "glscope.h"
-#include "helper.h"
+#include "utils/printutils.h"
 #include "settings.h"
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -48,30 +48,6 @@ AnalyzedData::AnalyzedData() {
   this->frequency = 0.0;
 }
 
-////////////////////////////////////////////////////////////////////////////////
-// class DataAnalyzer
-/// \brief Initializes the buffers and other variables.
-/// \param settings The settings that should be used.
-/// \param parent The parent widget.
-DataAnalyzer::DataAnalyzer(DsoSettings *settings, QObject *parent)
-    : QThread(parent) {
-  this->settings = settings;
-
-  this->lastRecordLength = 0;
-  this->lastWindow = (Dso::WindowFunction)-1;
-  this->window = 0;
-
-  this->analyzedDataMutex = new QMutex();
-
-  this->maxSamples = 0;
-
-  this->waitingDataSamplerate = 0.0;
-  this->waitingDataMutex = 0;
-}
-
-/// \brief Deallocates the buffers.
-DataAnalyzer::~DataAnalyzer() {}
-
 /// \brief Returns the analyzed data.
 /// \param channel Channel, whose data should be returned.
 /// \return Analyzed data as AnalyzedData struct.
@@ -86,120 +62,125 @@ AnalyzedData const *DataAnalyzer::data(unsigned int channel) const {
 /// \return The maximum sample count of the last analyzed data.
 unsigned int DataAnalyzer::sampleCount() { return this->maxSamples; }
 
-/// \brief Returns the mutex for the data.
-/// \return Mutex for the analyzed data.
 QMutex *DataAnalyzer::mutex() const { return this->analyzedDataMutex; }
 
-/// \brief Analyzes the data from the dso.
-void DataAnalyzer::run() {
-  this->analyzedDataMutex->lock();
+void DataAnalyzer::transferData() {
+    QMutexLocker locker(waitingDataMutex);
+    QMutexLocker locker2(analyzedDataMutex);
 
-  unsigned int maxSamples = 0;
-  unsigned int channelCount =
-      (unsigned int)this->settings->scope.voltage.size();
+    unsigned int maxSamples = 0;
+    unsigned int channelCount =
+        (unsigned int)scope->voltage.size();
 
-  // Adapt the number of channels for analyzed data
-  this->analyzedData.resize(channelCount);
+    // Adapt the number of channels for analyzed data
+    this->analyzedData.resize(channelCount);
 
-  for (unsigned int channel = 0; channel < channelCount; ++channel) {
-    AnalyzedData *const channelData = &this->analyzedData[channel];
+    for (unsigned int channel = 0; channel < channelCount; ++channel) {
+      AnalyzedData *const channelData = &this->analyzedData[channel];
 
-    if (  // Check...
-        ( // ...if we got data for this channel...
-            channel < this->settings->scope.physicalChannels &&
-            channel < (unsigned int)this->waitingData->size() &&
-            !this->waitingData->at(channel).empty()) ||
-        ( // ...or if it's a math channel that can be calculated
-            channel >= this->settings->scope.physicalChannels &&
-            (this->settings->scope.voltage[channel].used ||
-             this->settings->scope.spectrum[channel].used) &&
-            this->analyzedData.size() >= 2 &&
-            !this->analyzedData[0].samples.voltage.sample.empty() &&
-            !this->analyzedData[1].samples.voltage.sample.empty())) {
-      // Set sampling interval
-      const double interval = 1.0 / this->waitingDataSamplerate;
-      if (interval != channelData->samples.voltage.interval) {
-        channelData->samples.voltage.interval = interval;
-        if (this->waitingDataAppend) // Clear roll buffer if the samplerate
-                                     // changed
-          channelData->samples.voltage.sample.clear();
-      }
-
-      unsigned int size;
-      if (channel < this->settings->scope.physicalChannels) {
-        size = this->waitingData->at(channel).size();
-        if (this->waitingDataAppend)
-          size += channelData->samples.voltage.sample.size();
-        if (size > maxSamples)
-          maxSamples = size;
-      } else
-        size = maxSamples;
-
-      // Physical channels
-      if (channel < this->settings->scope.physicalChannels) {
-        // Copy the buffer of the oscilloscope into the sample buffer
-        if (this->waitingDataAppend)
-          channelData->samples.voltage.sample.insert(
-              channelData->samples.voltage.sample.end(),
-              this->waitingData->at(channel).begin(),
-              this->waitingData->at(channel).end());
-        else
-          channelData->samples.voltage.sample = this->waitingData->at(channel);
-      }
-      // Math channel
-      else {
-        // Resize the sample vector
-        channelData->samples.voltage.sample.resize(size);
+      if (  // Check...
+          ( // ...if we got data for this channel...
+              channel < scope->physicalChannels &&
+              channel < (unsigned int)this->waitingData->size() &&
+              !this->waitingData->at(channel).empty()) ||
+          ( // ...or if it's a math channel that can be calculated
+              channel >= scope->physicalChannels &&
+              (scope->voltage[channel].used ||
+               scope->spectrum[channel].used) &&
+              this->analyzedData.size() >= 2 &&
+              !this->analyzedData[0].samples.voltage.sample.empty() &&
+              !this->analyzedData[1].samples.voltage.sample.empty())) {
         // Set sampling interval
-        this->analyzedData[this->settings->scope.physicalChannels]
-            .samples.voltage.interval =
-            this->analyzedData[0].samples.voltage.interval;
-
-        // Resize the sample vector
-        this->analyzedData[this->settings->scope.physicalChannels]
-            .samples.voltage.sample.resize(
-                qMin(this->analyzedData[0].samples.voltage.sample.size(),
-                     this->analyzedData[1].samples.voltage.sample.size()));
-
-        // Calculate values and write them into the sample buffer
-        std::vector<double>::const_iterator ch1Iterator =
-            this->analyzedData[0].samples.voltage.sample.begin();
-        std::vector<double>::const_iterator ch2Iterator =
-            this->analyzedData[1].samples.voltage.sample.begin();
-        std::vector<double> &resultData =
-            this->analyzedData[this->settings->scope.physicalChannels]
-                .samples.voltage.sample;
-        for (std::vector<double>::iterator resultIterator = resultData.begin();
-             resultIterator != resultData.end(); ++resultIterator) {
-          switch (this->settings->scope
-                      .voltage[this->settings->scope.physicalChannels]
-                      .misc) {
-          case Dso::MATHMODE_1ADD2:
-            *resultIterator = *ch1Iterator + *ch2Iterator;
-            break;
-          case Dso::MATHMODE_1SUB2:
-            *resultIterator = *ch1Iterator - *ch2Iterator;
-            break;
-          case Dso::MATHMODE_2SUB1:
-            *resultIterator = *ch2Iterator - *ch1Iterator;
-            break;
-          }
-          ++ch1Iterator;
-          ++ch2Iterator;
+        const double interval = 1.0 / this->waitingDataSamplerate;
+        if (interval != channelData->samples.voltage.interval) {
+          channelData->samples.voltage.interval = interval;
+          if (this->waitingDataAppend) // Clear roll buffer if the samplerate
+                                       // changed
+            channelData->samples.voltage.sample.clear();
         }
-      }
-    } else {
-      // Clear unused channels
-      channelData->samples.voltage.sample.clear();
-      this->analyzedData[this->settings->scope.physicalChannels]
-          .samples.voltage.interval = 0;
-    }
-  }
 
-  this->waitingDataMutex->unlock();
+        unsigned int size;
+        if (channel < scope->physicalChannels) {
+          size = this->waitingData->at(channel).size();
+          if (this->waitingDataAppend)
+            size += channelData->samples.voltage.sample.size();
+          if (size > maxSamples)
+            maxSamples = size;
+        } else
+          size = maxSamples;
+
+        // Physical channels
+        if (channel < scope->physicalChannels) {
+          // Copy the buffer of the oscilloscope into the sample buffer
+          if (this->waitingDataAppend)
+            channelData->samples.voltage.sample.insert(
+                channelData->samples.voltage.sample.end(),
+                this->waitingData->at(channel).begin(),
+                this->waitingData->at(channel).end());
+          else
+            channelData->samples.voltage.sample = this->waitingData->at(channel);
+        }
+        // Math channel
+        else {
+          // Resize the sample vector
+          channelData->samples.voltage.sample.resize(size);
+          // Set sampling interval
+          this->analyzedData[scope->physicalChannels]
+              .samples.voltage.interval =
+              this->analyzedData[0].samples.voltage.interval;
+
+          // Resize the sample vector
+          this->analyzedData[scope->physicalChannels]
+              .samples.voltage.sample.resize(
+                  qMin(this->analyzedData[0].samples.voltage.sample.size(),
+                       this->analyzedData[1].samples.voltage.sample.size()));
+
+          // Calculate values and write them into the sample buffer
+          std::vector<double>::const_iterator ch1Iterator =
+              this->analyzedData[0].samples.voltage.sample.begin();
+          std::vector<double>::const_iterator ch2Iterator =
+              this->analyzedData[1].samples.voltage.sample.begin();
+          std::vector<double> &resultData =
+              this->analyzedData[scope->physicalChannels]
+                  .samples.voltage.sample;
+          for (std::vector<double>::iterator resultIterator = resultData.begin();
+               resultIterator != resultData.end(); ++resultIterator) {
+            switch (scope->voltage[scope->physicalChannels].misc) {
+            case Dso::MATHMODE_1ADD2:
+              *resultIterator = *ch1Iterator + *ch2Iterator;
+              break;
+            case Dso::MATHMODE_1SUB2:
+              *resultIterator = *ch1Iterator - *ch2Iterator;
+              break;
+            case Dso::MATHMODE_2SUB1:
+              *resultIterator = *ch2Iterator - *ch1Iterator;
+              break;
+            }
+            ++ch1Iterator;
+            ++ch2Iterator;
+          }
+        }
+      } else {
+        // Clear unused channels
+        channelData->samples.voltage.sample.clear();
+        this->analyzedData[scope->physicalChannels]
+            .samples.voltage.interval = 0;
+      }
+    }
+}
+
+/// \brief Analyzes the data from the dso.
+void DataAnalyzer::run(DsoSettingsOptions* options,DsoSettingsScope* scope,DsoSettingsView* view) {
+    this->options=options;
+    this->scope=scope;
+    this->view=view;
+
+  transferData();
 
   // Lower priority for spectrum calculation
   this->setPriority(QThread::LowPriority);
+
+  QMutexLocker locker(analyzedDataMutex);
 
   // Calculate frequencies, peak-to-peak voltages and spectrums
   for (unsigned int channel = 0; channel < this->analyzedData.size();
@@ -209,7 +190,7 @@ void DataAnalyzer::run() {
     if (!channelData->samples.voltage.sample.empty()) {
       // Calculate new window
       unsigned int sampleCount = channelData->samples.voltage.sample.size();
-      if (this->lastWindow != this->settings->scope.spectrumWindow ||
+      if (this->lastWindow != scope->spectrumWindow ||
           this->lastRecordLength != sampleCount) {
         if (this->lastRecordLength != sampleCount) {
           this->lastRecordLength = sampleCount;
@@ -221,9 +202,9 @@ void DataAnalyzer::run() {
         }
 
         unsigned int windowEnd = this->lastRecordLength - 1;
-        this->lastWindow = this->settings->scope.spectrumWindow;
+        this->lastWindow = scope->spectrumWindow;
 
-        switch (this->settings->scope.spectrumWindow) {
+        switch (scope->spectrumWindow) {
         case Dso::WINDOW_HAMMING:
           for (unsigned int windowPosition = 0;
                windowPosition < this->lastRecordLength; ++windowPosition)
@@ -441,12 +422,12 @@ void DataAnalyzer::run() {
         channelData->frequency = 0;
 
       // Finally calculate the real spectrum if we want it
-      if (this->settings->scope.spectrum[channel].used) {
+      if (scope->spectrum[channel].used) {
         // Convert values into dB (Relative to the reference level)
-        double offset = 60 - this->settings->scope.spectrumReference -
+        double offset = 60 - scope->spectrumReference -
                         20 * log10(dftLength);
-        double offsetLimit = this->settings->scope.spectrumLimit -
-                             this->settings->scope.spectrumReference;
+        double offsetLimit = scope->spectrumLimit -
+                             scope->spectrumReference;
         for (std::vector<double>::iterator spectrumIterator =
                  channelData->samples.spectrum.sample.begin();
              spectrumIterator != channelData->samples.spectrum.sample.end();
@@ -468,9 +449,7 @@ void DataAnalyzer::run() {
   }
 
   this->maxSamples = maxSamples;
-  emit(analyzed(maxSamples));
-
-  this->analyzedDataMutex->unlock();
+  emit analyzed(maxSamples);
 }
 
 /// \brief Starts the analyzing of new input data.
@@ -485,13 +464,12 @@ void DataAnalyzer::analyze(const std::vector<std::vector<double>> *data,
   // Previous analysis still running, drop the new data
   if (this->isRunning()) {
 #ifdef DEBUG
-    Helper::timestampDebug("Analyzer overload, dropping packets!");
+    timestampDebug("Analyzer overload, dropping packets!");
 #endif
     return;
   }
 
   // The thread will analyze it, just save the pointers
-  mutex->lock();
   this->waitingData = data;
   this->waitingDataAppend = append;
   this->waitingDataMutex = mutex;
@@ -500,6 +478,6 @@ void DataAnalyzer::analyze(const std::vector<std::vector<double>> *data,
 #ifdef DEBUG
   static unsigned long id = 0;
   ++id;
-  Helper::timestampDebug(QString("Analyzed packet %1").arg(id));
+  timestampDebug(QString("Analyzed packet %1").arg(id));
 #endif
 }

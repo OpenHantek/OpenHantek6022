@@ -1,42 +1,11 @@
-////////////////////////////////////////////////////////////////////////////////
-//
-//  OpenHantek
-/// \file hantek/control.h
-/// \brief Declares the Hantek::Control class.
-//
-//  Copyright (C) 2008, 2009  Oleg Khudyakov
-//  prcoder@potrebitel.ru
-//  Copyright (C) 2010 - 2012  Oliver Haag
-//  oliver.haag@gmail.com
-//
-//  This program is free software: you can redistribute it and/or modify it
-//  under the terms of the GNU General Public License as published by the Free
-//  Software Foundation, either version 3 of the License, or (at your option)
-//  any later version.
-//
-//  This program is distributed in the hope that it will be useful, but WITHOUT
-//  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-//  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-//  more details.
-//
-//  You should have received a copy of the GNU General Public License along with
-//  this program.  If not, see <http://www.gnu.org/licenses/>.
-//
-////////////////////////////////////////////////////////////////////////////////
+// SPDX-License-Identifier: GPL-2.0+
 
-#ifndef HANTEK_CONTROL_H
-#define HANTEK_CONTROL_H
+#pragma once
 
-#include <QMutex>
-
-#include "dsocontrol.h"
-#include "hantek/types.h"
-#include "helper.h"
-
-class QTimer;
+#include "definitions.h"
+#include <QList>
 
 namespace Hantek {
-class Device;
 
 //////////////////////////////////////////////////////////////////////////////
 /// \enum ControlIndex                                        hantek/control.h
@@ -204,97 +173,4 @@ struct ControlSettings {
   unsigned short int usedChannels; ///< Number of activated channels
 };
 
-//////////////////////////////////////////////////////////////////////////////
-/// \class Control                                            hantek/control.h
-/// \brief The DsoControl abstraction layer for %Hantek USB DSOs.
-class Control : public DsoControl {
-  Q_OBJECT
-
-public:
-  Control(QTimer *mainTimer, QObject *parent = 0);
-  ~Control();
-
-  unsigned int getChannelCount();
-  QList<unsigned int> *getAvailableRecordLengths();
-  double getMinSamplerate();
-  double getMaxSamplerate();
-
-protected:
-  void run();
-  void updateInterval();
-
-  unsigned int calculateTriggerPoint(unsigned int value);
-  int getCaptureState();
-  int getSamples(bool process);
-  double getBestSamplerate(double samplerate, bool fastRate = false,
-                           bool maximum = false, unsigned int *downsampler = 0);
-  unsigned int getSampleCount(bool *fastRate = 0);
-  unsigned int updateRecordLength(unsigned int size);
-  unsigned int updateSamplerate(unsigned int downsampler, bool fastRate);
-  void restoreTargets();
-  void updateSamplerateLimits();
-
-  // Communication with device
-  Device *device; ///< The USB device for the oscilloscope
-  QTimer *timer;  ///< Timer for periodic communication thread
-
-  Helper::DataArray<unsigned char> *command[BULK_COUNT]; ///< Pointers to bulk
-                                                         ///commands, ready to
-                                                         ///be transmitted
-  bool
-      commandPending[BULK_COUNT]; ///< true, when the command should be executed
-  Helper::DataArray<unsigned char>
-      *control[CONTROLINDEX_COUNT]; ///< Pointers to control commands
-  unsigned char
-      controlCode[CONTROLINDEX_COUNT]; ///< Request codes for control commands
-  bool controlPending[CONTROLINDEX_COUNT]; ///< true, when the control command
-                                           ///should be executed
-
-  // Device setup
-  ControlSpecification specification; ///< The specifications of the device
-  ControlSettings settings;           ///< The current settings of the device
-
-  // Results
-  std::vector<std::vector<double>>
-      samples; ///< Sample data vectors sent to the data analyzer
-  unsigned int previousSampleCount; ///< The expected total number of samples at
-                                    ///the last check before sampling started
-  QMutex samplesMutex;              ///< Mutex for the sample data
-
-  // State of the communication thread
-  int captureState;
-  int rollState;
-  bool samplingStarted;
-  Dso::TriggerMode lastTriggerMode;
-  int cycleCounter;
-  int startCycle;
-
-public slots:
-  virtual void connectDevice();
-
-  unsigned int setRecordLength(unsigned int size);
-  double setSamplerate(double samplerate = 0.0);
-  double setRecordTime(double duration = 0.0);
-
-  int setChannelUsed(unsigned int channel, bool used);
-  int setCoupling(unsigned int channel, Dso::Coupling coupling);
-  double setGain(unsigned int channel, double gain);
-  double setOffset(unsigned int channel, double offset);
-
-  int setTriggerMode(Dso::TriggerMode mode);
-  int setTriggerSource(bool special, unsigned int id);
-  double setTriggerLevel(unsigned int channel, double level);
-  int setTriggerSlope(Dso::Slope slope);
-  double setPretriggerPosition(double position);
-  int forceTrigger();
-
-#ifdef DEBUG
-  int stringCommand(QString command);
-#endif
-
-protected slots:
-  void handler();
-};
 }
-
-#endif

@@ -1,38 +1,16 @@
-////////////////////////////////////////////////////////////////////////////////
-//
-//  OpenHantek
-/// \file openhantek.h
-/// \brief Declares the HantekDsoMainWindow class.
-//
-//  Copyright (C) 2010, 2011  Oliver Haag
-//  oliver.haag@gmail.com
-//
-//  This program is free software: you can redistribute it and/or modify it
-//  under the terms of the GNU General Public License as published by the Free
-//  Software Foundation, either version 3 of the License, or (at your option)
-//  any later version.
-//
-//  This program is distributed in the hope that it will be useful, but WITHOUT
-//  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-//  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-//  more details.
-//
-//  You should have received a copy of the GNU General Public License along with
-//  this program.  If not, see <http://www.gnu.org/licenses/>.
-//
-////////////////////////////////////////////////////////////////////////////////
+// SPDX-License-Identifier: GPL-2.0+
 
-#ifndef HANTEKDSO_H
-#define HANTEKDSO_H
+#pragma once
 
 #include <QMainWindow>
 #include <QTimer>
+#include <memory>
 
 class QActionGroup;
 class QLineEdit;
 
 class DataAnalyzer;
-class DsoControl;
+class HantekDsoControl;
 class DsoSettings;
 class DsoWidget;
 class HorizontalDock;
@@ -49,8 +27,7 @@ class OpenHantekMainWindow : public QMainWindow {
   Q_OBJECT
 
 public:
-  OpenHantekMainWindow(QWidget *parent = 0, Qt::WindowFlags flags = 0);
-  ~OpenHantekMainWindow();
+  OpenHantekMainWindow(std::shared_ptr<HantekDsoControl> dsoControl, std::shared_ptr<DataAnalyzer> dataAnalyser);
 
 protected:
   void closeEvent(QCloseEvent *event);
@@ -65,7 +42,7 @@ private:
 
   // Device management
   void connectSignals();
-  void initializeDevice();
+  void applySettingsToDevice();
 
   // Settings
   int readSettings(const QString &fileName = QString());
@@ -109,12 +86,9 @@ private:
   QLineEdit *commandEdit;
 #endif
 
-  // Timer for DsoControl thread
-  QTimer *timer = new QTimer();
-
   // Data handling classes
-  DataAnalyzer *dataAnalyzer;
-  DsoControl *dsoControl;
+  std::shared_ptr<HantekDsoControl> dsoControl;
+  std::shared_ptr<DataAnalyzer> dataAnalyzer;
 
   // Other variables
   QString currentFile;
@@ -158,5 +132,3 @@ signals:
   void
   settingsChanged(); ///< The settings have changed (Option dialog, loading...)
 };
-
-#endif

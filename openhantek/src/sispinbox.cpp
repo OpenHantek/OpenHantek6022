@@ -26,7 +26,7 @@
 
 #include "sispinbox.h"
 
-#include "helper.h"
+#include "utils/printutils.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 // class OpenHantekMainWindow
@@ -37,7 +37,7 @@ SiSpinBox::SiSpinBox(QWidget *parent) : QDoubleSpinBox(parent) { this->init(); }
 /// \brief Initializes the SiSpinBox, allowing the user to choose the unit.
 /// \param unit The unit shown for the value in the spin box.
 /// \param parent The parent widget.
-SiSpinBox::SiSpinBox(Helper::Unit unit, QWidget *parent)
+SiSpinBox::SiSpinBox(Unit unit, QWidget *parent)
     : QDoubleSpinBox(parent) {
   this->init();
 
@@ -55,7 +55,7 @@ QValidator::State SiSpinBox::validate(QString &input, int &pos) const {
   Q_UNUSED(pos);
 
   bool ok;
-  double value = Helper::stringToValue(input, this->unit, &ok);
+  double value = stringToValue(input, this->unit, &ok);
 
   if (!ok)
     return QValidator::Invalid;
@@ -69,21 +69,21 @@ QValidator::State SiSpinBox::validate(QString &input, int &pos) const {
 /// \param text The content of the text box.
 /// \return Value in base unit.
 double SiSpinBox::valueFromText(const QString &text) const {
-  return Helper::stringToValue(text, this->unit);
+  return stringToValue(text, this->unit);
 }
 
 /// \brief Get string representation of value.
 /// \param val Value in base unit.
 /// \return String representation containing value and (prefix+)unit.
 QString SiSpinBox::textFromValue(double val) const {
-  return Helper::valueToString(val, this->unit, -1) + this->unitPostfix;
+  return valueToString(val, this->unit, -1) + this->unitPostfix;
 }
 
 /// \brief Fixes the text after the user finished changing it.
 /// \param input The content of the text box.
 void SiSpinBox::fixup(QString &input) const {
   bool ok;
-  double value = Helper::stringToValue(input, this->unit, &ok);
+  double value = stringToValue(input, this->unit, &ok);
 
   if (!ok)
     value = this->value();
@@ -154,8 +154,8 @@ void SiSpinBox::stepBy(int steps) {
 /// \brief Set the unit for this spin box.
 /// \param unit The unit shown for the value in the spin box.
 /// \return true on success, false on invalid unit.
-bool SiSpinBox::setUnit(Helper::Unit unit) {
-  if ((unsigned int)unit >= Helper::UNIT_COUNT)
+bool SiSpinBox::setUnit(Unit unit) {
+  if ((unsigned int)unit >= UNIT_COUNT)
     return false;
 
   this->unit = unit;

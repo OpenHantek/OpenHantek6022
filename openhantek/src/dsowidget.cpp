@@ -30,11 +30,12 @@
 
 #include "dsowidget.h"
 
+#include "hantek/definitions.h"
+#include "utils/printutils.h"
+#include "utils/dsoStrings.h"
 #include "dataanalyzer.h"
-#include "dso.h"
 #include "exporter.h"
 #include "glscope.h"
-#include "helper.h"
 #include "levelslider.h"
 #include "settings.h"
 
@@ -351,18 +352,18 @@ void DsoWidget::updateMarkerDetails() {
     this->markerInfoLabel->setText(
         tr("Zoom x%L1").arg(DIVS_TIME / divs, -1, 'g', 3));
     this->markerTimebaseLabel->setText(
-        Helper::valueToString(time / DIVS_TIME, Helper::UNIT_SECONDS, 3) +
+        valueToString(time / DIVS_TIME, UNIT_SECONDS, 3) +
         tr("/div"));
     this->markerFrequencybaseLabel->setText(
-        Helper::valueToString(
+        valueToString(
             divs * this->settings->scope.horizontal.frequencybase / DIVS_TIME,
-            Helper::UNIT_HERTZ, 4) +
+            UNIT_HERTZ, 4) +
         tr("/div"));
   }
   this->markerTimeLabel->setText(
-      Helper::valueToString(time, Helper::UNIT_SECONDS, 4));
+      valueToString(time, UNIT_SECONDS, 4));
   this->markerFrequencyLabel->setText(
-      Helper::valueToString(1.0 / time, Helper::UNIT_HERTZ, 4));
+      valueToString(1.0 / time, UNIT_HERTZ, 4));
 }
 
 /// \brief Update the label about the trigger settings
@@ -373,8 +374,8 @@ void DsoWidget::updateSpectrumDetails(unsigned int channel) {
 
   if (this->settings->scope.spectrum[channel].used)
     this->measurementMagnitudeLabel[channel]->setText(
-        Helper::valueToString(this->settings->scope.spectrum[channel].magnitude,
-                              Helper::UNIT_DECIBEL, 3) +
+        valueToString(this->settings->scope.spectrum[channel].magnitude,
+                              UNIT_DECIBEL, 3) +
         tr("/div"));
   else
     this->measurementMagnitudeLabel[channel]->setText(QString());
@@ -388,10 +389,10 @@ void DsoWidget::updateTriggerDetails() {
                         this->settings->view.color.screen
                             .voltage[this->settings->scope.trigger.source]);
   this->settingsTriggerLabel->setPalette(tablePalette);
-  QString levelString = Helper::valueToString(
+  QString levelString = valueToString(
       this->settings->scope.voltage[this->settings->scope.trigger.source]
           .trigger,
-      Helper::UNIT_VOLTS, 3);
+      UNIT_VOLTS, 3);
   QString pretriggerString =
       tr("%L1%").arg((int)(this->settings->scope.trigger.position * 100 + 0.5));
   this->settingsTriggerLabel->setText(
@@ -416,8 +417,8 @@ void DsoWidget::updateVoltageDetails(unsigned int channel) {
 
   if (this->settings->scope.voltage[channel].used)
     this->measurementGainLabel[channel]->setText(
-        Helper::valueToString(this->settings->scope.voltage[channel].gain,
-                              Helper::UNIT_VOLTS, 3) +
+        valueToString(this->settings->scope.voltage[channel].gain,
+                              UNIT_VOLTS, 3) +
         tr("/div"));
   else
     this->measurementGainLabel[channel]->setText(QString());
@@ -427,21 +428,21 @@ void DsoWidget::updateVoltageDetails(unsigned int channel) {
 /// \param frequencybase The frequencybase used for displaying the trace.
 void DsoWidget::updateFrequencybase(double frequencybase) {
   this->settingsFrequencybaseLabel->setText(
-      Helper::valueToString(frequencybase, Helper::UNIT_HERTZ, 4) + tr("/div"));
+      valueToString(frequencybase, UNIT_HERTZ, 4) + tr("/div"));
 }
 
 /// \brief Updates the samplerate field after changing the samplerate.
 /// \param samplerate The samplerate set in the oscilloscope.
 void DsoWidget::updateSamplerate(double samplerate) {
   this->settingsSamplerateLabel->setText(
-      Helper::valueToString(samplerate, Helper::UNIT_SAMPLES, 4) + tr("/s"));
+      valueToString(samplerate, UNIT_SAMPLES, 4) + tr("/s"));
 }
 
 /// \brief Handles timebaseChanged signal from the horizontal dock.
 /// \param timebase The timebase used for displaying the trace.
 void DsoWidget::updateTimebase(double timebase) {
   this->settingsTimebaseLabel->setText(
-      Helper::valueToString(timebase, Helper::UNIT_SECONDS, 4) + tr("/div"));
+      valueToString(timebase, UNIT_SECONDS, 4) + tr("/div"));
 
   this->updateMarkerDetails();
 }
@@ -544,7 +545,7 @@ void DsoWidget::updateVoltageUsed(unsigned int channel, bool used) {
 /// \brief Change the record length.
 void DsoWidget::updateRecordLength(unsigned long size) {
   this->settingsRecordLengthLabel->setText(
-      Helper::valueToString(size, Helper::UNIT_SAMPLES, 4));
+      valueToString(size, UNIT_SAMPLES, 4));
 }
 
 /// \brief Export the oscilloscope screen to a file.
@@ -606,11 +607,11 @@ void DsoWidget::dataAnalyzed() {
     if (this->settings->scope.voltage[channel].used &&
         this->dataAnalyzer->data(channel)) {
       // Amplitude string representation (4 significant digits)
-      this->measurementAmplitudeLabel[channel]->setText(Helper::valueToString(
-          this->dataAnalyzer->data(channel)->amplitude, Helper::UNIT_VOLTS, 4));
+      this->measurementAmplitudeLabel[channel]->setText(valueToString(
+          this->dataAnalyzer->data(channel)->amplitude, UNIT_VOLTS, 4));
       // Frequency string representation (5 significant digits)
-      this->measurementFrequencyLabel[channel]->setText(Helper::valueToString(
-          this->dataAnalyzer->data(channel)->frequency, Helper::UNIT_HERTZ, 5));
+      this->measurementFrequencyLabel[channel]->setText(valueToString(
+          this->dataAnalyzer->data(channel)->frequency, UNIT_HERTZ, 5));
     }
   }
 }

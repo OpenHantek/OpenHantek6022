@@ -87,7 +87,7 @@ void GlGenerator::generateGraphs() {
     }
   }
 
-  this->dataAnalyzer->mutex()->lock();
+  QMutexLocker locker(this->dataAnalyzer->mutex());
 
   unsigned int preTrigSamples = 0;
   unsigned int postTrigSamples = 0;
@@ -116,10 +116,9 @@ void GlGenerator::generateGraphs() {
 //    3: Ignore samples
 // For now #3 is chosen
 #ifdef DEBUG
-          Helper::timestampDebug(QString("Too few samples to make a steady "
+          timestampDebug(QString("Too few samples to make a steady "
                                          "picture. Decrease sample rate"));
 #endif
-          this->dataAnalyzer->mutex()->unlock();
           return;
         }
         preTrigSamples =
@@ -172,9 +171,8 @@ void GlGenerator::generateGraphs() {
       }
       if (swTriggerStart == 0) {
 #ifdef DEBUG
-        Helper::timestampDebug(QString("Trigger not asserted. Data ignored"));
+        timestampDebug(QString("Trigger not asserted. Data ignored"));
 #endif
-        this->dataAnalyzer->mutex()->unlock();
         return;
       }
     }
@@ -333,8 +331,6 @@ void GlGenerator::generateGraphs() {
   default:
     break;
   }
-
-  this->dataAnalyzer->mutex()->unlock();
 
   emit graphsGenerated();
 }

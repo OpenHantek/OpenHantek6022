@@ -32,7 +32,7 @@
 #include <QSize>
 #include <QString>
 
-#include "dso.h"
+#include "definitions.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 /// \struct DsoSettingsOptions                                        settings.h

@@ -31,7 +31,8 @@
 
 #include "dockwindows.h"
 
-#include "helper.h"
+#include "utils/printutils.h"
+#include "utils/dsoStrings.h"
 #include "settings.h"
 #include "sispinbox.h"
 
@@ -61,7 +62,7 @@ HorizontalDock::HorizontalDock(DsoSettings *settings, QWidget *parent,
 
   // Initialize elements
   this->samplerateLabel = new QLabel(tr("Samplerate"));
-  this->samplerateSiSpinBox = new SiSpinBox(Helper::UNIT_SAMPLES);
+  this->samplerateSiSpinBox = new SiSpinBox(UNIT_SAMPLES);
   this->samplerateSiSpinBox->setMinimum(1);
   this->samplerateSiSpinBox->setMaximum(1e8);
   this->samplerateSiSpinBox->setUnitPostfix("/s");
@@ -69,13 +70,13 @@ HorizontalDock::HorizontalDock(DsoSettings *settings, QWidget *parent,
   timebaseSteps << 1.0 << 2.0 << 4.0 << 10.0;
 
   this->timebaseLabel = new QLabel(tr("Timebase"));
-  this->timebaseSiSpinBox = new SiSpinBox(Helper::UNIT_SECONDS);
+  this->timebaseSiSpinBox = new SiSpinBox(UNIT_SECONDS);
   this->timebaseSiSpinBox->setSteps(timebaseSteps);
   this->timebaseSiSpinBox->setMinimum(1e-9);
   this->timebaseSiSpinBox->setMaximum(3.6e3);
 
   this->frequencybaseLabel = new QLabel(tr("Frequencybase"));
-  this->frequencybaseSiSpinBox = new SiSpinBox(Helper::UNIT_HERTZ);
+  this->frequencybaseSiSpinBox = new SiSpinBox(UNIT_HERTZ);
   this->frequencybaseSiSpinBox->setMinimum(1.0);
   this->frequencybaseSiSpinBox->setMaximum(100e6);
 
@@ -215,13 +216,13 @@ void HorizontalDock::availableRecordLengthsChanged(
       this->recordLengthComboBox->setItemText(
           index, recordLengthItem == UINT_MAX
                      ? tr("Roll")
-                     : Helper::valueToString(recordLengthItem,
-                                             Helper::UNIT_SAMPLES, 3));
+                     : valueToString(recordLengthItem,
+                                             UNIT_SAMPLES, 3));
     } else {
       this->recordLengthComboBox->addItem(
           recordLengthItem == UINT_MAX
               ? tr("Roll")
-              : Helper::valueToString(recordLengthItem, Helper::UNIT_SAMPLES,
+              : valueToString(recordLengthItem, UNIT_SAMPLES,
                                       3),
           (uint)recordLengthItem);
     }
@@ -464,8 +465,8 @@ SpectrumDock::SpectrumDock(DsoSettings *settings, QWidget *parent,
                        << 6e2; ///< Magnitude steps in dB/div
   for (QList<double>::iterator magnitude = this->magnitudeSteps.begin();
        magnitude != this->magnitudeSteps.end(); ++magnitude)
-    this->magnitudeStrings << Helper::valueToString(*magnitude,
-                                                    Helper::UNIT_DECIBEL, 0);
+    this->magnitudeStrings << valueToString(*magnitude,
+                                                    UNIT_DECIBEL, 0);
 
   // Initialize elements
   for (int channel = 0; channel < this->settings->scope.voltage.count();
@@ -605,7 +606,7 @@ VoltageDock::VoltageDock(DsoSettings *settings, QWidget *parent,
                   << 5e0; ///< Voltage steps in V/div
   for (QList<double>::iterator gain = this->gainSteps.begin();
        gain != this->gainSteps.end(); ++gain)
-    this->gainStrings << Helper::valueToString(*gain, Helper::UNIT_VOLTS, 0);
+    this->gainStrings << valueToString(*gain, UNIT_VOLTS, 0);
 
   // Initialize elements
   for (int channel = 0; channel < this->settings->scope.voltage.count();

@@ -28,7 +28,7 @@
 #include <QDockWidget>
 #include <QGridLayout>
 
-#include "dso.h"
+#include "definitions.h"
 #include "settings.h"
 
 class QLabel;

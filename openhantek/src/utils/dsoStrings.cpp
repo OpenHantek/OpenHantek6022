@@ -23,7 +23,7 @@
 
 #include <QApplication>
 
-#include "dso.h"
+#include "definitions.h"
 
 namespace Dso {
 /// \brief Return string representation of the given channel mode.

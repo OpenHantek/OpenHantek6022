@@ -1,25 +1,4 @@
-////////////////////////////////////////////////////////////////////////////////
-//
-//  OpenHantek
-//  helper.cpp
-//
-//  Copyright (C) 2010  Oliver Haag
-//  oliver.haag@gmail.com
-//
-//  This program is free software: you can redistribute it and/or modify it
-//  under the terms of the GNU General Public License as published by the Free
-//  Software Foundation, either version 3 of the License, or (at your option)
-//  any later version.
-//
-//  This program is distributed in the hope that it will be useful, but WITHOUT
-//  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-//  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-//  more details.
-//
-//  You should have received a copy of the GNU General Public License along with
-//  this program.  If not, see <http://www.gnu.org/licenses/>.
-//
-////////////////////////////////////////////////////////////////////////////////
+// SPDX-License-Identifier: GPL-2.0+
 
 #include <cmath>
 
@@ -29,12 +8,9 @@
 
 #include <libusb-1.0/libusb.h>
 
-#include "helper.h"
+#include "utils/printutils.h"
 
-namespace Helper {
-/// \brief Returns string representation for libusb errors.
-/// \param error The error code.
-/// \return String explaining the error.
+
 QString libUsbErrorString(int error) {
   switch (error) {
   case LIBUSB_SUCCESS:
@@ -69,12 +45,6 @@ QString libUsbErrorString(int error) {
   }
 }
 
-/// \brief Converts double to string containing value and (prefix+)unit
-/// (Counterpart to Helper::stringToValue).
-/// \param value The value in prefixless units.
-/// \param unit The unit for the value.
-/// \param precision Significant digits, 0 for integer, -1 for auto.
-/// \return String with the value and unit.
 QString valueToString(double value, Unit unit, int precision) {
   char format = (precision < 0) ? 'g' : 'f';
 
@@ -193,12 +163,6 @@ QString valueToString(double value, Unit unit, int precision) {
   }
 }
 
-/// \brief Converts string containing value and (prefix+)unit to double
-/// (Counterpart to Helper::valueToString).
-/// \param text The text containing the value and its unit.
-/// \param unit The base unit of the value.
-/// \param ok Pointer to a success-flag, true on success, false on error.
-/// \return Decoded value.
 double stringToValue(const QString &text, Unit unit, bool *ok) {
   // Check if the text is empty
   int totalSize = text.size();
@@ -302,11 +266,6 @@ double stringToValue(const QString &text, Unit unit, bool *ok) {
   }
 }
 
-#ifdef DEBUG
-/// \brief Returns the hex dump for the given data.
-/// \param data Pointer to the data bytes that should be dumped.
-/// \param length The length of the data array in bytes.
-/// \return String with the hex dump of the data.
 QString hexDump(unsigned char *data, unsigned int length) {
   QString dumpString, byteString;
 
@@ -316,11 +275,6 @@ QString hexDump(unsigned char *data, unsigned int length) {
   return dumpString;
 }
 
-/// \brief Returns the hex dump for the given data.
-/// \param dump The string with the hex dump of the data.
-/// \param data Pointer to the address where the data bytes should be saved.
-/// \param length The maximum length of the data array in bytes.
-/// \return The length of the saved data.
 unsigned int hexParse(const QString dump, unsigned char *data,
                       unsigned int length) {
   QString dumpString = dump;
@@ -345,6 +299,4 @@ unsigned int hexParse(const QString dump, unsigned char *data,
   }
 
   return index;
-}
-#endif
 }

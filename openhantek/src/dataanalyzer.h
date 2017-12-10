@@ -28,14 +28,15 @@
 #include <vector>
 
 #include <QThread>
+#include <QMutex>
 
-#include "dso.h"
-#include "helper.h"
+#include "definitions.h"
+#include "utils/printutils.h"
 
-class DsoSettings;
+class DsoSettingsOptions;
+class DsoSettingsScope;
+class DsoSettingsView;
 class HantekDSOAThread;
-class QMutex;
-
 ////////////////////////////////////////////////////////////////////////////////
 /// \struct SampleValues                                          dataanalyzer.h
 /// \brief Struct for a array of sample values.
@@ -74,33 +75,32 @@ class DataAnalyzer : public QThread {
   Q_OBJECT
 
 public:
-  DataAnalyzer(DsoSettings *settings, QObject *parent = 0);
-  ~DataAnalyzer();
-
   const AnalyzedData *data(unsigned int channel) const;
   unsigned int sampleCount();
+  /// \brief Returns the mutex for the data.
+  /// \return Mutex for the analyzed data.
   QMutex *mutex() const;
 
 protected:
-  void run();
+  void run(DsoSettingsOptions* options,DsoSettingsScope* scope,DsoSettingsView* view);
+  void transferData();
 
-  DsoSettings *settings; ///< The settings provided by the parent class
+  DsoSettingsOptions* options; ///< General options of the program
+  DsoSettingsScope* scope;     ///< All oscilloscope related settings
+  DsoSettingsView* view;       ///< All view related settings
 
-  std::vector<AnalyzedData>
-      analyzedData;          ///< The analyzed data for each channel
-  QMutex *analyzedDataMutex; ///< A mutex for the analyzed data of all channels
+  std::vector<AnalyzedData> analyzedData;          ///< The analyzed data for each channel
+  QMutex *analyzedDataMutex= new QMutex(); ///< A mutex for the analyzed data of all channels
 
-  unsigned int
-      lastRecordLength; ///< The record length of the previously analyzed data
-  unsigned int maxSamples; ///< The maximum record length of the analyzed data
-  Dso::WindowFunction lastWindow; ///< The previously used dft window function
-  double *window;                 ///< The array for the dft window factors
+  unsigned int lastRecordLength=0; ///< The record length of the previously analyzed data
+  unsigned int maxSamples=0; ///< The maximum record length of the analyzed data
+  Dso::WindowFunction lastWindow=(Dso::WindowFunction)-1; ///< The previously used dft window function
+  double *window=nullptr;                 ///< The array for the dft window factors
 
-  const std::vector<std::vector<double>>
-      *waitingData;             ///< Pointer to input data from device
-  double waitingDataSamplerate; ///< The samplerate of the input data
+  const std::vector<std::vector<double>> *waitingData;             ///< Pointer to input data from device
+  double waitingDataSamplerate=0.0; ///< The samplerate of the input data
   bool waitingDataAppend;       ///< true, if waiting data should be appended
-  QMutex *waitingDataMutex;     ///< A mutex for the input data
+  QMutex *waitingDataMutex=nullptr;     ///< A mutex for the input data
 
 public slots:
   void analyze(const std::vector<std::vector<double>> *data, double samplerate,

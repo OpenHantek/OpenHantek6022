@@ -11,21 +11,30 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake/")
 
 INCLUDE_DIRECTORIES("." "/usr/local/include")
 
-# Qt Widgets based Gui with OpenGL canvas
-add_subdirectory(openhantek)
-
 # Use CPack to make deb/rpm/zip/exe installer packages
 include(cmake/CPackInfos.cmake)
 
+# Qt Widgets based Gui with OpenGL canvas
+add_subdirectory(openhantek)
+
 if (WIN32)
     install(FILES COPYING readme.md DESTINATION ".")
+endif()
+
+if("${CMAKE_SYSTEM}" MATCHES "Linux")
+  if(EXISTS "/lib/udev/rules.d/")
+    install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/firmware/60-hantek.rules"
+      DESTINATION "/lib/udev/rules.d/" COMPONENT Runtime)
+  else()
+    message(WARNING "Could not find udev rules directory (/lib/udev/rules.d/), skipping installation of udev rules.")
+  endif()
 endif()
 
 # Add auxiliary files to the project, so that these files appear in VisualStudio/QtCreator
 add_custom_target(readme SOURCES readme.md)
 
 # Add "cppcheck" command
-add_custom_target(cppcheck COMMAND "cppcheck --enable=all -I \"${CMAKE_CURRENT_LIST_DIR}/libusbDSO\" -I \"${CMAKE_CURRENT_LIST_DIR}/libPostprocessingDSO\" -I \"${CMAKE_CURRENT_LIST_DIR}/openhantek/src\" -q ${SRC} --template=\"{file}:{line}: {severity}: {message}\"")
+add_custom_target(cppcheck COMMAND "cppcheck --enable=all -I \"${CMAKE_CURRENT_LIST_DIR}/openhantek/src\" -q ${SRC} --template=\"{file}:{line}: {severity}: {message}\"")
 
 # Add "doc" target to build the documentation.
 find_package(Doxygen QUIET)
