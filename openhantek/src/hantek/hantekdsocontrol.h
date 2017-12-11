@@ -32,6 +32,9 @@ public:
    */
     HantekDsoControl(USBDevice* device);
     ~HantekDsoControl();
+
+    /// Call this to start the processing. This method will call itself periodically from there on.
+    /// It is wise to move this class object to an own thread and call run from there.
     void run();
 
     unsigned int getChannelCount();

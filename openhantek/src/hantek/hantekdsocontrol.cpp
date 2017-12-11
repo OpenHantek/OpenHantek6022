@@ -1825,7 +1825,6 @@ int Control::stringCommand(QString command) {
 }
 #endif
 
-/// \brief Called periodically in the control thread by a timer->
 void HantekDsoControl::run() {
     int errorCode = 0;
 
@@ -2098,5 +2097,9 @@ void HantekDsoControl::run() {
     }
 
     this->updateInterval();
-    QTimer::singleShot(cycleTime, this, &HantekDsoControl::run);
+    #if (QT_VERSION >= QT_VERSION_CHECK(5, 4, 0))
+     QTimer::singleShot(cycleTime, this, &HantekDsoControl::run);
+    #else
+     QTimer::singleShot(cycleTime, this, SLOT(run()));
+    #endif
 }
