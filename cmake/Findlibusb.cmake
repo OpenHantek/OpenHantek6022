@@ -5,6 +5,7 @@ find_path(LIBUSB_INCLUDE_DIR
         /usr/local/include
         /opt/local/include
         /usr/include
+        /sw/include
     PATH_SUFFIXES
         libusb-1.0
 )
@@ -25,6 +26,7 @@ find_library(LIBUSB_LIBRARY
         /opt/local/lib
         /usr/lib
         /lib64/
+        /sw/lib
         /usr/lib/i386-linux-gnu/
         /usr/lib/x86_64-linux-gnu/
 )

@@ -1,22 +1,76 @@
-# - Find FFTW
-# Find the native FFTW includes and library
+# - Find the FFTW library
 #
-#  FFTW_INCLUDES    - where to find fftw3.h
-#  FFTW_LIBRARIES   - List of libraries when using FFTW.
-#  FFTW_FOUND       - True if FFTW found.
+# Usage:
+#   find_package(FFTW [REQUIRED] [QUIET] )
+#
+# It sets the following variables:
+#   FFTW_FOUND					... true if fftw is found on the system
+#   FFTW_LIBRARIES				... full path to fftw library
+#   FFTW_INCLUDES				... fftw include directory
+#
+# The following variables will be checked by the function
+#   FFTW_USE_STATIC_LIBS		... if true, only static libraries are found
+#   FFTW_LIBRARIES				... fftw library to use
+#   FFTW_INCLUDE_DIRS			... fftw include directory
+#
 
-if (FFTW_INCLUDES)
-  # Already in cache, be silent
-  set (FFTW_FIND_QUIETLY TRUE)
-endif (FFTW_INCLUDES)
 
-find_path (FFTW_INCLUDES fftw3.h)
+if (FFTW_LIBRARIES AND FFTW_INCLUDE_DIRS)
+  # in cache already
+  set(FFTW_FOUND TRUE)
+else (FFTW_LIBRARIES AND FFTW_INCLUDE_DIRS)
 
-find_library (FFTW_LIBRARIES NAMES fftw3)
+if (FFTW_USE_STATIC_LIBS AND NOT MSVC)
+    set (LIBFFTW_LIB_SUFFIX ".a" CACHE INTERNAL "libfftw3 library name suffix passed to find_library")
+else (FFTW_USE_STATIC_LIBS AND NOT MSVC)
+    set (LIBFFTW_LIB_SUFFIX ".dylib" CACHE INTERNAL "libfftw3 library name suffix passed to find_library")
+endif (FFTW_USE_STATIC_LIBS AND NOT MSVC)
 
-# handle the QUIETLY and REQUIRED arguments and set FFTW_FOUND to TRUE if
-# all listed variables are TRUE
-include (FindPackageHandleStandardArgs)
-find_package_handle_standard_args (FFTW DEFAULT_MSG FFTW_LIBRARIES FFTW_INCLUDES)
+  find_path(FFTW_INCLUDE_DIR
+    NAMES
+	fftw3.h
+    PATHS
+      /usr/include
+      /usr/local/include
+      /opt/local/include
+      /sw/include
+  )
 
-mark_as_advanced (FFTW_LIBRARIES FFTW_INCLUDES)
+  find_library(FFTW_LIBRARY
+    NAMES
+      fftw3
+      libfftw3${LIBFFTW_LIB_SUFFIX}
+    PATHS
+      /usr/lib
+      /usr/local/lib
+      /opt/local/lib
+      /sw/lib
+  )
+
+  set(FFTW_INCLUDE_DIRS
+    ${FFTW_INCLUDE_DIR}
+  )
+  set(FFTW_LIBRARIES
+    ${FFTW_LIBRARY}
+)
+
+  if (FFTW_INCLUDE_DIRS AND FFTW_LIBRARIES)
+     set(FFTW_FOUND TRUE)
+  endif (FFTW_INCLUDE_DIRS AND FFTW_LIBRARIES)
+
+  if (FFTW_FOUND)
+    if (NOT FFTW_FIND_QUIETLY)
+      message(STATUS "Found libfftw3:")
+	  message(STATUS " - Includes: ${FFTW_INCLUDE_DIRS}")
+	  message(STATUS " - Libraries: ${FFTW_LIBRARIES}")
+    endif (NOT FFTW_FIND_QUIETLY)
+  else (FFTW_FOUND)
+    if (FFTW_FIND_REQUIRED)
+      message(FATAL_ERROR "Could not find libfftw3")
+    endif (FFTW_FIND_REQUIRED)
+  endif (FFTW_FOUND)
+
+  # show the FFTW_INCLUDE_DIRS and FFTW_LIBRARIES variables only in the advanced view
+  mark_as_advanced(FFTW_INCLUDE_DIRS FFTW_LIBRARIES)
+
+endif (FFTW_LIBRARIES AND FFTW_INCLUDE_DIRS)

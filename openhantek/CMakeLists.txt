@@ -35,20 +35,21 @@ else()
     target_compile_options(${PROJECT_NAME} PRIVATE "$<$<CONFIG:DEBUG>:-O0>")
     target_compile_options(${PROJECT_NAME} PRIVATE "$<$<CONFIG:RELEASE>:-fno-rtti>")
 endif()
-    
 
-if (UNIX)
+if(WIN32)
+    include(../cmake/fftw_on_windows.cmake)
+    include(../cmake/libusb_on_windows.cmake)
+else()
     find_package(libusb REQUIRED)
+    target_include_directories(${PROJECT_NAME} PRIVATE ${LIBUSB_INCLUDE_DIRS})
     target_link_libraries(${PROJECT_NAME} ${LIBUSB_LIBRARIES})
 
     find_package(Threads REQUIRED)
     target_link_libraries(${PROJECT_NAME} ${CMAKE_THREAD_LIBS_INIT})
 
     find_package(FFTW REQUIRED)
+    target_include_directories(${PROJECT_NAME} PRIVATE ${FFTW_INCLUDE_DIRS})
     target_link_libraries(${PROJECT_NAME} ${FFTW_LIBRARIES})
-elseif(WIN32)
-    include(../cmake/fftw_on_windows.cmake)
-    include(../cmake/libusb_on_windows.cmake)
 endif()
 
 # install commands
