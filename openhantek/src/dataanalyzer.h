@@ -33,10 +33,9 @@
 #include "definitions.h"
 #include "utils/printutils.h"
 
-class DsoSettingsOptions;
-class DsoSettingsScope;
-class DsoSettingsView;
-class HantekDSOAThread;
+struct DsoSettingsOptions;
+struct DsoSettingsScope;
+struct DsoSettingsView;
 ////////////////////////////////////////////////////////////////////////////////
 /// \struct SampleValues                                          dataanalyzer.h
 /// \brief Struct for a array of sample values.
