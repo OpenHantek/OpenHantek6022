@@ -45,7 +45,7 @@ class HorizontalDock : public QDockWidget {
   Q_OBJECT
 
 public:
-  HorizontalDock(DsoSettings *settings, QWidget *parent = 0,
+  HorizontalDock(DsoSettings *settings, QWidget *parent,
                  Qt::WindowFlags flags = 0);
   ~HorizontalDock();
 
@@ -114,7 +114,7 @@ class TriggerDock : public QDockWidget {
 
 public:
   TriggerDock(DsoSettings *settings, const QStringList *specialTriggers,
-              QWidget *parent = 0, Qt::WindowFlags flags = 0);
+              QWidget *parent, Qt::WindowFlags flags = 0);
   ~TriggerDock();
 
   int setMode(Dso::TriggerMode mode);
@@ -162,7 +162,7 @@ class VoltageDock : public QDockWidget {
   Q_OBJECT
 
 public:
-  VoltageDock(DsoSettings *settings, QWidget *parent = 0,
+  VoltageDock(DsoSettings *settings, QWidget *parent,
               Qt::WindowFlags flags = 0);
   ~VoltageDock();
 
@@ -215,7 +215,7 @@ class SpectrumDock : public QDockWidget {
   Q_OBJECT
 
 public:
-  SpectrumDock(DsoSettings *settings, QWidget *parent = 0,
+  SpectrumDock(DsoSettings *settings, QWidget *parent,
                Qt::WindowFlags flags = 0);
   ~SpectrumDock();
 

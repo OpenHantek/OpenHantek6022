@@ -18,6 +18,7 @@
 #include "dataanalyzer.h"
 #include "dockwindows.h"
 #include "hantekdsocontrol.h"
+#include "usb/usbdevice.h"
 #include "dsowidget.h"
 #include "hantek/hantekdsocontrol.h"
 #include "settings.h"
@@ -32,7 +33,7 @@ OpenHantekMainWindow::OpenHantekMainWindow(std::shared_ptr<HantekDsoControl> dso
 
     // Window title
     setWindowIcon(QIcon(":openhantek.png"));
-    setWindowTitle(tr("OpenHantek"));
+    setWindowTitle(tr("OpenHantek - Device %1").arg(QString::fromStdString(dsoControl->getDevice()->getModel().name)));
 
     // Application settings
     settings = new DsoSettings();
@@ -40,6 +41,7 @@ OpenHantekMainWindow::OpenHantekMainWindow(std::shared_ptr<HantekDsoControl> dso
     readSettings();
 
     // Create dock windows before the dso widget, they fix messed up settings
+    setDockOptions(dockOptions() | QMainWindow::GroupedDragging);
     createDockWindows();
 
     // Central oszilloscope widget
@@ -249,10 +251,10 @@ void OpenHantekMainWindow::createStatusBar() {
 
 /// \brief Create all docking windows.
 void OpenHantekMainWindow::createDockWindows() {
-    horizontalDock = new HorizontalDock(settings);
-    triggerDock = new TriggerDock(settings, dsoControl->getSpecialTriggerSources());
-    spectrumDock = new SpectrumDock(settings);
-    voltageDock = new VoltageDock(settings);
+    horizontalDock = new HorizontalDock(settings, this);
+    triggerDock = new TriggerDock(settings, dsoControl->getSpecialTriggerSources(), this);
+    spectrumDock = new SpectrumDock(settings, this);
+    voltageDock = new VoltageDock(settings, this);
 }
 
 /// \brief Connect general signals and device management signals.
