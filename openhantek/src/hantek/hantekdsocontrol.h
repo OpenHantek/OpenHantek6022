@@ -43,6 +43,7 @@ public:
     double getMaxSamplerate();
 
     const QStringList *getSpecialTriggerSources();
+    const USBDevice* getDevice() const;
 
 signals:
     void samplingStarted(); ///< The oscilloscope started sampling/waiting for trigger

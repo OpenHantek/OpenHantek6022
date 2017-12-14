@@ -32,7 +32,12 @@ void HantekDsoControl::stopSampling() {
 
 /// \brief Get a list of the names of the special trigger sources.
 const QStringList *HantekDsoControl::getSpecialTriggerSources() {
-  return &(specialTriggerSources);
+    return &(specialTriggerSources);
+}
+
+const USBDevice *HantekDsoControl::getDevice() const
+{
+    return device;
 }
 
 /// \brief Initializes the command buffers and lists.
