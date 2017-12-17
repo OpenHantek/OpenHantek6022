@@ -1,35 +1,15 @@
-////////////////////////////////////////////////////////////////////////////////
-//
-//  OpenHantek
-/// \file exporter.h
-/// \brief Declares the Exporter class.
-//
-//  Copyright (C) 2010  Oliver Haag
-//  oliver.haag@gmail.com
-//
-//  This program is free software: you can redistribute it and/or modify it
-//  under the terms of the GNU General Public License as published by the Free
-//  Software Foundation, either version 3 of the License, or (at your option)
-//  any later version.
-//
-//  This program is distributed in the hope that it will be useful, but WITHOUT
-//  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-//  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-//  more details.
-//
-//  You should have received a copy of the GNU General Public License along with
-//  this program.  If not, see <http://www.gnu.org/licenses/>.
-//
-////////////////////////////////////////////////////////////////////////////////
+// SPDX-License-Identifier: GPL-2.0+
 
-#ifndef EXPORTER_H
-#define EXPORTER_H
+#pragma once
 
-#include <QObject>
+#include <memory>
 #include <QSize>
+#include <QPainter>
+#include <QPrinter>
 
 class DsoSettings;
-class DataAnalyzer;
+class DataAnalyzerResult;
+class DsoSettingsColorValues;
 
 ////////////////////////////////////////////////////////////////////////////////
 /// \enum ExportFormat                                                exporter.h
@@ -44,26 +24,24 @@ enum ExportFormat {
 ////////////////////////////////////////////////////////////////////////////////
 /// \class Exporter                                                   exporter.h
 /// \brief Exports the oscilloscope screen to a file or prints it.
-class Exporter : public QObject {
-  Q_OBJECT
-
+class Exporter {
 public:
-  Exporter(DsoSettings *settings, DataAnalyzer *dataAnalyzer,
-           QWidget *parent = 0);
-  ~Exporter();
+  static Exporter *createPrintExporter(DsoSettings *settings);
+  static Exporter *createSaveToFileExporter(DsoSettings *settings);
 
-  void setFilename(QString filename);
-  void setFormat(ExportFormat format);
-
-  bool doExport();
+  /// \brief Print the document (May be a file too)
+  bool exportSamples(const DataAnalyzerResult *result);
 
 private:
-  DataAnalyzer *dataAnalyzer;
+  Exporter(DsoSettings *settings, const QString& filename, ExportFormat format);
+  void setFormat(ExportFormat format);
+  bool exportCVS(const DataAnalyzerResult *result);
+  static std::unique_ptr<QPrinter> printPaintDevice(DsoSettings *settings);
+  void drawGrids(QPainter& painter, DsoSettingsColorValues *colorValues, double lineHeight,
+                 double scopeHeight, int scopeWidth);
   DsoSettings *settings;
+  std::unique_ptr<QPrinter> selectedPrinter;
 
   QString filename;
   ExportFormat format;
-  QSize size;
 };
-
-#endif

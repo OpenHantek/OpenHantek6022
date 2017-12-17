@@ -1,28 +1,8 @@
-////////////////////////////////////////////////////////////////////////////////
-//
-//  OpenHantek
-//  exporter.cpp
-//
-//  Copyright (C) 2010  Oliver Haag
-//  oliver.haag@gmail.com
-//
-//  This program is free software: you can redistribute it and/or modify it
-//  under the terms of the GNU General Public License as published by the Free
-//  Software Foundation, either version 3 of the License, or (at your option)
-//  any later version.
-//
-//  This program is distributed in the hope that it will be useful, but WITHOUT
-//  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-//  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-//  more details.
-//
-//  You should have received a copy of the GNU General Public License along with
-//  this program.  If not, see <http://www.gnu.org/licenses/>.
-//
-////////////////////////////////////////////////////////////////////////////////
+// SPDX-License-Identifier: GPL-2.0+
 
 #include <cmath>
 #include <algorithm>
+#include <memory>
 
 #include <QFile>
 #include <QImage>
@@ -30,96 +10,104 @@
 #include <QPainter>
 #include <QPixmap>
 #include <QPrintDialog>
+#include <QFileDialog>
 #include <QPrinter>
 #include <QTextStream>
+#include <QCoreApplication>
 
 #include "exporter.h"
 
-#include "dataanalyzer.h"
+#include "dataanalyzerresult.h"
 #include "definitions.h"
 #include "glgenerator.h"
 #include "utils/printutils.h"
 #include "utils/dsoStrings.h"
 #include "settings.h"
 
-////////////////////////////////////////////////////////////////////////////////
-// class HorizontalDock
-/// \brief Initializes the printer object.
-Exporter::Exporter(DsoSettings *settings, DataAnalyzer *dataAnalyzer,
-                   QWidget *parent)
-    : QObject(parent) {
-  this->settings = settings;
-  this->dataAnalyzer = dataAnalyzer;
+#define tr(msg) QCoreApplication::translate("Exporter", msg)
 
-  this->format = EXPORT_FORMAT_PRINTER;
+Exporter::Exporter(DsoSettings *settings, const QString &filename, ExportFormat format) :
+    settings(settings), filename(filename), format(format) {
 }
 
-/// \brief Cleans up everything.
-Exporter::~Exporter() {}
 
-/// \brief Set the filename of the output file (Not used for printing).
-void Exporter::setFilename(QString filename) {
-  if (!filename.isEmpty())
-    this->filename = filename;
+Exporter* Exporter::createPrintExporter(DsoSettings *settings)
+{
+    std::unique_ptr<QPrinter> printer = printPaintDevice(settings);
+    // Show the printing dialog
+    QPrintDialog dialog(printer.get());
+    dialog.setWindowTitle(tr("Print oscillograph"));
+    if (dialog.exec() != QDialog::Accepted) {
+        return nullptr;
+    }
+
+    Exporter* exporter = new Exporter(settings, QString(), EXPORT_FORMAT_PRINTER);
+    exporter->selectedPrinter = std::move(printer);
+    return exporter;
 }
 
-/// \brief Set the output format.
-void Exporter::setFormat(ExportFormat format) {
-  if (format >= EXPORT_FORMAT_PRINTER && format <= EXPORT_FORMAT_CSV)
-    this->format = format;
+Exporter *Exporter::createSaveToFileExporter(DsoSettings *settings)
+{
+    QStringList filters;
+    filters << tr("Portable Document Format (*.pdf)")
+            << tr("Image (*.png *.xpm *.jpg)")
+            << tr("Comma-Separated Values (*.csv)");
+
+    QFileDialog fileDialog(nullptr, tr("Export file..."), QString(), filters.join(";;"));
+    fileDialog.setFileMode(QFileDialog::AnyFile);
+    fileDialog.setAcceptMode(QFileDialog::AcceptSave);
+    if (fileDialog.exec() != QDialog::Accepted)
+        return nullptr;
+
+    return new Exporter(settings, fileDialog.selectedFiles().first(), (ExportFormat)(EXPORT_FORMAT_PDF + filters.indexOf(fileDialog.selectedNameFilter())));
 }
 
-/// \brief Print the document (May be a file too)
-bool Exporter::doExport() {
-  if (this->format < EXPORT_FORMAT_CSV) {
+std::unique_ptr<QPrinter> Exporter::printPaintDevice(DsoSettings *settings)
+{
+    // We need a QPrinter for printing, pdf- and ps-export
+    std::unique_ptr<QPrinter> printer = std::unique_ptr<QPrinter>(new QPrinter(QPrinter::HighResolution));
+    printer->setOrientation(settings->view.zoom ? QPrinter::Portrait : QPrinter::Landscape);
+    printer->setPageMargins(20, 20, 20, 20, QPrinter::Millimeter);
+    return printer;
+}
+
+bool Exporter::exportSamples(const DataAnalyzerResult* result) {
+    if (this->format == EXPORT_FORMAT_CSV) {
+        return exportCVS(result);
+    }
+
     // Choose the color values we need
     DsoSettingsColorValues *colorValues;
     if (this->format == EXPORT_FORMAT_IMAGE &&
-        this->settings->view.screenColorImages)
-      colorValues = &(this->settings->view.color.screen);
+            this->settings->view.screenColorImages)
+        colorValues = &(this->settings->view.color.screen);
     else
-      colorValues = &(this->settings->view.color.print);
+        colorValues = &(this->settings->view.color.print);
 
-    QPaintDevice *paintDevice;
+    std::unique_ptr<QPaintDevice> paintDevice;
 
-    if (this->format < EXPORT_FORMAT_IMAGE) {
-      // We need a QPrinter for printing, pdf- and ps-export
-      paintDevice = new QPrinter(QPrinter::HighResolution);
-      static_cast<QPrinter *>(paintDevice)
-          ->setOrientation(this->settings->view.zoom ? QPrinter::Portrait
-                                                     : QPrinter::Landscape);
-      static_cast<QPrinter *>(paintDevice)
-          ->setPageMargins(20, 20, 20, 20, QPrinter::Millimeter);
-
-      if (this->format == EXPORT_FORMAT_PRINTER) {
-        // Show the printing dialog
-        QPrintDialog dialog(static_cast<QPrinter *>(paintDevice),
-                            static_cast<QWidget *>(this->parent()));
-        dialog.setWindowTitle(tr("Print oscillograph"));
-        if (dialog.exec() != QDialog::Accepted) {
-          delete paintDevice;
-          return false;
-        }
-      } else {
-        // Configure the QPrinter
-        static_cast<QPrinter *>(paintDevice)->setOutputFileName(this->filename);
-        static_cast<QPrinter *>(paintDevice)
-            ->setOutputFormat((this->format == EXPORT_FORMAT_PDF)
-                                  ? QPrinter::PdfFormat
-                                  : QPrinter::NativeFormat);
-      }
-    } else {
-      // We need a QPixmap for image-export
-      paintDevice = new QPixmap(this->settings->options.imageSize);
-      static_cast<QPixmap *>(paintDevice)->fill(colorValues->background);
+    if (this->format == EXPORT_FORMAT_IMAGE) {
+        // We need a QPixmap for image-export
+        QPixmap *qPixmap = new QPixmap(this->settings->options.imageSize);
+        qPixmap->fill(colorValues->background);
+        paintDevice = std::unique_ptr<QPaintDevice>(qPixmap);
+    } else if (this->format == EXPORT_FORMAT_PRINTER) {
+        paintDevice = std::move(selectedPrinter);
+    }else {
+        std::unique_ptr<QPrinter> printer = printPaintDevice(settings);
+        printer->setOutputFileName(this->filename);
+        printer->setOutputFormat((this->format == EXPORT_FORMAT_PDF) ? QPrinter::PdfFormat : QPrinter::NativeFormat);
+        paintDevice = std::move(printer);
     }
 
+    if (!paintDevice) return false;
+
     // Create a painter for our device
-    QPainter painter(paintDevice);
+    QPainter painter(paintDevice.get());
 
     // Get line height
     QFont font;
-    QFontMetrics fontMetrics(font, paintDevice);
+    QFontMetrics fontMetrics(font, paintDevice.get());
     double lineHeight = fontMetrics.height();
 
     painter.setBrush(Qt::SolidPattern);
@@ -130,114 +118,112 @@ bool Exporter::doExport() {
     // Print trigger details
     painter.setPen(colorValues->voltage[this->settings->scope.trigger.source]);
     QString levelString = valueToString(
-        this->settings->scope.voltage[this->settings->scope.trigger.source]
+                this->settings->scope.voltage[this->settings->scope.trigger.source]
             .trigger,
-        UNIT_VOLTS, 3);
+            UNIT_VOLTS, 3);
     QString pretriggerString = tr("%L1%").arg(
-        (int)(this->settings->scope.trigger.position * 100 + 0.5));
+                (int)(this->settings->scope.trigger.position * 100 + 0.5));
     painter.drawText(
-        QRectF(0, 0, lineHeight * 10, lineHeight),
-        tr("%1  %2  %3  %4")
-            .arg(this->settings->scope
+                QRectF(0, 0, lineHeight * 10, lineHeight),
+                tr("%1  %2  %3  %4")
+                .arg(this->settings->scope
                      .voltage[this->settings->scope.trigger.source]
-                     .name,
-                 Dso::slopeString(this->settings->scope.trigger.slope),
-                 levelString, pretriggerString));
+                .name,
+                Dso::slopeString(this->settings->scope.trigger.slope),
+                levelString, pretriggerString));
 
     double scopeHeight;
 
     { // DataAnalyser mutex lock
-        QMutexLocker locker(this->dataAnalyzer->mutex());
-
         // Print sample count
         painter.setPen(colorValues->text);
         painter.drawText(QRectF(lineHeight * 10, 0, stretchBase, lineHeight),
-                         tr("%1 S").arg(this->dataAnalyzer->sampleCount()),
+                         tr("%1 S").arg(result->sampleCount()),
                          QTextOption(Qt::AlignRight));
         // Print samplerate
         painter.drawText(
-            QRectF(lineHeight * 10 + stretchBase, 0, stretchBase, lineHeight),
-            valueToString(this->settings->scope.horizontal.samplerate,
+                    QRectF(lineHeight * 10 + stretchBase, 0, stretchBase, lineHeight),
+                    valueToString(this->settings->scope.horizontal.samplerate,
                                   UNIT_SAMPLES) +
-                tr("/s"),
-            QTextOption(Qt::AlignRight));
+                    tr("/s"),
+                    QTextOption(Qt::AlignRight));
         // Print timebase
         painter.drawText(
-            QRectF(lineHeight * 10 + stretchBase * 2, 0, stretchBase, lineHeight),
-            valueToString(this->settings->scope.horizontal.timebase,
+                    QRectF(lineHeight * 10 + stretchBase * 2, 0, stretchBase, lineHeight),
+                    valueToString(this->settings->scope.horizontal.timebase,
                                   UNIT_SECONDS, 0) +
-                tr("/div"),
-            QTextOption(Qt::AlignRight));
+                    tr("/div"),
+                    QTextOption(Qt::AlignRight));
         // Print frequencybase
         painter.drawText(
-            QRectF(lineHeight * 10 + stretchBase * 3, 0, stretchBase, lineHeight),
-            valueToString(this->settings->scope.horizontal.frequencybase,
+                    QRectF(lineHeight * 10 + stretchBase * 3, 0, stretchBase, lineHeight),
+                    valueToString(this->settings->scope.horizontal.frequencybase,
                                   UNIT_HERTZ, 0) +
-                tr("/div"),
-            QTextOption(Qt::AlignRight));
+                    tr("/div"),
+                    QTextOption(Qt::AlignRight));
 
         // Draw the measurement table
         stretchBase = (double)(paintDevice->width() - lineHeight * 6) / 10;
         int channelCount = 0;
         for (int channel = this->settings->scope.voltage.count() - 1; channel >= 0;
              channel--) {
-          if ((this->settings->scope.voltage[channel].used ||
-               this->settings->scope.spectrum[channel].used) &&
-              this->dataAnalyzer->data(channel)) {
-            ++channelCount;
-            double top = (double)paintDevice->height() - channelCount * lineHeight;
+            if ((this->settings->scope.voltage[channel].used ||
+                 this->settings->scope.spectrum[channel].used) &&
+                    result->data(channel)) {
+                ++channelCount;
+                double top = (double)paintDevice->height() - channelCount * lineHeight;
 
-            // Print label
-            painter.setPen(colorValues->voltage[channel]);
-            painter.drawText(QRectF(0, top, lineHeight * 4, lineHeight),
-                             this->settings->scope.voltage[channel].name);
-            // Print coupling/math mode
-            if ((unsigned int)channel < this->settings->scope.physicalChannels)
-              painter.drawText(
-                  QRectF(lineHeight * 4, top, lineHeight * 2, lineHeight),
-                  Dso::couplingString(
-                      (Dso::Coupling)this->settings->scope.voltage[channel].misc));
-            else
-              painter.drawText(
-                  QRectF(lineHeight * 4, top, lineHeight * 2, lineHeight),
-                  Dso::mathModeString(
-                      (Dso::MathMode)this->settings->scope.voltage[channel].misc));
+                // Print label
+                painter.setPen(colorValues->voltage[channel]);
+                painter.drawText(QRectF(0, top, lineHeight * 4, lineHeight),
+                                 this->settings->scope.voltage[channel].name);
+                // Print coupling/math mode
+                if ((unsigned int)channel < this->settings->scope.physicalChannels)
+                    painter.drawText(
+                                QRectF(lineHeight * 4, top, lineHeight * 2, lineHeight),
+                                Dso::couplingString(
+                                    (Dso::Coupling)this->settings->scope.voltage[channel].misc));
+                else
+                    painter.drawText(
+                                QRectF(lineHeight * 4, top, lineHeight * 2, lineHeight),
+                                Dso::mathModeString(
+                                    (Dso::MathMode)this->settings->scope.voltage[channel].misc));
 
-            // Print voltage gain
-            painter.drawText(
-                QRectF(lineHeight * 6, top, stretchBase * 2, lineHeight),
-                valueToString(this->settings->scope.voltage[channel].gain,
-                                      UNIT_VOLTS, 0) +
-                    tr("/div"),
-                QTextOption(Qt::AlignRight));
-            // Print spectrum magnitude
-            if (this->settings->scope.spectrum[channel].used) {
-                painter.setPen(colorValues->spectrum[channel]);
-                painter.drawText(QRectF(lineHeight * 6 + stretchBase * 2, top,
-                                        stretchBase * 2, lineHeight),
-                                 valueToString(
-                                     this->settings->scope.spectrum[channel].magnitude,
-                                     UNIT_DECIBEL, 0) +
+                // Print voltage gain
+                painter.drawText(
+                            QRectF(lineHeight * 6, top, stretchBase * 2, lineHeight),
+                            valueToString(this->settings->scope.voltage[channel].gain,
+                                          UNIT_VOLTS, 0) +
+                            tr("/div"),
+                            QTextOption(Qt::AlignRight));
+                // Print spectrum magnitude
+                if (this->settings->scope.spectrum[channel].used) {
+                    painter.setPen(colorValues->spectrum[channel]);
+                    painter.drawText(QRectF(lineHeight * 6 + stretchBase * 2, top,
+                                            stretchBase * 2, lineHeight),
+                                     valueToString(
+                                         this->settings->scope.spectrum[channel].magnitude,
+                                         UNIT_DECIBEL, 0) +
                                      tr("/div"),
-                                 QTextOption(Qt::AlignRight));
-            }
+                                     QTextOption(Qt::AlignRight));
+                }
 
-            // Amplitude string representation (4 significant digits)
-            painter.setPen(colorValues->text);
-            painter.drawText(
-                QRectF(lineHeight * 6 + stretchBase * 4, top, stretchBase * 3,
-                       lineHeight),
-                valueToString(this->dataAnalyzer->data(channel)->amplitude,
-                                      UNIT_VOLTS, 4),
-                QTextOption(Qt::AlignRight));
-            // Frequency string representation (5 significant digits)
-            painter.drawText(
-                QRectF(lineHeight * 6 + stretchBase * 7, top, stretchBase * 3,
-                       lineHeight),
-                valueToString(this->dataAnalyzer->data(channel)->frequency,
-                                      UNIT_HERTZ, 5),
-                QTextOption(Qt::AlignRight));
-          }
+                // Amplitude string representation (4 significant digits)
+                painter.setPen(colorValues->text);
+                painter.drawText(
+                            QRectF(lineHeight * 6 + stretchBase * 4, top, stretchBase * 3,
+                                   lineHeight),
+                            valueToString(result->data(channel)->amplitude,
+                                          UNIT_VOLTS, 4),
+                            QTextOption(Qt::AlignRight));
+                // Frequency string representation (5 significant digits)
+                painter.drawText(
+                            QRectF(lineHeight * 6 + stretchBase * 7, top, stretchBase * 3,
+                                   lineHeight),
+                            valueToString(result->data(channel)->frequency,
+                                          UNIT_HERTZ, 5),
+                            QTextOption(Qt::AlignRight));
+            }
         }
 
         // Draw the marker table
@@ -246,59 +232,59 @@ bool Exporter::doExport() {
 
         // Calculate variables needed for zoomed scope
         double divs = fabs(this->settings->scope.horizontal.marker[1] -
-                           this->settings->scope.horizontal.marker[0]);
+                this->settings->scope.horizontal.marker[0]);
         double time = divs * this->settings->scope.horizontal.timebase;
         double zoomFactor = DIVS_TIME / divs;
         double zoomOffset = (this->settings->scope.horizontal.marker[0] +
-                             this->settings->scope.horizontal.marker[1]) /
-                            2;
+                this->settings->scope.horizontal.marker[1]) /
+                2;
 
         if (this->settings->view.zoom) {
-          scopeHeight =
-              (double)(paintDevice->height() - (channelCount + 5) * lineHeight) / 2;
-          double top = 2.5 * lineHeight + scopeHeight;
+            scopeHeight =
+                    (double)(paintDevice->height() - (channelCount + 5) * lineHeight) / 2;
+            double top = 2.5 * lineHeight + scopeHeight;
 
-          painter.drawText(QRectF(0, top, stretchBase, lineHeight),
-                           tr("Zoom x%L1").arg(DIVS_TIME / divs, -1, 'g', 3));
+            painter.drawText(QRectF(0, top, stretchBase, lineHeight),
+                             tr("Zoom x%L1").arg(DIVS_TIME / divs, -1, 'g', 3));
 
-          painter.drawText(QRectF(lineHeight * 10, top, stretchBase, lineHeight),
-                           valueToString(time, UNIT_SECONDS, 4),
-                           QTextOption(Qt::AlignRight));
-          painter.drawText(
-              QRectF(lineHeight * 10 + stretchBase, top, stretchBase, lineHeight),
-              valueToString(1.0 / time, UNIT_HERTZ, 4),
-              QTextOption(Qt::AlignRight));
+            painter.drawText(QRectF(lineHeight * 10, top, stretchBase, lineHeight),
+                             valueToString(time, UNIT_SECONDS, 4),
+                             QTextOption(Qt::AlignRight));
+            painter.drawText(
+                        QRectF(lineHeight * 10 + stretchBase, top, stretchBase, lineHeight),
+                        valueToString(1.0 / time, UNIT_HERTZ, 4),
+                        QTextOption(Qt::AlignRight));
 
-          painter.drawText(
-              QRectF(lineHeight * 10 + stretchBase * 2, top, stretchBase,
-                     lineHeight),
-              valueToString(time / DIVS_TIME, UNIT_SECONDS, 3) +
-                  tr("/div"),
-              QTextOption(Qt::AlignRight));
-          painter.drawText(
-              QRectF(lineHeight * 10 + stretchBase * 3, top, stretchBase,
-                     lineHeight),
-              valueToString(
-                  divs * this->settings->scope.horizontal.frequencybase / DIVS_TIME,
-                  UNIT_HERTZ, 3) +
-                  tr("/div"),
-              QTextOption(Qt::AlignRight));
+            painter.drawText(
+                        QRectF(lineHeight * 10 + stretchBase * 2, top, stretchBase,
+                               lineHeight),
+                        valueToString(time / DIVS_TIME, UNIT_SECONDS, 3) +
+                        tr("/div"),
+                        QTextOption(Qt::AlignRight));
+            painter.drawText(
+                        QRectF(lineHeight * 10 + stretchBase * 3, top, stretchBase,
+                               lineHeight),
+                        valueToString(
+                            divs * this->settings->scope.horizontal.frequencybase / DIVS_TIME,
+                            UNIT_HERTZ, 3) +
+                        tr("/div"),
+                        QTextOption(Qt::AlignRight));
         } else {
-          scopeHeight =
-              (double)paintDevice->height() - (channelCount + 4) * lineHeight;
-          double top = 2.5 * lineHeight + scopeHeight;
+            scopeHeight =
+                    (double)paintDevice->height() - (channelCount + 4) * lineHeight;
+            double top = 2.5 * lineHeight + scopeHeight;
 
-          painter.drawText(QRectF(0, top, stretchBase, lineHeight),
-                           tr("Marker 1/2"));
+            painter.drawText(QRectF(0, top, stretchBase, lineHeight),
+                             tr("Marker 1/2"));
 
-          painter.drawText(
-              QRectF(lineHeight * 10, top, stretchBase * 2, lineHeight),
-              valueToString(time, UNIT_SECONDS, 4),
-              QTextOption(Qt::AlignRight));
-          painter.drawText(QRectF(lineHeight * 10 + stretchBase * 2, top,
-                                  stretchBase * 2, lineHeight),
-                           valueToString(1.0 / time, UNIT_HERTZ, 4),
-                           QTextOption(Qt::AlignRight));
+            painter.drawText(
+                        QRectF(lineHeight * 10, top, stretchBase * 2, lineHeight),
+                        valueToString(time, UNIT_SECONDS, 4),
+                        QTextOption(Qt::AlignRight));
+            painter.drawText(QRectF(lineHeight * 10 + stretchBase * 2, top,
+                                    stretchBase * 2, lineHeight),
+                             valueToString(1.0 / time, UNIT_HERTZ, 4),
+                             QTextOption(Qt::AlignRight));
         }
 
         // Set DIVS_TIME x DIVS_VOLTAGE matrix for oscillograph
@@ -314,217 +300,133 @@ bool Exporter::doExport() {
 
         for (int zoomed = 0; zoomed < (this->settings->view.zoom ? 2 : 1);
              ++zoomed) {
-          switch (this->settings->scope.horizontal.format) {
-          case Dso::GRAPHFORMAT_TY:
-            // Add graphs for channels
-            for (int channel = 0; channel < this->settings->scope.voltage.count();
-                 ++channel) {
-              if (this->settings->scope.voltage[channel].used &&
-                  this->dataAnalyzer->data(channel)) {
-                painter.setPen(QPen(colorValues->voltage[channel], 0));
+            switch (this->settings->scope.horizontal.format) {
+            case Dso::GRAPHFORMAT_TY:
+                // Add graphs for channels
+                for (int channel = 0; channel < this->settings->scope.voltage.count();
+                     ++channel) {
+                    if (this->settings->scope.voltage[channel].used &&
+                            result->data(channel)) {
+                        painter.setPen(QPen(colorValues->voltage[channel], 0));
 
-                // What's the horizontal distance between sampling points?
-                double horizontalFactor =
-                    this->dataAnalyzer->data(channel)->samples.voltage.interval /
-                    this->settings->scope.horizontal.timebase;
-                // How many samples are visible?
-                double centerPosition, centerOffset;
-                if (zoomed) {
-                  centerPosition = (zoomOffset + DIVS_TIME / 2) / horizontalFactor;
-                  centerOffset = DIVS_TIME / horizontalFactor / zoomFactor / 2;
-                } else {
-                  centerPosition = DIVS_TIME / 2 / horizontalFactor;
-                  centerOffset = DIVS_TIME / horizontalFactor / 2;
+                        // What's the horizontal distance between sampling points?
+                        double horizontalFactor =
+                                result->data(channel)->voltage.interval /
+                                this->settings->scope.horizontal.timebase;
+                        // How many samples are visible?
+                        double centerPosition, centerOffset;
+                        if (zoomed) {
+                            centerPosition = (zoomOffset + DIVS_TIME / 2) / horizontalFactor;
+                            centerOffset = DIVS_TIME / horizontalFactor / zoomFactor / 2;
+                        } else {
+                            centerPosition = DIVS_TIME / 2 / horizontalFactor;
+                            centerOffset = DIVS_TIME / horizontalFactor / 2;
+                        }
+                        unsigned int firstPosition =
+                                qMax((int)(centerPosition - centerOffset), 0);
+                        unsigned int lastPosition =
+                                qMin((int)(centerPosition + centerOffset),
+                                     (int)result->data(channel)
+                                     ->voltage.sample.size() -
+                                     1);
+
+                        // Draw graph
+                        QPointF *graph = new QPointF[lastPosition - firstPosition + 1];
+
+                        for (unsigned int position = firstPosition;
+                             position <= lastPosition; ++position)
+                            graph[position - firstPosition] =
+                                    QPointF(position * horizontalFactor - DIVS_TIME / 2,
+                                            result->data(channel)
+                                            ->voltage.sample[position] /
+                                            this->settings->scope.voltage[channel].gain +
+                                            this->settings->scope.voltage[channel].offset);
+
+                        painter.drawPolyline(graph, lastPosition - firstPosition + 1);
+                        delete[] graph;
+                    }
                 }
-                unsigned int firstPosition =
-                    qMax((int)(centerPosition - centerOffset), 0);
-                unsigned int lastPosition =
-                    qMin((int)(centerPosition + centerOffset),
-                         (int)this->dataAnalyzer->data(channel)
-                                 ->samples.voltage.sample.size() -
-                             1);
 
-                // Draw graph
-                QPointF *graph = new QPointF[lastPosition - firstPosition + 1];
+                // Add spectrum graphs
+                for (int channel = 0; channel < this->settings->scope.spectrum.count();
+                     ++channel) {
+                    if (this->settings->scope.spectrum[channel].used &&
+                            result->data(channel)) {
+                        painter.setPen(QPen(colorValues->spectrum[channel], 0));
 
-                for (unsigned int position = firstPosition;
-                     position <= lastPosition; ++position)
-                  graph[position - firstPosition] =
-                      QPointF(position * horizontalFactor - DIVS_TIME / 2,
-                              this->dataAnalyzer->data(channel)
-                                          ->samples.voltage.sample[position] /
-                                      this->settings->scope.voltage[channel].gain +
-                                  this->settings->scope.voltage[channel].offset);
+                        // What's the horizontal distance between sampling points?
+                        double horizontalFactor =
+                                result->data(channel)->spectrum.interval /
+                                this->settings->scope.horizontal.frequencybase;
+                        // How many samples are visible?
+                        double centerPosition, centerOffset;
+                        if (zoomed) {
+                            centerPosition = (zoomOffset + DIVS_TIME / 2) / horizontalFactor;
+                            centerOffset = DIVS_TIME / horizontalFactor / zoomFactor / 2;
+                        } else {
+                            centerPosition = DIVS_TIME / 2 / horizontalFactor;
+                            centerOffset = DIVS_TIME / horizontalFactor / 2;
+                        }
+                        unsigned int firstPosition =
+                                qMax((int)(centerPosition - centerOffset), 0);
+                        unsigned int lastPosition =
+                                qMin((int)(centerPosition + centerOffset),
+                                     (int)result->data(channel)
+                                     ->spectrum.sample.size() -
+                                     1);
 
-                painter.drawPolyline(graph, lastPosition - firstPosition + 1);
-                delete[] graph;
-              }
+                        // Draw graph
+                        QPointF *graph = new QPointF[lastPosition - firstPosition + 1];
+
+                        for (unsigned int position = firstPosition;
+                             position <= lastPosition; ++position)
+                            graph[position - firstPosition] = QPointF(
+                                        position * horizontalFactor - DIVS_TIME / 2,
+                                        result->data(channel)
+                                        ->spectrum.sample[position] /
+                                        this->settings->scope.spectrum[channel].magnitude +
+                                        this->settings->scope.spectrum[channel].offset);
+
+                        painter.drawPolyline(graph, lastPosition - firstPosition + 1);
+                        delete[] graph;
+                    }
+                }
+                break;
+
+            case Dso::GRAPHFORMAT_XY:
+                break;
+
+            default:
+                break;
             }
 
-            // Add spectrum graphs
-            for (int channel = 0; channel < this->settings->scope.spectrum.count();
-                 ++channel) {
-              if (this->settings->scope.spectrum[channel].used &&
-                  this->dataAnalyzer->data(channel)) {
-                painter.setPen(QPen(colorValues->spectrum[channel], 0));
-
-                // What's the horizontal distance between sampling points?
-                double horizontalFactor =
-                    this->dataAnalyzer->data(channel)->samples.spectrum.interval /
-                    this->settings->scope.horizontal.frequencybase;
-                // How many samples are visible?
-                double centerPosition, centerOffset;
-                if (zoomed) {
-                  centerPosition = (zoomOffset + DIVS_TIME / 2) / horizontalFactor;
-                  centerOffset = DIVS_TIME / horizontalFactor / zoomFactor / 2;
-                } else {
-                  centerPosition = DIVS_TIME / 2 / horizontalFactor;
-                  centerOffset = DIVS_TIME / horizontalFactor / 2;
-                }
-                unsigned int firstPosition =
-                    qMax((int)(centerPosition - centerOffset), 0);
-                unsigned int lastPosition =
-                    qMin((int)(centerPosition + centerOffset),
-                         (int)this->dataAnalyzer->data(channel)
-                                 ->samples.spectrum.sample.size() -
-                             1);
-
-                // Draw graph
-                QPointF *graph = new QPointF[lastPosition - firstPosition + 1];
-
-                for (unsigned int position = firstPosition;
-                     position <= lastPosition; ++position)
-                  graph[position - firstPosition] = QPointF(
-                      position * horizontalFactor - DIVS_TIME / 2,
-                      this->dataAnalyzer->data(channel)
-                                  ->samples.spectrum.sample[position] /
-                              this->settings->scope.spectrum[channel].magnitude +
-                          this->settings->scope.spectrum[channel].offset);
-
-                painter.drawPolyline(graph, lastPosition - firstPosition + 1);
-                delete[] graph;
-              }
-            }
-            break;
-
-          case Dso::GRAPHFORMAT_XY:
-            break;
-
-          default:
-            break;
-          }
-
-          // Set DIVS_TIME / zoomFactor x DIVS_VOLTAGE matrix for zoomed
-          // oscillograph
-          painter.setMatrix(
-              QMatrix((paintDevice->width() - 1) / DIVS_TIME * zoomFactor, 0, 0,
-                      -(scopeHeight - 1) / DIVS_VOLTAGE,
-                      (double)(paintDevice->width() - 1) / 2 -
-                          zoomOffset * zoomFactor * (paintDevice->width() - 1) /
-                              DIVS_TIME,
-                      (scopeHeight - 1) * 1.5 + lineHeight * 4),
-              false);
+            // Set DIVS_TIME / zoomFactor x DIVS_VOLTAGE matrix for zoomed
+            // oscillograph
+            painter.setMatrix(
+                        QMatrix((paintDevice->width() - 1) / DIVS_TIME * zoomFactor, 0, 0,
+                                -(scopeHeight - 1) / DIVS_VOLTAGE,
+                                (double)(paintDevice->width() - 1) / 2 -
+                                zoomOffset * zoomFactor * (paintDevice->width() - 1) /
+                                DIVS_TIME,
+                                (scopeHeight - 1) * 1.5 + lineHeight * 4),
+                        false);
         }
     } // dataanalyser mutex release
 
-    // Draw grids
-    painter.setRenderHint(QPainter::Antialiasing, false);
-    for (int zoomed = 0; zoomed < (this->settings->view.zoom ? 2 : 1);
-         ++zoomed) {
-      // Set DIVS_TIME x DIVS_VOLTAGE matrix for oscillograph
-      painter.setMatrix(QMatrix((paintDevice->width() - 1) / DIVS_TIME, 0, 0,
-                                -(scopeHeight - 1) / DIVS_VOLTAGE,
-                                (double)(paintDevice->width() - 1) / 2,
-                                (scopeHeight - 1) * (zoomed + 0.5) +
-                                    lineHeight * 1.5 +
-                                    lineHeight * 2.5 * zoomed),
-                        false);
-
-      // Grid lines
-      painter.setPen(QPen(colorValues->grid, 0));
-
-      if (this->format < EXPORT_FORMAT_IMAGE) {
-        // Draw vertical lines
-        for (int div = 1; div < DIVS_TIME / 2; ++div) {
-          for (int dot = 1; dot < DIVS_VOLTAGE / 2 * 5; ++dot) {
-            painter.drawLine(QPointF((double)-div - 0.02, (double)-dot / 5),
-                             QPointF((double)-div + 0.02, (double)-dot / 5));
-            painter.drawLine(QPointF((double)-div - 0.02, (double)dot / 5),
-                             QPointF((double)-div + 0.02, (double)dot / 5));
-            painter.drawLine(QPointF((double)div - 0.02, (double)-dot / 5),
-                             QPointF((double)div + 0.02, (double)-dot / 5));
-            painter.drawLine(QPointF((double)div - 0.02, (double)dot / 5),
-                             QPointF((double)div + 0.02, (double)dot / 5));
-          }
-        }
-        // Draw horizontal lines
-        for (int div = 1; div < DIVS_VOLTAGE / 2; ++div) {
-          for (int dot = 1; dot < DIVS_TIME / 2 * 5; ++dot) {
-            painter.drawLine(QPointF((double)-dot / 5, (double)-div - 0.02),
-                             QPointF((double)-dot / 5, (double)-div + 0.02));
-            painter.drawLine(QPointF((double)dot / 5, (double)-div - 0.02),
-                             QPointF((double)dot / 5, (double)-div + 0.02));
-            painter.drawLine(QPointF((double)-dot / 5, (double)div - 0.02),
-                             QPointF((double)-dot / 5, (double)div + 0.02));
-            painter.drawLine(QPointF((double)dot / 5, (double)div - 0.02),
-                             QPointF((double)dot / 5, (double)div + 0.02));
-          }
-        }
-      } else {
-        // Draw vertical lines
-        for (int div = 1; div < DIVS_TIME / 2; ++div) {
-          for (int dot = 1; dot < DIVS_VOLTAGE / 2 * 5; ++dot) {
-            painter.drawPoint(QPointF(-div, (double)-dot / 5));
-            painter.drawPoint(QPointF(-div, (double)dot / 5));
-            painter.drawPoint(QPointF(div, (double)-dot / 5));
-            painter.drawPoint(QPointF(div, (double)dot / 5));
-          }
-        }
-        // Draw horizontal lines
-        for (int div = 1; div < DIVS_VOLTAGE / 2; ++div) {
-          for (int dot = 1; dot < DIVS_TIME / 2 * 5; ++dot) {
-            if (dot % 5 == 0)
-              continue; // Already done by vertical lines
-            painter.drawPoint(QPointF((double)-dot / 5, -div));
-            painter.drawPoint(QPointF((double)dot / 5, -div));
-            painter.drawPoint(QPointF((double)-dot / 5, div));
-            painter.drawPoint(QPointF((double)dot / 5, div));
-          }
-        }
-      }
-
-      // Axes
-      painter.setPen(QPen(colorValues->axes, 0));
-      painter.drawLine(QPointF(-DIVS_TIME / 2, 0), QPointF(DIVS_TIME / 2, 0));
-      painter.drawLine(QPointF(0, -DIVS_VOLTAGE / 2),
-                       QPointF(0, DIVS_VOLTAGE / 2));
-      for (double div = 0.2; div <= DIVS_TIME / 2; div += 0.2) {
-        painter.drawLine(QPointF(div, -0.05), QPointF(div, 0.05));
-        painter.drawLine(QPointF(-div, -0.05), QPointF(-div, 0.05));
-      }
-      for (double div = 0.2; div <= DIVS_VOLTAGE / 2; div += 0.2) {
-        painter.drawLine(QPointF(-0.05, div), QPointF(0.05, div));
-        painter.drawLine(QPointF(-0.05, -div), QPointF(0.05, -div));
-      }
-
-      // Borders
-      painter.setPen(QPen(colorValues->border, 0));
-      painter.drawRect(
-          QRectF(-DIVS_TIME / 2, -DIVS_VOLTAGE / 2, DIVS_TIME, DIVS_VOLTAGE));
-    }
-
+    drawGrids(painter, colorValues, lineHeight, scopeHeight, paintDevice->width());
     painter.end();
 
     if (this->format == EXPORT_FORMAT_IMAGE)
-      static_cast<QPixmap *>(paintDevice)->save(this->filename);
-
-    delete paintDevice;
+        static_cast<QPixmap *>(paintDevice.get())->save(this->filename);
 
     return true;
-  } else {
+}
+
+bool Exporter::exportCVS(const DataAnalyzerResult* result)
+{
     QFile csvFile(this->filename);
     if (!csvFile.open(QIODevice::WriteOnly | QIODevice::Text))
-      return false;
+        return false;
 
     QTextStream csvStream(&csvFile);
 
@@ -537,66 +439,156 @@ bool Exporter::doExport() {
     double freqInterval = 0;
 
     for (int channel = 0; channel < chCount; ++channel) {
-      if (dataAnalyzer->data(channel)) {
-        if (settings->scope.voltage[channel].used) {
-          voltageData[channel] = &(dataAnalyzer->data(channel)->samples.voltage);
-          maxRow = std::max(maxRow, voltageData[channel]->sample.size());
-          timeInterval = dataAnalyzer->data(channel)->samples.voltage.interval;
+        if (result->data(channel)) {
+            if (settings->scope.voltage[channel].used) {
+                voltageData[channel] = &(result->data(channel)->voltage);
+                maxRow = std::max(maxRow, voltageData[channel]->sample.size());
+                timeInterval = result->data(channel)->voltage.interval;
+            }
+            if (settings->scope.spectrum[channel].used) {
+                spectrumData[channel] = &(result->data(channel)->spectrum);
+                maxRow = std::max(maxRow, spectrumData[channel]->sample.size());
+                freqInterval = result->data(channel)->spectrum.interval;
+                isSpectrumUsed = true;
+            }
         }
-        if (settings->scope.spectrum[channel].used) {
-          spectrumData[channel] = &(dataAnalyzer->data(channel)->samples.spectrum);
-          maxRow = std::max(maxRow, spectrumData[channel]->sample.size());
-          freqInterval = dataAnalyzer->data(channel)->samples.spectrum.interval;
-          isSpectrumUsed = true;
-        }
-      }
     }
 
     // Start with channel names
     csvStream << "\"t\"";
     for (int channel = 0; channel < chCount; ++channel) {
-      if (voltageData[channel] != nullptr) {
-        csvStream << ",\"" << settings->scope.voltage[channel].name << "\"";
-      }
+        if (voltageData[channel] != nullptr) {
+            csvStream << ",\"" << settings->scope.voltage[channel].name << "\"";
+        }
     }
     if (isSpectrumUsed) {
-      csvStream << ",\"f\"";
-      for (int channel = 0; channel < chCount; ++channel) {
-        if (spectrumData[channel] != nullptr) {
-          csvStream << ",\"" << settings->scope.spectrum[channel].name << "\"";
+        csvStream << ",\"f\"";
+        for (int channel = 0; channel < chCount; ++channel) {
+            if (spectrumData[channel] != nullptr) {
+                csvStream << ",\"" << settings->scope.spectrum[channel].name << "\"";
+            }
         }
-      }
     }
     csvStream << "\n";
 
     for (unsigned int row = 0; row < maxRow; ++row) {
 
-      csvStream << timeInterval * row;
-      for (int channel = 0; channel < chCount; ++channel) {
-        if (voltageData[channel] != nullptr) {
-          csvStream << ",";
-          if (row < voltageData[channel]->sample.size()) {
-            csvStream << voltageData[channel]->sample[row];
-          }
-        }
-      }
-
-      if (isSpectrumUsed) {
-        csvStream << "," << freqInterval * row;
+        csvStream << timeInterval * row;
         for (int channel = 0; channel < chCount; ++channel) {
-          if (spectrumData[channel] != nullptr) {
-            csvStream << ",";
-            if (row < spectrumData[channel]->sample.size()) {
-              csvStream << spectrumData[channel]->sample[row];
+            if (voltageData[channel] != nullptr) {
+                csvStream << ",";
+                if (row < voltageData[channel]->sample.size()) {
+                    csvStream << voltageData[channel]->sample[row];
+                }
             }
-          }
         }
-      }
-      csvStream << "\n";
+
+        if (isSpectrumUsed) {
+            csvStream << "," << freqInterval * row;
+            for (int channel = 0; channel < chCount; ++channel) {
+                if (spectrumData[channel] != nullptr) {
+                    csvStream << ",";
+                    if (row < spectrumData[channel]->sample.size()) {
+                        csvStream << spectrumData[channel]->sample[row];
+                    }
+                }
+            }
+        }
+        csvStream << "\n";
     }
 
     csvFile.close();
 
     return true;
-  }
+}
+
+
+void Exporter::drawGrids(QPainter &painter, DsoSettingsColorValues *colorValues,
+                         double lineHeight, double scopeHeight, int scopeWidth)
+{
+    painter.setRenderHint(QPainter::Antialiasing, false);
+    for (int zoomed = 0; zoomed < (this->settings->view.zoom ? 2 : 1);
+         ++zoomed) {
+        // Set DIVS_TIME x DIVS_VOLTAGE matrix for oscillograph
+        painter.setMatrix(QMatrix((scopeWidth - 1) / DIVS_TIME, 0, 0,
+                                  -(scopeHeight - 1) / DIVS_VOLTAGE,
+                                  (double)(scopeWidth - 1) / 2,
+                                  (scopeHeight - 1) * (zoomed + 0.5) +
+                                  lineHeight * 1.5 +
+                                  lineHeight * 2.5 * zoomed),
+                          false);
+
+        // Grid lines
+        painter.setPen(QPen(colorValues->grid, 0));
+
+        if (this->format < EXPORT_FORMAT_IMAGE) {
+            // Draw vertical lines
+            for (int div = 1; div < DIVS_TIME / 2; ++div) {
+                for (int dot = 1; dot < DIVS_VOLTAGE / 2 * 5; ++dot) {
+                    painter.drawLine(QPointF((double)-div - 0.02, (double)-dot / 5),
+                                     QPointF((double)-div + 0.02, (double)-dot / 5));
+                    painter.drawLine(QPointF((double)-div - 0.02, (double)dot / 5),
+                                     QPointF((double)-div + 0.02, (double)dot / 5));
+                    painter.drawLine(QPointF((double)div - 0.02, (double)-dot / 5),
+                                     QPointF((double)div + 0.02, (double)-dot / 5));
+                    painter.drawLine(QPointF((double)div - 0.02, (double)dot / 5),
+                                     QPointF((double)div + 0.02, (double)dot / 5));
+                }
+            }
+            // Draw horizontal lines
+            for (int div = 1; div < DIVS_VOLTAGE / 2; ++div) {
+                for (int dot = 1; dot < DIVS_TIME / 2 * 5; ++dot) {
+                    painter.drawLine(QPointF((double)-dot / 5, (double)-div - 0.02),
+                                     QPointF((double)-dot / 5, (double)-div + 0.02));
+                    painter.drawLine(QPointF((double)dot / 5, (double)-div - 0.02),
+                                     QPointF((double)dot / 5, (double)-div + 0.02));
+                    painter.drawLine(QPointF((double)-dot / 5, (double)div - 0.02),
+                                     QPointF((double)-dot / 5, (double)div + 0.02));
+                    painter.drawLine(QPointF((double)dot / 5, (double)div - 0.02),
+                                     QPointF((double)dot / 5, (double)div + 0.02));
+                }
+            }
+        } else {
+            // Draw vertical lines
+            for (int div = 1; div < DIVS_TIME / 2; ++div) {
+                for (int dot = 1; dot < DIVS_VOLTAGE / 2 * 5; ++dot) {
+                    painter.drawPoint(QPointF(-div, (double)-dot / 5));
+                    painter.drawPoint(QPointF(-div, (double)dot / 5));
+                    painter.drawPoint(QPointF(div, (double)-dot / 5));
+                    painter.drawPoint(QPointF(div, (double)dot / 5));
+                }
+            }
+            // Draw horizontal lines
+            for (int div = 1; div < DIVS_VOLTAGE / 2; ++div) {
+                for (int dot = 1; dot < DIVS_TIME / 2 * 5; ++dot) {
+                    if (dot % 5 == 0)
+                        continue; // Already done by vertical lines
+                    painter.drawPoint(QPointF((double)-dot / 5, -div));
+                    painter.drawPoint(QPointF((double)dot / 5, -div));
+                    painter.drawPoint(QPointF((double)-dot / 5, div));
+                    painter.drawPoint(QPointF((double)dot / 5, div));
+                }
+            }
+        }
+
+        // Axes
+        painter.setPen(QPen(colorValues->axes, 0));
+        painter.drawLine(QPointF(-DIVS_TIME / 2, 0), QPointF(DIVS_TIME / 2, 0));
+        painter.drawLine(QPointF(0, -DIVS_VOLTAGE / 2),
+                         QPointF(0, DIVS_VOLTAGE / 2));
+        for (double div = 0.2; div <= DIVS_TIME / 2; div += 0.2) {
+            painter.drawLine(QPointF(div, -0.05), QPointF(div, 0.05));
+            painter.drawLine(QPointF(-div, -0.05), QPointF(-div, 0.05));
+        }
+        for (double div = 0.2; div <= DIVS_VOLTAGE / 2; div += 0.2) {
+            painter.drawLine(QPointF(-0.05, div), QPointF(0.05, div));
+            painter.drawLine(QPointF(-0.05, -div), QPointF(0.05, -div));
+        }
+
+        // Borders
+        painter.setPen(QPen(colorValues->border, 0));
+        painter.drawRect(
+                    QRectF(-DIVS_TIME / 2, -DIVS_VOLTAGE / 2, DIVS_TIME, DIVS_VOLTAGE));
+    }
+
 }
