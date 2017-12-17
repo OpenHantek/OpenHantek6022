@@ -7,6 +7,7 @@
 #include "bulkStructs.h"
 #include "stateStructs.h"
 #include "utils/printutils.h"
+#include "dsosamples.h"
 
 #include <vector>
 
@@ -17,14 +18,12 @@
 
 class USBDevice;
 
-//////////////////////////////////////////////////////////////////////////////
-/// \class Control                                            hantek/control.h
 /// \brief The DsoControl abstraction layer for %Hantek USB DSOs.
 class HantekDsoControl : public QObject {
     Q_OBJECT
 
 public:
-    /**
+  /**
    * Creates a dsoControl object. The actual event loop / timer is not started.
    * You can optionally create a thread and move the created object to the thread.
    * You need to call updateInterval() to start the timer.
@@ -44,15 +43,13 @@ public:
 
     const QStringList *getSpecialTriggerSources();
     const USBDevice* getDevice() const;
+    const DSOsamples& getLastSamples();
 
 signals:
     void samplingStarted(); ///< The oscilloscope started sampling/waiting for trigger
     void samplingStopped(); ///< The oscilloscope stopped sampling/waiting for trigger
-    void statusMessage(const QString &message,
-                       int timeout); ///< Status message about the oscilloscope
-    void samplesAvailable(const std::vector<std::vector<double>> *data,
-                          double samplerate, bool append,
-                          QMutex *mutex); ///< New sample data is available
+    void statusMessage(const QString &message, int timeout); ///< Status message about the oscilloscope
+    void samplesAvailable(); ///< New sample data is available
 
     void availableRecordLengthsChanged(const QList<unsigned int> &recordLengths); ///< The available record lengths, empty list for continuous
     void samplerateLimitsChanged(double minimum, double maximum); ///< The minimum or maximum samplerate has changed
@@ -93,10 +90,8 @@ protected:
     Hantek::ControlSettings settings;           ///< The current settings of the device
 
     // Results
-    std::vector<std::vector<double>> samples; ///< Sample data vectors sent to the data analyzer
-    unsigned int previousSampleCount; ///< The expected total number of samples at
-    ///the last check before sampling started
-    QMutex samplesMutex;              ///< Mutex for the sample data
+    DSOsamples result;
+    unsigned int previousSampleCount; ///< The expected total number of samples at the last check before sampling started
 
     // State of the communication thread
     int captureState = Hantek::CAPTURE_WAITING;

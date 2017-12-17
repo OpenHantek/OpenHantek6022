@@ -119,25 +119,38 @@ int main(int argc, char *argv[]) {
 
     //////// Create DSO control object and move it to a separate thread ////////
     QThread dsoControlThread;
-    std::shared_ptr<HantekDsoControl> dsoControl(new HantekDsoControl(device.get()));
-    dsoControl->moveToThread(&dsoControlThread);
-    QObject::connect(&dsoControlThread,&QThread::started,dsoControl.get(),&HantekDsoControl::run);
-    QObject::connect(dsoControl.get(), &HantekDsoControl::communicationError, QCoreApplication::instance(), &QCoreApplication::quit);
-    QObject::connect(device.get(), &USBDevice::deviceDisconnected, QCoreApplication::instance(), &QCoreApplication::quit);
+    dsoControlThread.setObjectName("dsoControlThread");
+    HantekDsoControl dsoControl(device.get());
+    dsoControl.moveToThread(&dsoControlThread);
+    QObject::connect(&dsoControlThread,&QThread::started, &dsoControl,&HantekDsoControl::run);
+    QObject::connect(&dsoControl, &HantekDsoControl::communicationError,
+                     QCoreApplication::instance(), &QCoreApplication::quit);
+    QObject::connect(device.get(), &USBDevice::deviceDisconnected,
+                     QCoreApplication::instance(), &QCoreApplication::quit);
 
     //////// Create data analyser object ////////
-    std::shared_ptr<DataAnalyzer> dataAnalyser(new DataAnalyzer());
+    QThread dataAnalyzerThread;
+    dataAnalyzerThread.setObjectName("dataAnalyzerThread");
+    DataAnalyzer dataAnalyser;
+    dataAnalyser.setSourceData(&dsoControl.getLastSamples());
+    dataAnalyser.moveToThread(&dataAnalyzerThread);
+    QObject::connect(&dsoControl, &HantekDsoControl::samplesAvailable,
+                     &dataAnalyser, &DataAnalyzer::samplesAvailable);
 
     //////// Create main window ////////
-    OpenHantekMainWindow *openHantekMainWindow = new OpenHantekMainWindow(dsoControl, dataAnalyser);
+    OpenHantekMainWindow *openHantekMainWindow = new OpenHantekMainWindow(&dsoControl, &dataAnalyser);
     openHantekMainWindow->show();
 
     //////// Start DSO thread and go into GUI main loop
+    dataAnalyzerThread.start();
     dsoControlThread.start();
     int res = openHantekApplication.exec();
 
     //////// Clean up ////////
     dsoControlThread.quit();
     dsoControlThread.wait(10000);
+
+    dataAnalyzerThread.quit();
+    dataAnalyzerThread.wait(10000);
     return res;
 }

@@ -27,7 +27,7 @@ class OpenHantekMainWindow : public QMainWindow {
   Q_OBJECT
 
 public:
-  OpenHantekMainWindow(std::shared_ptr<HantekDsoControl> dsoControl, std::shared_ptr<DataAnalyzer> dataAnalyser);
+  OpenHantekMainWindow(HantekDsoControl* dsoControl, DataAnalyzer* dataAnalyser);
 
 protected:
   void closeEvent(QCloseEvent *event);
@@ -87,8 +87,8 @@ private:
 #endif
 
   // Data handling classes
-  std::shared_ptr<HantekDsoControl> dsoControl;
-  std::shared_ptr<DataAnalyzer> dataAnalyzer;
+  HantekDsoControl* dsoControl;
+  DataAnalyzer* dataAnalyzer;
 
   // Other variables
   QString currentFile;

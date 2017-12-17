@@ -28,7 +28,7 @@
 /// \brief Initializes the gui elements of the main window.
 /// \param parent The parent widget.
 /// \param flags Flags for the window manager.
-OpenHantekMainWindow::OpenHantekMainWindow(std::shared_ptr<HantekDsoControl> dsoControl, std::shared_ptr<DataAnalyzer> dataAnalyzer)
+OpenHantekMainWindow::OpenHantekMainWindow(HantekDsoControl *dsoControl, DataAnalyzer *dataAnalyzer)
     :dsoControl(dsoControl),dataAnalyzer(dataAnalyzer) {
 
     // Window title
@@ -45,7 +45,11 @@ OpenHantekMainWindow::OpenHantekMainWindow(std::shared_ptr<HantekDsoControl> dso
     createDockWindows();
 
     // Central oszilloscope widget
-    dsoWidget = new DsoWidget(settings, dataAnalyzer.get());
+    dataAnalyzer->applySettings(&settings->scope);
+    dsoWidget = new DsoWidget(settings);
+    connect(dataAnalyzer, &DataAnalyzer::analyzed, [this]() {
+        dsoWidget->showNewData(this->dataAnalyzer->getNextResult());
+    });
     setCentralWidget(dsoWidget);
 
     // Subroutines for window elements
@@ -260,91 +264,85 @@ void OpenHantekMainWindow::createDockWindows() {
 /// \brief Connect general signals and device management signals.
 void OpenHantekMainWindow::connectSignals() {
     // Connect general signals
-    connect(this, SIGNAL(settingsChanged()), this, SLOT(applySettings()));
+    connect(this, &OpenHantekMainWindow::settingsChanged, this, &OpenHantekMainWindow::applySettings);
     // connect(dsoWidget, SIGNAL(stopped()), this, SLOT(stopped()));
-    connect(dsoControl.get(), SIGNAL(statusMessage(QString, int)),
-            statusBar(), SLOT(showMessage(QString, int)));
-    connect(dsoControl.get(),
-            SIGNAL(samplesAvailable(const std::vector<std::vector<double>> *,
-                                    double, bool, QMutex *)),
-            dataAnalyzer.get(),
-            SLOT(analyze(const std::vector<std::vector<double>> *, double, bool,
-                         QMutex *)));
+    connect(dsoControl, &HantekDsoControl::statusMessage,
+            statusBar(), &QStatusBar::showMessage);
 
     // Connect signals to DSO controller and widget
-    connect(horizontalDock, SIGNAL(samplerateChanged(double)), this,
-            SLOT(samplerateSelected()));
-    connect(horizontalDock, SIGNAL(timebaseChanged(double)), this,
-            SLOT(timebaseSelected()));
-    connect(horizontalDock, SIGNAL(frequencybaseChanged(double)),
-            dsoWidget, SLOT(updateFrequencybase(double)));
-    connect(horizontalDock, SIGNAL(recordLengthChanged(unsigned long)),
-            this, SLOT(recordLengthSelected(unsigned long)));
+    connect(horizontalDock, &HorizontalDock::samplerateChanged, this,
+            &OpenHantekMainWindow::samplerateSelected);
+    connect(horizontalDock, &HorizontalDock::timebaseChanged, this,
+            &OpenHantekMainWindow::timebaseSelected);
+    connect(horizontalDock, &HorizontalDock::frequencybaseChanged,
+            dsoWidget, &DsoWidget::updateFrequencybase);
+    connect(horizontalDock, &HorizontalDock::recordLengthChanged,
+            this, &OpenHantekMainWindow::recordLengthSelected);
     // connect(horizontalDock, SIGNAL(formatChanged(HorizontalFormat)),
     // dsoWidget, SLOT(horizontalFormatChanged(HorizontalFormat)));
 
-    connect(triggerDock, SIGNAL(modeChanged(Dso::TriggerMode)),
-            dsoControl.get(), SLOT(setTriggerMode(Dso::TriggerMode)));
-    connect(triggerDock, SIGNAL(modeChanged(Dso::TriggerMode)),
-            dsoWidget, SLOT(updateTriggerMode()));
-    connect(triggerDock, SIGNAL(sourceChanged(bool, unsigned int)),
-            dsoControl.get(), SLOT(setTriggerSource(bool, unsigned int)));
-    connect(triggerDock, SIGNAL(sourceChanged(bool, unsigned int)),
-            dsoWidget, SLOT(updateTriggerSource()));
-    connect(triggerDock, SIGNAL(slopeChanged(Dso::Slope)), dsoControl.get(),
-            SLOT(setTriggerSlope(Dso::Slope)));
-    connect(triggerDock, SIGNAL(slopeChanged(Dso::Slope)), dsoWidget,
-            SLOT(updateTriggerSlope()));
-    connect(dsoWidget, SIGNAL(triggerPositionChanged(double)),
-            dsoControl.get(), SLOT(setPretriggerPosition(double)));
-    connect(dsoWidget, SIGNAL(triggerLevelChanged(unsigned int, double)),
-            dsoControl.get(), SLOT(setTriggerLevel(unsigned int, double)));
+    connect(triggerDock, &TriggerDock::modeChanged,
+            dsoControl, &HantekDsoControl::setTriggerMode);
+    connect(triggerDock, &TriggerDock::modeChanged,
+            dsoWidget, &DsoWidget::updateTriggerMode);
+    connect(triggerDock, &TriggerDock::sourceChanged,
+            dsoControl, &HantekDsoControl::setTriggerSource);
+    connect(triggerDock, &TriggerDock::sourceChanged,
+            dsoWidget, &DsoWidget::updateTriggerSource);
+    connect(triggerDock, &TriggerDock::slopeChanged, dsoControl,
+            &HantekDsoControl::setTriggerSlope);
+    connect(triggerDock, &TriggerDock::slopeChanged, dsoWidget,
+            &DsoWidget::updateTriggerSlope);
+    connect(dsoWidget, &DsoWidget::triggerPositionChanged,
+            dsoControl, &HantekDsoControl::setPretriggerPosition);
+    connect(dsoWidget, &DsoWidget::triggerLevelChanged,
+            dsoControl, &HantekDsoControl::setTriggerLevel);
 
-    connect(voltageDock, SIGNAL(usedChanged(unsigned int, bool)), this,
-            SLOT(updateUsed(unsigned int)));
-    connect(voltageDock, SIGNAL(usedChanged(unsigned int, bool)),
-            dsoWidget, SLOT(updateVoltageUsed(unsigned int, bool)));
+    connect(voltageDock, &VoltageDock::usedChanged, this,
+            &OpenHantekMainWindow::updateUsed);
+    connect(voltageDock, &VoltageDock::usedChanged,
+            dsoWidget, &DsoWidget::updateVoltageUsed);
     connect(voltageDock,
-            SIGNAL(couplingChanged(unsigned int, Dso::Coupling)),
-            dsoControl.get(), SLOT(setCoupling(unsigned int, Dso::Coupling)));
+            &VoltageDock::couplingChanged,
+            dsoControl, &HantekDsoControl::setCoupling);
     connect(voltageDock,
-            SIGNAL(couplingChanged(unsigned int, Dso::Coupling)), dsoWidget,
-            SLOT(updateVoltageCoupling(unsigned int)));
-    connect(voltageDock, SIGNAL(modeChanged(Dso::MathMode)),
-            dsoWidget, SLOT(updateMathMode()));
-    connect(voltageDock, SIGNAL(gainChanged(unsigned int, double)), this,
-            SLOT(updateVoltageGain(unsigned int)));
-    connect(voltageDock, SIGNAL(gainChanged(unsigned int, double)),
-            dsoWidget, SLOT(updateVoltageGain(unsigned int)));
-    connect(dsoWidget, SIGNAL(offsetChanged(unsigned int, double)), this,
-            SLOT(updateOffset(unsigned int)));
+            &VoltageDock::couplingChanged, dsoWidget,
+            &DsoWidget::updateVoltageCoupling);
+    connect(voltageDock, &VoltageDock::modeChanged,
+            dsoWidget, &DsoWidget::updateMathMode);
+    connect(voltageDock, &VoltageDock::gainChanged, this,
+            &OpenHantekMainWindow::updateVoltageGain);
+    connect(voltageDock, &VoltageDock::gainChanged,
+            dsoWidget, &DsoWidget::updateVoltageGain);
+    connect(dsoWidget, &DsoWidget::offsetChanged, this,
+            &OpenHantekMainWindow::updateOffset);
 
-    connect(spectrumDock, SIGNAL(usedChanged(unsigned int, bool)), this,
-            SLOT(updateUsed(unsigned int)));
-    connect(spectrumDock, SIGNAL(usedChanged(unsigned int, bool)),
-            dsoWidget, SLOT(updateSpectrumUsed(unsigned int, bool)));
-    connect(spectrumDock, SIGNAL(magnitudeChanged(unsigned int, double)),
-            dsoWidget, SLOT(updateSpectrumMagnitude(unsigned int)));
+    connect(spectrumDock, &SpectrumDock::usedChanged, this,
+            &OpenHantekMainWindow::updateUsed);
+    connect(spectrumDock, &SpectrumDock::usedChanged,
+            dsoWidget, &DsoWidget::updateSpectrumUsed);
+    connect(spectrumDock, &SpectrumDock::magnitudeChanged,
+            dsoWidget, &DsoWidget::updateSpectrumMagnitude);
 
     // Started/stopped signals from oscilloscope
-    connect(dsoControl.get(), SIGNAL(samplingStarted()), this, SLOT(started()));
-    connect(dsoControl.get(), SIGNAL(samplingStopped()), this, SLOT(stopped()));
+    connect(dsoControl, &HantekDsoControl::samplingStarted, this, &OpenHantekMainWindow::started);
+    connect(dsoControl, &HantekDsoControl::samplingStopped, this, &OpenHantekMainWindow::stopped);
 
     // connect(dsoControl, SIGNAL(recordLengthChanged(unsigned long)), this,
     // SLOT(recordLengthChanged()));
-    connect(dsoControl.get(), SIGNAL(recordTimeChanged(double)), this,
-            SLOT(recordTimeChanged(double)));
-    connect(dsoControl.get(), SIGNAL(samplerateChanged(double)), this,
-            SLOT(samplerateChanged(double)));
+    connect(dsoControl, &HantekDsoControl::recordTimeChanged, this,
+            &OpenHantekMainWindow::recordTimeChanged);
+    connect(dsoControl, &HantekDsoControl::samplerateChanged, this,
+            &OpenHantekMainWindow::samplerateChanged);
 
-    connect(dsoControl.get(),
-            SIGNAL(availableRecordLengthsChanged(QList<unsigned int>)),
+    connect(dsoControl,
+            &HantekDsoControl::availableRecordLengthsChanged,
             horizontalDock,
-            SLOT(availableRecordLengthsChanged(QList<unsigned int>)));
-    connect(dsoControl.get(), SIGNAL(samplerateLimitsChanged(double, double)),
-            horizontalDock, SLOT(samplerateLimitsChanged(double, double)));
-    connect(dsoControl.get(), SIGNAL(samplerateSet(int, QList<double>)),
-            horizontalDock, SLOT(samplerateSet(int, QList<double>)));
+            &HorizontalDock::availableRecordLengthsChanged);
+    connect(dsoControl, &HantekDsoControl::samplerateLimitsChanged,
+            horizontalDock, &HorizontalDock::samplerateLimitsChanged);
+    connect(dsoControl, &HantekDsoControl::samplerateSet,
+            horizontalDock, &HorizontalDock::samplerateSet);
 }
 
 /// \brief Initialize the device with the current settings.
@@ -444,10 +442,10 @@ void OpenHantekMainWindow::started() {
     startStopAction->setIcon(QIcon(":actions/stop.png"));
     startStopAction->setStatusTip(tr("Stop the oscilloscope"));
 
-    disconnect(startStopAction, SIGNAL(triggered()), dsoControl.get(),
-               SLOT(startSampling()));
-    connect(startStopAction, SIGNAL(triggered()), dsoControl.get(),
-            SLOT(stopSampling()));
+    disconnect(startStopAction, &QAction::triggered, dsoControl,
+               &HantekDsoControl::startSampling);
+    connect(startStopAction, &QAction::triggered, dsoControl,
+            &HantekDsoControl::stopSampling);
 }
 
 /// \brief The oscilloscope stopped sampling.
@@ -456,10 +454,10 @@ void OpenHantekMainWindow::stopped() {
     startStopAction->setIcon(QIcon(":actions/start.png"));
     startStopAction->setStatusTip(tr("Start the oscilloscope"));
 
-    disconnect(startStopAction, SIGNAL(triggered()), dsoControl.get(),
-               SLOT(stopSampling()));
-    connect(startStopAction, SIGNAL(triggered()), dsoControl.get(),
-            SLOT(startSampling()));
+    disconnect(startStopAction, &QAction::triggered, dsoControl,
+               &HantekDsoControl::stopSampling);
+    connect(startStopAction, &QAction::triggered, dsoControl,
+            &HantekDsoControl::startSampling);
 }
 
 /// \brief Configure the oscilloscope.

@@ -40,6 +40,11 @@ const USBDevice *HantekDsoControl::getDevice() const
     return device;
 }
 
+const DSOsamples &HantekDsoControl::getLastSamples()
+{
+    return result;
+}
+
 /// \brief Initializes the command buffers and lists.
 /// \param parent The parent widget.
 HantekDsoControl::HantekDsoControl(USBDevice* device) : device(device) {
@@ -73,24 +78,24 @@ HantekDsoControl::HantekDsoControl(USBDevice* device) : device(device) {
     }
 
     // Set settings to default values
-    this->settings.samplerate.limits = &(this->specification.samplerate.single);
-    this->settings.samplerate.downsampler = 1;
-    this->settings.samplerate.current = 1e8;
-    this->settings.trigger.position = 0;
-    this->settings.trigger.point = 0;
-    this->settings.trigger.mode = Dso::TRIGGERMODE_NORMAL;
-    this->settings.trigger.slope = Dso::SLOPE_POSITIVE;
-    this->settings.trigger.special = false;
-    this->settings.trigger.source = 0;
+    settings.samplerate.limits = &(this->specification.samplerate.single);
+    settings.samplerate.downsampler = 1;
+    settings.samplerate.current = 1e8;
+    settings.trigger.position = 0;
+    settings.trigger.point = 0;
+    settings.trigger.mode = Dso::TRIGGERMODE_NORMAL;
+    settings.trigger.slope = Dso::SLOPE_POSITIVE;
+    settings.trigger.special = false;
+    settings.trigger.source = 0;
     for (unsigned int channel = 0; channel < HANTEK_CHANNELS; ++channel) {
-        this->settings.trigger.level[channel] = 0.0;
-        this->settings.voltage[channel].gain = 0;
-        this->settings.voltage[channel].offset = 0.0;
-        this->settings.voltage[channel].offsetReal = 0.0;
-        this->settings.voltage[channel].used = false;
+        settings.trigger.level[channel] = 0.0;
+        settings.voltage[channel].gain = 0;
+        settings.voltage[channel].offset = 0.0;
+        settings.voltage[channel].offsetReal = 0.0;
+        settings.voltage[channel].used = false;
     }
-    this->settings.recordLengthId = 1;
-    this->settings.usedChannels = 0;
+    settings.recordLengthId = 1;
+    settings.usedChannels = 0;
 
     // Special trigger sources
     this->specialTriggerSources << tr("EXT") << tr("EXT/10");
@@ -117,7 +122,7 @@ HantekDsoControl::HantekDsoControl(USBDevice* device) : device(device) {
     this->lastTriggerMode = (Dso::TriggerMode)-1;
 
     // Sample buffers
-    this->samples.resize(HANTEK_CHANNELS);
+    result.data.resize(HANTEK_CHANNELS);
 
     this->previousSampleCount = 0;
 
@@ -390,9 +395,9 @@ HantekDsoControl::HantekDsoControl(USBDevice* device) : device(device) {
         this->specification.sampleSize = 8;
         break;
     }
-    this->settings.recordLengthId = 1;
-    this->settings.samplerate.limits = &(this->specification.samplerate.single);
-    this->settings.samplerate.downsampler = 1;
+    settings.recordLengthId = 1;
+    settings.samplerate.limits = &(this->specification.samplerate.single);
+    settings.samplerate.downsampler = 1;
     this->previousSampleCount = 0;
 
     // Get channel level data
@@ -408,16 +413,16 @@ HantekDsoControl::HantekDsoControl(USBDevice* device) : device(device) {
 
     // Emit signals for initial settings
     emit availableRecordLengthsChanged(
-                this->settings.samplerate.limits->recordLengths);
+                settings.samplerate.limits->recordLengths);
     updateSamplerateLimits();
-    emit recordLengthChanged(this->settings.samplerate.limits
-                             ->recordLengths[this->settings.recordLengthId]);
-    if (this->settings.samplerate.limits
-            ->recordLengths[this->settings.recordLengthId] != UINT_MAX)
-        emit recordTimeChanged((double)this->settings.samplerate.limits
-                               ->recordLengths[this->settings.recordLengthId] /
-            this->settings.samplerate.current);
-    emit samplerateChanged(this->settings.samplerate.current);
+    emit recordLengthChanged(settings.samplerate.limits
+                             ->recordLengths[settings.recordLengthId]);
+    if (settings.samplerate.limits
+            ->recordLengths[settings.recordLengthId] != UINT_MAX)
+        emit recordTimeChanged((double)settings.samplerate.limits
+                               ->recordLengths[settings.recordLengthId] /
+            settings.samplerate.current);
+    emit samplerateChanged(settings.samplerate.current);
 
     if (this->device->getUniqueModelID() == MODEL_DSO6022BE) {
         QList<double> sampleSteps;
@@ -445,7 +450,7 @@ unsigned int HantekDsoControl::getChannelCount() { return HANTEK_CHANNELS; }
 /// \brief Get available record lengths for this oscilloscope.
 /// \return The number of physical channels, empty list for continuous.
 QList<unsigned int> *HantekDsoControl::getAvailableRecordLengths() {
-    return &this->settings.samplerate.limits->recordLengths;
+    return &settings.samplerate.limits->recordLengths;
 }
 
 /// \brief Get minimum samplerate for this oscilloscope.
@@ -459,7 +464,7 @@ double HantekDsoControl::getMinSamplerate() {
 /// \return The maximum samplerate for the current configuration in S/s.
 double HantekDsoControl::getMaxSamplerate() {
     ControlSamplerateLimits *limits =
-            (this->settings.usedChannels <= 1)
+            (settings.usedChannels <= 1)
             ? &this->specification.samplerate.multi
             : &this->specification.samplerate.single;
     return limits->max;
@@ -469,18 +474,18 @@ double HantekDsoControl::getMaxSamplerate() {
 void HantekDsoControl::updateInterval() {
     // Check the current oscilloscope state everytime 25% of the time the buffer
     // should be refilled
-    if (this->settings.samplerate.limits
-            ->recordLengths[this->settings.recordLengthId] == UINT_MAX)
+    if (settings.samplerate.limits
+            ->recordLengths[settings.recordLengthId] == UINT_MAX)
         cycleTime = (int)((double)this->device->getPacketSize() /
-                          ((this->settings.samplerate.limits ==
+                          ((settings.samplerate.limits ==
                             &this->specification.samplerate.multi)
                            ? 1
                            : HANTEK_CHANNELS) /
-                          this->settings.samplerate.current * 250);
+                          settings.samplerate.current * 250);
     else
-        cycleTime = (int)((double)this->settings.samplerate.limits
-                          ->recordLengths[this->settings.recordLengthId] /
-                this->settings.samplerate.current * 250);
+        cycleTime = (int)((double)settings.samplerate.limits
+                          ->recordLengths[settings.recordLengthId] /
+                settings.samplerate.current * 250);
 
     // Not more often than every 10 ms though but at least once every second
     cycleTime = qBound(10, cycleTime, 1000);
@@ -519,7 +524,7 @@ int HantekDsoControl::getCaptureState() {
     if (errorCode < 0)
         return errorCode;
 
-    this->settings.trigger.point =
+    settings.trigger.point =
             this->calculateTriggerPoint(response.getTriggerPoint());
 
     return (int)response.getCaptureState();
@@ -571,191 +576,193 @@ int HantekDsoControl::getSamples(bool process) {
         return errorCode;
 
     // Process the data only if we want it
-    if (process) {
-        // How much data did we really receive?
-        dataLength = errorCode;
-        if (this->specification.sampleSize > 8)
-            totalSampleCount = dataLength / 2;
-        else
-            totalSampleCount = dataLength;
+    if (!process)
+        return LIBUSB_SUCCESS;
 
-        QMutexLocker locker(&samplesMutex);
+    // How much data did we really receive?
+    dataLength = errorCode;
+    if (this->specification.sampleSize > 8)
+        totalSampleCount = dataLength / 2;
+    else
+        totalSampleCount = dataLength;
 
-        // Convert channel data
-        if (fastRate) {
-            // Fast rate mode, one channel is using all buffers
-            sampleCount = totalSampleCount;
-            int channel = 0;
-            for (; channel < HANTEK_CHANNELS; ++channel) {
-                if (this->settings.voltage[channel].used)
-                    break;
+    // Convert channel data
+    if (fastRate) {
+        QWriteLocker locker(&result.lock);
+        result.samplerate = settings.samplerate.current;
+        result.append = settings.samplerate.limits->recordLengths[settings.recordLengthId] == UINT_MAX;
+
+        // Fast rate mode, one channel is using all buffers
+        sampleCount = totalSampleCount;
+        int channel = 0;
+        for (; channel < HANTEK_CHANNELS; ++channel) {
+            if (settings.voltage[channel].used)
+                break;
+        }
+
+        // Clear unused channels
+        for (int channelCounter = 0; channelCounter < HANTEK_CHANNELS;
+             ++channelCounter)
+            if (channelCounter != channel) {
+
+                result.data[channelCounter].clear();
             }
 
-            // Clear unused channels
-            for (int channelCounter = 0; channelCounter < HANTEK_CHANNELS;
-                 ++channelCounter)
-                if (channelCounter != channel) {
+        if (channel < HANTEK_CHANNELS) {
+            // Resize sample vector
+            result.data[channel].resize(sampleCount);
 
-                    this->samples[channelCounter].clear();
+            // Convert data from the oscilloscope and write it into the sample
+            // buffer
+            unsigned int bufferPosition = settings.trigger.point * 2;
+            if (this->specification.sampleSize > 8) {
+                // Additional most significant bits after the normal data
+                unsigned int extraBitsPosition; // Track the position of the extra
+                // bits in the additional byte
+                unsigned int extraBitsSize =
+                        this->specification.sampleSize - 8; // Number of extra bits
+                unsigned short int extraBitsMask =
+                        (0x00ff << extraBitsSize) &
+                        0xff00; // Mask for extra bits extraction
+
+                for (unsigned int realPosition = 0; realPosition < sampleCount;
+                     ++realPosition, ++bufferPosition) {
+                    if (bufferPosition >= sampleCount)
+                        bufferPosition %= sampleCount;
+
+                    extraBitsPosition = bufferPosition % HANTEK_CHANNELS;
+
+                    result.data[channel][realPosition] =
+                            ((double)((unsigned short int)data[bufferPosition] +
+                                      (((unsigned short int)
+                                        data[sampleCount + bufferPosition -
+                                       extraBitsPosition]
+                                       << (8 -
+                                           (HANTEK_CHANNELS - 1 - extraBitsPosition) *
+                                           extraBitsSize)) &
+                                      extraBitsMask)) /
+                            this->specification
+                            .voltageLimit[channel]
+                            [settings.voltage[channel].gain] -
+                            settings.voltage[channel].offsetReal) *
+                            this->specification
+                            .gainSteps[settings.voltage[channel].gain];
                 }
+            } else {
+                for (unsigned int realPosition = 0; realPosition < sampleCount;
+                     ++realPosition, ++bufferPosition) {
+                    if (bufferPosition >= sampleCount)
+                        bufferPosition %= sampleCount;
 
-            if (channel < HANTEK_CHANNELS) {
+                    double dataBuf = (double)((int)data[bufferPosition]);
+                    result.data[channel][realPosition] =
+                            (dataBuf /
+                             this->specification
+                             .voltageLimit[channel]
+                             [settings.voltage[channel].gain] -
+                            settings.voltage[channel].offsetReal) *
+                            this->specification
+                            .gainSteps[settings.voltage[channel].gain];
+                }
+            }
+        }
+    } else {
+        QWriteLocker locker(&result.lock);
+        result.samplerate = settings.samplerate.current;
+        result.append = settings.samplerate.limits->recordLengths[settings.recordLengthId] == UINT_MAX;
+
+        // Normal mode, channels are using their separate buffers
+        sampleCount = totalSampleCount / HANTEK_CHANNELS;
+        // if device is 6022BE, drop heading & trailing samples
+        if (this->device->getUniqueModelID() == MODEL_DSO6022BE)
+            sampleCount -= (DROP_DSO6022_HEAD + DROP_DSO6022_TAIL);
+        for (int channel = 0; channel < HANTEK_CHANNELS; ++channel) {
+            if (settings.voltage[channel].used) {
                 // Resize sample vector
-                this->samples[channel].resize(sampleCount);
+                if (result.data[channel].size() < sampleCount) {
+                    result.data[channel].resize(sampleCount);
+                }
 
                 // Convert data from the oscilloscope and write it into the sample
                 // buffer
-                unsigned int bufferPosition = this->settings.trigger.point * 2;
+                unsigned int bufferPosition = settings.trigger.point * 2;
                 if (this->specification.sampleSize > 8) {
                     // Additional most significant bits after the normal data
-                    unsigned int extraBitsPosition; // Track the position of the extra
-                    // bits in the additional byte
                     unsigned int extraBitsSize =
                             this->specification.sampleSize - 8; // Number of extra bits
                     unsigned short int extraBitsMask =
                             (0x00ff << extraBitsSize) &
                             0xff00; // Mask for extra bits extraction
+                    unsigned int extraBitsIndex =
+                            8 -
+                            channel * 2; // Bit position offset for extra bits extraction
 
                     for (unsigned int realPosition = 0; realPosition < sampleCount;
-                         ++realPosition, ++bufferPosition) {
-                        if (bufferPosition >= sampleCount)
-                            bufferPosition %= sampleCount;
+                         ++realPosition, bufferPosition += HANTEK_CHANNELS) {
+                        if (bufferPosition >= totalSampleCount)
+                            bufferPosition %= totalSampleCount;
 
-                        extraBitsPosition = bufferPosition % HANTEK_CHANNELS;
-
-                        this->samples[channel][realPosition] =
-                                ((double)((unsigned short int)data[bufferPosition] +
-                                          (((unsigned short int)
-                                            data[sampleCount + bufferPosition -
-                                           extraBitsPosition]
-                                           << (8 -
-                                               (HANTEK_CHANNELS - 1 - extraBitsPosition) *
-                                               extraBitsSize)) &
-                                          extraBitsMask)) /
+                        result.data[channel][realPosition] =
+                                ((double)((unsigned short int)
+                                          data[bufferPosition + HANTEK_CHANNELS - 1 -
+                                 channel] +
+                                 (((unsigned short int)
+                                   data[totalSampleCount + bufferPosition]
+                                  << extraBitsIndex) &
+                                 extraBitsMask)) /
                                 this->specification
                                 .voltageLimit[channel]
-                                [this->settings.voltage[channel].gain] -
-                                this->settings.voltage[channel].offsetReal) *
+                                [settings.voltage[channel].gain] -
+                                settings.voltage[channel].offsetReal) *
                                 this->specification
-                                .gainSteps[this->settings.voltage[channel].gain];
+                                .gainSteps[settings.voltage[channel].gain];
                     }
                 } else {
+                    if (this->device->getUniqueModelID() == MODEL_DSO6022BE) {
+                        bufferPosition += channel;
+                        // if device is 6022BE, offset DROP_DSO6022_HEAD incrementally
+                        bufferPosition += DROP_DSO6022_HEAD * 2;
+                    } else
+                        bufferPosition += HANTEK_CHANNELS - 1 - channel;
+
                     for (unsigned int realPosition = 0; realPosition < sampleCount;
-                         ++realPosition, ++bufferPosition) {
-                        if (bufferPosition >= sampleCount)
-                            bufferPosition %= sampleCount;
+                         ++realPosition, bufferPosition += HANTEK_CHANNELS) {
+                        if (bufferPosition >= totalSampleCount)
+                            bufferPosition %= totalSampleCount;
 
-                        double dataBuf = (double)((int)data[bufferPosition]);
-                        this->samples[channel][realPosition] =
-                                (dataBuf /
-                                 this->specification
-                                 .voltageLimit[channel]
-                                 [this->settings.voltage[channel].gain] -
-                                this->settings.voltage[channel].offsetReal) *
-                                this->specification
-                                .gainSteps[this->settings.voltage[channel].gain];
-                    }
-                }
-            }
-        } else {
-            // Normal mode, channels are using their separate buffers
-            sampleCount = totalSampleCount / HANTEK_CHANNELS;
-            // if device is 6022BE, drop heading & trailing samples
-            if (this->device->getUniqueModelID() == MODEL_DSO6022BE)
-                sampleCount -= (DROP_DSO6022_HEAD + DROP_DSO6022_TAIL);
-            for (int channel = 0; channel < HANTEK_CHANNELS; ++channel) {
-                if (this->settings.voltage[channel].used) {
-                    // Resize sample vector
-                    if (samples[channel].size() < sampleCount) {
-                        this->samples[channel].resize(sampleCount);
-                    }
-
-                    // Convert data from the oscilloscope and write it into the sample
-                    // buffer
-                    unsigned int bufferPosition = this->settings.trigger.point * 2;
-                    if (this->specification.sampleSize > 8) {
-                        // Additional most significant bits after the normal data
-                        unsigned int extraBitsSize =
-                                this->specification.sampleSize - 8; // Number of extra bits
-                        unsigned short int extraBitsMask =
-                                (0x00ff << extraBitsSize) &
-                                0xff00; // Mask for extra bits extraction
-                        unsigned int extraBitsIndex =
-                                8 -
-                                channel * 2; // Bit position offset for extra bits extraction
-
-                        for (unsigned int realPosition = 0; realPosition < sampleCount;
-                             ++realPosition, bufferPosition += HANTEK_CHANNELS) {
-                            if (bufferPosition >= totalSampleCount)
-                                bufferPosition %= totalSampleCount;
-
-                            this->samples[channel][realPosition] =
-                                    ((double)((unsigned short int)
-                                              data[bufferPosition + HANTEK_CHANNELS - 1 -
-                                     channel] +
-                                     (((unsigned short int)
-                                       data[totalSampleCount + bufferPosition]
-                                      << extraBitsIndex) &
-                                     extraBitsMask)) /
-                                    this->specification
-                                    .voltageLimit[channel]
-                                    [this->settings.voltage[channel].gain] -
-                                    this->settings.voltage[channel].offsetReal) *
-                                    this->specification
-                                    .gainSteps[this->settings.voltage[channel].gain];
-                        }
-                    } else {
                         if (this->device->getUniqueModelID() == MODEL_DSO6022BE) {
-                            bufferPosition += channel;
-                            // if device is 6022BE, offset DROP_DSO6022_HEAD incrementally
-                            bufferPosition += DROP_DSO6022_HEAD * 2;
-                        } else
-                            bufferPosition += HANTEK_CHANNELS - 1 - channel;
-
-                        for (unsigned int realPosition = 0; realPosition < sampleCount;
-                             ++realPosition, bufferPosition += HANTEK_CHANNELS) {
-                            if (bufferPosition >= totalSampleCount)
-                                bufferPosition %= totalSampleCount;
-
-                            if (this->device->getUniqueModelID() == MODEL_DSO6022BE) {
-                                double dataBuf = (double)((int)(data[bufferPosition] - 0x83));
-                                this->samples[channel][realPosition] =
-                                        (dataBuf /
-                                         this->specification
-                                         .voltageLimit[channel]
-                                         [this->settings.voltage[channel].gain]) *
-                                        this->specification
-                                        .gainSteps[this->settings.voltage[channel].gain];
-                            } else {
-                                double dataBuf = (double)((int)(data[bufferPosition]));
-                                this->samples[channel][realPosition] =
-                                        (dataBuf /
-                                         this->specification.voltageLimit
-                                         [channel][this->settings.voltage[channel].gain] -
-                                        this->settings.voltage[channel].offsetReal) *
-                                        this->specification
-                                        .gainSteps[this->settings.voltage[channel].gain];
-                            }
+                            double dataBuf = (double)((int)(data[bufferPosition] - 0x83));
+                            result.data[channel][realPosition] =
+                                    (dataBuf /
+                                     this->specification
+                                     .voltageLimit[channel]
+                                     [settings.voltage[channel].gain]) *
+                                    this->specification
+                                    .gainSteps[settings.voltage[channel].gain];
+                        } else {
+                            double dataBuf = (double)((int)(data[bufferPosition]));
+                            result.data[channel][realPosition] =
+                                    (dataBuf /
+                                     this->specification.voltageLimit
+                                     [channel][settings.voltage[channel].gain] -
+                                    settings.voltage[channel].offsetReal) *
+                                    this->specification
+                                    .gainSteps[settings.voltage[channel].gain];
                         }
                     }
-                } else {
-                    // Clear unused channels
-                    this->samples[channel].clear();
                 }
+            } else {
+                // Clear unused channels
+                result.data[channel].clear();
             }
         }
-
-#ifdef DEBUG
-        static unsigned int id = 0;
-        ++id;
-        timestampDebug(QString("Received packet %1").arg(id));
-#endif
-        emit samplesAvailable(
-                    &(this->samples), this->settings.samplerate.current,
-                    this->settings.samplerate.limits
-                    ->recordLengths[this->settings.recordLengthId] == UINT_MAX,
-                &(this->samplesMutex));
     }
+
+    static unsigned int id = 0;
+    ++id;
+    timestampDebug(QString("Received packet %1").arg(id));
+
+    emit samplesAvailable();
 
     return errorCode;
 }
@@ -787,18 +794,18 @@ double HantekDsoControl::getBestSamplerate(double samplerate, bool fastRate,
     // Get downsampling factor that would provide the requested rate
     double bestDownsampler =
             (double)limits->base /
-            this->specification.bufferDividers[this->settings.recordLengthId] /
+            this->specification.bufferDividers[settings.recordLengthId] /
             samplerate;
     // Base samplerate sufficient, or is the maximum better?
     if (bestDownsampler < 1.0 &&
             (samplerate <= limits->max /
              this->specification
-             .bufferDividers[this->settings.recordLengthId] ||
+             .bufferDividers[settings.recordLengthId] ||
              !maximum)) {
         bestDownsampler = 0.0;
         bestSamplerate =
                 limits->max /
-                this->specification.bufferDividers[this->settings.recordLengthId];
+                this->specification.bufferDividers[settings.recordLengthId];
     } else {
         switch (this->specification.command.bulk.setSamplerate) {
         case BULK_SETTRIGGERANDSAMPLERATE:
@@ -866,7 +873,7 @@ double HantekDsoControl::getBestSamplerate(double samplerate, bool fastRate,
 
         bestSamplerate =
                 limits->base / bestDownsampler /
-                this->specification.bufferDividers[this->settings.recordLengthId];
+                this->specification.bufferDividers[settings.recordLengthId];
     }
 
     if (downsampler)
@@ -878,11 +885,8 @@ double HantekDsoControl::getBestSamplerate(double samplerate, bool fastRate,
 /// \param fastRate Is set to the state of the fast rate mode when provided.
 /// \return The total number of samples the scope should return.
 unsigned int HantekDsoControl::getSampleCount(bool *fastRate) {
-    unsigned int totalSampleCount =
-            this->settings.samplerate.limits
-            ->recordLengths[this->settings.recordLengthId];
-    bool fastRateEnabled =
-            this->settings.samplerate.limits == &this->specification.samplerate.multi;
+    unsigned int totalSampleCount = settings.samplerate.limits->recordLengths[settings.recordLengthId];
+    bool fastRateEnabled = settings.samplerate.limits == &this->specification.samplerate.multi;
 
     if (totalSampleCount == UINT_MAX) {
         // Roll mode
@@ -905,7 +909,7 @@ unsigned int HantekDsoControl::getSampleCount(bool *fastRate) {
 /// \return The record length that has been set, 0 on error.
 unsigned int HantekDsoControl::updateRecordLength(unsigned int index) {
     if (index >=
-            (unsigned int)this->settings.samplerate.limits->recordLengths.size())
+            (unsigned int)settings.samplerate.limits->recordLengths.size())
         return 0;
 
     switch (this->specification.command.bulk.setRecordLength) {
@@ -947,9 +951,9 @@ unsigned int HantekDsoControl::updateRecordLength(unsigned int index) {
     // Check if the divider has changed and adapt samplerate limits accordingly
     bool bDividerChanged =
             this->specification.bufferDividers[index] !=
-            this->specification.bufferDividers[this->settings.recordLengthId];
+            this->specification.bufferDividers[settings.recordLengthId];
 
-    this->settings.recordLengthId = index;
+    settings.recordLengthId = index;
 
     if (bDividerChanged) {
         this->updateSamplerateLimits();
@@ -958,7 +962,7 @@ unsigned int HantekDsoControl::updateRecordLength(unsigned int index) {
         this->restoreTargets();
     }
 
-    return this->settings.samplerate.limits->recordLengths[index];
+    return settings.samplerate.limits->recordLengths[index];
 }
 
 /// \brief Sets the samplerate based on the parameters calculated by
@@ -1068,49 +1072,49 @@ unsigned int HantekDsoControl::updateSamplerate(unsigned int downsampler,
     }
 
     // Update settings
-    bool fastRateChanged = fastRate != (this->settings.samplerate.limits ==
+    bool fastRateChanged = fastRate != (settings.samplerate.limits ==
                                         &this->specification.samplerate.multi);
     if (fastRateChanged) {
-        this->settings.samplerate.limits = limits;
+        settings.samplerate.limits = limits;
     }
 
-    this->settings.samplerate.downsampler = downsampler;
+    settings.samplerate.downsampler = downsampler;
     if (downsampler)
-        this->settings.samplerate.current =
-            this->settings.samplerate.limits->base /
-            this->specification.bufferDividers[this->settings.recordLengthId] /
+        settings.samplerate.current =
+            settings.samplerate.limits->base /
+            this->specification.bufferDividers[settings.recordLengthId] /
             downsampler;
     else
-        this->settings.samplerate.current =
-            this->settings.samplerate.limits->max /
-            this->specification.bufferDividers[this->settings.recordLengthId];
+        settings.samplerate.current =
+            settings.samplerate.limits->max /
+            this->specification.bufferDividers[settings.recordLengthId];
 
     // Update dependencies
-    this->setPretriggerPosition(this->settings.trigger.position);
+    this->setPretriggerPosition(settings.trigger.position);
 
     // Emit signals for changed settings
     if (fastRateChanged) {
         emit availableRecordLengthsChanged(
-                    this->settings.samplerate.limits->recordLengths);
+                    settings.samplerate.limits->recordLengths);
         emit recordLengthChanged(
-                    this->settings.samplerate.limits
-                    ->recordLengths[this->settings.recordLengthId]);
+                    settings.samplerate.limits
+                    ->recordLengths[settings.recordLengthId]);
     }
 
     // Check for Roll mode
-    if (this->settings.samplerate.limits
-            ->recordLengths[this->settings.recordLengthId] != UINT_MAX)
-        emit recordTimeChanged((double)this->settings.samplerate.limits
-                               ->recordLengths[this->settings.recordLengthId] /
-            this->settings.samplerate.current);
-    emit samplerateChanged(this->settings.samplerate.current);
+    if (settings.samplerate.limits
+            ->recordLengths[settings.recordLengthId] != UINT_MAX)
+        emit recordTimeChanged((double)settings.samplerate.limits
+                               ->recordLengths[settings.recordLengthId] /
+            settings.samplerate.current);
+    emit samplerateChanged(settings.samplerate.current);
 
     return downsampler;
 }
 
 /// \brief Restore the samplerate/timebase targets after divider updates.
 void HantekDsoControl::restoreTargets() {
-    if (this->settings.samplerate.target.samplerateSet)
+    if (settings.samplerate.target.samplerateSet)
         this->setSamplerate();
     else
         this->setRecordTime();
@@ -1121,15 +1125,15 @@ void HantekDsoControl::updateSamplerateLimits() {
     // Works only if the minimum samplerate for normal mode is lower than for fast
     // rate mode, which is the case for all models
     ControlSamplerateLimits *limits =
-            (this->settings.usedChannels <= 1)
+            (settings.usedChannels <= 1)
             ? &this->specification.samplerate.multi
             : &this->specification.samplerate.single;
     emit samplerateLimitsChanged(
                 (double)this->specification.samplerate.single.base /
                 this->specification.samplerate.single.maxDownsampler /
-                this->specification.bufferDividers[this->settings.recordLengthId],
+                this->specification.bufferDividers[settings.recordLengthId],
             limits->max /
-            this->specification.bufferDividers[this->settings.recordLengthId]);
+            this->specification.bufferDividers[settings.recordLengthId]);
 }
 
 /// \brief Sets the size of the oscilloscopes sample buffer.
@@ -1143,12 +1147,12 @@ unsigned int HantekDsoControl::setRecordLength(unsigned int index) {
         return 0;
 
     this->restoreTargets();
-    this->setPretriggerPosition(this->settings.trigger.position);
+    this->setPretriggerPosition(settings.trigger.position);
 
-    emit recordLengthChanged(this->settings.samplerate.limits
-                             ->recordLengths[this->settings.recordLengthId]);
-    return this->settings.samplerate.limits
-            ->recordLengths[this->settings.recordLengthId];
+    emit recordLengthChanged(settings.samplerate.limits
+                             ->recordLengths[settings.recordLengthId]);
+    return settings.samplerate.limits
+            ->recordLengths[settings.recordLengthId];
 }
 
 /// \brief Sets the samplerate of the oscilloscope.
@@ -1160,20 +1164,20 @@ double HantekDsoControl::setSamplerate(double samplerate) {
         return 0.0;
 
     if (samplerate == 0.0) {
-        samplerate = this->settings.samplerate.target.samplerate;
+        samplerate = settings.samplerate.target.samplerate;
     } else {
-        this->settings.samplerate.target.samplerate = samplerate;
-        this->settings.samplerate.target.samplerateSet = true;
+        settings.samplerate.target.samplerate = samplerate;
+        settings.samplerate.target.samplerateSet = true;
     }
 
     if (this->device->getUniqueModelID() != MODEL_DSO6022BE) {
         // When possible, enable fast rate if it is required to reach the requested
         // samplerate
         bool fastRate =
-                (this->settings.usedChannels <= 1) &&
+                (settings.usedChannels <= 1) &&
                 (samplerate >
                  this->specification.samplerate.single.max /
-                 this->specification.bufferDividers[this->settings.recordLengthId]);
+                 this->specification.bufferDividers[settings.recordLengthId]);
 
         // What is the nearest, at least as high samplerate the scope can provide?
         unsigned int downsampler = 0;
@@ -1196,18 +1200,18 @@ double HantekDsoControl::setSamplerate(double samplerate) {
         static_cast<ControlSetTimeDIV *>(this->control[CONTROLINDEX_SETTIMEDIV])
                 ->setDiv(this->specification.sampleDiv[sampleId]);
         this->controlPending[CONTROLINDEX_SETTIMEDIV] = true;
-        this->settings.samplerate.current = samplerate;
+        settings.samplerate.current = samplerate;
 
         // Provide margin for SW trigger
         unsigned int sampleMargin = 2000;
         // Check for Roll mode
-        if (this->settings.samplerate.limits
-                ->recordLengths[this->settings.recordLengthId] != UINT_MAX)
+        if (settings.samplerate.limits
+                ->recordLengths[settings.recordLengthId] != UINT_MAX)
             emit recordTimeChanged(
-                    (double)(this->settings.samplerate.limits
-                             ->recordLengths[this->settings.recordLengthId] - sampleMargin) /
-                this->settings.samplerate.current);
-        emit samplerateChanged(this->settings.samplerate.current);
+                    (double)(settings.samplerate.limits
+                             ->recordLengths[settings.recordLengthId] - sampleMargin) /
+                settings.samplerate.current);
+        emit samplerateChanged(settings.samplerate.current);
 
         return samplerate;
     }
@@ -1222,26 +1226,26 @@ double HantekDsoControl::setRecordTime(double duration) {
         return 0.0;
 
     if (duration == 0.0) {
-        duration = this->settings.samplerate.target.duration;
+        duration = settings.samplerate.target.duration;
     } else {
-        this->settings.samplerate.target.duration = duration;
-        this->settings.samplerate.target.samplerateSet = false;
+        settings.samplerate.target.duration = duration;
+        settings.samplerate.target.samplerateSet = false;
     }
 
     if (this->device->getUniqueModelID() != MODEL_DSO6022BE) {
         // Calculate the maximum samplerate that would still provide the requested
         // duration
         double maxSamplerate = (double)this->specification.samplerate.single
-                .recordLengths[this->settings.recordLengthId] /
+                .recordLengths[settings.recordLengthId] /
                 duration;
 
         // When possible, enable fast rate if the record time can't be set that low
         // to improve resolution
         bool fastRate =
-                (this->settings.usedChannels <= 1) &&
+                (settings.usedChannels <= 1) &&
                 (maxSamplerate >=
                  this->specification.samplerate.multi.base /
-                 this->specification.bufferDividers[this->settings.recordLengthId]);
+                 this->specification.bufferDividers[settings.recordLengthId]);
 
         // What is the nearest, at most as high samplerate the scope can provide?
         unsigned int downsampler = 0;
@@ -1252,8 +1256,8 @@ double HantekDsoControl::setRecordTime(double duration) {
         if (this->updateSamplerate(downsampler, fastRate) == UINT_MAX)
             return 0.0;
         else {
-            return (double)this->settings.samplerate.limits
-                    ->recordLengths[this->settings.recordLengthId] /
+            return (double)settings.samplerate.limits
+                    ->recordLengths[settings.recordLengthId] /
                     bestSamplerate;
         }
     } else {
@@ -1278,11 +1282,11 @@ double HantekDsoControl::setRecordTime(double duration) {
         static_cast<ControlSetTimeDIV *>(this->control[CONTROLINDEX_SETTIMEDIV])
                 ->setDiv(this->specification.sampleDiv[sampleId]);
         this->controlPending[CONTROLINDEX_SETTIMEDIV] = true;
-        this->settings.samplerate.current =
+        settings.samplerate.current =
                 this->specification.sampleSteps[sampleId];
 
-        emit samplerateChanged(this->settings.samplerate.current);
-        return this->settings.samplerate.current;
+        emit samplerateChanged(settings.samplerate.current);
+        return settings.samplerate.current;
     }
 }
 
@@ -1298,19 +1302,19 @@ int HantekDsoControl::setChannelUsed(unsigned int channel, bool used) {
         return Dso::ERROR_PARAMETER;
 
     // Update settings
-    this->settings.voltage[channel].used = used;
+    settings.voltage[channel].used = used;
     unsigned int channelCount = 0;
     for (int channelCounter = 0; channelCounter < HANTEK_CHANNELS;
          ++channelCounter) {
-        if (this->settings.voltage[channelCounter].used)
+        if (settings.voltage[channelCounter].used)
             ++channelCount;
     }
 
     // Calculate the UsedChannels field for the command
     unsigned char usedChannels = USED_CH1;
 
-    if (this->settings.voltage[1].used) {
-        if (this->settings.voltage[0].used) {
+    if (settings.voltage[1].used) {
+        if (settings.voltage[0].used) {
             usedChannels = USED_CH1CH2;
         } else {
             // DSO-2250 uses a different value for channel 2
@@ -1352,8 +1356,8 @@ int HantekDsoControl::setChannelUsed(unsigned int channel, bool used) {
 
     // Check if fast rate mode availability changed
     bool fastRateChanged =
-            (this->settings.usedChannels <= 1) != (channelCount <= 1);
-    this->settings.usedChannels = channelCount;
+            (settings.usedChannels <= 1) != (channelCount <= 1);
+    settings.usedChannels = channelCount;
 
     if (fastRateChanged)
         this->updateSamplerateLimits();
@@ -1430,9 +1434,9 @@ double HantekDsoControl::setGain(unsigned int channel, double gain) {
         this->controlPending[CONTROLINDEX_SETRELAYS] = true;
     }
 
-    this->settings.voltage[channel].gain = gainId;
+    settings.voltage[channel].gain = gainId;
 
-    this->setOffset(channel, this->settings.voltage[channel].offset);
+    this->setOffset(channel, settings.voltage[channel].offset);
 
     return this->specification.gainSteps[gainId];
 }
@@ -1453,23 +1457,23 @@ double HantekDsoControl::setOffset(unsigned int channel, double offset) {
     unsigned short int minimum =
             ((unsigned short int)*((unsigned char *)&(
                                        this->specification
-                                       .offsetLimit[channel][this->settings.voltage[channel].gain]
+                                       .offsetLimit[channel][settings.voltage[channel].gain]
                                    [OFFSET_START]))
             << 8) +
             *((unsigned char *)&(
                   this->specification
-                  .offsetLimit[channel][this->settings.voltage[channel].gain]
+                  .offsetLimit[channel][settings.voltage[channel].gain]
               [OFFSET_START]) +
             1);
     unsigned short int maximum =
             ((unsigned short int)*((unsigned char *)&(
                                        this->specification
-                                       .offsetLimit[channel][this->settings.voltage[channel].gain]
+                                       .offsetLimit[channel][settings.voltage[channel].gain]
                                    [OFFSET_END]))
             << 8) +
             *((unsigned char *)&(
                   this->specification
-                  .offsetLimit[channel][this->settings.voltage[channel].gain]
+                  .offsetLimit[channel][settings.voltage[channel].gain]
               [OFFSET_END]) +
             1);
     unsigned short int offsetValue = offset * (maximum - minimum) + minimum + 0.5;
@@ -1484,10 +1488,10 @@ double HantekDsoControl::setOffset(unsigned int channel, double offset) {
         this->controlPending[CONTROLINDEX_SETOFFSET] = true;
     }
 
-    this->settings.voltage[channel].offset = offset;
-    this->settings.voltage[channel].offsetReal = offsetReal;
+    settings.voltage[channel].offset = offset;
+    settings.voltage[channel].offsetReal = offsetReal;
 
-    this->setTriggerLevel(channel, this->settings.trigger.level[channel]);
+    this->setTriggerLevel(channel, settings.trigger.level[channel]);
 
     return offsetReal;
 }
@@ -1501,7 +1505,7 @@ int HantekDsoControl::setTriggerMode(Dso::TriggerMode mode) {
     if (mode < Dso::TRIGGERMODE_AUTO || mode >= Dso::TRIGGERMODE_COUNT)
         return Dso::ERROR_PARAMETER;
 
-    this->settings.trigger.mode = mode;
+    settings.trigger.mode = mode;
     return Dso::ERROR_NONE;
 }
 
@@ -1551,8 +1555,8 @@ int HantekDsoControl::setTriggerSource(bool special, unsigned int id) {
             ->setTrigger(special);
     this->controlPending[CONTROLINDEX_SETRELAYS] = true;
 
-    this->settings.trigger.special = special;
-    this->settings.trigger.source = id;
+    settings.trigger.special = special;
+    settings.trigger.source = id;
 
     // Apply trigger level of the new source
     if (special) {
@@ -1561,7 +1565,7 @@ int HantekDsoControl::setTriggerSource(bool special, unsigned int id) {
                 ->setTrigger(0x7f);
         this->controlPending[CONTROLINDEX_SETOFFSET] = true;
     } else
-        this->setTriggerLevel(id, this->settings.trigger.level[id]);
+        this->setTriggerLevel(id, settings.trigger.level[id]);
 
     return Dso::ERROR_NONE;
 }
@@ -1589,23 +1593,23 @@ double HantekDsoControl::setTriggerLevel(unsigned int channel, double level) {
         minimum =
                 ((unsigned short int)*((unsigned char *)&(
                                            this->specification
-                                           .offsetLimit[channel][this->settings.voltage[channel].gain]
+                                           .offsetLimit[channel][settings.voltage[channel].gain]
                                        [OFFSET_START]))
                 << 8) +
                 *((unsigned char *)&(
                       this->specification
-                      .offsetLimit[channel][this->settings.voltage[channel].gain]
+                      .offsetLimit[channel][settings.voltage[channel].gain]
                   [OFFSET_START]) +
                 1);
         maximum =
                 ((unsigned short int)*((unsigned char *)&(
                                            this->specification
-                                           .offsetLimit[channel][this->settings.voltage[channel].gain]
+                                           .offsetLimit[channel][settings.voltage[channel].gain]
                                        [OFFSET_END]))
                 << 8) +
                 *((unsigned char *)&(
                       this->specification
-                      .offsetLimit[channel][this->settings.voltage[channel].gain]
+                      .offsetLimit[channel][settings.voltage[channel].gain]
                   [OFFSET_END]) +
                 1);
         break;
@@ -1620,18 +1624,18 @@ double HantekDsoControl::setTriggerLevel(unsigned int channel, double level) {
     // Never get out of the limits
     unsigned short int levelValue = qBound(
                 (long int)minimum,
-                (long int)((this->settings.voltage[channel].offsetReal +
+                (long int)((settings.voltage[channel].offsetReal +
                             level /
                             this->specification
-                            .gainSteps[this->settings.voltage[channel].gain]) *
+                            .gainSteps[settings.voltage[channel].gain]) *
                 (maximum - minimum) +
                 0.5) +
             minimum,
             (long int)maximum);
 
     // Check if the set channel is the trigger source
-    if (!this->settings.trigger.special &&
-            channel == this->settings.trigger.source &&
+    if (!settings.trigger.special &&
+            channel == settings.trigger.source &&
             this->device->getUniqueModelID() != MODEL_DSO6022BE) {
         // SetOffset control command for trigger level
         static_cast<ControlSetOffset *>(this->control[CONTROLINDEX_SETOFFSET])
@@ -1641,10 +1645,10 @@ double HantekDsoControl::setTriggerLevel(unsigned int channel, double level) {
 
     /// \todo Get alternating trigger in here
 
-    this->settings.trigger.level[channel] = level;
+    settings.trigger.level[channel] = level;
     return (double)((levelValue - minimum) / (maximum - minimum) -
-                    this->settings.voltage[channel].offsetReal) *
-            this->specification.gainSteps[this->settings.voltage[channel].gain];
+                    settings.voltage[channel].offsetReal) *
+            this->specification.gainSteps[settings.voltage[channel].gain];
 }
 
 /// \brief Set the trigger slope.
@@ -1686,7 +1690,7 @@ int HantekDsoControl::setTriggerSlope(Dso::Slope slope) {
         return Dso::ERROR_UNSUPPORTED;
     }
 
-    this->settings.trigger.slope = slope;
+    settings.trigger.slope = slope;
     return Dso::ERROR_NONE;
 }
 
@@ -1703,13 +1707,13 @@ double HantekDsoControl::setPretriggerPosition(double position) {
         return -2;
 
     // All trigger positions are measured in samples
-    unsigned int positionSamples = position * this->settings.samplerate.current;
+    unsigned int positionSamples = position * settings.samplerate.current;
     unsigned int recordLength =
-            this->settings.samplerate.limits
-            ->recordLengths[this->settings.recordLengthId];
+            settings.samplerate.limits
+            ->recordLengths[settings.recordLengthId];
     bool rollMode = recordLength == UINT_MAX;
     // Fast rate mode uses both channels
-    if (this->settings.samplerate.limits == &this->specification.samplerate.multi)
+    if (settings.samplerate.limits == &this->specification.samplerate.multi)
         positionSamples /= HANTEK_CHANNELS;
 
     switch (this->specification.command.bulk.setPretrigger) {
@@ -1758,8 +1762,8 @@ double HantekDsoControl::setPretriggerPosition(double position) {
         return Dso::ERROR_UNSUPPORTED;
     }
 
-    this->settings.trigger.position = position;
-    return (double)positionSamples / this->settings.samplerate.current;
+    settings.trigger.position = position;
+    return (double)positionSamples / settings.samplerate.current;
 }
 
 #ifdef DEBUG
@@ -1888,8 +1892,8 @@ void HantekDsoControl::run() {
     }
 
     // State machine for the device communication
-    if (this->settings.samplerate.limits
-            ->recordLengths[this->settings.recordLengthId] == UINT_MAX) {
+    if (settings.samplerate.limits
+            ->recordLengths[settings.recordLengthId] == UINT_MAX) {
         // Roll mode
         this->captureState = CAPTURE_WAITING;
         bool toNextState = true;
@@ -1964,7 +1968,7 @@ void HantekDsoControl::run() {
 #endif
 
             // Check if we're in single trigger mode
-            if (this->settings.trigger.mode == Dso::TRIGGERMODE_SINGLE &&
+            if (settings.trigger.mode == Dso::TRIGGERMODE_SINGLE &&
                     this->_samplingStarted)
                 this->stopSampling();
 
@@ -2016,7 +2020,7 @@ void HantekDsoControl::run() {
 #endif
 
             // Check if we're in single trigger mode
-            if (this->settings.trigger.mode == Dso::TRIGGERMODE_SINGLE &&
+            if (settings.trigger.mode == Dso::TRIGGERMODE_SINGLE &&
                     this->_samplingStarted)
                 this->stopSampling();
 
@@ -2032,12 +2036,12 @@ void HantekDsoControl::run() {
             this->previousSampleCount = this->getSampleCount();
 
             if (this->_samplingStarted &&
-                    this->lastTriggerMode == this->settings.trigger.mode) {
+                    this->lastTriggerMode == settings.trigger.mode) {
                 ++this->cycleCounter;
 
                 if (this->cycleCounter == this->startCycle &&
-                        this->settings.samplerate.limits
-                        ->recordLengths[this->settings.recordLengthId] !=
+                        settings.samplerate.limits
+                        ->recordLengths[settings.recordLengthId] !=
                         UINT_MAX) {
                     // Buffer refilled completely since start of sampling, enable the
                     // trigger now
@@ -2054,7 +2058,7 @@ void HantekDsoControl::run() {
                     timestampDebug("Enabling trigger");
 #endif
                 } else if (this->cycleCounter >= 8 + this->startCycle &&
-                           this->settings.trigger.mode == Dso::TRIGGERMODE_AUTO) {
+                           settings.trigger.mode == Dso::TRIGGERMODE_AUTO) {
                     // Force triggering
                     errorCode =
                             this->device->bulkCommand(this->command[BULK_FORCETRIGGER]);
@@ -2090,8 +2094,8 @@ void HantekDsoControl::run() {
 
             this->_samplingStarted = true;
             this->cycleCounter = 0;
-            this->startCycle = this->settings.trigger.position * 1000 / cycleTime + 1;
-            this->lastTriggerMode = this->settings.trigger.mode;
+            this->startCycle = settings.trigger.position * 1000 / cycleTime + 1;
+            this->lastTriggerMode = settings.trigger.mode;
             break;
 
         case CAPTURE_SAMPLING:
