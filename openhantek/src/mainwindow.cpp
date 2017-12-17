@@ -5,6 +5,7 @@
 #include <QApplication>
 #include <QDir>
 #include <QFileDialog>
+#include <QLineEdit>
 #include <QMainWindow>
 #include <QMenu>
 #include <QMenuBar>
@@ -17,11 +18,11 @@
 #include "configdialog.h"
 #include "dataanalyzer.h"
 #include "dockwindows.h"
-#include "hantekdsocontrol.h"
-#include "usb/usbdevice.h"
 #include "dsowidget.h"
 #include "hantek/hantekdsocontrol.h"
+#include "hantekdsocontrol.h"
 #include "settings.h"
+#include "usb/usbdevice.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 // class OpenHantekMainWindow
@@ -29,7 +30,7 @@
 /// \param parent The parent widget.
 /// \param flags Flags for the window manager.
 OpenHantekMainWindow::OpenHantekMainWindow(HantekDsoControl *dsoControl, DataAnalyzer *dataAnalyzer)
-    :dsoControl(dsoControl),dataAnalyzer(dataAnalyzer) {
+    : dsoControl(dsoControl), dataAnalyzer(dataAnalyzer) {
 
     // Window title
     setWindowIcon(QIcon(":openhantek.png"));
@@ -40,25 +41,28 @@ OpenHantekMainWindow::OpenHantekMainWindow(HantekDsoControl *dsoControl, DataAna
     settings->setChannelCount(dsoControl->getChannelCount());
     readSettings();
 
-    // Create dock windows before the dso widget, they fix messed up settings
-    #if (QT_VERSION >= QT_VERSION_CHECK(5, 6, 0))
+// Create dock windows before the dso widget, they fix messed up settings
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 6, 0))
     setDockOptions(dockOptions() | QMainWindow::GroupedDragging);
-    #endif
+#endif
     createDockWindows();
 
     // Central oszilloscope widget
     dataAnalyzer->applySettings(&settings->scope);
     dsoWidget = new DsoWidget(settings);
-    connect(dataAnalyzer, &DataAnalyzer::analyzed, [this]() {
-        dsoWidget->showNewData(this->dataAnalyzer->getNextResult());
-    });
+    connect(dataAnalyzer, &DataAnalyzer::analyzed,
+            [this]() { dsoWidget->showNewData(this->dataAnalyzer->getNextResult()); });
     setCentralWidget(dsoWidget);
 
     // Subroutines for window elements
     createActions();
     createToolBars();
     createMenus();
-    createStatusBar();
+    statusBar()->showMessage(tr("Ready"));
+
+#ifdef DEBUG
+    addManualCommandEdit();
+#endif
 
     // Apply the settings after the gui is initialized
     applySettings();
@@ -82,80 +86,60 @@ void OpenHantekMainWindow::closeEvent(QCloseEvent *event) {
 
 /// \brief Create the used actions.
 void OpenHantekMainWindow::createActions() {
-    openAction =
-            new QAction(QIcon(":actions/open.png"), tr("&Open..."), this);
+    openAction = new QAction(QIcon(":actions/open.png"), tr("&Open..."), this);
     openAction->setShortcut(tr("Ctrl+O"));
     openAction->setStatusTip(tr("Open saved settings"));
-    connect(openAction, SIGNAL(triggered()), this, SLOT(open()));
+    connect(openAction, &QAction::triggered, this, &OpenHantekMainWindow::open);
 
     saveAction = new QAction(QIcon(":actions/save.png"), tr("&Save"), this);
     saveAction->setShortcut(tr("Ctrl+S"));
     saveAction->setStatusTip(tr("Save the current settings"));
-    connect(saveAction, SIGNAL(triggered()), this, SLOT(save()));
+    connect(saveAction, &QAction::triggered, this, &OpenHantekMainWindow::save);
 
-    saveAsAction =
-            new QAction(QIcon(":actions/save-as.png"), tr("Save &as..."), this);
-    saveAsAction->setStatusTip(
-                tr("Save the current settings to another file"));
-    connect(saveAsAction, SIGNAL(triggered()), this, SLOT(saveAs()));
+    saveAsAction = new QAction(QIcon(":actions/save-as.png"), tr("Save &as..."), this);
+    saveAsAction->setStatusTip(tr("Save the current settings to another file"));
+    connect(saveAsAction, &QAction::triggered, this, &OpenHantekMainWindow::saveAs);
 
-    printAction =
-            new QAction(QIcon(":actions/print.png"), tr("&Print..."), this);
+    printAction = new QAction(QIcon(":actions/print.png"), tr("&Print..."), this);
     printAction->setShortcut(tr("Ctrl+P"));
     printAction->setStatusTip(tr("Print the oscilloscope screen"));
-    connect(printAction, SIGNAL(triggered()), dsoWidget,
-            SLOT(print()));
+    connect(printAction, &QAction::triggered, dsoWidget, &DsoWidget::print);
 
-    exportAsAction =
-            new QAction(QIcon(":actions/export-as.png"), tr("&Export as..."), this);
+    exportAsAction = new QAction(QIcon(":actions/export-as.png"), tr("&Export as..."), this);
     exportAsAction->setShortcut(tr("Ctrl+E"));
-    exportAsAction->setStatusTip(
-                tr("Export the oscilloscope data to a file"));
-    connect(exportAsAction, SIGNAL(triggered()), dsoWidget,
-            SLOT(exportAs()));
+    exportAsAction->setStatusTip(tr("Export the oscilloscope data to a file"));
+    connect(exportAsAction, &QAction::triggered, dsoWidget, &DsoWidget::exportAs);
 
     exitAction = new QAction(tr("E&xit"), this);
     exitAction->setShortcut(tr("Ctrl+Q"));
     exitAction->setStatusTip(tr("Exit the application"));
-    connect(exitAction, SIGNAL(triggered()), this, SLOT(close()));
+    connect(exitAction, &QAction::triggered, this, &QWidget::close);
 
     configAction = new QAction(tr("&Settings"), this);
     configAction->setShortcut(tr("Ctrl+S"));
     configAction->setStatusTip(tr("Configure the oscilloscope"));
-    connect(configAction, SIGNAL(triggered()), this, SLOT(config()));
+    connect(configAction, &QAction::triggered, this, &OpenHantekMainWindow::config);
 
     startStopAction = new QAction(this);
     startStopAction->setShortcut(tr("Space"));
     stopped();
 
-    digitalPhosphorAction = new QAction(
-                QIcon(":actions/digitalphosphor.png"), tr("Digital &phosphor"), this);
+    digitalPhosphorAction = new QAction(QIcon(":actions/digitalphosphor.png"), tr("Digital &phosphor"), this);
     digitalPhosphorAction->setCheckable(true);
     digitalPhosphorAction->setChecked(settings->view.digitalPhosphor);
     digitalPhosphor(settings->view.digitalPhosphor);
-    connect(digitalPhosphorAction, SIGNAL(toggled(bool)), this,
-            SLOT(digitalPhosphor(bool)));
+    connect(digitalPhosphorAction, &QAction::toggled, this, &OpenHantekMainWindow::digitalPhosphor);
 
     zoomAction = new QAction(QIcon(":actions/zoom.png"), tr("&Zoom"), this);
     zoomAction->setCheckable(true);
     zoomAction->setChecked(settings->view.zoom);
     zoom(settings->view.zoom);
-    connect(zoomAction, SIGNAL(toggled(bool)), this, SLOT(zoom(bool)));
-    connect(zoomAction, SIGNAL(toggled(bool)), dsoWidget,
-            SLOT(updateZoom(bool)));
+    connect(zoomAction, &QAction::toggled, this, &OpenHantekMainWindow::zoom);
+    connect(zoomAction, &QAction::toggled, dsoWidget, &DsoWidget::updateZoom);
 
     aboutAction = new QAction(tr("&About"), this);
     aboutAction->setStatusTip(tr("Show information about this program"));
-    connect(aboutAction, SIGNAL(triggered()), this, SLOT(about()));
-
-    aboutQtAction = new QAction(tr("About &Qt"), this);
-    aboutQtAction->setStatusTip(tr("Show the Qt library's About box"));
-    connect(aboutQtAction, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
-
-#ifdef DEBUG
-    commandAction = new QAction(tr("Send command"), this);
-    commandAction->setShortcut(tr("Shift+C"));
-#endif
+    connect(aboutAction, &QAction::triggered, this, &OpenHantekMainWindow::about);
 }
 
 /// \brief Create the menus and menuitems.
@@ -188,27 +172,21 @@ void OpenHantekMainWindow::createMenus() {
     oscilloscopeMenu->addAction(configAction);
     oscilloscopeMenu->addSeparator();
     oscilloscopeMenu->addAction(startStopAction);
-#ifdef DEBUG
-    oscilloscopeMenu->addSeparator();
-    oscilloscopeMenu->addAction(commandAction);
-#endif
 
     menuBar()->addSeparator();
 
     helpMenu = menuBar()->addMenu(tr("&Help"));
     helpMenu->addAction(aboutAction);
-    helpMenu->addAction(aboutQtAction);
 }
 
 namespace {
 
-QToolBar* CreateToolBar(const QString& title) {
-    QToolBar* newObj = new QToolBar(title);
+QToolBar *CreateToolBar(const QString &title) {
+    QToolBar *newObj = new QToolBar(title);
     newObj->setObjectName(title);
     newObj->setAllowedAreas(Qt::TopToolBarArea | Qt::LeftToolBarArea);
     return newObj;
 }
-
 }
 
 /// \brief Create the toolbars and their buttons.
@@ -233,26 +211,32 @@ void OpenHantekMainWindow::createToolBars() {
     viewToolBar->addAction(zoomAction);
 }
 
-/// \brief Create the status bar.
-void OpenHantekMainWindow::createStatusBar() {
-#ifdef DEBUG
+void OpenHantekMainWindow::addManualCommandEdit() {
     // Command field inside the status bar
     commandEdit = new QLineEdit();
     commandEdit->hide();
 
+    commandAction = new QAction(tr("Send command"), this);
+    commandAction->setShortcut(tr("Shift+C"));
+
     statusBar()->addPermanentWidget(commandEdit, 1);
-#endif
 
-    statusBar()->showMessage(tr("Ready"));
+    oscilloscopeMenu->addSeparator();
+    oscilloscopeMenu->addAction(commandAction);
 
-#ifdef DEBUG
-    connect(commandAction, SIGNAL(triggered()), commandEdit,
-            SLOT(show()));
-    connect(commandAction, SIGNAL(triggered()), commandEdit,
-            SLOT(setFocus()));
-    connect(commandEdit, SIGNAL(returnPressed()), this,
-            SLOT(sendCommand()));
-#endif
+    connect(commandAction, &QAction::triggered, [this]() {
+        commandEdit->show();
+        commandEdit->setFocus();
+    });
+    connect(commandEdit, &QLineEdit::returnPressed, [this]() {
+        int errorCode = dsoControl->stringCommand(commandEdit->text());
+
+        commandEdit->hide();
+        commandEdit->clear();
+
+        if (errorCode < 0)
+            statusBar()->showMessage(tr("Invalid command"), 3000);
+    });
 }
 
 /// \brief Create all docking windows.
@@ -268,63 +252,37 @@ void OpenHantekMainWindow::connectSignals() {
     // Connect general signals
     connect(this, &OpenHantekMainWindow::settingsChanged, this, &OpenHantekMainWindow::applySettings);
     // connect(dsoWidget, SIGNAL(stopped()), this, SLOT(stopped()));
-    connect(dsoControl, &HantekDsoControl::statusMessage,
-            statusBar(), &QStatusBar::showMessage);
+    connect(dsoControl, &HantekDsoControl::statusMessage, statusBar(), &QStatusBar::showMessage);
 
     // Connect signals to DSO controller and widget
-    connect(horizontalDock, &HorizontalDock::samplerateChanged, this,
-            &OpenHantekMainWindow::samplerateSelected);
-    connect(horizontalDock, &HorizontalDock::timebaseChanged, this,
-            &OpenHantekMainWindow::timebaseSelected);
-    connect(horizontalDock, &HorizontalDock::frequencybaseChanged,
-            dsoWidget, &DsoWidget::updateFrequencybase);
-    connect(horizontalDock, &HorizontalDock::recordLengthChanged,
-            this, &OpenHantekMainWindow::recordLengthSelected);
+    connect(horizontalDock, &HorizontalDock::samplerateChanged, this, &OpenHantekMainWindow::samplerateSelected);
+    connect(horizontalDock, &HorizontalDock::timebaseChanged, this, &OpenHantekMainWindow::timebaseSelected);
+    connect(horizontalDock, &HorizontalDock::frequencybaseChanged, dsoWidget, &DsoWidget::updateFrequencybase);
+    connect(horizontalDock, &HorizontalDock::recordLengthChanged, this, &OpenHantekMainWindow::recordLengthSelected);
     // connect(horizontalDock, SIGNAL(formatChanged(HorizontalFormat)),
     // dsoWidget, SLOT(horizontalFormatChanged(HorizontalFormat)));
 
-    connect(triggerDock, &TriggerDock::modeChanged,
-            dsoControl, &HantekDsoControl::setTriggerMode);
-    connect(triggerDock, &TriggerDock::modeChanged,
-            dsoWidget, &DsoWidget::updateTriggerMode);
-    connect(triggerDock, &TriggerDock::sourceChanged,
-            dsoControl, &HantekDsoControl::setTriggerSource);
-    connect(triggerDock, &TriggerDock::sourceChanged,
-            dsoWidget, &DsoWidget::updateTriggerSource);
-    connect(triggerDock, &TriggerDock::slopeChanged, dsoControl,
-            &HantekDsoControl::setTriggerSlope);
-    connect(triggerDock, &TriggerDock::slopeChanged, dsoWidget,
-            &DsoWidget::updateTriggerSlope);
-    connect(dsoWidget, &DsoWidget::triggerPositionChanged,
-            dsoControl, &HantekDsoControl::setPretriggerPosition);
-    connect(dsoWidget, &DsoWidget::triggerLevelChanged,
-            dsoControl, &HantekDsoControl::setTriggerLevel);
+    connect(triggerDock, &TriggerDock::modeChanged, dsoControl, &HantekDsoControl::setTriggerMode);
+    connect(triggerDock, &TriggerDock::modeChanged, dsoWidget, &DsoWidget::updateTriggerMode);
+    connect(triggerDock, &TriggerDock::sourceChanged, dsoControl, &HantekDsoControl::setTriggerSource);
+    connect(triggerDock, &TriggerDock::sourceChanged, dsoWidget, &DsoWidget::updateTriggerSource);
+    connect(triggerDock, &TriggerDock::slopeChanged, dsoControl, &HantekDsoControl::setTriggerSlope);
+    connect(triggerDock, &TriggerDock::slopeChanged, dsoWidget, &DsoWidget::updateTriggerSlope);
+    connect(dsoWidget, &DsoWidget::triggerPositionChanged, dsoControl, &HantekDsoControl::setPretriggerPosition);
+    connect(dsoWidget, &DsoWidget::triggerLevelChanged, dsoControl, &HantekDsoControl::setTriggerLevel);
 
-    connect(voltageDock, &VoltageDock::usedChanged, this,
-            &OpenHantekMainWindow::updateUsed);
-    connect(voltageDock, &VoltageDock::usedChanged,
-            dsoWidget, &DsoWidget::updateVoltageUsed);
-    connect(voltageDock,
-            &VoltageDock::couplingChanged,
-            dsoControl, &HantekDsoControl::setCoupling);
-    connect(voltageDock,
-            &VoltageDock::couplingChanged, dsoWidget,
-            &DsoWidget::updateVoltageCoupling);
-    connect(voltageDock, &VoltageDock::modeChanged,
-            dsoWidget, &DsoWidget::updateMathMode);
-    connect(voltageDock, &VoltageDock::gainChanged, this,
-            &OpenHantekMainWindow::updateVoltageGain);
-    connect(voltageDock, &VoltageDock::gainChanged,
-            dsoWidget, &DsoWidget::updateVoltageGain);
-    connect(dsoWidget, &DsoWidget::offsetChanged, this,
-            &OpenHantekMainWindow::updateOffset);
+    connect(voltageDock, &VoltageDock::usedChanged, this, &OpenHantekMainWindow::updateUsed);
+    connect(voltageDock, &VoltageDock::usedChanged, dsoWidget, &DsoWidget::updateVoltageUsed);
+    connect(voltageDock, &VoltageDock::couplingChanged, dsoControl, &HantekDsoControl::setCoupling);
+    connect(voltageDock, &VoltageDock::couplingChanged, dsoWidget, &DsoWidget::updateVoltageCoupling);
+    connect(voltageDock, &VoltageDock::modeChanged, dsoWidget, &DsoWidget::updateMathMode);
+    connect(voltageDock, &VoltageDock::gainChanged, this, &OpenHantekMainWindow::updateVoltageGain);
+    connect(voltageDock, &VoltageDock::gainChanged, dsoWidget, &DsoWidget::updateVoltageGain);
+    connect(dsoWidget, &DsoWidget::offsetChanged, this, &OpenHantekMainWindow::updateOffset);
 
-    connect(spectrumDock, &SpectrumDock::usedChanged, this,
-            &OpenHantekMainWindow::updateUsed);
-    connect(spectrumDock, &SpectrumDock::usedChanged,
-            dsoWidget, &DsoWidget::updateSpectrumUsed);
-    connect(spectrumDock, &SpectrumDock::magnitudeChanged,
-            dsoWidget, &DsoWidget::updateSpectrumMagnitude);
+    connect(spectrumDock, &SpectrumDock::usedChanged, this, &OpenHantekMainWindow::updateUsed);
+    connect(spectrumDock, &SpectrumDock::usedChanged, dsoWidget, &DsoWidget::updateSpectrumUsed);
+    connect(spectrumDock, &SpectrumDock::magnitudeChanged, dsoWidget, &DsoWidget::updateSpectrumMagnitude);
 
     // Started/stopped signals from oscilloscope
     connect(dsoControl, &HantekDsoControl::samplingStarted, this, &OpenHantekMainWindow::started);
@@ -332,31 +290,23 @@ void OpenHantekMainWindow::connectSignals() {
 
     // connect(dsoControl, SIGNAL(recordLengthChanged(unsigned long)), this,
     // SLOT(recordLengthChanged()));
-    connect(dsoControl, &HantekDsoControl::recordTimeChanged, this,
-            &OpenHantekMainWindow::recordTimeChanged);
-    connect(dsoControl, &HantekDsoControl::samplerateChanged, this,
-            &OpenHantekMainWindow::samplerateChanged);
+    connect(dsoControl, &HantekDsoControl::recordTimeChanged, this, &OpenHantekMainWindow::recordTimeChanged);
+    connect(dsoControl, &HantekDsoControl::samplerateChanged, this, &OpenHantekMainWindow::samplerateChanged);
 
-    connect(dsoControl,
-            &HantekDsoControl::availableRecordLengthsChanged,
-            horizontalDock,
+    connect(dsoControl, &HantekDsoControl::availableRecordLengthsChanged, horizontalDock,
             &HorizontalDock::availableRecordLengthsChanged);
-    connect(dsoControl, &HantekDsoControl::samplerateLimitsChanged,
-            horizontalDock, &HorizontalDock::samplerateLimitsChanged);
-    connect(dsoControl, &HantekDsoControl::samplerateSet,
-            horizontalDock, &HorizontalDock::samplerateSet);
+    connect(dsoControl, &HantekDsoControl::samplerateLimitsChanged, horizontalDock,
+            &HorizontalDock::samplerateLimitsChanged);
+    connect(dsoControl, &HantekDsoControl::samplerateSet, horizontalDock, &HorizontalDock::samplerateSet);
 }
 
 /// \brief Initialize the device with the current settings.
 void OpenHantekMainWindow::applySettingsToDevice() {
-    for (unsigned int channel = 0;
-         channel < settings->scope.physicalChannels; ++channel) {
-        dsoControl->setCoupling(
-                    channel, (Dso::Coupling)settings->scope.voltage[channel].misc);
+    for (unsigned int channel = 0; channel < settings->scope.physicalChannels; ++channel) {
+        dsoControl->setCoupling(channel, (Dso::Coupling)settings->scope.voltage[channel].misc);
         updateVoltageGain(channel);
         updateOffset(channel);
-        dsoControl->setTriggerLevel(
-                    channel, settings->scope.voltage[channel].trigger);
+        dsoControl->setTriggerLevel(channel, settings->scope.voltage[channel].trigger);
     }
     updateUsed(settings->scope.physicalChannels);
     if (settings->scope.horizontal.samplerateSet)
@@ -364,20 +314,16 @@ void OpenHantekMainWindow::applySettingsToDevice() {
     else
         timebaseSelected();
     if (dsoControl->getAvailableRecordLengths()->isEmpty())
-        dsoControl->setRecordLength(
-                    settings->scope.horizontal.recordLength);
+        dsoControl->setRecordLength(settings->scope.horizontal.recordLength);
     else {
-        int index = dsoControl->getAvailableRecordLengths()->indexOf(
-                    settings->scope.horizontal.recordLength);
+        int index = dsoControl->getAvailableRecordLengths()->indexOf(settings->scope.horizontal.recordLength);
         dsoControl->setRecordLength(index < 0 ? 1 : index);
     }
     dsoControl->setTriggerMode(settings->scope.trigger.mode);
-    dsoControl->setPretriggerPosition(
-                settings->scope.trigger.position *
-                settings->scope.horizontal.timebase * DIVS_TIME);
+    dsoControl->setPretriggerPosition(settings->scope.trigger.position * settings->scope.horizontal.timebase *
+                                      DIVS_TIME);
     dsoControl->setTriggerSlope(settings->scope.trigger.slope);
-    dsoControl->setTriggerSource(settings->scope.trigger.special,
-                                 settings->scope.trigger.source);
+    dsoControl->setTriggerSource(settings->scope.trigger.special, settings->scope.trigger.source);
 }
 
 /// \brief Read the settings from an ini file.
@@ -404,8 +350,7 @@ int OpenHantekMainWindow::writeSettings(const QString &fileName) {
 /// \brief Open a configuration file.
 /// \return 0 on success, 1 on user abort, negative on error.
 int OpenHantekMainWindow::open() {
-    QString fileName = QFileDialog::getOpenFileName(this, tr("Open file"), "",
-                                                    tr("Settings (*.ini)"));
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Open file"), "", tr("Settings (*.ini)"));
 
     if (!fileName.isEmpty())
         return readSettings(fileName);
@@ -425,8 +370,7 @@ int OpenHantekMainWindow::save() {
 /// \brief Save the configuration to another filename.
 /// \return 0 on success, 1 on user abort, negative on error.
 int OpenHantekMainWindow::saveAs() {
-    QString fileName = QFileDialog::getSaveFileName(this, tr("Save settings"), "",
-                                                    tr("Settings (*.ini)"));
+    QString fileName = QFileDialog::getSaveFileName(this, tr("Save settings"), "", tr("Settings (*.ini)"));
     if (fileName.isEmpty())
         return 1;
 
@@ -444,10 +388,8 @@ void OpenHantekMainWindow::started() {
     startStopAction->setIcon(QIcon(":actions/stop.png"));
     startStopAction->setStatusTip(tr("Stop the oscilloscope"));
 
-    disconnect(startStopAction, &QAction::triggered, dsoControl,
-               &HantekDsoControl::startSampling);
-    connect(startStopAction, &QAction::triggered, dsoControl,
-            &HantekDsoControl::stopSampling);
+    disconnect(startStopAction, &QAction::triggered, dsoControl, &HantekDsoControl::startSampling);
+    connect(startStopAction, &QAction::triggered, dsoControl, &HantekDsoControl::stopSampling);
 }
 
 /// \brief The oscilloscope stopped sampling.
@@ -456,10 +398,8 @@ void OpenHantekMainWindow::stopped() {
     startStopAction->setIcon(QIcon(":actions/start.png"));
     startStopAction->setStatusTip(tr("Start the oscilloscope"));
 
-    disconnect(startStopAction, &QAction::triggered, dsoControl,
-               &HantekDsoControl::stopSampling);
-    connect(startStopAction, &QAction::triggered, dsoControl,
-            &HantekDsoControl::startSampling);
+    disconnect(startStopAction, &QAction::triggered, dsoControl, &HantekDsoControl::stopSampling);
+    connect(startStopAction, &QAction::triggered, dsoControl, &HantekDsoControl::startSampling);
 }
 
 /// \brief Configure the oscilloscope.
@@ -476,11 +416,9 @@ void OpenHantekMainWindow::digitalPhosphor(bool enabled) {
     settings->view.digitalPhosphor = enabled;
 
     if (settings->view.digitalPhosphor)
-        digitalPhosphorAction->setStatusTip(
-                    tr("Disable fading of previous graphs"));
+        digitalPhosphorAction->setStatusTip(tr("Disable fading of previous graphs"));
     else
-        digitalPhosphorAction->setStatusTip(
-                    tr("Enable fading of previous graphs"));
+        digitalPhosphorAction->setStatusTip(tr("Enable fading of previous graphs"));
 }
 
 /// \brief Show/hide the magnified scope.
@@ -495,11 +433,10 @@ void OpenHantekMainWindow::zoom(bool enabled) {
 
 /// \brief Show the about dialog.
 void OpenHantekMainWindow::about() {
-    QMessageBox::about(
-                this, tr("About OpenHantek %1").arg(VERSION),
-                tr("<p>This is a open source software for Hantek USB oscilloscopes.</p>"
-                   "<p>Copyright &copy; 2010, 2011 Oliver Haag "
-                   "&lt;oliver.haag@gmail.com&gt;</p>"));
+    QMessageBox::about(this, tr("About OpenHantek %1").arg(VERSION),
+                       tr("<p>This is a open source software for Hantek USB oscilloscopes.</p>"
+                          "<p>Copyright &copy; 2010, 2011 Oliver Haag "
+                          "&lt;oliver.haag@gmail.com&gt;</p>"));
 }
 
 /// \brief The settings have changed.
@@ -527,18 +464,15 @@ void OpenHantekMainWindow::updateSettings() {
 /// \brief The oscilloscope changed the record time.
 /// \param duration The new record time duration in seconds.
 void OpenHantekMainWindow::recordTimeChanged(double duration) {
-    if (settings->scope.horizontal.samplerateSet &&
-            settings->scope.horizontal.recordLength != UINT_MAX) {
+    if (settings->scope.horizontal.samplerateSet && settings->scope.horizontal.recordLength != UINT_MAX) {
         // The samplerate was set, let's adapt the timebase accordingly
-        settings->scope.horizontal.timebase =
-                horizontalDock->setTimebase(duration / DIVS_TIME);
+        settings->scope.horizontal.timebase = horizontalDock->setTimebase(duration / DIVS_TIME);
     }
 
     // The trigger position should be kept at the same place but the timebase has
     // changed
-    dsoControl->setPretriggerPosition(
-                settings->scope.trigger.position *
-                settings->scope.horizontal.timebase * DIVS_TIME);
+    dsoControl->setPretriggerPosition(settings->scope.trigger.position * settings->scope.horizontal.timebase *
+                                      DIVS_TIME);
 
     dsoWidget->updateTimebase(settings->scope.horizontal.timebase);
 }
@@ -546,8 +480,7 @@ void OpenHantekMainWindow::recordTimeChanged(double duration) {
 /// \brief The oscilloscope changed the samplerate.
 /// \param samplerate The new samplerate in samples per second.
 void OpenHantekMainWindow::samplerateChanged(double samplerate) {
-    if (!settings->scope.horizontal.samplerateSet &&
-            settings->scope.horizontal.recordLength != UINT_MAX) {
+    if (!settings->scope.horizontal.samplerateSet && settings->scope.horizontal.recordLength != UINT_MAX) {
         // The timebase was set, let's adapt the samplerate accordingly
         settings->scope.horizontal.samplerate = samplerate;
         horizontalDock->setSamplerate(samplerate);
@@ -563,14 +496,11 @@ void OpenHantekMainWindow::recordLengthSelected(unsigned long recordLength) {
 }
 
 /// \brief Sets the samplerate of the oscilloscope.
-void OpenHantekMainWindow::samplerateSelected() {
-    dsoControl->setSamplerate(settings->scope.horizontal.samplerate);
-}
+void OpenHantekMainWindow::samplerateSelected() { dsoControl->setSamplerate(settings->scope.horizontal.samplerate); }
 
 /// \brief Sets the record time of the oscilloscope.
 void OpenHantekMainWindow::timebaseSelected() {
-    dsoControl->setRecordTime(settings->scope.horizontal.timebase *
-                              DIVS_TIME);
+    dsoControl->setRecordTime(settings->scope.horizontal.timebase * DIVS_TIME);
     dsoWidget->updateTimebase(settings->scope.horizontal.timebase);
 }
 
@@ -580,9 +510,7 @@ void OpenHantekMainWindow::updateOffset(unsigned int channel) {
     if (channel >= settings->scope.physicalChannels)
         return;
 
-    dsoControl->setOffset(
-                channel,
-                (settings->scope.voltage[channel].offset / DIVS_VOLTAGE) + 0.5);
+    dsoControl->setOffset(channel, (settings->scope.voltage[channel].offset / DIVS_VOLTAGE) + 0.5);
 }
 
 /// \brief Sets the state of the given oscilloscope channel.
@@ -591,26 +519,19 @@ void OpenHantekMainWindow::updateUsed(unsigned int channel) {
     if (channel >= (unsigned int)settings->scope.voltage.count())
         return;
 
-    bool mathUsed =
-            settings->scope.voltage[settings->scope.physicalChannels]
-            .used |
-            settings->scope.spectrum[settings->scope.physicalChannels]
-            .used;
+    bool mathUsed = settings->scope.voltage[settings->scope.physicalChannels].used |
+                    settings->scope.spectrum[settings->scope.physicalChannels].used;
 
     // Normal channel, check if voltage/spectrum or math channel is used
     if (channel < settings->scope.physicalChannels)
         dsoControl->setChannelUsed(
-                    channel, mathUsed | settings->scope.voltage[channel].used |
-                    settings->scope.spectrum[channel].used);
+            channel, mathUsed | settings->scope.voltage[channel].used | settings->scope.spectrum[channel].used);
     // Math channel, update all channels
     else if (channel == settings->scope.physicalChannels) {
-        for (unsigned int channelCounter = 0;
-             channelCounter < settings->scope.physicalChannels;
-             ++channelCounter)
-            dsoControl->setChannelUsed(
-                        channelCounter,
-                        mathUsed | settings->scope.voltage[channelCounter].used |
-                        settings->scope.spectrum[channelCounter].used);
+        for (unsigned int channelCounter = 0; channelCounter < settings->scope.physicalChannels; ++channelCounter)
+            dsoControl->setChannelUsed(channelCounter,
+                                       mathUsed | settings->scope.voltage[channelCounter].used |
+                                           settings->scope.spectrum[channelCounter].used);
     }
 }
 
@@ -620,19 +541,5 @@ void OpenHantekMainWindow::updateVoltageGain(unsigned int channel) {
     if (channel >= settings->scope.physicalChannels)
         return;
 
-    dsoControl->setGain(
-                channel, settings->scope.voltage[channel].gain * DIVS_VOLTAGE);
+    dsoControl->setGain(channel, settings->scope.voltage[channel].gain * DIVS_VOLTAGE);
 }
-
-#ifdef DEBUG
-/// \brief Send the command in the commandEdit to the oscilloscope.
-void OpenHantekMainWindow::sendCommand() {
-    int errorCode = dsoControl->stringCommand(commandEdit->text());
-
-    commandEdit->hide();
-    commandEdit->clear();
-
-    if (errorCode < 0)
-        statusBar()->showMessage(tr("Invalid command"), 3000);
-}
-#endif

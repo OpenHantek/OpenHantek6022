@@ -1766,19 +1766,7 @@ double HantekDsoControl::setPretriggerPosition(double position) {
     return (double)positionSamples / settings.samplerate.current;
 }
 
-#ifdef DEBUG
-/// \brief Sends bulk/control commands directly.
-/// <p>
-///		<b>Syntax:</b><br />
-///		<br />
-///		Bulk command:
-///		<pre>send bulk [<em>hex data</em>]</pre>
-///		%Control command:
-///		<pre>send control [<em>hex code</em>] [<em>hex data</em>]</pre>
-/// </p>
-/// \param command The command as string (Has to be parsed).
-/// \return See ::Dso::ErrorCode.
-int Control::stringCommand(QString command) {
+int HantekDsoControl::stringCommand(QString command) {
     if (!this->device->isConnected())
         return Dso::ERROR_CONNECTION;
 
@@ -1832,7 +1820,6 @@ int Control::stringCommand(QString command) {
 
     return Dso::ERROR_UNSUPPORTED;
 }
-#endif
 
 void HantekDsoControl::run() {
     int errorCode = 0;
@@ -1842,12 +1829,9 @@ void HantekDsoControl::run() {
         if (!this->commandPending[command])
             continue;
 
-#ifdef DEBUG
-        timestampDebug(
-                    QString("Sending bulk command:%1")
+        timestampDebug(QString("Sending bulk command:%1")
                     .arg(hexDump(this->command[command]->data(),
                                          this->command[command]->getSize())));
-#endif
 
         errorCode = this->device->bulkCommand(this->command[command]);
         if (errorCode < 0) {
@@ -1867,13 +1851,11 @@ void HantekDsoControl::run() {
         if (!this->controlPending[control])
             continue;
 
-#ifdef DEBUG
         timestampDebug(
                     QString("Sending control command %1:%2")
                     .arg(QString::number(this->controlCode[control], 16),
                          hexDump(this->control[control]->data(),
                                          this->control[control]->getSize())));
-#endif
 
         errorCode = this->device->controlWrite(this->controlCode[control],
                                                this->control[control]->data(),
@@ -1917,9 +1899,8 @@ void HantekDsoControl::run() {
                 }
                 break;
             }
-#ifdef DEBUG
+
             timestampDebug("Starting to capture");
-#endif
 
             this->_samplingStarted = true;
 
@@ -1934,9 +1915,8 @@ void HantekDsoControl::run() {
                 }
                 break;
             }
-#ifdef DEBUG
+
             timestampDebug("Enabling trigger");
-#endif
 
             break;
 
@@ -1949,9 +1929,8 @@ void HantekDsoControl::run() {
                 }
                 break;
             }
-#ifdef DEBUG
+
             timestampDebug("Forcing trigger");
-#endif
 
             break;
 
@@ -1961,11 +1940,9 @@ void HantekDsoControl::run() {
             if (errorCode < 0)
                 qWarning("Getting sample data failed: %s",
                          libUsbErrorString(errorCode).toLocal8Bit().data());
-#ifdef DEBUG
             else
                 timestampDebug(
                             QString("Received %1 B of sampling data").arg(errorCode));
-#endif
 
             // Check if we're in single trigger mode
             if (settings.trigger.mode == Dso::TRIGGERMODE_SINGLE &&
@@ -1978,9 +1955,7 @@ void HantekDsoControl::run() {
             break;
 
         default:
-#ifdef DEBUG
             timestampDebug("Roll mode state unknown");
-#endif
             break;
         }
 
@@ -1991,19 +1966,17 @@ void HantekDsoControl::run() {
         // Standard mode
         this->rollState = ROLL_STARTSAMPLING;
 
-#ifdef DEBUG
-        int lastCaptureState = this->captureState;
-#endif
+        const int lastCaptureState = this->captureState;
         this->captureState = this->getCaptureState();
         if (this->captureState < 0)
             qWarning(
                         "Getting capture state failed: %s",
                         libUsbErrorString(this->captureState).toLocal8Bit().data());
-#ifdef DEBUG
+
         else if (this->captureState != lastCaptureState)
             timestampDebug(
                         QString("Capture state changed to %1").arg(this->captureState));
-#endif
+
         switch (this->captureState) {
         case CAPTURE_READY:
         case CAPTURE_READY2250:
@@ -2013,11 +1986,8 @@ void HantekDsoControl::run() {
             if (errorCode < 0)
                 qWarning("Getting sample data failed: %s",
                          libUsbErrorString(errorCode).toLocal8Bit().data());
-#ifdef DEBUG
             else
-                timestampDebug(
-                            QString("Received %1 B of sampling data").arg(errorCode));
-#endif
+                timestampDebug(QString("Received %1 B of sampling data").arg(errorCode));
 
             // Check if we're in single trigger mode
             if (settings.trigger.mode == Dso::TRIGGERMODE_SINGLE &&
@@ -2054,9 +2024,8 @@ void HantekDsoControl::run() {
                         }
                         break;
                     }
-#ifdef DEBUG
+
                     timestampDebug("Enabling trigger");
-#endif
                 } else if (this->cycleCounter >= 8 + this->startCycle &&
                            settings.trigger.mode == Dso::TRIGGERMODE_AUTO) {
                     // Force triggering
@@ -2069,9 +2038,8 @@ void HantekDsoControl::run() {
                         }
                         break;
                     }
-#ifdef DEBUG
+
                     timestampDebug("Forcing trigger");
-#endif
                 }
 
                 if (this->cycleCounter < 20 ||
@@ -2088,9 +2056,8 @@ void HantekDsoControl::run() {
                 }
                 break;
             }
-#ifdef DEBUG
+
             timestampDebug("Starting to capture");
-#endif
 
             this->_samplingStarted = true;
             this->cycleCounter = 0;

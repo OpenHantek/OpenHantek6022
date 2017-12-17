@@ -14,6 +14,7 @@
 #include "utils/dsoStrings.h"
 #include "exporter.h"
 #include "glscope.h"
+#include "glgenerator.h"
 #include "widgets/levelslider.h"
 #include "settings.h"
 
@@ -248,18 +249,14 @@ DsoWidget::DsoWidget(DsoSettings *settings, QWidget *parent, Qt::WindowFlags fla
     this->setLayout(this->mainLayout);
 
     // Connect change-signals of sliders
-    this->connect(this->offsetSlider, SIGNAL(valueChanged(int, double)), this,
-                  SLOT(updateOffset(int, double)));
-    this->connect(this->triggerPositionSlider, SIGNAL(valueChanged(int, double)),
-                  this, SLOT(updateTriggerPosition(int, double)));
-    this->connect(this->triggerLevelSlider, SIGNAL(valueChanged(int, double)),
-                  this, SLOT(updateTriggerLevel(int, double)));
-    this->connect(this->markerSlider, SIGNAL(valueChanged(int, double)), this,
-                  SLOT(updateMarker(int, double)));
-    this->connect(this->markerSlider, SIGNAL(valueChanged(int, double)),
-                  this->mainScope, SLOT(update()));
-    this->connect(this->markerSlider, SIGNAL(valueChanged(int, double)),
-                  this->zoomScope, SLOT(update()));
+    this->connect(this->offsetSlider, &LevelSlider::valueChanged, this, &DsoWidget::updateOffset);
+    this->connect(this->triggerPositionSlider, &LevelSlider::valueChanged, this, &DsoWidget::updateTriggerPosition);
+    this->connect(this->triggerLevelSlider, &LevelSlider::valueChanged, this, &DsoWidget::updateTriggerLevel);
+    this->connect(this->markerSlider, &LevelSlider::valueChanged, [this](int index, double value) {
+        this->updateMarker(index, value);
+        this->mainScope->update();
+        this->zoomScope->update();
+    });
 }
 
 void DsoWidget::showNewData(std::unique_ptr<DataAnalyzerResult> data)
@@ -544,16 +541,12 @@ void DsoWidget::doShowNewData() {
 
     updateRecordLength(data.get()->getMaxSamples());
 
-    for (int channel = 0; channel < this->settings->scope.voltage.count();
-         ++channel) {
-        if (this->settings->scope.voltage[channel].used &&
-                data.get()->data(channel)) {
+    for (int channel = 0; channel < settings->scope.voltage.count(); ++channel) {
+        if (settings->scope.voltage[channel].used && data.get()->data(channel)) {
             // Amplitude string representation (4 significant digits)
-            this->measurementAmplitudeLabel[channel]->setText(valueToString(
-                                                                  data.get()->data(channel)->amplitude, UNIT_VOLTS, 4));
+            measurementAmplitudeLabel[channel]->setText(valueToString(data.get()->data(channel)->amplitude, UNIT_VOLTS, 4));
             // Frequency string representation (5 significant digits)
-            this->measurementFrequencyLabel[channel]->setText(valueToString(
-                                                                  data.get()->data(channel)->frequency, UNIT_HERTZ, 5));
+            measurementFrequencyLabel[channel]->setText(valueToString(data.get()->data(channel)->frequency, UNIT_HERTZ, 5));
         }
     }
 }

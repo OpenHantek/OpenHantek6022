@@ -6,7 +6,6 @@
 
 #include "glscope.h"
 
-#include "dataanalyzer.h"
 #include "glgenerator.h"
 #include "settings.h"
 

@@ -45,6 +45,18 @@ public:
     const USBDevice* getDevice() const;
     const DSOsamples& getLastSamples();
 
+    /// \brief Sends bulk/control commands directly.
+    /// <p>
+    ///		<b>Syntax:</b><br />
+    ///		<br />
+    ///		Bulk command:
+    ///		<pre>send bulk [<em>hex data</em>]</pre>
+    ///		%Control command:
+    ///		<pre>send control [<em>hex code</em>] [<em>hex data</em>]</pre>
+    /// </p>
+    /// \param command The command as string (Has to be parsed).
+    /// \return See ::Dso::ErrorCode.
+    int stringCommand(QString command);
 signals:
     void samplingStarted(); ///< The oscilloscope started sampling/waiting for trigger
     void samplingStopped(); ///< The oscilloscope stopped sampling/waiting for trigger
@@ -120,8 +132,4 @@ public slots:
     int setTriggerSlope(Dso::Slope slope);
     double setPretriggerPosition(double position);
     int forceTrigger();
-
-#ifdef DEBUG
-    int stringCommand(QString command);
-#endif
 };

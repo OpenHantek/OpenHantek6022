@@ -32,6 +32,8 @@ endif()
 
 # Add auxiliary files to the project, so that these files appear in VisualStudio/QtCreator
 add_custom_target(readme SOURCES readme.md)
+add_custom_target(format SOURCES ".clang-format"
+    COMMAND "clang-format" "-style=.clang-format" "-i" "-sort-includes" ${SRC} ${HEADERS})
 
 # Add "cppcheck" command
 add_custom_target(cppcheck COMMAND "cppcheck --enable=all -I \"${CMAKE_CURRENT_LIST_DIR}/openhantek/src\" -q ${SRC} --template=\"{file}:{line}: {severity}: {message}\"")

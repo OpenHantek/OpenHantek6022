@@ -37,7 +37,7 @@ private:
   void createActions();
   void createMenus();
   void createToolBars();
-  void createStatusBar();
+  void addManualCommandEdit();
   void createDockWindows();
 
   // Device management
@@ -57,11 +57,10 @@ private:
   QAction *startStopAction;
   QAction *digitalPhosphorAction, *zoomAction;
 
-  QAction *aboutAction, *aboutQtAction;
+  QAction *aboutAction;
 
-#ifdef DEBUG
-  QAction *commandAction;
-#endif
+  QAction *commandAction; ///< Only used if DEBUG is on
+  QLineEdit *commandEdit; ///< Only used if DEBUG is on
 
   // Menus
   QMenu *fileMenu;
@@ -80,11 +79,6 @@ private:
 
   // Central widgets
   DsoWidget *dsoWidget;
-
-// Other widgets
-#ifdef DEBUG
-  QLineEdit *commandEdit;
-#endif
 
   // Data handling classes
   HantekDsoControl* dsoControl;
@@ -123,10 +117,6 @@ private slots:
   void updateOffset(unsigned int channel);
   void updateUsed(unsigned int channel);
   void updateVoltageGain(unsigned int channel);
-
-#ifdef DEBUG
-  void sendCommand();
-#endif
 
 signals:
   void

@@ -2,12 +2,13 @@
 
 #pragma once
 
-#include <libusb-1.0/libusb.h>
 #include <memory>
 #include <QString>
 
 #include "definitions.h"
 #include "usbdevice.h"
+
+struct libusb_context;
 
 /**
  * @brief Search for Hantek devices and connect to the selected one.

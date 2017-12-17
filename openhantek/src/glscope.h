@@ -14,9 +14,8 @@ using GL_WIDGET_CLASS = QGLWidget;
 #endif
 
 #include "definitions.h"
-#include "glgenerator.h"
 
-class DataAnalyzer;
+class GlGenerator;
 class DsoSettings;
 
 ////////////////////////////////////////////////////////////////////////////////

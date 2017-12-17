@@ -1,11 +1,13 @@
 // SPDX-License-Identifier: GPL-2.0+
 
+#include "finddevices.h"
+
 #include <QList>
 #include <QCoreApplication>
 #include <QDebug>
 #include <QTemporaryFile>
 
-#include "finddevices.h"
+#include <libusb-1.0/libusb.h>
 #include "utils/printutils.h"
 #include "ezusb.h"
 
