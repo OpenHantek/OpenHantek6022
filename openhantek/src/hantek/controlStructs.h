@@ -9,18 +9,17 @@ namespace Hantek {
 /// \class ControlGetSpeed                                      hantek/types.h
 /// \brief The CONTROL_GETSPEED parser.
 class ControlGetSpeed : public DataArray<uint8_t> {
-public:
+  public:
     ControlGetSpeed();
 
     ConnectionSpeed getSpeed();
 };
 
-
 //////////////////////////////////////////////////////////////////////////////
 /// \class ControlSetOffset                                     hantek/types.h
 /// \brief The CONTROL_SETOFFSET builder.
 class ControlSetOffset : public DataArray<uint8_t> {
-public:
+  public:
     ControlSetOffset();
     ControlSetOffset(uint16_t channel1, uint16_t channel2, uint16_t trigger);
 
@@ -29,7 +28,7 @@ public:
     uint16_t getTrigger();
     void setTrigger(uint16_t level);
 
-private:
+  private:
     void init();
 };
 
@@ -37,10 +36,9 @@ private:
 /// \class ControlSetRelays                                     hantek/types.h
 /// \brief The CONTROL_SETRELAYS builder.
 class ControlSetRelays : public DataArray<uint8_t> {
-public:
-    ControlSetRelays(bool ch1Below1V = false, bool ch1Below100mV = false,
-                     bool ch1CouplingDC = false, bool ch2Below1V = false,
-                     bool ch2Below100mV = false, bool ch2CouplingDC = false,
+  public:
+    ControlSetRelays(bool ch1Below1V = false, bool ch1Below100mV = false, bool ch1CouplingDC = false,
+                     bool ch2Below1V = false, bool ch2Below100mV = false, bool ch2CouplingDC = false,
                      bool triggerExt = false);
 
     bool getBelow1V(unsigned int channel);
@@ -57,7 +55,7 @@ public:
 /// \class ControlSetVoltDIV_CH1 hantek/types.h
 /// \brief The CONTROL_SETVOLTDIV_CH1 builder.
 class ControlSetVoltDIV_CH1 : public DataArray<uint8_t> {
-public:
+  public:
     ControlSetVoltDIV_CH1();
     void setDiv(uint8_t val);
 };
@@ -66,7 +64,7 @@ public:
 /// \class ControlSetVoltDIV_CH2 hantek/types.h
 /// \brief The CONTROL_SETVOLTDIV_CH2 builder.
 class ControlSetVoltDIV_CH2 : public DataArray<uint8_t> {
-public:
+  public:
     ControlSetVoltDIV_CH2();
     void setDiv(uint8_t val);
 };
@@ -75,7 +73,7 @@ public:
 /// \class ControlSetTimeDIV hantek/types.h
 /// \brief The CONTROL_SETTIMEDIV builder.
 class ControlSetTimeDIV : public DataArray<uint8_t> {
-public:
+  public:
     ControlSetTimeDIV();
     void setDiv(uint8_t val);
 };
@@ -84,12 +82,10 @@ public:
 /// \class ControlAcquireHardData hantek/types.h
 /// \brief The CONTROL_ACQUIIRE_HARD_DATA builder.
 class ControlAcquireHardData : public DataArray<uint8_t> {
-public:
+  public:
     ControlAcquireHardData();
 
-private:
+  private:
     void init();
 };
-
 }
-

@@ -15,6 +15,12 @@
 
 #include "mainwindow.h"
 
+#include "HorizontalDock.h"
+#include "SpectrumDock.h"
+#include "TriggerDock.h"
+#include "VoltageDock.h"
+#include "dockwindows.h"
+
 #include "configdialog.h"
 #include "dataanalyzer.h"
 #include "dockwindows.h"
@@ -23,6 +29,7 @@
 #include "hantekdsocontrol.h"
 #include "settings.h"
 #include "usb/usbdevice.h"
+#include "viewconstants.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 // class OpenHantekMainWindow
@@ -39,7 +46,7 @@ OpenHantekMainWindow::OpenHantekMainWindow(HantekDsoControl *dsoControl, DataAna
     // Application settings
     settings = new DsoSettings();
     settings->setChannelCount(dsoControl->getChannelCount());
-    readSettings();
+    settings->load(QString());
 
 // Create dock windows before the dso widget, they fix messed up settings
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 6, 0))
@@ -72,14 +79,15 @@ OpenHantekMainWindow::OpenHantekMainWindow(HantekDsoControl *dsoControl, DataAna
 
     // Set up the oscilloscope
     applySettingsToDevice();
-    dsoControl->startSampling();
 }
 
 /// \brief Save the settings before exiting.
 /// \param event The close event that should be handled.
 void OpenHantekMainWindow::closeEvent(QCloseEvent *event) {
-    if (settings->options.alwaysSave)
-        writeSettings();
+    if (settings->options.alwaysSave) {
+        saveWindowGeometry();
+        settings->save(QString());
+    }
 
     QMainWindow::closeEvent(event);
 }
@@ -234,13 +242,13 @@ void OpenHantekMainWindow::addManualCommandEdit() {
         commandEdit->hide();
         commandEdit->clear();
 
-        if (errorCode < 0)
-            statusBar()->showMessage(tr("Invalid command"), 3000);
+        if (errorCode < 0) statusBar()->showMessage(tr("Invalid command"), 3000);
     });
 }
 
 /// \brief Create all docking windows.
 void OpenHantekMainWindow::createDockWindows() {
+    registerDockMetaTypes();
     horizontalDock = new HorizontalDock(settings, this);
     triggerDock = new TriggerDock(settings, dsoControl->getSpecialTriggerSources(), this);
     spectrumDock = new SpectrumDock(settings, this);
@@ -251,7 +259,6 @@ void OpenHantekMainWindow::createDockWindows() {
 void OpenHantekMainWindow::connectSignals() {
     // Connect general signals
     connect(this, &OpenHantekMainWindow::settingsChanged, this, &OpenHantekMainWindow::applySettings);
-    // connect(dsoWidget, SIGNAL(stopped()), this, SLOT(stopped()));
     connect(dsoControl, &HantekDsoControl::statusMessage, statusBar(), &QStatusBar::showMessage);
 
     // Connect signals to DSO controller and widget
@@ -288,8 +295,6 @@ void OpenHantekMainWindow::connectSignals() {
     connect(dsoControl, &HantekDsoControl::samplingStarted, this, &OpenHantekMainWindow::started);
     connect(dsoControl, &HantekDsoControl::samplingStopped, this, &OpenHantekMainWindow::stopped);
 
-    // connect(dsoControl, SIGNAL(recordLengthChanged(unsigned long)), this,
-    // SLOT(recordLengthChanged()));
     connect(dsoControl, &HantekDsoControl::recordTimeChanged, this, &OpenHantekMainWindow::recordTimeChanged);
     connect(dsoControl, &HantekDsoControl::samplerateChanged, this, &OpenHantekMainWindow::samplerateChanged);
 
@@ -326,60 +331,32 @@ void OpenHantekMainWindow::applySettingsToDevice() {
     dsoControl->setTriggerSource(settings->scope.trigger.special, settings->scope.trigger.source);
 }
 
-/// \brief Read the settings from an ini file.
-/// \param fileName Optional filename to export the settings to a specific file.
-/// \return 0 on success, negative on error.
-int OpenHantekMainWindow::readSettings(const QString &fileName) {
-    int status = settings->load(fileName);
-
-    if (status == 0)
-        emit(settingsChanged());
-
-    return status;
-}
-
-/// \brief Save the settings to the harddisk.
-/// \param fileName Optional filename to read the settings from an ini file.
-/// \return 0 on success, negative on error.
-int OpenHantekMainWindow::writeSettings(const QString &fileName) {
-    updateSettings();
-
-    return settings->save(fileName);
-}
-
 /// \brief Open a configuration file.
-/// \return 0 on success, 1 on user abort, negative on error.
-int OpenHantekMainWindow::open() {
+void OpenHantekMainWindow::open() {
     QString fileName = QFileDialog::getOpenFileName(this, tr("Open file"), "", tr("Settings (*.ini)"));
-
-    if (!fileName.isEmpty())
-        return readSettings(fileName);
-    else
-        return 1;
+    if (!fileName.isEmpty()) {
+        if (!settings->load(fileName)) emit(settingsChanged());
+    }
 }
 
 /// \brief Save the current configuration to a file.
-/// \return 0 on success, negative on error.
-int OpenHantekMainWindow::save() {
+void OpenHantekMainWindow::save() {
+    saveWindowGeometry();
+
     if (currentFile.isEmpty())
-        return saveAs();
+        saveAs();
     else
-        return writeSettings(currentFile);
+        settings->save(currentFile);
 }
 
 /// \brief Save the configuration to another filename.
-/// \return 0 on success, 1 on user abort, negative on error.
-int OpenHantekMainWindow::saveAs() {
+void OpenHantekMainWindow::saveAs() {
     QString fileName = QFileDialog::getSaveFileName(this, tr("Save settings"), "", tr("Settings (*.ini)"));
-    if (fileName.isEmpty())
-        return 1;
+    if (fileName.isEmpty()) return;
 
-    int status = writeSettings(fileName);
+    saveWindowGeometry();
 
-    if (status == 0)
-        currentFile = fileName;
-
-    return status;
+    if (settings->save(QString()) == 0) currentFile = fileName;
 }
 
 /// \brief The oscilloscope started sampling.
@@ -404,11 +381,10 @@ void OpenHantekMainWindow::stopped() {
 
 /// \brief Configure the oscilloscope.
 void OpenHantekMainWindow::config() {
-    updateSettings();
+    saveWindowGeometry();
 
     DsoConfigDialog configDialog(settings, this);
-    if (configDialog.exec() == QDialog::Accepted)
-        settingsChanged();
+    if (configDialog.exec() == QDialog::Accepted) settingsChanged();
 }
 
 /// \brief Enable/disable digital phosphor.
@@ -455,7 +431,7 @@ void OpenHantekMainWindow::applySettings() {
 }
 
 /// \brief Update the window layout in the settings.
-void OpenHantekMainWindow::updateSettings() {
+void OpenHantekMainWindow::saveWindowGeometry() {
     // Main window
     settings->mainWindowGeometry = saveGeometry();
     settings->mainWindowState = saveState();
@@ -507,8 +483,7 @@ void OpenHantekMainWindow::timebaseSelected() {
 /// \brief Sets the offset of the oscilloscope for the given channel.
 /// \param channel The channel that got a new offset.
 void OpenHantekMainWindow::updateOffset(unsigned int channel) {
-    if (channel >= settings->scope.physicalChannels)
-        return;
+    if (channel >= settings->scope.physicalChannels) return;
 
     dsoControl->setOffset(channel, (settings->scope.voltage[channel].offset / DIVS_VOLTAGE) + 0.5);
 }
@@ -516,8 +491,7 @@ void OpenHantekMainWindow::updateOffset(unsigned int channel) {
 /// \brief Sets the state of the given oscilloscope channel.
 /// \param channel The channel whose state has changed.
 void OpenHantekMainWindow::updateUsed(unsigned int channel) {
-    if (channel >= (unsigned int)settings->scope.voltage.count())
-        return;
+    if (channel >= (unsigned int)settings->scope.voltage.count()) return;
 
     bool mathUsed = settings->scope.voltage[settings->scope.physicalChannels].used |
                     settings->scope.spectrum[settings->scope.physicalChannels].used;
@@ -538,8 +512,7 @@ void OpenHantekMainWindow::updateUsed(unsigned int channel) {
 /// \brief Sets the gain of the oscilloscope for the given channel.
 /// \param channel The channel that got a new gain value.
 void OpenHantekMainWindow::updateVoltageGain(unsigned int channel) {
-    if (channel >= settings->scope.physicalChannels)
-        return;
+    if (channel >= settings->scope.physicalChannels) return;
 
     dsoControl->setGain(channel, settings->scope.voltage[channel].gain * DIVS_VOLTAGE);
 }

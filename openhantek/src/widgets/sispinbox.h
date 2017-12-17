@@ -37,38 +37,38 @@
 /// floating point values. The step size is increasing in an exponential way, to
 /// keep the percentual difference between the steps at equal levels.
 class SiSpinBox : public QDoubleSpinBox {
-  Q_OBJECT
+    Q_OBJECT
 
-public:
-  explicit SiSpinBox(QWidget *parent = 0);
-  SiSpinBox(Unit unit, QWidget *parent = 0);
-  ~SiSpinBox();
+  public:
+    explicit SiSpinBox(QWidget *parent = 0);
+    SiSpinBox(Unit unit, QWidget *parent = 0);
+    ~SiSpinBox();
 
-  QValidator::State validate(QString &input, int &pos) const;
-  double valueFromText(const QString &text) const;
-  QString textFromValue(double val) const;
-  void fixup(QString &input) const;
-  void stepBy(int steps);
-  bool setUnit(Unit unit);
-  void setUnitPostfix(const QString &postfix);
-  void setSteps(const QList<double> &steps);
-  void setMode(const int mode);
+    QValidator::State validate(QString &input, int &pos) const;
+    double valueFromText(const QString &text) const;
+    QString textFromValue(double val) const;
+    void fixup(QString &input) const;
+    void stepBy(int steps);
+    bool setUnit(Unit unit);
+    void setUnitPostfix(const QString &postfix);
+    void setSteps(const QList<double> &steps);
+    void setMode(const int mode);
 
-private:
-  void init();
+  private:
+    void init();
 
-  Unit unit;   ///< The SI unit used for this spin box
-  QString unitPostfix; ///< Shown after the unit
-  QList<double> steps; ///< The steps, begins from start after last element
-  int mode;            ///< The mode, fixed or constant
+    Unit unit;           ///< The SI unit used for this spin box
+    QString unitPostfix; ///< Shown after the unit
+    QList<double> steps; ///< The steps, begins from start after last element
+    int mode;            ///< The mode, fixed or constant
 
-  bool steppedTo; ///< true, if the current value was reached using stepBy
-  int stepId;     ///< The index of the last step reached using stepBy
+    bool steppedTo; ///< true, if the current value was reached using stepBy
+    int stepId;     ///< The index of the last step reached using stepBy
 
-signals:
+  signals:
 
-private slots:
-  void resetSteppedTo();
+  private slots:
+    void resetSteppedTo();
 };
 
 #endif

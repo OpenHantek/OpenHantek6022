@@ -10,4 +10,4 @@ insert_final_newline = true
 
 # Tab indentation (no size specified)
 [*.cpp,*.h]
-indent_style = tab
+indent_style = space

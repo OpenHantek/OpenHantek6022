@@ -6,6 +6,7 @@
 #include "settings.h"
 
 #include <QCheckBox>
+#include <QComboBox>
 #include <QDoubleSpinBox>
 #include <QGridLayout>
 #include <QGroupBox>
@@ -13,38 +14,36 @@
 #include <QLabel>
 #include <QSpinBox>
 #include <QVBoxLayout>
-#include <QComboBox>
-
 
 ////////////////////////////////////////////////////////////////////////////////
 /// \class DsoConfigAnalysisPage                                   configpages.h
 /// \brief Config page for the data analysis.
 class DsoConfigAnalysisPage : public QWidget {
-  Q_OBJECT
+    Q_OBJECT
 
-public:
-  DsoConfigAnalysisPage(DsoSettings *settings, QWidget *parent = 0);
+  public:
+    DsoConfigAnalysisPage(DsoSettings *settings, QWidget *parent = 0);
 
-public slots:
-  void saveSettings();
+  public slots:
+    void saveSettings();
 
-private:
-  DsoSettings *settings;
+  private:
+    DsoSettings *settings;
 
-  QVBoxLayout *mainLayout;
+    QVBoxLayout *mainLayout;
 
-  QGroupBox *spectrumGroup;
-  QGridLayout *spectrumLayout;
-  QLabel *windowFunctionLabel;
-  QComboBox *windowFunctionComboBox;
+    QGroupBox *spectrumGroup;
+    QGridLayout *spectrumLayout;
+    QLabel *windowFunctionLabel;
+    QComboBox *windowFunctionComboBox;
 
-  QLabel *referenceLevelLabel;
-  QDoubleSpinBox *referenceLevelSpinBox;
-  QLabel *referenceLevelUnitLabel;
-  QHBoxLayout *referenceLevelLayout;
+    QLabel *referenceLevelLabel;
+    QDoubleSpinBox *referenceLevelSpinBox;
+    QLabel *referenceLevelUnitLabel;
+    QHBoxLayout *referenceLevelLayout;
 
-  QLabel *minimumMagnitudeLabel;
-  QDoubleSpinBox *minimumMagnitudeSpinBox;
-  QLabel *minimumMagnitudeUnitLabel;
-  QHBoxLayout *minimumMagnitudeLayout;
+    QLabel *minimumMagnitudeLabel;
+    QDoubleSpinBox *minimumMagnitudeSpinBox;
+    QLabel *minimumMagnitudeUnitLabel;
+    QHBoxLayout *minimumMagnitudeLayout;
 };

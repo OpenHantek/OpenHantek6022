@@ -2,13 +2,8 @@
 
 #pragma once
 
-
 #include <QDockWidget>
 #include <QLayout>
 
+void registerDockMetaTypes();
 void SetupDockWidget(QDockWidget *dockWindow, QWidget *dockWidget, QLayout *layout);
-
-#include "HorizontalDock.h"
-#include "SpectrumDock.h"
-#include "TriggerDock.h"
-#include "VoltageDock.h"

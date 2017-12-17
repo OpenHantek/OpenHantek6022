@@ -1,18 +1,18 @@
 // SPDX-License-Identifier: GPL-2.0+
 
+#include <QCoreApplication>
+#include <QDebug>
+#include <QString>
+#include <QTemporaryFile>
 #include <libusb-1.0/libusb.h>
 #include <memory>
-#include <QString>
-#include <QDebug>
-#include <QCoreApplication>
-#include <QTemporaryFile>
 
 #include "ezusb.h"
 #include "uploadFirmware.h"
 #include "usbdevice.h"
 #include "utils/printutils.h"
 
-bool UploadFirmware::startUpload(USBDevice* device) {
+bool UploadFirmware::startUpload(USBDevice *device) {
     if (device->isConnected() || !device->needsFirmware()) return false;
 
     // Open device
@@ -20,12 +20,13 @@ bool UploadFirmware::startUpload(USBDevice* device) {
     int errorCode = libusb_open(device->getRawDevice(), &handle);
     if (errorCode != LIBUSB_SUCCESS) {
         handle = nullptr;
-        errorMessage = QCoreApplication::translate("","Couldn't open device: %1").arg(libUsbErrorString(errorCode));
+        errorMessage = QCoreApplication::translate("", "Couldn't open device: %1").arg(libUsbErrorString(errorCode));
         return false;
     }
 
     // Write firmware from resources to temp files
-    QFile firmwareRes(QString(":/firmware/%1-firmware.hex").arg(QString::fromStdString(device->getModel().firmwareToken)));
+    QFile firmwareRes(
+        QString(":/firmware/%1-firmware.hex").arg(QString::fromStdString(device->getModel().firmwareToken)));
     auto temp_firmware_path = std::unique_ptr<QTemporaryFile>(QTemporaryFile::createNativeFile(firmwareRes));
     if (!temp_firmware_path) return false;
     temp_firmware_path->open();
@@ -68,7 +69,4 @@ bool UploadFirmware::startUpload(USBDevice* device) {
     return status == LIBUSB_SUCCESS;
 }
 
-const QString &UploadFirmware::getErrorMessage() const
-{
-    return errorMessage;
-}
+const QString &UploadFirmware::getErrorMessage() const { return errorMessage; }

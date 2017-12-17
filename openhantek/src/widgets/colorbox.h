@@ -32,23 +32,23 @@
 /// \class ColorBox                                                   colorbox.h
 /// \brief A widget for the selection of a color.
 class ColorBox : public QPushButton {
-  Q_OBJECT
+    Q_OBJECT
 
-public:
-  ColorBox(QColor color, QWidget *parent = 0);
-  ~ColorBox();
+  public:
+    ColorBox(QColor color, QWidget *parent = 0);
+    ~ColorBox();
 
-  const QColor getColor();
+    const QColor getColor();
 
-public slots:
-  void setColor(QColor color);
-  void waitForColor();
+  public slots:
+    void setColor(QColor color);
+    void waitForColor();
 
-private:
-  QColor color;
+  private:
+    QColor color;
 
-signals:
-  void colorChanged(QColor color); ///< The color has been changed
+  signals:
+    void colorChanged(QColor color); ///< The color has been changed
 };
 
 #endif

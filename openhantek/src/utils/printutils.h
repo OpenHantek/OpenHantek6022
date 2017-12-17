@@ -7,16 +7,9 @@
 #include <QTime>
 
 //////////////////////////////////////////////////////////////////////////////
-/// \enum Unit                                                        utils/printutils.h
+/// \enum Unit utils/printutils.h
 /// \brief The various units supported by valueToString.
-enum Unit {
-  UNIT_VOLTS,
-  UNIT_DECIBEL,
-  UNIT_SECONDS,
-  UNIT_HERTZ,
-  UNIT_SAMPLES,
-  UNIT_COUNT
-};
+enum Unit { UNIT_VOLTS, UNIT_DECIBEL, UNIT_SECONDS, UNIT_HERTZ, UNIT_SAMPLES, UNIT_COUNT };
 
 /// \brief Returns string representation for libusb errors.
 /// \param error The error code.
@@ -56,7 +49,7 @@ unsigned int hexParse(const QString dump, unsigned char *data, unsigned int leng
 /// \param text Text that will be output via qDebug.
 #ifdef DEBUG
 inline void timestampDebug(QString text) {
-  qDebug("%s: %s", QTime::currentTime().toString("hh:mm:ss.zzz").toLatin1().constData(), text.toLatin1().constData());
+    qDebug("%s: %s", QTime::currentTime().toString("hh:mm:ss.zzz").toLatin1().constData(), text.toLatin1().constData());
 }
 #else
 #define timestampDebug(ARG)

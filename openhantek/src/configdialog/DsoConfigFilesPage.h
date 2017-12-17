@@ -6,43 +6,43 @@
 #include "settings.h"
 
 #include <QCheckBox>
+#include <QComboBox>
 #include <QDoubleSpinBox>
 #include <QGridLayout>
 #include <QGroupBox>
 #include <QHBoxLayout>
 #include <QLabel>
+#include <QPushButton>
 #include <QSpinBox>
 #include <QVBoxLayout>
-#include <QComboBox>
-#include <QPushButton>
 
 ////////////////////////////////////////////////////////////////////////////////
 /// \class DsoConfigFilesPage                                      configpages.h
 /// \brief Config page for file loading/saving.
 class DsoConfigFilesPage : public QWidget {
-  Q_OBJECT
+    Q_OBJECT
 
-public:
-  DsoConfigFilesPage(DsoSettings *settings, QWidget *parent = 0);
+  public:
+    DsoConfigFilesPage(DsoSettings *settings, QWidget *parent = 0);
 
-public slots:
-  void saveSettings();
+  public slots:
+    void saveSettings();
 
-private:
-  DsoSettings *settings;
+  private:
+    DsoSettings *settings;
 
-  QVBoxLayout *mainLayout;
+    QVBoxLayout *mainLayout;
 
-  QGroupBox *configurationGroup;
-  QVBoxLayout *configurationLayout;
-  QCheckBox *saveOnExitCheckBox;
-  QPushButton *saveNowButton;
+    QGroupBox *configurationGroup;
+    QVBoxLayout *configurationLayout;
+    QCheckBox *saveOnExitCheckBox;
+    QPushButton *saveNowButton;
 
-  QGroupBox *exportGroup;
-  QGridLayout *exportLayout;
-  QCheckBox *screenColorCheckBox;
-  QLabel *imageWidthLabel;
-  QSpinBox *imageWidthSpinBox;
-  QLabel *imageHeightLabel;
-  QSpinBox *imageHeightSpinBox;
+    QGroupBox *exportGroup;
+    QGridLayout *exportLayout;
+    QCheckBox *screenColorCheckBox;
+    QLabel *imageWidthLabel;
+    QSpinBox *imageWidthSpinBox;
+    QLabel *imageHeightLabel;
+    QSpinBox *imageHeightSpinBox;
 };

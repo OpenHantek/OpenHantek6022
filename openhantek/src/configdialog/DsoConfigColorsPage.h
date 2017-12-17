@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: GPL-2.0+
 
-
 #include <QWidget>
 
 #include "definitions.h"
 #include "settings.h"
 
 #include <QCheckBox>
+#include <QComboBox>
 #include <QDoubleSpinBox>
 #include <QGridLayout>
 #include <QGroupBox>
@@ -14,7 +14,6 @@
 #include <QLabel>
 #include <QSpinBox>
 #include <QVBoxLayout>
-#include <QComboBox>
 
 #include "colorbox.h"
 
@@ -22,38 +21,35 @@
 /// \class DsoConfigColorsPage                                     configpages.h
 /// \brief Config page for the colors.
 class DsoConfigColorsPage : public QWidget {
-  Q_OBJECT
+    Q_OBJECT
 
-public:
-  DsoConfigColorsPage(DsoSettings *settings, QWidget *parent = 0);
+  public:
+    DsoConfigColorsPage(DsoSettings *settings, QWidget *parent = 0);
 
-public slots:
-  void saveSettings();
+  public slots:
+    void saveSettings();
 
-private:
-  DsoSettings *settings;
+  private:
+    DsoSettings *settings;
 
-  QVBoxLayout *mainLayout;
+    QVBoxLayout *mainLayout;
 
-  QGroupBox *colorsGroup;
-  QGridLayout *colorsLayout;
+    QGroupBox *colorsGroup;
+    QGridLayout *colorsLayout;
 
-  QLabel *screenColorsLabel, *printColorsLabel;
-  QLabel *axesLabel, *backgroundLabel, *borderLabel, *gridLabel, *markersLabel,
-      *textLabel;
-  ColorBox *axesColorBox, *backgroundColorBox, *borderColorBox, *gridColorBox,
-      *markersColorBox, *textColorBox;
+    QLabel *screenColorsLabel, *printColorsLabel;
+    QLabel *axesLabel, *backgroundLabel, *borderLabel, *gridLabel, *markersLabel, *textLabel;
+    ColorBox *axesColorBox, *backgroundColorBox, *borderColorBox, *gridColorBox, *markersColorBox, *textColorBox;
 
-  ColorBox *printAxesColorBox, *printBackgroundColorBox, *printBorderColorBox,
-      *printGridColorBox, *printMarkersColorBox, *printTextColorBox;
+    ColorBox *printAxesColorBox, *printBackgroundColorBox, *printBorderColorBox, *printGridColorBox,
+        *printMarkersColorBox, *printTextColorBox;
 
-  QLabel *graphLabel;
+    QLabel *graphLabel;
 
-  QLabel *screenChannelLabel, *screenSpectrumLabel, *printChannelLabel,
-      *printSpectrumLabel;
-  QList<QLabel *> colorLabel;
-  QList<ColorBox *> screenChannelColorBox;
-  QList<ColorBox *> screenSpectrumColorBox;
-  QList<ColorBox *> printChannelColorBox;
-  QList<ColorBox *> printSpectrumColorBox;
+    QLabel *screenChannelLabel, *screenSpectrumLabel, *printChannelLabel, *printSpectrumLabel;
+    QList<QLabel *> colorLabel;
+    QList<ColorBox *> screenChannelColorBox;
+    QList<ColorBox *> screenSpectrumColorBox;
+    QList<ColorBox *> printChannelColorBox;
+    QList<ColorBox *> printSpectrumColorBox;
 };

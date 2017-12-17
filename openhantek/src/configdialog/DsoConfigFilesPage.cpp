@@ -2,8 +2,7 @@
 
 #include "DsoConfigFilesPage.h"
 
-DsoConfigFilesPage::DsoConfigFilesPage(DsoSettings *settings, QWidget *parent)
-    : QWidget(parent), settings(settings) {
+DsoConfigFilesPage::DsoConfigFilesPage(DsoSettings *settings, QWidget *parent) : QWidget(parent), settings(settings) {
     // Export group
     screenColorCheckBox = new QCheckBox(tr("Export Images with Screen Colors"));
     screenColorCheckBox->setChecked(settings->view.screenColorImages);
@@ -17,8 +16,7 @@ DsoConfigFilesPage::DsoConfigFilesPage(DsoSettings *settings, QWidget *parent)
     imageHeightSpinBox = new QSpinBox();
     imageHeightSpinBox->setMinimum(100);
     imageHeightSpinBox->setMaximum(9999);
-    imageHeightSpinBox->setValue(
-                settings->options.imageSize.height());
+    imageHeightSpinBox->setValue(settings->options.imageSize.height());
 
     exportLayout = new QGridLayout();
     exportLayout->addWidget(screenColorCheckBox, 0, 0, 1, 2);
@@ -58,6 +56,5 @@ void DsoConfigFilesPage::saveSettings() {
     settings->options.alwaysSave = saveOnExitCheckBox->isChecked();
     settings->view.screenColorImages = screenColorCheckBox->isChecked();
     settings->options.imageSize.setWidth(imageWidthSpinBox->value());
-    settings->options.imageSize.setHeight(
-                imageHeightSpinBox->value());
+    settings->options.imageSize.setHeight(imageHeightSpinBox->value());
 }

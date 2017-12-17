@@ -10,9 +10,8 @@
 GlGenerator::GlGenerator(DsoSettingsScope *scope, DsoSettingsView *view) : settings(scope), view(view) {
     // Grid
     vaGrid[0].resize(((DIVS_TIME * DIVS_SUB - 2) * (DIVS_VOLTAGE - 2) +
-                            (DIVS_VOLTAGE * DIVS_SUB - 2) * (DIVS_TIME - 2) -
-                            ((DIVS_TIME - 2) * (DIVS_VOLTAGE - 2))) *
-                           2);
+                      (DIVS_VOLTAGE * DIVS_SUB - 2) * (DIVS_TIME - 2) - ((DIVS_TIME - 2) * (DIVS_VOLTAGE - 2))) *
+                     2);
     std::vector<GLfloat>::iterator glIterator = vaGrid[0].begin();
     // Draw vertical lines
     for (int div = 1; div < DIVS_TIME / 2; ++div) {
@@ -31,8 +30,7 @@ GlGenerator::GlGenerator(DsoSettingsScope *scope, DsoSettingsView *view) : setti
     // Draw horizontal lines
     for (int div = 1; div < DIVS_VOLTAGE / 2; ++div) {
         for (int dot = 1; dot < DIVS_TIME / 2 * DIVS_SUB; ++dot) {
-            if (dot % DIVS_SUB == 0)
-                continue; // Already done by vertical lines
+            if (dot % DIVS_SUB == 0) continue; // Already done by vertical lines
             float dotPosition = (float)dot / DIVS_SUB;
             *(glIterator++) = -dotPosition;
             *(glIterator++) = -div;
@@ -46,8 +44,7 @@ GlGenerator::GlGenerator(DsoSettingsScope *scope, DsoSettingsView *view) : setti
     }
 
     // Axes
-    vaGrid[1].resize(
-                (2 + (DIVS_TIME * DIVS_SUB - 2) + (DIVS_VOLTAGE * DIVS_SUB - 2)) * 4);
+    vaGrid[1].resize((2 + (DIVS_TIME * DIVS_SUB - 2) + (DIVS_VOLTAGE * DIVS_SUB - 2)) * 4);
     glIterator = vaGrid[1].begin();
     // Horizontal axis
     *(glIterator++) = -DIVS_TIME / 2;
@@ -101,17 +98,11 @@ const std::vector<GLfloat> &GlGenerator::channel(int mode, int channel, int inde
     return vaChannel[mode][channel][index];
 }
 
-const std::vector<GLfloat> &GlGenerator::grid(int a) const {
-    return vaGrid[a];
-}
+const std::vector<GLfloat> &GlGenerator::grid(int a) const { return vaGrid[a]; }
 
-bool GlGenerator::isReady() const
-{
-    return ready;
-}
+bool GlGenerator::isReady() const { return ready; }
 
-
-void GlGenerator::generateGraphs(const DataAnalyzerResult* result) {
+void GlGenerator::generateGraphs(const DataAnalyzerResult *result) {
 
     int digitalPhosphorDepth = view->digitalPhosphorDepth;
 
@@ -137,19 +128,15 @@ void GlGenerator::generateGraphs(const DataAnalyzerResult* result) {
     case Dso::GRAPHFORMAT_TY: {
         unsigned int swTriggerStart = 0;
         // check trigger point for software trigger
-        if (settings->trigger.mode == Dso::TRIGGERMODE_SOFTWARE &&
-                settings->trigger.source <= 1) {
+        if (settings->trigger.mode == Dso::TRIGGERMODE_SOFTWARE && settings->trigger.source <= 1) {
             unsigned int channel = settings->trigger.source;
-            if (settings->voltage[channel].used &&
-                    result->data(channel) &&
-                    !result->data(channel)->voltage.sample.empty()) {
+            if (settings->voltage[channel].used && result->data(channel) &&
+                !result->data(channel)->voltage.sample.empty()) {
                 double value;
                 double level = settings->voltage[channel].trigger;
-                unsigned int sampleCount =
-                        result->data(channel)->voltage.sample.size();
+                unsigned int sampleCount = result->data(channel)->voltage.sample.size();
                 double timeDisplay = settings->horizontal.timebase * 10;
-                double samplesDisplay =
-                        timeDisplay * settings->horizontal.samplerate;
+                double samplesDisplay = timeDisplay * settings->horizontal.samplerate;
                 if (samplesDisplay >= sampleCount) {
                     // For sure not enough samples to adjust for jitter.
                     // Following options exist:
@@ -171,10 +158,7 @@ void GlGenerator::generateGraphs(const DataAnalyzerResult* result) {
                         if (value > level && prev <= level) {
                             int rising = 0;
                             for (unsigned int k = i + 1; k < i + 11 && k < sampleCount; k++) {
-                                if (result->data(channel)
-                                        ->voltage.sample[k] >= value) {
-                                    rising++;
-                                }
+                                if (result->data(channel)->voltage.sample[k] >= value) { rising++; }
                             }
                             if (rising > 7) {
                                 swTriggerStart = i;
@@ -190,9 +174,7 @@ void GlGenerator::generateGraphs(const DataAnalyzerResult* result) {
                         if (value < level && prev >= level) {
                             int falling = 0;
                             for (unsigned int k = i + 1; k < i + 11 && k < sampleCount; k++) {
-                                if (result->data(channel)->voltage.sample[k] < value) {
-                                    falling++;
-                                }
+                                if (result->data(channel)->voltage.sample[k] < value) { falling++; }
                             }
                             if (falling > 7) {
                                 swTriggerStart = i;
@@ -213,18 +195,14 @@ void GlGenerator::generateGraphs(const DataAnalyzerResult* result) {
         for (int mode = Dso::CHANNELMODE_VOLTAGE; mode < Dso::CHANNELMODE_COUNT; ++mode) {
             for (int channel = 0; channel < (int)settings->voltage.size(); ++channel) {
                 // Check if this channel is used and available at the data analyzer
-                if (((mode == Dso::CHANNELMODE_VOLTAGE)
-                     ? settings->voltage[channel].used
-                     : settings->spectrum[channel].used) &&
-                        result->data(channel) &&
-                        !result->data(channel)
-                        ->voltage.sample.empty()) {
+                if (((mode == Dso::CHANNELMODE_VOLTAGE) ? settings->voltage[channel].used
+                                                        : settings->spectrum[channel].used) &&
+                    result->data(channel) && !result->data(channel)->voltage.sample.empty()) {
                     // Check if the sample count has changed
                     size_t sampleCount = (mode == Dso::CHANNELMODE_VOLTAGE)
-                            ? result->data(channel)->voltage.sample.size()
-                            : result->data(channel)->spectrum.sample.size();
-                    if (mode == Dso::CHANNELMODE_VOLTAGE)
-                        sampleCount -= (swTriggerStart - preTrigSamples);
+                                             ? result->data(channel)->voltage.sample.size()
+                                             : result->data(channel)->spectrum.sample.size();
+                    if (mode == Dso::CHANNELMODE_VOLTAGE) sampleCount -= (swTriggerStart - preTrigSamples);
                     size_t neededSize = sampleCount * 2;
 
 #if 0
@@ -238,46 +216,36 @@ void GlGenerator::generateGraphs(const DataAnalyzerResult* result) {
                     vaChannel[mode][(size_t)channel].front().resize(neededSize);
 
                     // Iterator to data for direct access
-                    std::vector<GLfloat>::iterator glIterator =
-                            vaChannel[mode][(size_t)channel].front().begin();
+                    std::vector<GLfloat>::iterator glIterator = vaChannel[mode][(size_t)channel].front().begin();
 
                     // What's the horizontal distance between sampling points?
                     double horizontalFactor;
                     if (mode == Dso::CHANNELMODE_VOLTAGE)
-                        horizontalFactor =
-                                result->data(channel)->voltage.interval /
-                                settings->horizontal.timebase;
+                        horizontalFactor = result->data(channel)->voltage.interval / settings->horizontal.timebase;
                     else
                         horizontalFactor =
-                                result->data(channel)->spectrum.interval /
-                                settings->horizontal.frequencybase;
+                            result->data(channel)->spectrum.interval / settings->horizontal.frequencybase;
 
                     // Fill vector array
                     if (mode == Dso::CHANNELMODE_VOLTAGE) {
                         std::vector<double>::const_iterator dataIterator =
-                                result->data(channel)
-                                ->voltage.sample.begin();
+                            result->data(channel)->voltage.sample.begin();
                         const double gain = settings->voltage[channel].gain;
                         const double offset = settings->voltage[channel].offset;
 
                         std::advance(dataIterator, swTriggerStart - preTrigSamples);
 
-                        for (unsigned int position = 0; position < sampleCount;
-                             ++position) {
+                        for (unsigned int position = 0; position < sampleCount; ++position) {
                             *(glIterator++) = position * horizontalFactor - DIVS_TIME / 2;
                             *(glIterator++) = *(dataIterator++) / gain + offset;
                         }
                     } else {
                         std::vector<double>::const_iterator dataIterator =
-                                result->data(channel)
-                                ->spectrum.sample.begin();
-                        const double magnitude =
-                                settings->spectrum[channel].magnitude;
-                        const double offset =
-                                settings->spectrum[channel].offset;
+                            result->data(channel)->spectrum.sample.begin();
+                        const double magnitude = settings->spectrum[channel].magnitude;
+                        const double offset = settings->spectrum[channel].offset;
 
-                        for (unsigned int position = 0; position < sampleCount;
-                             ++position) {
+                        for (unsigned int position = 0; position < sampleCount; ++position) {
                             *(glIterator++) = position * horizontalFactor - DIVS_TIME / 2;
                             *(glIterator++) = *(dataIterator++) / magnitude + offset;
                         }
@@ -292,44 +260,34 @@ void GlGenerator::generateGraphs(const DataAnalyzerResult* result) {
     } break;
 
     case Dso::GRAPHFORMAT_XY:
-        for (int channel = 0; channel < settings->voltage.size();
-             ++channel) {
+        for (int channel = 0; channel < settings->voltage.size(); ++channel) {
             // For even channel numbers check if this channel is used and this and the
             // following channel are available at the data analyzer
-            if (channel % 2 == 0 &&
-                    channel + 1 < settings->voltage.size() &&
-                    settings->voltage[channel].used &&
-                    result->data(channel) &&
-                    !result->data(channel)->voltage.sample.empty() &&
-                    result->data(channel + 1) &&
-                    !result->data(channel + 1)
-                    ->voltage.sample.empty()) {
+            if (channel % 2 == 0 && channel + 1 < settings->voltage.size() && settings->voltage[channel].used &&
+                result->data(channel) && !result->data(channel)->voltage.sample.empty() && result->data(channel + 1) &&
+                !result->data(channel + 1)->voltage.sample.empty()) {
                 // Check if the sample count has changed
-                const unsigned sampleCount = qMin(
-                            result->data(channel)->voltage.sample.size(),
-                            result->data(channel + 1)
-                            ->voltage.sample.size());
+                const unsigned sampleCount = qMin(result->data(channel)->voltage.sample.size(),
+                                                  result->data(channel + 1)->voltage.sample.size());
                 const unsigned neededSize = sampleCount * 2;
                 for (unsigned index = 0; index < (unsigned)digitalPhosphorDepth; ++index) {
                     if (vaChannel[Dso::CHANNELMODE_VOLTAGE][(size_t)channel][index].size() != neededSize)
-                        vaChannel[Dso::CHANNELMODE_VOLTAGE][(size_t)channel][index].clear(); // Something was changed, drop old traces
+                        vaChannel[Dso::CHANNELMODE_VOLTAGE][(size_t)channel][index]
+                            .clear(); // Something was changed, drop old traces
                 }
 
                 // Set size directly to avoid reallocations
-                vaChannel[Dso::CHANNELMODE_VOLTAGE][(size_t)channel].front().resize(
-                            neededSize);
+                vaChannel[Dso::CHANNELMODE_VOLTAGE][(size_t)channel].front().resize(neededSize);
 
                 // Iterator to data for direct access
                 std::vector<GLfloat>::iterator glIterator =
-                        vaChannel[Dso::CHANNELMODE_VOLTAGE][channel].front().begin();
+                    vaChannel[Dso::CHANNELMODE_VOLTAGE][channel].front().begin();
 
                 // Fill vector array
                 unsigned int xChannel = channel;
                 unsigned int yChannel = channel + 1;
-                std::vector<double>::const_iterator xIterator =
-                        result->data(xChannel)->voltage.sample.begin();
-                std::vector<double>::const_iterator yIterator =
-                        result->data(yChannel)->voltage.sample.begin();
+                std::vector<double>::const_iterator xIterator = result->data(xChannel)->voltage.sample.begin();
+                std::vector<double>::const_iterator yIterator = result->data(yChannel)->voltage.sample.begin();
                 const double xGain = settings->voltage[xChannel].gain;
                 const double yGain = settings->voltage[yChannel].gain;
                 const double xOffset = settings->voltage[xChannel].offset;

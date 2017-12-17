@@ -2,9 +2,9 @@
 
 #pragma once
 
-#include <array>
-#include <QtGlobal>
 #include <QMetaObject>
+#include <QtGlobal>
+#include <array>
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 4, 0))
 #include <QOpenGLWidget>
 using GL_WIDGET_CLASS = QOpenGLWidget;
@@ -24,7 +24,7 @@ class DsoSettings;
 class GlScope : public GL_WIDGET_CLASS {
     Q_OBJECT
 
-public:
+  public:
     /// \brief Initializes the scope widget.
     /// \param settings The settings that should be used.
     /// \param parent The parent widget.
@@ -32,7 +32,7 @@ public:
 
     void setZoomMode(bool zoomed);
 
-protected:
+  protected:
     void initializeGL() override;
     void paintGL() override;
     void resizeGL(int width, int height) override;
@@ -41,7 +41,8 @@ protected:
     void drawGraphDepth(int mode, int channel, int index);
     void drawGraph();
     bool channelUsed(int mode, int channel);
-private:
+
+  private:
     DsoSettings *settings;
     const GlGenerator *generator;
     std::vector<double> fadingFactor;

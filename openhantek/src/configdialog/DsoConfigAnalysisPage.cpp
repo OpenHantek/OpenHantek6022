@@ -2,33 +2,27 @@
 
 #include "DsoConfigAnalysisPage.h"
 
-DsoConfigAnalysisPage::DsoConfigAnalysisPage(DsoSettings *settings,
-                                             QWidget *parent)
+DsoConfigAnalysisPage::DsoConfigAnalysisPage(DsoSettings *settings, QWidget *parent)
     : QWidget(parent), settings(settings) {
     // Initialize lists for comboboxes
     QStringList windowFunctionStrings;
-    windowFunctionStrings << tr("Rectangular") << tr("Hamming") << tr("Hann")
-                          << tr("Cosine") << tr("Lanczos") << tr("Bartlett")
-                          << tr("Triangular") << tr("Gauss")
-                          << tr("Bartlett-Hann") << tr("Blackman")
-                             //<< tr("Kaiser")
-                          << tr("Nuttall") << tr("Blackman-Harris")
-                          << tr("Blackman-Nuttall") << tr("Flat top");
+    windowFunctionStrings << tr("Rectangular") << tr("Hamming") << tr("Hann") << tr("Cosine") << tr("Lanczos")
+                          << tr("Bartlett") << tr("Triangular") << tr("Gauss") << tr("Bartlett-Hann") << tr("Blackman")
+                          //<< tr("Kaiser")
+                          << tr("Nuttall") << tr("Blackman-Harris") << tr("Blackman-Nuttall") << tr("Flat top");
 
     // Initialize elements
     windowFunctionLabel = new QLabel(tr("Window function"));
     windowFunctionComboBox = new QComboBox();
     windowFunctionComboBox->addItems(windowFunctionStrings);
-    windowFunctionComboBox->setCurrentIndex(
-                settings->scope.spectrumWindow);
+    windowFunctionComboBox->setCurrentIndex(settings->scope.spectrumWindow);
 
     referenceLevelLabel = new QLabel(tr("Reference level"));
     referenceLevelSpinBox = new QDoubleSpinBox();
     referenceLevelSpinBox->setDecimals(1);
     referenceLevelSpinBox->setMinimum(-40.0);
     referenceLevelSpinBox->setMaximum(100.0);
-    referenceLevelSpinBox->setValue(
-                settings->scope.spectrumReference);
+    referenceLevelSpinBox->setValue(settings->scope.spectrumReference);
     referenceLevelUnitLabel = new QLabel(tr("dBm"));
     referenceLevelLayout = new QHBoxLayout();
     referenceLevelLayout->addWidget(referenceLevelSpinBox);
@@ -65,9 +59,7 @@ DsoConfigAnalysisPage::DsoConfigAnalysisPage(DsoSettings *settings,
 
 /// \brief Saves the new settings.
 void DsoConfigAnalysisPage::saveSettings() {
-    settings->scope.spectrumWindow =
-            (Dso::WindowFunction)windowFunctionComboBox->currentIndex();
-    settings->scope.spectrumReference =
-            referenceLevelSpinBox->value();
+    settings->scope.spectrumWindow = (Dso::WindowFunction)windowFunctionComboBox->currentIndex();
+    settings->scope.spectrumReference = referenceLevelSpinBox->value();
     settings->scope.spectrumLimit = minimumMagnitudeSpinBox->value();
 }
