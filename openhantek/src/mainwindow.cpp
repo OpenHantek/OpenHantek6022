@@ -41,7 +41,9 @@ OpenHantekMainWindow::OpenHantekMainWindow(HantekDsoControl *dsoControl, DataAna
     readSettings();
 
     // Create dock windows before the dso widget, they fix messed up settings
+    #if (QT_VERSION >= QT_VERSION_CHECK(5, 6, 0))
     setDockOptions(dockOptions() | QMainWindow::GroupedDragging);
+    #endif
     createDockWindows();
 
     // Central oszilloscope widget
