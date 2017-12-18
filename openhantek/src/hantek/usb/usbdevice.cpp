@@ -75,8 +75,7 @@ int USBDevice::claimInterface(const libusb_interface_descriptor *interfaceDescri
         if (endpointDescriptor->bEndpointAddress == endpointOut) {
             this->outPacketLength = endpointDescriptor->wMaxPacketSize;
         } else if (endpointDescriptor->bEndpointAddress == endPointIn) {
-            this->inPacketLength =
-                (model.uniqueModelID == MODEL_DSO6022BE) ? 16384 : endpointDescriptor->wMaxPacketSize;
+            this->inPacketLength = endpointDescriptor->wMaxPacketSize;
         }
     }
     return LIBUSB_SUCCESS;
@@ -155,8 +154,7 @@ int USBDevice::bulkRead(unsigned char *data, unsigned int length, int attempts) 
 int USBDevice::bulkCommand(DataArray<unsigned char> *command, int attempts) {
     if (!this->handle) return LIBUSB_ERROR_NO_DEVICE;
 
-    // don't send bulk command if dso6022be
-    if (this->getUniqueModelID() == MODEL_DSO6022BE) return 0;
+    if (!allowBulkTransfer) return LIBUSB_SUCCESS;
 
     // Send BeginCommand control command
     int errorCode = this->controlWrite(CONTROL_BEGINCOMMAND, this->beginCommandControl->data(),
@@ -283,3 +281,13 @@ int USBDevice::getUniqueModelID() { return model.uniqueModelID; }
 libusb_device *USBDevice::getRawDevice() const { return device; }
 
 const DSOModel &USBDevice::getModel() const { return model; }
+
+void USBDevice::setEnableBulkTransfer(bool enable)
+{
+    allowBulkTransfer = enable;
+}
+
+void USBDevice::overwriteInPacketLength(int len)
+{
+    inPacketLength = len;
+}

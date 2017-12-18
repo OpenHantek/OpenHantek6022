@@ -115,6 +115,12 @@ struct ControlSpecification {
     /// Calibration data for the channel offsets \todo Should probably be a QList
     /// too
     unsigned short int offsetLimit[HANTEK_CHANNELS][9][OFFSET_COUNT];
+
+    bool isSoftwareTriggerDevice=false;
+    bool useControlNoBulk = false;
+    bool supportsCaptureState = true;
+    bool supportsOffset = true;
+    bool supportsCouplingRelays = true;
 };
 
 //////////////////////////////////////////////////////////////////////////////

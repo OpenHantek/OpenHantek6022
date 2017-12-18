@@ -63,6 +63,8 @@ class USBDevice : public QObject {
 
     libusb_device *getRawDevice() const;
     const DSOModel &getModel() const;
+    void setEnableBulkTransfer(bool enable);
+    void overwriteInPacketLength(int len);
 
   protected:
     int claimInterface(const libusb_interface_descriptor *interfaceDescriptor, int endpointOut, int endPointIn);
@@ -79,6 +81,7 @@ class USBDevice : public QObject {
     int interface;
     int outPacketLength; ///< Packet length for the OUT endpoint
     int inPacketLength;  ///< Packet length for the IN endpoint
+    bool allowBulkTransfer = true;
   signals:
     void deviceDisconnected(); ///< The device has been disconnected
 };

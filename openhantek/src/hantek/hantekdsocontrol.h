@@ -95,26 +95,26 @@ class HantekDsoControl : public QObject {
     USBDevice *device;     ///< The USB device for the oscilloscope
     bool sampling = false; ///< true, if the oscilloscope is taking samples
 
-    QStringList specialTriggerSources; ///< Names of the special trigger sources
+    QStringList specialTriggerSources = {tr("EXT"),tr("EXT/10")}; ///< Names of the special trigger sources
 
-    DataArray<unsigned char> *command[Hantek::BULK_COUNT]; ///< Pointers to bulk
+    DataArray<unsigned char> *command[Hantek::BULK_COUNT] = {0}; ///< Pointers to bulk
                                                            /// commands, ready to
     /// be transmitted
-    bool commandPending[Hantek::BULK_COUNT];                       ///< true, when the command should be
+    bool commandPending[Hantek::BULK_COUNT] = {false};                       ///< true, when the command should be
                                                                    /// executed
-    DataArray<unsigned char> *control[Hantek::CONTROLINDEX_COUNT]; ///< Pointers to control commands
+    DataArray<unsigned char> *control[Hantek::CONTROLINDEX_COUNT] = {0}; ///< Pointers to control commands
     unsigned char controlCode[Hantek::CONTROLINDEX_COUNT];         ///< Request codes for
                                                                    /// control commands
-    bool controlPending[Hantek::CONTROLINDEX_COUNT];               ///< true, when the control
+    bool controlPending[Hantek::CONTROLINDEX_COUNT]= {false};               ///< true, when the control
     /// command should be executed
 
     // Device setup
     Hantek::ControlSpecification specification; ///< The specifications of the device
-    Hantek::ControlSettings settings;           ///< The current settings of the device
+    Hantek::ControlSettings controlsettings;           ///< The current settings of the device
 
     // Results
     DSOsamples result;
-    unsigned previousSampleCount; ///< The expected total number of samples at
+    unsigned previousSampleCount = 0; ///< The expected total number of samples at
                                   /// the last check before sampling started
 
     // State of the communication thread
@@ -125,6 +125,7 @@ class HantekDsoControl : public QObject {
     int cycleCounter = 0;
     int startCycle = 0;
     int cycleTime = 0;
+
   public slots:
     void startSampling();
     void stopSampling();
