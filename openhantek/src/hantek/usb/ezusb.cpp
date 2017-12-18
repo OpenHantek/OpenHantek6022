@@ -44,7 +44,7 @@
  * some can be set up with external memory when device costs allow.
  * Note that the design was originally by AnchorChips, so you may find
  * references to that vendor (which was later merged into Cypress).
- * The Cypress FX parts are largely compatible with the Anchorhip ones.
+ * The Cypress FX parts are largely compatible with the Anchorchip ones.
  */
 
 int verbose = 1;

@@ -1,5 +1,4 @@
-#ifndef __ezusb_H
-#define __ezusb_H
+#pragma once
 /*
  * Copyright © 2001 Stephen Williams (steve@icarus.com)
  * Copyright © 2002 David Brownell (dbrownell@users.sourceforge.net)
@@ -20,23 +19,10 @@
  *    along with this program; if not, write to the Free Software
  *    Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
  */
-#if !defined(_MSC_VER)
-#include <stdbool.h>
-#else
-#define __attribute__(x)
-#if !defined(bool)
-#define bool int
-#endif
-#if !defined(true)
-#define true(1 == 1)
-#endif
-#if !defined(false)
-#define false(!true)
-#endif
-#if defined(_PREFAST_)
-#pragma warning(disable : 28193)
-#endif
-#endif
+
+#include <inttypes.h>
+
+struct libusb_device_handle;
 
 #define FX_TYPE_UNDEFINED -1
 #define FX_TYPE_AN21 0  /* Original AnchorChips parts */
@@ -109,5 +95,3 @@ extern int ezusb_load_eeprom(libusb_device_handle *device, const char *path, int
 /* Verbosity level (default 1). Can be increased or decreased with options v/q
  */
 extern int verbose;
-
-#endif
