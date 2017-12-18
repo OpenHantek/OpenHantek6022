@@ -19,6 +19,7 @@
 #include "dataanalyzer.h"
 #include "hantekdsocontrol.h"
 #include "mainwindow.h"
+#include "settings.h"
 #include "usb/finddevices.h"
 #include "usb/uploadFirmware.h"
 #include "usb/usbdevice.h"
@@ -74,55 +75,62 @@ int main(int argc, char *argv[]) {
     }
 
     //////// Upload firmwares for all connected devices ////////
-    std::unique_ptr<QDialog> dialog = std::unique_ptr<QDialog>(new QDialog);
-    QListWidget *w = new QListWidget(dialog.get());
-    QPushButton *btn = new QPushButton(QCoreApplication::translate("", "Connect to first device"), dialog.get());
-    dialog->move(QApplication::desktop()->screen()->rect().center() - w->rect().center());
-    dialog->setWindowTitle(QCoreApplication::translate("", "Firmware upload"));
     for (const auto &i : devices) {
         QString modelName = QString::fromStdString(i->getModel().name);
         if (i->needsFirmware()) {
             UploadFirmware uf;
-            if (!uf.startUpload(i.get())) {
-                w->addItem(QCoreApplication::translate("Firmware upload dialog, failed", "%1: Failed (%2)")
-                               .arg(modelName)
-                               .arg(uf.getErrorMessage()));
-            } else {
-                w->addItem(
-                    QCoreApplication::translate("Firmware upload dialog, success", "%1: Uploaded").arg(modelName));
-            }
-        } else {
-            w->addItem(QCoreApplication::translate("Firmware upload dialog, success", "%1: Ready").arg(modelName));
+            uf.startUpload(i.get());
         }
     }
     devices.clear();
-    dialog->setLayout(new QVBoxLayout());
-    dialog->layout()->addWidget(w);
-    dialog->layout()->addWidget(btn);
-    btn->connect(btn, &QPushButton::clicked, QCoreApplication::instance(), &QCoreApplication::quit);
-    dialog->show();
-    openHantekApplication.exec();
-    dialog->close();
-    dialog.reset(nullptr);
 
-    //////// Find first ready device ////////
+    //////// Select device - Autoselect if only one device is ready ////////
+    std::unique_ptr<QDialog> dialog = std::unique_ptr<QDialog>(new QDialog);
+    QListWidget *w = new QListWidget(dialog.get());
+
     devices = findDevices.findDevices();
-    std::unique_ptr<USBDevice> device;
     for (auto &i : devices) {
-        if (i->needsFirmware()) continue;
         QString modelName = QString::fromStdString(i->getModel().name);
+
+        if (i->needsFirmware()) {
+            w->addItem(QCoreApplication::translate("Firmware upload dialog", "%1: Firmware upload failed").arg(modelName));
+            continue;
+        }
         QString errorMessage;
         if (i->connectDevice(errorMessage)) {
-            device = std::move(i);
-            break;
+            w->addItem(QCoreApplication::translate("Firmware upload dialog", "%1: Ready").arg(modelName));
+            w->setCurrentRow(w->count()-1);
         } else {
-            showMessage(QCoreApplication::translate("", "The connection to %1 can not be established: %2")
-                            .arg(modelName)
-                            .arg(findDevices.getErrorMessage()));
+            w->addItem(QCoreApplication::translate("Firmware upload dialog", "%1: %2").arg(modelName).arg(findDevices.getErrorMessage()));
         }
     }
 
-    if (device == nullptr) {
+    if (w->currentRow() == -1 || devices.size()>1) {
+        QPushButton *btn = new QPushButton(QCoreApplication::translate("", "Connect to first device"), dialog.get());
+        dialog->move(QApplication::desktop()->screen()->rect().center() - w->rect().center());
+        dialog->setWindowTitle(QCoreApplication::translate("", "Firmware upload"));
+        dialog->setLayout(new QVBoxLayout());
+        dialog->layout()->addWidget(w);
+        dialog->layout()->addWidget(btn);
+        btn->connect(btn, &QPushButton::clicked, QCoreApplication::instance(), &QCoreApplication::quit);
+        dialog->show();
+        openHantekApplication.exec();
+        dialog->close();
+    }
+    int selectedDevice = w->currentRow();
+    dialog.reset(nullptr);
+
+    std::unique_ptr<USBDevice> device;
+    int indexCounter = 0;
+    for (auto &i : devices) {
+        if (indexCounter == selectedDevice) {
+            device = std::move(i);
+            break;
+        }
+    }
+    devices.clear();
+
+    if (device == nullptr || device->needsFirmware() || !device->isConnected()) {
         showMessage(QCoreApplication::translate("", "A device was found, but the "
                                                     "firmware upload seem to have "
                                                     "failed or the connection "
@@ -150,8 +158,13 @@ int main(int argc, char *argv[]) {
     dataAnalyser.moveToThread(&dataAnalyzerThread);
     QObject::connect(&dsoControl, &HantekDsoControl::samplesAvailable, &dataAnalyser, &DataAnalyzer::samplesAvailable);
 
+    //////// Create settings object ////////
+    DsoSettings settings;
+    settings.setChannelCount(dsoControl.getChannelCount());
+    dataAnalyser.applySettings(&settings.scope);
+
     //////// Create main window ////////
-    OpenHantekMainWindow *openHantekMainWindow = new OpenHantekMainWindow(&dsoControl, &dataAnalyser);
+    OpenHantekMainWindow *openHantekMainWindow = new OpenHantekMainWindow(&dsoControl, &dataAnalyser, &settings);
     openHantekMainWindow->show();
 
     //////// Start DSO thread and go into GUI main loop

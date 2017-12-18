@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.5 FATAL_ERROR)
 project(OpenHantekProject)
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 # Default build type
 IF(NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
    SET(CMAKE_BUILD_TYPE RelWithDebInfo)

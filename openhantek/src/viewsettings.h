@@ -2,42 +2,49 @@
 
 #include "definitions.h"
 #include <QColor>
-#include <QList>
 #include <QObject>
 #include <QPoint>
 #include <QString>
+#include <QVector>
 
 ////////////////////////////////////////////////////////////////////////////////
-/// \struct DsoSettingsColorValues                                    settings.h
+/// \struct DsoSettingsColorValues
 /// \brief Holds the color values for the oscilloscope screen.
 struct DsoSettingsColorValues {
-    QColor axes;            ///< X- and Y-axis and subdiv lines on them
-    QColor background;      ///< The scope background
-    QColor border;          ///< The border of the scope screen
-    QColor grid;            ///< The color of the grid
-    QColor markers;         ///< The color of the markers
-    QList<QColor> spectrum; ///< The colors of the spectrum graphs
-    QColor text;            ///< The default text color
-    QList<QColor> voltage;  ///< The colors of the voltage graphs
+    QColor axes;              ///< X- and Y-axis and subdiv lines on them
+    QColor background;        ///< The scope background
+    QColor border;            ///< The border of the scope screen
+    QColor grid;              ///< The color of the grid
+    QColor markers;           ///< The color of the markers
+    QColor text;              ///< The default text color
+    QVector<QColor> spectrum; ///< The colors of the spectrum graphs
+    QVector<QColor> voltage;  ///< The colors of the voltage graphs
 };
 
 ////////////////////////////////////////////////////////////////////////////////
-/// \struct DsoSettingsViewColor                                      settings.h
-/// \brief Holds the settings for the used colors on the screen and on paper.
-struct DsoSettingsViewColor {
-    DsoSettingsColorValues screen; ///< Colors for the screen
-    DsoSettingsColorValues print;  ///< Colors for printout
-};
-
-////////////////////////////////////////////////////////////////////////////////
-/// \struct DsoSettingsView                                           settings.h
+/// \struct DsoSettingsView
 /// \brief Holds all view settings.
 struct DsoSettingsView {
-    DsoSettingsViewColor color;           ///< Used colors
-    bool antialiasing;                    ///< Antialiasing for the graphs
-    bool digitalPhosphor;                 ///< true slowly fades out the previous graphs
-    int digitalPhosphorDepth;             ///< Number of channels shown at one time
-    Dso::InterpolationMode interpolation; ///< Interpolation mode for the graph
-    bool screenColorImages;               ///< true exports images with screen colors
-    bool zoom;                            ///< true if the magnified scope is enabled
+    DsoSettingsColorValues screen = {QColor(0xff, 0xff, 0xff, 0x7f),
+                                     QColor(0x00, 0x00, 0x00, 0xff),
+                                     QColor(0xff, 0xff, 0xff, 0xff),
+                                     QColor(0xff, 0xff, 0xff, 0x3f),
+                                     QColor(0xff, 0xff, 0xff, 0xbf),
+                                     QColor(0xff, 0xff, 0xff, 0xff),
+                                     QVector<QColor>(),
+                                     QVector<QColor>()};
+    DsoSettingsColorValues print = {QColor(0x00, 0x00, 0x00, 0xbf),
+                                    QColor(0x00, 0x00, 0x00, 0x00),
+                                    QColor(0x00, 0x00, 0x00, 0xff),
+                                    QColor(0x00, 0x00, 0x00, 0x7f),
+                                    QColor(0x00, 0x00, 0x00, 0xef),
+                                    QColor(0x00, 0x00, 0x00, 0xff),
+                                    QVector<QColor>(),
+                                    QVector<QColor>()};
+    bool antialiasing = true;                                         ///< Antialiasing for the graphs
+    bool digitalPhosphor = false;                                     ///< true slowly fades out the previous graphs
+    int digitalPhosphorDepth = 8;                                     ///< Number of channels shown at one time
+    Dso::InterpolationMode interpolation = Dso::INTERPOLATION_LINEAR; ///< Interpolation mode for the graph
+    bool screenColorImages = false;                                   ///< true exports images with screen colors
+    bool zoom = false;                                                ///< true if the magnified scope is enabled
 };

@@ -24,8 +24,8 @@ DsoWidget::DsoWidget(DsoSettings *settings, QWidget *parent, Qt::WindowFlags fla
 
     // Palette for this widget
     QPalette palette;
-    palette.setColor(QPalette::Background, settings->view.color.screen.background);
-    palette.setColor(QPalette::WindowText, settings->view.color.screen.text);
+    palette.setColor(QPalette::Background, settings->view.screen.background);
+    palette.setColor(QPalette::WindowText, settings->view.screen.text);
 
     // The OpenGL accelerated scope widgets
     zoomScope->setZoomMode(true);
@@ -34,7 +34,7 @@ DsoWidget::DsoWidget(DsoSettings *settings, QWidget *parent, Qt::WindowFlags fla
     offsetSlider = new LevelSlider(Qt::RightArrow);
     for (int channel = 0; channel < settings->scope.voltage.count(); ++channel) {
         offsetSlider->addSlider(settings->scope.voltage[channel].name, channel);
-        offsetSlider->setColor(channel, settings->view.color.screen.voltage[channel]);
+        offsetSlider->setColor(channel, settings->view.screen.voltage[channel]);
         offsetSlider->setLimits(channel, -DIVS_VOLTAGE / 2, DIVS_VOLTAGE / 2);
         offsetSlider->setStep(channel, 0.2);
         offsetSlider->setValue(channel, settings->scope.voltage[channel].offset);
@@ -42,8 +42,7 @@ DsoWidget::DsoWidget(DsoSettings *settings, QWidget *parent, Qt::WindowFlags fla
     }
     for (int channel = 0; channel < settings->scope.voltage.count(); ++channel) {
         offsetSlider->addSlider(settings->scope.spectrum[channel].name, settings->scope.voltage.count() + channel);
-        offsetSlider->setColor(settings->scope.voltage.count() + channel,
-                               settings->view.color.screen.spectrum[channel]);
+        offsetSlider->setColor(settings->scope.voltage.count() + channel, settings->view.screen.spectrum[channel]);
         offsetSlider->setLimits(settings->scope.voltage.count() + channel, -DIVS_VOLTAGE / 2, DIVS_VOLTAGE / 2);
         offsetSlider->setStep(settings->scope.voltage.count() + channel, 0.2);
         offsetSlider->setValue(settings->scope.voltage.count() + channel, settings->scope.spectrum[channel].offset);
@@ -65,8 +64,8 @@ DsoWidget::DsoWidget(DsoSettings *settings, QWidget *parent, Qt::WindowFlags fla
         triggerLevelSlider->setColor(
             channel,
             (!settings->scope.trigger.special && channel == (int)settings->scope.trigger.source)
-                ? settings->view.color.screen.voltage[channel]
-                : settings->view.color.screen.voltage[channel].darker());
+                ? settings->view.screen.voltage[channel]
+                : settings->view.screen.voltage[channel].darker());
         adaptTriggerLevelSlider(channel);
         triggerLevelSlider->setValue(channel, settings->scope.voltage[channel].trigger);
         triggerLevelSlider->setVisible(channel, settings->scope.voltage[channel].used);
@@ -138,7 +137,7 @@ DsoWidget::DsoWidget(DsoSettings *settings, QWidget *parent, Qt::WindowFlags fla
     measurementLayout->setColumnStretch(4, 3);
     measurementLayout->setColumnStretch(5, 3);
     for (int channel = 0; channel < settings->scope.voltage.count(); ++channel) {
-        tablePalette.setColor(QPalette::WindowText, settings->view.color.screen.voltage[channel]);
+        tablePalette.setColor(QPalette::WindowText, settings->view.screen.voltage[channel]);
         measurementNameLabel.append(new QLabel(settings->scope.voltage[channel].name));
         measurementNameLabel[channel]->setPalette(tablePalette);
         measurementMiscLabel.append(new QLabel());
@@ -146,7 +145,7 @@ DsoWidget::DsoWidget(DsoSettings *settings, QWidget *parent, Qt::WindowFlags fla
         measurementGainLabel.append(new QLabel());
         measurementGainLabel[channel]->setAlignment(Qt::AlignRight);
         measurementGainLabel[channel]->setPalette(tablePalette);
-        tablePalette.setColor(QPalette::WindowText, settings->view.color.screen.spectrum[channel]);
+        tablePalette.setColor(QPalette::WindowText, settings->view.screen.spectrum[channel]);
         measurementMagnitudeLabel.append(new QLabel());
         measurementMagnitudeLabel[channel]->setAlignment(Qt::AlignRight);
         measurementMagnitudeLabel[channel]->setPalette(tablePalette);
@@ -280,7 +279,7 @@ void DsoWidget::updateSpectrumDetails(unsigned int channel) {
 void DsoWidget::updateTriggerDetails() {
     // Update the trigger details
     QPalette tablePalette = palette();
-    tablePalette.setColor(QPalette::WindowText, settings->view.color.screen.voltage[settings->scope.trigger.source]);
+    tablePalette.setColor(QPalette::WindowText, settings->view.screen.voltage[settings->scope.trigger.source]);
     settingsTriggerLabel->setPalette(tablePalette);
     QString levelString = valueToString(settings->scope.voltage[settings->scope.trigger.source].trigger, UNIT_VOLTS, 3);
     QString pretriggerString = tr("%L1%").arg((int)(settings->scope.trigger.position * 100 + 0.5));
@@ -350,16 +349,16 @@ void DsoWidget::updateTriggerSlope() { updateTriggerDetails(); }
 void DsoWidget::updateTriggerSource() {
     // Change the colors of the trigger sliders
     if (settings->scope.trigger.special || settings->scope.trigger.source >= settings->scope.physicalChannels)
-        triggerPositionSlider->setColor(0, settings->view.color.screen.border);
+        triggerPositionSlider->setColor(0, settings->view.screen.border);
     else
-        triggerPositionSlider->setColor(0, settings->view.color.screen.voltage[settings->scope.trigger.source]);
+        triggerPositionSlider->setColor(0, settings->view.screen.voltage[settings->scope.trigger.source]);
 
     for (int channel = 0; channel < (int)settings->scope.physicalChannels; ++channel)
         triggerLevelSlider->setColor(
             channel,
             (!settings->scope.trigger.special && channel == (int)settings->scope.trigger.source)
-                ? settings->view.color.screen.voltage[channel]
-                : settings->view.color.screen.voltage[channel].darker());
+                ? settings->view.screen.voltage[channel]
+                : settings->view.screen.voltage[channel].darker());
 
     updateTriggerDetails();
 }

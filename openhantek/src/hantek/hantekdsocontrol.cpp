@@ -373,7 +373,7 @@ HantekDsoControl::HantekDsoControl(USBDevice *device) : device(device) {
 
     // Get channel level data
     errorCode = device->controlRead(CONTROL_VALUE, (unsigned char *)&(specification.offsetLimit),
-                                          sizeof(specification.offsetLimit), (int)VALUE_OFFSETLIMITS);
+                                    sizeof(specification.offsetLimit), (int)VALUE_OFFSETLIMITS);
     if (errorCode < 0) {
         device->disconnect();
         emit statusMessage(tr("Couldn't get channel level data from oscilloscope"), 0);
@@ -386,9 +386,7 @@ HantekDsoControl::HantekDsoControl(USBDevice *device) : device(device) {
 /// \brief Disconnects the device.
 HantekDsoControl::~HantekDsoControl() {
     // Clean up commands
-    for (int cIndex = 0; cIndex < BULK_COUNT; ++cIndex) {
-        delete command[cIndex];
-    }
+    for (int cIndex = 0; cIndex < BULK_COUNT; ++cIndex) { delete command[cIndex]; }
 }
 
 /// \brief Gets the physical channel count for this oscilloscope.
@@ -397,9 +395,7 @@ unsigned HantekDsoControl::getChannelCount() { return HANTEK_CHANNELS; }
 
 /// \brief Get available record lengths for this oscilloscope.
 /// \return The number of physical channels, empty list for continuous.
-QList<unsigned> *HantekDsoControl::getAvailableRecordLengths() {
-    return &settings.samplerate.limits->recordLengths;
-}
+QList<unsigned> *HantekDsoControl::getAvailableRecordLengths() { return &settings.samplerate.limits->recordLengths; }
 
 /// \brief Get minimum samplerate for this oscilloscope.
 /// \return The minimum samplerate for the current configuration in S/s.
@@ -547,7 +543,7 @@ int HantekDsoControl::getSamples(bool process) {
                 // Additional most significant bits after the normal data
                 unsigned extraBitsPosition; // Track the position of the extra
                 // bits in the additional byte
-                unsigned extraBitsSize = specification.sampleSize - 8;             // Number of extra bits
+                unsigned extraBitsSize = specification.sampleSize - 8;                 // Number of extra bits
                 unsigned short int extraBitsMask = (0x00ff << extraBitsSize) & 0xff00; // Mask for extra bits extraction
 
                 for (unsigned realPosition = 0; realPosition < sampleCount; ++realPosition, ++bufferPosition) {
@@ -597,7 +593,7 @@ int HantekDsoControl::getSamples(bool process) {
                     // Additional most significant bits after the normal data
                     unsigned extraBitsSize = specification.sampleSize - 8; // Number of extra bits
                     unsigned short int extraBitsMask =
-                        (0x00ff << extraBitsSize) & 0xff00;        // Mask for extra bits extraction
+                        (0x00ff << extraBitsSize) & 0xff00;    // Mask for extra bits extraction
                     unsigned extraBitsIndex = 8 - channel * 2; // Bit position offset for extra bits extraction
 
                     for (unsigned realPosition = 0; realPosition < sampleCount;
@@ -1451,8 +1447,7 @@ double HantekDsoControl::setPretriggerPosition(double position) {
         unsigned position = isRollMode() ? 0x1 : 0x7ffff - recordLength + positionSamples;
 
         // SetTriggerAndSamplerate bulk command for trigger position
-        static_cast<BulkSetTriggerAndSamplerate *>(command[BULK_SETTRIGGERANDSAMPLERATE])
-            ->setTriggerPosition(position);
+        static_cast<BulkSetTriggerAndSamplerate *>(command[BULK_SETTRIGGERANDSAMPLERATE])->setTriggerPosition(position);
         commandPending[BULK_SETTRIGGERANDSAMPLERATE] = true;
 
         break;
@@ -1491,19 +1486,16 @@ double HantekDsoControl::setPretriggerPosition(double position) {
     return (double)positionSamples / settings.samplerate.current;
 }
 
-int HantekDsoControl::stringCommand(const QString& commandString) {
+int HantekDsoControl::stringCommand(const QString &commandString) {
     if (!device->isConnected()) return Dso::ERROR_CONNECTION;
 
     QStringList commandParts = commandString.split(' ', QString::SkipEmptyParts);
 
-    if (commandParts.count() < 1)
-        return Dso::ERROR_PARAMETER;
+    if (commandParts.count() < 1) return Dso::ERROR_PARAMETER;
 
-    if (commandParts[0] != "send")
-        return Dso::ERROR_UNSUPPORTED;
+    if (commandParts[0] != "send") return Dso::ERROR_UNSUPPORTED;
 
-    if (commandParts.count() < 2)
-        return Dso::ERROR_PARAMETER;
+    if (commandParts.count() < 2) return Dso::ERROR_PARAMETER;
 
     if (commandParts[1] == "bulk") {
         QString data = commandString.section(' ', 2, -1, QString::SectionSkipEmpty);
@@ -1545,13 +1537,12 @@ void HantekDsoControl::run() {
     for (int cIndex = 0; cIndex < BULK_COUNT; ++cIndex) {
         if (!commandPending[cIndex]) continue;
 
-        timestampDebug(QString("Sending bulk command:%1")
-                           .arg(hexDump(command[cIndex]->data(), command[cIndex]->getSize())));
+        timestampDebug(
+            QString("Sending bulk command:%1").arg(hexDump(command[cIndex]->data(), command[cIndex]->getSize())));
 
         errorCode = device->bulkCommand(command[cIndex]);
         if (errorCode < 0) {
-            qWarning("Sending bulk command %02x failed: %s", cIndex,
-                     libUsbErrorString(errorCode).toLocal8Bit().data());
+            qWarning("Sending bulk command %02x failed: %s", cIndex, libUsbErrorString(errorCode).toLocal8Bit().data());
 
             if (errorCode == LIBUSB_ERROR_NO_DEVICE) {
                 emit communicationError();
@@ -1570,7 +1561,7 @@ void HantekDsoControl::run() {
                                 hexDump(this->control[control]->data(), this->control[control]->getSize())));
 
         errorCode = device->controlWrite(this->controlCode[cIndex], this->control[cIndex]->data(),
-                                               this->control[cIndex]->getSize());
+                                         this->control[cIndex]->getSize());
         if (errorCode < 0) {
             qWarning("Sending control command %2x failed: %s", this->controlCode[cIndex],
                      libUsbErrorString(errorCode).toLocal8Bit().data());

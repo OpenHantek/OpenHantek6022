@@ -1,32 +1,32 @@
 #pragma once
 
 #include "definitions.h"
-#include <QList>
+#include <QVector>
 
 ////////////////////////////////////////////////////////////////////////////////
 /// \struct DsoSettingsScopeHorizontal                                settings.h
 /// \brief Holds the settings for the horizontal axis.
 struct DsoSettingsScopeHorizontal {
-    Dso::GraphFormat format;     ///< Graph drawing mode of the scope
-    double frequencybase;        ///< Frequencybase in Hz/div
-    double marker[MARKER_COUNT]; ///< Marker positions in div
+    Dso::GraphFormat format = Dso::GRAPHFORMAT_TY; ///< Graph drawing mode of the scope
+    double frequencybase = 1e3;                    ///< Frequencybase in Hz/div
+    double marker[MARKER_COUNT] = {-1.0, 1.0};     ///< Marker positions in div
     bool marker_visible[MARKER_COUNT];
-    double timebase;           ///< Timebase in s/div
-    unsigned int recordLength; ///< Sample count
-    double samplerate;         ///< The samplerate of the oscilloscope in S
-    bool samplerateSet;        ///< The samplerate was set by the user, not the timebase
+    double timebase = 1e-3;        ///< Timebase in s/div
+    unsigned int recordLength = 0; ///< Sample count
+    double samplerate = 1e6;       ///< The samplerate of the oscilloscope in S
+    bool samplerateSet = false;    ///< The samplerate was set by the user, not the timebase
 };
 
 ////////////////////////////////////////////////////////////////////////////////
 /// \struct DsoSettingsScopeTrigger                                   settings.h
 /// \brief Holds the settings for the trigger.
 struct DsoSettingsScopeTrigger {
-    bool filter;           ///< Not sure what this is good for...
-    Dso::TriggerMode mode; ///< Automatic, normal or single trigger
-    double position;       ///< Horizontal position for pretrigger
-    Dso::Slope slope;      ///< Rising or falling edge causes trigger
-    unsigned int source;   ///< Channel that is used as trigger source
-    bool special;          ///< true if the trigger source is not a standard channel
+    bool filter = true;                              ///< Not sure what this is good for...
+    Dso::TriggerMode mode = Dso::TRIGGERMODE_NORMAL; ///< Automatic, normal or single trigger
+    double position = 0.0;                           ///< Horizontal position for pretrigger
+    Dso::Slope slope = Dso::SLOPE_POSITIVE;          ///< Rising or falling edge causes trigger
+    unsigned int source = 0;                         ///< Channel that is used as trigger source
+    bool special = false;                            ///< true if the trigger source is not a standard channel
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -57,11 +57,11 @@ struct DsoSettingsScopeVoltage {
 struct DsoSettingsScope {
     DsoSettingsScopeHorizontal horizontal;    ///< Settings for the horizontal axis
     DsoSettingsScopeTrigger trigger;          ///< Settings for the trigger
-    QList<DsoSettingsScopeSpectrum> spectrum; ///< Spectrum analysis settings
-    QList<DsoSettingsScopeVoltage> voltage;   ///< Settings for the normal graphs
+    QVector<DsoSettingsScopeSpectrum> spectrum; ///< Spectrum analysis settings
+    QVector<DsoSettingsScopeVoltage> voltage;   ///< Settings for the normal graphs
 
-    unsigned int physicalChannels;      ///< Number of real channels (No math etc.)
-    Dso::WindowFunction spectrumWindow; ///< Window function for DFT
-    double spectrumReference;           ///< Reference level for spectrum in dBm
-    double spectrumLimit;               ///< Minimum magnitude of the spectrum (Avoids peaks)
+    unsigned int physicalChannels = 0;                     ///< Number of real channels (No math etc.)
+    Dso::WindowFunction spectrumWindow = Dso::WINDOW_HANN; ///< Window function for DFT
+    double spectrumReference = 0.0;                        ///< Reference level for spectrum in dBm
+    double spectrumLimit = -20.0;                          ///< Minimum magnitude of the spectrum (Avoids peaks)
 };

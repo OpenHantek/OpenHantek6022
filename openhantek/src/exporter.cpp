@@ -69,9 +69,9 @@ bool Exporter::exportSamples(const DataAnalyzerResult *result) {
     // Choose the color values we need
     DsoSettingsColorValues *colorValues;
     if (this->format == EXPORT_FORMAT_IMAGE && settings->view.screenColorImages)
-        colorValues = &(settings->view.color.screen);
+        colorValues = &(settings->view.screen);
     else
-        colorValues = &(settings->view.color.print);
+        colorValues = &(settings->view.print);
 
     std::unique_ptr<QPaintDevice> paintDevice;
 

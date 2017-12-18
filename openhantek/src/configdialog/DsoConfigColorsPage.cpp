@@ -4,7 +4,7 @@
 
 DsoConfigColorsPage::DsoConfigColorsPage(DsoSettings *settings, QWidget *parent) : QWidget(parent), settings(settings) {
     // Initialize elements
-    DsoSettingsViewColor &colorSettings = settings->view.color;
+    DsoSettingsView &colorSettings = settings->view;
     enum { COL_LABEL = 0, COL_SCR_CHANNEL, COL_SCR_SPECTRUM, COL_PRT_CHANNEL, COL_PRT_SPECTRUM };
 
     // Plot Area
@@ -127,8 +127,7 @@ DsoConfigColorsPage::DsoConfigColorsPage(DsoSettings *settings, QWidget *parent)
 
 /// \brief Saves the new settings.
 void DsoConfigColorsPage::saveSettings() {
-
-    DsoSettingsViewColor &colorSettings = settings->view.color;
+    DsoSettingsView &colorSettings = settings->view;
 
     // Screen category
     colorSettings.screen.axes = axesColorBox->getColor();

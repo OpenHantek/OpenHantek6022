@@ -27,7 +27,7 @@ class OpenHantekMainWindow : public QMainWindow {
     Q_OBJECT
 
   public:
-    OpenHantekMainWindow(HantekDsoControl *dsoControl, DataAnalyzer *dataAnalyser);
+    OpenHantekMainWindow(HantekDsoControl *dsoControl, DataAnalyzer *dataAnalyser, DsoSettings *settings);
 
   protected:
     void closeEvent(QCloseEvent *event);
@@ -80,26 +80,16 @@ class OpenHantekMainWindow : public QMainWindow {
     HantekDsoControl *dsoControl;
     DataAnalyzer *dataAnalyzer;
 
-    // Other variables
-    QString currentFile;
-
     // Settings used for the whole program
     DsoSettings *settings;
 
   private slots:
-    // File operations
-    void open();
-    void save();
-    void saveAs();
     // View
     void digitalPhosphor(bool enabled);
     void zoom(bool enabled);
     // Oscilloscope control
     void started();
     void stopped();
-    // Other
-    void config();
-    void about();
 
     // Settings management
     void applySettings();

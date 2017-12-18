@@ -27,7 +27,6 @@
 #include "dsowidget.h"
 #include "hantek/hantekdsocontrol.h"
 #include "hantekdsocontrol.h"
-#include "settings.h"
 #include "usb/usbdevice.h"
 #include "viewconstants.h"
 
@@ -36,17 +35,13 @@
 /// \brief Initializes the gui elements of the main window.
 /// \param parent The parent widget.
 /// \param flags Flags for the window manager.
-OpenHantekMainWindow::OpenHantekMainWindow(HantekDsoControl *dsoControl, DataAnalyzer *dataAnalyzer)
-    : dsoControl(dsoControl), dataAnalyzer(dataAnalyzer) {
+OpenHantekMainWindow::OpenHantekMainWindow(HantekDsoControl *dsoControl, DataAnalyzer *dataAnalyzer,
+                                           DsoSettings *settings)
+    : dsoControl(dsoControl), dataAnalyzer(dataAnalyzer), settings(settings) {
 
     // Window title
     setWindowIcon(QIcon(":openhantek.png"));
     setWindowTitle(tr("OpenHantek - Device %1").arg(QString::fromStdString(dsoControl->getDevice()->getModel().name)));
-
-    // Application settings
-    settings = new DsoSettings();
-    settings->setChannelCount(dsoControl->getChannelCount());
-    settings->load(QString());
 
 // Create dock windows before the dso widget, they fix messed up settings
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 6, 0))
@@ -55,7 +50,6 @@ OpenHantekMainWindow::OpenHantekMainWindow(HantekDsoControl *dsoControl, DataAna
     createDockWindows();
 
     // Central oszilloscope widget
-    dataAnalyzer->applySettings(&settings->scope);
     dsoWidget = new DsoWidget(settings);
     connect(dataAnalyzer, &DataAnalyzer::analyzed,
             [this]() { dsoWidget->showNewData(this->dataAnalyzer->getNextResult()); });
@@ -86,7 +80,7 @@ OpenHantekMainWindow::OpenHantekMainWindow(HantekDsoControl *dsoControl, DataAna
 void OpenHantekMainWindow::closeEvent(QCloseEvent *event) {
     if (settings->options.alwaysSave) {
         saveWindowGeometry();
-        settings->save(QString());
+        settings->save();
     }
 
     QMainWindow::closeEvent(event);
@@ -97,16 +91,33 @@ void OpenHantekMainWindow::createActions() {
     openAction = new QAction(QIcon(":actions/open.png"), tr("&Open..."), this);
     openAction->setShortcut(tr("Ctrl+O"));
     openAction->setStatusTip(tr("Open saved settings"));
-    connect(openAction, &QAction::triggered, this, &OpenHantekMainWindow::open);
+    connect(openAction, &QAction::triggered, [this]() {
+        QString fileName = QFileDialog::getOpenFileName(this, tr("Open file"), "", tr("Settings (*.ini)"));
+        if (!fileName.isEmpty()) {
+            if (settings->setFilename(fileName)) {
+                settings->load();
+                emit(settingsChanged());
+            }
+        }
+    });
 
     saveAction = new QAction(QIcon(":actions/save.png"), tr("&Save"), this);
     saveAction->setShortcut(tr("Ctrl+S"));
     saveAction->setStatusTip(tr("Save the current settings"));
-    connect(saveAction, &QAction::triggered, this, &OpenHantekMainWindow::save);
+    connect(saveAction, &QAction::triggered, [this]() {
+        saveWindowGeometry();
+        settings->save();
+    });
 
     saveAsAction = new QAction(QIcon(":actions/save-as.png"), tr("Save &as..."), this);
     saveAsAction->setStatusTip(tr("Save the current settings to another file"));
-    connect(saveAsAction, &QAction::triggered, this, &OpenHantekMainWindow::saveAs);
+    connect(saveAsAction, &QAction::triggered, [this]() {
+        QString fileName = QFileDialog::getSaveFileName(this, tr("Save settings"), "", tr("Settings (*.ini)"));
+        if (fileName.isEmpty()) return;
+        saveWindowGeometry();
+        settings->setFilename(fileName);
+        settings->save();
+    });
 
     printAction = new QAction(QIcon(":actions/print.png"), tr("&Print..."), this);
     printAction->setShortcut(tr("Ctrl+P"));
@@ -126,7 +137,12 @@ void OpenHantekMainWindow::createActions() {
     configAction = new QAction(tr("&Settings"), this);
     configAction->setShortcut(tr("Ctrl+S"));
     configAction->setStatusTip(tr("Configure the oscilloscope"));
-    connect(configAction, &QAction::triggered, this, &OpenHantekMainWindow::config);
+    connect(configAction, &QAction::triggered, [this]() {
+        saveWindowGeometry();
+
+        DsoConfigDialog configDialog(settings, this);
+        if (configDialog.exec() == QDialog::Accepted) settingsChanged();
+    });
 
     startStopAction = new QAction(this);
     startStopAction->setShortcut(tr("Space"));
@@ -147,7 +163,16 @@ void OpenHantekMainWindow::createActions() {
 
     aboutAction = new QAction(tr("&About"), this);
     aboutAction->setStatusTip(tr("Show information about this program"));
-    connect(aboutAction, &QAction::triggered, this, &OpenHantekMainWindow::about);
+    connect(aboutAction, &QAction::triggered, [this]() {
+        QMessageBox::about(
+            this, tr("About OpenHantek %1").arg(VERSION),
+            tr("<p>This is a open source software for Hantek USB oscilloscopes.</p>"
+               "<p>Copyright &copy; 2010, 2011 Oliver Haag<br><a "
+               "href='mailto:oliver.haag@gmail.com'>oliver.haag@gmail.com</a></p>"
+               "<p>Copyright &copy; 2012-2017 OpenHantek community<br>"
+               "<a href='https://github.com/OpenHantek/openhantek'>https://github.com/OpenHantek/openhantek</a></p>"));
+
+    });
 }
 
 /// \brief Create the menus and menuitems.
@@ -331,34 +356,6 @@ void OpenHantekMainWindow::applySettingsToDevice() {
     dsoControl->setTriggerSource(settings->scope.trigger.special, settings->scope.trigger.source);
 }
 
-/// \brief Open a configuration file.
-void OpenHantekMainWindow::open() {
-    QString fileName = QFileDialog::getOpenFileName(this, tr("Open file"), "", tr("Settings (*.ini)"));
-    if (!fileName.isEmpty()) {
-        if (!settings->load(fileName)) emit(settingsChanged());
-    }
-}
-
-/// \brief Save the current configuration to a file.
-void OpenHantekMainWindow::save() {
-    saveWindowGeometry();
-
-    if (currentFile.isEmpty())
-        saveAs();
-    else
-        settings->save(currentFile);
-}
-
-/// \brief Save the configuration to another filename.
-void OpenHantekMainWindow::saveAs() {
-    QString fileName = QFileDialog::getSaveFileName(this, tr("Save settings"), "", tr("Settings (*.ini)"));
-    if (fileName.isEmpty()) return;
-
-    saveWindowGeometry();
-
-    if (settings->save(QString()) == 0) currentFile = fileName;
-}
-
 /// \brief The oscilloscope started sampling.
 void OpenHantekMainWindow::started() {
     startStopAction->setText(tr("&Stop"));
@@ -379,14 +376,6 @@ void OpenHantekMainWindow::stopped() {
     connect(startStopAction, &QAction::triggered, dsoControl, &HantekDsoControl::startSampling);
 }
 
-/// \brief Configure the oscilloscope.
-void OpenHantekMainWindow::config() {
-    saveWindowGeometry();
-
-    DsoConfigDialog configDialog(settings, this);
-    if (configDialog.exec() == QDialog::Accepted) settingsChanged();
-}
-
 /// \brief Enable/disable digital phosphor.
 void OpenHantekMainWindow::digitalPhosphor(bool enabled) {
     settings->view.digitalPhosphor = enabled;
@@ -405,14 +394,6 @@ void OpenHantekMainWindow::zoom(bool enabled) {
         zoomAction->setStatusTip(tr("Hide magnified scope"));
     else
         zoomAction->setStatusTip(tr("Show magnified scope"));
-}
-
-/// \brief Show the about dialog.
-void OpenHantekMainWindow::about() {
-    QMessageBox::about(this, tr("About OpenHantek %1").arg(VERSION),
-                       tr("<p>This is a open source software for Hantek USB oscilloscopes.</p>"
-                          "<p>Copyright &copy; 2010, 2011 Oliver Haag "
-                          "&lt;oliver.haag@gmail.com&gt;</p>"));
 }
 
 /// \brief The settings have changed.

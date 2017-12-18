@@ -22,7 +22,7 @@ void GlScope::initializeGL() {
 
     glPointSize(1);
 
-    QColor bg = settings->view.color.screen.background;
+    QColor bg = settings->view.screen.background;
     glClearColor(bg.redF(), bg.greenF(), bg.blueF(), bg.alphaF());
 
     glShadeModel(GL_SMOOTH /*GL_FLAT*/);
@@ -33,18 +33,16 @@ void GlScope::initializeGL() {
 
 /// \brief Draw the graphs and the grid.
 void GlScope::paintGL() {
-    if (!isVisible() || !generator->isReady()) return;
-
     // Clear OpenGL buffer and configure settings
     glClear(GL_COLOR_BUFFER_BIT);
     glLineWidth(1);
 
-    if (settings->view.digitalPhosphorDepth > 0) { drawGraph(); }
+    if (settings->view.digitalPhosphorDepth > 0 && generator->isReady()) { drawGraph(); }
 
     if (!this->zoomed) {
         // Draw vertical lines at marker positions
         glEnable(GL_LINE_STIPPLE);
-        QColor trColor = settings->view.color.screen.markers;
+        QColor trColor = settings->view.screen.markers;
         glColor4f(trColor.redF(), trColor.greenF(), trColor.blueF(), trColor.alphaF());
 
         for (int marker = 0; marker < MARKER_COUNT; ++marker) {
@@ -99,17 +97,17 @@ void GlScope::drawGrid() {
 
     QColor color;
     // Grid
-    color = settings->view.color.screen.grid;
+    color = settings->view.screen.grid;
     glColor4f(color.redF(), color.greenF(), color.blueF(), color.alphaF());
     glVertexPointer(2, GL_FLOAT, 0, &generator->grid(0).front());
     glDrawArrays(GL_POINTS, 0, generator->grid(0).size() / 2);
     // Axes
-    color = settings->view.color.screen.axes;
+    color = settings->view.screen.axes;
     glColor4f(color.redF(), color.greenF(), color.blueF(), color.alphaF());
     glVertexPointer(2, GL_FLOAT, 0, &generator->grid(1).front());
     glDrawArrays(GL_LINES, 0, generator->grid(1).size() / 2);
     // Border
-    color = settings->view.color.screen.border;
+    color = settings->view.screen.border;
     glColor4f(color.redF(), color.greenF(), color.blueF(), color.alphaF());
     glVertexPointer(2, GL_FLOAT, 0, &generator->grid(2).front());
     glDrawArrays(GL_LINE_LOOP, 0, generator->grid(2).size() / 2);
@@ -119,9 +117,9 @@ void GlScope::drawGraphDepth(int mode, int channel, int index) {
     if (generator->channel(mode, channel, index).empty()) return;
     QColor trColor;
     if (mode == Dso::CHANNELMODE_VOLTAGE)
-        trColor = settings->view.color.screen.voltage[channel].darker(fadingFactor[index]);
+        trColor = settings->view.screen.voltage[channel].darker(fadingFactor[index]);
     else
-        trColor = settings->view.color.screen.spectrum[channel].darker(fadingFactor[index]);
+        trColor = settings->view.screen.spectrum[channel].darker(fadingFactor[index]);
     glColor4f(trColor.redF(), trColor.greenF(), trColor.blueF(), trColor.alphaF());
     glVertexPointer(2, GL_FLOAT, 0, &generator->channel(mode, channel, index).front());
     glDrawArrays((settings->view.interpolation == Dso::INTERPOLATION_OFF) ? GL_POINTS : GL_LINE_STRIP, 0,

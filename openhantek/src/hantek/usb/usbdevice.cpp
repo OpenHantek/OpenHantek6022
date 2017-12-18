@@ -18,6 +18,7 @@ USBDevice::USBDevice(DSOModel model, libusb_device *device) : model(model), devi
 
 bool USBDevice::connectDevice(QString &errorMessage) {
     if (needsFirmware()) return false;
+    if (isConnected()) return true;
 
     // Open device
     int errorCode = libusb_open(device, &(handle));

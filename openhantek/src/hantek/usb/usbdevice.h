@@ -79,7 +79,6 @@ class USBDevice : public QObject {
     int interface;
     int outPacketLength; ///< Packet length for the OUT endpoint
     int inPacketLength;  ///< Packet length for the IN endpoint
-
   signals:
     void deviceDisconnected(); ///< The device has been disconnected
 };

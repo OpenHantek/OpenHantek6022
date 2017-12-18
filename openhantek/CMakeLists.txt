@@ -1,4 +1,4 @@
-project(OpenHantek CXX C)
+project(OpenHantek CXX)
 
 find_package(Qt5Widgets REQUIRED)
 find_package(Qt5PrintSupport REQUIRED)

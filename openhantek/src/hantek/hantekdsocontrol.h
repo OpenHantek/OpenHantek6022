@@ -67,7 +67,7 @@ class HantekDsoControl : public QObject {
     void samplesAvailable();                                 ///< New sample data is available
 
     void availableRecordLengthsChanged(const QList<unsigned> &recordLengths); ///< The available record
-                                                                                  /// lengths, empty list for
+                                                                              /// lengths, empty list for
     /// continuous
     void samplerateLimitsChanged(double minimum, double maximum); ///< The minimum or maximum samplerate has changed
     void recordLengthChanged(unsigned long duration);             ///< The record length has changed
@@ -84,8 +84,7 @@ class HantekDsoControl : public QObject {
     unsigned calculateTriggerPoint(unsigned value);
     int getCaptureState();
     int getSamples(bool process);
-    double getBestSamplerate(double samplerate, bool fastRate = false, bool maximum = false,
-                             unsigned *downsampler = 0);
+    double getBestSamplerate(double samplerate, bool fastRate = false, bool maximum = false, unsigned *downsampler = 0);
     unsigned getSampleCount(bool *fastRate = 0);
     unsigned updateRecordLength(unsigned size);
     unsigned updateSamplerate(unsigned downsampler, bool fastRate);
@@ -93,8 +92,8 @@ class HantekDsoControl : public QObject {
     void updateSamplerateLimits();
 
     // Communication with device
-    USBDevice *device; ///< The USB device for the oscilloscope
-    bool sampling = false;     ///< true, if the oscilloscope is taking samples
+    USBDevice *device;     ///< The USB device for the oscilloscope
+    bool sampling = false; ///< true, if the oscilloscope is taking samples
 
     QStringList specialTriggerSources; ///< Names of the special trigger sources
 
@@ -116,7 +115,7 @@ class HantekDsoControl : public QObject {
     // Results
     DSOsamples result;
     unsigned previousSampleCount; ///< The expected total number of samples at
-                                      /// the last check before sampling started
+                                  /// the last check before sampling started
 
     // State of the communication thread
     int captureState = Hantek::CAPTURE_WAITING;

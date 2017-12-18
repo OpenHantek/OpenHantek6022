@@ -23,6 +23,7 @@
 
 #include <QApplication>
 #include <QColor>
+#include <QDebug>
 #include <QSettings>
 
 #include "settings.h"
@@ -30,63 +31,20 @@
 #include "definitions.h"
 #include "dsowidget.h"
 
-////////////////////////////////////////////////////////////////////////////////
-// class DsoSettings
-/// \brief Sets the values to their defaults.
-DsoSettings::DsoSettings(QWidget *parent) : QObject(parent) {
-    // Options
-    this->options.alwaysSave = true;
-    this->options.imageSize = QSize(640, 480);
-    // Oscilloscope settings
-    // Horizontal axis
-    this->scope.horizontal.format = Dso::GRAPHFORMAT_TY;
-    this->scope.horizontal.frequencybase = 1e3;
-    this->scope.horizontal.marker[0] = -1.0;
-    this->scope.horizontal.marker[1] = 1.0;
-    this->scope.horizontal.timebase = 1e-3;
-    this->scope.horizontal.recordLength = 0;
-    this->scope.horizontal.samplerate = 1e6;
-    this->scope.horizontal.samplerateSet = false;
-    // Trigger
-    this->scope.trigger.filter = true;
-    this->scope.trigger.mode = Dso::TRIGGERMODE_NORMAL;
-    this->scope.trigger.position = 0.0;
-    this->scope.trigger.slope = Dso::SLOPE_POSITIVE;
-    this->scope.trigger.source = 0;
-    this->scope.trigger.special = false;
-    // General
-    this->scope.physicalChannels = 0;
-    this->scope.spectrumLimit = -20.0;
-    this->scope.spectrumReference = 0.0;
-    this->scope.spectrumWindow = Dso::WINDOW_HANN;
-
-    // View
-    // Colors
-    // Screen
-    this->view.color.screen.axes = QColor(0xff, 0xff, 0xff, 0x7f);
-    this->view.color.screen.background = QColor(0x00, 0x00, 0x00, 0xff);
-    this->view.color.screen.border = QColor(0xff, 0xff, 0xff, 0xff);
-    this->view.color.screen.grid = QColor(0xff, 0xff, 0xff, 0x3f);
-    this->view.color.screen.markers = QColor(0xff, 0xff, 0xff, 0xbf);
-    this->view.color.screen.text = QColor(0xff, 0xff, 0xff, 0xff);
-    // Print
-    this->view.color.print.axes = QColor(0x00, 0x00, 0x00, 0xbf);
-    this->view.color.print.background = QColor(0x00, 0x00, 0x00, 0x00);
-    this->view.color.print.border = QColor(0x00, 0x00, 0x00, 0xff);
-    this->view.color.print.grid = QColor(0x00, 0x00, 0x00, 0x7f);
-    this->view.color.print.markers = QColor(0x00, 0x00, 0x00, 0xef);
-    this->view.color.print.text = QColor(0x00, 0x00, 0x00, 0xff);
-    // Other view settings
-    this->view.antialiasing = true;
-    this->view.digitalPhosphor = false;
-    this->view.digitalPhosphorDepth = 8;
-    this->view.interpolation = Dso::INTERPOLATION_LINEAR;
-    this->view.screenColorImages = false;
-    this->view.zoom = false;
-}
-
 /// \brief Set the number of channels.
 /// \param channels The new channel count, that will be applied to lists.
+DsoSettings::DsoSettings() { load(); }
+
+bool DsoSettings::setFilename(const QString &filename) {
+    std::unique_ptr<QSettings> local = std::unique_ptr<QSettings>(new QSettings(filename, QSettings::IniFormat));
+    if (local->status() != QSettings::NoError) {
+        qWarning() << "Could not change the settings file to " << filename;
+        return false;
+    }
+    store.swap(local);
+    return true;
+}
+
 void DsoSettings::setChannelCount(unsigned int channels) {
     this->scope.physicalChannels = channels;
     // Always put the math channel at the end of the list
@@ -128,15 +86,15 @@ void DsoSettings::setChannelCount(unsigned int channels) {
         // View
         // Colors
         // Screen
-        if (this->view.color.screen.voltage.count() <= channel + 1)
-            this->view.color.screen.voltage.insert(channel, QColor::fromHsv(channel * 60, 0xff, 0xff));
-        if (this->view.color.screen.spectrum.count() <= channel + 1)
-            this->view.color.screen.spectrum.insert(channel, this->view.color.screen.voltage[channel].lighter());
+        if (this->view.screen.voltage.count() <= channel + 1)
+            this->view.screen.voltage.insert(channel, QColor::fromHsv(channel * 60, 0xff, 0xff));
+        if (this->view.screen.spectrum.count() <= channel + 1)
+            this->view.screen.spectrum.insert(channel, this->view.screen.voltage[channel].lighter());
         // Print
-        if (this->view.color.print.voltage.count() <= channel + 1)
-            this->view.color.print.voltage.insert(channel, this->view.color.screen.voltage[channel].darker(120));
-        if (this->view.color.print.spectrum.count() <= channel + 1)
-            this->view.color.print.spectrum.insert(channel, this->view.color.screen.voltage[channel].darker());
+        if (this->view.print.voltage.count() <= channel + 1)
+            this->view.print.voltage.insert(channel, this->view.screen.voltage[channel].darker(120));
+        if (this->view.print.spectrum.count() <= channel + 1)
+            this->view.print.spectrum.insert(channel, this->view.screen.voltage[channel].darker());
     }
 
     // Check if the math channel is missing
@@ -158,267 +116,212 @@ void DsoSettings::setChannelCount(unsigned int channels) {
         newVoltage.used = false;
         this->scope.voltage.append(newVoltage);
     }
-    if (this->view.color.screen.voltage.count() <= (int)channels)
-        this->view.color.screen.voltage.append(QColor(0x7f, 0x7f, 0x7f, 0xff));
-    if (this->view.color.screen.spectrum.count() <= (int)channels)
-        this->view.color.screen.spectrum.append(this->view.color.screen.voltage[channels].lighter());
-    if (this->view.color.print.voltage.count() <= (int)channels)
-        this->view.color.print.voltage.append(this->view.color.screen.voltage[channels]);
-    if (this->view.color.print.spectrum.count() <= (int)channels)
-        this->view.color.print.spectrum.append(this->view.color.print.voltage[channels].darker());
+    if (this->view.screen.voltage.count() <= (int)channels)
+        this->view.screen.voltage.append(QColor(0x7f, 0x7f, 0x7f, 0xff));
+    if (this->view.screen.spectrum.count() <= (int)channels)
+        this->view.screen.spectrum.append(this->view.screen.voltage[channels].lighter());
+    if (this->view.print.voltage.count() <= (int)channels)
+        this->view.print.voltage.append(this->view.screen.voltage[channels]);
+    if (this->view.print.spectrum.count() <= (int)channels)
+        this->view.print.spectrum.append(this->view.print.voltage[channels].darker());
 }
 
-/// \brief Read the settings from the last session or another file.
-/// \param fileName Optional filename to load the settings from an ini file.
-/// \return 0 on success, negative on error.
-int DsoSettings::load(const QString &fileName) {
-    // Use main configuration if the fileName wasn't set
-    QSettings *settingsLoader;
-    if (fileName.isEmpty())
-        settingsLoader = new QSettings(this);
-    else {
-        settingsLoader = new QSettings(fileName, QSettings::IniFormat, this);
-    }
-    if (settingsLoader->status() != QSettings::NoError) return -settingsLoader->status();
-
+void DsoSettings::load() {
     // General options
-    settingsLoader->beginGroup("options");
-    if (settingsLoader->contains("alwaysSave")) this->options.alwaysSave = settingsLoader->value("alwaysSave").toBool();
-    if (settingsLoader->contains("imageSize")) this->options.imageSize = settingsLoader->value("imageSize").toSize();
+    store->beginGroup("options");
+    if (store->contains("alwaysSave")) this->options.alwaysSave = store->value("alwaysSave").toBool();
+    if (store->contains("imageSize")) this->options.imageSize = store->value("imageSize").toSize();
     // If the window/* keys were found in this group, remove them from settings
-    settingsLoader->remove("window");
-    settingsLoader->endGroup();
+    store->remove("window");
+    store->endGroup();
 
     // Oscilloscope settings
-    settingsLoader->beginGroup("scope");
+    store->beginGroup("scope");
     // Horizontal axis
-    settingsLoader->beginGroup("horizontal");
-    if (settingsLoader->contains("format"))
-        this->scope.horizontal.format = (Dso::GraphFormat)settingsLoader->value("format").toInt();
-    if (settingsLoader->contains("frequencybase"))
-        this->scope.horizontal.frequencybase = settingsLoader->value("frequencybase").toDouble();
+    store->beginGroup("horizontal");
+    if (store->contains("format")) this->scope.horizontal.format = (Dso::GraphFormat)store->value("format").toInt();
+    if (store->contains("frequencybase"))
+        this->scope.horizontal.frequencybase = store->value("frequencybase").toDouble();
     for (int marker = 0; marker < 2; ++marker) {
         QString name;
         name = QString("marker%1").arg(marker);
-        if (settingsLoader->contains(name))
-            this->scope.horizontal.marker[marker] = settingsLoader->value(name).toDouble();
+        if (store->contains(name)) this->scope.horizontal.marker[marker] = store->value(name).toDouble();
     }
-    if (settingsLoader->contains("timebase"))
-        this->scope.horizontal.timebase = settingsLoader->value("timebase").toDouble();
-    if (settingsLoader->contains("recordLength"))
-        this->scope.horizontal.recordLength = settingsLoader->value("recordLength").toUInt();
-    if (settingsLoader->contains("samplerate"))
-        this->scope.horizontal.samplerate = settingsLoader->value("samplerate").toDouble();
-    if (settingsLoader->contains("samplerateSet"))
-        this->scope.horizontal.samplerateSet = settingsLoader->value("samplerateSet").toBool();
-    settingsLoader->endGroup();
+    if (store->contains("timebase")) this->scope.horizontal.timebase = store->value("timebase").toDouble();
+    if (store->contains("recordLength")) this->scope.horizontal.recordLength = store->value("recordLength").toUInt();
+    if (store->contains("samplerate")) this->scope.horizontal.samplerate = store->value("samplerate").toDouble();
+    if (store->contains("samplerateSet")) this->scope.horizontal.samplerateSet = store->value("samplerateSet").toBool();
+    store->endGroup();
     // Trigger
-    settingsLoader->beginGroup("trigger");
-    if (settingsLoader->contains("filter")) this->scope.trigger.filter = settingsLoader->value("filter").toBool();
-    if (settingsLoader->contains("mode"))
-        this->scope.trigger.mode = (Dso::TriggerMode)settingsLoader->value("mode").toInt();
-    if (settingsLoader->contains("position"))
-        this->scope.trigger.position = settingsLoader->value("position").toDouble();
-    if (settingsLoader->contains("slope"))
-        this->scope.trigger.slope = (Dso::Slope)settingsLoader->value("slope").toInt();
-    if (settingsLoader->contains("source")) this->scope.trigger.source = settingsLoader->value("source").toInt();
-    if (settingsLoader->contains("special")) this->scope.trigger.special = settingsLoader->value("special").toInt();
-    settingsLoader->endGroup();
+    store->beginGroup("trigger");
+    if (store->contains("filter")) this->scope.trigger.filter = store->value("filter").toBool();
+    if (store->contains("mode")) this->scope.trigger.mode = (Dso::TriggerMode)store->value("mode").toInt();
+    if (store->contains("position")) this->scope.trigger.position = store->value("position").toDouble();
+    if (store->contains("slope")) this->scope.trigger.slope = (Dso::Slope)store->value("slope").toInt();
+    if (store->contains("source")) this->scope.trigger.source = store->value("source").toInt();
+    if (store->contains("special")) this->scope.trigger.special = store->value("special").toInt();
+    store->endGroup();
     // Spectrum
     for (int channel = 0; channel < this->scope.spectrum.count(); ++channel) {
-        settingsLoader->beginGroup(QString("spectrum%1").arg(channel));
-        if (settingsLoader->contains("magnitude"))
-            this->scope.spectrum[channel].magnitude = settingsLoader->value("magnitude").toDouble();
-        if (settingsLoader->contains("offset"))
-            this->scope.spectrum[channel].offset = settingsLoader->value("offset").toDouble();
-        if (settingsLoader->contains("used"))
-            this->scope.spectrum[channel].used = settingsLoader->value("used").toBool();
-        settingsLoader->endGroup();
+        store->beginGroup(QString("spectrum%1").arg(channel));
+        if (store->contains("magnitude"))
+            this->scope.spectrum[channel].magnitude = store->value("magnitude").toDouble();
+        if (store->contains("offset")) this->scope.spectrum[channel].offset = store->value("offset").toDouble();
+        if (store->contains("used")) this->scope.spectrum[channel].used = store->value("used").toBool();
+        store->endGroup();
     }
     // Vertical axis
     for (int channel = 0; channel < this->scope.voltage.count(); ++channel) {
-        settingsLoader->beginGroup(QString("vertical%1").arg(channel));
-        if (settingsLoader->contains("gain"))
-            this->scope.voltage[channel].gain = settingsLoader->value("gain").toDouble();
-        if (settingsLoader->contains("misc")) this->scope.voltage[channel].misc = settingsLoader->value("misc").toInt();
-        if (settingsLoader->contains("offset"))
-            this->scope.voltage[channel].offset = settingsLoader->value("offset").toDouble();
-        if (settingsLoader->contains("trigger"))
-            this->scope.voltage[channel].trigger = settingsLoader->value("trigger").toDouble();
-        if (settingsLoader->contains("used"))
-            this->scope.voltage[channel].used = settingsLoader->value("used").toBool();
-        settingsLoader->endGroup();
+        store->beginGroup(QString("vertical%1").arg(channel));
+        if (store->contains("gain")) this->scope.voltage[channel].gain = store->value("gain").toDouble();
+        if (store->contains("misc")) this->scope.voltage[channel].misc = store->value("misc").toInt();
+        if (store->contains("offset")) this->scope.voltage[channel].offset = store->value("offset").toDouble();
+        if (store->contains("trigger")) this->scope.voltage[channel].trigger = store->value("trigger").toDouble();
+        if (store->contains("used")) this->scope.voltage[channel].used = store->value("used").toBool();
+        store->endGroup();
     }
-    if (settingsLoader->contains("spectrumLimit"))
-        this->scope.spectrumLimit = settingsLoader->value("spectrumLimit").toDouble();
-    if (settingsLoader->contains("spectrumReference"))
-        this->scope.spectrumReference = settingsLoader->value("spectrumReference").toDouble();
-    if (settingsLoader->contains("spectrumWindow"))
-        this->scope.spectrumWindow = (Dso::WindowFunction)settingsLoader->value("spectrumWindow").toInt();
-    settingsLoader->endGroup();
+    if (store->contains("spectrumLimit")) this->scope.spectrumLimit = store->value("spectrumLimit").toDouble();
+    if (store->contains("spectrumReference"))
+        this->scope.spectrumReference = store->value("spectrumReference").toDouble();
+    if (store->contains("spectrumWindow"))
+        this->scope.spectrumWindow = (Dso::WindowFunction)store->value("spectrumWindow").toInt();
+    store->endGroup();
 
     // View
-    settingsLoader->beginGroup("view");
+    store->beginGroup("view");
     // Colors
-    settingsLoader->beginGroup("color");
+    store->beginGroup("color");
     DsoSettingsColorValues *colors;
     for (int mode = 0; mode < 2; ++mode) {
         if (mode == 0) {
-            colors = &this->view.color.screen;
-            settingsLoader->beginGroup("screen");
+            colors = &this->view.screen;
+            store->beginGroup("screen");
         } else {
-            colors = &this->view.color.print;
-            settingsLoader->beginGroup("print");
+            colors = &this->view.print;
+            store->beginGroup("print");
         }
 
-        if (settingsLoader->contains("axes")) colors->axes = settingsLoader->value("axes").value<QColor>();
-        if (settingsLoader->contains("background"))
-            colors->background = settingsLoader->value("background").value<QColor>();
-        if (settingsLoader->contains("border")) colors->border = settingsLoader->value("border").value<QColor>();
-        if (settingsLoader->contains("grid")) colors->grid = settingsLoader->value("grid").value<QColor>();
-        if (settingsLoader->contains("markers")) colors->markers = settingsLoader->value("markers").value<QColor>();
+        if (store->contains("axes")) colors->axes = store->value("axes").value<QColor>();
+        if (store->contains("background")) colors->background = store->value("background").value<QColor>();
+        if (store->contains("border")) colors->border = store->value("border").value<QColor>();
+        if (store->contains("grid")) colors->grid = store->value("grid").value<QColor>();
+        if (store->contains("markers")) colors->markers = store->value("markers").value<QColor>();
         for (int channel = 0; channel < this->scope.spectrum.count(); ++channel) {
             QString key = QString("spectrum%1").arg(channel);
-            if (settingsLoader->contains(key)) colors->spectrum[channel] = settingsLoader->value(key).value<QColor>();
+            if (store->contains(key)) colors->spectrum[channel] = store->value(key).value<QColor>();
         }
-        if (settingsLoader->contains("text")) colors->text = settingsLoader->value("text").value<QColor>();
+        if (store->contains("text")) colors->text = store->value("text").value<QColor>();
         for (int channel = 0; channel < this->scope.voltage.count(); ++channel) {
             QString key = QString("voltage%1").arg(channel);
-            if (settingsLoader->contains(key)) colors->voltage[channel] = settingsLoader->value(key).value<QColor>();
+            if (store->contains(key)) colors->voltage[channel] = store->value(key).value<QColor>();
         }
-        settingsLoader->endGroup();
+        store->endGroup();
     }
-    settingsLoader->endGroup();
+    store->endGroup();
     // Other view settings
-    if (settingsLoader->contains("digitalPhosphor"))
-        this->view.digitalPhosphor = settingsLoader->value("digitalPhosphor").toBool();
-    if (settingsLoader->contains("interpolation"))
-        this->view.interpolation = (Dso::InterpolationMode)settingsLoader->value("interpolation").toInt();
-    if (settingsLoader->contains("screenColorImages"))
-        this->view.screenColorImages = settingsLoader->value("screenColorImages").toBool();
-    if (settingsLoader->contains("zoom"))
-        this->view.zoom = (Dso::InterpolationMode)settingsLoader->value("zoom").toBool();
-    settingsLoader->endGroup();
+    if (store->contains("digitalPhosphor")) this->view.digitalPhosphor = store->value("digitalPhosphor").toBool();
+    if (store->contains("interpolation"))
+        this->view.interpolation = (Dso::InterpolationMode)store->value("interpolation").toInt();
+    if (store->contains("screenColorImages")) this->view.screenColorImages = store->value("screenColorImages").toBool();
+    if (store->contains("zoom")) this->view.zoom = (Dso::InterpolationMode)store->value("zoom").toBool();
+    store->endGroup();
 
-    settingsLoader->beginGroup("window");
-    mainWindowGeometry = settingsLoader->value("geometry").toByteArray();
-    mainWindowState = settingsLoader->value("state").toByteArray();
-    settingsLoader->endGroup();
-
-    delete settingsLoader;
-
-    return 0;
+    store->beginGroup("window");
+    mainWindowGeometry = store->value("geometry").toByteArray();
+    mainWindowState = store->value("state").toByteArray();
+    store->endGroup();
 }
 
-/// \brief Save the settings to the harddisk.
-/// \param fileName Optional filename to read the settings from an ini file.
-/// \return 0 on success, negative on error.
-int DsoSettings::save(const QString &fileName) {
-    // Use main configuration and save everything if the fileName wasn't set
-    QSettings *settingsSaver;
-    bool complete = fileName.isEmpty();
-    if (complete)
-        settingsSaver = new QSettings(this);
-    else
-        settingsSaver = new QSettings(fileName, QSettings::IniFormat, this);
-    if (settingsSaver->status() != QSettings::NoError) return -settingsSaver->status();
+void DsoSettings::save() {
+    // Main window layout and other general options
+    store->beginGroup("options");
+    store->setValue("alwaysSave", this->options.alwaysSave);
+    store->setValue("imageSize", this->options.imageSize);
+    store->endGroup();
 
-    if (complete) {
-        // Main window layout and other general options
-        settingsSaver->beginGroup("options");
-        settingsSaver->setValue("alwaysSave", this->options.alwaysSave);
-        settingsSaver->setValue("imageSize", this->options.imageSize);
-        settingsSaver->endGroup();
-    }
     // Oszilloskope settings
-    settingsSaver->beginGroup("scope");
+    store->beginGroup("scope");
     // Horizontal axis
-    settingsSaver->beginGroup("horizontal");
-    settingsSaver->setValue("format", this->scope.horizontal.format);
-    settingsSaver->setValue("frequencybase", this->scope.horizontal.frequencybase);
+    store->beginGroup("horizontal");
+    store->setValue("format", this->scope.horizontal.format);
+    store->setValue("frequencybase", this->scope.horizontal.frequencybase);
     for (int marker = 0; marker < 2; ++marker)
-        settingsSaver->setValue(QString("marker%1").arg(marker), this->scope.horizontal.marker[marker]);
-    settingsSaver->setValue("timebase", this->scope.horizontal.timebase);
-    settingsSaver->setValue("recordLength", this->scope.horizontal.recordLength);
-    settingsSaver->setValue("samplerate", this->scope.horizontal.samplerate);
-    settingsSaver->setValue("samplerateSet", this->scope.horizontal.samplerateSet);
-    settingsSaver->endGroup();
+        store->setValue(QString("marker%1").arg(marker), this->scope.horizontal.marker[marker]);
+    store->setValue("timebase", this->scope.horizontal.timebase);
+    store->setValue("recordLength", this->scope.horizontal.recordLength);
+    store->setValue("samplerate", this->scope.horizontal.samplerate);
+    store->setValue("samplerateSet", this->scope.horizontal.samplerateSet);
+    store->endGroup();
     // Trigger
-    settingsSaver->beginGroup("trigger");
-    settingsSaver->setValue("filter", this->scope.trigger.filter);
-    settingsSaver->setValue("mode", this->scope.trigger.mode);
-    settingsSaver->setValue("position", this->scope.trigger.position);
-    settingsSaver->setValue("slope", this->scope.trigger.slope);
-    settingsSaver->setValue("source", this->scope.trigger.source);
-    settingsSaver->setValue("special", this->scope.trigger.special);
-    settingsSaver->endGroup();
+    store->beginGroup("trigger");
+    store->setValue("filter", this->scope.trigger.filter);
+    store->setValue("mode", this->scope.trigger.mode);
+    store->setValue("position", this->scope.trigger.position);
+    store->setValue("slope", this->scope.trigger.slope);
+    store->setValue("source", this->scope.trigger.source);
+    store->setValue("special", this->scope.trigger.special);
+    store->endGroup();
     // Spectrum
     for (int channel = 0; channel < this->scope.spectrum.count(); ++channel) {
-        settingsSaver->beginGroup(QString("spectrum%1").arg(channel));
-        settingsSaver->setValue("magnitude", this->scope.spectrum[channel].magnitude);
-        settingsSaver->setValue("offset", this->scope.spectrum[channel].offset);
-        settingsSaver->setValue("used", this->scope.spectrum[channel].used);
-        settingsSaver->endGroup();
+        store->beginGroup(QString("spectrum%1").arg(channel));
+        store->setValue("magnitude", this->scope.spectrum[channel].magnitude);
+        store->setValue("offset", this->scope.spectrum[channel].offset);
+        store->setValue("used", this->scope.spectrum[channel].used);
+        store->endGroup();
     }
     // Vertical axis
     for (int channel = 0; channel < this->scope.voltage.count(); ++channel) {
-        settingsSaver->beginGroup(QString("vertical%1").arg(channel));
-        settingsSaver->setValue("gain", this->scope.voltage[channel].gain);
-        settingsSaver->setValue("misc", this->scope.voltage[channel].misc);
-        settingsSaver->setValue("offset", this->scope.voltage[channel].offset);
-        settingsSaver->setValue("trigger", this->scope.voltage[channel].trigger);
-        settingsSaver->setValue("used", this->scope.voltage[channel].used);
-        settingsSaver->endGroup();
+        store->beginGroup(QString("vertical%1").arg(channel));
+        store->setValue("gain", this->scope.voltage[channel].gain);
+        store->setValue("misc", this->scope.voltage[channel].misc);
+        store->setValue("offset", this->scope.voltage[channel].offset);
+        store->setValue("trigger", this->scope.voltage[channel].trigger);
+        store->setValue("used", this->scope.voltage[channel].used);
+        store->endGroup();
     }
-    settingsSaver->setValue("spectrumLimit", this->scope.spectrumLimit);
-    settingsSaver->setValue("spectrumReference", this->scope.spectrumReference);
-    settingsSaver->setValue("spectrumWindow", this->scope.spectrumWindow);
-    settingsSaver->endGroup();
+    store->setValue("spectrumLimit", this->scope.spectrumLimit);
+    store->setValue("spectrumReference", this->scope.spectrumReference);
+    store->setValue("spectrumWindow", this->scope.spectrumWindow);
+    store->endGroup();
 
     // View
-    settingsSaver->beginGroup("view");
+    store->beginGroup("view");
     // Colors
-    if (complete) {
-        settingsSaver->beginGroup("color");
-        DsoSettingsColorValues *colors;
-        for (int mode = 0; mode < 2; ++mode) {
-            if (mode == 0) {
-                colors = &this->view.color.screen;
-                settingsSaver->beginGroup("screen");
-            } else {
-                colors = &this->view.color.print;
-                settingsSaver->beginGroup("print");
-            }
 
-            settingsSaver->setValue("axes", colors->axes);
-            settingsSaver->setValue("background", colors->background);
-            settingsSaver->setValue("border", colors->border);
-            settingsSaver->setValue("grid", colors->grid);
-            settingsSaver->setValue("markers", colors->markers);
-            for (int channel = 0; channel < this->scope.spectrum.count(); ++channel)
-                settingsSaver->setValue(QString("spectrum%1").arg(channel), colors->spectrum[channel]);
-            settingsSaver->setValue("text", colors->text);
-            for (int channel = 0; channel < this->scope.voltage.count(); ++channel)
-                settingsSaver->setValue(QString("voltage%1").arg(channel), colors->voltage[channel]);
-            settingsSaver->endGroup();
+    store->beginGroup("color");
+    DsoSettingsColorValues *colors;
+    for (int mode = 0; mode < 2; ++mode) {
+        if (mode == 0) {
+            colors = &this->view.screen;
+            store->beginGroup("screen");
+        } else {
+            colors = &this->view.print;
+            store->beginGroup("print");
         }
-        settingsSaver->endGroup();
+
+        store->setValue("axes", colors->axes);
+        store->setValue("background", colors->background);
+        store->setValue("border", colors->border);
+        store->setValue("grid", colors->grid);
+        store->setValue("markers", colors->markers);
+        for (int channel = 0; channel < this->scope.spectrum.count(); ++channel)
+            store->setValue(QString("spectrum%1").arg(channel), colors->spectrum[channel]);
+        store->setValue("text", colors->text);
+        for (int channel = 0; channel < this->scope.voltage.count(); ++channel)
+            store->setValue(QString("voltage%1").arg(channel), colors->voltage[channel]);
+        store->endGroup();
     }
+    store->endGroup();
+
     // Other view settings
-    settingsSaver->setValue("digitalPhosphor", this->view.digitalPhosphor);
-    if (complete) {
-        settingsSaver->setValue("interpolation", this->view.interpolation);
-        settingsSaver->setValue("screenColorImages", this->view.screenColorImages);
-    }
-    settingsSaver->setValue("zoom", this->view.zoom);
-    settingsSaver->endGroup();
+    store->setValue("digitalPhosphor", this->view.digitalPhosphor);
+    store->setValue("interpolation", this->view.interpolation);
+    store->setValue("screenColorImages", this->view.screenColorImages);
+    store->setValue("zoom", this->view.zoom);
+    store->endGroup();
 
-    settingsSaver->beginGroup("window");
-    settingsSaver->setValue("geometry", mainWindowGeometry);
-    settingsSaver->setValue("state", mainWindowState);
-    settingsSaver->endGroup();
-
-    delete settingsSaver;
-
-    return 0;
+    store->beginGroup("window");
+    store->setValue("geometry", mainWindowGeometry);
+    store->setValue("state", mainWindowState);
+    store->endGroup();
 }

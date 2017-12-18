@@ -48,7 +48,7 @@ DsoConfigFilesPage::DsoConfigFilesPage(DsoSettings *settings, QWidget *parent) :
 
     setLayout(mainLayout);
 
-    connect(saveNowButton, SIGNAL(clicked()), settings, SLOT(save()));
+    connect(saveNowButton, &QAbstractButton::clicked, [settings]() { settings->save(); });
 }
 
 /// \brief Saves the new settings.

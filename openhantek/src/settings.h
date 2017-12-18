@@ -2,28 +2,29 @@
 
 #pragma once
 
+#include <QSettings>
 #include <QSize>
 #include <QString>
+#include <memory>
 
 #include "scopesettings.h"
 #include "viewsettings.h"
 
 ////////////////////////////////////////////////////////////////////////////////
-/// \struct DsoSettingsOptions                                        settings.h
+/// \struct DsoSettingsOptions
 /// \brief Holds the general options of the program.
 struct DsoSettingsOptions {
-    bool alwaysSave; ///< Always save the settings on exit
-    QSize imageSize; ///< Size of exported images in pixels
+    bool alwaysSave = true;            ///< Always save the settings on exit
+    QSize imageSize = QSize(640, 480); ///< Size of exported images in pixels
 };
 
 ////////////////////////////////////////////////////////////////////////////////
-/// \class DsoSettings                                                settings.h
+/// \class DsoSettings
 /// \brief Holds the settings of the program.
-class DsoSettings : public QObject {
-    Q_OBJECT
-
+class DsoSettings {
   public:
-    DsoSettings(QWidget *parent = 0);
+    DsoSettings();
+    bool setFilename(const QString &filename);
 
     void setChannelCount(unsigned int channels);
 
@@ -34,8 +35,12 @@ class DsoSettings : public QObject {
     QByteArray mainWindowGeometry; ///< Geometry of the main window
     QByteArray mainWindowState;    ///< State of docking windows and toolbars
 
-  public slots:
-    // Saving to and loading from configuration files
-    int load(const QString &fileName = QString());
-    int save(const QString &fileName = QString());
+    /// \brief Read the settings from the last session or another file.
+    void load();
+
+    /// \brief Save the settings to the harddisk.
+    void save();
+
+  private:
+    std::unique_ptr<QSettings> store = std::unique_ptr<QSettings>(new QSettings);
 };
