@@ -148,7 +148,7 @@ void GlScope::drawGraph() {
         fadingFactor.resize((size_t)settings->view.digitalPhosphorDepth);
         fadingFactor[0] = 100;
         double fadingRatio = pow(10.0, 2.0 / settings->view.digitalPhosphorDepth);
-        for (unsigned index = 1; index < settings->view.digitalPhosphorDepth; ++index)
+        for (size_t index = 1; index < (size_t)settings->view.digitalPhosphorDepth; ++index)
             fadingFactor[index] = fadingFactor[index - 1] * fadingRatio;
     }
 
