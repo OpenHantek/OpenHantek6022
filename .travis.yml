@@ -11,17 +11,17 @@ addons:
   apt:
     sources:
     - ubuntu-toolchain-r-test
-    - llvm-toolchain-trusty-3.6
+    - llvm-toolchain-trusty-3.9
     packages: &native_deps
     - cmake
     - libusb-1.0-0-dev
     - libfftw3-dev
-    - libqt5qml5
+#    - libqt5qml5
     - libgtest-dev
-    - libqt5opengl5-dev
-    - qtbase5-dev
-    - qttools5-dev
-    - qttools5-dev-tools
+#    - libqt5opengl5-dev
+#    - qtbase5-dev
+#    - qttools5-dev
+#    - qttools5-dev-tools
     - gcc-5
     - g++-5
 #    - doxygen
@@ -44,9 +44,12 @@ matrix:
   
 before_install:
     - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; brew install libusb fftw qt5; export CMAKE_PREFIX_PATH=$(brew --prefix qt5); fi
-    - if [[ "$TRAVIS_OS_NAME" != "osx" ]]; then mkdir $HOME/usr; export PATH="$HOME/usr/bin:$PATH"; wget https://cmake.org/files/v3.7/cmake-3.7.2-Linux-x86_64.sh; chmod +x cmake-3.7.2-Linux-x86_64.sh; ./cmake-3.7.2-Linux-x86_64.sh --prefix=$HOME/usr --exclude-subdir --skip-license; fi
+    - if [[ "$TRAVIS_OS_NAME" != "osx" ]]; then sudo add-apt-repository ppa:beineri/opt-qt551-trusty;sudo apt-get -qq update; sudo apt-get --yes install qt55base; fi
 
 before_script:
+    - QTDIR="/opt/qt55"
+    - PATH="$QTDIR/bin:$PATH"
+    - source /opt/qt55/bin/qt55-env.sh
     - mkdir build
     - cd build
     - cmake -DCMAKE_CXX_COMPILER=$CMAKE_CXX_COMPILER -DCMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH ../
