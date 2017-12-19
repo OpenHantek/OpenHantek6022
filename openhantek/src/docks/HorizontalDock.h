@@ -53,10 +53,8 @@ class HorizontalDock : public QDockWidget {
 
     QStringList formatStrings; ///< Strings for the formats
 
-    bool suppressSignals; ///< Disable changed-signals temporarily
-
   public slots:
-    void availableRecordLengthsChanged(const QList<unsigned int> &recordLengths);
+    void availableRecordLengthsChanged(const std::vector<unsigned> &recordLengths);
     void samplerateLimitsChanged(double minimum, double maximum);
     void samplerateSet(int mode, QList<double> sampleSteps);
 
