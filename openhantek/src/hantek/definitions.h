@@ -19,7 +19,7 @@
 namespace Dso {
 /// \enum ErrorCode                                           hantek/control.h
 /// \brief The return codes for device control methods.
-enum ErrorCode {
+enum class ErrorCode {
     ERROR_NONE = 0,         ///< Successful operation
     ERROR_CONNECTION = -1,  ///< Device not connected or communication error
     ERROR_UNSUPPORTED = -2, ///< Not supported by this device
@@ -821,7 +821,8 @@ enum CaptureState {
     CAPTURE_SAMPLING = 1,  ///< The scope is sampling data after triggering
     CAPTURE_READY = 2,     ///< Sampling data is available (DSO-2090/DSO-2150)
     CAPTURE_READY2250 = 3, ///< Sampling data is available (DSO-2250)
-    CAPTURE_READY5200 = 7  ///< Sampling data is available (DSO-5200/DSO-5200A)
+    CAPTURE_READY5200 = 7, ///< Sampling data is available (DSO-5200/DSO-5200A)
+    CAPTURE_ERROR = 1000
 };
 
 //////////////////////////////////////////////////////////////////////////////

@@ -93,19 +93,22 @@ int main(int argc, char *argv[]) {
         QString modelName = QString::fromStdString(i->getModel().name);
 
         if (i->needsFirmware()) {
-            w->addItem(QCoreApplication::translate("Firmware upload dialog", "%1: Firmware upload failed").arg(modelName));
+            w->addItem(
+                QCoreApplication::translate("Firmware upload dialog", "%1: Firmware upload failed").arg(modelName));
             continue;
         }
         QString errorMessage;
         if (i->connectDevice(errorMessage)) {
             w->addItem(QCoreApplication::translate("Firmware upload dialog", "%1: Ready").arg(modelName));
-            w->setCurrentRow(w->count()-1);
+            w->setCurrentRow(w->count() - 1);
         } else {
-            w->addItem(QCoreApplication::translate("Firmware upload dialog", "%1: %2").arg(modelName).arg(findDevices.getErrorMessage()));
+            w->addItem(QCoreApplication::translate("Firmware upload dialog", "%1: %2")
+                           .arg(modelName)
+                           .arg(findDevices.getErrorMessage()));
         }
     }
 
-    if (w->currentRow() == -1 || devices.size()>1) {
+    if (w->currentRow() == -1 || devices.size() > 1) {
         QPushButton *btn = new QPushButton(QCoreApplication::translate("", "Connect to first device"), dialog.get());
         dialog->move(QApplication::desktop()->screen()->rect().center() - w->rect().center());
         dialog->setWindowTitle(QCoreApplication::translate("", "Firmware upload"));

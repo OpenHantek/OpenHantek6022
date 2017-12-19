@@ -262,12 +262,12 @@ void OpenHantekMainWindow::addManualCommandEdit() {
         commandEdit->setFocus();
     });
     connect(commandEdit, &QLineEdit::returnPressed, [this]() {
-        int errorCode = dsoControl->stringCommand(commandEdit->text());
+        Dso::ErrorCode errorCode = dsoControl->stringCommand(commandEdit->text());
 
         commandEdit->hide();
         commandEdit->clear();
 
-        if (errorCode < 0) statusBar()->showMessage(tr("Invalid command"), 3000);
+        if (errorCode != Dso::ErrorCode::ERROR_NONE) statusBar()->showMessage(tr("Invalid command"), 3000);
     });
 }
 
@@ -343,10 +343,12 @@ void OpenHantekMainWindow::applySettingsToDevice() {
         samplerateSelected();
     else
         timebaseSelected();
-    if (dsoControl->getAvailableRecordLengths()->isEmpty())
+    if (dsoControl->getAvailableRecordLengths().empty())
         dsoControl->setRecordLength(settings->scope.horizontal.recordLength);
     else {
-        int index = dsoControl->getAvailableRecordLengths()->indexOf(settings->scope.horizontal.recordLength);
+        auto recLenVec = dsoControl->getAvailableRecordLengths();
+        ptrdiff_t index = std::distance(
+            recLenVec.begin(), std::find(recLenVec.begin(), recLenVec.end(), settings->scope.horizontal.recordLength));
         dsoControl->setRecordLength(index < 0 ? 1 : index);
     }
     dsoControl->setTriggerMode(settings->scope.trigger.mode);
