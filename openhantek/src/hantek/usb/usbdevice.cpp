@@ -2,6 +2,7 @@
 
 #include <QCoreApplication>
 #include <QList>
+#include <iostream>
 
 #include "usbdevice.h"
 
@@ -170,7 +171,7 @@ int USBDevice::bulkCommand(DataArray<unsigned char> *command, int attempts) {
 /// \param length The length of data contained in the packets.
 /// \param attempts The number of attempts, that are done on timeouts.
 /// \return Number of received bytes on success, libusb error code on error.
-int USBDevice::bulkReadMulti(unsigned char *data, unsigned int length, int attempts) {
+int USBDevice::bulkReadMulti(unsigned char *data, unsigned length, int attempts) {
     if (!this->handle) return LIBUSB_ERROR_NO_DEVICE;
 
     int errorCode = 0;
@@ -261,17 +262,16 @@ int USBDevice::getConnectionSpeed() {
 /// \brief Gets the maximum size of one packet transmitted via bulk transfer.
 /// \return The maximum packet size in bytes, -1 on error.
 int USBDevice::getPacketSize() {
-    switch (this->getConnectionSpeed()) {
-    case CONNECTION_FULLSPEED:
+    const int s = this->getConnectionSpeed();
+    if (s == CONNECTION_FULLSPEED)
         return 64;
-        break;
-    case CONNECTION_HIGHSPEED:
+    else if (s == CONNECTION_HIGHSPEED)
         return 512;
-        break;
-    default:
-        return -1;
-        break;
+    else if (s > CONNECTION_HIGHSPEED) {
+        std::cerr << "Unknown USB speed. Please correct source code in USBDevice::getPacketSize()" << std::endl;
+        throw new std::runtime_error("Unknown USB speed");
     }
+    return -1;
 }
 
 /// \brief Get the oscilloscope model.
@@ -282,12 +282,6 @@ libusb_device *USBDevice::getRawDevice() const { return device; }
 
 const DSOModel &USBDevice::getModel() const { return model; }
 
-void USBDevice::setEnableBulkTransfer(bool enable)
-{
-    allowBulkTransfer = enable;
-}
+void USBDevice::setEnableBulkTransfer(bool enable) { allowBulkTransfer = enable; }
 
-void USBDevice::overwriteInPacketLength(int len)
-{
-    inPacketLength = len;
-}
+void USBDevice::overwriteInPacketLength(int len) { inPacketLength = len; }

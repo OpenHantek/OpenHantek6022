@@ -48,7 +48,7 @@ class USBDevice : public QObject {
     int bulkRead(unsigned char *data, unsigned int length, int attempts = HANTEK_ATTEMPTS);
 
     int bulkCommand(DataArray<unsigned char> *command, int attempts = HANTEK_ATTEMPTS);
-    int bulkReadMulti(unsigned char *data, unsigned int length, int attempts = HANTEK_ATTEMPTS_MULTI);
+    int bulkReadMulti(unsigned char *data, unsigned length, int attempts = HANTEK_ATTEMPTS_MULTI);
 
     int controlTransfer(unsigned char type, unsigned char request, unsigned char *data, unsigned int length, int value,
                         int index, int attempts = HANTEK_ATTEMPTS);
