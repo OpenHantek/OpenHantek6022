@@ -77,10 +77,10 @@ struct ControlSpecificationCommands {
 /// \struct ControlSamplerateLimits                           hantek/control.h
 /// \brief Stores the samplerate limits for calculations.
 struct ControlSamplerateLimits {
-    double base;                       ///< The base for sample rate calculations
-    double max;                        ///< The maximum sample rate
-    unsigned int maxDownsampler;       ///< The maximum downsampling ratio
-    QList<unsigned int> recordLengths; ///< Available record lengths, UINT_MAX means rolling
+    double base;                         ///< The base for sample rate calculations
+    double max;                          ///< The maximum sample rate
+    unsigned int maxDownsampler;         ///< The maximum downsampling ratio
+    std::vector<unsigned> recordLengths; ///< Available record lengths, UINT_MAX means rolling
 };
 
 //////////////////////////////////////////////////////////////////////////////
@@ -106,7 +106,7 @@ struct ControlSpecification {
 
     // Calibration
     /// The sample values at the top of the screen
-    QList<unsigned short int> voltageLimit[HANTEK_CHANNELS];
+    QList<unsigned short> voltageLimit[HANTEK_CHANNELS];
     /// The index of the selected gain on the hardware
     QList<unsigned char> gainIndex;
     QList<unsigned char> gainDiv;
@@ -114,9 +114,9 @@ struct ControlSpecification {
     QList<unsigned char> sampleDiv;
     /// Calibration data for the channel offsets \todo Should probably be a QList
     /// too
-    unsigned short int offsetLimit[HANTEK_CHANNELS][9][OFFSET_COUNT];
+    unsigned short offsetLimit[HANTEK_CHANNELS][9][OFFSET_COUNT];
 
-    bool isSoftwareTriggerDevice=false;
+    bool isSoftwareTriggerDevice = false;
     bool useControlNoBulk = false;
     bool supportsCaptureState = true;
     bool supportsOffset = true;
@@ -159,7 +159,7 @@ struct ControlSettingsTrigger {
 /// \struct ControlSettingsVoltage                            hantek/control.h
 /// \brief Stores the current amplification settings of the device.
 struct ControlSettingsVoltage {
-    unsigned int gain; ///< The gain id
+    unsigned gain;     ///< The gain id
     double offset;     ///< The screen offset for each channel
     double offsetReal; ///< The real offset for each channel (Due to quantization)
     bool used;         ///< true, if the channel is used

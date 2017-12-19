@@ -55,8 +55,8 @@ struct DsoSettingsScopeVoltage {
 /// \struct DsoSettingsScope                                          settings.h
 /// \brief Holds the settings for the oscilloscope.
 struct DsoSettingsScope {
-    DsoSettingsScopeHorizontal horizontal;    ///< Settings for the horizontal axis
-    DsoSettingsScopeTrigger trigger;          ///< Settings for the trigger
+    DsoSettingsScopeHorizontal horizontal;      ///< Settings for the horizontal axis
+    DsoSettingsScopeTrigger trigger;            ///< Settings for the trigger
     QVector<DsoSettingsScopeSpectrum> spectrum; ///< Spectrum analysis settings
     QVector<DsoSettingsScopeVoltage> voltage;   ///< Settings for the normal graphs
 
