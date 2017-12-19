@@ -1,4 +1,7 @@
+// SPDX-License-Identifier: GPL-2.0+
+
 #include "dataanalyzerresult.h"
+#include <QDebug>
 #include <stdexcept>
 
 DataAnalyzerResult::DataAnalyzerResult(unsigned int channelCount) { analyzedData.resize(channelCount); }

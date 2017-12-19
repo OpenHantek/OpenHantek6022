@@ -24,6 +24,7 @@ class DataAnalyzer : public QObject {
     Q_OBJECT
 
   public:
+    ~DataAnalyzer();
     void applySettings(DsoSettingsScope *scope);
     void setSourceData(const DSOsamples *data);
     std::unique_ptr<DataAnalyzerResult> getNextResult();
@@ -35,12 +36,14 @@ class DataAnalyzer : public QObject {
   private:
     static std::unique_ptr<DataAnalyzerResult> convertData(const DSOsamples *data, const DsoSettingsScope *scope);
     static void spectrumAnalysis(DataAnalyzerResult *result, Dso::WindowFunction &lastWindow,
-                                 unsigned int lastRecordLength, const DsoSettingsScope *scope);
+                                 unsigned int lastRecordLength, double *&lastWindowBuffer,
+                                 const DsoSettingsScope *scope);
 
   private:
     DsoSettingsScope *scope;
     unsigned int lastRecordLength = 0;                        ///< The record length of the previously analyzed data
     Dso::WindowFunction lastWindow = (Dso::WindowFunction)-1; ///< The previously used dft window function
+    double *window = nullptr;
     const DSOsamples *sourceData = nullptr;
     std::unique_ptr<DataAnalyzerResult> lastResult;
   signals:

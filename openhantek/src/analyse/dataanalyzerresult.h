@@ -29,7 +29,6 @@ class DataAnalyzerResult {
     DataChannel *modifyData(int channel);
     unsigned int sampleCount() const;
     unsigned int channelCount() const;
-    double *window = nullptr; ///< The array for the dft window factors
 
     /**
      * Applies a new maximum samples value, if the given value is higher than the
