@@ -22,7 +22,7 @@ Navigate to the [Releases](https://github.com/OpenHantek/openhantek/releases) pa
 ## Building OpenHantek from source
 You need the following packages, to build OpenHantek from source:
 * CMake 3.5+
-* Qt 5.3+
+* Qt 5.4+
 * FFTW 3+ (prebuild files will be downloaded on windows)
 * libusb 1.x (prebuild files will be used on windows)
 
