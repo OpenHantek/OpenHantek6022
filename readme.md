@@ -105,7 +105,7 @@ Please use Github Issues to report any problems or enhancements or send us pull 
    - Create a separate branch other than *master* to easily amend changes to a pull request later, if necessary.
    - Write [good commit messages][11].
    - Use the same [coding style and spacing][13]
-     (install clang-format and use it in the root directory: `clang-format -style=llvm openhantek/src/*`).
+     (install clang-format. Use make target: `make format` or execute directly from the openhantek directory: `clang-format -style=file src/*`).
    - Open a [pull request][12] with a clear title and description
      
 [10]: http://gun.io/blog/how-to-github-fork-branch-and-pull-request
