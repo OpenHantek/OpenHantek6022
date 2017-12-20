@@ -2,20 +2,18 @@
 
 shopt -s globstar
 
-cd "$(dirname "$0")"
-make
-rm -rf tmp
-mkdir tmp
+rm -rf build
+mkdir build && cd build && cmake ../ && make && cd ..
 
-cd tmp
+if [ ! -d ./hex ]; then
+mkdir hex && cd hex && \
 for MODEL in "2090" "2150" "2250" "5200" "5200A"; do
     wget http://www.hantek.com/Product/DSO2000/DSO${MODEL}_Driver.zip
     unzip DSO${MODEL}_Driver.zip
-done
+done && \
 cd ..
+fi
 
-for f in tmp/**/*.sys; do
-    ./extractfw $f
+for f in hex/**/*.sys; do
+    ./build/FirmwareExtractor $f && rm $f
 done
-mv tmp/**/*.hex .
-rm -rf tmp
