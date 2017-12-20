@@ -25,7 +25,6 @@ add_custom_target(format SOURCES ".clang-format"
     COMMAND "clang-format" "-style=file" "-i" "-sort-includes" ${SRC} ${HEADERS})
 
 add_subdirectory(translations)
-add_subdirectory(res)
 
 add_definitions(-DVERSION="${CPACK_PACKAGE_VERSION}")
 

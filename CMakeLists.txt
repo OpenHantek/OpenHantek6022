@@ -11,7 +11,7 @@ ENDIF(NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
 # Find external libraries
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake/")
 
-INCLUDE_DIRECTORIES("." "/usr/local/include")
+INCLUDE_DIRECTORIES(".")
 
 # Use CPack to make deb/rpm/zip/exe installer packages
 include(cmake/CPackInfos.cmake)
