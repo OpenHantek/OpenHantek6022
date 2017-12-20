@@ -11,7 +11,7 @@ addons:
   apt:
     sources:
     - ubuntu-toolchain-r-test
-    - llvm-toolchain-trusty-3.9
+#    - llvm-toolchain-trusty-3.9
     packages: &native_deps
     - cmake
     - libusb-1.0-0-dev
@@ -55,7 +55,7 @@ script:
     - make -j4
 
 before_deploy:
-    - make package
+    - sudo make package
 
 notifications:
   on_success: change
@@ -67,8 +67,7 @@ deploy:
   provider: releases
   api_key:
     secure: XGiTAo3bIZXq1gWQQaodllxTX/Wg0Jwgs0Dxtwi688usIlyUheMmmda9Ot9hdrXTlxJJICgUE1RVwjYynE7c7uUKE9E82QlM/E05m+rAYXzCCzOdrkku2C7netAnFs8ZbNlfMn459QOAkPvbF0Wfx1h+pAYxpXbTFl0cwatBxIjVxc4BUpulbY2SJK413mm8nOwfHI/MpBaJwX2A1vaV4IevXWPVnLrypqA2g7B4N9NHnLB/kuBo6nKM9sjOLfvV7Lzmq/S2a9GeDF8JOO3OPjiQVLV+fwQbUn8l4Rfm6vzs1h4MYJ0E7QBV+laLbD3tHic9IcOHReinG64OTiA4uL8W75V556qGme4Eb6TId2SwnNtJPRU5zn5KIB3J6qXSrqA0XiPjm+lyxQF/LB4hIgMtr2r0t3a2+6zSOuu55D4W+IF4S7Q2ogRKyuu9Ku/QXPcmYRZQNkieXNUn7D6dANyQb6ml4uREZPlwHqLnbOi5RMBi5awiYY6NI8DLdcO4NXn+IsaWbJS50GQRGWJs/hB4PWXeuSAkjQ0kenPOf3ZcDhf73ynb/H6Z2gormgAFM91VC8yhvnjm+2zUMm+ChtYzX7xytCt34Itsrv7U+U1OdECMXRZkbbbvebbTeuo2jBqMdKEp4cDCvPEdrXlWwAFL//3sQvf2O23QEFkpTxY=
-  file: "packages/OpenHantekProject-*"
+  file: "packages/*"
   on:
     repo: OpenHantek/openhantek
-#    condition: "$CMAKE_CXX_COMPILER = clang++-3.6"
     tags: true
