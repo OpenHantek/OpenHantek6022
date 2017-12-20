@@ -47,6 +47,8 @@ VoltageDock::VoltageDock(DsoSettings *settings, QWidget *parent, Qt::WindowFlags
         this->gainComboBox.append(new QComboBox());
         this->gainComboBox[channel]->addItems(this->gainStrings);
 
+        this->invertCheckBox.append(new QCheckBox(tr("Invert")));
+
         this->usedCheckBox.append(new QCheckBox(settings->scope.voltage[channel].name));
     }
 
@@ -54,9 +56,10 @@ VoltageDock::VoltageDock(DsoSettings *settings, QWidget *parent, Qt::WindowFlags
     this->dockLayout->setColumnMinimumWidth(0, 64);
     this->dockLayout->setColumnStretch(1, 1);
     for (int channel = 0; channel < settings->scope.voltage.count(); ++channel) {
-        this->dockLayout->addWidget(this->usedCheckBox[channel], channel * 2, 0);
-        this->dockLayout->addWidget(this->gainComboBox[channel], channel * 2, 1);
-        this->dockLayout->addWidget(this->miscComboBox[channel], channel * 2 + 1, 1);
+        this->dockLayout->addWidget(this->usedCheckBox[channel], channel * 3, 0);
+        this->dockLayout->addWidget(this->gainComboBox[channel], channel * 3, 1);
+        this->dockLayout->addWidget(this->miscComboBox[channel], channel * 3 + 1, 1);
+        this->dockLayout->addWidget(this->invertCheckBox[channel], channel * 3 + 2, 1);
     }
 
     this->dockWidget = new QWidget();
@@ -65,6 +68,7 @@ VoltageDock::VoltageDock(DsoSettings *settings, QWidget *parent, Qt::WindowFlags
     // Connect signals and slots
     for (int channel = 0; channel < settings->scope.voltage.count(); ++channel) {
         connect(this->gainComboBox[channel], SIGNAL(currentIndexChanged(int)), this, SLOT(gainSelected(int)));
+        connect(this->invertCheckBox[channel], SIGNAL(toggled(bool)), this, SLOT(invertSwitched(bool)));
         connect(this->miscComboBox[channel], SIGNAL(currentIndexChanged(int)), this, SLOT(miscSelected(int)));
         connect(this->usedCheckBox[channel], SIGNAL(toggled(bool)), this, SLOT(usedSwitched(bool)));
     }
@@ -190,5 +194,21 @@ void VoltageDock::usedSwitched(bool checked) {
     if (channel < settings->scope.voltage.count()) {
         settings->scope.voltage[channel].used = checked;
         emit usedChanged(channel, checked);
+    }
+}
+
+/// \brief Called when the invert checkbox is switched.
+/// \param checked The check-state of the checkbox.
+void VoltageDock::invertSwitched(bool checked) {
+    int channel;
+
+    // Which checkbox was it?
+    for (channel = 0; channel < settings->scope.voltage.count(); ++channel)
+        if (this->sender() == this->invertCheckBox[channel]) break;
+
+    // Send signal if it was one of the checkboxes
+    if (channel < settings->scope.voltage.count()) {
+        settings->scope.voltage[channel].inverted = checked;
+        // Should we emit an event here?
     }
 }

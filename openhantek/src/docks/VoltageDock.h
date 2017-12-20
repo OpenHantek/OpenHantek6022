@@ -39,6 +39,7 @@ class VoltageDock : public QDockWidget {
     QList<QCheckBox *> usedCheckBox; ///< Enable/disable a specific channel
     QList<QComboBox *> gainComboBox; ///< Select the vertical gain for the channels
     QList<QComboBox *> miscComboBox; ///< Select coupling for real and mode for math channels
+    QList<QCheckBox *> invertCheckBox; ///< Select if the channels should be displayed inverted
 
     DsoSettings *settings; ///< The settings provided by the parent class
 
@@ -51,6 +52,7 @@ class VoltageDock : public QDockWidget {
     void gainSelected(int index);
     void miscSelected(int index);
     void usedSwitched(bool checked);
+    void invertSwitched(bool checked);
 
   signals:
     void couplingChanged(unsigned int channel, Dso::Coupling coupling); ///< A coupling has been selected
