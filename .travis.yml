@@ -44,12 +44,9 @@ matrix:
   
 before_install:
     - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; brew install libusb fftw qt5; export CMAKE_PREFIX_PATH=$(brew --prefix qt5); fi
-    - if [[ "$TRAVIS_OS_NAME" != "osx" ]]; then sudo add-apt-repository -y ppa:beineri/opt-qt542-trusty;sudo apt-get -qq update; sudo apt-get --yes install -qq qt54base; fi
+    - if [[ "$TRAVIS_OS_NAME" != "osx" ]]; then sudo add-apt-repository -y ppa:beineri/opt-qt542-trusty;sudo apt-get -qq update; sudo apt-get --yes install -qq qt54base; QTDIR="/opt/qt55"; PATH="$QTDIR/bin:$PATH"; source /opt/qt54/bin/qt54-env.sh; fi
 
 before_script:
-    - QTDIR="/opt/qt55"
-    - PATH="$QTDIR/bin:$PATH"
-    - source /opt/qt54/bin/qt54-env.sh
     - mkdir build
     - cd build
     - cmake -DCMAKE_CXX_COMPILER=$CMAKE_CXX_COMPILER -DCMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH ../
