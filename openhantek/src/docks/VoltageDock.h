@@ -34,11 +34,11 @@ class VoltageDock : public QDockWidget {
   protected:
     void closeEvent(QCloseEvent *event);
 
-    QGridLayout *dockLayout;         ///< The main layout for the dock window
-    QWidget *dockWidget;             ///< The main widget for the dock window
-    QList<QCheckBox *> usedCheckBox; ///< Enable/disable a specific channel
-    QList<QComboBox *> gainComboBox; ///< Select the vertical gain for the channels
-    QList<QComboBox *> miscComboBox; ///< Select coupling for real and mode for math channels
+    QGridLayout *dockLayout;           ///< The main layout for the dock window
+    QWidget *dockWidget;               ///< The main widget for the dock window
+    QList<QCheckBox *> usedCheckBox;   ///< Enable/disable a specific channel
+    QList<QComboBox *> gainComboBox;   ///< Select the vertical gain for the channels
+    QList<QComboBox *> miscComboBox;   ///< Select coupling for real and mode for math channels
     QList<QCheckBox *> invertCheckBox; ///< Select if the channels should be displayed inverted
 
     DsoSettings *settings; ///< The settings provided by the parent class
