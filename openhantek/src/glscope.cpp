@@ -154,7 +154,7 @@ void GlScope::drawGraph() {
     case Dso::GRAPHFORMAT_TY:
         // Real and virtual channels
         for (int mode = Dso::CHANNELMODE_VOLTAGE; mode < Dso::CHANNELMODE_COUNT; ++mode) {
-            for (int channel = 0; channel < settings->scope.voltage.count(); ++channel) {
+            for (int channel = 0; channel < settings->scope.voltage.size(); ++channel) {
                 if (!channelUsed(mode, channel)) continue;
 
                 // Draw graph for all available depths
@@ -167,7 +167,7 @@ void GlScope::drawGraph() {
 
     case Dso::GRAPHFORMAT_XY:
         // Real and virtual channels
-        for (int channel = 0; channel < settings->scope.voltage.count() - 1; channel += 2) {
+        for (int channel = 0; channel < settings->scope.voltage.size() - 1; channel += 2) {
             if (settings->scope.voltage[channel].used) {
                 for (int index = settings->view.digitalPhosphorDepth - 1; index >= 0; index--) {
                     drawGraphDepth(Dso::CHANNELMODE_VOLTAGE, channel, index);

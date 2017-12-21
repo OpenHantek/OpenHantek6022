@@ -136,7 +136,7 @@ bool Exporter::exportSamples(const DataAnalyzerResult *result) {
         // Draw the measurement table
         stretchBase = (double)(paintDevice->width() - lineHeight * 6) / 10;
         int channelCount = 0;
-        for (int channel = settings->scope.voltage.count() - 1; channel >= 0; channel--) {
+        for (int channel = settings->scope.voltage.size() - 1; channel >= 0; channel--) {
             if ((settings->scope.voltage[channel].used || settings->scope.spectrum[channel].used) &&
                 result->data(channel)) {
                 ++channelCount;
@@ -232,7 +232,7 @@ bool Exporter::exportSamples(const DataAnalyzerResult *result) {
             switch (settings->scope.horizontal.format) {
             case Dso::GRAPHFORMAT_TY:
                 // Add graphs for channels
-                for (int channel = 0; channel < settings->scope.voltage.count(); ++channel) {
+                for (int channel = 0; channel < settings->scope.voltage.size(); ++channel) {
                     if (settings->scope.voltage[channel].used && result->data(channel)) {
                         painter.setPen(QPen(colorValues->voltage[channel], 0));
 
@@ -267,7 +267,7 @@ bool Exporter::exportSamples(const DataAnalyzerResult *result) {
                 }
 
                 // Add spectrum graphs
-                for (int channel = 0; channel < settings->scope.spectrum.count(); ++channel) {
+                for (unsigned channel = 0; channel < settings->scope.spectrum.size(); ++channel) {
                     if (settings->scope.spectrum[channel].used && result->data(channel)) {
                         painter.setPen(QPen(colorValues->spectrum[channel], 0));
 
@@ -335,7 +335,7 @@ bool Exporter::exportCVS(const DataAnalyzerResult *result) {
 
     QTextStream csvStream(&csvFile);
 
-    int chCount = settings->scope.voltage.count();
+    int chCount = settings->scope.voltage.size();
     std::vector<const SampleValues *> voltageData(size_t(chCount), nullptr);
     std::vector<const SampleValues *> spectrumData(size_t(chCount), nullptr);
     size_t maxRow = 0;

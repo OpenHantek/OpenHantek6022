@@ -9,7 +9,7 @@
 
 class DsoSettings;
 class DataAnalyzerResult;
-class DsoSettingsColorValues;
+struct DsoSettingsColorValues;
 
 ////////////////////////////////////////////////////////////////////////////////
 /// \enum ExportFormat                                                exporter.h

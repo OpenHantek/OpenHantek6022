@@ -8,9 +8,13 @@
 
 GlGenerator::GlGenerator(DsoSettingsScope *scope, DsoSettingsView *view) : settings(scope), view(view) {
     // Grid
-    vaGrid[0].resize(((DIVS_TIME * DIVS_SUB - 2) * (DIVS_VOLTAGE - 2) +
-                      (DIVS_VOLTAGE * DIVS_SUB - 2) * (DIVS_TIME - 2) - ((DIVS_TIME - 2) * (DIVS_VOLTAGE - 2))) *
-                     2);
+    const int DIVS_TIME_S2 = (int)DIVS_TIME - 2;
+    const int DIVS_VOLTAGE_S2 = (int)DIVS_VOLTAGE - 2;
+    const int vaGrid0Size = (int) ((DIVS_TIME * DIVS_SUB - 2) * DIVS_VOLTAGE_S2 +
+                            (DIVS_VOLTAGE * DIVS_SUB - 2) * DIVS_TIME_S2 -
+                            (DIVS_TIME_S2 * DIVS_VOLTAGE_S2)) * 2;
+
+    vaGrid[0].resize(vaGrid0Size);
     std::vector<GLfloat>::iterator glIterator = vaGrid[0].begin();
     // Draw vertical lines
     for (int div = 1; div < DIVS_TIME / 2; ++div) {
@@ -43,7 +47,7 @@ GlGenerator::GlGenerator(DsoSettingsScope *scope, DsoSettingsView *view) : setti
     }
 
     // Axes
-    vaGrid[1].resize((2 + (DIVS_TIME * DIVS_SUB - 2) + (DIVS_VOLTAGE * DIVS_SUB - 2)) * 4);
+    vaGrid[1].resize((int)(2 + (DIVS_TIME * DIVS_SUB - 2) + (DIVS_VOLTAGE * DIVS_SUB - 2)) * 4);
     glIterator = vaGrid[1].begin();
     // Horizontal axis
     *(glIterator++) = -DIVS_TIME / 2;
@@ -59,24 +63,24 @@ GlGenerator::GlGenerator(DsoSettingsScope *scope, DsoSettingsView *view) : setti
     for (int line = 1; line < DIVS_TIME / 2 * DIVS_SUB; ++line) {
         float linePosition = (float)line / DIVS_SUB;
         *(glIterator++) = linePosition;
-        *(glIterator++) = -0.05;
+        *(glIterator++) = -0.05f;
         *(glIterator++) = linePosition;
-        *(glIterator++) = 0.05;
+        *(glIterator++) = 0.05f;
         *(glIterator++) = -linePosition;
-        *(glIterator++) = -0.05;
+        *(glIterator++) = -0.05f;
         *(glIterator++) = -linePosition;
-        *(glIterator++) = 0.05;
+        *(glIterator++) = 0.05f;
     }
     // Subdiv lines on vertical axis
     for (int line = 1; line < DIVS_VOLTAGE / 2 * DIVS_SUB; ++line) {
         float linePosition = (float)line / DIVS_SUB;
-        *(glIterator++) = -0.05;
+        *(glIterator++) = -0.05f;
         *(glIterator++) = linePosition;
-        *(glIterator++) = 0.05;
+        *(glIterator++) = 0.05f;
         *(glIterator++) = linePosition;
-        *(glIterator++) = -0.05;
+        *(glIterator++) = -0.05f;
         *(glIterator++) = -linePosition;
-        *(glIterator++) = 0.05;
+        *(glIterator++) = 0.05f;
         *(glIterator++) = -linePosition;
     }
 
@@ -93,7 +97,7 @@ GlGenerator::GlGenerator(DsoSettingsScope *scope, DsoSettingsView *view) : setti
     *(glIterator++) = DIVS_VOLTAGE / 2;
 }
 
-const std::vector<GLfloat> &GlGenerator::channel(int mode, int channel, int index) const {
+const std::vector<GLfloat> &GlGenerator::channel(int mode, unsigned channel, unsigned index) const {
     return vaChannel[mode][channel][index];
 }
 
@@ -108,7 +112,7 @@ void GlGenerator::generateGraphs(const DataAnalyzerResult *result) {
     // Handle all digital phosphor related list manipulations
     for (int mode = Dso::CHANNELMODE_VOLTAGE; mode < Dso::CHANNELMODE_COUNT; ++mode) {
         // Adapt the number of graphs
-        vaChannel[mode].resize(settings->voltage.count());
+        vaChannel[mode].resize(settings->voltage.size());
 
         for (unsigned int channel = 0; channel < vaChannel[mode].size(); ++channel) {
             // Move the last list element to the front

@@ -474,7 +474,7 @@ void OpenHantekMainWindow::updateOffset(unsigned int channel) {
 /// \brief Sets the state of the given oscilloscope channel.
 /// \param channel The channel whose state has changed.
 void OpenHantekMainWindow::updateUsed(unsigned int channel) {
-    if (channel >= (unsigned int)settings->scope.voltage.count()) return;
+    if (channel >= (unsigned int)settings->scope.voltage.size()) return;
 
     bool mathUsed = settings->scope.voltage[settings->scope.physicalChannels].used |
                     settings->scope.spectrum[settings->scope.physicalChannels].used;

@@ -1,37 +1,12 @@
-////////////////////////////////////////////////////////////////////////////////
-//
-//  OpenHantek
-/// \file sispinbox.h
-/// \brief Declares the SiSpinBox class.
-//
-//  Copyright (C) 2010, 2011  Oliver Haag
-//  oliver.haag@gmail.com
-//
-//  This program is free software: you can redistribute it and/or modify it
-//  under the terms of the GNU General Public License as published by the Free
-//  Software Foundation, either version 3 of the License, or (at your option)
-//  any later version.
-//
-//  This program is distributed in the hope that it will be useful, but WITHOUT
-//  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-//  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-//  more details.
-//
-//  You should have received a copy of the GNU General Public License along with
-//  this program.  If not, see <http://www.gnu.org/licenses/>.
-//
-////////////////////////////////////////////////////////////////////////////////
+// SPDX-License-Identifier: GPL-2.0+
 
-#ifndef SISPINBOX_H
-#define SISPINBOX_H
+#pragma once
 
 #include <QDoubleSpinBox>
 #include <QStringList>
 
 #include "utils/printutils.h"
 
-////////////////////////////////////////////////////////////////////////////////
-/// \class SiSpinBox                                                 sispinbox.h
 /// \brief A spin box with SI prefix support.
 /// This spin box supports the SI prefixes (k/M/G/T) after its value and allows
 /// floating point values. The step size is increasing in an exponential way, to
@@ -70,5 +45,3 @@ class SiSpinBox : public QDoubleSpinBox {
   private slots:
     void resetSteppedTo();
 };
-
-#endif

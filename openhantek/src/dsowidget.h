@@ -109,7 +109,7 @@ class DsoWidget : public QWidget {
 
   private slots:
     // Sliders
-    void updateOffset(int channel, double value);
+    void updateOffset(unsigned channel, double value);
     void updateTriggerPosition(int index, double value);
     void updateTriggerLevel(int channel, double value);
     void updateMarker(int marker, double value);

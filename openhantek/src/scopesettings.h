@@ -1,7 +1,7 @@
 #pragma once
 
 #include "definitions.h"
-#include <QVector>
+#include <vector>
 #include "analyse/enums.h"
 #include "hantekdso/enums.h"
 
@@ -37,6 +37,7 @@ struct DsoSettingsScopeTrigger {
 /// \struct DsoSettingsScopeSpectrum                                  settings.h
 /// \brief Holds the settings for the spectrum analysis.
 struct DsoSettingsScopeSpectrum {
+    unsigned channel;
     double magnitude; ///< The vertical resolution in dB/div
     QString name;     ///< Name of this channel
     double offset;    ///< Vertical offset in divs
@@ -66,8 +67,8 @@ struct DsoSettingsScopeVoltage {
 struct DsoSettingsScope {
     DsoSettingsScopeHorizontal horizontal;      ///< Settings for the horizontal axis
     DsoSettingsScopeTrigger trigger;            ///< Settings for the trigger
-    QVector<DsoSettingsScopeSpectrum> spectrum; ///< Spectrum analysis settings
-    QVector<DsoSettingsScopeVoltage> voltage;   ///< Settings for the normal graphs
+    std::vector<DsoSettingsScopeSpectrum> spectrum; ///< Spectrum analysis settings
+    std::vector<DsoSettingsScopeVoltage> voltage;   ///< Settings for the normal graphs
 
     unsigned int physicalChannels = 0;                     ///< Number of real channels (No math etc.)
     Dso::WindowFunction spectrumWindow = Dso::WindowFunction::HANN; ///< Window function for DFT

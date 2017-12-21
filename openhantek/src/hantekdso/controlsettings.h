@@ -4,7 +4,7 @@
 
 namespace Hantek {
 
-class ControlSamplerateLimits;
+struct ControlSamplerateLimits;
 
 //////////////////////////////////////////////////////////////////////////////
 /// \struct ControlSettingsSamplerateTarget                   hantek/control.h

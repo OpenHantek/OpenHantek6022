@@ -126,13 +126,11 @@ const QColor LevelSlider::color(int index) const {
 /// \param index The index of the slider whose color should be set.
 /// \param color The new color for the slider.
 /// \return The index of the slider, -1 on error.
-int LevelSlider::setColor(int index, QColor color) {
-    if (index < 0 || index >= this->slider.count()) return -1;
+void LevelSlider::setColor(unsigned index, QColor color) {
+    if (index >= (unsigned)this->slider.count()) return;
 
-    this->slider[index]->color = color;
+    this->slider[(int)index]->color = color;
     this->repaint();
-
-    return index;
 }
 
 /// \brief Return the text shown beside a slider.
@@ -170,13 +168,11 @@ bool LevelSlider::visible(int index) const {
 /// \param index The index of the slider whose visibility should be set.
 /// \param visible true to show the slider, false to hide it.
 /// \return The index of the slider, -1 on error.
-int LevelSlider::setVisible(int index, bool visible) {
-    if (index < 0 || index >= this->slider.count()) return -1;
+void LevelSlider::setIndexVisible(unsigned index, bool visible) {
+    if (index >= (unsigned)this->slider.count()) return;
 
-    this->slider[index]->visible = visible;
+    this->slider[(int)index]->visible = visible;
     this->repaint();
-
-    return index;
 }
 
 /// \brief Return the minimal value of the sliders.

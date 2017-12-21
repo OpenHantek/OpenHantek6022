@@ -51,7 +51,7 @@ DsoConfigColorsPage::DsoConfigColorsPage(DsoSettings *settings, QWidget *parent)
     printSpectrumLabel = new QLabel(tr("Spectrum"));
     printSpectrumLabel->setAlignment(Qt::AlignHCenter);
 
-    for (int channel = 0; channel < settings->scope.voltage.count(); ++channel) {
+    for (int channel = 0; channel < settings->scope.voltage.size(); ++channel) {
         colorLabel.append(new QLabel(settings->scope.voltage[channel].name));
         screenChannelColorBox.append(new ColorBox(colorSettings.screen.voltage[channel]));
         screenSpectrumColorBox.append(new ColorBox(colorSettings.screen.spectrum[channel]));
@@ -106,7 +106,7 @@ DsoConfigColorsPage::DsoConfigColorsPage(DsoSettings *settings, QWidget *parent)
     colorsLayout->addWidget(printSpectrumLabel, row, COL_PRT_SPECTRUM);
     ++row;
 
-    for (int channel = 0; channel < settings->scope.voltage.count(); ++channel, ++row) {
+    for (int channel = 0; channel < settings->scope.voltage.size(); ++channel, ++row) {
         colorsLayout->addWidget(colorLabel[channel], row, COL_LABEL);
         colorsLayout->addWidget(screenChannelColorBox[channel], row, COL_SCR_CHANNEL);
         colorsLayout->addWidget(screenSpectrumColorBox[channel], row, COL_SCR_SPECTRUM);
@@ -146,7 +146,7 @@ void DsoConfigColorsPage::saveSettings() {
     colorSettings.print.text = printTextColorBox->getColor();
 
     // Graph category
-    for (int channel = 0; channel < settings->scope.voltage.count(); ++channel) {
+    for (int channel = 0; channel < settings->scope.voltage.size(); ++channel) {
         colorSettings.screen.voltage[channel] = screenChannelColorBox[channel]->getColor();
         colorSettings.screen.spectrum[channel] = screenSpectrumColorBox[channel]->getColor();
         colorSettings.print.voltage[channel] = printChannelColorBox[channel]->getColor();

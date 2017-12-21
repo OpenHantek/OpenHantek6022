@@ -17,8 +17,8 @@ struct DsoSettingsColorValues {
     QColor grid;              ///< The color of the grid
     QColor markers;           ///< The color of the markers
     QColor text;              ///< The default text color
-    QVector<QColor> spectrum; ///< The colors of the spectrum graphs
-    QVector<QColor> voltage;  ///< The colors of the voltage graphs
+    std::vector<QColor> spectrum; ///< The colors of the spectrum graphs
+    std::vector<QColor> voltage;  ///< The colors of the voltage graphs
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -31,16 +31,16 @@ struct DsoSettingsView {
                                      QColor(0xff, 0xff, 0xff, 0x3f),
                                      QColor(0xff, 0xff, 0xff, 0xbf),
                                      QColor(0xff, 0xff, 0xff, 0xff),
-                                     QVector<QColor>(),
-                                     QVector<QColor>()};
+                                     std::vector<QColor>(),
+                                     std::vector<QColor>()};
     DsoSettingsColorValues print = {QColor(0x00, 0x00, 0x00, 0xbf),
                                     QColor(0x00, 0x00, 0x00, 0x00),
                                     QColor(0x00, 0x00, 0x00, 0xff),
                                     QColor(0x00, 0x00, 0x00, 0x7f),
                                     QColor(0x00, 0x00, 0x00, 0xef),
                                     QColor(0x00, 0x00, 0x00, 0xff),
-                                    QVector<QColor>(),
-                                    QVector<QColor>()};
+                                    std::vector<QColor>(),
+                                    std::vector<QColor>()};
     bool antialiasing = true;                                         ///< Antialiasing for the graphs
     bool digitalPhosphor = false;                                     ///< true slowly fades out the previous graphs
     int digitalPhosphorDepth = 8;                                     ///< Number of channels shown at one time

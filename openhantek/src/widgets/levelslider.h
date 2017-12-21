@@ -1,36 +1,11 @@
-////////////////////////////////////////////////////////////////////////////////
-//
-//  OpenHantek
-/// \file levelslider.h
-/// \brief Declares the LevelSlider class.
-//
-//  Copyright (C) 2010  Oliver Haag
-//  oliver.haag@gmail.com
-//
-//  This program is free software: you can redistribute it and/or modify it
-//  under the terms of the GNU General Public License as published by the Free
-//  Software Foundation, either version 3 of the License, or (at your option)
-//  any later version.
-//
-//  This program is distributed in the hope that it will be useful, but WITHOUT
-//  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-//  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-//  more details.
-//
-//  You should have received a copy of the GNU General Public License along with
-//  this program.  If not, see <http://www.gnu.org/licenses/>.
-//
-////////////////////////////////////////////////////////////////////////////////
+// SPDX-License-Identifier: GPL-2.0+
 
-#ifndef LEVELSLIDER_H
-#define LEVELSLIDER_H
+#pragma once
 
 #include <QWidget>
 
 class QColor;
 
-////////////////////////////////////////////////////////////////////////////////
-/// \struct LevelSliderParameters                                  levelslider.h
 /// \brief Contains the color, text and value of one slider.
 struct LevelSliderParameters {
     QColor color; ///< The color of the slider and font
@@ -68,11 +43,11 @@ class LevelSlider : public QWidget {
 
     // Parameters for a specific slider
     const QColor color(int index) const;
-    int setColor(int index, QColor color);
+    void setColor(unsigned index, QColor color);
     const QString text(int index) const;
     int setText(int index, QString text);
     bool visible(int index) const;
-    int setVisible(int index, bool visible);
+    void setIndexVisible(unsigned index, bool visible);
 
     double minimum(int index) const;
     double maximum(int index) const;
@@ -110,5 +85,3 @@ class LevelSlider : public QWidget {
   signals:
     void valueChanged(int index, double value); ///< The value of a slider has changed
 };
-
-#endif

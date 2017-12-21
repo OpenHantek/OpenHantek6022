@@ -33,7 +33,7 @@ SpectrumDock::SpectrumDock(DsoSettings *settings, QWidget *parent, Qt::WindowFla
         this->magnitudeStrings << valueToString(*magnitude, UNIT_DECIBEL, 0);
 
     // Initialize elements
-    for (int channel = 0; channel < settings->scope.voltage.count(); ++channel) {
+    for (int channel = 0; channel < settings->scope.voltage.size(); ++channel) {
         this->magnitudeComboBox.append(new QComboBox());
         this->magnitudeComboBox[channel]->addItems(this->magnitudeStrings);
 
@@ -43,7 +43,7 @@ SpectrumDock::SpectrumDock(DsoSettings *settings, QWidget *parent, Qt::WindowFla
     this->dockLayout = new QGridLayout();
     this->dockLayout->setColumnMinimumWidth(0, 64);
     this->dockLayout->setColumnStretch(1, 1);
-    for (int channel = 0; channel < settings->scope.voltage.count(); ++channel) {
+    for (int channel = 0; channel < settings->scope.voltage.size(); ++channel) {
         this->dockLayout->addWidget(this->usedCheckBox[channel], channel, 0);
         this->dockLayout->addWidget(this->magnitudeComboBox[channel], channel, 1);
     }
@@ -52,13 +52,13 @@ SpectrumDock::SpectrumDock(DsoSettings *settings, QWidget *parent, Qt::WindowFla
     SetupDockWidget(this, dockWidget, dockLayout);
 
     // Connect signals and slots
-    for (int channel = 0; channel < settings->scope.voltage.count(); ++channel) {
+    for (int channel = 0; channel < settings->scope.voltage.size(); ++channel) {
         connect(this->magnitudeComboBox[channel], SIGNAL(currentIndexChanged(int)), this, SLOT(magnitudeSelected(int)));
         connect(this->usedCheckBox[channel], SIGNAL(toggled(bool)), this, SLOT(usedSwitched(bool)));
     }
 
     // Set values
-    for (int channel = 0; channel < settings->scope.voltage.count(); ++channel) {
+    for (int channel = 0; channel < settings->scope.voltage.size(); ++channel) {
         this->setMagnitude(channel, settings->scope.spectrum[channel].magnitude);
         this->setUsed(channel, settings->scope.spectrum[channel].used);
     }
@@ -77,7 +77,7 @@ void SpectrumDock::closeEvent(QCloseEvent *event) {
 /// \param magnitude The magnitude in dB.
 /// \return Index of magnitude-value, -1 on error.
 int SpectrumDock::setMagnitude(int channel, double magnitude) {
-    if (channel < 0 || channel >= settings->scope.voltage.count()) return -1;
+    if (channel < 0 || channel >= settings->scope.voltage.size()) return -1;
 
     int index = this->magnitudeSteps.indexOf(magnitude);
     if (index != -1) this->magnitudeComboBox[channel]->setCurrentIndex(index);
@@ -90,7 +90,7 @@ int SpectrumDock::setMagnitude(int channel, double magnitude) {
 /// \param used True if the channel should be enabled, false otherwise.
 /// \return Index of channel, -1 on error.
 int SpectrumDock::setUsed(int channel, bool used) {
-    if (channel >= 0 && channel < settings->scope.voltage.count()) {
+    if (channel >= 0 && channel < settings->scope.voltage.size()) {
         this->usedCheckBox[channel]->setChecked(used);
         return channel;
     }
@@ -104,11 +104,11 @@ void SpectrumDock::magnitudeSelected(int index) {
     int channel;
 
     // Which combobox was it?
-    for (channel = 0; channel < settings->scope.voltage.count(); ++channel)
+    for (channel = 0; channel < settings->scope.voltage.size(); ++channel)
         if (this->sender() == this->magnitudeComboBox[channel]) break;
 
     // Send signal if it was one of the comboboxes
-    if (channel < settings->scope.voltage.count()) {
+    if (channel < settings->scope.voltage.size()) {
         settings->scope.spectrum[channel].magnitude = this->magnitudeSteps.at(index);
         emit magnitudeChanged(channel, settings->scope.spectrum[channel].magnitude);
     }
@@ -120,11 +120,11 @@ void SpectrumDock::usedSwitched(bool checked) {
     int channel;
 
     // Which checkbox was it?
-    for (channel = 0; channel < settings->scope.voltage.count(); ++channel)
+    for (channel = 0; channel < settings->scope.voltage.size(); ++channel)
         if (this->sender() == this->usedCheckBox[channel]) break;
 
     // Send signal if it was one of the checkboxes
-    if (channel < settings->scope.voltage.count()) {
+    if (channel < settings->scope.voltage.size()) {
         settings->scope.spectrum[channel].used = checked;
         emit usedChanged(channel, checked);
     }

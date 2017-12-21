@@ -38,7 +38,7 @@ VoltageDock::VoltageDock(DsoSettings *settings, QWidget *parent, Qt::WindowFlags
         this->gainStrings << valueToString(*gain, UNIT_VOLTS, 0);
 
     // Initialize elements
-    for (int channel = 0; channel < settings->scope.voltage.count(); ++channel) {
+    for (int channel = 0; channel < settings->scope.voltage.size(); ++channel) {
         this->miscComboBox.append(new QComboBox());
         if (channel < (int)settings->scope.physicalChannels)
             this->miscComboBox[channel]->addItems(this->couplingStrings);
@@ -56,7 +56,7 @@ VoltageDock::VoltageDock(DsoSettings *settings, QWidget *parent, Qt::WindowFlags
     this->dockLayout = new QGridLayout();
     this->dockLayout->setColumnMinimumWidth(0, 64);
     this->dockLayout->setColumnStretch(1, 1);
-    for (int channel = 0; channel < settings->scope.voltage.count(); ++channel) {
+    for (int channel = 0; channel < settings->scope.voltage.size(); ++channel) {
         this->dockLayout->addWidget(this->usedCheckBox[channel], channel * 3, 0);
         this->dockLayout->addWidget(this->gainComboBox[channel], channel * 3, 1);
         this->dockLayout->addWidget(this->miscComboBox[channel], channel * 3 + 1, 1);
@@ -67,7 +67,7 @@ VoltageDock::VoltageDock(DsoSettings *settings, QWidget *parent, Qt::WindowFlags
     SetupDockWidget(this, dockWidget, dockLayout);
 
     // Connect signals and slots
-    for (int channel = 0; channel < settings->scope.voltage.count(); ++channel) {
+    for (int channel = 0; channel < settings->scope.voltage.size(); ++channel) {
         connect(this->gainComboBox[channel], SIGNAL(currentIndexChanged(int)), this, SLOT(gainSelected(int)));
         connect(this->invertCheckBox[channel], SIGNAL(toggled(bool)), this, SLOT(invertSwitched(bool)));
         connect(this->miscComboBox[channel], SIGNAL(currentIndexChanged(int)), this, SLOT(miscSelected(int)));
@@ -75,7 +75,7 @@ VoltageDock::VoltageDock(DsoSettings *settings, QWidget *parent, Qt::WindowFlags
     }
 
     // Set values
-    for (int channel = 0; channel < settings->scope.voltage.count(); ++channel) {
+    for (int channel = 0; channel < settings->scope.voltage.size(); ++channel) {
         if (channel < (int)settings->scope.physicalChannels)
             this->setCoupling(channel, settings->scope.voltage[channel].coupling);
         else
@@ -110,7 +110,7 @@ int VoltageDock::setCoupling(int channel, Dso::Coupling coupling) {
 /// \param gain The gain in volts.
 /// \return Index of gain-value, -1 on error.
 int VoltageDock::setGain(int channel, double gain) {
-    if (channel < 0 || channel >= settings->scope.voltage.count()) return -1;
+    if (channel < 0 || channel >= settings->scope.voltage.size()) return -1;
 
     int index = this->gainSteps.indexOf(gain);
     if (index != -1) this->gainComboBox[channel]->setCurrentIndex(index);
@@ -130,7 +130,7 @@ void VoltageDock::setMode(Dso::MathMode mode) {
 /// \param used True if the channel should be enabled, false otherwise.
 /// \return Index of channel, -1 on error.
 int VoltageDock::setUsed(int channel, bool used) {
-    if (channel >= 0 && channel < settings->scope.voltage.count()) {
+    if (channel >= 0 && channel < settings->scope.voltage.size()) {
         this->usedCheckBox[channel]->setChecked(used);
         return channel;
     }
@@ -144,11 +144,11 @@ void VoltageDock::gainSelected(int index) {
     int channel;
 
     // Which combobox was it?
-    for (channel = 0; channel < settings->scope.voltage.count(); ++channel)
+    for (channel = 0; channel < settings->scope.voltage.size(); ++channel)
         if (this->sender() == this->gainComboBox[channel]) break;
 
     // Send signal if it was one of the comboboxes
-    if (channel < settings->scope.voltage.count()) {
+    if (channel < settings->scope.voltage.size()) {
         settings->scope.voltage[channel].gain = this->gainSteps.at(index);
 
         emit gainChanged(channel, settings->scope.voltage[channel].gain);
@@ -161,11 +161,11 @@ void VoltageDock::miscSelected(int index) {
     int channel;
 
     // Which combobox was it?
-    for (channel = 0; channel < settings->scope.voltage.count(); ++channel)
+    for (channel = 0; channel < settings->scope.voltage.size(); ++channel)
         if (this->sender() == this->miscComboBox[channel]) break;
 
     // Send signal if it was one of the comboboxes
-    if (channel < settings->scope.voltage.count()) {
+    if (channel < settings->scope.voltage.size()) {
         if (channel < (int)settings->scope.physicalChannels) {
             settings->scope.voltage[channel].coupling = (Dso::Coupling) index;
             emit couplingChanged(channel, settings->scope.voltage[channel].coupling);
@@ -182,11 +182,11 @@ void VoltageDock::usedSwitched(bool checked) {
     int channel;
 
     // Which checkbox was it?
-    for (channel = 0; channel < settings->scope.voltage.count(); ++channel)
+    for (channel = 0; channel < settings->scope.voltage.size(); ++channel)
         if (this->sender() == this->usedCheckBox[channel]) break;
 
     // Send signal if it was one of the checkboxes
-    if (channel < settings->scope.voltage.count()) {
+    if (channel < settings->scope.voltage.size()) {
         settings->scope.voltage[channel].used = checked;
         emit usedChanged(channel, checked);
     }
@@ -198,11 +198,11 @@ void VoltageDock::invertSwitched(bool checked) {
     int channel;
 
     // Which checkbox was it?
-    for (channel = 0; channel < settings->scope.voltage.count(); ++channel)
+    for (channel = 0; channel < settings->scope.voltage.size(); ++channel)
         if (this->sender() == this->invertCheckBox[channel]) break;
 
     // Send signal if it was one of the checkboxes
-    if (channel < settings->scope.voltage.count()) {
+    if (channel < settings->scope.voltage.size()) {
         settings->scope.voltage[channel].inverted = checked;
         // Should we emit an event here?
     }

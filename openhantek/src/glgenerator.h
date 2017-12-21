@@ -25,7 +25,7 @@ class GlGenerator : public QObject {
     /// \param parent The parent widget.
     GlGenerator(DsoSettingsScope *scope, DsoSettingsView *view);
     void generateGraphs(const DataAnalyzerResult *result);
-    const std::vector<GLfloat> &channel(int mode, int channel, int index) const;
+    const std::vector<GLfloat> &channel(int mode, unsigned channel, unsigned index) const;
     const std::vector<GLfloat> &grid(int a) const;
     bool isReady() const;
 
