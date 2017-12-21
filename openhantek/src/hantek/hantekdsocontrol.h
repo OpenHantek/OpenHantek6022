@@ -5,7 +5,10 @@
 #include "bulkStructs.h"
 #include "controlStructs.h"
 #include "dsosamples.h"
-#include "stateStructs.h"
+#include "states.h"
+#include "controlspecification.h"
+#include "controlsettings.h"
+#include "controlindexes.h"
 #include "utils/dataarray.h"
 #include "utils/printutils.h"
 

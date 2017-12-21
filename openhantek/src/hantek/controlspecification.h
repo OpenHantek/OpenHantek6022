@@ -8,33 +8,6 @@
 namespace Hantek {
 
 //////////////////////////////////////////////////////////////////////////////
-/// \enum ControlIndex                                        hantek/control.h
-/// \brief The array indices for the waiting control commands.
-enum ControlIndex {
-    // CONTROLINDEX_VALUE,
-    // CONTROLINDEX_GETSPEED,
-    // CONTROLINDEX_BEGINCOMMAND,
-    CONTROLINDEX_SETOFFSET,
-    CONTROLINDEX_SETRELAYS,
-    CONTROLINDEX_SETVOLTDIV_CH1,
-    CONTROLINDEX_SETVOLTDIV_CH2,
-    CONTROLINDEX_SETTIMEDIV,
-    CONTROLINDEX_ACQUIIRE_HARD_DATA,
-    CONTROLINDEX_COUNT
-};
-
-//////////////////////////////////////////////////////////////////////////////
-/// \enum RollState                                             hantek/types.h
-/// \brief The states of the roll cycle (Since capture state isn't valid).
-enum RollState {
-    ROLL_STARTSAMPLING = 0, ///< Start sampling
-    ROLL_ENABLETRIGGER = 1, ///< Enable triggering
-    ROLL_FORCETRIGGER = 2,  ///< Force triggering
-    ROLL_GETDATA = 3,       ///< Request sample data
-    ROLL_COUNT
-};
-
-//////////////////////////////////////////////////////////////////////////////
 /// \struct ControlSpecificationCommandsBulk                  hantek/control.h
 /// \brief Stores the bulk command codes used for this device.
 struct ControlSpecificationCommandsBulk {
@@ -123,56 +96,5 @@ struct ControlSpecification {
     bool supportsCouplingRelays = true;
 };
 
-//////////////////////////////////////////////////////////////////////////////
-/// \struct ControlSettingsSamplerateTarget                   hantek/control.h
-/// \brief Stores the target samplerate settings of the device.
-struct ControlSettingsSamplerateTarget {
-    double samplerate;  ///< The target samplerate set via setSamplerate
-    double duration;    ///< The target record time set via setRecordTime
-    bool samplerateSet; ///< true means samplerate was set last, false duration
-};
-
-//////////////////////////////////////////////////////////////////////////////
-/// \struct ControlSettingsSamplerate                         hantek/control.h
-/// \brief Stores the current samplerate settings of the device.
-struct ControlSettingsSamplerate {
-    ControlSettingsSamplerateTarget target; ///< The target samplerate values
-    ControlSamplerateLimits *limits;        ///< The samplerate limits
-    unsigned int downsampler;               ///< The variable downsampling factor
-    double current;                         ///< The current samplerate
-};
-
-//////////////////////////////////////////////////////////////////////////////
-/// \struct ControlSettingsTrigger                            hantek/control.h
-/// \brief Stores the current trigger settings of the device.
-struct ControlSettingsTrigger {
-    double level[HANTEK_CHANNELS]; ///< The trigger level for each channel in V
-    double position;               ///< The current pretrigger position
-    unsigned int point;            ///< The trigger position in Hantek coding
-    Dso::TriggerMode mode;         ///< The trigger mode
-    Dso::Slope slope;              ///< The trigger slope
-    bool special;                  ///< true, if the trigger source is special
-    unsigned int source;           ///< The trigger source
-};
-
-//////////////////////////////////////////////////////////////////////////////
-/// \struct ControlSettingsVoltage                            hantek/control.h
-/// \brief Stores the current amplification settings of the device.
-struct ControlSettingsVoltage {
-    unsigned gain;     ///< The gain id
-    double offset;     ///< The screen offset for each channel
-    double offsetReal; ///< The real offset for each channel (Due to quantization)
-    bool used;         ///< true, if the channel is used
-};
-
-//////////////////////////////////////////////////////////////////////////////
-/// \struct ControlSettings                                   hantek/control.h
-/// \brief Stores the current settings of the device.
-struct ControlSettings {
-    ControlSettingsSamplerate samplerate;            ///< The samplerate settings
-    ControlSettingsVoltage voltage[HANTEK_CHANNELS]; ///< The amplification settings
-    ControlSettingsTrigger trigger;                  ///< The trigger settings
-    unsigned int recordLengthId;                     ///< The id in the record length array
-    unsigned short int usedChannels;                 ///< Number of activated channels
-};
 }
+
