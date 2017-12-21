@@ -23,7 +23,6 @@ class HorizontalDock : public QDockWidget {
 
   public:
     HorizontalDock(DsoSettings *settings, QWidget *parent, Qt::WindowFlags flags = 0);
-    ~HorizontalDock();
 
     void setFrequencybase(double timebase);
     void setSamplerate(double samplerate);

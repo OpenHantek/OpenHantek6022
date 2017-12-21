@@ -6,6 +6,7 @@
 #include <QDockWidget>
 #include <QLabel>
 #include <QSignalBlocker>
+#include <QCoreApplication>
 
 #include <cmath>
 
@@ -16,6 +17,13 @@
 #include "sispinbox.h"
 #include "utils/dsoStrings.h"
 #include "utils/printutils.h"
+
+template<typename... Args> struct SELECT {
+    template<typename C, typename R>
+    static constexpr auto OVERLOAD_OF( R (C::*pmf)(Args...) ) -> decltype(pmf) {
+        return pmf;
+    }
+};
 
 ////////////////////////////////////////////////////////////////////////////////
 // class HorizontalDock
@@ -72,11 +80,11 @@ HorizontalDock::HorizontalDock(DsoSettings *settings, QWidget *parent, Qt::Windo
     SetupDockWidget(this, dockWidget, dockLayout);
 
     // Connect signals and slots
-    connect(this->samplerateSiSpinBox, SIGNAL(valueChanged(double)), this, SLOT(samplerateSelected(double)));
-    connect(this->timebaseSiSpinBox, SIGNAL(valueChanged(double)), this, SLOT(timebaseSelected(double)));
-    connect(this->frequencybaseSiSpinBox, SIGNAL(valueChanged(double)), this, SLOT(frequencybaseSelected(double)));
-    connect(this->recordLengthComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(recordLengthSelected(int)));
-    connect(this->formatComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(formatSelected(int)));
+    connect(this->samplerateSiSpinBox, SELECT<double>::OVERLOAD_OF(&QDoubleSpinBox::valueChanged), this, &HorizontalDock::samplerateSelected);
+    connect(this->timebaseSiSpinBox, SELECT<double>::OVERLOAD_OF(&QDoubleSpinBox::valueChanged), this, &HorizontalDock::timebaseSelected);
+    connect(this->frequencybaseSiSpinBox, SELECT<double>::OVERLOAD_OF(&QDoubleSpinBox::valueChanged), this, &HorizontalDock::frequencybaseSelected);
+    connect(this->recordLengthComboBox, SELECT<int>::OVERLOAD_OF(&QComboBox::currentIndexChanged), this, &HorizontalDock::recordLengthSelected);
+    connect(this->formatComboBox, SELECT<int>::OVERLOAD_OF(&QComboBox::currentIndexChanged), this, &HorizontalDock::formatSelected);
 
     // Set values
     this->setSamplerate(settings->scope.horizontal.samplerate);
@@ -85,9 +93,6 @@ HorizontalDock::HorizontalDock(DsoSettings *settings, QWidget *parent, Qt::Windo
     // this->setRecordLength(settings->scope.horizontal.recordLength);
     this->setFormat(settings->scope.horizontal.format);
 }
-
-/// \brief Cleans up everything.
-HorizontalDock::~HorizontalDock() {}
 
 /// \brief Don't close the dock, just hide it.
 /// \param event The close event that should be handled.
@@ -127,17 +132,23 @@ double HorizontalDock::setTimebase(double timebase) {
     return timebaseSiSpinBox->value();
 }
 
+int addRecordLength(QComboBox *recordLengthComboBox, unsigned recordLength) {
+    recordLengthComboBox->addItem(
+        recordLength == UINT_MAX ? QCoreApplication::translate("HorizontalDock","Roll") : valueToString(recordLength, UNIT_SAMPLES, 3), recordLength);
+    return recordLengthComboBox->count()-1;
+}
+
 /// \brief Changes the record length if the new value is supported.
 /// \param recordLength The record length in samples.
 void HorizontalDock::setRecordLength(unsigned int recordLength) {
     QSignalBlocker blocker(recordLengthComboBox);
     int index = recordLengthComboBox->findData(recordLength);
+    settings->scope.horizontal.recordLength = recordLength;
 
-    if (index != -1) {
-        recordLengthComboBox->setCurrentIndex(index);
-        settings->scope.horizontal.recordLength = this->recordLengthComboBox->itemData(index).toUInt();
-    } else
-        throw new std::runtime_error("Record length cannot be found");
+    if (index == -1) {
+        index = addRecordLength(recordLengthComboBox, recordLength);
+    }
+    recordLengthComboBox->setCurrentIndex(index);
 }
 
 /// \brief Changes the format if the new value is supported.
@@ -160,8 +171,7 @@ void HorizontalDock::availableRecordLengthsChanged(const std::vector<unsigned> &
 
     recordLengthComboBox->clear();
     for (auto recordLength : recordLengths) {
-        recordLengthComboBox->addItem(
-            recordLength == UINT_MAX ? tr("Roll") : valueToString(recordLength, UNIT_SAMPLES, 3), recordLength);
+        addRecordLength(recordLengthComboBox, recordLength);
     }
 
     setRecordLength(settings->scope.horizontal.recordLength);
