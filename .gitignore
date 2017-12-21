@@ -4,3 +4,4 @@
 .*~
 CMakeLists.txt.user
 build/
+firmware/hex
