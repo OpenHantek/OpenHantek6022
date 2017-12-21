@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: GPL-2.0+
 
+#include "bulkcode.h"
 #include "bulkStructs.h"
+#include "definitions.h"
 
 namespace Hantek {
 
@@ -437,8 +439,8 @@ BulkSetBuffer5200::BulkSetBuffer5200() : DataArray<uint8_t>(10) { this->init(); 
 /// \param usedPre The TriggerPositionUsedPre value.
 /// \param usedPost The TriggerPositionUsedPost value.
 /// \param recordLength The ::RecordLengthId value.
-BulkSetBuffer5200::BulkSetBuffer5200(uint16_t triggerPositionPre, uint16_t triggerPositionPost, uint8_t usedPre,
-                                     uint8_t usedPost, uint8_t recordLength)
+BulkSetBuffer5200::BulkSetBuffer5200(uint16_t triggerPositionPre, uint16_t triggerPositionPost, DTriggerPositionUsed usedPre,
+                                     DTriggerPositionUsed usedPost, uint8_t recordLength)
     : DataArray<uint8_t>(10) {
     this->init();
 
@@ -481,15 +483,15 @@ uint8_t BulkSetBuffer5200::getUsedPre() { return this->array[4]; }
 
 /// \brief Set the TriggerPositionUsedPre to the given value.
 /// \param value The new ::DTriggerPositionUsed value for the pre position.
-void BulkSetBuffer5200::setUsedPre(uint8_t value) { this->array[4] = value; }
+void BulkSetBuffer5200::setUsedPre(DTriggerPositionUsed value) { this->array[4] = (uint8_t) value; }
 
 /// \brief Get the TriggerPositionUsedPost value.
 /// \return The ::DTriggerPositionUsed value for the post position.
-uint8_t BulkSetBuffer5200::getUsedPost() { return ((DBufferBits *)&(this->array[8]))->triggerPositionUsed; }
+DTriggerPositionUsed BulkSetBuffer5200::getUsedPost() { return  (DTriggerPositionUsed) ((DBufferBits *)&(this->array[8]))->triggerPositionUsed; }
 
 /// \brief Set the TriggerPositionUsedPost to the given value.
 /// \param value The new ::DTriggerPositionUsed value for the post position.
-void BulkSetBuffer5200::setUsedPost(uint8_t value) { ((DBufferBits *)&(this->array[8]))->triggerPositionUsed = value; }
+void BulkSetBuffer5200::setUsedPost(DTriggerPositionUsed value) { ((DBufferBits *)&(this->array[8]))->triggerPositionUsed =  (uint8_t) value; }
 
 /// \brief Get the recordLength value in DBufferBits.
 /// \return The ::RecordLengthId value.

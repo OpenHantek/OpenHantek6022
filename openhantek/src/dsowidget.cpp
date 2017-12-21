@@ -12,7 +12,6 @@
 #include "exporter.h"
 #include "glgenerator.h"
 #include "glscope.h"
-#include "hantek/definitions.h"
 #include "settings.h"
 #include "utils/dsoStrings.h"
 #include "utils/printutils.h"
@@ -369,13 +368,13 @@ void DsoWidget::updateTriggerSource() {
 void DsoWidget::updateVoltageCoupling(unsigned int channel) {
     if (channel >= (unsigned int)settings->scope.voltage.count()) return;
 
-    measurementMiscLabel[channel]->setText(Dso::couplingString((Dso::Coupling)settings->scope.voltage[channel].misc));
+    measurementMiscLabel[channel]->setText(Dso::couplingString(settings->scope.voltage[channel].coupling));
 }
 
 /// \brief Handles modeChanged signal from the voltage dock.
 void DsoWidget::updateMathMode() {
     measurementMiscLabel[settings->scope.physicalChannels]->setText(
-        Dso::mathModeString((Dso::MathMode)settings->scope.voltage[settings->scope.physicalChannels].misc));
+        Dso::mathModeString(settings->scope.voltage[settings->scope.physicalChannels].math));
 }
 
 /// \brief Handles gainChanged signal from the voltage dock.

@@ -3,8 +3,7 @@
 #include <QMutex>
 
 #include "glgenerator.h"
-
-#include "dataanalyzer.h"
+#include "utils/printutils.h"
 #include "settings.h"
 
 GlGenerator::GlGenerator(DsoSettingsScope *scope, DsoSettingsView *view) : settings(scope), view(view) {

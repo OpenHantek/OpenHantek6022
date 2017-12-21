@@ -15,7 +15,7 @@ DsoConfigAnalysisPage::DsoConfigAnalysisPage(DsoSettings *settings, QWidget *par
     windowFunctionLabel = new QLabel(tr("Window function"));
     windowFunctionComboBox = new QComboBox();
     windowFunctionComboBox->addItems(windowFunctionStrings);
-    windowFunctionComboBox->setCurrentIndex(settings->scope.spectrumWindow);
+    windowFunctionComboBox->setCurrentIndex((int)settings->scope.spectrumWindow);
 
     referenceLevelLabel = new QLabel(tr("Reference level"));
     referenceLevelSpinBox = new QDoubleSpinBox();

@@ -3,7 +3,7 @@ layout: default
 ---
 # How to add a new device
 We only accept new devices whoms firmware is hantek protocol compatible.
-Codewise you will only need to touch files within `openhantek/src/hantek`.
+Codewise you will only need to touch files within `openhantek/src/hantekdso`.
 
 ## Firmware and usb access
 The firmware goes to `openhantek/res/firmware` in the hex format. Please keep to the filename
@@ -12,30 +12,53 @@ The `openhantek/res/firmwares.qrc` should list the new files.
 The firmware/60-hantek.rules file needs the usb vendor/device id to add access permissions.
 
 ## The hantek protocol
-The hantek protocol itself is encoded in the `bulkStructs.h` and `controlStructs.h` files.
+The hantek protocol itself is encoded in the `src/hantekprotocol` files.
 If your device needs other or slighly altered packets, you would need to modify those files.
 
 ## Add your model information
-The `models.h` file needs the model information. Add your model to the ``enum Model`` and
-also to the ``std::list<DSOModel> supportedModels`` list. A list item is a ``DSOModel``
-with the following constructor:
+You will only need to touch files within `openhantek/src/hantekdso/models`.
+
+Create a new class with your model name and inherit from `DSOModel`. Add an instance of your new class
+to the `supportedModels` list in `models.cpp`.
+
+The following code shows the constructor of `DSOModel` that needs to be supplied with model specific data:
 
 ``` c++
-DSOModel(Model model, long vendorID, long productID, long vendorIDnoFirmware, long productIDnoFirmware,
+DSOModel(int ID, long vendorID, long productID, long vendorIDnoFirmware, long productIDnoFirmware,
              std::string firmwareToken, const std::string name)
 ```
 
-You need to find out the usb vendor id and product id for your digital oscilloscope after it has received
-the firmware (for ``long vendorID``, ``long productID``) and before it has a valid firmware
-(for ``long vendorIDnoFirmware``, ``long productIDnoFirmware``).
+* You need to find out the usb vendor id and product id for your digital oscilloscope after it has received
+  the firmware (for ``long vendorID``, ``long productID``) and before it has a valid firmware
+  (for ``long vendorIDnoFirmware``, ``long productIDnoFirmware``).
+* The firmware token is just the devicename part of the firmware
+  (remember that we used `devicename-firmware.hex` and `devicename-loader.hex`).
+* The last parameter is the user visible name of the device.
 
-The firmware token is just the devicename part of the firmware
-(remember that we used `devicename-firmware.hex` and `devicename-loader.hex`).
+Add your device specific constants via the `specification` field, for instance:
 
-The last parameter is the user visible name of the device.
+``` c++
+    specification.samplerate.single.base = 50e6;
+    specification.samplerate.single.max = 50e6;
+    specification.samplerate.single.maxDownsampler = 131072;
+    specification.samplerate.single.recordLengths = {UINT_MAX, 10240, 32768};
+    specification.samplerate.multi.base = 100e6;
+    specification.samplerate.multi.max = 100e6;
+    specification.samplerate.multi.maxDownsampler = 131072;
+    specification.samplerate.multi.recordLengths = {UINT_MAX, 20480, 65536};
+```
 
-## Add your device specifications and capabilities
+The actual commands that are send, need to be defined as well, for instance:
 
-This is not ready yet for easy device addition. At the moment you need to add your device specifications
-in the `hantekdsocontrol.cpp` constructor.
+``` c++
+    specification.command.control.setOffset = CONTROL_SETOFFSET;
+    specification.command.control.setRelays = CONTROL_SETRELAYS;
+    specification.command.bulk.setGain = BULK_SETGAIN;
+    specification.command.bulk.setRecordLength = BULK_SETTRIGGERANDSAMPLERATE;
+    specification.command.bulk.setChannels = BULK_SETTRIGGERANDSAMPLERATE;
+    specification.command.bulk.setSamplerate = BULK_SETTRIGGERANDSAMPLERATE;
+    specification.command.bulk.setTrigger = BULK_SETTRIGGERANDSAMPLERATE;
+    specification.command.bulk.setPretrigger = BULK_SETTRIGGERANDSAMPLERATE;
+```
+
 

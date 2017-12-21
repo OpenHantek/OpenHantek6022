@@ -81,14 +81,14 @@ std::unique_ptr<DataAnalyzerResult> DataAnalyzer::convertData(const DSOsamples *
             std::vector<double> &resultData = result->modifyData(scope->physicalChannels)->voltage.sample;
             for (std::vector<double>::iterator resultIterator = resultData.begin(); resultIterator != resultData.end();
                  ++resultIterator) {
-                switch (scope->voltage[scope->physicalChannels].misc) {
-                case Dso::MATHMODE_1ADD2:
+                switch (scope->voltage[scope->physicalChannels].math) {
+                case Dso::MathMode::ADD_CH1_CH2:
                     *resultIterator = *ch1Iterator + *ch2Iterator;
                     break;
-                case Dso::MATHMODE_1SUB2:
+                case Dso::MathMode::SUB_CH2_FROM_CH1:
                     *resultIterator = *ch1Iterator - *ch2Iterator;
                     break;
-                case Dso::MATHMODE_2SUB1:
+                case Dso::MathMode::SUB_CH1_FROM_CH2:
                     *resultIterator = *ch2Iterator - *ch1Iterator;
                     break;
                 }
@@ -144,19 +144,19 @@ void DataAnalyzer::spectrumAnalysis(DataAnalyzerResult *result, Dso::WindowFunct
             lastWindow = scope->spectrumWindow;
 
             switch (scope->spectrumWindow) {
-            case Dso::WINDOW_HAMMING:
+            case Dso::WindowFunction::HAMMING:
                 for (unsigned int windowPosition = 0; windowPosition < lastRecordLength; ++windowPosition)
                     *(lastWindowBuffer + windowPosition) = 0.54 - 0.46 * cos(2.0 * M_PI * windowPosition / windowEnd);
                 break;
-            case Dso::WINDOW_HANN:
+            case Dso::WindowFunction::HANN:
                 for (unsigned int windowPosition = 0; windowPosition < lastRecordLength; ++windowPosition)
                     *(lastWindowBuffer + windowPosition) = 0.5 * (1.0 - cos(2.0 * M_PI * windowPosition / windowEnd));
                 break;
-            case Dso::WINDOW_COSINE:
+            case Dso::WindowFunction::COSINE:
                 for (unsigned int windowPosition = 0; windowPosition < lastRecordLength; ++windowPosition)
                     *(lastWindowBuffer + windowPosition) = sin(M_PI * windowPosition / windowEnd);
                 break;
-            case Dso::WINDOW_LANCZOS:
+            case Dso::WindowFunction::LANCZOS:
                 for (unsigned int windowPosition = 0; windowPosition < lastRecordLength; ++windowPosition) {
                     double sincParameter = (2.0 * windowPosition / windowEnd - 1.0) * M_PI;
                     if (sincParameter == 0)
@@ -165,65 +165,65 @@ void DataAnalyzer::spectrumAnalysis(DataAnalyzerResult *result, Dso::WindowFunct
                         *(lastWindowBuffer + windowPosition) = sin(sincParameter) / sincParameter;
                 }
                 break;
-            case Dso::WINDOW_BARTLETT:
+            case Dso::WindowFunction::BARTLETT:
                 for (unsigned int windowPosition = 0; windowPosition < lastRecordLength; ++windowPosition)
                     *(lastWindowBuffer + windowPosition) =
                         2.0 / windowEnd * (windowEnd / 2 - std::abs((double)(windowPosition - windowEnd / 2.0)));
                 break;
-            case Dso::WINDOW_TRIANGULAR:
+            case Dso::WindowFunction::TRIANGULAR:
                 for (unsigned int windowPosition = 0; windowPosition < lastRecordLength; ++windowPosition)
                     *(lastWindowBuffer + windowPosition) =
                         2.0 / lastRecordLength *
                         (lastRecordLength / 2 - std::abs((double)(windowPosition - windowEnd / 2.0)));
                 break;
-            case Dso::WINDOW_GAUSS: {
+            case Dso::WindowFunction::GAUSS: {
                 double sigma = 0.4;
                 for (unsigned int windowPosition = 0; windowPosition < lastRecordLength; ++windowPosition)
                     *(lastWindowBuffer + windowPosition) =
                         exp(-0.5 * pow(((windowPosition - windowEnd / 2) / (sigma * windowEnd / 2)), 2));
             } break;
-            case Dso::WINDOW_BARTLETTHANN:
+            case Dso::WindowFunction::BARTLETTHANN:
                 for (unsigned int windowPosition = 0; windowPosition < lastRecordLength; ++windowPosition)
                     *(lastWindowBuffer + windowPosition) = 0.62 -
                                                            0.48 * std::abs((double)(windowPosition / windowEnd - 0.5)) -
                                                            0.38 * cos(2.0 * M_PI * windowPosition / windowEnd);
                 break;
-            case Dso::WINDOW_BLACKMAN: {
+            case Dso::WindowFunction::BLACKMAN: {
                 double alpha = 0.16;
                 for (unsigned int windowPosition = 0; windowPosition < lastRecordLength; ++windowPosition)
                     *(lastWindowBuffer + windowPosition) = (1 - alpha) / 2 -
                                                            0.5 * cos(2.0 * M_PI * windowPosition / windowEnd) +
                                                            alpha / 2 * cos(4.0 * M_PI * windowPosition / windowEnd);
             } break;
-            // case WINDOW_KAISER:
+            // case Dso::WindowFunction::WINDOW_KAISER:
             // TODO WINDOW_KAISER
             // double alpha = 3.0;
             // for(unsigned int windowPosition = 0; windowPosition <
             // lastRecordLength; ++windowPosition)
             //*(window + windowPosition) = ;
             // break;
-            case Dso::WINDOW_NUTTALL:
+            case Dso::WindowFunction::NUTTALL:
                 for (unsigned int windowPosition = 0; windowPosition < lastRecordLength; ++windowPosition)
                     *(lastWindowBuffer + windowPosition) = 0.355768 -
                                                            0.487396 * cos(2 * M_PI * windowPosition / windowEnd) +
                                                            0.144232 * cos(4 * M_PI * windowPosition / windowEnd) -
                                                            0.012604 * cos(6 * M_PI * windowPosition / windowEnd);
                 break;
-            case Dso::WINDOW_BLACKMANHARRIS:
+            case Dso::WindowFunction::BLACKMANHARRIS:
                 for (unsigned int windowPosition = 0; windowPosition < lastRecordLength; ++windowPosition)
                     *(lastWindowBuffer + windowPosition) = 0.35875 -
                                                            0.48829 * cos(2 * M_PI * windowPosition / windowEnd) +
                                                            0.14128 * cos(4 * M_PI * windowPosition / windowEnd) -
                                                            0.01168 * cos(6 * M_PI * windowPosition / windowEnd);
                 break;
-            case Dso::WINDOW_BLACKMANNUTTALL:
+            case Dso::WindowFunction::BLACKMANNUTTALL:
                 for (unsigned int windowPosition = 0; windowPosition < lastRecordLength; ++windowPosition)
                     *(lastWindowBuffer + windowPosition) = 0.3635819 -
                                                            0.4891775 * cos(2 * M_PI * windowPosition / windowEnd) +
                                                            0.1365995 * cos(4 * M_PI * windowPosition / windowEnd) -
                                                            0.0106411 * cos(6 * M_PI * windowPosition / windowEnd);
                 break;
-            case Dso::WINDOW_FLATTOP:
+            case Dso::WindowFunction::FLATTOP:
                 for (unsigned int windowPosition = 0; windowPosition < lastRecordLength; ++windowPosition)
                     *(lastWindowBuffer + windowPosition) = 1.0 - 1.93 * cos(2 * M_PI * windowPosition / windowEnd) +
                                                            1.29 * cos(4 * M_PI * windowPosition / windowEnd) -

@@ -6,13 +6,13 @@
 
 #include "usbdevice.h"
 
-#include "controlStructs.h"
+#include "controlgetspeed.h"
+#include "controlcode.h"
 #include "models.h"
 #include "utils/printutils.h"
 
-using namespace Hantek;
 
-USBDevice::USBDevice(DSOModel model, libusb_device *device) : model(model), device(device) {
+USBDevice::USBDevice(DSOModel *model, libusb_device *device) : model(model), device(device) {
     libusb_ref_device(device);
     libusb_get_device_descriptor(device, &descriptor);
 }
@@ -101,7 +101,7 @@ void USBDevice::connectionLost() {
 bool USBDevice::isConnected() { return this->handle != 0; }
 
 bool USBDevice::needsFirmware() {
-    return this->descriptor.idProduct != model.productID || this->descriptor.idVendor != model.vendorID;
+    return this->descriptor.idProduct != model->productID || this->descriptor.idVendor != model->vendorID;
 }
 
 int USBDevice::bulkTransfer(unsigned char endpoint, unsigned char *data, unsigned int length, int attempts,
@@ -158,8 +158,8 @@ int USBDevice::bulkCommand(DataArray<unsigned char> *command, int attempts) {
     if (!allowBulkTransfer) return LIBUSB_SUCCESS;
 
     // Send BeginCommand control command
-    int errorCode = this->controlWrite(CONTROL_BEGINCOMMAND, this->beginCommandControl->data(),
-                                       this->beginCommandControl->getSize());
+    int errorCode = this->controlWrite(CONTROL_BEGINCOMMAND, beginCommandControl.data(),
+                                       beginCommandControl.getSize());
     if (errorCode < 0) return errorCode;
 
     // Send bulk command
@@ -274,13 +274,9 @@ int USBDevice::getPacketSize() {
     return -1;
 }
 
-/// \brief Get the oscilloscope model.
-/// \return The ::Model of the connected Hantek DSO.
-int USBDevice::getUniqueModelID() { return model.uniqueModelID; }
-
 libusb_device *USBDevice::getRawDevice() const { return device; }
 
-const DSOModel &USBDevice::getModel() const { return model; }
+const DSOModel* USBDevice::getModel() const { return model; }
 
 void USBDevice::setEnableBulkTransfer(bool enable) { allowBulkTransfer = enable; }
 

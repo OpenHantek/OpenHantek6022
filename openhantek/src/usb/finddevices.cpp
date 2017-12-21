@@ -11,6 +11,8 @@
 #include "utils/printutils.h"
 #include <libusb-1.0/libusb.h>
 
+#include "models.h"
+
 FindDevices::FindDevices(libusb_context *context) : context(context) {}
 
 // Iterate through all usb devices
@@ -33,14 +35,14 @@ std::list<std::unique_ptr<USBDevice>> FindDevices::findDevices() {
         struct libusb_device_descriptor descriptor;
         if (libusb_get_device_descriptor(device, &descriptor) < 0) continue;
 
-        for (DSOModel &model : supportedModels) {
+        for (DSOModel* model : supportedModels) {
             // Check VID and PID for firmware flashed devices
-            if (descriptor.idVendor == model.vendorID && descriptor.idProduct == model.productID) {
+            if (descriptor.idVendor == model->vendorID && descriptor.idProduct == model->productID) {
                 devices.push_back(std::unique_ptr<USBDevice>(new USBDevice(model, device)));
                 break;
             }
             // Devices without firmware have different VID/PIDs
-            if (descriptor.idVendor == model.vendorIDnoFirmware && descriptor.idProduct == model.productIDnoFirmware) {
+            if (descriptor.idVendor == model->vendorIDnoFirmware && descriptor.idProduct == model->productIDnoFirmware) {
                 devices.push_back(std::unique_ptr<USBDevice>(new USBDevice(model, device)));
                 break;
             }

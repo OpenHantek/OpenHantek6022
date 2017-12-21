@@ -17,7 +17,7 @@
 
 #include "exporter.h"
 
-#include "dataanalyzerresult.h"
+#include "analyse/dataanalyzerresult.h"
 #include "definitions.h"
 #include "glgenerator.h"
 #include "settings.h"
@@ -148,10 +148,10 @@ bool Exporter::exportSamples(const DataAnalyzerResult *result) {
                 // Print coupling/math mode
                 if ((unsigned int)channel < settings->scope.physicalChannels)
                     painter.drawText(QRectF(lineHeight * 4, top, lineHeight * 2, lineHeight),
-                                     Dso::couplingString((Dso::Coupling)settings->scope.voltage[channel].misc));
+                                     Dso::couplingString(settings->scope.voltage[channel].coupling));
                 else
                     painter.drawText(QRectF(lineHeight * 4, top, lineHeight * 2, lineHeight),
-                                     Dso::mathModeString((Dso::MathMode)settings->scope.voltage[channel].misc));
+                                     Dso::mathModeString(settings->scope.voltage[channel].math));
 
                 // Print voltage gain
                 painter.drawText(QRectF(lineHeight * 6, top, stretchBase * 2, lineHeight),

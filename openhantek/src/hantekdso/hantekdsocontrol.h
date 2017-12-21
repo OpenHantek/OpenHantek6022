@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "errorcodes.h"
 #include "bulkStructs.h"
 #include "controlStructs.h"
 #include "dsosamples.h"
@@ -22,6 +23,7 @@
 class USBDevice;
 
 /// \brief The DsoControl abstraction layer for %Hantek USB DSOs.
+/// TODO Please anyone, refactor this class into smaller pieces (Separation of Concerns!).
 class HantekDsoControl : public QObject {
     Q_OBJECT
 
@@ -65,7 +67,7 @@ class HantekDsoControl : public QObject {
     const QStringList *getSpecialTriggerSources();
 
     /// Return the associated usb device.
-    const USBDevice *getDevice() const;
+    USBDevice *getDevice();
 
     /// Return the last sample set
     const DSOsamples &getLastSamples();
@@ -87,6 +89,8 @@ class HantekDsoControl : public QObject {
     bool isRollMode() const;
     bool isFastRate() const;
     int getRecordLength() const;
+
+    Dso::ErrorCode retrieveChannelLevelData();
 
     /// \brief Calculated the nearest samplerate supported by the oscilloscope.
     /// \param samplerate The target samplerate, that should be met as good as
@@ -140,23 +144,23 @@ class HantekDsoControl : public QObject {
     /// \brief Update the minimum and maximum supported samplerate.
     void updateSamplerateLimits();
 
+  public: // TODO redo command queues
+    /// Pointers to bulk commands, ready to be transmitted
+    DataArray<unsigned char> *command[Hantek::BULK_COUNT] = {0};
+    /// true, when the command should be executed
+    bool commandPending[Hantek::BULK_COUNT] = {false};
+    ///< Pointers to control commands
+    DataArray<unsigned char> *control[Hantek::CONTROLINDEX_COUNT] = {0};
+    ///< Request codes for control commands
+    unsigned char controlCode[Hantek::CONTROLINDEX_COUNT];
+    ///< true, when the control command should be executed
+    bool controlPending[Hantek::CONTROLINDEX_COUNT] = {false};
   private:
     // Communication with device
     USBDevice *device;     ///< The USB device for the oscilloscope
     bool sampling = false; ///< true, if the oscilloscope is taking samples
 
     QStringList specialTriggerSources = {tr("EXT"), tr("EXT/10")}; ///< Names of the special trigger sources
-
-    DataArray<unsigned char> *command[Hantek::BULK_COUNT] = {0}; ///< Pointers to bulk
-                                                                 /// commands, ready to
-    /// be transmitted
-    bool commandPending[Hantek::BULK_COUNT] = {false};                   ///< true, when the command should be
-                                                                         /// executed
-    DataArray<unsigned char> *control[Hantek::CONTROLINDEX_COUNT] = {0}; ///< Pointers to control commands
-    unsigned char controlCode[Hantek::CONTROLINDEX_COUNT];               ///< Request codes for
-                                                                         /// control commands
-    bool controlPending[Hantek::CONTROLINDEX_COUNT] = {false};           ///< true, when the control
-    /// command should be executed
 
     // Device setup
     Hantek::ControlSpecification specification; ///< The specifications of the device
@@ -169,7 +173,7 @@ class HantekDsoControl : public QObject {
 
     // State of the communication thread
     int captureState = Hantek::CAPTURE_WAITING;
-    int rollState = 0;
+    Hantek::RollState rollState = Hantek::RollState::STARTSAMPLING;
     bool _samplingStarted = false;
     Dso::TriggerMode lastTriggerMode = (Dso::TriggerMode)-1;
     int cycleCounter = 0;

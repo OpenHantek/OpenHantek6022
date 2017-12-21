@@ -25,7 +25,7 @@ class VoltageDock : public QDockWidget {
 
     int setCoupling(int channel, Dso::Coupling coupling);
     int setGain(int channel, double gain);
-    int setMode(Dso::MathMode mode);
+    void setMode(Dso::MathMode mode);
     int setUsed(int channel, bool used);
 
   protected:

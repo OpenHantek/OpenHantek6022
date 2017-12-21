@@ -14,7 +14,7 @@ endif()
 
 # include directories
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
-include_directories(src/ src/hantek src/analyse src/widgets src/docks src/configdialog)
+include_directories(src/ src/hantekprotocol src/hantekdso src/widgets src/docks src/configdialog)
 
 # collect sources and other files
 file(GLOB_RECURSE SRC "src/*.cpp")

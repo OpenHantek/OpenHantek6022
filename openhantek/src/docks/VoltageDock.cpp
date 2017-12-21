@@ -29,8 +29,9 @@ VoltageDock::VoltageDock(DsoSettings *settings, QWidget *parent, Qt::WindowFlags
     for (int coupling = Dso::COUPLING_AC; coupling < Dso::COUPLING_COUNT; ++coupling)
         this->couplingStrings.append(Dso::couplingString((Dso::Coupling)coupling));
 
-    for (int mode = Dso::MATHMODE_1ADD2; mode < Dso::MATHMODE_COUNT; ++mode)
-        this->modeStrings.append(Dso::mathModeString((Dso::MathMode)mode));
+    for( auto e: Enum<Dso::MathMode>() ) {
+        this->modeStrings.append(Dso::mathModeString(e));
+    }
 
     this->gainSteps << 1e-2 << 2e-2 << 5e-2 << 1e-1 << 2e-1 << 5e-1 << 1e0 << 2e0 << 5e0; ///< Voltage steps in V/div
     for (QList<double>::iterator gain = this->gainSteps.begin(); gain != this->gainSteps.end(); ++gain)
@@ -76,9 +77,9 @@ VoltageDock::VoltageDock(DsoSettings *settings, QWidget *parent, Qt::WindowFlags
     // Set values
     for (int channel = 0; channel < settings->scope.voltage.count(); ++channel) {
         if (channel < (int)settings->scope.physicalChannels)
-            this->setCoupling(channel, (Dso::Coupling)settings->scope.voltage[channel].misc);
+            this->setCoupling(channel, settings->scope.voltage[channel].coupling);
         else
-            this->setMode((Dso::MathMode)settings->scope.voltage[channel].misc);
+            this->setMode(settings->scope.voltage[channel].math);
         this->setGain(channel, settings->scope.voltage[channel].gain);
         this->setUsed(channel, settings->scope.voltage[channel].used);
     }
@@ -120,13 +121,8 @@ int VoltageDock::setGain(int channel, double gain) {
 /// \brief Sets the mode for the math channel.
 /// \param mode The math-mode.
 /// \return Index of math-mode, -1 on error.
-int VoltageDock::setMode(Dso::MathMode mode) {
-    if (mode >= Dso::MATHMODE_1ADD2 && mode <= Dso::MATHMODE_2SUB1) {
-        this->miscComboBox[settings->scope.physicalChannels]->setCurrentIndex(mode);
-        return mode;
-    }
-
-    return -1;
+void VoltageDock::setMode(Dso::MathMode mode) {
+    miscComboBox[settings->scope.physicalChannels]->setCurrentIndex((int)mode);
 }
 
 /// \brief Enables/disables a channel.
@@ -170,11 +166,13 @@ void VoltageDock::miscSelected(int index) {
 
     // Send signal if it was one of the comboboxes
     if (channel < settings->scope.voltage.count()) {
-        settings->scope.voltage[channel].misc = index;
-        if (channel < (int)settings->scope.physicalChannels)
-            emit couplingChanged(channel, (Dso::Coupling)settings->scope.voltage[channel].misc);
-        else
-            emit modeChanged((Dso::MathMode)settings->scope.voltage[channel].misc);
+        if (channel < (int)settings->scope.physicalChannels) {
+            settings->scope.voltage[channel].coupling = (Dso::Coupling) index;
+            emit couplingChanged(channel, settings->scope.voltage[channel].coupling);
+        } else {
+            settings->scope.voltage[channel].math = (Dso::MathMode) index;
+            emit modeChanged(settings->scope.voltage[channel].math);
+        }
     }
 }
 

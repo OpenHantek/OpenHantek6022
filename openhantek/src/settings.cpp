@@ -78,7 +78,7 @@ void DsoSettings::setChannelCount(unsigned int channels) {
         if (this->scope.voltage.count() <= channel + 1) {
             DsoSettingsScopeVoltage newVoltage;
             newVoltage.gain = 1.0;
-            newVoltage.misc = Dso::COUPLING_DC;
+            newVoltage.coupling = Dso::COUPLING_DC;
             newVoltage.name = QApplication::tr("CH%1").arg(channel + 1);
             newVoltage.offset = 0.0;
             newVoltage.trigger = 0.0;
@@ -112,7 +112,7 @@ void DsoSettings::setChannelCount(unsigned int channels) {
     if (this->scope.voltage.count() <= (int)channels) {
         DsoSettingsScopeVoltage newVoltage;
         newVoltage.gain = 1.0;
-        newVoltage.misc = Dso::MATHMODE_1ADD2;
+        newVoltage.math = Dso::MathMode::ADD_CH1_CH2;
         newVoltage.name = QApplication::tr("MATH");
         newVoltage.offset = 0.0;
         newVoltage.trigger = 0.0;
@@ -177,7 +177,7 @@ void DsoSettings::load() {
     for (int channel = 0; channel < this->scope.voltage.count(); ++channel) {
         store->beginGroup(QString("vertical%1").arg(channel));
         if (store->contains("gain")) this->scope.voltage[channel].gain = store->value("gain").toDouble();
-        if (store->contains("misc")) this->scope.voltage[channel].misc = store->value("misc").toInt();
+        if (store->contains("misc")) this->scope.voltage[channel].rawValue = store->value("misc").toInt();
         if (store->contains("offset")) this->scope.voltage[channel].offset = store->value("offset").toDouble();
         if (store->contains("trigger")) this->scope.voltage[channel].trigger = store->value("trigger").toDouble();
         if (store->contains("used")) this->scope.voltage[channel].used = store->value("used").toBool();
@@ -276,7 +276,7 @@ void DsoSettings::save() {
     for (int channel = 0; channel < this->scope.voltage.count(); ++channel) {
         store->beginGroup(QString("vertical%1").arg(channel));
         store->setValue("gain", this->scope.voltage[channel].gain);
-        store->setValue("misc", this->scope.voltage[channel].misc);
+        store->setValue("misc", this->scope.voltage[channel].rawValue);
         store->setValue("offset", this->scope.voltage[channel].offset);
         store->setValue("trigger", this->scope.voltage[channel].trigger);
         store->setValue("used", this->scope.voltage[channel].used);
@@ -284,7 +284,7 @@ void DsoSettings::save() {
     }
     store->setValue("spectrumLimit", this->scope.spectrumLimit);
     store->setValue("spectrumReference", this->scope.spectrumReference);
-    store->setValue("spectrumWindow", this->scope.spectrumWindow);
+    store->setValue("spectrumWindow", (int)this->scope.spectrumWindow);
     store->endGroup();
 
     // View

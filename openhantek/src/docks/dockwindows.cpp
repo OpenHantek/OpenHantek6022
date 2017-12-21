@@ -8,6 +8,8 @@
 
 #include <cmath>
 
+#include "analyse/enums.h"
+#include "hantekdso/enums.h"
 #include "definitions.h"
 #include "dockwindows.h"
 

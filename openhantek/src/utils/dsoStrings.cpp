@@ -23,7 +23,7 @@
 
 #include <QApplication>
 
-#include "definitions.h"
+#include "dsoStrings.h"
 
 namespace Dso {
 /// \brief Return string representation of the given channel mode.
@@ -75,11 +75,11 @@ QString couplingString(Coupling coupling) {
 /// \return The string that should be used in labels etc.
 QString mathModeString(MathMode mode) {
     switch (mode) {
-    case MATHMODE_1ADD2:
+    case MathMode::ADD_CH1_CH2:
         return QApplication::tr("CH1 + CH2");
-    case MATHMODE_1SUB2:
+    case MathMode::SUB_CH2_FROM_CH1:
         return QApplication::tr("CH1 - CH2");
-    case MATHMODE_2SUB1:
+    case MathMode::SUB_CH1_FROM_CH2:
         return QApplication::tr("CH2 - CH1");
     default:
         return QString();
@@ -123,35 +123,35 @@ QString slopeString(Slope slope) {
 /// \return The string that should be used in labels etc.
 QString windowFunctionString(WindowFunction window) {
     switch (window) {
-    case WINDOW_RECTANGULAR:
+    case WindowFunction::RECTANGULAR:
         return QApplication::tr("Rectangular");
-    case WINDOW_HAMMING:
+    case WindowFunction::HAMMING:
         return QApplication::tr("Hamming");
-    case WINDOW_HANN:
+    case WindowFunction::HANN:
         return QApplication::tr("Hann");
-    case WINDOW_COSINE:
+    case WindowFunction::COSINE:
         return QApplication::tr("Cosine");
-    case WINDOW_LANCZOS:
+    case WindowFunction::LANCZOS:
         return QApplication::tr("Lanczos");
-    case WINDOW_BARTLETT:
+    case WindowFunction::BARTLETT:
         return QApplication::tr("Bartlett");
-    case WINDOW_TRIANGULAR:
+    case WindowFunction::TRIANGULAR:
         return QApplication::tr("Triangular");
-    case WINDOW_GAUSS:
+    case WindowFunction::GAUSS:
         return QApplication::tr("Gauss");
-    case WINDOW_BARTLETTHANN:
+    case WindowFunction::BARTLETTHANN:
         return QApplication::tr("Bartlett-Hann");
-    case WINDOW_BLACKMAN:
+    case WindowFunction::BLACKMAN:
         return QApplication::tr("Blackman");
-    // case WINDOW_KAISER:
+    // case WindowFunction::WINDOW_KAISER:
     //	return QApplication::tr("Kaiser");
-    case WINDOW_NUTTALL:
+    case WindowFunction::NUTTALL:
         return QApplication::tr("Nuttall");
-    case WINDOW_BLACKMANHARRIS:
+    case WindowFunction::BLACKMANHARRIS:
         return QApplication::tr("Blackman-Harris");
-    case WINDOW_BLACKMANNUTTALL:
+    case WindowFunction::BLACKMANNUTTALL:
         return QApplication::tr("Blackman-Nuttall");
-    case WINDOW_FLATTOP:
+    case WindowFunction::FLATTOP:
         return QApplication::tr("Flat top");
     default:
         return QString();

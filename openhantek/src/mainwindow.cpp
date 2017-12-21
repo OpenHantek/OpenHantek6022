@@ -22,12 +22,12 @@
 #include "dockwindows.h"
 
 #include "configdialog.h"
-#include "dataanalyzer.h"
+#include "analyse/dataanalyzer.h"
 #include "dockwindows.h"
 #include "dsowidget.h"
-#include "hantek/hantekdsocontrol.h"
 #include "hantekdsocontrol.h"
 #include "usb/usbdevice.h"
+#include "dsomodel.h"
 #include "viewconstants.h"
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -41,7 +41,7 @@ OpenHantekMainWindow::OpenHantekMainWindow(HantekDsoControl *dsoControl, DataAna
 
     // Window title
     setWindowIcon(QIcon(":openhantek.png"));
-    setWindowTitle(tr("OpenHantek - Device %1").arg(QString::fromStdString(dsoControl->getDevice()->getModel().name)));
+    setWindowTitle(tr("OpenHantek - Device %1").arg(QString::fromStdString(dsoControl->getDevice()->getModel()->name)));
 
 // Create dock windows before the dso widget, they fix messed up settings
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 6, 0))
@@ -267,7 +267,7 @@ void OpenHantekMainWindow::addManualCommandEdit() {
         commandEdit->hide();
         commandEdit->clear();
 
-        if (errorCode != Dso::ErrorCode::ERROR_NONE) statusBar()->showMessage(tr("Invalid command"), 3000);
+        if (errorCode != Dso::ErrorCode::NONE) statusBar()->showMessage(tr("Invalid command"), 3000);
     });
 }
 
@@ -333,7 +333,7 @@ void OpenHantekMainWindow::connectSignals() {
 /// \brief Initialize the device with the current settings.
 void OpenHantekMainWindow::applySettingsToDevice() {
     for (unsigned int channel = 0; channel < settings->scope.physicalChannels; ++channel) {
-        dsoControl->setCoupling(channel, (Dso::Coupling)settings->scope.voltage[channel].misc);
+        dsoControl->setCoupling(channel, settings->scope.voltage[channel].coupling);
         updateVoltageGain(channel);
         updateOffset(channel);
         dsoControl->setTriggerLevel(channel, settings->scope.voltage[channel].trigger);

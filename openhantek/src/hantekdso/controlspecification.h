@@ -2,6 +2,9 @@
 
 #pragma once
 
+#include "controlvalue.h"
+#include "bulkcode.h"
+#include "controlcode.h"
 #include "definitions.h"
 #include <QList>
 
@@ -11,21 +14,21 @@ namespace Hantek {
 /// \struct ControlSpecificationCommandsBulk                  hantek/control.h
 /// \brief Stores the bulk command codes used for this device.
 struct ControlSpecificationCommandsBulk {
-    BulkCode setChannels;     ///< Command for setting used channels
-    BulkCode setSamplerate;   ///< Command for samplerate settings
-    BulkCode setGain;         ///< Command for gain settings (Usually in combination with
+    BulkCode setChannels = (BulkCode)-1;     ///< Command for setting used channels
+    BulkCode setSamplerate = (BulkCode)-1;   ///< Command for samplerate settings
+    BulkCode setGain = (BulkCode)-1;         ///< Command for gain settings (Usually in combination with
                               /// CONTROL_SETRELAYS)
-    BulkCode setRecordLength; ///< Command for buffer settings
-    BulkCode setTrigger;      ///< Command for trigger settings
-    BulkCode setPretrigger;   ///< Command for pretrigger settings
+    BulkCode setRecordLength = (BulkCode)-1; ///< Command for buffer settings
+    BulkCode setTrigger = (BulkCode)-1;      ///< Command for trigger settings
+    BulkCode setPretrigger = (BulkCode)-1;   ///< Command for pretrigger settings
 };
 
 //////////////////////////////////////////////////////////////////////////////
 /// \struct ControlSpecificationCommandsControl               hantek/control.h
 /// \brief Stores the control command codes used for this device.
 struct ControlSpecificationCommandsControl {
-    ControlCode setOffset; ///< Command for setting offset calibration data
-    ControlCode setRelays; ///< Command for setting gain relays (Usually in
+    ControlCode setOffset = (ControlCode)-1; ///< Command for setting offset calibration data
+    ControlCode setRelays = (ControlCode)-1; ///< Command for setting gain relays (Usually in
                            /// combination with BULK_SETGAIN)
 };
 
@@ -33,8 +36,8 @@ struct ControlSpecificationCommandsControl {
 /// \struct ControlSpecificationCommandsValues                hantek/control.h
 /// \brief Stores the control value codes used for this device.
 struct ControlSpecificationCommandsValues {
-    ControlValue offsetLimits;  ///< Code for channel offset limits
-    ControlValue voltageLimits; ///< Code for voltage limits
+    ControlValue offsetLimits = VALUE_OFFSETLIMITS;  ///< Code for channel offset limits
+    ControlValue voltageLimits = (ControlValue)-1; ///< Code for voltage limits
 };
 
 //////////////////////////////////////////////////////////////////////////////
@@ -60,34 +63,35 @@ struct ControlSamplerateLimits {
 /// \struct ControlSpecificationSamplerate                    hantek/control.h
 /// \brief Stores the samplerate limits.
 struct ControlSpecificationSamplerate {
-    ControlSamplerateLimits single; ///< The limits for single channel mode
-    ControlSamplerateLimits multi;  ///< The limits for multi channel mode
+    ControlSamplerateLimits single = {50e6, 50e6, 0, std::vector<unsigned>()}; ///< The limits for single channel mode
+    ControlSamplerateLimits multi  = {100e6, 100e6, 0, std::vector<unsigned>()};  ///< The limits for multi channel mode
 };
 
 //////////////////////////////////////////////////////////////////////////////
 /// \struct ControlSpecification                              hantek/control.h
 /// \brief Stores the specifications of the currently connected device.
 struct ControlSpecification {
+    ControlSpecification() noexcept;
     // Interface
     ControlSpecificationCommands command; ///< The commands for this device
 
     // Limits
     ControlSpecificationSamplerate samplerate; ///< The samplerate specifications
-    QList<unsigned int> bufferDividers;        ///< Samplerate dividers for record lengths
-    QList<double> gainSteps;                   ///< Available voltage steps in V/screenheight
+    std::vector<unsigned int> bufferDividers;        ///< Samplerate dividers for record lengths
+    std::vector<double> gainSteps;                   ///< Available voltage steps in V/screenheight
     unsigned char sampleSize;                  ///< Number of bits per sample
 
     // Calibration
     /// The sample values at the top of the screen
-    QList<unsigned short> voltageLimit[HANTEK_CHANNELS];
+    std::vector<unsigned short> voltageLimit[HANTEK_CHANNELS];
     /// The index of the selected gain on the hardware
-    QList<unsigned char> gainIndex;
-    QList<unsigned char> gainDiv;
-    QList<double> sampleSteps; ///< Available samplerate steps in s
-    QList<unsigned char> sampleDiv;
-    /// Calibration data for the channel offsets \todo Should probably be a QList
-    /// too
-    unsigned short offsetLimit[HANTEK_CHANNELS][9][OFFSET_COUNT];
+    std::vector<unsigned char> gainIndex;
+    std::vector<unsigned char> gainDiv;
+    std::vector<double> sampleSteps; ///< Available samplerate steps in s
+    std::vector<unsigned char> sampleDiv;
+
+    /// Calibration data for the channel offsets
+    OffsetsPerGainStep offsetLimit[HANTEK_CHANNELS];
 
     bool isSoftwareTriggerDevice = false;
     bool useControlNoBulk = false;

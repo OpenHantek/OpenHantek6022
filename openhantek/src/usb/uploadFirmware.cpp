@@ -12,6 +12,8 @@
 #include "usbdevice.h"
 #include "utils/printutils.h"
 
+#include "dsomodel.h"
+
 bool UploadFirmware::startUpload(USBDevice *device) {
     if (device->isConnected() || !device->needsFirmware()) return false;
 
@@ -26,11 +28,11 @@ bool UploadFirmware::startUpload(USBDevice *device) {
 
     // Write firmware from resources to temp files
     QFile firmwareRes(
-        QString(":/firmware/%1-firmware.hex").arg(QString::fromStdString(device->getModel().firmwareToken)));
+        QString(":/firmware/%1-firmware.hex").arg(QString::fromStdString(device->getModel()->firmwareToken)));
     auto temp_firmware_path = std::unique_ptr<QTemporaryFile>(QTemporaryFile::createNativeFile(firmwareRes));
     if (!temp_firmware_path) return false;
     temp_firmware_path->open();
-    QFile loaderRes(QString(":/firmware/%1-loader.hex").arg(QString::fromStdString(device->getModel().firmwareToken)));
+    QFile loaderRes(QString(":/firmware/%1-loader.hex").arg(QString::fromStdString(device->getModel()->firmwareToken)));
     auto temp_loader_path = std::unique_ptr<QTemporaryFile>(QTemporaryFile::createNativeFile(loaderRes));
     if (!temp_loader_path) return false;
     temp_loader_path->open();

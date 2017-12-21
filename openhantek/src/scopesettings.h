@@ -2,6 +2,10 @@
 
 #include "definitions.h"
 #include <QVector>
+#include "analyse/enums.h"
+#include "hantekdso/enums.h"
+
+#define MARKER_COUNT 2 ///< Number of markers
 
 ////////////////////////////////////////////////////////////////////////////////
 /// \struct DsoSettingsScopeHorizontal                                settings.h
@@ -44,8 +48,12 @@ struct DsoSettingsScopeSpectrum {
 /// \brief Holds the settings for the normal voltage graphs.
 struct DsoSettingsScopeVoltage {
     double gain;    ///< The vertical resolution in V/div
-    int misc;       ///< Different enums, coupling for real- and mode for math-channels
     bool inverted;  ///< true if the channel is inverted (mirrored on cross-axis)
+    union { ///< Different enums, coupling for real- and mode for math-channels
+        Dso::MathMode math;
+        Dso::Coupling coupling;
+        int rawValue;
+    };
     QString name;   ///< Name of this channel
     double offset;  ///< Vertical offset in divs
     double trigger; ///< Trigger level in V
@@ -62,7 +70,7 @@ struct DsoSettingsScope {
     QVector<DsoSettingsScopeVoltage> voltage;   ///< Settings for the normal graphs
 
     unsigned int physicalChannels = 0;                     ///< Number of real channels (No math etc.)
-    Dso::WindowFunction spectrumWindow = Dso::WINDOW_HANN; ///< Window function for DFT
+    Dso::WindowFunction spectrumWindow = Dso::WindowFunction::HANN; ///< Window function for DFT
     double spectrumReference = 0.0;                        ///< Reference level for spectrum in dBm
     double spectrumLimit = -20.0;                          ///< Minimum magnitude of the spectrum (Avoids peaks)
 };

@@ -7,7 +7,7 @@
 #include <QGLFunctions>
 #include <QObject>
 
-#include "dataanalyzerresult.h"
+#include "analyse/dataanalyzerresult.h"
 #include "scopesettings.h"
 #include "viewconstants.h"
 #include "viewsettings.h"

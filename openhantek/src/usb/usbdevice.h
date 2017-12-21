@@ -7,15 +7,12 @@
 #include <libusb-1.0/libusb.h>
 #include <memory>
 
+#include "usbdevicedefinitions.h"
 #include "controlbegin.h"
 #include "definitions.h"
-#include "models.h"
 #include "utils/dataarray.h"
 
-#define HANTEK_TIMEOUT 500       ///< Timeout for USB transfers in ms
-#define HANTEK_TIMEOUT_MULTI 100 ///< Timeout for multi packet USB transfers in ms
-#define HANTEK_ATTEMPTS 3        ///< The number of transfer attempts
-#define HANTEK_ATTEMPTS_MULTI 1  ///< The number of multi packet transfer attempts
+class DSOModel;
 
 /// \brief This class handles the USB communication with an usb device that has
 /// one in and one out endpoint.
@@ -23,7 +20,7 @@ class USBDevice : public QObject {
     Q_OBJECT
 
   public:
-    USBDevice(DSOModel model, libusb_device *device);
+    USBDevice(DSOModel* model, libusb_device *device);
     ~USBDevice();
     bool connectDevice(QString &errorMessage);
 
@@ -59,10 +56,11 @@ class USBDevice : public QObject {
 
     int getConnectionSpeed();
     int getPacketSize();
-    int getUniqueModelID();
 
     libusb_device *getRawDevice() const;
-    const DSOModel &getModel() const;
+    /// \brief Get the oscilloscope model.
+    /// \return The ::Model of the connected Hantek DSO.
+    const DSOModel *getModel() const;
     void setEnableBulkTransfer(bool enable);
     void overwriteInPacketLength(int len);
 
@@ -71,8 +69,8 @@ class USBDevice : public QObject {
     void connectionLost();
 
     // Command buffers
-    ControlBeginCommand *beginCommandControl = new ControlBeginCommand();
-    DSOModel model;
+    ControlBeginCommand beginCommandControl;
+    DSOModel* model;
 
     // Libusb specific variables
     struct libusb_device_descriptor descriptor;

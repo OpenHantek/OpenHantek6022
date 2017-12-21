@@ -8,11 +8,9 @@
 #include <QString>
 
 #include "definitions.h"
+#include "states.h"
 #include "utils/dataarray.h"
 
-////////////////////////////////////////////////////////////////////////////////
-/// \namespace Hantek                                             hantek/types.h
-/// \brief All %Hantek DSO device specific things.
 namespace Hantek {
 
 //////////////////////////////////////////////////////////////////////////////
@@ -224,17 +222,17 @@ class BulkSetRecordLength2250 : public DataArray<uint8_t> {
 class BulkSetBuffer5200 : public DataArray<uint8_t> {
   public:
     BulkSetBuffer5200();
-    BulkSetBuffer5200(uint16_t triggerPositionPre, uint16_t triggerPositionPost, uint8_t usedPre = 0,
-                      uint8_t usedPost = 0, uint8_t recordLength = 0);
+    BulkSetBuffer5200(uint16_t triggerPositionPre, uint16_t triggerPositionPost, DTriggerPositionUsed usedPre = DTriggerPositionUsed::DTRIGGERPOSITION_OFF,
+                      DTriggerPositionUsed usedPost = DTriggerPositionUsed::DTRIGGERPOSITION_OFF, uint8_t recordLength = 0);
 
     uint16_t getTriggerPositionPre();
     void setTriggerPositionPre(uint16_t value);
     uint16_t getTriggerPositionPost();
     void setTriggerPositionPost(uint16_t value);
     uint8_t getUsedPre();
-    void setUsedPre(uint8_t value);
-    uint8_t getUsedPost();
-    void setUsedPost(uint8_t value);
+    void setUsedPre(DTriggerPositionUsed value);
+    DTriggerPositionUsed getUsedPost();
+    void setUsedPost(DTriggerPositionUsed value);
     uint8_t getRecordLength();
     void setRecordLength(uint8_t value);
 

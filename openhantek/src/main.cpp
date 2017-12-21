@@ -16,13 +16,14 @@
 
 #include <libusb-1.0/libusb.h>
 
-#include "dataanalyzer.h"
+#include "analyse/dataanalyzer.h"
 #include "hantekdsocontrol.h"
 #include "mainwindow.h"
 #include "settings.h"
 #include "usb/finddevices.h"
 #include "usb/uploadFirmware.h"
 #include "usb/usbdevice.h"
+#include "dsomodel.h"
 
 using namespace Hantek;
 
@@ -76,7 +77,7 @@ int main(int argc, char *argv[]) {
 
     //////// Upload firmwares for all connected devices ////////
     for (const auto &i : devices) {
-        QString modelName = QString::fromStdString(i->getModel().name);
+        QString modelName = QString::fromStdString(i->getModel()->name);
         if (i->needsFirmware()) {
             UploadFirmware uf;
             uf.startUpload(i.get());
@@ -92,7 +93,7 @@ int main(int argc, char *argv[]) {
 
     devices = findDevices.findDevices();
     for (auto &i : devices) {
-        QString modelName = QString::fromStdString(i->getModel().name);
+        QString modelName = QString::fromStdString(i->getModel()->name);
 
         if (i->needsFirmware()) {
             if (UploadFirmware().startUpload(&*i)) {
