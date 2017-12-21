@@ -238,7 +238,7 @@ void GlGenerator::generateGraphs(const DataAnalyzerResult *result) {
 
                         for (unsigned int position = 0; position < sampleCount; ++position) {
                             *(glIterator++) = position * horizontalFactor - DIVS_TIME / 2;
-                            *(glIterator++) = invert * (*(dataIterator++) / gain + offset);
+                            *(glIterator++) = *(dataIterator++) / gain * invert + offset;
                         }
                     } else {
                         std::vector<double>::const_iterator dataIterator =
@@ -297,8 +297,8 @@ void GlGenerator::generateGraphs(const DataAnalyzerResult *result) {
                 const double yInvert = settings->voltage[yChannel].inverted ? -1.0 : 1.0;
 
                 for (unsigned int position = 0; position < sampleCount; ++position) {
-                    *(glIterator++) = xInvert * (*(xIterator++) / xGain + xOffset);
-                    *(glIterator++) = yInvert * (*(yIterator++) / yGain + yOffset);
+                    *(glIterator++) = *(xIterator++) / xGain * xInvert + xOffset;
+                    *(glIterator++) = *(yIterator++) / yGain * yInvert + yOffset;
                 }
             } else {
                 // Delete all vector arrays
