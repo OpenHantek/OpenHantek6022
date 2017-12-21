@@ -23,7 +23,7 @@ struct DsoSettingsOptions {
 /// \brief Holds the settings of the program.
 class DsoSettings {
   public:
-    DsoSettings();
+    explicit DsoSettings(unsigned int channels);
     bool setFilename(const QString &filename);
 
     void setChannelCount(unsigned int channels);

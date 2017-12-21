@@ -217,6 +217,7 @@ DsoWidget::DsoWidget(DsoSettings *settings, QWidget *parent, Qt::WindowFlags fla
         mainScope->update();
         zoomScope->update();
     });
+    updateTriggerSource();
 }
 
 void DsoWidget::showNewData(std::unique_ptr<DataAnalyzerResult> data) {

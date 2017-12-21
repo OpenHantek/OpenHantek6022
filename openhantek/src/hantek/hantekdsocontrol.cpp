@@ -220,7 +220,6 @@ HantekDsoControl::HantekDsoControl(USBDevice *device) : device(device) {
         break;
 
     case MODEL_DSO5200A:
-        [[clang::fallthrough]];
     case MODEL_DSO5200:
         // Instantiate additional commands for the DSO-5200
         command[BULK_CSETTRIGGERORSAMPLERATE] = new BulkSetSamplerate5200();

@@ -40,7 +40,7 @@ LevelSlider::LevelSlider(Qt::ArrowType direction, QWidget *parent) : QWidget(par
     this->setFont(font);
 
     this->pressedSlider = -1;
-    this->sliderWidth = 8;
+    this->sliderWidth = 12;
 
     this->setDirection(direction);
 }
@@ -381,44 +381,45 @@ void LevelSlider::paintEvent(QPaintEvent *event) {
         painter.setPen((*slider)->color);
 
         if ((*slider)->text.isEmpty()) {
-            int needlePoints[6];
+            QVector<QPoint> needlePoints;
+            QRect& sRect = (*slider)->rect;
+            const int W = this->sliderWidth;
 
             switch (this->_direction) {
             case Qt::LeftArrow:
-                needlePoints[0] = (*slider)->rect.left() + 4;
-                needlePoints[1] = (*slider)->rect.top();
-                needlePoints[2] = (*slider)->rect.left() + 1;
-                needlePoints[3] = (*slider)->rect.top() + 3;
-                needlePoints[4] = (*slider)->rect.left() + 4;
-                needlePoints[5] = (*slider)->rect.top() + 6;
+                needlePoints << QPoint(sRect.left() + 4, sRect.top()    )
+                             << QPoint(sRect.left() + 1, sRect.top() + 3)
+                             << QPoint(sRect.left() + 4, sRect.top() + 6)
+                             << QPoint(sRect.left() + W, sRect.top() + 6)
+                             << QPoint(sRect.left() + W, sRect.top()    );
                 break;
             case Qt::UpArrow:
-                needlePoints[0] = (*slider)->rect.left();
-                needlePoints[1] = (*slider)->rect.top() + 4;
-                needlePoints[2] = (*slider)->rect.left() + 3;
-                needlePoints[3] = (*slider)->rect.top() + 1;
-                needlePoints[4] = (*slider)->rect.left() + 6;
-                needlePoints[5] = (*slider)->rect.top() + 4;
+                needlePoints << QPoint(sRect.left(),     sRect.top() + 4)
+                             << QPoint(sRect.left() + 3, sRect.top() + 1)
+                             << QPoint(sRect.left() + 6, sRect.top() + 4)
+                             << QPoint(sRect.left() + 6, sRect.top() + W)
+                             << QPoint(sRect.left(),     sRect.top() + W);
                 break;
             case Qt::DownArrow:
-                needlePoints[0] = (*slider)->rect.left();
-                needlePoints[1] = (*slider)->rect.top() + this->sliderWidth - 5;
-                needlePoints[2] = (*slider)->rect.left() + 3;
-                needlePoints[3] = (*slider)->rect.top() + this->sliderWidth - 2;
-                needlePoints[4] = (*slider)->rect.left() + 6;
-                needlePoints[5] = (*slider)->rect.top() + this->sliderWidth - 5;
+                needlePoints << QPoint(sRect.left(),     sRect.top() + W - 5)
+                             << QPoint(sRect.left() + 3, sRect.top() + W - 2)
+                             << QPoint(sRect.left() + 6, sRect.top() + W - 5)
+                             << QPoint(sRect.left() + 6, sRect.top()        )
+                             << QPoint(sRect.left(),     sRect.top()        );
+                break;
+            case Qt::RightArrow:
+                needlePoints << QPoint(sRect.left() + W - 5, sRect.top()    )
+                             << QPoint(sRect.left() + W - 2, sRect.top() + 3)
+                             << QPoint(sRect.left() + W - 5, sRect.top() + 6)
+                             << QPoint(sRect.left(),         sRect.top() + 6)
+                             << QPoint(sRect.left(),         sRect.top()    );
                 break;
             default:
-                needlePoints[0] = (*slider)->rect.left() + this->sliderWidth - 5;
-                needlePoints[1] = (*slider)->rect.top();
-                needlePoints[2] = (*slider)->rect.left() + this->sliderWidth - 2;
-                needlePoints[3] = (*slider)->rect.top() + 3;
-                needlePoints[4] = (*slider)->rect.left() + this->sliderWidth - 5;
-                needlePoints[5] = (*slider)->rect.top() + 6;
+                break;
             }
 
             painter.setBrush(QBrush((*slider)->color, Qt::SolidPattern));
-            painter.drawPolygon(QPolygon(3, needlePoints));
+            painter.drawPolygon(QPolygon(needlePoints));
             painter.setBrush(Qt::NoBrush);
         } else {
             // Get rect for text and draw needle
@@ -539,8 +540,8 @@ QRect LevelSlider::calculateRect(int sliderId) {
 /// \brief Search for the widest slider element.
 /// \return The calculated width of the slider.
 int LevelSlider::calculateWidth() {
-    // At least 8 px for the needles
-    this->sliderWidth = 8;
+    // At least 12 px for the needles
+    this->sliderWidth = 12;
 
     // Is it a vertical slider?
     if (this->_direction == Qt::RightArrow || this->_direction == Qt::LeftArrow) {

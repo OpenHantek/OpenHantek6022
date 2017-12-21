@@ -162,8 +162,7 @@ int main(int argc, char *argv[]) {
     QObject::connect(&dsoControl, &HantekDsoControl::samplesAvailable, &dataAnalyser, &DataAnalyzer::samplesAvailable);
 
     //////// Create settings object ////////
-    DsoSettings settings;
-    settings.setChannelCount(dsoControl.getChannelCount());
+    DsoSettings settings(dsoControl.getChannelCount());
     dataAnalyser.applySettings(&settings.scope);
 
     //////// Create main window ////////

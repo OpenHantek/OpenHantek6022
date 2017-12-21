@@ -33,7 +33,10 @@
 
 /// \brief Set the number of channels.
 /// \param channels The new channel count, that will be applied to lists.
-DsoSettings::DsoSettings() { load(); }
+DsoSettings::DsoSettings(unsigned int channels) {
+    setChannelCount(channels);
+    load();
+}
 
 bool DsoSettings::setFilename(const QString &filename) {
     std::unique_ptr<QSettings> local = std::unique_ptr<QSettings>(new QSettings(filename, QSettings::IniFormat));
