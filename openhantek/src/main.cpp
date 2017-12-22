@@ -84,6 +84,8 @@ int main(int argc, char *argv[]) {
     }
     devices.clear();
 
+#define TR(str) QCoreApplication::translate("Firmware upload dialog", str)
+
     //////// Select device - Autoselect if only one device is ready ////////
     std::unique_ptr<QDialog> dialog = std::unique_ptr<QDialog>(new QDialog);
     QListWidget *w = new QListWidget(dialog.get());
@@ -93,18 +95,20 @@ int main(int argc, char *argv[]) {
         QString modelName = QString::fromStdString(i->getModel().name);
 
         if (i->needsFirmware()) {
-            w->addItem(
-                QCoreApplication::translate("Firmware upload dialog", "%1: Firmware upload failed").arg(modelName));
+            if (UploadFirmware().startUpload(&*i)) {
+                w->addItem(TR("%1: Upload failed").arg(modelName));
+            } else {
+                w->addItem(TR("%1: Upload failed").arg(modelName));
+
+            }
             continue;
         }
         QString errorMessage;
         if (i->connectDevice(errorMessage)) {
-            w->addItem(QCoreApplication::translate("Firmware upload dialog", "%1: Ready").arg(modelName));
+            w->addItem(TR("%1: Ready").arg(modelName));
             w->setCurrentRow(w->count() - 1);
         } else {
-            w->addItem(QCoreApplication::translate("Firmware upload dialog", "%1: %2")
-                           .arg(modelName)
-                           .arg(findDevices.getErrorMessage()));
+            w->addItem(TR("%1: %2").arg(modelName).arg(findDevices.getErrorMessage()));
         }
     }
 
