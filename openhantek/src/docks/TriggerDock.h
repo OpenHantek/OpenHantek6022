@@ -14,8 +14,6 @@ class QComboBox;
 
 class SiSpinBox;
 
-////////////////////////////////////////////////////////////////////////////////
-/// \class TriggerDock                                             dockwindows.h
 /// \brief Dock window for the trigger settings.
 /// It contains the settings for the trigger mode, source and slope.
 class TriggerDock : public QDockWidget {
@@ -23,7 +21,6 @@ class TriggerDock : public QDockWidget {
 
   public:
     TriggerDock(DsoSettings *settings, const QStringList *specialTriggers, QWidget *parent, Qt::WindowFlags flags = 0);
-    ~TriggerDock();
 
     int setMode(Dso::TriggerMode mode);
     int setSource(bool special, unsigned int id);

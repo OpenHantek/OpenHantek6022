@@ -28,4 +28,5 @@ void registerDockMetaTypes() {
     qRegisterMetaType<Dso::ChannelMode>();
     qRegisterMetaType<Dso::WindowFunction>();
     qRegisterMetaType<Dso::InterpolationMode>();
+    qRegisterMetaType<std::vector<unsigned> >();
 }

@@ -14,8 +14,6 @@ class QComboBox;
 
 class SiSpinBox;
 
-////////////////////////////////////////////////////////////////////////////////
-/// \class VoltageDock                                             dockwindows.h
 /// \brief Dock window for the voltage channel settings.
 /// It contains the settings for gain and coupling for both channels and
 /// allows to enable/disable the channels.
@@ -24,7 +22,6 @@ class VoltageDock : public QDockWidget {
 
   public:
     VoltageDock(DsoSettings *settings, QWidget *parent, Qt::WindowFlags flags = 0);
-    ~VoltageDock();
 
     int setCoupling(int channel, Dso::Coupling coupling);
     int setGain(int channel, double gain);

@@ -84,9 +84,6 @@ VoltageDock::VoltageDock(DsoSettings *settings, QWidget *parent, Qt::WindowFlags
     }
 }
 
-/// \brief Cleans up everything.
-VoltageDock::~VoltageDock() {}
-
 /// \brief Don't close the dock, just hide it
 /// \param event The close event that should be handled.
 void VoltageDock::closeEvent(QCloseEvent *event) {

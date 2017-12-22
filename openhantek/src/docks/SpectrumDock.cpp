@@ -64,9 +64,6 @@ SpectrumDock::SpectrumDock(DsoSettings *settings, QWidget *parent, Qt::WindowFla
     }
 }
 
-/// \brief Cleans up everything.
-SpectrumDock::~SpectrumDock() {}
-
 /// \brief Don't close the dock, just hide it
 /// \param event The close event that should be handled.
 void SpectrumDock::closeEvent(QCloseEvent *event) {

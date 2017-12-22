@@ -14,8 +14,6 @@ class QComboBox;
 
 class SiSpinBox;
 
-////////////////////////////////////////////////////////////////////////////////
-/// \class SpectrumDock                                            dockwindows.h
 /// \brief Dock window for the spectrum view.
 /// It contains the magnitude for all channels and allows to enable/disable the
 /// channels.
@@ -24,7 +22,6 @@ class SpectrumDock : public QDockWidget {
 
   public:
     SpectrumDock(DsoSettings *settings, QWidget *parent, Qt::WindowFlags flags = 0);
-    ~SpectrumDock();
 
     int setMagnitude(int channel, double magnitude);
     int setUsed(int channel, bool used);

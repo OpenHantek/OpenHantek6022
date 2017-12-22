@@ -72,9 +72,6 @@ TriggerDock::TriggerDock(DsoSettings *settings, const QStringList *specialTrigge
     this->setSource(settings->scope.trigger.special, settings->scope.trigger.source);
 }
 
-/// \brief Cleans up everything.
-TriggerDock::~TriggerDock() {}
-
 /// \brief Don't close the dock, just hide it
 /// \param event The close event that should be handled.
 void TriggerDock::closeEvent(QCloseEvent *event) {

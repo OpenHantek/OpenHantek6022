@@ -5,6 +5,7 @@
 #include <QDockWidget>
 #include <QGridLayout>
 
+#include <vector>
 #include "definitions.h"
 #include "settings.h"
 
@@ -14,8 +15,8 @@ class QComboBox;
 
 class SiSpinBox;
 
-////////////////////////////////////////////////////////////////////////////////
-/// \class HorizontalDock                                          dockwindows.h
+Q_DECLARE_METATYPE(std::vector<unsigned>)
+
 /// \brief Dock window for the horizontal axis.
 /// It contains the settings for the timebase and the display format.
 class HorizontalDock : public QDockWidget {
