@@ -1,4 +1,6 @@
-
+---
+layout: default
+---
 ### [Linux](#linux)
 For debian based systems (Ubuntu, Mint) install named requirements like this:
 > apt install g++ cmake qttools5-dev qttools5-dev-tools libfftw3-dev binutils-dev libusb-1.0-0-dev libqt5opengl5-dev

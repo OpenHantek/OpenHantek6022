@@ -1,3 +1,6 @@
+---
+layout: default
+---
 # How to add a new device
 We only accept new devices whoms firmware is hantek protocol compatible.
 Codewise you will only need to touch files within `openhantek/src/hantek`.
