@@ -12,7 +12,7 @@ After you've installed the requirements run the following commands inside the di
 > mkdir build <br>
 > cd build <br>
 > cmake ../ <br>
-> make -j
+> make -j2
 
 Optionally install the program:
 
@@ -30,7 +30,7 @@ After you've installed the requirements run the following commands inside the di
 > mkdir build <br>
 > cd build <br>
 > cmake ../ -DCMAKE_PREFIX_PATH=/usr/local/Cellar/qt5/5.7.0 <br>
-> make -j
+> make -j2
 
 Please adjust the path to Qt5. You can find the path with the command:
 > brew info qt5
