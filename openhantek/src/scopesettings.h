@@ -38,27 +38,27 @@ struct DsoSettingsScopeTrigger {
 /// \brief Holds the settings for the spectrum analysis.
 struct DsoSettingsScopeSpectrum {
     unsigned channel;
-    double magnitude; ///< The vertical resolution in dB/div
-    QString name;     ///< Name of this channel
-    double offset;    ///< Vertical offset in divs
-    bool used;        ///< true if the spectrum is turned on
+    double magnitude = 20.0;    ///< The vertical resolution in dB/div
+    QString name;               ///< Name of this channel
+    double offset = 0.0;        ///< Vertical offset in divs
+    bool used = false;          ///< true if the spectrum is turned on
 };
 
 ////////////////////////////////////////////////////////////////////////////////
 /// \struct DsoSettingsScopeVoltage                                   settings.h
 /// \brief Holds the settings for the normal voltage graphs.
 struct DsoSettingsScopeVoltage {
-    double gain;    ///< The vertical resolution in V/div
-    bool inverted;  ///< true if the channel is inverted (mirrored on cross-axis)
+    double gain = 1.0;      ///< The vertical resolution in V/div
+    bool inverted = false;  ///< true if the channel is inverted (mirrored on cross-axis)
     union { ///< Different enums, coupling for real- and mode for math-channels
         Dso::MathMode math;
         Dso::Coupling coupling;
         int rawValue;
     };
-    QString name;   ///< Name of this channel
-    double offset;  ///< Vertical offset in divs
-    double trigger; ///< Trigger level in V
-    bool used;      ///< true if this channel is enabled
+    QString name;           ///< Name of this channel
+    double offset = 0.0;    ///< Vertical offset in divs
+    double trigger = 0.0;   ///< Trigger level in V
+    bool used = false;      ///< true if this channel is enabled
 };
 
 ////////////////////////////////////////////////////////////////////////////////

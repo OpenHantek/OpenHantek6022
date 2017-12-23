@@ -34,7 +34,41 @@
 /// \brief Set the number of channels.
 /// \param channels The new channel count, that will be applied to lists.
 DsoSettings::DsoSettings(unsigned int channels) {
-    setChannelCount(channels);
+    scope.physicalChannels = channels;
+
+    DsoSettingsScopeSpectrum newSpectrum;
+    newSpectrum.name = QApplication::tr("SPM");
+    scope.spectrum.push_back(newSpectrum);
+
+    DsoSettingsScopeVoltage newVoltage;
+    newVoltage.math = Dso::MathMode::ADD_CH1_CH2;
+    newVoltage.name = QApplication::tr("MATH");
+    scope.voltage.push_back(newVoltage);
+
+    view.screen.voltage.push_back(QColor(0x7f, 0x7f, 0x7f, 0xff));
+    view.screen.spectrum.push_back(view.screen.voltage.back().lighter());
+    view.print.voltage.push_back(view.screen.voltage.back());
+    view.print.spectrum.push_back(view.print.voltage.back().darker());
+
+    // Add new channels to the list
+    while (scope.spectrum.size() <= channels) {
+        // Spectrum
+        DsoSettingsScopeSpectrum newSpectrum;
+        newSpectrum.name = QApplication::tr("SP%1").arg(scope.spectrum.size());
+        scope.spectrum.insert(scope.spectrum.end()-1, newSpectrum);
+
+        // Voltage
+        DsoSettingsScopeVoltage newVoltage;
+        newVoltage.coupling = Dso::COUPLING_DC;
+        newVoltage.name = QApplication::tr("CH%1").arg(scope.voltage.size());
+        scope.voltage.insert(scope.voltage.end()-1, newVoltage);
+
+        view.screen.voltage.insert(view.screen.voltage.end()-1, QColor::fromHsv((int)(view.screen.voltage.size()-1) * 60, 0xff, 0xff));
+        view.screen.spectrum.insert(view.screen.spectrum.end()-1, view.screen.voltage.back().lighter());
+        view.print.voltage.insert(view.print.voltage.end()-1, view.screen.voltage.back().darker(120));
+        view.print.spectrum.insert(view.print.spectrum.end()-1, view.screen.voltage.back().darker());
+    }
+
     load();
 }
 
@@ -46,76 +80,6 @@ bool DsoSettings::setFilename(const QString &filename) {
     }
     store.swap(local);
     return true;
-}
-
-template<typename S>
-inline void removeIfPossible(std::vector<S>& v, unsigned start, unsigned keepAtEnd) {
-    if (start<v.size())
-        v.erase(v.begin()+start, v.end()-((v.size()-start>=keepAtEnd) ? keepAtEnd : 0));
-}
-
-void DsoSettings::setChannelCount(unsigned channels) {
-    scope.physicalChannels = channels;
-
-    // Remove list items for removed channels, keep last channel (math channel)
-    removeIfPossible(scope.spectrum, channels, 1);
-    removeIfPossible(scope.voltage, channels, 1);
-    removeIfPossible(view.screen.voltage, channels, 1);
-    removeIfPossible(view.print.voltage, channels, 1);
-
-    // Add math channel if missing
-    // Check if the math channel is missing
-    if (!scope.spectrum.size()) {
-        DsoSettingsScopeSpectrum newSpectrum;
-        newSpectrum.magnitude = 20.0;
-        newSpectrum.name = QApplication::tr("SPM");
-        newSpectrum.offset = 0.0;
-        newSpectrum.used = false;
-        scope.spectrum.push_back(newSpectrum);
-
-        DsoSettingsScopeVoltage newVoltage;
-        newVoltage.gain = 1.0;
-        newVoltage.math = Dso::MathMode::ADD_CH1_CH2;
-        newVoltage.name = QApplication::tr("MATH");
-        newVoltage.offset = 0.0;
-        newVoltage.trigger = 0.0;
-        newVoltage.used = false;
-        scope.voltage.push_back(newVoltage);
-
-        view.screen.voltage.push_back(QColor(0x7f, 0x7f, 0x7f, 0xff));
-        view.screen.spectrum.push_back(view.screen.voltage.back().lighter());
-        view.print.voltage.push_back(view.screen.voltage.back());
-        view.print.spectrum.push_back(view.print.voltage.back().darker());
-    }
-
-    // Add new channels to the list
-    while (scope.spectrum.size() <= channels) {
-        // Oscilloscope settings
-        // Spectrum
-        DsoSettingsScopeSpectrum newSpectrum;
-        newSpectrum.magnitude = 20.0;
-        newSpectrum.name = QApplication::tr("SP%1").arg(scope.spectrum.size());
-        newSpectrum.offset = 0.0;
-        newSpectrum.used = false;
-        scope.spectrum.insert(scope.spectrum.end()-1, newSpectrum);
-
-        // Voltage
-        DsoSettingsScopeVoltage newVoltage;
-        newVoltage.gain = 1.0;
-        newVoltage.coupling = Dso::COUPLING_DC;
-        newVoltage.name = QApplication::tr("CH%1").arg(scope.voltage.size());
-        newVoltage.offset = 0.0;
-        newVoltage.trigger = 0.0;
-        newVoltage.used = false;
-        scope.voltage.insert(scope.voltage.end()-1, newVoltage);
-
-        view.screen.voltage.insert(view.screen.voltage.end()-1, QColor::fromHsv((int)(view.screen.voltage.size()-1) * 60, 0xff, 0xff));
-        view.screen.spectrum.insert(view.screen.spectrum.end()-1, view.screen.voltage.back().lighter());
-        view.print.voltage.insert(view.print.voltage.end()-1, view.screen.voltage.back().darker(120));
-        view.print.spectrum.insert(view.print.spectrum.end()-1, view.screen.voltage.back().darker());
-    }
-
-
 }
 
 void DsoSettings::load() {
@@ -166,6 +130,7 @@ void DsoSettings::load() {
     for (unsigned channel = 0; channel < scope.voltage.size(); ++channel) {
         store->beginGroup(QString("vertical%1").arg(channel));
         if (store->contains("gain")) scope.voltage[channel].gain = store->value("gain").toDouble();
+        if (store->contains("inverted")) scope.voltage[channel].inverted = store->value("inverted").toBool();
         if (store->contains("misc")) scope.voltage[channel].rawValue = store->value("misc").toInt();
         if (store->contains("offset")) scope.voltage[channel].offset = store->value("offset").toDouble();
         if (store->contains("trigger")) scope.voltage[channel].trigger = store->value("trigger").toDouble();
@@ -265,6 +230,7 @@ void DsoSettings::save() {
     for (unsigned channel = 0; channel < scope.voltage.size(); ++channel) {
         store->beginGroup(QString("vertical%1").arg(channel));
         store->setValue("gain", scope.voltage[channel].gain);
+        store->setValue("inverted", scope.voltage[channel].inverted);
         store->setValue("misc", scope.voltage[channel].rawValue);
         store->setValue("offset", scope.voltage[channel].offset);
         store->setValue("trigger", scope.voltage[channel].trigger);
@@ -291,16 +257,16 @@ void DsoSettings::save() {
             store->beginGroup("print");
         }
 
-        store->setValue("axes", colors->axes);
-        store->setValue("background", colors->background);
-        store->setValue("border", colors->border);
-        store->setValue("grid", colors->grid);
-        store->setValue("markers", colors->markers);
+        store->setValue("axes", colors->axes.name(QColor::HexArgb));
+        store->setValue("background", colors->background.name(QColor::HexArgb));
+        store->setValue("border", colors->border.name(QColor::HexArgb));
+        store->setValue("grid", colors->grid.name(QColor::HexArgb));
+        store->setValue("markers", colors->markers.name(QColor::HexArgb));
         for (unsigned channel = 0; channel < scope.spectrum.size(); ++channel)
-            store->setValue(QString("spectrum%1").arg(channel), colors->spectrum[channel]);
-        store->setValue("text", colors->text);
+            store->setValue(QString("spectrum%1").arg(channel), colors->spectrum[channel].name(QColor::HexArgb));
+        store->setValue("text", colors->text.name(QColor::HexArgb));
         for (unsigned channel = 0; channel < scope.voltage.size(); ++channel)
-            store->setValue(QString("voltage%1").arg(channel), colors->voltage[channel]);
+            store->setValue(QString("voltage%1").arg(channel), colors->voltage[channel].name(QColor::HexArgb));
         store->endGroup();
     }
     store->endGroup();

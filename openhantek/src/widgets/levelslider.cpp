@@ -40,9 +40,9 @@ LevelSlider::LevelSlider(Qt::ArrowType direction, QWidget *parent) : QWidget(par
     this->setFont(font);
 
     this->pressedSlider = -1;
-    this->sliderWidth = 12;
 
-    this->setDirection(direction);
+    calculateWidth();
+    setDirection(direction);
 }
 
 /// \brief Cleans up the widget.

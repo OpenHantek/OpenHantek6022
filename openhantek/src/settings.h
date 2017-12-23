@@ -26,8 +26,6 @@ class DsoSettings {
     explicit DsoSettings(unsigned int channels);
     bool setFilename(const QString &filename);
 
-    void setChannelCount(unsigned int channels);
-
     DsoSettingsOptions options; ///< General options of the program
     DsoSettingsScope scope;     ///< All oscilloscope related settings
     DsoSettingsView view;       ///< All view related settings
