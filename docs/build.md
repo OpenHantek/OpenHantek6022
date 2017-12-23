@@ -2,10 +2,10 @@
 layout: default
 ---
 ### [Linux](#linux)
-For debian based systems (Ubuntu, Mint) install named requirements like this:
+For debian (stretch and newer), Ubuntu 17.04+ and Mint 17+ and other deb based distributions install named requirements like this:
 > apt install g++ cmake qttools5-dev qttools5-dev-tools libfftw3-dev binutils-dev libusb-1.0-0-dev libqt5opengl5-dev mesa-common-dev libgl1-mesa-dev
 
-For rpm based distributions (Fedora) use this command:
+For rpm based distributions (Fedora 21+, OpenSuse) use this command:
 > dnf install cmake gcc-c++ qt5-qtbase-gui qt5-qttools-devel qt5-qttranslations fftw-devel binutils-devel libusb-devel
 
 After you've installed the requirements run the following commands inside the directory of this package:
@@ -18,8 +18,8 @@ Optionally install the program:
 
 > sudo make install
 
-If you do not install the program, you need to copy the file `firmware/60-hantek.rules` to `/lib/udev/rules.d/`,
-and reload the udev service, otherwise you will not have the correct permissions to access usb devices.
+If you do not install the program, you need to copy the file `firmware/60-hantek.rules` to `/lib/udev/rules.d/` yourself,
+and replug your device, otherwise you will not have the correct permissions to access usb devices.
 
 ### [Apple MacOSX](#apple)
 We recommend homebrew to install the required libraries.
