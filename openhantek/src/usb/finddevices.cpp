@@ -7,6 +7,7 @@
 #include <QList>
 #include <QTemporaryFile>
 
+#include <algorithm>
 #include "ezusb.h"
 #include "utils/printutils.h"
 #include <libusb-1.0/libusb.h>
@@ -16,50 +17,64 @@
 FindDevices::FindDevices(libusb_context *context) : context(context) {}
 
 // Iterate through all usb devices
-std::list<std::unique_ptr<USBDevice>> FindDevices::findDevices() {
-    std::list<std::unique_ptr<USBDevice>> devices;
-
+int FindDevices::updateDeviceList() {
     libusb_device **deviceList;
     ssize_t deviceCount = libusb_get_device_list(context, &deviceList);
     if (deviceCount < 0) {
-        errorMessage = QCoreApplication::translate("", "Failed to get device list");
-        return devices;
+        return (int) deviceCount;
     }
 
-    noAccessDevices = false;
-    int noAccessDeviceCount = 0;
+    ++findIteration;
+    int changes = 0;
 
     for (ssize_t deviceIterator = 0; deviceIterator < deviceCount; ++deviceIterator) {
         libusb_device *device = deviceList[deviceIterator];
         // Get device descriptor
         struct libusb_device_descriptor descriptor;
-        if (libusb_get_device_descriptor(device, &descriptor) < 0) continue;
+        libusb_get_device_descriptor(device, &descriptor);
+
+        DeviceList::const_iterator inList = devices.find(USBDevice::computeUSBdeviceID(device));
+
+        if (inList != devices.end()) {
+            inList->second->setFindIteration(findIteration);
+            continue;
+        }
 
         for (DSOModel* model : supportedModels) {
             // Check VID and PID for firmware flashed devices
-            if (descriptor.idVendor == model->vendorID && descriptor.idProduct == model->productID) {
-                devices.push_back(std::unique_ptr<USBDevice>(new USBDevice(model, device)));
-                break;
-            }
+            bool supported = descriptor.idVendor == model->vendorID && descriptor.idProduct == model->productID;
             // Devices without firmware have different VID/PIDs
-            if (descriptor.idVendor == model->vendorIDnoFirmware && descriptor.idProduct == model->productIDnoFirmware) {
-                devices.push_back(std::unique_ptr<USBDevice>(new USBDevice(model, device)));
-                break;
+            supported |= descriptor.idVendor == model->vendorIDnoFirmware && descriptor.idProduct == model->productIDnoFirmware;
+            if (supported) {
+                ++changes;
+                devices[USBDevice::computeUSBdeviceID(device)] = std::unique_ptr<USBDevice>(new USBDevice(model, device, findIteration));
             }
         }
     }
 
-    if (noAccessDeviceCount == deviceCount) {
-        noAccessDevices = true;
-        errorMessage =
-            QCoreApplication::translate("", "Please make sure to have read/write access to your usb device. On "
-                                            "linux you need to install the correct udev file for example.");
+    // Remove non existing devices
+    for (DeviceList::iterator it=devices.begin();it!=devices.end();) {
+        if (it->second->getFindIteration() != findIteration) {
+            ++changes;
+            it = devices.erase(it);
+        } else {
+            ++it;
+        }
     }
 
     libusb_free_device_list(deviceList, true);
-    return devices;
+
+    return changes;
 }
 
-const QString &FindDevices::getErrorMessage() const { return errorMessage; }
+const FindDevices::DeviceList* FindDevices::getDevices()
+{
+    return &devices;
+}
 
-bool FindDevices::allDevicesNoAccessError() const { return noAccessDevices; }
+std::unique_ptr<USBDevice> FindDevices::takeDevice(UniqueUSBid id)
+{
+    DeviceList::iterator i = devices.find(id);
+    if (i==devices.end()) return nullptr;
+    return std::move(i->second);
+}

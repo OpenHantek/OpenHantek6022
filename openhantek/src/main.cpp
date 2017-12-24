@@ -1,35 +1,24 @@
 // SPDX-License-Identifier: GPL-2.0+
 
-#include <QApplication>
 #include <QDebug>
-#include <QDesktopWidget>
+#include <QApplication>
 #include <QLibraryInfo>
-#include <QListWidget>
 #include <QLocale>
-#include <QMessageBox>
-#include <QPushButton>
-#include <QTimer>
 #include <QTranslator>
-#include <QVBoxLayout>
+
 #include <iostream>
 #include <memory>
-
 #include <libusb-1.0/libusb.h>
 
 #include "analyse/dataanalyzer.h"
 #include "hantekdsocontrol.h"
 #include "mainwindow.h"
 #include "settings.h"
-#include "usb/finddevices.h"
-#include "usb/uploadFirmware.h"
 #include "usb/usbdevice.h"
 #include "dsomodel.h"
+#include "selectdevice/selectdevice.h"
 
 using namespace Hantek;
-
-void showMessage(const QString &message) {
-    QMessageBox::information(nullptr, QCoreApplication::translate("", "No connection established!"), message);
-}
 
 /// \brief Initialize resources and translations and show the main window.
 int main(int argc, char *argv[]) {
@@ -53,97 +42,17 @@ int main(int argc, char *argv[]) {
     }
 
     //////// Find matching usb devices ////////
-    libusb_context *context;
+    libusb_context *context = nullptr;
     int error = libusb_init(&context);
-
     if (error) {
-        showMessage(QCoreApplication::translate("", "Can't initalize USB: %1").arg(libUsbErrorString(error)));
+        SelectDevice().showLibUSBFailedDialogModel(error);
         return -1;
     }
+    std::unique_ptr<USBDevice> device = SelectDevice().showSelectDeviceModal(context);
 
-    FindDevices findDevices;
-    std::list<std::unique_ptr<USBDevice>> devices = findDevices.findDevices();
-
-    if (devices.empty()) {
-        showMessage(QCoreApplication::translate("", "No Hantek oscilloscope found. Please check if your "
-                                                    "device is supported by this software, is connected, "
-                                                    "in the right mode (oscilloscope mode) and if the "
-                                                    "driver is correctly installed. Refer to the <a "
-                                                    "href='https://github.com/OpenHantek/openhantek/"
-                                                    "'>website</a> for help: %1")
-                        .arg(findDevices.getErrorMessage()));
-        return -1;
-    }
-
-    //////// Upload firmwares for all connected devices ////////
-    for (const auto &i : devices) {
-        QString modelName = QString::fromStdString(i->getModel()->name);
-        if (i->needsFirmware()) {
-            UploadFirmware uf;
-            uf.startUpload(i.get());
-        }
-    }
-    devices.clear();
-
-#define TR(str) QCoreApplication::translate("Firmware upload dialog", str)
-
-    //////// Select device - Autoselect if only one device is ready ////////
-    std::unique_ptr<QDialog> dialog = std::unique_ptr<QDialog>(new QDialog);
-    QListWidget *w = new QListWidget(dialog.get());
-
-    devices = findDevices.findDevices();
-    for (auto &i : devices) {
-        QString modelName = QString::fromStdString(i->getModel()->name);
-
-        if (i->needsFirmware()) {
-            if (UploadFirmware().startUpload(&*i)) {
-                w->addItem(TR("%1: Upload failed").arg(modelName));
-            } else {
-                w->addItem(TR("%1: Upload failed").arg(modelName));
-
-            }
-            continue;
-        }
-        QString errorMessage;
-        if (i->connectDevice(errorMessage)) {
-            w->addItem(TR("%1: Ready").arg(modelName));
-            w->setCurrentRow(w->count() - 1);
-        } else {
-            w->addItem(TR("%1: %2").arg(modelName).arg(findDevices.getErrorMessage()));
-        }
-    }
-
-    if (w->currentRow() == -1 || devices.size() > 1) {
-        QPushButton *btn = new QPushButton(QCoreApplication::translate("", "Connect to first device"), dialog.get());
-        dialog->move(QApplication::desktop()->screen()->rect().center() - w->rect().center());
-        dialog->setWindowTitle(QCoreApplication::translate("", "Firmware upload"));
-        dialog->setLayout(new QVBoxLayout());
-        dialog->layout()->addWidget(w);
-        dialog->layout()->addWidget(btn);
-        btn->connect(btn, &QPushButton::clicked, QCoreApplication::instance(), &QCoreApplication::quit);
-        dialog->show();
-        openHantekApplication.exec();
-        dialog->close();
-    }
-    int selectedDevice = w->currentRow();
-    dialog.reset(nullptr);
-
-    std::unique_ptr<USBDevice> device;
-    int indexCounter = 0;
-    for (auto &i : devices) {
-        if (indexCounter == selectedDevice) {
-            device = std::move(i);
-            break;
-        }
-    }
-    devices.clear();
-
-    if (device == nullptr || device->needsFirmware() || !device->isConnected()) {
-        showMessage(QCoreApplication::translate("", "A device was found, but the "
-                                                    "firmware upload seem to have "
-                                                    "failed or the connection "
-                                                    "could not be established: %1")
-                        .arg(findDevices.getErrorMessage()));
+    QString errorMessage;
+    if (device == nullptr || !device->connectDevice(errorMessage)) {
+        libusb_exit(context);
         return -1;
     }
 

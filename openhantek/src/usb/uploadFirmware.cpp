@@ -14,6 +14,8 @@
 
 #include "dsomodel.h"
 
+#define TR(str) QCoreApplication::translate("UploadFirmware", str)
+
 bool UploadFirmware::startUpload(USBDevice *device) {
     if (device->isConnected() || !device->needsFirmware()) return false;
 
@@ -22,7 +24,7 @@ bool UploadFirmware::startUpload(USBDevice *device) {
     int errorCode = libusb_open(device->getRawDevice(), &handle);
     if (errorCode != LIBUSB_SUCCESS) {
         handle = nullptr;
-        errorMessage = QCoreApplication::translate("", "Couldn't open device: %1").arg(libUsbErrorString(errorCode));
+        errorMessage = TR("Couldn't open device: %1").arg(libUsbErrorString(errorCode));
         return false;
     }
 
@@ -41,7 +43,7 @@ bool UploadFirmware::startUpload(USBDevice *device) {
     libusb_set_auto_detach_kernel_driver(handle, 1);
     int status = libusb_claim_interface(handle, 0);
     if (status != LIBUSB_SUCCESS) {
-        errorMessage = QString("libusb_claim_interface() failed: %1").arg(libusb_error_name(status));
+        errorMessage = TR("libusb_claim_interface() failed: %1").arg(libusb_error_name(status));
         libusb_close(handle);
         return false;
     }
@@ -50,7 +52,7 @@ bool UploadFirmware::startUpload(USBDevice *device) {
     status = ezusb_load_ram(handle, temp_loader_path->fileName().toUtf8().constData(), FX_TYPE_FX2, IMG_TYPE_HEX, 0);
 
     if (status != LIBUSB_SUCCESS) {
-        errorMessage = QString("ezusb_load_ram(loader_path) failed: %1").arg(libusb_error_name(status));
+        errorMessage = TR("Writing the loader firmware failed: %1").arg(libusb_error_name(status));
         libusb_release_interface(handle, 0);
         libusb_close(handle);
         return false;
@@ -60,7 +62,7 @@ bool UploadFirmware::startUpload(USBDevice *device) {
     status = ezusb_load_ram(handle, temp_firmware_path->fileName().toUtf8().constData(), FX_TYPE_FX2, IMG_TYPE_HEX, 1);
 
     if (status != LIBUSB_SUCCESS) {
-        errorMessage = QString("ezusb_load_ram(firmware_path) failed: %1").arg(libusb_error_name(status));
+        errorMessage = TR("Writing the main firmware failed: %1").arg(libusb_error_name(status));
         libusb_release_interface(handle, 0);
         libusb_close(handle);
         return false;
@@ -72,3 +74,4 @@ bool UploadFirmware::startUpload(USBDevice *device) {
 }
 
 const QString &UploadFirmware::getErrorMessage() const { return errorMessage; }
+

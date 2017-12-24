@@ -11,8 +11,14 @@
 #include "models.h"
 #include "utils/printutils.h"
 
+UniqueUSBid USBDevice::computeUSBdeviceID(libusb_device *device) {
+    UniqueUSBid v=0;
+    libusb_get_port_numbers(device, (uint8_t*)&v, sizeof(v));
+    return v;
+}
 
-USBDevice::USBDevice(DSOModel *model, libusb_device *device) : model(model), device(device) {
+USBDevice::USBDevice(DSOModel *model, libusb_device *device, unsigned findIteration) :
+    model(model), device(device), findIteration(findIteration), uniqueUSBdeviceID(computeUSBdeviceID(device)) {
     libusb_ref_device(device);
     libusb_get_device_descriptor(device, &descriptor);
 }
@@ -59,7 +65,10 @@ bool USBDevice::connectDevice(QString &errorMessage) {
     return true;
 }
 
-USBDevice::~USBDevice() { connectionLost(); }
+USBDevice::~USBDevice() {
+    disconnectFromDevice();
+    device = nullptr;
+}
 
 int USBDevice::claimInterface(const libusb_interface_descriptor *interfaceDescriptor, int endpointOut, int endPointIn) {
     int errorCode = libusb_claim_interface(this->handle, interfaceDescriptor->bInterfaceNumber);
@@ -82,7 +91,8 @@ int USBDevice::claimInterface(const libusb_interface_descriptor *interfaceDescri
     return LIBUSB_SUCCESS;
 }
 
-void USBDevice::connectionLost() {
+void USBDevice::disconnectFromDevice() {
+    if (!device) return;
     libusb_unref_device(device);
 
     if (!this->handle) return;
@@ -93,7 +103,7 @@ void USBDevice::connectionLost() {
 
     // Close device handle
     libusb_close(this->handle);
-    this->handle = 0;
+    this->handle = nullptr;
 
     emit deviceDisconnected();
 }
@@ -102,6 +112,16 @@ bool USBDevice::isConnected() { return this->handle != 0; }
 
 bool USBDevice::needsFirmware() {
     return this->descriptor.idProduct != model->productID || this->descriptor.idVendor != model->vendorID;
+}
+
+void USBDevice::setFindIteration(unsigned iteration)
+{
+    findIteration = iteration;
+}
+
+unsigned USBDevice::getFindIteration() const
+{
+    return findIteration;
 }
 
 int USBDevice::bulkTransfer(unsigned char endpoint, unsigned char *data, unsigned int length, int attempts,
@@ -113,7 +133,7 @@ int USBDevice::bulkTransfer(unsigned char endpoint, unsigned char *data, unsigne
     for (int attempt = 0; (attempt < attempts || attempts == -1) && errorCode == LIBUSB_ERROR_TIMEOUT; ++attempt)
         errorCode = libusb_bulk_transfer(this->handle, endpoint, data, length, &transferred, timeout);
 
-    if (errorCode == LIBUSB_ERROR_NO_DEVICE) connectionLost();
+    if (errorCode == LIBUSB_ERROR_NO_DEVICE) disconnectFromDevice();
     if (errorCode < 0)
         return errorCode;
     else
@@ -211,7 +231,7 @@ int USBDevice::controlTransfer(unsigned char type, unsigned char request, unsign
     for (int attempt = 0; (attempt < attempts || attempts == -1) && errorCode == LIBUSB_ERROR_TIMEOUT; ++attempt)
         errorCode = libusb_control_transfer(this->handle, type, request, value, index, data, length, HANTEK_TIMEOUT);
 
-    if (errorCode == LIBUSB_ERROR_NO_DEVICE) connectionLost();
+    if (errorCode == LIBUSB_ERROR_NO_DEVICE) disconnectFromDevice();
     return errorCode;
 }
 
@@ -275,6 +295,11 @@ int USBDevice::getPacketSize() {
 }
 
 libusb_device *USBDevice::getRawDevice() const { return device; }
+
+unsigned long USBDevice::getUniqueUSBDeviceID() const
+{
+    return uniqueUSBdeviceID;
+}
 
 const DSOModel* USBDevice::getModel() const { return model; }
 

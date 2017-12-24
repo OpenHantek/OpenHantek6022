@@ -14,20 +14,30 @@
 
 class DSOModel;
 
+typedef unsigned long UniqueUSBid;
+
 /// \brief This class handles the USB communication with an usb device that has
 /// one in and one out endpoint.
 class USBDevice : public QObject {
     Q_OBJECT
 
   public:
-    USBDevice(DSOModel* model, libusb_device *device);
+    USBDevice(DSOModel* model, libusb_device *device, unsigned findIteration = 0);
     ~USBDevice();
     bool connectDevice(QString &errorMessage);
+    void disconnectFromDevice();
 
     /// \brief Check if the oscilloscope is connected.
     /// \return true, if a connection is up.
     bool isConnected();
     bool needsFirmware();
+
+    /**
+     * Keep track of the find iteration on which this device was found
+     * @param iteration The new iteration value
+     */
+    void setFindIteration(unsigned iteration);
+    unsigned getFindIteration() const;
 
     // Various methods to handle USB transfers
 
@@ -57,16 +67,31 @@ class USBDevice : public QObject {
     int getConnectionSpeed();
     int getPacketSize();
 
+    /**
+     * @return Returns the raw libusb device
+     */
     libusb_device *getRawDevice() const;
+
+    /**
+     * @return Return the unique usb device id {@link USBDevice::computeUSBdeviceID()}.
+     */
+    unsigned long getUniqueUSBDeviceID() const;
+    /**
+     * The USB bus is organised in a tree hierarchy. A device is connected to a port on a bus device,
+     * which is connected to a port on another bus device etc up to the root usb device.
+     *
+     * The USB 3.0 standard allows up to 7 levels with 256 devices on each level (1 Byte). We generate
+     * a unique number for the connected device.
+     */
+    static UniqueUSBid computeUSBdeviceID(libusb_device *device);
+
     /// \brief Get the oscilloscope model.
     /// \return The ::Model of the connected Hantek DSO.
     const DSOModel *getModel() const;
     void setEnableBulkTransfer(bool enable);
     void overwriteInPacketLength(int len);
-
   protected:
     int claimInterface(const libusb_interface_descriptor *interfaceDescriptor, int endpointOut, int endPointIn);
-    void connectionLost();
 
     // Command buffers
     ControlBeginCommand beginCommandControl;
@@ -76,6 +101,8 @@ class USBDevice : public QObject {
     struct libusb_device_descriptor descriptor;
     libusb_device *device; ///< The USB handle for the oscilloscope
     libusb_device_handle *handle = nullptr;
+    unsigned findIteration;
+    const unsigned long uniqueUSBdeviceID;
     int interface;
     int outPacketLength; ///< Packet length for the OUT endpoint
     int inPacketLength;  ///< Packet length for the IN endpoint

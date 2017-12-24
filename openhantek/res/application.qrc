@@ -1,6 +1,7 @@
 <RCC>
     <qresource prefix="/">
         <file alias="openhantek.png">images/openhantek.png</file>
+        <file alias="switch.png">images/switch.png</file>
     </qresource>
     <qresource prefix="/actions">
         <file alias="open.png">images/actions/open.png</file>

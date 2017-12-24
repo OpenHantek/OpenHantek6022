@@ -44,13 +44,17 @@ else()
         )
         
     set(ENV{LANG} "en_US")
-    execute_process(
-        COMMAND ${GIT_EXECUTABLE} log -n 10 "--date=format:%a %b %d %Y" "--pretty=format:* %ad %aN <%aE> %h - %s"
-        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-        RESULT_VARIABLE CMD_RESULT
-        OUTPUT_VARIABLE CHANGELOG
-        OUTPUT_STRIP_TRAILING_WHITESPACE
-        )
+    if(GIT_VERSION_STRING VERSION_LESS 2.6)
+        set(CHANGELOG "")
+    else()
+        execute_process(
+            COMMAND ${GIT_EXECUTABLE} log -n 10 "--date=format:%a %b %d %Y" "--pretty=format:* %ad %aN <%aE> %h - %s"
+            WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+            RESULT_VARIABLE CMD_RESULT
+            OUTPUT_VARIABLE CHANGELOG
+            OUTPUT_STRIP_TRAILING_WHITESPACE
+            )
+    endif()
     file(WRITE "${CMAKE_BINARY_DIR}/changelog" "${CHANGELOG}")
 endif()
 
