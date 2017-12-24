@@ -30,9 +30,15 @@ class GlGenerator : public QObject {
     bool isReady() const;
 
   private:
+    typedef std::tuple<unsigned,unsigned,unsigned> PrePostStartTriggerSamples;
+    typedef std::vector<GLfloat> DrawLines;
+    typedef std::deque<DrawLines> DrawLinesWithHistory;
+    typedef std::vector<DrawLinesWithHistory> DrawLinesWithHistoryPerChannel;
+    DrawLinesWithHistoryPerChannel vaChannel[Dso::CHANNELMODE_COUNT];
+
+    PrePostStartTriggerSamples computeSoftwareTriggerTY(const DataAnalyzerResult *result);
     DsoSettingsScope *settings;
     DsoSettingsView *view;
-    std::vector<std::deque<std::vector<GLfloat>>> vaChannel[Dso::CHANNELMODE_COUNT];
     std::vector<GLfloat> vaGrid[3];
     bool ready = false;
   signals:

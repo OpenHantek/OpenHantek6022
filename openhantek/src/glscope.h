@@ -39,7 +39,7 @@ class GlScope : public GL_WIDGET_CLASS {
 
     void drawGrid();
     void drawGraphDepth(int mode, int channel, int index);
-    void drawGraph();
+    void drawGraph(int digitalPhosphorDepth);
     bool channelUsed(int mode, int channel);
 
   private:

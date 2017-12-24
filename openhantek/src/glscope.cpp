@@ -37,7 +37,8 @@ void GlScope::paintGL() {
     glClear(GL_COLOR_BUFFER_BIT);
     glLineWidth(1);
 
-    if (settings->view.digitalPhosphorDepth > 0 && generator->isReady()) { drawGraph(); }
+    int digitalPhosphorDepth = settings->view.digitalPhosphor ? settings->view.digitalPhosphorDepth : 1;
+    if (generator->isReady()) { drawGraph(digitalPhosphorDepth); }
 
     if (!this->zoomed) {
         // Draw vertical lines at marker positions
@@ -126,7 +127,7 @@ void GlScope::drawGraphDepth(int mode, int channel, int index) {
                  generator->channel(mode, channel, index).size() / 2);
 }
 
-void GlScope::drawGraph() {
+void GlScope::drawGraph(int digitalPhosphorDepth) {
     if (settings->view.antialiasing) {
         glEnable(GL_POINT_SMOOTH);
         glEnable(GL_LINE_SMOOTH);
@@ -142,11 +143,11 @@ void GlScope::drawGraph() {
     }
 
     // Values we need for the fading of the digital phosphor
-    if ((int)fadingFactor.size() != settings->view.digitalPhosphorDepth) {
-        fadingFactor.resize((size_t)settings->view.digitalPhosphorDepth);
+    if ((int)fadingFactor.size() != digitalPhosphorDepth) {
+        fadingFactor.resize((size_t)digitalPhosphorDepth);
         fadingFactor[0] = 100;
-        double fadingRatio = pow(10.0, 2.0 / settings->view.digitalPhosphorDepth);
-        for (size_t index = 1; index < (size_t)settings->view.digitalPhosphorDepth; ++index)
+        double fadingRatio = pow(10.0, 2.0 / digitalPhosphorDepth);
+        for (size_t index = 1; index < (size_t)digitalPhosphorDepth; ++index)
             fadingFactor[index] = fadingFactor[index - 1] * fadingRatio;
     }
 
@@ -158,7 +159,7 @@ void GlScope::drawGraph() {
                 if (!channelUsed(mode, channel)) continue;
 
                 // Draw graph for all available depths
-                for (int index = settings->view.digitalPhosphorDepth - 1; index >= 0; index--) {
+                for (int index = digitalPhosphorDepth - 1; index >= 0; index--) {
                     drawGraphDepth(mode, channel, index);
                 }
             }
@@ -169,7 +170,7 @@ void GlScope::drawGraph() {
         // Real and virtual channels
         for (int channel = 0; channel < settings->scope.voltage.size() - 1; channel += 2) {
             if (settings->scope.voltage[channel].used) {
-                for (int index = settings->view.digitalPhosphorDepth - 1; index >= 0; index--) {
+                for (int index = digitalPhosphorDepth - 1; index >= 0; index--) {
                     drawGraphDepth(Dso::CHANNELMODE_VOLTAGE, channel, index);
                 }
             }

@@ -11,8 +11,8 @@ GlGenerator::GlGenerator(DsoSettingsScope *scope, DsoSettingsView *view) : setti
     const int DIVS_TIME_S2 = (int)DIVS_TIME - 2;
     const int DIVS_VOLTAGE_S2 = (int)DIVS_VOLTAGE - 2;
     const int vaGrid0Size = (int) ((DIVS_TIME * DIVS_SUB - 2) * DIVS_VOLTAGE_S2 +
-                            (DIVS_VOLTAGE * DIVS_SUB - 2) * DIVS_TIME_S2 -
-                            (DIVS_TIME_S2 * DIVS_VOLTAGE_S2)) * 2;
+                                   (DIVS_VOLTAGE * DIVS_SUB - 2) * DIVS_TIME_S2 -
+                                   (DIVS_TIME_S2 * DIVS_VOLTAGE_S2)) * 2;
 
     vaGrid[0].resize(vaGrid0Size);
     std::vector<GLfloat>::iterator glIterator = vaGrid[0].begin();
@@ -105,106 +105,116 @@ const std::vector<GLfloat> &GlGenerator::grid(int a) const { return vaGrid[a]; }
 
 bool GlGenerator::isReady() const { return ready; }
 
+GlGenerator::PrePostStartTriggerSamples GlGenerator::computeSoftwareTriggerTY(const DataAnalyzerResult *result)
+{
+    unsigned int preTrigSamples = 0;
+    unsigned int postTrigSamples = 0;
+    unsigned int swTriggerStart = 0;
+    unsigned int channel = settings->trigger.source;
+
+    // check trigger point for software trigger
+    if (settings->trigger.mode != Dso::TRIGGERMODE_SOFTWARE || channel >= settings->physicalChannels)
+        return PrePostStartTriggerSamples(preTrigSamples, postTrigSamples, swTriggerStart);
+
+    // Trigger channel not in use
+    if (!settings->voltage[channel].used || !result->data(channel) ||
+            result->data(channel)->voltage.sample.empty())
+        return PrePostStartTriggerSamples(preTrigSamples, postTrigSamples, swTriggerStart);
+
+    double value;
+    double level = settings->voltage[channel].trigger;
+    unsigned int sampleCount = result->data(channel)->voltage.sample.size();
+    double timeDisplay = settings->horizontal.timebase * 10;
+    double samplesDisplay = timeDisplay * settings->horizontal.samplerate;
+    if (samplesDisplay >= sampleCount) {
+        // For sure not enough samples to adjust for jitter.
+        // Following options exist:
+        //    1: Decrease sample rate
+        //    2: Change trigger mode to auto
+        //    3: Ignore samples
+        // For now #3 is chosen
+        timestampDebug(QString("Too few samples to make a steady "
+                               "picture. Decrease sample rate"));
+        return PrePostStartTriggerSamples(preTrigSamples, postTrigSamples, swTriggerStart);
+    }
+    preTrigSamples = (settings->trigger.position * samplesDisplay);
+    postTrigSamples = sampleCount - (samplesDisplay - preTrigSamples);
+
+    const int threshold = 7;
+    double prev;
+    bool (*opcmp)(int,int,int);
+    bool (*smplcmp)(int,int);
+    if (settings->trigger.slope == Dso::SLOPE_POSITIVE) {
+        prev = INT_MAX;
+        opcmp = [](int value, int level, int prev) { return value > level && prev <= level;};
+        smplcmp = [](int sampleK, int value) { return sampleK >= value;};
+    } else {
+        prev = INT_MIN;
+        opcmp = [](int value, int level, int prev) { return value > level && prev <= level;};
+        smplcmp = [](int sampleK, int value) { return sampleK < value;};
+    }
+
+    for (unsigned int i = preTrigSamples; i < postTrigSamples; i++) {
+        value = result->data(channel)->voltage.sample[i];
+        if (opcmp(value, level, prev)) {
+            int rising = 0;
+            for (unsigned int k = i + 1; k < i + 11 && k < sampleCount; k++) {
+                if (smplcmp(result->data(channel)->voltage.sample[k], value)) { rising++; }
+            }
+            if (rising > threshold) {
+                swTriggerStart = i;
+                break;
+            }
+        }
+        prev = value;
+    }
+    if (swTriggerStart == 0) {
+        timestampDebug(QString("Trigger not asserted. Data ignored"));
+    }
+    return PrePostStartTriggerSamples(preTrigSamples, postTrigSamples, swTriggerStart);
+}
+
 void GlGenerator::generateGraphs(const DataAnalyzerResult *result) {
 
-    int digitalPhosphorDepth = view->digitalPhosphorDepth;
+    int digitalPhosphorDepth = view->digitalPhosphor ? view->digitalPhosphorDepth : 1;
 
     // Handle all digital phosphor related list manipulations
     for (int mode = Dso::CHANNELMODE_VOLTAGE; mode < Dso::CHANNELMODE_COUNT; ++mode) {
-        // Adapt the number of graphs
-        vaChannel[mode].resize(settings->voltage.size());
+        DrawLinesWithHistoryPerChannel& d = vaChannel[mode];
+        // Resize to the number of channels
+        d.resize(settings->voltage.size());
 
         for (unsigned int channel = 0; channel < vaChannel[mode].size(); ++channel) {
+            DrawLinesWithHistory& drawLinesHistory = d[channel];
             // Move the last list element to the front
-            vaChannel[mode][channel].push_front(std::vector<GLfloat>());
+            if (digitalPhosphorDepth > 1 && drawLinesHistory.size())
+                drawLinesHistory.push_front(drawLinesHistory.back());
 
             // Resize lists for vector array to fit the digital phosphor depth
-            vaChannel[mode][channel].resize(digitalPhosphorDepth);
+            drawLinesHistory.resize(digitalPhosphorDepth);
         }
     }
 
     ready = true;
 
-    unsigned int preTrigSamples = 0;
-    unsigned int postTrigSamples = 0;
+    unsigned preTrigSamples;
+    unsigned postTrigSamples;
+    unsigned swTriggerStart;
     switch (settings->horizontal.format) {
-    case Dso::GRAPHFORMAT_TY: {
-        unsigned int swTriggerStart = 0;
-        // check trigger point for software trigger
-        if (settings->trigger.mode == Dso::TRIGGERMODE_SOFTWARE && settings->trigger.source <= 1) {
-            unsigned int channel = settings->trigger.source;
-            if (settings->voltage[channel].used && result->data(channel) &&
-                !result->data(channel)->voltage.sample.empty()) {
-                double value;
-                double level = settings->voltage[channel].trigger;
-                unsigned int sampleCount = result->data(channel)->voltage.sample.size();
-                double timeDisplay = settings->horizontal.timebase * 10;
-                double samplesDisplay = timeDisplay * settings->horizontal.samplerate;
-                if (samplesDisplay >= sampleCount) {
-                    // For sure not enough samples to adjust for jitter.
-                    // Following options exist:
-                    //    1: Decrease sample rate
-                    //    2: Change trigger mode to auto
-                    //    3: Ignore samples
-                    // For now #3 is chosen
-                    timestampDebug(QString("Too few samples to make a steady "
-                                           "picture. Decrease sample rate"));
-                    return;
-                }
-                preTrigSamples = (settings->trigger.position * samplesDisplay);
-                postTrigSamples = sampleCount - (samplesDisplay - preTrigSamples);
-
-                if (settings->trigger.slope == Dso::SLOPE_POSITIVE) {
-                    double prev = INT_MAX;
-                    for (unsigned int i = preTrigSamples; i < postTrigSamples; i++) {
-                        value = result->data(channel)->voltage.sample[i];
-                        if (value > level && prev <= level) {
-                            int rising = 0;
-                            for (unsigned int k = i + 1; k < i + 11 && k < sampleCount; k++) {
-                                if (result->data(channel)->voltage.sample[k] >= value) { rising++; }
-                            }
-                            if (rising > 7) {
-                                swTriggerStart = i;
-                                break;
-                            }
-                        }
-                        prev = value;
-                    }
-                } else if (settings->trigger.slope == Dso::SLOPE_NEGATIVE) {
-                    double prev = INT_MIN;
-                    for (unsigned int i = preTrigSamples; i < postTrigSamples; i++) {
-                        value = result->data(channel)->voltage.sample[i];
-                        if (value < level && prev >= level) {
-                            int falling = 0;
-                            for (unsigned int k = i + 1; k < i + 11 && k < sampleCount; k++) {
-                                if (result->data(channel)->voltage.sample[k] < value) { falling++; }
-                            }
-                            if (falling > 7) {
-                                swTriggerStart = i;
-                                break;
-                            }
-                        }
-                        prev = value;
-                    }
-                }
-            }
-            if (swTriggerStart == 0) {
-                timestampDebug(QString("Trigger not asserted. Data ignored"));
-                return;
-            }
-        }
+    case Dso::GRAPHFORMAT_TY:
+        std::tie(preTrigSamples, postTrigSamples, swTriggerStart) = computeSoftwareTriggerTY(result);
 
         // Add graphs for channels
         for (int mode = Dso::CHANNELMODE_VOLTAGE; mode < Dso::CHANNELMODE_COUNT; ++mode) {
             for (int channel = 0; channel < (int)settings->voltage.size(); ++channel) {
                 // Check if this channel is used and available at the data analyzer
                 if (((mode == Dso::CHANNELMODE_VOLTAGE) ? settings->voltage[channel].used
-                                                        : settings->spectrum[channel].used) &&
-                    result->data(channel) && !result->data(channel)->voltage.sample.empty()) {
+                     : settings->spectrum[channel].used) &&
+                        result->data(channel) && !result->data(channel)->voltage.sample.empty()) {
                     // Check if the sample count has changed
                     size_t sampleCount = (mode == Dso::CHANNELMODE_VOLTAGE)
-                                             ? result->data(channel)->voltage.sample.size()
-                                             : result->data(channel)->spectrum.sample.size();
+                            ? result->data(channel)->voltage.sample.size()
+                            : result->data(channel)->spectrum.sample.size();
                     if (mode == Dso::CHANNELMODE_VOLTAGE) sampleCount -= (swTriggerStart - preTrigSamples);
                     size_t neededSize = sampleCount * 2;
 
@@ -227,12 +237,12 @@ void GlGenerator::generateGraphs(const DataAnalyzerResult *result) {
                         horizontalFactor = result->data(channel)->voltage.interval / settings->horizontal.timebase;
                     else
                         horizontalFactor =
-                            result->data(channel)->spectrum.interval / settings->horizontal.frequencybase;
+                                result->data(channel)->spectrum.interval / settings->horizontal.frequencybase;
 
                     // Fill vector array
                     if (mode == Dso::CHANNELMODE_VOLTAGE) {
                         std::vector<double>::const_iterator dataIterator =
-                            result->data(channel)->voltage.sample.begin();
+                                result->data(channel)->voltage.sample.begin();
                         const double gain = settings->voltage[channel].gain;
                         const double offset = settings->voltage[channel].offset;
                         const double invert = settings->voltage[channel].inverted ? -1.0 : 1.0;
@@ -245,7 +255,7 @@ void GlGenerator::generateGraphs(const DataAnalyzerResult *result) {
                         }
                     } else {
                         std::vector<double>::const_iterator dataIterator =
-                            result->data(channel)->spectrum.sample.begin();
+                                result->data(channel)->spectrum.sample.begin();
                         const double magnitude = settings->spectrum[channel].magnitude;
                         const double offset = settings->spectrum[channel].offset;
 
@@ -261,15 +271,15 @@ void GlGenerator::generateGraphs(const DataAnalyzerResult *result) {
                 }
             }
         }
-    } break;
+        break;
 
     case Dso::GRAPHFORMAT_XY:
         for (int channel = 0; channel < settings->voltage.size(); ++channel) {
             // For even channel numbers check if this channel is used and this and the
             // following channel are available at the data analyzer
             if (channel % 2 == 0 && channel + 1 < settings->voltage.size() && settings->voltage[channel].used &&
-                result->data(channel) && !result->data(channel)->voltage.sample.empty() && result->data(channel + 1) &&
-                !result->data(channel + 1)->voltage.sample.empty()) {
+                    result->data(channel) && !result->data(channel)->voltage.sample.empty() && result->data(channel + 1) &&
+                    !result->data(channel + 1)->voltage.sample.empty()) {
                 // Check if the sample count has changed
                 const unsigned sampleCount = qMin(result->data(channel)->voltage.sample.size(),
                                                   result->data(channel + 1)->voltage.sample.size());
@@ -277,7 +287,7 @@ void GlGenerator::generateGraphs(const DataAnalyzerResult *result) {
                 for (unsigned index = 0; index < (unsigned)digitalPhosphorDepth; ++index) {
                     if (vaChannel[Dso::CHANNELMODE_VOLTAGE][(size_t)channel][index].size() != neededSize)
                         vaChannel[Dso::CHANNELMODE_VOLTAGE][(size_t)channel][index]
-                            .clear(); // Something was changed, drop old traces
+                                .clear(); // Something was changed, drop old traces
                 }
 
                 // Set size directly to avoid reallocations
@@ -285,7 +295,7 @@ void GlGenerator::generateGraphs(const DataAnalyzerResult *result) {
 
                 // Iterator to data for direct access
                 std::vector<GLfloat>::iterator glIterator =
-                    vaChannel[Dso::CHANNELMODE_VOLTAGE][channel].front().begin();
+                        vaChannel[Dso::CHANNELMODE_VOLTAGE][channel].front().begin();
 
                 // Fill vector array
                 unsigned int xChannel = channel;
