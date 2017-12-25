@@ -18,7 +18,6 @@
 #include "exporter.h"
 
 #include "analyse/dataanalyzerresult.h"
-#include "definitions.h"
 #include "glgenerator.h"
 #include "settings.h"
 #include "utils/dsoStrings.h"

@@ -4,7 +4,6 @@
 #include <QString>
 #include "analyse/enums.h"
 #include "hantekdso/enums.h"
-#include "definitions.h"
 
 #define MARKER_COUNT 2 ///< Number of markers
 

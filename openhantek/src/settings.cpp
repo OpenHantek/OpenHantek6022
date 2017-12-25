@@ -28,7 +28,6 @@
 
 #include "settings.h"
 
-#include "definitions.h"
 #include "dsowidget.h"
 
 /// \brief Set the number of channels.

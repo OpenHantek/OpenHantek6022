@@ -1,6 +1,5 @@
 #pragma once
 
-#include "definitions.h"
 #include <QColor>
 #include <QObject>
 #include <QPoint>
@@ -43,7 +42,7 @@ struct DsoSettingsView {
                                     std::vector<QColor>()};
     bool antialiasing = true;                                         ///< Antialiasing for the graphs
     bool digitalPhosphor = false;                                     ///< true slowly fades out the previous graphs
-    int digitalPhosphorDepth = 8;                                     ///< Number of channels shown at one time
+    unsigned digitalPhosphorDepth = 8;                                     ///< Number of channels shown at one time
     Dso::InterpolationMode interpolation = Dso::INTERPOLATION_LINEAR; ///< Interpolation mode for the graph
     bool screenColorImages = false;                                   ///< true exports images with screen colors
     bool zoom = false;                                                ///< true if the magnified scope is enabled

@@ -25,8 +25,8 @@ struct DataChannel {
 class DataAnalyzerResult {
   public:
     DataAnalyzerResult(unsigned int channelCount);
-    const DataChannel *data(int channel) const;
-    DataChannel *modifyData(int channel);
+    const DataChannel *data(unsigned channel) const;
+    DataChannel *modifyData(unsigned channel);
     unsigned int sampleCount() const;
     unsigned int channelCount() const;
 

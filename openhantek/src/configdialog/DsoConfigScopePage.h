@@ -2,7 +2,6 @@
 
 #include <QWidget>
 
-#include "definitions.h"
 #include "settings.h"
 
 #include <QCheckBox>

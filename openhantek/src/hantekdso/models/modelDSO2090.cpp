@@ -1,4 +1,6 @@
 #include "modelDSO2090.h"
+#include "hantekprotocol/bulkStructs.h"
+#include "hantekdsocontrol.h"
 
 using namespace Hantek;
 

@@ -9,7 +9,6 @@
 
 #include "usbdevicedefinitions.h"
 #include "controlbegin.h"
-#include "definitions.h"
 #include "utils/dataarray.h"
 
 class DSOModel;

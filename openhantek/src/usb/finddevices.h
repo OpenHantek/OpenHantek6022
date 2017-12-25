@@ -7,7 +7,6 @@
 #include <map>
 #include <list>
 
-#include "definitions.h"
 #include "usbdevice.h"
 
 struct libusb_context;

@@ -41,6 +41,8 @@ class GlGenerator : public QObject {
     DsoSettingsView *view;
     std::vector<GLfloat> vaGrid[3];
     bool ready = false;
+
+    const SampleValues &useSamplesOf(int mode, unsigned channel, const DataAnalyzerResult *result) const;
   signals:
     void graphsGenerated(); ///< The graphs are ready to be drawn
 };

@@ -6,7 +6,7 @@
 /// \brief All supported control commands.
 enum ControlCode {
     /// <em>[::MODEL_DSO2090, ::MODEL_DSO2150, ::MODEL_DSO2250, ::MODEL_DSO5200,
-    /// ::MODEL_DSO5200A]</em>
+    /// ::MODEL_DSO5200A, MODEL_DSO6022]</em>
     /// <p>
     ///   The 0xa2 control read/write command gives access to a ::ControlValue.
     /// </p>
@@ -14,7 +14,7 @@ enum ControlCode {
     CONTROL_VALUE = 0xa2,
 
     /// <em>[::MODEL_DSO2090, ::MODEL_DSO2150, ::MODEL_DSO2250, ::MODEL_DSO5200,
-    /// ::MODEL_DSO5200A]</em>
+    /// ::MODEL_DSO5200A, MODEL_DSO6022]</em>
     /// <p>
     ///   The 0xb2 control read command gets the speed level of the USB
     ///   connection:
@@ -132,9 +132,13 @@ enum ControlCode {
     /// <p><br /></p>
     CONTROL_SETRELAYS = 0xb5,
 
+    /// CH1 voltage div setting (6022BE/BL)
     CONTROL_SETVOLTDIV_CH1 = 0xe0,
+    /// CH2 voltage div setting (6022BE/BL)
     CONTROL_SETVOLTDIV_CH2 = 0xe1,
+    /// Time divisor setting (6022BE/BL)
     CONTROL_SETTIMEDIV = 0xe2,
+    /// Request sample data (6022BE/BL)
     CONTROL_ACQUIIRE_HARD_DATA = 0xe3
 };
 

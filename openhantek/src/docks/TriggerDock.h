@@ -5,7 +5,6 @@
 #include <QDockWidget>
 #include <QGridLayout>
 
-#include "definitions.h"
 #include "settings.h"
 
 class QLabel;

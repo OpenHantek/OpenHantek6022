@@ -3,8 +3,6 @@
 #pragma once
 
 #include "errorcodes.h"
-#include "bulkStructs.h"
-#include "controlStructs.h"
 #include "dsosamples.h"
 #include "states.h"
 #include "controlspecification.h"
@@ -88,7 +86,7 @@ class HantekDsoControl : public QObject {
   private:
     bool isRollMode() const;
     bool isFastRate() const;
-    int getRecordLength() const;
+    unsigned getRecordLength() const;
 
     Dso::ErrorCode retrieveChannelLevelData();
 

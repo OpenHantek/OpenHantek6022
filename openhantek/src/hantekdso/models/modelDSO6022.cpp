@@ -1,4 +1,8 @@
 #include "modelDSO6022.h"
+#include "usb/usbdevice.h"
+#include "hantekprotocol/controlStructs.h"
+#include "controlindexes.h"
+#include "hantekdsocontrol.h"
 
 using namespace Hantek;
 

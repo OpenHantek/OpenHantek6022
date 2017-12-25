@@ -1,10 +1,8 @@
 #pragma once
 
 #include "dsomodel.h"
-#include "hantekdsocontrol.h"
-#include "usb/usbdevice.h"
-#include "controlindexes.h"
 
+class HantekDsoControl;
 using namespace Hantek;
 
 struct ModelDSO6022BE : public DSOModel {

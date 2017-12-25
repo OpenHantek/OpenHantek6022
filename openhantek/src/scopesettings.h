@@ -1,6 +1,5 @@
 #pragma once
 
-#include "definitions.h"
 #include <vector>
 #include "analyse/enums.h"
 #include "hantekdso/enums.h"

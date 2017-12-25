@@ -9,14 +9,14 @@ DataAnalyzerResult::DataAnalyzerResult(unsigned int channelCount) { analyzedData
 /// \brief Returns the analyzed data.
 /// \param channel Channel, whose data should be returned.
 /// \return Analyzed data as AnalyzedData struct.
-const DataChannel *DataAnalyzerResult::data(int channel) const {
-    if (channel >= (int)this->analyzedData.size()) return 0;
+const DataChannel *DataAnalyzerResult::data(unsigned channel) const {
+    if (channel >= this->analyzedData.size()) return 0;
 
     return &this->analyzedData[(size_t)channel];
 }
 
-DataChannel *DataAnalyzerResult::modifyData(int channel) {
-    if (channel >= (int)this->analyzedData.size())
+DataChannel *DataAnalyzerResult::modifyData(unsigned channel) {
+    if (channel >= this->analyzedData.size())
         throw new std::runtime_error("If you modfiy the DataAnalyzerResult, you "
                                      "need to set the channels first!");
 

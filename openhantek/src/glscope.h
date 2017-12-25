@@ -13,8 +13,6 @@ using GL_WIDGET_CLASS = QOpenGLWidget;
 using GL_WIDGET_CLASS = QGLWidget;
 #endif
 
-#include "definitions.h"
-
 class GlGenerator;
 class DsoSettings;
 

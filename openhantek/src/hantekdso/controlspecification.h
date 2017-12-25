@@ -2,10 +2,10 @@
 
 #pragma once
 
-#include "controlvalue.h"
-#include "bulkcode.h"
-#include "controlcode.h"
-#include "definitions.h"
+#include "hantekprotocol/controlvalue.h"
+#include "hantekprotocol/bulkcode.h"
+#include "hantekprotocol/controlcode.h"
+#include "hantekprotocol/definitions.h"
 #include <QList>
 
 namespace Hantek {
@@ -71,7 +71,6 @@ struct ControlSpecificationSamplerate {
 /// \struct ControlSpecification                              hantek/control.h
 /// \brief Stores the specifications of the currently connected device.
 struct ControlSpecification {
-    ControlSpecification() noexcept;
     // Interface
     ControlSpecificationCommands command; ///< The commands for this device
 

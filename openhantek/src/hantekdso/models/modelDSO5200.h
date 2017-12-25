@@ -1,9 +1,8 @@
 #pragma once
 
 #include "dsomodel.h"
-#include "hantekdsocontrol.h"
-#include "bulkStructs.h"
 
+class HantekDsoControl;
 using namespace Hantek;
 
 struct ModelDSO5200 : public DSOModel {

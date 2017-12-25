@@ -10,7 +10,6 @@
 
 #include "analyse/enums.h"
 #include "hantekdso/enums.h"
-#include "definitions.h"
 #include "dockwindows.h"
 
 void SetupDockWidget(QDockWidget *dockWindow, QWidget *dockWidget, QLayout *layout) {

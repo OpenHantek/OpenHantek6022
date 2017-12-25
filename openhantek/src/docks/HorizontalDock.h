@@ -6,7 +6,6 @@
 #include <QGridLayout>
 
 #include <vector>
-#include "definitions.h"
 #include "settings.h"
 
 class QLabel;

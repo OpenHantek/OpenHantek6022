@@ -52,12 +52,12 @@ struct ControlSettingsVoltage {
 /// \struct ControlSettings                                   hantek/control.h
 /// \brief Stores the current settings of the device.
 struct ControlSettings {
-    ControlSettings(ControlSamplerateLimits *limits);
+    ControlSettings(ControlSamplerateLimits *limits, size_t channelCount);
     ControlSettingsSamplerate samplerate;            ///< The samplerate settings
     std::vector<ControlSettingsVoltage> voltage; ///< The amplification settings
     ControlSettingsTrigger trigger;                  ///< The trigger settings
-    unsigned int recordLengthId = 1;                     ///< The id in the record length array
-    unsigned short int usedChannels = 0;                 ///< Number of activated channels
+    unsigned recordLengthId = 1;                     ///< The id in the record length array
+    unsigned usedChannels = 0;                 ///< Number of activated channels
 };
 
 }

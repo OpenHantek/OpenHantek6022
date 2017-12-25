@@ -7,7 +7,6 @@
 #include "usbdevice.h"
 
 #include "controlgetspeed.h"
-#include "controlcode.h"
 #include "models.h"
 #include "utils/printutils.h"
 
@@ -280,7 +279,7 @@ int USBDevice::getConnectionSpeed() {
 }
 
 /// \brief Gets the maximum size of one packet transmitted via bulk transfer.
-/// \return The maximum packet size in bytes, -1 on error.
+/// \return The maximum packet size in bytes, negative libusb error code on error.
 int USBDevice::getPacketSize() {
     const int s = this->getConnectionSpeed();
     if (s == CONNECTION_FULLSPEED)
@@ -290,8 +289,8 @@ int USBDevice::getPacketSize() {
     else if (s > CONNECTION_HIGHSPEED) {
         std::cerr << "Unknown USB speed. Please correct source code in USBDevice::getPacketSize()" << std::endl;
         throw new std::runtime_error("Unknown USB speed");
-    }
-    return -1;
+    } else if (s<0) return s;
+    return 0;
 }
 
 libusb_device *USBDevice::getRawDevice() const { return device; }

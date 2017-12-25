@@ -9,7 +9,6 @@
 #include <memory>
 
 #include "dataanalyzerresult.h"
-#include "definitions.h"
 #include "dsosamples.h"
 #include "utils/printutils.h"
 #include "enums.h"
