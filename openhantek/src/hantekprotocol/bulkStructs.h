@@ -13,10 +13,15 @@
 
 namespace Hantek {
 
+class BulkCommand : public DataArray<uint8_t> {
+protected:
+    BulkCommand(unsigned size): DataArray<uint8_t>(size) {}
+};
+
 //////////////////////////////////////////////////////////////////////////////
 /// \class BulkSetFilter                                        hantek/types.h
-/// \brief The BULK_SETFILTER builder.
-class BulkSetFilter : public DataArray<uint8_t> {
+/// \brief The BULK::SETFILTER builder.
+class BulkSetFilter : public BulkCommand {
   public:
     BulkSetFilter();
     BulkSetFilter(bool channel1, bool channel2, bool trigger);
@@ -32,8 +37,8 @@ class BulkSetFilter : public DataArray<uint8_t> {
 
 //////////////////////////////////////////////////////////////////////////////
 /// \class BulkSetTriggerAndSamplerate                          hantek/types.h
-/// \brief The BULK_SETTRIGGERANDSAMPLERATE builder.
-class BulkSetTriggerAndSamplerate : public DataArray<uint8_t> {
+/// \brief The BulkCode::SETTRIGGERANDSAMPLERATE builder.
+class BulkSetTriggerAndSamplerate : public BulkCommand {
   public:
     BulkSetTriggerAndSamplerate();
     BulkSetTriggerAndSamplerate(uint16_t downsampler, uint32_t triggerPosition, uint8_t triggerSource = 0,
@@ -65,8 +70,8 @@ class BulkSetTriggerAndSamplerate : public DataArray<uint8_t> {
 
 //////////////////////////////////////////////////////////////////////////////
 /// \class BulkForceTrigger                                     hantek/types.h
-/// \brief The BULK_FORCETRIGGER builder.
-class BulkForceTrigger : public DataArray<uint8_t> {
+/// \brief The BulkCode::FORCETRIGGER builder.
+class BulkForceTrigger : public BulkCommand {
   public:
     BulkForceTrigger();
 };
@@ -74,7 +79,7 @@ class BulkForceTrigger : public DataArray<uint8_t> {
 //////////////////////////////////////////////////////////////////////////////
 /// \class BulkCaptureStart                                     hantek/types.h
 /// \brief The BULK_CAPTURESTART builder.
-class BulkCaptureStart : public DataArray<uint8_t> {
+class BulkCaptureStart : public BulkCommand {
   public:
     BulkCaptureStart();
 };
@@ -82,31 +87,31 @@ class BulkCaptureStart : public DataArray<uint8_t> {
 //////////////////////////////////////////////////////////////////////////////
 /// \class BulkTriggerEnabled                                   hantek/types.h
 /// \brief The BULK_TRIGGERENABLED builder.
-class BulkTriggerEnabled : public DataArray<uint8_t> {
+class BulkTriggerEnabled : public BulkCommand {
   public:
     BulkTriggerEnabled();
 };
 
 //////////////////////////////////////////////////////////////////////////////
 /// \class BulkGetData                                          hantek/types.h
-/// \brief The BULK_GETDATA builder.
-class BulkGetData : public DataArray<uint8_t> {
+/// \brief The BulkCode::GETDATA builder.
+class BulkGetData : public BulkCommand {
   public:
     BulkGetData();
 };
 
 //////////////////////////////////////////////////////////////////////////////
 /// \class BulkGetCaptureState                                  hantek/types.h
-/// \brief The BULK_GETCAPTURESTATE builder.
-class BulkGetCaptureState : public DataArray<uint8_t> {
+/// \brief The BulkCode::GETCAPTURESTATE builder.
+class BulkGetCaptureState : public BulkCommand {
   public:
     BulkGetCaptureState();
 };
 
 //////////////////////////////////////////////////////////////////////////////
 /// \class BulkResponseGetCaptureState                          hantek/types.h
-/// \brief The parser for the BULK_GETCAPTURESTATE response.
-class BulkResponseGetCaptureState : public DataArray<uint8_t> {
+/// \brief The parser for the BulkCode::GETCAPTURESTATE response.
+class BulkResponseGetCaptureState : public BulkCommand {
   public:
     BulkResponseGetCaptureState();
 
@@ -116,8 +121,8 @@ class BulkResponseGetCaptureState : public DataArray<uint8_t> {
 
 //////////////////////////////////////////////////////////////////////////////
 /// \class BulkSetGain                                          hantek/types.h
-/// \brief The BULK_SETGAIN builder.
-class BulkSetGain : public DataArray<uint8_t> {
+/// \brief The BulkCode::SETGAIN builder.
+class BulkSetGain : public BulkCommand {
   public:
     BulkSetGain();
     BulkSetGain(uint8_t channel1, uint8_t channel2);
@@ -131,8 +136,8 @@ class BulkSetGain : public DataArray<uint8_t> {
 
 //////////////////////////////////////////////////////////////////////////////
 /// \class BulkSetLogicalData                                   hantek/types.h
-/// \brief The BULK_SETLOGICALDATA builder.
-class BulkSetLogicalData : public DataArray<uint8_t> {
+/// \brief The BulkCode::SETLOGICALDATA builder.
+class BulkSetLogicalData : public BulkCommand {
   public:
     BulkSetLogicalData();
     BulkSetLogicalData(uint8_t data);
@@ -146,8 +151,8 @@ class BulkSetLogicalData : public DataArray<uint8_t> {
 
 //////////////////////////////////////////////////////////////////////////////
 /// \class BulkGetLogicalData                                   hantek/types.h
-/// \brief The BULK_GETLOGICALDATA builder.
-class BulkGetLogicalData : public DataArray<uint8_t> {
+/// \brief The BulkCode::GETLOGICALDATA builder.
+class BulkGetLogicalData : public BulkCommand {
   public:
     BulkGetLogicalData();
 };
@@ -155,7 +160,7 @@ class BulkGetLogicalData : public DataArray<uint8_t> {
 //////////////////////////////////////////////////////////////////////////////
 /// \class BulkSetChannels2250                                  hantek/types.h
 /// \brief The DSO-2250 BULK_BSETFILTER builder.
-class BulkSetChannels2250 : public DataArray<uint8_t> {
+class BulkSetChannels2250 : public BulkCommand {
   public:
     BulkSetChannels2250();
     BulkSetChannels2250(uint8_t usedChannels);
@@ -169,8 +174,8 @@ class BulkSetChannels2250 : public DataArray<uint8_t> {
 
 //////////////////////////////////////////////////////////////////////////////
 /// \class BulkSetTrigger2250                                   hantek/types.h
-/// \brief The DSO-2250 BULK_CSETTRIGGERORSAMPLERATE builder.
-class BulkSetTrigger2250 : public DataArray<uint8_t> {
+/// \brief The DSO-2250 BulkCode::CSETTRIGGERORSAMPLERATE builder.
+class BulkSetTrigger2250 : public BulkCommand {
   public:
     BulkSetTrigger2250();
     BulkSetTrigger2250(uint8_t triggerSource, uint8_t triggerSlope);
@@ -186,8 +191,8 @@ class BulkSetTrigger2250 : public DataArray<uint8_t> {
 
 //////////////////////////////////////////////////////////////////////////////
 /// \class BulkSetSamplerate5200                                hantek/types.h
-/// \brief The DSO-5200/DSO-5200A BULK_CSETTRIGGERORSAMPLERATE builder.
-class BulkSetSamplerate5200 : public DataArray<uint8_t> {
+/// \brief The DSO-5200/DSO-5200A BulkCode::CSETTRIGGERORSAMPLERATE builder.
+class BulkSetSamplerate5200 : public BulkCommand {
   public:
     BulkSetSamplerate5200();
     BulkSetSamplerate5200(uint16_t samplerateSlow, uint8_t samplerateFast);
@@ -203,8 +208,8 @@ class BulkSetSamplerate5200 : public DataArray<uint8_t> {
 
 //////////////////////////////////////////////////////////////////////////////
 /// \class BulkSetRecordLength2250                              hantek/types.h
-/// \brief The DSO-2250 BULK_DSETBUFFER builder.
-class BulkSetRecordLength2250 : public DataArray<uint8_t> {
+/// \brief The DSO-2250 BulkCode::DSETBUFFER builder.
+class BulkSetRecordLength2250 : public BulkCommand {
   public:
     BulkSetRecordLength2250();
     BulkSetRecordLength2250(uint8_t recordLength);
@@ -218,8 +223,8 @@ class BulkSetRecordLength2250 : public DataArray<uint8_t> {
 
 //////////////////////////////////////////////////////////////////////////////
 /// \class BulkSetBuffer5200                                    hantek/types.h
-/// \brief The DSO-5200/DSO-5200A BULK_DSETBUFFER builder.
-class BulkSetBuffer5200 : public DataArray<uint8_t> {
+/// \brief The DSO-5200/DSO-5200A BulkCode::DSETBUFFER builder.
+class BulkSetBuffer5200 : public BulkCommand {
   public:
     BulkSetBuffer5200();
     BulkSetBuffer5200(uint16_t triggerPositionPre, uint16_t triggerPositionPost, DTriggerPositionUsed usedPre = DTriggerPositionUsed::DTRIGGERPOSITION_OFF,
@@ -242,8 +247,8 @@ class BulkSetBuffer5200 : public DataArray<uint8_t> {
 
 //////////////////////////////////////////////////////////////////////////////
 /// \class BulkSetSamplerate2250                                hantek/types.h
-/// \brief The DSO-2250 BULK_ESETTRIGGERORSAMPLERATE builder.
-class BulkSetSamplerate2250 : public DataArray<uint8_t> {
+/// \brief The DSO-2250 BulkCode::ESETTRIGGERORSAMPLERATE builder.
+class BulkSetSamplerate2250 : public BulkCommand {
   public:
     BulkSetSamplerate2250();
     BulkSetSamplerate2250(bool fastRate, bool downsampling = false, uint16_t samplerate = 0);
@@ -261,8 +266,8 @@ class BulkSetSamplerate2250 : public DataArray<uint8_t> {
 
 //////////////////////////////////////////////////////////////////////////////
 /// \class BulkSetTrigger5200                                   hantek/types.h
-/// \brief The DSO-5200/DSO-5200A BULK_ESETTRIGGERORSAMPLERATE builder.
-class BulkSetTrigger5200 : public DataArray<uint8_t> {
+/// \brief The DSO-5200/DSO-5200A BulkCode::ESETTRIGGERORSAMPLERATE builder.
+class BulkSetTrigger5200 : public BulkCommand {
   public:
     BulkSetTrigger5200();
     BulkSetTrigger5200(uint8_t triggerSource, uint8_t usedChannels, bool fastRate = false, uint8_t triggerSlope = 0,
@@ -285,8 +290,8 @@ class BulkSetTrigger5200 : public DataArray<uint8_t> {
 
 //////////////////////////////////////////////////////////////////////////////
 /// \class BulkSetBuffer2250                                    hantek/types.h
-/// \brief The DSO-2250 BULK_FSETBUFFER builder.
-class BulkSetBuffer2250 : public DataArray<uint8_t> {
+/// \brief The DSO-2250 BulkCode::FSETBUFFER builder.
+class BulkSetBuffer2250 : public BulkCommand {
   public:
     BulkSetBuffer2250();
     BulkSetBuffer2250(uint32_t triggerPositionPre, uint32_t triggerPositionPost);

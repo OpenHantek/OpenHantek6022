@@ -58,6 +58,8 @@ struct ControlSettings {
     ControlSettingsTrigger trigger;                  ///< The trigger settings
     unsigned recordLengthId = 1;                     ///< The id in the record length array
     unsigned usedChannels = 0;                 ///< Number of activated channels
+    // Software trigger, margin
+    const unsigned swtriggerSampleMargin = 2000;
 };
 
 }

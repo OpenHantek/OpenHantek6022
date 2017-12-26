@@ -8,7 +8,6 @@
 #include "controlspecification.h"
 #include "controlsettings.h"
 #include "controlindexes.h"
-#include "utils/dataarray.h"
 #include "utils/printutils.h"
 
 #include <vector>
@@ -19,6 +18,10 @@
 #include <QTimer>
 
 class USBDevice;
+namespace Hantek {
+class BulkCommand;
+class ControlCommand;
+}
 
 /// \brief The DsoControl abstraction layer for %Hantek USB DSOs.
 /// TODO Please anyone, refactor this class into smaller pieces (Separation of Concerns!).
@@ -62,7 +65,7 @@ class HantekDsoControl : public QObject {
     double getMaxSamplerate();
 
     /// \brief Get a list of the names of the special trigger sources.
-    const QStringList *getSpecialTriggerSources();
+    const std::vector<std::string> getSpecialTriggerSources();
 
     /// Return the associated usb device.
     USBDevice *getDevice();
@@ -144,11 +147,11 @@ class HantekDsoControl : public QObject {
 
   public: // TODO redo command queues
     /// Pointers to bulk commands, ready to be transmitted
-    DataArray<unsigned char> *command[Hantek::BULK_COUNT] = {0};
+    Hantek::BulkCommand *command[(uint8_t)Hantek::BulkCode::COUNT] = {0};
     /// true, when the command should be executed
-    bool commandPending[Hantek::BULK_COUNT] = {false};
+    bool commandPending[(uint8_t)Hantek::BulkCode::COUNT] = {false};
     ///< Pointers to control commands
-    DataArray<unsigned char> *control[Hantek::CONTROLINDEX_COUNT] = {0};
+    Hantek::ControlCommand *control[Hantek::CONTROLINDEX_COUNT] = {0};
     ///< Request codes for control commands
     unsigned char controlCode[Hantek::CONTROLINDEX_COUNT];
     ///< true, when the control command should be executed
@@ -157,8 +160,6 @@ class HantekDsoControl : public QObject {
     // Communication with device
     USBDevice *device;     ///< The USB device for the oscilloscope
     bool sampling = false; ///< true, if the oscilloscope is taking samples
-
-    QStringList specialTriggerSources = {tr("EXT"), tr("EXT/10")}; ///< Names of the special trigger sources
 
     // Device setup
     Hantek::ControlSpecification specification; ///< The specifications of the device

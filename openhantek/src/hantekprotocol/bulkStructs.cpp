@@ -9,13 +9,13 @@ namespace Hantek {
 //////////////////////////////////////////////////////////////////////////////
 // class BulkSetFilter
 /// \brief Sets the data array to the default values.
-BulkSetFilter::BulkSetFilter() : DataArray<uint8_t>(8) { this->init(); }
+BulkSetFilter::BulkSetFilter() : BulkCommand(8) { this->init(); }
 
 /// \brief Sets the FilterByte to the given value.
 /// \param channel1 true if channel 1 is filtered.
 /// \param channel2 true if channel 2 is filtered.
 /// \param trigger true if trigger is filtered.
-BulkSetFilter::BulkSetFilter(bool channel1, bool channel2, bool trigger) : DataArray<uint8_t>(8) {
+BulkSetFilter::BulkSetFilter(bool channel1, bool channel2, bool trigger) : BulkCommand(8) {
     this->init();
 
     this->setChannel(0, channel1);
@@ -59,14 +59,14 @@ void BulkSetFilter::setTrigger(bool filtered) {
 
 /// \brief Initialize the array to the needed values.
 void BulkSetFilter::init() {
-    this->array[0] = BULK_SETFILTER;
+    this->array[0] =(uint8_t) BulkCode::SETFILTER;
     this->array[1] = 0x0f;
 }
 
 //////////////////////////////////////////////////////////////////////////////
 // class BulkSetTriggerAndSamplerate
 /// \brief Sets the data array to the default values.
-BulkSetTriggerAndSamplerate::BulkSetTriggerAndSamplerate() : DataArray<uint8_t>(12) { this->init(); }
+BulkSetTriggerAndSamplerate::BulkSetTriggerAndSamplerate() : BulkCommand(12) { this->init(); }
 
 /// \brief Sets the data bytes to the specified values.
 /// \param downsampler The Downsampler value.
@@ -82,7 +82,7 @@ BulkSetTriggerAndSamplerate::BulkSetTriggerAndSamplerate(uint16_t downsampler, u
                                                          uint8_t triggerSource, uint8_t recordLength,
                                                          uint8_t samplerateId, bool downsamplingMode,
                                                          uint8_t usedChannels, bool fastRate, uint8_t triggerSlope)
-    : DataArray<uint8_t>(12) {
+    : BulkCommand(12) {
     this->init();
 
     this->setTriggerSource(triggerSource);
@@ -196,37 +196,37 @@ void BulkSetTriggerAndSamplerate::setTriggerPosition(uint32_t position) {
 }
 
 /// \brief Initialize the array to the needed values.
-void BulkSetTriggerAndSamplerate::init() { this->array[0] = BULK_SETTRIGGERANDSAMPLERATE; }
+void BulkSetTriggerAndSamplerate::init() { this->array[0] = (uint8_t) BulkCode::SETTRIGGERANDSAMPLERATE; }
 
 //////////////////////////////////////////////////////////////////////////////
 // class BulkForceTrigger
 /// \brief Sets the data array to needed values.
-BulkForceTrigger::BulkForceTrigger() : DataArray<uint8_t>(2) { this->array[0] = BULK_FORCETRIGGER; }
+BulkForceTrigger::BulkForceTrigger() : BulkCommand(2) { this->array[0] = (uint8_t) BulkCode::FORCETRIGGER; }
 
 //////////////////////////////////////////////////////////////////////////////
 // class BulkCaptureStart
 /// \brief Sets the data array to needed values.
-BulkCaptureStart::BulkCaptureStart() : DataArray<uint8_t>(2) { this->array[0] = BULK_STARTSAMPLING; }
+BulkCaptureStart::BulkCaptureStart() : BulkCommand(2) { this->array[0] = (uint8_t) BulkCode::STARTSAMPLING; }
 
 //////////////////////////////////////////////////////////////////////////////
 // class BulkTriggerEnabled
 /// \brief Sets the data array to needed values.
-BulkTriggerEnabled::BulkTriggerEnabled() : DataArray<uint8_t>(2) { this->array[0] = BULK_ENABLETRIGGER; }
+BulkTriggerEnabled::BulkTriggerEnabled() : BulkCommand(2) { this->array[0] = (uint8_t) BulkCode::ENABLETRIGGER; }
 
 //////////////////////////////////////////////////////////////////////////////
 // class BulkGetData
 /// \brief Sets the data array to needed values.
-BulkGetData::BulkGetData() : DataArray<uint8_t>(2) { this->array[0] = BULK_GETDATA; }
+BulkGetData::BulkGetData() : BulkCommand(2) { this->array[0] = (uint8_t) BulkCode::GETDATA; }
 
 //////////////////////////////////////////////////////////////////////////////
 // class BulkGetCaptureState
 /// \brief Sets the data array to needed values.
-BulkGetCaptureState::BulkGetCaptureState() : DataArray<uint8_t>(2) { this->array[0] = BULK_GETCAPTURESTATE; }
+BulkGetCaptureState::BulkGetCaptureState() : BulkCommand(2) { this->array[0] = (uint8_t) BulkCode::GETCAPTURESTATE; }
 
 //////////////////////////////////////////////////////////////////////////////
 // class BulkResponseGetCaptureState
 /// \brief Initializes the array.
-BulkResponseGetCaptureState::BulkResponseGetCaptureState() : DataArray<uint8_t>(512) {}
+BulkResponseGetCaptureState::BulkResponseGetCaptureState() : BulkCommand(512) {}
 
 /// \brief Gets the capture state.
 /// \return The CaptureState of the oscilloscope.
@@ -241,12 +241,12 @@ unsigned int BulkResponseGetCaptureState::getTriggerPoint() {
 //////////////////////////////////////////////////////////////////////////////
 // class BulkSetGain
 /// \brief Sets the data array to needed values.
-BulkSetGain::BulkSetGain() : DataArray<uint8_t>(8) { this->init(); }
+BulkSetGain::BulkSetGain() : BulkCommand(8) { this->init(); }
 
 /// \brief Sets the gain to the given values.
 /// \param channel1 The gain value for channel 1.
 /// \param channel2 The gain value for channel 2.
-BulkSetGain::BulkSetGain(uint8_t channel1, uint8_t channel2) : DataArray<uint8_t>(8) {
+BulkSetGain::BulkSetGain(uint8_t channel1, uint8_t channel2) : BulkCommand(8) {
     this->init();
 
     this->setGain(0, channel1);
@@ -276,16 +276,16 @@ void BulkSetGain::setGain(unsigned int channel, uint8_t value) {
 }
 
 /// \brief Initialize the array to the needed values.
-void BulkSetGain::init() { this->array[0] = BULK_SETGAIN; }
+void BulkSetGain::init() { this->array[0] = (uint8_t)BulkCode::SETGAIN; }
 
 //////////////////////////////////////////////////////////////////////////////
 // class BulkSetLogicalData
 /// \brief Sets the data array to needed values.
-BulkSetLogicalData::BulkSetLogicalData() : DataArray<uint8_t>(8) { this->init(); }
+BulkSetLogicalData::BulkSetLogicalData() : BulkCommand(8) { this->init(); }
 
 /// \brief Sets the data to the given value.
 /// \param data The data byte.
-BulkSetLogicalData::BulkSetLogicalData(uint8_t data) : DataArray<uint8_t>(8) {
+BulkSetLogicalData::BulkSetLogicalData(uint8_t data) : BulkCommand(8) {
     this->init();
 
     this->setData(data);
@@ -300,21 +300,21 @@ uint8_t BulkSetLogicalData::getData() { return this->array[2]; }
 void BulkSetLogicalData::setData(uint8_t data) { this->array[2] = data; }
 
 /// \brief Initialize the array to the needed values.
-void BulkSetLogicalData::init() { this->array[0] = BULK_SETLOGICALDATA; }
+void BulkSetLogicalData::init() { this->array[0] = (uint8_t)BulkCode::SETLOGICALDATA; }
 
 //////////////////////////////////////////////////////////////////////////////
 // class BulkGetLogicalData
 /// \brief Sets the data array to needed values.
-BulkGetLogicalData::BulkGetLogicalData() : DataArray<uint8_t>(2) { this->array[0] = BULK_GETLOGICALDATA; }
+BulkGetLogicalData::BulkGetLogicalData() : BulkCommand(2) { this->array[0] = (uint8_t)BulkCode::GETLOGICALDATA; }
 
 //////////////////////////////////////////////////////////////////////////////
 // class BulkSetFilter2250
 /// \brief Sets the data array to needed values.
-BulkSetChannels2250::BulkSetChannels2250() : DataArray<uint8_t>(4) { this->init(); }
+BulkSetChannels2250::BulkSetChannels2250() : BulkCommand(4) { this->init(); }
 
 /// \brief Sets the used channels.
 /// \param usedChannels The UsedChannels value.
-BulkSetChannels2250::BulkSetChannels2250(uint8_t usedChannels) : DataArray<uint8_t>(4) {
+BulkSetChannels2250::BulkSetChannels2250(uint8_t usedChannels) : BulkCommand(4) {
     this->init();
 
     this->setUsedChannels(usedChannels);
@@ -329,17 +329,17 @@ uint8_t BulkSetChannels2250::getUsedChannels() { return this->array[2]; }
 void BulkSetChannels2250::setUsedChannels(uint8_t value) { this->array[2] = value; }
 
 /// \brief Initialize the array to the needed values.
-void BulkSetChannels2250::init() { this->array[0] = BULK_BSETCHANNELS; }
+void BulkSetChannels2250::init() { this->array[0] = (uint8_t)BulkCode::BSETCHANNELS; }
 
 //////////////////////////////////////////////////////////////////////////////
 // class BulkSetTrigger2250
 /// \brief Sets the data array to needed values.
-BulkSetTrigger2250::BulkSetTrigger2250() : DataArray<uint8_t>(8) { this->init(); }
+BulkSetTrigger2250::BulkSetTrigger2250() : BulkCommand(8) { this->init(); }
 
 /// \brief Sets the used channels.
 /// \param triggerSource The trigger source id (CTriggerBits).
 /// \param triggerSlope The triggerSlope value (CTriggerBits).
-BulkSetTrigger2250::BulkSetTrigger2250(uint8_t triggerSource, uint8_t triggerSlope) : DataArray<uint8_t>(8) {
+BulkSetTrigger2250::BulkSetTrigger2250(uint8_t triggerSource, uint8_t triggerSlope) : BulkCommand(8) {
     this->init();
 
     this->setTriggerSource(triggerSource);
@@ -363,17 +363,17 @@ uint8_t BulkSetTrigger2250::getTriggerSlope() { return ((CTriggerBits *)&(this->
 void BulkSetTrigger2250::setTriggerSlope(uint8_t slope) { ((CTriggerBits *)&(this->array[2]))->triggerSlope = slope; }
 
 /// \brief Initialize the array to the needed values.
-void BulkSetTrigger2250::init() { this->array[0] = BULK_CSETTRIGGERORSAMPLERATE; }
+void BulkSetTrigger2250::init() { this->array[0] = (uint8_t)BulkCode::CSETTRIGGERORSAMPLERATE; }
 
 //////////////////////////////////////////////////////////////////////////////
 // class BulkSetSamplerate5200
 /// \brief Sets the data array to the default values.
-BulkSetSamplerate5200::BulkSetSamplerate5200() : DataArray<uint8_t>(6) { this->init(); }
+BulkSetSamplerate5200::BulkSetSamplerate5200() : BulkCommand(6) { this->init(); }
 
 /// \brief Sets the data bytes to the specified values.
 /// \param samplerateSlow The SamplerateSlow value.
 /// \param samplerateFast The SamplerateFast value.
-BulkSetSamplerate5200::BulkSetSamplerate5200(uint16_t samplerateSlow, uint8_t samplerateFast) : DataArray<uint8_t>(6) {
+BulkSetSamplerate5200::BulkSetSamplerate5200(uint16_t samplerateSlow, uint8_t samplerateFast) : BulkCommand(6) {
     this->init();
 
     this->setSamplerateFast(samplerateFast);
@@ -402,16 +402,16 @@ void BulkSetSamplerate5200::setSamplerateSlow(uint16_t samplerate) {
 }
 
 /// \brief Initialize the array to the needed values.
-void BulkSetSamplerate5200::init() { this->array[0] = BULK_CSETTRIGGERORSAMPLERATE; }
+void BulkSetSamplerate5200::init() { this->array[0] = (uint8_t)BulkCode::CSETTRIGGERORSAMPLERATE; }
 
 //////////////////////////////////////////////////////////////////////////////
 // class BulkSetBuffer2250
 /// \brief Sets the data array to the default values.
-BulkSetRecordLength2250::BulkSetRecordLength2250() : DataArray<uint8_t>(4) { this->init(); }
+BulkSetRecordLength2250::BulkSetRecordLength2250() : BulkCommand(4) { this->init(); }
 
 /// \brief Sets the data bytes to the specified values.
 /// \param recordLength The ::RecordLengthId value.
-BulkSetRecordLength2250::BulkSetRecordLength2250(uint8_t recordLength) : DataArray<uint8_t>(4) {
+BulkSetRecordLength2250::BulkSetRecordLength2250(uint8_t recordLength) : BulkCommand(4) {
     this->init();
 
     this->setRecordLength(recordLength);
@@ -426,12 +426,12 @@ uint8_t BulkSetRecordLength2250::getRecordLength() { return this->array[2]; }
 void BulkSetRecordLength2250::setRecordLength(uint8_t value) { this->array[2] = value; }
 
 /// \brief Initialize the array to the needed values.
-void BulkSetRecordLength2250::init() { this->array[0] = BULK_DSETBUFFER; }
+void BulkSetRecordLength2250::init() { this->array[0] = (uint8_t)BulkCode::DSETBUFFER; }
 
 //////////////////////////////////////////////////////////////////////////////
 // class BulkSetBuffer5200
 /// \brief Sets the data array to the default values.
-BulkSetBuffer5200::BulkSetBuffer5200() : DataArray<uint8_t>(10) { this->init(); }
+BulkSetBuffer5200::BulkSetBuffer5200() : BulkCommand(10) { this->init(); }
 
 /// \brief Sets the data bytes to the specified values.
 /// \param triggerPositionPre The TriggerPositionPre value.
@@ -441,7 +441,7 @@ BulkSetBuffer5200::BulkSetBuffer5200() : DataArray<uint8_t>(10) { this->init(); 
 /// \param recordLength The ::RecordLengthId value.
 BulkSetBuffer5200::BulkSetBuffer5200(uint16_t triggerPositionPre, uint16_t triggerPositionPost, DTriggerPositionUsed usedPre,
                                      DTriggerPositionUsed usedPost, uint8_t recordLength)
-    : DataArray<uint8_t>(10) {
+    : BulkCommand(10) {
     this->init();
 
     this->setTriggerPositionPre(triggerPositionPre);
@@ -503,7 +503,7 @@ void BulkSetBuffer5200::setRecordLength(uint8_t value) { ((DBufferBits *)&(this-
 
 /// \brief Initialize the array to the needed values.
 void BulkSetBuffer5200::init() {
-    this->array[0] = BULK_DSETBUFFER;
+    this->array[0] = (uint8_t)BulkCode::DSETBUFFER;
     this->array[5] = 0xff;
     this->array[9] = 0xff;
 }
@@ -511,14 +511,14 @@ void BulkSetBuffer5200::init() {
 //////////////////////////////////////////////////////////////////////////////
 // class BulkSetSamplerate2250
 /// \brief Sets the data array to the default values.
-BulkSetSamplerate2250::BulkSetSamplerate2250() : DataArray<uint8_t>(8) { this->init(); }
+BulkSetSamplerate2250::BulkSetSamplerate2250() : BulkCommand(8) { this->init(); }
 
 /// \brief Sets the data bytes to the specified values.
 /// \param fastRate The fastRate state (ESamplerateBits).
 /// \param downsampling The downsampling state (ESamplerateBits).
 /// \param samplerate The Samplerate value.
 BulkSetSamplerate2250::BulkSetSamplerate2250(bool fastRate, bool downsampling, uint16_t samplerate)
-    : DataArray<uint8_t>(8) {
+    : BulkCommand(8) {
     this->init();
 
     this->setFastRate(fastRate);
@@ -558,12 +558,12 @@ void BulkSetSamplerate2250::setSamplerate(uint16_t samplerate) {
 }
 
 /// \brief Initialize the array to the needed values.
-void BulkSetSamplerate2250::init() { this->array[0] = BULK_ESETTRIGGERORSAMPLERATE; }
+void BulkSetSamplerate2250::init() { this->array[0] = (uint8_t)BulkCode::ESETTRIGGERORSAMPLERATE; }
 
 //////////////////////////////////////////////////////////////////////////////
 // class BulkSetTrigger5200
 /// \brief Sets the data array to the default values.
-BulkSetTrigger5200::BulkSetTrigger5200() : DataArray<uint8_t>(8) { this->init(); }
+BulkSetTrigger5200::BulkSetTrigger5200() : BulkCommand(8) { this->init(); }
 
 /// \brief Sets the data bytes to the specified values.
 /// \param triggerSource The trigger source id.
@@ -573,7 +573,7 @@ BulkSetTrigger5200::BulkSetTrigger5200() : DataArray<uint8_t>(8) { this->init();
 /// \param triggerPulse The triggerPulse value.
 BulkSetTrigger5200::BulkSetTrigger5200(uint8_t triggerSource, uint8_t usedChannels, bool fastRate, uint8_t triggerSlope,
                                        uint8_t triggerPulse)
-    : DataArray<uint8_t>(8) {
+    : BulkCommand(8) {
     this->init();
 
     this->setTriggerSource(triggerSource);
@@ -625,21 +625,21 @@ void BulkSetTrigger5200::setTriggerPulse(bool pulse) { ((ETsrBits *)&(this->arra
 
 /// \brief Initialize the array to the needed values.
 void BulkSetTrigger5200::init() {
-    this->array[0] = BULK_ESETTRIGGERORSAMPLERATE;
+    this->array[0] = (uint8_t)BulkCode::ESETTRIGGERORSAMPLERATE;
     this->array[4] = 0x02;
 }
 
 //////////////////////////////////////////////////////////////////////////////
 /// \class BulkSetBuffer2250                                    hantek/types.h
-/// \brief The DSO-2250 BULK_FSETBUFFER builder.
+/// \brief The DSO-2250 BulkCode::FSETBUFFER builder.
 /// \brief Sets the data array to the default values.
-BulkSetBuffer2250::BulkSetBuffer2250() : DataArray<uint8_t>(10) { this->init(); }
+BulkSetBuffer2250::BulkSetBuffer2250() : BulkCommand(10) { this->init(); }
 
 /// \brief Sets the data bytes to the specified values.
 /// \param triggerPositionPre The TriggerPositionPre value.
 /// \param triggerPositionPost The TriggerPositionPost value.
 BulkSetBuffer2250::BulkSetBuffer2250(uint32_t triggerPositionPre, uint32_t triggerPositionPost)
-    : DataArray<uint8_t>(12) {
+    : BulkCommand(12) {
     this->init();
 
     this->setTriggerPositionPre(triggerPositionPre);
@@ -675,5 +675,5 @@ void BulkSetBuffer2250::setTriggerPositionPre(uint32_t position) {
 }
 
 /// \brief Initialize the array to the needed values.
-void BulkSetBuffer2250::init() { this->array[0] = BULK_FSETBUFFER; }
+void BulkSetBuffer2250::init() { this->array[0] = (uint8_t)BulkCode::FSETBUFFER; }
 }

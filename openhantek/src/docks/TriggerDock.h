@@ -19,7 +19,7 @@ class TriggerDock : public QDockWidget {
     Q_OBJECT
 
   public:
-    TriggerDock(DsoSettings *settings, const QStringList *specialTriggers, QWidget *parent, Qt::WindowFlags flags = 0);
+    TriggerDock(DsoSettings *settings, const std::vector<std::string>& specialTriggers, QWidget *parent, Qt::WindowFlags flags = 0);
 
     int setMode(Dso::TriggerMode mode);
     int setSource(bool special, unsigned int id);

@@ -23,7 +23,7 @@ enum BulkIndex {
     COMMANDINDEX_0 = 0x03, ///< Used most of the time
     COMMANDINDEX_1 = 0x0a,
     COMMANDINDEX_2 = 0x09,
-    COMMANDINDEX_3 = 0x01, ///< Used for ::BULK_SETTRIGGERANDSAMPLERATE sometimes
+    COMMANDINDEX_3 = 0x01, ///< Used for ::BulkCode::SETTRIGGERANDSAMPLERATE sometimes
     COMMANDINDEX_4 = 0x02,
     COMMANDINDEX_5 = 0x08
 };

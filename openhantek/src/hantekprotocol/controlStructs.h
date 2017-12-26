@@ -5,7 +5,12 @@
 #include "utils/dataarray.h"
 
 namespace Hantek {
-struct ControlSetOffset : public DataArray<uint8_t> {
+class ControlCommand : public DataArray<uint8_t> {
+protected:
+    ControlCommand(unsigned size): DataArray<uint8_t>(size) {}
+};
+
+struct ControlSetOffset : public ControlCommand {
     ControlSetOffset();
     /// \brief Sets the offsets to the given values.
     /// \param channel1 The offset for channel 1.
@@ -29,7 +34,7 @@ struct ControlSetOffset : public DataArray<uint8_t> {
     void setTrigger(uint16_t level);
 };
 
-struct ControlSetRelays : public DataArray<uint8_t> {
+struct ControlSetRelays : public ControlCommand {
     /// \brief Sets all relay states.
     /// \param ch1Below1V Sets the state of the Channel 1 below 1 V relay.
     /// \param ch1Below100mV Sets the state of the Channel 1 below 100 mV relay.
@@ -74,22 +79,22 @@ struct ControlSetRelays : public DataArray<uint8_t> {
     void setTrigger(bool ext);
 };
 
-struct ControlSetVoltDIV_CH1 : public DataArray<uint8_t> {
+struct ControlSetVoltDIV_CH1 : public ControlCommand {
     ControlSetVoltDIV_CH1();
     void setDiv(uint8_t val);
 };
 
-struct ControlSetVoltDIV_CH2 : public DataArray<uint8_t> {
+struct ControlSetVoltDIV_CH2 : public ControlCommand {
     ControlSetVoltDIV_CH2();
     void setDiv(uint8_t val);
 };
 
-struct ControlSetTimeDIV : public DataArray<uint8_t> {
+struct ControlSetTimeDIV : public ControlCommand {
     ControlSetTimeDIV();
     void setDiv(uint8_t val);
 };
 
-struct ControlAcquireHardData : public DataArray<uint8_t> {
+struct ControlAcquireHardData : public ControlCommand {
     ControlAcquireHardData();
 };
 }

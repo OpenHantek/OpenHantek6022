@@ -10,6 +10,9 @@
 
 namespace Hantek {
 
+typedef unsigned RecordLengthID;
+typedef unsigned ChannelID;
+
 //////////////////////////////////////////////////////////////////////////////
 /// \struct ControlSpecificationCommandsBulk                  hantek/control.h
 /// \brief Stores the bulk command codes used for this device.
@@ -29,7 +32,7 @@ struct ControlSpecificationCommandsBulk {
 struct ControlSpecificationCommandsControl {
     ControlCode setOffset = (ControlCode)-1; ///< Command for setting offset calibration data
     ControlCode setRelays = (ControlCode)-1; ///< Command for setting gain relays (Usually in
-                           /// combination with BULK_SETGAIN)
+                           /// combination with BulkCode::SETGAIN)
 };
 
 //////////////////////////////////////////////////////////////////////////////
@@ -67,6 +70,23 @@ struct ControlSpecificationSamplerate {
     ControlSamplerateLimits multi  = {100e6, 100e6, 0, std::vector<unsigned>()};  ///< The limits for multi channel mode
 };
 
+struct ControlSpecificationGainLevel {
+    /// The index of the selected gain on the hardware
+    unsigned char gainIndex;
+    /// Available voltage steps in V/screenheight
+    double gainSteps;
+};
+
+struct FixedSampleRate {
+    unsigned char id;
+    double samplerate;
+};
+
+struct SpecialTriggerChannel {
+    std::string name;
+    int hardwareID;
+};
+
 //////////////////////////////////////////////////////////////////////////////
 /// \struct ControlSpecification                              hantek/control.h
 /// \brief Stores the specifications of the currently connected device.
@@ -76,22 +96,24 @@ struct ControlSpecification {
 
     // Limits
     ControlSpecificationSamplerate samplerate; ///< The samplerate specifications
-    std::vector<unsigned int> bufferDividers;        ///< Samplerate dividers for record lengths
-    std::vector<double> gainSteps;                   ///< Available voltage steps in V/screenheight
+    std::vector<RecordLengthID> bufferDividers;        ///< Samplerate dividers for record lengths
     unsigned char sampleSize;                  ///< Number of bits per sample
 
     // Calibration
     /// The sample values at the top of the screen
     std::vector<unsigned short> voltageLimit[HANTEK_CHANNELS];
-    /// The index of the selected gain on the hardware
-    std::vector<unsigned char> gainIndex;
-    std::vector<unsigned char> gainDiv;
-    std::vector<double> sampleSteps; ///< Available samplerate steps in s
-    std::vector<unsigned char> sampleDiv;
-
     /// Calibration data for the channel offsets
     OffsetsPerGainStep offsetLimit[HANTEK_CHANNELS];
 
+    /// Gain levels
+    std::vector<ControlSpecificationGainLevel> gain;
+
+    /// For devices that support only fixed sample rates (isFixedSamplerateDevice=true)
+    std::vector<FixedSampleRate> fixedSampleRates;
+
+    std::vector<SpecialTriggerChannel> specialTriggerChannels;
+
+    bool isFixedSamplerateDevice = false;
     bool isSoftwareTriggerDevice = false;
     bool useControlNoBulk = false;
     bool supportsCaptureState = true;

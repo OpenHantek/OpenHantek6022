@@ -53,12 +53,12 @@ The actual commands that are send, need to be defined as well, for instance:
 ``` c++
     specification.command.control.setOffset = CONTROL_SETOFFSET;
     specification.command.control.setRelays = CONTROL_SETRELAYS;
-    specification.command.bulk.setGain = BULK_SETGAIN;
-    specification.command.bulk.setRecordLength = BULK_SETTRIGGERANDSAMPLERATE;
-    specification.command.bulk.setChannels = BULK_SETTRIGGERANDSAMPLERATE;
-    specification.command.bulk.setSamplerate = BULK_SETTRIGGERANDSAMPLERATE;
-    specification.command.bulk.setTrigger = BULK_SETTRIGGERANDSAMPLERATE;
-    specification.command.bulk.setPretrigger = BULK_SETTRIGGERANDSAMPLERATE;
+    specification.command.bulk.setGain = BulkCode::SETGAIN;
+    specification.command.bulk.setRecordLength = BulkCode::SETTRIGGERANDSAMPLERATE;
+    specification.command.bulk.setChannels = BulkCode::SETTRIGGERANDSAMPLERATE;
+    specification.command.bulk.setSamplerate = BulkCode::SETTRIGGERANDSAMPLERATE;
+    specification.command.bulk.setTrigger = BulkCode::SETTRIGGERANDSAMPLERATE;
+    specification.command.bulk.setPretrigger = BulkCode::SETTRIGGERANDSAMPLERATE;
 ```
 
 

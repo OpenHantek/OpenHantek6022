@@ -8,7 +8,7 @@ template <class T> class DataArray {
     DataArray(unsigned int size);
     ~DataArray();
 
-    T *data();
+    T *data() const;
     T operator[](unsigned int index);
 
     unsigned int getSize() const;
@@ -31,7 +31,7 @@ template <class T> DataArray<T>::~DataArray() { delete[] this->array; }
 
 /// \brief Returns a pointer to the array data.
 /// \return The internal data array.
-template <class T> T *DataArray<T>::data() { return this->array; }
+template <class T> T *DataArray<T>::data() const { return this->array; }
 
 /// \brief Returns array element when using square brackets.
 /// \return The array element.

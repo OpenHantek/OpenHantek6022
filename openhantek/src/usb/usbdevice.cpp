@@ -123,14 +123,14 @@ unsigned USBDevice::getFindIteration() const
     return findIteration;
 }
 
-int USBDevice::bulkTransfer(unsigned char endpoint, unsigned char *data, unsigned int length, int attempts,
+int USBDevice::bulkTransfer(unsigned char endpoint, const unsigned char *data, unsigned int length, int attempts,
                             unsigned int timeout) {
     if (!this->handle) return LIBUSB_ERROR_NO_DEVICE;
 
     int errorCode = LIBUSB_ERROR_TIMEOUT;
-    int transferred;
+    int transferred = 0;
     for (int attempt = 0; (attempt < attempts || attempts == -1) && errorCode == LIBUSB_ERROR_TIMEOUT; ++attempt)
-        errorCode = libusb_bulk_transfer(this->handle, endpoint, data, length, &transferred, timeout);
+        errorCode = libusb_bulk_transfer(this->handle, endpoint, (unsigned char*) data, (int)length, &transferred, timeout);
 
     if (errorCode == LIBUSB_ERROR_NO_DEVICE) disconnectFromDevice();
     if (errorCode < 0)
@@ -144,7 +144,7 @@ int USBDevice::bulkTransfer(unsigned char endpoint, unsigned char *data, unsigne
 /// \param length The length of the packet.
 /// \param attempts The number of attempts, that are done on timeouts.
 /// \return Number of sent bytes on success, libusb error code on error.
-int USBDevice::bulkWrite(unsigned char *data, unsigned int length, int attempts) {
+int USBDevice::bulkWrite(const unsigned char *data, unsigned int length, int attempts) {
     if (!this->handle) return LIBUSB_ERROR_NO_DEVICE;
 
     int errorCode = this->getConnectionSpeed();
@@ -171,7 +171,7 @@ int USBDevice::bulkRead(unsigned char *data, unsigned int length, int attempts) 
 /// \param command The command, that should be sent.
 /// \param attempts The number of attempts, that are done on timeouts.
 /// \return Number of sent bytes on success, libusb error code on error.
-int USBDevice::bulkCommand(DataArray<unsigned char> *command, int attempts) {
+int USBDevice::bulkCommand(const DataArray<unsigned char> *command, int attempts) {
     if (!this->handle) return LIBUSB_ERROR_NO_DEVICE;
 
     if (!allowBulkTransfer) return LIBUSB_SUCCESS;

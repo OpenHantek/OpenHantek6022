@@ -1,5 +1,7 @@
 #pragma once
 
+#include <inttypes.h>
+
 namespace Hantek {
 
 //////////////////////////////////////////////////////////////////////////////
@@ -7,7 +9,7 @@ namespace Hantek {
 /// \brief All supported bulk commands.
 /// Indicies given in square brackets specify byte numbers in little endian
 /// format.
-enum BulkCode {
+enum class BulkCode : uint8_t {
     /// BulkSetFilter [<em>::MODEL_DSO2090, ::MODEL_DSO2150, ::MODEL_DSO5200,
     /// ::MODEL_DSO5200A</em>]
     /// <p>
@@ -29,7 +31,7 @@ enum BulkCode {
     ///   This command is used by the official %Hantek software, but doesn't seem
     ///   to be used by the device.
     /// <p><br /></p>
-    BULK_SETFILTER,
+    SETFILTER,
 
     /// BulkSetTriggerAndSamplerate [<em>::MODEL_DSO2090, ::MODEL_DSO2150</em>]
     /// <p>
@@ -86,7 +88,7 @@ enum BulkCode {
     ///   using the large buffer.
     /// </p>
     /// <p><br /></p>
-    BULK_SETTRIGGERANDSAMPLERATE,
+    SETTRIGGERANDSAMPLERATE,
 
     /// BulkForceTrigger [<em>::MODEL_DSO2090, ::MODEL_DSO2150, ::MODEL_DSO2250,
     /// ::MODEL_DSO5200, ::MODEL_DSO5200A</em>]
@@ -100,7 +102,7 @@ enum BulkCode {
     ///   </table>
     /// </p>
     /// <p><br /></p>
-    BULK_FORCETRIGGER,
+    FORCETRIGGER,
 
     /// BulkCaptureStart [<em>::MODEL_DSO2090, ::MODEL_DSO2150, ::MODEL_DSO2250,
     /// ::MODEL_DSO5200, ::MODEL_DSO5200A</em>]
@@ -114,7 +116,7 @@ enum BulkCode {
     ///   </table>
     /// </p>
     /// <p><br /></p>
-    BULK_STARTSAMPLING,
+    STARTSAMPLING,
 
     /// BulkTriggerEnabled [<em>::MODEL_DSO2090, ::MODEL_DSO2150, ::MODEL_DSO2250,
     /// ::MODEL_DSO5200, ::MODEL_DSO5200A</em>]
@@ -128,7 +130,7 @@ enum BulkCode {
     ///   </table>
     /// </p>
     /// <p><br /></p>
-    BULK_ENABLETRIGGER,
+    ENABLETRIGGER,
 
     /// BulkGetData [<em>::MODEL_DSO2090, ::MODEL_DSO2150, ::MODEL_DSO2250,
     /// ::MODEL_DSO5200, ::MODEL_DSO5200A</em>]
@@ -179,7 +181,7 @@ enum BulkCode {
     ///   </table>
     /// </p>
     /// <p><br /></p>
-    BULK_GETDATA,
+    GETDATA,
 
     /// BulkGetCaptureState [<em>::MODEL_DSO2090, ::MODEL_DSO2150,
     /// ::MODEL_DSO2250, ::MODEL_DSO5200, ::MODEL_DSO5200A</em>]
@@ -208,7 +210,7 @@ enum BulkCode {
     ///   </table>
     /// </p>
     /// <p><br /></p>
-    BULK_GETCAPTURESTATE,
+    GETCAPTURESTATE,
 
     /// BulkSetGain [<em>::MODEL_DSO2090, ::MODEL_DSO2150, ::MODEL_DSO2250,
     /// ::MODEL_DSO5200, ::MODEL_DSO5200A</em>]
@@ -229,7 +231,7 @@ enum BulkCode {
     ///   It is usually used in combination with ::CONTROL_SETRELAYS.
     /// </p>
     /// <p><br /></p>
-    BULK_SETGAIN,
+    SETGAIN,
 
     /// BulkSetLogicalData [<em></em>]
     /// <p>
@@ -249,7 +251,7 @@ enum BulkCode {
     ///   </table>
     /// </p>
     /// <p><br /></p>
-    BULK_SETLOGICALDATA,
+    SETLOGICALDATA,
 
     /// BulkGetLogicalData [<em></em>]
     /// <p>
@@ -273,7 +275,7 @@ enum BulkCode {
     ///   </table>
     /// </p>
     /// <p><br /></p>
-    BULK_GETLOGICALDATA,
+    GETLOGICALDATA,
 
     /// [<em></em>]
     /// <p>
@@ -286,7 +288,7 @@ enum BulkCode {
     ///   </table>
     /// </p>
     /// <p><br /></p>
-    BULK_AUNKNOWN,
+    AUNKNOWN,
 
     /// BulkSetChannels2250 [<em>::MODEL_DSO2250</em>]
     /// <p>
@@ -301,7 +303,7 @@ enum BulkCode {
     ///   </table>
     /// </p>
     /// <p><br /></p>
-    BULK_BSETCHANNELS,
+    BSETCHANNELS,
 
     /// BulkSetTrigger2250 [<em>::MODEL_DSO2250</em>]
     /// <p>
@@ -348,7 +350,7 @@ enum BulkCode {
     ///   SamplerateSlow = 0 and SamplerateFast = 4.
     /// </p>
     /// <p><br /></p>
-    BULK_CSETTRIGGERORSAMPLERATE,
+    CSETTRIGGERORSAMPLERATE,
 
     /// BulkSetRecordLength2250 [<em>::MODEL_DSO2250</em>]
     /// <p>
@@ -394,7 +396,7 @@ enum BulkCode {
     ///   TriggerPositionPost value is maximal for 0 % and minimal for 100%.
     /// </p>
     /// <p><br /></p>
-    BULK_DSETBUFFER,
+    DSETBUFFER,
 
     /// BulkSetSamplerate2250 [<em>::MODEL_DSO2250</em>]
     /// <p>
@@ -440,7 +442,7 @@ enum BulkCode {
     ///   </table>
     /// </p>
     /// <p><br /></p>
-    BULK_ESETTRIGGERORSAMPLERATE,
+    ESETTRIGGERORSAMPLERATE,
 
     /// BulkSetBuffer2250 [<em>::MODEL_DSO2250</em>]
     /// <p>
@@ -475,9 +477,9 @@ enum BulkCode {
     ///   TriggerPositionPost value is maximal for 0 % and minimal for 100%.
     /// </p>
     /// <p><br /></p>
-    BULK_FSETBUFFER,
+    FSETBUFFER,
 
-    BULK_COUNT
+    COUNT
 };
 
 }

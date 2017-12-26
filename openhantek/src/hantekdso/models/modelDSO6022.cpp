@@ -10,6 +10,7 @@ ModelDSO6022BE::ModelDSO6022BE() : DSOModel(ID, 0x04b5, 0x6022, 0x04b4, 0x6022, 
     // 6022BE do not support any bulk commands
     specification.useControlNoBulk = true;
     specification.isSoftwareTriggerDevice = true;
+    specification.isFixedSamplerateDevice = true;
     specification.supportsCaptureState = false;
     specification.supportsOffset = false;
     specification.supportsCouplingRelays = false;
@@ -23,14 +24,14 @@ ModelDSO6022BE::ModelDSO6022BE() : DSOModel(ID, 0x04b5, 0x6022, 0x04b4, 0x6022, 
     specification.samplerate.multi.maxDownsampler = 10;
     specification.samplerate.multi.recordLengths = {UINT_MAX, 20480};
     specification.bufferDividers = { 1000 , 1 , 1 };
-    specification.gainSteps = { 0.08 , 0.16 , 0.40 , 0.80 , 1.60 , 4.00 , 8.0 , 16.0 , 40.0 };
     // This data was based on testing and depends on Divider.
     specification.voltageLimit[0] = { 25 , 51 , 103 , 206 , 412 , 196 , 392 , 784 , 1000 };
     specification.voltageLimit[1] = { 25 , 51 , 103 , 206 , 412 , 196 , 392 , 784 , 1000 };
     // Divider. Tested and calculated results are different!
-    specification.gainDiv = { 10 , 10 , 10 , 10 , 10 , 2 , 2 , 2 , 1 };
-    specification.sampleSteps = { 1e5 , 2e5 , 5e5 , 1e6 , 2e6 , 4e6 , 8e6 , 16e6 , 24e6 , 48e6 };
-    specification.sampleDiv = { 10 , 20 , 50 , 1 , 2 , 4 , 8 , 16 , 24 , 48 };
+    specification.gain = { {10,0.08} , {10,0.16} , {10,0.40} , {10,0.80} ,
+                           {10,1.60} , {2,4.00} , {2,8.00} , {2,16.00} , {1,40.00} };
+    specification.fixedSampleRates = { {10,1e5} , {20,2e5} , {50,5e5} , {1,1e6} , {2,2e6} , {4,4e6} , {8,8e6} ,
+                                       {16,16e6} , {24,24e6} , {48,48e6} };
     specification.sampleSize = 8;
 }
 

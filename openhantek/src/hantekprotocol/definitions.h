@@ -8,7 +8,6 @@
 
 #define HANTEK_GAIN_STEPS 9
 #define HANTEK_CHANNELS 2         ///< Number of physical channels
-#define HANTEK_SPECIAL_CHANNELS 2 ///< Number of special channels
 
 namespace Hantek {
 /// \enum UsedChannels
@@ -68,7 +67,7 @@ struct OffsetsPerGainStep {
 };
 
 /// \struct FilterBits
-/// \brief The bits for BULK_SETFILTER.
+/// \brief The bits for BULK::SETFILTER.
 struct FilterBits {
     uint8_t channel1 : 1; ///< Set to true when channel 1 isn't used
     uint8_t channel2 : 1; ///< Set to true when channel 2 isn't used
@@ -78,7 +77,7 @@ struct FilterBits {
 
 
 /// \struct GainBits
-/// \brief The gain bits for BULK_SETGAIN.
+/// \brief The gain bits for BulkCode::SETGAIN.
 struct GainBits {
     uint8_t channel1 : 2; ///< Gain for CH1, 0 = 1e* V, 1 = 2e*, 2 = 5e*
     uint8_t channel2 : 2; ///< Gain for CH1, 0 = 1e* V, 1 = 2e*, 2 = 5e*

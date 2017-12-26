@@ -23,14 +23,15 @@
 /// \param specialTriggers The names of the special trigger sources.
 /// \param parent The parent widget.
 /// \param flags Flags for the window manager.
-TriggerDock::TriggerDock(DsoSettings *settings, const QStringList *specialTriggers, QWidget *parent,
+TriggerDock::TriggerDock(DsoSettings *settings, const std::vector<std::string> &specialTriggers, QWidget *parent,
                          Qt::WindowFlags flags)
     : QDockWidget(tr("Trigger"), parent, flags), settings(settings) {
 
     // Initialize lists for comboboxes
     for (unsigned int channel = 0; channel < settings->scope.physicalChannels; ++channel)
         this->sourceStandardStrings << tr("CH%1").arg(channel + 1);
-    this->sourceSpecialStrings << *specialTriggers;
+    for(const std::string& name: specialTriggers)
+        this->sourceSpecialStrings.append(QString::fromStdString(name));
 
     // Initialize elements
     this->modeLabel = new QLabel(tr("Mode"));

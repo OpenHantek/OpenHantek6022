@@ -9,7 +9,6 @@
 
 #include "usbdevicedefinitions.h"
 #include "controlbegin.h"
-#include "utils/dataarray.h"
 
 class DSOModel;
 
@@ -48,12 +47,12 @@ class USBDevice : public QObject {
     /// \param timeout The timeout in ms.
     /// \return Number of transferred bytes on success, libusb error code on
     /// error.
-    int bulkTransfer(unsigned char endpoint, unsigned char *data, unsigned int length, int attempts = HANTEK_ATTEMPTS,
+    int bulkTransfer(unsigned char endpoint, const unsigned char *data, unsigned int length, int attempts = HANTEK_ATTEMPTS,
                      unsigned int timeout = HANTEK_TIMEOUT);
-    int bulkWrite(unsigned char *data, unsigned int length, int attempts = HANTEK_ATTEMPTS);
+    int bulkWrite(const unsigned char *data, unsigned int length, int attempts = HANTEK_ATTEMPTS);
     int bulkRead(unsigned char *data, unsigned int length, int attempts = HANTEK_ATTEMPTS);
 
-    int bulkCommand(DataArray<unsigned char> *command, int attempts = HANTEK_ATTEMPTS);
+    int bulkCommand(const DataArray<unsigned char> *command, int attempts = HANTEK_ATTEMPTS);
     int bulkReadMulti(unsigned char *data, unsigned length, int attempts = HANTEK_ATTEMPTS_MULTI);
 
     int controlTransfer(unsigned char type, unsigned char request, unsigned char *data, unsigned int length, int value,
