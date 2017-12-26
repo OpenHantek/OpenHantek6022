@@ -140,7 +140,8 @@ GlGenerator::PrePostStartTriggerSamples GlGenerator::computeSoftwareTriggerTY(co
     preTrigSamples = (unsigned)(settings->trigger.position * samplesDisplay);
     postTrigSamples = (unsigned)sampleCount - ((unsigned)samplesDisplay - preTrigSamples);
 
-    const int threshold = 7;
+    const int swTriggerThreshold = 7;
+    const int swTriggerSampleSet = 11;
     double prev;
     bool (*opcmp)(double,double,double);
     bool (*smplcmp)(double,double);
@@ -158,10 +159,10 @@ GlGenerator::PrePostStartTriggerSamples GlGenerator::computeSoftwareTriggerTY(co
         double value = samples[i];
         if (opcmp(value, level, prev)) {
             int rising = 0;
-            for (unsigned int k = i + 1; k < i + 11 && k < sampleCount; k++) {
+            for (unsigned int k = i + 1; k < i + swTriggerSampleSet && k < sampleCount; k++) {
                 if (smplcmp(samples[k], value)) { rising++; }
             }
-            if (rising > threshold) {
+            if (rising > swTriggerThreshold) {
                 swTriggerStart = i;
                 break;
             }
