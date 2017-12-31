@@ -1310,7 +1310,7 @@ void HantekDsoControl::run() {
             if (!this->sampling) break;
 
 #if __has_cpp_attribute(fallthrough) // Make compiler happy
-            [[fallthrough]]
+            [[fallthrough]];
 #endif
         case CAPTURE_WAITING:
             // Sampling hasn't started, update the expected sample count
