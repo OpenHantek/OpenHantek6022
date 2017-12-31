@@ -84,6 +84,7 @@ DsoWidget::DsoWidget(DsoSettings *settings, QWidget *parent, Qt::WindowFlags fla
     // The table for the settings
     settingsTriggerLabel = new QLabel();
     settingsTriggerLabel->setMinimumWidth(160);
+    settingsTriggerLabel->setIndent(5);
     settingsRecordLengthLabel = new QLabel();
     settingsRecordLengthLabel->setAlignment(Qt::AlignRight);
     settingsRecordLengthLabel->setPalette(palette);
@@ -96,7 +97,13 @@ DsoWidget::DsoWidget(DsoSettings *settings, QWidget *parent, Qt::WindowFlags fla
     settingsFrequencybaseLabel = new QLabel();
     settingsFrequencybaseLabel->setAlignment(Qt::AlignRight);
     settingsFrequencybaseLabel->setPalette(palette);
+    swTriggerStatus = new QLabel();
+    swTriggerStatus->setMinimumWidth(30);
+    swTriggerStatus->setText(tr("TR"));
+    swTriggerStatus->setAlignment(Qt::AlignCenter);
+    swTriggerStatus->setAutoFillBackground(true);
     settingsLayout = new QHBoxLayout();
+    settingsLayout->addWidget(swTriggerStatus);
     settingsLayout->addWidget(settingsTriggerLabel);
     settingsLayout->addWidget(settingsRecordLengthLabel, 1);
     settingsLayout->addWidget(settingsSamplerateLabel, 1);
@@ -438,7 +445,11 @@ void DsoWidget::doShowNewData() {
         exportNextFrame.reset(nullptr);
     }
 
-    generator->generateGraphs(data.get());
+    bool triggered = generator->generateGraphs(data.get());
+    QPalette triggerLabelPalette = palette();
+    triggerLabelPalette.setColor(QPalette::WindowText, Qt::black);
+    triggerLabelPalette.setColor(QPalette::Background, triggered ? Qt::green : Qt::red);
+    swTriggerStatus->setPalette(triggerLabelPalette);
 
     updateRecordLength(data.get()->getMaxSamples());
 

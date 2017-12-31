@@ -443,9 +443,8 @@ void OpenHantekMainWindow::samplerateChanged(double samplerate) {
         // The timebase was set, let's adapt the samplerate accordingly
         settings->scope.horizontal.samplerate = samplerate;
         horizontalDock->setSamplerate(samplerate);
+        dsoWidget->updateSamplerate(samplerate);
     }
-
-    dsoWidget->updateSamplerate(samplerate);
 }
 
 /// \brief Apply new record length to settings.
@@ -455,7 +454,10 @@ void OpenHantekMainWindow::recordLengthSelected(unsigned long recordLength) {
 }
 
 /// \brief Sets the samplerate of the oscilloscope.
-void OpenHantekMainWindow::samplerateSelected() { dsoControl->setSamplerate(settings->scope.horizontal.samplerate); }
+void OpenHantekMainWindow::samplerateSelected() {
+    dsoControl->setSamplerate(settings->scope.horizontal.samplerate);
+    dsoWidget->updateSamplerate(settings->scope.horizontal.samplerate);
+}
 
 /// \brief Sets the record time of the oscilloscope.
 void OpenHantekMainWindow::timebaseSelected() {

@@ -124,7 +124,7 @@ GlGenerator::PrePostStartTriggerSamples GlGenerator::computeSoftwareTriggerTY(co
     const std::vector<double>& samples = result->data(channel)->voltage.sample;
     double level = settings->voltage[channel].trigger;
     size_t sampleCount = samples.size();
-    double timeDisplay = settings->horizontal.timebase * 10;
+    double timeDisplay = settings->horizontal.timebase * DIVS_TIME;
     double samplesDisplay = timeDisplay * settings->horizontal.samplerate;
     if (samplesDisplay >= sampleCount) {
         // For sure not enough samples to adjust for jitter.
@@ -172,6 +172,7 @@ GlGenerator::PrePostStartTriggerSamples GlGenerator::computeSoftwareTriggerTY(co
     if (swTriggerStart == 0) {
         timestampDebug(QString("Trigger not asserted. Data ignored"));
         preTrigSamples = 0; // preTrigSamples may never be greater than swTriggerStart
+        postTrigSamples = 0;
     }
     return PrePostStartTriggerSamples(preTrigSamples, postTrigSamples, swTriggerStart);
 }
@@ -188,7 +189,7 @@ const SampleValues& GlGenerator::useSamplesOf(int mode, unsigned channel, const 
     }
 }
 
-void GlGenerator::generateGraphs(const DataAnalyzerResult *result) {
+bool GlGenerator::generateGraphs(const DataAnalyzerResult *result) {
 
     unsigned digitalPhosphorDepth = view->digitalPhosphor ? view->digitalPhosphorDepth : 1;
 
@@ -214,10 +215,11 @@ void GlGenerator::generateGraphs(const DataAnalyzerResult *result) {
     unsigned preTrigSamples=0;
     unsigned postTrigSamples=0;
     unsigned swTriggerStart=0;
+    bool triggered = false;
     switch (settings->horizontal.format) {
     case Dso::GRAPHFORMAT_TY:
         std::tie(preTrigSamples, postTrigSamples, swTriggerStart) = computeSoftwareTriggerTY(result);
-
+        triggered = postTrigSamples > preTrigSamples;
         // Add graphs for channels
         for (int mode = Dso::CHANNELMODE_VOLTAGE; mode < Dso::CHANNELMODE_COUNT; ++mode) {
             DrawLinesWithHistoryPerChannel& dPerChannel = vaChannel[mode];
@@ -289,6 +291,7 @@ void GlGenerator::generateGraphs(const DataAnalyzerResult *result) {
         break;
 
     case Dso::GRAPHFORMAT_XY:
+        triggered = true;
         for (unsigned channel = 0; channel < settings->voltage.size(); ++channel) {
             // For even channel numbers check if this channel is used and this and the
             // following channel are available at the data analyzer
@@ -345,4 +348,6 @@ void GlGenerator::generateGraphs(const DataAnalyzerResult *result) {
     }
 
     emit graphsGenerated();
+
+    return triggered;
 }

@@ -1307,8 +1307,11 @@ void HantekDsoControl::run() {
             this->_samplingStarted = false;
 
             // Start next capture if necessary by leaving out the break statement
-            if (!this->sampling) break; else [[fallthrough]];
+            if (!this->sampling) break;
 
+#if __has_cpp_attribute(fallthrough) // Make compiler happy
+            [[fallthrough]]
+#endif
         case CAPTURE_WAITING:
             // Sampling hasn't started, update the expected sample count
             this->previousSampleCount = this->getSampleCount();
