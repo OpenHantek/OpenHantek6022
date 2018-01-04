@@ -26,42 +26,37 @@ SpectrumDock::SpectrumDock(DsoSettings *settings, QWidget *parent, Qt::WindowFla
     : QDockWidget(tr("Spectrum"), parent, flags), settings(settings) {
 
     // Initialize lists for comboboxes
-    this->magnitudeSteps << 1e0 << 2e0 << 3e0 << 6e0 << 1e1 << 2e1 << 3e1 << 6e1 << 1e2 << 2e2 << 3e2
-                         << 6e2; ///< Magnitude steps in dB/div
-    for (QList<double>::iterator magnitude = this->magnitudeSteps.begin(); magnitude != this->magnitudeSteps.end();
-         ++magnitude)
-        this->magnitudeStrings << valueToString(*magnitude, UNIT_DECIBEL, 0);
+    this->magnitudeSteps = { 1e0 , 2e0 , 3e0 , 6e0 , 1e1 , 2e1 , 3e1 , 6e1 , 1e2 , 2e2 , 3e2, 6e2 };
+    for (const auto& magnitude: magnitudeSteps)
+        this->magnitudeStrings << valueToString(magnitude, UNIT_DECIBEL, 0);
 
     // Initialize elements
-    for (int channel = 0; channel < settings->scope.voltage.size(); ++channel) {
-        this->magnitudeComboBox.append(new QComboBox());
+    for (ChannelID channel = 0; channel < settings->scope.voltage.size(); ++channel) {
+        this->magnitudeComboBox.push_back(new QComboBox());
         this->magnitudeComboBox[channel]->addItems(this->magnitudeStrings);
 
-        this->usedCheckBox.append(new QCheckBox(settings->scope.voltage[channel].name));
+        this->usedCheckBox.push_back(new QCheckBox(settings->scope.voltage[channel].name));
     }
 
     this->dockLayout = new QGridLayout();
     this->dockLayout->setColumnMinimumWidth(0, 64);
     this->dockLayout->setColumnStretch(1, 1);
-    for (int channel = 0; channel < settings->scope.voltage.size(); ++channel) {
-        this->dockLayout->addWidget(this->usedCheckBox[channel], channel, 0);
-        this->dockLayout->addWidget(this->magnitudeComboBox[channel], channel, 1);
-    }
+    for (ChannelID channel = 0; channel < settings->scope.voltage.size(); ++channel) {
+        this->dockLayout->addWidget(this->usedCheckBox[channel], (int)channel, 0);
+        this->dockLayout->addWidget(this->magnitudeComboBox[channel], (int)channel, 1);
 
-    this->dockWidget = new QWidget();
-    SetupDockWidget(this, dockWidget, dockLayout);
+        // Connect signals and slots
+        connect(usedCheckBox[channel], &QCheckBox::toggled, this, &SpectrumDock::usedSwitched);
+        QComboBox* cmb = magnitudeComboBox[channel];
+        connect(cmb, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &SpectrumDock::magnitudeSelected);
 
-    // Connect signals and slots
-    for (int channel = 0; channel < settings->scope.voltage.size(); ++channel) {
-        connect(this->magnitudeComboBox[channel], SIGNAL(currentIndexChanged(int)), this, SLOT(magnitudeSelected(int)));
-        connect(this->usedCheckBox[channel], SIGNAL(toggled(bool)), this, SLOT(usedSwitched(bool)));
-    }
-
-    // Set values
-    for (int channel = 0; channel < settings->scope.voltage.size(); ++channel) {
+        // Set values
         this->setMagnitude(channel, settings->scope.spectrum[channel].magnitude);
         this->setUsed(channel, settings->scope.spectrum[channel].used);
     }
+
+    dockWidget = new QWidget();
+    SetupDockWidget(this, dockWidget, dockLayout);
 }
 
 /// \brief Don't close the dock, just hide it
@@ -76,32 +71,31 @@ void SpectrumDock::closeEvent(QCloseEvent *event) {
 /// \param channel The channel, whose magnitude should be set.
 /// \param magnitude The magnitude in dB.
 /// \return Index of magnitude-value, -1 on error.
-int SpectrumDock::setMagnitude(int channel, double magnitude) {
-    if (channel < 0 || channel >= settings->scope.voltage.size()) return -1;
+int SpectrumDock::setMagnitude(ChannelID channel, double magnitude) {
+    if (channel >= settings->scope.voltage.size()) return -1;
 
-    int index = this->magnitudeSteps.indexOf(magnitude);
-    if (index != -1) this->magnitudeComboBox[channel]->setCurrentIndex(index);
-
+    auto indexIt = std::find(magnitudeSteps.begin(),magnitudeSteps.end(),magnitude);
+    if (indexIt == magnitudeSteps.end()) return -1;
+    int index = (int)std::distance(magnitudeSteps.begin(), indexIt);
+    magnitudeComboBox[channel]->setCurrentIndex(index);
     return index;
 }
 
 /// \brief Enables/disables a channel.
 /// \param channel The channel, that should be enabled/disabled.
 /// \param used True if the channel should be enabled, false otherwise.
-/// \return Index of channel, -1 on error.
-int SpectrumDock::setUsed(int channel, bool used) {
-    if (channel >= 0 && channel < settings->scope.voltage.size()) {
-        this->usedCheckBox[channel]->setChecked(used);
-        return channel;
-    }
+/// \return Index of channel, INT_MAX on error.
+unsigned SpectrumDock::setUsed(ChannelID channel, bool used) {
+    if (channel >= settings->scope.voltage.size()) return INT_MAX;
 
-    return -1;
+    this->usedCheckBox[channel]->setChecked(used);
+    return channel;
 }
 
 /// \brief Called when the source combo box changes it's value.
 /// \param index The index of the combo box item.
-void SpectrumDock::magnitudeSelected(int index) {
-    int channel;
+void SpectrumDock::magnitudeSelected(unsigned index) {
+    ChannelID channel;
 
     // Which combobox was it?
     for (channel = 0; channel < settings->scope.voltage.size(); ++channel)
@@ -117,7 +111,7 @@ void SpectrumDock::magnitudeSelected(int index) {
 /// \brief Called when the used checkbox is switched.
 /// \param checked The check-state of the checkbox.
 void SpectrumDock::usedSwitched(bool checked) {
-    int channel;
+    ChannelID channel;
 
     // Which checkbox was it?
     for (channel = 0; channel < settings->scope.voltage.size(); ++channel)

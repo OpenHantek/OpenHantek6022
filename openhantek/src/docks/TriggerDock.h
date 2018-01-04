@@ -21,9 +21,9 @@ class TriggerDock : public QDockWidget {
   public:
     TriggerDock(DsoSettings *settings, const std::vector<std::string>& specialTriggers, QWidget *parent, Qt::WindowFlags flags = 0);
 
-    int setMode(Dso::TriggerMode mode);
+    void setMode(Dso::TriggerMode mode);
     int setSource(bool special, unsigned int id);
-    int setSlope(Dso::Slope slope);
+    void setSlope(Dso::Slope slope);
 
   protected:
     void closeEvent(QCloseEvent *event);

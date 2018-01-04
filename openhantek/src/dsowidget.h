@@ -31,12 +31,12 @@ class DsoWidget : public QWidget {
     void showNewData(std::unique_ptr<DataAnalyzerResult> data);
 
   protected:
-    void adaptTriggerLevelSlider(unsigned int channel);
-    void setMeasurementVisible(unsigned int channel, bool visible);
+    void adaptTriggerLevelSlider(ChannelID channel);
+    void setMeasurementVisible(ChannelID channel, bool visible);
     void updateMarkerDetails();
-    void updateSpectrumDetails(unsigned int channel);
+    void updateSpectrumDetails(ChannelID channel);
     void updateTriggerDetails();
-    void updateVoltageDetails(unsigned int channel);
+    void updateVoltageDetails(ChannelID channel);
 
     QGridLayout *mainLayout;            ///< The main layout for this widget
     LevelSlider *offsetSlider;          ///< The sliders for the graph offsets
@@ -61,12 +61,12 @@ class DsoWidget : public QWidget {
     QLabel *markerFrequencybaseLabel; ///< The frequencybase for the zoomed scope
 
     QGridLayout *measurementLayout;            ///< The table for the signal details
-    QList<QLabel *> measurementNameLabel;      ///< The name of the channel
-    QList<QLabel *> measurementGainLabel;      ///< The gain for the voltage (V/div)
-    QList<QLabel *> measurementMagnitudeLabel; ///< The magnitude for the spectrum (dB/div)
-    QList<QLabel *> measurementMiscLabel;      ///< Coupling or math mode
-    QList<QLabel *> measurementAmplitudeLabel; ///< Amplitude of the signal (V)
-    QList<QLabel *> measurementFrequencyLabel; ///< Frequency of the signal (Hz)
+    std::vector<QLabel *> measurementNameLabel;      ///< The name of the channel
+    std::vector<QLabel *> measurementGainLabel;      ///< The gain for the voltage (V/div)
+    std::vector<QLabel *> measurementMagnitudeLabel; ///< The magnitude for the spectrum (dB/div)
+    std::vector<QLabel *> measurementMiscLabel;      ///< Coupling or math mode
+    std::vector<QLabel *> measurementAmplitudeLabel; ///< Amplitude of the signal (V)
+    std::vector<QLabel *> measurementFrequencyLabel; ///< Frequency of the signal (Hz)
 
     DsoSettings *settings;  ///< The settings provided by the main window
     GlGenerator *generator; ///< The generator for the OpenGL vertex arrays
@@ -111,7 +111,7 @@ class DsoWidget : public QWidget {
 
   private slots:
     // Sliders
-    void updateOffset(unsigned channel, double value);
+    void updateOffset(ChannelID channel, double value);
     void updateTriggerPosition(int index, double value);
     void updateTriggerLevel(int channel, double value);
     void updateMarker(int marker, double value);

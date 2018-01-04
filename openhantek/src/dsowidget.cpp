@@ -16,9 +16,11 @@
 #include "utils/dsoStrings.h"
 #include "utils/printutils.h"
 #include "widgets/levelslider.h"
+#include "viewconstants.h"
+#include "analyse/dataanalyzerresult.h"
 
 DsoWidget::DsoWidget(DsoSettings *settings, QWidget *parent, Qt::WindowFlags flags)
-    : QWidget(parent, flags), settings(settings), generator(new GlGenerator(&settings->scope, &settings->view)),
+    : QWidget(parent, flags), settings(settings), generator(new GlGenerator()),
       mainScope(new GlScope(settings, generator)), zoomScope(new GlScope(settings, generator)) {
 
     // Palette for this widget
@@ -31,7 +33,7 @@ DsoWidget::DsoWidget(DsoSettings *settings, QWidget *parent, Qt::WindowFlags fla
 
     // The offset sliders for all possible channels
     offsetSlider = new LevelSlider(Qt::RightArrow);
-    for (unsigned channel = 0; channel < settings->scope.voltage.size(); ++channel) {
+    for (ChannelID channel = 0; channel < settings->scope.voltage.size(); ++channel) {
         offsetSlider->addSlider(settings->scope.voltage[channel].name, channel);
         offsetSlider->setColor(channel, settings->view.screen.voltage[channel]);
         offsetSlider->setLimits(channel, -DIVS_VOLTAGE / 2, DIVS_VOLTAGE / 2);
@@ -39,7 +41,7 @@ DsoWidget::DsoWidget(DsoSettings *settings, QWidget *parent, Qt::WindowFlags fla
         offsetSlider->setValue(channel, settings->scope.voltage[channel].offset);
         offsetSlider->setIndexVisible(channel, settings->scope.voltage[channel].used);
     }
-    for (unsigned channel = 0; channel < settings->scope.voltage.size(); ++channel) {
+    for (ChannelID channel = 0; channel < settings->scope.voltage.size(); ++channel) {
         offsetSlider->addSlider(settings->scope.spectrum[channel].name, settings->scope.voltage.size() + channel);
         offsetSlider->setColor(settings->scope.voltage.size() + channel, settings->view.screen.spectrum[channel]);
         offsetSlider->setLimits(settings->scope.voltage.size() + channel, -DIVS_VOLTAGE / 2, DIVS_VOLTAGE / 2);
@@ -52,17 +54,17 @@ DsoWidget::DsoWidget(DsoSettings *settings, QWidget *parent, Qt::WindowFlags fla
     triggerPositionSlider = new LevelSlider(Qt::DownArrow);
     triggerPositionSlider->addSlider();
     triggerPositionSlider->setLimits(0, 0.0, 1.0);
-    triggerPositionSlider->setStep(0, 0.2 / DIVS_TIME);
+    triggerPositionSlider->setStep(0, 0.2 / (double)DIVS_TIME);
     triggerPositionSlider->setValue(0, settings->scope.trigger.position);
     triggerPositionSlider->setIndexVisible(0, true);
 
     // The sliders for the trigger levels
     triggerLevelSlider = new LevelSlider(Qt::LeftArrow);
-    for (int channel = 0; channel < (int)settings->scope.physicalChannels; ++channel) {
-        triggerLevelSlider->addSlider(channel);
+    for (ChannelID channel = 0; channel < settings->deviceSpecification->channels; ++channel) {
+        triggerLevelSlider->addSlider((int)channel);
         triggerLevelSlider->setColor(
             channel,
-            (!settings->scope.trigger.special && channel == (int)settings->scope.trigger.source)
+            (!settings->scope.trigger.special && channel == settings->scope.trigger.source)
                 ? settings->view.screen.voltage[channel]
                 : settings->view.screen.voltage[channel].darker());
         adaptTriggerLevelSlider(channel);
@@ -142,33 +144,33 @@ DsoWidget::DsoWidget(DsoSettings *settings, QWidget *parent, Qt::WindowFlags fla
     measurementLayout->setColumnStretch(3, 2);
     measurementLayout->setColumnStretch(4, 3);
     measurementLayout->setColumnStretch(5, 3);
-    for (int channel = 0; channel < (int)settings->scope.voltage.size(); ++channel) {
+    for (ChannelID channel = 0; channel < settings->scope.voltage.size(); ++channel) {
         tablePalette.setColor(QPalette::WindowText, settings->view.screen.voltage[channel]);
-        measurementNameLabel.append(new QLabel(settings->scope.voltage[channel].name));
+        measurementNameLabel.push_back(new QLabel(settings->scope.voltage[channel].name));
         measurementNameLabel[channel]->setPalette(tablePalette);
-        measurementMiscLabel.append(new QLabel());
+        measurementMiscLabel.push_back(new QLabel());
         measurementMiscLabel[channel]->setPalette(tablePalette);
-        measurementGainLabel.append(new QLabel());
+        measurementGainLabel.push_back(new QLabel());
         measurementGainLabel[channel]->setAlignment(Qt::AlignRight);
         measurementGainLabel[channel]->setPalette(tablePalette);
         tablePalette.setColor(QPalette::WindowText, settings->view.screen.spectrum[channel]);
-        measurementMagnitudeLabel.append(new QLabel());
+        measurementMagnitudeLabel.push_back(new QLabel());
         measurementMagnitudeLabel[channel]->setAlignment(Qt::AlignRight);
         measurementMagnitudeLabel[channel]->setPalette(tablePalette);
-        measurementAmplitudeLabel.append(new QLabel());
+        measurementAmplitudeLabel.push_back(new QLabel());
         measurementAmplitudeLabel[channel]->setAlignment(Qt::AlignRight);
         measurementAmplitudeLabel[channel]->setPalette(palette);
-        measurementFrequencyLabel.append(new QLabel());
+        measurementFrequencyLabel.push_back(new QLabel());
         measurementFrequencyLabel[channel]->setAlignment(Qt::AlignRight);
         measurementFrequencyLabel[channel]->setPalette(palette);
         setMeasurementVisible(channel, settings->scope.voltage[channel].used);
-        measurementLayout->addWidget(measurementNameLabel[channel], channel, 0);
-        measurementLayout->addWidget(measurementMiscLabel[channel], channel, 1);
-        measurementLayout->addWidget(measurementGainLabel[channel], channel, 2);
-        measurementLayout->addWidget(measurementMagnitudeLabel[channel], channel, 3);
-        measurementLayout->addWidget(measurementAmplitudeLabel[channel], channel, 4);
-        measurementLayout->addWidget(measurementFrequencyLabel[channel], channel, 5);
-        if ((unsigned)channel < settings->scope.physicalChannels)
+        measurementLayout->addWidget(measurementNameLabel[channel], (int)channel, 0);
+        measurementLayout->addWidget(measurementMiscLabel[channel], (int)channel, 1);
+        measurementLayout->addWidget(measurementGainLabel[channel], (int)channel, 2);
+        measurementLayout->addWidget(measurementMagnitudeLabel[channel], (int)channel, 3);
+        measurementLayout->addWidget(measurementAmplitudeLabel[channel], (int)channel, 4);
+        measurementLayout->addWidget(measurementFrequencyLabel[channel], (int)channel, 5);
+        if ((unsigned)channel < settings->deviceSpecification->channels)
             updateVoltageCoupling((unsigned)channel);
         else
             updateMathMode();
@@ -233,15 +235,15 @@ void DsoWidget::showNewData(std::unique_ptr<DataAnalyzerResult> data) {
 }
 
 /// \brief Set the trigger level sliders minimum and maximum to the new values.
-void DsoWidget::adaptTriggerLevelSlider(unsigned int channel) {
+void DsoWidget::adaptTriggerLevelSlider(ChannelID channel) {
     triggerLevelSlider->setLimits(
-        channel, (-DIVS_VOLTAGE / 2 - settings->scope.voltage[channel].offset) * settings->scope.voltage[channel].gain,
-        (DIVS_VOLTAGE / 2 - settings->scope.voltage[channel].offset) * settings->scope.voltage[channel].gain);
-    triggerLevelSlider->setStep(channel, settings->scope.voltage[channel].gain * 0.2);
+        (int)channel, (-DIVS_VOLTAGE / 2 - settings->scope.voltage[channel].offset) * settings->scope.gain(channel),
+        (DIVS_VOLTAGE / 2 - settings->scope.voltage[channel].offset) * settings->scope.gain(channel));
+    triggerLevelSlider->setStep((int)channel, settings->scope.gain(channel) * 0.2);
 }
 
 /// \brief Show/Hide a line of the measurement table.
-void DsoWidget::setMeasurementVisible(unsigned int channel, bool visible) {
+void DsoWidget::setMeasurementVisible(ChannelID channel, bool visible) {
     measurementNameLabel[channel]->setVisible(visible);
     measurementMiscLabel[channel]->setVisible(visible);
     measurementGainLabel[channel]->setVisible(visible);
@@ -272,7 +274,7 @@ void DsoWidget::updateMarkerDetails() {
 }
 
 /// \brief Update the label about the trigger settings
-void DsoWidget::updateSpectrumDetails(unsigned int channel) {
+void DsoWidget::updateSpectrumDetails(ChannelID channel) {
     setMeasurementVisible(channel, settings->scope.voltage[channel].used || settings->scope.spectrum[channel].used);
 
     if (settings->scope.spectrum[channel].used)
@@ -299,13 +301,13 @@ void DsoWidget::updateTriggerDetails() {
 }
 
 /// \brief Update the label about the trigger settings
-void DsoWidget::updateVoltageDetails(unsigned int channel) {
-    if (channel >= (unsigned int)settings->scope.voltage.size()) return;
+void DsoWidget::updateVoltageDetails(ChannelID channel) {
+    if (channel >= settings->scope.voltage.size()) return;
 
     setMeasurementVisible(channel, settings->scope.voltage[channel].used || settings->scope.spectrum[channel].used);
 
     if (settings->scope.voltage[channel].used)
-        measurementGainLabel[channel]->setText(valueToString(settings->scope.voltage[channel].gain, UNIT_VOLTS, 3) +
+        measurementGainLabel[channel]->setText(valueToString(settings->scope.gain(channel), UNIT_VOLTS, 3) +
                                                tr("/div"));
     else
         measurementGainLabel[channel]->setText(QString());
@@ -355,12 +357,12 @@ void DsoWidget::updateTriggerSlope() { updateTriggerDetails(); }
 /// \brief Handles sourceChanged signal from the trigger dock.
 void DsoWidget::updateTriggerSource() {
     // Change the colors of the trigger sliders
-    if (settings->scope.trigger.special || settings->scope.trigger.source >= settings->scope.physicalChannels)
+    if (settings->scope.trigger.special || settings->scope.trigger.source >= settings->deviceSpecification->channels)
         triggerPositionSlider->setColor(0, settings->view.screen.border);
     else
         triggerPositionSlider->setColor(0, settings->view.screen.voltage[settings->scope.trigger.source]);
 
-    for (int channel = 0; channel < (int)settings->scope.physicalChannels; ++channel)
+    for (int channel = 0; channel < (int)settings->deviceSpecification->channels; ++channel)
         triggerLevelSlider->setColor(
             channel,
             (!settings->scope.trigger.special && channel == (int)settings->scope.trigger.source)
@@ -375,13 +377,13 @@ void DsoWidget::updateTriggerSource() {
 void DsoWidget::updateVoltageCoupling(unsigned int channel) {
     if (channel >= (unsigned int)settings->scope.voltage.size()) return;
 
-    measurementMiscLabel[channel]->setText(Dso::couplingString(settings->scope.voltage[channel].coupling));
+    measurementMiscLabel[channel]->setText(Dso::couplingString(settings->coupling(channel)));
 }
 
 /// \brief Handles modeChanged signal from the voltage dock.
 void DsoWidget::updateMathMode() {
-    measurementMiscLabel[settings->scope.physicalChannels]->setText(
-        Dso::mathModeString(settings->scope.voltage[settings->scope.physicalChannels].math));
+    measurementMiscLabel[settings->deviceSpecification->channels]->setText(
+        Dso::mathModeString(settings->scope.voltage[settings->deviceSpecification->channels].math));
 }
 
 /// \brief Handles gainChanged signal from the voltage dock.
@@ -389,7 +391,7 @@ void DsoWidget::updateMathMode() {
 void DsoWidget::updateVoltageGain(unsigned int channel) {
     if (channel >= (unsigned int)settings->scope.voltage.size()) return;
 
-    if (channel < settings->scope.physicalChannels) adaptTriggerLevelSlider(channel);
+    if (channel < settings->deviceSpecification->channels) adaptTriggerLevelSlider(channel);
 
     updateVoltageDetails(channel);
 }
@@ -445,7 +447,8 @@ void DsoWidget::doShowNewData() {
         exportNextFrame.reset(nullptr);
     }
 
-    bool triggered = generator->generateGraphs(data.get());
+    bool triggered = generator->generateGraphs(data.get(), settings->view.digitalPhosphorDraws(),&settings->scope,settings->deviceSpecification->channels);
+
     QPalette triggerLabelPalette = palette();
     triggerLabelPalette.setColor(QPalette::WindowText, Qt::black);
     triggerLabelPalette.setColor(QPalette::Background, triggered ? Qt::green : Qt::red);
@@ -453,8 +456,8 @@ void DsoWidget::doShowNewData() {
 
     updateRecordLength(data.get()->getMaxSamples());
 
-    for (int channel = 0; channel < (int)settings->scope.voltage.size(); ++channel) {
-        if (settings->scope.voltage[(unsigned)channel].used && data.get()->data(channel)) {
+    for (ChannelID channel = 0; channel < settings->scope.voltage.size(); ++channel) {
+        if (settings->scope.voltage[channel].used && data.get()->data(channel)) {
             // Amplitude string representation (4 significant digits)
             measurementAmplitudeLabel[channel]->setText(
                 valueToString(data.get()->data(channel)->amplitude, UNIT_VOLTS, 4));
@@ -468,11 +471,11 @@ void DsoWidget::doShowNewData() {
 /// \brief Handles valueChanged signal from the offset sliders.
 /// \param channel The channel whose offset was changed.
 /// \param value The new offset for the channel.
-void DsoWidget::updateOffset(unsigned channel, double value) {
+void DsoWidget::updateOffset(ChannelID channel, double value) {
     if (channel < settings->scope.voltage.size()) {
         settings->scope.voltage[channel].offset = value;
 
-        if (channel < settings->scope.physicalChannels) adaptTriggerLevelSlider(channel);
+        if (channel < settings->deviceSpecification->channels) adaptTriggerLevelSlider(channel);
     } else if (channel < settings->scope.voltage.size() * 2)
         settings->scope.spectrum[channel - settings->scope.voltage.size()].offset = value;
 

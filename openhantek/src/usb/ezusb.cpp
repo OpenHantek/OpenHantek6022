@@ -333,104 +333,6 @@ static int parse_ihex(FILE *image, void *context, bool (*is_external)(uint32_t a
 }
 
 /*
- * Parse a binary image file and write it as is to the target.
- * Applies to Cypress BIX images for RAM or Cypress IIC images
- * for EEPROM.
- *
- * image       - the BIX image file
- * context     - for use by poke()
- * is_external - if non-null, used to check which segments go into
- *               external memory (writable only by software loader)
- * poke        - called with each memory segment; errors indicated
- *               by returning negative values.
- *
- * Caller is responsible for halting CPU as needed, such as when
- * overwriting a second stage loader.
- */
-static int parse_bin(FILE *image, void *context, bool (*is_external)(uint32_t addr, size_t len),
-                     int (*poke)(void *context, uint32_t addr, bool external, const unsigned char *data, size_t len)) {
-    unsigned char data[4096];
-    uint32_t data_addr = 0;
-    size_t data_len = 0;
-    int rc;
-    bool external = false;
-
-    for (;;) {
-        data_len = fread(data, 1, 4096, image);
-        if (data_len == 0) break;
-        if (is_external) external = is_external(data_addr, data_len);
-        rc = poke(context, data_addr, external, data, data_len);
-        if (rc < 0) return -1;
-        data_addr += (uint32_t)data_len;
-    }
-    return feof(image) ? 0 : -1;
-}
-
-/*
- * Parse a Cypress IIC image file and invoke the poke() function on the
- * various segments for writing to RAM
- *
- * image       - the IIC image file
- * context     - for use by poke()
- * is_external - if non-null, used to check which segments go into
- *               external memory (writable only by software loader)
- * poke        - called with each memory segment; errors indicated
- *               by returning negative values.
- *
- * Caller is responsible for halting CPU as needed, such as when
- * overwriting a second stage loader.
- */
-static int parse_iic(FILE *image, void *context, bool (*is_external)(uint32_t addr, size_t len),
-                     int (*poke)(void *context, uint32_t addr, bool external, const unsigned char *data, size_t len)) {
-    unsigned char data[4096];
-    uint32_t data_addr = 0;
-    size_t data_len = 0, read_len;
-    uint8_t block_header[4];
-    int rc;
-    bool external = false;
-    long file_size, initial_pos;
-
-    initial_pos = ftell(image);
-    if (initial_pos < 0) return -1;
-
-    if (fseek(image, 0L, SEEK_END) != 0) return -1;
-    file_size = ftell(image);
-    if (fseek(image, initial_pos, SEEK_SET) != 0) return -1;
-    for (;;) {
-        /* Ignore the trailing reset IIC data (5 bytes) */
-        if (ftell(image) >= (file_size - 5)) break;
-        if (fread(&block_header, 1, sizeof(block_header), image) != 4) {
-            logerror("unable to read IIC block header\n");
-            return -1;
-        }
-        data_len = (block_header[0] << 8) + block_header[1];
-        data_addr = (block_header[2] << 8) + block_header[3];
-        if (data_len > sizeof(data)) {
-            /* If this is ever reported as an error, switch to using malloc/realloc */
-            logerror("IIC data block too small - please report this error to "
-                     "libusb.info\n");
-            return -1;
-        }
-        read_len = fread(data, 1, data_len, image);
-        if (read_len != data_len) {
-            logerror("read error\n");
-            return -1;
-        }
-        if (is_external) external = is_external(data_addr, data_len);
-        rc = poke(context, data_addr, external, data, data_len);
-        if (rc < 0) return -1;
-    }
-    return 0;
-}
-
-/* the parse call will be selected according to the image type */
-static int (*parse[IMG_TYPE_MAX])(FILE *image, void *context, bool (*is_external)(uint32_t addr, size_t len),
-                                  int (*poke)(void *context, uint32_t addr, bool external, const unsigned char *data,
-                                              size_t len)) = {parse_ihex, parse_iic, parse_bin};
-
-/*****************************************************************************/
-
-/*
  * For writing to RAM using a first (hardware) or second (software)
  * stage loader and 0xA0 or 0xA3 vendor requests
  */
@@ -641,13 +543,12 @@ exit:
  * memory is written, expecting a second stage loader to have already
  * been loaded.  Then file is re-parsed and on-chip memory is written.
  */
-int ezusb_load_ram(libusb_device_handle *device, const char *path, int fx_type, int img_type, int stage) {
+int ezusb_load_ram(libusb_device_handle *device, const char *path, int fx_type, int stage) {
     FILE *image;
     uint32_t cpucs_addr;
     bool (*is_external)(uint32_t off, size_t len);
     struct ram_poke_context ctx;
     int status;
-    uint8_t iic_header[8] = {0};
     int ret = 0;
 
     if (fx_type == FX_TYPE_FX3) return fx3_load_ram(device, path);
@@ -659,16 +560,6 @@ int ezusb_load_ram(libusb_device_handle *device, const char *path, int fx_type, 
     } else if (verbose > 1)
         logerror("open firmware image %s for RAM upload\n", path);
 
-    if (img_type == IMG_TYPE_IIC) {
-        if ((fread(iic_header, 1, sizeof(iic_header), image) != sizeof(iic_header)) ||
-            (((fx_type == FX_TYPE_FX2LP) || (fx_type == FX_TYPE_FX2)) && (iic_header[0] != 0xC2)) ||
-            ((fx_type == FX_TYPE_AN21) && (iic_header[0] != 0xB2)) ||
-            ((fx_type == FX_TYPE_FX1) && (iic_header[0] != 0xB6))) {
-            logerror("IIC image does not contain executable code - cannot load to RAM.\n");
-            ret = -1;
-            goto exit;
-        }
-    }
 
     /* EZ-USB original/FX and FX2 devices differ, apart from the 8051 core */
     switch (fx_type) {
@@ -707,7 +598,7 @@ int ezusb_load_ram(libusb_device_handle *device, const char *path, int fx_type, 
     /* scan the image, first (maybe only) time */
     ctx.device = device;
     ctx.total = ctx.count = 0;
-    status = parse[img_type](image, &ctx, is_external, ram_poke);
+    status = parse_ihex(image, &ctx, is_external, ram_poke);
     if (status < 0) {
         logerror("unable to upload %s\n", path);
         ret = status;

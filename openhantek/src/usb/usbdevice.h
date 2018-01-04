@@ -57,7 +57,7 @@ class USBDevice : public QObject {
 
     int controlTransfer(unsigned char type, unsigned char request, unsigned char *data, unsigned int length, int value,
                         int index, int attempts = HANTEK_ATTEMPTS);
-    int controlWrite(unsigned char request, unsigned char *data, unsigned int length, int value = 0, int index = 0,
+    int controlWrite(uint8_t request, unsigned char *data, unsigned int length, int value = 0, int index = 0,
                      int attempts = HANTEK_ATTEMPTS);
     int controlRead(unsigned char request, unsigned char *data, unsigned int length, int value = 0, int index = 0,
                     int attempts = HANTEK_ATTEMPTS);

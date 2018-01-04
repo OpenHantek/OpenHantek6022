@@ -13,6 +13,7 @@
 #include "utils/printutils.h"
 #include "enums.h"
 
+class DsoSettings;
 struct DsoSettingsScope;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -25,7 +26,7 @@ class DataAnalyzer : public QObject {
 
   public:
     ~DataAnalyzer();
-    void applySettings(DsoSettingsScope *scope);
+    void applySettings(DsoSettings *settings);
     void setSourceData(const DSOsamples *data);
     std::unique_ptr<DataAnalyzerResult> getNextResult();
     /**
@@ -34,13 +35,13 @@ class DataAnalyzer : public QObject {
     void samplesAvailable();
 
   private:
-    static std::unique_ptr<DataAnalyzerResult> convertData(const DSOsamples *data, const DsoSettingsScope *scope);
+    static std::unique_ptr<DataAnalyzerResult> convertData(const DSOsamples *data, const DsoSettingsScope *scope, unsigned physicalChannels);
     static void spectrumAnalysis(DataAnalyzerResult *result, Dso::WindowFunction &lastWindow,
                                  unsigned int lastRecordLength, double *&lastWindowBuffer,
                                  const DsoSettingsScope *scope);
 
   private:
-    DsoSettingsScope *scope;
+    DsoSettings *settings;
     unsigned int lastRecordLength = 0;                        ///< The record length of the previously analyzed data
     Dso::WindowFunction lastWindow = (Dso::WindowFunction)-1; ///< The previously used dft window function
     double *window = nullptr;

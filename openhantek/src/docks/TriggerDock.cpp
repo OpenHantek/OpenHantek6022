@@ -28,7 +28,7 @@ TriggerDock::TriggerDock(DsoSettings *settings, const std::vector<std::string> &
     : QDockWidget(tr("Trigger"), parent, flags), settings(settings) {
 
     // Initialize lists for comboboxes
-    for (unsigned int channel = 0; channel < settings->scope.physicalChannels; ++channel)
+    for (unsigned int channel = 0; channel < settings->deviceSpecification->channels; ++channel)
         this->sourceStandardStrings << tr("CH%1").arg(channel + 1);
     for(const std::string& name: specialTriggers)
         this->sourceSpecialStrings.append(QString::fromStdString(name));
@@ -36,13 +36,13 @@ TriggerDock::TriggerDock(DsoSettings *settings, const std::vector<std::string> &
     // Initialize elements
     this->modeLabel = new QLabel(tr("Mode"));
     this->modeComboBox = new QComboBox();
-    for (int mode = Dso::TRIGGERMODE_AUTO; mode < Dso::TRIGGERMODE_COUNT; ++mode)
-        this->modeComboBox->addItem(Dso::triggerModeString((Dso::TriggerMode)mode));
+    for (Dso::TriggerMode mode: Dso::TriggerModeEnum)
+        this->modeComboBox->addItem(Dso::triggerModeString(mode));
 
     this->slopeLabel = new QLabel(tr("Slope"));
     this->slopeComboBox = new QComboBox();
-    for (int slope = Dso::SLOPE_POSITIVE; slope < Dso::SLOPE_COUNT; ++slope)
-        this->slopeComboBox->addItem(Dso::slopeString((Dso::Slope)slope));
+    for (Dso::Slope slope: Dso::SlopeEnum)
+        this->slopeComboBox->addItem(Dso::slopeString(slope));
 
     this->sourceLabel = new QLabel(tr("Source"));
     this->sourceComboBox = new QComboBox();
@@ -63,9 +63,9 @@ TriggerDock::TriggerDock(DsoSettings *settings, const std::vector<std::string> &
     SetupDockWidget(this, dockWidget, dockLayout);
 
     // Connect signals and slots
-    connect(this->modeComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(modeSelected(int)));
-    connect(this->slopeComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(slopeSelected(int)));
-    connect(this->sourceComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(sourceSelected(int)));
+    connect(this->modeComboBox, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &TriggerDock::modeSelected);
+    connect(this->slopeComboBox, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &TriggerDock::slopeSelected);
+    connect(this->sourceComboBox, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &TriggerDock::sourceSelected);
 
     // Set values
     this->setMode(settings->scope.trigger.mode);
@@ -84,25 +84,15 @@ void TriggerDock::closeEvent(QCloseEvent *event) {
 /// \brief Changes the trigger mode if the new mode is supported.
 /// \param mode The trigger mode.
 /// \return Index of mode-value, -1 on error.
-int TriggerDock::setMode(Dso::TriggerMode mode) {
-    if (mode >= Dso::TRIGGERMODE_AUTO && mode < Dso::TRIGGERMODE_COUNT) {
-        this->modeComboBox->setCurrentIndex(mode);
-        return mode;
-    }
-
-    return -1;
+void TriggerDock::setMode(Dso::TriggerMode mode) {
+    this->modeComboBox->setCurrentIndex((int)mode);
 }
 
 /// \brief Changes the trigger slope if the new slope is supported.
 /// \param slope The trigger slope.
 /// \return Index of slope-value, -1 on error.
-int TriggerDock::setSlope(Dso::Slope slope) {
-    if (slope >= Dso::SLOPE_POSITIVE && slope <= Dso::SLOPE_NEGATIVE) {
-        this->slopeComboBox->setCurrentIndex(slope);
-        return slope;
-    }
-
-    return -1;
+void TriggerDock::setSlope(Dso::Slope slope) {
+    this->slopeComboBox->setCurrentIndex((int)slope);
 }
 
 /// \brief Changes the trigger source if the new source is supported.
@@ -114,7 +104,7 @@ int TriggerDock::setSource(bool special, unsigned int id) {
         (special && id >= (unsigned int)this->sourceSpecialStrings.count()))
         return -1;
 
-    int index = id;
+    int index = (int)id;
     if (special) index += this->sourceStandardStrings.count();
     this->sourceComboBox->setCurrentIndex(index);
 

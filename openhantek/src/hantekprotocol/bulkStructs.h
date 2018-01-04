@@ -16,6 +16,9 @@ namespace Hantek {
 class BulkCommand : public DataArray<uint8_t> {
 protected:
     BulkCommand(unsigned size): DataArray<uint8_t>(size) {}
+public:
+    bool pending = false;
+    BulkCommand* next = nullptr;
 };
 
 //////////////////////////////////////////////////////////////////////////////

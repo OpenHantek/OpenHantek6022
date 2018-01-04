@@ -22,27 +22,27 @@ class SpectrumDock : public QDockWidget {
   public:
     SpectrumDock(DsoSettings *settings, QWidget *parent, Qt::WindowFlags flags = 0);
 
-    int setMagnitude(int channel, double magnitude);
-    int setUsed(int channel, bool used);
+    int setMagnitude(ChannelID channel, double magnitude);
+    unsigned setUsed(ChannelID channel, bool used);
 
   protected:
     void closeEvent(QCloseEvent *event);
 
     QGridLayout *dockLayout;              ///< The main layout for the dock window
     QWidget *dockWidget;                  ///< The main widget for the dock window
-    QList<QCheckBox *> usedCheckBox;      ///< Enable/disable spectrum for a channel
-    QList<QComboBox *> magnitudeComboBox; ///< Select the vertical magnitude for the spectrums
+    std::vector<QCheckBox *> usedCheckBox;      ///< Enable/disable spectrum for a channel
+    std::vector<QComboBox *> magnitudeComboBox; ///< Select the vertical magnitude for the spectrums
 
     DsoSettings *settings; ///< The settings provided by the parent class
 
-    QList<double> magnitudeSteps; ///< The selectable magnitude steps
+    std::vector<double> magnitudeSteps; ///< The selectable magnitude steps in dB/div
     QStringList magnitudeStrings; ///< String representations for the magnitude steps
 
   public slots:
-    void magnitudeSelected(int index);
+    void magnitudeSelected(unsigned index);
     void usedSwitched(bool checked);
 
   signals:
-    void magnitudeChanged(unsigned int channel, double magnitude); ///< A magnitude has been selected
-    void usedChanged(unsigned int channel, bool used);             ///< A spectrum has been enabled/disabled
+    void magnitudeChanged(ChannelID channel, double magnitude); ///< A magnitude has been selected
+    void usedChanged(ChannelID channel, bool used);             ///< A spectrum has been enabled/disabled
 };

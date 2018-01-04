@@ -177,7 +177,7 @@ int USBDevice::bulkCommand(const DataArray<unsigned char> *command, int attempts
     if (!allowBulkTransfer) return LIBUSB_SUCCESS;
 
     // Send BeginCommand control command
-    int errorCode = this->controlWrite(CONTROL_BEGINCOMMAND, beginCommandControl.data(),
+    int errorCode = this->controlWrite((uint8_t)Hantek::ControlCode::CONTROL_BEGINCOMMAND, beginCommandControl.data(),
                                        beginCommandControl.getSize());
     if (errorCode < 0) return errorCode;
 
@@ -242,10 +242,10 @@ int USBDevice::controlTransfer(unsigned char type, unsigned char request, unsign
 /// \param index The index field of the packet.
 /// \param attempts The number of attempts, that are done on timeouts.
 /// \return Number of sent bytes on success, libusb error code on error.
-int USBDevice::controlWrite(unsigned char request, unsigned char *data, unsigned int length, int value, int index,
+int USBDevice::controlWrite(uint8_t request, unsigned char *data, unsigned int length, int value, int index,
                             int attempts) {
     if (!this->handle) return LIBUSB_ERROR_NO_DEVICE;
-
+    // std::cout << "control" << (int)request << " l:"<<length<<" d:"<<(int)data[0] << std::endl;
     return this->controlTransfer(LIBUSB_REQUEST_TYPE_VENDOR | LIBUSB_ENDPOINT_OUT, request, data, length, value, index,
                                  attempts);
 }
@@ -272,7 +272,7 @@ int USBDevice::getConnectionSpeed() {
     int errorCode;
     ControlGetSpeed response;
 
-    errorCode = this->controlRead(CONTROL_GETSPEED, response.data(), response.getSize());
+    errorCode = this->controlRead((uint8_t)Hantek::ControlCode::CONTROL_GETSPEED, response.data(), response.getSize());
     if (errorCode < 0) return errorCode;
 
     return response.getSpeed();

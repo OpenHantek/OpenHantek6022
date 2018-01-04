@@ -1,50 +1,51 @@
 #pragma once
 
-#include <QMetaType>
 #include "utils/enumclass.h"
+#include <QMetaType>
 namespace Dso {
 /// \enum ChannelMode
 /// \brief The channel display modes.
-enum ChannelMode {
-    CHANNELMODE_VOLTAGE,  ///< Standard voltage view
-    CHANNELMODE_SPECTRUM, ///< Spectrum view
-    CHANNELMODE_COUNT     ///< The total number of modes
+enum class ChannelMode {
+    Voltage,  ///< Standard voltage view
+    Spectrum ///< Spectrum view
 };
+constexpr int ChannelModes = 2;
+extern Enum<Dso::ChannelMode, Dso::ChannelMode::Voltage, Dso::ChannelMode::Spectrum> ChannelModeEnum;
 
 /// \enum GraphFormat
 /// \brief The possible viewing formats for the graphs on the scope.
 enum GraphFormat {
-    GRAPHFORMAT_TY,   ///< The standard mode
-    GRAPHFORMAT_XY,   ///< CH1 on X-axis, CH2 on Y-axis
-    GRAPHFORMAT_COUNT ///< The total number of formats
+    TY,   ///< The standard mode
+    XY   ///< CH1 on X-axis, CH2 on Y-axis
 };
+
+extern Enum<Dso::GraphFormat, Dso::GraphFormat::TY, Dso::GraphFormat::XY> GraphFormatEnum;
 
 /// \enum Coupling
 /// \brief The coupling modes for the channels.
-enum Coupling {
-    COUPLING_AC,   ///< Offset filtered out by condensator
-    COUPLING_DC,   ///< No filtering
-    COUPLING_GND,  ///< Channel is grounded
-    COUPLING_COUNT ///< The total number of coupling modes
+enum class Coupling {
+    AC, ///< Offset filtered out by condensator
+    DC, ///< No filtering
+    GND ///< Channel is grounded
 };
 
 /// \enum TriggerMode
 /// \brief The different triggering modes.
-enum TriggerMode {
-    TRIGGERMODE_AUTO,     ///< Automatic without trigger event
-    TRIGGERMODE_NORMAL,   ///< Normal mode
-    TRIGGERMODE_SINGLE,   ///< Stop after the first trigger event
-    TRIGGERMODE_SOFTWARE, ///< Software trigger mode
-    TRIGGERMODE_COUNT     ///< The total number of modes
+enum class TriggerMode {
+    AUTO,    ///< Automatic without trigger event
+    NORMAL,  ///< Normal mode
+    SINGLE,  ///< Stop after the first trigger event
+    SOFTWARE ///< Software trigger mode
 };
+extern Enum<Dso::TriggerMode, Dso::TriggerMode::AUTO, Dso::TriggerMode::SOFTWARE> TriggerModeEnum;
 
 /// \enum Slope
 /// \brief The slope that causes a trigger.
-enum Slope {
-    SLOPE_POSITIVE, ///< From lower to higher voltage
-    SLOPE_NEGATIVE, ///< From higher to lower voltage
-    SLOPE_COUNT     ///< Total number of trigger slopes
+enum class Slope : uint8_t {
+    Positive = 0, ///< From lower to higher voltage
+    Negative = 1  ///< From higher to lower voltage
 };
+extern Enum<Dso::Slope, Dso::Slope::Positive, Dso::Slope::Negative> SlopeEnum;
 
 /// \enum InterpolationMode
 /// \brief The different interpolation modes for the graphs.
@@ -62,4 +63,3 @@ Q_DECLARE_METATYPE(Dso::Coupling)
 Q_DECLARE_METATYPE(Dso::GraphFormat)
 Q_DECLARE_METATYPE(Dso::ChannelMode)
 Q_DECLARE_METATYPE(Dso::InterpolationMode)
-

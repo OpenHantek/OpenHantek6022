@@ -2,7 +2,7 @@
 
 #pragma once
 
-template< typename T >
+template< typename T, T first, T last >
 class Enum
 {
 public:
@@ -34,14 +34,14 @@ public:
 
 };
 
-template< typename T >
-typename Enum<T>::Iterator begin( Enum<T> )
+template< typename T, T first, T last >
+typename Enum<T,first,last>::Iterator begin( Enum<T,first,last> )
 {
-   return typename Enum<T>::Iterator( (int)T::First );
+   return typename Enum<T,first,last>::Iterator( (int)first );
 }
 
-template< typename T >
-typename Enum<T>::Iterator end( Enum<T> )
+template< typename T, T first, T last >
+typename Enum<T,first,last>::Iterator end( Enum<T,first,last> )
 {
-   return typename Enum<T>::Iterator( ((int)T::Last) + 1 );
+   return typename Enum<T,first,last>::Iterator( ((int)last) + 1 );
 }

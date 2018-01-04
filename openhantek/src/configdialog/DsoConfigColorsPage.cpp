@@ -51,12 +51,12 @@ DsoConfigColorsPage::DsoConfigColorsPage(DsoSettings *settings, QWidget *parent)
     printSpectrumLabel = new QLabel(tr("Spectrum"));
     printSpectrumLabel->setAlignment(Qt::AlignHCenter);
 
-    for (int channel = 0; channel < settings->scope.voltage.size(); ++channel) {
-        colorLabel.append(new QLabel(settings->scope.voltage[channel].name));
-        screenChannelColorBox.append(new ColorBox(colorSettings.screen.voltage[channel]));
-        screenSpectrumColorBox.append(new ColorBox(colorSettings.screen.spectrum[channel]));
-        printChannelColorBox.append(new ColorBox(colorSettings.print.voltage[channel]));
-        printSpectrumColorBox.append(new ColorBox(colorSettings.print.spectrum[channel]));
+    for (ChannelID channel = 0; channel < settings->scope.voltage.size(); ++channel) {
+        colorLabel.push_back(new QLabel(settings->scope.voltage[channel].name));
+        screenChannelColorBox.push_back(new ColorBox(colorSettings.screen.voltage[channel]));
+        screenSpectrumColorBox.push_back(new ColorBox(colorSettings.screen.spectrum[channel]));
+        printChannelColorBox.push_back(new ColorBox(colorSettings.print.voltage[channel]));
+        printSpectrumColorBox.push_back(new ColorBox(colorSettings.print.spectrum[channel]));
     }
 
     // Plot Area Layout
@@ -106,7 +106,7 @@ DsoConfigColorsPage::DsoConfigColorsPage(DsoSettings *settings, QWidget *parent)
     colorsLayout->addWidget(printSpectrumLabel, row, COL_PRT_SPECTRUM);
     ++row;
 
-    for (int channel = 0; channel < settings->scope.voltage.size(); ++channel, ++row) {
+    for (ChannelID channel = 0; channel < settings->scope.voltage.size(); ++channel, ++row) {
         colorsLayout->addWidget(colorLabel[channel], row, COL_LABEL);
         colorsLayout->addWidget(screenChannelColorBox[channel], row, COL_SCR_CHANNEL);
         colorsLayout->addWidget(screenSpectrumColorBox[channel], row, COL_SCR_SPECTRUM);
@@ -146,7 +146,7 @@ void DsoConfigColorsPage::saveSettings() {
     colorSettings.print.text = printTextColorBox->getColor();
 
     // Graph category
-    for (int channel = 0; channel < settings->scope.voltage.size(); ++channel) {
+    for (ChannelID channel = 0; channel < settings->scope.voltage.size(); ++channel) {
         colorSettings.screen.voltage[channel] = screenChannelColorBox[channel]->getColor();
         colorSettings.screen.spectrum[channel] = screenSpectrumColorBox[channel]->getColor();
         colorSettings.print.voltage[channel] = printChannelColorBox[channel]->getColor();

@@ -1,25 +1,4 @@
-////////////////////////////////////////////////////////////////////////////////
-//
-//  OpenHantek
-//  settings.cpp
-//
-//  Copyright (C) 2010, 2011  Oliver Haag
-//  oliver.haag@gmail.com
-//
-//  This program is free software: you can redistribute it and/or modify it
-//  under the terms of the GNU General Public License as published by the Free
-//  Software Foundation, either version 3 of the License, or (at your option)
-//  any later version.
-//
-//  This program is distributed in the hope that it will be useful, but WITHOUT
-//  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-//  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-//  more details.
-//
-//  You should have received a copy of the GNU General Public License along with
-//  this program.  If not, see <http://www.gnu.org/licenses/>.
-//
-////////////////////////////////////////////////////////////////////////////////
+// SPDX-License-Identifier: GPL-2.0+
 
 #include <QApplication>
 #include <QColor>
@@ -32,8 +11,26 @@
 
 /// \brief Set the number of channels.
 /// \param channels The new channel count, that will be applied to lists.
-DsoSettings::DsoSettings(unsigned int channels) {
-    scope.physicalChannels = channels;
+DsoSettings::DsoSettings(const Dso::ControlSettings* deviceSettings, const Dso::ControlSpecification* deviceSpecification)
+    : deviceSettings(deviceSettings), deviceSpecification(deviceSpecification) {
+
+    // Add new channels to the list
+    while (scope.spectrum.size() < deviceSpecification->channels) {
+        // Spectrum
+        DsoSettingsScopeSpectrum newSpectrum;
+        newSpectrum.name = QApplication::tr("SP%1").arg(scope.spectrum.size()+1);
+        scope.spectrum.push_back(newSpectrum);
+
+        // Voltage
+        DsoSettingsScopeVoltage newVoltage;
+        newVoltage.name = QApplication::tr("CH%1").arg(scope.voltage.size()+1);
+        scope.voltage.push_back(newVoltage);
+
+        view.screen.voltage.push_back(QColor::fromHsv((int)(scope.spectrum.size()-1) * 60, 0xff, 0xff));
+        view.screen.spectrum.push_back(view.screen.voltage.back().lighter());
+        view.print.voltage.push_back(view.screen.voltage.back().darker(120));
+        view.print.spectrum.push_back(view.screen.voltage.back().darker());
+    }
 
     DsoSettingsScopeSpectrum newSpectrum;
     newSpectrum.name = QApplication::tr("SPM");
@@ -49,24 +46,6 @@ DsoSettings::DsoSettings(unsigned int channels) {
     view.print.voltage.push_back(view.screen.voltage.back());
     view.print.spectrum.push_back(view.print.voltage.back().darker());
 
-    // Add new channels to the list
-    while (scope.spectrum.size() <= channels) {
-        // Spectrum
-        DsoSettingsScopeSpectrum newSpectrum;
-        newSpectrum.name = QApplication::tr("SP%1").arg(scope.spectrum.size());
-        scope.spectrum.insert(scope.spectrum.end()-1, newSpectrum);
-
-        // Voltage
-        DsoSettingsScopeVoltage newVoltage;
-        newVoltage.coupling = Dso::COUPLING_DC;
-        newVoltage.name = QApplication::tr("CH%1").arg(scope.voltage.size());
-        scope.voltage.insert(scope.voltage.end()-1, newVoltage);
-
-        view.screen.voltage.insert(view.screen.voltage.end()-1, QColor::fromHsv((int)(view.screen.voltage.size()-1) * 60, 0xff, 0xff));
-        view.screen.spectrum.insert(view.screen.spectrum.end()-1, view.screen.voltage.back().lighter());
-        view.print.voltage.insert(view.print.voltage.end()-1, view.screen.voltage.back().darker(120));
-        view.print.spectrum.insert(view.print.spectrum.end()-1, view.screen.voltage.back().darker());
-    }
 
     load();
 }
@@ -110,14 +89,14 @@ void DsoSettings::load() {
     // Trigger
     store->beginGroup("trigger");
     if (store->contains("filter")) scope.trigger.filter = store->value("filter").toBool();
-    if (store->contains("mode")) scope.trigger.mode = (Dso::TriggerMode)store->value("mode").toInt();
+    if (store->contains("mode")) scope.trigger.mode = (Dso::TriggerMode)store->value("mode").toUInt();
     if (store->contains("position")) scope.trigger.position = store->value("position").toDouble();
-    if (store->contains("slope")) scope.trigger.slope = (Dso::Slope)store->value("slope").toInt();
-    if (store->contains("source")) scope.trigger.source = store->value("source").toInt();
+    if (store->contains("slope")) scope.trigger.slope = (Dso::Slope)store->value("slope").toUInt();
+    if (store->contains("source")) scope.trigger.source = store->value("source").toUInt();
     if (store->contains("special")) scope.trigger.special = store->value("special").toInt();
     store->endGroup();
     // Spectrum
-    for (unsigned channel = 0; channel < scope.spectrum.size(); ++channel) {
+    for (ChannelID channel = 0; channel < scope.spectrum.size(); ++channel) {
         store->beginGroup(QString("spectrum%1").arg(channel));
         if (store->contains("magnitude"))
             scope.spectrum[channel].magnitude = store->value("magnitude").toDouble();
@@ -126,9 +105,10 @@ void DsoSettings::load() {
         store->endGroup();
     }
     // Vertical axis
-    for (unsigned channel = 0; channel < scope.voltage.size(); ++channel) {
+    for (ChannelID channel = 0; channel < scope.voltage.size(); ++channel) {
         store->beginGroup(QString("vertical%1").arg(channel));
-        if (store->contains("gain")) scope.voltage[channel].gain = store->value("gain").toDouble();
+        if (store->contains("gainStepIndex")) scope.voltage[channel].gainStepIndex = store->value("gainStepIndex").toUInt();
+        if (store->contains("couplingIndex")) scope.voltage[channel].couplingIndex = store->value("couplingIndex").toUInt();
         if (store->contains("inverted")) scope.voltage[channel].inverted = store->value("inverted").toBool();
         if (store->contains("misc")) scope.voltage[channel].rawValue = store->value("misc").toInt();
         if (store->contains("offset")) scope.voltage[channel].offset = store->value("offset").toDouble();
@@ -162,12 +142,12 @@ void DsoSettings::load() {
         if (store->contains("border")) colors->border = store->value("border").value<QColor>();
         if (store->contains("grid")) colors->grid = store->value("grid").value<QColor>();
         if (store->contains("markers")) colors->markers = store->value("markers").value<QColor>();
-        for (unsigned channel = 0; channel < scope.spectrum.size(); ++channel) {
+        for (ChannelID channel = 0; channel < scope.spectrum.size(); ++channel) {
             QString key = QString("spectrum%1").arg(channel);
             if (store->contains(key)) colors->spectrum[channel] = store->value(key).value<QColor>();
         }
         if (store->contains("text")) colors->text = store->value("text").value<QColor>();
-        for (unsigned channel = 0; channel < scope.voltage.size(); ++channel) {
+        for (ChannelID channel = 0; channel < scope.voltage.size(); ++channel) {
             QString key = QString("voltage%1").arg(channel);
             if (store->contains(key)) colors->voltage[channel] = store->value(key).value<QColor>();
         }
@@ -211,14 +191,14 @@ void DsoSettings::save() {
     // Trigger
     store->beginGroup("trigger");
     store->setValue("filter", scope.trigger.filter);
-    store->setValue("mode", scope.trigger.mode);
+    store->setValue("mode", (unsigned)scope.trigger.mode);
     store->setValue("position", scope.trigger.position);
-    store->setValue("slope", scope.trigger.slope);
+    store->setValue("slope", (unsigned)scope.trigger.slope);
     store->setValue("source", scope.trigger.source);
     store->setValue("special", scope.trigger.special);
     store->endGroup();
     // Spectrum
-    for (unsigned channel = 0; channel < scope.spectrum.size(); ++channel) {
+    for (ChannelID channel = 0; channel < scope.spectrum.size(); ++channel) {
         store->beginGroup(QString("spectrum%1").arg(channel));
         store->setValue("magnitude", scope.spectrum[channel].magnitude);
         store->setValue("offset", scope.spectrum[channel].offset);
@@ -226,9 +206,10 @@ void DsoSettings::save() {
         store->endGroup();
     }
     // Vertical axis
-    for (unsigned channel = 0; channel < scope.voltage.size(); ++channel) {
+    for (ChannelID channel = 0; channel < scope.voltage.size(); ++channel) {
         store->beginGroup(QString("vertical%1").arg(channel));
-        store->setValue("gain", scope.voltage[channel].gain);
+        store->setValue("gainStepIndex", scope.voltage[channel].gainStepIndex);
+        store->setValue("couplingIndex", scope.voltage[channel].couplingIndex);
         store->setValue("inverted", scope.voltage[channel].inverted);
         store->setValue("misc", scope.voltage[channel].rawValue);
         store->setValue("offset", scope.voltage[channel].offset);
@@ -261,10 +242,10 @@ void DsoSettings::save() {
         store->setValue("border", colors->border.name(QColor::HexArgb));
         store->setValue("grid", colors->grid.name(QColor::HexArgb));
         store->setValue("markers", colors->markers.name(QColor::HexArgb));
-        for (unsigned channel = 0; channel < scope.spectrum.size(); ++channel)
+        for (ChannelID channel = 0; channel < scope.spectrum.size(); ++channel)
             store->setValue(QString("spectrum%1").arg(channel), colors->spectrum[channel].name(QColor::HexArgb));
         store->setValue("text", colors->text.name(QColor::HexArgb));
-        for (unsigned channel = 0; channel < scope.voltage.size(); ++channel)
+        for (ChannelID channel = 0; channel < scope.voltage.size(); ++channel)
             store->setValue(QString("voltage%1").arg(channel), colors->voltage[channel].name(QColor::HexArgb));
         store->endGroup();
     }

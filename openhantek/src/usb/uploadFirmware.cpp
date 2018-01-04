@@ -49,7 +49,7 @@ bool UploadFirmware::startUpload(USBDevice *device) {
     }
 
     // Write loader
-    status = ezusb_load_ram(handle, temp_loader_path->fileName().toUtf8().constData(), FX_TYPE_FX2, IMG_TYPE_HEX, 0);
+    status = ezusb_load_ram(handle, temp_loader_path->fileName().toUtf8().constData(), FX_TYPE_FX2, 0);
 
     if (status != LIBUSB_SUCCESS) {
         errorMessage = TR("Writing the loader firmware failed: %1").arg(libusb_error_name(status));
@@ -59,7 +59,7 @@ bool UploadFirmware::startUpload(USBDevice *device) {
     }
 
     // Write firmware
-    status = ezusb_load_ram(handle, temp_firmware_path->fileName().toUtf8().constData(), FX_TYPE_FX2, IMG_TYPE_HEX, 1);
+    status = ezusb_load_ram(handle, temp_firmware_path->fileName().toUtf8().constData(), FX_TYPE_FX2, 1);
 
     if (status != LIBUSB_SUCCESS) {
         errorMessage = TR("Writing the main firmware failed: %1").arg(libusb_error_name(status));

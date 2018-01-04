@@ -9,6 +9,9 @@
 #define HANTEK_GAIN_STEPS 9
 #define HANTEK_CHANNELS 2         ///< Number of physical channels
 
+typedef unsigned RecordLengthID;
+typedef unsigned ChannelID;
+
 namespace Hantek {
 /// \enum UsedChannels
 /// \brief The enabled channels.

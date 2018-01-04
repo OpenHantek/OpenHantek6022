@@ -9,11 +9,9 @@ namespace Dso {
 enum class MathMode {
     ADD_CH1_CH2,
     SUB_CH2_FROM_CH1,
-    SUB_CH1_FROM_CH2,
-
-    First = ADD_CH1_CH2,
-    Last = SUB_CH1_FROM_CH2
+    SUB_CH1_FROM_CH2
 };
+extern Enum<Dso::MathMode,Dso::MathMode::ADD_CH1_CH2,Dso::MathMode::SUB_CH1_FROM_CH2> MathModeEnum;
 
 /// \enum WindowFunction
 /// \brief The supported window functions.
@@ -34,11 +32,9 @@ enum class WindowFunction: int {
     NUTTALL,         ///< Nuttall window, cont. first deriv.
     BLACKMANHARRIS,  ///< Blackman-Harris window
     BLACKMANNUTTALL, ///< Blackman-Nuttall window
-    FLATTOP,         ///< Flat top window
-
-    First = RECTANGULAR,
-    Last = FLATTOP
+    FLATTOP         ///< Flat top window
 };
+extern Enum<Dso::WindowFunction,Dso::WindowFunction::RECTANGULAR,Dso::WindowFunction::FLATTOP> WindowFunctionEnum;
 
 }
 

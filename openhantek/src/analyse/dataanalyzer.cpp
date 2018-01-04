@@ -15,7 +15,7 @@
 #include "settings.h"
 #include "utils/printutils.h"
 
-std::unique_ptr<DataAnalyzerResult> DataAnalyzer::convertData(const DSOsamples *data, const DsoSettingsScope *scope) {
+std::unique_ptr<DataAnalyzerResult> DataAnalyzer::convertData(const DSOsamples *data, const DsoSettingsScope *scope, unsigned physicalChannels) {
     QReadLocker locker(&data->lock);
 
     unsigned int channelCount = (unsigned int)scope->voltage.size();
@@ -26,9 +26,9 @@ std::unique_ptr<DataAnalyzerResult> DataAnalyzer::convertData(const DSOsamples *
     for (unsigned int channel = 0; channel < channelCount; ++channel) {
         DataChannel *const channelData = result->modifyData(channel);
 
-        bool gotDataForChannel = channel < scope->physicalChannels && channel < (unsigned int)data->data.size() &&
+        bool gotDataForChannel = channel < physicalChannels && channel < (unsigned int)data->data.size() &&
                                  !data->data.at(channel).empty();
-        bool isMathChannel = channel >= scope->physicalChannels &&
+        bool isMathChannel = channel >= physicalChannels &&
                              (scope->voltage[channel].used || scope->spectrum[channel].used) &&
                              result->channelCount() >= 2 && !result->data(0)->voltage.sample.empty() &&
                              !result->data(1)->voltage.sample.empty();
@@ -36,7 +36,7 @@ std::unique_ptr<DataAnalyzerResult> DataAnalyzer::convertData(const DSOsamples *
         if (!gotDataForChannel && !isMathChannel) {
             // Clear unused channels
             channelData->voltage.sample.clear();
-            result->modifyData(scope->physicalChannels)->voltage.interval = 0;
+            result->modifyData(physicalChannels)->voltage.interval = 0;
             continue;
         }
 
@@ -49,15 +49,15 @@ std::unique_ptr<DataAnalyzerResult> DataAnalyzer::convertData(const DSOsamples *
         }
 
         unsigned int size;
-        if (channel < scope->physicalChannels) {
-            size = data->data.at(channel).size();
+        if (channel < physicalChannels) {
+            size = (unsigned) data->data.at(channel).size();
             if (data->append) size += channelData->voltage.sample.size();
             result->challengeMaxSamples(size);
         } else
             size = result->getMaxSamples();
 
         // Physical channels
-        if (channel < scope->physicalChannels) {
+        if (channel < physicalChannels) {
             // Copy the buffer of the oscilloscope into the sample buffer
             if (data->append)
                 channelData->voltage.sample.insert(channelData->voltage.sample.end(), data->data.at(channel).begin(),
@@ -68,20 +68,20 @@ std::unique_ptr<DataAnalyzerResult> DataAnalyzer::convertData(const DSOsamples *
             // Resize the sample vector
             channelData->voltage.sample.resize(size);
             // Set sampling interval
-            result->modifyData(scope->physicalChannels)->voltage.interval = result->data(0)->voltage.interval;
+            result->modifyData(physicalChannels)->voltage.interval = result->data(0)->voltage.interval;
 
             // Resize the sample vector
-            result->modifyData(scope->physicalChannels)
+            result->modifyData(physicalChannels)
                 ->voltage.sample.resize(
                     qMin(result->data(0)->voltage.sample.size(), result->data(1)->voltage.sample.size()));
 
             // Calculate values and write them into the sample buffer
             std::vector<double>::const_iterator ch1Iterator = result->data(0)->voltage.sample.begin();
             std::vector<double>::const_iterator ch2Iterator = result->data(1)->voltage.sample.begin();
-            std::vector<double> &resultData = result->modifyData(scope->physicalChannels)->voltage.sample;
+            std::vector<double> &resultData = result->modifyData(physicalChannels)->voltage.sample;
             for (std::vector<double>::iterator resultIterator = resultData.begin(); resultIterator != resultData.end();
                  ++resultIterator) {
-                switch (scope->voltage[scope->physicalChannels].math) {
+                switch (scope->voltage[physicalChannels].math) {
                 case Dso::MathMode::ADD_CH1_CH2:
                     *resultIterator = *ch1Iterator + *ch2Iterator;
                     break;
@@ -105,7 +105,7 @@ DataAnalyzer::~DataAnalyzer() {
     if (window) fftw_free(window);
 }
 
-void DataAnalyzer::applySettings(DsoSettingsScope *scope) { this->scope = scope; }
+void DataAnalyzer::applySettings(DsoSettings *settings) { this->settings = settings; }
 
 void DataAnalyzer::setSourceData(const DSOsamples *data) { sourceData = data; }
 
@@ -113,8 +113,8 @@ std::unique_ptr<DataAnalyzerResult> DataAnalyzer::getNextResult() { return std::
 
 void DataAnalyzer::samplesAvailable() {
     if (sourceData == nullptr) return;
-    std::unique_ptr<DataAnalyzerResult> result = convertData(sourceData, scope);
-    spectrumAnalysis(result.get(), lastWindow, lastRecordLength, window, scope);
+    std::unique_ptr<DataAnalyzerResult> result = convertData(sourceData, &settings->scope,settings->deviceSpecification->channels);
+    spectrumAnalysis(result.get(), lastWindow, lastRecordLength, window, &settings->scope);
     lastResult.swap(result);
     emit analyzed();
 }
@@ -134,11 +134,11 @@ void DataAnalyzer::spectrumAnalysis(DataAnalyzerResult *result, Dso::WindowFunct
         }
 
         // Calculate new window
-        unsigned int sampleCount = channelData->voltage.sample.size();
+        size_t sampleCount = channelData->voltage.sample.size();
         if (!lastWindowBuffer || lastWindow != scope->spectrumWindow || lastRecordLength != sampleCount) {
             if (lastWindowBuffer) fftw_free(lastWindowBuffer);
             lastWindowBuffer = fftw_alloc_real(sampleCount);
-            lastRecordLength = sampleCount;
+            lastRecordLength = (unsigned)sampleCount;
 
             unsigned int windowEnd = lastRecordLength - 1;
             lastWindow = scope->spectrumWindow;

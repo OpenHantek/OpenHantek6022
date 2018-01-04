@@ -35,7 +35,7 @@
 ColorBox::ColorBox(QColor color, QWidget *parent) : QPushButton(parent) {
     this->setColor(color);
 
-    connect(this, SIGNAL(clicked()), this, SLOT(waitForColor()));
+    connect(this, &QAbstractButton::clicked, this, &ColorBox::waitForColor);
 }
 
 /// \brief Cleans up the widget.

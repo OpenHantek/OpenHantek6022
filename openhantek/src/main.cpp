@@ -16,7 +16,7 @@
 #include "settings.h"
 #include "usb/usbdevice.h"
 #include "dsomodel.h"
-#include "selectdevice/selectdevice.h"
+#include "selectdevice/selectsupporteddevice.h"
 
 using namespace Hantek;
 
@@ -45,10 +45,10 @@ int main(int argc, char *argv[]) {
     libusb_context *context = nullptr;
     int error = libusb_init(&context);
     if (error) {
-        SelectDevice().showLibUSBFailedDialogModel(error);
+        SelectSupportedDevice().showLibUSBFailedDialogModel(error);
         return -1;
     }
-    std::unique_ptr<USBDevice> device = SelectDevice().showSelectDeviceModal(context);
+    std::unique_ptr<USBDevice> device = SelectSupportedDevice().showSelectDeviceModal(context);
 
     QString errorMessage;
     if (device == nullptr || !device->connectDevice(errorMessage)) {
@@ -76,8 +76,8 @@ int main(int argc, char *argv[]) {
     QObject::connect(&dsoControl, &HantekDsoControl::samplesAvailable, &dataAnalyser, &DataAnalyzer::samplesAvailable);
 
     //////// Create settings object ////////
-    DsoSettings settings(dsoControl.getChannelCount());
-    dataAnalyser.applySettings(&settings.scope);
+    DsoSettings settings(dsoControl.getDeviceSettings(), &device->getModel()->specification);
+    dataAnalyser.applySettings(&settings);
 
     //////// Create main window ////////
     OpenHantekMainWindow *openHantekMainWindow = new OpenHantekMainWindow(&dsoControl, &dataAnalyser, &settings);

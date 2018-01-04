@@ -31,13 +31,12 @@ namespace Dso {
 /// \return The string that should be used in labels etc., empty when invalid.
 QString channelModeString(ChannelMode mode) {
     switch (mode) {
-    case CHANNELMODE_VOLTAGE:
+    case ChannelMode::Voltage:
         return QApplication::tr("Voltage");
-    case CHANNELMODE_SPECTRUM:
+    case ChannelMode::Spectrum:
         return QApplication::tr("Spectrum");
-    default:
-        return QString();
     }
+    return QString();
 }
 
 /// \brief Return string representation of the given graph format.
@@ -45,13 +44,12 @@ QString channelModeString(ChannelMode mode) {
 /// \return The string that should be used in labels etc.
 QString graphFormatString(GraphFormat format) {
     switch (format) {
-    case GRAPHFORMAT_TY:
+    case GraphFormat::TY:
         return QApplication::tr("T - Y");
-    case GRAPHFORMAT_XY:
+    case GraphFormat::XY:
         return QApplication::tr("X - Y");
-    default:
-        return QString();
     }
+    return QString();
 }
 
 /// \brief Return string representation of the given channel coupling.
@@ -59,15 +57,14 @@ QString graphFormatString(GraphFormat format) {
 /// \return The string that should be used in labels etc.
 QString couplingString(Coupling coupling) {
     switch (coupling) {
-    case COUPLING_AC:
+    case Coupling::AC:
         return QApplication::tr("AC");
-    case COUPLING_DC:
+    case Coupling::DC:
         return QApplication::tr("DC");
-    case COUPLING_GND:
+    case Coupling::GND:
         return QApplication::tr("GND");
-    default:
-        return QString();
     }
+    return QString();
 }
 
 /// \brief Return string representation of the given math mode.
@@ -81,9 +78,8 @@ QString mathModeString(MathMode mode) {
         return QApplication::tr("CH1 - CH2");
     case MathMode::SUB_CH1_FROM_CH2:
         return QApplication::tr("CH2 - CH1");
-    default:
-        return QString();
     }
+    return QString();
 }
 
 /// \brief Return string representation of the given trigger mode.
@@ -91,17 +87,16 @@ QString mathModeString(MathMode mode) {
 /// \return The string that should be used in labels etc.
 QString triggerModeString(TriggerMode mode) {
     switch (mode) {
-    case TRIGGERMODE_AUTO:
+    case TriggerMode::AUTO:
         return QApplication::tr("Auto");
-    case TRIGGERMODE_NORMAL:
+    case TriggerMode::NORMAL:
         return QApplication::tr("Normal");
-    case TRIGGERMODE_SINGLE:
+    case TriggerMode::SINGLE:
         return QApplication::tr("Single");
-    case TRIGGERMODE_SOFTWARE:
+    case TriggerMode::SOFTWARE:
         return QApplication::tr("Software");
-    default:
-        return QString();
     }
+    return QString();
 }
 
 /// \brief Return string representation of the given trigger slope.
@@ -109,9 +104,9 @@ QString triggerModeString(TriggerMode mode) {
 /// \return The string that should be used in labels etc.
 QString slopeString(Slope slope) {
     switch (slope) {
-    case SLOPE_POSITIVE:
+    case Slope::Positive:
         return QString::fromUtf8("\u2197");
-    case SLOPE_NEGATIVE:
+    case Slope::Negative:
         return QString::fromUtf8("\u2198");
     default:
         return QString();

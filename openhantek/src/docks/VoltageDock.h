@@ -4,12 +4,11 @@
 
 #include <QDockWidget>
 #include <QGridLayout>
+#include <QCheckBox>
+#include <QComboBox>
+#include <QLabel>
 
 #include "settings.h"
-
-class QLabel;
-class QCheckBox;
-class QComboBox;
 
 class SiSpinBox;
 
@@ -22,33 +21,45 @@ class VoltageDock : public QDockWidget {
   public:
     VoltageDock(DsoSettings *settings, QWidget *parent, Qt::WindowFlags flags = 0);
 
-    int setCoupling(int channel, Dso::Coupling coupling);
-    int setGain(int channel, double gain);
+    /// \brief Sets the coupling for a channel.
+    /// \param channel The channel, whose coupling should be set.
+    /// \param coupling The coupling-mode.
+    void setCoupling(ChannelID channel, unsigned couplingIndex);
+
+    /// \brief Sets the gain for a channel.
+    /// \param channel The channel, whose gain should be set.
+    /// \param gain The gain in volts.
+    void setGain(ChannelID channel, unsigned gainStepIndex);
+
+    /// \brief Sets the mode for the math channel.
+    /// \param mode The math-mode.
     void setMode(Dso::MathMode mode);
-    int setUsed(int channel, bool used);
+
+    /// \brief Enables/disables a channel.
+    /// \param channel The channel, that should be enabled/disabled.
+    /// \param used True if the channel should be enabled, false otherwise.
+    void setUsed(ChannelID channel, bool used);
 
   protected:
     void closeEvent(QCloseEvent *event);
 
     QGridLayout *dockLayout;           ///< The main layout for the dock window
     QWidget *dockWidget;               ///< The main widget for the dock window
-    QList<QCheckBox *> usedCheckBox;   ///< Enable/disable a specific channel
-    QList<QComboBox *> gainComboBox;   ///< Select the vertical gain for the channels
-    QList<QComboBox *> miscComboBox;   ///< Select coupling for real and mode for math channels
-    QList<QCheckBox *> invertCheckBox; ///< Select if the channels should be displayed inverted
+
+    struct ChannelBlock {
+        QCheckBox * usedCheckBox;   ///< Enable/disable a specific channel
+        QComboBox * gainComboBox;   ///< Select the vertical gain for the channels
+        QComboBox * miscComboBox;   ///< Select coupling for real and mode for math channels
+        QCheckBox * invertCheckBox; ///< Select if the channels should be displayed inverted
+    };
+
+    std::vector<ChannelBlock> channelBlocks;
 
     DsoSettings *settings; ///< The settings provided by the parent class
 
     QStringList couplingStrings; ///< The strings for the couplings
     QStringList modeStrings;     ///< The strings for the math mode
-    QList<double> gainSteps;     ///< The selectable gain steps
     QStringList gainStrings;     ///< String representations for the gain steps
-
-  protected slots:
-    void gainSelected(int index);
-    void miscSelected(int index);
-    void usedSwitched(bool checked);
-    void invertSwitched(bool checked);
 
   signals:
     void couplingChanged(unsigned int channel, Dso::Coupling coupling); ///< A coupling has been selected

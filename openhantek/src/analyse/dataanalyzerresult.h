@@ -3,6 +3,7 @@
 #pragma once
 
 #include <vector>
+#include "hantekprotocol/definitions.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 /// \struct SampleValues                                          dataanalyzer.h
@@ -25,8 +26,8 @@ struct DataChannel {
 class DataAnalyzerResult {
   public:
     DataAnalyzerResult(unsigned int channelCount);
-    const DataChannel *data(unsigned channel) const;
-    DataChannel *modifyData(unsigned channel);
+    const DataChannel *data(ChannelID channel) const;
+    DataChannel *modifyData(ChannelID channel);
     unsigned int sampleCount() const;
     unsigned int channelCount() const;
 

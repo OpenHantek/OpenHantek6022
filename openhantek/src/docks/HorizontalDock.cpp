@@ -59,8 +59,8 @@ HorizontalDock::HorizontalDock(DsoSettings *settings, QWidget *parent, Qt::Windo
 
     this->formatLabel = new QLabel(tr("Format"));
     this->formatComboBox = new QComboBox();
-    for (int format = Dso::GRAPHFORMAT_TY; format < Dso::GRAPHFORMAT_COUNT; ++format)
-        this->formatComboBox->addItem(Dso::graphFormatString((Dso::GraphFormat)format));
+    for (Dso::GraphFormat format: Dso::GraphFormatEnum)
+        this->formatComboBox->addItem(Dso::graphFormatString(format));
 
     this->dockLayout = new QGridLayout();
     this->dockLayout->setColumnMinimumWidth(0, 64);
@@ -156,7 +156,7 @@ void HorizontalDock::setRecordLength(unsigned int recordLength) {
 /// \return Index of format-value, -1 on error.
 int HorizontalDock::setFormat(Dso::GraphFormat format) {
     QSignalBlocker blocker(formatComboBox);
-    if (format >= Dso::GRAPHFORMAT_TY && format <= Dso::GRAPHFORMAT_XY) {
+    if (format >= Dso::GraphFormat::TY && format <= Dso::GraphFormat::XY) {
         formatComboBox->setCurrentIndex(format);
         return format;
     }

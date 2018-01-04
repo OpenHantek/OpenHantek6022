@@ -90,9 +90,9 @@ DsoConfigDialog::DsoConfigDialog(DsoSettings *settings, QWidget *parent, Qt::Win
     this->mainLayout->addLayout(this->buttonsLayout);
     this->setLayout(this->mainLayout);
 
-    connect(this->acceptButton, SIGNAL(clicked()), this, SLOT(accept()));
-    connect(this->applyButton, SIGNAL(clicked()), this, SLOT(apply()));
-    connect(this->rejectButton, SIGNAL(clicked()), this, SLOT(reject()));
+    connect(this->acceptButton, &QAbstractButton::clicked, this, &DsoConfigDialog::accept);
+    connect(this->applyButton, &QAbstractButton::clicked, this, &DsoConfigDialog::apply);
+    connect(this->rejectButton, &QAbstractButton::clicked, this, &QDialog::reject);
 }
 
 /// \brief Cleans up the dialog.
@@ -116,8 +116,8 @@ void DsoConfigDialog::createIcons() {
     scopeButton->setIcon(QIcon(":config/scope.png"));
     scopeButton->setText(tr("Scope"));
 
-    connect(contentsWidget, SIGNAL(currentItemChanged(QListWidgetItem *, QListWidgetItem *)), this,
-            SLOT(changePage(QListWidgetItem *, QListWidgetItem *)));
+    connect(contentsWidget, &QListWidget::currentItemChanged, this,
+            &DsoConfigDialog::changePage);
 }
 
 /// \brief Saves the settings and closes the dialog.

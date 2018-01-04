@@ -291,8 +291,6 @@ void OpenHantekMainWindow::connectSignals() {
     connect(horizontalDock, &HorizontalDock::timebaseChanged, this, &OpenHantekMainWindow::timebaseSelected);
     connect(horizontalDock, &HorizontalDock::frequencybaseChanged, dsoWidget, &DsoWidget::updateFrequencybase);
     connect(horizontalDock, &HorizontalDock::recordLengthChanged, this, &OpenHantekMainWindow::recordLengthSelected);
-    // connect(horizontalDock, SIGNAL(formatChanged(HorizontalFormat)),
-    // dsoWidget, SLOT(horizontalFormatChanged(HorizontalFormat)));
 
     connect(triggerDock, &TriggerDock::modeChanged, dsoControl, &HantekDsoControl::setTriggerMode);
     connect(triggerDock, &TriggerDock::modeChanged, dsoWidget, &DsoWidget::updateTriggerMode);
@@ -332,13 +330,13 @@ void OpenHantekMainWindow::connectSignals() {
 
 /// \brief Initialize the device with the current settings.
 void OpenHantekMainWindow::applySettingsToDevice() {
-    for (unsigned int channel = 0; channel < settings->scope.physicalChannels; ++channel) {
-        dsoControl->setCoupling(channel, settings->scope.voltage[channel].coupling);
+    for (unsigned int channel = 0; channel < settings->deviceSpecification->channels; ++channel) {
+        dsoControl->setCoupling(channel, settings->coupling(channel));
         updateVoltageGain(channel);
         updateOffset(channel);
         dsoControl->setTriggerLevel(channel, settings->scope.voltage[channel].trigger);
     }
-    updateUsed(settings->scope.physicalChannels);
+    updateUsed(settings->deviceSpecification->channels);
     if (settings->scope.horizontal.samplerateSet)
         samplerateSelected();
     else
@@ -468,7 +466,7 @@ void OpenHantekMainWindow::timebaseSelected() {
 /// \brief Sets the offset of the oscilloscope for the given channel.
 /// \param channel The channel that got a new offset.
 void OpenHantekMainWindow::updateOffset(unsigned int channel) {
-    if (channel >= settings->scope.physicalChannels) return;
+    if (channel >= settings->deviceSpecification->channels) return;
 
     dsoControl->setOffset(channel, (settings->scope.voltage[channel].offset / DIVS_VOLTAGE) + 0.5);
 }
@@ -478,16 +476,16 @@ void OpenHantekMainWindow::updateOffset(unsigned int channel) {
 void OpenHantekMainWindow::updateUsed(unsigned int channel) {
     if (channel >= (unsigned int)settings->scope.voltage.size()) return;
 
-    bool mathUsed = settings->scope.voltage[settings->scope.physicalChannels].used |
-                    settings->scope.spectrum[settings->scope.physicalChannels].used;
+    bool mathUsed = settings->scope.voltage[settings->deviceSpecification->channels].used |
+                    settings->scope.spectrum[settings->deviceSpecification->channels].used;
 
     // Normal channel, check if voltage/spectrum or math channel is used
-    if (channel < settings->scope.physicalChannels)
+    if (channel < settings->deviceSpecification->channels)
         dsoControl->setChannelUsed(
             channel, mathUsed | settings->scope.voltage[channel].used | settings->scope.spectrum[channel].used);
     // Math channel, update all channels
-    else if (channel == settings->scope.physicalChannels) {
-        for (unsigned int channelCounter = 0; channelCounter < settings->scope.physicalChannels; ++channelCounter)
+    else if (channel == settings->deviceSpecification->channels) {
+        for (unsigned int channelCounter = 0; channelCounter < settings->deviceSpecification->channels; ++channelCounter)
             dsoControl->setChannelUsed(channelCounter,
                                        mathUsed | settings->scope.voltage[channelCounter].used |
                                            settings->scope.spectrum[channelCounter].used);
@@ -497,7 +495,7 @@ void OpenHantekMainWindow::updateUsed(unsigned int channel) {
 /// \brief Sets the gain of the oscilloscope for the given channel.
 /// \param channel The channel that got a new gain value.
 void OpenHantekMainWindow::updateVoltageGain(unsigned int channel) {
-    if (channel >= settings->scope.physicalChannels) return;
+    if (channel >= settings->deviceSpecification->channels) return;
 
-    dsoControl->setGain(channel, settings->scope.voltage[channel].gain * DIVS_VOLTAGE);
+    dsoControl->setGain(channel, settings->scope.gain(channel) * DIVS_VOLTAGE);
 }

@@ -3,11 +3,16 @@
 #include "definitions.h"
 #include "usb/usbdevicedefinitions.h"
 #include "utils/dataarray.h"
+#include "controlcode.h"
 
 namespace Hantek {
 class ControlCommand : public DataArray<uint8_t> {
 protected:
-    ControlCommand(unsigned size): DataArray<uint8_t>(size) {}
+    ControlCommand(ControlCode code, unsigned size): DataArray<uint8_t>(size), code(code) {}
+public:
+    bool pending = false;
+    ControlCode code;
+    ControlCommand* next = nullptr;
 };
 
 struct ControlSetOffset : public ControlCommand {

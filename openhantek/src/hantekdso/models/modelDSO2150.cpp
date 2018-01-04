@@ -1,13 +1,11 @@
 #include "modelDSO2150.h"
 #include "hantekprotocol/bulkStructs.h"
+#include "hantekprotocol/controlStructs.h"
 #include "hantekdsocontrol.h"
 
 using namespace Hantek;
 
-ModelDSO2150::ModelDSO2150() : DSOModel(ID, 0x04b5, 0x2150, 0x04b4, 0x2150, "dso2150x86", "DSO-2150", Hantek::ControlSpecification()) {
-    specification.command.control.setOffset = CONTROL_SETOFFSET;
-    specification.command.control.setRelays = CONTROL_SETRELAYS;
-    specification.command.bulk.setGain = BulkCode::SETGAIN;
+ModelDSO2150::ModelDSO2150() : DSOModel(ID, 0x04b5, 0x2150, 0x04b4, 0x2150, "dso2150x86", "DSO-2150", Dso::ControlSpecification()) {
     specification.command.bulk.setRecordLength = BulkCode::SETTRIGGERANDSAMPLERATE;
     specification.command.bulk.setChannels = BulkCode::SETTRIGGERANDSAMPLERATE;
     specification.command.bulk.setSamplerate = BulkCode::SETTRIGGERANDSAMPLERATE;
@@ -32,8 +30,7 @@ ModelDSO2150::ModelDSO2150() : DSOModel(ID, 0x04b5, 0x2150, 0x04b4, 0x2150, "dso
 }
 
 void ModelDSO2150::applyRequirements(HantekDsoControl *dsoControl) const {
-    dsoControl->command[(uint8_t)BulkCode::SETTRIGGERANDSAMPLERATE] = new BulkSetTriggerAndSamplerate();
-    dsoControl->commandPending[(uint8_t)BulkCode::SETTRIGGERANDSAMPLERATE] = true;
-    dsoControl->controlPending[CONTROLINDEX_SETOFFSET] = true;
-    dsoControl->controlPending[CONTROLINDEX_SETRELAYS] = true;
+    dsoControl->addCommand(BulkCode::SETTRIGGERANDSAMPLERATE, new BulkSetTriggerAndSamplerate());
+    dsoControl->addCommand(ControlCode::CONTROL_SETOFFSET, new ControlSetOffset());
+    dsoControl->addCommand(ControlCode::CONTROL_SETRELAYS, new ControlSetRelays());
 }

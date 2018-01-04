@@ -19,6 +19,7 @@ include_directories(src/ src/hantekdso src/widgets src/docks src/configdialog)
 # collect sources and other files
 file(GLOB_RECURSE SRC "src/*.cpp")
 file(GLOB_RECURSE HEADERS "src/*.h")
+file(GLOB_RECURSE UI "src/*.ui")
 file(GLOB_RECURSE QRC "res/*.qrc")
 
 add_custom_target(format SOURCES ".clang-format"
@@ -29,7 +30,7 @@ add_subdirectory(translations)
 add_definitions(-DVERSION="${CPACK_PACKAGE_VERSION}")
 
 # make executable
-add_executable(${PROJECT_NAME} ${SRC} ${HEADERS} ${QRC} ${TRANSLATION_BIN_FILES} ${TRANSLATION_QRC})
+add_executable(${PROJECT_NAME} ${SRC} ${HEADERS} ${UI} ${QRC} ${TRANSLATION_BIN_FILES} ${TRANSLATION_QRC})
 target_link_libraries(${PROJECT_NAME} Qt5::Widgets Qt5::PrintSupport Qt5::OpenGL ${OPENGL_LIBRARIES} )
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_range_for)
 if(MSVC)

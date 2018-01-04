@@ -46,9 +46,9 @@ class DsoConfigColorsPage : public QWidget {
     QLabel *graphLabel;
 
     QLabel *screenChannelLabel, *screenSpectrumLabel, *printChannelLabel, *printSpectrumLabel;
-    QList<QLabel *> colorLabel;
-    QList<ColorBox *> screenChannelColorBox;
-    QList<ColorBox *> screenSpectrumColorBox;
-    QList<ColorBox *> printChannelColorBox;
-    QList<ColorBox *> printSpectrumColorBox;
+    std::vector<QLabel *> colorLabel;
+    std::vector<ColorBox *> screenChannelColorBox;
+    std::vector<ColorBox *> screenSpectrumColorBox;
+    std::vector<ColorBox *> printChannelColorBox;
+    std::vector<ColorBox *> printSpectrumColorBox;
 };

@@ -1,8 +1,9 @@
 #pragma once
 
+#include "controlspecification.h"
 #include "enums.h"
 
-namespace Hantek {
+namespace Dso {
 
 struct ControlSamplerateLimits;
 
@@ -10,9 +11,9 @@ struct ControlSamplerateLimits;
 /// \struct ControlSettingsSamplerateTarget                   hantek/control.h
 /// \brief Stores the target samplerate settings of the device.
 struct ControlSettingsSamplerateTarget {
-    double samplerate;  ///< The target samplerate set via setSamplerate
-    double duration;    ///< The target record time set via setRecordTime
-    bool samplerateSet; ///< true means samplerate was set last, false duration
+    double samplerate; ///< The target samplerate set via setSamplerate
+    double duration;   ///< The target record time set via setRecordTime
+    enum SamplerrateSet { Duration, Samplerrate } samplerateSet;
 };
 
 //////////////////////////////////////////////////////////////////////////////
@@ -21,21 +22,21 @@ struct ControlSettingsSamplerateTarget {
 struct ControlSettingsSamplerate {
     ControlSettingsSamplerateTarget target; ///< The target samplerate values
     ControlSamplerateLimits *limits;        ///< The samplerate limits
-    unsigned int downsampler = 1;               ///< The variable downsampling factor
-    double current = 1e8;                         ///< The current samplerate
+    unsigned int downsampler = 1;           ///< The variable downsampling factor
+    double current = 1e8;                   ///< The current samplerate
 };
 
 //////////////////////////////////////////////////////////////////////////////
 /// \struct ControlSettingsTrigger                            hantek/control.h
 /// \brief Stores the current trigger settings of the device.
 struct ControlSettingsTrigger {
-    std::vector<double> level; ///< The trigger level for each channel in V
-    double position = 0.0;               ///< The current pretrigger position
-    unsigned int point = 0;            ///< The trigger position in Hantek coding
-    Dso::TriggerMode mode = Dso::TRIGGERMODE_NORMAL;         ///< The trigger mode
-    Dso::Slope slope = Dso::SLOPE_POSITIVE;              ///< The trigger slope
-    bool special = false;                  ///< true, if the trigger source is special
-    unsigned int source = 0;           ///< The trigger source
+    std::vector<double> level;                       ///< The trigger level for each channel in V
+    double position = 0.0;                           ///< The current pretrigger position
+    unsigned int point = 0;                          ///< The trigger position in Hantek coding
+    Dso::TriggerMode mode = Dso::TriggerMode::NORMAL; ///< The trigger mode
+    Dso::Slope slope = Dso::Slope::Positive;          ///< The trigger slope
+    bool special = false;                            ///< true, if the trigger source is special
+    unsigned int source = 0;                         ///< The trigger source
 };
 
 //////////////////////////////////////////////////////////////////////////////
@@ -53,14 +54,12 @@ struct ControlSettingsVoltage {
 /// \brief Stores the current settings of the device.
 struct ControlSettings {
     ControlSettings(ControlSamplerateLimits *limits, size_t channelCount);
-    ControlSettingsSamplerate samplerate;            ///< The samplerate settings
+    ControlSettingsSamplerate samplerate;        ///< The samplerate settings
     std::vector<ControlSettingsVoltage> voltage; ///< The amplification settings
-    ControlSettingsTrigger trigger;                  ///< The trigger settings
-    unsigned recordLengthId = 1;                     ///< The id in the record length array
-    unsigned usedChannels = 0;                 ///< Number of activated channels
+    ControlSettingsTrigger trigger;              ///< The trigger settings
+    RecordLengthID recordLengthId = 1;           ///< The id in the record length array
+    unsigned usedChannels = 0;                   ///< Number of activated channels
     // Software trigger, margin
     const unsigned swtriggerSampleMargin = 2000;
 };
-
 }
-

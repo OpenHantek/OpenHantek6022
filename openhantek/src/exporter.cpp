@@ -20,6 +20,7 @@
 #include "analyse/dataanalyzerresult.h"
 #include "glgenerator.h"
 #include "settings.h"
+#include "viewconstants.h"
 #include "utils/dsoStrings.h"
 #include "utils/printutils.h"
 
@@ -145,16 +146,16 @@ bool Exporter::exportSamples(const DataAnalyzerResult *result) {
                 painter.setPen(colorValues->voltage[channel]);
                 painter.drawText(QRectF(0, top, lineHeight * 4, lineHeight), settings->scope.voltage[channel].name);
                 // Print coupling/math mode
-                if ((unsigned int)channel < settings->scope.physicalChannels)
+                if ((unsigned int)channel < settings->deviceSpecification->channels)
                     painter.drawText(QRectF(lineHeight * 4, top, lineHeight * 2, lineHeight),
-                                     Dso::couplingString(settings->scope.voltage[channel].coupling));
+                                     Dso::couplingString(settings->coupling(channel)));
                 else
                     painter.drawText(QRectF(lineHeight * 4, top, lineHeight * 2, lineHeight),
                                      Dso::mathModeString(settings->scope.voltage[channel].math));
 
                 // Print voltage gain
                 painter.drawText(QRectF(lineHeight * 6, top, stretchBase * 2, lineHeight),
-                                 valueToString(settings->scope.voltage[channel].gain, UNIT_VOLTS, 0) + tr("/div"),
+                                 valueToString(settings->scope.gain(channel), UNIT_VOLTS, 0) + tr("/div"),
                                  QTextOption(Qt::AlignRight));
                 // Print spectrum magnitude
                 if (settings->scope.spectrum[channel].used) {
@@ -229,9 +230,9 @@ bool Exporter::exportSamples(const DataAnalyzerResult *result) {
 
         for (int zoomed = 0; zoomed < (settings->view.zoom ? 2 : 1); ++zoomed) {
             switch (settings->scope.horizontal.format) {
-            case Dso::GRAPHFORMAT_TY:
+            case Dso::GraphFormat::TY:
                 // Add graphs for channels
-                for (int channel = 0; channel < settings->scope.voltage.size(); ++channel) {
+                for (ChannelID channel = 0; channel < settings->scope.voltage.size(); ++channel) {
                     if (settings->scope.voltage[channel].used && result->data(channel)) {
                         painter.setPen(QPen(colorValues->voltage[channel], 0));
 
@@ -257,7 +258,7 @@ bool Exporter::exportSamples(const DataAnalyzerResult *result) {
                         for (unsigned int position = firstPosition; position <= lastPosition; ++position)
                             graph[position - firstPosition] = QPointF(position * horizontalFactor - DIVS_TIME / 2,
                                                                       result->data(channel)->voltage.sample[position] /
-                                                                              settings->scope.voltage[channel].gain +
+                                                                              settings->scope.gain(channel) +
                                                                           settings->scope.voltage[channel].offset);
 
                         painter.drawPolyline(graph, lastPosition - firstPosition + 1);
@@ -266,7 +267,7 @@ bool Exporter::exportSamples(const DataAnalyzerResult *result) {
                 }
 
                 // Add spectrum graphs
-                for (unsigned channel = 0; channel < settings->scope.spectrum.size(); ++channel) {
+                for (ChannelID channel = 0; channel < settings->scope.spectrum.size(); ++channel) {
                     if (settings->scope.spectrum[channel].used && result->data(channel)) {
                         painter.setPen(QPen(colorValues->spectrum[channel], 0));
 
@@ -302,7 +303,7 @@ bool Exporter::exportSamples(const DataAnalyzerResult *result) {
                 }
                 break;
 
-            case Dso::GRAPHFORMAT_XY:
+            case Dso::GraphFormat::XY:
                 break;
 
             default:

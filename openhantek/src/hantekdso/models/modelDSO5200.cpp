@@ -1,13 +1,11 @@
 #include "modelDSO5200.h"
 #include "hantekprotocol/bulkStructs.h"
+#include "hantekprotocol/controlStructs.h"
 #include "hantekdsocontrol.h"
 
 using namespace Hantek;
 
-ModelDSO5200::ModelDSO5200() : DSOModel(ID, 0x04b5, 0x5200, 0x04b4, 0x5200, "dso5200x86", "DSO-5200", Hantek::ControlSpecification()) {
-    specification.command.control.setOffset = CONTROL_SETOFFSET;
-    specification.command.control.setRelays = CONTROL_SETRELAYS;
-    specification.command.bulk.setGain = BulkCode::SETGAIN;
+ModelDSO5200::ModelDSO5200() : DSOModel(ID, 0x04b5, 0x5200, 0x04b4, 0x5200, "dso5200x86", "DSO-5200", Dso::ControlSpecification()) {
     specification.command.bulk.setRecordLength = BulkCode::DSETBUFFER;
     specification.command.bulk.setChannels = BulkCode::ESETTRIGGERORSAMPLERATE;
     specification.command.bulk.setSamplerate = BulkCode::CSETTRIGGERORSAMPLERATE;
@@ -35,15 +33,11 @@ ModelDSO5200::ModelDSO5200() : DSOModel(ID, 0x04b5, 0x5200, 0x04b4, 0x5200, "dso
 
 void ModelDSO5200::applyRequirements(HantekDsoControl *dsoControl) const {
     // Instantiate additional commands for the DSO-5200
-    dsoControl->command[(uint8_t)BulkCode::CSETTRIGGERORSAMPLERATE] = new BulkSetSamplerate5200();
-    dsoControl->command[(uint8_t)BulkCode::DSETBUFFER] = new BulkSetBuffer5200();
-    dsoControl->command[(uint8_t)BulkCode::ESETTRIGGERORSAMPLERATE] = new BulkSetTrigger5200();
-    dsoControl->commandPending[(uint8_t)BulkCode::CSETTRIGGERORSAMPLERATE] = true;
-    dsoControl->commandPending[(uint8_t)BulkCode::DSETBUFFER] = true;
-    dsoControl->commandPending[(uint8_t)BulkCode::ESETTRIGGERORSAMPLERATE] = true;
-
-    dsoControl->controlPending[CONTROLINDEX_SETOFFSET] = true;
-    dsoControl->controlPending[CONTROLINDEX_SETRELAYS] = true;
+    dsoControl->addCommand(BulkCode::CSETTRIGGERORSAMPLERATE, new BulkSetSamplerate5200());
+    dsoControl->addCommand(BulkCode::DSETBUFFER, new BulkSetBuffer5200());
+    dsoControl->addCommand(BulkCode::ESETTRIGGERORSAMPLERATE, new BulkSetTrigger5200());
+    dsoControl->addCommand(ControlCode::CONTROL_SETOFFSET, new ControlSetOffset());
+    dsoControl->addCommand(ControlCode::CONTROL_SETRELAYS, new ControlSetRelays());
 }
 
 ModelDSO5200A::ModelDSO5200A() {
