@@ -38,14 +38,14 @@ class LevelSlider : public QWidget {
     int postMargin() const;
 
     int addSlider(int index = -1);
-    int addSlider(QString text, int index = -1);
+    int addSlider(const QString &text, int index = -1);
     int removeSlider(int index = -1);
 
     // Parameters for a specific slider
     const QColor color(int index) const;
     void setColor(unsigned index, QColor color);
     const QString text(int index) const;
-    int setText(int index, QString text);
+    int setText(int index, const QString &text);
     bool visible(int index) const;
     void setIndexVisible(unsigned index, bool visible);
 

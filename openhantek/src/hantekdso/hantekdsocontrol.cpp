@@ -659,7 +659,7 @@ Dso::ErrorCode HantekDsoControl::setSamplerate(double samplerate) {
 
         // Check for Roll mode
         if (!isRollMode())
-            emit recordTimeChanged((double)(getRecordLength() - controlsettings.swtriggerSampleMargin) /
+            emit recordTimeChanged((double)(getRecordLength() - controlsettings.swTrigger.sampleMargin) /
                                    controlsettings.samplerate.current);
         emit samplerateChanged(controlsettings.samplerate.current);
 
@@ -709,7 +709,7 @@ Dso::ErrorCode HantekDsoControl::setRecordTime(double duration) {
         unsigned sampleId;
         for (sampleId = 0; sampleId < specification.fixedSampleRates.size(); ++sampleId) {
             if (specification.fixedSampleRates[sampleId].samplerate * duration <
-                (sampleCount - controlsettings.swtriggerSampleMargin))
+                (sampleCount - controlsettings.swTrigger.sampleMargin))
                 break;
         }
         // Usable sample value

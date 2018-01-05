@@ -13,7 +13,7 @@
 #include "HorizontalDock.h"
 #include "dockwindows.h"
 
-#include "settings.h"
+#include "scopesettings.h"
 #include "sispinbox.h"
 #include "utils/dsoStrings.h"
 #include "utils/printutils.h"
@@ -25,14 +25,8 @@ template<typename... Args> struct SELECT {
     }
 };
 
-////////////////////////////////////////////////////////////////////////////////
-// class HorizontalDock
-/// \brief Initializes the horizontal axis docking window.
-/// \param settings The target settings object.
-/// \param parent The parent widget.
-/// \param flags Flags for the window manager.
-HorizontalDock::HorizontalDock(DsoSettings *settings, QWidget *parent, Qt::WindowFlags flags)
-    : QDockWidget(tr("Horizontal"), parent, flags), settings(settings) {
+HorizontalDock::HorizontalDock(DsoSettingsScope *scope, QWidget *parent, Qt::WindowFlags flags)
+    : QDockWidget(tr("Horizontal"), parent, flags), scope(scope) {
 
     // Initialize elements
     this->samplerateLabel = new QLabel(tr("Samplerate"));
@@ -87,11 +81,11 @@ HorizontalDock::HorizontalDock(DsoSettings *settings, QWidget *parent, Qt::Windo
     connect(this->formatComboBox, SELECT<int>::OVERLOAD_OF(&QComboBox::currentIndexChanged), this, &HorizontalDock::formatSelected);
 
     // Set values
-    this->setSamplerate(settings->scope.horizontal.samplerate);
-    this->setTimebase(settings->scope.horizontal.timebase);
-    this->setFrequencybase(settings->scope.horizontal.frequencybase);
-    // this->setRecordLength(settings->scope.horizontal.recordLength);
-    this->setFormat(settings->scope.horizontal.format);
+    this->setSamplerate(scope->horizontal.samplerate);
+    this->setTimebase(scope->horizontal.timebase);
+    this->setFrequencybase(scope->horizontal.frequencybase);
+    // this->setRecordLength(scope->horizontal.recordLength);
+    this->setFormat(scope->horizontal.format);
 }
 
 /// \brief Don't close the dock, just hide it.
@@ -102,22 +96,16 @@ void HorizontalDock::closeEvent(QCloseEvent *event) {
     event->accept();
 }
 
-/// \brief Changes the frequencybase.
-/// \param frequencybase The frequencybase in hertz.
 void HorizontalDock::setFrequencybase(double frequencybase) {
     QSignalBlocker blocker(frequencybaseSiSpinBox);
     frequencybaseSiSpinBox->setValue(frequencybase);
 }
 
-/// \brief Changes the samplerate.
-/// \param samplerate The samplerate in seconds.
 void HorizontalDock::setSamplerate(double samplerate) {
     QSignalBlocker blocker(samplerateSiSpinBox);
     samplerateSiSpinBox->setValue(samplerate);
 }
 
-/// \brief Changes the timebase.
-/// \param timebase The timebase in seconds.
 double HorizontalDock::setTimebase(double timebase) {
     QSignalBlocker blocker(timebaseSiSpinBox);
     // timebaseSteps are repeated in each decade
@@ -138,12 +126,10 @@ int addRecordLength(QComboBox *recordLengthComboBox, unsigned recordLength) {
     return recordLengthComboBox->count()-1;
 }
 
-/// \brief Changes the record length if the new value is supported.
-/// \param recordLength The record length in samples.
 void HorizontalDock::setRecordLength(unsigned int recordLength) {
     QSignalBlocker blocker(recordLengthComboBox);
     int index = recordLengthComboBox->findData(recordLength);
-    settings->scope.horizontal.recordLength = recordLength;
+    scope->horizontal.recordLength = recordLength;
 
     if (index == -1) {
         index = addRecordLength(recordLengthComboBox, recordLength);
@@ -151,9 +137,6 @@ void HorizontalDock::setRecordLength(unsigned int recordLength) {
     recordLengthComboBox->setCurrentIndex(index);
 }
 
-/// \brief Changes the format if the new value is supported.
-/// \param format The format for the horizontal axis.
-/// \return Index of format-value, -1 on error.
 int HorizontalDock::setFormat(Dso::GraphFormat format) {
     QSignalBlocker blocker(formatComboBox);
     if (format >= Dso::GraphFormat::TY && format <= Dso::GraphFormat::XY) {
@@ -164,9 +147,7 @@ int HorizontalDock::setFormat(Dso::GraphFormat format) {
     return -1;
 }
 
-/// \brief Updates the available record lengths in the combo box.
-/// \param recordLengths The available record lengths for the combo box.
-void HorizontalDock::availableRecordLengthsChanged(const std::vector<unsigned> &recordLengths) {
+void HorizontalDock::setAvailableRecordLengths(const std::vector<unsigned> &recordLengths) {
     QSignalBlocker blocker(recordLengthComboBox);
 
     recordLengthComboBox->clear();
@@ -174,22 +155,16 @@ void HorizontalDock::availableRecordLengthsChanged(const std::vector<unsigned> &
         addRecordLength(recordLengthComboBox, recordLength);
     }
 
-    setRecordLength(settings->scope.horizontal.recordLength);
+    setRecordLength(scope->horizontal.recordLength);
 }
 
-/// \brief Updates the minimum and maximum of the samplerate spin box.
-/// \param minimum The minimum value the spin box should accept.
-/// \param maximum The minimum value the spin box should accept.
-void HorizontalDock::samplerateLimitsChanged(double minimum, double maximum) {
+void HorizontalDock::setSamplerateLimits(double minimum, double maximum) {
     QSignalBlocker blocker(samplerateSiSpinBox);
     this->samplerateSiSpinBox->setMinimum(minimum);
     this->samplerateSiSpinBox->setMaximum(maximum);
 }
 
-/// \brief Updates the mode and steps of the samplerate spin box.
-/// \param mode The mode value the spin box should accept.
-/// \param steps The steps value the spin box should accept.
-void HorizontalDock::samplerateSet(int mode, QList<double> steps) {
+void HorizontalDock::setSamplerateSteps(int mode, QList<double> steps) {
     QSignalBlocker blocker(samplerateSiSpinBox);
     this->samplerateSiSpinBox->setMode(mode);
     this->samplerateSiSpinBox->setSteps(steps);
@@ -198,36 +173,36 @@ void HorizontalDock::samplerateSet(int mode, QList<double> steps) {
 /// \brief Called when the frequencybase spinbox changes its value.
 /// \param frequencybase The frequencybase in hertz.
 void HorizontalDock::frequencybaseSelected(double frequencybase) {
-    settings->scope.horizontal.frequencybase = frequencybase;
+    scope->horizontal.frequencybase = frequencybase;
     emit frequencybaseChanged(frequencybase);
 }
 
 /// \brief Called when the samplerate spinbox changes its value.
 /// \param samplerate The samplerate in samples/second.
 void HorizontalDock::samplerateSelected(double samplerate) {
-    settings->scope.horizontal.samplerate = samplerate;
-    settings->scope.horizontal.samplerateSet = true;
+    scope->horizontal.samplerate = samplerate;
+    scope->horizontal.samplerateSet = true;
     emit samplerateChanged(samplerate);
 }
 
 /// \brief Called when the timebase spinbox changes its value.
 /// \param timebase The timebase in seconds.
 void HorizontalDock::timebaseSelected(double timebase) {
-    settings->scope.horizontal.timebase = timebase;
-    settings->scope.horizontal.samplerateSet = false;
+    scope->horizontal.timebase = timebase;
+    scope->horizontal.samplerateSet = false;
     emit timebaseChanged(timebase);
 }
 
 /// \brief Called when the record length combo box changes its value.
 /// \param index The index of the combo box item.
 void HorizontalDock::recordLengthSelected(int index) {
-    settings->scope.horizontal.recordLength = this->recordLengthComboBox->itemData(index).toUInt();
+    scope->horizontal.recordLength = this->recordLengthComboBox->itemData(index).toUInt();
     emit recordLengthChanged(index);
 }
 
 /// \brief Called when the format combo box changes its value.
 /// \param index The index of the combo box item.
 void HorizontalDock::formatSelected(int index) {
-    settings->scope.horizontal.format = (Dso::GraphFormat)index;
-    emit formatChanged(settings->scope.horizontal.format);
+    scope->horizontal.format = (Dso::GraphFormat)index;
+    emit formatChanged(scope->horizontal.format);
 }

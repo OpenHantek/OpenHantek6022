@@ -5,16 +5,12 @@
 #include <vector>
 #include "hantekprotocol/definitions.h"
 
-////////////////////////////////////////////////////////////////////////////////
-/// \struct SampleValues                                          dataanalyzer.h
 /// \brief Struct for a array of sample values.
 struct SampleValues {
     std::vector<double> sample; ///< Vector holding the sampling data
     double interval = 0.0;      ///< The interval between two sample values
 };
 
-////////////////////////////////////////////////////////////////////////////////
-/// \struct AnalyzedData                                          dataanalyzer.h
 /// \brief Struct for the analyzed data.
 struct DataChannel {
     SampleValues voltage;   ///< The time-domain voltage levels (V)
@@ -23,6 +19,7 @@ struct DataChannel {
     double frequency = 0.0; ///< The frequency of the signal
 };
 
+/// A result from the { @link DataAnalyzer } class.
 class DataAnalyzerResult {
   public:
     DataAnalyzerResult(unsigned int channelCount);

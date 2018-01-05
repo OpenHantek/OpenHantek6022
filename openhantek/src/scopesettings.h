@@ -7,6 +7,7 @@
 #include "analyse/enums.h"
 #include "hantekdso/enums.h"
 #include "hantekprotocol/definitions.h"
+#include "hantekdso/controlspecification.h"
 #include <vector>
 
 #define MARKER_COUNT 2 ///< Number of markers
@@ -72,4 +73,12 @@ struct DsoSettingsScope {
     double gain(unsigned channel) const {
         return gainSteps[voltage[channel].gainStepIndex];
     }
+    bool anyUsed(ChannelID channel) {
+        return voltage[channel].used | spectrum[channel].used;
+    }
+
+    Dso::Coupling coupling(ChannelID channel, const Dso::ControlSpecification* deviceSpecification) {
+        return deviceSpecification->couplings[voltage[channel].couplingIndex];
+    }
+
 };

@@ -29,8 +29,8 @@ class BulkSetFilter : public BulkCommand {
     BulkSetFilter();
     BulkSetFilter(bool channel1, bool channel2, bool trigger);
 
-    bool getChannel(unsigned int channel);
-    void setChannel(unsigned int channel, bool filtered);
+    bool getChannel(ChannelID channel);
+    void setChannel(ChannelID channel, bool filtered);
     bool getTrigger();
     void setTrigger(bool filtered);
 
@@ -130,8 +130,8 @@ class BulkSetGain : public BulkCommand {
     BulkSetGain();
     BulkSetGain(uint8_t channel1, uint8_t channel2);
 
-    uint8_t getGain(unsigned int channel);
-    void setGain(unsigned int channel, uint8_t value);
+    uint8_t getGain(ChannelID channel);
+    void setGain(ChannelID channel, uint8_t value);
 
   private:
     void init();

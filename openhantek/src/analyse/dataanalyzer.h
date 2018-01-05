@@ -16,8 +16,6 @@
 class DsoSettings;
 struct DsoSettingsScope;
 
-////////////////////////////////////////////////////////////////////////////////
-/// \class DataAnalyzer                                           dataanalyzer.h
 /// \brief Analyzes the data from the dso.
 /// Calculates the spectrum and various data about the signal and saves the
 /// time-/frequencysteps between two values.

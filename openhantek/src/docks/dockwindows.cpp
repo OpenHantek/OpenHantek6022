@@ -30,4 +30,5 @@ void registerDockMetaTypes() {
     qRegisterMetaType<Dso::WindowFunction>();
     qRegisterMetaType<Dso::InterpolationMode>();
     qRegisterMetaType<std::vector<unsigned> >();
+    qRegisterMetaType<std::vector<double> >();
 }

@@ -18,21 +18,23 @@ using GL_WIDGET_CLASS = QGLWidget;
 #include "hantekprotocol/definitions.h"
 
 class GlGenerator;
-class DsoSettings;
+struct DsoSettingsScope;
+struct DsoSettingsView;
 
 /// \brief OpenGL accelerated widget that displays the oscilloscope screen.
 class GlScope : public GL_WIDGET_CLASS {
     Q_OBJECT
 
   public:
+    static GlScope* createNormal(DsoSettingsScope *scope, DsoSettingsView *view, const GlGenerator *generator, QWidget *parent = 0);
+    static GlScope* createZoomed(DsoSettingsScope *scope, DsoSettingsView *view, const GlGenerator *generator, QWidget *parent = 0);
+
+  protected:
     /// \brief Initializes the scope widget.
     /// \param settings The settings that should be used.
     /// \param parent The parent widget.
-    GlScope(DsoSettings *settings, const GlGenerator *generator, QWidget *parent = 0);
+    GlScope(DsoSettingsScope *scope, DsoSettingsView *view, const GlGenerator *generator, QWidget *parent = 0);
 
-    void setZoomMode(bool zoomEnabled);
-
-  protected:
     /// \brief Initializes OpenGL output.
     void initializeGL() override;
 
@@ -58,7 +60,8 @@ class GlScope : public GL_WIDGET_CLASS {
     bool channelUsed(Dso::ChannelMode mode, ChannelID channel);
 
   private:
-    DsoSettings *settings;
+    DsoSettingsScope *scope;
+    DsoSettingsView *view;
     const GlGenerator *generator;
     std::vector<int> fadingFactor;
 

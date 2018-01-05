@@ -26,11 +26,11 @@ struct ControlSetOffset : public ControlCommand {
     /// \brief Get the offset for the given channel.
     /// \param channel The channel whose offset should be returned.
     /// \return The channel offset value.
-    uint16_t getChannel(unsigned int channel);
+    uint16_t getChannel(ChannelID channel);
     /// \brief Set the offset for the given channel.
     /// \param channel The channel that should be set.
     /// \param offset The new channel offset value.
-    void setChannel(unsigned int channel, uint16_t offset);
+    void setChannel(ChannelID channel, uint16_t offset);
     /// \brief Get the trigger level.
     /// \return The trigger level value.
     uint16_t getTrigger();
@@ -55,27 +55,27 @@ struct ControlSetRelays : public ControlCommand {
     /// \brief Get the below 1 V relay state for the given channel.
     /// \param channel The channel whose relay state should be returned.
     /// \return true, if the gain of the channel is below 1 V.
-    bool getBelow1V(unsigned int channel);
+    bool getBelow1V(ChannelID channel);
     /// \brief Set the below 1 V relay for the given channel.
     /// \param channel The channel that should be set.
     /// \param below true, if the gain of the channel should be below 1 V.
-    void setBelow1V(unsigned int channel, bool below);
+    void setBelow1V(ChannelID channel, bool below);
     /// \brief Get the below 1 V relay state for the given channel.
     /// \param channel The channel whose relay state should be returned.
     /// \return true, if the gain of the channel is below 1 V.
-    bool getBelow100mV(unsigned int channel);
+    bool getBelow100mV(ChannelID channel);
     /// \brief Set the below 100 mV relay for the given channel.
     /// \param channel The channel that should be set.
     /// \param below true, if the gain of the channel should be below 100 mV.
-    void setBelow100mV(unsigned int channel, bool below);
+    void setBelow100mV(ChannelID channel, bool below);
     /// \brief Get the coupling relay state for the given channel.
     /// \param channel The channel whose relay state should be returned.
     /// \return true, if the coupling of the channel is DC.
-    bool getCoupling(unsigned int channel);
+    bool getCoupling(ChannelID channel);
     /// \brief Set the coupling relay for the given channel.
     /// \param channel The channel that should be set.
     /// \param dc true, if the coupling of the channel should be DC.
-    void setCoupling(unsigned int channel, bool dc);
+    void setCoupling(ChannelID channel, bool dc);
     /// \brief Get the external trigger relay state.
     /// \return true, if the trigger is external (EXT-Connector).
     bool getTrigger();

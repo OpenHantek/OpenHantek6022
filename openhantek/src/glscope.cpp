@@ -7,11 +7,26 @@
 #include "glscope.h"
 
 #include "glgenerator.h"
-#include "settings.h"
+#include "scopesettings.h"
+#include "viewsettings.h"
 #include "viewconstants.h"
 
-GlScope::GlScope(DsoSettings *settings, const GlGenerator *generator, QWidget *parent)
-    : GL_WIDGET_CLASS(parent), settings(settings), generator(generator) {
+GlScope *GlScope::createNormal(DsoSettingsScope *scope, DsoSettingsView *view, const GlGenerator *generator, QWidget *parent)
+{
+    GlScope* s = new GlScope(scope, view, generator, parent);
+    s->zoomed = false;
+    return s;
+}
+
+GlScope *GlScope::createZoomed(DsoSettingsScope *scope, DsoSettingsView *view, const GlGenerator *generator, QWidget *parent)
+{
+    GlScope* s = new GlScope(scope, view, generator, parent);
+    s->zoomed = true;
+    return s;
+}
+
+GlScope::GlScope(DsoSettingsScope *scope, DsoSettingsView *view, const GlGenerator *generator, QWidget *parent)
+    : GL_WIDGET_CLASS(parent), scope(scope), view(view), generator(generator) {
     connect(generator, &GlGenerator::graphsGenerated, [this]() { update(); });
 }
 
@@ -22,7 +37,7 @@ void GlScope::initializeGL() {
 
     glPointSize(1);
 
-    QColor bg = settings->view.screen.background;
+    QColor bg = view->screen.background;
     glClearColor((GLfloat)bg.redF(), (GLfloat)bg.greenF(), (GLfloat)bg.blueF(), (GLfloat)bg.alphaF());
 
     glShadeModel(GL_SMOOTH /*GL_FLAT*/);
@@ -36,24 +51,24 @@ void GlScope::paintGL() {
     glClear(GL_COLOR_BUFFER_BIT);
     glLineWidth(1);
 
-    if (generator->isReady()) { drawGraph(settings->view.digitalPhosphorDraws()); }
+    if (generator->isReady()) { drawGraph(view->digitalPhosphorDraws()); }
 
     if (!this->zoomed) {
         // Draw vertical lines at marker positions
         glEnable(GL_LINE_STIPPLE);
-        QColor trColor = settings->view.screen.markers;
+        QColor trColor = view->screen.markers;
         glColor4f((GLfloat)trColor.redF(), (GLfloat)trColor.greenF(), (GLfloat)trColor.blueF(), (GLfloat)trColor.alphaF());
 
         for (int marker = 0; marker < MARKER_COUNT; ++marker) {
-            if (!settings->scope.horizontal.marker_visible[marker]) continue;
+            if (!scope->horizontal.marker_visible[marker]) continue;
             if (vaMarker[marker].size() != 4) {
                 vaMarker[marker].resize(2 * 2);
                 vaMarker[marker][1] = -DIVS_VOLTAGE;
                 vaMarker[marker][3] = DIVS_VOLTAGE;
             }
 
-            vaMarker[marker][0] = (GLfloat)settings->scope.horizontal.marker[marker];
-            vaMarker[marker][2] = (GLfloat)settings->scope.horizontal.marker[marker];
+            vaMarker[marker][0] = (GLfloat)scope->horizontal.marker[marker];
+            vaMarker[marker][2] = (GLfloat)scope->horizontal.marker[marker];
 
             glVertexPointer(2, GL_FLOAT, 0, &vaMarker[marker].front());
             glDrawArrays(GL_LINES, 0, (GLsizei)vaMarker[marker].size() / 2);
@@ -82,27 +97,23 @@ void GlScope::resizeGL(int width, int height) {
     glMatrixMode(GL_MODELVIEW);
 }
 
-/// \brief Set the zoom mode for this GlScope.
-/// \param zoomed true magnifies the area between the markers.
-void GlScope::setZoomMode(bool zoomEnabled) { this->zoomed = zoomEnabled; }
-
 void GlScope::drawGrid() {
     glDisable(GL_POINT_SMOOTH);
     glDisable(GL_LINE_SMOOTH);
 
     QColor color;
     // Grid
-    color = settings->view.screen.grid;
+    color = view->screen.grid;
     glColor4f((GLfloat)color.redF(), (GLfloat)color.greenF(), (GLfloat)color.blueF(), (GLfloat)color.alphaF());
     glVertexPointer(2, GL_FLOAT, 0, &generator->grid(0).front());
     glDrawArrays(GL_POINTS, 0, (GLsizei) generator->grid(0).size() / 2);
     // Axes
-    color = settings->view.screen.axes;
+    color = view->screen.axes;
     glColor4f((GLfloat)color.redF(), (GLfloat)color.greenF(), (GLfloat)color.blueF(), (GLfloat)color.alphaF());
     glVertexPointer(2, GL_FLOAT, 0, &generator->grid(1).front());
     glDrawArrays(GL_LINES, 0, (GLsizei) generator->grid(1).size() / 2);
     // Border
-    color = settings->view.screen.border;
+    color = view->screen.border;
     glColor4f((GLfloat)color.redF(), (GLfloat)color.greenF(), (GLfloat)color.blueF(), (GLfloat)color.alphaF());
     glVertexPointer(2, GL_FLOAT, 0, &generator->grid(2).front());
     glDrawArrays(GL_LINE_LOOP, 0, (GLsizei) generator->grid(2).size() / 2);
@@ -112,17 +123,17 @@ void GlScope::drawGraphDepth(Dso::ChannelMode mode, ChannelID channel, unsigned 
     if (generator->channel(mode, channel, index).empty()) return;
     QColor trColor;
     if (mode == Dso::ChannelMode::Voltage)
-        trColor = settings->view.screen.voltage[channel].darker(fadingFactor[index]);
+        trColor = view->screen.voltage[channel].darker(fadingFactor[index]);
     else
-        trColor = settings->view.screen.spectrum[channel].darker(fadingFactor[index]);
+        trColor = view->screen.spectrum[channel].darker(fadingFactor[index]);
     glColor4f((GLfloat)trColor.redF(), (GLfloat)trColor.greenF(), (GLfloat)trColor.blueF(), (GLfloat)trColor.alphaF());
     glVertexPointer(2, GL_FLOAT, 0, &generator->channel(mode, channel, index).front());
-    glDrawArrays((settings->view.interpolation == Dso::INTERPOLATION_OFF) ? GL_POINTS : GL_LINE_STRIP, 0,
+    glDrawArrays((view->interpolation == Dso::INTERPOLATION_OFF) ? GL_POINTS : GL_LINE_STRIP, 0,
                  (GLsizei)generator->channel(mode, channel, index).size() / 2);
 }
 
 void GlScope::drawGraph(unsigned digitalPhosphorDepth) {
-    if (settings->view.antialiasing) {
+    if (view->antialiasing) {
         glEnable(GL_POINT_SMOOTH);
         glEnable(GL_LINE_SMOOTH);
         glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
@@ -131,9 +142,9 @@ void GlScope::drawGraph(unsigned digitalPhosphorDepth) {
     // Apply zoom settings via matrix transformation
     if (this->zoomed) {
         glPushMatrix();
-        glScalef(DIVS_TIME / (GLfloat)fabs(settings->scope.horizontal.marker[1] - settings->scope.horizontal.marker[0]), 1.0f,
+        glScalef(DIVS_TIME / (GLfloat)fabs(scope->horizontal.marker[1] - scope->horizontal.marker[0]), 1.0f,
                  1.0f);
-        glTranslatef((GLfloat)-(settings->scope.horizontal.marker[0] + settings->scope.horizontal.marker[1]) / 2, 0.0f, 0.0f);
+        glTranslatef((GLfloat)-(scope->horizontal.marker[0] + scope->horizontal.marker[1]) / 2, 0.0f, 0.0f);
     }
 
     // Values we need for the fading of the digital phosphor
@@ -145,11 +156,11 @@ void GlScope::drawGraph(unsigned digitalPhosphorDepth) {
             fadingFactor[index] = int(fadingFactor[index - 1] * fadingRatio);
     }
 
-    switch (settings->scope.horizontal.format) {
+    switch (scope->horizontal.format) {
     case Dso::GraphFormat::TY:
         // Real and virtual channels
         for (Dso::ChannelMode mode: Dso::ChannelModeEnum) {
-            for (ChannelID channel = 0; channel < settings->scope.voltage.size(); ++channel) {
+            for (ChannelID channel = 0; channel < scope->voltage.size(); ++channel) {
                 if (!channelUsed(mode, channel)) continue;
 
                 // Draw graph for all available depths
@@ -162,7 +173,7 @@ void GlScope::drawGraph(unsigned digitalPhosphorDepth) {
     case Dso::GraphFormat::XY:
         const Dso::ChannelMode mode = Dso::ChannelMode::Voltage;
         // Real and virtual channels
-        for (ChannelID channel = 0; channel < settings->scope.voltage.size() - 1; channel += 2) {
+        for (ChannelID channel = 0; channel < scope->voltage.size() - 1; channel += 2) {
             if (!channelUsed(mode, channel)) continue;
             for (unsigned index = digitalPhosphorDepth; index > 0; index--) {
                 drawGraphDepth(mode, channel, index-1);
@@ -178,6 +189,6 @@ void GlScope::drawGraph(unsigned digitalPhosphorDepth) {
 }
 
 bool GlScope::channelUsed(Dso::ChannelMode mode, ChannelID channel) {
-    return (mode == Dso::ChannelMode::Voltage) ? settings->scope.voltage[channel].used
-                                              : settings->scope.spectrum[channel].used;
+    return (mode == Dso::ChannelMode::Voltage) ? scope->voltage[channel].used
+                                              : scope->spectrum[channel].used;
 }

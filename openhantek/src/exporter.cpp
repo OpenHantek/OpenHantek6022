@@ -136,7 +136,7 @@ bool Exporter::exportSamples(const DataAnalyzerResult *result) {
         // Draw the measurement table
         stretchBase = (double)(paintDevice->width() - lineHeight * 6) / 10;
         int channelCount = 0;
-        for (int channel = settings->scope.voltage.size() - 1; channel >= 0; channel--) {
+        for (ChannelID channel = settings->scope.voltage.size() - 1; channel >= 0; channel--) {
             if ((settings->scope.voltage[channel].used || settings->scope.spectrum[channel].used) &&
                 result->data(channel)) {
                 ++channelCount;
@@ -148,7 +148,7 @@ bool Exporter::exportSamples(const DataAnalyzerResult *result) {
                 // Print coupling/math mode
                 if ((unsigned int)channel < settings->deviceSpecification->channels)
                     painter.drawText(QRectF(lineHeight * 4, top, lineHeight * 2, lineHeight),
-                                     Dso::couplingString(settings->coupling(channel)));
+                                     Dso::couplingString(settings->scope.coupling(channel, settings->deviceSpecification)));
                 else
                     painter.drawText(QRectF(lineHeight * 4, top, lineHeight * 2, lineHeight),
                                      Dso::mathModeString(settings->scope.voltage[channel].math));
@@ -335,7 +335,7 @@ bool Exporter::exportCVS(const DataAnalyzerResult *result) {
 
     QTextStream csvStream(&csvFile);
 
-    int chCount = settings->scope.voltage.size();
+    size_t chCount = settings->scope.voltage.size();
     std::vector<const SampleValues *> voltageData(size_t(chCount), nullptr);
     std::vector<const SampleValues *> spectrumData(size_t(chCount), nullptr);
     size_t maxRow = 0;
@@ -343,7 +343,7 @@ bool Exporter::exportCVS(const DataAnalyzerResult *result) {
     double timeInterval = 0;
     double freqInterval = 0;
 
-    for (int channel = 0; channel < chCount; ++channel) {
+    for (ChannelID channel = 0; channel < chCount; ++channel) {
         if (result->data(channel)) {
             if (settings->scope.voltage[channel].used) {
                 voltageData[channel] = &(result->data(channel)->voltage);
@@ -361,12 +361,12 @@ bool Exporter::exportCVS(const DataAnalyzerResult *result) {
 
     // Start with channel names
     csvStream << "\"t\"";
-    for (int channel = 0; channel < chCount; ++channel) {
+    for (ChannelID channel = 0; channel < chCount; ++channel) {
         if (voltageData[channel] != nullptr) { csvStream << ",\"" << settings->scope.voltage[channel].name << "\""; }
     }
     if (isSpectrumUsed) {
         csvStream << ",\"f\"";
-        for (int channel = 0; channel < chCount; ++channel) {
+        for (ChannelID channel = 0; channel < chCount; ++channel) {
             if (spectrumData[channel] != nullptr) {
                 csvStream << ",\"" << settings->scope.spectrum[channel].name << "\"";
             }
@@ -377,7 +377,7 @@ bool Exporter::exportCVS(const DataAnalyzerResult *result) {
     for (unsigned int row = 0; row < maxRow; ++row) {
 
         csvStream << timeInterval * row;
-        for (int channel = 0; channel < chCount; ++channel) {
+        for (ChannelID channel = 0; channel < chCount; ++channel) {
             if (voltageData[channel] != nullptr) {
                 csvStream << ",";
                 if (row < voltageData[channel]->sample.size()) { csvStream << voltageData[channel]->sample[row]; }
@@ -386,7 +386,7 @@ bool Exporter::exportCVS(const DataAnalyzerResult *result) {
 
         if (isSpectrumUsed) {
             csvStream << "," << freqInterval * row;
-            for (int channel = 0; channel < chCount; ++channel) {
+            for (ChannelID channel = 0; channel < chCount; ++channel) {
                 if (spectrumData[channel] != nullptr) {
                     csvStream << ",";
                     if (row < spectrumData[channel]->sample.size()) { csvStream << spectrumData[channel]->sample[row]; }

@@ -14,14 +14,14 @@ ControlSetOffset::ControlSetOffset(uint16_t channel1, uint16_t channel2, uint16_
     this->setTrigger(trigger);
 }
 
-uint16_t ControlSetOffset::getChannel(unsigned int channel) {
+uint16_t ControlSetOffset::getChannel(ChannelID channel) {
     if (channel == 0)
         return ((this->array[0] & 0x0f) << 8) | this->array[1];
     else
         return ((this->array[2] & 0x0f) << 8) | this->array[3];
 }
 
-void ControlSetOffset::setChannel(unsigned int channel, uint16_t offset) {
+void ControlSetOffset::setChannel(ChannelID channel, uint16_t offset) {
     if (channel == 0) {
         this->array[0] = (uint8_t)(offset >> 8);
         this->array[1] = (uint8_t)offset;
@@ -50,42 +50,42 @@ ControlSetRelays::ControlSetRelays(bool ch1Below1V, bool ch1Below100mV, bool ch1
     this->setTrigger(triggerExt);
 }
 
-bool ControlSetRelays::getBelow1V(unsigned int channel) {
+bool ControlSetRelays::getBelow1V(ChannelID channel) {
     if (channel == 0)
         return (this->array[1] & 0x04) == 0x00;
     else
         return (this->array[4] & 0x20) == 0x00;
 }
 
-void ControlSetRelays::setBelow1V(unsigned int channel, bool below) {
+void ControlSetRelays::setBelow1V(ChannelID channel, bool below) {
     if (channel == 0)
         this->array[1] = below ? 0xfb : 0x04;
     else
         this->array[4] = below ? 0xdf : 0x20;
 }
 
-bool ControlSetRelays::getBelow100mV(unsigned int channel) {
+bool ControlSetRelays::getBelow100mV(ChannelID channel) {
     if (channel == 0)
         return (this->array[2] & 0x08) == 0x00;
     else
         return (this->array[5] & 0x40) == 0x00;
 }
 
-void ControlSetRelays::setBelow100mV(unsigned int channel, bool below) {
+void ControlSetRelays::setBelow100mV(ChannelID channel, bool below) {
     if (channel == 0)
         this->array[2] = below ? 0xf7 : 0x08;
     else
         this->array[5] = below ? 0xbf : 0x40;
 }
 
-bool ControlSetRelays::getCoupling(unsigned int channel) {
+bool ControlSetRelays::getCoupling(ChannelID channel) {
     if (channel == 0)
         return (this->array[3] & 0x02) == 0x00;
     else
         return (this->array[6] & 0x10) == 0x00;
 }
 
-void ControlSetRelays::setCoupling(unsigned int channel, bool dc) {
+void ControlSetRelays::setCoupling(ChannelID channel, bool dc) {
     if (channel == 0)
         this->array[3] = dc ? 0xfd : 0x02;
     else

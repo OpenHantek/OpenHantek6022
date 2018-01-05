@@ -23,7 +23,7 @@ std::unique_ptr<DataAnalyzerResult> DataAnalyzer::convertData(const DSOsamples *
     std::unique_ptr<DataAnalyzerResult> result =
         std::unique_ptr<DataAnalyzerResult>(new DataAnalyzerResult(channelCount));
 
-    for (unsigned int channel = 0; channel < channelCount; ++channel) {
+    for (ChannelID channel = 0; channel < channelCount; ++channel) {
         DataChannel *const channelData = result->modifyData(channel);
 
         bool gotDataForChannel = channel < physicalChannels && channel < (unsigned int)data->data.size() &&
@@ -123,7 +123,7 @@ void DataAnalyzer::spectrumAnalysis(DataAnalyzerResult *result, Dso::WindowFunct
                                     unsigned int lastRecordLength, double *&lastWindowBuffer,
                                     const DsoSettingsScope *scope) {
     // Calculate frequencies, peak-to-peak voltages and spectrums
-    for (unsigned int channel = 0; channel < result->channelCount(); ++channel) {
+    for (ChannelID channel = 0; channel < result->channelCount(); ++channel) {
         DataChannel *const channelData = result->modifyData(channel);
 
         if (channelData->voltage.sample.empty()) {

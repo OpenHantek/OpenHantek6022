@@ -26,7 +26,7 @@ BulkSetFilter::BulkSetFilter(bool channel1, bool channel2, bool trigger) : BulkC
 /// \brief Gets the filtering state of one channel.
 /// \param channel The channel whose filtering state should be returned.
 /// \return The filtering state of the channel.
-bool BulkSetFilter::getChannel(unsigned int channel) {
+bool BulkSetFilter::getChannel(ChannelID channel) {
     FilterBits *filterBits = (FilterBits *)&(this->array[2]);
     if (channel == 0)
         return filterBits->channel1 == 1;
@@ -37,7 +37,7 @@ bool BulkSetFilter::getChannel(unsigned int channel) {
 /// \brief Enables/disables filtering of one channel.
 /// \param channel The channel that should be set.
 /// \param filtered true if the channel should be filtered.
-void BulkSetFilter::setChannel(unsigned int channel, bool filtered) {
+void BulkSetFilter::setChannel(ChannelID channel, bool filtered) {
     FilterBits *filterBits = (FilterBits *)&(this->array[2]);
     if (channel == 0)
         filterBits->channel1 = filtered ? 1 : 0;
@@ -256,7 +256,7 @@ BulkSetGain::BulkSetGain(uint8_t channel1, uint8_t channel2) : BulkCommand(8) {
 /// \brief Get the gain for the given channel.
 /// \param channel The channel whose gain should be returned.
 /// \returns The gain value.
-uint8_t BulkSetGain::getGain(unsigned int channel) {
+uint8_t BulkSetGain::getGain(ChannelID channel) {
     GainBits *gainBits = (GainBits *)&(this->array[2]);
     if (channel == 0)
         return gainBits->channel1;
@@ -267,7 +267,7 @@ uint8_t BulkSetGain::getGain(unsigned int channel) {
 /// \brief Set the gain for the given channel.
 /// \param channel The channel that should be set.
 /// \param value The new gain value for the channel.
-void BulkSetGain::setGain(unsigned int channel, uint8_t value) {
+void BulkSetGain::setGain(ChannelID channel, uint8_t value) {
     GainBits *gainBits = (GainBits *)&(this->array[2]);
     if (channel == 0)
         gainBits->channel1 = value;

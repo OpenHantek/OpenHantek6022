@@ -129,7 +129,7 @@ bool GlGenerator::generateGraphs(const DataAnalyzerResult *result, unsigned digi
         // Resize to the number of channels
         d.resize(scope->voltage.size());
 
-        for (unsigned int channel = 0; channel < vaChannel[(unsigned)mode].size(); ++channel) {
+        for (ChannelID channel = 0; channel < vaChannel[(unsigned)mode].size(); ++channel) {
             DrawLinesWithHistory& drawLinesHistory = d[channel];
             // Move the last list element to the front
             if (digitalPhosphorDepth > 1 && drawLinesHistory.size())

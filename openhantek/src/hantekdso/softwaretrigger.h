@@ -1,5 +1,6 @@
 #pragma once
 #include <tuple>
+#include "softwaretriggersettings.h"
 struct DsoSettingsScope;
 class DataAnalyzerResult;
 

@@ -11,8 +11,8 @@
 
 /// \brief Set the number of channels.
 /// \param channels The new channel count, that will be applied to lists.
-DsoSettings::DsoSettings(const Dso::ControlSettings* deviceSettings, const Dso::ControlSpecification* deviceSpecification)
-    : deviceSettings(deviceSettings), deviceSpecification(deviceSpecification) {
+DsoSettings::DsoSettings(const Dso::ControlSpecification* deviceSpecification)
+    : deviceSpecification(deviceSpecification) {
 
     // Add new channels to the list
     while (scope.spectrum.size() < deviceSpecification->channels) {

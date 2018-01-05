@@ -28,30 +28,6 @@ enum class UsedChannels : uint8_t {
     BUSED_CH2 = USED_NONE
 };
 
-
-/// \enum TriggerSource
-/// \brief The possible trigger sources.
-// enum TriggerSource { TRIGGER_CH2, TRIGGER_CH1, TRIGGER_ALT, TRIGGER_EXT, TRIGGER_EXT10 };
-
-
-/// \enum RecordLengthId
-/// \brief The size id for CommandSetTriggerAndSamplerate.
-//enum RecordLengthId {
-//    RECORDLENGTHID_ROLL = 0, ///< Used for the roll mode
-//    RECORDLENGTHID_SMALL,    ///< The standard buffer with 10240 samples
-//    RECORDLENGTHID_LARGE     ///< The large buffer, 32768 samples (14336 for DSO-5200)
-//};
-
-
-/// \enum LevelOffset
-/// \brief The array indicies for the CalibrationData.
-enum LevelOffset {
-    OFFSET_START, ///< The channel level at the bottom of the scope
-    OFFSET_END,   ///< The channel level at the top of the scope
-    OFFSET_COUNT
-};
-
-
 /// \enum DTriggerPositionUsed                                  hantek/types.h
 /// \brief The trigger position states for the 0x0d command.
 enum class DTriggerPositionUsed: uint8_t {

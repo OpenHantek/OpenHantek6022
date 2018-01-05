@@ -11,7 +11,7 @@ SoftwareTrigger::PrePostStartTriggerSamples SoftwareTrigger::computeTY(const Dat
     unsigned int preTrigSamples = 0;
     unsigned int postTrigSamples = 0;
     unsigned int swTriggerStart = 0;
-    unsigned int channel = scope->trigger.source;
+    ChannelID channel = scope->trigger.source;
 
     // check trigger point for software trigger
     if (scope->trigger.mode != Dso::TriggerMode::SOFTWARE || channel >= physicalChannels)

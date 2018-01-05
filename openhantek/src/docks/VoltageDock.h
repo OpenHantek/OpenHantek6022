@@ -8,7 +8,8 @@
 #include <QComboBox>
 #include <QLabel>
 
-#include "settings.h"
+#include "scopesettings.h"
+#include "hantekdso/controlspecification.h"
 
 class SiSpinBox;
 
@@ -19,7 +20,11 @@ class VoltageDock : public QDockWidget {
     Q_OBJECT
 
   public:
-    VoltageDock(DsoSettings *settings, QWidget *parent, Qt::WindowFlags flags = 0);
+    /// \brief Initializes the vertical axis docking window.
+    /// \param settings The target settings object.
+    /// \param parent The parent widget.
+    /// \param flags Flags for the window manager.
+    VoltageDock(DsoSettingsScope *scope, const Dso::ControlSpecification* spec, QWidget *parent, Qt::WindowFlags flags = 0);
 
     /// \brief Sets the coupling for a channel.
     /// \param channel The channel, whose coupling should be set.
@@ -55,15 +60,16 @@ class VoltageDock : public QDockWidget {
 
     std::vector<ChannelBlock> channelBlocks;
 
-    DsoSettings *settings; ///< The settings provided by the parent class
+    DsoSettingsScope *scope; ///< The settings provided by the parent class
+    const Dso::ControlSpecification *spec;
 
     QStringList couplingStrings; ///< The strings for the couplings
     QStringList modeStrings;     ///< The strings for the math mode
     QStringList gainStrings;     ///< String representations for the gain steps
 
   signals:
-    void couplingChanged(unsigned int channel, Dso::Coupling coupling); ///< A coupling has been selected
-    void gainChanged(unsigned int channel, double gain);                ///< A gain has been selected
+    void couplingChanged(ChannelID channel, Dso::Coupling coupling); ///< A coupling has been selected
+    void gainChanged(ChannelID channel, double gain);                ///< A gain has been selected
     void modeChanged(Dso::MathMode mode);              ///< The mode for the math channels has been changed
-    void usedChanged(unsigned int channel, bool used); ///< A channel has been enabled/disabled
+    void usedChanged(ChannelID channel, bool used); ///< A channel has been enabled/disabled
 };

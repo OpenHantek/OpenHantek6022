@@ -5,15 +5,17 @@
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QList>
+#include <QGridLayout>
 #include <memory>
 
 #include "exporter.h"
 #include "glscope.h"
 #include "levelslider.h"
+#include "hantekdso/controlspecification.h"
 
 class DataAnalyzer;
-class DsoSettings;
-class QGridLayout;
+struct DsoSettingsScope;
+struct DsoSettingsView;
 
 /// \class DsoWidget
 /// \brief The widget for the oszilloscope-screen
@@ -27,8 +29,9 @@ class DsoWidget : public QWidget {
     /// \param dataAnalyzer The data analyzer that should be used as data source.
     /// \param parent The parent widget.
     /// \param flags Flags for the window manager.
-    DsoWidget(DsoSettings *settings, QWidget *parent = 0, Qt::WindowFlags flags = 0);
+    DsoWidget(DsoSettingsScope* scope, DsoSettingsView* view, const Dso::ControlSpecification* spec, QWidget *parent = 0, Qt::WindowFlags flags = 0);
     void showNewData(std::unique_ptr<DataAnalyzerResult> data);
+    void setExporterForNextFrame(std::unique_ptr<Exporter> exporter);
 
   protected:
     void adaptTriggerLevelSlider(ChannelID channel);
@@ -68,7 +71,10 @@ class DsoWidget : public QWidget {
     std::vector<QLabel *> measurementAmplitudeLabel; ///< Amplitude of the signal (V)
     std::vector<QLabel *> measurementFrequencyLabel; ///< Frequency of the signal (Hz)
 
-    DsoSettings *settings;  ///< The settings provided by the main window
+    DsoSettingsScope* scope;
+    DsoSettingsView* view;
+    const Dso::ControlSpecification* spec;
+
     GlGenerator *generator; ///< The generator for the OpenGL vertex arrays
     GlScope *mainScope;     ///< The main scope screen
     GlScope *zoomScope;     ///< The optional magnified scope screen
@@ -87,21 +93,17 @@ class DsoWidget : public QWidget {
     void updateTriggerSource();
 
     // Spectrum
-    void updateSpectrumMagnitude(unsigned int channel);
-    void updateSpectrumUsed(unsigned int channel, bool used);
+    void updateSpectrumMagnitude(ChannelID channel);
+    void updateSpectrumUsed(ChannelID channel, bool used);
 
     // Vertical axis
-    void updateVoltageCoupling(unsigned int channel);
+    void updateVoltageCoupling(ChannelID channel);
     void updateMathMode();
-    void updateVoltageGain(unsigned int channel);
-    void updateVoltageUsed(unsigned int channel, bool used);
+    void updateVoltageGain(ChannelID channel);
+    void updateVoltageUsed(ChannelID channel, bool used);
 
     // Menus
     void updateRecordLength(unsigned long size);
-
-    // Export
-    void exportAs();
-    void print();
 
     // Scope control
     void updateZoom(bool enabled);
@@ -113,13 +115,13 @@ class DsoWidget : public QWidget {
     // Sliders
     void updateOffset(ChannelID channel, double value);
     void updateTriggerPosition(int index, double value);
-    void updateTriggerLevel(int channel, double value);
+    void updateTriggerLevel(ChannelID channel, double value);
     void updateMarker(int marker, double value);
 
   signals:
     // Sliders
-    void offsetChanged(unsigned int channel, double value);       ///< A graph offset has been changed
+    void offsetChanged(ChannelID channel, double value);       ///< A graph offset has been changed
     void triggerPositionChanged(double value);                    ///< The pretrigger has been changed
-    void triggerLevelChanged(unsigned int channel, double value); ///< A trigger level has been changed
+    void triggerLevelChanged(ChannelID channel, double value); ///< A trigger level has been changed
     void markerChanged(unsigned int marker, double value);        ///< A marker position has been changed
 };

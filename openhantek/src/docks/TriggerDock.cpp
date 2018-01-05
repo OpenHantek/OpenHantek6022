@@ -5,6 +5,7 @@
 #include <QComboBox>
 #include <QDockWidget>
 #include <QLabel>
+#include <QSignalBlocker>
 
 #include <cmath>
 
@@ -16,19 +17,12 @@
 #include "utils/dsoStrings.h"
 #include "utils/printutils.h"
 
-////////////////////////////////////////////////////////////////////////////////
-// class TriggerDock
-/// \brief Initializes the trigger settings docking window.
-/// \param settings The target settings object.
-/// \param specialTriggers The names of the special trigger sources.
-/// \param parent The parent widget.
-/// \param flags Flags for the window manager.
 TriggerDock::TriggerDock(DsoSettings *settings, const std::vector<std::string> &specialTriggers, QWidget *parent,
                          Qt::WindowFlags flags)
     : QDockWidget(tr("Trigger"), parent, flags), settings(settings) {
 
     // Initialize lists for comboboxes
-    for (unsigned int channel = 0; channel < settings->deviceSpecification->channels; ++channel)
+    for (ChannelID channel = 0; channel < settings->deviceSpecification->channels; ++channel)
         this->sourceStandardStrings << tr("CH%1").arg(channel + 1);
     for(const std::string& name: specialTriggers)
         this->sourceSpecialStrings.append(QString::fromStdString(name));
@@ -63,9 +57,26 @@ TriggerDock::TriggerDock(DsoSettings *settings, const std::vector<std::string> &
     SetupDockWidget(this, dockWidget, dockLayout);
 
     // Connect signals and slots
-    connect(this->modeComboBox, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &TriggerDock::modeSelected);
-    connect(this->slopeComboBox, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &TriggerDock::slopeSelected);
-    connect(this->sourceComboBox, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &TriggerDock::sourceSelected);
+    connect(this->modeComboBox, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged), [this](int index) {
+        this->settings->scope.trigger.mode = (Dso::TriggerMode)index;
+        emit modeChanged(this->settings->scope.trigger.mode);
+    });
+    connect(this->slopeComboBox, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged), [this](int index) {
+        this->settings->scope.trigger.slope = (Dso::Slope)index;
+        emit slopeChanged(this->settings->scope.trigger.slope);
+    });
+    connect(this->sourceComboBox, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged), [this](int index) {
+        bool special = false;
+
+        if (index >= this->sourceStandardStrings.count()) {
+            index -= this->sourceStandardStrings.count();
+            special = true;
+        }
+
+        this->settings->scope.trigger.source = (unsigned) index;
+        this->settings->scope.trigger.special = special;
+        emit sourceChanged(special, (unsigned)index);
+    });
 
     // Set values
     this->setMode(settings->scope.trigger.mode);
@@ -81,62 +92,23 @@ void TriggerDock::closeEvent(QCloseEvent *event) {
     event->accept();
 }
 
-/// \brief Changes the trigger mode if the new mode is supported.
-/// \param mode The trigger mode.
-/// \return Index of mode-value, -1 on error.
 void TriggerDock::setMode(Dso::TriggerMode mode) {
-    this->modeComboBox->setCurrentIndex((int)mode);
+    QSignalBlocker blocker(modeComboBox);
+    modeComboBox->setCurrentIndex((int)mode);
 }
 
-/// \brief Changes the trigger slope if the new slope is supported.
-/// \param slope The trigger slope.
-/// \return Index of slope-value, -1 on error.
 void TriggerDock::setSlope(Dso::Slope slope) {
-    this->slopeComboBox->setCurrentIndex((int)slope);
+    QSignalBlocker blocker(slopeComboBox);
+    slopeComboBox->setCurrentIndex((int)slope);
 }
 
-/// \brief Changes the trigger source if the new source is supported.
-/// \param special true for a special channel (EXT, ...) as trigger source.
-/// \param id The number of the channel, that should be used as trigger.
-/// \return Index of source item, -1 on error.
-int TriggerDock::setSource(bool special, unsigned int id) {
+void TriggerDock::setSource(bool special, unsigned int id) {
     if ((!special && id >= (unsigned int)this->sourceStandardStrings.count()) ||
         (special && id >= (unsigned int)this->sourceSpecialStrings.count()))
-        return -1;
+        return;
 
     int index = (int)id;
     if (special) index += this->sourceStandardStrings.count();
-    this->sourceComboBox->setCurrentIndex(index);
-
-    return index;
-}
-
-/// \brief Called when the mode combo box changes it's value.
-/// \param index The index of the combo box item.
-void TriggerDock::modeSelected(int index) {
-    settings->scope.trigger.mode = (Dso::TriggerMode)index;
-    emit modeChanged(settings->scope.trigger.mode);
-}
-
-/// \brief Called when the slope combo box changes it's value.
-/// \param index The index of the combo box item.
-void TriggerDock::slopeSelected(int index) {
-    settings->scope.trigger.slope = (Dso::Slope)index;
-    emit slopeChanged(settings->scope.trigger.slope);
-}
-
-/// \brief Called when the source combo box changes it's value.
-/// \param index The index of the combo box item.
-void TriggerDock::sourceSelected(int index) {
-    unsigned int id = index;
-    bool special = false;
-
-    if (id >= (unsigned int)this->sourceStandardStrings.count()) {
-        id -= this->sourceStandardStrings.count();
-        special = true;
-    }
-
-    settings->scope.trigger.source = id;
-    settings->scope.trigger.special = special;
-    emit sourceChanged(special, id);
+    QSignalBlocker blocker(sourceComboBox);
+    sourceComboBox->setCurrentIndex(index);
 }

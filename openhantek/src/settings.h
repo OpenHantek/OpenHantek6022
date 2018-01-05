@@ -25,7 +25,7 @@ struct DsoSettingsOptions {
 /// \brief Holds the settings of the program.
 class DsoSettings {
   public:
-    explicit DsoSettings(const Dso::ControlSettings* deviceSettings, const Dso::ControlSpecification* deviceSpecification);
+    explicit DsoSettings(const Dso::ControlSpecification* deviceSpecification);
     bool setFilename(const QString &filename);
 
     DsoSettingsOptions options; ///< General options of the program
@@ -33,12 +33,7 @@ class DsoSettings {
     DsoSettingsView view;       ///< All view related settings
 
     // Read only access to device settings and device specification
-    const Dso::ControlSettings* deviceSettings;
     const Dso::ControlSpecification* deviceSpecification;
-
-    Dso::Coupling coupling(ChannelID channel) {
-        return deviceSpecification->couplings[scope.voltage[channel].couplingIndex];
-    }
 
     QByteArray mainWindowGeometry; ///< Geometry of the main window
     QByteArray mainWindowState;    ///< State of docking windows and toolbars

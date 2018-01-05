@@ -17,8 +17,41 @@
 #include "usb/usbdevice.h"
 #include "dsomodel.h"
 #include "selectdevice/selectsupporteddevice.h"
+#include "viewconstants.h"
 
 using namespace Hantek;
+
+
+/// \brief Initialize the device with the current settings.
+void applySettingsToDevice(HantekDsoControl* dsoControl, DsoSettingsScope* scope, const Dso::ControlSpecification* spec) {
+    bool mathUsed = scope->anyUsed(spec->channels);
+    for (ChannelID channel = 0; channel < spec->channels; ++channel) {
+        dsoControl->setCoupling(channel, scope->coupling(channel,spec));
+        dsoControl->setGain(channel, scope->gain(channel) * DIVS_VOLTAGE);
+        dsoControl->setOffset(channel, (scope->voltage[channel].offset / DIVS_VOLTAGE) + 0.5);
+        dsoControl->setTriggerLevel(channel, scope->voltage[channel].trigger);
+        dsoControl->setChannelUsed(channel, mathUsed | scope->anyUsed(channel));
+    }
+
+    if (scope->horizontal.samplerateSet)
+        dsoControl->setSamplerate(scope->horizontal.samplerate);
+    else
+        dsoControl->setRecordTime(scope->horizontal.timebase * DIVS_TIME);
+
+    if (dsoControl->getAvailableRecordLengths().empty())
+        dsoControl->setRecordLength(scope->horizontal.recordLength);
+    else {
+        auto recLenVec = dsoControl->getAvailableRecordLengths();
+        ptrdiff_t index = std::distance(
+            recLenVec.begin(), std::find(recLenVec.begin(), recLenVec.end(), scope->horizontal.recordLength));
+        dsoControl->setRecordLength(index < 0 ? 1 : index);
+    }
+    dsoControl->setTriggerMode(scope->trigger.mode);
+    dsoControl->setPretriggerPosition(scope->trigger.position * scope->horizontal.timebase * DIVS_TIME);
+    dsoControl->setTriggerSlope(scope->trigger.slope);
+    dsoControl->setTriggerSource(scope->trigger.special, scope->trigger.source);
+}
+
 
 /// \brief Initialize resources and translations and show the main window.
 int main(int argc, char *argv[]) {
@@ -76,12 +109,14 @@ int main(int argc, char *argv[]) {
     QObject::connect(&dsoControl, &HantekDsoControl::samplesAvailable, &dataAnalyser, &DataAnalyzer::samplesAvailable);
 
     //////// Create settings object ////////
-    DsoSettings settings(dsoControl.getDeviceSettings(), &device->getModel()->specification);
+    DsoSettings settings(&device->getModel()->specification);
     dataAnalyser.applySettings(&settings);
 
     //////// Create main window ////////
-    OpenHantekMainWindow *openHantekMainWindow = new OpenHantekMainWindow(&dsoControl, &dataAnalyser, &settings);
+    MainWindow *openHantekMainWindow = new MainWindow(&dsoControl, &dataAnalyser, &settings);
     openHantekMainWindow->show();
+
+    applySettingsToDevice(&dsoControl,&settings.scope,&device->getModel()->specification);
 
     //////// Start DSO thread and go into GUI main loop
     dsoControl.startSampling();
