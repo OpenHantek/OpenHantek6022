@@ -21,7 +21,7 @@ SelectSupportedDevice::SelectSupportedDevice(QWidget *parent) :
     ui->setupUi(this);
     newDeviceFromExistingDialog = new NewDeviceModelFromExisting(this);
     ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(false);
-    qRegisterMetaType<UniqueUSBid>();
+    qRegisterMetaType<UniqueUSBid>("UniqueUSBid");
     connect(ui->buttonBox, &QDialogButtonBox::accepted, [this]() {
         if (ui->cmbDevices->currentIndex()!=-1) {
             selectedDevice = ui->cmbDevices->currentData(Qt::UserRole).value<UniqueUSBid>();

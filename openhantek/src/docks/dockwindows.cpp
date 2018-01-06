@@ -32,5 +32,5 @@ void registerDockMetaTypes() {
     qRegisterMetaType<Dso::InterpolationMode>();
     qRegisterMetaType<std::vector<unsigned> >();
     qRegisterMetaType<std::vector<double> >();
-    qRegisterMetaType<ChannelID>();
+    qRegisterMetaType<ChannelID>("ChannelID");
 }
