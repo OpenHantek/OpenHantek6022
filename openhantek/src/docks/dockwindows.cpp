@@ -10,6 +10,7 @@
 
 #include "analyse/enums.h"
 #include "hantekdso/enums.h"
+#include "hantekprotocol/definitions.h"
 #include "dockwindows.h"
 
 void SetupDockWidget(QDockWidget *dockWindow, QWidget *dockWidget, QLayout *layout) {
@@ -31,4 +32,5 @@ void registerDockMetaTypes() {
     qRegisterMetaType<Dso::InterpolationMode>();
     qRegisterMetaType<std::vector<unsigned> >();
     qRegisterMetaType<std::vector<double> >();
+    qRegisterMetaType<ChannelID>();
 }

@@ -10,4 +10,4 @@
 std::list<DSOModel*> supportedModels =
     std::list<DSOModel*>({new ModelDSO2090(), new ModelDSO2090A(), new ModelDSO2150(),
                          new  ModelDSO2250(), new ModelDSO5200(), new ModelDSO5200A(),
-                         new ModelDSO6022BE(), new ModelDSO6022LE()});
+                         new ModelDSO6022BE(), new ModelDSO6022BL()});

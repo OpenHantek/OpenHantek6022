@@ -45,9 +45,9 @@ void ModelDSO6022BE::applyRequirements(HantekDsoControl *dsoControl) const {
     dsoControl->addCommand(ControlCode::CONTROL_SETVOLTDIV_CH1, new ControlSetVoltDIV_CH1());
 }
 
-ModelDSO6022LE::ModelDSO6022LE() {
+ModelDSO6022BL::ModelDSO6022BL() {
     productID = 0x602a;
     productIDnoFirmware = 0x602a;
-    firmwareToken = "dso6022be";
-    name = "DSO-6022LE";
+    firmwareToken = "dso6022bl";
+    name = "DSO-6022BL";
 }
