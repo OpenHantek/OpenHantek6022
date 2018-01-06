@@ -59,7 +59,7 @@ int LevelSlider::postMargin() const { return this->_postMargin; }
 /// \brief Add a new slider to the slider container.
 /// \param index The index where the slider should be inserted, 0 to append.
 /// \return The index of the slider, -1 on error.
-int LevelSlider::addSlider(int index) { return this->addSlider("0", index); }
+int LevelSlider::addSlider(int index) { return this->addSlider("", index); }
 
 /// \brief Add a new slider to the slider container.
 /// \param text The text that will be shown next to the slider.

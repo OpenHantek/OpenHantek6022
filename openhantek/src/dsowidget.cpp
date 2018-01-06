@@ -75,7 +75,7 @@ DsoWidget::DsoWidget(DsoSettingsScope *scope, DsoSettingsView *view, const Dso::
     for (int marker = 0; marker < MARKER_COUNT; ++marker) {
         markerSlider->addSlider(QString::number(marker + 1), marker);
         markerSlider->setLimits(marker, -DIVS_TIME / 2, DIVS_TIME / 2);
-        markerSlider->setStep(marker, 0.2);
+        markerSlider->setStep(marker, DIVS_TIME / 100.0);
         markerSlider->setValue(marker, scope->horizontal.marker[marker]);
         markerSlider->setIndexVisible(marker, true);
     }
@@ -241,7 +241,7 @@ void DsoWidget::adaptTriggerLevelSlider(ChannelID channel) {
     triggerLevelSlider->setLimits(
         (int)channel, (-DIVS_VOLTAGE / 2 - scope->voltage[channel].offset) * scope->gain(channel),
         (DIVS_VOLTAGE / 2 - scope->voltage[channel].offset) * scope->gain(channel));
-    triggerLevelSlider->setStep((int)channel, scope->gain(channel) * 0.2);
+    triggerLevelSlider->setStep((int)channel, scope->gain(channel) * 0.05);
 }
 
 /// \brief Show/Hide a line of the measurement table.
