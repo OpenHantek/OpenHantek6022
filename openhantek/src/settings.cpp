@@ -84,11 +84,10 @@ void DsoSettings::load() {
     if (store->contains("timebase")) scope.horizontal.timebase = store->value("timebase").toDouble();
     if (store->contains("recordLength")) scope.horizontal.recordLength = store->value("recordLength").toUInt();
     if (store->contains("samplerate")) scope.horizontal.samplerate = store->value("samplerate").toDouble();
-    if (store->contains("samplerateSet")) scope.horizontal.samplerateSet = store->value("samplerateSet").toBool();
+    if (store->contains("samplerateSet")) scope.horizontal.samplerateSource = (DsoSettingsScopeHorizontal::SamplerateSource)store->value("samplerateSet").toInt();
     store->endGroup();
     // Trigger
     store->beginGroup("trigger");
-    if (store->contains("filter")) scope.trigger.filter = store->value("filter").toBool();
     if (store->contains("mode")) scope.trigger.mode = (Dso::TriggerMode)store->value("mode").toUInt();
     if (store->contains("position")) scope.trigger.position = store->value("position").toDouble();
     if (store->contains("slope")) scope.trigger.slope = (Dso::Slope)store->value("slope").toUInt();
@@ -186,11 +185,10 @@ void DsoSettings::save() {
     store->setValue("timebase", scope.horizontal.timebase);
     store->setValue("recordLength", scope.horizontal.recordLength);
     store->setValue("samplerate", scope.horizontal.samplerate);
-    store->setValue("samplerateSet", scope.horizontal.samplerateSet);
+    store->setValue("samplerateSet", (int)scope.horizontal.samplerateSource);
     store->endGroup();
     // Trigger
     store->beginGroup("trigger");
-    store->setValue("filter", scope.trigger.filter);
     store->setValue("mode", (unsigned)scope.trigger.mode);
     store->setValue("position", scope.trigger.position);
     store->setValue("slope", (unsigned)scope.trigger.slope);

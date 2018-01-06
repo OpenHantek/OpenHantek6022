@@ -201,19 +201,63 @@ class HantekDsoControl : public QObject {
     void startSampling();
     void stopSampling();
 
+    /// \brief Sets the size of the oscilloscopes sample buffer.
+    /// \param index The record length index that should be set.
+    /// \return The record length that has been set, 0 on error.
     Dso::ErrorCode setRecordLength(unsigned size);
+    /// \brief Sets the samplerate of the oscilloscope.
+    /// \param samplerate The samplerate that should be met (S/s), 0.0 to restore
+    /// current samplerate.
+    /// \return The samplerate that has been set, 0.0 on error.
     Dso::ErrorCode setSamplerate(double samplerate = 0.0);
+    /// \brief Sets the time duration of one aquisition by adapting the samplerate.
+    /// \param duration The record time duration that should be met (s), 0.0 to
+    /// restore current record time.
+    /// \return The record time duration that has been set, 0.0 on error.
     Dso::ErrorCode setRecordTime(double duration = 0.0);
 
+    /// \brief Enables/disables filtering of the given channel.
+    /// \param channel The channel that should be set.
+    /// \param used true if the channel should be sampled.
+    /// \return See ::Dso::ErrorCode.
     Dso::ErrorCode setChannelUsed(ChannelID channel, bool used);
+    /// \brief Set the coupling for the given channel.
+    /// \param channel The channel that should be set.
+    /// \param coupling The new coupling for the channel.
+    /// \return See ::Dso::ErrorCode.
     Dso::ErrorCode setCoupling(ChannelID channel, Dso::Coupling coupling);
+    /// \brief Sets the gain for the given channel.
+    /// Get the actual gain by specification.gainSteps[gainId]
+    /// \param channel The channel that should be set.
+    /// \param gain The gain that should be met (V/div).
+    /// \return The gain that has been set, ::Dso::ErrorCode on error.
     Dso::ErrorCode setGain(ChannelID channel, double gain);
+    /// \brief Set the offset for the given channel.
+    /// Get the actual offset for the channel from controlsettings.voltage[channel].offsetReal
+    /// \param channel The channel that should be set.
+    /// \param offset The new offset value (0.0 - 1.0).
     Dso::ErrorCode setOffset(ChannelID channel, const double offset);
 
+    /// \brief Set the trigger mode.
+    /// \return See ::Dso::ErrorCode.
     Dso::ErrorCode setTriggerMode(Dso::TriggerMode mode);
+    /// \brief Set the trigger source.
+    /// \param special true for a special channel (EXT, ...) as trigger source.
+    /// \param id The number of the channel, that should be used as trigger.
+    /// \return See ::Dso::ErrorCode.
     Dso::ErrorCode setTriggerSource(bool special, unsigned id);
+    /// \brief Set the trigger level.
+    /// \param channel The channel that should be set.
+    /// \param level The new trigger level (V).
+    /// \return The trigger level that has been set, ::Dso::ErrorCode on error.
     Dso::ErrorCode setTriggerLevel(ChannelID channel, double level);
+    /// \brief Set the trigger slope.
+    /// \param slope The Slope that should cause a trigger.
+    /// \return See ::Dso::ErrorCode.
     Dso::ErrorCode setTriggerSlope(Dso::Slope slope);
+    /// \brief Set the trigger position.
+    /// \param position The new trigger position (in s).
+    /// \return The trigger position that has been set.
     Dso::ErrorCode setPretriggerPosition(double position);
     void forceTrigger();
 

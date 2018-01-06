@@ -181,7 +181,7 @@ void HorizontalDock::frequencybaseSelected(double frequencybase) {
 /// \param samplerate The samplerate in samples/second.
 void HorizontalDock::samplerateSelected(double samplerate) {
     scope->horizontal.samplerate = samplerate;
-    scope->horizontal.samplerateSet = true;
+    scope->horizontal.samplerateSource = DsoSettingsScopeHorizontal::Samplerrate;
     emit samplerateChanged(samplerate);
 }
 
@@ -189,7 +189,7 @@ void HorizontalDock::samplerateSelected(double samplerate) {
 /// \param timebase The timebase in seconds.
 void HorizontalDock::timebaseSelected(double timebase) {
     scope->horizontal.timebase = timebase;
-    scope->horizontal.samplerateSet = false;
+    scope->horizontal.samplerateSource = DsoSettingsScopeHorizontal::Duration;
     emit timebaseChanged(timebase);
 }
 

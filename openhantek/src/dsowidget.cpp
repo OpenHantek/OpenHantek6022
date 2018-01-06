@@ -78,7 +78,6 @@ DsoWidget::DsoWidget(DsoSettingsScope *scope, DsoSettingsView *view, const Dso::
         markerSlider->setStep(marker, 0.2);
         markerSlider->setValue(marker, scope->horizontal.marker[marker]);
         markerSlider->setIndexVisible(marker, true);
-        scope->horizontal.marker_visible[marker] = true;
     }
 
     // The table for the settings

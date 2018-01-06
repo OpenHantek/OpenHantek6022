@@ -93,7 +93,8 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DataAnalyzer *dataAnalyser,
     });
 
     connect(dsoControl, &HantekDsoControl::recordTimeChanged, [this](double duration) {
-        if (this->settings->scope.horizontal.samplerateSet && this->settings->scope.horizontal.recordLength != UINT_MAX) {
+        if (this->settings->scope.horizontal.samplerateSource == DsoSettingsScopeHorizontal::Samplerrate &&
+                this->settings->scope.horizontal.recordLength != UINT_MAX) {
             // The samplerate was set, let's adapt the timebase accordingly
             this->settings->scope.horizontal.timebase = horizontalDock->setTimebase(duration / DIVS_TIME);
         }
@@ -106,7 +107,8 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DataAnalyzer *dataAnalyser,
         dsoWidget->updateTimebase(this->settings->scope.horizontal.timebase);
     });
     connect(dsoControl, &HantekDsoControl::samplerateChanged, [this](double samplerate) {
-        if (!this->settings->scope.horizontal.samplerateSet && this->settings->scope.horizontal.recordLength != UINT_MAX) {
+        if (this->settings->scope.horizontal.samplerateSource == DsoSettingsScopeHorizontal::Duration &&
+                this->settings->scope.horizontal.recordLength != UINT_MAX) {
             // The timebase was set, let's adapt the samplerate accordingly
             this->settings->scope.horizontal.samplerate = samplerate;
             horizontalDock->setSamplerate(samplerate);
@@ -259,7 +261,7 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DataAnalyzer *dataAnalyser,
 
     });
 
-    if (settings->scope.horizontal.samplerateSet)
+    if (settings->scope.horizontal.samplerateSource == DsoSettingsScopeHorizontal::Samplerrate)
         dsoWidget->updateSamplerate(settings->scope.horizontal.samplerate);
     else
         dsoWidget->updateTimebase(settings->scope.horizontal.timebase);

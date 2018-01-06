@@ -42,8 +42,6 @@ SoftwareTrigger::PrePostStartTriggerSamples SoftwareTrigger::computeTY(const Dat
     preTrigSamples = (unsigned)(scope->trigger.position * samplesDisplay);
     postTrigSamples = (unsigned)sampleCount - ((unsigned)samplesDisplay - preTrigSamples);
 
-    const int swTriggerThreshold = 7;
-    const int swTriggerSampleSet = 11;
     double prev;
     bool (*opcmp)(double,double,double);
     bool (*smplcmp)(double,double);
@@ -60,11 +58,11 @@ SoftwareTrigger::PrePostStartTriggerSamples SoftwareTrigger::computeTY(const Dat
     for (unsigned int i = preTrigSamples; i < postTrigSamples; i++) {
         double value = samples[i];
         if (opcmp(value, level, prev)) {
-            int rising = 0;
-            for (unsigned int k = i + 1; k < i + swTriggerSampleSet && k < sampleCount; k++) {
+            unsigned rising = 0;
+            for (unsigned int k = i + 1; k < i + scope->trigger.swTriggerSampleSet && k < sampleCount; k++) {
                 if (smplcmp(samples[k], value)) { rising++; }
             }
-            if (rising > swTriggerThreshold) {
+            if (rising > scope->trigger.swTriggerThreshold) {
                 swTriggerStart = i;
                 break;
             }

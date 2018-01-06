@@ -2,7 +2,6 @@
 
 #include "controlspecification.h"
 #include "enums.h"
-#include "softwaretriggersettings.h"
 
 namespace Dso {
 
@@ -31,13 +30,13 @@ struct ControlSettingsSamplerate {
 /// \struct ControlSettingsTrigger                            hantek/control.h
 /// \brief Stores the current trigger settings of the device.
 struct ControlSettingsTrigger {
-    std::vector<double> level;                       ///< The trigger level for each channel in V
-    double position = 0.0;                           ///< The current pretrigger position
-    unsigned int point = 0;                          ///< The trigger position in Hantek coding
+    std::vector<double> level;                        ///< The trigger level for each channel in V
+    double position = 0.0;                            ///< The current pretrigger position
+    unsigned int point = 0;                           ///< The trigger position in Hantek coding
     Dso::TriggerMode mode = Dso::TriggerMode::NORMAL; ///< The trigger mode
     Dso::Slope slope = Dso::Slope::Positive;          ///< The trigger slope
-    bool special = false;                            ///< true, if the trigger source is special
-    unsigned int source = 0;                         ///< The trigger source
+    bool special = false;                             ///< true, if the trigger source is special
+    unsigned int source = 0;                          ///< The trigger source
 };
 
 //////////////////////////////////////////////////////////////////////////////
@@ -60,6 +59,6 @@ struct ControlSettings {
     ControlSettingsTrigger trigger;              ///< The trigger settings
     RecordLengthID recordLengthId = 1;           ///< The id in the record length array
     unsigned usedChannels = 0;                   ///< Number of activated channels
-    SoftwareTriggerSettings swTrigger;
+    unsigned swSampleMargin = 2000;              ///< Software trigger, sample margin
 };
 }

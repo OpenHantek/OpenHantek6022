@@ -33,7 +33,7 @@ void applySettingsToDevice(HantekDsoControl* dsoControl, DsoSettingsScope* scope
         dsoControl->setChannelUsed(channel, mathUsed | scope->anyUsed(channel));
     }
 
-    if (scope->horizontal.samplerateSet)
+    if (scope->horizontal.samplerateSource == DsoSettingsScopeHorizontal::Samplerrate)
         dsoControl->setSamplerate(scope->horizontal.samplerate);
     else
         dsoControl->setRecordTime(scope->horizontal.timebase * DIVS_TIME);

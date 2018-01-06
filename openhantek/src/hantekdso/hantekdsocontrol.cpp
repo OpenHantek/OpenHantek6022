@@ -603,9 +603,6 @@ void HantekDsoControl::updateSamplerateLimits() {
                                  limits->max / specification.bufferDividers[controlsettings.recordLengthId]);
 }
 
-/// \brief Sets the size of the oscilloscopes sample buffer.
-/// \param index The record length index that should be set.
-/// \return The record length that has been set, 0 on error.
 Dso::ErrorCode HantekDsoControl::setRecordLength(unsigned index) {
     if (!device->isConnected()) return Dso::ErrorCode::CONNECTION;
 
@@ -618,10 +615,6 @@ Dso::ErrorCode HantekDsoControl::setRecordLength(unsigned index) {
     return Dso::ErrorCode::NONE;
 }
 
-/// \brief Sets the samplerate of the oscilloscope.
-/// \param samplerate The samplerate that should be met (S/s), 0.0 to restore
-/// current samplerate.
-/// \return The samplerate that has been set, 0.0 on error.
 Dso::ErrorCode HantekDsoControl::setSamplerate(double samplerate) {
     if (!device->isConnected()) return Dso::ErrorCode::CONNECTION;
 
@@ -659,7 +652,7 @@ Dso::ErrorCode HantekDsoControl::setSamplerate(double samplerate) {
 
         // Check for Roll mode
         if (!isRollMode())
-            emit recordTimeChanged((double)(getRecordLength() - controlsettings.swTrigger.sampleMargin) /
+            emit recordTimeChanged((double)(getRecordLength() - controlsettings.swSampleMargin) /
                                    controlsettings.samplerate.current);
         emit samplerateChanged(controlsettings.samplerate.current);
 
@@ -667,10 +660,6 @@ Dso::ErrorCode HantekDsoControl::setSamplerate(double samplerate) {
     }
 }
 
-/// \brief Sets the time duration of one aquisition by adapting the samplerate.
-/// \param duration The record time duration that should be met (s), 0.0 to
-/// restore current record time.
-/// \return The record time duration that has been set, 0.0 on error.
 Dso::ErrorCode HantekDsoControl::setRecordTime(double duration) {
     if (!device->isConnected()) return Dso::ErrorCode::CONNECTION;
 
@@ -706,10 +695,10 @@ Dso::ErrorCode HantekDsoControl::setRecordTime(double duration) {
         // For now - we go for the 10240 size sampling - the other seems not to be supported
         // Find highest samplerate using less than 10240 samples to obtain our duration.
         unsigned sampleCount = 10240;
+        if (specification.isSoftwareTriggerDevice) sampleCount -= controlsettings.swSampleMargin;
         unsigned sampleId;
         for (sampleId = 0; sampleId < specification.fixedSampleRates.size(); ++sampleId) {
-            if (specification.fixedSampleRates[sampleId].samplerate * duration <
-                (sampleCount - controlsettings.swTrigger.sampleMargin))
+            if (specification.fixedSampleRates[sampleId].samplerate * duration < sampleCount)
                 break;
         }
         // Usable sample value
@@ -722,10 +711,6 @@ Dso::ErrorCode HantekDsoControl::setRecordTime(double duration) {
     }
 }
 
-/// \brief Enables/disables filtering of the given channel.
-/// \param channel The channel that should be set.
-/// \param used true if the channel should be sampled.
-/// \return See ::Dso::ErrorCode.
 Dso::ErrorCode HantekDsoControl::setChannelUsed(ChannelID channel, bool used) {
     if (!device->isConnected()) return Dso::ErrorCode::CONNECTION;
 
@@ -783,10 +768,6 @@ Dso::ErrorCode HantekDsoControl::setChannelUsed(ChannelID channel, bool used) {
     return Dso::ErrorCode::NONE;
 }
 
-/// \brief Set the coupling for the given channel.
-/// \param channel The channel that should be set.
-/// \param coupling The new coupling for the channel.
-/// \return See ::Dso::ErrorCode.
 Dso::ErrorCode HantekDsoControl::setCoupling(ChannelID channel, Dso::Coupling coupling) {
     if (!device->isConnected()) return Dso::ErrorCode::CONNECTION;
 
@@ -801,11 +782,6 @@ Dso::ErrorCode HantekDsoControl::setCoupling(ChannelID channel, Dso::Coupling co
     return Dso::ErrorCode::NONE;
 }
 
-/// \brief Sets the gain for the given channel.
-/// Get the actual gain by specification.gainSteps[gainId]
-/// \param channel The channel that should be set.
-/// \param gain The gain that should be met (V/div).
-/// \return The gain that has been set, ::Dso::ErrorCode on error.
 Dso::ErrorCode HantekDsoControl::setGain(ChannelID channel, double gain) {
     if (!device->isConnected()) return Dso::ErrorCode::CONNECTION;
 
@@ -842,10 +818,6 @@ Dso::ErrorCode HantekDsoControl::setGain(ChannelID channel, double gain) {
     return Dso::ErrorCode::NONE;
 }
 
-/// \brief Set the offset for the given channel.
-/// Get the actual offset for the channel from controlsettings.voltage[channel].offsetReal
-/// \param channel The channel that should be set.
-/// \param offset The new offset value (0.0 - 1.0).
 Dso::ErrorCode HantekDsoControl::setOffset(ChannelID channel, const double offset) {
     if (!device->isConnected()) return Dso::ErrorCode::CONNECTION;
 
@@ -873,8 +845,6 @@ Dso::ErrorCode HantekDsoControl::setOffset(ChannelID channel, const double offse
     return Dso::ErrorCode::NONE;
 }
 
-/// \brief Set the trigger mode.
-/// \return See ::Dso::ErrorCode.
 Dso::ErrorCode HantekDsoControl::setTriggerMode(Dso::TriggerMode mode) {
     if (!device->isConnected()) return Dso::ErrorCode::CONNECTION;
 
@@ -882,10 +852,6 @@ Dso::ErrorCode HantekDsoControl::setTriggerMode(Dso::TriggerMode mode) {
     return Dso::ErrorCode::NONE;
 }
 
-/// \brief Set the trigger source.
-/// \param special true for a special channel (EXT, ...) as trigger source.
-/// \param id The number of the channel, that should be used as trigger.
-/// \return See ::Dso::ErrorCode.
 Dso::ErrorCode HantekDsoControl::setTriggerSource(bool special, unsigned id) {
     if (!device->isConnected()) return Dso::ErrorCode::CONNECTION;
     if (specification.isSoftwareTriggerDevice) return Dso::ErrorCode::UNSUPPORTED;
@@ -932,10 +898,6 @@ Dso::ErrorCode HantekDsoControl::setTriggerSource(bool special, unsigned id) {
     return Dso::ErrorCode::NONE;
 }
 
-/// \brief Set the trigger level.
-/// \param channel The channel that should be set.
-/// \param level The new trigger level (V).
-/// \return The trigger level that has been set, ::Dso::ErrorCode on error.
 Dso::ErrorCode HantekDsoControl::setTriggerLevel(ChannelID channel, double level) {
     if (!device->isConnected()) return Dso::ErrorCode::CONNECTION;
 
@@ -977,9 +939,6 @@ Dso::ErrorCode HantekDsoControl::setTriggerLevel(ChannelID channel, double level
     return Dso::ErrorCode::NONE;
 }
 
-/// \brief Set the trigger slope.
-/// \param slope The Slope that should cause a trigger.
-/// \return See ::Dso::ErrorCode.
 Dso::ErrorCode HantekDsoControl::setTriggerSlope(Dso::Slope slope) {
     if (!device->isConnected()) return Dso::ErrorCode::CONNECTION;
 
@@ -1009,9 +968,6 @@ Dso::ErrorCode HantekDsoControl::setTriggerSlope(Dso::Slope slope) {
 
 void HantekDsoControl::forceTrigger() { modifyCommand<BulkCommand>(BulkCode::FORCETRIGGER); }
 
-/// \brief Set the trigger position.
-/// \param position The new trigger position (in s).
-/// \return The trigger position that has been set.
 Dso::ErrorCode HantekDsoControl::setPretriggerPosition(double position) {
     if (!device->isConnected()) return Dso::ErrorCode::CONNECTION;
 
