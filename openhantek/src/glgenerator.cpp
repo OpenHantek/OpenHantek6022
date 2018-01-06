@@ -9,6 +9,7 @@
 #include "analyse/dataanalyzerresult.h"
 #include "viewconstants.h"
 #include "hantekdso/softwaretrigger.h"
+#include "hantekdso/controlspecification.h"
 
 static const SampleValues& useSamplesOf(Dso::ChannelMode mode, ChannelID channel, const DataAnalyzerResult *result, const DsoSettingsScope *scope) {
     static SampleValues emptyDefault;
@@ -121,7 +122,7 @@ const std::vector<GLfloat> &GlGenerator::grid(int a) const { return vaGrid[a]; }
 bool GlGenerator::isReady() const { return ready; }
 
 bool GlGenerator::generateGraphs(const DataAnalyzerResult *result, unsigned digitalPhosphorDepth,
-                                 const DsoSettingsScope *scope, unsigned physicalChannels) {
+                                 const DsoSettingsScope *scope, const Dso::ControlSpecification* spec) {
 
     // Handle all digital phosphor related list manipulations
     for (Dso::ChannelMode mode: Dso::ChannelModeEnum) {
@@ -149,7 +150,9 @@ bool GlGenerator::generateGraphs(const DataAnalyzerResult *result, unsigned digi
 
     switch (scope->horizontal.format) {
     case Dso::GraphFormat::TY:
-        std::tie(preTrigSamples, postTrigSamples, swTriggerStart) = SoftwareTrigger::computeTY(result, scope, physicalChannels);
+        // check trigger point for software trigger
+        if (spec->isSoftwareTriggerDevice && scope->trigger.source < spec->channels)
+             std::tie(preTrigSamples, postTrigSamples, swTriggerStart) = SoftwareTrigger::compute(result, scope);
         triggered = postTrigSamples > preTrigSamples;
 
         // Add graphs for channels

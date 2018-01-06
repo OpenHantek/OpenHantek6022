@@ -87,14 +87,12 @@ QString mathModeString(MathMode mode) {
 /// \return The string that should be used in labels etc.
 QString triggerModeString(TriggerMode mode) {
     switch (mode) {
-    case TriggerMode::AUTO:
-        return QApplication::tr("Auto");
-    case TriggerMode::NORMAL:
-        return QApplication::tr("Normal");
+    case TriggerMode::WAIT_FORCE:
+        return QApplication::tr("Wait/Force");
+    case TriggerMode::HARDWARE_SOFTWARE:
+        return QApplication::tr("Hard-/Software");
     case TriggerMode::SINGLE:
         return QApplication::tr("Single");
-    case TriggerMode::SOFTWARE:
-        return QApplication::tr("Software");
     }
     return QString();
 }

@@ -74,9 +74,6 @@ class HantekDsoControl : public QObject {
     /// \return The maximum samplerate for the current configuration in S/s.
     double getMaxSamplerate();
 
-    /// \brief Get a list of the names of the special trigger sources.
-    const std::vector<std::string> getSpecialTriggerSources();
-
     /// Return the associated usb device.
     USBDevice *getDevice();
 

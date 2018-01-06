@@ -12,6 +12,9 @@
 
 struct DsoSettingsScope;
 class DataAnalyzerResult;
+namespace Dso {
+struct ControlSpecification;
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 /// \class GlGenerator
@@ -26,7 +29,7 @@ class GlGenerator : public QObject {
 
     GlGenerator();
     bool generateGraphs(const DataAnalyzerResult *result, unsigned digitalPhosphorDepth, const DsoSettingsScope *scope,
-                        unsigned physicalChannels);
+                        const Dso::ControlSpecification *spec);
     const std::vector<GLfloat> &channel(Dso::ChannelMode mode, ChannelID channel, unsigned index) const;
 
     const std::vector<GLfloat> &grid(int a) const;

@@ -4,14 +4,17 @@
 
 #include <QDockWidget>
 #include <QGridLayout>
+#include <QLabel>
+#include <QCheckBox>
+#include <QComboBox>
 
-#include "settings.h"
-
-class QLabel;
-class QCheckBox;
-class QComboBox;
+#include "hantekdso/enums.h"
 
 class SiSpinBox;
+class DsoSettingsScope;
+namespace Dso {
+struct ControlSpecification;
+}
 
 /// \brief Dock window for the trigger settings.
 /// It contains the settings for the trigger mode, source and slope.
@@ -21,10 +24,10 @@ class TriggerDock : public QDockWidget {
   public:
     /// \brief Initializes the trigger settings docking window.
     /// \param settings The target settings object.
-    /// \param specialTriggers The names of the special trigger sources.
+    /// \param spec
     /// \param parent The parent widget.
     /// \param flags Flags for the window manager.
-    TriggerDock(DsoSettings *settings, const std::vector<std::string>& specialTriggers, QWidget *parent, Qt::WindowFlags flags = 0);
+    TriggerDock(DsoSettingsScope *scope, const Dso::ControlSpecification* spec, QWidget *parent, Qt::WindowFlags flags = 0);
 
     /// \brief Changes the trigger mode if the new mode is supported.
     /// \param mode The trigger mode.
@@ -51,13 +54,11 @@ class TriggerDock : public QDockWidget {
     QComboBox *sourceComboBox; ///< Select the source for triggering
     QComboBox *slopeComboBox;  ///< Select the slope that causes triggering
 
-    DsoSettings *settings; ///< The settings provided by the parent class
+    DsoSettingsScope *scope; ///< The settings provided by the parent class
+    const Dso::ControlSpecification* spec;
 
-    QStringList modeStrings;           ///< Strings for the trigger modes
     QStringList sourceStandardStrings; ///< Strings for the standard trigger sources
     QStringList sourceSpecialStrings;  ///< Strings for the special trigger sources
-    QStringList slopeStrings;          ///< Strings for the trigger slopes
-
   signals:
     void modeChanged(Dso::TriggerMode);                ///< The trigger mode has been changed
     void sourceChanged(bool special, unsigned int id); ///< The trigger source has been changed

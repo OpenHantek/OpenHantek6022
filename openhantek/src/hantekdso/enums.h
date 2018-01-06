@@ -6,7 +6,7 @@ namespace Dso {
 /// \enum ChannelMode
 /// \brief The channel display modes.
 enum class ChannelMode {
-    Voltage,  ///< Standard voltage view
+    Voltage, ///< Standard voltage view
     Spectrum ///< Spectrum view
 };
 constexpr int ChannelModes = 2;
@@ -15,8 +15,8 @@ extern Enum<Dso::ChannelMode, Dso::ChannelMode::Voltage, Dso::ChannelMode::Spect
 /// \enum GraphFormat
 /// \brief The possible viewing formats for the graphs on the scope.
 enum GraphFormat {
-    TY,   ///< The standard mode
-    XY   ///< CH1 on X-axis, CH2 on Y-axis
+    TY, ///< The standard mode
+    XY  ///< CH1 on X-axis, CH2 on Y-axis
 };
 
 extern Enum<Dso::GraphFormat, Dso::GraphFormat::TY, Dso::GraphFormat::XY> GraphFormatEnum;
@@ -32,12 +32,11 @@ enum class Coupling {
 /// \enum TriggerMode
 /// \brief The different triggering modes.
 enum class TriggerMode {
-    AUTO,    ///< Automatic without trigger event
-    NORMAL,  ///< Normal mode
-    SINGLE,  ///< Stop after the first trigger event
-    SOFTWARE ///< Software trigger mode
+    HARDWARE_SOFTWARE, ///< Normal hardware trigger (or software trigger) mode
+    WAIT_FORCE,        ///< Automatic without trigger event
+    SINGLE             ///< Stop after the first trigger event
 };
-extern Enum<Dso::TriggerMode, Dso::TriggerMode::AUTO, Dso::TriggerMode::SOFTWARE> TriggerModeEnum;
+extern Enum<Dso::TriggerMode, Dso::TriggerMode::HARDWARE_SOFTWARE, Dso::TriggerMode::SINGLE> TriggerModeEnum;
 
 /// \enum Slope
 /// \brief The slope that causes a trigger.

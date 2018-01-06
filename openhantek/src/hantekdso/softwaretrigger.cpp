@@ -1,28 +1,23 @@
 #include "softwaretrigger.h"
 #include "analyse/dataanalyzerresult.h"
-#include "settings.h"
+#include "scopesettings.h"
 #include "viewconstants.h"
 #include "utils/printutils.h"
 
-SoftwareTrigger::PrePostStartTriggerSamples SoftwareTrigger::computeTY(const DataAnalyzerResult *result,
-                                                                              const DsoSettingsScope *scope,
-                                                                              unsigned physicalChannels)
+SoftwareTrigger::PrePostStartTriggerSamples SoftwareTrigger::compute(const DataAnalyzerResult *data,
+                                                                              const DsoSettingsScope *scope)
 {
     unsigned int preTrigSamples = 0;
     unsigned int postTrigSamples = 0;
     unsigned int swTriggerStart = 0;
     ChannelID channel = scope->trigger.source;
 
-    // check trigger point for software trigger
-    if (scope->trigger.mode != Dso::TriggerMode::SOFTWARE || channel >= physicalChannels)
-        return PrePostStartTriggerSamples(preTrigSamples, postTrigSamples, swTriggerStart);
-
     // Trigger channel not in use
-    if (!scope->voltage[channel].used || !result->data(channel) ||
-            result->data(channel)->voltage.sample.empty())
+    if (!scope->voltage[channel].used || !data->data(channel) ||
+            data->data(channel)->voltage.sample.empty())
         return PrePostStartTriggerSamples(preTrigSamples, postTrigSamples, swTriggerStart);
 
-    const std::vector<double>& samples = result->data(channel)->voltage.sample;
+    const std::vector<double>& samples = data->data(channel)->voltage.sample;
     double level = scope->voltage[channel].trigger;
     size_t sampleCount = samples.size();
     double timeDisplay = scope->horizontal.timebase * DIVS_TIME;

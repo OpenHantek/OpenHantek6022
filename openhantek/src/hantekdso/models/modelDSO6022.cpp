@@ -34,6 +34,7 @@ ModelDSO6022BE::ModelDSO6022BE() : DSOModel(ID, 0x04b5, 0x6022, 0x04b4, 0x6022, 
     specification.sampleSize = 8;
 
     specification.couplings = {Dso::Coupling::DC};
+    specification.triggerModes = {Dso::TriggerMode::HARDWARE_SOFTWARE, Dso::TriggerMode::SINGLE};
 }
 
 void ModelDSO6022BE::applyRequirements(HantekDsoControl *dsoControl) const {

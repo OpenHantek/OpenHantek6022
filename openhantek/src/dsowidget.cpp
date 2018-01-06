@@ -441,7 +441,7 @@ void DsoWidget::doShowNewData() {
         exportNextFrame.reset(nullptr);
     }
 
-    bool triggered = generator->generateGraphs(data.get(), view->digitalPhosphorDraws(),scope,spec->channels);
+    bool triggered = generator->generateGraphs(data.get(), view->digitalPhosphorDraws(), scope, spec);
 
     QPalette triggerLabelPalette = palette();
     triggerLabelPalette.setColor(QPalette::WindowText, Qt::black);

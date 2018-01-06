@@ -17,6 +17,8 @@
 #include "dsomodel.h"
 #include "viewconstants.h"
 
+#include "settings.h"
+
 #include <QFileDialog>
 #include <QLineEdit>
 #include <QMessageBox>
@@ -38,7 +40,7 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DataAnalyzer *dataAnalyser,
 
     registerDockMetaTypes();
     horizontalDock = new HorizontalDock(&settings->scope, this);
-    triggerDock = new TriggerDock(settings, dsoControl->getSpecialTriggerSources(), this);
+    triggerDock = new TriggerDock(&settings->scope, settings->deviceSpecification, this);
     spectrumDock = new SpectrumDock(&settings->scope, this);
     voltageDock = new VoltageDock(&settings->scope, settings->deviceSpecification, this);
 

@@ -49,12 +49,6 @@ void HantekDsoControl::stopSampling() {
     emit samplingStopped();
 }
 
-const std::vector<std::string> HantekDsoControl::getSpecialTriggerSources() {
-    std::vector<std::string> sources;
-    for (auto &v : specification.specialTriggerChannels) { sources.push_back(v.name); }
-    return sources;
-}
-
 USBDevice *HantekDsoControl::getDevice() { return device; }
 
 const DSOsamples &HantekDsoControl::getLastSamples() { return result; }
@@ -1236,7 +1230,7 @@ void HantekDsoControl::run() {
             // Sampling hasn't started, update the expected sample count
             expectedSampleCount = this->getSampleCount();
 
-            if (this->_samplingStarted && this->lastTriggerMode == controlsettings.trigger.mode) {
+            if (_samplingStarted && lastTriggerMode == controlsettings.trigger.mode) {
                 ++this->cycleCounter;
 
                 if (this->cycleCounter == this->startCycle && !isRollMode()) {
@@ -1252,8 +1246,8 @@ void HantekDsoControl::run() {
                     }
 
                     timestampDebug("Enabling trigger");
-                } else if (this->cycleCounter >= 8 + this->startCycle &&
-                           controlsettings.trigger.mode == Dso::TriggerMode::AUTO) {
+                } else if (cycleCounter >= 8 + this->startCycle &&
+                           controlsettings.trigger.mode == Dso::TriggerMode::WAIT_FORCE) {
                     // Force triggering
                     errorCode = device->bulkCommand(getCommand(BulkCode::FORCETRIGGER));
                     if (errorCode < 0) {

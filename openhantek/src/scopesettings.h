@@ -30,7 +30,7 @@ struct DsoSettingsScopeHorizontal {
 /// \brief Holds the settings for the trigger.
 /// TODO Use ControlSettingsTrigger
 struct DsoSettingsScopeTrigger {
-    Dso::TriggerMode mode = Dso::TriggerMode::NORMAL; ///< Automatic, normal or single trigger
+    Dso::TriggerMode mode = Dso::TriggerMode::HARDWARE_SOFTWARE; ///< Automatic, normal or single trigger
     double position = 0.0;                            ///< Horizontal position for pretrigger
     Dso::Slope slope = Dso::Slope::Positive;          ///< Rising or falling edge causes trigger
     unsigned int source = 0;                          ///< Channel that is used as trigger source
