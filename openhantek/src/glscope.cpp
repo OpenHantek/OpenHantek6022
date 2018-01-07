@@ -3,6 +3,7 @@
 #include <cmath>
 
 #include <QColor>
+#include <QMouseEvent>
 
 #include "glscope.h"
 
@@ -70,6 +71,7 @@ void GlScope::paintGL() {
             vaMarker[marker][0] = (GLfloat)scope->horizontal.marker[marker];
             vaMarker[marker][2] = (GLfloat)scope->horizontal.marker[marker];
 
+            glLineWidth((marker == selectedMarker) ? 3 : 1);
             glVertexPointer(2, GL_FLOAT, 0, &vaMarker[marker].front());
             glDrawArrays(GL_LINES, 0, (GLsizei)vaMarker[marker].size() / 2);
         }
@@ -95,6 +97,55 @@ void GlScope::resizeGL(int width, int height) {
             1.0);
 
     glMatrixMode(GL_MODELVIEW);
+}
+
+void GlScope::mousePressEvent(QMouseEvent *event) {
+    if (!zoomed && event->button() == Qt::LeftButton) {
+        double position = (double)(event->x() - width() / 2) * DIVS_TIME / (double)width();
+        double distance = DIVS_TIME;
+        selectedMarker = NO_MARKER;
+        // Capture nearest marker located within snap area (+/- 1% of full scale).
+        for (int marker = 0; marker < MARKER_COUNT; ++marker) {
+            if (!scope->horizontal.marker_visible[marker]) continue;
+            if (fabs(scope->horizontal.marker[marker] - position) < std::min(distance, DIVS_TIME / 100.0)) {
+                distance = fabs(scope->horizontal.marker[marker] - position);
+                selectedMarker = marker;
+            }
+        }
+        if (selectedMarker != NO_MARKER) {
+            emit markerMoved(selectedMarker, position);
+        }
+    }
+    event->accept();
+}
+
+void GlScope::mouseMoveEvent(QMouseEvent *event) {
+    if (!zoomed && (event->buttons() & Qt::LeftButton) != 0) {
+        double position = (double)(event->x() - width() / 2) * DIVS_TIME / (double)width();
+        if (selectedMarker == NO_MARKER) {
+            // User started draging outside the snap area of any marker:
+            // move all markers to current position and select last marker in the array.
+            for (int marker = 0; marker < MARKER_COUNT; ++marker) {
+                emit markerMoved(marker, position);
+                selectedMarker = marker;
+            }
+        }
+        else if (selectedMarker < MARKER_COUNT) {
+            emit markerMoved(selectedMarker, position);
+        }
+    }
+    event->accept();
+}
+
+void GlScope::mouseReleaseEvent(QMouseEvent *event) {
+    if (!zoomed && event->button() == Qt::LeftButton) {
+        double position = (double)(event->x() - width() / 2) * DIVS_TIME / (double)width();
+        if (selectedMarker != NO_MARKER && selectedMarker < MARKER_COUNT) {
+            emit markerMoved(selectedMarker, position);
+        }
+        selectedMarker = NO_MARKER;
+    }
+    event->accept();
 }
 
 void GlScope::drawGrid() {

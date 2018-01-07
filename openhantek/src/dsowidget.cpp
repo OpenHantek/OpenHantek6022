@@ -80,6 +80,12 @@ DsoWidget::DsoWidget(DsoSettingsScope *scope, DsoSettingsView *view, const Dso::
         markerSlider->setIndexVisible(marker, true);
     }
 
+    connect(mainScope, &GlScope::markerMoved, [this] (int marker, double position) {
+        double step = this->markerSlider->step(marker);
+        this->scope->horizontal.marker[marker] =
+            this->markerSlider->setValue(marker, std::round(position / step) * step);
+    });
+
     // The table for the settings
     settingsTriggerLabel = new QLabel();
     settingsTriggerLabel->setMinimumWidth(160);
@@ -265,12 +271,17 @@ void DsoWidget::updateMarkerDetails() {
     double divs = fabs(scope->horizontal.marker[1] - scope->horizontal.marker[0]);
     double time = divs * scope->horizontal.timebase;
 
+    QString infoLabelPrefix(tr("Markers"));
     if (view->zoom) {
-        markerInfoLabel->setText(tr("Zoom x%L1").arg(DIVS_TIME / divs, -1, 'g', 3));
+        infoLabelPrefix = tr("Zoom x%L1").arg(DIVS_TIME / divs, -1, 'g', 3);
         markerTimebaseLabel->setText(valueToString(time / DIVS_TIME, UNIT_SECONDS, 3) + tr("/div"));
         markerFrequencybaseLabel->setText(
             valueToString(divs * scope->horizontal.frequencybase / DIVS_TIME, UNIT_HERTZ, 4) + tr("/div"));
     }
+    markerInfoLabel->setText(infoLabelPrefix.append(":  %1  %2")
+        .arg(valueToString(0.5 + scope->horizontal.marker[0] / DIVS_TIME - scope->trigger.position, UNIT_SECONDS, 4))
+        .arg(valueToString(0.5 + scope->horizontal.marker[1] / DIVS_TIME - scope->trigger.position, UNIT_SECONDS, 4)));
+
     markerTimeLabel->setText(valueToString(time, UNIT_SECONDS, 4));
     markerFrequencyLabel->setText(valueToString(1.0 / time, UNIT_HERTZ, 4));
 }
@@ -426,10 +437,7 @@ void DsoWidget::updateZoom(bool enabled) {
     markerTimebaseLabel->setVisible(enabled);
     markerLayout->setStretch(4, enabled ? 1 : 0);
     markerFrequencybaseLabel->setVisible(enabled);
-    if (enabled)
-        updateMarkerDetails();
-    else
-        markerInfoLabel->setText(tr("Marker 1/2"));
+    updateMarkerDetails();
 
     repaint();
 }

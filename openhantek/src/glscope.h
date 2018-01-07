@@ -46,6 +46,10 @@ class GlScope : public GL_WIDGET_CLASS {
     /// \param height The new height of the widget.
     void resizeGL(int width, int height) override;
 
+    void mousePressEvent(QMouseEvent *event) override;
+    void mouseMoveEvent(QMouseEvent *event) override;
+    void mouseReleaseEvent(QMouseEvent *event) override;
+
     /// \brief Draw the grid.
     void drawGrid();
 
@@ -59,7 +63,11 @@ class GlScope : public GL_WIDGET_CLASS {
      */
     bool channelUsed(Dso::ChannelMode mode, ChannelID channel);
 
+  signals:
+    void markerMoved(int marker, double position);
+
   private:
+    const int NO_MARKER = -1;
     DsoSettingsScope *scope;
     DsoSettingsView *view;
     const GlGenerator *generator;
@@ -67,4 +75,5 @@ class GlScope : public GL_WIDGET_CLASS {
 
     std::vector<GLfloat> vaMarker[2];
     bool zoomed = false;
+    int selectedMarker = NO_MARKER;
 };

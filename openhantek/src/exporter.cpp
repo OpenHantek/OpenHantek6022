@@ -64,7 +64,7 @@ std::unique_ptr<QPrinter> Exporter::printPaintDevice(DsoSettings *settings) {
 }
 
 bool Exporter::exportSamples(const DataAnalyzerResult *result) {
-    if (this->format == EXPORT_FORMAT_CSV) { return exportCVS(result); }
+    if (this->format == EXPORT_FORMAT_CSV) { return exportCSV(result); }
 
     // Choose the color values we need
     DsoSettingsColorValues *colorValues;
@@ -136,7 +136,7 @@ bool Exporter::exportSamples(const DataAnalyzerResult *result) {
         // Draw the measurement table
         stretchBase = (double)(paintDevice->width() - lineHeight * 6) / 10;
         int channelCount = 0;
-        for (ChannelID channel = settings->scope.voltage.size() - 1; channel >= 0; channel--) {
+        for (int channel = settings->scope.voltage.size() - 1; channel >= 0; channel--) {
             if ((settings->scope.voltage[channel].used || settings->scope.spectrum[channel].used) &&
                 result->data(channel)) {
                 ++channelCount;
@@ -329,7 +329,7 @@ bool Exporter::exportSamples(const DataAnalyzerResult *result) {
     return true;
 }
 
-bool Exporter::exportCVS(const DataAnalyzerResult *result) {
+bool Exporter::exportCSV(const DataAnalyzerResult *result) {
     QFile csvFile(this->filename);
     if (!csvFile.open(QIODevice::WriteOnly | QIODevice::Text)) return false;
 

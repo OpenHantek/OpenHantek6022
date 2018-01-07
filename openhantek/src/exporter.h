@@ -30,7 +30,7 @@ class Exporter {
   private:
     Exporter(DsoSettings *settings, const QString &filename, ExportFormat format);
     void setFormat(ExportFormat format);
-    bool exportCVS(const DataAnalyzerResult *result);
+    bool exportCSV(const DataAnalyzerResult *result);
     static std::unique_ptr<QPrinter> printPaintDevice(DsoSettings *settings);
     void drawGrids(QPainter &painter, DsoSettingsColorValues *colorValues, double lineHeight, double scopeHeight,
                    int scopeWidth);
