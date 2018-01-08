@@ -5,6 +5,7 @@
 #include <QLibraryInfo>
 #include <QLocale>
 #include <QTranslator>
+#include <QSurfaceFormat>
 
 #include <iostream>
 #include <memory>
@@ -18,6 +19,10 @@
 #include "dsomodel.h"
 #include "selectdevice/selectsupporteddevice.h"
 #include "viewconstants.h"
+
+#ifndef VERSION
+#error "You need to run the cmake buildsystem!"
+#endif
 
 using namespace Hantek;
 
@@ -61,6 +66,12 @@ int main(int argc, char *argv[]) {
     QCoreApplication::setApplicationName("OpenHantek");
     QCoreApplication::setApplicationVersion(VERSION);
 
+    QCoreApplication::setAttribute(Qt::AA_UseOpenGLES, true);
+    QCoreApplication::setAttribute(Qt::AA_ShareOpenGLContexts, true);
+
+    QSurfaceFormat format;
+    format.setProfile(QSurfaceFormat::CoreProfile);
+    QSurfaceFormat::setDefaultFormat(format);
     QApplication openHantekApplication(argc, argv);
 
     //////// Load translations ////////

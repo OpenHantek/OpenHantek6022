@@ -5,6 +5,10 @@
 #include <QColor>
 #include <QMouseEvent>
 
+#include <QOpenGLFunctions_ES2>
+#include <QOpenGLFunctions_3_2_Core>
+#include <QOpenGLFunctions_1_3>
+
 #include "glscope.h"
 
 #include "glgenerator.h"
@@ -27,38 +31,48 @@ GlScope *GlScope::createZoomed(DsoSettingsScope *scope, DsoSettingsView *view, c
 }
 
 GlScope::GlScope(DsoSettingsScope *scope, DsoSettingsView *view, const GlGenerator *generator, QWidget *parent)
-    : GL_WIDGET_CLASS(parent), scope(scope), view(view), generator(generator) {
+    : QOpenGLWidget(parent), scope(scope), view(view), generator(generator) {
     connect(generator, &GlGenerator::graphsGenerated, [this]() { update(); });
 }
 
 void GlScope::initializeGL() {
-    glDisable(GL_DEPTH_TEST);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    // TODO: Migrate to OpenGL ES2
+    // QOpenGLFunctions_ES2 *localFunctions = context()->versionFunctions<QOpenGLFunctions_ES2>();
+    // QOpenGLFunctions_3_2_Core *localFunctions = context()->versionFunctions<QOpenGLFunctions_3_2_Core>();
+    QOpenGLFunctions_1_3 *localFunctions = context()->versionFunctions<QOpenGLFunctions_1_3>();
 
-    glPointSize(1);
+    localFunctions->glDisable(GL_DEPTH_TEST);
+    localFunctions->glEnable(GL_BLEND);
+    localFunctions->glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    localFunctions->glPointSize(1);
 
     QColor bg = view->screen.background;
-    glClearColor((GLfloat)bg.redF(), (GLfloat)bg.greenF(), (GLfloat)bg.blueF(), (GLfloat)bg.alphaF());
+    localFunctions->glClearColor((GLfloat)bg.redF(), (GLfloat)bg.greenF(), (GLfloat)bg.blueF(), (GLfloat)bg.alphaF());
 
-    glShadeModel(GL_SMOOTH /*GL_FLAT*/);
-    glLineStipple(1, 0x3333);
+    localFunctions->glShadeModel(GL_SMOOTH /*GL_FLAT*/);
+    localFunctions->glLineStipple(1, 0x3333);
 
-    glEnableClientState(GL_VERTEX_ARRAY);
+    localFunctions->glEnableClientState(GL_VERTEX_ARRAY);
 }
 
 void GlScope::paintGL() {
+    // TODO: Migrate to OpenGL ES2
+    // QOpenGLFunctions_ES2 *localFunctions = context()->versionFunctions<QOpenGLFunctions_ES2>();
+    // QOpenGLFunctions_3_2_Core *localFunctions = context()->versionFunctions<QOpenGLFunctions_3_2_Core>();
+    QOpenGLFunctions_1_3 *localFunctions = context()->versionFunctions<QOpenGLFunctions_1_3>();
+
     // Clear OpenGL buffer and configure settings
-    glClear(GL_COLOR_BUFFER_BIT);
-    glLineWidth(1);
+    localFunctions->glClear(GL_COLOR_BUFFER_BIT);
+    localFunctions->glLineWidth(1);
 
     if (generator->isReady()) { drawGraph(view->digitalPhosphorDraws()); }
 
     if (!this->zoomed) {
         // Draw vertical lines at marker positions
-        glEnable(GL_LINE_STIPPLE);
+        localFunctions->glEnable(GL_LINE_STIPPLE);
         QColor trColor = view->screen.markers;
-        glColor4f((GLfloat)trColor.redF(), (GLfloat)trColor.greenF(), (GLfloat)trColor.blueF(), (GLfloat)trColor.alphaF());
+        localFunctions->glColor4f((GLfloat)trColor.redF(), (GLfloat)trColor.greenF(), (GLfloat)trColor.blueF(), (GLfloat)trColor.alphaF());
 
         for (int marker = 0; marker < MARKER_COUNT; ++marker) {
             if (!scope->horizontal.marker_visible[marker]) continue;
@@ -71,12 +85,12 @@ void GlScope::paintGL() {
             vaMarker[marker][0] = (GLfloat)scope->horizontal.marker[marker];
             vaMarker[marker][2] = (GLfloat)scope->horizontal.marker[marker];
 
-            glLineWidth((marker == selectedMarker) ? 3 : 1);
-            glVertexPointer(2, GL_FLOAT, 0, &vaMarker[marker].front());
-            glDrawArrays(GL_LINES, 0, (GLsizei)vaMarker[marker].size() / 2);
+            localFunctions->glLineWidth((marker == selectedMarker) ? 3 : 1);
+            localFunctions->glVertexPointer(2, GL_FLOAT, 0, &vaMarker[marker].front());
+            localFunctions->glDrawArrays(GL_LINES, 0, (GLsizei)vaMarker[marker].size() / 2);
         }
 
-        glDisable(GL_LINE_STIPPLE);
+        localFunctions->glDisable(GL_LINE_STIPPLE);
     }
 
     // Draw grid

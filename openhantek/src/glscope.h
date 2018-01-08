@@ -6,14 +6,7 @@
 #include <QtGlobal>
 #include <array>
 
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 4, 0))
 #include <QOpenGLWidget>
-using GL_WIDGET_CLASS = QOpenGLWidget;
-#else
-#include <QGLWidget>
-using GL_WIDGET_CLASS = QGLWidget;
-#endif
-
 #include "hantekdso/enums.h"
 #include "hantekprotocol/definitions.h"
 
@@ -22,7 +15,7 @@ struct DsoSettingsScope;
 struct DsoSettingsView;
 
 /// \brief OpenGL accelerated widget that displays the oscilloscope screen.
-class GlScope : public GL_WIDGET_CLASS {
+class GlScope : public QOpenGLWidget {
     Q_OBJECT
 
   public:
