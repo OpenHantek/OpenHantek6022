@@ -24,10 +24,6 @@
 #include <QTimer>
 
 class USBDevice;
-namespace Hantek {
-class BulkCommand;
-class ControlCommand;
-}
 
 /// \brief The DsoControl abstraction layer for %Hantek USB DSOs.
 /// TODO Please anyone, refactor this class into smaller pieces (Separation of Concerns!).
@@ -93,19 +89,19 @@ class HantekDsoControl : public QObject {
     /// \return See ::Dso::ErrorCode.
     Dso::ErrorCode stringCommand(const QString &commandString);
 
-    void addCommand(Hantek::BulkCode code, Hantek::BulkCommand* newCommand, bool pending = true);
+    void addCommand(BulkCommand* newCommand, bool pending = true);
     template<class T> T* modifyCommand(Hantek::BulkCode code) {
         command[(uint8_t)code]->pending = true;
         return static_cast<T*>(command[(uint8_t)code]);
     }
-    const Hantek::BulkCommand* getCommand(Hantek::BulkCode code) const;
+    const BulkCommand* getCommand(Hantek::BulkCode code) const;
 
-    void addCommand(Hantek::ControlCode code, Hantek::ControlCommand* newCommand, bool pending = true);
+    void addCommand(ControlCommand* newCommand, bool pending = true);
     template<class T> T* modifyCommand(Hantek::ControlCode code) {
         control[(uint8_t)code]->pending = true;
         return static_cast<T*>(control[(uint8_t)code]);
     }
-    const Hantek::ControlCommand* getCommand(Hantek::ControlCode code) const;
+    const ControlCommand* getCommand(Hantek::ControlCode code) const;
   private:
     bool isRollMode() const;
     bool isFastRate() const;
@@ -167,10 +163,10 @@ class HantekDsoControl : public QObject {
 
   private:
     /// Pointers to bulk/control commands
-    Hantek::BulkCommand *command[255] = {0};
-    Hantek::BulkCommand* firstBulkCommand = nullptr;
-    Hantek::ControlCommand *control[255] = {0};
-    Hantek::ControlCommand* firstControlCommand = nullptr;
+    BulkCommand *command[255] = {0};
+    BulkCommand* firstBulkCommand = nullptr;
+    ControlCommand *control[255] = {0};
+    ControlCommand* firstControlCommand = nullptr;
 
     // Communication with device
     USBDevice *device;     ///< The USB device for the oscilloscope

@@ -94,5 +94,6 @@ struct ControlSpecification {
     bool supportsCaptureState = true;
     bool supportsOffset = true;
     bool supportsCouplingRelays = true;
+    int fixedUSBinLength = 0;
 };
 }

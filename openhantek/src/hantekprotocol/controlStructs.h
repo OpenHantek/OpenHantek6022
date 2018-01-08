@@ -2,18 +2,10 @@
 
 #include "definitions.h"
 #include "usb/usbdevicedefinitions.h"
-#include "utils/dataarray.h"
+#include "usb/controlcommand.h"
 #include "controlcode.h"
 
 namespace Hantek {
-class ControlCommand : public DataArray<uint8_t> {
-protected:
-    ControlCommand(ControlCode code, unsigned size): DataArray<uint8_t>(size), code(code) {}
-public:
-    bool pending = false;
-    ControlCode code;
-    ControlCommand* next = nullptr;
-};
 
 struct ControlSetOffset : public ControlCommand {
     ControlSetOffset();
@@ -101,5 +93,11 @@ struct ControlSetTimeDIV : public ControlCommand {
 
 struct ControlAcquireHardData : public ControlCommand {
     ControlAcquireHardData();
+};
+
+struct ControlGetLimits : public ControlCommand {
+    OffsetsPerGainStep* offsetLimit;
+    ControlGetLimits(unsigned channels);
+    ~ControlGetLimits();
 };
 }

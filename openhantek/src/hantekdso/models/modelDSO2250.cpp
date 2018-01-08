@@ -30,12 +30,19 @@ ModelDSO2250::ModelDSO2250() : DSOModel(ID, 0x04b5, 0x2250, 0x04b4, 0x2250, "dso
 }
 
 void ModelDSO2250::applyRequirements(HantekDsoControl *dsoControl) const {
+    dsoControl->addCommand(new BulkForceTrigger(), false);
+    dsoControl->addCommand(new BulkCaptureStart(), false);
+    dsoControl->addCommand(new BulkTriggerEnabled(), false);
+    dsoControl->addCommand(new BulkGetData(), false);
+    dsoControl->addCommand(new BulkGetCaptureState(), false);
+    dsoControl->addCommand(new BulkSetGain(), false);
+
     // Instantiate additional commands for the DSO-2250
-    dsoControl->addCommand(BulkCode::BSETCHANNELS, new BulkSetChannels2250());
-    dsoControl->addCommand(BulkCode::CSETTRIGGERORSAMPLERATE, new BulkSetTrigger2250());
-    dsoControl->addCommand(BulkCode::DSETBUFFER, new BulkSetRecordLength2250());
-    dsoControl->addCommand(BulkCode::ESETTRIGGERORSAMPLERATE, new BulkSetSamplerate2250());
-    dsoControl->addCommand(BulkCode::FSETBUFFER, new BulkSetBuffer2250());
-    dsoControl->addCommand(ControlCode::CONTROL_SETOFFSET, new ControlSetOffset());
-    dsoControl->addCommand(ControlCode::CONTROL_SETRELAYS, new ControlSetRelays());
+    dsoControl->addCommand(new BulkSetChannels2250(), false);
+    dsoControl->addCommand(new BulkSetTrigger2250(), false);
+    dsoControl->addCommand(new BulkSetRecordLength2250(), false);
+    dsoControl->addCommand(new BulkSetSamplerate2250(), false);
+    dsoControl->addCommand(new BulkSetBuffer2250(), false);
+    dsoControl->addCommand(new ControlSetOffset(), false);
+    dsoControl->addCommand(new ControlSetRelays(), false);
 }

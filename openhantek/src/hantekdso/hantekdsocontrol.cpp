@@ -60,15 +60,10 @@ HantekDsoControl::HantekDsoControl(USBDevice *device)
 
     if (specification.useControlNoBulk) {
         device->setEnableBulkTransfer(false);
-    } else {
-        // Instantiate the commands needed for all bulk-command-enabled models
-        addCommand(BulkCode::FORCETRIGGER, new BulkForceTrigger(), false);
-        addCommand(BulkCode::STARTSAMPLING, new BulkCaptureStart(), false);
-        addCommand(BulkCode::ENABLETRIGGER, new BulkTriggerEnabled(), false);
-        addCommand(BulkCode::GETDATA, new BulkGetData(), false);
-        addCommand(BulkCode::GETCAPTURESTATE, new BulkGetCaptureState(), false);
-        addCommand(BulkCode::SETGAIN, new BulkSetGain(), false);
     }
+
+    if (specification.fixedUSBinLength)
+    device->overwriteInPacketLength(specification.fixedUSBinLength);
 
     // Apply special requirements by the devices model
     device->getModel()->applyRequirements(this);
@@ -135,15 +130,16 @@ unsigned HantekDsoControl::getRecordLength() const {
 
 Dso::ErrorCode HantekDsoControl::retrieveChannelLevelData() {
     // Get channel level data
+    ControlGetLimits c(2);
     int errorCode =
-        device->controlRead((uint8_t)ControlCode::CONTROL_VALUE, (unsigned char *)&(specification.offsetLimit),
-                            sizeof(specification.offsetLimit), (uint8_t)ControlValue::VALUE_OFFSETLIMITS);
+        device->controlRead(&c);
     if (errorCode < 0) {
         qWarning() << tr("Couldn't get channel level data from oscilloscope");
         emit statusMessage(tr("Couldn't get channel level data from oscilloscope"), 0);
         emit communicationError();
         return Dso::ErrorCode::CONNECTION;
     }
+    memcpy(specification.offsetLimit,c.offsetLimit,sizeof(specification.offsetLimit));
 
     return Dso::ErrorCode::NONE;
 }
@@ -185,8 +181,7 @@ std::vector<unsigned char> HantekDsoControl::getSamples(unsigned &previousSample
         // Request data
         errorCode = device->bulkCommand(getCommand(BulkCode::GETDATA), 1);
     } else {
-        const ControlCommand *bulkCommand = getCommand(ControlCode::CONTROL_ACQUIIRE_HARD_DATA);
-        errorCode = device->controlWrite((uint8_t)bulkCommand->code, bulkCommand->data(), bulkCommand->getSize());
+        errorCode = device->controlWrite(getCommand(ControlCode::CONTROL_ACQUIIRE_HARD_DATA));
     }
     if (errorCode < 0) {
         qWarning() << "Getting sample data failed: " << libUsbErrorString(errorCode);
@@ -1040,18 +1035,18 @@ Dso::ErrorCode HantekDsoControl::stringCommand(const QString &commandString) {
         return Dso::ErrorCode::UNSUPPORTED;
 }
 
-void HantekDsoControl::addCommand(BulkCode code, BulkCommand *newCommand, bool pending) {
+void HantekDsoControl::addCommand(BulkCommand *newCommand, bool pending) {
     newCommand->pending = pending;
-    command[(uint8_t)code] = newCommand;
+    command[(uint8_t)newCommand->code] = newCommand;
     newCommand->next = firstBulkCommand;
     firstBulkCommand = newCommand;
 }
 
 const BulkCommand *HantekDsoControl::getCommand(BulkCode code) const { return command[(uint8_t)code]; }
 
-void HantekDsoControl::addCommand(ControlCode code, ControlCommand *newCommand, bool pending) {
+void HantekDsoControl::addCommand(ControlCommand *newCommand, bool pending) {
     newCommand->pending = pending;
-    control[(uint8_t)code] = newCommand;
+    control[newCommand->code] = newCommand;
     newCommand->next = firstControlCommand;
     firstControlCommand = newCommand;
 }
@@ -1087,8 +1082,7 @@ void HantekDsoControl::run() {
                                .arg(QString::number(control[cIndex], 16),
                                     hexDump(this->control[control]->data(), this->control[control]->getSize())));
 
-            errorCode =
-                device->controlWrite((uint8_t)controlCommand->code, controlCommand->data(), controlCommand->getSize());
+            errorCode = device->controlWrite(controlCommand);
             if (errorCode < 0) {
                 qWarning("Sending control command %2x failed: %s", (uint8_t)controlCommand->code,
                          libUsbErrorString(errorCode).toLocal8Bit().data());

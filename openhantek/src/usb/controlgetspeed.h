@@ -1,14 +1,11 @@
-
 // SPDX-License-Identifier: GPL-2.0+
 
 #pragma once
-#include "utils/dataarray.h"
-#include <inttypes.h>
+#include "controlcommand.h"
 #include "usbdevicedefinitions.h"
 
-/// \class ControlGetSpeed
 /// \brief The CONTROL_GETSPEED parser.
-class ControlGetSpeed : public DataArray<uint8_t> {
+class ControlGetSpeed : public ControlCommand {
   public:
     ControlGetSpeed();
     /// \brief Gets the speed of the connection.

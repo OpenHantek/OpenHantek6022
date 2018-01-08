@@ -11,7 +11,6 @@ ModelDSO5200::ModelDSO5200() : DSOModel(ID, 0x04b5, 0x5200, 0x04b4, 0x5200, "dso
     specification.command.bulk.setSamplerate = BulkCode::CSETTRIGGERORSAMPLERATE;
     specification.command.bulk.setTrigger = BulkCode::ESETTRIGGERORSAMPLERATE;
     specification.command.bulk.setPretrigger = BulkCode::ESETTRIGGERORSAMPLERATE;
-    // specification.command.values.voltageLimits = VALUE_ETSCORRECTION;
 
     specification.samplerate.single.base = 100e6;
     specification.samplerate.single.max = 125e6;
@@ -32,12 +31,19 @@ ModelDSO5200::ModelDSO5200() : DSOModel(ID, 0x04b5, 0x5200, 0x04b4, 0x5200, "dso
 }
 
 void ModelDSO5200::applyRequirements(HantekDsoControl *dsoControl) const {
+    dsoControl->addCommand(new BulkForceTrigger(), false);
+    dsoControl->addCommand(new BulkCaptureStart(), false);
+    dsoControl->addCommand(new BulkTriggerEnabled(), false);
+    dsoControl->addCommand(new BulkGetData(), false);
+    dsoControl->addCommand(new BulkGetCaptureState(), false);
+    dsoControl->addCommand(new BulkSetGain(), false);
+
     // Instantiate additional commands for the DSO-5200
-    dsoControl->addCommand(BulkCode::CSETTRIGGERORSAMPLERATE, new BulkSetSamplerate5200());
-    dsoControl->addCommand(BulkCode::DSETBUFFER, new BulkSetBuffer5200());
-    dsoControl->addCommand(BulkCode::ESETTRIGGERORSAMPLERATE, new BulkSetTrigger5200());
-    dsoControl->addCommand(ControlCode::CONTROL_SETOFFSET, new ControlSetOffset());
-    dsoControl->addCommand(ControlCode::CONTROL_SETRELAYS, new ControlSetRelays());
+    dsoControl->addCommand(new BulkSetSamplerate5200(), false);
+    dsoControl->addCommand(new BulkSetBuffer5200(), false);
+    dsoControl->addCommand(new BulkSetTrigger5200(), false);
+    dsoControl->addCommand(new ControlSetOffset(), false);
+    dsoControl->addCommand(new ControlSetRelays(), false);
 }
 
 ModelDSO5200A::ModelDSO5200A() {

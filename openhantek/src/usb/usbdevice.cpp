@@ -6,6 +6,8 @@
 
 #include "usbdevice.h"
 
+#include "hantekprotocol/controlStructs.h"
+#include "hantekprotocol/bulkStructs.h"
 #include "controlgetspeed.h"
 #include "models.h"
 #include "utils/printutils.h"
@@ -139,11 +141,6 @@ int USBDevice::bulkTransfer(unsigned char endpoint, const unsigned char *data, u
         return transferred;
 }
 
-/// \brief Bulk write to the oscilloscope.
-/// \param data Buffer for the sent/recieved data.
-/// \param length The length of the packet.
-/// \param attempts The number of attempts, that are done on timeouts.
-/// \return Number of sent bytes on success, libusb error code on error.
 int USBDevice::bulkWrite(const unsigned char *data, unsigned int length, int attempts) {
     if (!this->handle) return LIBUSB_ERROR_NO_DEVICE;
 
@@ -153,11 +150,6 @@ int USBDevice::bulkWrite(const unsigned char *data, unsigned int length, int att
     return this->bulkTransfer(HANTEK_EP_OUT, data, length, attempts);
 }
 
-/// \brief Bulk read from the oscilloscope.
-/// \param data Buffer for the sent/recieved data.
-/// \param length The length of the packet.
-/// \param attempts The number of attempts, that are done on timeouts.
-/// \return Number of received bytes on success, libusb error code on error.
 int USBDevice::bulkRead(unsigned char *data, unsigned int length, int attempts) {
     if (!this->handle) return LIBUSB_ERROR_NO_DEVICE;
 
@@ -167,29 +159,19 @@ int USBDevice::bulkRead(unsigned char *data, unsigned int length, int attempts) 
     return this->bulkTransfer(HANTEK_EP_IN, data, length, attempts);
 }
 
-/// \brief Send a bulk command to the oscilloscope.
-/// \param command The command, that should be sent.
-/// \param attempts The number of attempts, that are done on timeouts.
-/// \return Number of sent bytes on success, libusb error code on error.
 int USBDevice::bulkCommand(const DataArray<unsigned char> *command, int attempts) {
     if (!this->handle) return LIBUSB_ERROR_NO_DEVICE;
 
     if (!allowBulkTransfer) return LIBUSB_SUCCESS;
 
     // Send BeginCommand control command
-    int errorCode = this->controlWrite((uint8_t)Hantek::ControlCode::CONTROL_BEGINCOMMAND, beginCommandControl.data(),
-                                       beginCommandControl.getSize());
+    int errorCode = this->controlWrite(&beginCommandControl);
     if (errorCode < 0) return errorCode;
 
     // Send bulk command
     return this->bulkWrite(command->data(), command->getSize(), attempts);
 }
 
-/// \brief Multi packet bulk read from the oscilloscope.
-/// \param data Buffer for the sent/recieved data.
-/// \param length The length of data contained in the packets.
-/// \param attempts The number of attempts, that are done on timeouts.
-/// \return Number of received bytes on success, libusb error code on error.
 int USBDevice::bulkReadMulti(unsigned char *data, unsigned length, int attempts) {
     if (!this->handle) return LIBUSB_ERROR_NO_DEVICE;
 
@@ -213,15 +195,6 @@ int USBDevice::bulkReadMulti(unsigned char *data, unsigned length, int attempts)
         return errorCode;
 }
 
-/// \brief Control transfer to the oscilloscope.
-/// \param type The request type, also sets the direction of the transfer.
-/// \param request The request field of the packet.
-/// \param data Buffer for the sent/recieved data.
-/// \param length The length field of the packet.
-/// \param value The value field of the packet.
-/// \param index The index field of the packet.
-/// \param attempts The number of attempts, that are done on timeouts.
-/// \return Number of transferred bytes on success, libusb error code on error.
 int USBDevice::controlTransfer(unsigned char type, unsigned char request, unsigned char *data, unsigned int length,
                                int value, int index, int attempts) {
     if (!this->handle) return LIBUSB_ERROR_NO_DEVICE;
@@ -234,52 +207,29 @@ int USBDevice::controlTransfer(unsigned char type, unsigned char request, unsign
     return errorCode;
 }
 
-/// \brief Control write to the oscilloscope.
-/// \param request The request field of the packet.
-/// \param data Buffer for the sent/recieved data.
-/// \param length The length field of the packet.
-/// \param value The value field of the packet.
-/// \param index The index field of the packet.
-/// \param attempts The number of attempts, that are done on timeouts.
-/// \return Number of sent bytes on success, libusb error code on error.
-int USBDevice::controlWrite(uint8_t request, unsigned char *data, unsigned int length, int value, int index,
-                            int attempts) {
+int USBDevice::controlWrite(const ControlCommand* command) {
     if (!this->handle) return LIBUSB_ERROR_NO_DEVICE;
     // std::cout << "control" << (int)request << " l:"<<length<<" d:"<<(int)data[0] << std::endl;
-    return this->controlTransfer(LIBUSB_REQUEST_TYPE_VENDOR | LIBUSB_ENDPOINT_OUT, request, data, length, value, index,
-                                 attempts);
+    return this->controlTransfer(LIBUSB_REQUEST_TYPE_VENDOR | LIBUSB_ENDPOINT_OUT,
+                                 (uint8_t)command->code, command->data(), command->getSize(), command->value, 0, HANTEK_ATTEMPTS);
 }
 
-/// \brief Control read to the oscilloscope.
-/// \param request The request field of the packet.
-/// \param data Buffer for the sent/recieved data.
-/// \param length The length field of the packet.
-/// \param value The value field of the packet.
-/// \param index The index field of the packet.
-/// \param attempts The number of attempts, that are done on timeouts.
-/// \return Number of received bytes on success, libusb error code on error.
-int USBDevice::controlRead(unsigned char request, unsigned char *data, unsigned int length, int value, int index,
-                           int attempts) {
+int USBDevice::controlRead(const ControlCommand *command) {
     if (!this->handle) return LIBUSB_ERROR_NO_DEVICE;
 
-    return this->controlTransfer(LIBUSB_REQUEST_TYPE_VENDOR | LIBUSB_ENDPOINT_IN, request, data, length, value, index,
-                                 attempts);
+    return this->controlTransfer(LIBUSB_REQUEST_TYPE_VENDOR | LIBUSB_ENDPOINT_IN,
+                                 (uint8_t)command->code, command->data(), command->getSize(), command->value, 0, HANTEK_ATTEMPTS);
 }
 
-/// \brief Gets the speed of the connection.
-/// \return The ::ConnectionSpeed of the USB connection.
 int USBDevice::getConnectionSpeed() {
     int errorCode;
     ControlGetSpeed response;
-
-    errorCode = this->controlRead((uint8_t)Hantek::ControlCode::CONTROL_GETSPEED, response.data(), response.getSize());
+    errorCode = this->controlRead(&response);
     if (errorCode < 0) return errorCode;
 
     return response.getSpeed();
 }
 
-/// \brief Gets the maximum size of one packet transmitted via bulk transfer.
-/// \return The maximum packet size in bytes, negative libusb error code on error.
 int USBDevice::getPacketSize() {
     const int s = this->getConnectionSpeed();
     if (s == CONNECTION_FULLSPEED)

@@ -3,6 +3,7 @@
 #include <cstring>
 
 #include "controlStructs.h"
+#include "controlvalue.h"
 
 namespace Hantek {
 
@@ -109,4 +110,14 @@ ControlSetTimeDIV::ControlSetTimeDIV() : ControlCommand(ControlCode::CONTROL_SET
 void ControlSetTimeDIV::setDiv(uint8_t val) { this->array[0] = val; }
 
 ControlAcquireHardData::ControlAcquireHardData() : ControlCommand(ControlCode::CONTROL_ACQUIIRE_HARD_DATA,1) { this->array[0] = 0x01; }
+
+ControlGetLimits::ControlGetLimits(unsigned channels) : ControlCommand(ControlCode::CONTROL_VALUE,1), offsetLimit(new OffsetsPerGainStep[channels]) {
+    value = (uint8_t)ControlValue::VALUE_OFFSETLIMITS;
+    array[0] = 0x01;
+}
+
+ControlGetLimits::~ControlGetLimits()
+{
+    delete [] offsetLimit;
+}
 }

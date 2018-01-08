@@ -457,6 +457,8 @@ enum class BulkCode : uint8_t {
     DSETBUFFER = 0x0d,
     ESETTRIGGERORSAMPLERATE = 0x0e,
     FSETBUFFER = 0x0f,
+
+    GETCAPTURESTATE_RESPONSE=0xfe,
     INVALID=0xff
 };
 

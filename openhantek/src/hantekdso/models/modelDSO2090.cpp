@@ -30,9 +30,16 @@ ModelDSO2090::ModelDSO2090() : DSOModel(ID, 0x04b5, 0x2090, 0x04b4, 0x2090, "dso
 }
 
 void ModelDSO2090::applyRequirements(HantekDsoControl *dsoControl)  const {
-    dsoControl->addCommand(BulkCode::SETTRIGGERANDSAMPLERATE, new BulkSetTriggerAndSamplerate());
-    dsoControl->addCommand(ControlCode::CONTROL_SETOFFSET, new ControlSetOffset());
-    dsoControl->addCommand(ControlCode::CONTROL_SETRELAYS, new ControlSetRelays());
+    dsoControl->addCommand(new BulkForceTrigger(), false);
+    dsoControl->addCommand(new BulkCaptureStart(), false);
+    dsoControl->addCommand(new BulkTriggerEnabled(), false);
+    dsoControl->addCommand(new BulkGetData(), false);
+    dsoControl->addCommand(new BulkGetCaptureState(), false);
+    dsoControl->addCommand(new BulkSetGain(), false);
+
+    dsoControl->addCommand(new BulkSetTriggerAndSamplerate(), false);
+    dsoControl->addCommand(new ControlSetOffset(), false);
+    dsoControl->addCommand(new ControlSetRelays(), false);
 }
 
 ModelDSO2090A::ModelDSO2090A() {
