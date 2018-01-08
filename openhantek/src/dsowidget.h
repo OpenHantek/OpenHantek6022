@@ -23,6 +23,13 @@ struct DsoSettingsView;
 class DsoWidget : public QWidget {
     Q_OBJECT
 
+    struct Sliders {
+        LevelSlider *offsetSlider;          ///< The sliders for the graph offsets
+        LevelSlider *triggerPositionSlider; ///< The slider for the pretrigger
+        LevelSlider *triggerLevelSlider;    ///< The sliders for the trigger level
+        LevelSlider *markerSlider;          ///< The sliders for the markers
+    };
+
   public:
     /// \brief Initializes the components of the oszilloscope-screen.
     /// \param settings The settings object containing the oscilloscope settings.
@@ -34,18 +41,19 @@ class DsoWidget : public QWidget {
     void setExporterForNextFrame(std::unique_ptr<Exporter> exporter);
 
   protected:
-    void adaptTriggerLevelSlider(ChannelID channel);
-    void setMeasurementVisible(ChannelID channel, bool visible);
+    void setupSliders(Sliders &sliders);
+    void adaptTriggerLevelSlider(DsoWidget::Sliders &sliders, ChannelID channel);
+    void adaptTriggerPositionSlider();
+    void setMeasurementVisible(ChannelID channel);
     void updateMarkerDetails();
     void updateSpectrumDetails(ChannelID channel);
     void updateTriggerDetails();
     void updateVoltageDetails(ChannelID channel);
 
+    Sliders mainSliders;
+    Sliders zoomSliders;
+
     QGridLayout *mainLayout;            ///< The main layout for this widget
-    LevelSlider *offsetSlider;          ///< The sliders for the graph offsets
-    LevelSlider *triggerPositionSlider; ///< The slider for the pretrigger
-    LevelSlider *triggerLevelSlider;    ///< The sliders for the trigger level
-    LevelSlider *markerSlider;          ///< The sliders for the markers
 
     QHBoxLayout *settingsLayout;        ///< The table for the settings info
     QLabel *settingsTriggerLabel;       ///< The trigger details
@@ -80,6 +88,7 @@ class DsoWidget : public QWidget {
     GlScope *zoomScope;     ///< The optional magnified scope screen
     std::unique_ptr<Exporter> exportNextFrame;
     std::unique_ptr<DataAnalyzerResult> data;
+
   public slots:
     // Horizontal axis
     // void horizontalFormatChanged(HorizontalFormat format);

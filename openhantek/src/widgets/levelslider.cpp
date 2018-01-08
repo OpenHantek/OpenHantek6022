@@ -311,6 +311,7 @@ void LevelSlider::mouseMoveEvent(QMouseEvent *event) {
         this->setValue(this->pressedSlider,
                        floor(value / this->slider[pressedSlider]->step + 0.5) * this->slider[pressedSlider]->step);
 
+    emit valueChanged(pressedSlider, slider[pressedSlider]->value);
     event->accept();
 }
 
@@ -414,7 +415,7 @@ void LevelSlider::paintEvent(QPaintEvent *event) {
                 break;
             }
 
-            painter.setBrush(QBrush((*slider)->color, Qt::SolidPattern));
+            painter.setBrush(QBrush((*slider)->color, isEnabled() ? Qt::SolidPattern : Qt::NoBrush));
             painter.drawPolygon(QPolygon(needlePoints));
             painter.setBrush(Qt::NoBrush);
         } else {
