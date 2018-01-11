@@ -35,7 +35,7 @@ if("${CMAKE_SYSTEM}" MATCHES "Linux")
 endif()
 
 # Add auxiliary files to the project, so that these files appear in VisualStudio/QtCreator
-file(GLOB_RECURSE MDFILES "docs/*.md")
+file(GLOB_RECURSE MDFILES "docs/*.md" "openhantek/*.md")
 add_custom_target(readme SOURCES readme.md ${MDFILES})
 
 # Add "cppcheck" command
