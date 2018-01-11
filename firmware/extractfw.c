@@ -24,10 +24,12 @@
 
 
 #include <ctype.h>
-#include <malloc.h>
+#include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 
+#define PACKAGE_VERSION 1
+#define PACKAGE 1
 #include <bfd.h>
 
 
@@ -60,7 +62,7 @@ int main(int argc, char **argv) {
 	
 	if(argc < 3) {
 		// Guess correct filename for firmware
-		filenameFirmware = malloc(prefixLength + strlen(filenameEndFirmware) + 1);
+        filenameFirmware = (char*)malloc(prefixLength + strlen(filenameEndFirmware) + 1);
 		memcpy(filenameFirmware, filenameDriver, prefixLength);
 		strcpy(filenameFirmware + prefixLength, filenameEndFirmware);
 		
@@ -77,7 +79,7 @@ int main(int argc, char **argv) {
 	
 	if(argc < 4) {
 		// Guess correct filename for loader
-		filenameLoader = malloc(prefixLength + strlen(filenameEndLoader) + 1);
+        filenameLoader = (char*)malloc(prefixLength + strlen(filenameEndLoader) + 1);
 		memcpy(filenameLoader, filenameDriver, prefixLength);
 		strcpy(filenameLoader + prefixLength, filenameEndLoader);
 		
@@ -138,7 +140,7 @@ int extractFirmware(const char *filenameDriver, const char *filenameFirmware, co
 	printf("Section %s found (starting at 0x%04lx, %li bytes)\n", nameSection, (unsigned long int) sectionData->filepos, (long int) sectionData->size);
 	
 	// Search for the symbols we want
-	symbols = malloc(bfd_get_symtab_upper_bound(bfdDriver));
+    symbols = (asymbol**)malloc(bfd_get_symtab_upper_bound(bfdDriver));
 	symbolCount = bfd_canonicalize_symtab(bfdDriver, symbols);
 	for(currentSymbol = 0; currentSymbol < symbolCount; currentSymbol++) {
 		symbolName = bfd_asymbol_name(symbols[currentSymbol]);
@@ -160,8 +162,8 @@ int extractFirmware(const char *filenameDriver, const char *filenameFirmware, co
 	printf("Symbol %s found (offset 0x%04lx, %li bytes)\n", nameSymbolLoader, (unsigned long int) offsetLoader, (long int) lengthLoader);
 	
 	// Extract data
-	bufferFirmware = malloc(lengthFirmware);
-	bufferLoader = malloc(lengthLoader);
+    bufferFirmware = (unsigned char*)malloc(lengthFirmware);
+    bufferLoader = (unsigned char*)malloc(lengthLoader);
 	if (bufferFirmware == NULL || bufferLoader == NULL) {
 		fprintf(stderr, "Can't allocate memory\n");
 		bfd_close(bfdDriver);
