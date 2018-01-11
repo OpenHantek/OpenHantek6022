@@ -2,8 +2,11 @@
 
 #pragma once
 
+#include <QVector3D>
+#include <QReadWriteLock>
+
 #include <vector>
-#include "hantekprotocol/definitions.h"
+#include "hantekprotocol/types.h"
 
 /// \brief Struct for a array of sample values.
 struct SampleValues {
@@ -15,28 +18,34 @@ struct SampleValues {
 struct DataChannel {
     SampleValues voltage;   ///< The time-domain voltage levels (V)
     SampleValues spectrum;  ///< The frequency-domain power levels (dB)
-    double amplitude = 0.0; ///< The amplitude of the signal
+
     double frequency = 0.0; ///< The frequency of the signal
+    // Calculate peak-to-peak voltage
+    double computeAmplitude() const;
 };
 
-/// A result from the { @link DataAnalyzer } class.
-class DataAnalyzerResult {
+typedef std::vector<QVector3D> ChannelGraph;
+typedef std::vector<ChannelGraph> ChannelsGraphs;
+
+/// Post processing results
+class PPresult {
   public:
-    DataAnalyzerResult(unsigned int channelCount);
+    PPresult(unsigned int channelCount);
+
+    /// \brief Returns the analyzed data.
+    /// \param channel Channel, whose data should be returned.
     const DataChannel *data(ChannelID channel) const;
+    /// \brief Returns the analyzed data. The data structure can be modifed.
+    /// \param channel Channel, whose data should be returned.
     DataChannel *modifyData(ChannelID channel);
+    /// \return The maximum sample count of the last analyzed data. This assumes there is at least one channel.
     unsigned int sampleCount() const;
     unsigned int channelCount() const;
 
-    /**
-     * Applies a new maximum samples value, if the given value is higher than the
-     * already stored one
-     * @param newMaxSamples Maximum samples value
-     */
-    void challengeMaxSamples(unsigned int newMaxSamples);
-    unsigned int getMaxSamples() const;
+    bool softwareTriggerTriggered = false;
 
+    ChannelsGraphs vaChannelSpectrum;
+    ChannelsGraphs vaChannelVoltage;
   private:
     std::vector<DataChannel> analyzedData; ///< The analyzed data for each channel
-    unsigned int maxSamples = 0;           ///< The maximum record length of the analyzed data
 };

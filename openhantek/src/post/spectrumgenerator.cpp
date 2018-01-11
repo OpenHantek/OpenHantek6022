@@ -9,120 +9,21 @@
 
 #include <fftw3.h>
 
-#include "dataanalyzer.h"
+#include "spectrumgenerator.h"
 
 #include "glscope.h"
 #include "settings.h"
 #include "utils/printutils.h"
 
-std::unique_ptr<DataAnalyzerResult> DataAnalyzer::convertData(const DSOsamples *data, const DsoSettingsScope *scope, unsigned physicalChannels) {
-    QReadLocker locker(&data->lock);
-
-    unsigned int channelCount = (unsigned int)scope->voltage.size();
-
-    std::unique_ptr<DataAnalyzerResult> result =
-        std::unique_ptr<DataAnalyzerResult>(new DataAnalyzerResult(channelCount));
-
-    for (ChannelID channel = 0; channel < channelCount; ++channel) {
-        DataChannel *const channelData = result->modifyData(channel);
-
-        bool gotDataForChannel = channel < physicalChannels && channel < (unsigned int)data->data.size() &&
-                                 !data->data.at(channel).empty();
-        bool isMathChannel = channel >= physicalChannels &&
-                             (scope->voltage[channel].used || scope->spectrum[channel].used) &&
-                             result->channelCount() >= 2 && !result->data(0)->voltage.sample.empty() &&
-                             !result->data(1)->voltage.sample.empty();
-
-        if (!gotDataForChannel && !isMathChannel) {
-            // Clear unused channels
-            channelData->voltage.sample.clear();
-            result->modifyData(physicalChannels)->voltage.interval = 0;
-            continue;
-        }
-
-        // Set sampling interval
-        const double interval = 1.0 / data->samplerate;
-        if (interval != channelData->voltage.interval) {
-            channelData->voltage.interval = interval;
-            if (data->append) // Clear roll buffer if the samplerate changed
-                channelData->voltage.sample.clear();
-        }
-
-        unsigned int size;
-        if (channel < physicalChannels) {
-            size = (unsigned) data->data.at(channel).size();
-            if (data->append) size += channelData->voltage.sample.size();
-            result->challengeMaxSamples(size);
-        } else
-            size = result->getMaxSamples();
-
-        // Physical channels
-        if (channel < physicalChannels) {
-            // Copy the buffer of the oscilloscope into the sample buffer
-            if (data->append)
-                channelData->voltage.sample.insert(channelData->voltage.sample.end(), data->data.at(channel).begin(),
-                                                   data->data.at(channel).end());
-            else
-                channelData->voltage.sample = data->data.at(channel);
-        } else { // Math channel
-            // Resize the sample vector
-            channelData->voltage.sample.resize(size);
-            // Set sampling interval
-            result->modifyData(physicalChannels)->voltage.interval = result->data(0)->voltage.interval;
-
-            // Resize the sample vector
-            result->modifyData(physicalChannels)
-                ->voltage.sample.resize(
-                    qMin(result->data(0)->voltage.sample.size(), result->data(1)->voltage.sample.size()));
-
-            // Calculate values and write them into the sample buffer
-            std::vector<double>::const_iterator ch1Iterator = result->data(0)->voltage.sample.begin();
-            std::vector<double>::const_iterator ch2Iterator = result->data(1)->voltage.sample.begin();
-            std::vector<double> &resultData = result->modifyData(physicalChannels)->voltage.sample;
-            for (std::vector<double>::iterator resultIterator = resultData.begin(); resultIterator != resultData.end();
-                 ++resultIterator) {
-                switch (scope->voltage[physicalChannels].math) {
-                case Dso::MathMode::ADD_CH1_CH2:
-                    *resultIterator = *ch1Iterator + *ch2Iterator;
-                    break;
-                case Dso::MathMode::SUB_CH2_FROM_CH1:
-                    *resultIterator = *ch1Iterator - *ch2Iterator;
-                    break;
-                case Dso::MathMode::SUB_CH1_FROM_CH2:
-                    *resultIterator = *ch2Iterator - *ch1Iterator;
-                    break;
-                }
-                ++ch1Iterator;
-                ++ch2Iterator;
-            }
-        }
-    }
-    return result;
-}
-
 /// \brief Analyzes the data from the dso.
-DataAnalyzer::~DataAnalyzer() {
-    if (window) fftw_free(window);
+SpectrumGenerator::SpectrumGenerator(const DsoSettingsScope *scope) : scope(scope) {}
+
+SpectrumGenerator::~SpectrumGenerator() {
+    if (lastWindowBuffer) fftw_free(lastWindowBuffer);
 }
 
-void DataAnalyzer::applySettings(DsoSettings *settings) { this->settings = settings; }
-
-void DataAnalyzer::setSourceData(const DSOsamples *data) { sourceData = data; }
-
-std::unique_ptr<DataAnalyzerResult> DataAnalyzer::getNextResult() { return std::move(lastResult); }
-
-void DataAnalyzer::samplesAvailable() {
-    if (sourceData == nullptr) return;
-    std::unique_ptr<DataAnalyzerResult> result = convertData(sourceData, &settings->scope,settings->deviceSpecification->channels);
-    spectrumAnalysis(result.get(), lastWindow, lastRecordLength, window, &settings->scope);
-    lastResult.swap(result);
-    emit analyzed();
-}
-
-void DataAnalyzer::spectrumAnalysis(DataAnalyzerResult *result, Dso::WindowFunction &lastWindow,
-                                    unsigned int lastRecordLength, double *&lastWindowBuffer,
-                                    const DsoSettingsScope *scope) {
-    // Calculate frequencies, peak-to-peak voltages and spectrums
+void SpectrumGenerator::process(PPresult *result) {
+    // Calculate frequencies and spectrums
     for (ChannelID channel = 0; channel < result->channelCount(); ++channel) {
         DataChannel *const channelData = result->modifyData(channel);
 
@@ -285,19 +186,6 @@ void DataAnalyzer::spectrumAnalysis(DataAnalyzerResult *result, Dso::WindowFunct
             fftw_plan_r2r_1d(sampleCount, conjugateComplex.get(), correlation.get(), FFTW_HC2R, FFTW_ESTIMATE);
         fftw_execute(fftPlan);
         fftw_destroy_plan(fftPlan);
-
-        // Calculate peak-to-peak voltage
-        double minimalVoltage, maximalVoltage;
-        minimalVoltage = maximalVoltage = channelData->voltage.sample[0];
-
-        for (unsigned int position = 1; position < sampleCount; ++position) {
-            if (channelData->voltage.sample[position] < minimalVoltage)
-                minimalVoltage = channelData->voltage.sample[position];
-            else if (channelData->voltage.sample[position] > maximalVoltage)
-                maximalVoltage = channelData->voltage.sample[position];
-        }
-
-        channelData->amplitude = maximalVoltage - minimalVoltage;
 
         // Get the frequency from the correlation results
         double minimumCorrelation = correlation[0];

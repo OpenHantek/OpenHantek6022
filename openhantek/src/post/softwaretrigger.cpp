@@ -1,10 +1,10 @@
-#include "softwaretrigger.h"
-#include "analyse/dataanalyzerresult.h"
+#include "post/softwaretrigger.h"
+#include "post/ppresult.h"
 #include "scopesettings.h"
 #include "viewconstants.h"
 #include "utils/printutils.h"
 
-SoftwareTrigger::PrePostStartTriggerSamples SoftwareTrigger::compute(const DataAnalyzerResult *data,
+SoftwareTrigger::PrePostStartTriggerSamples SoftwareTrigger::compute(const PPresult *data,
                                                                               const DsoSettingsScope *scope)
 {
     unsigned int preTrigSamples = 0;

@@ -1,7 +1,7 @@
 #pragma once
 #include <tuple>
 struct DsoSettingsScope;
-class DataAnalyzerResult;
+class PPresult;
 
 
 /**
@@ -18,5 +18,5 @@ class SoftwareTrigger {
      * @param scope Scope settings
      * @return Returns a tuple of positions [preTrigger, postTrigger, startTrigger]
      */
-    static PrePostStartTriggerSamples compute(const DataAnalyzerResult *data, const DsoSettingsScope *scope);
+    static PrePostStartTriggerSamples compute(const PPresult *data, const DsoSettingsScope *scope);
 };
