@@ -17,31 +17,34 @@
 
 #include "exporter.h"
 
-#include "analyse/dataanalyzerresult.h"
-#include "glgenerator.h"
+#include "controlspecification.h"
+#include "post/graphgenerator.h"
+#include "post/ppresult.h"
 #include "settings.h"
-#include "viewconstants.h"
 #include "utils/dsoStrings.h"
 #include "utils/printutils.h"
+#include "viewconstants.h"
 
 #define tr(msg) QCoreApplication::translate("Exporter", msg)
 
-Exporter::Exporter(DsoSettings *settings, const QString &filename, ExportFormat format)
-    : settings(settings), filename(filename), format(format) {}
+Exporter::Exporter(const Dso::ControlSpecification *deviceSpecification, DsoSettings *settings, const QString &filename,
+                   ExportFormat format)
+    : deviceSpecification(deviceSpecification), settings(settings), filename(filename), format(format) {}
 
-Exporter *Exporter::createPrintExporter(DsoSettings *settings) {
+Exporter *Exporter::createPrintExporter(const Dso::ControlSpecification *deviceSpecification, DsoSettings *settings) {
     std::unique_ptr<QPrinter> printer = printPaintDevice(settings);
     // Show the printing dialog
     QPrintDialog dialog(printer.get());
     dialog.setWindowTitle(tr("Print oscillograph"));
     if (dialog.exec() != QDialog::Accepted) { return nullptr; }
 
-    Exporter *exporter = new Exporter(settings, QString(), EXPORT_FORMAT_PRINTER);
+    Exporter *exporter = new Exporter(deviceSpecification, settings, QString(), EXPORT_FORMAT_PRINTER);
     exporter->selectedPrinter = std::move(printer);
     return exporter;
 }
 
-Exporter *Exporter::createSaveToFileExporter(DsoSettings *settings) {
+Exporter *Exporter::createSaveToFileExporter(const Dso::ControlSpecification *deviceSpecification,
+                                             DsoSettings *settings) {
     QStringList filters;
     filters << tr("Portable Document Format (*.pdf)") << tr("Image (*.png *.xpm *.jpg)")
             << tr("Comma-Separated Values (*.csv)");
@@ -51,7 +54,7 @@ Exporter *Exporter::createSaveToFileExporter(DsoSettings *settings) {
     fileDialog.setAcceptMode(QFileDialog::AcceptSave);
     if (fileDialog.exec() != QDialog::Accepted) return nullptr;
 
-    return new Exporter(settings, fileDialog.selectedFiles().first(),
+    return new Exporter(deviceSpecification, settings, fileDialog.selectedFiles().first(),
                         (ExportFormat)(EXPORT_FORMAT_PDF + filters.indexOf(fileDialog.selectedNameFilter())));
 }
 
@@ -63,7 +66,7 @@ std::unique_ptr<QPrinter> Exporter::printPaintDevice(DsoSettings *settings) {
     return printer;
 }
 
-bool Exporter::exportSamples(const DataAnalyzerResult *result) {
+bool Exporter::exportSamples(const PPresult *result) {
     if (this->format == EXPORT_FORMAT_CSV) { return exportCSV(result); }
 
     // Choose the color values we need
@@ -77,7 +80,7 @@ bool Exporter::exportSamples(const DataAnalyzerResult *result) {
 
     if (this->format == EXPORT_FORMAT_IMAGE) {
         // We need a QPixmap for image-export
-        QPixmap *qPixmap = new QPixmap(settings->options.imageSize);
+        QPixmap *qPixmap = new QPixmap(settings->exporting.imageSize);
         qPixmap->fill(colorValues->background);
         paintDevice = std::unique_ptr<QPaintDevice>(qPixmap);
     } else if (this->format == EXPORT_FORMAT_PRINTER) {
@@ -146,9 +149,10 @@ bool Exporter::exportSamples(const DataAnalyzerResult *result) {
                 painter.setPen(colorValues->voltage[channel]);
                 painter.drawText(QRectF(0, top, lineHeight * 4, lineHeight), settings->scope.voltage[channel].name);
                 // Print coupling/math mode
-                if ((unsigned int)channel < settings->deviceSpecification->channels)
-                    painter.drawText(QRectF(lineHeight * 4, top, lineHeight * 2, lineHeight),
-                                     Dso::couplingString(settings->scope.coupling(channel, settings->deviceSpecification)));
+                if ((unsigned int)channel < deviceSpecification->channels)
+                    painter.drawText(
+                        QRectF(lineHeight * 4, top, lineHeight * 2, lineHeight),
+                        Dso::couplingString(settings->scope.coupling(channel, deviceSpecification)));
                 else
                     painter.drawText(QRectF(lineHeight * 4, top, lineHeight * 2, lineHeight),
                                      Dso::mathModeString(settings->scope.voltage[channel].math));
@@ -169,7 +173,7 @@ bool Exporter::exportSamples(const DataAnalyzerResult *result) {
                 // Amplitude string representation (4 significant digits)
                 painter.setPen(colorValues->text);
                 painter.drawText(QRectF(lineHeight * 6 + stretchBase * 4, top, stretchBase * 3, lineHeight),
-                                 valueToString(result->data(channel)->amplitude, UNIT_VOLTS, 4),
+                                 valueToString(result->data(channel)->computeAmplitude(), UNIT_VOLTS, 4),
                                  QTextOption(Qt::AlignRight));
                 // Frequency string representation (5 significant digits)
                 painter.drawText(QRectF(lineHeight * 6 + stretchBase * 7, top, stretchBase * 3, lineHeight),
@@ -329,7 +333,7 @@ bool Exporter::exportSamples(const DataAnalyzerResult *result) {
     return true;
 }
 
-bool Exporter::exportCSV(const DataAnalyzerResult *result) {
+bool Exporter::exportCSV(const PPresult *result) {
     QFile csvFile(this->filename);
     if (!csvFile.open(QIODevice::WriteOnly | QIODevice::Text)) return false;
 
