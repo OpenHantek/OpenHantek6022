@@ -7,6 +7,7 @@
 
 #include <QString>
 
+#include "types.h"
 #include "definitions.h"
 #include "states.h"
 #include "usb/bulkcommand.h"
@@ -190,8 +191,8 @@ class BulkSetRecordLength2250 : public BulkCommand {
 class BulkSetBuffer5200 : public BulkCommand {
   public:
     BulkSetBuffer5200();
-    BulkSetBuffer5200(uint16_t triggerPositionPre, uint16_t triggerPositionPost, DTriggerPositionUsed usedPre = DTriggerPositionUsed::DTRIGGERPOSITION_OFF,
-                      DTriggerPositionUsed usedPost = DTriggerPositionUsed::DTRIGGERPOSITION_OFF, uint8_t recordLength = 0);
+    BulkSetBuffer5200(uint16_t triggerPositionPre, uint16_t triggerPositionPost, DTriggerPositionUsed usedPre = DTriggerPositionUsed::OFF,
+                      DTriggerPositionUsed usedPost = DTriggerPositionUsed::OFF, uint8_t recordLength = 0);
 
     uint16_t getTriggerPositionPre();
     void setTriggerPositionPre(uint16_t value);

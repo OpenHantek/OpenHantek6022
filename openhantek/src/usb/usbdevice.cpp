@@ -6,20 +6,19 @@
 
 #include "usbdevice.h"
 
-#include "hantekprotocol/controlStructs.h"
 #include "hantekprotocol/bulkStructs.h"
-#include "controlgetspeed.h"
+#include "hantekprotocol/controlStructs.h"
 #include "models.h"
 #include "utils/printutils.h"
 
 UniqueUSBid USBDevice::computeUSBdeviceID(libusb_device *device) {
-    UniqueUSBid v=0;
-    libusb_get_port_numbers(device, (uint8_t*)&v, sizeof(v));
+    UniqueUSBid v = 0;
+    libusb_get_port_numbers(device, (uint8_t *)&v, sizeof(v));
     return v;
 }
 
-USBDevice::USBDevice(DSOModel *model, libusb_device *device, unsigned findIteration) :
-    model(model), device(device), findIteration(findIteration), uniqueUSBdeviceID(computeUSBdeviceID(device)) {
+USBDevice::USBDevice(DSOModel *model, libusb_device *device, unsigned findIteration)
+    : model(model), device(device), findIteration(findIteration), uniqueUSBdeviceID(computeUSBdeviceID(device)) {
     libusb_ref_device(device);
     libusb_get_device_descriptor(device, &descriptor);
 }
@@ -115,15 +114,9 @@ bool USBDevice::needsFirmware() {
     return this->descriptor.idProduct != model->productID || this->descriptor.idVendor != model->vendorID;
 }
 
-void USBDevice::setFindIteration(unsigned iteration)
-{
-    findIteration = iteration;
-}
+void USBDevice::setFindIteration(unsigned iteration) { findIteration = iteration; }
 
-unsigned USBDevice::getFindIteration() const
-{
-    return findIteration;
-}
+unsigned USBDevice::getFindIteration() const { return findIteration; }
 
 int USBDevice::bulkTransfer(unsigned char endpoint, const unsigned char *data, unsigned int length, int attempts,
                             unsigned int timeout) {
@@ -132,7 +125,8 @@ int USBDevice::bulkTransfer(unsigned char endpoint, const unsigned char *data, u
     int errorCode = LIBUSB_ERROR_TIMEOUT;
     int transferred = 0;
     for (int attempt = 0; (attempt < attempts || attempts == -1) && errorCode == LIBUSB_ERROR_TIMEOUT; ++attempt)
-        errorCode = libusb_bulk_transfer(this->handle, endpoint, (unsigned char*) data, (int)length, &transferred, timeout);
+        errorCode =
+            libusb_bulk_transfer(this->handle, endpoint, (unsigned char *)data, (int)length, &transferred, timeout);
 
     if (errorCode == LIBUSB_ERROR_NO_DEVICE) disconnectFromDevice();
     if (errorCode < 0)
@@ -142,55 +136,27 @@ int USBDevice::bulkTransfer(unsigned char endpoint, const unsigned char *data, u
 }
 
 int USBDevice::bulkWrite(const unsigned char *data, unsigned int length, int attempts) {
-    if (!this->handle) return LIBUSB_ERROR_NO_DEVICE;
-
-    int errorCode = this->getConnectionSpeed();
-    if (errorCode < 0) return errorCode;
-
-    return this->bulkTransfer(HANTEK_EP_OUT, data, length, attempts);
+    return bulkTransfer(HANTEK_EP_OUT, data, length, attempts);
 }
 
-int USBDevice::bulkRead(unsigned char *data, unsigned int length, int attempts) {
-    if (!this->handle) return LIBUSB_ERROR_NO_DEVICE;
-
-    int errorCode = this->getConnectionSpeed();
-    if (errorCode < 0) return errorCode;
-
-    return this->bulkTransfer(HANTEK_EP_IN, data, length, attempts);
-}
-
-int USBDevice::bulkCommand(const DataArray<unsigned char> *command, int attempts) {
-    if (!this->handle) return LIBUSB_ERROR_NO_DEVICE;
-
-    if (!allowBulkTransfer) return LIBUSB_SUCCESS;
-
-    // Send BeginCommand control command
-    int errorCode = this->controlWrite(&beginCommandControl);
-    if (errorCode < 0) return errorCode;
-
-    // Send bulk command
-    return this->bulkWrite(command->data(), command->getSize(), attempts);
+int USBDevice::bulkRead(const DataArray<unsigned char> *command, int attempts) {
+    return bulkTransfer(HANTEK_EP_IN, command->data(), command->getSize(), attempts);
 }
 
 int USBDevice::bulkReadMulti(unsigned char *data, unsigned length, int attempts) {
     if (!this->handle) return LIBUSB_ERROR_NO_DEVICE;
 
-    int errorCode = 0;
-
-    errorCode = this->getConnectionSpeed();
-    if (errorCode < 0) return errorCode;
-
-    errorCode = this->inPacketLength;
+    int errorCode = this->inPacketLength;
     unsigned int packet, received = 0;
     for (packet = 0; received < length && errorCode == this->inPacketLength; ++packet) {
         errorCode = this->bulkTransfer(HANTEK_EP_IN, data + packet * this->inPacketLength,
                                        qMin(length - received, (unsigned int)this->inPacketLength), attempts,
                                        HANTEK_TIMEOUT_MULTI);
-        if (errorCode > 0) received += errorCode;
+        if (errorCode > 0) received += (unsigned)errorCode;
     }
 
     if (received > 0)
-        return received;
+        return (int)received;
     else
         return errorCode;
 }
@@ -207,51 +173,23 @@ int USBDevice::controlTransfer(unsigned char type, unsigned char request, unsign
     return errorCode;
 }
 
-int USBDevice::controlWrite(const ControlCommand* command) {
+int USBDevice::controlWrite(const ControlCommand *command) {
     if (!this->handle) return LIBUSB_ERROR_NO_DEVICE;
-    // std::cout << "control" << (int)request << " l:"<<length<<" d:"<<(int)data[0] << std::endl;
-    return this->controlTransfer(LIBUSB_REQUEST_TYPE_VENDOR | LIBUSB_ENDPOINT_OUT,
-                                 (uint8_t)command->code, command->data(), command->getSize(), command->value, 0, HANTEK_ATTEMPTS);
+    return controlTransfer(LIBUSB_REQUEST_TYPE_VENDOR | LIBUSB_ENDPOINT_OUT, (uint8_t)command->code, command->data(),
+                           command->getSize(), command->value, 0, HANTEK_ATTEMPTS);
 }
 
 int USBDevice::controlRead(const ControlCommand *command) {
     if (!this->handle) return LIBUSB_ERROR_NO_DEVICE;
 
-    return this->controlTransfer(LIBUSB_REQUEST_TYPE_VENDOR | LIBUSB_ENDPOINT_IN,
-                                 (uint8_t)command->code, command->data(), command->getSize(), command->value, 0, HANTEK_ATTEMPTS);
-}
-
-int USBDevice::getConnectionSpeed() {
-    int errorCode;
-    ControlGetSpeed response;
-    errorCode = this->controlRead(&response);
-    if (errorCode < 0) return errorCode;
-
-    return response.getSpeed();
-}
-
-int USBDevice::getPacketSize() {
-    const int s = this->getConnectionSpeed();
-    if (s == CONNECTION_FULLSPEED)
-        return 64;
-    else if (s == CONNECTION_HIGHSPEED)
-        return 512;
-    else if (s > CONNECTION_HIGHSPEED) {
-        std::cerr << "Unknown USB speed. Please correct source code in USBDevice::getPacketSize()" << std::endl;
-        throw new std::runtime_error("Unknown USB speed");
-    } else if (s<0) return s;
-    return 0;
+    return controlTransfer(LIBUSB_REQUEST_TYPE_VENDOR | LIBUSB_ENDPOINT_IN, (uint8_t)command->code, command->data(),
+                           command->getSize(), command->value, 0, HANTEK_ATTEMPTS);
 }
 
 libusb_device *USBDevice::getRawDevice() const { return device; }
 
-unsigned long USBDevice::getUniqueUSBDeviceID() const
-{
-    return uniqueUSBdeviceID;
-}
+unsigned long USBDevice::getUniqueUSBDeviceID() const { return uniqueUSBdeviceID; }
 
-const DSOModel* USBDevice::getModel() const { return model; }
-
-void USBDevice::setEnableBulkTransfer(bool enable) { allowBulkTransfer = enable; }
+const DSOModel *USBDevice::getModel() const { return model; }
 
 void USBDevice::overwriteInPacketLength(int len) { inPacketLength = len; }

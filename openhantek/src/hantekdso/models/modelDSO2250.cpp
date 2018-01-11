@@ -5,12 +5,13 @@
 
 using namespace Hantek;
 
-ModelDSO2250::ModelDSO2250() : DSOModel(ID, 0x04b5, 0x2250, 0x04b4, 0x2250, "dso2250x86", "DSO-2250", Dso::ControlSpecification()) {
-    specification.command.bulk.setRecordLength = BulkCode::DSETBUFFER;
-    specification.command.bulk.setChannels = BulkCode::BSETCHANNELS;
-    specification.command.bulk.setSamplerate = BulkCode::ESETTRIGGERORSAMPLERATE;
-    specification.command.bulk.setTrigger = BulkCode::CSETTRIGGERORSAMPLERATE;
-    specification.command.bulk.setPretrigger = BulkCode::FSETBUFFER;
+ModelDSO2250::ModelDSO2250() : DSOModel(ID, 0x04b5, 0x2250, 0x04b4, 0x2250, "dso2250x86", "DSO-2250",
+                                        Dso::ControlSpecification(2)) {
+    specification.cmdSetRecordLength = BulkCode::DSETBUFFER;
+    specification.cmdSetChannels = BulkCode::BSETCHANNELS;
+    specification.cmdSetSamplerate = BulkCode::ESETTRIGGERORSAMPLERATE;
+    specification.cmdSetTrigger = BulkCode::CSETTRIGGERORSAMPLERATE;
+    specification.cmdSetPretrigger = BulkCode::FSETBUFFER;
 
     specification.samplerate.single.base = 100e6;
     specification.samplerate.single.max = 100e6;

@@ -4,12 +4,24 @@
 
 #include "controlStructs.h"
 #include "controlvalue.h"
+#include "definitions.h"
 
 namespace Hantek {
 
+ControlBeginCommand::ControlBeginCommand(BulkIndex index)
+    : ControlCommand(Hantek::ControlCode::CONTROL_BEGINCOMMAND, 10) {
+    array[0] = 0x0f;
+    array[1] = (uint8_t)index;
+}
+
+ControlGetSpeed::ControlGetSpeed() : ControlCommand(Hantek::ControlCode::CONTROL_GETSPEED, 10) {}
+
+ConnectionSpeed ControlGetSpeed::getSpeed() { return (ConnectionSpeed)this->array[0]; }
+
 ControlSetOffset::ControlSetOffset() : ControlCommand(ControlCode::CONTROL_SETOFFSET, 17) {}
 
-ControlSetOffset::ControlSetOffset(uint16_t channel1, uint16_t channel2, uint16_t trigger) : ControlCommand(ControlCode::CONTROL_SETOFFSET, 17) {
+ControlSetOffset::ControlSetOffset(uint16_t channel1, uint16_t channel2, uint16_t trigger)
+    : ControlCommand(ControlCode::CONTROL_SETOFFSET, 17) {
     this->setChannel(0, channel1);
     this->setChannel(1, channel2);
     this->setTrigger(trigger);
@@ -41,7 +53,7 @@ void ControlSetOffset::setTrigger(uint16_t level) {
 
 ControlSetRelays::ControlSetRelays(bool ch1Below1V, bool ch1Below100mV, bool ch1CouplingDC, bool ch2Below1V,
                                    bool ch2Below100mV, bool ch2CouplingDC, bool triggerExt)
-    : ControlCommand(ControlCode::CONTROL_SETRELAYS,17) {
+    : ControlCommand(ControlCode::CONTROL_SETRELAYS, 17) {
     this->setBelow1V(0, ch1Below1V);
     this->setBelow100mV(0, ch1Below100mV);
     this->setCoupling(0, ch1CouplingDC);
@@ -97,27 +109,31 @@ bool ControlSetRelays::getTrigger() { return (this->array[7] & 0x01) == 0x00; }
 
 void ControlSetRelays::setTrigger(bool ext) { this->array[7] = ext ? 0xfe : 0x01; }
 
-ControlSetVoltDIV_CH1::ControlSetVoltDIV_CH1() : ControlCommand(ControlCode::CONTROL_SETVOLTDIV_CH1,1) { this->setDiv(5); }
+ControlSetVoltDIV_CH1::ControlSetVoltDIV_CH1() : ControlCommand(ControlCode::CONTROL_SETVOLTDIV_CH1, 1) {
+    this->setDiv(5);
+}
 
 void ControlSetVoltDIV_CH1::setDiv(uint8_t val) { this->array[0] = val; }
 
-ControlSetVoltDIV_CH2::ControlSetVoltDIV_CH2() : ControlCommand(ControlCode::CONTROL_SETVOLTDIV_CH2,1) { this->setDiv(5); }
+ControlSetVoltDIV_CH2::ControlSetVoltDIV_CH2() : ControlCommand(ControlCode::CONTROL_SETVOLTDIV_CH2, 1) {
+    this->setDiv(5);
+}
 
 void ControlSetVoltDIV_CH2::setDiv(uint8_t val) { this->array[0] = val; }
 
-ControlSetTimeDIV::ControlSetTimeDIV() : ControlCommand(ControlCode::CONTROL_SETTIMEDIV,1) { this->setDiv(1); }
+ControlSetTimeDIV::ControlSetTimeDIV() : ControlCommand(ControlCode::CONTROL_SETTIMEDIV, 1) { this->setDiv(1); }
 
 void ControlSetTimeDIV::setDiv(uint8_t val) { this->array[0] = val; }
 
-ControlAcquireHardData::ControlAcquireHardData() : ControlCommand(ControlCode::CONTROL_ACQUIIRE_HARD_DATA,1) { this->array[0] = 0x01; }
+ControlAcquireHardData::ControlAcquireHardData() : ControlCommand(ControlCode::CONTROL_ACQUIIRE_HARD_DATA, 1) {
+    this->array[0] = 0x01;
+}
 
-ControlGetLimits::ControlGetLimits(unsigned channels) : ControlCommand(ControlCode::CONTROL_VALUE,1), offsetLimit(new OffsetsPerGainStep[channels]) {
+ControlGetLimits::ControlGetLimits(unsigned channels)
+    : ControlCommand(ControlCode::CONTROL_VALUE, 1), offsetLimit(new OffsetsPerGainStep[channels]) {
     value = (uint8_t)ControlValue::VALUE_OFFSETLIMITS;
     array[0] = 0x01;
 }
 
-ControlGetLimits::~ControlGetLimits()
-{
-    delete [] offsetLimit;
-}
+ControlGetLimits::~ControlGetLimits() { delete[] offsetLimit; }
 }

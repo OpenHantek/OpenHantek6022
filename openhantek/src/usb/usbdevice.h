@@ -8,7 +8,7 @@
 #include <memory>
 
 #include "usbdevicedefinitions.h"
-#include "controlbegin.h"
+#include "dataarray.h"
 
 class DSOModel;
 class ControlCommand;
@@ -65,13 +65,7 @@ class USBDevice : public QObject {
     /// \param length The length of the packet.
     /// \param attempts The number of attempts, that are done on timeouts.
     /// \return Number of received bytes on success, libusb error code on error.
-    int bulkRead(unsigned char *data, unsigned int length, int attempts = HANTEK_ATTEMPTS);
-
-    /// \brief Send a bulk command to the oscilloscope.
-    /// \param command The command, that should be sent.
-    /// \param attempts The number of attempts, that are done on timeouts.
-    /// \return Number of sent bytes on success, libusb error code on error.
-    int bulkCommand(const DataArray<unsigned char> *command, int attempts = HANTEK_ATTEMPTS);
+    int bulkRead(const DataArray<unsigned char> *command, int attempts = HANTEK_ATTEMPTS);
 
     /// \brief Multi packet bulk read from the oscilloscope.
     /// \param data Buffer for the sent/recieved data.
@@ -93,32 +87,14 @@ class USBDevice : public QObject {
                         int index, int attempts = HANTEK_ATTEMPTS);
 
     /// \brief Control write to the oscilloscope.
-    /// \param request The request field of the packet.
-    /// \param data Buffer for the sent/recieved data.
-    /// \param length The length field of the packet.
-    /// \param value The value field of the packet.
-    /// \param index The index field of the packet.
-    /// \param attempts The number of attempts, that are done on timeouts.
+    /// \param command Buffer for the sent/recieved data.
     /// \return Number of sent bytes on success, libusb error code on error.
     int controlWrite(const ControlCommand *command);
 
     /// \brief Control read to the oscilloscope.
-    /// \param request The request field of the packet.
-    /// \param data Buffer for the sent/recieved data.
-    /// \param length The length field of the packet.
-    /// \param value The value field of the packet.
-    /// \param index The index field of the packet.
-    /// \param attempts The number of attempts, that are done on timeouts.
+    /// \param command Buffer for the sent/recieved data.
     /// \return Number of received bytes on success, libusb error code on error.
     int controlRead(const ControlCommand *command);
-
-    /// \brief Gets the speed of the connection.
-    /// \return The ::ConnectionSpeed of the USB connection.
-    int getConnectionSpeed();
-
-    /// \brief Gets the maximum size of one packet transmitted via bulk transfer.
-    /// \return The maximum packet size in bytes, negative libusb error code on error.
-    int getPacketSize();
 
     /**
      * @return Returns the raw libusb device
@@ -141,13 +117,11 @@ class USBDevice : public QObject {
     /// \brief Get the oscilloscope model.
     /// \return The ::Model of the connected Hantek DSO.
     const DSOModel *getModel() const;
-    void setEnableBulkTransfer(bool enable);
     void overwriteInPacketLength(int len);
   protected:
     int claimInterface(const libusb_interface_descriptor *interfaceDescriptor, int endpointOut, int endPointIn);
 
-    // Command buffers
-    ControlBeginCommand beginCommandControl;
+    // Device model data
     DSOModel* model;
 
     // Libusb specific variables
@@ -159,7 +133,6 @@ class USBDevice : public QObject {
     int interface;
     int outPacketLength; ///< Packet length for the OUT endpoint
     int inPacketLength;  ///< Packet length for the IN endpoint
-    bool allowBulkTransfer = true;
   signals:
     void deviceDisconnected(); ///< The device has been disconnected
 };

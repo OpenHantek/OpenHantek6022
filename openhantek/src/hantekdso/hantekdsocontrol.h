@@ -5,16 +5,16 @@
 #define NOMINMAX // disable windows.h min/max global methods
 #include <limits>
 
-#include "errorcodes.h"
-#include "dsosamples.h"
-#include "states.h"
-#include "controlspecification.h"
 #include "controlsettings.h"
+#include "controlspecification.h"
+#include "dsosamples.h"
+#include "errorcodes.h"
+#include "states.h"
 #include "utils/printutils.h"
 
-#include "hantekprotocol/definitions.h"
 #include "hantekprotocol/bulkStructs.h"
 #include "hantekprotocol/controlStructs.h"
+#include "hantekprotocol/definitions.h"
 
 #include <vector>
 
@@ -71,7 +71,15 @@ class HantekDsoControl : public QObject {
     double getMaxSamplerate();
 
     /// Return the associated usb device.
-    USBDevice *getDevice();
+    const USBDevice *getDevice() const;
+
+    /// \brief Gets the speed of the connection.
+    /// \return The ::ConnectionSpeed of the USB connection.
+    int getConnectionSpeed() const;
+
+    /// \brief Gets the maximum size of one packet transmitted via bulk transfer.
+    /// \return The maximum packet size in bytes, negative libusb error code on error.
+    int getPacketSize() const;
 
     /// Return the last sample set
     const DSOsamples &getLastSamples();
@@ -89,19 +97,20 @@ class HantekDsoControl : public QObject {
     /// \return See ::Dso::ErrorCode.
     Dso::ErrorCode stringCommand(const QString &commandString);
 
-    void addCommand(BulkCommand* newCommand, bool pending = true);
-    template<class T> T* modifyCommand(Hantek::BulkCode code) {
+    void addCommand(BulkCommand *newCommand, bool pending = true);
+    template <class T> T *modifyCommand(Hantek::BulkCode code) {
         command[(uint8_t)code]->pending = true;
-        return static_cast<T*>(command[(uint8_t)code]);
+        return static_cast<T *>(command[(uint8_t)code]);
     }
-    const BulkCommand* getCommand(Hantek::BulkCode code) const;
+    const BulkCommand *getCommand(Hantek::BulkCode code) const;
 
-    void addCommand(ControlCommand* newCommand, bool pending = true);
-    template<class T> T* modifyCommand(Hantek::ControlCode code) {
+    void addCommand(ControlCommand *newCommand, bool pending = true);
+    template <class T> T *modifyCommand(Hantek::ControlCode code) {
         control[(uint8_t)code]->pending = true;
-        return static_cast<T*>(control[(uint8_t)code]);
+        return static_cast<T *>(control[(uint8_t)code]);
     }
-    const ControlCommand* getCommand(Hantek::ControlCode code) const;
+    const ControlCommand *getCommand(Hantek::ControlCode code) const;
+
   private:
     bool isRollMode() const;
     bool isFastRate() const;
@@ -164,9 +173,9 @@ class HantekDsoControl : public QObject {
   private:
     /// Pointers to bulk/control commands
     BulkCommand *command[255] = {0};
-    BulkCommand* firstBulkCommand = nullptr;
+    BulkCommand *firstBulkCommand = nullptr;
     ControlCommand *control[255] = {0};
-    ControlCommand* firstControlCommand = nullptr;
+    ControlCommand *firstControlCommand = nullptr;
 
     // Communication with device
     USBDevice *device;     ///< The USB device for the oscilloscope
@@ -189,6 +198,12 @@ class HantekDsoControl : public QObject {
     int cycleCounter = 0;
     int startCycle = 0;
     int cycleTime = 0;
+
+    /// \brief Send a bulk command to the oscilloscope.
+    /// \param command The command, that should be sent.
+    /// \param attempts The number of attempts, that are done on timeouts.
+    /// \return Number of sent bytes on success, libusb error code on error.
+    int bulkCommand(const DataArray<unsigned char> *command, int attempts = HANTEK_ATTEMPTS) const;
 
   public slots:
     void startSampling();
@@ -258,7 +273,7 @@ class HantekDsoControl : public QObject {
     void samplingStarted();                                  ///< The oscilloscope started sampling/waiting for trigger
     void samplingStopped();                                  ///< The oscilloscope stopped sampling/waiting for trigger
     void statusMessage(const QString &message, int timeout); ///< Status message about the oscilloscope
-    void samplesAvailable();                                 ///< New sample data is available
+    void samplesAvailable(const DSOsamples *samples);        ///< New sample data is available
 
     void availableRecordLengthsChanged(const std::vector<unsigned> &recordLengths); ///< The available record
                                                                                     /// lengths, empty list for
@@ -271,3 +286,5 @@ class HantekDsoControl : public QObject {
 
     void communicationError() const;
 };
+
+Q_DECLARE_METATYPE(DSOsamples *)

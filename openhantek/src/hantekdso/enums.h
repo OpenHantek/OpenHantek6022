@@ -9,8 +9,6 @@ enum class ChannelMode {
     Voltage, ///< Standard voltage view
     Spectrum ///< Spectrum view
 };
-constexpr int ChannelModes = 2;
-extern Enum<Dso::ChannelMode, Dso::ChannelMode::Voltage, Dso::ChannelMode::Spectrum> ChannelModeEnum;
 
 /// \enum GraphFormat
 /// \brief The possible viewing formats for the graphs on the scope.

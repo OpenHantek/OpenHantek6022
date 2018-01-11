@@ -5,12 +5,13 @@
 
 using namespace Hantek;
 
-ModelDSO2090::ModelDSO2090() : DSOModel(ID, 0x04b5, 0x2090, 0x04b4, 0x2090, "dso2090x86", "DSO-2090", Dso::ControlSpecification()) {
-    specification.command.bulk.setRecordLength = BulkCode::SETTRIGGERANDSAMPLERATE;
-    specification.command.bulk.setChannels = BulkCode::SETTRIGGERANDSAMPLERATE;
-    specification.command.bulk.setSamplerate = BulkCode::SETTRIGGERANDSAMPLERATE;
-    specification.command.bulk.setTrigger = BulkCode::SETTRIGGERANDSAMPLERATE;
-    specification.command.bulk.setPretrigger = BulkCode::SETTRIGGERANDSAMPLERATE;
+ModelDSO2090::ModelDSO2090() : DSOModel(ID, 0x04b5, 0x2090, 0x04b4, 0x2090, "dso2090x86", "DSO-2090",
+                                        Dso::ControlSpecification(2)) {
+    specification.cmdSetRecordLength = BulkCode::SETTRIGGERANDSAMPLERATE;
+    specification.cmdSetChannels = BulkCode::SETTRIGGERANDSAMPLERATE;
+    specification.cmdSetSamplerate = BulkCode::SETTRIGGERANDSAMPLERATE;
+    specification.cmdSetTrigger = BulkCode::SETTRIGGERANDSAMPLERATE;
+    specification.cmdSetPretrigger = BulkCode::SETTRIGGERANDSAMPLERATE;
 
     specification.samplerate.single.base = 50e6;
     specification.samplerate.single.max = 50e6;

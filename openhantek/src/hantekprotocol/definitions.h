@@ -7,10 +7,6 @@
 #include <stdint.h>
 
 #define HANTEK_GAIN_STEPS 9
-#define HANTEK_CHANNELS 2         ///< Number of physical channels
-
-typedef unsigned RecordLengthID;
-typedef unsigned ChannelID;
 
 namespace Hantek {
 /// \enum UsedChannels
@@ -31,8 +27,8 @@ enum class UsedChannels : uint8_t {
 /// \enum DTriggerPositionUsed                                  hantek/types.h
 /// \brief The trigger position states for the 0x0d command.
 enum class DTriggerPositionUsed: uint8_t {
-    DTRIGGERPOSITION_OFF = 0, ///< Used for Roll mode
-    DTRIGGERPOSITION_ON = 7   ///< Used for normal operation
+    OFF = 0, ///< Used for Roll mode
+    ON = 7   ///< Used for normal operation
 };
 
 #pragma pack(push, 1)

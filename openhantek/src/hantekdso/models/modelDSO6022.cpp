@@ -5,7 +5,8 @@
 
 using namespace Hantek;
 
-ModelDSO6022BE::ModelDSO6022BE() : DSOModel(ID, 0x04b5, 0x6022, 0x04b4, 0x6022, "dso6022be", "DSO-6022BE", Dso::ControlSpecification()) {
+ModelDSO6022BE::ModelDSO6022BE() : DSOModel(ID, 0x04b5, 0x6022, 0x04b4, 0x6022, "dso6022be", "DSO-6022BE",
+                                            Dso::ControlSpecification(2)) {
     // 6022xx do not support any bulk commands
     specification.useControlNoBulk = true;
     specification.isSoftwareTriggerDevice = true;

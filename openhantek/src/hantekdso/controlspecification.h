@@ -4,30 +4,13 @@
 
 #include "enums.h"
 #include "hantekprotocol/bulkcode.h"
-#include "hantekprotocol/controlcode.h"
-#include "hantekprotocol/controlvalue.h"
+#include "hantekprotocol/controlStructs.h"
 #include "hantekprotocol/definitions.h"
 #include <QList>
 
 namespace Dso {
 
 using namespace Hantek;
-
-/// \brief Stores the bulk command codes used for this device.
-struct ControlSpecificationCommandsBulk {
-    BulkCode setChannels = BulkCode::INVALID;     ///< Command for setting used channels
-    BulkCode setSamplerate = BulkCode::INVALID;   ///< Command for samplerate settings
-    BulkCode setGain = BulkCode::SETGAIN;         ///< Command for gain settings (Usually in combination with
-                                                  /// CONTROL_SETRELAYS)
-    BulkCode setRecordLength = BulkCode::INVALID; ///< Command for buffer settings
-    BulkCode setTrigger = BulkCode::INVALID;      ///< Command for trigger settings
-    BulkCode setPretrigger = BulkCode::INVALID;   ///< Command for pretrigger settings
-};
-
-/// \brief Stores the command codes used for this device.
-struct ControlSpecificationCommands {
-    ControlSpecificationCommandsBulk bulk; ///< The used bulk commands
-};
 
 /// \brief Stores the samplerate limits for calculations.
 struct ControlSamplerateLimits {
@@ -62,32 +45,47 @@ struct SpecialTriggerChannel {
 
 /// \brief Stores the specifications of the currently connected device.
 struct ControlSpecification {
-    ChannelID channels = HANTEK_CHANNELS;
+    ControlSpecification(unsigned channels);
+    const ChannelID channels;
 
     // Interface
-    ControlSpecificationCommands command; ///< The commands for this device
+    BulkCode cmdSetChannels = BulkCode::INVALID;             ///< Command for setting used channels
+    BulkCode cmdSetSamplerate = BulkCode::INVALID;           ///< Command for samplerate settings
+    BulkCode cmdSetRecordLength = BulkCode::INVALID;         ///< Command for buffer settings
+    BulkCode cmdSetTrigger = BulkCode::INVALID;              ///< Command for trigger settings
+    BulkCode cmdSetPretrigger = BulkCode::INVALID;           ///< Command for pretrigger settings
+    BulkCode cmdForceTrigger = BulkCode::FORCETRIGGER;       ///< Command for forcing a trigger event
+    BulkCode cmdCaptureStart = BulkCode::STARTSAMPLING;      ///< Command for starting the sampling
+    BulkCode cmdTriggerEnabled = BulkCode::ENABLETRIGGER;    ///< Command for enabling the trigger
+    BulkCode cmdGetData = BulkCode::GETDATA;                 ///< Command for retrieve sample data
+    BulkCode cmdGetCaptureState = BulkCode::GETCAPTURESTATE; ///< Command for retrieve the capture state
+    BulkCode cmdSetGain = BulkCode::SETGAIN;                    ///< Command for setting the gain
+
+    ControlBeginCommand beginCommandControl;
+    ControlGetLimits cmdGetLimits;
 
     // Limits
     ControlSpecificationSamplerate samplerate;  ///< The samplerate specifications
     std::vector<RecordLengthID> bufferDividers; ///< Samplerate dividers for record lengths
     unsigned char sampleSize;                   ///< Number of bits per sample
 
+    /// For devices that support only fixed sample rates (isFixedSamplerateDevice=true)
+    std::vector<FixedSampleRate> fixedSampleRates;
+
     // Calibration
+
     /// The sample values at the top of the screen
-    std::vector<unsigned short> voltageLimit[HANTEK_CHANNELS];
-    /// Calibration data for the channel offsets
-    OffsetsPerGainStep offsetLimit[HANTEK_CHANNELS];
+    typedef std::vector<unsigned short> VoltageLimit;
+    std::vector<VoltageLimit> voltageLimit; // Per channel
 
     /// Gain levels
     std::vector<ControlSpecificationGainLevel> gain;
 
-    /// For devices that support only fixed sample rates (isFixedSamplerateDevice=true)
-    std::vector<FixedSampleRate> fixedSampleRates;
-
+    // Features
     std::vector<SpecialTriggerChannel> specialTriggerChannels;
     std::vector<Coupling> couplings = {Dso::Coupling::DC, Dso::Coupling::AC};
-    std::vector<TriggerMode> triggerModes = {TriggerMode::HARDWARE_SOFTWARE, TriggerMode::WAIT_FORCE, TriggerMode::SINGLE};
-
+    std::vector<TriggerMode> triggerModes = {TriggerMode::HARDWARE_SOFTWARE, TriggerMode::WAIT_FORCE,
+                                             TriggerMode::SINGLE};
     bool isFixedSamplerateDevice = false;
     bool isSoftwareTriggerDevice = false;
     bool useControlNoBulk = false;

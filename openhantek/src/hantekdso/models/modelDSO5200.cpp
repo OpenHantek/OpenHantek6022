@@ -5,12 +5,13 @@
 
 using namespace Hantek;
 
-ModelDSO5200::ModelDSO5200() : DSOModel(ID, 0x04b5, 0x5200, 0x04b4, 0x5200, "dso5200x86", "DSO-5200", Dso::ControlSpecification()) {
-    specification.command.bulk.setRecordLength = BulkCode::DSETBUFFER;
-    specification.command.bulk.setChannels = BulkCode::ESETTRIGGERORSAMPLERATE;
-    specification.command.bulk.setSamplerate = BulkCode::CSETTRIGGERORSAMPLERATE;
-    specification.command.bulk.setTrigger = BulkCode::ESETTRIGGERORSAMPLERATE;
-    specification.command.bulk.setPretrigger = BulkCode::ESETTRIGGERORSAMPLERATE;
+ModelDSO5200::ModelDSO5200() : DSOModel(ID, 0x04b5, 0x5200, 0x04b4, 0x5200, "dso5200x86", "DSO-5200",
+                                        Dso::ControlSpecification(2)) {
+    specification.cmdSetRecordLength = BulkCode::DSETBUFFER;
+    specification.cmdSetChannels = BulkCode::ESETTRIGGERORSAMPLERATE;
+    specification.cmdSetSamplerate = BulkCode::CSETTRIGGERORSAMPLERATE;
+    specification.cmdSetTrigger = BulkCode::ESETTRIGGERORSAMPLERATE;
+    specification.cmdSetPretrigger = BulkCode::ESETTRIGGERORSAMPLERATE;
 
     specification.samplerate.single.base = 100e6;
     specification.samplerate.single.max = 125e6;

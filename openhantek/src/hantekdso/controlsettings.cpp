@@ -1,4 +1,5 @@
 #include "controlsettings.h"
+#include "hantekprotocol/definitions.h"
 
 namespace Dso {
 
@@ -7,13 +8,12 @@ ControlSettings::ControlSettings(ControlSamplerateLimits* limits, size_t channel
     samplerate.limits = limits;
     trigger.level.resize(channelCount);
     voltage.resize(channelCount);
-    for (ChannelID channel = 0; channel < channelCount; ++channel) {
-        trigger.level[channel] = 0.0;
-        voltage[channel].gain = 0;
-        voltage[channel].offset = 0.0;
-        voltage[channel].offsetReal = 0.0;
-        voltage[channel].used = false;
-    }
+    offsetLimit = new Hantek::OffsetsPerGainStep[channelCount];
+}
+
+ControlSettings::~ControlSettings()
+{
+    delete [] offsetLimit;
 }
 
 }
