@@ -2,7 +2,7 @@
 
 #pragma once
 #include <QString>
-#include "analyse/enums.h"
+#include "post/enums.h"
 #include "hantekdso/enums.h"
 
 #define MARKER_COUNT 2 ///< Number of markers

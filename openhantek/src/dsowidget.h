@@ -8,16 +8,15 @@
 #include <QGridLayout>
 #include <memory>
 
-#include "exporter.h"
+#include "exporting/exporter.h"
 #include "glscope.h"
 #include "levelslider.h"
 #include "hantekdso/controlspecification.h"
 
-class DataAnalyzer;
+class SpectrumGenerator;
 struct DsoSettingsScope;
 struct DsoSettingsView;
 
-/// \class DsoWidget
 /// \brief The widget for the oszilloscope-screen
 /// This widget contains the scopes and all level sliders.
 class DsoWidget : public QWidget {
@@ -37,8 +36,10 @@ class DsoWidget : public QWidget {
     /// \param parent The parent widget.
     /// \param flags Flags for the window manager.
     DsoWidget(DsoSettingsScope* scope, DsoSettingsView* view, const Dso::ControlSpecification* spec, QWidget *parent = 0, Qt::WindowFlags flags = 0);
-    void showNewData(std::unique_ptr<DataAnalyzerResult> data);
     void setExporterForNextFrame(std::unique_ptr<Exporter> exporter);
+
+    // Data arrived
+    void showNew(std::shared_ptr<PPresult> data);
 
   protected:
     void setupSliders(Sliders &sliders);
@@ -83,11 +84,10 @@ class DsoWidget : public QWidget {
     DsoSettingsView* view;
     const Dso::ControlSpecification* spec;
 
-    GlGenerator *generator; ///< The generator for the OpenGL vertex arrays
     GlScope *mainScope;     ///< The main scope screen
     GlScope *zoomScope;     ///< The optional magnified scope screen
     std::unique_ptr<Exporter> exportNextFrame;
-    std::unique_ptr<DataAnalyzerResult> data;
+    std::shared_ptr<PPresult> data;
 
   public slots:
     // Horizontal axis
@@ -116,9 +116,6 @@ class DsoWidget : public QWidget {
 
     // Scope control
     void updateZoom(bool enabled);
-
-    // Data analyzer
-    void doShowNewData();
 
   private slots:
     // Sliders

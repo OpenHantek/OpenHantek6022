@@ -1,23 +1,27 @@
 // SPDX-License-Identifier: GPL-2.0+
 
-#include <QDebug>
 #include <QApplication>
+#include <QDebug>
 #include <QLibraryInfo>
 #include <QLocale>
-#include <QTranslator>
 #include <QSurfaceFormat>
+#include <QTranslator>
 
 #include <iostream>
-#include <memory>
 #include <libusb-1.0/libusb.h>
+#include <memory>
 
-#include "analyse/dataanalyzer.h"
+#include "post/graphgenerator.h"
+#include "post/mathchannelgenerator.h"
+#include "post/postprocessing.h"
+#include "post/spectrumgenerator.h"
+
+#include "dsomodel.h"
 #include "hantekdsocontrol.h"
 #include "mainwindow.h"
+#include "selectdevice/selectsupporteddevice.h"
 #include "settings.h"
 #include "usb/usbdevice.h"
-#include "dsomodel.h"
-#include "selectdevice/selectsupporteddevice.h"
 #include "viewconstants.h"
 
 #ifndef VERSION
@@ -26,12 +30,12 @@
 
 using namespace Hantek;
 
-
 /// \brief Initialize the device with the current settings.
-void applySettingsToDevice(HantekDsoControl* dsoControl, DsoSettingsScope* scope, const Dso::ControlSpecification* spec) {
+void applySettingsToDevice(HantekDsoControl *dsoControl, DsoSettingsScope *scope,
+                           const Dso::ControlSpecification *spec) {
     bool mathUsed = scope->anyUsed(spec->channels);
     for (ChannelID channel = 0; channel < spec->channels; ++channel) {
-        dsoControl->setCoupling(channel, scope->coupling(channel,spec));
+        dsoControl->setCoupling(channel, scope->coupling(channel, spec));
         dsoControl->setGain(channel, scope->gain(channel) * DIVS_VOLTAGE);
         dsoControl->setOffset(channel, (scope->voltage[channel].offset / DIVS_VOLTAGE) + 0.5);
         dsoControl->setTriggerLevel(channel, scope->voltage[channel].trigger);
@@ -47,16 +51,15 @@ void applySettingsToDevice(HantekDsoControl* dsoControl, DsoSettingsScope* scope
         dsoControl->setRecordLength(scope->horizontal.recordLength);
     else {
         auto recLenVec = dsoControl->getAvailableRecordLengths();
-        ptrdiff_t index = std::distance(
-            recLenVec.begin(), std::find(recLenVec.begin(), recLenVec.end(), scope->horizontal.recordLength));
-        dsoControl->setRecordLength(index < 0 ? 1 : index);
+        ptrdiff_t index = std::distance(recLenVec.begin(),
+                                        std::find(recLenVec.begin(), recLenVec.end(), scope->horizontal.recordLength));
+        dsoControl->setRecordLength(index < 0 ? 1 : (unsigned)index);
     }
     dsoControl->setTriggerMode(scope->trigger.mode);
     dsoControl->setPretriggerPosition(scope->trigger.position * scope->horizontal.timebase * DIVS_TIME);
     dsoControl->setTriggerSlope(scope->trigger.slope);
     dsoControl->setTriggerSource(scope->trigger.special, scope->trigger.source);
 }
-
 
 /// \brief Initialize resources and translations and show the main window.
 int main(int argc, char *argv[]) {
@@ -69,6 +72,7 @@ int main(int argc, char *argv[]) {
     QCoreApplication::setAttribute(Qt::AA_UseOpenGLES, true);
     QCoreApplication::setAttribute(Qt::AA_ShareOpenGLContexts, true);
 
+    // Prefer full desktop OpenGL without fixed pipeline
     QSurfaceFormat format;
     format.setProfile(QSurfaceFormat::CoreProfile);
     QSurfaceFormat::setDefaultFormat(format);
@@ -111,27 +115,36 @@ int main(int argc, char *argv[]) {
     QObject::connect(device.get(), &USBDevice::deviceDisconnected, QCoreApplication::instance(),
                      &QCoreApplication::quit);
 
-    //////// Create data analyser object ////////
-    QThread dataAnalyzerThread;
-    dataAnalyzerThread.setObjectName("dataAnalyzerThread");
-    DataAnalyzer dataAnalyser;
-    dataAnalyser.setSourceData(&dsoControl.getLastSamples());
-    dataAnalyser.moveToThread(&dataAnalyzerThread);
-    QObject::connect(&dsoControl, &HantekDsoControl::samplesAvailable, &dataAnalyser, &DataAnalyzer::samplesAvailable);
-
     //////// Create settings object ////////
-    DsoSettings settings(&device->getModel()->specification);
-    dataAnalyser.applySettings(&settings);
+    auto settings = std::unique_ptr<DsoSettings>(new DsoSettings(&device->getModel()->specification));
+
+    //////// Create post processing objects ////////
+    QThread postProcessingThread;
+    postProcessingThread.setObjectName("postProcessingThread");
+    PostProcessing postProcessing(settings->scope.countChannels());
+
+    SpectrumGenerator spectrumGenerator(&settings->scope);
+    MathChannelGenerator mathchannelGenerator(&settings->scope, device->getModel()->specification.channels);
+    GraphGenerator graphGenerator(&settings->scope, device->getModel()->specification.isSoftwareTriggerDevice);
+
+    postProcessing.registerProcessor(&mathchannelGenerator);
+    postProcessing.registerProcessor(&spectrumGenerator);
+    postProcessing.registerProcessor(&graphGenerator);
+
+    postProcessing.moveToThread(&postProcessingThread);
+    QObject::connect(&dsoControl, &HantekDsoControl::samplesAvailable, &postProcessing, &PostProcessing::input);
 
     //////// Create main window ////////
-    MainWindow *openHantekMainWindow = new MainWindow(&dsoControl, &dataAnalyser, &settings);
-    openHantekMainWindow->show();
+    MainWindow openHantekMainWindow(&dsoControl, settings.get());
+    QObject::connect(&postProcessing, &PostProcessing::processingFinished, &openHantekMainWindow,
+                     &MainWindow::showNewData);
+    openHantekMainWindow.show();
 
-    applySettingsToDevice(&dsoControl,&settings.scope,&device->getModel()->specification);
+    applySettingsToDevice(&dsoControl, &settings->scope, &device->getModel()->specification);
 
     //////// Start DSO thread and go into GUI main loop
     dsoControl.startSampling();
-    dataAnalyzerThread.start();
+    postProcessingThread.start();
     dsoControlThread.start();
     int res = openHantekApplication.exec();
 
@@ -139,7 +152,7 @@ int main(int argc, char *argv[]) {
     dsoControlThread.quit();
     dsoControlThread.wait(10000);
 
-    dataAnalyzerThread.quit();
-    dataAnalyzerThread.wait(10000);
+    postProcessingThread.quit();
+    postProcessingThread.wait(10000);
     return res;
 }

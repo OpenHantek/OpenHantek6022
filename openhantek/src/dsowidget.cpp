@@ -10,22 +10,24 @@
 
 #include "dsowidget.h"
 
-#include "exporter.h"
-#include "glgenerator.h"
-#include "glscope.h"
-#include "scopesettings.h"
-#include "viewsettings.h"
+#include "post/graphgenerator.h"
+#include "post/ppresult.h"
+
 #include "utils/dsoStrings.h"
 #include "utils/printutils.h"
-#include "widgets/levelslider.h"
+
+#include "glscope.h"
+#include "scopesettings.h"
 #include "viewconstants.h"
-#include "analyse/dataanalyzerresult.h"
+#include "viewsettings.h"
+#include "widgets/levelslider.h"
 
 static int zoomScopeRow = 0;
 
-DsoWidget::DsoWidget(DsoSettingsScope *scope, DsoSettingsView *view, const Dso::ControlSpecification *spec, QWidget *parent, Qt::WindowFlags flags)
-    : QWidget(parent, flags), scope(scope), view(view), spec(spec), generator(new GlGenerator()),
-      mainScope(GlScope::createNormal(scope, view, generator)), zoomScope(GlScope::createZoomed(scope, view, generator)) {
+DsoWidget::DsoWidget(DsoSettingsScope *scope, DsoSettingsView *view, const Dso::ControlSpecification *spec,
+                     QWidget *parent, Qt::WindowFlags flags)
+    : QWidget(parent, flags), scope(scope), view(view), spec(spec), mainScope(GlScope::createNormal(scope, view)),
+      zoomScope(GlScope::createZoomed(scope, view)) {
 
     // Palette for this widget
     QPalette palette;
@@ -37,6 +39,7 @@ DsoWidget::DsoWidget(DsoSettingsScope *scope, DsoSettingsView *view, const Dso::
 
     connect(mainScope, &GlScope::markerMoved, [this] (int marker, double position) {
         double step = this->mainSliders.markerSlider->step(marker);
+
         this->scope->horizontal.marker[marker] =
             this->mainSliders.markerSlider->setValue(marker, std::round(position / step) * step);
     });
@@ -62,6 +65,7 @@ DsoWidget::DsoWidget(DsoSettingsScope *scope, DsoSettingsView *view, const Dso::
     swTriggerStatus->setText(tr("TR"));
     swTriggerStatus->setAlignment(Qt::AlignCenter);
     swTriggerStatus->setAutoFillBackground(true);
+    swTriggerStatus->setVisible(false);
     settingsLayout = new QHBoxLayout();
     settingsLayout->addWidget(swTriggerStatus);
     settingsLayout->addWidget(settingsTriggerLabel);
@@ -259,14 +263,7 @@ void DsoWidget::setupSliders(DsoWidget::Sliders &sliders) {
     }
 }
 
-void DsoWidget::showNewData(std::unique_ptr<DataAnalyzerResult> data) {
-    if (!data) return;
-    this->data = std::move(data);
-    emit doShowNewData();
-}
-
-void DsoWidget::setExporterForNextFrame(std::unique_ptr<Exporter> exporter)
-{
+void DsoWidget::setExporterForNextFrame(std::unique_ptr<Exporter> exporter) {
     this->exportNextFrame = std::move(exporter);
 }
 
@@ -317,9 +314,12 @@ void DsoWidget::updateMarkerDetails() {
         markerFrequencybaseLabel->setText(
             valueToString(divs * scope->horizontal.frequencybase / DIVS_TIME, UNIT_HERTZ, 4) + tr("/div"));
     }
-    markerInfoLabel->setText(infoLabelPrefix.append(":  %1  %2")
-        .arg(valueToString(0.5 + scope->horizontal.marker[0] / DIVS_TIME - scope->trigger.position, UNIT_SECONDS, 4))
-        .arg(valueToString(0.5 + scope->horizontal.marker[1] / DIVS_TIME - scope->trigger.position, UNIT_SECONDS, 4)));
+    markerInfoLabel->setText(
+        infoLabelPrefix.append(":  %1  %2")
+            .arg(
+                valueToString(0.5 + scope->horizontal.marker[0] / DIVS_TIME - scope->trigger.position, UNIT_SECONDS, 4))
+            .arg(valueToString(0.5 + scope->horizontal.marker[1] / DIVS_TIME - scope->trigger.position, UNIT_SECONDS,
+                               4)));
 
     markerTimeLabel->setText(valueToString(time, UNIT_SECONDS, 4));
     markerFrequencyLabel->setText(valueToString(1.0 / time, UNIT_HERTZ, 4));
@@ -330,8 +330,8 @@ void DsoWidget::updateSpectrumDetails(ChannelID channel) {
     setMeasurementVisible(channel);
 
     if (scope->spectrum[channel].used)
-        measurementMagnitudeLabel[channel]->setText(
-            valueToString(scope->spectrum[channel].magnitude, UNIT_DECIBEL, 3) + tr("/div"));
+        measurementMagnitudeLabel[channel]->setText(valueToString(scope->spectrum[channel].magnitude, UNIT_DECIBEL, 3) +
+                                                    tr("/div"));
     else
         measurementMagnitudeLabel[channel]->setText(QString());
 }
@@ -346,8 +346,7 @@ void DsoWidget::updateTriggerDetails() {
     QString pretriggerString = tr("%L1%").arg((int)(scope->trigger.position * 100 + 0.5));
     settingsTriggerLabel->setText(tr("%1  %2  %3  %4")
                                       .arg(scope->voltage[scope->trigger.source].name,
-                                           Dso::slopeString(scope->trigger.slope), levelString,
-                                           pretriggerString));
+                                           Dso::slopeString(scope->trigger.slope), levelString, pretriggerString));
 
     /// \todo This won't work for special trigger sources
 }
@@ -359,8 +358,7 @@ void DsoWidget::updateVoltageDetails(ChannelID channel) {
     setMeasurementVisible(channel);
 
     if (scope->voltage[channel].used)
-        measurementGainLabel[channel]->setText(valueToString(scope->gain(channel), UNIT_VOLTS, 3) +
-                                               tr("/div"));
+        measurementGainLabel[channel]->setText(valueToString(scope->gain(channel), UNIT_VOLTS, 3) + tr("/div"));
     else
         measurementGainLabel[channel]->setText(QString());
 }
@@ -435,13 +433,12 @@ void DsoWidget::updateTriggerSource() {
 void DsoWidget::updateVoltageCoupling(ChannelID channel) {
     if (channel >= (unsigned int)scope->voltage.size()) return;
 
-    measurementMiscLabel[channel]->setText(Dso::couplingString(scope->coupling(channel,spec)));
+    measurementMiscLabel[channel]->setText(Dso::couplingString(scope->coupling(channel, spec)));
 }
 
 /// \brief Handles modeChanged signal from the voltage dock.
 void DsoWidget::updateMathMode() {
-    measurementMiscLabel[spec->channels]->setText(
-        Dso::mathModeString(scope->voltage[spec->channels].math));
+    measurementMiscLabel[spec->channels]->setText(Dso::mathModeString(scope->voltage[spec->channels].math));
 }
 
 /// \brief Handles gainChanged signal from the voltage dock.
@@ -505,26 +502,32 @@ void DsoWidget::updateZoom(bool enabled) {
 }
 
 /// \brief Prints analyzed data.
-void DsoWidget::doShowNewData() {
+void DsoWidget::showNew(std::shared_ptr<PPresult> data) {
     if (exportNextFrame) {
         exportNextFrame->exportSamples(data.get());
         exportNextFrame.reset(nullptr);
     }
 
-    bool triggered = generator->generateGraphs(data.get(), view->digitalPhosphorDraws(), scope, spec);
+    mainScope->showData(data.get());
+    mainScope->update();
+    zoomScope->showData(data.get());
+    zoomScope->update();
 
-    QPalette triggerLabelPalette = palette();
-    triggerLabelPalette.setColor(QPalette::WindowText, Qt::black);
-    triggerLabelPalette.setColor(QPalette::Background, triggered ? Qt::green : Qt::red);
-    swTriggerStatus->setPalette(triggerLabelPalette);
+    if (spec->isSoftwareTriggerDevice) {
+        QPalette triggerLabelPalette = palette();
+        triggerLabelPalette.setColor(QPalette::WindowText, Qt::black);
+        triggerLabelPalette.setColor(QPalette::Background, data->softwareTriggerTriggered ? Qt::green : Qt::red);
+        swTriggerStatus->setPalette(triggerLabelPalette);
+        swTriggerStatus->setVisible(true);
+    }
 
-    updateRecordLength(data.get()->getMaxSamples());
+    updateRecordLength(data.get()->sampleCount());
 
     for (ChannelID channel = 0; channel < scope->voltage.size(); ++channel) {
         if (scope->voltage[channel].used && data.get()->data(channel)) {
             // Amplitude string representation (4 significant digits)
             measurementAmplitudeLabel[channel]->setText(
-                valueToString(data.get()->data(channel)->amplitude, UNIT_VOLTS, 4));
+                valueToString(data.get()->data(channel)->computeAmplitude(), UNIT_VOLTS, 4));
             // Frequency string representation (5 significant digits)
             measurementFrequencyLabel[channel]->setText(
                 valueToString(data.get()->data(channel)->frequency, UNIT_HERTZ, 5));
