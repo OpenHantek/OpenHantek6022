@@ -8,9 +8,9 @@
 
 #include <cmath>
 
-#include "analyse/enums.h"
+#include "post/enums.h"
 #include "hantekdso/enums.h"
-#include "hantekprotocol/definitions.h"
+#include "hantekprotocol/types.h"
 #include "dockwindows.h"
 
 void SetupDockWidget(QDockWidget *dockWindow, QWidget *dockWidget, QLayout *layout) {

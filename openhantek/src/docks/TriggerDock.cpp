@@ -12,32 +12,30 @@
 #include "TriggerDock.h"
 #include "dockwindows.h"
 
+#include "hantekdso/controlspecification.h"
 #include "settings.h"
 #include "sispinbox.h"
 #include "utils/dsoStrings.h"
 #include "utils/printutils.h"
-#include "hantekdso/controlspecification.h"
 
-TriggerDock::TriggerDock(DsoSettingsScope *scope, const Dso::ControlSpecification* spec, QWidget *parent,
+TriggerDock::TriggerDock(DsoSettingsScope *scope, const Dso::ControlSpecification *spec, QWidget *parent,
                          Qt::WindowFlags flags)
-    : QDockWidget(tr("Trigger"), parent, flags), scope(scope), spec(spec) {
+    : QDockWidget(tr("Trigger"), parent, flags), scope(scope), mSpec(spec) {
 
     // Initialize lists for comboboxes
-    for (ChannelID channel = 0; channel < spec->channels; ++channel)
+    for (ChannelID channel = 0; channel < mSpec->channels; ++channel)
         this->sourceStandardStrings << tr("CH%1").arg(channel + 1);
-    for(const Dso::SpecialTriggerChannel& specialTrigger: spec->specialTriggerChannels)
+    for (const Dso::SpecialTriggerChannel &specialTrigger : mSpec->specialTriggerChannels)
         this->sourceSpecialStrings.append(QString::fromStdString(specialTrigger.name));
 
     // Initialize elements
     this->modeLabel = new QLabel(tr("Mode"));
     this->modeComboBox = new QComboBox();
-    for (Dso::TriggerMode mode: spec->triggerModes)
-        this->modeComboBox->addItem(Dso::triggerModeString(mode));
+    for (Dso::TriggerMode mode : mSpec->triggerModes) this->modeComboBox->addItem(Dso::triggerModeString(mode));
 
     this->slopeLabel = new QLabel(tr("Slope"));
     this->slopeComboBox = new QComboBox();
-    for (Dso::Slope slope: Dso::SlopeEnum)
-        this->slopeComboBox->addItem(Dso::slopeString(slope));
+    for (Dso::Slope slope : Dso::SlopeEnum) this->slopeComboBox->addItem(Dso::slopeString(slope));
 
     this->sourceLabel = new QLabel(tr("Source"));
     this->sourceComboBox = new QComboBox();
@@ -63,26 +61,29 @@ TriggerDock::TriggerDock(DsoSettingsScope *scope, const Dso::ControlSpecificatio
     setSource(scope->trigger.special, scope->trigger.source);
 
     // Connect signals and slots
-    connect(this->modeComboBox, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged), [this,spec](int index) {
-        this->scope->trigger.mode = spec->triggerModes[(unsigned)index];
-        emit modeChanged(this->scope->trigger.mode);
-    });
-    connect(this->slopeComboBox, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged), [this](int index) {
-        this->scope->trigger.slope = (Dso::Slope)index;
-        emit slopeChanged(this->scope->trigger.slope);
-    });
-    connect(this->sourceComboBox, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged), [this](int index) {
-        bool special = false;
+    connect(this->modeComboBox, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
+            [this, spec](int index) {
+                this->scope->trigger.mode = mSpec->triggerModes[(unsigned)index];
+                emit modeChanged(this->scope->trigger.mode);
+            });
+    connect(this->slopeComboBox, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
+            [this](int index) {
+                this->scope->trigger.slope = (Dso::Slope)index;
+                emit slopeChanged(this->scope->trigger.slope);
+            });
+    connect(this->sourceComboBox, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
+            [this](int index) {
+                bool special = false;
 
-        if (index >= this->sourceStandardStrings.count()) {
-            index -= this->sourceStandardStrings.count();
-            special = true;
-        }
+                if (index >= this->sourceStandardStrings.count()) {
+                    index -= this->sourceStandardStrings.count();
+                    special = true;
+                }
 
-        this->scope->trigger.source = (unsigned) index;
-        this->scope->trigger.special = special;
-        emit sourceChanged(special, (unsigned)index);
-    });
+                this->scope->trigger.source = (unsigned)index;
+                this->scope->trigger.special = special;
+                emit sourceChanged(special, (unsigned)index);
+            });
 }
 
 /// \brief Don't close the dock, just hide it
@@ -94,7 +95,7 @@ void TriggerDock::closeEvent(QCloseEvent *event) {
 }
 
 void TriggerDock::setMode(Dso::TriggerMode mode) {
-    int index = std::find(spec->triggerModes.begin(),spec->triggerModes.end(), mode) - spec->triggerModes.begin();
+    int index = std::find(mSpec->triggerModes.begin(), mSpec->triggerModes.end(), mode) - mSpec->triggerModes.begin();
     QSignalBlocker blocker(modeComboBox);
     modeComboBox->setCurrentIndex(index);
 }

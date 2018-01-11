@@ -11,12 +11,12 @@ DsoConfigFilesPage::DsoConfigFilesPage(DsoSettings *settings, QWidget *parent) :
     imageWidthSpinBox = new QSpinBox();
     imageWidthSpinBox->setMinimum(100);
     imageWidthSpinBox->setMaximum(9999);
-    imageWidthSpinBox->setValue(settings->options.imageSize.width());
+    imageWidthSpinBox->setValue(settings->exporting.imageSize.width());
     imageHeightLabel = new QLabel(tr("Image height"));
     imageHeightSpinBox = new QSpinBox();
     imageHeightSpinBox->setMinimum(100);
     imageHeightSpinBox->setMaximum(9999);
-    imageHeightSpinBox->setValue(settings->options.imageSize.height());
+    imageHeightSpinBox->setValue(settings->exporting.imageSize.height());
 
     exportLayout = new QGridLayout();
     exportLayout->addWidget(screenColorCheckBox, 0, 0, 1, 2);
@@ -30,7 +30,7 @@ DsoConfigFilesPage::DsoConfigFilesPage(DsoSettings *settings, QWidget *parent) :
 
     // Configuration group
     saveOnExitCheckBox = new QCheckBox(tr("Save default settings on exit"));
-    saveOnExitCheckBox->setChecked(settings->options.alwaysSave);
+    saveOnExitCheckBox->setChecked(settings->alwaysSave);
     saveNowButton = new QPushButton(tr("Save default settings now"));
 
     configurationLayout = new QVBoxLayout();
@@ -53,8 +53,8 @@ DsoConfigFilesPage::DsoConfigFilesPage(DsoSettings *settings, QWidget *parent) :
 
 /// \brief Saves the new settings.
 void DsoConfigFilesPage::saveSettings() {
-    settings->options.alwaysSave = saveOnExitCheckBox->isChecked();
+    settings->alwaysSave = saveOnExitCheckBox->isChecked();
     settings->view.screenColorImages = screenColorCheckBox->isChecked();
-    settings->options.imageSize.setWidth(imageWidthSpinBox->value());
-    settings->options.imageSize.setHeight(imageHeightSpinBox->value());
+    settings->exporting.imageSize.setWidth(imageWidthSpinBox->value());
+    settings->exporting.imageSize.setHeight(imageHeightSpinBox->value());
 }
