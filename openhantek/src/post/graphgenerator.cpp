@@ -62,7 +62,7 @@ void GraphGenerator::generateGraphsTYvoltage(PPresult *result) {
         size_t neededSize = sampleCount * 2;
 
         // Set size directly to avoid reallocations
-        target.resize(neededSize);
+        target.reserve(neededSize);
 
         // What's the horizontal distance between sampling points?
         float horizontalFactor = (float)(samples.interval / scope->horizontal.timebase);
@@ -104,7 +104,7 @@ void GraphGenerator::generateGraphsTYspectrum(PPresult *result) {
         size_t neededSize = sampleCount * 2;
 
         // Set size directly to avoid reallocations
-        target.resize(neededSize);
+        target.reserve(neededSize);
 
         // What's the horizontal distance between sampling points?
         float horizontalFactor = (float)(samples.interval / scope->horizontal.frequencybase);
@@ -160,7 +160,7 @@ void GraphGenerator::generateGraphsXY(PPresult *result, const DsoSettingsScope *
         // Check if the sample count has changed
         const size_t sampleCount = std::min(xSamples.sample.size(), ySamples.sample.size());
         ChannelGraph &drawLines = result->vaChannelVoltage[channel];
-        drawLines.resize(sampleCount * 2);
+        drawLines.reserve(sampleCount * 2);
 
         // Fill vector array
         std::vector<double>::const_iterator xIterator = xSamples.sample.begin();

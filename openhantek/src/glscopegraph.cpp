@@ -13,6 +13,7 @@ void Graph::writeData(PPresult *data, QOpenGLShaderProgram *program, int vertexL
     for (ChannelGraph &cg : data->vaChannelSpectrum) neededMemory += cg.size() * sizeof(QVector3D);
 
     buffer.bind();
+    program->bind();
 
     // Allocate space if necessary
     if (neededMemory > allocatedMem) {
@@ -32,7 +33,10 @@ void Graph::writeData(PPresult *data, QOpenGLShaderProgram *program, int vertexL
         int dataSize;
 
         // Voltage channel
-        if (!v.first) v.first = new QOpenGLVertexArrayObject;
+        if (!v.first) {
+            v.first = new QOpenGLVertexArrayObject;
+            if (!v.first->create()) throw new std::runtime_error("QOpenGLVertexArrayObject create failed");
+        }
         ChannelGraph &gVoltage = data->vaChannelVoltage[channel];
         v.first->bind();
         dataSize = int(gVoltage.size() * sizeof(QVector3D));
@@ -44,7 +48,10 @@ void Graph::writeData(PPresult *data, QOpenGLShaderProgram *program, int vertexL
         offset += dataSize;
 
         // Spectrum channel
-        if (!s.first) s.first = new QOpenGLVertexArrayObject;
+        if (!s.first) {
+            s.first = new QOpenGLVertexArrayObject;
+            if (!s.first->create()) throw new std::runtime_error("QOpenGLVertexArrayObject create failed");
+        }
         ChannelGraph &gSpectrum = data->vaChannelSpectrum[channel];
         s.first->bind();
         dataSize = int(gSpectrum.size() * sizeof(QVector3D));

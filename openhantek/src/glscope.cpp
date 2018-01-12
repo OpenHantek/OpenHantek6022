@@ -166,7 +166,7 @@ void GlScope::initializeGL() {
         m_marker.create();
         m_marker.bind();
         m_marker.setUsagePattern(QOpenGLBuffer::StaticDraw);
-        m_marker.allocate(4 * sizeof(QVector3D));
+        m_marker.allocate(int(vaMarker.size() * sizeof(Line)));
         m_program->enableAttributeArray(vertexLocation);
         m_program->setAttributeBuffer(vertexLocation, GL_FLOAT, 0, 3, 0);
     }
@@ -177,10 +177,18 @@ void GlScope::initializeGL() {
 void GlScope::showData(PPresult *data) {
     if (!m_program || !m_program->isLinked()) return;
     makeCurrent();
-    m_GraphHistory.resize(view->digitalPhosphorDraws());
-    m_GraphHistory[currentGraphInHistory].writeData(data, m_program.get(), vertexLocation);
-    currentGraphInHistory = (currentGraphInHistory + 1) % m_GraphHistory.size();
-    doneCurrent();
+    // Remove too much entries
+    while (view->digitalPhosphorDraws() < m_GraphHistory.size()) m_GraphHistory.pop_back();
+
+    // Add if missing
+    if (view->digitalPhosphorDraws() > m_GraphHistory.size()) { m_GraphHistory.resize(m_GraphHistory.size() + 1); }
+
+    // Move last item to front
+    m_GraphHistory.splice(m_GraphHistory.begin(), m_GraphHistory, std::prev(m_GraphHistory.end()));
+
+    // Add new entry
+    m_GraphHistory.front().writeData(data, m_program.get(), vertexLocation);
+    // doneCurrent();
 }
 
 void GlScope::paintGL() {
@@ -210,13 +218,13 @@ void GlScope::paintGL() {
         m_program->setUniformValue(matrixLocation, pmvMatrix * m);
     }
 
-    for (unsigned historyIndex = 0; historyIndex < m_GraphHistory.size(); ++historyIndex) {
-        unsigned graphID = (historyIndex + currentGraphInHistory) % m_GraphHistory.size();
-        Graph &graph = m_GraphHistory[graphID];
+    unsigned historyIndex = 0;
+    for (Graph &graph : m_GraphHistory) {
         for (ChannelID channel = 0; channel < scope->voltage.size(); ++channel) {
             drawSpectrumChannelGraph(channel, graph, (int)historyIndex);
             drawVoltageChannelGraph(channel, graph, (int)historyIndex);
         }
+        ++historyIndex;
     }
 
     gl->glDisable(GL_POINT_SMOOTH);
@@ -377,18 +385,25 @@ void GlScope::drawMarkers() {
 
     m_vaoMarker.bind();
 
-    for (unsigned marker = 0; marker < MARKER_COUNT; ++marker) {
+    for (unsigned marker = 0; marker < vaMarker.size(); ++marker) {
         if (!scope->horizontal.marker_visible[marker]) continue;
         vaMarker[marker] = {QVector3D((GLfloat)scope->horizontal.marker[marker], -DIVS_VOLTAGE, 0.0f),
                             QVector3D((GLfloat)scope->horizontal.marker[marker], DIVS_VOLTAGE, 0.0f)};
+    }
 
-        m_marker.bind();
-        auto ptr = m_marker.mapRange(0, sizeof(Line), QOpenGLBuffer::RangeInvalidateBuffer | QOpenGLBuffer::RangeWrite);
-        memcpy(ptr, &vaMarker[marker], sizeof(Line));
-        m_marker.unmap();
+    // Write coordinates to GPU
+    m_marker.bind();
+    m_marker.write(0, vaMarker.data(), vaMarker.size() * sizeof(Line));
 
-        gl->glLineWidth((marker == selectedMarker) ? 3 : 1);
-        gl->glDrawArrays(GL_LINES, 0, (GLsizei)2);
+    // Draw all
+    gl->glLineWidth(1);
+    gl->glDrawArrays(GL_LINES, 0, (GLsizei)vaMarker.size() * 2);
+    m_marker.release();
+
+    // Draw selected
+    if (selectedMarker != NO_MARKER) {
+        gl->glLineWidth(3);
+        gl->glDrawArrays(GL_LINES, selectedMarker * 2, (GLsizei)2);
     }
 
     m_vaoMarker.release();
@@ -398,7 +413,6 @@ void GlScope::drawVoltageChannelGraph(ChannelID channel, Graph &graph, int histo
     if (!scope->voltage[channel].used) return;
 
     m_program->setUniformValue(colorLocation, view->screen.voltage[channel].darker(100 + 10 * historyIndex));
-
     Graph::VaoCount &v = graph.vaoVoltage[channel];
 
     QOpenGLVertexArrayObject::Binder b(v.first);

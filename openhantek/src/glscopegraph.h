@@ -12,10 +12,12 @@
 #include "post/ppresult.h"
 
 struct Graph {
-    Graph();
+    explicit Graph();
+    Graph(const Graph &) = delete;
+    Graph(const Graph &&) = delete;
     ~Graph();
-    void writeData(PPresult *data, QOpenGLShaderProgram* program, int vertexLocation);
-    typedef std::pair<QOpenGLVertexArrayObject*, GLsizei> VaoCount;
+    void writeData(PPresult *data, QOpenGLShaderProgram *program, int vertexLocation);
+    typedef std::pair<QOpenGLVertexArrayObject *, GLsizei> VaoCount;
 
   public:
     int allocatedMem = 0;

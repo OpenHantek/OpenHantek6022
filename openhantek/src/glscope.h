@@ -3,6 +3,7 @@
 #pragma once
 
 #include <memory>
+#include <list>
 
 #include <QtGlobal>
 #include <QOpenGLBuffer>
@@ -93,7 +94,7 @@ class GlScope : public QOpenGLWidget {
     void generateGrid();
 
     // Graphs
-    std::vector<Graph> m_GraphHistory;
+    std::list<Graph> m_GraphHistory;
     unsigned currentGraphInHistory = 0;
 
     // OpenGL shader, matrix, var-locations
@@ -102,4 +103,5 @@ class GlScope : public QOpenGLWidget {
     int colorLocation;
     int vertexLocation;
     int matrixLocation;
+    int selectionLocation;
 };
