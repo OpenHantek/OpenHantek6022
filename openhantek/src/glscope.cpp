@@ -20,8 +20,11 @@
 #include "viewconstants.h"
 #include "viewsettings.h"
 
-// typedef QOpenGLFunctions_ES2 OPENGL_VER;
+#if defined(QT_OPENGL_ES_2)
+typedef QOpenGLFunctions_ES2 OPENGL_VER;
+#else
 typedef QOpenGLFunctions_3_3_Core OPENGL_VER;
+#endif
 
 GlScope *GlScope::createNormal(DsoSettingsScope *scope, DsoSettingsView *view, QWidget *parent) {
     GlScope *s = new GlScope(scope, view, parent);
@@ -153,8 +156,6 @@ void GlScope::initializeGL() {
     gl->glEnable(GL_CULL_FACE);
     gl->glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    gl->glPointSize(1);
-
     QColor bg = view->screen.background;
     gl->glClearColor((GLfloat)bg.redF(), (GLfloat)bg.greenF(), (GLfloat)bg.blueF(), (GLfloat)bg.alphaF());
 
@@ -203,12 +204,6 @@ void GlScope::paintGL() {
 
     m_program->bind();
 
-    if (view->antialiasing) {
-        gl->glEnable(GL_POINT_SMOOTH);
-        gl->glEnable(GL_LINE_SMOOTH);
-        gl->glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
-    }
-
     // Apply zoom settings via matrix transformation
     if (zoomed) {
         QMatrix4x4 m;
@@ -226,9 +221,6 @@ void GlScope::paintGL() {
         }
         ++historyIndex;
     }
-
-    gl->glDisable(GL_POINT_SMOOTH);
-    gl->glDisable(GL_LINE_SMOOTH);
 
     if (zoomed) { m_program->setUniformValue(matrixLocation, pmvMatrix); }
 
@@ -258,8 +250,6 @@ void GlScope::resizeGL(int width, int height) {
 
 void GlScope::drawGrid() {
     auto *gl = context()->versionFunctions<OPENGL_VER>();
-    gl->glDisable(GL_POINT_SMOOTH);
-    gl->glDisable(GL_LINE_SMOOTH);
     gl->glLineWidth(1);
 
     // Grid

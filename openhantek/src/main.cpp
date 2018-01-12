@@ -75,6 +75,7 @@ int main(int argc, char *argv[]) {
     // Prefer full desktop OpenGL without fixed pipeline
     QSurfaceFormat format;
     format.setProfile(QSurfaceFormat::CoreProfile);
+    format.setSamples(4); // Antia-Aliasing, Multisampling
     QSurfaceFormat::setDefaultFormat(format);
     QApplication openHantekApplication(argc, argv);
 
