@@ -51,11 +51,11 @@ class LevelSlider : public QWidget {
 
     double minimum(int index) const;
     double maximum(int index) const;
-    int setLimits(int index, double minimum, double maximum);
+    void setLimits(int index, double minimum, double maximum);
     double step(int index) const;
     double setStep(int index, double step);
     double value(int index) const;
-    double setValue(int index, double value);
+    void setValue(int index, double value);
 
     // Parameters for all sliders
     Qt::ArrowType direction() const;
@@ -71,7 +71,7 @@ class LevelSlider : public QWidget {
 
     QRect calculateRect(int sliderId);
     int calculateWidth();
-    int fixValue(int index);
+    void fixValue(int index);
 
     QList<LevelSliderParameters *> slider; ///< The parameters for each slider
     int pressedSlider;                     ///< The currently pressed (moved) slider

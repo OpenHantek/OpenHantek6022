@@ -196,17 +196,14 @@ double LevelSlider::maximum(int index) const {
 /// \param minimum The value a slider has at the bottommost/leftmost position.
 /// \param maximum The value a slider has at the topmost/rightmost position.
 /// \return -1 on error, fixValue result on success.
-int LevelSlider::setLimits(int index, double minimum, double maximum) {
-    if (index < 0 || index >= this->slider.count()) return -1;
+void LevelSlider::setLimits(int index, double minimum, double maximum) {
+    if (index < 0 || index >= this->slider.count()) return;
 
     this->slider[index]->minimum = minimum;
     this->slider[index]->maximum = maximum;
-    int result = this->fixValue(index);
-
+    this->fixValue(index);
     this->calculateRect(index);
     this->repaint();
-
-    return result;
 }
 
 /// \brief Return the step width of the sliders.
@@ -243,8 +240,8 @@ double LevelSlider::value(int index) const {
 /// \param index The index of the slider whose value should be set.
 /// \param value The new value of the slider.
 /// \return The new value of the slider.
-double LevelSlider::setValue(int index, double value) {
-    if (index < 0 || index >= this->slider.count()) return -1;
+void LevelSlider::setValue(int index, double value) {
+    if (index < 0 || index >= this->slider.count()) return;
 
     // Apply new value
     this->slider[index]->value = value;
@@ -254,8 +251,6 @@ double LevelSlider::setValue(int index, double value) {
     this->repaint();
 
     if (this->pressedSlider < 0) emit valueChanged(index, value);
-
-    return this->slider[index]->value;
 }
 
 /// \brief Return the direction of the sliders.
@@ -563,17 +558,14 @@ int LevelSlider::calculateWidth() {
 /// \brief Fix the value if it's outside the limits.
 /// \param index The index of the slider who should be fixed.
 /// \return 0 when ok, -1 on error, 1 when increased and 2 when decreased.
-int LevelSlider::fixValue(int index) {
-    if (index < 0 || index >= this->slider.count()) return -1;
+void LevelSlider::fixValue(int index) {
+    if (index < 0 || index >= this->slider.count()) return;
 
     double lowest = qMin(this->slider[index]->minimum, this->slider[index]->maximum);
     double highest = qMax(this->slider[index]->minimum, this->slider[index]->maximum);
     if (this->slider[index]->value < lowest) {
         this->slider[index]->value = lowest;
-        return 1;
     } else if (this->slider[index]->value > highest) {
         this->slider[index]->value = highest;
-        return 2;
     }
-    return 0;
 }

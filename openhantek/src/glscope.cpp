@@ -4,12 +4,16 @@
 #include <iostream>
 
 #include <QColor>
+#include <QCoreApplication>
 #include <QDebug>
 #include <QMatrix4x4>
+#include <QMessageBox>
 #include <QMouseEvent>
 #include <QOpenGLShaderProgram>
+#include <QPainter>
 
-#include <QOpenGLFunctions_3_3_Core>
+// We can't be more modern than OpenGL 3.2 or ES2 because of MacOSX.
+#include <QOpenGLFunctions_3_2_Core>
 #include <QOpenGLFunctions_ES2>
 
 #include "glscope.h"
@@ -23,7 +27,7 @@
 #if defined(QT_OPENGL_ES_2)
 typedef QOpenGLFunctions_ES2 OPENGL_VER;
 #else
-typedef QOpenGLFunctions_3_3_Core OPENGL_VER;
+typedef QOpenGLFunctions_3_2_Core OPENGL_VER;
 #endif
 
 GlScope *GlScope::createNormal(DsoSettingsScope *scope, DsoSettingsView *view, QWidget *parent) {
@@ -36,6 +40,25 @@ GlScope *GlScope::createZoomed(DsoSettingsScope *scope, DsoSettingsView *view, Q
     GlScope *s = new GlScope(scope, view, parent);
     s->zoomed = true;
     return s;
+}
+
+void GlScope::fixOpenGLversion() {
+    QCoreApplication::setAttribute(Qt::AA_ShareOpenGLContexts, true);
+
+    // Prefer full desktop OpenGL without fixed pipeline
+    QSurfaceFormat format;
+    format.setSamples(4); // Antia-Aliasing, Multisampling
+#if defined(QT_OPENGL_ES_2)
+    format.setVersion(2, 0);
+    format.setProfile(QSurfaceFormat::CoreProfile);
+    format.setRenderableType(QSurfaceFormat::OpenGLES);
+    QCoreApplication::setAttribute(Qt::AA_UseOpenGLES, true);
+#else
+    format.setVersion(3, 2);
+    format.setProfile(QSurfaceFormat::CoreProfile);
+    format.setRenderableType(QSurfaceFormat::OpenGL);
+#endif
+    QSurfaceFormat::setDefaultFormat(format);
 }
 
 GlScope::GlScope(DsoSettingsScope *scope, DsoSettingsView *view, QWidget *parent)
@@ -51,7 +74,7 @@ void GlScope::mousePressEvent(QMouseEvent *event) {
         double distance = DIVS_TIME;
         selectedMarker = NO_MARKER;
         // Capture nearest marker located within snap area (+/- 1% of full scale).
-        for (int marker = 0; marker < MARKER_COUNT; ++marker) {
+        for (unsigned marker = 0; marker < MARKER_COUNT; ++marker) {
             if (!scope->horizontal.marker_visible[marker]) continue;
             if (fabs(scope->horizontal.marker[marker] - position) < std::min(distance, DIVS_TIME / 100.0)) {
                 distance = fabs(scope->horizontal.marker[marker] - position);
@@ -89,13 +112,34 @@ void GlScope::mouseReleaseEvent(QMouseEvent *event) {
     event->accept();
 }
 
-void GlScope::initializeGL() {
-    auto *gl = context()->versionFunctions<OPENGL_VER>();
+void GlScope::paintEvent(QPaintEvent *event) {
+    // Draw error message if OpenGL failed
+    if (!shaderCompileSuccess) {
+        QPainter painter(this);
+        painter.setRenderHint(QPainter::Antialiasing, true);
+        QFont font = painter.font();
+        font.setPointSize(18);
+        painter.setFont(font);
+        painter.drawText(rect(), Qt::AlignCenter, errorMessage);
+        event->accept();
+    } else
+        QOpenGLWidget::paintEvent(event);
+}
 
-    m_program = std::unique_ptr<QOpenGLShaderProgram>(new QOpenGLShaderProgram(context()));
+void GlScope::initializeGL() {
+    if (!QOpenGLShaderProgram::hasOpenGLShaderPrograms(context())) {
+        errorMessage = tr("System does not support OpenGL Shading Language (GLSL)");
+        return;
+    }
+    if (m_program) {
+        qWarning() << "OpenGL init called twice!";
+        return;
+    }
+
+    auto program = std::unique_ptr<QOpenGLShaderProgram>(new QOpenGLShaderProgram(context()));
 
     const char *vshaderES = R"(
-          #version 330
+          #version 100
           attribute highp vec3 vertex;
           uniform mat4 matrix;
           void main()
@@ -104,9 +148,14 @@ void GlScope::initializeGL() {
               gl_PointSize = 1.0;
           }
     )";
+    const char *fshaderES = R"(
+          #version 100
+          uniform highp vec4 colour;
+          void main() { gl_FragColor = colour; }
+    )";
 
     const char *vshaderCore = R"(
-          #version 330
+          #version 150
           in highp vec3 vertex;
           uniform mat4 matrix;
           void main()
@@ -116,37 +165,39 @@ void GlScope::initializeGL() {
           }
     )";
     const char *fshaderCore = R"(
-          #version 330
+          #version 150
           uniform highp vec4 colour;
-          void main() { gl_FragColor = colour; }
+          out vec4 flatColor;
+          void main() { flatColor = colour; }
     )";
 
     qDebug() << "compile shaders";
     // Compile vertex shader
     bool coreShaders = QSurfaceFormat::defaultFormat().profile() == QSurfaceFormat::CoreProfile;
-    if (!m_program->addShaderFromSourceCode(QOpenGLShader::Vertex, coreShaders ? vshaderCore : vshaderES) ||
-        !m_program->addShaderFromSourceCode(QOpenGLShader::Fragment, fshaderCore)) {
-        qWarning() << "Failed to compile OpenGL shader programs.\n" << m_program->log();
+    if (!program->addShaderFromSourceCode(QOpenGLShader::Vertex, coreShaders ? vshaderCore : vshaderES) ||
+        !program->addShaderFromSourceCode(QOpenGLShader::Fragment, coreShaders ? fshaderCore : fshaderES)) {
+        errorMessage = "Failed to compile OpenGL shader programs.\n" + program->log();
         return;
     }
 
     // Link shader pipeline
-    if (!m_program->link() || !m_program->bind()) {
-        qWarning() << "Failed to link/bind OpenGL shader programs";
+    if (!program->link() || !program->bind()) {
+        errorMessage = "Failed to link/bind OpenGL shader programs\n" + program->log();
         return;
     }
 
-    vertexLocation = m_program->attributeLocation("vertex");
-    matrixLocation = m_program->uniformLocation("matrix");
-    colorLocation = m_program->uniformLocation("colour");
+    vertexLocation = program->attributeLocation("vertex");
+    matrixLocation = program->uniformLocation("matrix");
+    colorLocation = program->uniformLocation("colour");
 
     if (vertexLocation == -1 || colorLocation == -1 || matrixLocation == -1) {
         qWarning() << "Failed to locate shader variable";
         return;
     }
 
-    m_program->bind();
+    program->bind();
 
+    auto *gl = context()->versionFunctions<OPENGL_VER>();
     gl->glDisable(GL_DEPTH_TEST);
     gl->glEnable(GL_BLEND);
     // Enable depth buffer
@@ -159,7 +210,7 @@ void GlScope::initializeGL() {
     QColor bg = view->screen.background;
     gl->glClearColor((GLfloat)bg.redF(), (GLfloat)bg.greenF(), (GLfloat)bg.blueF(), (GLfloat)bg.alphaF());
 
-    generateGrid();
+    generateGrid(program.get());
 
     {
         m_vaoMarker.create();
@@ -168,15 +219,18 @@ void GlScope::initializeGL() {
         m_marker.bind();
         m_marker.setUsagePattern(QOpenGLBuffer::StaticDraw);
         m_marker.allocate(int(vaMarker.size() * sizeof(Line)));
-        m_program->enableAttributeArray(vertexLocation);
-        m_program->setAttributeBuffer(vertexLocation, GL_FLOAT, 0, 3, 0);
+        program->enableAttributeArray(vertexLocation);
+        program->setAttributeBuffer(vertexLocation, GL_FLOAT, 0, 3, 0);
     }
 
-    m_program->release();
+    markerUpdated();
+
+    m_program = std::move(program);
+    shaderCompileSuccess = true;
 }
 
 void GlScope::showData(PPresult *data) {
-    if (!m_program || !m_program->isLinked()) return;
+    if (!shaderCompileSuccess) return;
     makeCurrent();
     // Remove too much entries
     while (view->digitalPhosphorDraws() < m_GraphHistory.size()) m_GraphHistory.pop_back();
@@ -192,8 +246,23 @@ void GlScope::showData(PPresult *data) {
     // doneCurrent();
 }
 
+void GlScope::markerUpdated()
+{
+
+    for (unsigned marker = 0; marker < vaMarker.size(); ++marker) {
+        if (!scope->horizontal.marker_visible[marker]) continue;
+        vaMarker[marker] = {QVector3D((GLfloat)scope->horizontal.marker[marker], -DIVS_VOLTAGE, 0.0f),
+                            QVector3D((GLfloat)scope->horizontal.marker[marker], DIVS_VOLTAGE, 0.0f)};
+    }
+
+    // Write coordinates to GPU
+    makeCurrent();
+    m_marker.bind();
+    m_marker.write(0, vaMarker.data(), vaMarker.size() * sizeof(Line));
+}
+
 void GlScope::paintGL() {
-    if (!m_program->isLinked()) return;
+    if (!shaderCompileSuccess) return;
 
     auto *gl = context()->versionFunctions<OPENGL_VER>();
 
@@ -231,6 +300,7 @@ void GlScope::paintGL() {
 }
 
 void GlScope::resizeGL(int width, int height) {
+    if (!shaderCompileSuccess) return;
     auto *gl = context()->versionFunctions<OPENGL_VER>();
     gl->glViewport(0, 0, (GLint)width, (GLint)height);
 
@@ -248,30 +318,7 @@ void GlScope::resizeGL(int width, int height) {
     m_program->release();
 }
 
-void GlScope::drawGrid() {
-    auto *gl = context()->versionFunctions<OPENGL_VER>();
-    gl->glLineWidth(1);
-
-    // Grid
-    m_vaoGrid[0].bind();
-    m_program->setUniformValue(colorLocation, view->screen.grid);
-    gl->glDrawArrays(GL_POINTS, 0, gridDrawCounts[0]);
-    m_vaoGrid[0].release();
-
-    // Axes
-    m_vaoGrid[1].bind();
-    m_program->setUniformValue(colorLocation, view->screen.axes);
-    gl->glDrawArrays(GL_LINES, 0, gridDrawCounts[1]);
-    m_vaoGrid[1].release();
-
-    // Border
-    m_vaoGrid[2].bind();
-    m_program->setUniformValue(colorLocation, view->screen.border);
-    gl->glDrawArrays(GL_LINE_LOOP, 0, gridDrawCounts[2]);
-    m_vaoGrid[2].release();
-}
-
-void GlScope::generateGrid() {
+void GlScope::generateGrid(QOpenGLShaderProgram *program) {
     gridDrawCounts[0] = 0;
     gridDrawCounts[1] = 0;
     gridDrawCounts[2] = 0;
@@ -286,8 +333,8 @@ void GlScope::generateGrid() {
         m_vaoGrid[0].create();
         QOpenGLVertexArrayObject::Binder b(&m_vaoGrid[0]);
         m_grid.bind();
-        m_program->enableAttributeArray(vertexLocation);
-        m_program->setAttributeBuffer(vertexLocation, GL_FLOAT, 0, 3, 0);
+        program->enableAttributeArray(vertexLocation);
+        program->setAttributeBuffer(vertexLocation, GL_FLOAT, 0, 3, 0);
     }
 
     // Draw vertical lines
@@ -318,8 +365,8 @@ void GlScope::generateGrid() {
         m_vaoGrid[1].create();
         QOpenGLVertexArrayObject::Binder b(&m_vaoGrid[1]);
         m_grid.bind();
-        m_program->enableAttributeArray(vertexLocation);
-        m_program->setAttributeBuffer(vertexLocation, GL_FLOAT, int(vaGrid.size() * sizeof(QVector3D)), 3);
+        program->enableAttributeArray(vertexLocation);
+        program->setAttributeBuffer(vertexLocation, GL_FLOAT, int(vaGrid.size() * sizeof(QVector3D)), 3);
     }
 
     // Axes
@@ -353,8 +400,8 @@ void GlScope::generateGrid() {
         m_vaoGrid[2].create();
         QOpenGLVertexArrayObject::Binder b(&m_vaoGrid[2]);
         m_grid.bind();
-        m_program->enableAttributeArray(vertexLocation);
-        m_program->setAttributeBuffer(vertexLocation, GL_FLOAT, int(vaGrid.size() * sizeof(QVector3D)), 3);
+        program->enableAttributeArray(vertexLocation);
+        program->setAttributeBuffer(vertexLocation, GL_FLOAT, int(vaGrid.size() * sizeof(QVector3D)), 3);
     }
 
     // Border
@@ -368,6 +415,29 @@ void GlScope::generateGrid() {
     m_grid.release();
 }
 
+void GlScope::drawGrid() {
+    auto *gl = context()->versionFunctions<OPENGL_VER>();
+    gl->glLineWidth(1);
+
+    // Grid
+    m_vaoGrid[0].bind();
+    m_program->setUniformValue(colorLocation, view->screen.grid);
+    gl->glDrawArrays(GL_POINTS, 0, gridDrawCounts[0]);
+    m_vaoGrid[0].release();
+
+    // Axes
+    m_vaoGrid[1].bind();
+    m_program->setUniformValue(colorLocation, view->screen.axes);
+    gl->glDrawArrays(GL_LINES, 0, gridDrawCounts[1]);
+    m_vaoGrid[1].release();
+
+    // Border
+    m_vaoGrid[2].bind();
+    m_program->setUniformValue(colorLocation, view->screen.border);
+    gl->glDrawArrays(GL_LINE_LOOP, 0, gridDrawCounts[2]);
+    m_vaoGrid[2].release();
+}
+
 void GlScope::drawMarkers() {
     auto *gl = context()->versionFunctions<OPENGL_VER>();
     QColor trColor = view->screen.markers;
@@ -375,23 +445,13 @@ void GlScope::drawMarkers() {
 
     m_vaoMarker.bind();
 
-    for (unsigned marker = 0; marker < vaMarker.size(); ++marker) {
-        if (!scope->horizontal.marker_visible[marker]) continue;
-        vaMarker[marker] = {QVector3D((GLfloat)scope->horizontal.marker[marker], -DIVS_VOLTAGE, 0.0f),
-                            QVector3D((GLfloat)scope->horizontal.marker[marker], DIVS_VOLTAGE, 0.0f)};
-    }
-
-    // Write coordinates to GPU
-    m_marker.bind();
-    m_marker.write(0, vaMarker.data(), vaMarker.size() * sizeof(Line));
-
     // Draw all
     gl->glLineWidth(1);
     gl->glDrawArrays(GL_LINES, 0, (GLsizei)vaMarker.size() * 2);
-    m_marker.release();
 
     // Draw selected
     if (selectedMarker != NO_MARKER) {
+        qWarning() << selectedMarker;
         gl->glLineWidth(3);
         gl->glDrawArrays(GL_LINES, selectedMarker * 2, (GLsizei)2);
     }

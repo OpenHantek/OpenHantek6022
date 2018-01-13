@@ -24,6 +24,8 @@
 #include "usb/usbdevice.h"
 #include "viewconstants.h"
 
+#include "glscope.h"
+
 #ifndef VERSION
 #error "You need to run the cmake buildsystem!"
 #endif
@@ -69,14 +71,8 @@ int main(int argc, char *argv[]) {
     QCoreApplication::setApplicationName("OpenHantek");
     QCoreApplication::setApplicationVersion(VERSION);
 
-    QCoreApplication::setAttribute(Qt::AA_UseOpenGLES, true);
-    QCoreApplication::setAttribute(Qt::AA_ShareOpenGLContexts, true);
+    GlScope::fixOpenGLversion();
 
-    // Prefer full desktop OpenGL without fixed pipeline
-    QSurfaceFormat format;
-    format.setProfile(QSurfaceFormat::CoreProfile);
-    format.setSamples(4); // Antia-Aliasing, Multisampling
-    QSurfaceFormat::setDefaultFormat(format);
     QApplication openHantekApplication(argc, argv);
 
     //////// Load translations ////////
@@ -155,5 +151,10 @@ int main(int argc, char *argv[]) {
 
     postProcessingThread.quit();
     postProcessingThread.wait(10000);
+
+    if (context && device != nullptr) {
+        libusb_exit(context);
+    }
+
     return res;
 }

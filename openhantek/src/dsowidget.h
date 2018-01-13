@@ -42,6 +42,7 @@ class DsoWidget : public QWidget {
     void showNew(std::shared_ptr<PPresult> data);
 
   protected:
+    virtual void showEvent(QShowEvent *event);
     void setupSliders(Sliders &sliders);
     void adaptTriggerLevelSlider(DsoWidget::Sliders &sliders, ChannelID channel);
     void adaptTriggerPositionSlider();

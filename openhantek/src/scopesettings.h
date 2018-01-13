@@ -11,6 +11,7 @@
 #include <vector>
 
 #define MARKER_COUNT 2 ///< Number of markers
+#define MARKER_STEP (DIVS_TIME / 100.0)
 
 /// \brief Holds the settings for the horizontal axis.
 struct DsoSettingsScopeHorizontal {

@@ -31,10 +31,16 @@ class GlScope : public QOpenGLWidget {
                                  QWidget *parent = 0);
 
     /**
+     * We need at least OpenGL 3.2 with shader version 150 or
+     * OpenGL ES 2.0 with shader version 100.
+     */
+    static void fixOpenGLversion();
+    /**
      * Show new post processed data
      * @param data
      */
     void showData(PPresult* data);
+    void markerUpdated();
 
   protected:
     /// \brief Initializes the scope widget.
@@ -42,21 +48,23 @@ class GlScope : public QOpenGLWidget {
     /// \param parent The parent widget.
     GlScope(DsoSettingsScope *scope, DsoSettingsView *view, QWidget *parent = 0);
     virtual ~GlScope();
+    GlScope(const GlScope&) = delete;
 
     /// \brief Initializes OpenGL output.
-    void initializeGL() override;
+    virtual void initializeGL() override;
 
     /// \brief Draw the graphs, marker and the grid.
-    void paintGL() override;
+    virtual void paintGL() override;
 
     /// \brief Resize the widget.
     /// \param width The new width of the widget.
     /// \param height The new height of the widget.
-    void resizeGL(int width, int height) override;
+    virtual void resizeGL(int width, int height) override;
 
-    void mousePressEvent(QMouseEvent *event) override;
-    void mouseMoveEvent(QMouseEvent *event) override;
-    void mouseReleaseEvent(QMouseEvent *event) override;
+    virtual void mousePressEvent(QMouseEvent *event) override;
+    virtual void mouseMoveEvent(QMouseEvent *event) override;
+    virtual void mouseReleaseEvent(QMouseEvent *event) override;
+    virtual void paintEvent(QPaintEvent *event) override;
 
     /// \brief Draw the grid.
     void drawGrid();
@@ -91,13 +99,15 @@ class GlScope : public QOpenGLWidget {
     QOpenGLBuffer m_grid;
     QOpenGLVertexArrayObject m_vaoGrid[3];
     GLsizei gridDrawCounts[3];
-    void generateGrid();
+    void generateGrid(QOpenGLShaderProgram *program);
 
     // Graphs
     std::list<Graph> m_GraphHistory;
     unsigned currentGraphInHistory = 0;
 
     // OpenGL shader, matrix, var-locations
+    bool shaderCompileSuccess = false;
+    QString errorMessage;
     std::unique_ptr<QOpenGLShaderProgram> m_program;
     QMatrix4x4 pmvMatrix; ///< projection, view matrix
     int colorLocation;
