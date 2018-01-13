@@ -38,7 +38,7 @@ You need the following software, to build OpenHantek from source:
 We have build instructions available for [Linux](docs/build.md#linux), [Apple MacOSX](docs/build.md#apple) and [Microsoft Windows](docs/build.md#windows).
 
 ## Run OpenHantek
-You need a OpenGL 3.0+ or OpenGL ES 2.0+ capable graphics hardware for OpenHantek.
+You need an OpenGL 3.2+ or OpenGL ES 2.0+ capable graphics hardware for OpenHantek.
 
 USB access for the device is required:
 * As seen on the [Microsoft Windows build instructions](docs/build.md#windows) page, you need a
@@ -57,7 +57,7 @@ We welcome any reported Github Issue if you have a problem with this software. S
      (install clang-format. Use make target: `make format` or execute directly from the openhantek directory: `clang-format -style=file src/*`).
    - Open a [pull request][12] with a clear title and description.
    - Read [Add a new device](docs/adddevice.md) if you want to know how to add a device.
-   - Do as a favour and use QtCreator as IDE on all platforms. It comes with CMake support, a decent compiler, and Qt out of the box.
+   - We recommend QtCreator as IDE on all platforms. It comes with CMake support, a decent compiler, and Qt out of the box.
 
 [10]: http://gun.io/blog/how-to-github-fork-branch-and-pull-request
 [11]: http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html
