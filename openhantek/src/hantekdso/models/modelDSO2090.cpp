@@ -5,6 +5,9 @@
 
 using namespace Hantek;
 
+static ModelDSO2090 modelInstance;
+static ModelDSO2090A modelInstance2;
+
 ModelDSO2090::ModelDSO2090() : DSOModel(ID, 0x04b5, 0x2090, 0x04b4, 0x2090, "dso2090x86", "DSO-2090",
                                         Dso::ControlSpecification(2)) {
     specification.cmdSetRecordLength = BulkCode::SETTRIGGERANDSAMPLERATE;

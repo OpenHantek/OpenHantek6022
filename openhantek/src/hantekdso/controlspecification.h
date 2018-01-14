@@ -59,7 +59,7 @@ struct ControlSpecification {
     BulkCode cmdTriggerEnabled = BulkCode::ENABLETRIGGER;    ///< Command for enabling the trigger
     BulkCode cmdGetData = BulkCode::GETDATA;                 ///< Command for retrieve sample data
     BulkCode cmdGetCaptureState = BulkCode::GETCAPTURESTATE; ///< Command for retrieve the capture state
-    BulkCode cmdSetGain = BulkCode::SETGAIN;                    ///< Command for setting the gain
+    BulkCode cmdSetGain = BulkCode::SETGAIN;                 ///< Command for setting the gain
 
     ControlBeginCommand beginCommandControl;
     ControlGetLimits cmdGetLimits;

@@ -1,7 +1,7 @@
 #include "newdevicemodelfromexisting.h"
 
 #include "dsomodel.h"
-#include "models.h"
+#include "modelregistry.h"
 #include "rawdeviceslistmodel.h"
 
 #include <QDebug>
@@ -21,7 +21,7 @@ NewDeviceModelFromExisting::NewDeviceModelFromExisting(QWidget *parent) :
     ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(false);
 
     QStringList supportedModelsList;
-    for (const DSOModel* model: supportedModels) {
+    for (const DSOModel* model: ModelRegistry::get()->models()) {
         supportedModelsList.append(QString::fromStdString(model->name));
     }
 

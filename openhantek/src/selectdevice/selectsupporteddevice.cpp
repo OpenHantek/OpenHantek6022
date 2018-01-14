@@ -12,7 +12,7 @@
 #include "devicelistentry.h"
 #include "deviceslistmodel.h"
 #include "newdevicemodelfromexisting.h"
-#include "models.h"
+#include "modelregistry.h"
 
 SelectSupportedDevice::SelectSupportedDevice(QWidget *parent) :
     QDialog(parent),
@@ -114,7 +114,7 @@ void SelectSupportedDevice::showLibUSBFailedDialogModel(int error)
 void SelectSupportedDevice::updateSupportedDevices()
 {
     QString devices;
-    for (const DSOModel* model: supportedModels) {
+    for (const DSOModel* model: ModelRegistry::get()->models()) {
         devices.append(QString::fromStdString(model->name)).append(" ");
     }
     ui->labelSupportedDevices->setText(devices);

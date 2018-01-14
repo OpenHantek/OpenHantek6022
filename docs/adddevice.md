@@ -18,10 +18,18 @@ If your device needs other or slighly altered packets, you would need to modify 
 ## Add your model information
 You will only need to touch files within `openhantek/src/hantekdso/models`.
 
-Create a new class with your model name and inherit from `DSOModel`. Add an instance of your new class
-to the `supportedModels` list in `models.cpp`.
+1. Create a new class with your model name and inherit from `DSOModel`:
 
-The following code shows the constructor of `DSOModel` that needs to be supplied with model specific data:
+``` c++
+struct ModelDSO2090 : public DSOModel {
+    static const int ID = 0x2090; // Freely chooseable but unique id
+    ModelDSO2090();
+    void applyRequirements(HantekDsoControl* dsoControl) const override;
+};
+```
+
+2. Implement the constructor of your class, where you need to supply the constructor of `DSOModel` with
+   some information. The `DSOModel` constructor looks like this:
 
 ``` c++
 DSOModel(int ID, long vendorID, long productID, long vendorIDnoFirmware, long productIDnoFirmware,
@@ -35,7 +43,7 @@ DSOModel(int ID, long vendorID, long productID, long vendorIDnoFirmware, long pr
   (remember that we used `devicename-firmware.hex` and `devicename-loader.hex`).
 * The last parameter is the user visible name of the device.
 
-Add your device specific constants via the `specification` field, for instance:
+3. Add your device specific constants via the `specification` field, for instance:
 
 ``` c++
     specification.samplerate.single.base = 50e6;
@@ -48,7 +56,7 @@ Add your device specific constants via the `specification` field, for instance:
     specification.samplerate.multi.recordLengths = {UINT_MAX, 20480, 65536};
 ```
 
-The actual commands that are send, need to be defined as well, for instance:
+4. The actual commands that are send, need to be defined as well, for instance:
 
 ``` c++
     specification.command.control.setOffset = CONTROL_SETOFFSET;
@@ -61,4 +69,9 @@ The actual commands that are send, need to be defined as well, for instance:
     specification.command.bulk.setPretrigger = BulkCode::SETTRIGGERANDSAMPLERATE;
 ```
 
+5. Add an instance of your class to the cpp file. The `DSOModel` constructor will register
+   your new model automatically to the ModelRegistry:
 
+```
+static ModelDSO2090 modelInstance;
+```

@@ -5,6 +5,8 @@
 
 using namespace Hantek;
 
+static ModelDSO2250 modelInstance;
+
 ModelDSO2250::ModelDSO2250() : DSOModel(ID, 0x04b5, 0x2250, 0x04b4, 0x2250, "dso2250x86", "DSO-2250",
                                         Dso::ControlSpecification(2)) {
     specification.cmdSetRecordLength = BulkCode::DSETBUFFER;

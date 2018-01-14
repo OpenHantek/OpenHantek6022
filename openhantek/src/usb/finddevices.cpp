@@ -12,7 +12,7 @@
 #include "utils/printutils.h"
 #include <libusb-1.0/libusb.h>
 
-#include "models.h"
+#include "modelregistry.h"
 
 FindDevices::FindDevices(libusb_context *context) : context(context) {}
 
@@ -40,7 +40,7 @@ int FindDevices::updateDeviceList() {
             continue;
         }
 
-        for (DSOModel* model : supportedModels) {
+        for (DSOModel* model : ModelRegistry::get()->models()) {
             // Check VID and PID for firmware flashed devices
             bool supported = descriptor.idVendor == model->vendorID && descriptor.idProduct == model->productID;
             // Devices without firmware have different VID/PIDs

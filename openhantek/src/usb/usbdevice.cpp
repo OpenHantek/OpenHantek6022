@@ -6,9 +6,9 @@
 
 #include "usbdevice.h"
 
+#include "hantekdso/dsomodel.h"
 #include "hantekprotocol/bulkStructs.h"
 #include "hantekprotocol/controlStructs.h"
-#include "models.h"
 #include "utils/printutils.h"
 
 UniqueUSBid USBDevice::computeUSBdeviceID(libusb_device *device) {
