@@ -3,9 +3,9 @@
 #pragma once
 
 #include "enums.h"
-#include "hantekprotocol/bulkcode.h"
-#include "hantekprotocol/controlStructs.h"
 #include "hantekprotocol/definitions.h"
+#include "hantekprotocol/types.h"
+#include "hantekprotocol/bulkcode.h"
 #include <QList>
 
 namespace Dso {
@@ -60,9 +60,6 @@ struct ControlSpecification {
     BulkCode cmdGetData = BulkCode::GETDATA;                 ///< Command for retrieve sample data
     BulkCode cmdGetCaptureState = BulkCode::GETCAPTURESTATE; ///< Command for retrieve the capture state
     BulkCode cmdSetGain = BulkCode::SETGAIN;                 ///< Command for setting the gain
-
-    ControlBeginCommand beginCommandControl;
-    ControlGetLimits cmdGetLimits;
 
     // Limits
     ControlSpecificationSamplerate samplerate;  ///< The samplerate specifications

@@ -10,7 +10,6 @@
 #include "ezusb.h"
 #include "uploadFirmware.h"
 #include "usbdevice.h"
-#include "utils/printutils.h"
 
 #include "dsomodel.h"
 

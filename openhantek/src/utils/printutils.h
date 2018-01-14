@@ -11,11 +11,6 @@
 /// \brief The various units supported by valueToString.
 enum Unit { UNIT_VOLTS, UNIT_DECIBEL, UNIT_SECONDS, UNIT_HERTZ, UNIT_SAMPLES, UNIT_COUNT };
 
-/// \brief Returns string representation for libusb errors.
-/// \param error The error code.
-/// \return String explaining the error.
-QString libUsbErrorString(int error);
-
 /// \brief Converts double to string containing value and (prefix+)unit
 /// (Counterpart to stringToValue).
 /// \param value The value in prefixless units.

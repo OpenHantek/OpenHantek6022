@@ -5,7 +5,6 @@
 #include <QFile>
 #include <QUrl>
 
-#include "utils/printutils.h"
 #include "usb/uploadFirmware.h"
 #include "usb/finddevices.h"
 #include "dsomodel.h"

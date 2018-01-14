@@ -9,7 +9,41 @@
 #include "hantekdso/dsomodel.h"
 #include "hantekprotocol/bulkStructs.h"
 #include "hantekprotocol/controlStructs.h"
-#include "utils/printutils.h"
+
+#include <QCoreApplication>
+
+QString libUsbErrorString(int error) {
+    switch (error) {
+    case LIBUSB_SUCCESS:
+        return QCoreApplication::tr("Success (no error)");
+    case LIBUSB_ERROR_IO:
+        return QCoreApplication::tr("Input/output error");
+    case LIBUSB_ERROR_INVALID_PARAM:
+        return QCoreApplication::tr("Invalid parameter");
+    case LIBUSB_ERROR_ACCESS:
+        return QCoreApplication::tr("Access denied (insufficient permissions)");
+    case LIBUSB_ERROR_NO_DEVICE:
+        return QCoreApplication::tr("No such device (it may have been disconnected)");
+    case LIBUSB_ERROR_NOT_FOUND:
+        return QCoreApplication::tr("Entity not found");
+    case LIBUSB_ERROR_BUSY:
+        return QCoreApplication::tr("Resource busy");
+    case LIBUSB_ERROR_TIMEOUT:
+        return QCoreApplication::tr("Operation timed out");
+    case LIBUSB_ERROR_OVERFLOW:
+        return QCoreApplication::tr("Overflow");
+    case LIBUSB_ERROR_PIPE:
+        return QCoreApplication::tr("Pipe error");
+    case LIBUSB_ERROR_INTERRUPTED:
+        return QCoreApplication::tr("System call interrupted (perhaps due to signal)");
+    case LIBUSB_ERROR_NO_MEM:
+        return QCoreApplication::tr("Insufficient memory");
+    case LIBUSB_ERROR_NOT_SUPPORTED:
+        return QCoreApplication::tr("Operation not supported or unimplemented on this platform");
+    default:
+        return QCoreApplication::tr("Other error");
+    }
+}
 
 UniqueUSBid USBDevice::computeUSBdeviceID(libusb_device *device) {
     UniqueUSBid v = 0;
@@ -65,10 +99,7 @@ bool USBDevice::connectDevice(QString &errorMessage) {
     return true;
 }
 
-USBDevice::~USBDevice() {
-    disconnectFromDevice();
-    device = nullptr;
-}
+USBDevice::~USBDevice() { disconnectFromDevice(); }
 
 int USBDevice::claimInterface(const libusb_interface_descriptor *interfaceDescriptor, int endpointOut, int endPointIn) {
     int errorCode = libusb_claim_interface(this->handle, interfaceDescriptor->bInterfaceNumber);
@@ -93,17 +124,18 @@ int USBDevice::claimInterface(const libusb_interface_descriptor *interfaceDescri
 
 void USBDevice::disconnectFromDevice() {
     if (!device) return;
-    libusb_unref_device(device);
 
-    if (!this->handle) return;
+    if (this->handle) {
+        // Release claimed interface
+        if (this->interface != -1) libusb_release_interface(this->handle, this->interface);
+        this->interface = -1;
 
-    // Release claimed interface
-    libusb_release_interface(this->handle, this->interface);
-    this->interface = -1;
-
-    // Close device handle
-    libusb_close(this->handle);
+        // Close device handle
+        libusb_close(this->handle);
+    }
     this->handle = nullptr;
+
+    libusb_unref_device(device);
 
     emit deviceDisconnected();
 }
@@ -113,10 +145,6 @@ bool USBDevice::isConnected() { return this->handle != 0; }
 bool USBDevice::needsFirmware() {
     return this->descriptor.idProduct != model->productID || this->descriptor.idVendor != model->vendorID;
 }
-
-void USBDevice::setFindIteration(unsigned iteration) { findIteration = iteration; }
-
-unsigned USBDevice::getFindIteration() const { return findIteration; }
 
 int USBDevice::bulkTransfer(unsigned char endpoint, const unsigned char *data, unsigned int length, int attempts,
                             unsigned int timeout) {
@@ -133,14 +161,6 @@ int USBDevice::bulkTransfer(unsigned char endpoint, const unsigned char *data, u
         return errorCode;
     else
         return transferred;
-}
-
-int USBDevice::bulkWrite(const unsigned char *data, unsigned int length, int attempts) {
-    return bulkTransfer(HANTEK_EP_OUT, data, length, attempts);
-}
-
-int USBDevice::bulkRead(const DataArray<unsigned char> *command, int attempts) {
-    return bulkTransfer(HANTEK_EP_IN, command->data(), command->getSize(), attempts);
 }
 
 int USBDevice::bulkReadMulti(unsigned char *data, unsigned length, int attempts) {
@@ -173,23 +193,6 @@ int USBDevice::controlTransfer(unsigned char type, unsigned char request, unsign
     return errorCode;
 }
 
-int USBDevice::controlWrite(const ControlCommand *command) {
-    if (!this->handle) return LIBUSB_ERROR_NO_DEVICE;
-    return controlTransfer(LIBUSB_REQUEST_TYPE_VENDOR | LIBUSB_ENDPOINT_OUT, (uint8_t)command->code, command->data(),
-                           command->getSize(), command->value, 0, HANTEK_ATTEMPTS);
-}
 
-int USBDevice::controlRead(const ControlCommand *command) {
-    if (!this->handle) return LIBUSB_ERROR_NO_DEVICE;
 
-    return controlTransfer(LIBUSB_REQUEST_TYPE_VENDOR | LIBUSB_ENDPOINT_IN, (uint8_t)command->code, command->data(),
-                           command->getSize(), command->value, 0, HANTEK_ATTEMPTS);
-}
 
-libusb_device *USBDevice::getRawDevice() const { return device; }
-
-unsigned long USBDevice::getUniqueUSBDeviceID() const { return uniqueUSBdeviceID; }
-
-const DSOModel *USBDevice::getModel() const { return model; }
-
-void USBDevice::overwriteInPacketLength(int len) { inPacketLength = len; }

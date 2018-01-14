@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: GPL-2.0+
+
 #pragma once
 
 #define HANTEK_TIMEOUT 500       ///< Timeout for USB transfers in ms
@@ -8,8 +10,6 @@
 #define HANTEK_EP_OUT 0x02 ///< OUT Endpoint for bulk transfers
 #define HANTEK_EP_IN 0x86  ///< IN Endpoint for bulk transfers
 
-//////////////////////////////////////////////////////////////////////////////
-/// \enum ConnectionSpeed                                       hantek/types.h
 /// \brief The speed level of the USB connection.
 enum ConnectionSpeed {
     CONNECTION_FULLSPEED = 0, ///< FullSpeed USB, 64 byte bulk transfers

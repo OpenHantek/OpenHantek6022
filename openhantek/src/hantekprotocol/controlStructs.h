@@ -1,9 +1,12 @@
 #pragma once
 
+#include "controlcode.h"
+#include "controlcommand.h"
 #include "types.h"
 #include "usb/usbdevicedefinitions.h"
-#include "usb/controlcommand.h"
-#include "controlcode.h"
+
+#include <inttypes.h>
+#include <memory>
 
 namespace Hantek {
 struct OffsetsPerGainStep;
@@ -126,8 +129,8 @@ struct ControlAcquireHardData : public ControlCommand {
 };
 
 struct ControlGetLimits : public ControlCommand {
-    OffsetsPerGainStep* offsetLimit;
-    ControlGetLimits(unsigned channels);
-    ~ControlGetLimits();
+    std::unique_ptr<OffsetsPerGainStep[]> offsetLimit;
+    ControlGetLimits(size_t channels);
+    inline uint8_t *offsetLimitData() { return (uint8_t *)offsetLimit.get(); }
 };
 }

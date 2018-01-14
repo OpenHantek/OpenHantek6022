@@ -88,7 +88,6 @@ class DsoWidget : public QWidget {
     GlScope *mainScope;     ///< The main scope screen
     GlScope *zoomScope;     ///< The optional magnified scope screen
     std::unique_ptr<Exporter> exportNextFrame;
-    std::shared_ptr<PPresult> data;
 
   public slots:
     // Horizontal axis

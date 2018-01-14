@@ -10,7 +10,7 @@
 #include "types.h"
 #include "definitions.h"
 #include "states.h"
-#include "usb/bulkcommand.h"
+#include "bulkcommand.h"
 
 namespace Hantek {
 

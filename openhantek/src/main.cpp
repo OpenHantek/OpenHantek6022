@@ -113,7 +113,7 @@ int main(int argc, char *argv[]) {
                      &QCoreApplication::quit);
 
     //////// Create settings object ////////
-    auto settings = std::unique_ptr<DsoSettings>(new DsoSettings(&device->getModel()->specification));
+    auto settings = std::unique_ptr<DsoSettings>(new DsoSettings(device->getModel()->spec()));
 
     //////// Create post processing objects ////////
     QThread postProcessingThread;
@@ -121,8 +121,8 @@ int main(int argc, char *argv[]) {
     PostProcessing postProcessing(settings->scope.countChannels());
 
     SpectrumGenerator spectrumGenerator(&settings->scope);
-    MathChannelGenerator mathchannelGenerator(&settings->scope, device->getModel()->specification.channels);
-    GraphGenerator graphGenerator(&settings->scope, device->getModel()->specification.isSoftwareTriggerDevice);
+    MathChannelGenerator mathchannelGenerator(&settings->scope, device->getModel()->spec()->channels);
+    GraphGenerator graphGenerator(&settings->scope, device->getModel()->spec()->isSoftwareTriggerDevice);
 
     postProcessing.registerProcessor(&mathchannelGenerator);
     postProcessing.registerProcessor(&spectrumGenerator);
@@ -137,7 +137,7 @@ int main(int argc, char *argv[]) {
                      &MainWindow::showNewData);
     openHantekMainWindow.show();
 
-    applySettingsToDevice(&dsoControl, &settings->scope, &device->getModel()->specification);
+    applySettingsToDevice(&dsoControl, &settings->scope, device->getModel()->spec());
 
     //////// Start DSO thread and go into GUI main loop
     dsoControl.startSampling();

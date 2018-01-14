@@ -35,7 +35,7 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, QWid
 #endif
 
     DsoSettingsScope *scope = &(mSettings->scope);
-    const Dso::ControlSpecification *spec = &dsoControl->getDevice()->getModel()->specification;
+    const Dso::ControlSpecification *spec = dsoControl->getDevice()->getModel()->spec();
 
     registerDockMetaTypes();
 

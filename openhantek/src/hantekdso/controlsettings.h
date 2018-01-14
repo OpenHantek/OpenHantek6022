@@ -2,6 +2,8 @@
 
 #include "enums.h"
 #include "hantekprotocol/types.h"
+#include "hantekprotocol/bulkcode.h"
+#include "hantekprotocol/controlStructs.h"
 
 namespace Hantek {
 struct OffsetsPerGainStep;
@@ -21,7 +23,7 @@ struct ControlSettingsSamplerateTarget {
 /// \brief Stores the current samplerate settings of the device.
 struct ControlSettingsSamplerate {
     ControlSettingsSamplerateTarget target; ///< The target samplerate values
-    ControlSamplerateLimits *limits;        ///< The samplerate limits
+    const ControlSamplerateLimits * limits;        ///< The samplerate limits
     unsigned int downsampler = 1;           ///< The variable downsampling factor
     double current = 1e8;                   ///< The current samplerate
 };
@@ -47,7 +49,7 @@ struct ControlSettingsVoltage {
 
 /// \brief Stores the current settings of the device.
 struct ControlSettings {
-    ControlSettings(ControlSamplerateLimits *limits, size_t channelCount);
+    ControlSettings(const ControlSamplerateLimits *limits, size_t channelCount);
     ~ControlSettings();
     ControlSettingsSamplerate samplerate;        ///< The samplerate settings
     std::vector<ControlSettingsVoltage> voltage; ///< The amplification settings
@@ -56,5 +58,9 @@ struct ControlSettings {
     unsigned usedChannels = 0;                   ///< Number of activated channels
     unsigned swSampleMargin = 2000;              ///< Software trigger, sample margin
     Hantek::OffsetsPerGainStep *offsetLimit;     ///< Calibration data for the channel offsets
+
+
+    Hantek::ControlBeginCommand beginCommandControl;
+    Hantek::ControlGetLimits cmdGetLimits;
 };
 }

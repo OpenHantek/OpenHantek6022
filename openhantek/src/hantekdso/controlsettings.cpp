@@ -3,7 +3,7 @@
 
 namespace Dso {
 
-ControlSettings::ControlSettings(ControlSamplerateLimits* limits, size_t channelCount)
+ControlSettings::ControlSettings(const ControlSamplerateLimits * limits, size_t channelCount) : cmdGetLimits(channelCount)
 {
     samplerate.limits = limits;
     trigger.level.resize(channelCount);

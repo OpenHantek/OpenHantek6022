@@ -8,8 +8,7 @@ using namespace Hantek;
 static ModelDSO6022BE modelInstance;
 static ModelDSO6022BL modelInstance2;
 
-ModelDSO6022BE::ModelDSO6022BE() : DSOModel(ID, 0x04b5, 0x6022, 0x04b4, 0x6022, "dso6022be", "DSO-6022BE",
-                                            Dso::ControlSpecification(2)) {
+static void initSpecifications(Dso::ControlSpecification& specification) {
     // 6022xx do not support any bulk commands
     specification.useControlNoBulk = true;
     specification.isSoftwareTriggerDevice = true;
@@ -42,16 +41,27 @@ ModelDSO6022BE::ModelDSO6022BE() : DSOModel(ID, 0x04b5, 0x6022, 0x04b4, 0x6022, 
     specification.fixedUSBinLength = 16384;
 }
 
-void ModelDSO6022BE::applyRequirements(HantekDsoControl *dsoControl) const {
+void applyRequirements_(HantekDsoControl *dsoControl) {
     dsoControl->addCommand(new ControlAcquireHardData());
     dsoControl->addCommand(new ControlSetTimeDIV());
     dsoControl->addCommand(new ControlSetVoltDIV_CH2());
     dsoControl->addCommand(new ControlSetVoltDIV_CH1());
 }
 
-ModelDSO6022BL::ModelDSO6022BL() {
-    productID = 0x602a;
-    productIDnoFirmware = 0x602a;
-    firmwareToken = "dso6022bl";
-    name = "DSO-6022BL";
+ModelDSO6022BE::ModelDSO6022BE() : DSOModel(ID, 0x04b5, 0x6022, 0x04b4, 0x6022, "dso6022be", "DSO-6022BE",
+                                            Dso::ControlSpecification(2)) {
+    initSpecifications(specification);
+}
+
+void ModelDSO6022BE::applyRequirements(HantekDsoControl *dsoControl) const {
+    applyRequirements_(dsoControl);
+}
+
+ModelDSO6022BL::ModelDSO6022BL() : DSOModel(ID, 0x04b5, 0x602a, 0x04b4, 0x602a, "dso6022bl", "DSO-6022BL",
+                                            Dso::ControlSpecification(2)) {
+    initSpecifications(specification);
+}
+
+void ModelDSO6022BL::applyRequirements(HantekDsoControl *dsoControl) const {
+   applyRequirements_(dsoControl);
 }

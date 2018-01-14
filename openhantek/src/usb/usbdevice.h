@@ -8,12 +8,16 @@
 #include <memory>
 
 #include "usbdevicedefinitions.h"
-#include "dataarray.h"
 
 class DSOModel;
-class ControlCommand;
 
 typedef unsigned long UniqueUSBid;
+
+
+/// \brief Returns string representation for libusb errors.
+/// \param error The error code.
+/// \return String explaining the error.
+QString libUsbErrorString(int error);
 
 /// \brief This class handles the USB communication with an usb device that has
 /// one in and one out endpoint.
@@ -21,7 +25,8 @@ class USBDevice : public QObject {
     Q_OBJECT
 
   public:
-    USBDevice(DSOModel* model, libusb_device *device, unsigned findIteration = 0);
+    explicit USBDevice(DSOModel* model, libusb_device *device, unsigned findIteration = 0);
+    USBDevice(const USBDevice&) = delete;
     ~USBDevice();
     bool connectDevice(QString &errorMessage);
     void disconnectFromDevice();
@@ -39,8 +44,8 @@ class USBDevice : public QObject {
      * Keep track of the find iteration on which this device was found
      * @param iteration The new iteration value
      */
-    void setFindIteration(unsigned iteration);
-    unsigned getFindIteration() const;
+    inline void setFindIteration(unsigned iteration) { findIteration = iteration; }
+    inline unsigned getFindIteration() const { return findIteration; }
 
     /// \brief Bulk transfer to/from the oscilloscope.
     /// \param endpoint Endpoint number, also sets the direction of the transfer.
@@ -58,14 +63,19 @@ class USBDevice : public QObject {
     /// \param length The length of the packet.
     /// \param attempts The number of attempts, that are done on timeouts.
     /// \return Number of sent bytes on success, libusb error code on error.
-    int bulkWrite(const unsigned char *data, unsigned int length, int attempts = HANTEK_ATTEMPTS);
+    inline int bulkWrite(const unsigned char *data, unsigned int length, int attempts = HANTEK_ATTEMPTS) {
+         return bulkTransfer(HANTEK_EP_OUT, data, length, attempts);
+    }
 
     /// \brief Bulk read from the oscilloscope.
     /// \param data Buffer for the sent/recieved data.
     /// \param length The length of the packet.
     /// \param attempts The number of attempts, that are done on timeouts.
     /// \return Number of received bytes on success, libusb error code on error.
-    int bulkRead(const DataArray<unsigned char> *command, int attempts = HANTEK_ATTEMPTS);
+    template<class T>
+    inline int bulkRead(const T *command, int attempts = HANTEK_ATTEMPTS) {
+        return bulkTransfer(HANTEK_EP_IN, command->data(), command->size(), attempts);
+    }
 
     /// \brief Multi packet bulk read from the oscilloscope.
     /// \param data Buffer for the sent/recieved data.
@@ -89,22 +99,32 @@ class USBDevice : public QObject {
     /// \brief Control write to the oscilloscope.
     /// \param command Buffer for the sent/recieved data.
     /// \return Number of sent bytes on success, libusb error code on error.
-    int controlWrite(const ControlCommand *command);
+    template<class T>
+    inline int controlWrite(const T *command) {
+        return controlTransfer(LIBUSB_REQUEST_TYPE_VENDOR | LIBUSB_ENDPOINT_OUT, (uint8_t)command->code,
+                               (unsigned char *)command->data(), (unsigned)command->size(), command->value, 0,
+                               HANTEK_ATTEMPTS);
+    }
 
     /// \brief Control read to the oscilloscope.
     /// \param command Buffer for the sent/recieved data.
     /// \return Number of received bytes on success, libusb error code on error.
-    int controlRead(const ControlCommand *command);
+    template<class T>
+    inline int controlRead(const T *command) {
+        return controlTransfer(LIBUSB_REQUEST_TYPE_VENDOR | LIBUSB_ENDPOINT_IN, (uint8_t)command->code,
+                               (unsigned char *)command->data(), (unsigned)command->size(), command->value, 0,
+                               HANTEK_ATTEMPTS);
+    }
 
     /**
      * @return Returns the raw libusb device
      */
-    libusb_device *getRawDevice() const;
+    inline libusb_device *getRawDevice() const { return device; }
 
     /**
      * @return Return the unique usb device id {@link USBDevice::computeUSBdeviceID()}.
      */
-    unsigned long getUniqueUSBDeviceID() const;
+    inline unsigned long getUniqueUSBDeviceID() const { return uniqueUSBdeviceID; }
     /**
      * The USB bus is organised in a tree hierarchy. A device is connected to a port on a bus device,
      * which is connected to a port on another bus device etc up to the root usb device.
@@ -116,8 +136,14 @@ class USBDevice : public QObject {
 
     /// \brief Get the oscilloscope model.
     /// \return The ::Model of the connected Hantek DSO.
-    const DSOModel *getModel() const;
-    void overwriteInPacketLength(int len);
+    inline const DSOModel *getModel() const { return model; }
+    /**
+     * Usually a maximaum packet length for in and outgoing packets is determined
+     * by the underlying implementation and usb specification. E.g. the roll buffer
+     * mode uses the maximum in length for transfer. Some devices do not support
+     * that much data though and need an artification restriction.
+     */
+    inline void overwriteInPacketLength(int len) { inPacketLength = len; }
   protected:
     int claimInterface(const libusb_interface_descriptor *interfaceDescriptor, int endpointOut, int endPointIn);
 

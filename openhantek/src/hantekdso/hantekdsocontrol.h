@@ -182,7 +182,7 @@ class HantekDsoControl : public QObject {
     bool sampling = false; ///< true, if the oscilloscope is taking samples
 
     // Device setup
-    Dso::ControlSpecification specification; ///< The specifications of the device
+    const Dso::ControlSpecification* specification; ///< The specifications of the device
     Dso::ControlSettings controlsettings;    ///< The current settings of the device
 
     // Results
@@ -203,7 +203,7 @@ class HantekDsoControl : public QObject {
     /// \param command The command, that should be sent.
     /// \param attempts The number of attempts, that are done on timeouts.
     /// \return Number of sent bytes on success, libusb error code on error.
-    int bulkCommand(const DataArray<unsigned char> *command, int attempts = HANTEK_ATTEMPTS) const;
+    int bulkCommand(const std::vector<unsigned char> *command, int attempts = HANTEK_ATTEMPTS) const;
 
   public slots:
     void startSampling();

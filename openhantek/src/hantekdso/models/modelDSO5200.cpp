@@ -8,8 +8,7 @@ using namespace Hantek;
 static ModelDSO5200 modelInstance;
 static ModelDSO5200A modelInstance2;
 
-ModelDSO5200::ModelDSO5200() : DSOModel(ID, 0x04b5, 0x5200, 0x04b4, 0x5200, "dso5200x86", "DSO-5200",
-                                        Dso::ControlSpecification(2)) {
+static void initSpecifications(Dso::ControlSpecification& specification) {
     specification.cmdSetRecordLength = BulkCode::DSETBUFFER;
     specification.cmdSetChannels = BulkCode::ESETTRIGGERORSAMPLERATE;
     specification.cmdSetSamplerate = BulkCode::CSETTRIGGERORSAMPLERATE;
@@ -34,7 +33,7 @@ ModelDSO5200::ModelDSO5200() : DSOModel(ID, 0x04b5, 0x5200, 0x04b4, 0x5200, "dso
     specification.specialTriggerChannels = {{"EXT", -2}, {"EXT/10", -3}}; // 3, 4
 }
 
-void ModelDSO5200::applyRequirements(HantekDsoControl *dsoControl) const {
+static void _applyRequirements(HantekDsoControl *dsoControl) {
     dsoControl->addCommand(new BulkForceTrigger(), false);
     dsoControl->addCommand(new BulkCaptureStart(), false);
     dsoControl->addCommand(new BulkTriggerEnabled(), false);
@@ -50,9 +49,20 @@ void ModelDSO5200::applyRequirements(HantekDsoControl *dsoControl) const {
     dsoControl->addCommand(new ControlSetRelays(), false);
 }
 
-ModelDSO5200A::ModelDSO5200A() {
-    productID = 0x520a;
-    productIDnoFirmware = 0x520a;
-    firmwareToken = "dso5200ax86";
-    name = "DSO-5200A";
+ModelDSO5200::ModelDSO5200() : DSOModel(ID, 0x04b5, 0x5200, 0x04b4, 0x5200, "dso5200x86", "DSO-5200",
+                                        Dso::ControlSpecification(2)) {
+    initSpecifications(specification);
+}
+
+void ModelDSO5200::applyRequirements(HantekDsoControl *dsoControl) const {
+    _applyRequirements(dsoControl);
+}
+
+ModelDSO5200A::ModelDSO5200A() : DSOModel(ID, 0x04b5, 0x520a, 0x04b4, 0x520a, "dso5200ax86", "DSO-5200A",
+                                          Dso::ControlSpecification(2)) {
+    initSpecifications(specification);
+}
+
+void ModelDSO5200A::applyRequirements(HantekDsoControl *dsoControl) const {
+    _applyRequirements(dsoControl);
 }
