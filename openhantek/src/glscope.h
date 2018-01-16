@@ -34,7 +34,7 @@ class GlScope : public QOpenGLWidget {
      * We need at least OpenGL 3.2 with shader version 150 or
      * OpenGL ES 2.0 with shader version 100.
      */
-    static void fixOpenGLversion();
+    static void fixOpenGLversion(QSurfaceFormat::RenderableType t=QSurfaceFormat::DefaultRenderableType);
     /**
      * Show new post processed data
      * @param data

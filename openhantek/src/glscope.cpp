@@ -12,9 +12,7 @@
 #include <QOpenGLShaderProgram>
 #include <QPainter>
 
-// We can't be more modern than OpenGL 3.2 or ES2 because of MacOSX.
-#include <QOpenGLFunctions_3_2_Core>
-#include <QOpenGLFunctions_ES2>
+#include <QOpenGLFunctions>
 
 #include "glscope.h"
 
@@ -23,12 +21,6 @@
 #include "scopesettings.h"
 #include "viewconstants.h"
 #include "viewsettings.h"
-
-#if defined(QT_OPENGL_ES_2)
-typedef QOpenGLFunctions_ES2 OPENGL_VER;
-#else
-typedef QOpenGLFunctions_3_2_Core OPENGL_VER;
-#endif
 
 GlScope *GlScope::createNormal(DsoSettingsScope *scope, DsoSettingsView *view, QWidget *parent) {
     GlScope *s = new GlScope(scope, view, parent);
@@ -42,22 +34,21 @@ GlScope *GlScope::createZoomed(DsoSettingsScope *scope, DsoSettingsView *view, Q
     return s;
 }
 
-void GlScope::fixOpenGLversion() {
+void GlScope::fixOpenGLversion(QSurfaceFormat::RenderableType t) {
     QCoreApplication::setAttribute(Qt::AA_ShareOpenGLContexts, true);
 
     // Prefer full desktop OpenGL without fixed pipeline
     QSurfaceFormat format;
     format.setSamples(4); // Antia-Aliasing, Multisampling
-#if defined(QT_OPENGL_ES_2)
-    format.setVersion(2, 0);
     format.setProfile(QSurfaceFormat::CoreProfile);
-    format.setRenderableType(QSurfaceFormat::OpenGLES);
-    QCoreApplication::setAttribute(Qt::AA_UseOpenGLES, true);
-#else
-    format.setVersion(3, 2);
-    format.setProfile(QSurfaceFormat::CoreProfile);
-    format.setRenderableType(QSurfaceFormat::OpenGL);
-#endif
+    if (t==QSurfaceFormat::OpenGLES) {
+        format.setVersion(2, 0);
+        format.setRenderableType(QSurfaceFormat::OpenGLES);
+        QCoreApplication::setAttribute(Qt::AA_UseOpenGLES, true);
+    } else {
+        format.setVersion(3, 2);
+        format.setRenderableType(QSurfaceFormat::OpenGL);
+    }
     QSurfaceFormat::setDefaultFormat(format);
 }
 
@@ -66,7 +57,7 @@ GlScope::GlScope(DsoSettingsScope *scope, DsoSettingsView *view, QWidget *parent
     vaMarker.resize(MARKER_COUNT);
 }
 
-GlScope::~GlScope() {}
+GlScope::~GlScope() {/* virtual destructor necessary */}
 
 void GlScope::mousePressEvent(QMouseEvent *event) {
     if (!zoomed && event->button() == Qt::LeftButton) {
@@ -154,7 +145,7 @@ void GlScope::initializeGL() {
           void main() { gl_FragColor = colour; }
     )";
 
-    const char *vshaderCore = R"(
+    const char *vshaderDesktop = R"(
           #version 150
           in highp vec3 vertex;
           uniform mat4 matrix;
@@ -164,7 +155,7 @@ void GlScope::initializeGL() {
               gl_PointSize = 1.0;
           }
     )";
-    const char *fshaderCore = R"(
+    const char *fshaderDesktop = R"(
           #version 150
           uniform highp vec4 colour;
           out vec4 flatColor;
@@ -173,9 +164,9 @@ void GlScope::initializeGL() {
 
     qDebug() << "compile shaders";
     // Compile vertex shader
-    bool coreShaders = QSurfaceFormat::defaultFormat().profile() == QSurfaceFormat::CoreProfile;
-    if (!program->addShaderFromSourceCode(QOpenGLShader::Vertex, coreShaders ? vshaderCore : vshaderES) ||
-        !program->addShaderFromSourceCode(QOpenGLShader::Fragment, coreShaders ? fshaderCore : fshaderES)) {
+    bool usesOpenGL = QSurfaceFormat::defaultFormat().renderableType()==QSurfaceFormat::OpenGL;
+    if (!program->addShaderFromSourceCode(QOpenGLShader::Vertex, usesOpenGL ? vshaderDesktop : vshaderES) ||
+        !program->addShaderFromSourceCode(QOpenGLShader::Fragment, usesOpenGL ? fshaderDesktop : fshaderES)) {
         errorMessage = "Failed to compile OpenGL shader programs.\n" + program->log();
         return;
     }
@@ -197,7 +188,7 @@ void GlScope::initializeGL() {
 
     program->bind();
 
-    auto *gl = context()->versionFunctions<OPENGL_VER>();
+    auto *gl = context()->functions();
     gl->glDisable(GL_DEPTH_TEST);
     gl->glEnable(GL_BLEND);
     // Enable depth buffer
@@ -246,8 +237,7 @@ void GlScope::showData(PPresult *data) {
     // doneCurrent();
 }
 
-void GlScope::markerUpdated()
-{
+void GlScope::markerUpdated() {
 
     for (unsigned marker = 0; marker < vaMarker.size(); ++marker) {
         if (!scope->horizontal.marker_visible[marker]) continue;
@@ -264,7 +254,7 @@ void GlScope::markerUpdated()
 void GlScope::paintGL() {
     if (!shaderCompileSuccess) return;
 
-    auto *gl = context()->versionFunctions<OPENGL_VER>();
+    auto *gl = context()->functions();
 
     // Clear OpenGL buffer and configure settings
     // TODO Don't clear if view->digitalPhosphorDraws()>1
@@ -301,7 +291,7 @@ void GlScope::paintGL() {
 
 void GlScope::resizeGL(int width, int height) {
     if (!shaderCompileSuccess) return;
-    auto *gl = context()->versionFunctions<OPENGL_VER>();
+    auto *gl = context()->functions();
     gl->glViewport(0, 0, (GLint)width, (GLint)height);
 
     // Set axes to div-scale and apply correction for exact pixelization
@@ -416,7 +406,7 @@ void GlScope::generateGrid(QOpenGLShaderProgram *program) {
 }
 
 void GlScope::drawGrid() {
-    auto *gl = context()->versionFunctions<OPENGL_VER>();
+    auto *gl = context()->functions();
     gl->glLineWidth(1);
 
     // Grid
@@ -439,7 +429,7 @@ void GlScope::drawGrid() {
 }
 
 void GlScope::drawMarkers() {
-    auto *gl = context()->versionFunctions<OPENGL_VER>();
+    auto *gl = context()->functions();
     QColor trColor = view->screen.markers;
     m_program->setUniformValue(colorLocation, trColor);
 
@@ -451,7 +441,6 @@ void GlScope::drawMarkers() {
 
     // Draw selected
     if (selectedMarker != NO_MARKER) {
-        qWarning() << selectedMarker;
         gl->glLineWidth(3);
         gl->glDrawArrays(GL_LINES, selectedMarker * 2, (GLsizei)2);
     }
@@ -467,7 +456,7 @@ void GlScope::drawVoltageChannelGraph(ChannelID channel, Graph &graph, int histo
 
     QOpenGLVertexArrayObject::Binder b(v.first);
     const GLenum dMode = (view->interpolation == Dso::INTERPOLATION_OFF) ? GL_POINTS : GL_LINE_STRIP;
-    context()->versionFunctions<OPENGL_VER>()->glDrawArrays(dMode, 0, v.second);
+    context()->functions()->glDrawArrays(dMode, 0, v.second);
 }
 
 void GlScope::drawSpectrumChannelGraph(ChannelID channel, Graph &graph, int historyIndex) {
@@ -478,5 +467,5 @@ void GlScope::drawSpectrumChannelGraph(ChannelID channel, Graph &graph, int hist
 
     QOpenGLVertexArrayObject::Binder b(v.first);
     const GLenum dMode = (view->interpolation == Dso::INTERPOLATION_OFF) ? GL_POINTS : GL_LINE_STRIP;
-    context()->versionFunctions<OPENGL_VER>()->glDrawArrays(dMode, 0, v.second);
+    context()->functions()->glDrawArrays(dMode, 0, v.second);
 }

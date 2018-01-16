@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0+
 
 #include <QApplication>
+#include <QCommandLineParser>
 #include <QDebug>
 #include <QLibraryInfo>
 #include <QLocale>
@@ -71,7 +72,19 @@ int main(int argc, char *argv[]) {
     QCoreApplication::setApplicationName("OpenHantek");
     QCoreApplication::setApplicationVersion(VERSION);
 
-    GlScope::fixOpenGLversion();
+    bool useGles = false;
+    {
+        QCoreApplication parserApp(argc, argv);
+        QCommandLineParser p;
+        p.addHelpOption();
+        p.addVersionOption();
+        QCommandLineOption useGlesOption("useGLES", QCoreApplication::tr("Use OpenGL ES instead of OpenGL"));
+        p.addOption(useGlesOption);
+        p.process(parserApp);
+        useGles = p.isSet(useGlesOption);
+    }
+
+    GlScope::fixOpenGLversion(useGles ? QSurfaceFormat::OpenGLES : QSurfaceFormat::OpenGL);
 
     QApplication openHantekApplication(argc, argv);
 
@@ -152,9 +165,7 @@ int main(int argc, char *argv[]) {
     postProcessingThread.quit();
     postProcessingThread.wait(10000);
 
-    if (context && device != nullptr) {
-        libusb_exit(context);
-    }
+    if (context && device != nullptr) { libusb_exit(context); }
 
     return res;
 }

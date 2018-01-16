@@ -21,8 +21,6 @@ void Graph::writeData(PPresult *data, QOpenGLShaderProgram *program, int vertexL
         allocatedMem = neededMemory;
     }
 
-    qDebug() << data->data(0)->frequency;
-
     // Write data to buffer
     int offset = 0;
     vaoVoltage.resize(data->vaChannelVoltage.size());
