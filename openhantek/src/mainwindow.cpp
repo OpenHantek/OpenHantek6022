@@ -27,9 +27,10 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, QWid
 
     // Window title
     setWindowIcon(QIcon(":openhantek.png"));
-    setWindowTitle(tr("OpenHantek - Device %1").arg(QString::fromStdString(dsoControl->getDevice()->getModel()->name)));
+    setWindowTitle(tr("OpenHantek - Device %1 - Renderer %2")
+                       .arg(QString::fromStdString(dsoControl->getDevice()->getModel()->name))
+                       .arg(QSurfaceFormat::defaultFormat().renderableType()==QSurfaceFormat::OpenGL?"OpenGL":"OpenGL ES"));
 
-// Create dock windows before the dso widget, they fix messed up settings
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 6, 0))
     setDockOptions(dockOptions() | QMainWindow::GroupedDragging);
 #endif
@@ -40,6 +41,7 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, QWid
     registerDockMetaTypes();
 
     // Docking windows
+    // Create dock windows before the dso widget, they fix messed up settings
     HorizontalDock *horizontalDock;
     TriggerDock *triggerDock;
     SpectrumDock *spectrumDock;
@@ -135,8 +137,7 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, QWid
         bool mathUsed = mSettings->scope.anyUsed(spec->channels);
 
         // Normal channel, check if voltage/spectrum or math channel is used
-        if (channel < spec->channels)
-            dsoControl->setChannelUsed(channel, mathUsed | mSettings->scope.anyUsed(channel));
+        if (channel < spec->channels) dsoControl->setChannelUsed(channel, mathUsed | mSettings->scope.anyUsed(channel));
         // Math channel, update all channels
         else if (channel == spec->channels) {
             for (ChannelID c = 0; c < spec->channels; ++c)

@@ -39,6 +39,8 @@ We have build instructions available for [Linux](docs/build.md#linux), [Apple Ma
 
 ## Run OpenHantek
 You need an OpenGL 3.2+ or OpenGL ES 2.0+ capable graphics hardware for OpenHantek.
+OpenGL is prefered, if available. Overwrite this behaviour by starting OpenHantek
+from the command line like this: `OpenHantek --useGLES`.
 
 USB access for the device is required:
 * As seen on the [Microsoft Windows build instructions](docs/build.md#windows) page, you need a
