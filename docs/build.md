@@ -37,10 +37,16 @@ Please adjust the path to Qt5. You can find the path with the command:
 
 ### [Windows](#windows)
 
-Run the **CMake GUI** program and select the source directory, build directory and your compiler.
-If your compiler is for example Visual Studio, cmake will generate a Visual Studio Project and solution file (\*.sln).
-Open the project and build it. If you use an IDE that has inbuild support for cmake projects like QtCreator,
-you can just open and build this project.
+We highly recommend to use QtCreator to build this software. All reported issues regarding other IDEs
+will be closed as invalid!
+
+* Open the project in QtCreator
+* Compile the software
+
+Hints for Visual Studio 2015/2017 users:
+* Install the right Qt package that matches your Visual Studio installation.
+* Build for 64bit. 32bit builds theoretically work, but you are on your own then.
+* Use the **CMake GUI** to setup all required Qt include and library paths.
 
 Microsoft Windows needs an installed driver for every usb device:
 
