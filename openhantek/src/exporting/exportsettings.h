@@ -4,10 +4,9 @@
 
 #include <QSize>
 
-/// \brief Holds the general options of the program.
+/// \brief Holds the export options of the program.
 struct DsoSettingsExport {
     QSize imageSize = QSize(640, 480); ///< Size of exported images in pixels
+    unsigned exportSizeBytes = 1024*1024*10; ///< For exporters that save a continous stream. Default: 10 Megabytes
+    bool useProcessedSamples = true; ///< Export raw or processed samples
 };
-
-/// \brief Possible file formats for the export.
-enum ExportFormat { EXPORT_FORMAT_PRINTER, EXPORT_FORMAT_PDF, EXPORT_FORMAT_IMAGE, EXPORT_FORMAT_CSV };

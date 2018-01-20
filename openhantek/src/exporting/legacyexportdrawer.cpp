@@ -5,101 +5,29 @@
 #include <memory>
 
 #include <QCoreApplication>
-#include <QFile>
-#include <QFileDialog>
 #include <QImage>
-#include <QMutex>
 #include <QPainter>
-#include <QPixmap>
-#include <QPrintDialog>
-#include <QPrinter>
-#include <QTextStream>
 
-#include "exporter.h"
+#include "legacyexportdrawer.h"
 
 #include "controlspecification.h"
 #include "post/graphgenerator.h"
 #include "post/ppresult.h"
 #include "settings.h"
-#include "utils/dsoStrings.h"
 #include "utils/printutils.h"
 #include "viewconstants.h"
 
 #define tr(msg) QCoreApplication::translate("Exporter", msg)
 
-Exporter::Exporter(const Dso::ControlSpecification *deviceSpecification, DsoSettings *settings, const QString &filename,
-                   ExportFormat format)
-    : deviceSpecification(deviceSpecification), settings(settings), filename(filename), format(format) {}
-
-Exporter *Exporter::createPrintExporter(const Dso::ControlSpecification *deviceSpecification, DsoSettings *settings) {
-    std::unique_ptr<QPrinter> printer = printPaintDevice(settings);
-    // Show the printing dialog
-    QPrintDialog dialog(printer.get());
-    dialog.setWindowTitle(tr("Print oscillograph"));
-    if (dialog.exec() != QDialog::Accepted) { return nullptr; }
-
-    Exporter *exporter = new Exporter(deviceSpecification, settings, QString(), EXPORT_FORMAT_PRINTER);
-    exporter->selectedPrinter = std::move(printer);
-    return exporter;
-}
-
-Exporter *Exporter::createSaveToFileExporter(const Dso::ControlSpecification *deviceSpecification,
-                                             DsoSettings *settings) {
-    QStringList filters;
-    filters << tr("Portable Document Format (*.pdf)") << tr("Image (*.png *.xpm *.jpg)")
-            << tr("Comma-Separated Values (*.csv)");
-
-    QFileDialog fileDialog(nullptr, tr("Export file..."), QString(), filters.join(";;"));
-    fileDialog.setFileMode(QFileDialog::AnyFile);
-    fileDialog.setAcceptMode(QFileDialog::AcceptSave);
-    if (fileDialog.exec() != QDialog::Accepted) return nullptr;
-
-    return new Exporter(deviceSpecification, settings, fileDialog.selectedFiles().first(),
-                        (ExportFormat)(EXPORT_FORMAT_PDF + filters.indexOf(fileDialog.selectedNameFilter())));
-}
-
-std::unique_ptr<QPrinter> Exporter::printPaintDevice(DsoSettings *settings) {
-    // We need a QPrinter for printing, pdf- and ps-export
-    std::unique_ptr<QPrinter> printer = std::unique_ptr<QPrinter>(new QPrinter(QPrinter::HighResolution));
-    printer->setOrientation(settings->view.zoom ? QPrinter::Portrait : QPrinter::Landscape);
-    printer->setPageMargins(20, 20, 20, 20, QPrinter::Millimeter);
-    return printer;
-}
-
-bool Exporter::exportSamples(const PPresult *result) {
-    if (this->format == EXPORT_FORMAT_CSV) { return exportCSV(result); }
-
-    // Choose the color values we need
-    DsoSettingsColorValues *colorValues;
-    if (this->format == EXPORT_FORMAT_IMAGE && settings->view.screenColorImages)
-        colorValues = &(settings->view.screen);
-    else
-        colorValues = &(settings->view.print);
-
-    std::unique_ptr<QPaintDevice> paintDevice;
-
-    if (this->format == EXPORT_FORMAT_IMAGE) {
-        // We need a QPixmap for image-export
-        QPixmap *qPixmap = new QPixmap(settings->exporting.imageSize);
-        qPixmap->fill(colorValues->background);
-        paintDevice = std::unique_ptr<QPaintDevice>(qPixmap);
-    } else if (this->format == EXPORT_FORMAT_PRINTER) {
-        paintDevice = std::move(selectedPrinter);
-    } else {
-        std::unique_ptr<QPrinter> printer = printPaintDevice(settings);
-        printer->setOutputFileName(this->filename);
-        printer->setOutputFormat((this->format == EXPORT_FORMAT_PDF) ? QPrinter::PdfFormat : QPrinter::NativeFormat);
-        paintDevice = std::move(printer);
-    }
-
-    if (!paintDevice) return false;
-
+bool LegacyExportDrawer::exportSamples(const PPresult *result, QPaintDevice* paintDevice,
+                             const Dso::ControlSpecification *deviceSpecification,
+                             const DsoSettings *settings, bool isPrinter, const DsoSettingsColorValues *colorValues) {
     // Create a painter for our device
-    QPainter painter(paintDevice.get());
+    QPainter painter(paintDevice);
 
     // Get line height
     QFont font;
-    QFontMetrics fontMetrics(font, paintDevice.get());
+    QFontMetrics fontMetrics(font, paintDevice);
     double lineHeight = fontMetrics.height();
 
     painter.setBrush(Qt::SolidPattern);
@@ -150,12 +78,12 @@ bool Exporter::exportSamples(const PPresult *result) {
                 painter.drawText(QRectF(0, top, lineHeight * 4, lineHeight), settings->scope.voltage[channel].name);
                 // Print coupling/math mode
                 if ((unsigned int)channel < deviceSpecification->channels)
+                    painter.drawText(QRectF(lineHeight * 4, top, lineHeight * 2, lineHeight),
+                                     Dso::couplingString(settings->scope.coupling(channel, deviceSpecification)));
+                else
                     painter.drawText(
                         QRectF(lineHeight * 4, top, lineHeight * 2, lineHeight),
-                        Dso::couplingString(settings->scope.coupling(channel, deviceSpecification)));
-                else
-                    painter.drawText(QRectF(lineHeight * 4, top, lineHeight * 2, lineHeight),
-                                     Dso::mathModeString(settings->scope.voltage[channel].math));
+                        Dso::mathModeString(Dso::getMathMode(settings->scope.voltage[channel])));
 
                 // Print voltage gain
                 painter.drawText(QRectF(lineHeight * 6, top, stretchBase * 2, lineHeight),
@@ -325,90 +253,17 @@ bool Exporter::exportSamples(const PPresult *result) {
         }
     } // dataanalyser mutex release
 
-    drawGrids(painter, colorValues, lineHeight, scopeHeight, paintDevice->width());
+    drawGrids(painter, colorValues, lineHeight, scopeHeight, paintDevice->width(),
+              isPrinter, settings->view.zoom);
     painter.end();
 
-    if (this->format == EXPORT_FORMAT_IMAGE) static_cast<QPixmap *>(paintDevice.get())->save(this->filename);
-
     return true;
 }
 
-bool Exporter::exportCSV(const PPresult *result) {
-    QFile csvFile(this->filename);
-    if (!csvFile.open(QIODevice::WriteOnly | QIODevice::Text)) return false;
-
-    QTextStream csvStream(&csvFile);
-
-    size_t chCount = settings->scope.voltage.size();
-    std::vector<const SampleValues *> voltageData(size_t(chCount), nullptr);
-    std::vector<const SampleValues *> spectrumData(size_t(chCount), nullptr);
-    size_t maxRow = 0;
-    bool isSpectrumUsed = false;
-    double timeInterval = 0;
-    double freqInterval = 0;
-
-    for (ChannelID channel = 0; channel < chCount; ++channel) {
-        if (result->data(channel)) {
-            if (settings->scope.voltage[channel].used) {
-                voltageData[channel] = &(result->data(channel)->voltage);
-                maxRow = std::max(maxRow, voltageData[channel]->sample.size());
-                timeInterval = result->data(channel)->voltage.interval;
-            }
-            if (settings->scope.spectrum[channel].used) {
-                spectrumData[channel] = &(result->data(channel)->spectrum);
-                maxRow = std::max(maxRow, spectrumData[channel]->sample.size());
-                freqInterval = result->data(channel)->spectrum.interval;
-                isSpectrumUsed = true;
-            }
-        }
-    }
-
-    // Start with channel names
-    csvStream << "\"t\"";
-    for (ChannelID channel = 0; channel < chCount; ++channel) {
-        if (voltageData[channel] != nullptr) { csvStream << ",\"" << settings->scope.voltage[channel].name << "\""; }
-    }
-    if (isSpectrumUsed) {
-        csvStream << ",\"f\"";
-        for (ChannelID channel = 0; channel < chCount; ++channel) {
-            if (spectrumData[channel] != nullptr) {
-                csvStream << ",\"" << settings->scope.spectrum[channel].name << "\"";
-            }
-        }
-    }
-    csvStream << "\n";
-
-    for (unsigned int row = 0; row < maxRow; ++row) {
-
-        csvStream << timeInterval * row;
-        for (ChannelID channel = 0; channel < chCount; ++channel) {
-            if (voltageData[channel] != nullptr) {
-                csvStream << ",";
-                if (row < voltageData[channel]->sample.size()) { csvStream << voltageData[channel]->sample[row]; }
-            }
-        }
-
-        if (isSpectrumUsed) {
-            csvStream << "," << freqInterval * row;
-            for (ChannelID channel = 0; channel < chCount; ++channel) {
-                if (spectrumData[channel] != nullptr) {
-                    csvStream << ",";
-                    if (row < spectrumData[channel]->sample.size()) { csvStream << spectrumData[channel]->sample[row]; }
-                }
-            }
-        }
-        csvStream << "\n";
-    }
-
-    csvFile.close();
-
-    return true;
-}
-
-void Exporter::drawGrids(QPainter &painter, DsoSettingsColorValues *colorValues, double lineHeight, double scopeHeight,
-                         int scopeWidth) {
+void LegacyExportDrawer::drawGrids(QPainter &painter, const DsoSettingsColorValues *colorValues, double lineHeight, double scopeHeight,
+                         int scopeWidth, bool isPrinter, bool zoom) {
     painter.setRenderHint(QPainter::Antialiasing, false);
-    for (int zoomed = 0; zoomed < (settings->view.zoom ? 2 : 1); ++zoomed) {
+    for (int zoomed = 0; zoomed < (zoom ? 2 : 1); ++zoomed) {
         // Set DIVS_TIME x DIVS_VOLTAGE matrix for oscillograph
         painter.setMatrix(QMatrix((scopeWidth - 1) / DIVS_TIME, 0, 0, -(scopeHeight - 1) / DIVS_VOLTAGE,
                                   (double)(scopeWidth - 1) / 2,
@@ -418,7 +273,7 @@ void Exporter::drawGrids(QPainter &painter, DsoSettingsColorValues *colorValues,
         // Grid lines
         painter.setPen(QPen(colorValues->grid, 0));
 
-        if (this->format < EXPORT_FORMAT_IMAGE) {
+        if (isPrinter) {
             // Draw vertical lines
             for (int div = 1; div < DIVS_TIME / 2; ++div) {
                 for (int dot = 1; dot < DIVS_VOLTAGE / 2 * 5; ++dot) {
