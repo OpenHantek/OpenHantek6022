@@ -275,7 +275,9 @@ void GlScope::paintGL() {
     unsigned historyIndex = 0;
     for (Graph &graph : m_GraphHistory) {
         for (ChannelID channel = 0; channel < scope->voltage.size(); ++channel) {
-            drawSpectrumChannelGraph(channel, graph, (int)historyIndex);
+            if (scope->horizontal.format == Dso::GraphFormat::TY) {
+                drawSpectrumChannelGraph(channel, graph, (int)historyIndex);
+            }
             drawVoltageChannelGraph(channel, graph, (int)historyIndex);
         }
         ++historyIndex;
