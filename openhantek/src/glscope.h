@@ -39,7 +39,7 @@ class GlScope : public QOpenGLWidget {
      * Show new post processed data
      * @param data
      */
-    void showData(PPresult* data);
+    void showData(std::shared_ptr<PPresult> data);
     void markerUpdated();
 
   protected:
