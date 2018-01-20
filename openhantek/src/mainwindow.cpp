@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include "iconfont/QtAwesome.h"
 #include "ui_mainwindow.h"
 
 #include "HorizontalDock.h"
@@ -11,6 +12,8 @@
 #include "dockwindows.h"
 #include "dsomodel.h"
 #include "dsowidget.h"
+#include "exporting/exporterinterface.h"
+#include "exporting/exporterregistry.h"
 #include "hantekdsocontrol.h"
 #include "usb/usbdevice.h"
 #include "viewconstants.h"
@@ -21,19 +24,42 @@
 #include <QLineEdit>
 #include <QMessageBox>
 
-MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, QWidget *parent)
-    : QMainWindow(parent), ui(new Ui::MainWindow), mSettings(settings) {
+MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, ExporterRegistry *exporterRegistry,
+                       QWidget *parent)
+    : QMainWindow(parent), ui(new Ui::MainWindow), mSettings(settings), exporterRegistry(exporterRegistry) {
     ui->setupUi(this);
+    ui->actionSave->setIcon(iconFont->icon(fa::save));
+    ui->actionAbout->setIcon(iconFont->icon(fa::questioncircle));
+    ui->actionOpen->setIcon(iconFont->icon(fa::folderopen));
+    ui->actionSampling->setIcon(iconFont->icon(fa::pause,
+                                               {std::make_pair("text-selected-off", QChar(fa::play)),
+                                                std::make_pair("text-off", QChar(fa::play)),
+                                                std::make_pair("text-active-off", QChar(fa::play))}));
+    ui->actionSettings->setIcon(iconFont->icon(fa::gear));
+    ui->actionManualCommand->setIcon(iconFont->icon(fa::edit));
+    ui->actionDigital_phosphor->setIcon(QIcon(":/images/digitalphosphor.svg"));
+    ui->actionZoom->setIcon(iconFont->icon(fa::crop));
 
     // Window title
     setWindowIcon(QIcon(":openhantek.png"));
-    setWindowTitle(tr("OpenHantek - Device %1 - Renderer %2")
-                       .arg(QString::fromStdString(dsoControl->getDevice()->getModel()->name))
-                       .arg(QSurfaceFormat::defaultFormat().renderableType()==QSurfaceFormat::OpenGL?"OpenGL":"OpenGL ES"));
+    setWindowTitle(
+        tr("OpenHantek - Device %1 - Renderer %2")
+            .arg(QString::fromStdString(dsoControl->getDevice()->getModel()->name))
+            .arg(QSurfaceFormat::defaultFormat().renderableType() == QSurfaceFormat::OpenGL ? "OpenGL" : "OpenGL ES"));
 
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 6, 0))
     setDockOptions(dockOptions() | QMainWindow::GroupedDragging);
 #endif
+
+    for (auto *exporter : *exporterRegistry) {
+        QAction *action = new QAction(exporter->icon(), exporter->name(), this);
+        action->setCheckable(exporter->type() == ExporterInterface::Type::ContinousExport);
+        connect(action, &QAction::triggered, [exporter, exporterRegistry](bool checked) {
+            exporterRegistry->setExporterEnabled(
+                exporter, exporter->type() == ExporterInterface::Type::ContinousExport ? checked : true);
+        });
+        ui->menuExport->addAction(action);
+    }
 
     DsoSettingsScope *scope = &(mSettings->scope);
     const Dso::ControlSpecification *spec = dsoControl->getDevice()->getModel()->spec();
@@ -166,22 +192,19 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, QWid
     connect(spectrumDock, &SpectrumDock::magnitudeChanged, dsoWidget, &DsoWidget::updateSpectrumMagnitude);
 
     // Started/stopped signals from oscilloscope
-    connect(dsoControl, &HantekDsoControl::samplingStarted, [this, dsoControl]() {
-        this->ui->actionSampling->setText(tr("&Stop"));
-        this->ui->actionSampling->setIcon(QIcon(":actions/stop.png"));
-        this->ui->actionSampling->setStatusTip(tr("Stop the oscilloscope"));
-
-        disconnect(this->ui->actionSampling, &QAction::triggered, dsoControl, &HantekDsoControl::startSampling);
-        connect(this->ui->actionSampling, &QAction::triggered, dsoControl, &HantekDsoControl::stopSampling);
+    connect(dsoControl, &HantekDsoControl::samplingStatusChanged, [this, dsoControl](bool enabled) {
+        QSignalBlocker blocker(this->ui->actionSampling);
+        if (enabled) {
+            this->ui->actionSampling->setText(tr("&Stop"));
+            this->ui->actionSampling->setStatusTip(tr("Stop the oscilloscope"));
+        } else {
+            this->ui->actionSampling->setText(tr("&Start"));
+            this->ui->actionSampling->setStatusTip(tr("Start the oscilloscope"));
+        }
+        this->ui->actionSampling->setChecked(enabled);
     });
-    connect(dsoControl, &HantekDsoControl::samplingStopped, [this, dsoControl]() {
-        this->ui->actionSampling->setText(tr("&Start"));
-        this->ui->actionSampling->setIcon(QIcon(":actions/start.png"));
-        this->ui->actionSampling->setStatusTip(tr("Start the oscilloscope"));
-
-        disconnect(this->ui->actionSampling, &QAction::triggered, dsoControl, &HantekDsoControl::stopSampling);
-        connect(this->ui->actionSampling, &QAction::triggered, dsoControl, &HantekDsoControl::startSampling);
-    });
+    connect(this->ui->actionSampling, &QAction::triggered, dsoControl, &HantekDsoControl::enableSampling);
+    this->ui->actionSampling->setChecked(dsoControl->isSampling());
 
     connect(dsoControl, &HantekDsoControl::availableRecordLengthsChanged, horizontalDock,
             &HorizontalDock::setAvailableRecordLengths);
@@ -209,16 +232,6 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, QWid
         mSettings->mainWindowState = saveState();
         mSettings->setFilename(fileName);
         mSettings->save();
-    });
-
-    connect(ui->actionPrint, &QAction::triggered, [this, spec]() {
-        this->dsoWidget->setExporterForNextFrame(
-            std::unique_ptr<Exporter>(Exporter::createPrintExporter(spec, this->mSettings)));
-    });
-
-    connect(ui->actionExport, &QAction::triggered, [this, spec]() {
-        this->dsoWidget->setExporterForNextFrame(
-            std::unique_ptr<Exporter>(Exporter::createSaveToFileExporter(spec, this->mSettings)));
     });
 
     connect(ui->actionExit, &QAction::triggered, this, &QWidget::close);
@@ -279,6 +292,12 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, QWid
 MainWindow::~MainWindow() { delete ui; }
 
 void MainWindow::showNewData(std::shared_ptr<PPresult> data) { dsoWidget->showNew(data); }
+
+void MainWindow::exporterStatusChanged(const QString &exporterName, const QString &status) {
+    ui->statusbar->showMessage(tr("%1: %2").arg(exporterName).arg(status));
+}
+
+void MainWindow::exporterProgressChanged() { exporterRegistry->checkForWaitingExporters(); }
 
 /// \brief Save the settings before exiting.
 /// \param event The close event that should be handled.

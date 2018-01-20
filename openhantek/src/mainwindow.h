@@ -1,11 +1,12 @@
 #pragma once
+#include "post/ppresult.h"
 #include <QMainWindow>
 #include <memory>
-#include "post/ppresult.h"
 
 class SpectrumGenerator;
 class HantekDsoControl;
 class DsoSettings;
+class ExporterRegistry;
 class DsoWidget;
 class HorizontalDock;
 class TriggerDock;
@@ -19,19 +20,22 @@ class MainWindow;
 /// \brief The main window of the application.
 /// The main window contains the classic oszilloscope-screen and the gui
 /// elements used to control the oszilloscope.
-class MainWindow : public QMainWindow
-{
+class MainWindow : public QMainWindow {
     Q_OBJECT
 
-public:
-    explicit MainWindow(HantekDsoControl *dsoControl, DsoSettings *mSettings, QWidget *parent = 0);
+  public:
+    explicit MainWindow(HantekDsoControl *dsoControl, DsoSettings *mSettings, ExporterRegistry *exporterRegistry,
+                        QWidget *parent = 0);
     ~MainWindow();
-public slots:
+  public slots:
     void showNewData(std::shared_ptr<PPresult> data);
+    void exporterStatusChanged(const QString &exporterName, const QString &status);
+    void exporterProgressChanged();
 
-protected:
+  protected:
     void closeEvent(QCloseEvent *event) override;
-private:
+
+  private:
     Ui::MainWindow *ui;
 
     // Central widgets
@@ -39,4 +43,5 @@ private:
 
     // Settings used for the whole program
     DsoSettings *mSettings;
+    ExporterRegistry *exporterRegistry;
 };

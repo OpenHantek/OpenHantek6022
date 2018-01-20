@@ -31,9 +31,6 @@
     <addaction name="actionSave"/>
     <addaction name="actionSave_as"/>
     <addaction name="separator"/>
-    <addaction name="actionPrint"/>
-    <addaction name="actionExport"/>
-    <addaction name="separator"/>
     <addaction name="actionExit"/>
    </widget>
    <widget class="QMenu" name="menuView">
@@ -58,7 +55,13 @@
     </property>
     <addaction name="actionAbout"/>
    </widget>
+   <widget class="QMenu" name="menuExport">
+    <property name="title">
+     <string>Export</string>
+    </property>
+   </widget>
    <addaction name="menuFile"/>
+   <addaction name="menuExport"/>
    <addaction name="menuView"/>
    <addaction name="menuOscilloscope"/>
    <addaction name="menuHelp"/>
@@ -76,71 +79,32 @@
    </attribute>
    <addaction name="actionOpen"/>
    <addaction name="actionSave"/>
-   <addaction name="actionSave_as"/>
-   <addaction name="separator"/>
-   <addaction name="actionPrint"/>
-   <addaction name="actionExport"/>
    <addaction name="separator"/>
    <addaction name="actionSampling"/>
    <addaction name="separator"/>
    <addaction name="actionDigital_phosphor"/>
    <addaction name="actionZoom"/>
+   <addaction name="separator"/>
   </widget>
   <action name="actionOpen">
-   <property name="icon">
-    <iconset resource="../res/application.qrc">
-     <normaloff>:/actions/open.png</normaloff>:/actions/open.png</iconset>
-   </property>
    <property name="text">
-    <string>Open</string>
+    <string>Open layout</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+O</string>
    </property>
   </action>
   <action name="actionSave">
-   <property name="icon">
-    <iconset resource="../res/application.qrc">
-     <normaloff>:/actions/save.png</normaloff>:/actions/save.png</iconset>
-   </property>
    <property name="text">
-    <string>Save</string>
+    <string>Save layout</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+S</string>
    </property>
   </action>
   <action name="actionSave_as">
-   <property name="icon">
-    <iconset resource="../res/application.qrc">
-     <normaloff>:/actions/save-as.png</normaloff>:/actions/save-as.png</iconset>
-   </property>
    <property name="text">
     <string>Save as ...</string>
-   </property>
-  </action>
-  <action name="actionPrint">
-   <property name="icon">
-    <iconset resource="../res/application.qrc">
-     <normaloff>:/actions/print.png</normaloff>:/actions/print.png</iconset>
-   </property>
-   <property name="text">
-    <string>Print</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+P</string>
-   </property>
-  </action>
-  <action name="actionExport">
-   <property name="icon">
-    <iconset resource="../res/application.qrc">
-     <normaloff>:/actions/export-as.png</normaloff>:/actions/export-as.png</iconset>
-   </property>
-   <property name="text">
-    <string>Export as ...</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+E</string>
    </property>
   </action>
   <action name="actionExit">
@@ -152,10 +116,6 @@
    <property name="checkable">
     <bool>true</bool>
    </property>
-   <property name="icon">
-    <iconset resource="../res/application.qrc">
-     <normaloff>:/actions/digitalphosphor.png</normaloff>:/actions/digitalphosphor.png</iconset>
-   </property>
    <property name="text">
     <string>Digital phosphor</string>
    </property>
@@ -163,10 +123,6 @@
   <action name="actionZoom">
    <property name="checkable">
     <bool>true</bool>
-   </property>
-   <property name="icon">
-    <iconset resource="../res/application.qrc">
-     <normaloff>:/actions/zoom.png</normaloff>:/actions/zoom.png</iconset>
    </property>
    <property name="text">
     <string>Zoom</string>
@@ -196,11 +152,6 @@
    <property name="checkable">
     <bool>true</bool>
    </property>
-   <property name="icon">
-    <iconset resource="../res/application.qrc">
-     <normaloff>:/actions/stop.png</normaloff>
-     <normalon>:/actions/start.png</normalon>:/actions/stop.png</iconset>
-   </property>
    <property name="text">
     <string>Sampling</string>
    </property>
@@ -217,8 +168,6 @@
    </property>
   </action>
  </widget>
- <resources>
-  <include location="../res/application.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>
