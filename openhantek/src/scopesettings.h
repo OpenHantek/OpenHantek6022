@@ -7,7 +7,6 @@
 #include "hantekdso/controlspecification.h"
 #include "hantekdso/enums.h"
 #include "hantekprotocol/definitions.h"
-#include "post/enums.h"
 #include <vector>
 
 #define MARKER_COUNT 2 ///< Number of markers
@@ -52,37 +51,30 @@ struct DsoSettingsScopeSpectrum {
 /// \brief Holds the settings for the normal voltage graphs.
 /// TODO Use ControlSettingsVoltage
 struct DsoSettingsScopeVoltage {
-    double offset = 0.0;        ///< Vertical offset in divs
-    double trigger = 0.0;       ///< Trigger level in V
-    unsigned gainStepIndex = 6; ///< The vertical resolution in V/div (default = 1.0)
-    union {                     ///< Different enums, coupling for real- and mode for math-channels
-        Dso::MathMode math;
-        unsigned couplingIndex = 0;
-        int rawValue;
-    };
-    QString name;          ///< Name of this channel
-    bool inverted = false; ///< true if the channel is inverted (mirrored on cross-axis)
-    bool used = false;     ///< true if this channel is enabled
+    double offset = 0.0;              ///< Vertical offset in divs
+    double trigger = 0.0;             ///< Trigger level in V
+    unsigned gainStepIndex = 6;       ///< The vertical resolution in V/div (default = 1.0)
+    unsigned couplingOrMathIndex = 0; ///< Different index: coupling for real- and mode for math-channels
+    QString name;                     ///< Name of this channel
+    bool inverted = false;            ///< true if the channel is inverted (mirrored on cross-axis)
+    bool used = false;                ///< true if this channel is enabled
 };
 
 /// \brief Holds the settings for the oscilloscope.
 struct DsoSettingsScope {
     std::vector<double> gainSteps = {1e-2, 2e-2, 5e-2, 1e-1, 2e-1,
                                      5e-1, 1e0,  2e0,  5e0};        ///< The selectable voltage gain steps in V/div
-    Dso::WindowFunction spectrumWindow = Dso::WindowFunction::HANN; ///< Window function for DFT
     std::vector<DsoSettingsScopeSpectrum> spectrum;                 ///< Spectrum analysis settings
     std::vector<DsoSettingsScopeVoltage> voltage;                   ///< Settings for the normal graphs
     DsoSettingsScopeHorizontal horizontal;                          ///< Settings for the horizontal axis
     DsoSettingsScopeTrigger trigger;                                ///< Settings for the trigger
-    double spectrumReference = 0.0;                                 ///< Reference level for spectrum in dBm
-    double spectrumLimit = -20.0; ///< Minimum magnitude of the spectrum (Avoids peaks)
 
     double gain(unsigned channel) const { return gainSteps[voltage[channel].gainStepIndex]; }
     bool anyUsed(ChannelID channel) { return voltage[channel].used | spectrum[channel].used; }
 
-    Dso::Coupling coupling(ChannelID channel, const Dso::ControlSpecification *deviceSpecification) {
-        return deviceSpecification->couplings[voltage[channel].couplingIndex];
+    Dso::Coupling coupling(ChannelID channel, const Dso::ControlSpecification *deviceSpecification) const {
+        return deviceSpecification->couplings[voltage[channel].couplingOrMathIndex];
     }
     // Channels, including math channels
-    unsigned countChannels() { return (unsigned)voltage.size(); }
+    unsigned countChannels() const { return (unsigned)voltage.size(); }
 };

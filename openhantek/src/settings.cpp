@@ -35,7 +35,7 @@ DsoSettings::DsoSettings(const Dso::ControlSpecification* deviceSpecification) {
     scope.spectrum.push_back(newSpectrum);
 
     DsoSettingsScopeVoltage newVoltage;
-    newVoltage.math = Dso::MathMode::ADD_CH1_CH2;
+    newVoltage.couplingOrMathIndex = (unsigned)Dso::MathMode::ADD_CH1_CH2;
     newVoltage.name = QApplication::tr("MATH");
     scope.voltage.push_back(newVoltage);
 
@@ -106,19 +106,20 @@ void DsoSettings::load() {
     for (ChannelID channel = 0; channel < scope.voltage.size(); ++channel) {
         store->beginGroup(QString("vertical%1").arg(channel));
         if (store->contains("gainStepIndex")) scope.voltage[channel].gainStepIndex = store->value("gainStepIndex").toUInt();
-        if (store->contains("couplingIndex")) scope.voltage[channel].couplingIndex = store->value("couplingIndex").toUInt();
+        if (store->contains("couplingOrMathIndex")) scope.voltage[channel].couplingOrMathIndex = store->value("couplingIndex").toUInt();
         if (store->contains("inverted")) scope.voltage[channel].inverted = store->value("inverted").toBool();
-        if (store->contains("misc")) scope.voltage[channel].rawValue = store->value("misc").toInt();
         if (store->contains("offset")) scope.voltage[channel].offset = store->value("offset").toDouble();
         if (store->contains("trigger")) scope.voltage[channel].trigger = store->value("trigger").toDouble();
         if (store->contains("used")) scope.voltage[channel].used = store->value("used").toBool();
         store->endGroup();
     }
-    if (store->contains("spectrumLimit")) scope.spectrumLimit = store->value("spectrumLimit").toDouble();
+
+    // Post processing
+    if (store->contains("spectrumLimit")) post.spectrumLimit = store->value("spectrumLimit").toDouble();
     if (store->contains("spectrumReference"))
-        scope.spectrumReference = store->value("spectrumReference").toDouble();
+        post.spectrumReference = store->value("spectrumReference").toDouble();
     if (store->contains("spectrumWindow"))
-        scope.spectrumWindow = (Dso::WindowFunction)store->value("spectrumWindow").toInt();
+        post.spectrumWindow = (Dso::WindowFunction)store->value("spectrumWindow").toInt();
     store->endGroup();
 
     // View
@@ -209,17 +210,18 @@ void DsoSettings::save() {
     for (ChannelID channel = 0; channel < scope.voltage.size(); ++channel) {
         store->beginGroup(QString("vertical%1").arg(channel));
         store->setValue("gainStepIndex", scope.voltage[channel].gainStepIndex);
-        store->setValue("couplingIndex", scope.voltage[channel].couplingIndex);
+        store->setValue("couplingOrMathIndex", scope.voltage[channel].couplingOrMathIndex);
         store->setValue("inverted", scope.voltage[channel].inverted);
-        store->setValue("misc", scope.voltage[channel].rawValue);
         store->setValue("offset", scope.voltage[channel].offset);
         store->setValue("trigger", scope.voltage[channel].trigger);
         store->setValue("used", scope.voltage[channel].used);
         store->endGroup();
     }
-    store->setValue("spectrumLimit", scope.spectrumLimit);
-    store->setValue("spectrumReference", scope.spectrumReference);
-    store->setValue("spectrumWindow", (int)scope.spectrumWindow);
+
+    // Post processing
+    store->setValue("spectrumLimit", post.spectrumLimit);
+    store->setValue("spectrumReference", post.spectrumReference);
+    store->setValue("spectrumWindow", (int)post.spectrumWindow);
     store->endGroup();
 
     // View

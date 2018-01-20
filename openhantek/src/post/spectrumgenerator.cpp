@@ -16,7 +16,8 @@
 #include "utils/printutils.h"
 
 /// \brief Analyzes the data from the dso.
-SpectrumGenerator::SpectrumGenerator(const DsoSettingsScope *scope) : scope(scope) {}
+SpectrumGenerator::SpectrumGenerator(const DsoSettingsScope *scope, const DsoSettingsPostProcessing *postprocessing)
+    : scope(scope), postprocessing(postprocessing) {}
 
 SpectrumGenerator::~SpectrumGenerator() {
     if (lastWindowBuffer) fftw_free(lastWindowBuffer);
@@ -36,15 +37,15 @@ void SpectrumGenerator::process(PPresult *result) {
 
         // Calculate new window
         size_t sampleCount = channelData->voltage.sample.size();
-        if (!lastWindowBuffer || lastWindow != scope->spectrumWindow || lastRecordLength != sampleCount) {
+        if (!lastWindowBuffer || lastWindow != postprocessing->spectrumWindow || lastRecordLength != sampleCount) {
             if (lastWindowBuffer) fftw_free(lastWindowBuffer);
             lastWindowBuffer = fftw_alloc_real(sampleCount);
             lastRecordLength = (unsigned)sampleCount;
 
             unsigned int windowEnd = lastRecordLength - 1;
-            lastWindow = scope->spectrumWindow;
+            lastWindow = postprocessing->spectrumWindow;
 
-            switch (scope->spectrumWindow) {
+            switch (postprocessing->spectrumWindow) {
             case Dso::WindowFunction::HAMMING:
                 for (unsigned int windowPosition = 0; windowPosition < lastRecordLength; ++windowPosition)
                     *(lastWindowBuffer + windowPosition) = 0.54 - 0.46 * cos(2.0 * M_PI * windowPosition / windowEnd);
@@ -210,8 +211,8 @@ void SpectrumGenerator::process(PPresult *result) {
         // Finally calculate the real spectrum if we want it
         if (scope->spectrum[channel].used) {
             // Convert values into dB (Relative to the reference level)
-            double offset = 60 - scope->spectrumReference - 20 * log10(dftLength);
-            double offsetLimit = scope->spectrumLimit - scope->spectrumReference;
+            double offset = 60 - postprocessing->spectrumReference - 20 * log10(dftLength);
+            double offsetLimit = postprocessing->spectrumLimit - postprocessing->spectrumReference;
             for (std::vector<double>::iterator spectrumIterator = channelData->spectrum.sample.begin();
                  spectrumIterator != channelData->spectrum.sample.end(); ++spectrumIterator) {
                 double value = 20 * log10(fabs(*spectrumIterator)) + offset;

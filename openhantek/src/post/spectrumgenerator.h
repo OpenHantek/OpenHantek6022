@@ -11,7 +11,7 @@
 #include "ppresult.h"
 #include "dsosamples.h"
 #include "utils/printutils.h"
-#include "enums.h"
+#include "postprocessingsettings.h"
 
 #include "processor.h"
 
@@ -23,12 +23,13 @@ struct DsoSettingsScope;
 /// time-/frequencysteps between two values.
 class SpectrumGenerator : public Processor {
   public:
-    SpectrumGenerator(const DsoSettingsScope* scope);
+    SpectrumGenerator(const DsoSettingsScope* scope, const DsoSettingsPostProcessing* postprocessing);
     virtual ~SpectrumGenerator();
     virtual void process(PPresult *data) override;
 
   private:
     const DsoSettingsScope* scope;
+    const DsoSettingsPostProcessing* postprocessing;
     unsigned int lastRecordLength = 0;                        ///< The record length of the previously analyzed data
     Dso::WindowFunction lastWindow = (Dso::WindowFunction)-1; ///< The previously used dft window function
     double *lastWindowBuffer = nullptr;

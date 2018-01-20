@@ -52,8 +52,28 @@ and the graphical part.
 
 All OpenGL rendering takes place in the `GlScope` class. A helper class `GlScopeGraph` contains exactly one
 data sample snapshot including all channels for voltage and spectrum and a pointer to the respective GPU buffer.
-`GlScope` works for OpenGL 3.2 and OpenGL ES 2.0, but this needs to be decided at compile time. Usually Qt
-selects the right interface.
+`GlScope` works for OpenGL 3.2 and OpenGL ES 2.0. If both is present, OpenGL will be prefered, but can be
+overwritten by the user via a command flag.
+
+### Export
+
+All export related funtionality is within *src/exporting*.
+
+The following exporters are implemented:
+
+* Export to comma separated value file (CSV): Write to a user selected file,
+* Export to an image/pdf: Writes an image/pdf to a user selected file,
+* Print exporter: Creates a printable document and opens the print dialog.
+
+All export classes (exportcsv, exportimage, exportprint) implement the
+ExporterInterface and are registered to the ExporterRegistry in the main.cpp.
+
+Some export classes are still using the legacyExportDrawer class to
+draw the grid and paint all the labels, values and graphs.
+
+The plan is to retire this legacy class and replace the paint code with
+a `GlScope` class shared OpenGL drawing code for at least the grid and the
+scope graphs.
 
 ## Data flow
 

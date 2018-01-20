@@ -7,22 +7,22 @@
 #include <QString>
 #include <memory>
 
+#include "exporting/exportsettings.h"
+#include "post/postprocessingsettings.h"
 #include "scopesettings.h"
 #include "viewsettings.h"
-#include "exporting/exportsettings.h"
-#include "hantekdso/controlspecification.h"
-#include "hantekdso/controlsettings.h"
 
 /// \brief Holds the settings of the program.
 class DsoSettings {
   public:
-    explicit DsoSettings(const Dso::ControlSpecification* deviceSpecification);
+    explicit DsoSettings(const Dso::ControlSpecification *deviceSpecification);
     bool setFilename(const QString &filename);
 
-    DsoSettingsExport exporting; ///< General options of the program
-    DsoSettingsScope scope;     ///< All oscilloscope related settings
-    DsoSettingsView view;       ///< All view related settings
-    bool alwaysSave = true;            ///< Always save the settings on exit
+    DsoSettingsExport exporting;    ///< General options of the program
+    DsoSettingsScope scope;         ///< All oscilloscope related settings
+    DsoSettingsView view;           ///< All view related settings
+    DsoSettingsPostProcessing post; ///< All post processing related settings
+    bool alwaysSave = true;         ///< Always save the settings on exit
 
     QByteArray mainWindowGeometry; ///< Geometry of the main window
     QByteArray mainWindowState;    ///< State of docking windows and toolbars

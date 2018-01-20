@@ -10,6 +10,7 @@
 
 #include "scopesettings.h"
 #include "hantekdso/controlspecification.h"
+#include "post/postprocessingsettings.h"
 
 class SiSpinBox;
 
@@ -28,7 +29,7 @@ class VoltageDock : public QDockWidget {
 
     /// \brief Sets the coupling for a channel.
     /// \param channel The channel, whose coupling should be set.
-    /// \param coupling The coupling-mode.
+    /// \param couplingIndex The coupling-mode index.
     void setCoupling(ChannelID channel, unsigned couplingIndex);
 
     /// \brief Sets the gain for a channel.
@@ -37,8 +38,8 @@ class VoltageDock : public QDockWidget {
     void setGain(ChannelID channel, unsigned gainStepIndex);
 
     /// \brief Sets the mode for the math channel.
-    /// \param mode The math-mode.
-    void setMode(Dso::MathMode mode);
+    /// \param mathModeIndex The math-mode index.
+    void setMode(unsigned mathModeIndex);
 
     /// \brief Enables/disables a channel.
     /// \param channel The channel, that should be enabled/disabled.

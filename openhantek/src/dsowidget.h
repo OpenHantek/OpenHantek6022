@@ -8,7 +8,6 @@
 #include <QGridLayout>
 #include <memory>
 
-#include "exporting/exporter.h"
 #include "glscope.h"
 #include "levelslider.h"
 #include "hantekdso/controlspecification.h"
@@ -36,7 +35,6 @@ class DsoWidget : public QWidget {
     /// \param parent The parent widget.
     /// \param flags Flags for the window manager.
     DsoWidget(DsoSettingsScope* scope, DsoSettingsView* view, const Dso::ControlSpecification* spec, QWidget *parent = 0, Qt::WindowFlags flags = 0);
-    void setExporterForNextFrame(std::unique_ptr<Exporter> exporter);
 
     // Data arrived
     void showNew(std::shared_ptr<PPresult> data);
@@ -87,7 +85,6 @@ class DsoWidget : public QWidget {
 
     GlScope *mainScope;     ///< The main scope screen
     GlScope *zoomScope;     ///< The optional magnified scope screen
-    std::unique_ptr<Exporter> exportNextFrame;
 
   public slots:
     // Horizontal axis

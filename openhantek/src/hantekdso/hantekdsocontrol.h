@@ -52,7 +52,7 @@ class HantekDsoControl : public QObject {
 
     /// \brief Gets the physical channel count for this oscilloscope.
     /// \return The number of physical channels.
-    unsigned getChannelCount();
+    unsigned getChannelCount() const;
 
     /// Return the read-only device control settings. Use the set- Methods to change
     /// device settings.
@@ -60,15 +60,17 @@ class HantekDsoControl : public QObject {
 
     /// \brief Get available record lengths for this oscilloscope.
     /// \return The number of physical channels, empty list for continuous.
-    const std::vector<unsigned> &getAvailableRecordLengths();
+    const std::vector<unsigned> &getAvailableRecordLengths() const;
 
     /// \brief Get minimum samplerate for this oscilloscope.
     /// \return The minimum samplerate for the current configuration in S/s.
-    double getMinSamplerate();
+    double getMinSamplerate() const;
 
     /// \brief Get maximum samplerate for this oscilloscope.
     /// \return The maximum samplerate for the current configuration in S/s.
-    double getMaxSamplerate();
+    double getMaxSamplerate() const;
+
+    bool isSampling() const;
 
     /// Return the associated usb device.
     const USBDevice *getDevice() const;
@@ -182,8 +184,8 @@ class HantekDsoControl : public QObject {
     bool sampling = false; ///< true, if the oscilloscope is taking samples
 
     // Device setup
-    const Dso::ControlSpecification* specification; ///< The specifications of the device
-    Dso::ControlSettings controlsettings;    ///< The current settings of the device
+    const Dso::ControlSpecification *specification; ///< The specifications of the device
+    Dso::ControlSettings controlsettings;           ///< The current settings of the device
 
     // Results
     DSOsamples result;
@@ -206,8 +208,10 @@ class HantekDsoControl : public QObject {
     int bulkCommand(const std::vector<unsigned char> *command, int attempts = HANTEK_ATTEMPTS) const;
 
   public slots:
-    void startSampling();
-    void stopSampling();
+    /// \brief If sampling is disabled, no samplesAvailable() signals are send anymore, no samples
+    /// are fetched from the device and no processing takes place.
+    /// \param enabled Enables/Disables sampling
+    void enableSampling(bool enabled);
 
     /// \brief Sets the size of the oscilloscopes sample buffer.
     /// \param index The record length index that should be set.
@@ -270,19 +274,21 @@ class HantekDsoControl : public QObject {
     void forceTrigger();
 
   signals:
-    void samplingStarted();                                  ///< The oscilloscope started sampling/waiting for trigger
-    void samplingStopped();                                  ///< The oscilloscope stopped sampling/waiting for trigger
+    void samplingStatusChanged(bool enabled); ///< The oscilloscope started/stopped sampling/waiting for trigger
     void statusMessage(const QString &message, int timeout); ///< Status message about the oscilloscope
     void samplesAvailable(const DSOsamples *samples);        ///< New sample data is available
 
     void availableRecordLengthsChanged(const std::vector<unsigned> &recordLengths); ///< The available record
                                                                                     /// lengths, empty list for
 
-    void samplerateLimitsChanged(double minimum, double maximum); ///< The minimum or maximum samplerate has changed
-    void recordLengthChanged(unsigned long duration);             ///< The record length has changed
-    void recordTimeChanged(double duration);                      ///< The record time duration has changed
-    void samplerateChanged(double samplerate);                    ///< The samplerate has changed
-    void samplerateSet(int mode, QList<double> sampleSteps);      ///< The samplerate has changed
+    /// The available samplerate range has changed
+    void samplerateLimitsChanged(double minimum, double maximum);
+    /// The available samplerate for fixed samplerate devices has changed
+    void samplerateSet(int mode, QList<double> sampleSteps);
+
+    void recordLengthChanged(unsigned long duration); ///< The record length has changed
+    void recordTimeChanged(double duration);          ///< The record time duration has changed
+    void samplerateChanged(double samplerate);        ///< The samplerate has changed
 
     void communicationError() const;
 };

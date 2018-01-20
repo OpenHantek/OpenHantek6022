@@ -10,10 +10,10 @@
 
 #include "dsowidget.h"
 
+#include "post/postprocessingsettings.h"
 #include "post/graphgenerator.h"
 #include "post/ppresult.h"
 
-#include "utils/dsoStrings.h"
 #include "utils/printutils.h"
 
 #include "glscope.h"
@@ -252,10 +252,6 @@ void DsoWidget::setupSliders(DsoWidget::Sliders &sliders) {
     }
 }
 
-void DsoWidget::setExporterForNextFrame(std::unique_ptr<Exporter> exporter) {
-    this->exportNextFrame = std::move(exporter);
-}
-
 /// \brief Set the trigger level sliders minimum and maximum to the new values.
 void DsoWidget::adaptTriggerLevelSlider(DsoWidget::Sliders &sliders, ChannelID channel) {
     sliders.triggerLevelSlider->setLimits((int)channel,
@@ -422,7 +418,8 @@ void DsoWidget::updateVoltageCoupling(ChannelID channel) {
 
 /// \brief Handles modeChanged signal from the voltage dock.
 void DsoWidget::updateMathMode() {
-    measurementMiscLabel[spec->channels]->setText(Dso::mathModeString(scope->voltage[spec->channels].math));
+    measurementMiscLabel[spec->channels]->setText(
+        Dso::mathModeString(Dso::getMathMode(scope->voltage[spec->channels])));
 }
 
 /// \brief Handles gainChanged signal from the voltage dock.
@@ -486,15 +483,8 @@ void DsoWidget::updateZoom(bool enabled) {
 
 /// \brief Prints analyzed data.
 void DsoWidget::showNew(std::shared_ptr<PPresult> data) {
-    if (exportNextFrame) {
-        exportNextFrame->exportSamples(data.get());
-        exportNextFrame.reset(nullptr);
-    }
-
-    mainScope->showData(data.get());
-    mainScope->update();
-    zoomScope->showData(data.get());
-    zoomScope->update();
+    mainScope->showData(data);
+    zoomScope->showData(data);
 
     if (spec->isSoftwareTriggerDevice) {
         QPalette triggerLabelPalette = palette();

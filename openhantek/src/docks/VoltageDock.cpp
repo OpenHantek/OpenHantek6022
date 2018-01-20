@@ -14,7 +14,6 @@
 
 #include "settings.h"
 #include "sispinbox.h"
-#include "utils/dsoStrings.h"
 #include "utils/printutils.h"
 
 template<typename... Args> struct SELECT {
@@ -66,9 +65,9 @@ VoltageDock::VoltageDock(DsoSettingsScope *scope, const Dso::ControlSpecificatio
         dockLayout->addWidget(b.invertCheckBox, (int)channel * 3 + 2, 1);
 
         if (channel < spec->channels)
-            setCoupling(channel, scope->voltage[channel].couplingIndex);
+            setCoupling(channel, scope->voltage[channel].couplingOrMathIndex);
         else
-            setMode(scope->voltage[channel].math);
+            setMode(scope->voltage[channel].couplingOrMathIndex);
         setGain(channel, scope->voltage[channel].gainStepIndex);
         setUsed(channel, scope->voltage[channel].used);
 
@@ -80,12 +79,11 @@ VoltageDock::VoltageDock(DsoSettingsScope *scope, const Dso::ControlSpecificatio
             this->scope->voltage[channel].inverted = checked;
         });
         connect(b.miscComboBox, SELECT<int>::OVERLOAD_OF(&QComboBox::currentIndexChanged), [this,channel,spec,scope](int index){
+            this->scope->voltage[channel].couplingOrMathIndex = (unsigned)index;
             if (channel < spec->channels) {
-                this->scope->voltage[channel].couplingIndex = (unsigned)index;
                 emit couplingChanged(channel, scope->coupling(channel, spec));
             } else {
-                this->scope->voltage[channel].math = (Dso::MathMode) index;
-                emit modeChanged(this->scope->voltage[channel].math);
+                emit modeChanged(Dso::getMathMode(this->scope->voltage[channel]));
             }
         });
         connect(b.usedCheckBox, &QAbstractButton::toggled, [this,channel](bool checked) {
@@ -119,9 +117,9 @@ void VoltageDock::setGain(ChannelID channel, unsigned gainStepIndex) {
     channelBlocks[channel].gainComboBox->setCurrentIndex((unsigned)gainStepIndex);
 }
 
-void VoltageDock::setMode(Dso::MathMode mode) {
+void VoltageDock::setMode(unsigned mathModeIndex) {
     QSignalBlocker blocker(channelBlocks[spec->channels].miscComboBox);
-    channelBlocks[spec->channels].miscComboBox->setCurrentIndex((int)mode);
+    channelBlocks[spec->channels].miscComboBox->setCurrentIndex((int)mathModeIndex);
 }
 
 void VoltageDock::setUsed(ChannelID channel, bool used) {

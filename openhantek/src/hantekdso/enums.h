@@ -2,6 +2,7 @@
 
 #include "utils/enumclass.h"
 #include <QMetaType>
+#include <QString>
 namespace Dso {
 /// \enum ChannelMode
 /// \brief The channel display modes.
@@ -52,6 +53,13 @@ enum InterpolationMode {
     INTERPOLATION_SINC,    ///< Smooth graph through the dots
     INTERPOLATION_COUNT    ///< Total number of interpolation modes
 };
+
+QString channelModeString(ChannelMode mode);
+QString graphFormatString(GraphFormat format);
+QString couplingString(Coupling coupling);
+QString triggerModeString(TriggerMode mode);
+QString slopeString(Slope slope);
+QString interpolationModeString(InterpolationMode interpolation);
 }
 
 Q_DECLARE_METATYPE(Dso::TriggerMode)

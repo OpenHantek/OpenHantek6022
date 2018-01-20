@@ -1,23 +1,22 @@
 #pragma once
 
-#include <QMetaType>
 #include "utils/enumclass.h"
+#include <QMetaType>
 namespace Dso {
 
 /// \enum MathMode
 /// \brief The different math modes for the math-channel.
-enum class MathMode {
-    ADD_CH1_CH2,
-    SUB_CH2_FROM_CH1,
-    SUB_CH1_FROM_CH2
-};
-extern Enum<Dso::MathMode,Dso::MathMode::ADD_CH1_CH2,Dso::MathMode::SUB_CH1_FROM_CH2> MathModeEnum;
+enum class MathMode : unsigned { ADD_CH1_CH2, SUB_CH2_FROM_CH1, SUB_CH1_FROM_CH2 };
+extern Enum<Dso::MathMode, Dso::MathMode::ADD_CH1_CH2, Dso::MathMode::SUB_CH1_FROM_CH2> MathModeEnum;
+
+template<class T>
+inline MathMode getMathMode(T& t) { return (MathMode)t.couplingOrMathIndex; }
 
 /// \enum WindowFunction
 /// \brief The supported window functions.
 /// These are needed for spectrum analysis and are applied to the sample values
 /// before calculating the DFT.
-enum class WindowFunction: int {
+enum class WindowFunction : int {
     RECTANGULAR,  ///< Rectangular window (aka Dirichlet)
     HAMMING,      ///< Hamming window
     HANN,         ///< Hann window
@@ -32,12 +31,19 @@ enum class WindowFunction: int {
     NUTTALL,         ///< Nuttall window, cont. first deriv.
     BLACKMANHARRIS,  ///< Blackman-Harris window
     BLACKMANNUTTALL, ///< Blackman-Nuttall window
-    FLATTOP         ///< Flat top window
+    FLATTOP          ///< Flat top window
 };
-extern Enum<Dso::WindowFunction,Dso::WindowFunction::RECTANGULAR,Dso::WindowFunction::FLATTOP> WindowFunctionEnum;
+extern Enum<Dso::WindowFunction, Dso::WindowFunction::RECTANGULAR, Dso::WindowFunction::FLATTOP> WindowFunctionEnum;
 
+QString mathModeString(MathMode mode);
+QString windowFunctionString(WindowFunction window);
 }
 
 Q_DECLARE_METATYPE(Dso::MathMode)
 Q_DECLARE_METATYPE(Dso::WindowFunction)
 
+struct DsoSettingsPostProcessing {
+    Dso::WindowFunction spectrumWindow = Dso::WindowFunction::HANN; ///< Window function for DFT
+    double spectrumReference = 0.0;                                 ///< Reference level for spectrum in dBm
+    double spectrumLimit = -20.0; ///< Minimum magnitude of the spectrum (Avoids peaks)
+};

@@ -22,30 +22,17 @@ using namespace Hantek;
 using namespace Dso;
 
 /// \brief Start sampling process.
-void HantekDsoControl::startSampling() {
-    sampling = true;
+void HantekDsoControl::enableSampling(bool enabled) {
+    sampling = enabled;
 
     // Emit signals for initial settings
-    emit availableRecordLengthsChanged(controlsettings.samplerate.limits->recordLengths);
-    updateSamplerateLimits();
-    emit recordLengthChanged(getRecordLength());
-    if (!isRollMode()) emit recordTimeChanged((double)getRecordLength() / controlsettings.samplerate.current);
-    emit samplerateChanged(controlsettings.samplerate.current);
+    //    emit availableRecordLengthsChanged(controlsettings.samplerate.limits->recordLengths);
+    //    updateSamplerateLimits();
+    //    emit recordLengthChanged(getRecordLength());
+    //    if (!isRollMode()) emit recordTimeChanged((double)getRecordLength() / controlsettings.samplerate.current);
+    //    emit samplerateChanged(controlsettings.samplerate.current);
 
-    if (specification->isFixedSamplerateDevice) {
-        // Convert to GUI presentable values (1e5 -> 1.0, 48e6 -> 480.0 etc)
-        QList<double> sampleSteps;
-        for (auto &v : specification->fixedSampleRates) { sampleSteps << v.samplerate / 1e5; }
-        emit samplerateSet(1, sampleSteps);
-    }
-
-    emit samplingStarted();
-}
-
-/// \brief Stop sampling process.
-void HantekDsoControl::stopSampling() {
-    sampling = false;
-    emit samplingStopped();
+    emit samplingStatusChanged(enabled);
 }
 
 const USBDevice *HantekDsoControl::getDevice() const { return device; }
@@ -91,24 +78,26 @@ int HantekDsoControl::bulkCommand(const std::vector<unsigned char> *command, int
     return device->bulkWrite(command->data(), command->size(), attempts);
 }
 
-unsigned HantekDsoControl::getChannelCount() { return specification->channels; }
+unsigned HantekDsoControl::getChannelCount() const { return specification->channels; }
 
 const ControlSettings *HantekDsoControl::getDeviceSettings() const { return &controlsettings; }
 
-const std::vector<unsigned> &HantekDsoControl::getAvailableRecordLengths() { //
+const std::vector<unsigned> &HantekDsoControl::getAvailableRecordLengths() const { //
     return controlsettings.samplerate.limits->recordLengths;
 }
 
-double HantekDsoControl::getMinSamplerate() {
+double HantekDsoControl::getMinSamplerate() const {
     return (double)specification->samplerate.single.base / specification->samplerate.single.maxDownsampler;
 }
 
-double HantekDsoControl::getMaxSamplerate() {
+double HantekDsoControl::getMaxSamplerate() const {
     if (controlsettings.usedChannels <= 1)
         return specification->samplerate.multi.max;
     else
         return specification->samplerate.single.max;
 }
+
+bool HantekDsoControl::isSampling() const { return sampling; }
 
 /// \brief Updates the interval of the periodic thread timer.
 void HantekDsoControl::updateInterval() {
@@ -593,13 +582,21 @@ void HantekDsoControl::restoreTargets() {
 }
 
 void HantekDsoControl::updateSamplerateLimits() {
-    // Works only if the minimum samplerate for normal mode is lower than for fast
-    // rate mode, which is the case for all models
-    const double min = (double)specification->samplerate.single.base / specification->samplerate.single.maxDownsampler;
-    const double max = getMaxSamplerate();
+    if (specification->isFixedSamplerateDevice) {
+        // Convert to GUI presentable values (1e5 -> 1.0, 48e6 -> 480.0 etc)
+        QList<double> sampleSteps;
+        for (auto &v : specification->fixedSampleRates) { sampleSteps << v.samplerate / 1e5; }
+        emit samplerateSet(1, sampleSteps);
+    } else {
+        // Works only if the minimum samplerate for normal mode is lower than for fast
+        // rate mode, which is the case for all models
+        const double min =
+            (double)specification->samplerate.single.base / specification->samplerate.single.maxDownsampler;
+        const double max = getMaxSamplerate();
 
-    emit samplerateLimitsChanged(min / specification->bufferDividers[controlsettings.recordLengthId],
-                                 max / specification->bufferDividers[controlsettings.recordLengthId]);
+        emit samplerateLimitsChanged(min / specification->bufferDividers[controlsettings.recordLengthId],
+                                     max / specification->bufferDividers[controlsettings.recordLengthId]);
+    }
 }
 
 Dso::ErrorCode HantekDsoControl::setRecordLength(unsigned index) {
@@ -1175,7 +1172,7 @@ void HantekDsoControl::run() {
 
             // Check if we're in single trigger mode
             if (controlsettings.trigger.mode == Dso::TriggerMode::SINGLE && this->_samplingStarted)
-                this->stopSampling();
+                this->enableSampling(false);
 
             // Sampling completed, restart it when necessary
             this->_samplingStarted = false;
@@ -1216,7 +1213,7 @@ void HantekDsoControl::run() {
 
             // Check if we're in single trigger mode
             if (controlsettings.trigger.mode == Dso::TriggerMode::SINGLE && this->_samplingStarted)
-                this->stopSampling();
+                this->enableSampling(false);
 
             // Sampling completed, restart it when necessary
             this->_samplingStarted = false;

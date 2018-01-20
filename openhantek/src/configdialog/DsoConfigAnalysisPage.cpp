@@ -15,14 +15,14 @@ DsoConfigAnalysisPage::DsoConfigAnalysisPage(DsoSettings *settings, QWidget *par
     windowFunctionLabel = new QLabel(tr("Window function"));
     windowFunctionComboBox = new QComboBox();
     windowFunctionComboBox->addItems(windowFunctionStrings);
-    windowFunctionComboBox->setCurrentIndex((int)settings->scope.spectrumWindow);
+    windowFunctionComboBox->setCurrentIndex((int)settings->post.spectrumWindow);
 
     referenceLevelLabel = new QLabel(tr("Reference level"));
     referenceLevelSpinBox = new QDoubleSpinBox();
     referenceLevelSpinBox->setDecimals(1);
     referenceLevelSpinBox->setMinimum(-40.0);
     referenceLevelSpinBox->setMaximum(100.0);
-    referenceLevelSpinBox->setValue(settings->scope.spectrumReference);
+    referenceLevelSpinBox->setValue(settings->post.spectrumReference);
     referenceLevelUnitLabel = new QLabel(tr("dBm"));
     referenceLevelLayout = new QHBoxLayout();
     referenceLevelLayout->addWidget(referenceLevelSpinBox);
@@ -33,7 +33,7 @@ DsoConfigAnalysisPage::DsoConfigAnalysisPage(DsoSettings *settings, QWidget *par
     minimumMagnitudeSpinBox->setDecimals(1);
     minimumMagnitudeSpinBox->setMinimum(-40.0);
     minimumMagnitudeSpinBox->setMaximum(100.0);
-    minimumMagnitudeSpinBox->setValue(settings->scope.spectrumLimit);
+    minimumMagnitudeSpinBox->setValue(settings->post.spectrumLimit);
     minimumMagnitudeUnitLabel = new QLabel(tr("dBm"));
     minimumMagnitudeLayout = new QHBoxLayout();
     minimumMagnitudeLayout->addWidget(minimumMagnitudeSpinBox);
@@ -59,7 +59,7 @@ DsoConfigAnalysisPage::DsoConfigAnalysisPage(DsoSettings *settings, QWidget *par
 
 /// \brief Saves the new settings.
 void DsoConfigAnalysisPage::saveSettings() {
-    settings->scope.spectrumWindow = (Dso::WindowFunction)windowFunctionComboBox->currentIndex();
-    settings->scope.spectrumReference = referenceLevelSpinBox->value();
-    settings->scope.spectrumLimit = minimumMagnitudeSpinBox->value();
+    settings->post.spectrumWindow = (Dso::WindowFunction)windowFunctionComboBox->currentIndex();
+    settings->post.spectrumReference = referenceLevelSpinBox->value();
+    settings->post.spectrumLimit = minimumMagnitudeSpinBox->value();
 }

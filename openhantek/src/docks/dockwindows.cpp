@@ -8,7 +8,7 @@
 
 #include <cmath>
 
-#include "post/enums.h"
+#include "post/postprocessingsettings.h"
 #include "hantekdso/enums.h"
 #include "hantekprotocol/types.h"
 #include "dockwindows.h"
