@@ -106,7 +106,8 @@ void DsoSettings::load() {
     for (ChannelID channel = 0; channel < scope.voltage.size(); ++channel) {
         store->beginGroup(QString("vertical%1").arg(channel));
         if (store->contains("gainStepIndex")) scope.voltage[channel].gainStepIndex = store->value("gainStepIndex").toUInt();
-        if (store->contains("couplingOrMathIndex")) scope.voltage[channel].couplingOrMathIndex = store->value("couplingIndex").toUInt();
+        if (store->contains("couplingOrMathIndex")) scope.voltage[channel].couplingOrMathIndex =
+                store->value("couplingOrMathIndex").toUInt();
         if (store->contains("inverted")) scope.voltage[channel].inverted = store->value("inverted").toBool();
         if (store->contains("offset")) scope.voltage[channel].offset = store->value("offset").toDouble();
         if (store->contains("trigger")) scope.voltage[channel].trigger = store->value("trigger").toDouble();

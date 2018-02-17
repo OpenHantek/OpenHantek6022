@@ -124,7 +124,8 @@ void SiSpinBox::stepBy(int steps) {
             if (stepsId < 0) stepsId += stepsCount;
             value = pow(stepsSpan, floor((double)this->stepId / stepsCount)) * this->steps[stepsId];
         } else {
-            value = this->minimum() * this->steps[stepId];
+            stepId = std::min(std::max(stepId, 0), stepsCount);
+            value = this->steps[stepId];
         }
         if (value <= this->minimum() || value >= this->maximum()) break;
     }

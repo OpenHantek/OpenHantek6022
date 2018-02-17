@@ -583,9 +583,8 @@ void HantekDsoControl::restoreTargets() {
 
 void HantekDsoControl::updateSamplerateLimits() {
     if (specification->isFixedSamplerateDevice) {
-        // Convert to GUI presentable values (1e5 -> 1.0, 48e6 -> 480.0 etc)
         QList<double> sampleSteps;
-        for (auto &v : specification->fixedSampleRates) { sampleSteps << v.samplerate / 1e5; }
+        for (auto &v : specification->fixedSampleRates) { sampleSteps << v.samplerate; }
         emit samplerateSet(1, sampleSteps);
     } else {
         // Works only if the minimum samplerate for normal mode is lower than for fast
@@ -691,10 +690,13 @@ Dso::ErrorCode HantekDsoControl::setRecordTime(double duration) {
         // For now - we go for the 10240 size sampling - the other seems not to be supported
         // Find highest samplerate using less than 10240 samples to obtain our duration.
         unsigned sampleCount = 10240;
-        if (specification->isSoftwareTriggerDevice) sampleCount -= controlsettings.swSampleMargin;
-        unsigned sampleId;
-        for (sampleId = 0; sampleId < specification->fixedSampleRates.size(); ++sampleId) {
-            if (specification->fixedSampleRates[sampleId].samplerate * duration < sampleCount) break;
+        // Ensure that at least 1/2 of remaining samples are available for SW trigger algorithm
+        if (specification->isSoftwareTriggerDevice) {
+            sampleCount = (sampleCount - controlsettings.swSampleMargin) / 2;
+        }
+        unsigned sampleId = 0;
+        for (unsigned id = 0; id < specification->fixedSampleRates.size(); ++id) {
+            if (specification->fixedSampleRates[id].samplerate * duration < sampleCount) sampleId = id;
         }
         // Usable sample value
         modifyCommand<ControlSetTimeDIV>(ControlCode::CONTROL_SETTIMEDIV)

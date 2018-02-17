@@ -164,9 +164,16 @@ void HorizontalDock::setSamplerateLimits(double minimum, double maximum) {
 }
 
 void HorizontalDock::setSamplerateSteps(int mode, QList<double> steps) {
-    QSignalBlocker blocker(samplerateSiSpinBox);
-    this->samplerateSiSpinBox->setMode(mode);
-    this->samplerateSiSpinBox->setSteps(steps);
+    // Assume that method is invoked for fixed samplerate devices only
+    QSignalBlocker samplerateBlocker(samplerateSiSpinBox);
+    samplerateSiSpinBox->setMode(mode);
+    samplerateSiSpinBox->setSteps(steps);
+    samplerateSiSpinBox->setMinimum(steps.first());
+    samplerateSiSpinBox->setMaximum(steps.last());
+    // Make reasonable adjustments to the timebase spinbox
+    QSignalBlocker timebaseBlocker(timebaseSiSpinBox);
+    timebaseSiSpinBox->setMinimum(pow(10, floor(log10(1.0 / steps.last()))));
+    timebaseSiSpinBox->setMaximum(pow(10, ceil(log10(8192.0 / (steps.first() * 10)))));
 }
 
 /// \brief Called when the frequencybase spinbox changes its value.
