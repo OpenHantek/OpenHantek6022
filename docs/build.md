@@ -24,12 +24,12 @@ and replug your device, otherwise you will not have the correct permissions to a
 ### [Apple MacOSX](#apple)
 We recommend homebrew to install the required libraries.
 > brew update <br>
-> brew install libusb fftw qt5;
+> brew install libusb fftw qt5 cmake;
 
 After you've installed the requirements run the following commands inside the directory of this package:
 > mkdir build <br>
 > cd build <br>
-> cmake ../ -DCMAKE_PREFIX_PATH=/usr/local/Cellar/qt5/5.7.0 <br>
+> cmake ../ -DCMAKE_PREFIX_PATH=/usr/local/Cellar/qt/5.10.1 <br>
 > make -j2
 
 Please adjust the path to Qt5. You can find the path with the command:
