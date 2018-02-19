@@ -11,6 +11,5 @@ public:
     void add(DSOModel* model);
     const std::list<DSOModel*> models() const;
 private:
-    static ModelRegistry* instance;
     std::list<DSOModel*> supportedModels;
 };
