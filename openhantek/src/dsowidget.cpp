@@ -2,6 +2,7 @@
 
 #include <cmath>
 
+#include <QApplication>
 #include <QFileDialog>
 #include <QGridLayout>
 #include <QLabel>
@@ -283,25 +284,35 @@ void DsoWidget::setMeasurementVisible(ChannelID channel) {
     if (!scope->spectrum[channel].used) { measurementMagnitudeLabel[channel]->setText(QString()); }
 }
 
+static QString markerToString(DsoSettingsScope *scope, unsigned index) {
+    double value = (DIVS_TIME * (0.5 - scope->trigger.position) + scope->horizontal.marker[index]) * scope->horizontal.timebase;
+    int precision = 3 - (int)floor(log10(fabs(value)));
+
+    if (scope->horizontal.timebase < 1e-9)
+        return QApplication::tr("%L1 ps").arg(value / 1e-12, 0, 'f', qBound(0, precision - 12, 3));
+    else if (scope->horizontal.timebase < 1e-6)
+        return QApplication::tr("%L1 ns").arg(value / 1e-9, 0, 'f', qBound(0, precision - 9, 3));
+    else if (scope->horizontal.timebase < 1e-3)
+        return QApplication::tr("%L1 µs").arg(value / 1e-6, 0, 'f', qBound(0, precision - 6, 3));
+    else if (scope->horizontal.timebase < 1)
+        return QApplication::tr("%L1 ms").arg(value / 1e-3, 0, 'f', qBound(0, precision - 3, 3));
+    else
+        return QApplication::tr("%L1 s").arg(value, 0, 'f', qBound(0, precision, 3));
+}
+
 /// \brief Update the label about the marker measurements
 void DsoWidget::updateMarkerDetails() {
     double divs = fabs(scope->horizontal.marker[1] - scope->horizontal.marker[0]);
     double time = divs * scope->horizontal.timebase;
 
-    QString infoLabelPrefix(tr("Markers"));
+    QString prefix(tr("Markers"));
     if (view->zoom) {
-        infoLabelPrefix = tr("Zoom x%L1").arg(DIVS_TIME / divs, -1, 'g', 3);
+        prefix = tr("Zoom x%L1").arg(DIVS_TIME / divs, -1, 'g', 3);
         markerTimebaseLabel->setText(valueToString(time / DIVS_TIME, UNIT_SECONDS, 3) + tr("/div"));
         markerFrequencybaseLabel->setText(
             valueToString(divs * scope->horizontal.frequencybase / DIVS_TIME, UNIT_HERTZ, 4) + tr("/div"));
     }
-    markerInfoLabel->setText(
-        infoLabelPrefix.append(":  %1  %2")
-            .arg(
-                valueToString(0.5 + scope->horizontal.marker[0] / DIVS_TIME - scope->trigger.position, UNIT_SECONDS, 4))
-            .arg(valueToString(0.5 + scope->horizontal.marker[1] / DIVS_TIME - scope->trigger.position, UNIT_SECONDS,
-                               4)));
-
+    markerInfoLabel->setText(prefix.append(":  %1  %2").arg(markerToString(scope, 0)).arg(markerToString(scope, 1)));
     markerTimeLabel->setText(valueToString(time, UNIT_SECONDS, 4));
     markerFrequencyLabel->setText(valueToString(1.0 / time, UNIT_HERTZ, 4));
 }
