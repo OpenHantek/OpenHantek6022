@@ -115,10 +115,12 @@ bool LegacyExportDrawer::exportSamples(const PPresult *result, QPaintDevice* pai
         painter.setPen(colorValues->text);
 
         // Calculate variables needed for zoomed scope
-        double divs = fabs(settings->scope.horizontal.marker[1] - settings->scope.horizontal.marker[0]);
+        double m1 = settings->scope.getMarker(0);
+        double m2 = settings->scope.getMarker(1);
+        double divs = fabs(m2 - m1);
         double time = divs * settings->scope.horizontal.timebase;
         double zoomFactor = DIVS_TIME / divs;
-        double zoomOffset = (settings->scope.horizontal.marker[0] + settings->scope.horizontal.marker[1]) / 2;
+        double zoomOffset = (m1 + m2) / 2;
 
         if (settings->view.zoom) {
             scopeHeight = (double)(paintDevice->height() - (channelCount + 5) * lineHeight) / 2;

@@ -160,18 +160,19 @@ void SiSpinBox::setMode(const int mode) { this->mode = mode; }
 
 /// \brief Generic initializations.
 void SiSpinBox::init() {
-    this->setMinimum(1e-12);
-    this->setMaximum(1e12);
-    this->setValue(1.0);
-    this->setDecimals(DBL_MAX_10_EXP + DBL_DIG); // Disable automatic rounding
-    this->unit = unit;
-    this->steps << 1.0 << 2.0 << 5.0 << 10.0;
+    setMinimum(1e-12);
+    setMaximum(1e12);
+    setValue(1.0);
+    setDecimals(DBL_MAX_10_EXP + DBL_DIG); // Disable automatic rounding
+    setFocusPolicy(Qt::NoFocus);
+    steps << 1.0 << 2.0 << 5.0 << 10.0;
 
-    this->steppedTo = false;
-    this->stepId = 0;
-    this->mode = 0;
+    steppedTo = false;
+    stepId = 0;
+    mode = 0;
 
-    connect(this, static_cast<void (QDoubleSpinBox::*)(double)>(&QDoubleSpinBox::valueChanged), this, &SiSpinBox::resetSteppedTo);
+    connect(this, static_cast<void (QDoubleSpinBox::*)(double)>(&QDoubleSpinBox::valueChanged),
+            this, &SiSpinBox::resetSteppedTo);
 }
 
 /// \brief Resets the ::steppedTo flag after the value has been changed.

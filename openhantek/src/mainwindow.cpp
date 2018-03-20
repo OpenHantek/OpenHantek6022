@@ -39,6 +39,7 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, Expo
     ui->actionManualCommand->setIcon(iconFont->icon(fa::edit));
     ui->actionDigital_phosphor->setIcon(QIcon(":/images/digitalphosphor.svg"));
     ui->actionZoom->setIcon(iconFont->icon(fa::crop));
+    ui->actionCursors->setIcon(iconFont->icon(fa::crosshairs));
 
     // Window title
     setWindowIcon(QIcon(":openhantek.png"));
@@ -160,6 +161,7 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, Expo
     auto usedChanged = [this, dsoControl, spec](ChannelID channel, bool used) {
         if (channel >= (unsigned int)mSettings->scope.voltage.size()) return;
 
+//        if (!used) dsoWidget->
         bool mathUsed = mSettings->scope.anyUsed(spec->channels);
 
         // Normal channel, check if voltage/spectrum or math channel is used
@@ -266,6 +268,18 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, Expo
         this->dsoWidget->updateZoom(enabled);
     });
     ui->actionZoom->setChecked(mSettings->view.zoom);
+
+    connect(ui->actionCursors, &QAction::toggled, [this](bool enabled) {
+        mSettings->view.cursorsVisible = enabled;
+
+        if (mSettings->view.cursorsVisible)
+            this->ui->actionCursors->setStatusTip(tr("Hide measurements"));
+        else
+            this->ui->actionCursors->setStatusTip(tr("Show measurements"));
+
+        this->dsoWidget->updateCursorGrid(enabled);
+    });
+    ui->actionCursors->setChecked(mSettings->view.cursorsVisible);
 
     connect(ui->actionAbout, &QAction::triggered, [this]() {
         QMessageBox::about(

@@ -75,10 +75,10 @@ void DsoSettings::load() {
     if (store->contains("format")) scope.horizontal.format = (Dso::GraphFormat)store->value("format").toInt();
     if (store->contains("frequencybase"))
         scope.horizontal.frequencybase = store->value("frequencybase").toDouble();
-    for (int marker = 0; marker < 2; ++marker) {
+    for (int marker = 0; marker < MARKER_COUNT; ++marker) {
         QString name;
         name = QString("marker%1").arg(marker);
-        if (store->contains(name)) scope.horizontal.marker[marker] = store->value(name).toDouble();
+        if (store->contains(name)) scope.setMarker(marker, store->value(name).toDouble());
     }
     if (store->contains("timebase")) scope.horizontal.timebase = store->value("timebase").toDouble();
     if (store->contains("recordLength")) scope.horizontal.recordLength = store->value("recordLength").toUInt();
@@ -100,6 +100,17 @@ void DsoSettings::load() {
             scope.spectrum[channel].magnitude = store->value("magnitude").toDouble();
         if (store->contains("offset")) scope.spectrum[channel].offset = store->value("offset").toDouble();
         if (store->contains("used")) scope.spectrum[channel].used = store->value("used").toBool();
+        store->beginGroup("cursor");
+        if (store->contains("shape")) scope.spectrum[channel].cursor.shape =
+                DsoSettingsScopeCursor::CursorShape(store->value("shape").toUInt());
+        for (int marker = 0; marker < MARKER_COUNT; ++marker) {
+            QString name;
+            name = QString("x%1").arg(marker);
+            if (store->contains(name)) scope.spectrum[channel].cursor.pos[marker].setX(store->value(name).toDouble());
+            name = QString("y%1").arg(marker);
+            if (store->contains(name)) scope.spectrum[channel].cursor.pos[marker].setY(store->value(name).toDouble());
+        }
+        store->endGroup();
         store->endGroup();
     }
     // Vertical axis
@@ -112,6 +123,17 @@ void DsoSettings::load() {
         if (store->contains("offset")) scope.voltage[channel].offset = store->value("offset").toDouble();
         if (store->contains("trigger")) scope.voltage[channel].trigger = store->value("trigger").toDouble();
         if (store->contains("used")) scope.voltage[channel].used = store->value("used").toBool();
+        store->beginGroup("cursor");
+        if (store->contains("shape")) scope.voltage[channel].cursor.shape =
+                DsoSettingsScopeCursor::CursorShape(store->value("shape").toUInt());
+        for (int marker = 0; marker < MARKER_COUNT; ++marker) {
+            QString name;
+            name = QString("x%1").arg(marker);
+            if (store->contains(name)) scope.voltage[channel].cursor.pos[marker].setX(store->value(name).toDouble());
+            name = QString("y%1").arg(marker);
+            if (store->contains(name)) scope.voltage[channel].cursor.pos[marker].setY(store->value(name).toDouble());
+        }
+        store->endGroup();
         store->endGroup();
     }
 
@@ -159,7 +181,10 @@ void DsoSettings::load() {
     if (store->contains("interpolation"))
         view.interpolation = (Dso::InterpolationMode)store->value("interpolation").toInt();
     if (store->contains("screenColorImages")) view.screenColorImages = store->value("screenColorImages").toBool();
-    if (store->contains("zoom")) view.zoom = (Dso::InterpolationMode)store->value("zoom").toBool();
+    if (store->contains("zoom")) view.zoom = store->value("zoom").toBool();
+    if (store->contains("cursorGridPosition"))
+        view.cursorGridPosition = (Qt::ToolBarArea)store->value("cursorGridPosition").toUInt();
+    if (store->contains("cursorsVisible")) view.cursorsVisible = store->value("cursorsVisible").toBool();
     store->endGroup();
 
     store->beginGroup("window");
@@ -184,8 +209,8 @@ void DsoSettings::save() {
     store->beginGroup("horizontal");
     store->setValue("format", scope.horizontal.format);
     store->setValue("frequencybase", scope.horizontal.frequencybase);
-    for (int marker = 0; marker < 2; ++marker)
-        store->setValue(QString("marker%1").arg(marker), scope.horizontal.marker[marker]);
+    for (int marker = 0; marker < MARKER_COUNT; ++marker)
+        store->setValue(QString("marker%1").arg(marker), scope.getMarker(marker));
     store->setValue("timebase", scope.horizontal.timebase);
     store->setValue("recordLength", scope.horizontal.recordLength);
     store->setValue("samplerate", scope.horizontal.samplerate);
@@ -205,6 +230,16 @@ void DsoSettings::save() {
         store->setValue("magnitude", scope.spectrum[channel].magnitude);
         store->setValue("offset", scope.spectrum[channel].offset);
         store->setValue("used", scope.spectrum[channel].used);
+        store->beginGroup("cursor");
+        store->setValue("shape", scope.spectrum[channel].cursor.shape);
+        for (int marker = 0; marker < MARKER_COUNT; ++marker) {
+            QString name;
+            name = QString("x%1").arg(marker);
+            store->setValue(name, scope.spectrum[channel].cursor.pos[marker].x());
+            name = QString("y%1").arg(marker);
+            store->setValue(name, scope.spectrum[channel].cursor.pos[marker].y());
+        }
+        store->endGroup();
         store->endGroup();
     }
     // Vertical axis
@@ -216,6 +251,16 @@ void DsoSettings::save() {
         store->setValue("offset", scope.voltage[channel].offset);
         store->setValue("trigger", scope.voltage[channel].trigger);
         store->setValue("used", scope.voltage[channel].used);
+        store->beginGroup("cursor");
+        store->setValue("shape", scope.voltage[channel].cursor.shape);
+        for (int marker = 0; marker < MARKER_COUNT; ++marker) {
+            QString name;
+            name = QString("x%1").arg(marker);
+            store->setValue(name, scope.voltage[channel].cursor.pos[marker].x());
+            name = QString("y%1").arg(marker);
+            store->setValue(name, scope.voltage[channel].cursor.pos[marker].y());
+        }
+        store->endGroup();
         store->endGroup();
     }
 
@@ -259,6 +304,8 @@ void DsoSettings::save() {
     store->setValue("interpolation", view.interpolation);
     store->setValue("screenColorImages", view.screenColorImages);
     store->setValue("zoom", view.zoom);
+    store->setValue("cursorGridPosition", view.cursorGridPosition);
+    store->setValue("cursorsVisible", view.cursorsVisible);
     store->endGroup();
 
     store->beginGroup("window");
