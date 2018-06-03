@@ -39,13 +39,34 @@ CheckExitCodeAndExitIfError("tar")
 
 get_filename_component(_vs_bin_path "${CMAKE_LINKER}" DIRECTORY)
 
-execute_process(
-    COMMAND "${_vs_bin_path}/lib.exe" ${LIBEXE_64} /def:${CMAKE_BINARY_DIR}/fftw/libfftw3-3.def /out:${CMAKE_BINARY_DIR}/fftw/libfftw3-3.lib
-    WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/fftw"
-    OUTPUT_VARIABLE OutVar
-    ERROR_VARIABLE ErrVar
-    RESULT_VARIABLE ExitCode)
-CheckExitCodeAndExitIfError("lib.exe: ${OutVar} ${ErrVar}")
+if(CMAKE_HOST_UNIX AND WIN32)
+    set(DLLTOOL "i686-w64-mingw32-dlltool")
+    execute_process (
+    COMMAND bash -c "command -v ${DLLTOOL}"
+    OUTPUT_VARIABLE isExists
+    )
+    message(STATUS "Found dlltool: ${isExists}")
+    if("${isExists}" MATCHES "${DLLTOOL}")
+        execute_process(
+	    COMMAND ${DLLTOOL} ${LIBEXE_64} -d ${CMAKE_BINARY_DIR}/fftw/libfftw3-3.def -l ${CMAKE_BINARY_DIR}/fftw/libfftw3-3.lib
+	    WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/fftw"
+	    OUTPUT_VARIABLE OutVar
+	    ERROR_VARIABLE ErrVar
+	    RESULT_VARIABLE ExitCode)
+	    CheckExitCodeAndExitIfError("${DLLTOOL}: ${OutVar} ${ErrVar}")
+    else()
+	message(FATAL_ERROR "Your cross compiler dlltool is not installed or name is different from i686-w64-mingw32-dlltool. If you running Fedora or Fedora based distro you can install it by running:\n# dnf install mingw32-binutils")
+    endif()
+else()
+    execute_process(
+	COMMAND "${_vs_bin_path}/lib.exe" ${LIBEXE_64} /def:${CMAKE_BINARY_DIR}/fftw/libfftw3-3.def /out:${CMAKE_BINARY_DIR}/fftw/libfftw3-3.lib
+	WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/fftw"
+	OUTPUT_VARIABLE OutVar
+	ERROR_VARIABLE ErrVar
+	RESULT_VARIABLE ExitCode)
+    CheckExitCodeAndExitIfError("lib.exe: ${OutVar} ${ErrVar}")
+endif()
+
 
 target_link_libraries(${PROJECT_NAME} "${CMAKE_BINARY_DIR}/fftw/libfftw3-3.lib")
 target_include_directories(${PROJECT_NAME} PRIVATE "${CMAKE_BINARY_DIR}/fftw")
