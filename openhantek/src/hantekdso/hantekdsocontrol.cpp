@@ -1231,6 +1231,8 @@ void HantekDsoControl::run() {
     #else
     #define FALLTHROUGH
     #endif
+#else
+#define FALLTHROUGH
 #endif
             else {
                 FALLTHROUGH
