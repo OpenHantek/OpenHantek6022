@@ -1223,12 +1223,14 @@ void HantekDsoControl::run() {
             // Start next capture if necessary by leaving out the break statement
 
             if (!this->sampling) break;
-#if __has_cpp_attribute(clang::fallthrough)
-#define FALLTHROUGH [[clang::fallthrough]];
-#elif __has_cpp_attribute(fallthrough)
-#define FALLTHROUGH [[fallthrough]];
-#else
-#define FALLTHROUGH
+#ifdef __has_cpp_attribute
+    #if __has_cpp_attribute(clang::fallthrough)
+    #define FALLTHROUGH [[clang::fallthrough]];
+    #elif __has_cpp_attribute(fallthrough)
+    #define FALLTHROUGH [[fallthrough]];
+    #else
+    #define FALLTHROUGH
+    #endif
 #endif
             else {
                 FALLTHROUGH
