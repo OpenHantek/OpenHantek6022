@@ -130,7 +130,7 @@ ControlAcquireHardData::ControlAcquireHardData() : ControlCommand(ControlCode::C
 }
 
 ControlGetLimits::ControlGetLimits(size_t channels)
-    : ControlCommand(ControlCode::CONTROL_VALUE, 1), offsetLimit(new OffsetsPerGainStep[channels]) {
+    : ControlCommand(ControlCode::CONTROL_VALUE, sizeof(OffsetsPerGainStep)*channels) {
     value = (uint8_t)ControlValue::VALUE_OFFSETLIMITS;
     data()[0] = 0x01;
 }

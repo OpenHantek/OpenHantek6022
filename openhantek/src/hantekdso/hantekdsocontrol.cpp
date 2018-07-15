@@ -135,7 +135,7 @@ Dso::ErrorCode HantekDsoControl::retrieveChannelLevelData() {
         return Dso::ErrorCode::CONNECTION;
     }
 
-    memcpy(controlsettings.offsetLimit, controlsettings.cmdGetLimits.offsetLimitData(),
+    memcpy(controlsettings.offsetLimit, controlsettings.cmdGetLimits.data(),
            sizeof(OffsetsPerGainStep) * specification->channels);
 
     return Dso::ErrorCode::NONE;

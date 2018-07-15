@@ -129,8 +129,6 @@ struct ControlAcquireHardData : public ControlCommand {
 };
 
 struct ControlGetLimits : public ControlCommand {
-    std::unique_ptr<OffsetsPerGainStep[]> offsetLimit;
     ControlGetLimits(size_t channels);
-    inline uint8_t *offsetLimitData() { return (uint8_t *)offsetLimit.get(); }
 };
 }
