@@ -531,11 +531,11 @@ unsigned HantekDsoControl::updateSamplerate(unsigned downsampler, bool fastRate)
         BulkSetSamplerate2250 *commandSetSamplerate2250 =
             modifyCommand<BulkSetSamplerate2250>(BulkCode::ESETTRIGGERORSAMPLERATE);
 
-        bool downsampling = downsampler >= 1;
+        bool downsampling = downsampler > 1;
         // Store downsampler state value
         commandSetSamplerate2250->setDownsampling(downsampling);
         // Store samplerate value
-        commandSetSamplerate2250->setSamplerate(downsampler > 1 ? 0x10001 - downsampler : 0);
+        commandSetSamplerate2250->setSamplerate(downsampling ? 0x10001 - downsampler : 0);
         // Set fast rate when used
         commandSetSamplerate2250->setFastRate(fastRate);
 
