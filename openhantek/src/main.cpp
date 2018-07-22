@@ -205,7 +205,10 @@ int main(int argc, char *argv[]) {
     postProcessingThread.quit();
     postProcessingThread.wait(10000);
 
-    if (context && device != nullptr) { libusb_exit(context); }
+    if (context && device != nullptr) { 
+        device.reset(); // causes libusb_close(), which must be called before libusb_exit() 
+        libusb_exit(context); 
+    }
 
     return res;
 }
