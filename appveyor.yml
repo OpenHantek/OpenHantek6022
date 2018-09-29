@@ -7,47 +7,24 @@ configuration:
 matrix:
   fast_finish: true
 
-clone_folder: C:\projects\openhantek
-
-install:
-#  - cinst cmake
-  
 image:
   - Visual Studio 2015
 
 shallow_clone: true
 
 before_build:
-  - if [%PLATFORM%] == [x64] set QT5=C:\Qt\5.8\msvc2015_64
-  - if [%PLATFORM%] == [x64] set VSARCH=x86
-  - if [%PLATFORM%] == [x64] set "CMAKE_GENERATOR_NAME=Visual Studio 14 2015 Win64"
-  - if [%PLATFORM%] == [Win32] set QT5=C:\Qt\5.8\msvc2015
-  - if [%PLATFORM%] == [Win32] set VSARCH=x64
-  - if [%PLATFORM%] == [Win32] set "CMAKE_GENERATOR_NAME=Visual Studio 14 2015"
+  - set QT5=C:\Qt\5.11\msvc2015_64
+  - set "CMAKE_GENERATOR_NAME=Visual Studio 14 2015 Win64"
   - set Path=%QT5%\bin;%Path%
   - md build
   - cd build
-  - call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" %VSARCH%
+  - call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" %platform%
   - cmake.exe -G "%CMAKE_GENERATOR_NAME%" "-DCMAKE_PREFIX_PATH=%QT5%" -DCMAKE_BUILD_TYPE=%configuration% ..
-  
-build:
 
 build_script:
-  - cmake --build . --config Release --target package
+  - cmake --build . --config %configuration% --target package
 
-# User "ci-openhantek". Uses a appveyor encrypted github access token for that user.
-deploy:
-  - provider: GitHub
-    artifact: /packages\\*\.exe/
-    draft: false
-    prerelease: false
-    force_update: true
-    auth_token:
-      secure: KD4fRkMn+nap8Uw/8SDyAgqYREMPYkF+AOdl6e130Ha95lEAyCyLsKuIfFWsLy4c
-    on:
-      branch: master                # release from master branch only
-      appveyor_repo_tag: true       # deploy on tag push only
-
-notifications:
-  - provider: Email
-    on_build_status_changed: true
+artifacts:
+  - path: build\openhantek\$(configuration)
+    name: OpenHantek-$(platform)-$(configuration)-b$(APPVEYOR_BUILD_NUMBER)
+    type: zip
