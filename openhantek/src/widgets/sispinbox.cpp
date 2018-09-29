@@ -41,6 +41,8 @@ SiSpinBox::SiSpinBox(Unit unit, QWidget *parent) : QDoubleSpinBox(parent) {
     this->init();
 
     this->setUnit(unit);
+
+    this->setBackground();
 }
 
 /// \brief Cleans up the main window.
@@ -177,3 +179,10 @@ void SiSpinBox::init() {
 
 /// \brief Resets the ::steppedTo flag after the value has been changed.
 void SiSpinBox::resetSteppedTo() { this->steppedTo = false; }
+
+// fix Dark mode background introduced with MacOS 10.24 (mojave)
+void SiSpinBox::setBackground() {
+    QPalette palette;
+    QColor background = palette.color(QPalette::Window);
+    this->setStyleSheet("background-color: " + background.name());
+}

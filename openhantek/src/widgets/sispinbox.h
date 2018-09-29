@@ -31,6 +31,7 @@ class SiSpinBox : public QDoubleSpinBox {
 
   private:
     void init();
+    void setBackground();
 
     Unit unit;           ///< The SI unit used for this spin box
     QString unitPostfix; ///< Shown after the unit
