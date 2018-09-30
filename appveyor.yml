@@ -1,11 +1,5 @@
-platform:
-  - x64
-
 configuration:
   - Release
-
-matrix:
-  fast_finish: true
 
 image:
   - Visual Studio 2015
@@ -13,18 +7,17 @@ image:
 shallow_clone: true
 
 before_build:
-  - set QT5=C:\Qt\5.11\msvc2015_64
-  - set "CMAKE_GENERATOR_NAME=Visual Studio 14 2015 Win64"
-  - set Path=%QT5%\bin;%Path%
-  - md build
-  - cd build
-  - call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" %platform%
-  - cmake.exe -G "%CMAKE_GENERATOR_NAME%" "-DCMAKE_PREFIX_PATH=%QT5%" -DCMAKE_BUILD_TYPE=%configuration% ..
+  - set qtpath="C:\Qt\5.11\msvc2015_64"
+  - set arch64=x64
+  - set dir64=build_x64
+
+  - md %dir64%
+  - call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" %arch64%
+  - cmake -G "Visual Studio 14 2015 Win64" -DCMAKE_PREFIX_PATH=%qtpath% -DCMAKE_BUILD_TYPE=%configuration% -B%dir64% -H.
 
 build_script:
-  - cmake --build . --config %configuration% --target package
+  - cmake --build %dir64% --config %configuration% --target package
 
 artifacts:
-  - path: build\openhantek\$(configuration)
-    name: OpenHantek-$(platform)-$(configuration)-b$(APPVEYOR_BUILD_NUMBER)
-    type: zip
+  - path: $(dir64)\openhantek\$(configuration)
+    name: OpenHantek-$(arch64)-$(configuration)-b$(APPVEYOR_BUILD_NUMBER)
