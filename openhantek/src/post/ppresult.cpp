@@ -20,15 +20,16 @@ unsigned int PPresult::channelCount() const { return (unsigned)analyzedData.size
 
 double DataChannel::computeAmplitude() const {
     if (voltage.sample.empty()) return 0.0;
-    double minimalVoltage, maximalVoltage;
+    double minimalVoltage, maximalVoltage, averageVoltage = 0.0;
     minimalVoltage = maximalVoltage = voltage.sample[0];
 
     for (unsigned int position = 1; position < voltage.sample.size(); ++position) {
+        averageVoltage += voltage.sample[position];
         if (voltage.sample[position] < minimalVoltage)
             minimalVoltage = voltage.sample[position];
         else if (voltage.sample[position] > maximalVoltage)
             maximalVoltage = voltage.sample[position];
     }
-
+    return averageVoltage /= voltage.sample.size();
     return maximalVoltage - minimalVoltage;
 }

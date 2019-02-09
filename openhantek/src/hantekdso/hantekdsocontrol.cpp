@@ -12,6 +12,8 @@
 #include <QMutex>
 #include <QTimer>
 
+#include <stdio.h>
+
 #include "hantekdsocontrol.h"
 #include "hantekprotocol/bulkStructs.h"
 #include "hantekprotocol/controlStructs.h"
@@ -307,13 +309,22 @@ void HantekDsoControl::convertRawDataToSamples(const std::vector<unsigned char> 
                     bufferPosition += DROP_DSO6022_HEAD * 2;
                 }
                 bufferPosition += channel;
-                shiftDataBuf = 0x83;
+                shiftDataBuf = 0x80; //HORO: unsigned 8 bit -> signed 8 bit, use channel offset for zero adjust
+                shiftDataBuf += channel?-3:6; //HORO: correct individual channel offset CH1:CH0
+
             } else {
                 bufferPosition += specification->channels - 1 - channel;
             }
+
+            //HORO: test output (get one data point at e.g. pos 555)
+            fprintf( stderr, "channel %d, gainID %d, limit %4d, offset %8.3f, gainStep %8.3f, raw 0x%03x, result %8.3f\n", \
+                     channel, gainID, limit, offset, gainStep, rawData[ 555 + channel ], \
+                     ((double)((int)(rawData[ 555 + channel ] - shiftDataBuf)) / limit - offset ) * gainStep );
+
             for (unsigned pos = 0; pos < result.data[channel].size();
                  ++pos, bufferPosition += specification->channels) {
-                if (bufferPosition >= totalSampleCount) bufferPosition %= totalSampleCount;
+                if (bufferPosition >= totalSampleCount) bufferPosition %= totalSampleCount; 
+                //HORO: the %= wraparound conflicts with DROP_DS6022... from above!
                 double dataBuf = (double)((int)(rawData[bufferPosition] - shiftDataBuf));
                 result.data[channel][pos] = (dataBuf / limit - offset) * gainStep;
             }
