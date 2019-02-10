@@ -41,7 +41,7 @@ static void initSpecifications(Dso::ControlSpecification& specification) {
 
     //HORO: read the real calibration values from file
     const unsigned RANGES = 9;
-    QSettings settings( QDir::homePath() + "/.config/OpenHantek/HT6022BE.conf", QSettings::IniFormat );
+    QSettings settings( QDir::homePath() + "/.config/OpenHantek/modelDSO6022.conf", QSettings::IniFormat );
     settings.beginGroup( "gain" );
     for ( unsigned ch = 0; ch < 2; ch++ ) {
         settings.beginGroup( channels[ ch ] );
