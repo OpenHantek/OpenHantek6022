@@ -32,8 +32,8 @@ static void initSpecifications(Dso::ControlSpecification& specification) {
     specification.bufferDividers = { 1000 , 1 , 1 };
     // This data was based on testing and depends on Divider.
     // The sample value at the top of the screen
-    specification.voltageLimit[0] = { 20 , 40 , 100 , 200 , 400 , 200 , 400 , 400 , 1000 };
-    specification.voltageLimit[1] = { 20 , 40 , 100 , 200 , 400 , 200 , 400 , 400 , 1000 };
+    specification.voltageLimit[0] = { 20 , 40 , 100 , 200 , 200 , 200 , 400 , 400 , 1000 };
+    specification.voltageLimit[1] = { 20 , 40 , 100 , 200 , 200 , 200 , 400 , 400 , 1000 };
     specification.voltageOffset[0] = { 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80 };
     specification.voltageOffset[1] = { 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80 };
     const char* ranges[] = { "10mV", "20mV", "50mV","100mV", "200mV", "500mV", "1000mV", "2000mV", "5000mV" }; 
@@ -74,7 +74,7 @@ static void initSpecifications(Dso::ControlSpecification& specification) {
 
     // Divider. Tested and calculated results are different!
     // HW gain, voltage steps in V/screenheight (ranges 10,20,50,100,200,500,1000,2000,5000 mV)
-    specification.gain = { {10,0.08} , {10,0.16} , {10,0.40} , {10,0.80} , {10,1.60} ,
+    specification.gain = { {10,0.08} , {10,0.16} , {10,0.40} , {10,0.80} , {5,1.60} ,
                            {2,4.00} , {2,8.00} , {1,16.00} , {1,40.00} };
     specification.fixedSampleRates = { {10,1e5} , {20,2e5} , {50,5e5} , {1,1e6} , {2,2e6} , {4,4e6} , {8,8e6} ,
                                        {16,16e6} , {24,24e6} , {48,48e6} };
