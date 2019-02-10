@@ -229,6 +229,7 @@ void HantekDsoControl::convertRawDataToSamples(const std::vector<unsigned char> 
 
     const unsigned extraBitsSize = specification->sampleSize - 8;            // Number of extra bits
     const unsigned short extraBitsMask = (0x00ff << extraBitsSize) & 0xff00; // Mask for extra bits extraction
+    int shiftDataBuf = 0;
 
     // Convert channel data
     if (isFastRate()) {
@@ -280,7 +281,7 @@ void HantekDsoControl::convertRawDataToSamples(const std::vector<unsigned char> 
             const unsigned short limit = specification->voltageLimit[channel][gainID];
             const double offset = controlsettings.voltage[channel].offsetReal;
             const double gainStep = specification->gain[gainID].gainSteps;
-            int shiftDataBuf = 0;
+            shiftDataBuf = specification->voltageOffset[channel][gainID];
 
             // Convert data from the oscilloscope and write it into the sample buffer
             unsigned bufferPosition = controlsettings.trigger.point * 2;
@@ -309,17 +310,11 @@ void HantekDsoControl::convertRawDataToSamples(const std::vector<unsigned char> 
                     bufferPosition += DROP_DSO6022_HEAD * 2;
                 }
                 bufferPosition += channel;
-                shiftDataBuf = 0x80; //HORO: unsigned 8 bit -> signed 8 bit, use channel offset for zero adjust
-                shiftDataBuf += channel?-3:6; //HORO: correct individual channel offset CH1:CH0
-
+                //HORO: shift + individual offset for each channel and gain
+                shiftDataBuf = specification->voltageOffset[ channel ][ gainID ];
             } else {
                 bufferPosition += specification->channels - 1 - channel;
             }
-
-            //HORO: test output (get one data point at e.g. pos 555)
-            fprintf( stderr, "channel %d, gainID %d, limit %4d, offset %8.3f, gainStep %8.3f, raw 0x%03x, result %8.3f\n", \
-                     channel, gainID, limit, offset, gainStep, rawData[ 555 + channel ], \
-                     ((double)((int)(rawData[ 555 + channel ] - shiftDataBuf)) / limit - offset ) * gainStep );
 
             for (unsigned pos = 0; pos < result.data[channel].size();
                  ++pos, bufferPosition += specification->channels) {
@@ -328,6 +323,12 @@ void HantekDsoControl::convertRawDataToSamples(const std::vector<unsigned char> 
                 double dataBuf = (double)((int)(rawData[bufferPosition] - shiftDataBuf));
                 result.data[channel][pos] = (dataBuf / limit - offset) * gainStep;
             }
+#if 0
+            //HORO: test output (get one data point at e.g. pos 666, this offset must be even!)
+            fprintf( stderr, "channel %d, gainID %d, limit %4d, shift %d, gainStep %8.3f, raw 0x%03x, result %8.3f\n", \
+                     channel, gainID, limit, shiftDataBuf, gainStep, rawData[ 666 + channel ], \
+                     ((double)((int)(rawData[ 666 + channel ] - shiftDataBuf)) / limit - offset ) * gainStep );
+#endif
         }
     }
 }
