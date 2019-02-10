@@ -91,16 +91,16 @@ int main(int argc, char *argv[]) {
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling, true);
 #endif
 
-    bool useGles = true;
+    bool useGles = false;
     {
         QCoreApplication parserApp(argc, argv);
         QCommandLineParser p;
         p.addHelpOption();
         p.addVersionOption();
-        QCommandLineOption useGlesOption("noGLES", QCoreApplication::tr("Use OpenGL instead of OpenGL ES"));
+        QCommandLineOption useGlesOption("useGLES", QCoreApplication::tr("Use OpenGL ES instead of OpenGL"));
         p.addOption(useGlesOption);
         p.process(parserApp);
-        useGles = ! p.isSet(useGlesOption);
+        useGles = p.isSet(useGlesOption);
     }
 
     GlScope::fixOpenGLversion(useGles ? QSurfaceFormat::OpenGLES : QSurfaceFormat::OpenGL);
