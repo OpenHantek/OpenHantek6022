@@ -229,7 +229,6 @@ void HantekDsoControl::convertRawDataToSamples(const std::vector<unsigned char> 
 
     const unsigned extraBitsSize = specification->sampleSize - 8;            // Number of extra bits
     const unsigned short extraBitsMask = (0x00ff << extraBitsSize) & 0xff00; // Mask for extra bits extraction
-    int shiftDataBuf = 0;
 
     // Convert channel data
     if (isFastRate()) {
@@ -281,7 +280,7 @@ void HantekDsoControl::convertRawDataToSamples(const std::vector<unsigned char> 
             const unsigned short limit = specification->voltageLimit[channel][gainID];
             const double offset = controlsettings.voltage[channel].offsetReal;
             const double gainStep = specification->gain[gainID].gainSteps;
-            shiftDataBuf = specification->voltageOffset[channel][gainID];
+            int shiftDataBuf = 0;
 
             // Convert data from the oscilloscope and write it into the sample buffer
             unsigned bufferPosition = controlsettings.trigger.point * 2;
@@ -325,7 +324,7 @@ void HantekDsoControl::convertRawDataToSamples(const std::vector<unsigned char> 
             }
 #if 0
             //HORO: test output (get one data point at e.g. pos 666, this offset must be even!)
-            fprintf( stderr, "channel %d, gainID %d, limit %4d, shift %d, gainStep %8.3f, raw 0x%03x, result %8.3f\n", \
+            fprintf( stderr, "channel %d, gainID %d, limit %d, shift %d, gainStep %8.3f, raw 0x%03x, result %8.3f\n", \
                      channel, gainID, limit, shiftDataBuf, gainStep, rawData[ 666 + channel ], \
                      ((double)((int)(rawData[ 666 + channel ] - shiftDataBuf)) / limit - offset ) * gainStep );
 #endif
