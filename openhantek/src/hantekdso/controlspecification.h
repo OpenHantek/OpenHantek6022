@@ -74,6 +74,8 @@ struct ControlSpecification {
     /// The sample values at the top of the screen
     typedef std::vector<unsigned short> VoltageLimit;
     std::vector<VoltageLimit> voltageLimit; // Per channel
+    typedef std::vector<unsigned short> VoltageOffset;
+    std::vector<VoltageOffset> voltageOffset; // Per channel
 
     /// Gain levels
     std::vector<ControlSpecificationGainLevel> gain;
