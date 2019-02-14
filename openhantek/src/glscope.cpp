@@ -202,8 +202,8 @@ void GlScope::initializeGL() {
     )";
 
     const char *vshaderDesktop = R"(
-          #version 150
-          in highp vec3 vertex;
+          #version 120 //150
+          attribute vec3 vertex; //in highp vec3 vertex;
           uniform mat4 matrix;
           void main()
           {
@@ -212,10 +212,10 @@ void GlScope::initializeGL() {
           }
     )";
     const char *fshaderDesktop = R"(
-          #version 150
+          #version 120 //150
           uniform highp vec4 colour;
-          out vec4 flatColor;
-          void main() { flatColor = colour; }
+          //out vec4 flatColor;
+          void main() { gl_FragColor = colour; } //{ flatColor = colour; }
     )";
 
     qDebug() << "compile shaders";
