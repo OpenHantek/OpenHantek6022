@@ -36,7 +36,7 @@ SoftwareTrigger::PrePostStartTriggerSamples SoftwareTrigger::compute(const PPres
     }
     preTrigSamples = (unsigned)(scope->trigger.position * samplesDisplay);
     postTrigSamples = (unsigned)sampleCount - ((unsigned)samplesDisplay - preTrigSamples);
-
+    //fprintf( stderr, "count: %lu, display: %f, pre: %d, post: %d\n", sampleCount, samplesDisplay, preTrigSamples, postTrigSamples );
     double prev;
     bool (*opcmp)(double,double,double);
     bool (*smplcmp)(double,double);

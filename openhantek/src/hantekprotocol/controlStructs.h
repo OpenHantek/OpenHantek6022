@@ -124,6 +124,11 @@ struct ControlSetTimeDIV : public ControlCommand {
     void setDiv(uint8_t val);
 };
 
+struct ControlSetNumChannels : public ControlCommand {
+    ControlSetNumChannels();
+    void setDiv(uint8_t val);
+};
+
 struct ControlAcquireHardData : public ControlCommand {
     ControlAcquireHardData();
 };

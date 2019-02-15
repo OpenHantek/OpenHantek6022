@@ -12,8 +12,6 @@
 #include <QMutex>
 #include <QTimer>
 
-#include <stdio.h>
-
 #include "hantekdsocontrol.h"
 #include "hantekprotocol/bulkStructs.h"
 #include "hantekprotocol/controlStructs.h"
@@ -112,7 +110,7 @@ void HantekDsoControl::updateInterval() {
         cycleTime = (int)((double)getRecordLength() / controlsettings.samplerate.current * 250);
 
     // Not more often than every 10 ms though but at least once every second
-    cycleTime = qBound(10, cycleTime, 1000);
+    cycleTime = qBound(100, cycleTime, 1000);
 }
 
 bool HantekDsoControl::isRollMode() const {
@@ -309,25 +307,16 @@ void HantekDsoControl::convertRawDataToSamples(const std::vector<unsigned char> 
                     bufferPosition += DROP_DSO6022_HEAD * 2;
                 }
                 bufferPosition += channel;
-                //HORO: shift + individual offset for each channel and gain
-                shiftDataBuf = specification->voltageOffset[ channel ][ gainID ];
+                shiftDataBuf = 0x83;
             } else {
                 bufferPosition += specification->channels - 1 - channel;
             }
-
             for (unsigned pos = 0; pos < result.data[channel].size();
                  ++pos, bufferPosition += specification->channels) {
-                if (bufferPosition >= totalSampleCount) bufferPosition %= totalSampleCount; 
-                //HORO: the %= wraparound conflicts with DROP_DS6022... from above!
+                if (bufferPosition >= totalSampleCount) bufferPosition %= totalSampleCount;
                 double dataBuf = (double)((int)(rawData[bufferPosition] - shiftDataBuf));
                 result.data[channel][pos] = (dataBuf / limit - offset) * gainStep;
             }
-#if 0
-            //HORO: test output (get one data point at e.g. pos 666, this offset must be even!)
-            fprintf( stderr, "channel %d, gainID %d, limit %d, shift %d, gainStep %8.3f, raw 0x%03x, result %8.3f\n", \
-                     channel, gainID, limit, shiftDataBuf, gainStep, rawData[ 666 + channel ], \
-                     ((double)((int)(rawData[ 666 + channel ] - shiftDataBuf)) / limit - offset ) * gainStep );
-#endif
         }
     }
 }
@@ -764,6 +753,9 @@ Dso::ErrorCode HantekDsoControl::setChannelUsed(ChannelID channel, bool used) {
         break;
     }
     default:
+        qDebug() << "usedChannels:" << (int) usedChannels;
+        modifyCommand<ControlSetNumChannels>(ControlCode::CONTROL_SETNUMCHANNELS)
+            ->setDiv( usedChannels==UsedChannels::USED_CH1?1:2 );
         break;
     }
 

@@ -49,9 +49,6 @@ static void initSpecifications(Dso::ControlSpecification& specification) {
             double calibration = settings.value( ranges[ iii ], "0.0" ).toDouble();
             if ( calibration )
                 specification.voltageLimit[ ch ][ iii ] /= calibration;
-#if VERBOSE
-            qDebug() << ranges[ iii ] << specification.voltageLimit[ ch ][ iii ];
-#endif
         }
         settings.endGroup(); // channels
     }
@@ -64,9 +61,6 @@ static void initSpecifications(Dso::ControlSpecification& specification) {
             int offset = settings.value( ranges[ iii ], "0" ).toInt();
             if ( offset ) 
                 specification.voltageOffset[ ch ][ iii ] -= offset;
-#if VERBOSE
-            qDebug() << "offset" << specification.voltageOffset[ ch ][ iii ];
-#endif
         }
         settings.endGroup(); // channels
     }
@@ -76,8 +70,10 @@ static void initSpecifications(Dso::ControlSpecification& specification) {
     // HW gain, voltage steps in V/screenheight (ranges 10,20,50,100,200,500,1000,2000,5000 mV)
     specification.gain = { {10,0.08} , {10,0.16} , {10,0.40} , {10,0.80} , {5,1.60} ,
                            {2,4.00} , {2,8.00} , {1,16.00} , {1,40.00} };
+    // Sample rates with default fw (fw modded from https://github.com/jhoenicke/Hantek6022API)
+    // 100k, 200k, 500k, 1M, 2M, 4M, 8M, 12M, 16M, 24M, 30M, 48M, (30M & 48M are unstable with 2 channels)
     specification.fixedSampleRates = { {10,1e5} , {20,2e5} , {50,5e5} , {1,1e6} , {2,2e6} , {4,4e6} , {8,8e6} ,
-                                       {16,16e6} , {24,24e6} , {48,48e6} };
+                                       {12,12e6} , {16,16e6} , {24,24e6} , {30,30e6} /*, {48,48e6}*/ }; // 30&48 are unstable
     specification.sampleSize = 8;
 
     specification.couplings = {Dso::Coupling::DC};
@@ -90,6 +86,7 @@ void applyRequirements_(HantekDsoControl *dsoControl) {
     dsoControl->addCommand(new ControlSetTimeDIV());
     dsoControl->addCommand(new ControlSetVoltDIV_CH2());
     dsoControl->addCommand(new ControlSetVoltDIV_CH1());
+    dsoControl->addCommand(new ControlSetNumChannels());
 }
 
 ModelDSO6022BE::ModelDSO6022BE() : DSOModel(ID, 0x04b5, 0x6022, 0x04b4, 0x6022, "dso6022be", "DSO-6022BE",
