@@ -125,6 +125,12 @@ ControlSetTimeDIV::ControlSetTimeDIV() : ControlCommand(ControlCode::CONTROL_SET
 
 void ControlSetTimeDIV::setDiv(uint8_t val) { data()[0] = val; }
 
+ControlSetNumChannels::ControlSetNumChannels() : ControlCommand(ControlCode::CONTROL_SETNUMCHANNELS, 1) { 
+    this->setDiv(2);
+}
+
+void ControlSetNumChannels::setDiv(uint8_t val) { data()[0] = val; }
+
 ControlAcquireHardData::ControlAcquireHardData() : ControlCommand(ControlCode::CONTROL_ACQUIIRE_HARD_DATA, 1) {
     data()[0] = 0x01;
 }
