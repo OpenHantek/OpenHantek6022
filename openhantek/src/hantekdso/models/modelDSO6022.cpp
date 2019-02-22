@@ -22,11 +22,11 @@ static void initSpecifications(Dso::ControlSpecification& specification) {
     specification.supportsCouplingRelays = false;
 
     specification.samplerate.single.base = 1e6;
-    specification.samplerate.single.max = 48e6;
+    specification.samplerate.single.max = 30e6;
     specification.samplerate.single.maxDownsampler = 10;
     specification.samplerate.single.recordLengths = {UINT_MAX, 10240};
     specification.samplerate.multi.base = 1e6;
-    specification.samplerate.multi.max = 48e6;
+    specification.samplerate.multi.max = 24e6;
     specification.samplerate.multi.maxDownsampler = 10;
     specification.samplerate.multi.recordLengths = {UINT_MAX, 20480};
     specification.bufferDividers = { 1000 , 1 , 1 };
