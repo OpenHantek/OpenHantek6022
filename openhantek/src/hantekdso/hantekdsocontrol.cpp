@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0+
 
+//#define DEBUG
+
 #include <assert.h>
 #include <cmath>
 #include <limits>
@@ -11,6 +13,8 @@
 #include <QList>
 #include <QMutex>
 #include <QTimer>
+
+#include <stdio.h>
 
 #include "hantekdsocontrol.h"
 #include "hantekprotocol/bulkStructs.h"
@@ -109,8 +113,9 @@ void HantekDsoControl::updateInterval() {
     else
         cycleTime = (int)((double)getRecordLength() / controlsettings.samplerate.current * 250);
 
-    // Not more often than every 10 ms though but at least once every second
+    // Not more often than every 100 ms though but at least once every second
     cycleTime = qBound(100, cycleTime, 1000);
+    //timestampDebug(QString("cycleTime %1").arg(cycleTime));
 }
 
 bool HantekDsoControl::isRollMode() const {
@@ -187,7 +192,7 @@ std::vector<unsigned char> HantekDsoControl::getSamples(unsigned &previousSample
     }
 
     unsigned totalSampleCount = this->getSampleCount();
-
+    // qDebug() << "totalSampleCount" << totalSampleCount;
     // To make sure no samples will remain in the scope buffer, also check the
     // sample count before the last sampling started
     if (totalSampleCount < previousSampleCount) {
@@ -270,6 +275,7 @@ void HantekDsoControl::convertRawDataToSamples(const std::vector<unsigned char> 
             }
         }
     } else {
+        unsigned short activeChannels = specification->channels;
         // Normal mode, channels are using their separate buffers
         for (ChannelID channel = 0; channel < specification->channels; ++channel) {
             result.data[channel].resize(totalSampleCount / specification->channels);
@@ -298,25 +304,44 @@ void HantekDsoControl::convertRawDataToSamples(const std::vector<unsigned char> 
                     result.data[channel][realPosition] = ((double)(low + high) / limit - offset) * gainStep;
                 }
             } else if (device->getModel()->ID == ModelDSO6022BE::ID) {
+
+                // 6022 fast rate
+                if ( controlsettings.voltage[0].used && !controlsettings.voltage[1].used) {
+                    activeChannels = 1;
+                    if ( channel ) // one channel mode only with 1st channel
+                        continue;
+                }
+
                 // if device is 6022BE, drop heading & trailing samples
                 const unsigned DROP_DSO6022_HEAD = 0x410;
                 const unsigned DROP_DSO6022_TAIL = 0x3F0;
                 if (!isRollMode()) {
-                    result.data[channel].resize(result.data[channel].size() - (DROP_DSO6022_HEAD + DROP_DSO6022_TAIL));
+                    result.data[channel].resize(result.data[channel].size() 
+                        - (DROP_DSO6022_HEAD + DROP_DSO6022_TAIL));
                     // if device is 6022BE, offset DROP_DSO6022_HEAD incrementally
-                    bufferPosition += DROP_DSO6022_HEAD * 2;
+                    bufferPosition += DROP_DSO6022_HEAD * activeChannels;
                 }
                 bufferPosition += channel;
-                shiftDataBuf = 0x83;
+                //HORO: shift + individual offset for each channel and gain
+                shiftDataBuf = specification->voltageOffset[ channel ][ gainID ];
             } else {
                 bufferPosition += specification->channels - 1 - channel;
             }
+
             for (unsigned pos = 0; pos < result.data[channel].size();
-                 ++pos, bufferPosition += specification->channels) {
-                if (bufferPosition >= totalSampleCount) bufferPosition %= totalSampleCount;
+                 ++pos, bufferPosition += activeChannels) {
+                if
+                 (bufferPosition >= totalSampleCount) bufferPosition %= totalSampleCount; 
+                //HORO: does the %= wraparound conflict with DROP_DS6022... from above?
                 double dataBuf = (double)((int)(rawData[bufferPosition] - shiftDataBuf));
                 result.data[channel][pos] = (dataBuf / limit - offset) * gainStep;
             }
+#ifdef DEBUG
+            //HORO: test output (get one data point at e.g. pos 666, this offset must be even!)
+            fprintf( stderr, "channel %d, gainID %d, limit %d, shift %d, gainStep %8.3f, raw 0x%03x, result %8.3f\n", \
+                     channel, gainID, limit, shiftDataBuf, gainStep, rawData[ 666 + channel ], \
+                     ((double)((int)(rawData[ 666 + channel ] - shiftDataBuf)) / limit - offset ) * gainStep );
+#endif
         }
     }
 }
@@ -644,7 +669,6 @@ Dso::ErrorCode HantekDsoControl::setSamplerate(double samplerate) {
         modifyCommand<ControlSetTimeDIV>(ControlCode::CONTROL_SETTIMEDIV)
             ->setDiv(specification->fixedSampleRates[sampleId].id);
         controlsettings.samplerate.current = samplerate;
-
         // Check for Roll mode
         if (!isRollMode())
             emit recordTimeChanged((double)(getRecordLength() - controlsettings.swSampleMargin) /
@@ -673,7 +697,7 @@ Dso::ErrorCode HantekDsoControl::setRecordTime(double duration) {
 
         // When possible, enable fast rate if the record time can't be set that low
         // to improve resolution
-        bool fastRate = (controlsettings.usedChannels <= 1) &&
+        bool fastRate = (controlsettings.usedChannels < 1) &&
                         (maxSamplerate >= specification->samplerate.multi.base /
                                               specification->bufferDividers[controlsettings.recordLengthId]);
 
@@ -694,9 +718,12 @@ Dso::ErrorCode HantekDsoControl::setRecordTime(double duration) {
         if (specification->isSoftwareTriggerDevice) {
             sampleCount = (sampleCount - controlsettings.swSampleMargin) / 2;
         }
+        //qDebug() << "sampleCount" << sampleCount;
         unsigned sampleId = 0;
         for (unsigned id = 0; id < specification->fixedSampleRates.size(); ++id) {
+            //qDebug() << "id:" << id << "dur:" << duration << "spec:" << specification->fixedSampleRates[id].samplerate;
             if (specification->fixedSampleRates[id].samplerate * duration < sampleCount) sampleId = id;
+            //qDebug() << "sampleId:" << sampleId; 
         }
         // Usable sample value
         modifyCommand<ControlSetTimeDIV>(ControlCode::CONTROL_SETTIMEDIV)
@@ -712,7 +739,6 @@ Dso::ErrorCode HantekDsoControl::setChannelUsed(ChannelID channel, bool used) {
     if (!device->isConnected()) return Dso::ErrorCode::CONNECTION;
 
     if (channel >= specification->channels) return Dso::ErrorCode::PARAMETER;
-
     // Update settings
     controlsettings.voltage[channel].used = used;
     ChannelID channelCount = 0;
@@ -752,10 +778,14 @@ Dso::ErrorCode HantekDsoControl::setChannelUsed(ChannelID channel, bool used) {
         modifyCommand<BulkSetTrigger5200>(BulkCode::ESETTRIGGERORSAMPLERATE)->setUsedChannels((uint8_t)usedChannels);
         break;
     }
-    default:
-        qDebug() << "usedChannels:" << (int) usedChannels;
-        modifyCommand<ControlSetNumChannels>(ControlCode::CONTROL_SETNUMCHANNELS)
-            ->setDiv( usedChannels==UsedChannels::USED_CH1?1:2 );
+    default: 
+        //qDebug() << "usedChannels" << (int)usedChannels;
+        if (device->getModel()->ID == ModelDSO6022BE::ID) {
+            if ( usedChannels == UsedChannels::USED_CH1 )
+                modifyCommand<ControlSetNumChannels>(ControlCode::CONTROL_SETNUMCHANNELS)->setDiv( 1 );
+            else
+                modifyCommand<ControlSetNumChannels>(ControlCode::CONTROL_SETNUMCHANNELS)->setDiv( 2 );
+            }
         break;
     }
 
