@@ -313,8 +313,8 @@ void HantekDsoControl::convertRawDataToSamples(const std::vector<unsigned char> 
                 }
 
                 // if device is 6022BE, drop heading & trailing samples
-                const unsigned DROP_DSO6022_HEAD = 0x410;
-                const unsigned DROP_DSO6022_TAIL = 0x3F0;
+                const unsigned DROP_DSO6022_HEAD = 0x810;
+                const unsigned DROP_DSO6022_TAIL = 0x7F0;
                 if (!isRollMode()) {
                     result.data[channel].resize(result.data[channel].size() 
                         - (DROP_DSO6022_HEAD + DROP_DSO6022_TAIL));

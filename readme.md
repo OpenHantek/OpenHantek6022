@@ -1,6 +1,7 @@
 # OpenHantek [![Build Status](https://travis-ci.org/Ho-Ro/openhantek.svg?branch=master)](https://travis-ci.org/Ho-Ro/openhantek) [![Build status](https://ci.appveyor.com/api/projects/status/github/Ho-Ro/openhantek?branch=master&svg=true)](https://ci.appveyor.com/project/Ho-Ro/openhantek/branch/master) [![Stability: Experimental](https://masterminds.github.io/stability/experimental.svg)](https://masterminds.github.io/stability/experimental.html)
 
-OpenHantek is a free software for Hantek and compatible (Voltcraft/Darkwire/Protek/Acetech) USB digital signal oscilloscopes.
+OpenHantek is a free software for Hantek and compatible (Voltcraft/Darkwire/Protek/Acetech) USB digital signal oscilloscopes. 
+It was initially developed by [David Gräff and others](https://github.com/OpenHantek/openhantek/graphs/contributors) on [github.com/OpenHantek/openhantek](https://github.com/OpenHantek/openhantek). After David [stopped maintaining](https://github.com/OpenHantek/openhantek/issues/277) the programm I cloned the repo to provide some updates - but only for Hantek 6022BE/BL on the linux platform.
 
 <table><tr>
     <td> <img alt="Image of main window on linux" width="100%" src="docs/images/screenshot_mainwindow.png"> </td>
@@ -25,8 +26,8 @@ OpenHantek is a free software for Hantek and compatible (Voltcraft/Darkwire/Prot
   This allows a minimum window size of 640*480 for old workstation computers.
 
 ## Install prebuilt binary
-Navigate to the [Releases](https://github.com/OpenHantek/openhantek/releases) page.
-* [Download Windows build](https://ci.appveyor.com/project/openhantek/openhantek/branch/master/artifacts)
+* Get linux packages from the [Releases](https://github.com/Ho-Ro/openhantek/releases) page.
+* [Download (untested) Windows build](https://ci.appveyor.com/project/Ho-Ro/openhantek/branch/master/artifacts)
 
 ## Building OpenHantek from source
 You need the following software, to build OpenHantek from source:
@@ -46,7 +47,7 @@ from the command line like this: `OpenHantek --useGLES`.
 USB access for the device is required:
 * As seen on the [Microsoft Windows build instructions](docs/build.md#windows) page, you need a
 special driver for Windows systems.
-* On Linux, you need to copy the file `firmware/60-hantek.rules` to `/lib/udev/rules.d/` and replug your device.
+* On Linux, you need to copy the file `firmware/60-hantek.rules` to `/etc/udev/rules.d/` or `/lib/udev/rules.d/` and replug your device.
 
 ## Specifications, Features and limitations
 Please refer to the [Specifications, Features, Limitations](docs/limitations.md) page.
