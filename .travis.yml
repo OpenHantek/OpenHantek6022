@@ -9,6 +9,7 @@ addons:
     - libqt5opengl5-dev
     - libusb-1.0-0-dev
     - libfftw3-dev
+    - rpm
 
 matrix:
   include:

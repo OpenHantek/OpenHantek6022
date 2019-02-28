@@ -1,7 +1,7 @@
 # This file configures CPack. We setup a version number that contains
 # the current git revision if git is found. A zip file is created on
-# all platforms. Additionally an NSIS Installer exe is created on windows
-# and a .sh installer file for linux.
+# all platforms. Additionally an NSIS Installer exe is created on windows,
+# a tar.gz, deb and rpm file for linux and a tar.gz file for osx.
 
 find_package(Git QUIET)
 
@@ -58,27 +58,23 @@ else()
     file(WRITE "${CMAKE_BINARY_DIR}/changelog" "${CHANGELOG}")
 endif()
 
-string(TIMESTAMP DATE_VERSION "%d.%m.%Y")
-string(TIMESTAMP CURRENT_TIME "%d.%m.%Y %H:%M")
+string(TIMESTAMP DATE_VERSION "%Y%m%d")
+string(TIMESTAMP CURRENT_TIME "%Y%m%d_%H:%M")
 
+# build *.zip for all targets
+set(CPACK_GENERATOR ${CPACK_GENERATOR} ZIP)
 if (UNIX)
     set(CPACK_PACKAGING_INSTALL_PREFIX "/usr")
-    set(CPACK_GENERATOR STGZ)
-	if (NOT APPLE)
-        set(CPACK_GENERATOR ${CPACK_GENERATOR} ZIP)
-        find_program(LSB_RELEASE lsb_release)
-        execute_process(COMMAND ${LSB_RELEASE} -is
-            OUTPUT_VARIABLE LSB_RELEASE_ID_SHORT
-            OUTPUT_STRIP_TRAILING_WHITESPACE
-        )
-        if (LSB_RELEASE_ID_SHORT MATCHES "Ubuntu")
-            set(CPACK_GENERATOR ${CPACK_GENERATOR} DEB)
-        else()
-            set(CPACK_GENERATOR ${CPACK_GENERATOR} RPM)
-        endif()
-	endif()
+    set(CPACK_GENERATOR ${CPACK_GENERATOR} TGZ)
+    if (NOT APPLE)
+        set(CPACK_TARGET "")
+        set(CPACK_GENERATOR ${CPACK_GENERATOR} STGZ DEB RPM)
+    else()
+        set(CPACK_TARGET "osx_")
+    endif()
 elseif(WIN32)
-    set(CPACK_GENERATOR NSIS)
+    set(CPACK_TARGET "win_")
+    set(CPACK_GENERATOR ${CPACK_GENERATOR} NSIS)
 endif()
 
 set(CPACK_PACKAGE_NAME "${PROJECT_NAME}")
@@ -94,20 +90,23 @@ if (EXISTS "${CMAKE_SOURCE_DIR}/COPYING")
 endif()
 
 # Linux DEB+RPM 
-set(CPACK_DEBIAN_PACKAGE_SECTION "net")
 set(CPACK_ARCH)
 IF ((MSVC AND CMAKE_GENERATOR MATCHES "Win64+") OR (CMAKE_SIZEOF_VOID_P EQUAL 8))
     set(CPACK_DEBIAN_PACKAGE_ARCHITECTURE "amd64")
     set(CPACK_RPM_PACKAGE_ARCHITECTURE "x86_64")
     set(CPACK_ARCH "x86_64")
 else()
-    set(CPACK_DEBIAN_PACKAGE_ARCHITECTURE "i586")
-    set(CPACK_RPM_PACKAGE_ARCHITECTURE "i586")
+    set(CPACK_DEBIAN_PACKAGE_ARCHITECTURE "i386")
+    set(CPACK_RPM_PACKAGE_ARCHITECTURE "i686")
     set(CPACK_ARCH "x86")
 endif()
 set(CPACK_STRIP_FILES 1)
 
 include(CMakeDetermineSystem)
+
+# Linux DEB
+set(CPACK_DEBIAN_PACKAGE_SECTION "electronics")
+set(CPACK_DEBIAN_PACKAGE_DEPENDS "qtbase5, libqt5opengl5-dev, libusb-1.0-0, libfftw3")
 
 # Linux RPM
 set(CPACK_RPM_PACKAGE_RELOCATABLE NO)
@@ -119,7 +118,7 @@ set(CPACK_RPM_CHANGELOG_FILE "${CMAKE_BINARY_DIR}/changelog")
 set(CPACK_NSIS_EXECUTABLES_DIRECTORY ".")
 
 set(CPACK_INCLUDE_TOPLEVEL_DIRECTORY 0)
-set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}-1.${CPACK_ARCH}")
+set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}-1_${CPACK_TARGET}${CPACK_ARCH}")
 set(CPACK_PACKAGE_INSTALL_DIRECTORY ".")
 SET(CPACK_OUTPUT_FILE_PREFIX packages)
 
