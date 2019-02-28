@@ -42,7 +42,7 @@ else()
         OUTPUT_VARIABLE VCS_URL
         OUTPUT_STRIP_TRAILING_WHITESPACE
         )
-        
+
     set(ENV{LANG} "en_US")
     if(GIT_VERSION_STRING VERSION_LESS 2.6)
         set(CHANGELOG "")
@@ -62,18 +62,18 @@ string(TIMESTAMP DATE_VERSION "%Y%m%d")
 string(TIMESTAMP CURRENT_TIME "%Y%m%d_%H:%M")
 
 # build *.zip for all targets
-set(CPACK_GENERATOR ${CPACK_GENERATOR} ZIP)
+set(CPACK_GENERATOR ZIP)
 if (UNIX)
     set(CPACK_PACKAGING_INSTALL_PREFIX "/usr")
     set(CPACK_GENERATOR ${CPACK_GENERATOR} TGZ)
     if (NOT APPLE)
-        set(CPACK_TARGET "")
+        set(CPACK_TARGET "linux")
         set(CPACK_GENERATOR ${CPACK_GENERATOR} STGZ DEB RPM)
     else()
-        set(CPACK_TARGET "osx_")
+        set(CPACK_TARGET "osx")
     endif()
 elseif(WIN32)
-    set(CPACK_TARGET "win_")
+    set(CPACK_TARGET "win")
     set(CPACK_GENERATOR ${CPACK_GENERATOR} NSIS)
 endif()
 
