@@ -34,7 +34,7 @@ HorizontalDock::HorizontalDock(DsoSettingsScope *scope, QWidget *parent, Qt::Win
     this->samplerateSiSpinBox->setMaximum(1e8);
     this->samplerateSiSpinBox->setUnitPostfix("/s");
 
-    timebaseSteps << 1.0 << 2.0 << 4.0 << 10.0;
+    timebaseSteps << 1.0 << 2.0 << 5.0 << 10.0;
 
     this->timebaseLabel = new QLabel(tr("Timebase"));
     this->timebaseSiSpinBox = new SiSpinBox(UNIT_SECONDS);
@@ -172,7 +172,7 @@ void HorizontalDock::setSamplerateSteps(int mode, QList<double> steps) {
     samplerateSiSpinBox->setMaximum(steps.last());
     // Make reasonable adjustments to the timebase spinbox
     QSignalBlocker timebaseBlocker(timebaseSiSpinBox);
-    timebaseSiSpinBox->setMinimum(pow(10, floor(log10(256.0 / steps.last()))));
+    timebaseSiSpinBox->setMinimum(pow(10, floor(log10(1.0 / steps.last()))));
     timebaseSiSpinBox->setMaximum(pow(10, ceil(log10(1024.0 / (steps.first() * 10)))));
 }
 

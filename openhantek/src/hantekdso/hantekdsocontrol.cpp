@@ -31,7 +31,7 @@ void HantekDsoControl::enableSampling(bool enabled) {
 
     // Emit signals for initial settings
     //    emit availableRecordLengthsChanged(controlsettings.samplerate.limits->recordLengths);
-    //    updateSamplerateLimits();
+    updateSamplerateLimits();
     //    emit recordLengthChanged(getRecordLength());
     //    if (!isRollMode()) emit recordTimeChanged((double)getRecordLength() / controlsettings.samplerate.current);
     //    emit samplerateChanged(controlsettings.samplerate.current);
@@ -42,6 +42,8 @@ void HantekDsoControl::enableSampling(bool enabled) {
 const USBDevice *HantekDsoControl::getDevice() const { return device; }
 
 const DSOsamples &HantekDsoControl::getLastSamples() { return result; }
+
+#define is6022 (device->getModel()->ID == ModelDSO6022BE::ID)
 
 HantekDsoControl::HantekDsoControl(USBDevice *device)
     : device(device), specification(device->getModel()->spec()),
@@ -235,6 +237,7 @@ void HantekDsoControl::convertRawDataToSamples(const std::vector<unsigned char> 
 
     // Convert channel data
     if (isFastRate()) {
+        //qDebug() << "isFastRate()";
         // Fast rate mode, one channel is using all buffers
         ChannelID channel = 0;
         for (; channel < specification->channels; ++channel) {
@@ -275,6 +278,7 @@ void HantekDsoControl::convertRawDataToSamples(const std::vector<unsigned char> 
             }
         }
     } else {
+        //qDebug() << "! isFastRate()";
         unsigned short activeChannels = specification->channels;
         // Normal mode, channels are using their separate buffers
         for (ChannelID channel = 0; channel < specification->channels; ++channel) {
@@ -308,7 +312,7 @@ void HantekDsoControl::convertRawDataToSamples(const std::vector<unsigned char> 
                 // 6022 fast rate
                 if ( controlsettings.voltage[0].used && !controlsettings.voltage[1].used) {
                     activeChannels = 1;
-                    if ( channel ) // one channel mode only with 1st channel
+                    if ( channel > 0 ) // one channel mode only with CH1 (channel == 0)
                         continue;
                 }
 
@@ -336,7 +340,7 @@ void HantekDsoControl::convertRawDataToSamples(const std::vector<unsigned char> 
                 double dataBuf = (double)((int)(rawData[bufferPosition] - shiftDataBuf));
                 result.data[channel][pos] = (dataBuf / limit - offset) * gainStep;
             }
-#ifdef DEBUG
+#if 0
             //HORO: test output (get one data point at e.g. pos 666, this offset must be even!)
             fprintf( stderr, "channel %d, gainID %d, limit %d, shift %d, gainStep %8.3f, raw 0x%03x, result %8.3f\n", \
                      channel, gainID, limit, shiftDataBuf, gainStep, rawData[ 666 + channel ], \
@@ -348,6 +352,7 @@ void HantekDsoControl::convertRawDataToSamples(const std::vector<unsigned char> 
 
 double HantekDsoControl::getBestSamplerate(double samplerate, bool fastRate, bool maximum,
                                            unsigned *downsampler) const {
+    // qDebug() << "getBestSamplerate()";
     // Abort if the input value is invalid
     if (samplerate <= 0.0) return 0.0;
 
@@ -443,6 +448,7 @@ unsigned HantekDsoControl::getSampleCount() const {
 }
 
 unsigned HantekDsoControl::updateRecordLength(RecordLengthID index) {
+    // qDebug() << "updateRecordLenght()";
     if (index >= controlsettings.samplerate.limits->recordLengths.size()) return 0;
 
     switch (specification->cmdSetRecordLength) {
@@ -485,6 +491,7 @@ unsigned HantekDsoControl::updateRecordLength(RecordLengthID index) {
 }
 
 unsigned HantekDsoControl::updateSamplerate(unsigned downsampler, bool fastRate) {
+    // qDebug() << "updateSamplerate( " << downsampler << ", " << fastRate << " )";
     // Get samplerate limits
     const ControlSamplerateLimits *limits =
         fastRate ? &specification->samplerate.multi : &specification->samplerate.single;
@@ -600,6 +607,7 @@ unsigned HantekDsoControl::updateSamplerate(unsigned downsampler, bool fastRate)
 }
 
 void HantekDsoControl::restoreTargets() {
+    // qDebug() << "restoreTargets()";
     if (controlsettings.samplerate.target.samplerateSet == ControlSettingsSamplerateTarget::Samplerrate)
         this->setSamplerate();
     else
@@ -607,9 +615,12 @@ void HantekDsoControl::restoreTargets() {
 }
 
 void HantekDsoControl::updateSamplerateLimits() {
+    // qDebug() << "updateSamplerateLimits()";
     if (specification->isFixedSamplerateDevice) {
         QList<double> sampleSteps;
+        //HORO: TODO limit sample rate if not single channel mode
         for (auto &v : specification->fixedSampleRates) { sampleSteps << v.samplerate; }
+        // qDebug() << sampleSteps;
         emit samplerateSet(1, sampleSteps);
     } else {
         // Works only if the minimum samplerate for normal mode is lower than for fast
@@ -624,6 +635,7 @@ void HantekDsoControl::updateSamplerateLimits() {
 }
 
 Dso::ErrorCode HantekDsoControl::setRecordLength(unsigned index) {
+    // qDebug() << "setRecordLength()";
     if (!device->isConnected()) return Dso::ErrorCode::CONNECTION;
 
     if (!updateRecordLength(index)) return Dso::ErrorCode::PARAMETER;
@@ -636,6 +648,7 @@ Dso::ErrorCode HantekDsoControl::setRecordLength(unsigned index) {
 }
 
 Dso::ErrorCode HantekDsoControl::setSamplerate(double samplerate) {
+    // qDebug() << "setSamplerate( " << samplerate << " )";
     if (!device->isConnected()) return Dso::ErrorCode::CONNECTION;
 
     if (samplerate == 0.0) {
@@ -718,12 +731,12 @@ Dso::ErrorCode HantekDsoControl::setRecordTime(double duration) {
         if (specification->isSoftwareTriggerDevice) {
             sampleCount = (sampleCount - controlsettings.swSampleMargin) / 2;
         }
-        //qDebug() << "sampleCount" << sampleCount;
+        // qDebug() << "sampleCount" << sampleCount;
         unsigned sampleId = 0;
         for (unsigned id = 0; id < specification->fixedSampleRates.size(); ++id) {
-            //qDebug() << "id:" << id << "dur:" << duration << "spec:" << specification->fixedSampleRates[id].samplerate;
+            // qDebug() << "id:" << id << "dur:" << duration << "spec:" << specification->fixedSampleRates[id].samplerate;
             if (specification->fixedSampleRates[id].samplerate * duration < sampleCount) sampleId = id;
-            //qDebug() << "sampleId:" << sampleId; 
+            // qDebug() << "sampleId:" << sampleId; 
         }
         // Usable sample value
         modifyCommand<ControlSetTimeDIV>(ControlCode::CONTROL_SETTIMEDIV)
@@ -779,8 +792,8 @@ Dso::ErrorCode HantekDsoControl::setChannelUsed(ChannelID channel, bool used) {
         break;
     }
     default: 
-        //qDebug() << "usedChannels" << (int)usedChannels;
-        if (device->getModel()->ID == ModelDSO6022BE::ID) {
+        // qDebug() << "usedChannels" << (int)usedChannels;
+        if ( is6022 ) {
             if ( usedChannels == UsedChannels::USED_CH1 )
                 modifyCommand<ControlSetNumChannels>(ControlCode::CONTROL_SETNUMCHANNELS)->setDiv( 1 );
             else
@@ -1163,7 +1176,7 @@ void HantekDsoControl::run() {
                 break;
             }
 
-            timestampDebug("Starting to capture");
+            //timestampDebug("Starting to capture");
 
             this->_samplingStarted = true;
 

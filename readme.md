@@ -1,15 +1,13 @@
-# OpenHantek [![Build Status](https://travis-ci.org/Ho-Ro/openhantek.svg?branch=master)](https://travis-ci.org/Ho-Ro/openhantek) [![Build status](https://ci.appveyor.com/api/projects/status/github/Ho-Ro/openhantek?branch=master&svg=true)](https://ci.appveyor.com/project/Ho-Ro/openhantek/branch/master) [![Stability: Experimental](https://masterminds.github.io/stability/experimental.svg)](https://masterminds.github.io/stability/experimental.html)
+# OpenHantek [![Build Status](https://travis-ci.org/Ho-Ro/openhantek.svg)](https://travis-ci.org/Ho-Ro/openhantek) [![Build status](https://ci.appveyor.com/api/projects/status/github/Ho-Ro/openhantek?svg=true)](https://ci.appveyor.com/project/Ho-Ro/openhantek) [![Stability: Experimental](https://masterminds.github.io/stability/experimental.svg)](https://masterminds.github.io/stability/experimental.html)
 
 OpenHantek is a free software for Hantek and compatible (Voltcraft/Darkwire/Protek/Acetech) USB digital signal oscilloscopes. 
 It was initially developed by [David Gräff and others](https://github.com/OpenHantek/openhantek/graphs/contributors) on [github.com/OpenHantek/openhantek](https://github.com/OpenHantek/openhantek). After David [stopped maintaining](https://github.com/OpenHantek/openhantek/issues/277) the programm I cloned the repo to provide some updates - but only for Hantek 6022BE/BL on the linux platform.
 
-<table><tr>
-    <td> <img alt="Image of main window on linux" width="100%" src="docs/images/screenshot_mainwindow.png"> </td>
-    <td> <img alt="Image of main window on Windows" width="100%" src="docs/images/screenshot_mainwindow_win.png"> </td>
-</tr></table>
+<img alt="Image of main window on linux" width="100%" src="docs/images/screenshot_mainwindow.png">
 
-* Supported operating systems: Linux, MacOSX, Windows¹, Android
-* Supported devices: DSO2xxx Series, DSO52xx Series, 6022BE/BL
+* Actively supported devices: Hantek 6022BE/BL on Linux.
+* DSO2xxx Series and DSO52xx Series support is still in but untested due to missing devices.
+* Other operating systems builds: MacOSX, Windows - untested.
 
 ## Features
 
@@ -26,7 +24,7 @@ It was initially developed by [David Gräff and others](https://github.com/OpenH
   This allows a minimum window size of 640*480 for old workstation computers.
 
 ## Install prebuilt binary
-* Get linux packages from the [Releases](https://github.com/Ho-Ro/openhantek/releases) page.
+* Get linux (and untested osx) packages from the [Releases](https://github.com/Ho-Ro/openhantek/releases) page.
 * [Download (untested) Windows build](https://ci.appveyor.com/project/Ho-Ro/openhantek/branch/master/artifacts)
 
 ## Building OpenHantek from source
@@ -35,12 +33,13 @@ You need the following software, to build OpenHantek from source:
 * [Qt 5.4+](https://www1.qt.io/download-open-source/)
 * [FFTW 3+ (prebuild files will be downloaded on windows)](http://www.fftw.org/)
 * libusb 1.x (prebuild files will be used on windows)
-* A compiler that supports C++11
+* A compiler that supports C++11 - tested with gcc, clang and msvc.
 
 We have build instructions available for [Linux](docs/build.md#linux), [Apple MacOSX](docs/build.md#apple) and [Microsoft Windows](docs/build.md#windows).
 
 ## Run OpenHantek
-You need an OpenGL 3.2+ or OpenGL ES 2.0+ capable graphics hardware for OpenHantek.
+With the original OpenHantek version you needed an OpenGL 3.2+ or OpenGL ES 2.0+ capable graphics hardware.
+OpenHantek runs now on legacy HW/SW (OpenGL 2.1+ or OpenGL ES 1.2+) with the patch [coozoo@01b42d3](https://github.com/coozoo/openhantek/commit/01b42d3db2921a0aa83ea6808147ea6257de3f28")
 OpenGL is prefered, if available. Overwrite this behaviour by starting OpenHantek
 from the command line like this: `OpenHantek --useGLES`.
 
@@ -69,5 +68,9 @@ We welcome any reported Github Issue if you have a problem with this software. S
 [13]: http://llvm.org/docs/CodingStandards.html
 
 ## Other DSO open source software
+* [Firmware (also used by OpenHantek) and python bindings for 6022BE/BL](https://github.com/Ho-Ro/Hantek6022API)
 * [SigRok](http://www.sigrok.org)
-* [Software for the Hantek 6022BE/BL only](http://pididu.com/wordpress/basicscope/)
+* [Software for the Hantek 6022BE/BL (win only)](http://pididu.com/wordpress/basicscope/)
+
+## Other related software
+* [HScope for Android](https://hscope.martinloren.com/) 1 channel basic version free of charge plus in-app purchases

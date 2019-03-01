@@ -26,7 +26,7 @@ static void initSpecifications(Dso::ControlSpecification& specification) {
     specification.samplerate.single.maxDownsampler = 10;
     specification.samplerate.single.recordLengths = {UINT_MAX, 14*1024};
     specification.samplerate.multi.base = 1e6;
-    specification.samplerate.multi.max = 24e6;
+    specification.samplerate.multi.max = 16e6;
     specification.samplerate.multi.maxDownsampler = 10;
     specification.samplerate.multi.recordLengths = {UINT_MAX, 14*2048};
     specification.bufferDividers = { 1000 , 1 , 1 };

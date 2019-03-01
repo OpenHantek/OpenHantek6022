@@ -1,7 +1,8 @@
 # This file configures CPack. We setup a version number that contains
-# the current git revision if git is found. A zip file is created on
-# all platforms. Additionally an NSIS Installer exe is created on windows,
-# a tar.gz, deb and rpm file for linux and a tar.gz file for osx.
+# the current git revision if git is found.
+# A tgz, deb and rpm file is created for linux (tgz and deb tested on debian stretch and buster).
+# A tgz file is created for osx (not tested).
+# A zip file and an NSIS Installer exe is created on windows (not tested).
 
 find_package(Git QUIET)
 
@@ -61,23 +62,22 @@ endif()
 string(TIMESTAMP DATE_VERSION "%Y%m%d")
 string(TIMESTAMP CURRENT_TIME "%Y%m%d_%H:%M")
 
-# build *.zip for all targets
-set(CPACK_GENERATOR ZIP)
+
 if (UNIX)
     set(CPACK_PACKAGING_INSTALL_PREFIX "/usr")
-    set(CPACK_GENERATOR ${CPACK_GENERATOR} TGZ)
+    set(CPACK_GENERATOR TGZ)
     if (NOT APPLE)
         set(CPACK_TARGET "")
-        set(CPACK_GENERATOR ${CPACK_GENERATOR} STGZ DEB RPM)
+        set(CPACK_GENERATOR ${CPACK_GENERATOR} DEB RPM)
     else()
         set(CPACK_TARGET "osx_")
     endif()
 elseif(WIN32)
     set(CPACK_TARGET "win_")
-    set(CPACK_GENERATOR ${CPACK_GENERATOR} NSIS)
+    set(CPACK_GENERATOR ${CPACK_GENERATOR} ZIP NSIS)
 endif()
 
-set(CPACK_PACKAGE_NAME "${PROJECT_NAME}")
+set(CPACK_PACKAGE_NAME "openhantek")
 string(TOLOWER ${CPACK_PACKAGE_NAME} CPACK_PACKAGE_NAME)
 set(CPACK_PACKAGE_VERSION "${DATE_VERSION}_${VCS_REVISION}")
 set(CPACK_PACKAGE_CONTACT "contact@openhantek.org")
@@ -89,12 +89,12 @@ if (EXISTS "${CMAKE_SOURCE_DIR}/COPYING")
     set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/COPYING")
 endif()
 
-# Linux DEB+RPM 
+# Linux DEB+RPM
 set(CPACK_ARCH)
 IF ((MSVC AND CMAKE_GENERATOR MATCHES "Win64+") OR (CMAKE_SIZEOF_VOID_P EQUAL 8))
     set(CPACK_DEBIAN_PACKAGE_ARCHITECTURE "amd64")
     set(CPACK_RPM_PACKAGE_ARCHITECTURE "x86_64")
-    set(CPACK_ARCH "x86_64")
+    set(CPACK_ARCH "amd64")
 else()
     set(CPACK_DEBIAN_PACKAGE_ARCHITECTURE "i386")
     set(CPACK_RPM_PACKAGE_ARCHITECTURE "i686")
@@ -104,11 +104,11 @@ set(CPACK_STRIP_FILES 1)
 
 include(CMakeDetermineSystem)
 
-# Linux DEB
+# Linux DEB (tested on debian stretch and buster)
 set(CPACK_DEBIAN_PACKAGE_SECTION "electronics")
-set(CPACK_DEBIAN_PACKAGE_DEPENDS "qtbase5, libqt5opengl5-dev, libusb-1.0-0, libfftw3")
+set(CPACK_DEBIAN_PACKAGE_DEPENDS "qtbase5, libqt5opengl5, libusb-1.0-0, libfftw3")
 
-# Linux RPM
+# Linux RPM (not tested on debian)
 set(CPACK_RPM_PACKAGE_RELOCATABLE NO)
 set(CPACK_RPM_PACKAGE_LICENSE "GPLv2+")
 set(CPACK_RPM_PACKAGE_DESCRIPTION ${CPACK_PACKAGE_DESCRIPTION})
