@@ -43,7 +43,8 @@ const USBDevice *HantekDsoControl::getDevice() const { return device; }
 
 const DSOsamples &HantekDsoControl::getLastSamples() { return result; }
 
-#define is6022 (device->getModel()->ID == ModelDSO6022BE::ID)
+#define is6022 (getDevice()->getModel()->ID == ModelDSO6022BE::ID)
+#define fast6022 (controlsettings.voltage[0].used && !controlsettings.voltage[1].used)
 
 HantekDsoControl::HantekDsoControl(USBDevice *device)
     : device(device), specification(device->getModel()->spec()),
@@ -307,10 +308,10 @@ void HantekDsoControl::convertRawDataToSamples(const std::vector<unsigned char> 
 
                     result.data[channel][realPosition] = ((double)(low + high) / limit - offset) * gainStep;
                 }
-            } else if (device->getModel()->ID == ModelDSO6022BE::ID) {
+            } else if ( is6022 ) {
 
                 // 6022 fast rate
-                if ( controlsettings.voltage[0].used && !controlsettings.voltage[1].used) {
+                if ( fast6022 ) {
                     activeChannels = 1;
                     if ( channel > 0 ) // one channel mode only with CH1 (channel == 0)
                         continue;
@@ -332,10 +333,9 @@ void HantekDsoControl::convertRawDataToSamples(const std::vector<unsigned char> 
                 bufferPosition += specification->channels - 1 - channel;
             }
 
-            for (unsigned pos = 0; pos < result.data[channel].size();
-                 ++pos, bufferPosition += activeChannels) {
-                if
-                 (bufferPosition >= totalSampleCount) bufferPosition %= totalSampleCount; 
+            for ( unsigned pos = 0; pos < result.data[channel].size();
+                ++pos, bufferPosition += activeChannels ) {
+                if ( bufferPosition >= totalSampleCount ) bufferPosition %= totalSampleCount; 
                 //HORO: does the %= wraparound conflict with DROP_DS6022... from above?
                 double dataBuf = (double)((int)(rawData[bufferPosition] - shiftDataBuf));
                 result.data[channel][pos] = (dataBuf / limit - offset) * gainStep;
@@ -352,7 +352,7 @@ void HantekDsoControl::convertRawDataToSamples(const std::vector<unsigned char> 
 
 double HantekDsoControl::getBestSamplerate(double samplerate, bool fastRate, bool maximum,
                                            unsigned *downsampler) const {
-    // qDebug() << "getBestSamplerate()";
+    qDebug() << "getBestSamplerate()";
     // Abort if the input value is invalid
     if (samplerate <= 0.0) return 0.0;
 
@@ -360,7 +360,7 @@ double HantekDsoControl::getBestSamplerate(double samplerate, bool fastRate, boo
 
     // Get samplerate specifications for this mode and model
     const ControlSamplerateLimits *limits;
-    if (fastRate)
+    if ( fastRate )
         limits = &(specification->samplerate.multi);
     else
         limits = &(specification->samplerate.single);
@@ -615,11 +615,14 @@ void HantekDsoControl::restoreTargets() {
 }
 
 void HantekDsoControl::updateSamplerateLimits() {
-    // qDebug() << "updateSamplerateLimits()";
     if (specification->isFixedSamplerateDevice) {
         QList<double> sampleSteps;
-        //HORO: TODO limit sample rate if not single channel mode
-        for (auto &v : specification->fixedSampleRates) { sampleSteps << v.samplerate; }
+        //HORO: limit sample rate if not single channel mode
+        double limit = ( isFastRate() || fast6022 ) ?
+            specification->samplerate.single.max : specification->samplerate.multi.max;
+        for (auto &v : specification->fixedSampleRates) {
+            if ( v.samplerate <= limit ) { sampleSteps << v.samplerate; }
+        }
         // qDebug() << sampleSteps;
         emit samplerateSet(1, sampleSteps);
     } else {
