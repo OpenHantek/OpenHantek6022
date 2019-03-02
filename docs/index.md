@@ -2,18 +2,15 @@
 layout: default
 overview: true
 ---
-# OpenHantek [![Build Status](https://travis-ci.org/OpenHantek/openhantek.svg?branch=master)](https://travis-ci.org/OpenHantek/openhantek) [![Build status](https://ci.appveyor.com/api/projects/status/9w4rd5r04ufqafr4/branch/master?svg=true)](https://ci.appveyor.com/project/davidgraeff/openhantek/branch/master)
+# OpenHantek 6022 [![Build Status](https://travis-ci.org/Ho-Ro/openhantek.svg)](https://travis-ci.org/Ho-Ro/openhantek) [![Build status](https://ci.appveyor.com/api/projects/status/github/Ho-Ro/openhantek?svg=true)](https://ci.appveyor.com/project/Ho-Ro/openhantek) [![Stability: Experimental](https://masterminds.github.io/stability/experimental.svg)](https://masterminds.github.io/stability/experimental.html)
 
-OpenHantek is a free software for Hantek and compatible (Voltcraft/Darkwire/Protek/Acetech) USB digital signal oscilloscopes.
+OpenHantek is a free software for Hantek and compatible (Voltcraft/Darkwire/Protek/Acetech) USB digital signal oscilloscopes. 
+It was initially developed by [David Gräff and others](https://github.com/OpenHantek/openhantek/graphs/contributors) on [github.com/OpenHantek/openhantek](https://github.com/OpenHantek/openhantek). After David [stopped maintaining](https://github.com/OpenHantek/openhantek/issues/277) the programm I cloned the repo to provide some updates - but only for Hantek 6022BE/BL on the linux platform.
 
-It has started as an alternative to the official Hantek DSO software for Linux users. Nowadays it works under Microsoft Windows and Apple Mac OS as well.
+<img alt="Image of main window on linux" width="100%" src="docs/images/screenshot_mainwindow.png">
 
-<table><tr>
-    <td> <img alt="Image of main window on linux" width="100%" src="images/screenshot_mainwindow.png"> </td>
-    <td> <img alt="Image of main window on Windows" width="100%" src="images/screenshot_mainwindow_win.png"> </td>
-</tr></table>
-
-* Supported operating systems: Linux, MacOSX, Windows¹
-* Supported devices: DSO2xxx Series, DSO52xx Series, 6022BE/BL
+* Actively supported devices: Hantek 6022BE/BL on Linux.
+* DSO2xxx Series and DSO52xx Series support is still in but untested due to missing devices.
+* Other operating systems builds: MacOSX, Windows - untested.
 
 
