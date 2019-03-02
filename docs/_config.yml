@@ -2,7 +2,7 @@ title: Openhantek
 description: Software for Hantek and compatible (Voltcraft/Darkwire/Protek/Acetech) USB digital signal oscilloscopes
 google_analytics: 
 show_downloads: true
-theme: jekyll-theme-slate
+theme: jekyll-theme-leap-day
 
 gems:
   - jekyll-mentions
