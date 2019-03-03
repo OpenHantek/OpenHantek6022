@@ -20,7 +20,7 @@ build_script:
 
 artifacts:
   - path: $(dir64)\openhantek\$(configuration)
-    name: OpenHantek-$(arch64)-$(configuration)-b$(APPVEYOR_BUILD_NUMBER)
+    name: OpenHantek-Win-$(arch64)-$(configuration)-b$(APPVEYOR_BUILD_NUMBER)
 
 deploy:
   - tag: $(APPVEYOR_REPO_TAG_NAME)
