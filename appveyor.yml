@@ -27,7 +27,7 @@ deploy:
     provider: GitHub
     auth_token:
       secure: tED6gUEbD6VZC40Bi+fUToE1CTjJ/NI9PvA8VuBx+jlnBEhS5dVujI3/ESHvBJNO
-    artifact: $(dir64)\openhantek\$(configuration)/OpenHantek-$(arch64)-$(configuration)-b$(APPVEYOR_BUILD_NUMBER)
+    artifact: $(dir64)\openhantek\$(configuration)/OpenHantek-$(arch64)-$(configuration)-b$(APPVEYOR_BUILD_NUMBER).zip
     draft: true
     prerelease: true
     force_update: true
