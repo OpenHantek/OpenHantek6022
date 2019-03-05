@@ -101,7 +101,7 @@ bool LegacyExportDrawer::exportSamples(const PPresult *result, QPaintDevice* pai
                 // Amplitude string representation (4 significant digits)
                 painter.setPen(colorValues->text);
                 painter.drawText(QRectF(lineHeight * 6 + stretchBase * 4, top, stretchBase * 3, lineHeight),
-                                 valueToString(result->data(channel)->computeAmplitude(), UNIT_VOLTS, 4),
+                                 valueToString(result->data(channel)->amplitude, UNIT_VOLTS, 4),
                                  QTextOption(Qt::AlignRight));
                 // Frequency string representation (5 significant digits)
                 painter.drawText(QRectF(lineHeight * 6 + stretchBase * 7, top, stretchBase * 3, lineHeight),

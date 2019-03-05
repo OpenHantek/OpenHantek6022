@@ -18,6 +18,7 @@ unsigned int PPresult::sampleCount() const { return (unsigned)analyzedData[0].vo
 
 unsigned int PPresult::channelCount() const { return (unsigned)analyzedData.size(); }
 
+# if 0
 double DataChannel::computeAmplitude() const {
     if (voltage.sample.empty()) return 0.0;
     double minimalVoltage, maximalVoltage, averageVoltage = 0.0;
@@ -33,3 +34,4 @@ double DataChannel::computeAmplitude() const {
     return averageVoltage /= voltage.sample.size();
     return maximalVoltage - minimalVoltage;
 }
+#endif

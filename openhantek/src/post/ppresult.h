@@ -20,8 +20,10 @@ struct DataChannel {
     SampleValues spectrum;  ///< The frequency-domain power levels (dB)
 
     double frequency = 0.0; ///< The frequency of the signal
+    double amplitude = 0.0; ///< The DC bias of the signal
+    double rms = 0.0;       ///< The AC rms value of the signal
     // Calculate peak-to-peak voltage
-    double computeAmplitude() const;
+    // double computeAmplitude() const;
 };
 
 typedef std::vector<QVector3D> ChannelGraph;

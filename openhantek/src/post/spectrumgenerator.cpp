@@ -149,9 +149,21 @@ void SpectrumGenerator::process(PPresult *result) {
 
         // Create sample buffer and apply window
         std::unique_ptr<double[]> windowedValues = std::unique_ptr<double[]>(new double[sampleCount]);
-
-        for (unsigned int position = 0; position < sampleCount; ++position)
-            windowedValues[position] = lastWindowBuffer[position] * channelData->voltage.sample[position];
+        // calculate the average value
+        channelData->amplitude = 0.0;
+        for (unsigned int position = 0; position < sampleCount; ++position) {
+            channelData->amplitude += channelData->voltage.sample[position];
+        }
+        channelData->amplitude /= sampleCount;
+        // strip DC bias, calculate rms, apply window
+        double rms = 0.0;
+        for (unsigned int position = 0; position < sampleCount; ++position) {
+            double ac = channelData->voltage.sample[position] - channelData->amplitude;
+            rms += ac * ac;
+            windowedValues[position] = lastWindowBuffer[position] * ac;
+        }
+        rms /= sampleCount;
+        channelData->rms = sqrt( rms );
 
         {
             // Do discrete real to half-complex transformation
