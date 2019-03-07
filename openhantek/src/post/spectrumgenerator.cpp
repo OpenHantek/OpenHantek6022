@@ -174,8 +174,14 @@ void SpectrumGenerator::process(PPresult *result) {
             fftw_execute(fftPlan);
             fftw_destroy_plan(fftPlan);
         }
-
+#if 0
         // Do an autocorrelation to get the frequency of the signal
+        // HORO:
+        // This doesn't give reliable results and is quite inaccurate due to the used algorithm
+        // as we do a autocorrellation the resolution at high frequencies is limited by voltagestep interval
+        // e.g. at 6 MHz we get correlation at time shift of either 4 or 5 or 6 -> 5.0 / 6.0 / 7.5 MHz
+        // use spectrum instead
+
         std::unique_ptr<double[]> conjugateComplex = std::move(windowedValues);
 
         // Real values
@@ -206,34 +212,48 @@ void SpectrumGenerator::process(PPresult *result) {
         unsigned int peakPosition = 0;
 
         for (unsigned int position = 1; position < sampleCount / 2; ++position) {
-            if (correlation[position] > peakCorrelation && correlation[position] > minimumCorrelation * 2) {
+            if ( correlation[position] > 1.5 * peakCorrelation && correlation[position] > minimumCorrelation ) {
                 peakCorrelation = correlation[position];
                 peakPosition = position;
             } else if (correlation[position] < minimumCorrelation)
                 minimumCorrelation = correlation[position];
         }
         correlation.reset(nullptr);
-
+        //printf( "pc: %f, %d\n", peakCorrelation, peakPosition );
         // Calculate the frequency in Hz
         if (peakPosition)
             channelData->frequency = 1.0 / (channelData->voltage.interval * peakPosition);
         else
             channelData->frequency = 0;
+#endif
 
-        // Finally calculate the real spectrum if we want it
-        if (scope->spectrum[channel].used) {
+        // Finally calculate the real spectrum anyhow (it's also used for frequency display)
+        unsigned int peakPos = 0; // position of max spectrum peak 
+        if ( true ) { // scope->spectrum[channel].used) {
             // Convert values into dB (Relative to the reference level)
             double offset = 60 - postprocessing->spectrumReference - 20 * log10(dftLength);
             double offsetLimit = postprocessing->spectrumLimit - postprocessing->spectrumReference;
+            unsigned int position = 0;
+            double peakSpectrum = *(channelData->spectrum.sample.begin()); // get a start value as reference
             for (std::vector<double>::iterator spectrumIterator = channelData->spectrum.sample.begin();
                  spectrumIterator != channelData->spectrum.sample.end(); ++spectrumIterator) {
                 double value = 20 * log10(fabs(*spectrumIterator)) + offset;
-
+                // detect frequency peak in first half of spectrum (second half is mirrored)
+                if ( position < sampleCount/2 && peakSpectrum < value ) {
+                    peakSpectrum = value;
+                    peakPos = position;
+                }
+                position++;
                 // Check if this value has to be limited
                 if (offsetLimit > value) value = offsetLimit;
 
                 *spectrumIterator = value;
             }
+            // printf( "pf: %f; %d; %f\n", peakSpectrum, peakPos, channelData->spectrum.interval * peakPos );
         }
+        if (peakPos)
+            channelData->frequency = channelData->spectrum.interval * peakPos;
+        else
+            channelData->frequency = 0;
     }
 }
