@@ -20,15 +20,18 @@ static void initSpecifications(Dso::ControlSpecification& specification) {
     specification.supportsCaptureState = false;
     specification.supportsOffset = false;
     specification.supportsCouplingRelays = false;
-
+    // we drop 2k sample values due to unreliable start of stream
+    // 20K samples at 100kS/s = 204,8 ms gives enough to fill 
+    // the screen two times (for pre/post trigger) at 10ms/div = 100ms/screen
+    const unsigned samples = (20 + 2) * 1024;
     specification.samplerate.single.base = 1e6;
     specification.samplerate.single.max = 30e6;
     specification.samplerate.single.maxDownsampler = 10;
-    specification.samplerate.single.recordLengths = {UINT_MAX, 14*1024};
+    specification.samplerate.single.recordLengths = {UINT_MAX, samples};
     specification.samplerate.multi.base = 1e6;
     specification.samplerate.multi.max = 16e6;
     specification.samplerate.multi.maxDownsampler = 10;
-    specification.samplerate.multi.recordLengths = {UINT_MAX, 14*2048};
+    specification.samplerate.multi.recordLengths = {UINT_MAX, samples * 2};
     specification.bufferDividers = { 1000 , 1 , 1 };
     // This data was based on testing and depends on Divider.
     // The sample value at the top of the screen

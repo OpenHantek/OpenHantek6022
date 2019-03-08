@@ -37,7 +37,7 @@ class HorizontalDock : public QDockWidget {
     void setFrequencybase(double timebase);
     /// \brief Changes the samplerate.
     /// \param samplerate The samplerate in seconds.
-    void setSamplerate(double samplerate);
+    double setSamplerate(double samplerate);
     /// \brief Changes the timebase.
     /// \param timebase The timebase in seconds.
     double setTimebase(double timebase);

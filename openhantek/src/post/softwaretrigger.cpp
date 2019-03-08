@@ -36,28 +36,39 @@ SoftwareTrigger::PrePostStartTriggerSamples SoftwareTrigger::compute(const PPres
     }
     preTrigSamples = (unsigned)(scope->trigger.position * samplesDisplay);
     postTrigSamples = (unsigned)sampleCount - ((unsigned)samplesDisplay - preTrigSamples);
-    //fprintf( stderr, "count: %lu, display: %f, pre: %d, post: %d\n", sampleCount, samplesDisplay, preTrigSamples, postTrigSamples );
     double prev;
     bool (*opcmp)(double,double,double);
-    bool (*smplcmp)(double,double);
+    bool (*smplcmpBefore)(double,double);
+    bool (*smplcmpAfter)(double,double);
+    // define trigger condition
     if (scope->trigger.slope == Dso::Slope::Positive) {
         prev = INT_MAX;
         opcmp = [](double value, double level, double prev) { return value > level && prev <= level;};
-        smplcmp = [](double sampleK, double value) { return sampleK >= value;};
+        smplcmpBefore = [](double sampleK, double value) { return sampleK < value;};
+        smplcmpAfter = [](double sampleK, double value) { return sampleK >= value;};
     } else {
         prev = INT_MIN;
         opcmp = [](double value, double level, double prev) { return value < level && prev >= level;};
-        smplcmp = [](double sampleK, double value) { return sampleK < value;};
+        smplcmpBefore = [](double sampleK, double value) { return sampleK >= value;};
+        smplcmpAfter = [](double sampleK, double value) { return sampleK < value;};
     }
-
+    // search for trigger point
     for (unsigned int i = preTrigSamples; i < postTrigSamples; i++) {
         double value = samples[i];
-        if (opcmp(value, level, prev)) {
-            unsigned rising = 0;
-            for (unsigned int k = i + 1; k < i + scope->trigger.swTriggerSampleSet && k < sampleCount; k++) {
-                if (smplcmp(samples[k], value)) { rising++; }
+        if (opcmp(value, level, prev)) { // trigger condition met
+            // check for the next few SampleSet samples, if they are also above/below the trigger value
+            // defined in src/scopesettings.h
+            unsigned int risingBefore = 0;
+            for (unsigned int k = i - 1; k > i - scope->trigger.swTriggerSampleSet && k > 0; k--) {
+                if (smplcmpBefore(samples[k], level)) { risingBefore++; }
             }
-            if (rising > scope->trigger.swTriggerThreshold) {
+            unsigned int risingAfter = 0;
+            for (unsigned int k = i + 1; k < i + scope->trigger.swTriggerSampleSet && k < sampleCount; k++) {
+                if (smplcmpAfter(samples[k], level)) { risingAfter++; }
+            }
+
+            // if at least >Threshold (=5) samples before and after trig meet the condition, set trigger
+            if (risingBefore > scope->trigger.swTriggerThreshold && risingAfter > scope->trigger.swTriggerThreshold) {
                 swTriggerStart = i;
                 break;
             }

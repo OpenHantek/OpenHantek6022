@@ -98,10 +98,12 @@ double HantekDsoControl::getMinSamplerate() const {
 }
 
 double HantekDsoControl::getMaxSamplerate() const {
-    if (controlsettings.usedChannels <= 1)
+    printf( "usedChannels %d\n", controlsettings.usedChannels );
+    if (controlsettings.usedChannels <= 1) {
         return specification->samplerate.multi.max;
-    else
+    } else {
         return specification->samplerate.single.max;
+    }
 }
 
 bool HantekDsoControl::isSampling() const { return sampling; }
@@ -313,13 +315,15 @@ void HantekDsoControl::convertRawDataToSamples(const std::vector<unsigned char> 
                 // 6022 fast rate
                 if ( fast6022 ) {
                     activeChannels = 1;
-                    if ( channel > 0 ) // one channel mode only with CH1 (channel == 0)
+                    if ( channel > 0 ) { // one channel mode only with CH1 (channel == 0)
+                        result.data[channel].clear();
                         continue;
+                    }
                 }
 
                 // if device is 6022BE, drop heading & trailing samples
-                const unsigned DROP_DSO6022_HEAD = 0x810;
-                const unsigned DROP_DSO6022_TAIL = 0x7F0;
+                const unsigned DROP_DSO6022_HEAD = 0x800;
+                const unsigned DROP_DSO6022_TAIL = 0;
                 if (!isRollMode()) {
                     result.data[channel].resize(result.data[channel].size() 
                         - (DROP_DSO6022_HEAD + DROP_DSO6022_TAIL));
@@ -360,11 +364,18 @@ double HantekDsoControl::getBestSamplerate(double samplerate, bool fastRate, boo
 
     // Get samplerate specifications for this mode and model
     const ControlSamplerateLimits *limits;
-    if ( fastRate )
-        limits = &(specification->samplerate.multi);
-    else
-        limits = &(specification->samplerate.single);
-
+    if ( is6022 ) {
+        if ( fastRate )
+            limits = &(specification->samplerate.multi);
+        else
+            limits = &(specification->samplerate.single);
+    } else {
+        if ( fast6022 )
+            limits = &(specification->samplerate.multi);
+        else
+            limits = &(specification->samplerate.single);
+    }
+    printf( "limits: %g\n", limits->max );
     // Get downsampling factor that would provide the requested rate
     double bestDownsampler = limits->base / specification->bufferDividers[controlsettings.recordLengthId] / samplerate;
     // Base samplerate sufficient, or is the maximum better?

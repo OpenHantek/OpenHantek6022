@@ -4,6 +4,8 @@
 .*~
 *~
 *.orig
+*.new
 CMakeLists.txt.user
 build/
 firmware/hex
+*.json

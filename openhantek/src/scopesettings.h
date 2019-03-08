@@ -46,7 +46,7 @@ struct DsoSettingsScopeTrigger {
     Dso::Slope slope = Dso::Slope::Positive;                     ///< Rising or falling edge causes trigger
     unsigned int source = 0;                                     ///< Channel that is used as trigger source
     bool special = false;             ///< true if the trigger source is not a standard channel
-    unsigned swTriggerThreshold = 7;  ///< Software trigger, threshold
+    unsigned swTriggerThreshold = 5;  ///< Software trigger, threshold
     unsigned swTriggerSampleSet = 11; ///< Software trigger, sample set
 };
 
