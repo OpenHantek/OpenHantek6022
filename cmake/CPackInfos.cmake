@@ -1,5 +1,4 @@
-# This file configures CPack. We setup a version number that contains
-# the current git revision if git is found.
+# This file configures CPack. 
 # A tgz, deb and rpm file is created for linux (tgz and deb tested on debian stretch and buster).
 # A tgz file is created for osx (not tested).
 # A zip file and an NSIS Installer exe is created on windows (not tested).
@@ -11,14 +10,14 @@ if (GIT_EXECUTABLE AND EXISTS "${CMAKE_SOURCE_DIR}/.git")
         COMMAND ${GIT_EXECUTABLE} rev-parse --short HEAD
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
         RESULT_VARIABLE CMD_RESULT
-        OUTPUT_VARIABLE VCS_REVISION
+        # OUTPUT_VARIABLE VCS_REVISION
         OUTPUT_STRIP_TRAILING_WHITESPACE
         )
 endif()
 
 if(NOT DEFINED CMD_RESULT)
     set(VCS_BRANCH "master")
-    set(VCS_REVISION "na")
+    # set(VCS_REVISION "na")
 else()
     execute_process(
         COMMAND ${GIT_EXECUTABLE} status
@@ -34,7 +33,7 @@ else()
     string(REPLACE " " ";" DESCRIBE_STATUS ${DESCRIBE_STATUS})
     list(GET DESCRIBE_STATUS 2 VCS_BRANCH)
 
-    message(STATUS "Version: ${VCS_BRANCH}/${VCS_REVISION}")
+    message(STATUS "Version: ${VCS_BRANCH}) # /${VCS_REVISION}")
 
     execute_process(
         COMMAND ${GIT_EXECUTABLE} config --get remote.origin.url
@@ -79,7 +78,8 @@ endif()
 
 set(CPACK_PACKAGE_NAME "openhantek")
 string(TOLOWER ${CPACK_PACKAGE_NAME} CPACK_PACKAGE_NAME)
-set(CPACK_PACKAGE_VERSION "${DATE_VERSION}_${VCS_REVISION}")
+# set(CPACK_PACKAGE_VERSION "${DATE_VERSION}_${VCS_REVISION}")
+set(CPACK_PACKAGE_VERSION "${DATE_VERSION}")
 set(CPACK_PACKAGE_CONTACT "contact@openhantek.org")
 set(CPACK_PACKAGE_VENDOR "OpenHantek Community")
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Digital oscilloscope software for Hantek USB hardware")
@@ -106,7 +106,7 @@ include(CMakeDetermineSystem)
 
 # Linux DEB (tested on debian stretch and buster)
 set(CPACK_DEBIAN_PACKAGE_SECTION "electronics")
-set(CPACK_DEBIAN_PACKAGE_DEPENDS "qtbase5, libqt5opengl5, libusb-1.0-0, libfftw3")
+set(CPACK_DEBIAN_PACKAGE_DEPENDS "libqt5core5a, libqt5opengl5, libusb-1.0-0, libfftw3-3")
 
 # Linux RPM (not tested on debian)
 set(CPACK_RPM_PACKAGE_RELOCATABLE NO)
@@ -118,7 +118,7 @@ set(CPACK_RPM_CHANGELOG_FILE "${CMAKE_BINARY_DIR}/changelog")
 set(CPACK_NSIS_EXECUTABLES_DIRECTORY ".")
 
 set(CPACK_INCLUDE_TOPLEVEL_DIRECTORY 0)
-set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}-1_${CPACK_TARGET}${CPACK_ARCH}")
+set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}_${CPACK_PACKAGE_VERSION}-1_${CPACK_TARGET}${CPACK_ARCH}")
 set(CPACK_PACKAGE_INSTALL_DIRECTORY ".")
 SET(CPACK_OUTPUT_FILE_PREFIX packages)
 
