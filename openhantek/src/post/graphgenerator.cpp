@@ -32,14 +32,18 @@ GraphGenerator::GraphGenerator(const DsoSettingsScope *scope, bool isSoftwareTri
 bool GraphGenerator::isReady() const { return ready; }
 
 void GraphGenerator::generateGraphsTYvoltage(PPresult *result) {
+    // printf( "GraphGenerator::generateGraphsTYvoltage()\n" );
     unsigned preTrigSamples = 0;
     unsigned postTrigSamples = 0;
     unsigned swTriggerStart = 0;
-
+    static bool trig_available = 0; // do we have triggered data
     // check trigger point for software trigger
     if (isSoftwareTriggerDevice && scope->trigger.source < result->channelCount())
         std::tie(preTrigSamples, postTrigSamples, swTriggerStart) = SoftwareTrigger::compute(result, scope);
-    result->softwareTriggerTriggered = postTrigSamples > preTrigSamples;
+    if ( postTrigSamples <= preTrigSamples \
+       && trig_available && scope->trigger.mode == Dso::TriggerMode::NORMAL ) // not triggered but triggered values available
+        return; // reuse old values
+    result->softwareTriggerTriggered = trig_available = postTrigSamples > preTrigSamples;
 
     result->vaChannelVoltage.resize(scope->voltage.size());
     for (ChannelID channel = 0; channel < scope->voltage.size(); ++channel) {
@@ -83,6 +87,7 @@ void GraphGenerator::generateGraphsTYvoltage(PPresult *result) {
 }
 
 void GraphGenerator::generateGraphsTYspectrum(PPresult *result) {
+    // printf( "GraphGenerator::generateGraphsTYspectrum()\n" );
     ready = true;
     result->vaChannelSpectrum.resize(scope->spectrum.size());
     for (ChannelID channel = 0; channel < scope->voltage.size(); ++channel) {
@@ -122,6 +127,7 @@ void GraphGenerator::generateGraphsTYspectrum(PPresult *result) {
 }
 
 void GraphGenerator::process(PPresult *data) {
+    // printf( "GraphGenerator::process()\n" );
     if (scope->horizontal.format == Dso::GraphFormat::TY) {
         ready = true;
         generateGraphsTYspectrum(data);

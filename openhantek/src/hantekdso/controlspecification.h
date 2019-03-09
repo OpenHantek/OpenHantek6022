@@ -83,7 +83,7 @@ struct ControlSpecification {
     // Features
     std::vector<SpecialTriggerChannel> specialTriggerChannels;
     std::vector<Coupling> couplings = {Dso::Coupling::DC, Dso::Coupling::AC};
-    std::vector<TriggerMode> triggerModes = {TriggerMode::HARDWARE_SOFTWARE, TriggerMode::WAIT_FORCE,
+    std::vector<TriggerMode> triggerModes = {TriggerMode::NORMAL, TriggerMode::AUTO,
                                              TriggerMode::SINGLE};
     bool isFixedSamplerateDevice = false;
     bool isSoftwareTriggerDevice = false;

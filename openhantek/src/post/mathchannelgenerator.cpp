@@ -8,7 +8,9 @@ MathChannelGenerator::MathChannelGenerator(const DsoSettingsScope *scope, unsign
 
 MathChannelGenerator::~MathChannelGenerator() {}
 
+
 void MathChannelGenerator::process(PPresult *result) {
+    // printf( "MathChannelGenerator::process\n" );
     bool channelsHaveData = !result->data(0)->voltage.sample.empty() && !result->data(1)->voltage.sample.empty();
     if (!channelsHaveData) return;
 
@@ -45,3 +47,4 @@ void MathChannelGenerator::process(PPresult *result) {
         }
     }
 }
+

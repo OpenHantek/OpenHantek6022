@@ -2,7 +2,7 @@
 #include <QCoreApplication>
 
 namespace Dso {
-    Enum<Dso::TriggerMode, Dso::TriggerMode::HARDWARE_SOFTWARE, Dso::TriggerMode::SINGLE> TriggerModeEnum;
+    Enum<Dso::TriggerMode, Dso::TriggerMode::NORMAL, Dso::TriggerMode::SINGLE> TriggerModeEnum;
     Enum<Dso::Slope, Dso::Slope::Positive, Dso::Slope::Negative> SlopeEnum;
     Enum<Dso::GraphFormat, Dso::GraphFormat::TY, Dso::GraphFormat::XY> GraphFormatEnum;
 
@@ -53,10 +53,10 @@ namespace Dso {
     /// \return The string that should be used in labels etc.
     QString triggerModeString(TriggerMode mode) {
         switch (mode) {
-        case TriggerMode::WAIT_FORCE:
-            return QCoreApplication::tr("Wait/Force");
-        case TriggerMode::HARDWARE_SOFTWARE:
-            return QCoreApplication::tr("Hard-/Software");
+        case TriggerMode::AUTO:
+            return QCoreApplication::tr("Auto");
+        case TriggerMode::NORMAL:
+            return QCoreApplication::tr("Normal");
         case TriggerMode::SINGLE:
             return QCoreApplication::tr("Single");
         }

@@ -7,6 +7,7 @@
 SoftwareTrigger::PrePostStartTriggerSamples SoftwareTrigger::compute(const PPresult *data,
                                                                               const DsoSettingsScope *scope)
 {
+    // printf( "SoftwareTrigger::compute\n" );
     unsigned int preTrigSamples = 0;
     unsigned int postTrigSamples = 0;
     unsigned int swTriggerStart = 0;
@@ -19,11 +20,10 @@ SoftwareTrigger::PrePostStartTriggerSamples SoftwareTrigger::compute(const PPres
 
     const std::vector<double>& samples = data->data(channel)->voltage.sample;
     double level = scope->voltage[channel].trigger;
-    size_t sampleCount = samples.size();
-    double timeDisplay = scope->horizontal.timebase * DIVS_TIME;
-    double samplesDisplay = timeDisplay * scope->horizontal.samplerate;
-
-    if (samplesDisplay >= sampleCount) {
+    size_t sampleCount = samples.size(); // number of available samples
+    double timeDisplay = scope->horizontal.timebase * DIVS_TIME; // time for full screen width
+    double samplesDisplay = timeDisplay * scope->horizontal.samplerate; // samples for full screen width
+    if (samplesDisplay >= sampleCount) { 
         // For sure not enough samples to adjust for jitter.
         // Following options exist:
         //    1: Decrease sample rate
@@ -34,8 +34,13 @@ SoftwareTrigger::PrePostStartTriggerSamples SoftwareTrigger::compute(const PPres
                                "picture. Decrease sample rate"));
         return PrePostStartTriggerSamples(preTrigSamples, postTrigSamples, swTriggerStart);
     }
-    preTrigSamples = (unsigned)(scope->trigger.position * samplesDisplay);
-    postTrigSamples = (unsigned)sampleCount - ((unsigned)samplesDisplay - preTrigSamples);
+    preTrigSamples = (unsigned)(scope->trigger.position * samplesDisplay); // samples left of trigger
+    postTrigSamples = (unsigned)sampleCount - ((unsigned)samplesDisplay - preTrigSamples); // samples right of trigger
+    // I-----------samples-----------I
+    // I--disp--I
+    // I-----T--I--------------------I
+    // I-pre-I
+    // I--(samp-disp+pre)--------I
     double prev;
     bool (*opcmp)(double,double,double);
     bool (*smplcmpBefore)(double,double);
@@ -52,7 +57,7 @@ SoftwareTrigger::PrePostStartTriggerSamples SoftwareTrigger::compute(const PPres
         smplcmpBefore = [](double sampleK, double value) { return sampleK >= value;};
         smplcmpAfter = [](double sampleK, double value) { return sampleK < value;};
     }
-    // search for trigger point
+    // search for trigger point in a range that leaves enough samples left and right of trigger for display
     for (unsigned int i = preTrigSamples; i < postTrigSamples; i++) {
         double value = samples[i];
         if (opcmp(value, level, prev)) { // trigger condition met

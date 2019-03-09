@@ -80,7 +80,7 @@ static void initSpecifications(Dso::ControlSpecification& specification) {
     specification.sampleSize = 8;
 
     specification.couplings = {Dso::Coupling::DC};
-    specification.triggerModes = {Dso::TriggerMode::HARDWARE_SOFTWARE, Dso::TriggerMode::SINGLE};
+    specification.triggerModes = {Dso::TriggerMode::AUTO, Dso::TriggerMode::NORMAL, Dso::TriggerMode::SINGLE};
     specification.fixedUSBinLength = 16384;
 }
 

@@ -226,7 +226,6 @@ std::vector<unsigned char> HantekDsoControl::getSamples(unsigned &previousSample
 
 void HantekDsoControl::convertRawDataToSamples(const std::vector<unsigned char> &rawData) {
     const size_t totalSampleCount = (specification->sampleSize > 8) ? rawData.size() / 2 : rawData.size();
-
     QWriteLocker locker(&result.lock);
     result.samplerate = controlsettings.samplerate.current;
     result.append = isRollMode();
@@ -1318,7 +1317,7 @@ void HantekDsoControl::run() {
 
                     timestampDebug("Enabling trigger");
                 } else if (cycleCounter >= 8 + this->startCycle &&
-                           controlsettings.trigger.mode == Dso::TriggerMode::WAIT_FORCE) {
+                           controlsettings.trigger.mode == Dso::TriggerMode::AUTO) {
                     // Force triggering
                     errorCode = bulkCommand(getCommand(BulkCode::FORCETRIGGER));
                     if (errorCode < 0) {
