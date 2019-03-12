@@ -14,10 +14,11 @@ void PostProcessing::convertData(const DSOsamples *source, PPresult *destination
         const std::vector<double> &rawChannelData = source->data.at(channel);
 
         if (rawChannelData.empty()) { continue; }
-
         DataChannel *const channelData = destination->modifyData(channel);
         channelData->voltage.interval = 1.0 / source->samplerate;
         channelData->voltage.sample = rawChannelData;
+        // printf( "PP CH%d: %d\n", channel+1, source->clipped );
+        channelData->valid = ! ( source->clipped & (0x01 << channel) );
     }
 }
 

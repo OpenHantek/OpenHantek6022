@@ -23,7 +23,7 @@ static void initSpecifications(Dso::ControlSpecification& specification) {
     // we drop 2k sample values due to unreliable start of stream
     // 20K samples at 100kS/s = 204,8 ms gives enough to fill 
     // the screen two times (for pre/post trigger) at 10ms/div = 100ms/screen
-    const unsigned samples = (20 + 2) * 1024;
+    const unsigned samples = (20 + 4) * 1024;
     specification.samplerate.single.base = 1e6;
     specification.samplerate.single.max = 30e6;
     specification.samplerate.single.maxDownsampler = 10;

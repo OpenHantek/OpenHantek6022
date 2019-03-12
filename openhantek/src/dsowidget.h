@@ -67,7 +67,7 @@ class DsoWidget : public QWidget {
     QLabel *settingsTimebaseLabel;      ///< The timebase of the main scope
     QLabel *settingsFrequencybaseLabel; ///< The frequencybase of the main scope
 
-    QLabel *swTriggerStatus;    ///< The status of SW trigger
+    QLabel *swTriggerStatus;          ///< The status of SW trigger
 
     QHBoxLayout *markerLayout;        ///< The table for the marker details
     QLabel *markerInfoLabel;          ///< The info about the zoom factor

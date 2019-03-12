@@ -321,8 +321,8 @@ void HantekDsoControl::convertRawDataToSamples(const std::vector<unsigned char> 
                 }
 
                 // if device is 6022BE, drop heading & trailing samples
-                const unsigned DROP_DSO6022_HEAD = 0x800;
-                const unsigned DROP_DSO6022_TAIL = 0;
+                const unsigned DROP_DSO6022_HEAD = 0x810;
+                const unsigned DROP_DSO6022_TAIL = 0x7F0;
                 if (!isRollMode()) {
                     result.data[channel].resize(result.data[channel].size() 
                         - (DROP_DSO6022_HEAD + DROP_DSO6022_TAIL));
@@ -335,12 +335,15 @@ void HantekDsoControl::convertRawDataToSamples(const std::vector<unsigned char> 
             } else {
                 bufferPosition += specification->channels - 1 - channel;
             }
-
+            result.clipped &= ~(0x01 << channel);
             for ( unsigned pos = 0; pos < result.data[channel].size();
                 ++pos, bufferPosition += activeChannels ) {
                 if ( bufferPosition >= totalSampleCount ) bufferPosition %= totalSampleCount; 
                 //HORO: does the %= wraparound conflict with DROP_DS6022... from above?
-                double dataBuf = (double)((int)(rawData[bufferPosition] - shiftDataBuf));
+                unsigned char rawSample = rawData[bufferPosition];
+                if ( rawSample == 0x00 || rawSample == 0xFF )
+                    result.clipped |= 0x01 << channel;
+                double dataBuf = (double)((int)(rawSample - shiftDataBuf));
                 result.data[channel][pos] = (dataBuf / limit - offset) * gainStep;
             }
 #if 0

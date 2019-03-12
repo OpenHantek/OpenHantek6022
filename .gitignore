@@ -5,6 +5,7 @@
 *~
 *.orig
 *.new
+*.diff
 CMakeLists.txt.user
 build/
 firmware/hex
