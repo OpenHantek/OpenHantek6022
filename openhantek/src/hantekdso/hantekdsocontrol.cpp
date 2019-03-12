@@ -340,10 +340,10 @@ void HantekDsoControl::convertRawDataToSamples(const std::vector<unsigned char> 
                 ++pos, bufferPosition += activeChannels ) {
                 if ( bufferPosition >= totalSampleCount ) bufferPosition %= totalSampleCount; 
                 //HORO: does the %= wraparound conflict with DROP_DS6022... from above?
-                unsigned char rawSample = rawData[bufferPosition];
+                int rawSample = rawData[bufferPosition]; // range 0...255
                 if ( rawSample == 0x00 || rawSample == 0xFF )
                     result.clipped |= 0x01 << channel;
-                double dataBuf = (double)((int)(rawSample - shiftDataBuf));
+                double dataBuf = (double)(rawSample - shiftDataBuf); // int - int
                 result.data[channel][pos] = (dataBuf / limit - offset) * gainStep;
             }
 #if 0
