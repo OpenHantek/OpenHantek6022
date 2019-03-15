@@ -56,18 +56,21 @@ void GlScope::fixOpenGLversion(QSurfaceFormat::RenderableType t) {
 GlScope::GlScope(DsoSettingsScope *scope, DsoSettingsView *view, QWidget *parent)
     : QOpenGLWidget(parent), scope(scope), view(view) {
 
-#if 0
-    // get OpenGL version
-    QOffscreenSurface surf;
-    surf.create();
-
-    QOpenGLContext ctx;
-    ctx.create();
-    ctx.makeCurrent(&surf);
-
-    QString glVersion = (const char *)ctx.functions()->glGetString(GL_VERSION);
-    surf.destroy();
-    qDebug() << glVersion;
+#if 1
+    // get OpenGL version to define appropriate OpenGLSL version
+    // reason:
+    // some not so new intel graphic driver report a very conservative version
+    // e.g. debian buster -> "2.1 Mesa 18.3.4"
+    QOffscreenSurface surface;
+    surface.create();
+    QOpenGLContext context;
+    context.create();
+    context.makeCurrent(&surface);
+    QString glVersion = (const char*)context.functions()->glGetString(GL_VERSION);
+    GLSLversion = glVersion >= "3.2" ? 150 : 120; // version string "3.2 xxxx" > "3.2" is true
+    // qDebug() << glVersion;
+    // qDebug() << GLSLversion;
+    surface.destroy();
 #endif
 
     cursorInfo.clear();
@@ -217,7 +220,7 @@ void GlScope::initializeGL() {
           void main() { gl_FragColor = colour; }
     )";
 
-    const char *vshaderDesktop = R"(
+    const char *vshaderDesktop120 = R"(
           #version 120
           attribute highp vec3 vertex;
           uniform mat4 matrix;
@@ -227,11 +230,31 @@ void GlScope::initializeGL() {
               gl_PointSize = 1.0;
           }
     )";
-    const char *fshaderDesktop = R"(
+    const char *fshaderDesktop120 = R"(
           #version 120
           uniform highp vec4 colour;
           void main() { gl_FragColor = colour; }
     )";
+
+    const char *vshaderDesktop150 = R"(
+          #version 150
+          in highp vec3 vertex;
+          uniform mat4 matrix;
+          void main()
+          {
+              gl_Position = matrix * vec4(vertex, 1.0);
+              gl_PointSize = 1.0;
+          }
+    )";
+    const char *fshaderDesktop150 = R"(
+          #version 150
+          uniform highp vec4 colour;
+          out vec4 flatColor;
+          void main() { flatColor = colour; }
+    )";
+
+    const char *vshaderDesktop = GLSLversion == 120 ? vshaderDesktop120 : vshaderDesktop150;
+    const char *fshaderDesktop = GLSLversion == 120 ? fshaderDesktop120 : fshaderDesktop150;
 
     qDebug() << "compile shaders";
     // Compile vertex shader
