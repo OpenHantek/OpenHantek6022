@@ -12,7 +12,7 @@ struct ModelDSO6022BE : public DSOModel {
 };
 
 struct ModelDSO6022BL : public DSOModel {
-    static const int ID = 0x6022;
+    static const int ID = 0x602a;
     ModelDSO6022BL();
     virtual void applyRequirements(HantekDsoControl* dsoControl) const override;
 };

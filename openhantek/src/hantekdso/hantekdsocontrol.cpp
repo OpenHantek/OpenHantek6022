@@ -43,8 +43,11 @@ const USBDevice *HantekDsoControl::getDevice() const { return device; }
 
 const DSOsamples &HantekDsoControl::getLastSamples() { return result; }
 
-#define is6022 (getDevice()->getModel()->ID == ModelDSO6022BE::ID)
-#define fast6022 (controlsettings.voltage[0].used && !controlsettings.voltage[1].used)
+// HORO: Hantek 6022 hack
+#define is6022 (getDevice()->getModel()->ID == ModelDSO6022BE::ID || getDevice()->getModel()->ID == ModelDSO6022BL::ID)
+// only 6022BE firmware (modded) supports command E4 -> set channel num, 6022BL gives error
+// fast mode: sample only CH1 and transmit 8bit / sample instead of CH1&CH2 = 16bit / sample
+#define fast6022be (getDevice()->getModel()->ID == ModelDSO6022BE::ID && controlsettings.voltage[0].used && !controlsettings.voltage[1].used)
 
 HantekDsoControl::HantekDsoControl(USBDevice *device)
     : device(device), specification(device->getModel()->spec()),
@@ -312,7 +315,7 @@ void HantekDsoControl::convertRawDataToSamples(const std::vector<unsigned char> 
             } else if ( is6022 ) {
 
                 // 6022 fast rate
-                if ( fast6022 ) {
+                if ( fast6022be ) {
                     activeChannels = 1;
                     if ( channel > 0 ) { // one channel mode only with CH1 (channel == 0)
                         result.data[channel].clear();
@@ -372,7 +375,7 @@ double HantekDsoControl::getBestSamplerate(double samplerate, bool fastRate, boo
         else
             limits = &(specification->samplerate.single);
     } else {
-        if ( fast6022 )
+        if ( fast6022be )
             limits = &(specification->samplerate.multi);
         else
             limits = &(specification->samplerate.single);
@@ -631,7 +634,7 @@ void HantekDsoControl::updateSamplerateLimits() {
     if (specification->isFixedSamplerateDevice) {
         QList<double> sampleSteps;
         //HORO: limit sample rate if not single channel mode
-        double limit = ( isFastRate() || fast6022 ) ?
+        double limit = ( isFastRate() || fast6022be ) ?
             specification->samplerate.single.max : specification->samplerate.multi.max;
         for (auto &v : specification->fixedSampleRates) {
             if ( v.samplerate <= limit ) { sampleSteps << v.samplerate; }

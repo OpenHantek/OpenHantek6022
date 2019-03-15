@@ -13,6 +13,7 @@
 #include <QPainter>
 
 #include <QOpenGLFunctions>
+#include <QOffscreenSurface>
 
 #include "glscope.h"
 
@@ -54,6 +55,21 @@ void GlScope::fixOpenGLversion(QSurfaceFormat::RenderableType t) {
 
 GlScope::GlScope(DsoSettingsScope *scope, DsoSettingsView *view, QWidget *parent)
     : QOpenGLWidget(parent), scope(scope), view(view) {
+
+#if 0
+    // get OpenGL version
+    QOffscreenSurface surf;
+    surf.create();
+
+    QOpenGLContext ctx;
+    ctx.create();
+    ctx.makeCurrent(&surf);
+
+    QString glVersion = (const char *)ctx.functions()->glGetString(GL_VERSION);
+    surf.destroy();
+    qDebug() << glVersion;
+#endif
+
     cursorInfo.clear();
     cursorInfo.push_back(&scope->horizontal.cursor);
     selectedCursor = 0;
@@ -202,8 +218,8 @@ void GlScope::initializeGL() {
     )";
 
     const char *vshaderDesktop = R"(
-          #version 120 //150
-          attribute vec3 vertex; //in highp vec3 vertex;
+          #version 120
+          attribute highp vec3 vertex;
           uniform mat4 matrix;
           void main()
           {
@@ -212,10 +228,9 @@ void GlScope::initializeGL() {
           }
     )";
     const char *fshaderDesktop = R"(
-          #version 120 //150
+          #version 120
           uniform highp vec4 colour;
-          //out vec4 flatColor;
-          void main() { gl_FragColor = colour; } //{ flatColor = colour; }
+          void main() { gl_FragColor = colour; }
     )";
 
     qDebug() << "compile shaders";
