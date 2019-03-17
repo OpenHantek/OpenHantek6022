@@ -150,6 +150,7 @@ Dso::ErrorCode HantekDsoControl::retrieveChannelLevelData() {
 
     memcpy(controlsettings.offsetLimit, controlsettings.cmdGetLimits.data(),
            sizeof(OffsetsPerGainStep) * specification->channels);
+    // printf( "offsetLimit %d %d\n", sizeof(OffsetsPerGainStep), ((unsigned char*)controlsettings.offsetLimit)[0] );
 
     return Dso::ErrorCode::NONE;
 }
