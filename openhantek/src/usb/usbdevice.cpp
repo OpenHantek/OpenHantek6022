@@ -83,6 +83,11 @@ bool USBDevice::connectDevice(QString &errorMessage) {
             interfaceDescriptor->bNumEndpoints == 2) {
             errorCode = claimInterface(interfaceDescriptor, HANTEK_EP_OUT, HANTEK_EP_IN);
             break;
+        } else if (interfaceDescriptor->bInterfaceClass == LIBUSB_CLASS_VENDOR_SPEC &&
+            interfaceDescriptor->bInterfaceSubClass == 0 && interfaceDescriptor->bInterfaceProtocol == 0 &&
+            interfaceDescriptor->bNumEndpoints == 1) {
+            errorCode = claimInterface(interfaceDescriptor, HANTEK_EP_IN);
+            break;
         }
     }
 
@@ -122,6 +127,25 @@ int USBDevice::claimInterface(const libusb_interface_descriptor *interfaceDescri
         if (endpointDescriptor->bEndpointAddress == endpointOut) {
             this->outPacketLength = endpointDescriptor->wMaxPacketSize;
         } else if (endpointDescriptor->bEndpointAddress == endPointIn) {
+            this->inPacketLength = endpointDescriptor->wMaxPacketSize;
+        }
+    }
+    return LIBUSB_SUCCESS;
+}
+
+int USBDevice::claimInterface(const libusb_interface_descriptor *interfaceDescriptor, int endPointIn) {
+    int errorCode = libusb_claim_interface(this->handle, interfaceDescriptor->bInterfaceNumber);
+    if (errorCode < 0) { return errorCode; }
+
+    interface = interfaceDescriptor->bInterfaceNumber;
+
+    // Check the maximum endpoint packet size
+    const libusb_endpoint_descriptor *endpointDescriptor;
+    this->outPacketLength = 0;
+    this->inPacketLength = 0;
+    for (int endpoint = 0; endpoint < interfaceDescriptor->bNumEndpoints; ++endpoint) {
+        endpointDescriptor = &(interfaceDescriptor->endpoint[endpoint]);
+        if (endpointDescriptor->bEndpointAddress == endPointIn) {
             this->inPacketLength = endpointDescriptor->wMaxPacketSize;
         }
     }

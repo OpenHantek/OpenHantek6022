@@ -146,6 +146,7 @@ class USBDevice : public QObject {
     inline void overwriteInPacketLength(int len) { inPacketLength = len; }
   protected:
     int claimInterface(const libusb_interface_descriptor *interfaceDescriptor, int endpointOut, int endPointIn);
+    int claimInterface(const libusb_interface_descriptor *interfaceDescriptor, int endPointIn);
 
     // Device model data
     DSOModel* model;
