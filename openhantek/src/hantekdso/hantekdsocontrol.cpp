@@ -44,7 +44,9 @@ const USBDevice *HantekDsoControl::getDevice() const { return device; }
 const DSOsamples &HantekDsoControl::getLastSamples() { return result; }
 
 // HORO: Hantek 6022 hack
-#define is6022 (getDevice()->getModel()->ID == ModelDSO6022BE::ID || getDevice()->getModel()->ID == ModelDSO6022BL::ID)
+#define is6022BE (getDevice()->getModel()->ID == ModelDSO6022BE::ID)
+#define is6022BL (getDevice()->getModel()->ID == ModelDSO6022BL::ID)
+#define is6022 ( is6022BE || is6022BL )
 // only 6022BE firmware (modded) supports command E4 -> set channel num, 6022BL gives error
 // fast mode: sample only CH1 and transmit 8bit / sample instead of CH1&CH2 = 16bit / sample
 #define fast6022be (getDevice()->getModel()->ID == ModelDSO6022BE::ID && controlsettings.voltage[0].used && !controlsettings.voltage[1].used)
@@ -813,7 +815,7 @@ Dso::ErrorCode HantekDsoControl::setChannelUsed(ChannelID channel, bool used) {
     }
     default: 
         // qDebug() << "usedChannels" << (int)usedChannels;
-        if ( is6022 ) {
+        if ( is6022BE ) {
             if ( usedChannels == UsedChannels::USED_CH1 )
                 modifyCommand<ControlSetNumChannels>(ControlCode::CONTROL_SETNUMCHANNELS)->setDiv( 1 );
             else
