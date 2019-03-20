@@ -41,6 +41,11 @@ class USBDevice : public QObject {
     bool needsFirmware();
 
     /**
+     * @return Return device version as unsigned int
+     */
+    inline unsigned int getFwVersion() const { return this->descriptor.bcdDevice; }
+
+    /**
      * Keep track of the find iteration on which this device was found
      * @param iteration The new iteration value
      */

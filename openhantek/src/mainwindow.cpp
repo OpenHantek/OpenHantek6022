@@ -44,8 +44,9 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, Expo
     // Window title
     setWindowIcon(QIcon(":openhantek.png"));
     setWindowTitle(
-        tr("OpenHantek - Device %1 - Renderer %2")
+        tr("OpenHantek - Device %1 (%2) - Renderer %3")
             .arg(QString::fromStdString(dsoControl->getDevice()->getModel()->name))
+            .arg((unsigned int)dsoControl->getDevice()->getFwVersion(),4,16,QChar('0'))
             .arg(QSurfaceFormat::defaultFormat().renderableType() == QSurfaceFormat::OpenGL ? "OpenGL" : "OpenGL ES"));
 
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 6, 0))
