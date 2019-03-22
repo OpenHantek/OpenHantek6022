@@ -33,7 +33,8 @@ bool UploadFirmware::startUpload(USBDevice *device) {
     auto temp_firmware_path = std::unique_ptr<QTemporaryFile>(QTemporaryFile::createNativeFile(firmwareRes));
     if (!temp_firmware_path) return false;
     temp_firmware_path->open();
-    QFile loaderRes(QString(":/firmware/%1-loader.hex").arg(QString::fromStdString(device->getModel()->firmwareToken)));
+    QFile loaderRes(
+        QString(":/firmware/%1-loader.hex").arg(QString::fromStdString(device->getModel()->firmwareToken)));
     auto temp_loader_path = std::unique_ptr<QTemporaryFile>(QTemporaryFile::createNativeFile(loaderRes));
     if (!temp_loader_path) return false;
     temp_loader_path->open();
@@ -48,7 +49,7 @@ bool UploadFirmware::startUpload(USBDevice *device) {
     }
 
     // Write loader
-    status = ezusb_load_ram(handle, temp_loader_path->fileName().toUtf8().constData(), FX_TYPE_FX2, 0);
+    status = ezusb_load_ram(handle, temp_loader_path->fileName().toUtf8().constData(), FX_TYPE_FX2LP, 0);
 
     if (status != LIBUSB_SUCCESS) {
         errorMessage = TR("Writing the loader firmware failed: %1").arg(libusb_error_name(status));
@@ -58,7 +59,7 @@ bool UploadFirmware::startUpload(USBDevice *device) {
     }
 
     // Write firmware
-    status = ezusb_load_ram(handle, temp_firmware_path->fileName().toUtf8().constData(), FX_TYPE_FX2, 1);
+    status = ezusb_load_ram(handle, temp_firmware_path->fileName().toUtf8().constData(), FX_TYPE_FX2LP, 1);
 
     if (status != LIBUSB_SUCCESS) {
         errorMessage = TR("Writing the main firmware failed: %1").arg(libusb_error_name(status));
