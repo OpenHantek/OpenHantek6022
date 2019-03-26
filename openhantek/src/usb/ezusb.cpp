@@ -48,7 +48,7 @@
  * The Cypress FX parts are largely compatible with the Anchorchip ones.
  */
 
-int verbose = 1;
+int verbose = 0;
 
 /*
  * return true if [addr,addr+len] includes external RAM

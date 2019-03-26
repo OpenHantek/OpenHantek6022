@@ -35,6 +35,7 @@ struct DsoSettingsScopeHorizontal {
     /// TODO Use ControlSettingsSamplerateTarget
     double timebase = 1e-3;  ///< Timebase in s/div
     double samplerate = 1e6; ///< The samplerate of the oscilloscope in S
+    double calfreq = 1e3;    ///< The frequency of the calibration output
     enum SamplerateSource { Samplerrate, Duration } samplerateSource = Samplerrate;
 };
 

@@ -17,6 +17,8 @@
 #include "sispinbox.h"
 #include "utils/printutils.h"
 
+static unsigned int row = 0;
+
 template<typename... Args> struct SELECT {
     template<typename C, typename R>
     static constexpr auto OVERLOAD_OF( R (C::*pmf)(Args...) ) -> decltype(pmf) {
@@ -55,19 +57,31 @@ HorizontalDock::HorizontalDock(DsoSettingsScope *scope, QWidget *parent, Qt::Win
     for (Dso::GraphFormat format: Dso::GraphFormatEnum)
         this->formatComboBox->addItem(Dso::graphFormatString(format));
 
+    calfreqSteps << 1.0 << 2.0 << 5.0 << 10.0;
+
+    this->calfreqLabel = new QLabel(tr("Calibration out"));
+    this->calfreqSiSpinBox = new SiSpinBox(UNIT_HERTZ);
+    this->calfreqSiSpinBox->setSteps(calfreqSteps); // 1,2,5,10
+    this->calfreqSiSpinBox->setMinimum(50);
+    this->calfreqSiSpinBox->setMaximum(100e3);
+
     this->dockLayout = new QGridLayout();
     this->dockLayout->setColumnMinimumWidth(0, 64);
     this->dockLayout->setColumnStretch(1, 1);
-    this->dockLayout->addWidget(this->timebaseLabel, 0, 0);
-    this->dockLayout->addWidget(this->timebaseSiSpinBox, 0, 1);
-    this->dockLayout->addWidget(this->samplerateLabel, 1, 0);
-    this->dockLayout->addWidget(this->samplerateSiSpinBox, 1, 1);
-    this->dockLayout->addWidget(this->frequencybaseLabel, 2, 0);
-    this->dockLayout->addWidget(this->frequencybaseSiSpinBox, 2, 1);
-    this->dockLayout->addWidget(this->recordLengthLabel, 3, 0);
-    this->dockLayout->addWidget(this->recordLengthComboBox, 3, 1);
-    this->dockLayout->addWidget(this->formatLabel, 4, 0);
-    this->dockLayout->addWidget(this->formatComboBox, 4, 1);
+
+    row = 0; // allows flexible shift up/down 
+    this->dockLayout->addWidget(this->timebaseLabel, row, 0);
+    this->dockLayout->addWidget(this->timebaseSiSpinBox, row++, 1);
+    this->dockLayout->addWidget(this->samplerateLabel, row, 0);
+    this->dockLayout->addWidget(this->samplerateSiSpinBox, row++, 1);
+    this->dockLayout->addWidget(this->frequencybaseLabel, row, 0);
+    this->dockLayout->addWidget(this->frequencybaseSiSpinBox, row++, 1);
+    //this->dockLayout->addWidget(this->recordLengthLabel, row, 0);
+    //this->dockLayout->addWidget(this->recordLengthComboBox, row++, 1);
+    this->dockLayout->addWidget(this->formatLabel, row, 0);
+    this->dockLayout->addWidget(this->formatComboBox, row++, 1);
+    this->dockLayout->addWidget(this->calfreqLabel, row, 0);
+    this->dockLayout->addWidget(this->calfreqSiSpinBox, row++, 1);
 
     this->dockWidget = new QWidget();
     SetupDockWidget(this, dockWidget, dockLayout);
@@ -78,6 +92,7 @@ HorizontalDock::HorizontalDock(DsoSettingsScope *scope, QWidget *parent, Qt::Win
     connect(this->frequencybaseSiSpinBox, SELECT<double>::OVERLOAD_OF(&QDoubleSpinBox::valueChanged), this, &HorizontalDock::frequencybaseSelected);
     connect(this->recordLengthComboBox, SELECT<int>::OVERLOAD_OF(&QComboBox::currentIndexChanged), this, &HorizontalDock::recordLengthSelected);
     connect(this->formatComboBox, SELECT<int>::OVERLOAD_OF(&QComboBox::currentIndexChanged), this, &HorizontalDock::formatSelected);
+    connect(this->calfreqSiSpinBox, SELECT<double>::OVERLOAD_OF(&QDoubleSpinBox::valueChanged), this, &HorizontalDock::calfreqSelected);
 
     // Set values
     this->setSamplerate(scope->horizontal.samplerate);
@@ -85,7 +100,9 @@ HorizontalDock::HorizontalDock(DsoSettingsScope *scope, QWidget *parent, Qt::Win
     this->setFrequencybase(scope->horizontal.frequencybase);
     // this->setRecordLength(scope->horizontal.recordLength);
     this->setFormat(scope->horizontal.format);
+    this->setCalfreq(scope->horizontal.calfreq);
 }
+
 
 /// \brief Don't close the dock, just hide it.
 /// \param event The close event that should be handled.
@@ -95,10 +112,12 @@ void HorizontalDock::closeEvent(QCloseEvent *event) {
     event->accept();
 }
 
+
 void HorizontalDock::setFrequencybase(double frequencybase) {
     QSignalBlocker blocker(frequencybaseSiSpinBox);
     frequencybaseSiSpinBox->setValue(frequencybase);
 }
+
 
 double HorizontalDock::setSamplerate(double samplerate) {
     //printf( "setSamplerate %g\n", samplerate );
@@ -106,6 +125,7 @@ double HorizontalDock::setSamplerate(double samplerate) {
     samplerateSiSpinBox->setValue(samplerate);
     return samplerateSiSpinBox->value();
 }
+
 
 double HorizontalDock::setTimebase(double timebase) {
     //printf( "setTimebase %g\n", timebase );
@@ -122,11 +142,13 @@ double HorizontalDock::setTimebase(double timebase) {
     return timebaseSiSpinBox->value();
 }
 
+
 int addRecordLength(QComboBox *recordLengthComboBox, unsigned recordLength) {
     recordLengthComboBox->addItem(
         recordLength == UINT_MAX ? QCoreApplication::translate("HorizontalDock","Roll") : valueToString(recordLength, UNIT_SAMPLES, 3), recordLength);
     return recordLengthComboBox->count()-1;
 }
+
 
 void HorizontalDock::setRecordLength(unsigned int recordLength) {
     QSignalBlocker blocker(recordLengthComboBox);
@@ -139,15 +161,23 @@ void HorizontalDock::setRecordLength(unsigned int recordLength) {
     recordLengthComboBox->setCurrentIndex(index);
 }
 
+
 int HorizontalDock::setFormat(Dso::GraphFormat format) {
     QSignalBlocker blocker(formatComboBox);
     if (format >= Dso::GraphFormat::TY && format <= Dso::GraphFormat::XY) {
         formatComboBox->setCurrentIndex(format);
         return format;
     }
-
     return -1;
 }
+
+
+double HorizontalDock::setCalfreq(double calfreq) {
+    QSignalBlocker blocker(calfreqSiSpinBox);
+    calfreqSiSpinBox->setValue(calfreq);
+    return calfreqSiSpinBox->value();
+}
+
 
 void HorizontalDock::setAvailableRecordLengths(const std::vector<unsigned> &recordLengths) {
     QSignalBlocker blocker(recordLengthComboBox);
@@ -160,12 +190,14 @@ void HorizontalDock::setAvailableRecordLengths(const std::vector<unsigned> &reco
     setRecordLength(scope->horizontal.recordLength);
 }
 
+
 void HorizontalDock::setSamplerateLimits(double minimum, double maximum) {
     //printf( "setSamplerateLimits %f %f\n", minimum, maximum );
     QSignalBlocker blocker(samplerateSiSpinBox);
     this->samplerateSiSpinBox->setMinimum(minimum);
     this->samplerateSiSpinBox->setMaximum(maximum);
 }
+
 
 void HorizontalDock::setSamplerateSteps(int mode, QList<double> steps) {
     // Assume that method is invoked for fixed samplerate devices only
@@ -180,12 +212,14 @@ void HorizontalDock::setSamplerateSteps(int mode, QList<double> steps) {
     timebaseSiSpinBox->setMaximum(pow(10, ceil(log10(1024.0 / (steps.first() * 10)))));
 }
 
+
 /// \brief Called when the frequencybase spinbox changes its value.
 /// \param frequencybase The frequencybase in hertz.
 void HorizontalDock::frequencybaseSelected(double frequencybase) {
     scope->horizontal.frequencybase = frequencybase;
     emit frequencybaseChanged(frequencybase);
 }
+
 
 /// \brief Called when the samplerate spinbox changes its value.
 /// \param samplerate The samplerate in samples/second.
@@ -196,6 +230,7 @@ void HorizontalDock::samplerateSelected(double samplerate) {
     emit samplerateChanged(samplerate);
 }
 
+
 /// \brief Called when the timebase spinbox changes its value.
 /// \param timebase The timebase in seconds.
 void HorizontalDock::timebaseSelected(double timebase) {
@@ -205,6 +240,7 @@ void HorizontalDock::timebaseSelected(double timebase) {
     emit timebaseChanged(timebase);
 }
 
+
 /// \brief Called when the record length combo box changes its value.
 /// \param index The index of the combo box item.
 void HorizontalDock::recordLengthSelected(int index) {
@@ -212,9 +248,20 @@ void HorizontalDock::recordLengthSelected(int index) {
     emit recordLengthChanged(index);
 }
 
+
 /// \brief Called when the format combo box changes its value.
 /// \param index The index of the combo box item.
 void HorizontalDock::formatSelected(int index) {
     scope->horizontal.format = (Dso::GraphFormat)index;
     emit formatChanged(scope->horizontal.format);
 }
+
+
+/// \brief Called when the calfreq spinbox changes its value.
+/// \param calfreq The calibration frequency in hertz.
+void HorizontalDock::calfreqSelected(double calfreq) {
+    //printf( "calfreqSelected: %g\n", calfreq );
+    scope->horizontal.calfreq = calfreq;
+    emit calfreqChanged(calfreq);
+}
+

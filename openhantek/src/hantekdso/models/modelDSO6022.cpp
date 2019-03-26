@@ -90,6 +90,7 @@ void applyRequirements_(HantekDsoControl *dsoControl) {
     dsoControl->addCommand(new ControlSetVoltDIV_CH2());
     dsoControl->addCommand(new ControlSetVoltDIV_CH1());
     dsoControl->addCommand(new ControlSetNumChannels());
+    dsoControl->addCommand(new ControlSetCalFreq());
 }
 
 ModelDSO6022BE::ModelDSO6022BE() : DSOModel(ID, 0x04b5, 0x6022, 0x04b4, 0x6022, "dso6022be", "DSO-6022BE",
