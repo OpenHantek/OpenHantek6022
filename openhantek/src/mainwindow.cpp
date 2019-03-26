@@ -125,6 +125,7 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, Expo
     connect(horizontalDock, &HorizontalDock::recordLengthChanged,
             [dsoControl](unsigned long recordLength) { dsoControl->setRecordLength(recordLength); });
 
+
     connect(dsoControl, &HantekDsoControl::recordTimeChanged,
             [this, settings, horizontalDock, dsoControl](double duration) {
                 if (settings->scope.horizontal.samplerateSource == DsoSettingsScopeHorizontal::Samplerrate &&
@@ -149,6 +150,12 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, Expo
             dsoWidget->updateSamplerate(samplerate);
         }
     });
+
+    connect(horizontalDock, &HorizontalDock::calfreqChanged, [dsoControl, this]() {
+        dsoControl->setCalFreq(mSettings->scope.horizontal.calfreq);
+    });
+
+
 
     connect(triggerDock, &TriggerDock::modeChanged, dsoControl, &HantekDsoControl::setTriggerMode);
     connect(triggerDock, &TriggerDock::modeChanged, dsoWidget, &DsoWidget::updateTriggerMode);

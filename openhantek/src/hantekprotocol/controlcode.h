@@ -125,6 +125,7 @@ namespace Hantek {
 /// CONTROL_SETTIMEDIV Time divisor setting (6022BE/BL)
 ///
 /// CONTROL_ACQUIIRE_HARD_DATA Request sample data (6022BE/BL)
+
 enum class ControlCode : uint8_t {
     CONTROL_VALUE = 0xa2,
     CONTROL_GETSPEED = 0xb2,
@@ -135,7 +136,9 @@ enum class ControlCode : uint8_t {
     CONTROL_SETVOLTDIV_CH2 = 0xe1,
     CONTROL_SETTIMEDIV = 0xe2,
     CONTROL_ACQUIIRE_HARD_DATA = 0xe3,
-    CONTROL_SETNUMCHANNELS = 0xe4
+    CONTROL_SETNUMCHANNELS = 0xe4,
+    // CONTROL_SETCOUPLING = 0xe5, // DC/AC not possible without hw modification
+    CONTROL_SETCALFREQ = 0xe6
 };
 
 }

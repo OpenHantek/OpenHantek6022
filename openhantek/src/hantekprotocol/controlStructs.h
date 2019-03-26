@@ -136,4 +136,10 @@ struct ControlAcquireHardData : public ControlCommand {
 struct ControlGetLimits : public ControlCommand {
     ControlGetLimits(size_t channels);
 };
+
+struct ControlSetCalFreq : public ControlCommand {
+    ControlSetCalFreq();
+    void setCalFreq(uint8_t val);
+};
+
 }

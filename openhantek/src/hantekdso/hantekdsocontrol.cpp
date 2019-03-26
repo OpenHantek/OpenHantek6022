@@ -354,7 +354,7 @@ void HantekDsoControl::convertRawDataToSamples(const std::vector<unsigned char> 
             }
 #if 0
             //HORO: test output (get one data point at e.g. pos 666, this offset must be even!)
-            fprintf( stderr, "channel %d, gainID %d, limit %d, shift %d, gainStep %8.3f, raw 0x%03x, result %8.3f\n", \
+            printf( stderr, "channel %d, gainID %d, limit %d, shift %d, gainStep %8.3f, raw 0x%03x, result %8.3f\n", \
                      channel, gainID, limit, shiftDataBuf, gainStep, rawData[ 666 + channel ], \
                      ((double)((int)(rawData[ 666 + channel ] - shiftDataBuf)) / limit - offset ) * gainStep );
 #endif
@@ -1081,6 +1081,20 @@ Dso::ErrorCode HantekDsoControl::setPretriggerPosition(double position) {
     controlsettings.trigger.position = position;
     return Dso::ErrorCode::NONE;
 }
+
+
+Dso::ErrorCode HantekDsoControl::setCalFreq( double calfreq ) {
+    unsigned int cf = (int)calfreq / 1000;
+    if ( cf == 0 ) // 50, 100, 200, 500 -> 105, 110, 120, 150
+        cf = 100 + calfreq / 10;
+    // printf( "HDC::setCalFreq( %g ) -> %d\n", calfreq, cf );
+    if (!device->isConnected()) return Dso::ErrorCode::CONNECTION;
+    // control command for setting
+    modifyCommand<ControlSetCalFreq>(ControlCode::CONTROL_SETCALFREQ)
+        ->setCalFreq( cf );
+    return Dso::ErrorCode::NONE;
+}
+
 
 Dso::ErrorCode HantekDsoControl::stringCommand(const QString &commandString) {
     if (!device->isConnected()) return Dso::ErrorCode::CONNECTION;

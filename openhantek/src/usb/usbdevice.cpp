@@ -218,7 +218,8 @@ int USBDevice::controlTransfer(unsigned char type, unsigned char request, unsign
     if (!this->handle) return LIBUSB_ERROR_NO_DEVICE;
 
     int errorCode = LIBUSB_ERROR_TIMEOUT;
-    // printf( "controlTransfer t %x r %x * l %d v %d i %d a %d\n", type, request,length, value, index, attempts ); 
+    // printf( "controlTransfer type %x request %x data[0] %d length %d value %d index %d attempts %d\n", 
+    //    type, request, data[0], length, value, index, attempts ); 
 
     for (int attempt = 0; (attempt < attempts || attempts == -1) && errorCode == LIBUSB_ERROR_TIMEOUT; ++attempt)
         errorCode = libusb_control_transfer(this->handle, type, request, value, index, data, length, HANTEK_TIMEOUT);

@@ -56,7 +56,6 @@ void GlScope::fixOpenGLversion(QSurfaceFormat::RenderableType t) {
 GlScope::GlScope(DsoSettingsScope *scope, DsoSettingsView *view, QWidget *parent)
     : QOpenGLWidget(parent), scope(scope), view(view) {
 
-#if 1
     // get OpenGL version to define appropriate OpenGLSL version
     // reason:
     // some not so new intel graphic driver report a very conservative version
@@ -71,7 +70,6 @@ GlScope::GlScope(DsoSettingsScope *scope, DsoSettingsView *view, QWidget *parent
     // qDebug() << glVersion;
     // qDebug() << GLSLversion;
     surface.destroy();
-#endif
 
     cursorInfo.clear();
     cursorInfo.push_back(&scope->horizontal.cursor);
@@ -256,7 +254,7 @@ void GlScope::initializeGL() {
     const char *vshaderDesktop = GLSLversion == 120 ? vshaderDesktop120 : vshaderDesktop150;
     const char *fshaderDesktop = GLSLversion == 120 ? fshaderDesktop120 : fshaderDesktop150;
 
-    qDebug() << "compile shaders";
+    // qDebug() << "compile shaders";
     // Compile vertex shader
     bool usesOpenGL = QSurfaceFormat::defaultFormat().renderableType()==QSurfaceFormat::OpenGL;
     if (!program->addShaderFromSourceCode(QOpenGLShader::Vertex, usesOpenGL ? vshaderDesktop : vshaderES) ||
