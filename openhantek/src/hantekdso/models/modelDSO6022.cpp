@@ -34,15 +34,20 @@ static void initSpecifications(Dso::ControlSpecification& specification) {
     specification.samplerate.multi.recordLengths = {UINT_MAX, samples * 2};
     specification.bufferDividers = { 1000 , 1 , 1 };
     // This data was based on testing and depends on Divider.
-    // The sample value at the top of the screen
-    specification.voltageLimit[0] = { 20 , 40 , 100 , 200 , 200 , 200 , 400 , 400 , 1000 };
-    specification.voltageLimit[1] = { 20 , 40 , 100 , 200 , 200 , 200 , 400 , 400 , 1000 };
+    // Input divider: 100/1009 = 1% too low display
+    // Amplifier gain: x1 (ok), x2 (ok), x5.1 (2% too high), x10.1 (1% too high)
+    // Overall gain: x1 1% too low, x2 1% to low, x5 1% to high, x10 ok
+    // The sample value at the top of the screen with gain error correction
+    specification.voltageLimit[0] = { 20 , 40 , 100 , 200 , 202 , 198 , 396 , 396 , 990 };
+    specification.voltageLimit[1] = { 20 , 40 , 100 , 200 , 202 , 198 , 396 , 396 , 990 };
+    // theoretical offset, will be corrected by individual config file
     specification.voltageOffset[0] = { 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80 };
     specification.voltageOffset[1] = { 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80 };
+
+    // read the real calibration values from file
     const char* ranges[] = { "10mV", "20mV", "50mV","100mV", "200mV", "500mV", "1000mV", "2000mV", "5000mV" }; 
     const char* channels[] = { "ch0", "ch1" };
-
-    //HORO: read the real calibration values from file
+    //printf( "read config file\n" );
     const unsigned RANGES = 9;
     QSettings settings( QDir::homePath() + "/.config/OpenHantek/modelDSO6022.conf", QSettings::IniFormat );
     settings.beginGroup( "gain" );

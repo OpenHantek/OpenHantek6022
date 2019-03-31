@@ -47,9 +47,9 @@ const DSOsamples &HantekDsoControl::getLastSamples() { return result; }
 #define is6022BE (getDevice()->getModel()->ID == ModelDSO6022BE::ID)
 #define is6022BL (getDevice()->getModel()->ID == ModelDSO6022BL::ID)
 #define is6022 ( is6022BE || is6022BL )
-// only 6022BE firmware (modded) supports command E4 -> set channel num, 6022BL gives error
+// 6022BE & 6022BL firmware (custom) supports command E4 -> set channel num
 // fast mode: sample only CH1 and transmit 8bit / sample instead of CH1&CH2 = 16bit / sample
-#define fast6022be (getDevice()->getModel()->ID == ModelDSO6022BE::ID && controlsettings.voltage[0].used && !controlsettings.voltage[1].used)
+#define fast6022 ( is6022 && controlsettings.voltage[0].used && !controlsettings.voltage[1].used )
 
 HantekDsoControl::HantekDsoControl(USBDevice *device)
     : device(device), specification(device->getModel()->spec()),
@@ -142,6 +142,7 @@ unsigned HantekDsoControl::getRecordLength() const {
 
 Dso::ErrorCode HantekDsoControl::retrieveChannelLevelData() {
     // Get channel level data
+    // printf( "retrieveChannelLevelData()\n" );
     int errorCode = device->controlRead(&controlsettings.cmdGetLimits);
     if (errorCode < 0) {
         qWarning() << tr("Couldn't get channel level data from oscilloscope");
@@ -318,7 +319,7 @@ void HantekDsoControl::convertRawDataToSamples(const std::vector<unsigned char> 
             } else if ( is6022 ) {
 
                 // 6022 fast rate
-                if ( fast6022be ) {
+                if ( fast6022 ) {
                     activeChannels = 1;
                     if ( channel > 0 ) { // one channel mode only with CH1 (channel == 0)
                         result.data[channel].clear();
@@ -344,14 +345,18 @@ void HantekDsoControl::convertRawDataToSamples(const std::vector<unsigned char> 
             result.clipped &= ~(0x01 << channel);
             for ( unsigned pos = 0; pos < result.data[channel].size();
                 ++pos, bufferPosition += activeChannels ) {
-                if ( bufferPosition >= totalSampleCount ) bufferPosition %= totalSampleCount; 
-                //HORO: does the %= wraparound conflict with DROP_DS6022... from above?
+                if ( bufferPosition >= totalSampleCount ) 
+                    bufferPosition %= totalSampleCount; 
+
                 int rawSample = rawData[bufferPosition]; // range 0...255
                 if ( rawSample == 0x00 || rawSample == 0xFF )
                     result.clipped |= 0x01 << channel;
                 double dataBuf = (double)(rawSample - shiftDataBuf); // int - int
                 result.data[channel][pos] = (dataBuf / limit - offset) * gainStep;
             }
+            //printf( "channel %d, gainID %d, samplerate %f\n", channel, gainID, controlsettings.samplerate.current );
+            //printf( "offsetLimit %ld %d\n", sizeof(OffsetsPerGainStep), ((unsigned char*)controlsettings.offsetLimit)[0] );
+
 #if 0
             //HORO: test output (get one data point at e.g. pos 666, this offset must be even!)
             printf( stderr, "channel %d, gainID %d, limit %d, shift %d, gainStep %8.3f, raw 0x%03x, result %8.3f\n", \
@@ -378,7 +383,7 @@ double HantekDsoControl::getBestSamplerate(double samplerate, bool fastRate, boo
         else
             limits = &(specification->samplerate.single);
     } else {
-        if ( fast6022be )
+        if ( fast6022 )
             limits = &(specification->samplerate.multi);
         else
             limits = &(specification->samplerate.single);
@@ -637,7 +642,7 @@ void HantekDsoControl::updateSamplerateLimits() {
     if (specification->isFixedSamplerateDevice) {
         QList<double> sampleSteps;
         //HORO: limit sample rate if not single channel mode
-        double limit = ( isFastRate() || fast6022be ) ?
+        double limit = ( isFastRate() || fast6022 ) ?
             specification->samplerate.single.max : specification->samplerate.multi.max;
         for (auto &v : specification->fixedSampleRates) {
             if ( v.samplerate <= limit ) { sampleSteps << v.samplerate; }
