@@ -327,7 +327,7 @@ void HantekDsoControl::convertRawDataToSamples(const std::vector<unsigned char> 
                     }
                 }
 
-                // if device is 6022BE, drop heading & trailing samples
+                // if device is 6022, drop heading & trailing samples
                 const unsigned DROP_DSO6022_HEAD = 0x810;
                 const unsigned DROP_DSO6022_TAIL = 0x7F0;
                 if (!isRollMode()) {
@@ -820,7 +820,7 @@ Dso::ErrorCode HantekDsoControl::setChannelUsed(ChannelID channel, bool used) {
     }
     default: 
         // qDebug() << "usedChannels" << (int)usedChannels;
-        if ( is6022BE ) {
+        if ( is6022 ) {
             if ( usedChannels == UsedChannels::USED_CH1 )
                 modifyCommand<ControlSetNumChannels>(ControlCode::CONTROL_SETNUMCHANNELS)->setDiv( 1 );
             else
