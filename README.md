@@ -22,7 +22,8 @@ It was initially developed by [David Gräff and others](https://github.com/OpenH
 * :star: NEW: Shows a red channel warning (bottom left) if input data is clipped
 * A zoom view with a freely selectable range
 * All settings can be saved to a configuration file and loaded again
-* :star: NEW: Calibration data loaded from a model configuration file (only 6022BE/BL)
+* :star: NEW: Calibration values loaded from eeprom or a model configuration file (only 6022BE/BL)
+* :star: NEW: [Calibration program](https://github.com/Ho-Ro/Hantek6022API/blob/master/README.md#create-calibration-values-for-openhantek) to create these values automatically.
 * Multiple instances with a different device each can be started
 * The dock views on the main window can be customized by dragging them around and stacking them.
   This allows a minimum window size of 640*480 for old workstation computers.
