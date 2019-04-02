@@ -298,6 +298,7 @@ void HantekDsoControl::convertRawDataToSamples(const std::vector<unsigned char> 
             const double offset = controlsettings.voltage[channel].offsetReal;
             const double gainStep = specification->gain[gainID].gainSteps;
             int shiftDataBuf = 0;
+            double gainCalibration = 1.0;
 
             // Convert data from the oscilloscope and write it into the sample buffer
             unsigned bufferPosition = controlsettings.trigger.point * 2;
@@ -327,6 +328,21 @@ void HantekDsoControl::convertRawDataToSamples(const std::vector<unsigned char> 
                     }
                 }
 
+                // shift + individual offset for each channel and gain
+                shiftDataBuf = specification->voltageOffset[ channel ][ gainID ];
+                gainCalibration = 1.0;
+                if ( !shiftDataBuf ) { // no config file value
+                    // get offset value from eeprom[ 8 .. 39 ]
+                    const unsigned char * pOff = (const unsigned char *) controlsettings.offsetLimit;
+                    pOff += 2 * gainID + channel; // point to gain/channel offset value in eeprom[ 8 .. 39 ]
+                    shiftDataBuf = result.samplerate < 30e6 ? *pOff : *(pOff+16); // lowspeed / highspeed
+                    pOff += 32; // now point to gain/channel gain value in eeprom[ 40 .. 55 ]
+                    if ( *pOff != 255 && *pOff != 0 ) { // eeprom content valid
+                        // byte 128 - 125 ... 128 + 125 -> 1.0 - 0.250 ... 1.0 + 0.250 = 0.75 .. 1.25 
+                        gainCalibration = 1.0 + (*pOff - 0x80) / 500.0;
+                    }
+                    // printf( "sDB %d, gain_cal %f, ch %d, gIG %d\n", shiftDataBuf, gainCalibration, channel, gainID );
+                } 
                 // if device is 6022, drop heading & trailing samples
                 const unsigned DROP_DSO6022_HEAD = 0x810;
                 const unsigned DROP_DSO6022_TAIL = 0x7F0;
@@ -337,8 +353,6 @@ void HantekDsoControl::convertRawDataToSamples(const std::vector<unsigned char> 
                     bufferPosition += DROP_DSO6022_HEAD * activeChannels;
                 }
                 bufferPosition += channel;
-                //HORO: shift + individual offset for each channel and gain
-                shiftDataBuf = specification->voltageOffset[ channel ][ gainID ];
             } else {
                 bufferPosition += specification->channels - 1 - channel;
             }
@@ -352,7 +366,7 @@ void HantekDsoControl::convertRawDataToSamples(const std::vector<unsigned char> 
                 if ( rawSample == 0x00 || rawSample == 0xFF )
                     result.clipped |= 0x01 << channel;
                 double dataBuf = (double)(rawSample - shiftDataBuf); // int - int
-                result.data[channel][pos] = (dataBuf / limit - offset) * gainStep;
+                result.data[channel][pos] = (dataBuf / limit - offset) * gainCalibration * gainStep;
             }
             //printf( "channel %d, gainID %d, samplerate %f\n", channel, gainID, controlsettings.samplerate.current );
             //printf( "offsetLimit %ld %d\n", sizeof(OffsetsPerGainStep), ((unsigned char*)controlsettings.offsetLimit)[0] );

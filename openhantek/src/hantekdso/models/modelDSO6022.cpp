@@ -38,18 +38,19 @@ static void initSpecifications(Dso::ControlSpecification& specification) {
     // Amplifier gain: x1 (ok), x2 (ok), x5.1 (2% too high), x10.1 (1% too high)
     // Overall gain: x1 1% too low, x2 1% to low, x5 1% to high, x10 ok
     // The sample value at the top of the screen with gain error correction
-    specification.voltageLimit[0] = { 20 , 40 , 100 , 200 , 202 , 198 , 396 , 396 , 990 };
-    specification.voltageLimit[1] = { 20 , 40 , 100 , 200 , 202 , 198 , 396 , 396 , 990 };
+    specification.voltageLimit[0] = { 40 , 100 , 200 , 202 , 198 , 198 , 396 , 990 };
+    specification.voltageLimit[1] = { 40 , 100 , 200 , 202 , 198 , 198 , 396 , 990 };
     // theoretical offset, will be corrected by individual config file
-    specification.voltageOffset[0] = { 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80 };
-    specification.voltageOffset[1] = { 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80 };
+    specification.voltageOffset[0] = { 0, 0, 0, 0, 0, 0, 0, 0 };
+    specification.voltageOffset[1] = { 0, 0, 0, 0, 0, 0, 0, 0 };
 
     // read the real calibration values from file
-    const char* ranges[] = { "10mV", "20mV", "50mV","100mV", "200mV", "500mV", "1000mV", "2000mV", "5000mV" }; 
+    const char* ranges[] = { "20mV", "50mV","100mV", "200mV", "500mV", "1000mV", "2000mV", "5000mV" }; 
     const char* channels[] = { "ch0", "ch1" };
     //printf( "read config file\n" );
-    const unsigned RANGES = 9;
+    const unsigned RANGES = 8;
     QSettings settings( QDir::homePath() + "/.config/OpenHantek/modelDSO6022.conf", QSettings::IniFormat );
+
     settings.beginGroup( "gain" );
     for ( unsigned ch = 0; ch < 2; ch++ ) {
         settings.beginGroup( channels[ ch ] );
@@ -61,14 +62,17 @@ static void initSpecifications(Dso::ControlSpecification& specification) {
         settings.endGroup(); // channels
     }
     settings.endGroup(); // gain
+
     settings.beginGroup( "offset" );
     for ( unsigned ch = 0; ch < 2; ch++ ) {
         settings.beginGroup( channels[ ch ] );
         for ( unsigned iii = 0; iii < RANGES; iii++ ) {
             //settings.setValue( ranges[ iii ], iii );
-            int offset = settings.value( ranges[ iii ], "0" ).toInt();
-            if ( offset ) 
-                specification.voltageOffset[ ch ][ iii ] -= offset;
+            // set to 0x80 if no value from conf file
+            int offset = settings.value( ranges[ iii ], "255" ).toInt();
+            // printf( "%d: %d\n", iii, offset );
+            if ( offset != 255 ) // value exists in config file
+                specification.voltageOffset[ ch ][ iii ] = 0x80 - offset;
         }
         settings.endGroup(); // channels
     }
@@ -76,8 +80,8 @@ static void initSpecifications(Dso::ControlSpecification& specification) {
 
     // Divider. Tested and calculated results are different!
     // HW gain, voltage steps in V/screenheight (ranges 10,20,50,100,200,500,1000,2000,5000 mV)
-    specification.gain = { {10,0.08} , {10,0.16} , {10,0.40} , {10,0.80} , {5,1.60} ,
-                           {2,4.00} , {2,8.00} , {1,16.00} , {1,40.00} };
+    specification.gain = { {10,0.16} , {10,0.40} , {10,0.80} , {5,1.60} ,
+                           {2,4.00} , {1,8.00} , {1,16.00} , {1,40.00} };
     // Sample rates with default fw (fw modded from https://github.com/jhoenicke/Hantek6022API)
     // 100k, 200k, 500k, 1M, 2M, 4M, 8M, 12M, 16M, 24M, 30M, 48M, (30M & 48M are unstable with 2 channels)
     specification.fixedSampleRates = { {10,1e5} , {20,2e5} , {50,5e5} , {1,1e6} , {2,2e6} , {4,4e6} , {8,8e6} ,

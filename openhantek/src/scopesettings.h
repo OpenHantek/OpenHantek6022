@@ -76,7 +76,7 @@ struct DsoSettingsScopeVoltage : public DsoSettingsScopeChannel {
 
 /// \brief Holds the settings for the oscilloscope.
 struct DsoSettingsScope {
-    std::vector<double> gainSteps = {1e-2, 2e-2, 5e-2, 1e-1, 2e-1,
+    std::vector<double> gainSteps = {2e-2, 5e-2, 1e-1, 2e-1,
                                      5e-1, 1e0,  2e0,  5e0};        ///< The selectable voltage gain steps in V/div
     std::vector<DsoSettingsScopeSpectrum> spectrum;                 ///< Spectrum analysis settings
     std::vector<DsoSettingsScopeVoltage> voltage;                   ///< Settings for the normal graphs
