@@ -489,6 +489,7 @@ void DsoWidget::updateFrequencybase(double frequencybase) {
 /// \brief Updates the samplerate field after changing the samplerate.
 /// \param samplerate The samplerate set in the oscilloscope.
 void DsoWidget::updateSamplerate(double samplerate) {
+    // printf( "updateSamplerate( %g )\n", samplerate );
     settingsSamplerateLabel->setText(valueToString(samplerate, UNIT_SAMPLES, 4) + tr("/s"));
 }
 
@@ -496,7 +497,6 @@ void DsoWidget::updateSamplerate(double samplerate) {
 /// \param timebase The timebase used for displaying the trace.
 void DsoWidget::updateTimebase(double timebase) {
     settingsTimebaseLabel->setText(valueToString(timebase, UNIT_SECONDS, 4) + tr("/div"));
-
     updateMarkerDetails();
 }
 

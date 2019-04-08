@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0+
 
-//#define DEBUG
+// #define DEBUG
 
 #include <assert.h>
 #include <cmath>
@@ -49,7 +49,7 @@ const DSOsamples &HantekDsoControl::getLastSamples() { return result; }
 #define is6022 ( is6022BE || is6022BL )
 // 6022BE & 6022BL firmware (custom) supports command E4 -> set channel num
 // fast mode: sample only CH1 and transmit 8bit / sample instead of CH1&CH2 = 16bit / sample
-#define fast6022 ( is6022 && controlsettings.voltage[0].used && !controlsettings.voltage[1].used )
+#define isFast6022 ( is6022 && controlsettings.voltage[0].used && !controlsettings.voltage[1].used )
 
 HantekDsoControl::HantekDsoControl(USBDevice *device)
     : device(device), specification(device->getModel()->spec()),
@@ -103,7 +103,7 @@ double HantekDsoControl::getMinSamplerate() const {
 }
 
 double HantekDsoControl::getMaxSamplerate() const {
-    printf( "usedChannels %d\n", controlsettings.usedChannels );
+    // printf( "usedChannels %d\n", controlsettings.usedChannels );
     if (controlsettings.usedChannels <= 1) {
         return specification->samplerate.multi.max;
     } else {
@@ -320,7 +320,7 @@ void HantekDsoControl::convertRawDataToSamples(const std::vector<unsigned char> 
             } else if ( is6022 ) {
 
                 // 6022 fast rate
-                if ( fast6022 ) {
+                if ( isFast6022 ) {
                     activeChannels = 1;
                     if ( channel > 0 ) { // one channel mode only with CH1 (channel == 0)
                         result.data[channel].clear();
@@ -383,7 +383,7 @@ void HantekDsoControl::convertRawDataToSamples(const std::vector<unsigned char> 
 
 double HantekDsoControl::getBestSamplerate(double samplerate, bool fastRate, bool maximum,
                                            unsigned *downsampler) const {
-    qDebug() << "getBestSamplerate()";
+    // printf( "getBestSamplerate()\n" );
     // Abort if the input value is invalid
     if (samplerate <= 0.0) return 0.0;
 
@@ -397,12 +397,12 @@ double HantekDsoControl::getBestSamplerate(double samplerate, bool fastRate, boo
         else
             limits = &(specification->samplerate.single);
     } else {
-        if ( fast6022 )
+        if ( isFast6022 )
             limits = &(specification->samplerate.multi);
         else
             limits = &(specification->samplerate.single);
     }
-    printf( "limits: %g\n", limits->max );
+    // printf( "limits: %g\n", limits->max );
     // Get downsampling factor that would provide the requested rate
     double bestDownsampler = limits->base / specification->bufferDividers[controlsettings.recordLengthId] / samplerate;
     // Base samplerate sufficient, or is the maximum better?
@@ -529,7 +529,7 @@ unsigned HantekDsoControl::updateRecordLength(RecordLengthID index) {
 }
 
 unsigned HantekDsoControl::updateSamplerate(unsigned downsampler, bool fastRate) {
-    // qDebug() << "updateSamplerate( " << downsampler << ", " << fastRate << " )";
+    qDebug() << "updateSamplerate( " << downsampler << ", " << fastRate << " )";
     // Get samplerate limits
     const ControlSamplerateLimits *limits =
         fastRate ? &specification->samplerate.multi : &specification->samplerate.single;
@@ -656,7 +656,7 @@ void HantekDsoControl::updateSamplerateLimits() {
     if (specification->isFixedSamplerateDevice) {
         QList<double> sampleSteps;
         //HORO: limit sample rate if not single channel mode
-        double limit = ( isFastRate() || fast6022 ) ?
+        double limit = ( isFastRate() || isFast6022 ) ?
             specification->samplerate.single.max : specification->samplerate.multi.max;
         for (auto &v : specification->fixedSampleRates) {
             if ( v.samplerate <= limit ) { sampleSteps << v.samplerate; }
@@ -734,7 +734,9 @@ Dso::ErrorCode HantekDsoControl::setSamplerate(double samplerate) {
 }
 
 Dso::ErrorCode HantekDsoControl::setRecordTime(double duration) {
-    if (!device->isConnected()) return Dso::ErrorCode::CONNECTION;
+    // printf( "setRecordTime( %g )\n", duration );
+    if (!device->isConnected())
+        return Dso::ErrorCode::CONNECTION;
 
     if (duration == 0.0) {
         duration = controlsettings.samplerate.target.duration;
@@ -764,20 +766,29 @@ Dso::ErrorCode HantekDsoControl::setRecordTime(double duration) {
         else {
             return Dso::ErrorCode::NONE;
         }
-    } else {
-        // For now - we go for the 10240 size sampling - the other seems not to be supported
-        // Find highest samplerate using less than 10240 samples to obtain our duration.
-        unsigned sampleCount = 10240;
+    } else { // isFixedSamplerateDevice (e.g. 6022)
+        double srLimit;
+        if ( isFastRate() || isFast6022 )
+            srLimit = (specification->samplerate.single).max;
+        else
+            srLimit = (specification->samplerate.multi).max;
+        // For now - we go for the 20480 size sampling
+        // Find highest samplerate using less than 20480 samples to obtain our duration.
+        unsigned sampleCount = 20480;
         // Ensure that at least 1/2 of remaining samples are available for SW trigger algorithm
+
         if (specification->isSoftwareTriggerDevice) {
             sampleCount = (sampleCount - controlsettings.swSampleMargin) / 2;
         }
-        // qDebug() << "sampleCount" << sampleCount;
+        // qDebug() << "sampleCount" << sampleCount << "limit" << limit;
         unsigned sampleId = 0;
         for (unsigned id = 0; id < specification->fixedSampleRates.size(); ++id) {
-            // qDebug() << "id:" << id << "dur:" << duration << "spec:" << specification->fixedSampleRates[id].samplerate;
-            if (specification->fixedSampleRates[id].samplerate * duration < sampleCount) sampleId = id;
-            // qDebug() << "sampleId:" << sampleId; 
+            double sRate = specification->fixedSampleRates[id].samplerate;
+            // qDebug() << "id:" << id << "dur:" << duration << "spec:" << sRate;
+            if (sRate <= srLimit && sRate * duration < sampleCount) {
+                sampleId = id;
+            }
+            // qDebug() << "sampleId:" << sampleId;
         }
         // Usable sample value
         modifyCommand<ControlSetTimeDIV>(ControlCode::CONTROL_SETTIMEDIV)
@@ -790,9 +801,10 @@ Dso::ErrorCode HantekDsoControl::setRecordTime(double duration) {
 }
 
 Dso::ErrorCode HantekDsoControl::setChannelUsed(ChannelID channel, bool used) {
-    if (!device->isConnected()) return Dso::ErrorCode::CONNECTION;
-
-    if (channel >= specification->channels) return Dso::ErrorCode::PARAMETER;
+    if (!device->isConnected())
+        return Dso::ErrorCode::CONNECTION;
+    if (channel >= specification->channels)
+        return Dso::ErrorCode::PARAMETER;
     // Update settings
     controlsettings.voltage[channel].used = used;
     ChannelID channelCount = 0;

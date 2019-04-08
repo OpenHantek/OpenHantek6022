@@ -62,9 +62,9 @@ class HorizontalDock : public QDockWidget {
     /// \brief Changes the calibration frequency.
     /// \param calfreq The calibration frequency in hertz.
     double setCalfreq( double calfreq );
+
   protected:
     void closeEvent(QCloseEvent *event);
-
     QGridLayout *dockLayout;           ///< The main layout for the dock window
     QWidget *dockWidget;               ///< The main widget for the dock window
     QLabel *samplerateLabel;           ///< The label for the samplerate spinbox
@@ -81,11 +81,11 @@ class HorizontalDock : public QDockWidget {
                                        ///  interpreted and shown
     SiSpinBox *calfreqSiSpinBox;       ///< Selects the calibration frequency
 
-    DsoSettingsScope *scope; ///< The settings provided by the parent class
+    DsoSettingsScope *scope;           ///< The settings provided by the parent class
     QList<double> timebaseSteps;       ///< Steps for the timebase spinbox
     QList<double> calfreqSteps;        ///< Steps for the calfreq spinbox
 
-    QStringList formatStrings; ///< Strings for the formats
+    QStringList formatStrings;         ///< Strings for the formats
 
   protected slots:
     void frequencybaseSelected(double frequencybase);

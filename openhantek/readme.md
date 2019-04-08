@@ -24,12 +24,12 @@ via the `ezusb` helper methods and the `UploadFirmware` class.
 
 The hantek protocol structures and constants are defined within `src/hantekprotocol`.
 
-The heart of OpenHantek is the `src/hantekdso` folder and its `hantekdsocontrol` class. All supported
-models, based on the `DsoModel` class, are implemented within a subfolder `src/hantekdso/models` and automatically register themself
-to a `ModelRegistry` class. A model is based on (contains) a specification, the `ControlSpecification` class.
+The heart of OpenHantek is the `src/hantekdso` folder and its `hantekdsocontrol` class. All supported models, 
+based on the `DsoModel` class, are implemented within a subfolder `src/hantekdso/models` and automatically register
+themself to a `ModelRegistry` class. A model is based on (contains) a specification, the `ControlSpecification` class.
 
-The `hantekdsocontrol` class keeps track of the devices current state (samplerate, selected gain, activated channels, etc)
-via the `ControlSettings` class and field.
+The `hantekdsocontrol` class keeps track of the devices current state (samplerate, selected gain, activated channels,
+etc) via the `ControlSettings` class and field.
 It outputs the channel separated unprocessed samples via a `samplesAvailable(DSOsamples*)` signal.
 
 Before the data is presented to the GUI it arrives in the `src/post/postprocessing` class. Several post

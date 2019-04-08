@@ -120,7 +120,7 @@ void HorizontalDock::setFrequencybase(double frequencybase) {
 
 
 double HorizontalDock::setSamplerate(double samplerate) {
-    //printf( "setSamplerate %g\n", samplerate );
+    // printf( "setSamplerate( %g )\n", samplerate );
     QSignalBlocker blocker(samplerateSiSpinBox);
     samplerateSiSpinBox->setValue(samplerate);
     return samplerateSiSpinBox->value();
@@ -128,7 +128,7 @@ double HorizontalDock::setSamplerate(double samplerate) {
 
 
 double HorizontalDock::setTimebase(double timebase) {
-    //printf( "setTimebase %g\n", timebase );
+    // printf( "setTimebase( %g )\n", timebase );
     QSignalBlocker blocker(timebaseSiSpinBox);
     // timebaseSteps are repeated in each decade
     double decade = pow(10, floor(log10(timebase)));
@@ -139,6 +139,7 @@ double HorizontalDock::setTimebase(double timebase) {
             break;
         }
     }
+    // printf( "return %g \n", timebaseSiSpinBox->value() );
     return timebaseSiSpinBox->value();
 }
 
@@ -192,7 +193,7 @@ void HorizontalDock::setAvailableRecordLengths(const std::vector<unsigned> &reco
 
 
 void HorizontalDock::setSamplerateLimits(double minimum, double maximum) {
-    //printf( "setSamplerateLimits %f %f\n", minimum, maximum );
+    // printf( "setSamplerateLimits %f %f\n", minimum, maximum );
     QSignalBlocker blocker(samplerateSiSpinBox);
     this->samplerateSiSpinBox->setMinimum(minimum);
     this->samplerateSiSpinBox->setMaximum(maximum);
@@ -224,7 +225,7 @@ void HorizontalDock::frequencybaseSelected(double frequencybase) {
 /// \brief Called when the samplerate spinbox changes its value.
 /// \param samplerate The samplerate in samples/second.
 void HorizontalDock::samplerateSelected(double samplerate) {
-    //printf( "samplerateSelected: %g\n", samplerate );
+    // printf( "samplerateSelected( %g )\n", samplerate );
     scope->horizontal.samplerate = samplerate;
     scope->horizontal.samplerateSource = DsoSettingsScopeHorizontal::Samplerrate;
     emit samplerateChanged(samplerate);
@@ -234,7 +235,7 @@ void HorizontalDock::samplerateSelected(double samplerate) {
 /// \brief Called when the timebase spinbox changes its value.
 /// \param timebase The timebase in seconds.
 void HorizontalDock::timebaseSelected(double timebase) {
-    //printf( "timebaseSelected: %g\n", timebase );
+    // printf( "timebaseSelected( %g )\n", timebase );
     scope->horizontal.timebase = timebase;
     scope->horizontal.samplerateSource = DsoSettingsScopeHorizontal::Duration;
     emit timebaseChanged(timebase);
@@ -260,7 +261,7 @@ void HorizontalDock::formatSelected(int index) {
 /// \brief Called when the calfreq spinbox changes its value.
 /// \param calfreq The calibration frequency in hertz.
 void HorizontalDock::calfreqSelected(double calfreq) {
-    //printf( "calfreqSelected: %g\n", calfreq );
+    // printf( "calfreqSelected: %g\n", calfreq );
     scope->horizontal.calfreq = calfreq;
     emit calfreqChanged(calfreq);
 }

@@ -124,8 +124,6 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, Expo
     connect(horizontalDock, &HorizontalDock::frequencybaseChanged, dsoWidget, &DsoWidget::updateFrequencybase);
     connect(horizontalDock, &HorizontalDock::recordLengthChanged,
             [dsoControl](unsigned long recordLength) { dsoControl->setRecordLength(recordLength); });
-
-
     connect(dsoControl, &HantekDsoControl::recordTimeChanged,
             [this, settings, horizontalDock, dsoControl](double duration) {
                 if (settings->scope.horizontal.samplerateSource == DsoSettingsScopeHorizontal::Samplerrate &&
@@ -145,17 +143,15 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, Expo
         if (mSettings->scope.horizontal.samplerateSource == DsoSettingsScopeHorizontal::Duration &&
             mSettings->scope.horizontal.recordLength != UINT_MAX) {
             // The timebase was set, let's adapt the samplerate accordingly
+            // printf( "samplerateChanged( %g )\n", samplerate );
             mSettings->scope.horizontal.samplerate = samplerate;
             horizontalDock->setSamplerate(samplerate);
             dsoWidget->updateSamplerate(samplerate);
         }
     });
-
     connect(horizontalDock, &HorizontalDock::calfreqChanged, [dsoControl, this]() {
         dsoControl->setCalFreq(mSettings->scope.horizontal.calfreq);
     });
-
-
 
     connect(triggerDock, &TriggerDock::modeChanged, dsoControl, &HantekDsoControl::setTriggerMode);
     connect(triggerDock, &TriggerDock::modeChanged, dsoWidget, &DsoWidget::updateTriggerMode);
@@ -297,7 +293,6 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, Expo
                "href='mailto:oliver.haag@gmail.com'>oliver.haag@gmail.com</a></p>"
                "<p>Copyright &copy; 2012-2017 OpenHantek community<br>"
                "<a href='https://github.com/OpenHantek/openhantek'>https://github.com/OpenHantek/openhantek</a></p>"));
-
     });
 
     if (mSettings->scope.horizontal.samplerateSource == DsoSettingsScopeHorizontal::Samplerrate)
