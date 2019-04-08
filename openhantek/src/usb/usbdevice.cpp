@@ -83,6 +83,11 @@ bool USBDevice::connectDevice(QString &errorMessage) {
             interfaceDescriptor->bNumEndpoints == 2) {
             errorCode = claimInterface(interfaceDescriptor, HANTEK_EP_OUT, HANTEK_EP_IN);
             break;
+        } else if (interfaceDescriptor->bInterfaceClass == LIBUSB_CLASS_VENDOR_SPEC &&
+            interfaceDescriptor->bInterfaceSubClass == 0 && interfaceDescriptor->bInterfaceProtocol == 0 &&
+            interfaceDescriptor->bNumEndpoints == 1) {
+            errorCode = claimInterface(interfaceDescriptor, HANTEK_EP_IN);
+            break;
         }
     }
 
@@ -122,6 +127,25 @@ int USBDevice::claimInterface(const libusb_interface_descriptor *interfaceDescri
         if (endpointDescriptor->bEndpointAddress == endpointOut) {
             this->outPacketLength = endpointDescriptor->wMaxPacketSize;
         } else if (endpointDescriptor->bEndpointAddress == endPointIn) {
+            this->inPacketLength = endpointDescriptor->wMaxPacketSize;
+        }
+    }
+    return LIBUSB_SUCCESS;
+}
+
+int USBDevice::claimInterface(const libusb_interface_descriptor *interfaceDescriptor, int endPointIn) {
+    int errorCode = libusb_claim_interface(this->handle, interfaceDescriptor->bInterfaceNumber);
+    if (errorCode < 0) { return errorCode; }
+
+    interface = interfaceDescriptor->bInterfaceNumber;
+
+    // Check the maximum endpoint packet size
+    const libusb_endpoint_descriptor *endpointDescriptor;
+    this->outPacketLength = 0;
+    this->inPacketLength = 0;
+    for (int endpoint = 0; endpoint < interfaceDescriptor->bNumEndpoints; ++endpoint) {
+        endpointDescriptor = &(interfaceDescriptor->endpoint[endpoint]);
+        if (endpointDescriptor->bEndpointAddress == endPointIn) {
             this->inPacketLength = endpointDescriptor->wMaxPacketSize;
         }
     }
@@ -194,6 +218,9 @@ int USBDevice::controlTransfer(unsigned char type, unsigned char request, unsign
     if (!this->handle) return LIBUSB_ERROR_NO_DEVICE;
 
     int errorCode = LIBUSB_ERROR_TIMEOUT;
+    // printf( "controlTransfer type %x request %x data[0] %d length %d value %d index %d attempts %d\n", 
+    //    type, request, data[0], length, value, index, attempts ); 
+
     for (int attempt = 0; (attempt < attempts || attempts == -1) && errorCode == LIBUSB_ERROR_TIMEOUT; ++attempt)
         errorCode = libusb_control_transfer(this->handle, type, request, value, index, data, length, HANTEK_TIMEOUT);
 

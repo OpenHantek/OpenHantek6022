@@ -66,7 +66,7 @@ DsoWidget::DsoWidget(DsoSettingsScope *scope, DsoSettingsView *view, const Dso::
     settingsFrequencybaseLabel->setAlignment(Qt::AlignRight);
     settingsFrequencybaseLabel->setPalette(palette);
     swTriggerStatus = new QLabel();
-    swTriggerStatus->setMinimumWidth(30);
+    swTriggerStatus->setMinimumWidth(20);
     swTriggerStatus->setText(tr("TR"));
     swTriggerStatus->setAlignment(Qt::AlignCenter);
     swTriggerStatus->setAutoFillBackground(true);
@@ -105,8 +105,8 @@ DsoWidget::DsoWidget(DsoSettingsScope *scope, DsoSettingsView *view, const Dso::
     // The table for the measurements
     QPalette tablePalette = palette;
     measurementLayout = new QGridLayout();
-    measurementLayout->setColumnMinimumWidth(0, 64);
-    measurementLayout->setColumnMinimumWidth(1, 32);
+    measurementLayout->setColumnMinimumWidth(0, 50);
+    measurementLayout->setColumnMinimumWidth(1, 30);
     measurementLayout->setColumnStretch(2, 2);
     measurementLayout->setColumnStretch(3, 2);
     measurementLayout->setColumnStretch(4, 3);
@@ -115,7 +115,9 @@ DsoWidget::DsoWidget(DsoSettingsScope *scope, DsoSettingsView *view, const Dso::
     for (ChannelID channel = 0; channel < scope->voltage.size(); ++channel) {
         tablePalette.setColor(QPalette::WindowText, view->screen.voltage[channel]);
         measurementNameLabel.push_back(new QLabel(scope->voltage[channel].name));
+        measurementNameLabel[channel]->setAlignment(Qt::AlignCenter);
         measurementNameLabel[channel]->setPalette(tablePalette);
+        measurementNameLabel[channel]->setAutoFillBackground(true);
         measurementMiscLabel.push_back(new QLabel());
         measurementMiscLabel[channel]->setPalette(tablePalette);
         measurementGainLabel.push_back(new QLabel());
@@ -633,9 +635,7 @@ void DsoWidget::showNew(std::shared_ptr<PPresult> data) {
         swTriggerStatus->setPalette(triggerLabelPalette);
         swTriggerStatus->setVisible(true);
     }
-
     updateRecordLength(data.get()->sampleCount());
-
     for (ChannelID channel = 0; channel < scope->voltage.size(); ++channel) {
         if (scope->voltage[channel].used && data.get()->data(channel)) {
             // DC Amplitude string representation (4 significant digits)
@@ -647,6 +647,17 @@ void DsoWidget::showNew(std::shared_ptr<PPresult> data) {
             // Frequency string representation (5 significant digits)
             measurementFrequencyLabel[channel]->setText(
                 valueToString(data.get()->data(channel)->frequency, UNIT_HERTZ, 4));
+            // Highlight clipped channel
+            //printf( "CH%d: %d\n", channel+1, data.get()->data(channel)->valid );
+            QPalette validPalette;
+            if ( data.get()->data(channel)->valid ) { // normal display
+                validPalette.setColor( QPalette::WindowText, view->screen.voltage[channel] );
+                validPalette.setColor( QPalette::Background, view->screen.background );
+            } else { // warning
+                validPalette.setColor(QPalette::WindowText, Qt::black );
+                validPalette.setColor(QPalette::Background, Qt::red );
+            }
+            measurementNameLabel[channel]->setPalette( validPalette );
         }
     }
 }

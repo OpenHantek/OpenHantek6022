@@ -10,6 +10,7 @@
 struct DSOsamples {
     std::vector<std::vector<double>> data; ///< Pointer to input data from device
     double samplerate = 0.0;               ///< The samplerate of the input data
+    unsigned char clipped = 0;             ///< Bitmask of clipped channels
     bool append = false;                   ///< true, if waiting data should be appended
     mutable QReadWriteLock lock;
 };

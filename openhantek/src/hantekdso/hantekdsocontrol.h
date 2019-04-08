@@ -271,6 +271,10 @@ class HantekDsoControl : public QObject {
     /// \param position The new trigger position (in s).
     /// \return The trigger position that has been set.
     Dso::ErrorCode setPretriggerPosition(double position);
+    /// \brief Sets the calibration frequency of the oscilloscope.
+    /// \param calfreq The calibration frequency.
+    /// \return The tfrequency that has been set, ::Dso::ErrorCode on error.
+    Dso::ErrorCode setCalFreq(double calfreq = 0.0);
     void forceTrigger();
 
   signals:

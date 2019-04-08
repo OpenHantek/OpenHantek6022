@@ -13,6 +13,7 @@
 #include <QPainter>
 
 #include <QOpenGLFunctions>
+#include <QOffscreenSurface>
 
 #include "glscope.h"
 
@@ -54,6 +55,22 @@ void GlScope::fixOpenGLversion(QSurfaceFormat::RenderableType t) {
 
 GlScope::GlScope(DsoSettingsScope *scope, DsoSettingsView *view, QWidget *parent)
     : QOpenGLWidget(parent), scope(scope), view(view) {
+
+    // get OpenGL version to define appropriate OpenGLSL version
+    // reason:
+    // some not so new intel graphic driver report a very conservative version
+    // e.g. debian buster -> "2.1 Mesa 18.3.4"
+    QOffscreenSurface surface;
+    surface.create();
+    QOpenGLContext context;
+    context.create();
+    context.makeCurrent(&surface);
+    QString glVersion = (const char*)context.functions()->glGetString(GL_VERSION);
+    GLSLversion = glVersion >= "3.2" ? 150 : 120; // version string "3.2 xxxx" > "3.2" is true
+    // qDebug() << glVersion;
+    // qDebug() << GLSLversion;
+    surface.destroy();
+
     cursorInfo.clear();
     cursorInfo.push_back(&scope->horizontal.cursor);
     selectedCursor = 0;
@@ -201,9 +218,9 @@ void GlScope::initializeGL() {
           void main() { gl_FragColor = colour; }
     )";
 
-    const char *vshaderDesktop = R"(
-          #version 120 //150
-          attribute vec3 vertex; //in highp vec3 vertex;
+    const char *vshaderDesktop120 = R"(
+          #version 120
+          attribute highp vec3 vertex;
           uniform mat4 matrix;
           void main()
           {
@@ -211,14 +228,33 @@ void GlScope::initializeGL() {
               gl_PointSize = 1.0;
           }
     )";
-    const char *fshaderDesktop = R"(
-          #version 120 //150
+    const char *fshaderDesktop120 = R"(
+          #version 120
           uniform highp vec4 colour;
-          //out vec4 flatColor;
-          void main() { gl_FragColor = colour; } //{ flatColor = colour; }
+          void main() { gl_FragColor = colour; }
     )";
 
-    qDebug() << "compile shaders";
+    const char *vshaderDesktop150 = R"(
+          #version 150
+          in highp vec3 vertex;
+          uniform mat4 matrix;
+          void main()
+          {
+              gl_Position = matrix * vec4(vertex, 1.0);
+              gl_PointSize = 1.0;
+          }
+    )";
+    const char *fshaderDesktop150 = R"(
+          #version 150
+          uniform highp vec4 colour;
+          out vec4 flatColor;
+          void main() { flatColor = colour; }
+    )";
+
+    const char *vshaderDesktop = GLSLversion == 120 ? vshaderDesktop120 : vshaderDesktop150;
+    const char *fshaderDesktop = GLSLversion == 120 ? fshaderDesktop120 : fshaderDesktop150;
+
+    // qDebug() << "compile shaders";
     // Compile vertex shader
     bool usesOpenGL = QSurfaceFormat::defaultFormat().renderableType()==QSurfaceFormat::OpenGL;
     if (!program->addShaderFromSourceCode(QOpenGLShader::Vertex, usesOpenGL ? vshaderDesktop : vshaderES) ||

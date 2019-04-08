@@ -41,6 +41,11 @@ class USBDevice : public QObject {
     bool needsFirmware();
 
     /**
+     * @return Return device version as unsigned int
+     */
+    inline unsigned int getFwVersion() const { return this->descriptor.bcdDevice; }
+
+    /**
      * Keep track of the find iteration on which this device was found
      * @param iteration The new iteration value
      */
@@ -146,6 +151,7 @@ class USBDevice : public QObject {
     inline void overwriteInPacketLength(int len) { inPacketLength = len; }
   protected:
     int claimInterface(const libusb_interface_descriptor *interfaceDescriptor, int endpointOut, int endPointIn);
+    int claimInterface(const libusb_interface_descriptor *interfaceDescriptor, int endPointIn);
 
     // Device model data
     DSOModel* model;

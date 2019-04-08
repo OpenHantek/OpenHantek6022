@@ -115,6 +115,7 @@ class GlScope : public QOpenGLWidget {
     unsigned currentGraphInHistory = 0;
 
     // OpenGL shader, matrix, var-locations
+    unsigned int GLSLversion = 150;
     bool shaderCompileSuccess = false;
     QString errorMessage;
     std::unique_ptr<QOpenGLShaderProgram> m_program;

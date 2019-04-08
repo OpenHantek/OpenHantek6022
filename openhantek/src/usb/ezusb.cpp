@@ -48,7 +48,7 @@
  * The Cypress FX parts are largely compatible with the Anchorchip ones.
  */
 
-int verbose = 1;
+int verbose = 0;
 
 /*
  * return true if [addr,addr+len] includes external RAM
@@ -176,7 +176,7 @@ static bool ezusb_cpucs(libusb_device_handle *device, uint32_t addr, bool doRun)
 }
 
 /*
- * Send an FX3 jumpt to address command
+ * Send an FX3 jump to address command
  * Returns false on error.
  */
 static bool ezusb_fx3_jump(libusb_device_handle *device, uint32_t addr) {

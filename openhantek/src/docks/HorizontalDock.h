@@ -59,7 +59,9 @@ class HorizontalDock : public QDockWidget {
     /// \param mode The mode value the spin box should accept.
     /// \param steps The steps value the spin box should accept.
     void setSamplerateSteps(int mode, QList<double> sampleSteps);
-
+    /// \brief Changes the calibration frequency.
+    /// \param calfreq The calibration frequency in hertz.
+    double setCalfreq( double calfreq );
   protected:
     void closeEvent(QCloseEvent *event);
 
@@ -70,15 +72,18 @@ class HorizontalDock : public QDockWidget {
     QLabel *frequencybaseLabel;        ///< The label for the frequencybase spinbox
     QLabel *recordLengthLabel;         ///< The label for the record length combobox
     QLabel *formatLabel;               ///< The label for the format combobox
+    QLabel *calfreqLabel;              ///< The label for the calibration frequency spinbox
     SiSpinBox *samplerateSiSpinBox;    ///< Selects the samplerate for aquisitions
     SiSpinBox *timebaseSiSpinBox;      ///< Selects the timebase for voltage graphs
     SiSpinBox *frequencybaseSiSpinBox; ///< Selects the frequencybase for spectrum graphs
     QComboBox *recordLengthComboBox;   ///< Selects the record length for aquisitions
     QComboBox *formatComboBox;         ///< Selects the way the sampled data is
-                                       /// interpreted and shown
+                                       ///  interpreted and shown
+    SiSpinBox *calfreqSiSpinBox;       ///< Selects the calibration frequency
 
     DsoSettingsScope *scope; ///< The settings provided by the parent class
-    QList<double> timebaseSteps;     ///< Steps for the timebase spinbox
+    QList<double> timebaseSteps;       ///< Steps for the timebase spinbox
+    QList<double> calfreqSteps;        ///< Steps for the calfreq spinbox
 
     QStringList formatStrings; ///< Strings for the formats
 
@@ -88,6 +93,7 @@ class HorizontalDock : public QDockWidget {
     void timebaseSelected(double timebase);
     void recordLengthSelected(int index);
     void formatSelected(int index);
+    void calfreqSelected(double calfreq);
 
   signals:
     void frequencybaseChanged(double frequencybase);      ///< The frequencybase has been changed
@@ -95,4 +101,5 @@ class HorizontalDock : public QDockWidget {
     void timebaseChanged(double timebase);                ///< The timebase has been changed
     void recordLengthChanged(unsigned long recordLength); ///< The recordd length has been changed
     void formatChanged(Dso::GraphFormat format);          ///< The viewing format has been changed
+    void calfreqChanged(double calfreq);                  ///< The timebase has been changed
 };

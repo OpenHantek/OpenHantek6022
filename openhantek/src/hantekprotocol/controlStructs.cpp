@@ -140,4 +140,11 @@ ControlGetLimits::ControlGetLimits(size_t channels)
     value = (uint8_t)ControlValue::VALUE_OFFSETLIMITS;
     data()[0] = 0x01;
 }
+
+ControlSetCalFreq::ControlSetCalFreq() : ControlCommand(ControlCode::CONTROL_SETCALFREQ, 1) { 
+    this->setCalFreq( 1 ); // 1kHz
+}
+
+void ControlSetCalFreq::setCalFreq(uint8_t val) { data()[0] = val; }
+
 }
