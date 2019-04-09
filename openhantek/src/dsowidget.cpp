@@ -644,7 +644,7 @@ void DsoWidget::showNew(std::shared_ptr<PPresult> data) {
             // AC Amplitude string representation (4 significant digits)
             measurementRMSLabel[channel]->setText(
                 valueToString(data.get()->data(channel)->rms, UNIT_VOLTS, 4) + " ~");
-            // Frequency string representation (5 significant digits)
+            // Frequency string representation (4 significant digits)
             measurementFrequencyLabel[channel]->setText(
                 valueToString(data.get()->data(channel)->frequency, UNIT_HERTZ, 4));
             // Highlight clipped channel

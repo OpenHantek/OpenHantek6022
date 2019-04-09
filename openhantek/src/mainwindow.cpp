@@ -99,14 +99,16 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, Expo
 
     connect(ui->actionManualCommand, &QAction::toggled, [this, commandEdit](bool checked) {
         commandEdit->setVisible(checked);
-        if (checked) commandEdit->setFocus();
+        if (checked)
+            commandEdit->setFocus();
     });
 
     connect(commandEdit, &QLineEdit::returnPressed, [this, commandEdit, dsoControl]() {
         Dso::ErrorCode errorCode = dsoControl->stringCommand(commandEdit->text());
         commandEdit->clear();
         this->ui->actionManualCommand->setChecked(false);
-        if (errorCode != Dso::ErrorCode::NONE) statusBar()->showMessage(tr("Invalid command"), 3000);
+        if (errorCode != Dso::ErrorCode::NONE)
+            statusBar()->showMessage(tr("Invalid command"), 3000);
     });
 
     // Connect general signals
@@ -163,13 +165,14 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, Expo
     connect(dsoWidget, &DsoWidget::triggerLevelChanged, dsoControl, &HantekDsoControl::setTriggerLevel);
 
     auto usedChanged = [this, dsoControl, spec](ChannelID channel, bool used) {
-        if (channel >= (unsigned int)mSettings->scope.voltage.size()) return;
+        if (channel >= (unsigned int)mSettings->scope.voltage.size())
+            return;
 
-//        if (!used) dsoWidget->
         bool mathUsed = mSettings->scope.anyUsed(spec->channels);
 
         // Normal channel, check if voltage/spectrum or math channel is used
-        if (channel < spec->channels) dsoControl->setChannelUsed(channel, mathUsed | mSettings->scope.anyUsed(channel));
+        if (channel < spec->channels)
+            dsoControl->setChannelUsed(channel, mathUsed | mSettings->scope.anyUsed(channel));
         // Math channel, update all channels
         else if (channel == spec->channels) {
             for (ChannelID c = 0; c < spec->channels; ++c)
@@ -183,13 +186,15 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, Expo
     connect(voltageDock, &VoltageDock::couplingChanged, dsoWidget, &DsoWidget::updateVoltageCoupling);
     connect(voltageDock, &VoltageDock::modeChanged, dsoWidget, &DsoWidget::updateMathMode);
     connect(voltageDock, &VoltageDock::gainChanged, [this, dsoControl, spec](ChannelID channel, double gain) {
-        if (channel >= spec->channels) return;
+        if (channel >= spec->channels)
+            return;
 
         dsoControl->setGain(channel, mSettings->scope.gain(channel) * DIVS_VOLTAGE);
     });
     connect(voltageDock, &VoltageDock::gainChanged, dsoWidget, &DsoWidget::updateVoltageGain);
     connect(dsoWidget, &DsoWidget::offsetChanged, [this, dsoControl, spec](ChannelID channel) {
-        if (channel >= spec->channels) return;
+        if (channel >= spec->channels)
+            return;
         dsoControl->setOffset(channel, (mSettings->scope.voltage[channel].offset / DIVS_VOLTAGE) + 0.5);
     });
 
@@ -233,7 +238,8 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, Expo
 
     connect(ui->actionSave_as, &QAction::triggered, [this]() {
         QString fileName = QFileDialog::getSaveFileName(this, tr("Save settings"), "", tr("Settings (*.ini)"));
-        if (fileName.isEmpty()) return;
+        if (fileName.isEmpty())
+            return;
         mSettings->mainWindowGeometry = saveGeometry();
         mSettings->mainWindowState = saveState();
         mSettings->setFilename(fileName);
