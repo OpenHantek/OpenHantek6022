@@ -149,6 +149,7 @@ class USBDevice : public QObject {
      * that much data though and need an artification restriction.
      */
     inline void overwriteInPacketLength(int len) { inPacketLength = len; }
+
   protected:
     int claimInterface(const libusb_interface_descriptor *interfaceDescriptor, int endpointOut, int endPointIn);
     int claimInterface(const libusb_interface_descriptor *interfaceDescriptor, int endPointIn);
@@ -165,6 +166,7 @@ class USBDevice : public QObject {
     int interface;
     int outPacketLength; ///< Packet length for the OUT endpoint
     int inPacketLength;  ///< Packet length for the IN endpoint
+
   signals:
     void deviceDisconnected(); ///< The device has been disconnected
 };

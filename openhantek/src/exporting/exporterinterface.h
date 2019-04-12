@@ -15,7 +15,6 @@ class PPresult;
  * in the main routine to make an Exporter available.
  */
 class ExporterInterface {
-
 public:
     /**
     * Starts up this exporter. Aquires resources etc. Do not call this directly, it

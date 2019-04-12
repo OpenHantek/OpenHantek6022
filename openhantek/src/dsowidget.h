@@ -23,7 +23,6 @@ class DsoWidget : public QWidget {
     Q_OBJECT
 
   public:
-
     struct Sliders {
         LevelSlider *offsetSlider;          ///< The sliders for the graph offsets
         LevelSlider *triggerPositionSlider; ///< The slider for the pretrigger
