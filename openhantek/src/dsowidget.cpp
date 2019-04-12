@@ -355,7 +355,6 @@ void DsoWidget::adaptTriggerLevelSlider(DsoWidget::Sliders &sliders, ChannelID c
 
 /// \brief Show/Hide a line of the measurement table.
 void DsoWidget::setMeasurementVisible(ChannelID channel) {
-
     bool visible = scope->voltage[channel].used || scope->spectrum[channel].used;
 
     measurementNameLabel[channel]->setVisible(visible);

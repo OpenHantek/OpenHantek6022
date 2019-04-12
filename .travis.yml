@@ -20,7 +20,7 @@ matrix:
     - compiler: clang
       env: CMAKE_CXX_COMPILER=/usr/bin/clang++
       os: osx
-  
+
 before_install:
     - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; brew install qt5 fftw binutils; export CMAKE_PREFIX_PATH=$(brew --prefix qt5); fi
     - if [[ "$TRAVIS_OS_NAME" != "osx" ]]; then pip install cmake --user; fi

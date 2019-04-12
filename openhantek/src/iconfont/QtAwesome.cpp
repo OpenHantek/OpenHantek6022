@@ -18,7 +18,6 @@ QtAwesome *iconFont = new QtAwesome();
 
 /// The font-awesome icon painter
 class QtAwesomeCharIconPainter : public QtAwesomeIconPainter {
-
   protected:
     QStringList optionKeysForModeAndState(const QString &key, QIcon::Mode mode, QIcon::State state) {
         QString modePostfix;
@@ -88,7 +87,6 @@ class QtAwesomeCharIconPainter : public QtAwesomeIconPainter {
         QVariant var = options.value("anim");
         QtAwesomeAnimation *anim = var.value<QtAwesomeAnimation *>();
         if (anim) { anim->setup(*painter, rect); }
-
     }
 };
 
@@ -96,7 +94,6 @@ class QtAwesomeCharIconPainter : public QtAwesomeIconPainter {
 
 /// The painter icon engine.
 class QtAwesomeIconPainterIconEngine : public QIconEngine {
-
   public:
     QtAwesomeIconPainterIconEngine(QtAwesome *awesome, QtAwesomeIconPainter *painter, const QVariantMap &options)
         : awesomeRef_(awesome), iconPainterRef_(painter), options_(options) {}

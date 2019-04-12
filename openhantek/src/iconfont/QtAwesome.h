@@ -825,7 +825,6 @@ class QtAwesome : public QObject
 Q_OBJECT
 
 public:
-
     explicit QtAwesome(QObject *parent = 0);
     virtual ~QtAwesome();
 

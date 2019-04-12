@@ -15,8 +15,8 @@ class PPresult;
  * in the main routine to make an Exporter available.
  */
 class ExporterInterface {
-public:
 
+public:
     /**
     * Starts up this exporter. Aquires resources etc. Do not call this directly, it
     * will be called by the exporter registry at some point. Release your resources in the
@@ -73,6 +73,7 @@ public:
      * A continous exporter may report the used memory / reservered memory ratio here.
      */
     virtual float progress() = 0;
+
 protected:
     ExporterRegistry *registry;
 };

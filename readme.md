@@ -6,8 +6,8 @@ It was initially developed by [David Gräff and others](https://github.com/OpenH
 <img alt="Image of main window on linux" width="100%" src="docs/images/screenshot_mainwindow.png">
 
 * Actively supported devices: Hantek 6022BE/BL on Linux.
+* Other operating systems builds: MacOSX - partly tested & Windows - untested.
 * DSO2xxx Series and DSO52xx Series support is still in but untested due to missing devices.
-* Other operating systems builds: MacOSX and Windows - untested.
 
 ## Features
 
@@ -29,8 +29,10 @@ It was initially developed by [David Gräff and others](https://github.com/OpenH
   This allows a minimum window size of 640*480 for old workstation computers.
 
 ## Install prebuilt binary
-* Get Linux (and untested OSX and Win) packages from the [Releases](https://github.com/Ho-Ro/openhantek/releases) page.
+* Get Linux (and untested MacOSX and Win) packages from the [Releases](https://github.com/Ho-Ro/openhantek/releases) page.
+* Get MacOSX package from [macports](https://www.macports.org/ports.php?by=name&substr=openhantek) - thx [ra1nb0w](https://github.com/ra1nb0w)
 * [Download (untested) Windows build](https://ci.appveyor.com/project/Ho-Ro/openhantek/branch/master/artifacts)
+
 
 ## Building OpenHantek from source
 You need the following software, to build OpenHantek from source:
@@ -74,7 +76,7 @@ We welcome any reported Github Issue if you have a problem with this software. S
 
 ## Other DSO open source software
 * [Firmware (also used by OpenHantek) and python bindings for 6022BE/BL](https://github.com/Ho-Ro/Hantek6022API)
-* [SigRok](http://www.sigrok.org)
+* [sigrok](http://www.sigrok.org)
 * [Software for the Hantek 6022BE/BL (win only)](http://pididu.com/wordpress/basicscope/)
 
 ## Other related software

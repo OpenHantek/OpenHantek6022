@@ -31,7 +31,6 @@ public:
    private:
       int m_value;
    };
-
 };
 
 template< typename T, T first, T last >

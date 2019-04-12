@@ -29,7 +29,6 @@ private:
     int interval_;
     double step_;
     double angle_;
-
 };
 
 

@@ -19,6 +19,7 @@ struct DsoSettingsScope;
  */
 class PostProcessing : public QObject {
     Q_OBJECT
+
   public:
     PostProcessing(unsigned channelCount);
     /**
@@ -38,6 +39,7 @@ class PostProcessing : public QObject {
     ///
     std::unique_ptr<PPresult> currentData;
     static void convertData(const DSOsamples *source, PPresult *destination);
+
   public slots:
     /**
      * Start processing new data. The actual data may be processed in another thread if you have moved
@@ -45,6 +47,7 @@ class PostProcessing : public QObject {
      * @param data
      */
     void input(const DSOsamples *data);
+
 signals:
     void processingFinished(std::shared_ptr<PPresult> result);
 };

@@ -22,6 +22,7 @@ class ExporterInterface;
 
 class ExporterRegistry : public QObject {
     Q_OBJECT
+
   public:
     explicit ExporterRegistry(const Dso::ControlSpecification *deviceSpecification, DsoSettings *settings,
                               QObject *parent = nullptr);
@@ -58,6 +59,7 @@ class ExporterRegistry : public QObject {
     /// @return Return true if the exporter has finished and want to be removed from the
     ///     enabledExporters list.
     bool processData(std::shared_ptr<PPresult> &data, ExporterInterface *const &exporter);
+
   signals:
     void exporterStatusChanged(const QString &exporterName, const QString &status);
     void exporterProgressChanged();

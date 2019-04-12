@@ -287,7 +287,7 @@ void HantekDsoControl::convertRawDataToSamples(const std::vector<unsigned char> 
             }
         }
     } else {
-        //qDebug() << "! isFastRate()";
+        // ! isFastRate()
         unsigned short activeChannels = specification->channels;
         // Normal mode, channels are using their separate buffers
         for (ChannelID channel = 0; channel < specification->channels; ++channel) {
@@ -318,7 +318,6 @@ void HantekDsoControl::convertRawDataToSamples(const std::vector<unsigned char> 
                     result.data[channel][realPosition] = ((double)(low + high) / limit - offset) * gainStep;
                 }
             } else if ( is6022 ) {
-
                 // 6022 fast rate
                 if ( isFast6022 ) {
                     activeChannels = 1;
@@ -370,13 +369,6 @@ void HantekDsoControl::convertRawDataToSamples(const std::vector<unsigned char> 
             }
             //printf( "channel %d, gainID %d, samplerate %f\n", channel, gainID, controlsettings.samplerate.current );
             //printf( "offsetLimit %ld %d\n", sizeof(OffsetsPerGainStep), ((unsigned char*)controlsettings.offsetLimit)[0] );
-
-#if 0
-            //HORO: test output (get one data point at e.g. pos 666, this offset must be even!)
-            printf( stderr, "channel %d, gainID %d, limit %d, shift %d, gainStep %8.3f, raw 0x%03x, result %8.3f\n", \
-                     channel, gainID, limit, shiftDataBuf, gainStep, rawData[ 666 + channel ], \
-                     ((double)((int)(rawData[ 666 + channel ] - shiftDataBuf)) / limit - offset ) * gainStep );
-#endif
         }
     }
 }

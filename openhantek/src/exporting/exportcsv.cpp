@@ -82,7 +82,6 @@ bool ExporterCSV::save() {
     csvStream << "\n";
 
     for (unsigned int row = 0; row < maxRow; ++row) {
-
         csvStream << timeInterval * row;
         for (ChannelID channel = 0; channel < chCount; ++channel) {
             if (voltageData[channel] != nullptr) {
