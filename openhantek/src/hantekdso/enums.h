@@ -31,11 +31,11 @@ enum class Coupling {
 /// \enum TriggerMode
 /// \brief The different triggering modes.
 enum class TriggerMode {
-    NORMAL, ///< Normal hardware trigger (or software trigger) mode
     AUTO,   ///< Automatic without trigger event
+    NORMAL, ///< Normal hardware trigger (or software trigger) mode
     SINGLE  ///< Stop after the first trigger event
-};
-extern Enum<Dso::TriggerMode, Dso::TriggerMode::NORMAL, Dso::TriggerMode::SINGLE> TriggerModeEnum;
+}; // <class T, T first, T last>
+extern Enum<Dso::TriggerMode, Dso::TriggerMode::AUTO, Dso::TriggerMode::SINGLE> TriggerModeEnum;
 
 /// \enum Slope
 /// \brief The slope that causes a trigger.

@@ -2,7 +2,7 @@
 #include <QCoreApplication>
 
 namespace Dso {
-    Enum<Dso::TriggerMode, Dso::TriggerMode::NORMAL, Dso::TriggerMode::SINGLE> TriggerModeEnum;
+    Enum<Dso::TriggerMode, Dso::TriggerMode::AUTO, Dso::TriggerMode::SINGLE> TriggerModeEnum;
     Enum<Dso::Slope, Dso::Slope::Positive, Dso::Slope::Negative> SlopeEnum;
     Enum<Dso::GraphFormat, Dso::GraphFormat::TY, Dso::GraphFormat::XY> GraphFormatEnum;
 
