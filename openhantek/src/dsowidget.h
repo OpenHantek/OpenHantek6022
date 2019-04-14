@@ -80,8 +80,9 @@ class DsoWidget : public QWidget {
     std::vector<QLabel *> measurementGainLabel;      ///< The gain for the voltage (V/div)
     std::vector<QLabel *> measurementMagnitudeLabel; ///< The magnitude for the spectrum (dB/div)
     std::vector<QLabel *> measurementMiscLabel;      ///< Coupling or math mode
-    std::vector<QLabel *> measurementAmplitudeLabel; ///< DC Amplitude of the signal (V)
-    std::vector<QLabel *> measurementRMSLabel;       ///< AC Amplitude of the signal (V)
+    std::vector<QLabel *> measurementDCLabel;        ///< DC Amplitude of the signal (V)
+    std::vector<QLabel *> measurementACLabel;        ///< AC Amplitude of the signal (V)
+    std::vector<QLabel *> measurementRMSLabel;       ///< RMS Amplitude of the signal (V) = sqrt( DC² + AC² )
     std::vector<QLabel *> measurementFrequencyLabel; ///< Frequency of the signal (Hz)
 
     DataGrid *cursorDataGrid;

@@ -112,6 +112,7 @@ DsoWidget::DsoWidget(DsoSettingsScope *scope, DsoSettingsView *view, const Dso::
     measurementLayout->setColumnStretch(4, 3);
     measurementLayout->setColumnStretch(5, 3);
     measurementLayout->setColumnStretch(6, 3);
+    measurementLayout->setColumnStretch(7, 3);
     for (ChannelID channel = 0; channel < scope->voltage.size(); ++channel) {
         tablePalette.setColor(QPalette::WindowText, view->screen.voltage[channel]);
         measurementNameLabel.push_back(new QLabel(scope->voltage[channel].name));
@@ -127,9 +128,12 @@ DsoWidget::DsoWidget(DsoSettingsScope *scope, DsoSettingsView *view, const Dso::
         measurementMagnitudeLabel.push_back(new QLabel());
         measurementMagnitudeLabel[channel]->setAlignment(Qt::AlignRight);
         measurementMagnitudeLabel[channel]->setPalette(tablePalette);
-        measurementAmplitudeLabel.push_back(new QLabel());
-        measurementAmplitudeLabel[channel]->setAlignment(Qt::AlignRight);
-        measurementAmplitudeLabel[channel]->setPalette(palette);
+        measurementDCLabel.push_back(new QLabel());
+        measurementDCLabel[channel]->setAlignment(Qt::AlignRight);
+        measurementDCLabel[channel]->setPalette(palette);
+        measurementACLabel.push_back(new QLabel());
+        measurementACLabel[channel]->setAlignment(Qt::AlignRight);
+        measurementACLabel[channel]->setPalette(palette);
         measurementRMSLabel.push_back(new QLabel());
         measurementRMSLabel[channel]->setAlignment(Qt::AlignRight);
         measurementRMSLabel[channel]->setPalette(palette);
@@ -141,9 +145,10 @@ DsoWidget::DsoWidget(DsoSettingsScope *scope, DsoSettingsView *view, const Dso::
         measurementLayout->addWidget(measurementMiscLabel[channel], (int)channel, 1);
         measurementLayout->addWidget(measurementGainLabel[channel], (int)channel, 2);
         measurementLayout->addWidget(measurementMagnitudeLabel[channel], (int)channel, 3);
-        measurementLayout->addWidget(measurementAmplitudeLabel[channel], (int)channel, 4);
-        measurementLayout->addWidget(measurementRMSLabel[channel], (int)channel, 5);
-        measurementLayout->addWidget(measurementFrequencyLabel[channel], (int)channel, 6);
+        measurementLayout->addWidget(measurementDCLabel[channel], (int)channel, 4);
+        measurementLayout->addWidget(measurementACLabel[channel], (int)channel, 5);
+        measurementLayout->addWidget(measurementRMSLabel[channel], (int)channel, 6);
+        measurementLayout->addWidget(measurementFrequencyLabel[channel], (int)channel, 7);
         if ((unsigned)channel < spec->channels)
             updateVoltageCoupling((unsigned)channel);
         else
@@ -360,12 +365,14 @@ void DsoWidget::setMeasurementVisible(ChannelID channel) {
     measurementNameLabel[channel]->setVisible(visible);
     measurementMiscLabel[channel]->setVisible(visible);
 
-    measurementAmplitudeLabel[channel]->setVisible(visible);
+    measurementDCLabel[channel]->setVisible(visible);
+    measurementACLabel[channel]->setVisible(visible);
     measurementRMSLabel[channel]->setVisible(visible);
     measurementFrequencyLabel[channel]->setVisible(visible);
     if (!visible) {
         measurementGainLabel[channel]->setText(QString());
-        measurementAmplitudeLabel[channel]->setText(QString());
+        measurementDCLabel[channel]->setText(QString());
+        measurementACLabel[channel]->setText(QString());
         measurementRMSLabel[channel]->setText(QString());
         measurementFrequencyLabel[channel]->setText(QString());
     }
@@ -638,16 +645,18 @@ void DsoWidget::showNew(std::shared_ptr<PPresult> data) {
     for (ChannelID channel = 0; channel < scope->voltage.size(); ++channel) {
         if (scope->voltage[channel].used && data.get()->data(channel)) {
             // DC Amplitude string representation (4 significant digits)
-            measurementAmplitudeLabel[channel]->setText(
-                valueToString(data.get()->data(channel)->amplitude, UNIT_VOLTS, 4) + " =");
+            measurementDCLabel[channel]->setText(
+                valueToString( data.get()->data(channel)->dc, UNIT_VOLTS, 4 ) + " =" );
             // AC Amplitude string representation (4 significant digits)
+            measurementACLabel[channel]->setText(
+                valueToString( data.get()->data(channel)->ac, UNIT_VOLTS, 4 ) + " ~" );
+            // RMS Amplitude string representation (4 significant digits)
             measurementRMSLabel[channel]->setText(
-                valueToString(data.get()->data(channel)->rms, UNIT_VOLTS, 4) + " ~");
+                valueToString( data.get()->data(channel)->rms, UNIT_VOLTS, 4 ) + " eff" );
             // Frequency string representation (4 significant digits)
             measurementFrequencyLabel[channel]->setText(
-                valueToString(data.get()->data(channel)->frequency, UNIT_HERTZ, 4));
+                valueToString( data.get()->data(channel)->frequency, UNIT_HERTZ, 4 ) );
             // Highlight clipped channel
-            //printf( "CH%d: %d\n", channel+1, data.get()->data(channel)->valid );
             QPalette validPalette;
             if ( data.get()->data(channel)->valid ) { // normal display
                 validPalette.setColor( QPalette::WindowText, view->screen.voltage[channel] );

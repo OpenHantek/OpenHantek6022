@@ -17,7 +17,7 @@
 #include "sispinbox.h"
 #include "utils/printutils.h"
 
-static unsigned int row = 0;
+static int row = 0;
 
 template<typename... Args> struct SELECT {
     template<typename C, typename R>
@@ -246,7 +246,7 @@ void HorizontalDock::timebaseSelected(double timebase) {
 /// \param index The index of the combo box item.
 void HorizontalDock::recordLengthSelected(int index) {
     scope->horizontal.recordLength = this->recordLengthComboBox->itemData(index).toUInt();
-    emit recordLengthChanged(index);
+    emit recordLengthChanged((unsigned int)index);
 }
 
 

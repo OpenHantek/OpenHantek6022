@@ -149,20 +149,22 @@ void SpectrumGenerator::process(PPresult *result) {
         // Create sample buffer and apply window
         std::unique_ptr<double[]> windowedValues = std::unique_ptr<double[]>(new double[sampleCount]);
         // calculate the average value
-        channelData->amplitude = 0.0;
+        double dc = 0.0;
         for (unsigned int position = 0; position < sampleCount; ++position) {
-            channelData->amplitude += channelData->voltage.sample[position];
+            dc += channelData->voltage.sample[position];
         }
-        channelData->amplitude /= sampleCount;
-        // strip DC bias, calculate rms, apply window
-        double rms = 0.0;
+        dc /= sampleCount;
+        channelData->dc = dc;
+        // now strip DC bias, calculate rms of AC component and apply window for fft to AC component
+        double ac2 = 0.0;
         for (unsigned int position = 0; position < sampleCount; ++position) {
-            double ac = channelData->voltage.sample[position] - channelData->amplitude;
-            rms += ac * ac;
-            windowedValues[position] = lastWindowBuffer[position] * ac;
+            double ac_sample = channelData->voltage.sample[position] - dc;
+            ac2 += ac_sample * ac_sample;
+            windowedValues[position] = lastWindowBuffer[position] * ac_sample;
         }
-        rms /= sampleCount;
-        channelData->rms = sqrt( rms );
+        ac2 /= sampleCount;
+        channelData->ac = sqrt( ac2 ); // rms of AC component
+        channelData->rms = sqrt( dc * dc + ac2 ); // total rms = U eff
 
         {
             // Do discrete real to half-complex transformation
