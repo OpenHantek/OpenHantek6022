@@ -10,6 +10,7 @@
 #include <QTextStream>
 #include <QFile>
 #include <QFileDialog>
+#include <QLocale>
 
 ExporterCSV::ExporterCSV() {}
 
@@ -50,6 +51,9 @@ bool ExporterCSV::save() {
     double timeInterval = 0;
     double freqInterval = 0;
 
+    // use semicolon as data separator if comma is already used as decimal separator - e.g. with german locale
+    const char *sep = QLocale::system().decimalPoint() == ',' ? ";" : ",";
+
     for (ChannelID channel = 0; channel < chCount; ++channel) {
         if (data->data(channel)) {
             if (registry->settings->scope.voltage[channel].used) {
@@ -69,33 +73,39 @@ bool ExporterCSV::save() {
     // Start with channel names
     csvStream << "\"t\"";
     for (ChannelID channel = 0; channel < chCount; ++channel) {
-        if (voltageData[channel] != nullptr) { csvStream << ",\"" << registry->settings->scope.voltage[channel].name << "\""; }
+        if (voltageData[channel] != nullptr) {
+            csvStream << sep << "\"" << registry->settings->scope.voltage[channel].name << "\"";
+        }
     }
     if (isSpectrumUsed) {
-        csvStream << ",\"f\"";
+        csvStream << sep << "\"f\"";
         for (ChannelID channel = 0; channel < chCount; ++channel) {
             if (spectrumData[channel] != nullptr) {
-                csvStream << ",\"" << registry->settings->scope.spectrum[channel].name << "\"";
+                csvStream << sep << "\"" << registry->settings->scope.spectrum[channel].name << "\"";
             }
         }
     }
     csvStream << "\n";
 
     for (unsigned int row = 0; row < maxRow; ++row) {
-        csvStream << timeInterval * row;
+        csvStream << QLocale::system().toString( timeInterval * row );
         for (ChannelID channel = 0; channel < chCount; ++channel) {
             if (voltageData[channel] != nullptr) {
-                csvStream << ",";
-                if (row < voltageData[channel]->sample.size()) { csvStream << voltageData[channel]->sample[row]; }
+                csvStream << sep;
+                if (row < voltageData[channel]->sample.size()) {
+                    csvStream << QLocale::system().toString( voltageData[channel]->sample[row] );
+                }
             }
         }
 
         if (isSpectrumUsed) {
-            csvStream << "," << freqInterval * row;
+            csvStream << sep << QLocale::system().toString( freqInterval * row );
             for (ChannelID channel = 0; channel < chCount; ++channel) {
                 if (spectrumData[channel] != nullptr) {
-                    csvStream << ",";
-                    if (row < spectrumData[channel]->sample.size()) { csvStream << spectrumData[channel]->sample[row]; }
+                    csvStream << sep;
+                    if (row < spectrumData[channel]->sample.size()) { 
+                        csvStream << QLocale::system().toString( spectrumData[channel]->sample[row] );
+                    }
                 }
             }
         }
@@ -107,4 +117,7 @@ bool ExporterCSV::save() {
     return true;
 }
 
-float ExporterCSV::progress() { return data ? 1.0f : 0; }
+
+float ExporterCSV::progress() { 
+    return data ? 1.0f : 0;
+}

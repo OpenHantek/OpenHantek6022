@@ -7,6 +7,6 @@
 *.new
 *.diff
 CMakeLists.txt.user
-build/
+build*
 firmware/hex
 *.json
