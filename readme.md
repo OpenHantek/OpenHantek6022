@@ -22,6 +22,7 @@ It was initially developed by [David Gräff and others](https://github.com/OpenH
 * Math channel with these modes: Ch1+Ch2, Ch1-Ch2, Ch2-Ch1
 * Freely configurable colors
 * Export to CSV, JPG, PNG or print the graphs
+* :star: NEW: Localized CSV file (decimal and data separator)
 * Supports hardware and software triggered devices
 * :star: NEW: Trigger modes: Normal, Auto and Single with green/red status display (top left)
 * :star: NEW: Shows a red channel warning (bottom left) if input data is clipped
