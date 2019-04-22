@@ -404,7 +404,6 @@ static QString markerToString(DsoSettingsScope *scope, unsigned index) {
 void DsoWidget::updateMarkerDetails() {
     double divs = fabs(scope->horizontal.cursor.pos[1].x() - scope->horizontal.cursor.pos[0].x());
     double time = divs * scope->horizontal.timebase;
-    double freq = divs * scope->horizontal.frequencybase;
 
     QString prefix(tr("Markers"));
     if (view->zoom) {
@@ -418,7 +417,8 @@ void DsoWidget::updateMarkerDetails() {
     markerFrequencyLabel->setText(valueToString(1.0 / time, UNIT_HERTZ, 4));
 
     int index = 0;
-    cursorDataGrid->updateInfo(index++, true, QString(), valueToString(time, UNIT_SECONDS, 4), valueToString(freq, UNIT_HERTZ, 4));
+    cursorDataGrid->updateInfo(index++, true, QString(),
+        valueToString(time, UNIT_SECONDS, 4), valueToString(1.0 / time, UNIT_HERTZ, 4));
 
     for (ChannelID channel = 0; channel < scope->voltage.size(); ++channel) {
         if (scope->voltage[channel].used) {
