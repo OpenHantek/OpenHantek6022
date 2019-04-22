@@ -1313,10 +1313,10 @@ void HantekDsoControl::run() {
         case CAPTURE_READY2250:
         case CAPTURE_READY5200: {
             std::vector<unsigned char> rawData = this->getSamples(expectedSampleCount);
-            if (this->_samplingStarted) {
+            if (this->_samplingStarted) { // feed new samples to postprocess and display
                 convertRawDataToSamples(rawData);
-                emit samplesAvailable(&result);
-            }
+            } // else don't update, reuse old values
+            emit samplesAvailable(&result); // let display run always to allow user interaction
         }
 
             // Check if we're in single trigger mode
