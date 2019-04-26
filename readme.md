@@ -51,7 +51,7 @@ We have build instructions available for [Linux](docs/build.md#linux), [Apple Ma
 
 ## Run OpenHantek
 With the original OpenHantek version you needed an OpenGL 3.2+ or OpenGL ES 2.0+ capable graphics hardware.
-OpenHantek6022 runs now on legacy HW/SW (OpenGL 2.1+ or OpenGL ES 1.2+) with the patch [coozoo@01b42d3](https://github.com/coozoo/openhantek/commit/01b42d3db2921a0aa83ea6808147ea6257de3f28)
+OpenHantek6022 runs also on legacy HW/SW (OpenGL 2.1+ or OpenGL ES 1.2+) with the patch [coozoo@01b42d3](https://github.com/coozoo/openhantek/commit/01b42d3db2921a0aa83ea6808147ea6257de3f28)
 OpenGL is preferred, if available. Overwrite this behaviour by starting OpenHantek
 from the command line like this: `OpenHantek --useGLES`.
 

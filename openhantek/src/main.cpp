@@ -84,7 +84,7 @@ int main(int argc, char *argv[]) {
     //////// Set application information ////////
     QCoreApplication::setOrganizationName("OpenHantek");
     QCoreApplication::setOrganizationDomain("www.openhantek.org");
-    QCoreApplication::setApplicationName("OpenHantek");
+    QCoreApplication::setApplicationName("OpenHantek6022");
     QCoreApplication::setApplicationVersion(VERSION);
     QCoreApplication::setAttribute(Qt::AA_UseHighDpiPixmaps, true);
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 6, 0))

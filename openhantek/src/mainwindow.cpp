@@ -44,10 +44,12 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, Expo
     // Window title
     setWindowIcon(QIcon(":openhantek.png"));
     setWindowTitle(
-        tr("OpenHantek - Device %1 (%2) - Renderer %3")
+        tr("OpenHantek6022 (Build %1) - Device %2 (FW %3)") //" - Renderer %4")
+            .arg(QString::fromStdString( VERSION))
             .arg(QString::fromStdString(dsoControl->getDevice()->getModel()->name))
             .arg((unsigned int)dsoControl->getDevice()->getFwVersion(),4,16,QChar('0'))
-            .arg(QSurfaceFormat::defaultFormat().renderableType() == QSurfaceFormat::OpenGL ? "OpenGL" : "OpenGL ES"));
+            //.arg(QSurfaceFormat::defaultFormat().renderableType() == QSurfaceFormat::OpenGL ? "OpenGL" : "OpenGL ES")
+        );
 
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 6, 0))
     setDockOptions(dockOptions() | QMainWindow::GroupedDragging);
@@ -293,12 +295,12 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, Expo
 
     connect(ui->actionAbout, &QAction::triggered, [this]() {
         QMessageBox::about(
-            this, tr("About OpenHantek %1").arg(VERSION),
-            tr("<p>This is a open source software for Hantek USB oscilloscopes.</p>"
+            this, tr("About OpenHantek6022 (Build %1)").arg(VERSION),
+            tr("<p>This is a open source software for Hantek6022 USB oscilloscopes</p>"
                "<p>Copyright &copy; 2010, 2011 Oliver Haag<br><a "
                "href='mailto:oliver.haag@gmail.com'>oliver.haag@gmail.com</a></p>"
-               "<p>Copyright &copy; 2012-2017 OpenHantek community<br>"
-               "<a href='https://github.com/OpenHantek/openhantek'>https://github.com/OpenHantek/openhantek</a></p>"));
+               "<p>Copyright &copy; 2012-2019 OpenHantek community<br>"
+               "<a href='https://github.com/OpenHantek'>https://github.com/OpenHantek</a></p>"));
     });
 
     if (mSettings->scope.horizontal.samplerateSource == DsoSettingsScopeHorizontal::Samplerrate)

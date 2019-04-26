@@ -28,7 +28,7 @@ SelectSupportedDevice::SelectSupportedDevice(QWidget *parent) :
         QCoreApplication::instance()->quit();
     });
     connect(ui->buttonBox, &QDialogButtonBox::helpRequested, [this]() {
-        QDesktopServices::openUrl(QUrl("https://github.com/OpenHantek/openhantek#openhantek--"));
+        QDesktopServices::openUrl(QUrl("https://github.com/OpenHantek/OpenHantek6022"));
     });
     connect(ui->btnAddDevice, &QPushButton::clicked, [this]() {
         newDeviceFromExistingDialog->setModal(true);
