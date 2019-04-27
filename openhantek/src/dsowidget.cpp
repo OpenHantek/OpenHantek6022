@@ -49,7 +49,7 @@ DsoWidget::DsoWidget(DsoSettingsScope *scope, DsoSettingsView *view, const Dso::
         zoomScope->updateCursor(cursorIndex);
     });
 
-    // The table for the settings
+    // The table for the settings at screen top
     settingsTriggerLabel = new QLabel();
     settingsTriggerLabel->setMinimumWidth(160);
     settingsTriggerLabel->setIndent(5);
@@ -102,7 +102,7 @@ DsoWidget::DsoWidget(DsoSettingsScope *scope, DsoSettingsView *view, const Dso::
     markerLayout->addWidget(markerTimebaseLabel, 1);
     markerLayout->addWidget(markerFrequencybaseLabel, 1);
 
-    // The table for the measurements
+    // The table for the measurements at screen bottom
     QPalette tablePalette = palette;
     measurementLayout = new QGridLayout();
     measurementLayout->setColumnMinimumWidth(0, 50);

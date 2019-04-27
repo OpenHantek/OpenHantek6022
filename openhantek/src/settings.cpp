@@ -44,7 +44,6 @@ DsoSettings::DsoSettings(const Dso::ControlSpecification* deviceSpecification) {
     view.print.voltage.push_back(view.screen.voltage.back());
     view.print.spectrum.push_back(view.print.voltage.back().darker());
 
-
     load();
 }
 

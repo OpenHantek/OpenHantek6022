@@ -49,7 +49,7 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, Expo
             .arg(QString::fromStdString(dsoControl->getDevice()->getModel()->name))
             .arg((unsigned int)dsoControl->getDevice()->getFwVersion(),4,16,QChar('0'))
             //.arg(QSurfaceFormat::defaultFormat().renderableType() == QSurfaceFormat::OpenGL ? "OpenGL" : "OpenGL ES")
-        );
+    );
 
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 6, 0))
     setDockOptions(dockOptions() | QMainWindow::GroupedDragging);
@@ -129,20 +129,18 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, Expo
     connect(horizontalDock, &HorizontalDock::recordLengthChanged,
             [dsoControl](unsigned long recordLength) { dsoControl->setRecordLength(recordLength); });
     connect(dsoControl, &HantekDsoControl::recordTimeChanged,
-            [this, settings, horizontalDock, dsoControl](double duration) {
-                if (settings->scope.horizontal.samplerateSource == DsoSettingsScopeHorizontal::Samplerrate &&
-                    settings->scope.horizontal.recordLength != UINT_MAX) {
-                    // The samplerate was set, let's adapt the timebase accordingly
-                    settings->scope.horizontal.timebase = horizontalDock->setTimebase(duration / DIVS_TIME);
-                }
-
-                // The trigger position should be kept at the same place but the timebase has
-                // changed
-                dsoControl->setPretriggerPosition(settings->scope.trigger.position *
-                                                  settings->scope.horizontal.timebase * DIVS_TIME);
-
-                this->dsoWidget->updateTimebase(settings->scope.horizontal.timebase);
-            });
+        [this, settings, horizontalDock, dsoControl](double duration) {
+            if (settings->scope.horizontal.samplerateSource == DsoSettingsScopeHorizontal::Samplerrate &&
+                settings->scope.horizontal.recordLength != UINT_MAX) {
+                // The samplerate was set, let's adapt the timebase accordingly
+                settings->scope.horizontal.timebase = horizontalDock->setTimebase(duration / DIVS_TIME);
+            }
+            // The trigger position should be kept at the same place but the timebase has
+            // changed
+            dsoControl->setPretriggerPosition(settings->scope.trigger.position *
+                                                settings->scope.horizontal.timebase * DIVS_TIME);
+            this->dsoWidget->updateTimebase(settings->scope.horizontal.timebase);
+    });
     connect(dsoControl, &HantekDsoControl::samplerateChanged, [this, horizontalDock](double samplerate) {
         if (mSettings->scope.horizontal.samplerateSource == DsoSettingsScopeHorizontal::Duration &&
             mSettings->scope.horizontal.recordLength != UINT_MAX) {
@@ -300,7 +298,9 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, Expo
                "<p>Copyright &copy; 2010, 2011 Oliver Haag<br><a "
                "href='mailto:oliver.haag@gmail.com'>oliver.haag@gmail.com</a></p>"
                "<p>Copyright &copy; 2012-2019 OpenHantek community<br>"
-               "<a href='https://github.com/OpenHantek'>https://github.com/OpenHantek</a></p>"));
+               "<a href='https://github.com/OpenHantek'>https://github.com/OpenHantek</a></p>"
+            )
+        );
     });
 
     if (mSettings->scope.horizontal.samplerateSource == DsoSettingsScopeHorizontal::Samplerrate)
@@ -314,15 +314,21 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, Expo
     }
 }
 
-MainWindow::~MainWindow() { delete ui; }
+MainWindow::~MainWindow() { 
+    delete ui;
+}
 
-void MainWindow::showNewData(std::shared_ptr<PPresult> data) { dsoWidget->showNew(data); }
+void MainWindow::showNewData(std::shared_ptr<PPresult> data) {
+    dsoWidget->showNew(data);
+}
 
 void MainWindow::exporterStatusChanged(const QString &exporterName, const QString &status) {
     ui->statusbar->showMessage(tr("%1: %2").arg(exporterName).arg(status));
 }
 
-void MainWindow::exporterProgressChanged() { exporterRegistry->checkForWaitingExporters(); }
+void MainWindow::exporterProgressChanged() { 
+    exporterRegistry->checkForWaitingExporters();
+}
 
 /// \brief Save the settings before exiting.
 /// \param event The close event that should be handled.
@@ -332,6 +338,5 @@ void MainWindow::closeEvent(QCloseEvent *event) {
         mSettings->mainWindowState = saveState();
         mSettings->save();
     }
-
     QMainWindow::closeEvent(event);
 }
