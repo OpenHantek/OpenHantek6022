@@ -31,12 +31,10 @@ class GraphGenerator : public QObject, public Processor {
     void generateGraphsTYvoltage(PPresult *result);
     void generateGraphsTYspectrum(PPresult *result);
 
-  private:
     bool ready = false;
     const DsoSettingsScope *scope;
     const bool isSoftwareTriggerDevice;
 
     // Processor interface
-    private:
-    virtual void process(PPresult *) override;
+    void process(PPresult *data) override;
 };

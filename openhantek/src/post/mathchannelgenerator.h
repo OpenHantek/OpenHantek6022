@@ -12,7 +12,7 @@ class MathChannelGenerator : public Processor
 public:
     MathChannelGenerator(const DsoSettingsScope *scope, unsigned physicalChannels);
     virtual ~MathChannelGenerator();
-    virtual void process(PPresult *) override;
+    void process(PPresult *) override;
 private:
     const unsigned physicalChannels;
     const DsoSettingsScope *scope;

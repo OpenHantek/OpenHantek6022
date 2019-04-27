@@ -104,13 +104,13 @@ class QtAwesomeIconPainterIconEngine : public QIconEngine {
         return new QtAwesomeIconPainterIconEngine(awesomeRef_, iconPainterRef_, options_);
     }
 
-    virtual void paint(QPainter *painter, const QRect &rect, QIcon::Mode mode, QIcon::State state) override {
+    void paint(QPainter *painter, const QRect &rect, QIcon::Mode mode, QIcon::State state) override {
         Q_UNUSED(mode);
         Q_UNUSED(state);
         iconPainterRef_->paint(awesomeRef_, painter, rect, mode, state, options_);
     }
 
-    virtual QPixmap pixmap(const QSize &size, QIcon::Mode mode, QIcon::State state) override {
+    QPixmap pixmap(const QSize &size, QIcon::Mode mode, QIcon::State state) override {
         QPixmap pm(size);
         pm.fill(Qt::transparent); // we need transparency
         {
@@ -120,7 +120,7 @@ class QtAwesomeIconPainterIconEngine : public QIconEngine {
         return pm;
     }
     //#if (QT_VERSION >= QT_VERSION_CHECK(5, 6, 0))
-    //    virtual QList<QSize> availableSizes(QIcon::Mode mode, QIcon::State state) const override {
+    //    QList<QSize> availableSizes(QIcon::Mode mode, QIcon::State state) const override {
     //        Q_UNUSED(mode);
     //        Q_UNUSED(state);
     //        QList<QSize> sizes = {QSize(16, 16),   QSize(32, 32),   QSize(64, 64),

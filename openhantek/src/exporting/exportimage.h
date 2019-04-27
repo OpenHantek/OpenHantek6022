@@ -7,13 +7,13 @@ class ExporterImage : public ExporterInterface
 {
 public:
     ExporterImage();
-    virtual void create(ExporterRegistry *registry) override;
-    virtual QIcon icon() override;
-    virtual QString name() override;
-    virtual Type type() override;
-    virtual bool samples(const std::shared_ptr<PPresult>data) override;
-    virtual bool save() override;
-    virtual float progress() override;
+    void create(ExporterRegistry *registry) override;
+    QIcon icon() override;
+    QString name() override;
+    Type type() override;
+    bool samples(const std::shared_ptr<PPresult>data) override;
+    bool save() override;
+    float progress() override;
 private:
     std::shared_ptr<PPresult> data;
 };

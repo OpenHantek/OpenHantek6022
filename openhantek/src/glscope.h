@@ -53,20 +53,20 @@ class GlScope : public QOpenGLWidget {
     GlScope(const GlScope&) = delete;
 
     /// \brief Initializes OpenGL output.
-    virtual void initializeGL() override;
+    void initializeGL() override;
 
     /// \brief Draw the graphs, marker and the grid.
-    virtual void paintGL() override;
+    void paintGL() override;
 
     /// \brief Resize the widget.
     /// \param width The new width of the widget.
     /// \param height The new height of the widget.
-    virtual void resizeGL(int width, int height) override;
+    void resizeGL(int width, int height) override;
 
-    virtual void mousePressEvent(QMouseEvent *event) override;
-    virtual void mouseMoveEvent(QMouseEvent *event) override;
-    virtual void mouseReleaseEvent(QMouseEvent *event) override;
-    virtual void paintEvent(QPaintEvent *event) override;
+    void mousePressEvent(QMouseEvent *event) override;
+    void mouseMoveEvent(QMouseEvent *event) override;
+    void mouseReleaseEvent(QMouseEvent *event) override;
+    void paintEvent(QPaintEvent *event) override;
 
     /// \brief Draw the grid.
     void drawGrid();

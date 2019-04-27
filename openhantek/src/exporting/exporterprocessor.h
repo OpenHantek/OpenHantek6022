@@ -8,7 +8,7 @@ class ExporterProcessor : public Processor
 {
 public:
     ExporterProcessor(ExporterRegistry* registry);
-    virtual void process(PPresult *) override;
+    void process(PPresult *) override;
 private:
     ExporterRegistry* registry;
 };

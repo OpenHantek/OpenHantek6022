@@ -26,5 +26,5 @@ private:
 
     // QDialog interface
 public slots:
-    virtual void accept() override;
+    void accept() override;
 };

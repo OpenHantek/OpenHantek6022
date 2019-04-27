@@ -25,7 +25,6 @@ class SpectrumGenerator : public Processor {
   public:
     SpectrumGenerator(const DsoSettingsScope* scope, const DsoSettingsPostProcessing* postprocessing);
     virtual ~SpectrumGenerator();
-    virtual void process(PPresult *data) override;
 
   private:
     const DsoSettingsScope* scope;
@@ -33,4 +32,6 @@ class SpectrumGenerator : public Processor {
     unsigned int lastRecordLength = 0;                        ///< The record length of the previously analyzed data
     Dso::WindowFunction lastWindow = (Dso::WindowFunction)-1; ///< The previously used dft window function
     double *lastWindowBuffer = nullptr;
+    // Processor interface
+    void process(PPresult *data) override;
 };
