@@ -21,18 +21,18 @@ before_build:
 
   - md %dir32%
   - call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" %arch32%
-  - cmake -G "Visual Studio 14 2015" -DCMAKE_PREFIX_PATH=%qtpath32% -DCMAKE_BUILD_TYPE=%configuration% -B%dir32% -H.  
-  
+  - cmake -G "Visual Studio 14 2015" -DCMAKE_PREFIX_PATH=%qtpath32% -DCMAKE_BUILD_TYPE=%configuration% -B%dir32% -H.
+
 build_script:
   - cmake --build %dir64% --config %configuration% --target package
   - cmake --build %dir32% --config %configuration% --target package
-  
+
 artifacts:
   - path: $(dir64)\openhantek\$(configuration)
     name: OpenHantek-Win-$(arch64)-$(configuration)-b$(APPVEYOR_BUILD_NUMBER)
   - path: $(dir32)\openhantek\$(configuration)
     name: OpenHantek-Win-$(arch32)-$(configuration)-b$(APPVEYOR_BUILD_NUMBER)
-    
+
 deploy:
   - tag: $(APPVEYOR_REPO_TAG_NAME)
     provider: GitHub
