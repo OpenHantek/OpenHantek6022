@@ -165,7 +165,7 @@ void USBDevice::disconnectFromDevice() {
     }
     this->handle = nullptr;
 
-#if !defined(_WIN32) || !defined(_WIN64)
+#if !defined(_WIN32) && !defined(_WIN64)
     libusb_unref_device(device);
 #endif
 
