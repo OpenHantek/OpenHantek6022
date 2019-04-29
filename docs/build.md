@@ -74,3 +74,5 @@ Date = "08/12/2017"
 ; =====================================================
 ````
 
+Read also black2279's wiki entry 
+[USB Drivers Installation with Zadig for Hantek 6022 (Windows)](https://github.com/black2279/OpenHantek6022/wiki/USB-Drivers-Installation-with-Zadig-for-Hantek-6022-%28Windows%29)
