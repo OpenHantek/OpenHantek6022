@@ -84,6 +84,7 @@ class HorizontalDock : public QDockWidget {
     DsoSettingsScope *scope;           ///< The settings provided by the parent class
     QList<double> timebaseSteps;       ///< Steps for the timebase spinbox
     QList<double> calfreqSteps;        ///< Steps for the calfreq spinbox
+    QList<double> samplerateSteps;     ///< Possible sampe rates
 
     QStringList formatStrings;         ///< Strings for the formats
 

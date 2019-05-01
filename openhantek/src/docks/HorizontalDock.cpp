@@ -7,6 +7,7 @@
 #include <QLabel>
 #include <QSignalBlocker>
 #include <QCoreApplication>
+#include <QDebug>
 
 #include <cmath>
 
@@ -120,7 +121,7 @@ void HorizontalDock::setFrequencybase(double frequencybase) {
 
 
 double HorizontalDock::setSamplerate(double samplerate) {
-    // printf( "setSamplerate( %g )\n", samplerate );
+    // printf( "HD::setSamplerate( %g )\n", samplerate );
     QSignalBlocker blocker(samplerateSiSpinBox);
     samplerateSiSpinBox->setValue(samplerate);
     return samplerateSiSpinBox->value();
@@ -128,7 +129,7 @@ double HorizontalDock::setSamplerate(double samplerate) {
 
 
 double HorizontalDock::setTimebase(double timebase) {
-    // printf( "setTimebase( %g )\n", timebase );
+    // printf( "HD::setTimebase( %g ) ", timebase );
     QSignalBlocker blocker(timebaseSiSpinBox);
     // timebaseSteps are repeated in each decade
     double decade = pow(10, floor(log10(timebase)));
@@ -139,7 +140,7 @@ double HorizontalDock::setTimebase(double timebase) {
             break;
         }
     }
-    // printf( "return %g \n", timebaseSiSpinBox->value() );
+    // printf( "return %g\n", timebaseSiSpinBox->value() );
     return timebaseSiSpinBox->value();
 }
 
@@ -187,20 +188,21 @@ void HorizontalDock::setAvailableRecordLengths(const std::vector<unsigned> &reco
     for (auto recordLength : recordLengths) {
         addRecordLength(recordLengthComboBox, recordLength);
     }
-
     setRecordLength(scope->horizontal.recordLength);
 }
 
 
 void HorizontalDock::setSamplerateLimits(double minimum, double maximum) {
-    // printf( "setSamplerateLimits %f %f\n", minimum, maximum );
+    // printf( "HD::setSamplerateLimits( %g, %g )\n", minimum, maximum );
     QSignalBlocker blocker(samplerateSiSpinBox);
     this->samplerateSiSpinBox->setMinimum(minimum);
     this->samplerateSiSpinBox->setMaximum(maximum);
 }
 
 
-void HorizontalDock::setSamplerateSteps(int mode, QList<double> steps) {
+void HorizontalDock::setSamplerateSteps(int mode, const QList<double> steps) {
+    // printf( "HD::setSamplerateSteps( %d )\n", mode );
+    samplerateSteps = steps;
     // Assume that method is invoked for fixed samplerate devices only
     QSignalBlocker samplerateBlocker(samplerateSiSpinBox);
     samplerateSiSpinBox->setMode(mode);
@@ -225,9 +227,9 @@ void HorizontalDock::frequencybaseSelected(double frequencybase) {
 /// \brief Called when the samplerate spinbox changes its value.
 /// \param samplerate The samplerate in samples/second.
 void HorizontalDock::samplerateSelected(double samplerate) {
-    // printf( "samplerateSelected( %g )\n", samplerate );
+    // printf( "HD::samplerateSelected( %g )\n", samplerate );
     scope->horizontal.samplerate = samplerate;
-    scope->horizontal.samplerateSource = DsoSettingsScopeHorizontal::Samplerrate;
+    // scope->horizontal.samplerateSource = DsoSettingsScopeHorizontal::Samplerrate;
     emit samplerateChanged(samplerate);
 }
 
@@ -235,8 +237,25 @@ void HorizontalDock::samplerateSelected(double samplerate) {
 /// \brief Called when the timebase spinbox changes its value.
 /// \param timebase The timebase in seconds.
 void HorizontalDock::timebaseSelected(double timebase) {
-    // printf( "timebaseSelected( %g )\n", timebase );
+    // printf( "HD::timebaseSelected( %g )\n", timebase );
     scope->horizontal.timebase = timebase;
+    // search appropriate min & max sample rate
+    int lowId=0, highId=0;
+    double min, max;
+    for (int id = 0; id < samplerateSteps.size(); ++id) {
+        double sRate = samplerateSteps[id];
+        // qDebug() << sRate << sRate *timebase;
+        if ( sRate * timebase < 10 ) {
+            lowId = id;
+        }
+        if ( sRate * timebase < 2000 ) {
+            highId = id;
+        }
+    }
+    min = samplerateSteps[ lowId ];
+    max = samplerateSteps[ highId ];
+    // qDebug() << "limits:" << min  << max;
+    setSamplerateLimits( min, max );
     scope->horizontal.samplerateSource = DsoSettingsScopeHorizontal::Duration;
     emit timebaseChanged(timebase);
 }
@@ -265,4 +284,3 @@ void HorizontalDock::calfreqSelected(double calfreq) {
     scope->horizontal.calfreq = calfreq;
     emit calfreqChanged(calfreq);
 }
-

@@ -521,7 +521,7 @@ unsigned HantekDsoControl::updateRecordLength(RecordLengthID index) {
 }
 
 unsigned HantekDsoControl::updateSamplerate(unsigned downsampler, bool fastRate) {
-    qDebug() << "updateSamplerate( " << downsampler << ", " << fastRate << " )";
+    // qDebug() << "updateSamplerate( " << downsampler << ", " << fastRate << " )";
     // Get samplerate limits
     const ControlSamplerateLimits *limits =
         fastRate ? &specification->samplerate.multi : &specification->samplerate.single;
@@ -681,7 +681,7 @@ Dso::ErrorCode HantekDsoControl::setRecordLength(unsigned index) {
 }
 
 Dso::ErrorCode HantekDsoControl::setSamplerate(double samplerate) {
-    // qDebug() << "setSamplerate( " << samplerate << " )";
+    // qDebug() << "HDC::setSamplerate(" << samplerate << ")";
     if (!device->isConnected()) return Dso::ErrorCode::CONNECTION;
 
     if (samplerate == 0.0) {
@@ -772,16 +772,16 @@ Dso::ErrorCode HantekDsoControl::setRecordTime(double duration) {
         if (specification->isSoftwareTriggerDevice) {
             sampleCount = (sampleCount - controlsettings.swSampleMargin) / 2;
         }
-        // qDebug() << "sampleCount" << sampleCount << "limit" << limit;
+        // qDebug() << "sampleCount" << sampleCount << "limit" << srLimit;
         unsigned sampleId = 0;
         for (unsigned id = 0; id < specification->fixedSampleRates.size(); ++id) {
             double sRate = specification->fixedSampleRates[id].samplerate;
             // qDebug() << "id:" << id << "dur:" << duration << "spec:" << sRate;
-            if (sRate <= srLimit && sRate * duration < sampleCount) {
+            if (sRate <= srLimit && sRate * duration < 2 * sampleCount) {
                 sampleId = id;
             }
-            // qDebug() << "sampleId:" << sampleId;
         }
+        // qDebug() << "sampleId:" << sampleId;
         // Usable sample value
         modifyCommand<ControlSetTimeDIV>(ControlCode::CONTROL_SETTIMEDIV)
             ->setDiv(specification->fixedSampleRates[sampleId].id);
