@@ -777,7 +777,7 @@ Dso::ErrorCode HantekDsoControl::setRecordTime(double duration) {
         for (unsigned id = 0; id < specification->fixedSampleRates.size(); ++id) {
             double sRate = specification->fixedSampleRates[id].samplerate;
             // qDebug() << "id:" << id << "dur:" << duration << "spec:" << sRate;
-            if (sRate <= srLimit && sRate * duration < 2 * sampleCount) {
+            if (sRate <= srLimit && sRate * duration < sampleCount / 10) {
                 sampleId = id;
             }
         }

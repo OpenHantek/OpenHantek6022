@@ -195,8 +195,10 @@ void HorizontalDock::setAvailableRecordLengths(const std::vector<unsigned> &reco
 void HorizontalDock::setSamplerateLimits(double minimum, double maximum) {
     // printf( "HD::setSamplerateLimits( %g, %g )\n", minimum, maximum );
     QSignalBlocker blocker(samplerateSiSpinBox);
-    this->samplerateSiSpinBox->setMinimum(minimum);
-    this->samplerateSiSpinBox->setMaximum(maximum);
+    if ( minimum )
+        this->samplerateSiSpinBox->setMinimum(minimum);
+    if ( maximum )
+        this->samplerateSiSpinBox->setMaximum(maximum);
 }
 
 
@@ -229,7 +231,6 @@ void HorizontalDock::frequencybaseSelected(double frequencybase) {
 void HorizontalDock::samplerateSelected(double samplerate) {
     // printf( "HD::samplerateSelected( %g )\n", samplerate );
     scope->horizontal.samplerate = samplerate;
-    // scope->horizontal.samplerateSource = DsoSettingsScopeHorizontal::Samplerrate;
     emit samplerateChanged(samplerate);
 }
 
@@ -239,24 +240,25 @@ void HorizontalDock::samplerateSelected(double samplerate) {
 void HorizontalDock::timebaseSelected(double timebase) {
     // printf( "HD::timebaseSelected( %g )\n", timebase );
     scope->horizontal.timebase = timebase;
-    // search appropriate min & max sample rate
-    int lowId=0, highId=0;
-    double min, max;
-    for (int id = 0; id < samplerateSteps.size(); ++id) {
-        double sRate = samplerateSteps[id];
-        // qDebug() << sRate << sRate *timebase;
-        if ( sRate * timebase < 10 ) {
-            lowId = id;
+    if ( samplerateSteps.size() ) {
+        // search appropriate min & max sample rate
+        int lowId=0, highId=0;
+        double min = 0.0, max = 0.0;
+        for (int id = 0; id < samplerateSteps.size(); ++id) {
+            double sRate = samplerateSteps[id];
+            // qDebug() << sRate << sRate *timebase;
+            if ( sRate * timebase <= 1 ) {
+                lowId = id;
+            }
+            if ( sRate * timebase < 2000 ) {
+                highId = id;
+            }
         }
-        if ( sRate * timebase < 2000 ) {
-            highId = id;
-        }
+        min = samplerateSteps[ lowId ];
+        max = samplerateSteps[ highId ];
+        // qDebug() << "limits:" << min  << max;
+        setSamplerateLimits( min, max );
     }
-    min = samplerateSteps[ lowId ];
-    max = samplerateSteps[ highId ];
-    // qDebug() << "limits:" << min  << max;
-    setSamplerateLimits( min, max );
-    scope->horizontal.samplerateSource = DsoSettingsScopeHorizontal::Duration;
     emit timebaseChanged(timebase);
 }
 

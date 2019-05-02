@@ -130,20 +130,13 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, Expo
             [dsoControl](unsigned long recordLength) { dsoControl->setRecordLength(recordLength); });
     connect(dsoControl, &HantekDsoControl::recordTimeChanged,
         [this, settings, horizontalDock, dsoControl](double duration) {
-            if (settings->scope.horizontal.samplerateSource == DsoSettingsScopeHorizontal::Samplerrate &&
-                settings->scope.horizontal.recordLength != UINT_MAX) {
-                // The samplerate was set, let's adapt the timebase accordingly
-                settings->scope.horizontal.timebase = horizontalDock->setTimebase(duration / DIVS_TIME);
-            }
-            // The trigger position should be kept at the same place but the timebase has
-            // changed
+            // The trigger position should be kept at the same place but the timebase has changed
             dsoControl->setPretriggerPosition(settings->scope.trigger.position *
                                                 settings->scope.horizontal.timebase * DIVS_TIME);
             this->dsoWidget->updateTimebase(settings->scope.horizontal.timebase);
     });
     connect(dsoControl, &HantekDsoControl::samplerateChanged, [this, horizontalDock](double samplerate) {
-        if (mSettings->scope.horizontal.samplerateSource == DsoSettingsScopeHorizontal::Duration &&
-            mSettings->scope.horizontal.recordLength != UINT_MAX) {
+        if (mSettings->scope.horizontal.recordLength != UINT_MAX) {
             // The timebase was set, let's adapt the samplerate accordingly
             // printf( "samplerateChanged( %g )\n", samplerate );
             mSettings->scope.horizontal.samplerate = samplerate;
@@ -303,10 +296,7 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, Expo
         );
     });
 
-    if (mSettings->scope.horizontal.samplerateSource == DsoSettingsScopeHorizontal::Samplerrate)
-        dsoWidget->updateSamplerate(mSettings->scope.horizontal.samplerate);
-    else
-        dsoWidget->updateTimebase(mSettings->scope.horizontal.timebase);
+    dsoWidget->updateTimebase(mSettings->scope.horizontal.timebase);
 
     for (ChannelID channel = 0; channel < spec->channels; ++channel) {
         this->dsoWidget->updateVoltageUsed(channel, mSettings->scope.voltage[channel].used);

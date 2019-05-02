@@ -74,7 +74,7 @@ SoftwareTrigger::PrePostStartTriggerSamples SoftwareTrigger::compute(const PPres
 
             // if at least >Threshold (=5) samples before and after trig meet the condition, set trigger
             if (risingBefore > scope->trigger.swTriggerThreshold && risingAfter > scope->trigger.swTriggerThreshold) {
-                swTriggerStart = i;
+                swTriggerStart = i-1;
                 break;
             }
         }

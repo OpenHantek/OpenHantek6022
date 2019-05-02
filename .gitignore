@@ -10,3 +10,4 @@ CMakeLists.txt.user
 build*
 firmware/hex
 *.json
+*.kate-swp
