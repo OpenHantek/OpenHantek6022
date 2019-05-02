@@ -240,22 +240,22 @@ void HorizontalDock::samplerateSelected(double samplerate) {
 void HorizontalDock::timebaseSelected(double timebase) {
     // printf( "HD::timebaseSelected( %g )\n", timebase );
     scope->horizontal.timebase = timebase;
-    if ( samplerateSteps.size() ) {
+    int size = samplerateSteps.size();
+    if ( size ) {
         // search appropriate min & max sample rate
-        int lowId=0, highId=0;
         double min = 0.0, max = 0.0;
-        for (int id = 0; id < samplerateSteps.size(); ++id) {
-            double sRate = samplerateSteps[id];
+        for ( int id = 0; id < size; ++id ) {
+            double sRate = samplerateSteps[ id ];
             // qDebug() << sRate << sRate *timebase;
-            if ( sRate * timebase <= 1 ) {
-                lowId = id;
+            // min must be < maxRate
+            if ( id < size-1 && sRate * timebase <= 1 ) {
+                min = sRate;
             }
-            if ( sRate * timebase < 2000 ) {
-                highId = id;
+            // max must be > minRate
+            if ( id && sRate * timebase < 2000 ) {
+                max = sRate;
             }
         }
-        min = samplerateSteps[ lowId ];
-        max = samplerateSteps[ highId ];
         // qDebug() << "limits:" << min  << max;
         setSamplerateLimits( min, max );
     }

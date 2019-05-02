@@ -776,12 +776,13 @@ Dso::ErrorCode HantekDsoControl::setRecordTime(double duration) {
         unsigned sampleId = 0;
         for (unsigned id = 0; id < specification->fixedSampleRates.size(); ++id) {
             double sRate = specification->fixedSampleRates[id].samplerate;
-            // qDebug() << "id:" << id << "dur:" << duration << "spec:" << sRate;
-            if (sRate <= srLimit && sRate * duration < sampleCount / 10) {
+            // qDebug() << "id:" << id << "sRate:" << sRate << "sRate*duration:" << sRate * duration;
+            // for stability reason avoid the highest sample rate as default
+            if (sRate < srLimit && sRate * duration < sampleCount / 10) {
                 sampleId = id;
             }
         }
-        // qDebug() << "sampleId:" << sampleId;
+        // qDebug() << "sampleId:" << sampleId << specification->fixedSampleRates[sampleId].samplerate;
         // Usable sample value
         modifyCommand<ControlSetTimeDIV>(ControlCode::CONTROL_SETTIMEDIV)
             ->setDiv(specification->fixedSampleRates[sampleId].id);
