@@ -37,6 +37,11 @@ class VoltageDock : public QDockWidget {
     /// \param gain The gain in volts.
     void setGain(ChannelID channel, unsigned gainStepIndex);
 
+    /// \brief Sets the probe attenuation for a channel.
+    /// \param channel The channel, whose attn should be set.
+    /// \param attn The attn .
+    void setAttn(ChannelID channel, bool attn);
+
     /// \brief Sets the mode for the math channel.
     /// \param mathModeIndex The math-mode index.
     void setMode(unsigned mathModeIndex);
@@ -57,6 +62,7 @@ class VoltageDock : public QDockWidget {
         QComboBox * gainComboBox;   ///< Select the vertical gain for the channels
         QComboBox * miscComboBox;   ///< Select coupling for real and mode for math channels
         QCheckBox * invertCheckBox; ///< Select if the channels should be displayed inverted
+        QCheckBox * attnCheckBox;   ///< Select if probe (x10) is used
     };
 
     std::vector<ChannelBlock> channelBlocks;
@@ -67,10 +73,12 @@ class VoltageDock : public QDockWidget {
     QStringList couplingStrings; ///< The strings for the couplings
     QStringList modeStrings;     ///< The strings for the math mode
     QStringList gainStrings;     ///< String representations for the gain steps
+    QStringList attnStrings;     ///< String representations for the probe attn steps
 
   signals:
     void couplingChanged(ChannelID channel, Dso::Coupling coupling); ///< A coupling has been selected
     void gainChanged(ChannelID channel, double gain);                ///< A gain has been selected
-    void modeChanged(Dso::MathMode mode);              ///< The mode for the math channels has been changed
-    void usedChanged(ChannelID channel, bool used);    ///< A channel has been enabled/disabled
+    void modeChanged(Dso::MathMode mode);                            ///< The mode for the math channels has been changed
+    void usedChanged(ChannelID channel, bool used);                  ///< A channel has been enabled/disabled
+    void probeAttnChanged(ChannelID channel, bool probeUsed, double probeAttn); ///< A channel probe gain has been changed
 };

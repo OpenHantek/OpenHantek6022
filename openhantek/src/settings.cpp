@@ -120,6 +120,7 @@ void DsoSettings::load() {
         if (store->contains("inverted")) scope.voltage[channel].inverted = store->value("inverted").toBool();
         if (store->contains("offset")) scope.voltage[channel].offset = store->value("offset").toDouble();
         if (store->contains("trigger")) scope.voltage[channel].trigger = store->value("trigger").toDouble();
+        if (store->contains("probeUsed")) scope.voltage[channel].probeUsed = store->value("probeUsed").toBool();
         if (store->contains("used"))
             scope.voltage[channel].used = store->value("used").toBool();
         else if ( 0 == channel ) // default: ch0 is active
@@ -251,6 +252,7 @@ void DsoSettings::save() {
         store->setValue("offset", scope.voltage[channel].offset);
         store->setValue("trigger", scope.voltage[channel].trigger);
         store->setValue("used", scope.voltage[channel].used);
+        store->setValue("probeUsed", scope.voltage[channel].probeUsed);
         store->beginGroup("cursor");
         store->setValue("shape", scope.voltage[channel].cursor.shape);
         for (int marker = 0; marker < MARKER_COUNT; ++marker) {

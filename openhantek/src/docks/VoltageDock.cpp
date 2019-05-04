@@ -16,6 +16,9 @@
 #include "sispinbox.h"
 #include "utils/printutils.h"
 
+// probe attenuation
+#define ATTENUATION 10
+
 template<typename... Args> struct SELECT {
     template<typename C, typename R>
     static constexpr auto OVERLOAD_OF( R (C::*pmf)(Args...) ) -> decltype(pmf) {
@@ -34,9 +37,10 @@ VoltageDock::VoltageDock(DsoSettingsScope *scope, const Dso::ControlSpecificatio
         modeStrings.append(Dso::mathModeString(e));
     }
 
-    for (double gainStep: scope->gainSteps)
+    for (double gainStep: scope->gainSteps) {
         gainStrings << valueToString(gainStep, UNIT_VOLTS, 0);
-
+        attnStrings << valueToString(gainStep * ATTENUATION, UNIT_VOLTS, 0);
+    }
     dockLayout = new QGridLayout();
     dockLayout->setColumnMinimumWidth(0, 64);
     dockLayout->setColumnStretch(1, 1);
@@ -48,6 +52,7 @@ VoltageDock::VoltageDock(DsoSettingsScope *scope, const Dso::ControlSpecificatio
         b.miscComboBox=(new QComboBox());
         b.gainComboBox=(new QComboBox());
         b.invertCheckBox=(new QCheckBox(tr("Invert")));
+        b.attnCheckBox=(new QCheckBox(tr("Probe x10")));
         b.usedCheckBox=(new QCheckBox(scope->voltage[channel].name));
 
         channelBlocks.push_back(std::move(b));
@@ -64,16 +69,27 @@ VoltageDock::VoltageDock(DsoSettingsScope *scope, const Dso::ControlSpecificatio
         dockLayout->addWidget(b.miscComboBox, (int)channel * 3 + 1, 1);
         dockLayout->addWidget(b.invertCheckBox, (int)channel * 3 + 2, 1);
 
-        if (channel < spec->channels)
-            setCoupling(channel, scope->voltage[channel].couplingOrMathIndex);
-        else
+        if (channel < spec->channels) {
+            // setCoupling(channel, scope->voltage[channel].couplingOrMathIndex);
+            dockLayout->addWidget(b.attnCheckBox, (int)channel * 3 + 1, 0);
+
+        } else {
             setMode(scope->voltage[channel].couplingOrMathIndex);
+        }
         setGain(channel, scope->voltage[channel].gainStepIndex);
         setUsed(channel, scope->voltage[channel].used);
+        setAttn(channel, scope->voltage[channel].probeUsed);
 
         connect(b.gainComboBox, SELECT<int>::OVERLOAD_OF(&QComboBox::currentIndexChanged), [this,channel](int index) {
             this->scope->voltage[channel].gainStepIndex = (unsigned)index;
             emit gainChanged(channel, this->scope->gain(channel));
+        });
+        connect(b.attnCheckBox, &QAbstractButton::toggled, [this,channel](bool attn) {
+            this->setAttn( channel, attn );
+            this->scope->voltage[channel].probeUsed = attn;
+            this->scope->voltage[channel].probeAttn = attn ? ATTENUATION : 1;
+            emit gainChanged(channel, this->scope->gain(channel));
+            emit probeAttnChanged( channel, attn, attn ? ATTENUATION : 1 );
         });
         connect(b.invertCheckBox, &QAbstractButton::toggled, [this,channel](bool checked) {
             this->scope->voltage[channel].inverted = checked;
@@ -115,6 +131,16 @@ void VoltageDock::setGain(ChannelID channel, unsigned gainStepIndex) {
     if (gainStepIndex >= scope->gainSteps.size()) return;
     QSignalBlocker blocker(channelBlocks[channel].gainComboBox);
     channelBlocks[channel].gainComboBox->setCurrentIndex((unsigned)gainStepIndex);
+}
+
+void VoltageDock::setAttn(ChannelID channel, bool attn) {
+    if (channel >= scope->voltage.size()) return;
+    QSignalBlocker blocker(channelBlocks[channel].gainComboBox);
+    int index = channelBlocks[channel].gainComboBox->currentIndex();
+    channelBlocks[channel].gainComboBox->clear();
+    channelBlocks[channel].gainComboBox->addItems( attn ? attnStrings : gainStrings );
+    channelBlocks[channel].gainComboBox->setCurrentIndex( index );
+    channelBlocks[channel].attnCheckBox->setChecked(attn);
 }
 
 void VoltageDock::setMode(unsigned mathModeIndex) {

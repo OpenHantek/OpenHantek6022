@@ -16,6 +16,7 @@
 
 #include <stdio.h>
 
+#include "scopesettings.h"
 #include "hantekdsocontrol.h"
 #include "hantekprotocol/bulkStructs.h"
 #include "hantekprotocol/controlStructs.h"
@@ -262,6 +263,7 @@ void HantekDsoControl::convertRawDataToSamples(const std::vector<unsigned char> 
         const unsigned short limit = specification->voltageLimit[channel][gainID];
         const double offset = controlsettings.voltage[channel].offsetReal;
         const double gainStep = specification->gain[gainID].gainSteps;
+        const double probeAttn = controlsettings.voltage[channel].probeAttn;
 
         // Convert data from the oscilloscope and write it into the sample buffer
         unsigned bufferPosition = controlsettings.trigger.point * 2;
@@ -283,7 +285,7 @@ void HantekDsoControl::convertRawDataToSamples(const std::vector<unsigned char> 
                 if (bufferPosition >= totalSampleCount) bufferPosition %= totalSampleCount;
 
                 double dataBuf = (double)((int)rawData[bufferPosition]);
-                result.data[channel][pos] = (dataBuf / limit - offset) * gainStep;
+                result.data[channel][pos] = (dataBuf / limit - offset) * gainStep * probeAttn;
             }
         }
     } else {
@@ -297,6 +299,7 @@ void HantekDsoControl::convertRawDataToSamples(const std::vector<unsigned char> 
             const unsigned short limit = specification->voltageLimit[channel][gainID];
             const double offset = controlsettings.voltage[channel].offsetReal;
             const double gainStep = specification->gain[gainID].gainSteps;
+            const double probeAttn = controlsettings.voltage[channel].probeAttn;
             int shiftDataBuf = 0;
             double gainCalibration = 1.0;
 
@@ -315,7 +318,7 @@ void HantekDsoControl::convertRawDataToSamples(const std::vector<unsigned char> 
                         ((unsigned short int)rawData[totalSampleCount + bufferPosition] << extraBitsIndex) &
                         extraBitsMask;
 
-                    result.data[channel][realPosition] = ((double)(low + high) / limit - offset) * gainStep;
+                    result.data[channel][realPosition] = ((double)(low + high) / limit - offset) * gainStep * probeAttn;
                 }
             } else if ( is6022 ) {
                 // 6022 fast rate
@@ -365,7 +368,7 @@ void HantekDsoControl::convertRawDataToSamples(const std::vector<unsigned char> 
                 if ( rawSample == 0x00 || rawSample == 0xFF )
                     result.clipped |= 0x01 << channel;
                 double dataBuf = (double)(rawSample - shiftDataBuf); // int - int
-                result.data[channel][pos] = (dataBuf / limit - offset) * gainCalibration * gainStep;
+                result.data[channel][pos] = (dataBuf / limit - offset) * gainCalibration * gainStep * probeAttn;
             }
             //printf( "channel %d, gainID %d, samplerate %f\n", channel, gainID, controlsettings.samplerate.current );
             //printf( "offsetLimit %ld %d\n", sizeof(OffsetsPerGainStep), ((unsigned char*)controlsettings.offsetLimit)[0] );
@@ -905,6 +908,14 @@ Dso::ErrorCode HantekDsoControl::setGain(ChannelID channel, double gain) {
 
     this->setOffset(channel, controlsettings.voltage[channel].offset);
 
+    return Dso::ErrorCode::NONE;
+}
+
+Dso::ErrorCode HantekDsoControl::setProbeAttn( ChannelID channel, bool probeUsed, double probeAttn ) {
+    if (channel >= specification->channels) return Dso::ErrorCode::PARAMETER;
+    controlsettings.voltage[channel].probeUsed = probeUsed;
+    controlsettings.voltage[channel].probeAttn = probeAttn;
+    // printf( "setProbeAttn %g\n", probeAttn );
     return Dso::ErrorCode::NONE;
 }
 
