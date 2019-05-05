@@ -17,6 +17,7 @@ It was initially developed by [David Gräff and others](https://github.com/OpenH
 
 * Digital phosphor effect to notice even short spikes.
 * Voltage and Spectrum view for all device supported chanels.
+* :star: NEW: Checkbox for X10 probe - scope now shows the correct voltage. 
 * :star: NEW: Show DC (average), AC (rms) and RMS values as well as frequency of displayed channels.
 * Math channel with these modes: Ch1+Ch2, Ch1-Ch2, Ch2-Ch1.
 * Freely configurable colors.

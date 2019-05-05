@@ -186,7 +186,7 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, Expo
     connect(voltageDock, &VoltageDock::probeAttnChanged, [this, dsoControl, spec](ChannelID channel, bool probeUsed, double probeAttn ) {
         if (channel >= spec->channels)
             return;
-        dsoControl->setProbeAttn( channel, probeUsed, probeAttn );
+        dsoControl->setProbe( channel, probeUsed, probeAttn );
     });
     connect(voltageDock, &VoltageDock::gainChanged, dsoWidget, &DsoWidget::updateVoltageGain);
    

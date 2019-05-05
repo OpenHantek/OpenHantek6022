@@ -123,7 +123,7 @@ void DsoSettings::load() {
         if (store->contains("probeUsed")) scope.voltage[channel].probeUsed = store->value("probeUsed").toBool();
         if (store->contains("used"))
             scope.voltage[channel].used = store->value("used").toBool();
-        else if ( 0 == channel ) // default: ch0 is active
+        else if ( 0 == channel ) // no "used" entry -> no config file: ch0 is active as default
             scope.voltage[channel].used = true;
         store->beginGroup("cursor");
         if (store->contains("shape")) scope.voltage[channel].cursor.shape =

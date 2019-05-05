@@ -243,7 +243,7 @@ class HantekDsoControl : public QObject {
     /// \param channel The channel that should be set.
     /// \param gain The gain that should be met (V/div).
     /// \return The gain that has been set, ::Dso::ErrorCode on error.
-    Dso::ErrorCode setProbeAttn(ChannelID channel, bool probeUsed, double probeAttn);
+    Dso::ErrorCode setProbe(ChannelID channel, bool probeUsed, double probeAttn);
     /// \brief Sets the probe gain for the given channel.
     /// \param channel The channel that should be set.
     /// \param probeUsed probe attenuation was set

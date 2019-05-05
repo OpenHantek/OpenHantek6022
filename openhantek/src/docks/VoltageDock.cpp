@@ -52,7 +52,7 @@ VoltageDock::VoltageDock(DsoSettingsScope *scope, const Dso::ControlSpecificatio
         b.miscComboBox=(new QComboBox());
         b.gainComboBox=(new QComboBox());
         b.invertCheckBox=(new QCheckBox(tr("Invert")));
-        b.attnCheckBox=(new QCheckBox(tr("Probe x10")));
+        b.attnCheckBox=(new QCheckBox(tr("X10 probe")));
         b.usedCheckBox=(new QCheckBox(scope->voltage[channel].name));
 
         channelBlocks.push_back(std::move(b));

@@ -36,15 +36,19 @@ void GraphGenerator::generateGraphsTYvoltage(PPresult *result) {
     unsigned preTrigSamples = 0;
     unsigned postTrigSamples = 0;
     unsigned swTriggerStart = 0;
-    static bool trig_available = 0; // do we have triggered data
+    static bool trigAvailable = 0; // do we have triggered data
+
     // check trigger point for software trigger
     if (isSoftwareTriggerDevice && scope->trigger.source < result->channelCount())
         std::tie(preTrigSamples, postTrigSamples, swTriggerStart) = SoftwareTrigger::compute(result, scope);
-    if ( postTrigSamples <= preTrigSamples \
-       && trig_available && scope->trigger.mode == Dso::TriggerMode::NORMAL ) // not triggered but triggered values available
-        return; // reuse old values
-    result->softwareTriggerTriggered = trig_available = postTrigSamples > preTrigSamples;
 
+    // not triggered  &&  triggered values available in *result &&  normal mode
+    if ( postTrigSamples <= preTrigSamples && trigAvailable && scope->trigger.mode == Dso::TriggerMode::NORMAL ) {
+        result->softwareTriggerTriggered = false; // show red trigger status on top left screen
+        return; // stop processing, reuse old values
+    }
+
+    result->softwareTriggerTriggered = trigAvailable = postTrigSamples > preTrigSamples;
     result->vaChannelVoltage.resize(scope->voltage.size());
     for (ChannelID channel = 0; channel < scope->voltage.size(); ++channel) {
         ChannelGraph &target = result->vaChannelVoltage[channel];
