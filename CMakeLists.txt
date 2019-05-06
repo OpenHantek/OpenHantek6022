@@ -19,7 +19,7 @@ INCLUDE_DIRECTORIES(".")
 include(cmake/CPackInfos.cmake)
 
 # Enable C++ standard library hardening -> cheap range checks for C++ arrays, vectors, and strings.
-add_compile_definitions( _GLIBCXX_ASSERTIONS )
+add_compile_options( -D_GLIBCXX_ASSERTIONS )
 
 # Qt Widgets based Gui with OpenGL canvas
 add_subdirectory(openhantek)
