@@ -1,5 +1,9 @@
 // SPDX-License-Identifier: GPL-2.0+
 
+// HACK prevent vector size assertion 
+// FIX for issue #5, GraphGenerator::generateGraphsTYvoltage(...) (trigger mode NORMAL)
+#undef _GLIBCXX_ASSERTIONS
+
 #include <cmath>
 #include <iostream>
 

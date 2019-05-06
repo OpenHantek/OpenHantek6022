@@ -18,6 +18,9 @@ INCLUDE_DIRECTORIES(".")
 # Use CPack to make deb/rpm/zip/exe installer packages
 include(cmake/CPackInfos.cmake)
 
+# Enable C++ standard library hardening -> cheap range checks for C++ arrays, vectors, and strings.
+add_compile_definitions( _GLIBCXX_ASSERTIONS )
+
 # Qt Widgets based Gui with OpenGL canvas
 add_subdirectory(openhantek)
 
