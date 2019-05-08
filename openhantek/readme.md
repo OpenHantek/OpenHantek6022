@@ -52,8 +52,7 @@ and the graphical part.
 
 All OpenGL rendering takes place in the `GlScope` class. A helper class `GlScopeGraph` contains exactly one
 data sample snapshot including all channels for voltage and spectrum and a pointer to the respective GPU buffer.
-`GlScope` works for OpenGL 3.2 and OpenGL ES 2.0. If both is present, OpenGL will be prefered, but can be
-overwritten by the user via a command flag.
+`GlScope` works normally for **OpenGL 3.2+** and OpenGL ES 2.0+ but if it detects **OpenGL 2.1+** and OpenGL ES 1.2+ on older platforms it switches to a legacy implementation. If both OpenGL and OpenGL Es are present, OpenGL will be prefered, but can be overwritten by the user via a command flag.
 
 ### Export
 
@@ -77,4 +76,27 @@ scope graphs.
 
 ## Data flow
 
-To be written
+* Raw 8-bit ADC values are collected in HantekDsoControl and converted in `HantekDsoControl::convertRawDataToSamples()` to real-world double samples (scaled with voltage and sample rate). Also overdriving of the inputs is detected. The conversion uses either the factory calibration values from EEPROM or from a user supplied config file. Read more about [calibration](https://github.com/Ho-Ro/Hantek6022API/blob/master/README.md#create-calibration-values-for-openhantek).
+* The converted samples are emitted to PostProcessing::input() via signal/slot.
+* PostProzessing calls
+  * `mathchannelGenerator::process()`
+    * which creates CH3 as one of these three data sample combinations: `CH1 + CH2`, `CH1 - CH2` or `CH2 - CH1`.
+  * `spectrumGenerator::process()`
+    * For each active channel:
+      * Calculate the DC (average), AC (rms) and effective value ( sqrt( DC² + AC² ) ).
+      * Apply a user selected window function.
+      * Calculate the autocorrelation to get the frequency of the signal. This is quite inaccurate at high frequencies. In these cases the first peak value of the spectrum is used.
+      * Calculate the spectrum of the AC part of the signal.
+  * `graphGenerator::process()`
+    * which works either in TY mode and creates two types of traces:
+      * voltage over time `GraphGenerator::generateGraphsTYvoltage()`
+      * spectrum over frequency `GraphGenerator::generateGraphsTYspectrum()`
+    * or in XY mode and creates a voltage over voltage trace `GraphGenerator::generateGraphsXY()`.
+    * `GraphGenerator::generateGraphsTYspectrum()` creates up to three (CH1, CH2, MATH) spectral traces .
+    * `GraphGenerator::generateGraphsTYvoltage()` calls
+      * `SoftwareTrigger::compute()` to find the trigger point in the voltage samples.
+    * Finally `useVoltSamplesTriggered()` collects the samples of all active voltage channels to create up to three (CH1, CH2, MATH) voltage traces.
+    * If the **trigger condition is false** but we have already a **triggered trace** and the **trigger mode is Normal** then we reuse the last triggered **voltage** samples, the voltage trace is frozen until the trigger condition becomes true again. 
+    * The other results (spectrum traces as well as DC, AC, RMS and frequency display at the bottom) are constantly updated. The complete display can be frozen by pressing the SPACE bar.
+
+t.b.c.

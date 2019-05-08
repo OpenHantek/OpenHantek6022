@@ -19,6 +19,7 @@ static const SampleValues &useSpecSamplesOf(ChannelID channel, const PPresult *r
     return result->data(channel)->spectrum;
 }
 
+
 static const SampleValues &useVoltSamplesOf(ChannelID channel, const PPresult *result,
                                             const DsoSettingsScope *scope) {
     static SampleValues emptyDefault;
@@ -26,33 +27,61 @@ static const SampleValues &useVoltSamplesOf(ChannelID channel, const PPresult *r
     return result->data(channel)->voltage;
 }
 
+
+static const SampleValues &useVoltSamplesTriggered(ChannelID channel, const PPresult *result,
+                                            const DsoSettingsScope *scope, unsigned& skipSamples) {
+    static SampleValues emptyDefault;
+    static std::vector<SampleValues> lastSamples( 3 );
+    static std::vector<unsigned> lastSkip( 3, 0 );
+    static std::vector<bool> samplesValid( 3, false ); // all samples are invalid
+
+    if ( !scope->voltage[channel].used || !result->data(channel) ) {
+        samplesValid[ channel ] = false;
+        return emptyDefault;
+    }
+    // If we have a triggered trace then save and display this trace
+    if ( result->softwareTriggerTriggered ) {
+        if ( lastSamples.size() <= channel ) // increase vector size if needed
+            lastSamples.resize( channel+1 );
+        lastSamples[ channel ] = result->data(channel)->voltage;
+        lastSkip[ channel ] = skipSamples;
+        samplesValid[ channel ] = true;
+        return result->data(channel)->voltage;
+    }
+    // If not triggered in NORMAL mode but a triggered trace was saved then use the saved trace
+    if ( scope->trigger.mode == Dso::TriggerMode::NORMAL && samplesValid[ channel ] ) {
+        skipSamples = lastSkip[ channel ]; // return last triggered value
+        return lastSamples[ channel ];  // return last triggered trace
+    }
+    // If not triggered, but not NORMAL mode -> discard history and use the free running trace
+    samplesValid[ channel ] = false;
+    return result->data(channel)->voltage;
+}
+
+
 GraphGenerator::GraphGenerator(const DsoSettingsScope *scope, bool isSoftwareTriggerDevice)
     : scope(scope), isSoftwareTriggerDevice(isSoftwareTriggerDevice) {}
 
 bool GraphGenerator::isReady() const { return ready; }
+
 
 void GraphGenerator::generateGraphsTYvoltage(PPresult *result) {
     // printf( "GraphGenerator::generateGraphsTYvoltage()\n" );
     unsigned preTrigSamples = 0;
     unsigned postTrigSamples = 0;
     unsigned swTriggerStart = 0;
-    static bool trigAvailable = 0; // do we have triggered data
+    static unsigned skipSamples = 0;
 
     // check trigger point for software trigger
     if (isSoftwareTriggerDevice && scope->trigger.source < result->channelCount())
         std::tie(preTrigSamples, postTrigSamples, swTriggerStart) = SoftwareTrigger::compute(result, scope);
 
-    // not triggered  &&  triggered values available in *result &&  normal mode
-    if ( postTrigSamples <= preTrigSamples && trigAvailable && scope->trigger.mode == Dso::TriggerMode::NORMAL ) {
-        result->softwareTriggerTriggered = false; // show red trigger status on top left screen
-        return; // stop processing, reuse old values
-    }
-
-    result->softwareTriggerTriggered = trigAvailable = postTrigSamples > preTrigSamples;
+    skipSamples = swTriggerStart - preTrigSamples;
+    result->softwareTriggerTriggered = postTrigSamples > preTrigSamples;
     result->vaChannelVoltage.resize(scope->voltage.size());
     for (ChannelID channel = 0; channel < scope->voltage.size(); ++channel) {
         ChannelGraph &target = result->vaChannelVoltage[channel];
-        const SampleValues &samples = useVoltSamplesOf(channel, result, scope);
+        const SampleValues &samples = useVoltSamplesTriggered(channel, result, scope, skipSamples);
 
         // Check if this channel is used and available at the data analyzer
         if (samples.sample.empty()) {
@@ -66,7 +95,7 @@ void GraphGenerator::generateGraphsTYvoltage(PPresult *result) {
             qWarning() << "Sample count too high!";
             throw new std::runtime_error("Sample count too high!");
         }
-        sampleCount -= (swTriggerStart - preTrigSamples);
+        sampleCount -= skipSamples;
         size_t neededSize = sampleCount * 2;
 
         // Set size directly to avoid reallocations
@@ -81,7 +110,7 @@ void GraphGenerator::generateGraphsTYvoltage(PPresult *result) {
         const float offset = (float)scope->voltage[channel].offset;
         const float invert = scope->voltage[channel].inverted ? -1.0f : 1.0f;
 
-        std::advance(dataIterator, swTriggerStart - preTrigSamples);
+        std::advance(dataIterator, skipSamples);
 
         for (unsigned int position = 0; position < sampleCount; ++position) {
             target.push_back(QVector3D(position * horizontalFactor - DIVS_TIME / 2,
@@ -89,6 +118,7 @@ void GraphGenerator::generateGraphsTYvoltage(PPresult *result) {
         }
     }
 }
+
 
 void GraphGenerator::generateGraphsTYspectrum(PPresult *result) {
     // printf( "GraphGenerator::generateGraphsTYspectrum()\n" );
@@ -130,6 +160,7 @@ void GraphGenerator::generateGraphsTYspectrum(PPresult *result) {
     }
 }
 
+
 void GraphGenerator::process(PPresult *data) {
     // printf( "GraphGenerator::process()\n" );
     if (scope->horizontal.format == Dso::GraphFormat::TY) {
@@ -139,6 +170,7 @@ void GraphGenerator::process(PPresult *data) {
     } else
         generateGraphsXY(data, scope);
 }
+
 
 void GraphGenerator::generateGraphsXY(PPresult *result, const DsoSettingsScope *scope) {
     result->vaChannelVoltage.resize(scope->voltage.size());
