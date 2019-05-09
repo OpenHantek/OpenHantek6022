@@ -52,6 +52,8 @@ const DSOsamples &HantekDsoControl::getLastSamples() { return result; }
 // fast mode: sample only CH1 and transmit 8bit / sample instead of CH1&CH2 = 16bit / sample
 #define isFast6022 ( is6022 && controlsettings.voltage[0].used && !controlsettings.voltage[1].used )
 
+static bool channelUsedChanged = false;
+
 HantekDsoControl::HantekDsoControl(USBDevice *device)
     : device(device), specification(device->getModel()->spec()),
       controlsettings(&(specification->samplerate.single), specification->channels) {
@@ -233,6 +235,10 @@ std::vector<unsigned char> HantekDsoControl::getSamples(unsigned &previousSample
 }
 
 void HantekDsoControl::convertRawDataToSamples(const std::vector<unsigned char> &rawData) {
+    if ( channelUsedChanged ) { // skip the next conversion to avoid artefacts due to channel switch
+        channelUsedChanged = false;
+        return;
+    }
     const size_t totalSampleCount = (specification->sampleSize > 8) ? rawData.size() / 2 : rawData.size();
     QWriteLocker locker(&result.lock);
     result.samplerate = controlsettings.samplerate.current;
@@ -857,6 +863,7 @@ Dso::ErrorCode HantekDsoControl::setChannelUsed(ChannelID channel, bool used) {
     if ( fastRateChanged || is6022 ) { // update 6022 anyway
         this->updateSamplerateLimits();
         this->restoreTargets();
+        channelUsedChanged = true;
     }
     return Dso::ErrorCode::NONE;
 }

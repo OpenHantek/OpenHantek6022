@@ -11,3 +11,4 @@ build*
 firmware/hex
 *.json
 *.kate-swp
+.directory

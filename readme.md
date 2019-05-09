@@ -62,7 +62,7 @@ special driver for Windows systems.
 * On Linux, you need to copy the file `firmware/60-hantek.rules` to `/etc/udev/rules.d/` or `/lib/udev/rules.d/` and replug your device.
 
 ## Specifications, features, limitations and developer documentation
-Please refer to the [Specifications, features, limitations](docs/limitations.md) and the [developer documentation](openhantek/readme.md) pages.
+Please refer to the [specifications, features, limitations](docs/limitations.md) and the [developer documentation](openhantek/readme.md) pages.
 
 ## Contribute
 We welcome any reported Github Issue if you have a problem with this software. Send us a pull request for enhancements and fixes. Some random notes:
