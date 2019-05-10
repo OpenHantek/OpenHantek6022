@@ -17,7 +17,7 @@
 #include "utils/printutils.h"
 
 // probe attenuation
-#define ATTENUATION 10
+#define ATTENUATION 10.0
 
 template<typename... Args> struct SELECT {
     template<typename C, typename R>
@@ -141,6 +141,8 @@ void VoltageDock::setAttn(ChannelID channel, bool attn) {
     channelBlocks[channel].gainComboBox->addItems( attn ? attnStrings : gainStrings );
     channelBlocks[channel].gainComboBox->setCurrentIndex( index );
     channelBlocks[channel].attnCheckBox->setChecked(attn);
+    this->scope->voltage[channel].probeUsed = attn;
+    this->scope->voltage[channel].probeAttn = attn ? ATTENUATION : 1.0;
 }
 
 void VoltageDock::setMode(unsigned mathModeIndex) {

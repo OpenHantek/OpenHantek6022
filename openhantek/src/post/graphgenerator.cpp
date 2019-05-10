@@ -12,12 +12,14 @@
 #include "utils/printutils.h"
 #include "viewconstants.h"
 
+#if 0
 static const SampleValues &useSpecSamplesOf(ChannelID channel, const PPresult *result,
                                             const DsoSettingsScope *scope) {
     static SampleValues emptyDefault;
     if (!scope->spectrum[channel].used || !result->data(channel)) return emptyDefault;
     return result->data(channel)->spectrum;
 }
+#endif
 
 
 static const SampleValues &useVoltSamplesOf(ChannelID channel, const PPresult *result,
@@ -56,6 +58,34 @@ static const SampleValues &useVoltSamplesTriggered(ChannelID channel, const PPre
     // If not triggered, but not NORMAL mode -> discard history and use the free running trace
     samplesValid[ channel ] = false;
     return result->data(channel)->voltage;
+}
+
+
+static const SampleValues &useSpectrumSamplesTriggered(ChannelID channel, const PPresult *result,
+                                            const DsoSettingsScope *scope ) {
+    static SampleValues emptyDefault;
+    static std::vector<SampleValues> lastSamples( 3 );
+    static std::vector<bool> samplesValid( 3, false ); // all samples are invalid
+
+    if ( !scope->spectrum[channel].used || !result->data(channel) ) {
+        samplesValid[ channel ] = false;
+        return emptyDefault;
+    }
+    // If we have a triggered trace then save and display this trace
+    if ( result->softwareTriggerTriggered ) {
+        if ( lastSamples.size() <= channel ) // increase vector size if needed
+            lastSamples.resize( channel+1 );
+        lastSamples[ channel ] = result->data(channel)->spectrum;
+        samplesValid[ channel ] = true;
+        return result->data(channel)->spectrum;
+    }
+    // If not triggered in NORMAL mode but a triggered trace was saved then use the saved trace
+    if ( scope->trigger.mode == Dso::TriggerMode::NORMAL && samplesValid[ channel ] ) {
+        return lastSamples[ channel ];  // return last triggered trace
+    }
+    // If not triggered, but not NORMAL mode -> discard history and use the free running trace
+    samplesValid[ channel ] = false;
+    return result->data(channel)->spectrum;
 }
 
 
@@ -126,7 +156,7 @@ void GraphGenerator::generateGraphsTYspectrum(PPresult *result) {
     result->vaChannelSpectrum.resize(scope->spectrum.size());
     for (ChannelID channel = 0; channel < scope->voltage.size(); ++channel) {
         ChannelGraph &target = result->vaChannelSpectrum[channel];
-        const SampleValues &samples = useSpecSamplesOf(channel, result, scope);
+        const SampleValues &samples = useSpectrumSamplesTriggered(channel, result, scope);
 
         // Check if this channel is used and available at the data analyzer
         if (samples.sample.empty()) {
@@ -165,8 +195,8 @@ void GraphGenerator::process(PPresult *data) {
     // printf( "GraphGenerator::process()\n" );
     if (scope->horizontal.format == Dso::GraphFormat::TY) {
         ready = true;
-        generateGraphsTYspectrum(data);
         generateGraphsTYvoltage(data);
+        generateGraphsTYspectrum(data);
     } else
         generateGraphsXY(data, scope);
 }

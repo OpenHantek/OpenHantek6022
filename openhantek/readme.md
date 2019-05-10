@@ -76,7 +76,7 @@ scope graphs.
 
 ## Data flow
 
-* Raw 8-bit ADC values are collected in HantekDsoControl and converted in `HantekDsoControl::convertRawDataToSamples()` to real-world double samples (scaled with voltage and sample rate). Also overdriving of the inputs is detected. The conversion uses either the factory calibration values from EEPROM or from a user supplied config file. Read more about [calibration](https://github.com/Ho-Ro/Hantek6022API/blob/master/README.md#create-calibration-values-for-openhantek).
+* Raw 8-bit ADC values are collected in `HantekDsoControl::run()` and converted in `HantekDsoControl::convertRawDataToSamples()` to real-world double samples (scaled with voltage and sample rate). Also overdriving of the inputs is detected. The conversion uses either the factory calibration values from EEPROM or from a user supplied config file. Read more about [calibration](https://github.com/Ho-Ro/Hantek6022API/blob/master/README.md#create-calibration-values-for-openhantek).
 * The converted samples are emitted to PostProcessing::input() via signal/slot.
 * PostProzessing calls
   * `mathchannelGenerator::process()`
@@ -92,11 +92,11 @@ scope graphs.
       * voltage over time `GraphGenerator::generateGraphsTYvoltage()`
       * spectrum over frequency `GraphGenerator::generateGraphsTYspectrum()`
     * or in XY mode and creates a voltage over voltage trace `GraphGenerator::generateGraphsXY()`.
-    * `GraphGenerator::generateGraphsTYspectrum()` creates up to three (CH1, CH2, MATH) spectral traces .
     * `GraphGenerator::generateGraphsTYvoltage()` calls
       * `SoftwareTrigger::compute()` to find the trigger point in the voltage samples.
     * Finally `useVoltSamplesTriggered()` collects the samples of all active voltage channels to create up to three (CH1, CH2, MATH) voltage traces.
-    * If the **trigger condition is false** but we have already a **triggered trace** and the **trigger mode is Normal** then we reuse the last triggered **voltage** samples, the voltage trace is frozen until the trigger condition becomes true again. 
-    * The other results (spectrum traces as well as DC, AC, RMS and frequency display at the bottom) are constantly updated. The complete display can be frozen by pressing the SPACE bar.
+    * `GraphGenerator::generateGraphsTYspectrum()` creates also up to three (CH1, CH2, MATH) spectral traces.
+    * If the **trigger condition is false** but we have already a **triggered trace** and the **trigger mode is Normal** then we reuse the last triggered samples, the voltage and spectrum traces are frozen until the trigger condition becomes true again. 
+    * The other results (DC, AC, RMS and frequency display at the bottom) are constantly updated. The complete display can be frozen by pressing the SPACE bar.
 
 t.b.c.
