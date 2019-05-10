@@ -20,10 +20,11 @@ static void initSpecifications(Dso::ControlSpecification& specification) {
     specification.supportsCaptureState = false;
     specification.supportsOffset = false;
     specification.supportsCouplingRelays = false;
-    // we drop 2k sample values due to unreliable start of stream
-    // 20K samples at 100kS/s = 204,8 ms gives enough to fill 
+    // we drop 2K + 480 sample values due to unreliable start of stream
+    // 20000 samples at 100kS/s = 200 ms gives enough to fill
     // the screen two times (for pre/post trigger) at 10ms/div = 100ms/screen
-    const unsigned samples = (20 + 4) * 1024;
+    // adapt accordingly in HantekDsoControl::convertRawDataToSamples()
+    const unsigned samples = (20 + 2) * 1024; // use multiple of 1K
     specification.samplerate.single.base = 1e6;
     specification.samplerate.single.max = 30e6;
     specification.samplerate.single.maxDownsampler = 10;

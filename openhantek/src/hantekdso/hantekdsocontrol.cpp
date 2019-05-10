@@ -234,6 +234,7 @@ std::vector<unsigned char> HantekDsoControl::getSamples(unsigned &previousSample
     return data;
 }
 
+
 void HantekDsoControl::convertRawDataToSamples(const std::vector<unsigned char> &rawData) {
     if ( channelUsedChanged ) { // skip the next conversion to avoid artefacts due to channel switch
         channelUsedChanged = false;
@@ -351,36 +352,36 @@ void HantekDsoControl::convertRawDataToSamples(const std::vector<unsigned char> 
                     }
                     // printf( "sDB %d, gain_cal %f, ch %d, gIG %d\n", shiftDataBuf, gainCalibration, channel, gainID );
                 } 
-                // if device is 6022, drop heading & trailing samples
-                const unsigned DROP_DSO6022_HEAD = 0x810;
-                const unsigned DROP_DSO6022_TAIL = 0x7F0;
+                // 6022 sample size is (20 + 2) * 1024, set in modelDSO6022.cpp
+                // The 1st two or three frames (512 byte) of the raw sample stream are unreliable
+                // (Maybe because the common mode input voltage of ADC is handled far out of spec and has to settle)
+                // Solution: drop (2048 + 480) heading samples from (22 * 1024) total samples
+                // 22 * 1024 - 2048 - 480 = 20000
+                const unsigned DROP_DSO6022_HEAD = 2048 + 480;
                 if (!isRollMode()) {
-                    result.data[channel].resize(result.data[channel].size() 
-                        - (DROP_DSO6022_HEAD + DROP_DSO6022_TAIL));
-                    // if device is 6022BE, offset DROP_DSO6022_HEAD incrementally
+                    result.data[channel].resize( result.data[channel].size() - DROP_DSO6022_HEAD );
                     bufferPosition += DROP_DSO6022_HEAD * activeChannels;
                 }
                 bufferPosition += channel;
             } else {
                 bufferPosition += specification->channels - 1 - channel;
             }
-            result.clipped &= ~(0x01 << channel);
+            result.clipped &= ~(0x01 << channel); // clear clipping flag
             for ( unsigned pos = 0; pos < result.data[channel].size();
                 ++pos, bufferPosition += activeChannels ) {
                 if ( bufferPosition >= totalSampleCount ) 
                     bufferPosition %= totalSampleCount; 
 
                 int rawSample = rawData[bufferPosition]; // range 0...255
-                if ( rawSample == 0x00 || rawSample == 0xFF )
+                if ( rawSample == 0x00 || rawSample == 0xFF ) // min or max -> clipped
                     result.clipped |= 0x01 << channel;
                 double dataBuf = (double)(rawSample - shiftDataBuf); // int - int
                 result.data[channel][pos] = (dataBuf / limit - offset) * gainCalibration * gainStep * probeAttn;
             }
-            //printf( "channel %d, gainID %d, samplerate %f\n", channel, gainID, controlsettings.samplerate.current );
-            //printf( "offsetLimit %ld %d\n", sizeof(OffsetsPerGainStep), ((unsigned char*)controlsettings.offsetLimit)[0] );
         }
     }
 }
+
 
 double HantekDsoControl::getBestSamplerate(double samplerate, bool fastRate, bool maximum,
                                            unsigned *downsampler) const {
@@ -775,7 +776,7 @@ Dso::ErrorCode HantekDsoControl::setRecordTime(double duration) {
             srLimit = (specification->samplerate.multi).max;
         // For now - we go for the 20480 size sampling
         // Find highest samplerate using less than 20480 samples to obtain our duration.
-        unsigned sampleCount = 20480;
+        unsigned sampleCount = 20000; // 20480;
         // Ensure that at least 1/2 of remaining samples are available for SW trigger algorithm
 
         if (specification->isSoftwareTriggerDevice) {
