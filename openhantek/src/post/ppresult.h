@@ -46,7 +46,10 @@ class PPresult {
     unsigned int sampleCount() const;
     unsigned int channelCount() const;
 
+    /// sw trigger status
     bool softwareTriggerTriggered = false;
+    /// skip samples at start of channel to get triggered tace on screen
+    unsigned int skipSamples = 0;
 
     ChannelsGraphs vaChannelSpectrum;
     ChannelsGraphs vaChannelVoltage;

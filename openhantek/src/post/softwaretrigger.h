@@ -11,12 +11,12 @@ class PPresult;
  */
 class SoftwareTrigger {
   public:
-    typedef std::tuple<unsigned, unsigned, unsigned> PrePostStartTriggerSamples;
+    typedef std::pair<bool, unsigned> TriggerStatusSkip;
     /**
      * @brief Computes a software trigger point.
      * @param data Analysed data from the
      * @param scope Scope settings
      * @return Returns a tuple of positions [preTrigger, postTrigger, startTrigger]
      */
-    static PrePostStartTriggerSamples compute(const PPresult *data, const DsoSettingsScope *scope);
+    static TriggerStatusSkip compute(const PPresult *data, const DsoSettingsScope *scope);
 };

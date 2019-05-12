@@ -4,10 +4,9 @@
 #include "viewconstants.h"
 #include "utils/printutils.h"
 
-SoftwareTrigger::PrePostStartTriggerSamples SoftwareTrigger::compute(const PPresult *data,
-                                                                              const DsoSettingsScope *scope)
+SoftwareTrigger::TriggerStatusSkip SoftwareTrigger::compute(const PPresult *data, const DsoSettingsScope *scope)
 {
-    // printf( "SoftwareTrigger::compute\n" );
+    // printf( "SoftwareTrigger::compute()\n" );
     unsigned int preTrigSamples = 0;
     unsigned int postTrigSamples = 0;
     unsigned int swTriggerStart = 0;
@@ -16,7 +15,7 @@ SoftwareTrigger::PrePostStartTriggerSamples SoftwareTrigger::compute(const PPres
     // Trigger channel not in use
     if (!scope->voltage[channel].used || !data->data(channel) ||
             data->data(channel)->voltage.sample.empty())
-        return PrePostStartTriggerSamples(preTrigSamples, postTrigSamples, swTriggerStart);
+        return TriggerStatusSkip( false, 0 );
 
     const std::vector<double>& samples = data->data(channel)->voltage.sample;
     double level = scope->voltage[channel].trigger;
@@ -32,7 +31,7 @@ SoftwareTrigger::PrePostStartTriggerSamples SoftwareTrigger::compute(const PPres
         // For now #3 is chosen
         timestampDebug(QString("Too few samples to make a steady "
                                "picture. Decrease sample rate"));
-        return PrePostStartTriggerSamples(preTrigSamples, postTrigSamples, swTriggerStart);
+        return TriggerStatusSkip( false, 0 );
     }
     preTrigSamples = (unsigned)(scope->trigger.position * samplesDisplay); // samples left of trigger
     postTrigSamples = (unsigned)sampleCount - ((unsigned)samplesDisplay - preTrigSamples); // samples right of trigger
@@ -85,5 +84,6 @@ SoftwareTrigger::PrePostStartTriggerSamples SoftwareTrigger::compute(const PPres
         preTrigSamples = 0; // preTrigSamples may never be greater than swTriggerStart
         postTrigSamples = 0;
     }
-    return PrePostStartTriggerSamples(preTrigSamples, postTrigSamples, swTriggerStart);
+    //printf("PPS(%d %d %d)\n", preTrigSamples, postTrigSamples, swTriggerStart);
+    return TriggerStatusSkip( postTrigSamples > preTrigSamples, swTriggerStart - preTrigSamples );
 }

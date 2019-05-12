@@ -26,6 +26,7 @@
 #include "post/mathchannelgenerator.h"
 #include "post/postprocessing.h"
 #include "post/spectrumgenerator.h"
+#include "post/triggering.h"
 
 // Exporter
 #include "exporting/exportcsv.h"
@@ -163,11 +164,13 @@ int main(int argc, char *argv[]) {
     postProcessingThread.setObjectName("postProcessingThread");
     PostProcessing postProcessing(settings.scope.countChannels());
 
+    Triggering triggering( &settings.scope, device->getModel()->spec()->isSoftwareTriggerDevice );
     SpectrumGenerator spectrumGenerator(&settings.scope, &settings.post);
     MathChannelGenerator mathchannelGenerator(&settings.scope, device->getModel()->spec()->channels);
     GraphGenerator graphGenerator(&settings.scope, device->getModel()->spec()->isSoftwareTriggerDevice);
 
     postProcessing.registerProcessor(&samplesToExportRaw);
+    postProcessing.registerProcessor(&triggering);
     postProcessing.registerProcessor(&mathchannelGenerator);
     postProcessing.registerProcessor(&spectrumGenerator);
     postProcessing.registerProcessor(&graphGenerator);
