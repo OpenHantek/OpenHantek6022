@@ -12,7 +12,6 @@
 #include "states.h"
 #include "utils/printutils.h"
 
-#include "hantekprotocol/bulkStructs.h"
 #include "hantekprotocol/controlStructs.h"
 #include "hantekprotocol/definitions.h"
 
@@ -86,25 +85,16 @@ class HantekDsoControl : public QObject {
     /// Return the last sample set
     const DSOsamples &getLastSamples();
 
-    /// \brief Sends bulk/control commands directly.
+    /// \brief Sends control commands directly.
     /// <p>
     ///		<b>Syntax:</b><br />
     ///		<br />
-    ///		Bulk command:
-    ///		<pre>send bulk [<em>hex data</em>]</pre>
     ///		%Control command:
     ///		<pre>send control [<em>hex code</em>] [<em>hex data</em>]</pre>
     /// </p>
     /// \param command The command as string (Has to be parsed).
     /// \return See ::Dso::ErrorCode.
     Dso::ErrorCode stringCommand(const QString &commandString);
-
-    void addCommand(BulkCommand *newCommand, bool pending = true);
-    template <class T> T *modifyCommand(Hantek::BulkCode code) {
-        command[(uint8_t)code]->pending = true;
-        return static_cast<T *>(command[(uint8_t)code]);
-    }
-    const BulkCommand *getCommand(Hantek::BulkCode code) const;
 
     void addCommand(ControlCommand *newCommand, bool pending = true);
     template <class T> T *modifyCommand(Hantek::ControlCode code) {
@@ -119,19 +109,6 @@ class HantekDsoControl : public QObject {
     unsigned getRecordLength() const;
 
     Dso::ErrorCode retrieveChannelLevelData();
-
-    /// \brief Calculated the nearest samplerate supported by the oscilloscope.
-    /// \param samplerate The target samplerate, that should be met as good as
-    /// possible.
-    /// \param fastRate true, if the fast rate mode is enabled.
-    /// \param maximum The target samplerate is the maximum allowed when true, the
-    /// minimum otherwise.
-    /// \param downsampler Pointer to where the selected downsampling factor should
-    /// be written.
-    /// \return The nearest samplerate supported, 0.0 on error.
-    double getBestSamplerate(double samplerate, bool fastRate = false, bool maximum = false,
-                             unsigned *downsampler = 0) const;
-
     /// Get the number of samples that are expected returned by the scope.
     /// In rolling mode this is depends on the usb speed and packet size.
     /// \return The total number of samples the scope should return.
@@ -173,9 +150,7 @@ class HantekDsoControl : public QObject {
     void updateSamplerateLimits();
 
   private:
-    /// Pointers to bulk/control commands
-    BulkCommand *command[255] = {0};
-    BulkCommand *firstBulkCommand = nullptr;
+    /// Pointers to control commands
     ControlCommand *control[255] = {0};
     ControlCommand *firstControlCommand = nullptr;
 
@@ -205,18 +180,19 @@ class HantekDsoControl : public QObject {
     /// \param command The command, that should be sent.
     /// \param attempts The number of attempts, that are done on timeouts.
     /// \return Number of sent bytes on success, libusb error code on error.
-    int bulkCommand(const std::vector<unsigned char> *command, int attempts = HANTEK_ATTEMPTS) const;
+    //int bulkCommand(const std::vector<unsigned char> *command, int attempts = HANTEK_ATTEMPTS) const;
 
   public slots:
     /// \brief If sampling is disabled, no samplesAvailable() signals are send anymore, no samples
     /// are fetched from the device and no processing takes place.
     /// \param enabled Enables/Disables sampling
     void enableSampling(bool enabled);
-
+#if 0
     /// \brief Sets the size of the oscilloscopes sample buffer.
     /// \param index The record length index that should be set.
     /// \return The record length that has been set, 0 on error.
     Dso::ErrorCode setRecordLength(unsigned size);
+#endif
     /// \brief Sets the samplerate of the oscilloscope.
     /// \param samplerate The samplerate that should be met (S/s), 0.0 to restore
     /// current samplerate.
@@ -250,12 +226,13 @@ class HantekDsoControl : public QObject {
     /// \param probeAttn gain of probe is set.
     /// \return error code.
     Dso::ErrorCode setGain(ChannelID channel, double gain);
+#if 0
     /// \brief Set the offset for the given channel.
     /// Get the actual offset for the channel from controlsettings.voltage[channel].offsetReal
     /// \param channel The channel that should be set.
     /// \param offset The new offset value (0.0 - 1.0).
     Dso::ErrorCode setOffset(ChannelID channel, const double offset);
-
+#endif
     /// \brief Set the trigger mode.
     /// \return See ::Dso::ErrorCode.
     Dso::ErrorCode setTriggerMode(Dso::TriggerMode mode);
@@ -276,12 +253,12 @@ class HantekDsoControl : public QObject {
     /// \brief Set the trigger position.
     /// \param position The new trigger position (in s).
     /// \return The trigger position that has been set.
-    Dso::ErrorCode setPretriggerPosition(double position);
+    Dso::ErrorCode setTriggerPosition(double position);
     /// \brief Sets the calibration frequency of the oscilloscope.
     /// \param calfreq The calibration frequency.
     /// \return The tfrequency that has been set, ::Dso::ErrorCode on error.
     Dso::ErrorCode setCalFreq(double calfreq = 0.0);
-    void forceTrigger();
+    //void forceTrigger();
 
   signals:
     void samplingStatusChanged(bool enabled); ///< The oscilloscope started/stopped sampling/waiting for trigger
@@ -290,7 +267,6 @@ class HantekDsoControl : public QObject {
 
     void availableRecordLengthsChanged(const std::vector<unsigned> &recordLengths); ///< The available record
                                                                                     /// lengths, empty list for
-
     /// The available samplerate range has changed
     void samplerateLimitsChanged(double minimum, double maximum);
     /// The available samplerate for fixed samplerate devices has changed

@@ -766,7 +766,7 @@ void DsoWidget::updateTriggerPosition(int index, double value, bool mainView) {
     updateTriggerDetails();
     updateMarkerDetails();
 
-    emit triggerPositionChanged(scope->trigger.position * scope->horizontal.timebase * DIVS_TIME);
+    emit triggerPositionChanged(scope->trigger.position /* * scope->horizontal.timebase */ * DIVS_TIME);
 }
 
 /// \brief Handles valueChanged signal from the trigger level slider.

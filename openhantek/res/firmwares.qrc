@@ -1,15 +1,5 @@
 <RCC>
     <qresource prefix="/">
-        <file>firmware/dso2090x86-firmware.hex</file>
-        <file>firmware/dso2090x86-loader.hex</file>
-        <file>firmware/dso2150x86-firmware.hex</file>
-        <file>firmware/dso2150x86-loader.hex</file>
-        <file>firmware/dso2250x86-firmware.hex</file>
-        <file>firmware/dso2250x86-loader.hex</file>
-        <file>firmware/dso5200ax86-firmware.hex</file>
-        <file>firmware/dso5200ax86-loader.hex</file>
-        <file>firmware/dso5200x86-firmware.hex</file>
-        <file>firmware/dso5200x86-loader.hex</file>
         <file>firmware/dso6022be-firmware.hex</file>
         <file>firmware/dso6022be-loader.hex</file>
         <file>firmware/dso6022bl-firmware.hex</file>

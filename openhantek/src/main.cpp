@@ -56,14 +56,14 @@ void applySettingsToDevice(HantekDsoControl *dsoControl, DsoSettingsScope *scope
     for (ChannelID channel = 0; channel < spec->channels; ++channel) {
         dsoControl->setCoupling(channel, scope->coupling(channel, spec));
         dsoControl->setGain(channel, scope->gain(channel) * DIVS_VOLTAGE);
-        dsoControl->setOffset(channel, (scope->voltage[channel].offset / DIVS_VOLTAGE) + 0.5);
+        //dsoControl->setOffset(channel, (scope->voltage[channel].offset / DIVS_VOLTAGE) + 0.5);
         dsoControl->setTriggerLevel(channel, scope->voltage[channel].trigger);
         dsoControl->setChannelUsed(channel, mathUsed | scope->anyUsed(channel));
         dsoControl->setProbe( channel, scope->voltage[channel].probeUsed, scope->voltage[channel].probeAttn );
     }
 
-    dsoControl->setRecordTime(scope->horizontal.timebase * DIVS_TIME);
-
+    // dsoControl->setRecordTime(scope->horizontal.timebase * DIVS_TIME);
+#if 0
     if (dsoControl->getAvailableRecordLengths().empty())
         dsoControl->setRecordLength(scope->horizontal.recordLength);
     else {
@@ -72,8 +72,9 @@ void applySettingsToDevice(HantekDsoControl *dsoControl, DsoSettingsScope *scope
                                         std::find(recLenVec.begin(), recLenVec.end(), scope->horizontal.recordLength));
         dsoControl->setRecordLength(index < 0 ? 1 : (unsigned)index);
     }
+#endif
     dsoControl->setTriggerMode(scope->trigger.mode);
-    dsoControl->setPretriggerPosition(scope->trigger.position * scope->horizontal.timebase * DIVS_TIME);
+    dsoControl->setTriggerPosition(scope->trigger.position /* * scope->horizontal.timebase */ * DIVS_TIME);
     dsoControl->setTriggerSlope(scope->trigger.slope);
     dsoControl->setTriggerSource(scope->trigger.special, scope->trigger.source);
 }

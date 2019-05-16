@@ -126,15 +126,17 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, Expo
         this->dsoWidget->updateTimebase(mSettings->scope.horizontal.timebase);
     });
     connect(horizontalDock, &HorizontalDock::frequencybaseChanged, dsoWidget, &DsoWidget::updateFrequencybase);
+#if 0
     connect(horizontalDock, &HorizontalDock::recordLengthChanged,
             [dsoControl](unsigned long recordLength) { dsoControl->setRecordLength(recordLength); });
     connect(dsoControl, &HantekDsoControl::recordTimeChanged,
         [this, settings, horizontalDock, dsoControl](double duration) {
             // The trigger position should be kept at the same place but the timebase has changed
-            dsoControl->setPretriggerPosition(settings->scope.trigger.position *
+            dsoControl->setTriggerPosition(settings->scope.trigger.position *
                                                 settings->scope.horizontal.timebase * DIVS_TIME);
             this->dsoWidget->updateTimebase(settings->scope.horizontal.timebase);
     });
+#endif
     connect(dsoControl, &HantekDsoControl::samplerateChanged, [this, horizontalDock](double samplerate) {
         if (mSettings->scope.horizontal.recordLength != UINT_MAX) {
             // The timebase was set, let's adapt the samplerate accordingly
@@ -154,7 +156,7 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, Expo
     connect(triggerDock, &TriggerDock::sourceChanged, dsoWidget, &DsoWidget::updateTriggerSource);
     connect(triggerDock, &TriggerDock::slopeChanged, dsoControl, &HantekDsoControl::setTriggerSlope);
     connect(triggerDock, &TriggerDock::slopeChanged, dsoWidget, &DsoWidget::updateTriggerSlope);
-    connect(dsoWidget, &DsoWidget::triggerPositionChanged, dsoControl, &HantekDsoControl::setPretriggerPosition);
+    connect(dsoWidget, &DsoWidget::triggerPositionChanged, dsoControl, &HantekDsoControl::setTriggerPosition);
     connect(dsoWidget, &DsoWidget::triggerLevelChanged, dsoControl, &HantekDsoControl::setTriggerLevel);
 
     auto usedChanged = [this, dsoControl, spec](ChannelID channel, bool used) {
@@ -189,13 +191,13 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, Expo
         dsoControl->setProbe( channel, probeUsed, probeAttn );
     });
     connect(voltageDock, &VoltageDock::gainChanged, dsoWidget, &DsoWidget::updateVoltageGain);
-   
+#if 0   
     connect(dsoWidget, &DsoWidget::offsetChanged, [this, dsoControl, spec](ChannelID channel) {
         if (channel >= spec->channels)
             return;
         dsoControl->setOffset(channel, (mSettings->scope.voltage[channel].offset / DIVS_VOLTAGE) + 0.5);
     });
-
+#endif
     connect(voltageDock, &VoltageDock::usedChanged, dsoWidget, &DsoWidget::updateVoltageUsed);
     connect(spectrumDock, &SpectrumDock::usedChanged, dsoWidget, &DsoWidget::updateSpectrumUsed);
     connect(spectrumDock, &SpectrumDock::magnitudeChanged, dsoWidget, &DsoWidget::updateSpectrumMagnitude);
