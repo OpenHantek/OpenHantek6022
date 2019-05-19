@@ -104,7 +104,6 @@ class HantekDsoControl : public QObject {
     const ControlCommand *getCommand(Hantek::ControlCode code) const;
 
   private:
-    bool isRollMode() const;
     bool isFastRate() const;
     unsigned getRecordLength() const;
 
@@ -149,6 +148,10 @@ class HantekDsoControl : public QObject {
     /// \brief Update the minimum and maximum supported samplerate.
     void updateSamplerateLimits();
 
+    int softwareTrigger();
+
+    void triggering();
+
   private:
     /// Pointers to control commands
     ControlCommand *control[255] = {0};
@@ -176,23 +179,11 @@ class HantekDsoControl : public QObject {
     int startCycle = 0;
     int cycleTime = 0;
 
-    /// \brief Send a bulk command to the oscilloscope.
-    /// \param command The command, that should be sent.
-    /// \param attempts The number of attempts, that are done on timeouts.
-    /// \return Number of sent bytes on success, libusb error code on error.
-    //int bulkCommand(const std::vector<unsigned char> *command, int attempts = HANTEK_ATTEMPTS) const;
-
   public slots:
     /// \brief If sampling is disabled, no samplesAvailable() signals are send anymore, no samples
     /// are fetched from the device and no processing takes place.
     /// \param enabled Enables/Disables sampling
     void enableSampling(bool enabled);
-#if 0
-    /// \brief Sets the size of the oscilloscopes sample buffer.
-    /// \param index The record length index that should be set.
-    /// \return The record length that has been set, 0 on error.
-    Dso::ErrorCode setRecordLength(unsigned size);
-#endif
     /// \brief Sets the samplerate of the oscilloscope.
     /// \param samplerate The samplerate that should be met (S/s), 0.0 to restore
     /// current samplerate.
@@ -209,11 +200,6 @@ class HantekDsoControl : public QObject {
     /// \param used true if the channel should be sampled.
     /// \return See ::Dso::ErrorCode.
     Dso::ErrorCode setChannelUsed(ChannelID channel, bool used);
-    /// \brief Set the coupling for the given channel.
-    /// \param channel The channel that should be set.
-    /// \param coupling The new coupling for the channel.
-    /// \return See ::Dso::ErrorCode.
-    Dso::ErrorCode setCoupling(ChannelID channel, Dso::Coupling coupling);
     /// \brief Sets the gain for the given channel.
     /// Get the actual gain by specification.gainSteps[gainId]
     /// \param channel The channel that should be set.
@@ -226,13 +212,6 @@ class HantekDsoControl : public QObject {
     /// \param probeAttn gain of probe is set.
     /// \return error code.
     Dso::ErrorCode setGain(ChannelID channel, double gain);
-#if 0
-    /// \brief Set the offset for the given channel.
-    /// Get the actual offset for the channel from controlsettings.voltage[channel].offsetReal
-    /// \param channel The channel that should be set.
-    /// \param offset The new offset value (0.0 - 1.0).
-    Dso::ErrorCode setOffset(ChannelID channel, const double offset);
-#endif
     /// \brief Set the trigger mode.
     /// \return See ::Dso::ErrorCode.
     Dso::ErrorCode setTriggerMode(Dso::TriggerMode mode);

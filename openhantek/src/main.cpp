@@ -26,7 +26,6 @@
 #include "post/mathchannelgenerator.h"
 #include "post/postprocessing.h"
 #include "post/spectrumgenerator.h"
-#include "post/triggering.h"
 
 // Exporter
 #include "exporting/exportcsv.h"
@@ -54,27 +53,15 @@ void applySettingsToDevice(HantekDsoControl *dsoControl, DsoSettingsScope *scope
                            const Dso::ControlSpecification *spec) {
     bool mathUsed = scope->anyUsed(spec->channels);
     for (ChannelID channel = 0; channel < spec->channels; ++channel) {
-        dsoControl->setCoupling(channel, scope->coupling(channel, spec));
         dsoControl->setGain(channel, scope->gain(channel) * DIVS_VOLTAGE);
-        //dsoControl->setOffset(channel, (scope->voltage[channel].offset / DIVS_VOLTAGE) + 0.5);
         dsoControl->setTriggerLevel(channel, scope->voltage[channel].trigger);
         dsoControl->setChannelUsed(channel, mathUsed | scope->anyUsed(channel));
         dsoControl->setProbe( channel, scope->voltage[channel].probeUsed, scope->voltage[channel].probeAttn );
     }
 
-    // dsoControl->setRecordTime(scope->horizontal.timebase * DIVS_TIME);
-#if 0
-    if (dsoControl->getAvailableRecordLengths().empty())
-        dsoControl->setRecordLength(scope->horizontal.recordLength);
-    else {
-        auto recLenVec = dsoControl->getAvailableRecordLengths();
-        ptrdiff_t index = std::distance(recLenVec.begin(),
-                                        std::find(recLenVec.begin(), recLenVec.end(), scope->horizontal.recordLength));
-        dsoControl->setRecordLength(index < 0 ? 1 : (unsigned)index);
-    }
-#endif
+    dsoControl->setRecordTime(scope->horizontal.timebase * DIVS_TIME);
     dsoControl->setTriggerMode(scope->trigger.mode);
-    dsoControl->setTriggerPosition(scope->trigger.position /* * scope->horizontal.timebase */ * DIVS_TIME);
+    dsoControl->setTriggerPosition(scope->trigger.position);
     dsoControl->setTriggerSlope(scope->trigger.slope);
     dsoControl->setTriggerSource(scope->trigger.special, scope->trigger.source);
 }
@@ -103,7 +90,7 @@ int main(int argc, char *argv[]) {
         useGles = p.isSet(useGlesOption);
     }
 
-    GlScope::fixOpenGLversion(useGles ? QSurfaceFormat::OpenGLES : QSurfaceFormat::OpenGL);
+    GlScope::fixOpenGLversion( useGles ? QSurfaceFormat::OpenGLES : QSurfaceFormat::OpenGL );
 
     QApplication openHantekApplication(argc, argv);
 
@@ -165,13 +152,11 @@ int main(int argc, char *argv[]) {
     postProcessingThread.setObjectName("postProcessingThread");
     PostProcessing postProcessing(settings.scope.countChannels());
 
-    Triggering triggering( &settings.scope, device->getModel()->spec()->isSoftwareTriggerDevice );
     SpectrumGenerator spectrumGenerator(&settings.scope, &settings.post);
     MathChannelGenerator mathchannelGenerator(&settings.scope, device->getModel()->spec()->channels);
-    GraphGenerator graphGenerator(&settings.scope, device->getModel()->spec()->isSoftwareTriggerDevice);
+    GraphGenerator graphGenerator(&settings.scope);
 
     postProcessing.registerProcessor(&samplesToExportRaw);
-    postProcessing.registerProcessor(&triggering);
     postProcessing.registerProcessor(&mathchannelGenerator);
     postProcessing.registerProcessor(&spectrumGenerator);
     postProcessing.registerProcessor(&graphGenerator);

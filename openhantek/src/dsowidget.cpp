@@ -352,10 +352,15 @@ void DsoWidget::setupSliders(DsoWidget::Sliders &sliders) {
 
 /// \brief Set the trigger level sliders minimum and maximum to the new values.
 void DsoWidget::adaptTriggerLevelSlider(DsoWidget::Sliders &sliders, ChannelID channel) {
+    //printf( "DW::adaptTriggerLevelSlider( %d )\n", channel );
     sliders.triggerLevelSlider->setLimits((int)channel,
                                           (-DIVS_VOLTAGE / 2 - scope->voltage[channel].offset) * scope->gain(channel),
-                                          (DIVS_VOLTAGE / 2 - scope->voltage[channel].offset) * scope->gain(channel));
+                                          ( DIVS_VOLTAGE / 2 - scope->voltage[channel].offset) * scope->gain(channel) );
     sliders.triggerLevelSlider->setStep((int)channel, scope->gain(channel) * 0.05);
+    double value = sliders.triggerLevelSlider->value(channel); 
+    if ( value  ) { // ignore when first called at init
+        updateTriggerLevel(channel, value);
+    }
 }
 
 /// \brief Show/Hide a line of the measurement table.
@@ -495,7 +500,7 @@ void DsoWidget::updateFrequencybase(double frequencybase) {
 /// \brief Updates the samplerate field after changing the samplerate.
 /// \param samplerate The samplerate set in the oscilloscope.
 void DsoWidget::updateSamplerate(double samplerate) {
-    // printf( "updateSamplerate( %g )\n", samplerate );
+    //printf( "updateSamplerate( %g )\n", samplerate );
     settingsSamplerateLabel->setText(valueToString(samplerate, UNIT_SAMPLES, 4) + tr("/s"));
 }
 
@@ -634,13 +639,11 @@ void DsoWidget::showNew(std::shared_ptr<PPresult> data) {
     mainScope->showData(data);
     zoomScope->showData(data);
 
-    if (spec->isSoftwareTriggerDevice) {
-        QPalette triggerLabelPalette = palette();
-        triggerLabelPalette.setColor(QPalette::WindowText, Qt::black);
-        triggerLabelPalette.setColor(QPalette::Background, data->softwareTriggerTriggered ? Qt::green : Qt::red);
-        swTriggerStatus->setPalette(triggerLabelPalette);
-        swTriggerStatus->setVisible(true);
-    }
+    QPalette triggerLabelPalette = palette();
+    triggerLabelPalette.setColor(QPalette::WindowText, Qt::black);
+    triggerLabelPalette.setColor(QPalette::Background, data->softwareTriggerTriggered ? Qt::green : Qt::red);
+    swTriggerStatus->setPalette(triggerLabelPalette);
+    swTriggerStatus->setVisible(true);
     updateRecordLength(data.get()->sampleCount());
     for (ChannelID channel = 0; channel < scope->voltage.size(); ++channel) {
         if (scope->voltage[channel].used && data.get()->data(channel)) {
@@ -766,13 +769,14 @@ void DsoWidget::updateTriggerPosition(int index, double value, bool mainView) {
     updateTriggerDetails();
     updateMarkerDetails();
 
-    emit triggerPositionChanged(scope->trigger.position /* * scope->horizontal.timebase */ * DIVS_TIME);
+    emit triggerPositionChanged(scope->trigger.position);
 }
 
 /// \brief Handles valueChanged signal from the trigger level slider.
 /// \param channel The index of the slider.
 /// \param value The new trigger level.
 void DsoWidget::updateTriggerLevel(ChannelID channel, double value) {
+    //printf("DW::updateTriggerLevel( %d, %g )\n", channel, value);
     scope->voltage[channel].trigger = value;
 
     if (mainSliders.triggerLevelSlider->value(channel) != value) {

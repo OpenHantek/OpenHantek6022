@@ -3,7 +3,7 @@
 #pragma once
 
 #define HANTEK_TIMEOUT 500       ///< Timeout for USB transfers in ms
-#define HANTEK_TIMEOUT_MULTI 200 ///< Timeout for multi packet USB transfers in ms
+#define HANTEK_TIMEOUT_MULTI 500 ///< Timeout for multi packet USB transfers in ms
 #define HANTEK_ATTEMPTS 3        ///< The number of transfer attempts
 #define HANTEK_ATTEMPTS_MULTI 1  ///< The number of multi packet transfer attempts
 

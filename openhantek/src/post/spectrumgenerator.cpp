@@ -220,7 +220,7 @@ void SpectrumGenerator::process(PPresult *result) {
                 minimumCorrelation = correlation[position];
         }
         correlation.reset(nullptr);
-        // printf( "pc: %d: %g\n", peakPosition, 1.0 / (channelData->voltage.interval * peakPosition) );
+        //printf( "pc: %d: %g\n", peakPosition, 1.0 / (channelData->voltage.interval * peakPosition) );
         // Calculate the frequency in Hz
         // use auto correlation result if it is granular enough (+- 1%), else try 1st spectrum peak.
         if (peakPosition > 100)
@@ -250,7 +250,7 @@ void SpectrumGenerator::process(PPresult *result) {
 
                 *spectrumIterator = value;
             }
-            // printf( "pf: %d; %g\n", peakPos, channelData->spectrum.interval * peakPos );
+            //printf( "pf: %d; %g\n", peakPos, channelData->spectrum.interval * peakPos );
         }
 
         if ( peakPos ) { // use this frequency result if available

@@ -5,118 +5,31 @@
 namespace Hantek {
 
 /// \brief All supported control commands.
-
-/// CONTROL_VALUE <em>[MODEL_DSO2090, MODEL_DSO2150, MODEL_DSO2250, MODEL_DSO5200, MODEL_DSO5200A, MODEL_DSO6022]</em>
-/// <p>
-///   The 0xa2 control read/write command gives access to a ControlValue.
-/// </p>
+/// \brief All supported control commands.
+/// 0xE0 CONTROL_SETVOLTDIV_CH1 CH1 voltage div setting (6022BE/BL)
 ///
-/// CONTROL_GETSPEED <em>[MODEL_DSO2090, MODEL_DSO2150, MODEL_DSO2250, MODEL_DSO5200, MODEL_DSO5200A, MODEL_DSO6022]</em>
-/// <p>
-///   The 0xb2 control read command gets the speed level of the USB
-///   connection:
-///   <table>
-///     <tr>
-///       <td>ConnectionSpeed</td>
-///       <td>0x00</td>
-///       <td>0x00</td>
-///       <td>0x00</td>
-///       <td>0x00</td>
-///       <td>0x00</td>
-///       <td>0x00</td>
-///       <td>0x00</td>
-///       <td>0x00</td>
-///       <td>0x00</td>
-///     </tr>
-///   </table>
-/// </p>
+/// 0xE1 CONTROL_SETVOLTDIV_CH2 CH2 voltage div setting (6022BE/BL)
 ///
-/// CONTROL_BEGINCOMMAND <em>[MODEL_DSO2090, MODEL_DSO2150, MODEL_DSO2250, MODEL_DSO5200, MODEL_DSO5200A]</em>
-/// <p>
-///   The 0xb3 control write command is sent before any bulk command:
-///   <table>
-///     <tr>
-///       <td>0x0f</td>
-///       <td>BulkIndex</td>
-///       <td>BulkIndex</td>
-///       <td>BulkIndex</td>
-///       <td>0x00</td>
-///       <td>0x00</td>
-///       <td>0x00</td>
-///       <td>0x00</td>
-///       <td>0x00</td>
-///       <td>0x00</td>
-///     </tr>
-///   </table>
-/// </p>
+/// CONTROL_SETTIMEDIV Time divisor setting (6022BE/BL)
 ///
-/// CONTROL_SETOFFSET <em>[MODEL_DSO2090, MODEL_DSO2150, MODEL_DSO2250, MODEL_DSO5200, MODEL_DSO5200A]</em>
-/// <p>
-///   The 0xb4 control write command sets the channel offsets:
-///   <table>
-///     <tr>
-///       <td>Ch1Offset[1]</td>
-///       <td>Ch1Offset[0]</td>
-///       <td>Ch2Offset[1]</td>
-///       <td>Ch2Offset[0]</td>
-///       <td>TriggerOffset[1]</td>
-///       <td>TriggerOffset[0]</td>
-///     </tr>
-///   </table>
-///   <table>
-///     <tr>
-///       <td>0x00</td>
-///       <td>0x00</td>
-///       <td>0x00</td>
-///       <td>0x00</td>
-///       <td>0x00</td>
-///       <td>0x00</td>
-///       <td>0x00</td>
-///       <td>0x00</td>
-///       <td>0x00</td>
-///       <td>0x00</td>
-///       <td>0x00</td>
-///     </tr>
-///   </table>
-/// </p>
+/// CONTROL_ACQUIIRE_HARD_DATA Request sample data (6022BE/BL)
 ///
-/// CONTROL_SETRELAYS <em>[MODEL_DSO2090, MODEL_DSO2150, MODEL_DSO2250, MODEL_DSO5200, MODEL_DSO5200A]</em>
-/// <p>
-///   The 0xb5 control write command sets the internal relays:
-///   <table>
-///     <tr>
-///       <td>0x00</td>
-///       <td>0x04 ^ (Ch1Gain < 1 V)</td>
-///       <td>0x08 ^ (Ch1Gain < 100 mV)</td>
-///       <td>0x02 ^ (Ch1Coupling == DC)</td>
-///     </tr>
-///   </table>
-///   <table>
-///     <tr>
-///       <td>0x20 ^ (Ch2Gain < 1 V)</td>
-///       <td>0x40 ^ (Ch2Gain < 100 mV)</td>
-///       <td>0x10 ^ (Ch2Coupling == DC)</td>
-///       <td>0x01 ^ (Trigger == EXT)</td>
-///     </tr>
-///   </table>
-///   <table>
-///     <tr>
-///       <td>0x00</td>
-///       <td>0x00</td>
-///       <td>0x00</td>
-///       <td>0x00</td>
-///       <td>0x00</td>
-///       <td>0x00</td>
-///       <td>0x00</td>
-///       <td>0x00</td>
-///       <td>0x00</td>
-///     </tr>
-///   </table>
-/// </p>
-/// <p>
-///   The limits are <= instead of < for the 10 bit models, since those
-///   support voltages up to 10 V.
-/// </p>
+/// | Oscilloscope Command | bRequest Value | Other Notes                                                            |
+/// |----------------------|----------------|------------------------------------------------------------------------|
+/// | Set CH0 voltage range|      0xE0      | Possible values: 1,2,5,10 (5V, 2.5V, 1V, 500mV).                       |
+/// | Set CH1 voltage range|      0xE1      | Possible values: 1,2,5,10 (5V, 2.5V, 1V, 500mV).                       |
+/// | Set Sampling Rate    |      0xE2      | Possible values: 48, 30, 24, 16, 8, 4, 1 (MHz) and 50,20,10 (*10kHz).  |
+/// | Trigger Oscilloscope |      0xE3      | Possible values: 0: start sampling, 1: stop sampling                   |
+/// | Set channel count    |      0xE4      | Possible values are 1 (CH1 only) and 2 (CH1 and CH2)                   |
+/// | Set Calibration Freq |      0xE6      | Possible values: 1, 2, 5, 10, 20, 50, 100 (kHz)                        |
+/// |                      |                | Possible values: 105 (50 Hz), 110 (100 Hz), 120 (200 Hz), 150 (500 Hz) |
+/// | Read/Write Firmware  |      0xA0      | Read or write the scope firmware. Must be done on scope initialization |
+///
+/// The 0xEx requests are sent with value 0x00.
+/// The calibration commands are sent with value 0x08 (offset into eeprom).
+/// The value for R/W command is dependent on the Cypress protocol for interacting with the firmware.
+///
+/// A bulk read from end point 0x86 reads the current contents of the FIFO, which the ADC is filling.
 ///
 /// CONTROL_SETVOLTDIV_CH1 CH1 voltage div setting (6022BE/BL)
 ///

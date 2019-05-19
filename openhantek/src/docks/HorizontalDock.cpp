@@ -121,7 +121,7 @@ void HorizontalDock::setFrequencybase(double frequencybase) {
 
 
 double HorizontalDock::setSamplerate(double samplerate) {
-    // printf( "HD::setSamplerate( %g )\n", samplerate );
+    //printf( "HD::setSamplerate( %g )\n", samplerate );
     QSignalBlocker blocker(samplerateSiSpinBox);
     samplerateSiSpinBox->setValue(samplerate);
     return samplerateSiSpinBox->value();
@@ -129,7 +129,7 @@ double HorizontalDock::setSamplerate(double samplerate) {
 
 
 double HorizontalDock::setTimebase(double timebase) {
-    // printf( "HD::setTimebase( %g ) ", timebase );
+    //printf( "HD::setTimebase( %g )\n", timebase );
     QSignalBlocker blocker(timebaseSiSpinBox);
     // timebaseSteps are repeated in each decade
     double decade = pow(10, floor(log10(timebase)));
@@ -140,7 +140,8 @@ double HorizontalDock::setTimebase(double timebase) {
             break;
         }
     }
-    // printf( "return %g\n", timebaseSiSpinBox->value() );
+    //printf( "return %g\n", timebaseSiSpinBox->value() );
+    calculateSamplerateSteps( timebase );
     return timebaseSiSpinBox->value();
 }
 
@@ -193,7 +194,7 @@ void HorizontalDock::setAvailableRecordLengths(const std::vector<unsigned> &reco
 
 
 void HorizontalDock::setSamplerateLimits(double minimum, double maximum) {
-    // printf( "HD::setSamplerateLimits( %g, %g )\n", minimum, maximum );
+    //printf( "HD::setSamplerateLimits( %g, %g )\n", minimum, maximum );
     QSignalBlocker blocker(samplerateSiSpinBox);
     if ( minimum )
         this->samplerateSiSpinBox->setMinimum(minimum);
@@ -203,7 +204,7 @@ void HorizontalDock::setSamplerateLimits(double minimum, double maximum) {
 
 
 void HorizontalDock::setSamplerateSteps(int mode, const QList<double> steps) {
-    // printf( "HD::setSamplerateSteps( %d )\n", mode );
+    //printf( "HD::setSamplerateSteps( %d )\n", mode );
     samplerateSteps = steps;
     // Assume that method is invoked for fixed samplerate devices only
     QSignalBlocker samplerateBlocker(samplerateSiSpinBox);
@@ -215,6 +216,7 @@ void HorizontalDock::setSamplerateSteps(int mode, const QList<double> steps) {
     QSignalBlocker timebaseBlocker(timebaseSiSpinBox);
     timebaseSiSpinBox->setMinimum(pow(10, floor(log10(1.0 / steps.last()))));
     timebaseSiSpinBox->setMaximum(pow(10, ceil(log10(1024.0 / (steps.first() * 10)))));
+    calculateSamplerateSteps( timebaseSiSpinBox->value() );
 }
 
 
@@ -229,7 +231,7 @@ void HorizontalDock::frequencybaseSelected(double frequencybase) {
 /// \brief Called when the samplerate spinbox changes its value.
 /// \param samplerate The samplerate in samples/second.
 void HorizontalDock::samplerateSelected(double samplerate) {
-    // printf( "HD::samplerateSelected( %g )\n", samplerate );
+    //printf( "HD::samplerateSelected( %g )\n", samplerate );
     scope->horizontal.samplerate = samplerate;
     emit samplerateChanged(samplerate);
 }
@@ -238,15 +240,22 @@ void HorizontalDock::samplerateSelected(double samplerate) {
 /// \brief Called when the timebase spinbox changes its value.
 /// \param timebase The timebase in seconds.
 void HorizontalDock::timebaseSelected(double timebase) {
-    // printf( "HD::timebaseSelected( %g )\n", timebase );
+    //printf( "HD::timebaseSelected( %g )\n", timebase );
     scope->horizontal.timebase = timebase;
+    calculateSamplerateSteps( timebase );
+    emit timebaseChanged(timebase);
+}
+
+
+void HorizontalDock::calculateSamplerateSteps(double timebase) {
     int size = samplerateSteps.size();
     if ( size ) {
         // search appropriate min & max sample rate
-        double min = 0.0, max = 0.0;
+        double min = samplerateSteps[ 0 ];
+        double max = samplerateSteps[ 0 ];
         for ( int id = 0; id < size; ++id ) {
             double sRate = samplerateSteps[ id ];
-            // qDebug() << sRate << sRate *timebase;
+            //printf( "sRate %g, sRate*timebase %g\n", sRate, sRate * timebase );
             // min must be < maxRate
             if ( id < size-1 && sRate * timebase <= 1 ) {
                 min = sRate;
@@ -256,10 +265,9 @@ void HorizontalDock::timebaseSelected(double timebase) {
                 max = sRate;
             }
         }
-        // qDebug() << "limits:" << min  << max;
+        //printf( "limits: %g, %g\n", min, max );
         setSamplerateLimits( min, max );
     }
-    emit timebaseChanged(timebase);
 }
 
 
@@ -282,7 +290,7 @@ void HorizontalDock::formatSelected(int index) {
 /// \brief Called when the calfreq spinbox changes its value.
 /// \param calfreq The calibration frequency in hertz.
 void HorizontalDock::calfreqSelected(double calfreq) {
-    // printf( "calfreqSelected: %g\n", calfreq );
+    //printf( "calfreqSelected: %g\n", calfreq );
     scope->horizontal.calfreq = calfreq;
     emit calfreqChanged(calfreq);
 }

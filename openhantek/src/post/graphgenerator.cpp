@@ -6,7 +6,6 @@
 
 #include "post/graphgenerator.h"
 #include "post/ppresult.h"
-#include "post/softwaretrigger.h"
 #include "hantekdso/controlspecification.h"
 #include "scopesettings.h"
 #include "utils/printutils.h"
@@ -29,15 +28,14 @@ static const SampleValues &useVoltSamplesOf(ChannelID channel, const PPresult *r
 }
 
 
-GraphGenerator::GraphGenerator(const DsoSettingsScope *scope, bool isSoftwareTriggerDevice)
-    : scope(scope), isSoftwareTriggerDevice(isSoftwareTriggerDevice) {}
+GraphGenerator::GraphGenerator(const DsoSettingsScope *scope) : scope(scope) {}
 
 
 bool GraphGenerator::isReady() const { return ready; }
 
 
 void GraphGenerator::generateGraphsTYvoltage(PPresult *result) {
-    // printf( "GraphGenerator::generateGraphsTYvoltage()\n" );
+    //printf( "GraphGenerator::generateGraphsTYvoltage()\n" );
     unsigned skipSamples = result->skipSamples;
 
     result->vaChannelVoltage.resize(scope->voltage.size());
@@ -83,7 +81,7 @@ void GraphGenerator::generateGraphsTYvoltage(PPresult *result) {
 
 
 void GraphGenerator::generateGraphsTYspectrum(PPresult *result) {
-    // printf( "GraphGenerator::generateGraphsTYspectrum()\n" );
+    //printf( "GraphGenerator::generateGraphsTYspectrum()\n" );
     ready = true;
     result->vaChannelSpectrum.resize(scope->spectrum.size());
     for (ChannelID channel = 0; channel < scope->voltage.size(); ++channel) {
@@ -124,7 +122,7 @@ void GraphGenerator::generateGraphsTYspectrum(PPresult *result) {
 
 
 void GraphGenerator::process(PPresult *data) {
-    // printf( "GraphGenerator::process()\n" );
+    //printf( "GraphGenerator::process()\n" );
     if (scope->horizontal.format == Dso::GraphFormat::TY) {
         ready = true;
         generateGraphsTYvoltage(data);

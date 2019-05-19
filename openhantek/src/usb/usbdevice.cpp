@@ -7,7 +7,7 @@
 #include "usbdevice.h"
 
 #include "hantekdso/dsomodel.h"
-#include "hantekprotocol/bulkStructs.h"
+// #include "hantekprotocol/bulkStructs.h"
 #include "hantekprotocol/controlStructs.h"
 
 #include <QCoreApplication>
@@ -195,9 +195,12 @@ int USBDevice::bulkTransfer(unsigned char endpoint, const unsigned char *data, u
         return transferred;
 }
 
+
 int USBDevice::bulkReadMulti(unsigned char *data, unsigned length, int attempts) {
     if (!this->handle) return LIBUSB_ERROR_NO_DEVICE;
-
+    //printf("USBDevice::bulkReadMulti( %d )\n", length );
+#if 0
+    // unstable transfer if read in smaller chunks
     int errorCode = this->inPacketLength;
     unsigned int packet, received = 0;
     for (packet = 0; received < length && errorCode == this->inPacketLength; ++packet) {
@@ -206,19 +209,24 @@ int USBDevice::bulkReadMulti(unsigned char *data, unsigned length, int attempts)
                                        HANTEK_TIMEOUT_MULTI);
         if (errorCode > 0) received += (unsigned)errorCode;
     }
-
+    //printf( "total packets: %d, received: %d\n", packet, received );
     if (received > 0)
         return (int)received;
     else
         return errorCode;
+#else
+    // more stable if read as one big block
+    return this->bulkTransfer(HANTEK_EP_IN, data, length, attempts, HANTEK_TIMEOUT_MULTI);
+#endif
 }
+
 
 int USBDevice::controlTransfer(unsigned char type, unsigned char request, unsigned char *data, unsigned int length,
                                int value, int index, int attempts) {
     if (!this->handle) return LIBUSB_ERROR_NO_DEVICE;
 
     int errorCode = LIBUSB_ERROR_TIMEOUT;
-    // printf( "controlTransfer type %x request %x data[0] %d length %d value %d index %d attempts %d\n", 
+    //printf( "controlTransfer type %x request %x data[0] %d length %d value %d index %d attempts %d\n", 
     //    type, request, data[0], length, value, index, attempts ); 
 
     for (int attempt = 0; (attempt < attempts || attempts == -1) && errorCode == LIBUSB_ERROR_TIMEOUT; ++attempt)

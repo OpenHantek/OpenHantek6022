@@ -2,7 +2,6 @@
 
 #include "enums.h"
 #include "hantekprotocol/types.h"
-#include "hantekprotocol/bulkcode.h"
 #include "hantekprotocol/controlStructs.h"
 
 namespace Hantek {
@@ -23,7 +22,7 @@ struct ControlSettingsSamplerateTarget {
 /// \brief Stores the current samplerate settings of the device.
 struct ControlSettingsSamplerate {
     ControlSettingsSamplerateTarget target; ///< The target samplerate values
-    const ControlSamplerateLimits * limits;        ///< The samplerate limits
+    const ControlSamplerateLimits * limits; ///< The samplerate limits
     unsigned int downsampler = 1;           ///< The variable downsampling factor
     double current = 1e8;                   ///< The current samplerate
 };

@@ -5,7 +5,6 @@
 #include "enums.h"
 #include "hantekprotocol/definitions.h"
 #include "hantekprotocol/types.h"
-#include "hantekprotocol/bulkcode.h"
 #include <QList>
 
 namespace Dso {
@@ -48,25 +47,12 @@ struct ControlSpecification {
     ControlSpecification(unsigned channels);
     const ChannelID channels;
 
-    // Interface
-    BulkCode cmdSetChannels = BulkCode::INVALID;             ///< Command for setting used channels
-    BulkCode cmdSetSamplerate = BulkCode::INVALID;           ///< Command for samplerate settings
-    BulkCode cmdSetRecordLength = BulkCode::INVALID;         ///< Command for buffer settings
-    BulkCode cmdSetTrigger = BulkCode::INVALID;              ///< Command for trigger settings
-    BulkCode cmdSetPretrigger = BulkCode::INVALID;           ///< Command for pretrigger settings
-    BulkCode cmdForceTrigger = BulkCode::FORCETRIGGER;       ///< Command for forcing a trigger event
-    BulkCode cmdCaptureStart = BulkCode::STARTSAMPLING;      ///< Command for starting the sampling
-    BulkCode cmdTriggerEnabled = BulkCode::ENABLETRIGGER;    ///< Command for enabling the trigger
-    BulkCode cmdGetData = BulkCode::GETDATA;                 ///< Command for retrieve sample data
-    BulkCode cmdGetCaptureState = BulkCode::GETCAPTURESTATE; ///< Command for retrieve the capture state
-    BulkCode cmdSetGain = BulkCode::SETGAIN;                 ///< Command for setting the gain
-
     // Limits
     ControlSpecificationSamplerate samplerate;  ///< The samplerate specifications
     std::vector<RecordLengthID> bufferDividers; ///< Samplerate dividers for record lengths
     unsigned char sampleSize;                   ///< Number of bits per sample
 
-    /// For devices that support only fixed sample rates (isFixedSamplerateDevice=true)
+    /// For devices that support only fixed sample rates
     std::vector<FixedSampleRate> fixedSampleRates;
 
     // Calibration
@@ -85,12 +71,6 @@ struct ControlSpecification {
     std::vector<Coupling> couplings = {Dso::Coupling::DC, Dso::Coupling::AC};
     std::vector<TriggerMode> triggerModes = {TriggerMode::AUTO, TriggerMode::NORMAL,
                                              TriggerMode::SINGLE};
-    bool isFixedSamplerateDevice = false;
-    bool isSoftwareTriggerDevice = false;
-    bool useControlNoBulk = false;
-    bool supportsCaptureState = true;
-    bool supportsOffset = true;
-    bool supportsCouplingRelays = true;
     int fixedUSBinLength = 0;
 };
 }

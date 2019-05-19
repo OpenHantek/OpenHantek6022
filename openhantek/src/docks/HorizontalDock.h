@@ -59,6 +59,7 @@ class HorizontalDock : public QDockWidget {
     /// \param mode The mode value the spin box should accept.
     /// \param steps The steps value the spin box should accept.
     void setSamplerateSteps(int mode, QList<double> sampleSteps);
+    void calculateSamplerateSteps(double timebase);
     /// \brief Changes the calibration frequency.
     /// \param calfreq The calibration frequency in hertz.
     double setCalfreq( double calfreq );

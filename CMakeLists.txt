@@ -26,8 +26,8 @@ add_subdirectory(openhantek)
 
 if (WIN32)
     install(FILES COPYING readme.md DESTINATION ".")
-else()
-    add_subdirectory(firmware EXCLUDE_FROM_ALL)
+#else()
+#    add_subdirectory(firmware EXCLUDE_FROM_ALL)
 endif()
 
 if("${CMAKE_SYSTEM}" MATCHES "Linux")
