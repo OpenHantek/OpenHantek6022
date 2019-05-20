@@ -9,9 +9,9 @@ It was initially developed by [David Gräff and others](https://github.com/OpenH
 
 <img alt="Image of main window on linux" width="100%" src="docs/images/screenshot_mainwindow.png">
 
-* Actively supported devices: Hantek 6022BE/BL on Linux.
-* Other operating systems builds: MacOSX - partly tested & Windows - untested.
-* DSO2xxx Series and DSO52xx Series support is still in but untested due to missing devices.
+* Supported devices: Hantek 6022BE/BL on Linux.
+* Other operating systems builds: MacOSX & Windows - partly tested.
+* Uses [free firmware](https://github.com/Ho-Ro/Hantek6022API), no dependecy on not free Hantek firmware.
 
 ## Features
 
@@ -37,6 +37,7 @@ It was initially developed by [David Gräff and others](https://github.com/OpenH
 ## Install prebuilt binary
 * Get Linux (and untested MacOSX and Win) packages from the [Releases](https://github.com/OpenHantek/OpenHantek6022/releases) page.
 * Get MacOSX package from [macports](https://www.macports.org/ports.php?by=name&substr=openhantek) - thx [ra1nb0w](https://github.com/ra1nb0w).
+* Get rpm packages from [rpmfusion](http://koji.rpmfusion.org/koji/packageinfo?packageID=563) - thx [Vascom](https://github.com/Vascom).
 * [Download (untested) Windows build](https://ci.appveyor.com/project/Ho-Ro/openhantek6022/build/artifacts).
 
 

@@ -77,11 +77,13 @@ scope graphs.
 ## Data flow
 
 * Raw 8-bit ADC values are collected in `HantekDsoControl::run()` and converted in `HantekDsoControl::convertRawDataToSamples()` to real-world double samples (scaled with voltage and sample rate). Also overdriving of the inputs is detected. The conversion uses either the factory calibration values from EEPROM or from a user supplied config file. Read more about [calibration](https://github.com/Ho-Ro/Hantek6022API/blob/master/README.md#create-calibration-values-for-openhantek).
+  * `swTrigger()`
+    * which checks if the signal is triggered and calculates the starting point for a stable display.
+  * `triggering()` handles the trigger mode:
+    * If the **trigger condition is false** and the **trigger mode is Normal** then we reuse the last triggered samples so that voltage and spectrum traces as well as the measurement at the scope's bottom lines are frozen until the trigger condition becomes true again.
+    * If the **trigger condition is false** and the **trigger mode is not Normal** then we display a free running trace and discard the last saved samples.
 * The converted samples are emitted to PostProcessing::input() via signal/slot.
 * PostProzessing calls all processors that were registered in `main.cpp`.
-  * `Triggering::process()`
-    * which checks if the signal is triggered and calculates the starting point for a stable display.
-    * If the **trigger condition is false** but we have already a **triggered trace** and the **trigger mode is Normal** then we reuse the last triggered samples so that voltage and spectrum traces as well as the measurement at the scope's bottom lines are frozen until the trigger condition becomes true again.
   * `MathchannelGenerator::process()`
     * which creates CH3 as one of these three data sample combinations: `CH1 + CH2`, `CH1 - CH2` or `CH2 - CH1`.
   * `SpectrumGenerator::process()`

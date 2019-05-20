@@ -369,14 +369,11 @@ Dso::ErrorCode HantekDsoControl::setRecordTime(double duration) {
         srLimit = (specification->samplerate.single).max;
     else
         srLimit = (specification->samplerate.multi).max;
-    // For now - we go for the 20480 size sampling
-    // Find highest samplerate using less than 20480 samples to obtain our duration.
-    unsigned sampleCount = 20000; // 20480;
+    // For now - we go for the 20000 size sampling
+    // Find highest samplerate using less than 20000 samples to obtain our duration.
+    unsigned sampleCount = SAMPLESIZE_USED;
     // Ensure that at least 1/2 of remaining samples are available for SW trigger algorithm
-
-    //if (specification->isSoftwareTriggerDevice) {
-        sampleCount = (sampleCount - controlsettings.swSampleMargin) / 2;
-    //}
+    sampleCount = (sampleCount - controlsettings.swSampleMargin) / 2;
     //qDebug() << "sampleCount" << sampleCount << "limit" << srLimit;
     unsigned sampleId = 0;
     for (unsigned id = 0; id < specification->fixedSampleRates.size(); ++id) {
@@ -434,14 +431,17 @@ Dso::ErrorCode HantekDsoControl::setChannelUsed(ChannelID channel, bool used) {
 
 
 Dso::ErrorCode HantekDsoControl::setGain(ChannelID channel, double gain) {
-    if (!device->isConnected()) return Dso::ErrorCode::CONNECTION;
+    if (!device->isConnected())
+        return Dso::ErrorCode::CONNECTION;
 
-    if (channel >= specification->channels) return Dso::ErrorCode::PARAMETER;
+    if (channel >= specification->channels)
+        return Dso::ErrorCode::PARAMETER;
 
     // Find lowest gain voltage thats at least as high as the requested
     unsigned gainID;
     for (gainID = 0; gainID < specification->gain.size() - 1; ++gainID)
-        if (specification->gain[gainID].gainSteps >= gain) break;
+        if (specification->gain[gainID].gainSteps >= gain) 
+            break;
 
     if (channel == 0) {
         modifyCommand<ControlSetVoltDIV_CH1>(ControlCode::CONTROL_SETVOLTDIV_CH1)
@@ -457,7 +457,8 @@ Dso::ErrorCode HantekDsoControl::setGain(ChannelID channel, double gain) {
 
 
 Dso::ErrorCode HantekDsoControl::setProbe( ChannelID channel, bool probeUsed, double probeAttn ) {
-    if (channel >= specification->channels) return Dso::ErrorCode::PARAMETER;
+    if (channel >= specification->channels)
+        return Dso::ErrorCode::PARAMETER;
     controlsettings.voltage[channel].probeUsed = probeUsed;
     controlsettings.voltage[channel].probeAttn = probeAttn;
     //printf( "setProbe %g\n", probeAttn );
@@ -466,7 +467,8 @@ Dso::ErrorCode HantekDsoControl::setProbe( ChannelID channel, bool probeUsed, do
 
 
 Dso::ErrorCode HantekDsoControl::setTriggerMode(Dso::TriggerMode mode) {
-    if (!device->isConnected()) return Dso::ErrorCode::CONNECTION;
+    if (!device->isConnected())
+        return Dso::ErrorCode::CONNECTION;
     //printf("setTriggerMode( %d )\n", (int)mode);
     controlsettings.trigger.mode = mode;
     return Dso::ErrorCode::NONE;
@@ -474,7 +476,8 @@ Dso::ErrorCode HantekDsoControl::setTriggerMode(Dso::TriggerMode mode) {
 
 
 Dso::ErrorCode HantekDsoControl::setTriggerSource(bool special, ChannelID channel) {
-    if (!device->isConnected()) return Dso::ErrorCode::CONNECTION;
+    if (!device->isConnected())
+        return Dso::ErrorCode::CONNECTION;
     //printf("setTriggerSource( %d )\n", channel);
     this->setTriggerLevel(channel, controlsettings.trigger.level[channel]);
     return Dso::ErrorCode::NONE;
@@ -482,8 +485,10 @@ Dso::ErrorCode HantekDsoControl::setTriggerSource(bool special, ChannelID channe
 
 // trigger level in Volt
 Dso::ErrorCode HantekDsoControl::setTriggerLevel(ChannelID channel, double level) {
-    if (!device->isConnected()) return Dso::ErrorCode::CONNECTION;
-    if (channel >= specification->channels) return Dso::ErrorCode::PARAMETER;
+    if (!device->isConnected())
+        return Dso::ErrorCode::CONNECTION;
+    if (channel >= specification->channels)
+        return Dso::ErrorCode::PARAMETER;
     //printf("setTriggerLevel( %d, %g )\n", channel, level);
     controlsettings.trigger.level[channel] = level;
     return Dso::ErrorCode::NONE;
@@ -491,7 +496,8 @@ Dso::ErrorCode HantekDsoControl::setTriggerLevel(ChannelID channel, double level
 
 
 Dso::ErrorCode HantekDsoControl::setTriggerSlope(Dso::Slope slope) {
-    if (!device->isConnected()) return Dso::ErrorCode::CONNECTION;
+    if (!device->isConnected())
+        return Dso::ErrorCode::CONNECTION;
     //printf("setTriggerSlope( %d )\n", (int)slope);
     controlsettings.trigger.slope = slope;
     return Dso::ErrorCode::NONE;
@@ -500,7 +506,8 @@ Dso::ErrorCode HantekDsoControl::setTriggerSlope(Dso::Slope slope) {
 
 // set trigger position (0.0 - 1.0)
 Dso::ErrorCode HantekDsoControl::setTriggerPosition(double position) {
-    if (!device->isConnected()) return Dso::ErrorCode::CONNECTION;
+    if (!device->isConnected())
+        return Dso::ErrorCode::CONNECTION;
     //printf("setTriggerPosition( %g )\n", position);
     controlsettings.trigger.position = position;
     return Dso::ErrorCode::NONE;
@@ -548,7 +555,7 @@ int HantekDsoControl::softwareTrigger() {
     // |<<<<<T>>|--------------------| // >> = right = (disp-pre) i.e. right of trigger on screen
     // |<pre<|                         // << = left = pre
     // |--(samp-(disp-pre))-------|>>|
-    // |<<<<<I????????????????????|>>| // ?? = search for trigger in this range [left,right]
+    // |<<<<<|????????????????????|>>| // ?? = search for trigger in this range [left,right]
     double prev;
     bool (*opcmp)(double,double,double);
     bool (*smplcmpBefore)(double,double);
@@ -572,11 +579,13 @@ int HantekDsoControl::softwareTrigger() {
             // check for the next few SampleSet samples, if they are also above/below the trigger value
             unsigned int risingBefore = 0;
             for (unsigned int k = i - 1; k > i - swTriggerSampleSet && k > 0; k--) {
-                if (smplcmpBefore(samples[k], level)) { risingBefore++; }
+                if (smplcmpBefore(samples[k], level))
+                    risingBefore++;
             }
             unsigned int risingAfter = 0;
             for (unsigned int k = i + 1; k < i + swTriggerSampleSet && k < sampleCount; k++) {
-                if (smplcmpAfter(samples[k], level)) { risingAfter++; }
+                if (smplcmpAfter(samples[k], level))
+                    risingAfter++;
             }
 
             // if at least >Threshold (=5) samples before and after trig meet the condition, set trigger
@@ -607,33 +616,35 @@ void HantekDsoControl::triggering() {
     //printf( "HDC::triggering()\n" );
     static DSOsamples triggeredResult; // storage for last triggered trace samples
     if ( result.triggerPosition >= 0 ) { // live trace has triggered
-        // We have a triggered trace -> save and use this trace
+        // Use this trace and save it also
         triggeredResult.data = result.data;
         triggeredResult.samplerate = result.samplerate;
         triggeredResult.clipped = result.clipped;
         triggeredResult.triggerPosition = result.triggerPosition;
-        result.liveTrigger = true;
-    } else if ( controlsettings.trigger.mode == Dso::TriggerMode::NORMAL && triggeredResult.triggerPosition >= 0 ) {
-        // Not triggered in NORMAL mode but a triggered trace was saved -> use the saved trace
-        result.data = triggeredResult.data;
+        result.liveTrigger = true; // show green "TR" top left 
+    } else if ( controlsettings.trigger.mode == Dso::TriggerMode::NORMAL ) { // Not triggered in NORMAL mode
+        // Use saved trace (even if it is empty)
+        result.data = triggeredResult.data; 
         result.samplerate = triggeredResult.samplerate;
         result.clipped = triggeredResult.clipped;
         result.triggerPosition = triggeredResult.triggerPosition;
-        result.liveTrigger = false;
-    } else {
-        // If not triggered, but not NORMAL mode -> discard history and use the free running trace
-        triggeredResult.triggerPosition = -1;
-        result.liveTrigger = false;
+        result.liveTrigger = false; // show red "TR" top left
+    } else { // Not triggered and not NORMAL mode
+        // Use the free running trace, discard history
+        triggeredResult.data.clear(); // discard trace
+        triggeredResult.triggerPosition = -1; // not triggered
+        result.liveTrigger = false; // show red "TR" top left
     }
 }
 
 
 Dso::ErrorCode HantekDsoControl::setCalFreq( double calfreq ) {
-    unsigned int cf = (int)calfreq / 1000;
+    unsigned int cf = (int)calfreq / 1000; // 1000, ..., 100000 -> 1, ..., 100
     if ( cf == 0 ) // 50, 100, 200, 500 -> 105, 110, 120, 150
         cf = 100 + calfreq / 10;
     //printf( "HDC::setCalFreq( %g ) -> %d\n", calfreq, cf );
-    if (!device->isConnected()) return Dso::ErrorCode::CONNECTION;
+    if (!device->isConnected())
+        return Dso::ErrorCode::CONNECTION;
     // control command for setting
     modifyCommand<ControlSetCalFreq>(ControlCode::CONTROL_SETCALFREQ)
         ->setCalFreq( cf );
@@ -642,20 +653,25 @@ Dso::ErrorCode HantekDsoControl::setCalFreq( double calfreq ) {
 
 
 Dso::ErrorCode HantekDsoControl::stringCommand(const QString &commandString) {
-    if (!device->isConnected()) return Dso::ErrorCode::CONNECTION;
+    if (!device->isConnected())
+        return Dso::ErrorCode::CONNECTION;
 
     QStringList commandParts = commandString.split(' ', QString::SkipEmptyParts);
 
-    if (commandParts.count() < 1) return Dso::ErrorCode::PARAMETER;
-    if (commandParts[0] != "send") return Dso::ErrorCode::UNSUPPORTED;
-    if (commandParts.count() < 2) return Dso::ErrorCode::PARAMETER;
+    if (commandParts.count() < 1)
+        return Dso::ErrorCode::PARAMETER;
+    if (commandParts[0] != "send")
+        return Dso::ErrorCode::UNSUPPORTED;
+    if (commandParts.count() < 2)
+        return Dso::ErrorCode::PARAMETER;
 
     uint8_t codeIndex = 0;
     hexParse(commandParts[2], &codeIndex, 1);
     QString data = commandString.section(' ', 2, -1, QString::SectionSkipEmpty);
 
     if (commandParts[1] == "control") {
-        if (!control[codeIndex]) return Dso::ErrorCode::UNSUPPORTED;
+        if (!control[codeIndex])
+            return Dso::ErrorCode::UNSUPPORTED;
 
         ControlCommand *c = modifyCommand<ControlCommand>((ControlCode)codeIndex);
         hexParse(data, c->data(), c->size());
@@ -701,22 +717,8 @@ void HantekDsoControl::run() {
         controlCommand = controlCommand->next;
     }
 
-    // TODO clean / refactor this state machine
     // State machine for the device communication
-    // Standard mode
-    this->rollState = RollState::STARTSAMPLING;
-
-#if 0
-    const int lastCaptureState = this->captureState;
-    unsigned triggerPoint;
-    std::tie(captureState, triggerPoint) = this->getCaptureState();
-    //controlsettings.trigger.point = calculateTriggerPoint(triggerPoint);
-    if (this->captureState < 0) {
-        qWarning() << tr("Getting capture state failed: %1").arg(libUsbErrorString(this->captureState));
-        emit statusMessage(tr("Getting capture state failed: %1").arg(libUsbErrorString(this->captureState)), 0);
-    } else if (this->captureState != lastCaptureState)
-        timestampDebug(QString("Capture state changed to %1").arg(this->captureState));
-#endif
+//     this->rollState = RollState::STARTSAMPLING;
 
     {
         std::vector<unsigned char> rawData = this->getSamples(expectedSampleCount);
@@ -736,16 +738,10 @@ void HantekDsoControl::run() {
     this->_samplingStarted = false;
 
     if (this->sampling) {
-
         // Sampling hasn't started, update the expected sample count
         expectedSampleCount = this->getSampleCount();
-
         timestampDebug("Starting to capture");
-
         this->_samplingStarted = true;
-        this->cycleCounter = 0;
-        this->startCycle = int(controlsettings.trigger.position * 1000.0 / cycleTime + 1.0);
-        this->lastTriggerMode = controlsettings.trigger.mode;
     }
     this->updateInterval();
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 4, 0))

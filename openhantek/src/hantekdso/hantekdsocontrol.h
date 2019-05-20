@@ -170,13 +170,12 @@ class HantekDsoControl : public QObject {
     unsigned expectedSampleCount = 0; ///< The expected total number of samples at
                                       /// the last check before sampling started
 
-    // State of the communication thread
-    int captureState = Hantek::CAPTURE_WAITING;
-    Hantek::RollState rollState = Hantek::RollState::STARTSAMPLING;
+//     int captureState = Hantek::CAPTURE_WAITING;
+//     Hantek::RollState rollState = Hantek::RollState::STARTSAMPLING;
     bool _samplingStarted = false;
-    Dso::TriggerMode lastTriggerMode = (Dso::TriggerMode)-1;
-    int cycleCounter = 0;
-    int startCycle = 0;
+//     Dso::TriggerMode lastTriggerMode = (Dso::TriggerMode)-1;
+//     int cycleCounter = 0;
+//     int startCycle = 0;
     int cycleTime = 0;
 
   public slots:

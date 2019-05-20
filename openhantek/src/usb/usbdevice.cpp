@@ -45,11 +45,13 @@ QString libUsbErrorString(int error) {
     }
 }
 
+
 UniqueUSBid USBDevice::computeUSBdeviceID(libusb_device *device) {
     UniqueUSBid v = 0;
     libusb_get_port_numbers(device, (uint8_t *)&v, sizeof(v));
     return v;
 }
+
 
 USBDevice::USBDevice(DSOModel *model, libusb_device *device, unsigned findIteration)
     : model(model), device(device), findIteration(findIteration), uniqueUSBdeviceID(computeUSBdeviceID(device)) {
@@ -57,9 +59,12 @@ USBDevice::USBDevice(DSOModel *model, libusb_device *device, unsigned findIterat
     libusb_get_device_descriptor(device, &descriptor);
 }
 
+
 bool USBDevice::connectDevice(QString &errorMessage) {
-    if (needsFirmware()) return false;
-    if (isConnected()) return true;
+    if (needsFirmware())
+        return false;
+    if (isConnected())
+        return true;
 
     // Open device
     int errorCode = libusb_open(device, &(handle));
@@ -75,18 +80,13 @@ bool USBDevice::connectDevice(QString &errorMessage) {
     libusb_get_config_descriptor(device, 0, &configDescriptor);
     for (int interfaceIndex = 0; interfaceIndex < (int)configDescriptor->bNumInterfaces; ++interfaceIndex) {
         const libusb_interface *interface = &configDescriptor->interface[interfaceIndex];
-        if (interface->num_altsetting < 1) continue;
+        if (interface->num_altsetting < 1)
+            continue;
 
         const libusb_interface_descriptor *interfaceDescriptor = &interface->altsetting[0];
-        if (interfaceDescriptor->bInterfaceClass == LIBUSB_CLASS_VENDOR_SPEC &&
-            interfaceDescriptor->bInterfaceSubClass == 0 && interfaceDescriptor->bInterfaceProtocol == 0 &&
-            interfaceDescriptor->bNumEndpoints == 2) {
-            errorCode = claimInterface(interfaceDescriptor, HANTEK_EP_OUT, HANTEK_EP_IN);
-            break;
-        } else if (interfaceDescriptor->bInterfaceClass == LIBUSB_CLASS_VENDOR_SPEC &&
-            interfaceDescriptor->bInterfaceSubClass == 0 && interfaceDescriptor->bInterfaceProtocol == 0 &&
-            interfaceDescriptor->bNumEndpoints == 1) {
-            errorCode = claimInterface(interfaceDescriptor, HANTEK_EP_IN);
+        if ( interfaceDescriptor->bInterfaceClass == LIBUSB_CLASS_VENDOR_SPEC &&
+            interfaceDescriptor->bInterfaceSubClass == 0 && interfaceDescriptor->bInterfaceProtocol == 0 ) {
+            errorCode = claimInterface( interfaceDescriptor );
             break;
         }
     }
@@ -104,17 +104,21 @@ bool USBDevice::connectDevice(QString &errorMessage) {
     return true;
 }
 
+
 USBDevice::~USBDevice() {
-	disconnectFromDevice();
+    disconnectFromDevice();
 #if defined(_WIN32) || defined(_WIN64)
-	if (device != nullptr) libusb_unref_device(device);
-	device = nullptr;
+    if (device != nullptr)
+        libusb_unref_device(device);
+    device = nullptr;
 #endif
 }
 
-int USBDevice::claimInterface(const libusb_interface_descriptor *interfaceDescriptor, int endpointOut, int endPointIn) {
+
+int USBDevice::claimInterface( const libusb_interface_descriptor *interfaceDescriptor ) {
     int errorCode = libusb_claim_interface(this->handle, interfaceDescriptor->bInterfaceNumber);
-    if (errorCode < 0) { return errorCode; }
+    if (errorCode < 0)
+        return errorCode;
 
     interface = interfaceDescriptor->bInterfaceNumber;
 
@@ -124,36 +128,19 @@ int USBDevice::claimInterface(const libusb_interface_descriptor *interfaceDescri
     this->inPacketLength = 0;
     for (int endpoint = 0; endpoint < interfaceDescriptor->bNumEndpoints; ++endpoint) {
         endpointDescriptor = &(interfaceDescriptor->endpoint[endpoint]);
-        if (endpointDescriptor->bEndpointAddress == endpointOut) {
+        if ( endpointDescriptor->bEndpointAddress == HANTEK_EP_OUT ) {
             this->outPacketLength = endpointDescriptor->wMaxPacketSize;
-        } else if (endpointDescriptor->bEndpointAddress == endPointIn) {
+        } else if ( endpointDescriptor->bEndpointAddress == HANTEK_EP_IN ) {
             this->inPacketLength = endpointDescriptor->wMaxPacketSize;
         }
     }
     return LIBUSB_SUCCESS;
 }
 
-int USBDevice::claimInterface(const libusb_interface_descriptor *interfaceDescriptor, int endPointIn) {
-    int errorCode = libusb_claim_interface(this->handle, interfaceDescriptor->bInterfaceNumber);
-    if (errorCode < 0) { return errorCode; }
-
-    interface = interfaceDescriptor->bInterfaceNumber;
-
-    // Check the maximum endpoint packet size
-    const libusb_endpoint_descriptor *endpointDescriptor;
-    this->outPacketLength = 0;
-    this->inPacketLength = 0;
-    for (int endpoint = 0; endpoint < interfaceDescriptor->bNumEndpoints; ++endpoint) {
-        endpointDescriptor = &(interfaceDescriptor->endpoint[endpoint]);
-        if (endpointDescriptor->bEndpointAddress == endPointIn) {
-            this->inPacketLength = endpointDescriptor->wMaxPacketSize;
-        }
-    }
-    return LIBUSB_SUCCESS;
-}
 
 void USBDevice::disconnectFromDevice() {
-    if (!device) return;
+    if (!device)
+        return;
 
     if (this->handle) {
         // Release claimed interface
@@ -172,15 +159,19 @@ void USBDevice::disconnectFromDevice() {
     emit deviceDisconnected();
 }
 
+
 bool USBDevice::isConnected() { return this->handle != 0; }
+
 
 bool USBDevice::needsFirmware() {
     return this->descriptor.idProduct != model->productID || this->descriptor.idVendor != model->vendorID;
 }
 
+
 int USBDevice::bulkTransfer(unsigned char endpoint, const unsigned char *data, unsigned int length, int attempts,
                             unsigned int timeout) {
-    if (!this->handle) return LIBUSB_ERROR_NO_DEVICE;
+    if (!this->handle)
+        return LIBUSB_ERROR_NO_DEVICE;
 
     int errorCode = LIBUSB_ERROR_TIMEOUT;
     int transferred = 0;
@@ -188,7 +179,8 @@ int USBDevice::bulkTransfer(unsigned char endpoint, const unsigned char *data, u
         errorCode =
             libusb_bulk_transfer(this->handle, endpoint, (unsigned char *)data, (int)length, &transferred, timeout);
 
-    if (errorCode == LIBUSB_ERROR_NO_DEVICE) disconnectFromDevice();
+    if (errorCode == LIBUSB_ERROR_NO_DEVICE)
+        disconnectFromDevice();
     if (errorCode < 0)
         return errorCode;
     else
@@ -196,10 +188,15 @@ int USBDevice::bulkTransfer(unsigned char endpoint, const unsigned char *data, u
 }
 
 
+#define BIG_BLOCK
 int USBDevice::bulkReadMulti(unsigned char *data, unsigned length, int attempts) {
-    if (!this->handle) return LIBUSB_ERROR_NO_DEVICE;
+    if (!this->handle)
+        return LIBUSB_ERROR_NO_DEVICE;
     //printf("USBDevice::bulkReadMulti( %d )\n", length );
-#if 0
+#ifdef BIG_BLOCK
+    // more stable if read as one big block
+    return this->bulkTransfer(HANTEK_EP_IN, data, length, attempts, HANTEK_TIMEOUT_MULTI);
+#else
     // unstable transfer if read in smaller chunks
     int errorCode = this->inPacketLength;
     unsigned int packet, received = 0;
@@ -207,23 +204,22 @@ int USBDevice::bulkReadMulti(unsigned char *data, unsigned length, int attempts)
         errorCode = this->bulkTransfer(HANTEK_EP_IN, data + packet * this->inPacketLength,
                                        qMin(length - received, (unsigned int)this->inPacketLength), attempts,
                                        HANTEK_TIMEOUT_MULTI);
-        if (errorCode > 0) received += (unsigned)errorCode;
+        if (errorCode > 0)
+            received += (unsigned)errorCode;
     }
     //printf( "total packets: %d, received: %d\n", packet, received );
     if (received > 0)
         return (int)received;
     else
         return errorCode;
-#else
-    // more stable if read as one big block
-    return this->bulkTransfer(HANTEK_EP_IN, data, length, attempts, HANTEK_TIMEOUT_MULTI);
 #endif
 }
 
 
 int USBDevice::controlTransfer(unsigned char type, unsigned char request, unsigned char *data, unsigned int length,
                                int value, int index, int attempts) {
-    if (!this->handle) return LIBUSB_ERROR_NO_DEVICE;
+    if (!this->handle)
+        return LIBUSB_ERROR_NO_DEVICE;
 
     int errorCode = LIBUSB_ERROR_TIMEOUT;
     //printf( "controlTransfer type %x request %x data[0] %d length %d value %d index %d attempts %d\n", 
@@ -232,10 +228,7 @@ int USBDevice::controlTransfer(unsigned char type, unsigned char request, unsign
     for (int attempt = 0; (attempt < attempts || attempts == -1) && errorCode == LIBUSB_ERROR_TIMEOUT; ++attempt)
         errorCode = libusb_control_transfer(this->handle, type, request, value, index, data, length, HANTEK_TIMEOUT);
 
-    if (errorCode == LIBUSB_ERROR_NO_DEVICE) disconnectFromDevice();
+    if (errorCode == LIBUSB_ERROR_NO_DEVICE)
+        disconnectFromDevice();
     return errorCode;
 }
-
-
-
-
