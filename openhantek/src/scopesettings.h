@@ -45,9 +45,6 @@ struct DsoSettingsScopeTrigger {
     double position = 0.0;                          ///< Horizontal position for pretrigger
     Dso::Slope slope = Dso::Slope::Positive;        ///< Rising or falling edge causes trigger
     unsigned int source = 0;                        ///< Channel that is used as trigger source
-    bool special = false;                           ///< true if the trigger source is not a standard channel
-    unsigned swTriggerThreshold = 5;                ///< Software trigger, threshold
-    unsigned swTriggerSampleSet = 11;               ///< Software trigger, sample set
 };
 
 /// \brief Base for DsoSettingsScopeSpectrum and DsoSettingsScopeVoltage
@@ -87,7 +84,7 @@ struct DsoSettingsScope {
     double gain(unsigned channel) const {
         return gainSteps[voltage[channel].gainStepIndex] * voltage[channel].probeAttn;
     }
-    
+
     bool anyUsed(ChannelID channel) { return voltage[channel].used | spectrum[channel].used; }
 
     Dso::Coupling coupling(ChannelID channel, const Dso::ControlSpecification *deviceSpecification) const {

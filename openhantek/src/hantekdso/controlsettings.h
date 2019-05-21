@@ -34,7 +34,6 @@ struct ControlSettingsTrigger {
     unsigned int point = 0;                                      ///< The trigger position in Hantek coding
     Dso::TriggerMode mode = Dso::TriggerMode::AUTO;              ///< The trigger mode
     Dso::Slope slope = Dso::Slope::Positive;                     ///< The trigger slope
-    bool special = false;                                        ///< true, if the trigger source is special
     unsigned int source = 0;                                     ///< The trigger source
 };
 
@@ -59,7 +58,6 @@ struct ControlSettings {
     unsigned usedChannels = 0;                   ///< Number of activated channels
     unsigned swSampleMargin = 2000;              ///< Software trigger, sample margin
     Hantek::OffsetsPerGainStep *offsetLimit;     ///< Calibration data for the channel offsets
-
 
     Hantek::ControlBeginCommand beginCommandControl;
     Hantek::ControlGetLimits cmdGetLimits;

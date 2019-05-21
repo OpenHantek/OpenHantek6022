@@ -24,8 +24,6 @@ TriggerDock::TriggerDock(DsoSettingsScope *scope, const Dso::ControlSpecificatio
     // Initialize lists for comboboxes
     for (ChannelID channel = 0; channel < mSpec->channels; ++channel)
         this->sourceStandardStrings << tr("CH%1").arg(channel + 1);
-    for (const Dso::SpecialTriggerChannel &specialTrigger : mSpec->specialTriggerChannels)
-        this->sourceSpecialStrings.append(QString::fromStdString(specialTrigger.name));
 
     // Initialize elements
     this->modeLabel = new QLabel(tr("Mode"));
@@ -39,7 +37,6 @@ TriggerDock::TriggerDock(DsoSettingsScope *scope, const Dso::ControlSpecificatio
     this->sourceLabel = new QLabel(tr("Source"));
     this->sourceComboBox = new QComboBox();
     this->sourceComboBox->addItems(this->sourceStandardStrings);
-    this->sourceComboBox->addItems(this->sourceSpecialStrings);
 
     this->dockLayout = new QGridLayout();
     this->dockLayout->setColumnMinimumWidth(0, 64);
@@ -57,7 +54,7 @@ TriggerDock::TriggerDock(DsoSettingsScope *scope, const Dso::ControlSpecificatio
     // Set values
     setMode(scope->trigger.mode);
     setSlope(scope->trigger.slope);
-    setSource(scope->trigger.special, scope->trigger.source);
+    setSource(scope->trigger.source);
 
     // Connect signals and slots
     connect(this->modeComboBox, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
@@ -72,16 +69,8 @@ TriggerDock::TriggerDock(DsoSettingsScope *scope, const Dso::ControlSpecificatio
             });
     connect(this->sourceComboBox, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
             [this](int index) {
-                bool special = false;
-
-                if (index >= this->sourceStandardStrings.count()) {
-                    index -= this->sourceStandardStrings.count();
-                    special = true;
-                }
-
                 this->scope->trigger.source = (unsigned)index;
-                this->scope->trigger.special = special;
-                emit sourceChanged(special, (unsigned)index);
+                emit sourceChanged((unsigned)index);
             });
 }
 
@@ -104,13 +93,9 @@ void TriggerDock::setSlope(Dso::Slope slope) {
     slopeComboBox->setCurrentIndex((int)slope);
 }
 
-void TriggerDock::setSource(bool special, unsigned int id) {
-    if ((!special && id >= (unsigned int)this->sourceStandardStrings.count()) ||
-        (special && id >= (unsigned int)this->sourceSpecialStrings.count()))
+void TriggerDock::setSource(unsigned int id) {
+    if ( id >= (unsigned int)this->sourceStandardStrings.count() )
         return;
-
-    int index = (int)id;
-    if (special) index += this->sourceStandardStrings.count();
     QSignalBlocker blocker(sourceComboBox);
-    sourceComboBox->setCurrentIndex(index);
+    sourceComboBox->setCurrentIndex(id);
 }

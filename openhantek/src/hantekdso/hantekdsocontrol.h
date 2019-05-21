@@ -169,13 +169,7 @@ class HantekDsoControl : public QObject {
     DSOsamples result;
     unsigned expectedSampleCount = 0; ///< The expected total number of samples at
                                       /// the last check before sampling started
-
-//     int captureState = Hantek::CAPTURE_WAITING;
-//     Hantek::RollState rollState = Hantek::RollState::STARTSAMPLING;
     bool _samplingStarted = false;
-//     Dso::TriggerMode lastTriggerMode = (Dso::TriggerMode)-1;
-//     int cycleCounter = 0;
-//     int startCycle = 0;
     int cycleTime = 0;
 
   public slots:
@@ -215,14 +209,13 @@ class HantekDsoControl : public QObject {
     /// \return See ::Dso::ErrorCode.
     Dso::ErrorCode setTriggerMode(Dso::TriggerMode mode);
     /// \brief Set the trigger source.
-    /// \param special true for a special channel (EXT, ...) as trigger source.
-    /// \param id The number of the channel, that should be used as trigger.
+    /// \param id The channel that should be used as trigger.
     /// \return See ::Dso::ErrorCode.
-    Dso::ErrorCode setTriggerSource(bool special, unsigned id);
+    Dso::ErrorCode setTriggerSource(ChannelID channel);
     /// \brief Set the trigger level.
     /// \param channel The channel that should be set.
     /// \param level The new trigger level (V).
-    /// \return The trigger level that has been set, ::Dso::ErrorCode on error.
+    /// \return See ::Dso::ErrorCode.
     Dso::ErrorCode setTriggerLevel(ChannelID channel, double level);
     /// \brief Set the trigger slope.
     /// \param slope The Slope that should cause a trigger.

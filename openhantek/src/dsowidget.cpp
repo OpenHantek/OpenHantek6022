@@ -331,7 +331,7 @@ void DsoWidget::setupSliders(DsoWidget::Sliders &sliders) {
     for (ChannelID channel = 0; channel < spec->channels; ++channel) {
         sliders.triggerLevelSlider->addSlider((int)channel);
         sliders.triggerLevelSlider->setColor(channel,
-                                             (!scope->trigger.special && channel == scope->trigger.source)
+                                             (channel == scope->trigger.source)
                                                  ? view->screen.voltage[channel]
                                                  : view->screen.voltage[channel].darker());
         adaptTriggerLevelSlider(sliders, channel);
@@ -475,8 +475,6 @@ void DsoWidget::updateTriggerDetails() {
     settingsTriggerLabel->setText(tr("%1  %2  %3  %4")
                                       .arg(scope->voltage[scope->trigger.source].name,
                                            Dso::slopeString(scope->trigger.slope), levelString, pretriggerString));
-
-    /// \todo This won't work for special trigger sources
 }
 
 /// \brief Update the label about the trigger settings
@@ -539,16 +537,11 @@ void DsoWidget::updateTriggerSlope() { updateTriggerDetails(); }
 /// \brief Handles sourceChanged signal from the trigger dock.
 void DsoWidget::updateTriggerSource() {
     // Change the colors of the trigger sliders
-    if (scope->trigger.special || scope->trigger.source >= spec->channels) {
-        mainSliders.triggerPositionSlider->setColor(0, view->screen.border);
-        zoomSliders.triggerPositionSlider->setColor(0, view->screen.border);
-    } else {
-        mainSliders.triggerPositionSlider->setColor(0, view->screen.voltage[scope->trigger.source]);
-        zoomSliders.triggerPositionSlider->setColor(0, view->screen.voltage[scope->trigger.source]);
-    }
+    mainSliders.triggerPositionSlider->setColor(0, view->screen.voltage[scope->trigger.source]);
+    zoomSliders.triggerPositionSlider->setColor(0, view->screen.voltage[scope->trigger.source]);
 
     for (ChannelID channel = 0; channel < spec->channels; ++channel) {
-        QColor color = (!scope->trigger.special && channel == scope->trigger.source)
+        QColor color = (channel == scope->trigger.source)
                            ? view->screen.voltage[channel]
                            : view->screen.voltage[channel].darker();
         mainSliders.triggerLevelSlider->setColor(channel, color);

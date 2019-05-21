@@ -475,11 +475,11 @@ Dso::ErrorCode HantekDsoControl::setTriggerMode(Dso::TriggerMode mode) {
 }
 
 
-Dso::ErrorCode HantekDsoControl::setTriggerSource(bool special, ChannelID channel) {
+Dso::ErrorCode HantekDsoControl::setTriggerSource(ChannelID channel) {
     if (!device->isConnected())
         return Dso::ErrorCode::CONNECTION;
     //printf("setTriggerSource( %d )\n", channel);
-    this->setTriggerLevel(channel, controlsettings.trigger.level[channel]);
+    controlsettings.trigger.source = channel;
     return Dso::ErrorCode::NONE;
 }
 
@@ -718,8 +718,6 @@ void HantekDsoControl::run() {
     }
 
     // State machine for the device communication
-//     this->rollState = RollState::STARTSAMPLING;
-
     {
         std::vector<unsigned char> rawData = this->getSamples(expectedSampleCount);
         if (this->_samplingStarted) { // feed new samples to postprocess and display

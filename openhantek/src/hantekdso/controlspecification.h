@@ -37,11 +37,6 @@ struct FixedSampleRate {
     double samplerate;
 };
 
-struct SpecialTriggerChannel {
-    std::string name;
-    int hardwareID;
-};
-
 /// \brief Stores the specifications of the currently connected device.
 struct ControlSpecification {
     ControlSpecification(unsigned channels);
@@ -67,7 +62,6 @@ struct ControlSpecification {
     std::vector<ControlSpecificationGainLevel> gain;
 
     // Features
-    std::vector<SpecialTriggerChannel> specialTriggerChannels;
     std::vector<Coupling> couplings = {Dso::Coupling::DC, Dso::Coupling::AC};
     std::vector<TriggerMode> triggerModes = {TriggerMode::AUTO, TriggerMode::NORMAL,
                                              TriggerMode::SINGLE};

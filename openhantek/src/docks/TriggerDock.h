@@ -34,9 +34,8 @@ class TriggerDock : public QDockWidget {
     void setMode(Dso::TriggerMode mode);
 
     /// \brief Changes the trigger source if the new source is supported.
-    /// \param special true for a special channel (EXT, ...) as trigger source.
     /// \param id The number of the channel, that should be used as trigger.
-    void setSource(bool special, unsigned int id);
+    void setSource(unsigned int id);
 
     /// \brief Changes the trigger slope if the new slope is supported.
     /// \param slope The trigger slope.
@@ -58,9 +57,9 @@ class TriggerDock : public QDockWidget {
     const Dso::ControlSpecification* mSpec;
 
     QStringList sourceStandardStrings; ///< Strings for the standard trigger sources
-    QStringList sourceSpecialStrings;  ///< Strings for the special trigger sources
-  signals:
-    void modeChanged(Dso::TriggerMode);                ///< The trigger mode has been changed
-    void sourceChanged(bool special, unsigned int id); ///< The trigger source has been changed
-    void slopeChanged(Dso::Slope);                     ///< The trigger slope has been changed
+
+signals:
+    void modeChanged(Dso::TriggerMode);     ///< The trigger mode has been changed
+    void sourceChanged(unsigned int id);    ///< The trigger source has been changed
+    void slopeChanged(Dso::Slope);          ///< The trigger slope has been changed
 };
