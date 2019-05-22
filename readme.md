@@ -11,7 +11,7 @@ It was initially developed by [David Gräff and others](https://github.com/OpenH
 
 * Supported devices: Hantek 6022BE/BL on Linux.
 * Other operating systems builds: MacOSX & Windows - partly tested.
-* Uses [free firmware](https://github.com/Ho-Ro/Hantek6022API), no dependecy on not free Hantek firmware.
+* Uses [free open source firmware](https://github.com/Ho-Ro/Hantek6022API), no longer dependent on nonfree Hantek firmware.
 
 ## Features
 

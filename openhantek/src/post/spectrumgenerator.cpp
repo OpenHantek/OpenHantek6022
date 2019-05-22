@@ -150,9 +150,11 @@ void SpectrumGenerator::process(PPresult *result) {
         std::unique_ptr<double[]> windowedValues = std::unique_ptr<double[]>(new double[sampleCount]);
         // calculate the average value
         double dc = 0.0;
+
         for (unsigned int position = 0; position < sampleCount; ++position) {
             dc += channelData->voltage.sample[position];
         }
+
         dc /= sampleCount;
         channelData->dc = dc;
         // now strip DC bias, calculate rms of AC component and apply window for fft to AC component

@@ -46,6 +46,7 @@ VoltageDock::VoltageDock(DsoSettingsScope *scope, const Dso::ControlSpecificatio
     dockLayout->setColumnStretch(1, 1);
 
     // Initialize elements
+    int row = 0;
     for (ChannelID channel = 0; channel < scope->voltage.size(); ++channel) {
         ChannelBlock b;
 
@@ -64,18 +65,16 @@ VoltageDock::VoltageDock(DsoSettingsScope *scope, const Dso::ControlSpecificatio
 
         b.gainComboBox->addItems(gainStrings);
 
-        dockLayout->addWidget(b.usedCheckBox, (int)channel * 3, 0);
-        dockLayout->addWidget(b.gainComboBox, (int)channel * 3, 1);
-        dockLayout->addWidget(b.miscComboBox, (int)channel * 3 + 1, 1);
-        dockLayout->addWidget(b.invertCheckBox, (int)channel * 3 + 2, 1);
-
+        dockLayout->addWidget( b.usedCheckBox, row, 0 );
+        dockLayout->addWidget( b.gainComboBox, row++, 1 );
+        dockLayout->addWidget( b.invertCheckBox, row, 0 );
         if (channel < spec->channels) {
-            // setCoupling(channel, scope->voltage[channel].couplingOrMathIndex);
-            dockLayout->addWidget(b.attnCheckBox, (int)channel * 3 + 1, 0);
-
+            dockLayout->addWidget( b.attnCheckBox, row++, 1) ;
         } else {
+            dockLayout->addWidget( b.miscComboBox, row++, 1 );
             setMode(scope->voltage[channel].couplingOrMathIndex);
         }
+
         setGain(channel, scope->voltage[channel].gainStepIndex);
         setUsed(channel, scope->voltage[channel].used);
         setAttn(channel, scope->voltage[channel].probeUsed);
@@ -97,7 +96,8 @@ VoltageDock::VoltageDock(DsoSettingsScope *scope, const Dso::ControlSpecificatio
         connect(b.miscComboBox, SELECT<int>::OVERLOAD_OF(&QComboBox::currentIndexChanged), [this,channel,spec,scope](int index){
             this->scope->voltage[channel].couplingOrMathIndex = (unsigned)index;
             if (channel < spec->channels) {
-                emit couplingChanged(channel, scope->coupling(channel, spec));
+                printf("miscComboBox CH%d, index %d\n", channel, index );
+                //emit couplingChanged(channel, scope->coupling(channel, spec));
             } else {
                 emit modeChanged(Dso::getMathMode(this->scope->voltage[channel]));
             }
