@@ -187,33 +187,27 @@ void SpectrumGenerator::process(PPresult *result) {
 
         std::unique_ptr<double[]> conjugateComplex = std::move(windowedValues);
 
-        // Real values
         unsigned int position;
         double correctionFactor = 1.0 / dftLength / dftLength;
         // correct the (half-)compled values in spectrum (1st part real forward), (2nd part imag backwards) -> magnitude
-        std::vector<double>::iterator fwdIterator = channelData->spectrum.sample.begin();
-        std::vector<double>::iterator backIterator = channelData->spectrum.sample.end();
-        conjugateComplex[0] = (channelData->spectrum.sample[0] * channelData->spectrum.sample[0]) * correctionFactor;
-        fwdIterator++;
-        *backIterator-- = 0; // clear mirrored 2nd half of spectrum
-        for (position = 1; position < dftLength; ++position) {
-            conjugateComplex[position] =
-                (channelData->spectrum.sample[position] * channelData->spectrum.sample[position] +
-                 channelData->spectrum.sample[sampleCount - position] *
-                     channelData->spectrum.sample[sampleCount - position]) *
-                correctionFactor;
-            // convert complex to magnitude
-            *fwdIterator++ = sqrt( *fwdIterator * *fwdIterator + *backIterator * *backIterator );
-            *backIterator-- = 0; // clear mirrored 2nd half of spectrum
+        std::vector<double>::iterator fwd = channelData->spectrum.sample.begin();
+        std::vector<double>::reverse_iterator rev = channelData->spectrum.sample.rbegin();
+        conjugateComplex[ 0 ] = *fwd * *fwd * correctionFactor;
+        fwd++; // spectrum[0] is only real
+        for ( position = 1; position < dftLength; ++position ) {
+            conjugateComplex[ position ] = ( *fwd * *fwd + *rev * *rev ) * correctionFactor;
+            // convert complex to magnitude square
+            *fwd++ = sqrt( *fwd * *fwd + *rev * *rev );
+            rev++ ;
         }
-        conjugateComplex[dftLength] =
-            (channelData->spectrum.sample[dftLength] * channelData->spectrum.sample[dftLength]) * correctionFactor;
+        conjugateComplex[ position ] = *fwd * *fwd  * correctionFactor;
+        fwd++;
         // Complex values, all zero for autocorrelation
         for (++position; position < sampleCount; ++position) {
-            conjugateComplex[position] = 0;
+            conjugateComplex[ position ] = 0;
         }
-        // clear mirrored 2nd half of spectrum
-        channelData->spectrum.sample.resize( dftLength );
+        // skip mirrored 2nd half of spectrum
+        channelData->spectrum.sample.resize( dftLength-1 );
 
         // Do half-complex to real inverse transformation
         std::unique_ptr<double[]> correlation = std::unique_ptr<double[]>(new double[sampleCount]);
@@ -240,7 +234,7 @@ void SpectrumGenerator::process(PPresult *result) {
         if (peakPosition > 100)
             channelData->frequency = 1.0 / (channelData->voltage.interval * peakPosition);
         else
-            channelData->frequency = 0; // no result
+            channelData->frequency = 0; // no (good) result
 
         // Finally calculate the real spectrum (it's also used for frequency display)
         unsigned int peakPos = 0; // position of max spectrum peak 
@@ -253,16 +247,16 @@ void SpectrumGenerator::process(PPresult *result) {
             for (std::vector<double>::iterator spectrumIterator = channelData->spectrum.sample.begin();
                  spectrumIterator != channelData->spectrum.sample.end(); ++spectrumIterator) {
                 double value = 20 * log10(fabs(*spectrumIterator)) + offset;
-                // detect frequency peak in first half of spectrum (second half is mirrored)
-                if ( position < sampleCount/2 && peakSpectrum < value ) {
+                // Check if this value has to be limited
+                if (offsetLimit > value)
+                    value = offsetLimit;
+                *spectrumIterator = value;
+                // detect frequency peak in first half of spectrum (second mirrored half was already removed)
+                if ( peakSpectrum < value ) {
                     peakSpectrum = value;
                     peakPos = position;
                 }
                 position++;
-                // Check if this value has to be limited
-                if (offsetLimit > value) value = offsetLimit;
-
-                *spectrumIterator = value;
             }
             //printf( "pf: %d; %g\n", peakPos, channelData->spectrum.interval * peakPos );
         }
