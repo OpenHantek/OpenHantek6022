@@ -14,6 +14,7 @@
 #include "HorizontalDock.h"
 #include "dockwindows.h"
 
+#include "viewconstants.h"
 #include "scopesettings.h"
 #include "sispinbox.h"
 #include "utils/printutils.h"
@@ -124,6 +125,10 @@ double HorizontalDock::setSamplerate(double samplerate) {
     //printf( "HD::setSamplerate( %g )\n", samplerate );
     QSignalBlocker blocker(samplerateSiSpinBox);
     samplerateSiSpinBox->setValue(samplerate);
+    double maxFreqBase = samplerate / DIVS_TIME / 2;
+    frequencybaseSiSpinBox->setMaximum( maxFreqBase );
+    if (frequencybaseSiSpinBox->value() > maxFreqBase )
+        setFrequencybase( maxFreqBase );
     return samplerateSiSpinBox->value();
 }
 

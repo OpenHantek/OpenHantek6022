@@ -124,12 +124,12 @@ void SpectrumGenerator::process(PPresult *result) {
                                                            0.1365995 * cos(4 * M_PI * windowPosition / windowEnd) -
                                                            0.0106411 * cos(6 * M_PI * windowPosition / windowEnd);
                 break;
-            case Dso::WindowFunction::FLATTOP:
+            case Dso::WindowFunction::FLATTOP: // wikipedia.de
                 for (unsigned int windowPosition = 0; windowPosition < lastRecordLength; ++windowPosition)
                     *(lastWindowBuffer + windowPosition) = 1.0 - 1.93 * cos(2 * M_PI * windowPosition / windowEnd) +
                                                            1.29 * cos(4 * M_PI * windowPosition / windowEnd) -
                                                            0.388 * cos(6 * M_PI * windowPosition / windowEnd) +
-                                                           0.032 * cos(8 * M_PI * windowPosition / windowEnd);
+                                                           0.028 * cos(8 * M_PI * windowPosition / windowEnd);
                 break;
             default: // Dso::WINDOW_RECTANGULAR
                 for (unsigned int windowPosition = 0; windowPosition < lastRecordLength; ++windowPosition)
@@ -168,15 +168,15 @@ void SpectrumGenerator::process(PPresult *result) {
         channelData->ac = sqrt( ac2 ); // rms of AC component
         channelData->rms = sqrt( dc * dc + ac2 ); // total rms = U eff
 
-        {
-            // Do discrete real to half-complex transformation
-            /// \todo Check if record length is multiple of 2
-            /// \todo Reuse plan and use FFTW_MEASURE to get fastest algorithm
-            fftw_plan fftPlan = fftw_plan_r2r_1d(sampleCount, windowedValues.get(),
-                                                 &channelData->spectrum.sample.front(), FFTW_R2HC, FFTW_ESTIMATE);
-            fftw_execute(fftPlan);
-            fftw_destroy_plan(fftPlan);
-        }
+        // Do discrete real to half-complex transformation
+        /// \todo Check if record length is multiple of 2
+        /// \todo Reuse plan and use FFTW_MEASURE to get fastest algorithm
+
+        fftw_plan fftPlan;
+        fftPlan = fftw_plan_r2r_1d(sampleCount, windowedValues.get(),
+                                    &channelData->spectrum.sample.front(), FFTW_R2HC, FFTW_ESTIMATE);
+        fftw_execute(fftPlan);
+        fftw_destroy_plan(fftPlan);
 
         // Do an autocorrelation to get the frequency of the signal
         // HORO:
@@ -190,22 +190,34 @@ void SpectrumGenerator::process(PPresult *result) {
         // Real values
         unsigned int position;
         double correctionFactor = 1.0 / dftLength / dftLength;
+        // correct the (half-)compled values in spectrum (1st part real forward), (2nd part imag backwards) -> magnitude
+        std::vector<double>::iterator fwdIterator = channelData->spectrum.sample.begin();
+        std::vector<double>::iterator backIterator = channelData->spectrum.sample.end();
         conjugateComplex[0] = (channelData->spectrum.sample[0] * channelData->spectrum.sample[0]) * correctionFactor;
-        for (position = 1; position < dftLength; ++position)
+        fwdIterator++;
+        *backIterator-- = 0; // clear mirrored 2nd half of spectrum
+        for (position = 1; position < dftLength; ++position) {
             conjugateComplex[position] =
                 (channelData->spectrum.sample[position] * channelData->spectrum.sample[position] +
                  channelData->spectrum.sample[sampleCount - position] *
                      channelData->spectrum.sample[sampleCount - position]) *
                 correctionFactor;
-        // Complex values, all zero for autocorrelation
+            // convert complex to magnitude
+            *fwdIterator++ = sqrt( *fwdIterator * *fwdIterator + *backIterator * *backIterator );
+            *backIterator-- = 0; // clear mirrored 2nd half of spectrum
+        }
         conjugateComplex[dftLength] =
             (channelData->spectrum.sample[dftLength] * channelData->spectrum.sample[dftLength]) * correctionFactor;
-        for (++position; position < sampleCount; ++position) conjugateComplex[position] = 0;
+        // Complex values, all zero for autocorrelation
+        for (++position; position < sampleCount; ++position) {
+            conjugateComplex[position] = 0;
+        }
+        // clear mirrored 2nd half of spectrum
+        channelData->spectrum.sample.resize( dftLength );
 
         // Do half-complex to real inverse transformation
         std::unique_ptr<double[]> correlation = std::unique_ptr<double[]>(new double[sampleCount]);
-        fftw_plan fftPlan =
-            fftw_plan_r2r_1d(sampleCount, conjugateComplex.get(), correlation.get(), FFTW_HC2R, FFTW_ESTIMATE);
+        fftPlan = fftw_plan_r2r_1d(sampleCount, conjugateComplex.get(), correlation.get(), FFTW_HC2R, FFTW_ESTIMATE);
         fftw_execute(fftPlan);
         fftw_destroy_plan(fftPlan);
 
@@ -215,7 +227,7 @@ void SpectrumGenerator::process(PPresult *result) {
         unsigned int peakPosition = 0;
 
         for (unsigned int position = 1; position < sampleCount / 2; ++position) {
-            if ( correlation[position] > 1.5 * peakCorrelation && correlation[position] > minimumCorrelation ) {
+            if ( correlation[position] > peakCorrelation && correlation[position] > minimumCorrelation ) {
                 peakCorrelation = correlation[position];
                 peakPosition = position;
             } else if (correlation[position] < minimumCorrelation)
