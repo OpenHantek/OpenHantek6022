@@ -104,6 +104,8 @@ class HantekDsoControl : public QObject {
     const ControlCommand *getCommand(Hantek::ControlCode code) const;
 
   private:
+    unsigned samplesRaw = 22 * 1024;
+    unsigned samplesSkip = 20000 - samplesRaw;
     bool isFastRate() const;
     unsigned getRecordLength() const;
 

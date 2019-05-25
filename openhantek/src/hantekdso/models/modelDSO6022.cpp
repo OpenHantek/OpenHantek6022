@@ -21,11 +21,16 @@ static void initSpecifications(Dso::ControlSpecification& specification) {
     specification.samplerate.single.base = 1e6;
     specification.samplerate.single.max = 30e6;
     specification.samplerate.single.maxDownsampler = 10;
-    specification.samplerate.single.recordLengths = {UINT_MAX, SAMPLESIZE_RAW};
+    specification.samplerate.single.recordLengths = {
+        UINT_MAX, SAMPLESIZE_RAW, SAMPLESIZE_RAW_L, SAMPLESIZE_RAW_XL, SAMPLESIZE_RAW_XXL
+    };
     specification.samplerate.multi.base = 1e6;
     specification.samplerate.multi.max = 16e6;
     specification.samplerate.multi.maxDownsampler = 10;
-    specification.samplerate.multi.recordLengths = {UINT_MAX, SAMPLESIZE_RAW * 2};
+    specification.samplerate.multi.recordLengths = {
+        UINT_MAX, SAMPLESIZE_RAW * 2, SAMPLESIZE_RAW_L * 2,
+        SAMPLESIZE_RAW_XL * 2, SAMPLESIZE_RAW_XXL * 2
+    };
     specification.bufferDividers = { 1000 , 1 , 1 };
     // This data was based on testing and depends on Divider.
     // Input divider: 100/1009 = 1% too low display

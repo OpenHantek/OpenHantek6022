@@ -117,8 +117,17 @@ bool HantekDsoControl::isFastRate() const {
 
 
 unsigned HantekDsoControl::getRecordLength() const {
-    //printf("getRecordLength: %d\n", controlsettings.samplerate.limits->recordLengths[controlsettings.recordLengthId]);
-    return controlsettings.samplerate.limits->recordLengths[controlsettings.recordLengthId];
+    double duration = controlsettings.samplerate.target.duration;
+    if ( duration <= 0.1 )
+        return controlsettings.samplerate.limits->recordLengths[controlsettings.recordLengthId];
+    else if ( duration <= 0.2 )
+        return controlsettings.samplerate.limits->recordLengths[controlsettings.recordLengthId + 1];
+    else if ( duration <= 0.5 )
+        return controlsettings.samplerate.limits->recordLengths[controlsettings.recordLengthId + 2];
+    else
+        return controlsettings.samplerate.limits->recordLengths[controlsettings.recordLengthId + 3];
+//     printf("getRecordLength: %d\n", controlsettings.samplerate.limits->recordLengths[controlsettings.recordLengthId]);
+//     return controlsettings.samplerate.limits->recordLengths[controlsettings.recordLengthId];
 }
 
 
@@ -240,8 +249,18 @@ void HantekDsoControl::convertRawDataToSamples(const std::vector<unsigned char> 
         // DROP_DSO6022_HEAD defined in modelDSO6022.h
         // 22 * 1024 - 2048 - 480 = 20000
 
-        result.data[channel].resize( rawSampleCount - DROP_DSO6022_HEAD );
-        rawBufferPosition += DROP_DSO6022_HEAD * activeChannels; // skip first unstable samples
+        int skipSamples;
+        if ( controlsettings.samplerate.target.duration <= 0.1 )
+            skipSamples = DROP_DSO6022_HEAD;
+        else if ( controlsettings.samplerate.target.duration <= 0.2 )
+            skipSamples = DROP_DSO6022_HEAD_L;
+        else if ( controlsettings.samplerate.target.duration <= 0.5 )
+            skipSamples = DROP_DSO6022_HEAD_XL;
+        else
+            skipSamples = DROP_DSO6022_HEAD_XXL;
+
+        result.data[channel].resize( rawSampleCount - skipSamples );
+        rawBufferPosition += skipSamples * activeChannels; // skip first unstable samples
         rawBufferPosition += channel;
         result.clipped &= ~(0x01 << channel); // clear clipping flag
         for ( unsigned index = 0; index < result.data[ channel ].size();
@@ -363,6 +382,7 @@ Dso::ErrorCode HantekDsoControl::setRecordTime(double duration) {
         controlsettings.samplerate.target.duration = duration;
         controlsettings.samplerate.target.samplerateSet = ControlSettingsSamplerateTarget::Duration;
     }
+    //printf( "duration = %g\n", duration );
 
     double srLimit;
     if ( isFastRate() )
@@ -469,8 +489,9 @@ Dso::ErrorCode HantekDsoControl::setProbe( ChannelID channel, bool probeUsed, do
 Dso::ErrorCode HantekDsoControl::setTriggerMode(Dso::TriggerMode mode) {
     if (!device->isConnected())
         return Dso::ErrorCode::CONNECTION;
-    //printf("setTriggerMode( %d )\n", (int)mode);
     controlsettings.trigger.mode = mode;
+    if ( Dso::TriggerMode::SINGLE != mode )
+        enableSampling( true );
     return Dso::ErrorCode::NONE;
 }
 
