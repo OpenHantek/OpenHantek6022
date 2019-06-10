@@ -9,7 +9,8 @@ It was initially developed by [David Gräff and others](https://github.com/OpenH
 
 <img alt="Image of main window on linux" width="100%" src="docs/images/screenshot_mainwindow.png">
 
-* Supported devices: Hantek 6022BE/BL on Linux.
+* Supported devices: Hantek 6022BE and 6022BL.
+* Fully supported operating system: Linux (developed under debian).
 * Other operating systems builds: MacOSX & Windows - partly tested.
 * Uses [free open source firmware](https://github.com/Ho-Ro/Hantek6022API), no longer dependent on nonfree Hantek firmware.
 
@@ -19,6 +20,8 @@ It was initially developed by [David Gräff and others](https://github.com/OpenH
 * Voltage and Spectrum view for all device supported chanels.
 * :star: NEW: Checkbox for X10 probe - scope now shows the correct voltage. 
 * :star: NEW: Show DC (average), AC (rms) and RMS values as well as frequency of displayed channels.
+* Time base 200ms/div .. 10 ns/div.
+* Sample rates 60, 100, 200, 500 kS/s, 1, 2, 5, 10, 12, 15, 24, 30 MS/s.
 * Math channel with these modes: Ch1+Ch2, Ch1-Ch2, Ch2-Ch1.
 * Freely configurable colors.
 * Export to CSV, JPG, PNG or print the graphs.
@@ -37,7 +40,7 @@ It was initially developed by [David Gräff and others](https://github.com/OpenH
 ## Install prebuilt binary
 * Get Linux (and untested MacOSX and Win) packages from the [Releases](https://github.com/OpenHantek/OpenHantek6022/releases) page.
 * Get MacOSX package from [macports](https://www.macports.org/ports.php?by=name&substr=openhantek) - thx [ra1nb0w](https://github.com/ra1nb0w).
-* Get rpm packages from [rpmfusion](http://koji.rpmfusion.org/koji/packageinfo?packageID=563) - thx [Vascom](https://github.com/Vascom).
+* Get [Fedora rpm packages](https://pkgs.org/download/openhantek) - thx [Vascom](https://github.com/Vascom).
 * [Download (untested) Windows build](https://ci.appveyor.com/project/Ho-Ro/openhantek6022/build/artifacts).
 
 

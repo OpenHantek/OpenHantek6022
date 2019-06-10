@@ -222,7 +222,10 @@ void HorizontalDock::setSamplerateSteps(int mode, const QList<double> steps) {
     // Make reasonable adjustments to the timebase spinbox
     QSignalBlocker timebaseBlocker(timebaseSiSpinBox);
     timebaseSiSpinBox->setMinimum(pow(10, floor(log10(1.0 / steps.last()))));
-    timebaseSiSpinBox->setMaximum(pow(10, ceil(log10(10000.0 / (steps.first())))));
+    double maxTime = pow(10, ceil(log10(10000.0 / (steps.first()))));
+    if ( maxTime > 200e-3 )
+        maxTime = 200e-3;
+    timebaseSiSpinBox->setMaximum( maxTime );
     calculateSamplerateSteps( timebaseSiSpinBox->value() );
 }
 
