@@ -17,10 +17,11 @@ class HantekDsoControl;
 class DSOModel {
   public:
     const int ID;
-    const long vendorID;            ///< The USB vendor ID
-    const long productID;           ///< The USB product ID
-    const long vendorIDnoFirmware;  ///< The USB vendor ID if no firmware is flashed yet
-    const long productIDnoFirmware; ///< The USB product ID if no firmware is flashed yet
+    const unsigned vendorID;            ///< The USB vendor ID
+    const unsigned productID;           ///< The USB product ID
+    const unsigned vendorIDnoFirmware;  ///< The USB vendor ID if no firmware is uploaded yet
+    const unsigned productIDnoFirmware; ///< The USB product ID if no firmware is uploaded yet
+    const unsigned firmwareVersion;     ///< The BCD version of the uploaded firmware
     /// Firmwares are compiled into the executable with a filename pattern of devicename-firmware.hex and
     /// devicename-loader.hex.
     /// The firmwareToken is the "devicename" of the pattern above.
@@ -32,7 +33,8 @@ class DSOModel {
   public:
     /// This model may need to modify the HantekDsoControl class to work correctly
     virtual void applyRequirements(HantekDsoControl *) const = 0;
-    DSOModel(int id, long vendorID, long productID, long vendorIDnoFirmware, long productIDnoFirmware,
+    DSOModel(int id, unsigned vendorID, unsigned productID, unsigned vendorIDnoFirmware, unsigned productIDnoFirmware,
+             unsigned firmwareVersion,
              const std::string &firmwareToken, const std::string &name, const Dso::ControlSpecification &&specification);
     virtual ~DSOModel() = default;
     /// Return the device specifications

@@ -164,7 +164,9 @@ bool USBDevice::isConnected() { return this->handle != 0; }
 
 
 bool USBDevice::needsFirmware() {
-    return this->descriptor.idProduct != model->productID || this->descriptor.idVendor != model->vendorID;
+    return this->descriptor.idProduct != model->productID 
+        || this->descriptor.idVendor != model->vendorID
+        || this->descriptor.bcdDevice != model->firmwareVersion;
 }
 
 

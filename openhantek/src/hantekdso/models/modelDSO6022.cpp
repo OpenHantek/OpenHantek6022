@@ -102,7 +102,7 @@ void applyRequirements_(HantekDsoControl *dsoControl) {
     dsoControl->addCommand(new ControlSetCalFreq());
 }
 
-ModelDSO6022BE::ModelDSO6022BE() : DSOModel(ID, 0x04b5, 0x6022, 0x04b4, 0x6022, "dso6022be", "DSO-6022BE",
+ModelDSO6022BE::ModelDSO6022BE() : DSOModel(ID, 0x04b5, 0x6022, 0x04b4, 0x6022, 0x0200, "dso6022be", "DSO-6022BE",
                                             Dso::ControlSpecification(2)) {
     initSpecifications(specification);
 }
@@ -111,7 +111,7 @@ void ModelDSO6022BE::applyRequirements(HantekDsoControl *dsoControl) const {
     applyRequirements_(dsoControl);
 }
 
-ModelDSO6022BL::ModelDSO6022BL() : DSOModel(ID, 0x04b5, 0x602a, 0x04b4, 0x602a, "dso6022bl", "DSO-6022BL",
+ModelDSO6022BL::ModelDSO6022BL() : DSOModel(ID, 0x04b5, 0x602a, 0x04b4, 0x602a, 0x0200, "dso6022bl", "DSO-6022BL",
                                             Dso::ControlSpecification(2)) {
     initSpecifications(specification);
 }
