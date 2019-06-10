@@ -126,6 +126,8 @@ double HorizontalDock::setSamplerate(double samplerate) {
     QSignalBlocker blocker(samplerateSiSpinBox);
     samplerateSiSpinBox->setValue(samplerate);
     double maxFreqBase = samplerate / DIVS_TIME / 2;
+    if ( samplerate < 100e3 ) // avoid the odd 3 kHz setting
+        maxFreqBase = 2e3;
     frequencybaseSiSpinBox->setMaximum( maxFreqBase );
     if (frequencybaseSiSpinBox->value() > maxFreqBase )
         setFrequencybase( maxFreqBase );

@@ -25,7 +25,7 @@ static void initSpecifications(Dso::ControlSpecification& specification) {
         UINT_MAX, SAMPLESIZE_RAW, SAMPLESIZE_RAW_L, SAMPLESIZE_RAW_XL, SAMPLESIZE_RAW_XXL
     };
     specification.samplerate.multi.base = 1e6;
-    specification.samplerate.multi.max = 16e6;
+    specification.samplerate.multi.max = 15e6;
     specification.samplerate.multi.maxDownsampler = 10;
     specification.samplerate.multi.recordLengths = {
         UINT_MAX, SAMPLESIZE_RAW * 2, SAMPLESIZE_RAW_L * 2,
@@ -84,9 +84,10 @@ static void initSpecifications(Dso::ControlSpecification& specification) {
     // 100k, 200k, 500k, 1M, 2M, 4M, 8M, 12M, 16M, 24M, 30M, 48M
     // 48M is unstable in 1 channel mode
     // 24M, 30M and 48M are unstable in 2 channel mode
-    specification.fixedSampleRates = { {10,1e5} , {20,2e5} , {50,5e5} , {1,1e6} , {2,2e6} , {4,4e6} , 
-                                       {8,8e6} , {12,12e6} , {16,16e6} , {24,24e6} , {30,30e6} }; 
-    specification.sampleSize = 8;
+    specification.fixedSampleRates = { {106,60e3} , {110,100e3} , {120,200e3} , {150,500e3} ,
+                                       {1,1e6} , {2,2e6} , {5,5e6} , {10,10e6} ,
+                                       {12,12e6} , {15,15e6} , {24,24e6} , {30,30e6} };
+    specification.sampleSize = 12;
 
     specification.couplings = {Dso::Coupling::DC};
     specification.triggerModes = {Dso::TriggerMode::AUTO, Dso::TriggerMode::NORMAL, Dso::TriggerMode::SINGLE};
@@ -102,7 +103,7 @@ void applyRequirements_(HantekDsoControl *dsoControl) {
     dsoControl->addCommand(new ControlSetCalFreq());
 }
 
-ModelDSO6022BE::ModelDSO6022BE() : DSOModel(ID, 0x04b5, 0x6022, 0x04b4, 0x6022, 0x0200, "dso6022be", "DSO-6022BE",
+ModelDSO6022BE::ModelDSO6022BE() : DSOModel(ID, 0x04b5, 0x6022, 0x04b4, 0x6022, 0x0201, "dso6022be", "DSO-6022BE",
                                             Dso::ControlSpecification(2)) {
     initSpecifications(specification);
 }
@@ -111,7 +112,7 @@ void ModelDSO6022BE::applyRequirements(HantekDsoControl *dsoControl) const {
     applyRequirements_(dsoControl);
 }
 
-ModelDSO6022BL::ModelDSO6022BL() : DSOModel(ID, 0x04b5, 0x602a, 0x04b4, 0x602a, 0x0200, "dso6022bl", "DSO-6022BL",
+ModelDSO6022BL::ModelDSO6022BL() : DSOModel(ID, 0x04b5, 0x602a, 0x04b4, 0x602a, 0x0201, "dso6022bl", "DSO-6022BL",
                                             Dso::ControlSpecification(2)) {
     initSpecifications(specification);
 }
