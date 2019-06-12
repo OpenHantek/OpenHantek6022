@@ -27,6 +27,7 @@ class DSOModel {
     /// The firmwareToken is the "devicename" of the pattern above.
     std::string firmwareToken;
     std::string name; ///< User visible name. Does not need internationalisation/translation.
+
   protected:
     Dso::ControlSpecification specification;
 

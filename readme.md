@@ -68,7 +68,7 @@ special driver for Windows systems.
 ## Important!
 The scope doesn't store the firmware permanently in flash or eeprom, it must be uploaded after each power-up and is kept in ram 'til power-down.
 If the scope was used with a different software (old openhantek, sigrok or the windows software) the scope must be unplugged and replugged one-time before using it with OpenHantek6022 to enable the automatic loading of the correct firmware.
-The top line of the program must display the correct firmware version (FW 0200).
+The top line of the program must display the correct firmware version (FW 0201).
 
 ## Specifications, features, limitations and developer documentation
 Please refer to the [specifications, features, limitations](docs/limitations.md) and the [developer documentation](openhantek/readme.md) pages.
