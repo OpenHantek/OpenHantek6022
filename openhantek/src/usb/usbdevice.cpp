@@ -197,7 +197,7 @@ int USBDevice::bulkReadMulti(unsigned char *data, unsigned length, int attempts)
     //printf("USBDevice::bulkReadMulti( %d )\n", length );
 #ifdef BIG_BLOCK
     // more stable if read as one big block
-    return this->bulkTransfer(HANTEK_EP_IN, data, length, attempts, HANTEK_TIMEOUT_MULTI);
+    return this->bulkTransfer(HANTEK_EP_IN, data, length, attempts, HANTEK_TIMEOUT_MULTI * length / this->inPacketLength );
 #else
     // unstable transfer if read in smaller chunks
     int errorCode = this->inPacketLength;

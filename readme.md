@@ -20,8 +20,9 @@ It was initially developed by [David Gräff and others](https://github.com/OpenH
 * Voltage and Spectrum view for all device supported chanels.
 * :star: NEW: Checkbox for X10 probe - scope now shows the correct voltage. 
 * :star: NEW: Show DC (average), AC (rms) and RMS values as well as frequency of displayed channels.
-* Time base 200ms/div .. 10 ns/div.
-* Sample rates 60, 100, 200, 500 kS/s, 1, 2, 5, 10, 12, 15, 24, 30 MS/s.
+* :star: NEW: Time base 1s/div .. 10 ns/div.
+* Sample rates 100, 200, 500 kS/s, 1, 2, 5, 10, 12, 15, 24, 30 MS/s.
+* :star: NEW: Downsampling sample rates 10, 20, 50 kS/s.
 * Math channel with these modes: Ch1+Ch2, Ch1-Ch2, Ch2-Ch1.
 * Freely configurable colors.
 * Export to CSV, JPG, PNG or print the graphs.
@@ -31,7 +32,7 @@ It was initially developed by [David Gräff and others](https://github.com/OpenH
 * :star: NEW: Shows a red channel warning (bottom left) if input data is clipped.
 * A zoom view with a freely selectable range.
 * All settings can be saved to a configuration file and loaded again.
-* :star: NEW: Calibration values loaded from eeprom or a model configuration file (only 6022BE/BL).
+* :star: NEW: Calibration values loaded from eeprom or a model configuration file.
 * :star: NEW: [Calibration program](https://github.com/Ho-Ro/Hantek6022API/blob/master/README.md#create-calibration-values-for-openhantek) to create these values automatically.
 * Multiple instances with a different device each can be started.
 * The dock views on the main window can be customized by dragging them around and stacking them.

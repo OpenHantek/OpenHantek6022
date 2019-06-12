@@ -11,6 +11,8 @@ using namespace Hantek;
 
 static ModelDSO6022BE modelInstance;
 static ModelDSO6022BL modelInstance2;
+static ModelEzUSB modelInstance3;
+static ModelSaleae modelInstance4;
 
 static void initSpecifications(Dso::ControlSpecification& specification) {
     // we drop 2K + 480 sample values due to unreliable start of stream
@@ -21,16 +23,11 @@ static void initSpecifications(Dso::ControlSpecification& specification) {
     specification.samplerate.single.base = 1e6;
     specification.samplerate.single.max = 30e6;
     specification.samplerate.single.maxDownsampler = 10;
-    specification.samplerate.single.recordLengths = {
-        UINT_MAX, SAMPLESIZE_RAW, SAMPLESIZE_RAW_L, SAMPLESIZE_RAW_XL, SAMPLESIZE_RAW_XXL
-    };
+    specification.samplerate.single.recordLengths = { UINT_MAX };
     specification.samplerate.multi.base = 1e6;
     specification.samplerate.multi.max = 15e6;
     specification.samplerate.multi.maxDownsampler = 10;
-    specification.samplerate.multi.recordLengths = {
-        UINT_MAX, SAMPLESIZE_RAW * 2, SAMPLESIZE_RAW_L * 2,
-        SAMPLESIZE_RAW_XL * 2, SAMPLESIZE_RAW_XXL * 2
-    };
+    specification.samplerate.multi.recordLengths = { UINT_MAX };
     specification.bufferDividers = { 1000 , 1 , 1 };
     // This data was based on testing and depends on Divider.
     // Input divider: 100/1009 = 1% too low display
@@ -81,17 +78,18 @@ static void initSpecifications(Dso::ControlSpecification& specification) {
     specification.gain = { {10,0.16} , {10,0.40} , {10,0.80} , {5,1.60} ,
                            {2,4.00} , {1,8.00} , {1,16.00} , {1,40.00} };
     // Sample rates with custom fw from https://github.com/Ho-Ro/Hantek6022API
-    // 100k, 200k, 500k, 1M, 2M, 4M, 8M, 12M, 16M, 24M, 30M, 48M
+    // 60k, 100k, 200k, 500k, 1M, 2M, 5M, 10M, 12M, 15M, 24M, 30M (, 48M)
     // 48M is unstable in 1 channel mode
     // 24M, 30M and 48M are unstable in 2 channel mode
-    specification.fixedSampleRates = { {106,60e3} , {110,100e3} , {120,200e3} , {150,500e3} ,
+    specification.fixedSampleRates = { {110, 10e3} , {110, 20e3} , {110, 50e3} , // downsampling fro 100kS/s!
+                                       {110,100e3} , {120,200e3} , {150,500e3} ,
                                        {1,1e6} , {2,2e6} , {5,5e6} , {10,10e6} ,
                                        {12,12e6} , {15,15e6} , {24,24e6} , {30,30e6} };
-    specification.sampleSize = 12;
+    specification.sampleSize = 14;
 
     specification.couplings = {Dso::Coupling::DC};
     specification.triggerModes = {Dso::TriggerMode::AUTO, Dso::TriggerMode::NORMAL, Dso::TriggerMode::SINGLE};
-    specification.fixedUSBinLength = SAMPLESIZE_RAW;
+    specification.fixedUSBinLength = 0;
 }
 
 void applyRequirements_(HantekDsoControl *dsoControl) {
@@ -118,5 +116,23 @@ ModelDSO6022BL::ModelDSO6022BL() : DSOModel(ID, 0x04b5, 0x602a, 0x04b4, 0x602a, 
 }
 
 void ModelDSO6022BL::applyRequirements(HantekDsoControl *dsoControl) const {
+   applyRequirements_(dsoControl);
+}
+
+ModelEzUSB::ModelEzUSB() : DSOModel(ID, 0x04b5, 0x6022, 0x04b4, 0x8613, 0x0201, "dso6022be", "LCsoft-EzUSB",
+                                            Dso::ControlSpecification(2)) {
+    initSpecifications(specification);
+}
+
+void ModelEzUSB::applyRequirements(HantekDsoControl *dsoControl) const {
+   applyRequirements_(dsoControl);
+}
+
+ModelSaleae::ModelSaleae() : DSOModel(ID, 0x04b5, 0x6022, 0x0925, 0x3881, 0x0201, "dso6022be", "LCsoft-Saleae",
+                                            Dso::ControlSpecification(2)) {
+    initSpecifications(specification);
+}
+
+void ModelSaleae::applyRequirements(HantekDsoControl *dsoControl) const {
    applyRequirements_(dsoControl);
 }

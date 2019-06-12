@@ -126,8 +126,8 @@ double HorizontalDock::setSamplerate(double samplerate) {
     QSignalBlocker blocker(samplerateSiSpinBox);
     samplerateSiSpinBox->setValue(samplerate);
     double maxFreqBase = samplerate / DIVS_TIME / 2;
-    if ( samplerate < 100e3 ) // avoid the odd 3 kHz setting
-        maxFreqBase = 2e3;
+//    if ( samplerate < 100e3 ) // avoid the odd 3 kHz setting
+//        maxFreqBase = 2e3;
     frequencybaseSiSpinBox->setMaximum( maxFreqBase );
     if (frequencybaseSiSpinBox->value() > maxFreqBase )
         setFrequencybase( maxFreqBase );
@@ -222,9 +222,8 @@ void HorizontalDock::setSamplerateSteps(int mode, const QList<double> steps) {
     // Make reasonable adjustments to the timebase spinbox
     QSignalBlocker timebaseBlocker(timebaseSiSpinBox);
     timebaseSiSpinBox->setMinimum(pow(10, floor(log10(1.0 / steps.last()))));
+    // max 10000 ms
     double maxTime = pow(10, ceil(log10(10000.0 / (steps.first()))));
-    if ( maxTime > 200e-3 )
-        maxTime = 200e-3;
     timebaseSiSpinBox->setMaximum( maxTime );
     calculateSamplerateSteps( timebaseSiSpinBox->value() );
 }
@@ -267,7 +266,7 @@ void HorizontalDock::calculateSamplerateSteps(double timebase) {
             double sRate = samplerateSteps[ id ];
             //printf( "sRate %g, sRate*timebase %g\n", sRate, sRate * timebase );
             // min must be < maxRate
-            if ( id < size-1 && sRate * timebase <= 1 ) {
+            if ( id < size-1 && sRate * timebase <= 100 ) {
                 min = sRate;
             }
             // max must be > minRate
