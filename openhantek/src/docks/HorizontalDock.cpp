@@ -266,11 +266,14 @@ void HorizontalDock::calculateSamplerateSteps(double timebase) {
             double sRate = samplerateSteps[ id ];
             //printf( "sRate %g, sRate*timebase %g\n", sRate, sRate * timebase );
             // min must be < maxRate
+            // find minimal samplerate to get at least this number of samples per div
             if ( id < size-1 && sRate * timebase <= 100 ) {
                 min = sRate;
             }
             // max must be > minRate
-            if ( id && sRate * timebase < 2000 ) {
+            // find max samplesrate to get not more then this number of samples per div
+            // number should be <= 1000 to get enough samples for two full screens (to ensure triggering)
+            if ( id && sRate * timebase <= 1000 ) {
                 max = sRate;
             }
         }

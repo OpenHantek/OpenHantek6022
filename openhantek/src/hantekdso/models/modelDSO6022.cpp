@@ -11,8 +11,11 @@ using namespace Hantek;
 
 static ModelDSO6022BE modelInstance;
 static ModelDSO6022BL modelInstance2;
+#ifdef LCSOFT_TEST_BOARD
+// two test cases with simple EZUSB board (LCsoft) without EEPROM or with Saleae VID/PID EEPROM
 static ModelEzUSB modelInstance3;
 static ModelSaleae modelInstance4;
+#endif
 
 static void initSpecifications(Dso::ControlSpecification& specification) {
     // we drop 2K + 480 sample values due to unreliable start of stream
@@ -119,6 +122,9 @@ void ModelDSO6022BL::applyRequirements(HantekDsoControl *dsoControl) const {
    applyRequirements_(dsoControl);
 }
 
+#ifdef LCSOFT_TEST_BOARD
+// two test cases with simple EZUSB board (LCsoft) without EEPROM or with Saleae VID/PID EEPROM
+
 ModelEzUSB::ModelEzUSB() : DSOModel(ID, 0x04b5, 0x6022, 0x04b4, 0x8613, 0x0201, "dso6022be", "LCsoft-EzUSB",
                                             Dso::ControlSpecification(2)) {
     initSpecifications(specification);
@@ -136,3 +142,4 @@ ModelSaleae::ModelSaleae() : DSOModel(ID, 0x04b5, 0x6022, 0x0925, 0x3881, 0x0201
 void ModelSaleae::applyRequirements(HantekDsoControl *dsoControl) const {
    applyRequirements_(dsoControl);
 }
+#endif

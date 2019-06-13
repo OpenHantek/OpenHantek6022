@@ -19,6 +19,9 @@ struct ModelDSO6022BL : public DSOModel {
     void applyRequirements(HantekDsoControl* dsoControl) const override;
 };
 
+// #define LCSOFT_TEST_BOARD
+#ifdef LCSOFT_TEST_BOARD
+// two test cases with simple EZUSB board (LCsoft) without EEPROM or with Saleae VID/PID EEPROM
 struct ModelEzUSB : public DSOModel {
     static const int ID = 0x6022;
     ModelEzUSB();
@@ -30,3 +33,4 @@ struct ModelSaleae : public DSOModel {
     ModelSaleae();
     void applyRequirements(HantekDsoControl* dsoControl) const override;
 };
+#endif
