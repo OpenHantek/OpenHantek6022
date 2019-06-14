@@ -45,6 +45,8 @@
 #ifndef VERSION
 #error "You need to run the cmake buildsystem!"
 #endif
+#include "OH_VERSION.h"
+
 
 using namespace Hantek;
 
@@ -186,8 +188,13 @@ int main(int argc, char *argv[]) {
     int res = openHantekApplication.exec();
 
     //////// Clean up ////////
+
+    // wait 2 * record time (delay is ms) for dso to finish
+    unsigned waitForDso = 2000 * dsoControl.getSamplesize() / dsoControl.getSamplerate();
+    if ( waitForDso < 10000 ) // minimum 10 s
+        waitForDso = 10000;
     dsoControlThread.quit();
-    dsoControlThread.wait(10000);
+    dsoControlThread.wait( waitForDso );
 
     postProcessingThread.quit();
     postProcessingThread.wait(10000);

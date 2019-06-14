@@ -110,7 +110,6 @@ HorizontalDock::HorizontalDock(DsoSettingsScope *scope, QWidget *parent, Qt::Win
 /// \param event The close event that should be handled.
 void HorizontalDock::closeEvent(QCloseEvent *event) {
     this->hide();
-
     event->accept();
 }
 
@@ -126,8 +125,6 @@ double HorizontalDock::setSamplerate(double samplerate) {
     QSignalBlocker blocker(samplerateSiSpinBox);
     samplerateSiSpinBox->setValue(samplerate);
     double maxFreqBase = samplerate / DIVS_TIME / 2;
-//    if ( samplerate < 100e3 ) // avoid the odd 3 kHz setting
-//        maxFreqBase = 2e3;
     frequencybaseSiSpinBox->setMaximum( maxFreqBase );
     if (frequencybaseSiSpinBox->value() > maxFreqBase )
         setFrequencybase( maxFreqBase );
@@ -222,8 +219,8 @@ void HorizontalDock::setSamplerateSteps(int mode, const QList<double> steps) {
     // Make reasonable adjustments to the timebase spinbox
     QSignalBlocker timebaseBlocker(timebaseSiSpinBox);
     timebaseSiSpinBox->setMinimum(pow(10, floor(log10(1.0 / steps.last()))));
-    // max 10000 ms
-    double maxTime = pow(10, ceil(log10(10000.0 / (steps.first()))));
+    // max 1000 ms
+    double maxTime = pow(10, ceil(log10(1000.0 / (steps.first()))));
     timebaseSiSpinBox->setMaximum( maxTime );
     calculateSamplerateSteps( timebaseSiSpinBox->value() );
 }
@@ -267,7 +264,7 @@ void HorizontalDock::calculateSamplerateSteps(double timebase) {
             //printf( "sRate %g, sRate*timebase %g\n", sRate, sRate * timebase );
             // min must be < maxRate
             // find minimal samplerate to get at least this number of samples per div
-            if ( id < size-1 && sRate * timebase <= 100 ) {
+            if ( id < size-1 && sRate * timebase <= 10 ) {
                 min = sRate;
             }
             // max must be > minRate
@@ -277,7 +274,7 @@ void HorizontalDock::calculateSamplerateSteps(double timebase) {
                 max = sRate;
             }
         }
-        //printf( "limits: %g, %g\n", min, max );
+        //printf( "cSS limits: %g, %g\n", min, max );
         setSamplerateLimits( min, max );
     }
 }

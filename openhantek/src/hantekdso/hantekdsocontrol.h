@@ -69,6 +69,10 @@ class HantekDsoControl : public QObject {
     /// \return The maximum samplerate for the current configuration in S/s.
     double getMaxSamplerate() const;
 
+    double getSamplerate() const;
+
+    unsigned getSamplesize() const;
+
     bool isSampling() const;
 
     /// Return the associated usb device.
@@ -123,10 +127,6 @@ class HantekDsoControl : public QObject {
     /// \return The calculated trigger point for the given data.
     static unsigned calculateTriggerPoint(unsigned value);
 
-    /// \brief Gets the current state.
-    /// \return The current CaptureState of the oscilloscope.
-    std::pair<int, unsigned> getCaptureState() const;
-
     /// \brief Gets sample data from the oscilloscope
     std::vector<unsigned char> getSamples(unsigned &expectedSampleCount) const;
 
@@ -175,6 +175,7 @@ class HantekDsoControl : public QObject {
                                       /// the last check before sampling started
     bool _samplingStarted = false;
     int cycleTime = 0;
+    bool channelSetupChanged = false;
 
   public slots:
     /// \brief If sampling is disabled, no samplesAvailable() signals are send anymore, no samples

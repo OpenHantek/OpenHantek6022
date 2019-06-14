@@ -84,11 +84,12 @@ static void initSpecifications(Dso::ControlSpecification& specification) {
     // 60k, 100k, 200k, 500k, 1M, 2M, 5M, 10M, 12M, 15M, 24M, 30M (, 48M)
     // 48M is unstable in 1 channel mode
     // 24M, 30M and 48M are unstable in 2 channel mode
-    specification.fixedSampleRates = { {110, 10e3} , {110, 20e3} , {110, 50e3} , // downsampling fro 100kS/s!
+    specification.fixedSampleRates = { {110,  1e3} , {110,  2e3} , {110,  5e3} , // downsampling from 100kS/s!
+                                       {110, 10e3} , {110, 20e3} , {110, 50e3} , // downsampling from 100kS/s!
                                        {110,100e3} , {120,200e3} , {150,500e3} ,
                                        {1,1e6} , {2,2e6} , {5,5e6} , {10,10e6} ,
                                        {12,12e6} , {15,15e6} , {24,24e6} , {30,30e6} };
-    specification.sampleSize = 14;
+    specification.sampleSize = 17;
 
     specification.couplings = {Dso::Coupling::DC};
     specification.triggerModes = {Dso::TriggerMode::AUTO, Dso::TriggerMode::NORMAL, Dso::TriggerMode::SINGLE};

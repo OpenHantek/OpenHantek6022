@@ -24,6 +24,8 @@
 #include <QLineEdit>
 #include <QMessageBox>
 
+#include "OH_VERSION.h"
+
 MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, ExporterRegistry *exporterRegistry,
                        QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow), mSettings(settings), exporterRegistry(exporterRegistry) {
@@ -44,7 +46,7 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, Expo
     // Window title
     setWindowIcon(QIcon(":openhantek.png"));
     setWindowTitle(
-        tr("OpenHantek6022 (Build %1) - Device %2 (FW %3)") //" - Renderer %4")
+        tr("OpenHantek6022 (%1) - Device %2 (FW%3)") //" - Renderer %4")
             .arg(QString::fromStdString( VERSION))
             .arg(QString::fromStdString(dsoControl->getDevice()->getModel()->name))
             .arg((unsigned int)dsoControl->getDevice()->getFwVersion(),4,16,QChar('0'))
@@ -273,7 +275,7 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, Expo
 
     connect(ui->actionAbout, &QAction::triggered, [this]() {
         QMessageBox::about(
-            this, tr("About OpenHantek6022 (Build %1)").arg(VERSION),
+            this, tr("About OpenHantek6022 (%1)").arg(VERSION),
             tr("<p>This is a open source software for Hantek6022 USB oscilloscopes</p>"
                "<p>Copyright &copy; 2010, 2011 Oliver Haag<br><a "
                "href='mailto:oliver.haag@gmail.com'>oliver.haag@gmail.com</a></p>"

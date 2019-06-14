@@ -43,8 +43,6 @@ const USBDevice *HantekDsoControl::getDevice() const { return device; }
 
 const DSOsamples &HantekDsoControl::getLastSamples() { return result; }
 
-static bool channelUsedChanged = false;
-
 
 HantekDsoControl::HantekDsoControl(USBDevice *device)
     : device(device), specification(device->getModel()->spec()),
@@ -118,12 +116,9 @@ bool HantekDsoControl::isFastRate() const {
 
 
 unsigned HantekDsoControl::getRecordLength() const {
-    unsigned bigbuffer = controlsettings.samplerate.target.duration;
-    unsigned rawsize = 20e3;
-    if (  bigbuffer > 1 ) // display more than 1 second on screen
-        rawsize *= bigbuffer; // get more samples
-    rawsize *= this->downsampling;
-    rawsize = ( (rawsize + 1024) / 1024 + 1 ) * 1024;
+    unsigned rawsize = SAMPLESIZE_USED;
+    rawsize *= this->downsampling; // take more samples
+    rawsize = ( (rawsize + 1024) / 1024 + 2 ) * 1024; // adjust for skipping of minimal 2018 leading samples
     //printf( "getRecordLength: %d\n", rawsize );
     return rawsize;
 }
@@ -153,9 +148,6 @@ Dso::ErrorCode HantekDsoControl::retrieveChannelLevelData() {
 
     return Dso::ErrorCode::NONE;
 }
-
-
-std::pair<int, unsigned> HantekDsoControl::getCaptureState() const { return std::make_pair(CAPTURE_READY, 0); }
 
 
 std::vector<unsigned char> HantekDsoControl::getSamples(unsigned &previousSampleCount) const {
@@ -195,12 +187,16 @@ std::vector<unsigned char> HantekDsoControl::getSamples(unsigned &previousSample
 
 
 void HantekDsoControl::convertRawDataToSamples(const std::vector<unsigned char> &rawData) {
-    if ( channelUsedChanged ) { // skip the next conversion to avoid artefacts due to channel switch
-        channelUsedChanged = false;
+    if ( channelSetupChanged ) { // skip the next conversion to avoid artefacts due to channel switch
+        channelSetupChanged = false;
         return;
     }
+
     const size_t rawSampleCount = isFastRate() ? rawData.size() : (rawData.size() / 2);
-    //printf("cRDTS, rawSampleCount %d\n", (int)rawSampleCount);
+    //printf("cRDTS, rawSampleCount %lu\n", rawSampleCount);
+    if ( 0 == rawSampleCount ) // nothing to convert
+        return;
+
     QWriteLocker locker(&result.lock);
     result.samplerate = controlsettings.samplerate.current;
     // Prepare result buffers
@@ -208,16 +204,16 @@ void HantekDsoControl::convertRawDataToSamples(const std::vector<unsigned char> 
     for (ChannelID channelCounter = 0; channelCounter < specification->channels; ++channelCounter)
         result.data[channelCounter].clear();
 
-    // The 1st one or two frames (512 byte) of the raw sample stream are unreliable
+    // The 1st two or three frames (512 byte) of the raw sample stream are unreliable
     // (Maybe because the common mode input voltage of ADC is handled far out of spec and has to settle)
-    // Solution: sample at least 1024 more values -> rawSampleSize (must be multiple of 1024)
-    //           rawSampleSize = ( ( n*20000 + 1024 ) / 1024 + 1) * 1024;
+    // Solution: sample at least 2048 more values -> rawSampleSize (must be multiple of 1024)
+    //           rawSampleSize = ( ( n*20000 + 1024 ) / 1024 + 2) * 1024;
     // and skip over these samples to get 20000 samples (or n*20000)
 
-    unsigned sampleCount = (rawSampleCount / 1000 - 1) * 1000;
+    unsigned sampleCount = ((rawSampleCount-1024) / 1000 - 1) * 1000;
     unsigned skipSamples = rawSampleCount - sampleCount;
-    if ( sampleCount / this->downsampling > 500000 ) // if too big then skip this block
-        return;
+    unsigned downsampling = sampleCount / SAMPLESIZE_USED;
+    //printf("sampleCount %u, downsampling %u\n", sampleCount, downsampling );
 
     // Convert channel data
     unsigned short activeChannels = specification->channels;
@@ -258,20 +254,20 @@ void HantekDsoControl::convertRawDataToSamples(const std::vector<unsigned char> 
         // Convert data from the oscilloscope and write it into the sample buffer
         unsigned rawBufferPosition = 0;
 
-        result.data[channel].resize( sampleCount / this->downsampling );
+        result.data[channel].resize( sampleCount / downsampling );
         rawBufferPosition += skipSamples * activeChannels; // skip first unstable samples
         rawBufferPosition += channel;
         result.clipped &= ~(0x01 << channel); // clear clipping flag
         for ( unsigned index = 0; index < result.data[ channel ].size();
-            ++index, rawBufferPosition += activeChannels * this->downsampling ) { // advance either by one or two blocks
+            ++index, rawBufferPosition += activeChannels * downsampling ) { // advance either by one or two blocks
             double sample = 0;
-            for ( unsigned iii = 0; iii < this->downsampling * activeChannels; iii += activeChannels ) {
+            for ( unsigned iii = 0; iii < downsampling * activeChannels; iii += activeChannels ) {
                 int rawSample = rawData[ rawBufferPosition + iii ]; // range 0...255
                 if ( rawSample == 0x00 || rawSample == 0xFF ) // min or max -> clipped
                     result.clipped |= 0x01 << channel;
                 sample += (double)(rawSample - shiftDataBuf); // int - int
             }
-            sample /= this->downsampling;
+            sample /= downsampling;
             result.data[ channel ][ index ] = (sample / limit - offset) * gainCalibration * gainStep * probeAttn;
         }
     }
@@ -362,12 +358,23 @@ Dso::ErrorCode HantekDsoControl::setSamplerate(double samplerate) {
         ->setDiv(specification->fixedSampleRates[sampleId].id);
     controlsettings.samplerate.current = samplerate;
     setDownsampling( samplerate );
+    channelSetupChanged = true; // skip next raw samples block to avoid artefacts
     // Check for Roll mode
     emit recordTimeChanged((double)(getRecordLength() - controlsettings.swSampleMargin) /
                            controlsettings.samplerate.current);
     emit samplerateChanged(controlsettings.samplerate.current);
 
     return Dso::ErrorCode::NONE;
+}
+
+
+double HantekDsoControl::getSamplerate() const {
+    return controlsettings.samplerate.current;
+}
+
+
+unsigned HantekDsoControl::getSamplesize() const {
+    return SAMPLESIZE_USED;
 }
 
 
@@ -389,28 +396,27 @@ Dso::ErrorCode HantekDsoControl::setRecordTime(double duration) {
         srLimit = (specification->samplerate.single).max;
     else
         srLimit = (specification->samplerate.multi).max;
-    // For now - we go for the 20000 size sampling
-    // Find highest samplerate using less than 20000 samples to obtain our duration.
-    unsigned sampleCount = SAMPLESIZE_USED;
-    // Ensure that at least 1/2 of remaining samples are available for SW trigger algorithm
-    sampleCount = (sampleCount - controlsettings.swSampleMargin) / 2;
-    //qDebug() << "sampleCount" << sampleCount << "limit" << srLimit;
+    // For now - we go for the 20000 size sampling, defined in model6022.h
+    // Find highest samplerate using less equal half of 20000 samples to obtain our duration.
     unsigned sampleId = 0;
     for (unsigned id = 0; id < specification->fixedSampleRates.size(); ++id) {
         double sRate = specification->fixedSampleRates[id].samplerate;
         //qDebug() << "id:" << id << "sRate:" << sRate << "sRate*duration:" << sRate * duration;
+        // Ensure that at least 1/2 of remaining samples are available for SW trigger algorithm
         // for stability reason avoid the highest sample rate as default
-        if (sRate < srLimit && sRate * duration < sampleCount / 10) {
+        if ( sRate < srLimit && sRate * duration <= SAMPLESIZE_USED / 2 ) {
             sampleId = id;
         }
     }
-    //qDebug() << "sampleId:" << sampleId << specification->fixedSampleRates[sampleId].samplerate;
+    srLimit = specification->fixedSampleRates[sampleId].samplerate;
+    //qDebug() << "sampleId:" << sampleId << srLimit << srLimit;
     // Usable sample value
     modifyCommand<ControlSetTimeDIV>(ControlCode::CONTROL_SETTIMEDIV)
         ->setDiv(specification->fixedSampleRates[sampleId].id);
-    controlsettings.samplerate.current = specification->fixedSampleRates[sampleId].samplerate;
-    setDownsampling( controlsettings.samplerate.current );
-    emit samplerateChanged(controlsettings.samplerate.current);
+    controlsettings.samplerate.current = srLimit;
+    setDownsampling( srLimit );
+    channelSetupChanged = true; // skip next raw samples block to avoid artefacts
+    emit samplerateChanged( srLimit );
     return Dso::ErrorCode::NONE;
 }
 
@@ -445,7 +451,7 @@ Dso::ErrorCode HantekDsoControl::setChannelUsed(ChannelID channel, bool used) {
     controlsettings.usedChannels = channelCount;
     this->updateSamplerateLimits();
     this->restoreTargets();
-    channelUsedChanged = true; // skip next raw samples block to avoid artefacts
+    channelSetupChanged = true; // skip next raw samples block to avoid artefacts
     return Dso::ErrorCode::NONE;
 }
 
