@@ -124,13 +124,6 @@ unsigned HantekDsoControl::getRecordLength() const {
 }
 
 
-void HantekDsoControl::setDownsampling( double samplerate ) {
-    this->downsampling = 100e3 / samplerate;
-    if ( this->downsampling < 1 )
-        this->downsampling = 1;
-}
-
-
 Dso::ErrorCode HantekDsoControl::retrieveChannelLevelData() {
     // Get channel level data
     //printf( "retrieveChannelLevelData()\n" );
@@ -357,7 +350,7 @@ Dso::ErrorCode HantekDsoControl::setSamplerate(double samplerate) {
     modifyCommand<ControlSetTimeDIV>(ControlCode::CONTROL_SETTIMEDIV)
         ->setDiv(specification->fixedSampleRates[sampleId].id);
     controlsettings.samplerate.current = samplerate;
-    setDownsampling( samplerate );
+    setDownsampling( specification->fixedSampleRates[sampleId].downsampling );
     channelSetupChanged = true; // skip next raw samples block to avoid artefacts
     // Check for Roll mode
     emit recordTimeChanged((double)(getRecordLength() - controlsettings.swSampleMargin) /
@@ -396,8 +389,8 @@ Dso::ErrorCode HantekDsoControl::setRecordTime(double duration) {
         srLimit = (specification->samplerate.single).max;
     else
         srLimit = (specification->samplerate.multi).max;
-    // For now - we go for the 20000 size sampling, defined in model6022.h
-    // Find highest samplerate using less equal half of 20000 samples to obtain our duration.
+    // For now - we go for the SAMPLESIZE_USED (= 20000) size sampling, defined in model6022.h
+    // Find highest samplerate using less equal half of these samples to obtain our duration.
     unsigned sampleId = 0;
     for (unsigned id = 0; id < specification->fixedSampleRates.size(); ++id) {
         double sRate = specification->fixedSampleRates[id].samplerate;
@@ -408,15 +401,15 @@ Dso::ErrorCode HantekDsoControl::setRecordTime(double duration) {
             sampleId = id;
         }
     }
-    srLimit = specification->fixedSampleRates[sampleId].samplerate;
-    //qDebug() << "sampleId:" << sampleId << srLimit << srLimit;
+    double samplerate = specification->fixedSampleRates[sampleId].samplerate;
+    //qDebug() << "sampleId:" << sampleId << srLimit << samplerate;
     // Usable sample value
     modifyCommand<ControlSetTimeDIV>(ControlCode::CONTROL_SETTIMEDIV)
         ->setDiv(specification->fixedSampleRates[sampleId].id);
-    controlsettings.samplerate.current = srLimit;
-    setDownsampling( srLimit );
+    controlsettings.samplerate.current = samplerate;
+    setDownsampling( specification->fixedSampleRates[sampleId].downsampling );
     channelSetupChanged = true; // skip next raw samples block to avoid artefacts
-    emit samplerateChanged( srLimit );
+    emit samplerateChanged( samplerate );
     return Dso::ErrorCode::NONE;
 }
 

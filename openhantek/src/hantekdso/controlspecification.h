@@ -33,8 +33,9 @@ struct ControlSpecificationGainLevel {
 };
 
 struct FixedSampleRate {
-    unsigned char id;
     double samplerate;
+    unsigned char id;
+    unsigned downsampling;
 };
 
 /// \brief Stores the specifications of the currently connected device.

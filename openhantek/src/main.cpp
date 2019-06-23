@@ -7,7 +7,10 @@
 #include <QLocale>
 #include <QSurfaceFormat>
 #include <QTranslator>
-
+#ifdef __linux__
+//#include <QStyle>
+#include <QStyleFactory>
+#endif
 #include <iostream>
 #include <libusb-1.0/libusb.h>
 #include <memory>
@@ -95,6 +98,15 @@ int main(int argc, char *argv[]) {
     GlScope::fixOpenGLversion( useGles ? QSurfaceFormat::OpenGLES : QSurfaceFormat::OpenGL );
 
     QApplication openHantekApplication(argc, argv);
+
+#ifdef __linux__
+    // qDebug() << QStyleFactory::keys();
+    // Qt5 linux default
+    // ("Breeze", "Windows", "Fusion")
+    // with package qt5-style-plugins
+    // ("Breeze", "bb10dark", "bb10bright", "cleanlooks", "gtk2", "cde", "motif", "plastique", "Windows", "Fusion")
+    openHantekApplication.setStyle( QStyleFactory::create( "Fusion" ) ); // smaller widgets allow stacking of all docks
+#endif
 
     //////// Load translations ////////
     QTranslator qtTranslator;

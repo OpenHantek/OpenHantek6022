@@ -89,14 +89,15 @@ static void initSpecifications(Dso::ControlSpecification& specification) {
     // 24M, 30M and 48M are unstable in 2 channel mode
 // define VERY_SLOW_SAMPLES to get timebase up to 1s/div at the expense of very slow reaction time (up to 20 s)
 //#define VERY_SLOW_SAMPLES
-    specification.fixedSampleRates = { 
+    specification.fixedSampleRates = { // samplerate, sampleId, downsampling
 #ifdef VERY_SLOW_SAMPLES
-        {110,  1e3} , {110,  2e3} , {110,  5e3} , // downsampling from 100kS/s!
+        {  1e3, 110, 100} , {  2e3, 110,  50} , {  5e3, 110,  20} , // massive downsampling from 100 kS/s!
 #endif
-        {110, 10e3} , {110, 20e3} , {110, 50e3} , // downsampling from 100kS/s!
-        {110,100e3} , {120,200e3} , {150,500e3} ,
-        {1,1e6} , {2,2e6} , {5,5e6} , {10,10e6} ,
-        {12,12e6} , {15,15e6} , {24,24e6} , {30,30e6}
+        { 10e3, 110,  10} , { 20e3, 120,  10} , { 50e3, 150,  10} , // 10x downsampling from 100, 200, 500 kS/s!
+        {100e3,   1,  10} , {200e3,   2,  10} , {500e3,   5,  10} , // 10x downsampling from 1, 2, 5 MS/s
+        {  1e6,  10,  10} , {  2e6,  10,   5} , {  5e6,  10,   2} , // 10x, 5x, 2x downsampling from 10 MS/s
+        { 10e6,  10,   1} , { 12e6,  12,   1} , { 15e6,  15,   1} ,
+        { 24e6,  24,   1} , { 30e6, 30, 1}
     };
 
     specification.sampleSize = specification.fixedSampleRates.size();

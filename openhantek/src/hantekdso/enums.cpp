@@ -68,10 +68,17 @@ namespace Dso {
     /// \return The string that should be used in labels etc.
     QString slopeString(Slope slope) {
         switch (slope) {
+#if defined(_WIN32) || defined(_WIN64) // avoid unicode mismatch
         case Slope::Positive:
-            return QString::fromUtf8("\u2197");
+            return QString::fromUtf8("/");
         case Slope::Negative:
-            return QString::fromUtf8("\u2198");
+            return QString::fromUtf8("\\");
+#else
+        case Slope::Positive:
+            return QString::fromUtf8("\u2197"); // "↗"
+        case Slope::Negative:
+            return QString::fromUtf8("\u2198"); // "↘"
+#endif
         default:
             return QString();
         }
