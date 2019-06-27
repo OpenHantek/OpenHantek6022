@@ -5,7 +5,7 @@
 
 namespace Dso {
 
-Enum<Dso::MathMode, Dso::MathMode::ADD_CH1_CH2, Dso::MathMode::SUB_CH1_FROM_CH2> MathModeEnum;
+Enum<Dso::MathMode, Dso::MathMode::ADD_CH1_CH2, Dso::MathMode::AC_CH2> MathModeEnum;
 Enum<Dso::WindowFunction, Dso::WindowFunction::RECTANGULAR, Dso::WindowFunction::FLATTOP> WindowFunctionEnum;
 
 /// \brief Return string representation of the given math mode.
@@ -19,6 +19,10 @@ QString mathModeString(MathMode mode) {
         return QCoreApplication::tr("CH1 - CH2");
     case MathMode::SUB_CH1_FROM_CH2:
         return QCoreApplication::tr("CH2 - CH1");
+    case MathMode::AC_CH1:
+        return QCoreApplication::tr("CH1 AC");
+    case MathMode::AC_CH2:
+        return QCoreApplication::tr("CH2 AC");
     }
     return QString();
 }
