@@ -11,7 +11,7 @@ It was initially developed by [David Gräff and others](https://github.com/OpenH
 
 * Supported devices: Hantek 6022BE and 6022BL.
 * Fully supported operating system: Linux (developed under debian).
-* Other operating systems builds: MacOSX & Windows - partly tested.
+* Other operating systems builds: MacOSX & [Windows](docs/images/screenshot_mainwindow_win.png) - partly tested.
 * Uses [free open source firmware](https://github.com/Ho-Ro/Hantek6022API), no longer dependent on nonfree Hantek firmware.
 
 ## Features
@@ -20,10 +20,11 @@ It was initially developed by [David Gräff and others](https://github.com/OpenH
 * Voltage and Spectrum view for all device supported chanels.
 * :star: NEW: Checkbox for X10 probe - scope now shows the correct voltage. 
 * :star: NEW: Show DC (average), AC (rms) and RMS values as well as frequency of displayed channels.
-* :star: NEW: Time base 1s/div .. 10 ns/div.
+* :star: NEW: Time base 100 ms/div .. 10 ns/div.
 * Sample rates 100, 200, 500 kS/s, 1, 2, 5, 10, 12, 15, 24, 30 MS/s.
 * :star: NEW: Downsampling sample rates 10, 20, 50 kS/s.
 * Math channel with these modes: Ch1+Ch2, Ch1-Ch2, Ch2-Ch1.
+* :star: NEW: Math mode AC, calculate AC part of Ch1 or Ch2.
 * Freely configurable colors.
 * Export to CSV, JPG, PNG or print the graphs.
 * :star: NEW: Localized CSV file (decimal and data separator).
@@ -50,7 +51,7 @@ You need the following software, to build OpenHantek from source:
 * [CMake 3.5+](https://cmake.org/download/)
 * [Qt 5.4+](https://www1.qt.io/download-open-source/)
 * [FFTW 3+ (prebuild files will be downloaded on windows)](http://www.fftw.org/)
-* libusb 1.x (prebuild files will be used on windows)
+* libusb-1.0, version >= 1.0.16 (prebuild files will be used on windows)
 * A compiler that supports C++11 - tested with gcc, clang and msvc
 
 We have build instructions available for [Linux](docs/build.md#linux), [Apple MacOSX](docs/build.md#apple) and [Microsoft Windows](docs/build.md#windows).
@@ -69,7 +70,7 @@ special driver for Windows systems.
 ## Important!
 The scope doesn't store the firmware permanently in flash or eeprom, it must be uploaded after each power-up and is kept in ram 'til power-down.
 If the scope was used with a different software (old openhantek, sigrok or the windows software) the scope must be unplugged and replugged one-time before using it with OpenHantek6022 to enable the automatic loading of the correct firmware.
-The top line of the program must display the correct firmware version (FW 0201).
+The top line of the program must display the correct firmware version (FW0202).
 
 ## Specifications, features, limitations and developer documentation
 Please refer to the [specifications, features, limitations](docs/limitations.md) and the [developer documentation](openhantek/readme.md) pages.

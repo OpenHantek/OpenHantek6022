@@ -181,88 +181,88 @@ void SpectrumGenerator::process(PPresult *result) {
         // Do an autocorrelation to get the frequency of the signal
         // HORO:
         // This is quite inaccurate at high frequencies due to the used algorithm:
-        // as we do a autocorrellation the resolution at high frequencies is limited by voltagestep interval
+        // as we do a autocorrelation the resolution at high frequencies is limited by voltagestep interval
         // e.g. at 6 MHz we get correlation at time shift of either 4 or 5 or 6 -> 5.0 / 6.0 / 7.5 MHz
         // use spectrum instead if peak position is too small.
 
-        std::unique_ptr<double[]> conjugateComplex = std::move(windowedValues);
+        // create a copy of powerSpectrum because hc2r iDFT destroys spectrum input
+        const double norm = 1.0 / dftLength / dftLength;
+        std::unique_ptr<double[]> powerSpectrum = std::move(windowedValues);
 
         unsigned int position;
-        double correctionFactor = 1.0 / dftLength / dftLength;
         // correct the (half-)compled values in spectrum (1st part real forward), (2nd part imag backwards) -> magnitude
         std::vector<double>::iterator fwd = channelData->spectrum.sample.begin();
         std::vector<double>::reverse_iterator rev = channelData->spectrum.sample.rbegin();
-        conjugateComplex[ 0 ] = *fwd * *fwd * correctionFactor;
+        // convert complex to magnitude square in place (*fwd) and into copy (powerSpectrum[])
+        *fwd = *fwd * *fwd;
+        powerSpectrum[ 0 ] = *fwd * norm;
         fwd++; // spectrum[0] is only real
         for ( position = 1; position < dftLength; ++position ) {
-            conjugateComplex[ position ] = ( *fwd * *fwd + *rev * *rev ) * correctionFactor;
-            // convert complex to magnitude square
-            *fwd++ = sqrt( *fwd * *fwd + *rev * *rev );
-            rev++ ;
+            *fwd = ( *fwd * *fwd + *rev * *rev );
+            powerSpectrum[ position ] = *fwd * norm;
+            fwd++;
+            rev++;
         }
-        conjugateComplex[ position ] = *fwd * *fwd  * correctionFactor;
+        *fwd = *fwd * *fwd;
+        powerSpectrum[ position ] = *fwd * norm;
         fwd++;
         // Complex values, all zero for autocorrelation
         for (++position; position < sampleCount; ++position) {
-            conjugateComplex[ position ] = 0;
+            powerSpectrum[ position ] = 0;
         }
-        // skip mirrored 2nd half of spectrum
-        channelData->spectrum.sample.resize( dftLength-1 );
+        // skip mirrored 2nd half of result spectrum
+        channelData->spectrum.sample.resize( dftLength + 1 );
 
-        // Do half-complex to real inverse transformation
+        // Do half-complex to real inverse transformation -> autocorrelation
         std::unique_ptr<double[]> correlation = std::unique_ptr<double[]>(new double[sampleCount]);
-        fftPlan = fftw_plan_r2r_1d(sampleCount, conjugateComplex.get(), correlation.get(), FFTW_HC2R, FFTW_ESTIMATE);
+        fftPlan = fftw_plan_r2r_1d(sampleCount, powerSpectrum.get(), correlation.get(), FFTW_HC2R, FFTW_ESTIMATE);
         fftw_execute(fftPlan);
         fftw_destroy_plan(fftPlan);
 
         // Get the frequency from the correlation results
         double minimumCorrelation = correlation[0];
         double peakCorrelation = 0;
-        unsigned int peakPosition = 0;
+        unsigned int peakCorrPos = 0;
 
-        for (unsigned int position = 1; position < sampleCount / 2; ++position) {
+        for ( position = 1; position < sampleCount / 2; ++position ) {
             if ( correlation[position] > peakCorrelation && correlation[position] > minimumCorrelation ) {
                 peakCorrelation = correlation[position];
-                peakPosition = position;
+                peakCorrPos = position;
             } else if (correlation[position] < minimumCorrelation)
                 minimumCorrelation = correlation[position];
         }
         correlation.reset(nullptr);
-        //printf( "pc: %d: %g\n", peakPosition, 1.0 / (channelData->voltage.interval * peakPosition) );
-        // Calculate the frequency in Hz
-        // use auto correlation result if it is granular enough (+- 1%), else try 1st spectrum peak.
-        if (peakPosition > 100)
-            channelData->frequency = 1.0 / (channelData->voltage.interval * peakPosition);
-        else
-            channelData->frequency = 0; // no (good) result
 
         // Finally calculate the real spectrum (it's also used for frequency display)
-        unsigned int peakPos = 0; // position of max spectrum peak 
-        if ( scope->spectrum[channel].used || 0 == channelData->frequency ) {
-            // Convert values into dB (Relative to the reference level)
-            double offset = 60 - postprocessing->spectrumReference - 20 * log10(dftLength);
-            double offsetLimit = postprocessing->spectrumLimit - postprocessing->spectrumReference;
-            unsigned int position = 0;
-            double peakSpectrum = *(channelData->spectrum.sample.begin()); // get a start value as reference
-            for (std::vector<double>::iterator spectrumIterator = channelData->spectrum.sample.begin();
-                 spectrumIterator != channelData->spectrum.sample.end(); ++spectrumIterator) {
-                double value = 20 * log10(fabs(*spectrumIterator)) + offset;
-                // Check if this value has to be limited
-                if (offsetLimit > value)
-                    value = offsetLimit;
-                *spectrumIterator = value;
-                // detect frequency peak in first half of spectrum (second mirrored half was already removed)
-                if ( peakSpectrum < value ) {
-                    peakSpectrum = value;
-                    peakPos = position;
-                }
-                position++;
+        unsigned int peakFreqPos = 0; // position of max spectrum peak
+        // Convert values into dB (Relative to the reference level)
+        double offset = 60 - postprocessing->spectrumReference - 20 * log10(dftLength);
+        double offsetLimit = postprocessing->spectrumLimit - postprocessing->spectrumReference;
+        position = 0;
+        double peakSpectrum = 10 * log10( fabs( channelData->spectrum.sample[0] ) ); // get a start value as reference
+        for (std::vector<double>::iterator spectrumIterator = channelData->spectrum.sample.begin();
+             spectrumIterator != channelData->spectrum.sample.end(); ++spectrumIterator) {
+            // spectrum is power spectrum, but show amplitude spectrum -> 10 * log...
+            double value = 10 * log10( fabs( *spectrumIterator ) ) + offset;
+            // Check if this value has to be limited
+            if (offsetLimit > value)
+                value = offsetLimit;
+            *spectrumIterator = value;
+            // detect frequency peak
+            if ( value >= peakSpectrum  ) {
+                peakSpectrum = value;
+                peakFreqPos = position;
             }
-            //printf( "pf: %d; %g\n", peakPos, channelData->spectrum.interval * peakPos );
+            position++;
         }
-
-        if ( peakPos ) { // use this frequency result if available
-            channelData->frequency = channelData->spectrum.interval * peakPos;
+        //printf( "pc %u: %d  %g\n", channel, peakCorrPos, 1.0 / (channelData->voltage.interval * peakCorrPos) );
+        //printf( "pf %u: %d  %g\n", channel, peakFreqPos, channelData->spectrum.interval * peakFreqPos );
+        // Calculate the peak frequency in Hz
+        // use frequency result if it is granular enough (+- 1%), or correlation is out of safe range
+        if ( peakFreqPos > peakCorrPos || peakFreqPos > 100 || peakCorrPos < 100 || peakCorrPos > sampleCount / 5 ) {
+            channelData->frequency = channelData->spectrum.interval * peakFreqPos;
+        } else {
+            channelData->frequency = 1.0 / (channelData->voltage.interval * peakCorrPos);
         }
     }
 }
