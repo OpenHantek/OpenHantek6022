@@ -179,6 +179,11 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, Expo
             return;
         dsoControl->setProbe( channel, probeUsed, probeAttn );
     });
+    connect(voltageDock, &VoltageDock::invertedChanged, [this, dsoControl, spec](ChannelID channel, bool inverted) {
+        if (channel >= spec->channels)
+            return;
+        dsoControl->setChannelInverted( channel, inverted );
+    });
     connect(voltageDock, &VoltageDock::gainChanged, dsoWidget, &DsoWidget::updateVoltageGain);
     connect(voltageDock, &VoltageDock::usedChanged, dsoWidget, &DsoWidget::updateVoltageUsed);
     connect(spectrumDock, &SpectrumDock::usedChanged, dsoWidget, &DsoWidget::updateSpectrumUsed);

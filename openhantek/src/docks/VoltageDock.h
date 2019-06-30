@@ -51,6 +51,11 @@ class VoltageDock : public QDockWidget {
     /// \param used True if the channel should be enabled, false otherwise.
     void setUsed(ChannelID channel, bool used);
 
+    /// \brief Set channel inverted.
+    /// \param channel The channel, that should be inverted.
+    /// \param used True if the channel should be inverted, false otherwise.
+    void setInverted(ChannelID channel, bool inverted);
+
   protected:
     void closeEvent(QCloseEvent *event);
 
@@ -81,4 +86,5 @@ class VoltageDock : public QDockWidget {
     void modeChanged(Dso::MathMode mode);                            ///< The mode for the math channels has been changed
     void usedChanged(ChannelID channel, bool used);                  ///< A channel has been enabled/disabled
     void probeAttnChanged(ChannelID channel, bool probeUsed, double probeAttn); ///< A channel probe gain has been changed
+    void invertedChanged(ChannelID channel, bool inverted);          ///< A channel "inverted" has been toggled
 };

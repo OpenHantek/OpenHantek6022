@@ -6,7 +6,7 @@ namespace Dso {
 
 /// \enum MathMode
 /// \brief The different math modes for the math-channel.
-enum class MathMode : unsigned { ADD_CH1_CH2, SUB_CH2_FROM_CH1, SUB_CH1_FROM_CH2, AC_CH1, AC_CH2 };
+enum class MathMode : unsigned { ADD_CH1_CH2, SUB_CH2_FROM_CH1, SUB_CH1_FROM_CH2, MUL_CH1_CH2, AC_CH1, AC_CH2 };
 extern Enum<Dso::MathMode, Dso::MathMode::ADD_CH1_CH2, Dso::MathMode::AC_CH2> MathModeEnum;
 
 template<class T>

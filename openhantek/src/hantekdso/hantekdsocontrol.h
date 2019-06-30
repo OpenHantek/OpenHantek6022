@@ -182,11 +182,13 @@ class HantekDsoControl : public QObject {
     /// are fetched from the device and no processing takes place.
     /// \param enabled Enables/Disables sampling
     void enableSampling(bool enabled);
+
     /// \brief Sets the samplerate of the oscilloscope.
     /// \param samplerate The samplerate that should be met (S/s), 0.0 to restore
     /// current samplerate.
     /// \return The samplerate that has been set, 0.0 on error.
     Dso::ErrorCode setSamplerate(double samplerate = 0.0);
+
     /// \brief Sets the time duration of one aquisition by adapting the samplerate.
     /// \param duration The record time duration that should be met (s), 0.0 to
     /// restore current record time.
@@ -198,38 +200,52 @@ class HantekDsoControl : public QObject {
     /// \param used true if the channel should be sampled.
     /// \return See ::Dso::ErrorCode.
     Dso::ErrorCode setChannelUsed(ChannelID channel, bool used);
+
+    /// \brief Enables/disables inverting of the given channel.
+    /// \param channel The channel that should be set.
+    /// \param used true if the channel is inverted.
+    /// \return See ::Dso::ErrorCode.
+    Dso::ErrorCode setChannelInverted(ChannelID channel, bool inverted);
+
     /// \brief Sets the gain for the given channel.
     /// Get the actual gain by specification.gainSteps[gainId]
     /// \param channel The channel that should be set.
     /// \param gain The gain that should be met (V/div).
     /// \return The gain that has been set, ::Dso::ErrorCode on error.
     Dso::ErrorCode setProbe(ChannelID channel, bool probeUsed, double probeAttn);
+
     /// \brief Sets the probe gain for the given channel.
     /// \param channel The channel that should be set.
     /// \param probeUsed probe attenuation was set
     /// \param probeAttn gain of probe is set.
     /// \return error code.
     Dso::ErrorCode setGain(ChannelID channel, double gain);
+
     /// \brief Set the trigger mode.
     /// \return See ::Dso::ErrorCode.
     Dso::ErrorCode setTriggerMode(Dso::TriggerMode mode);
+
     /// \brief Set the trigger source.
     /// \param id The channel that should be used as trigger.
     /// \return See ::Dso::ErrorCode.
     Dso::ErrorCode setTriggerSource(ChannelID channel);
+
     /// \brief Set the trigger level.
     /// \param channel The channel that should be set.
     /// \param level The new trigger level (V).
     /// \return See ::Dso::ErrorCode.
     Dso::ErrorCode setTriggerLevel(ChannelID channel, double level);
+
     /// \brief Set the trigger slope.
     /// \param slope The Slope that should cause a trigger.
     /// \return See ::Dso::ErrorCode.
     Dso::ErrorCode setTriggerSlope(Dso::Slope slope);
+
     /// \brief Set the trigger position.
     /// \param position The new trigger position (in s).
     /// \return The trigger position that has been set.
     Dso::ErrorCode setTriggerPosition(double position);
+
     /// \brief Sets the calibration frequency of the oscilloscope.
     /// \param calfreq The calibration frequency.
     /// \return The tfrequency that has been set, ::Dso::ErrorCode on error.

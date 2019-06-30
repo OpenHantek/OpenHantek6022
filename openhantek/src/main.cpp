@@ -61,6 +61,7 @@ void applySettingsToDevice(HantekDsoControl *dsoControl, DsoSettingsScope *scope
         dsoControl->setGain(channel, scope->gain(channel) * DIVS_VOLTAGE);
         dsoControl->setTriggerLevel(channel, scope->voltage[channel].trigger);
         dsoControl->setChannelUsed(channel, mathUsed | scope->anyUsed(channel));
+        dsoControl->setChannelInverted(channel, scope->voltage[channel].inverted);
         dsoControl->setProbe( channel, scope->voltage[channel].probeUsed, scope->voltage[channel].probeAttn );
     }
 

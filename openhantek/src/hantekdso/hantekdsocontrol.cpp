@@ -225,6 +225,7 @@ void HantekDsoControl::convertRawDataToSamples(const std::vector<unsigned char> 
         const double offset = controlsettings.voltage[channel].offsetReal;
         const double gainStep = specification->gain[gainID].gainSteps;
         const double probeAttn = controlsettings.voltage[channel].probeAttn;
+        const double sign = controlsettings.voltage[channel].inverted ? -1.0 : 1.0;
         int shiftDataBuf = 0;
         double gainCalibration = 1.0;
 
@@ -261,7 +262,7 @@ void HantekDsoControl::convertRawDataToSamples(const std::vector<unsigned char> 
                 sample += (double)(rawSample - shiftDataBuf); // int - int
             }
             sample /= downsampling;
-            result.data[ channel ][ index ] = (sample / limit - offset) * gainCalibration * gainStep * probeAttn;
+            result.data[ channel ][ index ] = sign * (sample / limit - offset) * gainCalibration * gainStep * probeAttn;
         }
     }
 }
@@ -444,6 +445,19 @@ Dso::ErrorCode HantekDsoControl::setChannelUsed(ChannelID channel, bool used) {
     controlsettings.usedChannels = channelCount;
     this->updateSamplerateLimits();
     this->restoreTargets();
+    channelSetupChanged = true; // skip next raw samples block to avoid artefacts
+    return Dso::ErrorCode::NONE;
+}
+
+
+Dso::ErrorCode HantekDsoControl::setChannelInverted(ChannelID channel, bool inverted) {
+    if (!device->isConnected())
+        return Dso::ErrorCode::CONNECTION;
+    if (channel >= specification->channels)
+        return Dso::ErrorCode::PARAMETER;
+    // Update settings
+    //printf("setChannelInverted %s\n", inverted?"true":"false");
+    controlsettings.voltage[channel].inverted = inverted;
     channelSetupChanged = true; // skip next raw samples block to avoid artefacts
     return Dso::ErrorCode::NONE;
 }

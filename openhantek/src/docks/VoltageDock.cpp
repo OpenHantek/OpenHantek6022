@@ -78,6 +78,8 @@ VoltageDock::VoltageDock(DsoSettingsScope *scope, const Dso::ControlSpecificatio
         setGain(channel, scope->voltage[channel].gainStepIndex);
         setUsed(channel, scope->voltage[channel].used);
         setAttn(channel, scope->voltage[channel].probeUsed);
+        setInverted(channel, scope->voltage[channel].inverted);
+        //printf("VD::setInverted %d %d\n", channel, scope->voltage[channel].inverted);
 
         connect(b.gainComboBox, SELECT<int>::OVERLOAD_OF(&QComboBox::currentIndexChanged), [this,channel](int index) {
             this->scope->voltage[channel].gainStepIndex = (unsigned)index;
@@ -92,11 +94,12 @@ VoltageDock::VoltageDock(DsoSettingsScope *scope, const Dso::ControlSpecificatio
         });
         connect(b.invertCheckBox, &QAbstractButton::toggled, [this,channel](bool checked) {
             this->scope->voltage[channel].inverted = checked;
+            emit invertedChanged( channel, checked );
         });
         connect(b.miscComboBox, SELECT<int>::OVERLOAD_OF(&QComboBox::currentIndexChanged), [this,channel,spec,scope](int index){
             this->scope->voltage[channel].couplingOrMathIndex = (unsigned)index;
             if (channel < spec->channels) {
-                printf("miscComboBox CH%d, index %d\n", channel, index );
+                //printf("miscComboBox CH%d, index %d\n", channel, index );
                 //emit couplingChanged(channel, scope->coupling(channel, spec));
             } else {
                 emit modeChanged(Dso::getMathMode(this->scope->voltage[channel]));
@@ -154,4 +157,10 @@ void VoltageDock::setUsed(ChannelID channel, bool used) {
     if (channel >= scope->voltage.size()) return;
     QSignalBlocker blocker(channelBlocks[channel].usedCheckBox);
     channelBlocks[channel].usedCheckBox->setChecked(used);
+}
+
+void VoltageDock::setInverted(ChannelID channel, bool inverted) {
+    if (channel >= scope->voltage.size()) return;
+    QSignalBlocker blocker(channelBlocks[channel].invertCheckBox);
+    channelBlocks[channel].invertCheckBox->setChecked(inverted);
 }

@@ -43,6 +43,7 @@ struct ControlSettingsVoltage {
     double offsetReal = 0.0; ///< The real offset for each channel (Due to quantization)
     unsigned gain = 0;       ///< The gain id
     bool used = false;       ///< true, if the channel is used
+    bool inverted = false;   ///< true, if the channel is inverted
     double probeAttn = 1.0;  ///< attenuation of probe
     bool probeUsed = false;   ///< probe attn used
 };

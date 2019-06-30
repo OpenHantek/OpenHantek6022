@@ -68,13 +68,12 @@ void GraphGenerator::generateGraphsTYvoltage(PPresult *result) {
         std::vector<double>::const_iterator dataIterator = samples.sample.begin();
         const float gain = (float)scope->gain(channel);
         const float offset = (float)scope->voltage[channel].offset;
-        const float invert = scope->voltage[channel].inverted ? -1.0f : 1.0f;
 
         std::advance(dataIterator, skipSamples);
 
         for (unsigned int position = 0; position < sampleCount; ++position) {
             target.push_back(QVector3D(position * horizontalFactor - DIVS_TIME / 2,
-                                       (float)*(dataIterator++) / gain * invert + offset, 0.0));
+                                       (float)*(dataIterator++) / gain + offset, 0.0));
         }
     }
 }
@@ -171,12 +170,10 @@ void GraphGenerator::generateGraphsXY(PPresult *result, const DsoSettingsScope *
         const double yGain = scope->gain(yChannel);
         const double xOffset = scope->voltage[xChannel].offset;
         const double yOffset = scope->voltage[yChannel].offset;
-        const double xInvert = scope->voltage[xChannel].inverted ? -1.0 : 1.0;
-        const double yInvert = scope->voltage[yChannel].inverted ? -1.0 : 1.0;
 
         for (unsigned int position = 0; position < sampleCount; ++position) {
-            drawLines.push_back(QVector3D((float)(*(xIterator++) / xGain * xInvert + xOffset),
-                                          (float)(*(yIterator++) / yGain * yInvert + yOffset), 0.0));
+            drawLines.push_back(QVector3D((float)(*(xIterator++) / xGain + xOffset),
+                                          (float)(*(yIterator++) / yGain + yOffset), 0.0));
         }
     }
 }

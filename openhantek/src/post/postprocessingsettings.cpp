@@ -19,6 +19,8 @@ QString mathModeString(MathMode mode) {
         return QCoreApplication::tr("CH1 - CH2");
     case MathMode::SUB_CH1_FROM_CH2:
         return QCoreApplication::tr("CH2 - CH1");
+    case MathMode::MUL_CH1_CH2:
+        return QCoreApplication::tr("CH1 * CH2");
     case MathMode::AC_CH1:
         return QCoreApplication::tr("CH1 AC");
     case MathMode::AC_CH2:
