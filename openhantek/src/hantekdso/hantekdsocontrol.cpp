@@ -458,7 +458,6 @@ Dso::ErrorCode HantekDsoControl::setChannelInverted(ChannelID channel, bool inve
     // Update settings
     //printf("setChannelInverted %s\n", inverted?"true":"false");
     controlsettings.voltage[channel].inverted = inverted;
-    channelSetupChanged = true; // skip next raw samples block to avoid artefacts
     return Dso::ErrorCode::NONE;
 }
 

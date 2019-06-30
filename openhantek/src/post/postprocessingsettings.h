@@ -43,7 +43,7 @@ Q_DECLARE_METATYPE(Dso::MathMode)
 Q_DECLARE_METATYPE(Dso::WindowFunction)
 
 struct DsoSettingsPostProcessing {
-    Dso::WindowFunction spectrumWindow = Dso::WindowFunction::HANN; ///< Window function for DFT
-    double spectrumReference = 0.0;                                 ///< Reference level for spectrum in dBm
-    double spectrumLimit = -20.0; ///< Minimum magnitude of the spectrum (Avoids peaks)
+    Dso::WindowFunction spectrumWindow = Dso::WindowFunction::HAMMING; ///< Window function for DFT
+    double spectrumReference = 0.0;                                 ///< Reference level for spectrum in dBu
+    double spectrumLimit = -60.0; ///< Minimum magnitude of the spectrum (Avoids peaks)
 };

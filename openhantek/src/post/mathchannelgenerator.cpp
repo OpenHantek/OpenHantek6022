@@ -32,30 +32,28 @@ void MathChannelGenerator::process(PPresult *result) {
         // Calculate values and write them into the sample buffer
         std::vector<double>::const_iterator ch1Iterator = result->data(0)->voltage.sample.begin();
         std::vector<double>::const_iterator ch2Iterator = result->data(1)->voltage.sample.begin();
-        double (*calculate)(double,double);
+        double (*calculate)( double, double );
 
         switch (Dso::getMathMode(scope->voltage[physicalChannels])) {
             case Dso::MathMode::ADD_CH1_CH2:
-                calculate = [](double val1, double val2) { return val1 + val2;};
+                calculate = []( double val1, double val2 ) -> double { return val1 + val2; };
                 break;
             case Dso::MathMode::SUB_CH2_FROM_CH1:
-                calculate = [](double val1, double val2) { return val1 - val2;};
+                calculate = []( double val1, double val2 ) -> double { return val1 - val2; };
                 break;
             case Dso::MathMode::SUB_CH1_FROM_CH2:
-                calculate = [](double val1, double val2) { return val2 - val1;};
+                calculate = []( double val1, double val2 ) -> double { return val2 - val1; };
                 break;
             case Dso::MathMode::MUL_CH1_CH2:
                 // multiply e.g. voltage and current (measured with a 1 ohm shunt) to get momentary power
-                calculate = [](double val1, double val2) { return val1 * val2;};
+                calculate = []( double val1, double val2 ) -> double { return val1 * val2; };
                 break;
             default:
-                calculate = [](double val1, double val2) { return val1 + val2;};
+                calculate = []( double val1, double val2 ) -> double { return 0.0; };
                 break;
         }
         for (std::vector<double>::iterator it = resultData.begin(); it != resultData.end(); ++it) {
-            *it = sign * calculate( *ch1Iterator, *ch2Iterator );
-            ++ch1Iterator;
-            ++ch2Iterator;
+            *it = sign * calculate( *ch1Iterator++, *ch2Iterator++ );
         }
     } else { // unary operators (calculate "AC coupling")
         if ( Dso::getMathMode( scope->voltage[physicalChannels] ) == Dso::MathMode::AC_CH1 )

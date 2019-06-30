@@ -23,6 +23,8 @@ SpectrumGenerator::~SpectrumGenerator() {
     if (lastWindowBuffer) fftw_free(lastWindowBuffer);
 }
 
+static double dB( double dB ) { return pow( 10.0, dB/20.0 ); }
+
 void SpectrumGenerator::process(PPresult *result) {
     // Calculate frequencies and spectrums
     for (ChannelID channel = 0; channel < result->channelCount(); ++channel) {
@@ -35,6 +37,7 @@ void SpectrumGenerator::process(PPresult *result) {
             continue;
         }
         // Calculate new window
+        // scale all windows to display 1 Veff as 0 dBu reference level.
         size_t sampleCount = channelData->voltage.sample.size();
         if (!lastWindowBuffer || lastWindow != postprocessing->spectrumWindow || lastRecordLength != sampleCount) {
             if (lastWindowBuffer) fftw_free(lastWindowBuffer);
@@ -47,54 +50,54 @@ void SpectrumGenerator::process(PPresult *result) {
             switch (postprocessing->spectrumWindow) {
             case Dso::WindowFunction::HAMMING:
                 for (unsigned int windowPosition = 0; windowPosition < lastRecordLength; ++windowPosition)
-                    *(lastWindowBuffer + windowPosition) = 0.54 - 0.46 * cos(2.0 * M_PI * windowPosition / windowEnd);
+                    *(lastWindowBuffer + windowPosition) = ( 0.54 - 0.46 * cos( 2.0 * M_PI * windowPosition / windowEnd ) ) * dB( 2.5);
                 break;
             case Dso::WindowFunction::HANN:
                 for (unsigned int windowPosition = 0; windowPosition < lastRecordLength; ++windowPosition)
-                    *(lastWindowBuffer + windowPosition) = 0.5 * (1.0 - cos(2.0 * M_PI * windowPosition / windowEnd));
+                    *(lastWindowBuffer + windowPosition) = ( 0.5 * ( 1.0 - cos( 2.0 * M_PI * windowPosition / windowEnd ) ) ) * dB( 3.0 );
                 break;
             case Dso::WindowFunction::COSINE:
                 for (unsigned int windowPosition = 0; windowPosition < lastRecordLength; ++windowPosition)
-                    *(lastWindowBuffer + windowPosition) = sin(M_PI * windowPosition / windowEnd);
+                    *(lastWindowBuffer + windowPosition) = sin( M_PI * windowPosition / windowEnd ) * dB( 1.0 );
                 break;
             case Dso::WindowFunction::LANCZOS:
                 for (unsigned int windowPosition = 0; windowPosition < lastRecordLength; ++windowPosition) {
                     double sincParameter = (2.0 * windowPosition / windowEnd - 1.0) * M_PI;
                     if (sincParameter == 0)
-                        *(lastWindowBuffer + windowPosition) = 1;
+                        *(lastWindowBuffer + windowPosition) = 1 * dB( 1.5 );
                     else
-                        *(lastWindowBuffer + windowPosition) = sin(sincParameter) / sincParameter;
+                        *(lastWindowBuffer + windowPosition) = sin( sincParameter ) / sincParameter * dB( 1.5 );
                 }
                 break;
             case Dso::WindowFunction::BARTLETT:
                 for (unsigned int windowPosition = 0; windowPosition < lastRecordLength; ++windowPosition)
                     *(lastWindowBuffer + windowPosition) =
-                        2.0 / windowEnd * (windowEnd / 2 - std::abs((double)(windowPosition - windowEnd / 2.0)));
+                        ( 2.0 / windowEnd * (windowEnd / 2 - std::abs((double)(windowPosition - windowEnd / 2.0))) ) * dB( 3.3 );
                 break;
             case Dso::WindowFunction::TRIANGULAR:
                 for (unsigned int windowPosition = 0; windowPosition < lastRecordLength; ++windowPosition)
                     *(lastWindowBuffer + windowPosition) =
                         2.0 / lastRecordLength *
-                        (lastRecordLength / 2 - std::abs((double)(windowPosition - windowEnd / 2.0)));
+                        (lastRecordLength / 2 - std::abs((double)(windowPosition - windowEnd / 2.0))) * dB( 3.3 );
                 break;
             case Dso::WindowFunction::GAUSS: {
                 double sigma = 0.4;
                 for (unsigned int windowPosition = 0; windowPosition < lastRecordLength; ++windowPosition)
                     *(lastWindowBuffer + windowPosition) =
-                        exp(-0.5 * pow(((windowPosition - windowEnd / 2) / (sigma * windowEnd / 2)), 2));
+                        exp(-0.5 * pow(((windowPosition - windowEnd / 2) / (sigma * windowEnd / 2)), 2)) * dB( 9.4 );
             } break;
             case Dso::WindowFunction::BARTLETTHANN:
                 for (unsigned int windowPosition = 0; windowPosition < lastRecordLength; ++windowPosition)
-                    *(lastWindowBuffer + windowPosition) = 0.62 -
-                                                           0.48 * std::abs((double)(windowPosition / windowEnd - 0.5)) -
-                                                           0.38 * cos(2.0 * M_PI * windowPosition / windowEnd);
+                    *(lastWindowBuffer + windowPosition) = ( 0.62 -
+                                                             0.48 * std::abs((double)(windowPosition / windowEnd - 0.5)) -
+                                                             0.38 * cos(2.0 * M_PI * windowPosition / windowEnd) ) * dB( 5.5 );
                 break;
             case Dso::WindowFunction::BLACKMAN: {
                 double alpha = 0.16;
                 for (unsigned int windowPosition = 0; windowPosition < lastRecordLength; ++windowPosition)
-                    *(lastWindowBuffer + windowPosition) = (1 - alpha) / 2 -
+                    *(lastWindowBuffer + windowPosition) = ( (1 - alpha) / 2 -
                                                            0.5 * cos(2.0 * M_PI * windowPosition / windowEnd) +
-                                                           alpha / 2 * cos(4.0 * M_PI * windowPosition / windowEnd);
+                                                           alpha / 2 * cos(4.0 * M_PI * windowPosition / windowEnd) ) * dB( 4.8 );
             } break;
             // case Dso::WindowFunction::WINDOW_KAISER:
             // TODO WINDOW_KAISER
@@ -105,35 +108,35 @@ void SpectrumGenerator::process(PPresult *result) {
             // break;
             case Dso::WindowFunction::NUTTALL:
                 for (unsigned int windowPosition = 0; windowPosition < lastRecordLength; ++windowPosition)
-                    *(lastWindowBuffer + windowPosition) = 0.355768 -
-                                                           0.487396 * cos(2 * M_PI * windowPosition / windowEnd) +
-                                                           0.144232 * cos(4 * M_PI * windowPosition / windowEnd) -
-                                                           0.012604 * cos(6 * M_PI * windowPosition / windowEnd);
+                    *(lastWindowBuffer + windowPosition) = ( 0.355768 -
+                                                             0.487396 * cos(2 * M_PI * windowPosition / windowEnd) +
+                                                             0.144232 * cos(4 * M_PI * windowPosition / windowEnd) -
+                                                             0.012604 * cos(6 * M_PI * windowPosition / windowEnd) ) * dB( 6.0 );
                 break;
             case Dso::WindowFunction::BLACKMANHARRIS:
                 for (unsigned int windowPosition = 0; windowPosition < lastRecordLength; ++windowPosition)
-                    *(lastWindowBuffer + windowPosition) = 0.35875 -
-                                                           0.48829 * cos(2 * M_PI * windowPosition / windowEnd) +
-                                                           0.14128 * cos(4 * M_PI * windowPosition / windowEnd) -
-                                                           0.01168 * cos(6 * M_PI * windowPosition / windowEnd);
+                    *(lastWindowBuffer + windowPosition) = ( 0.35875 -
+                                                             0.48829 * cos(2 * M_PI * windowPosition / windowEnd) +
+                                                             0.14128 * cos(4 * M_PI * windowPosition / windowEnd) -
+                                                             0.01168 * cos(6 * M_PI * windowPosition / windowEnd) ) * dB( 6.0 );
                 break;
             case Dso::WindowFunction::BLACKMANNUTTALL:
                 for (unsigned int windowPosition = 0; windowPosition < lastRecordLength; ++windowPosition)
-                    *(lastWindowBuffer + windowPosition) = 0.3635819 -
-                                                           0.4891775 * cos(2 * M_PI * windowPosition / windowEnd) +
-                                                           0.1365995 * cos(4 * M_PI * windowPosition / windowEnd) -
-                                                           0.0106411 * cos(6 * M_PI * windowPosition / windowEnd);
+                    *(lastWindowBuffer + windowPosition) = ( 0.3635819 -
+                                                             0.4891775 * cos(2 * M_PI * windowPosition / windowEnd) +
+                                                             0.1365995 * cos(4 * M_PI * windowPosition / windowEnd) -
+                                                             0.0106411 * cos(6 * M_PI * windowPosition / windowEnd) ) * dB( 6.0 );
                 break;
             case Dso::WindowFunction::FLATTOP: // wikipedia.de
                 for (unsigned int windowPosition = 0; windowPosition < lastRecordLength; ++windowPosition)
-                    *(lastWindowBuffer + windowPosition) = 1.0 - 1.93 * cos(2 * M_PI * windowPosition / windowEnd) +
+                    *(lastWindowBuffer + windowPosition) = ( 1.0 - 1.93 * cos(2 * M_PI * windowPosition / windowEnd) +
                                                            1.29 * cos(4 * M_PI * windowPosition / windowEnd) -
                                                            0.388 * cos(6 * M_PI * windowPosition / windowEnd) +
-                                                           0.028 * cos(8 * M_PI * windowPosition / windowEnd);
+                                                           0.028 * cos(8 * M_PI * windowPosition / windowEnd) ) * dB( -3.0 );
                 break;
             default: // Dso::WINDOW_RECTANGULAR
                 for (unsigned int windowPosition = 0; windowPosition < lastRecordLength; ++windowPosition)
-                    *(lastWindowBuffer + windowPosition) = 1.0;
+                    *(lastWindowBuffer + windowPosition) = 1.0 * dB( -3.0 );
             }
         }
 
@@ -235,8 +238,8 @@ void SpectrumGenerator::process(PPresult *result) {
 
         // Finally calculate the real spectrum (it's also used for frequency display)
         unsigned int peakFreqPos = 0; // position of max spectrum peak
-        // Convert values into dB (Relative to the reference level)
-        double offset = 60 - postprocessing->spectrumReference - 20 * log10(dftLength);
+        // Convert values into dB (Relative to the reference level 0 dBu = 1V eff)
+        double offset = - postprocessing->spectrumReference - 20 * log10(dftLength);
         double offsetLimit = postprocessing->spectrumLimit - postprocessing->spectrumReference;
         position = 0;
         double peakSpectrum = 10 * log10( fabs( channelData->spectrum.sample[0] ) ); // get a start value as reference

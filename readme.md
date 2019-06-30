@@ -24,6 +24,10 @@ It was initially developed by [David Gräff and others](https://github.com/OpenH
 * Sample rates 100, 200, 500 kS/s, 1, 2, 5, 10, 12, 15, 24, 30 MS/s.
 * :star: NEW: Downsampling sample rates 10, 20, 50 kS/s.
 * Math channel with these modes: Ch1+Ch2, Ch1-Ch2, Ch2-Ch1.
+* :star: NEW: Math mode Ch1*Ch2,
+  e.g. for showing momentary power as product of voltage and current
+  (when measured with a 1 Ω shunt in the GND line 1 V in MATH equates 1 W).
+  Or use a current probe if you're lucky to own one.
 * :star: NEW: Math mode AC, calculate AC part of Ch1 or Ch2.
 * Freely configurable colors.
 * Export to CSV, JPG, PNG or print the graphs.
