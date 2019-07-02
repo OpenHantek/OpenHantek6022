@@ -81,10 +81,13 @@ void SpectrumGenerator::process(PPresult *result) {
                         (lastRecordLength / 2 - std::abs((double)(windowPosition - windowEnd / 2.0)));
                 break;
             case Dso::WindowFunction::GAUSS: {
-                double sigma = 0.5;
-                for (unsigned int windowPosition = 0; windowPosition < lastRecordLength; ++windowPosition)
-                    weight += *(lastWindowBuffer + windowPosition) =
-                        exp(-0.5 * pow(((windowPosition - windowEnd / 2) / (sigma * windowEnd / 2)), 2));
+                const double sigma = 1.0 / exp( 1.0 );
+                double w;
+                for (unsigned int windowPosition = 0; windowPosition < lastRecordLength; ++windowPosition) {
+                    w = ( (double)windowPosition - windowEnd / 2.0 ) / ( sigma * windowEnd / 2.0 );
+                    w *= w;
+                    weight += *(lastWindowBuffer + windowPosition) = exp( -w );
+                }
             } break;
             case Dso::WindowFunction::BARTLETTHANN:
                 for (unsigned int windowPosition = 0; windowPosition < lastRecordLength; ++windowPosition)
@@ -138,8 +141,15 @@ void SpectrumGenerator::process(PPresult *result) {
                 for (unsigned int windowPosition = 0; windowPosition < lastRecordLength; ++windowPosition)
                     weight += *(lastWindowBuffer + windowPosition) = 1.0;
             }
-            weight = lastRecordLength / weight / 1.09; //normalise all windows equal to rectangular window
-            //printf( "window %u, weight %g\n", (unsigned)postprocessing->spectrumWindow, weight );
+            // weight is the area below the window function
+            weight = lastRecordLength / weight; //normalise all windows equal to the rectangular window
+
+            // DFT transforms a 1V sin(ωt) signal to 1 = 0 dB, RMS = 0.707 V = sqrt(0.5) V (-3dBV)
+            // If we want to scale to 0 dBu = 0 dBm @ 600 Ω, RMS = 0.775V = sqrt(1 mW * 600 Ω)
+            // we must scale by sqrt(0.5/0.6) = -2.2 dB
+            weight *= sqrt(0.5); // scale display to 0 dBV -> 1V RMS = 0dB
+            // printf( "window %u, weight %g\n", (unsigned)postprocessing->spectrumWindow, weight );
+            // scale the windowed samples
             for (unsigned int windowPosition = 0; windowPosition < lastRecordLength; ++windowPosition)
                 *(lastWindowBuffer + windowPosition) *= weight;
         }

@@ -23,7 +23,7 @@ DsoConfigAnalysisPage::DsoConfigAnalysisPage(DsoSettings *settings, QWidget *par
     referenceLevelSpinBox->setMinimum(-100.0);
     referenceLevelSpinBox->setMaximum(100.0);
     referenceLevelSpinBox->setValue(settings->post.spectrumReference);
-    referenceLevelUnitLabel = new QLabel(tr("dBu"));
+    referenceLevelUnitLabel = new QLabel(tr("dBV"));
     referenceLevelLayout = new QHBoxLayout();
     referenceLevelLayout->addWidget(referenceLevelSpinBox);
     referenceLevelLayout->addWidget(referenceLevelUnitLabel);
@@ -34,7 +34,7 @@ DsoConfigAnalysisPage::DsoConfigAnalysisPage(DsoSettings *settings, QWidget *par
     minimumMagnitudeSpinBox->setMinimum(-100.0);
     minimumMagnitudeSpinBox->setMaximum(100.0);
     minimumMagnitudeSpinBox->setValue(settings->post.spectrumLimit);
-    minimumMagnitudeUnitLabel = new QLabel(tr("dBu"));
+    minimumMagnitudeUnitLabel = new QLabel(tr("dBV"));
     minimumMagnitudeLayout = new QHBoxLayout();
     minimumMagnitudeLayout->addWidget(minimumMagnitudeSpinBox);
     minimumMagnitudeLayout->addWidget(minimumMagnitudeUnitLabel);
