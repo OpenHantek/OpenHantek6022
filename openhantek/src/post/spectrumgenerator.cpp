@@ -81,10 +81,10 @@ void SpectrumGenerator::process(PPresult *result) {
                         (lastRecordLength / 2 - std::abs((double)(windowPosition - windowEnd / 2.0)));
                 break;
             case Dso::WindowFunction::GAUSS: {
-                const double sigma = 1.0 / exp( 1.0 );
+                const double sigma = 0.5;
                 double w;
                 for (unsigned int windowPosition = 0; windowPosition < lastRecordLength; ++windowPosition) {
-                    w = ( (double)windowPosition - windowEnd / 2.0 ) / ( sigma * windowEnd / 2.0 );
+                    w = ( (double)windowPosition - lastRecordLength / 2.0 ) / ( sigma * lastRecordLength / 2.0 );
                     w *= w;
                     weight += *(lastWindowBuffer + windowPosition) = exp( -w );
                 }
@@ -251,35 +251,38 @@ void SpectrumGenerator::process(PPresult *result) {
         correlation.reset(nullptr);
 
         // Finally calculate the real spectrum (it's also used for frequency display)
-        unsigned int peakFreqPos = 0; // position of max spectrum peak
         // Convert values into dB (Relative to the reference level 0 dBu = 1V eff)
         double offset = - postprocessing->spectrumReference - 20 * log10(dftLength);
         double offsetLimit = postprocessing->spectrumLimit - postprocessing->spectrumReference;
+        double peakSpectrum = offsetLimit; // get a start value for peak search
+        unsigned int peakFreqPos = 0; // initial position of max spectrum peak
         position = 0;
-        double peakSpectrum = 10 * log10( fabs( channelData->spectrum.sample[0] ) ); // get a start value as reference
         for (std::vector<double>::iterator spectrumIterator = channelData->spectrum.sample.begin();
              spectrumIterator != channelData->spectrum.sample.end(); ++spectrumIterator) {
             // spectrum is power spectrum, but show amplitude spectrum -> 10 * log...
-            double value = 10 * log10( fabs( *spectrumIterator ) ) + offset;
+            double value = 10 * log10( *spectrumIterator ) + offset;
             // Check if this value has to be limited
-            if (offsetLimit > value)
+            if (value < offsetLimit)
                 value = offsetLimit;
             *spectrumIterator = value;
             // detect frequency peak
-            if ( value >= peakSpectrum  ) {
+            if ( value > peakSpectrum  ) {
                 peakSpectrum = value;
                 peakFreqPos = position;
             }
             position++;
         }
-        //printf( "pc %u: %d  %g\n", channel, peakCorrPos, 1.0 / (channelData->voltage.interval * peakCorrPos) );
-        //printf( "pf %u: %d  %g\n", channel, peakFreqPos, channelData->spectrum.interval * peakFreqPos );
-        // Calculate the peak frequency in Hz
-        // use frequency result if it is granular enough (+- 1%), or correlation is out of safe range
-        if ( peakFreqPos > peakCorrPos || peakFreqPos > 100 || peakCorrPos < 100 || peakCorrPos > sampleCount / 5 ) {
-            channelData->frequency = channelData->spectrum.interval * peakFreqPos;
-        } else {
-            channelData->frequency = 1.0 / (channelData->voltage.interval * peakCorrPos);
+        // Calculate both peak frequencies (correlation and spectrum) in Hz
+        double pF = channelData->spectrum.interval * peakFreqPos;
+        double pC = 1.0 / ( channelData->voltage.interval * peakCorrPos );
+        //printf( "pF %u: %d  %g\n", channel, peakFreqPos, pF );
+        //printf( "pC %u: %d  %g\n", channel, peakCorrPos, pC );
+        if ( peakFreqPos > peakCorrPos || peakFreqPos > 100  // use frequency result if it is granular enough (+- 1%)
+           || peakCorrPos < 100 || peakCorrPos > sampleCount / 2 // or correlation is out of safe range
+           || pF > pC ) { // or frequency result is higher as correlation result (due to subharmonics)
+            channelData->frequency = pF;
+        } else { // fall back to correlation
+            channelData->frequency = pC;
         }
     }
 }
