@@ -196,11 +196,14 @@ void SpectrumGenerator::process(PPresult *result) {
         fftw_destroy_plan(fftPlan);
 
         // Do an autocorrelation to get the frequency of the signal
+        // fft: f(t) ⊶ F(ω); calculate power spectrum F²(ω)
+        // ifft: F(ω) ∙ F(ω) ⊷ f(t) ⊗ f(t) (convolution of f(t) with f(t), i.e. autocorrelation)
         // HORO:
         // This is quite inaccurate at high frequencies due to the used algorithm:
         // as we do a autocorrelation the resolution at high frequencies is limited by voltagestep interval
-        // e.g. at 6 MHz we get correlation at time shift of either 4 or 5 or 6 -> 5.0 / 6.0 / 7.5 MHz
-        // use spectrum instead if peak position is too small.
+        // e.g. at 6 MHz sampled with 30 MS/s we get correlation at time shift
+        // of either 6 or 5 or 4 samples -> 30 MHz / 6 = 5.0 MHz ; 30 / 5 = 6.0 ; 30 / 4 = 7.5
+        // in these cases use spectrum instead if peak position is too small.
 
         // create a copy of powerSpectrum because hc2r iDFT destroys spectrum input
         const double norm = 1.0 / dftLength / dftLength;
