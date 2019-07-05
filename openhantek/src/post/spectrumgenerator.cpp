@@ -237,16 +237,23 @@ void SpectrumGenerator::process(PPresult *result) {
         fftw_destroy_plan(fftPlan);
 
         // Get the frequency from the correlation results
-        double minimumCorrelation = correlation[0];
-        double peakCorrelation = 0;
         unsigned int peakCorrPos = 0;
-
-        for ( position = 1; position < sampleCount / 2; ++position ) {
-            if ( correlation[position] > peakCorrelation && correlation[position] > minimumCorrelation ) {
-                peakCorrelation = correlation[position];
-                peakCorrPos = position;
-            } else if (correlation[position] < minimumCorrelation)
-                minimumCorrelation = correlation[position];
+        double minCorr = 0;
+        double maxCorr = 0;
+        unsigned maxCorrPos = 0;
+        // search from right to left for a max and remember this if a following min corr (<0) is found
+        for ( position = sampleCount / 2; position > 1; --position ) { // go down to get leftmost peak (= max freq)
+            if ( correlation[position] > maxCorr ) { // find (local) max
+                maxCorr = correlation[position];
+                maxCorrPos = position;
+                minCorr = 0; // reset minimum to start new min search
+                // printf( "max %d: %g\n", position, maxCorr );
+            } else if ( correlation[position] < minCorr ) { // search for local min
+                minCorr = correlation[position];
+                maxCorr = 0; // reset max to start new max seach
+                peakCorrPos = maxCorrPos;
+                // printf( "min %d: %g\n", position, minCorr );
+            }
         }
         correlation.reset(nullptr);
 
@@ -272,16 +279,17 @@ void SpectrumGenerator::process(PPresult *result) {
             }
             position++;
         }
+
         // Calculate both peak frequencies (correlation and spectrum) in Hz
         double pF = channelData->spectrum.interval * peakFreqPos;
         double pC = 1.0 / ( channelData->voltage.interval * peakCorrPos );
         //printf( "pF %u: %d  %g\n", channel, peakFreqPos, pF );
         //printf( "pC %u: %d  %g\n", channel, peakCorrPos, pC );
-        if ( peakFreqPos > peakCorrPos || peakFreqPos > 100  // use frequency result if it is granular enough (+- 1%)
-           || peakCorrPos < 100 || peakCorrPos > sampleCount / 2 // or correlation is out of safe range
-           || pF > pC ) { // or frequency result is higher as correlation result (due to subharmonics)
+        if ( peakFreqPos > peakCorrPos // use frequency result if it is more granular than correlation
+           || peakFreqPos > 100        // or at least if it is granular enough (+- 1% resolution)
+           || peakCorrPos < 100 || peakCorrPos > sampleCount / 4 ) { // or if correlation is out of safe range
             channelData->frequency = pF;
-        } else { // fall back to correlation
+        } else { // otherwise fall back to correlation
             channelData->frequency = pC;
         }
     }
