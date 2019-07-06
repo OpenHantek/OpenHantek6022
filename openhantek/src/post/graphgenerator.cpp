@@ -31,9 +31,6 @@ static const SampleValues &useVoltSamplesOf(ChannelID channel, const PPresult *r
 GraphGenerator::GraphGenerator(const DsoSettingsScope *scope) : scope(scope) {}
 
 
-bool GraphGenerator::isReady() const { return ready; }
-
-
 void GraphGenerator::generateGraphsTYvoltage(PPresult *result) {
     //printf( "GraphGenerator::generateGraphsTYvoltage()\n" );
     unsigned skipSamples = result->skipSamples;

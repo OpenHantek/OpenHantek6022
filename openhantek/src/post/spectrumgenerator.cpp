@@ -196,7 +196,7 @@ void SpectrumGenerator::process(PPresult *result) {
         fftw_destroy_plan(fftPlan);
 
         // Do an autocorrelation to get the frequency of the signal
-        // fft: f(t) ⊶ F(ω); calculate power spectrum F²(ω)
+        // fft: f(t) ⊶ F(ω); calculate power spectrum |F(ω)|²
         // ifft: F(ω) ∙ F(ω) ⊷ f(t) ⊗ f(t) (convolution of f(t) with f(t), i.e. autocorrelation)
         // HORO:
         // This is quite inaccurate at high frequencies due to the used algorithm:

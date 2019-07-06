@@ -77,7 +77,7 @@ void MathChannelGenerator::process(PPresult *result) {
         // ... and remove DC component to get AC
         std::vector<double>::const_iterator srcIt = result->data( src )->voltage.sample.begin();
         for ( std::vector<double>::iterator dstIt = resultData.begin(); dstIt != resultData.end(); ++dstIt ) {
-            *dstIt = sign * *srcIt++ - average;
+            *dstIt = sign * ( *srcIt++ - average );
         }
     }
 }

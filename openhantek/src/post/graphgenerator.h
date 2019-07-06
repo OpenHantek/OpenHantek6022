@@ -25,8 +25,6 @@ class GraphGenerator : public QObject, public Processor {
     GraphGenerator(const DsoSettingsScope *scope);
     void generateGraphsXY(PPresult *result, const DsoSettingsScope *scope);
 
-    bool isReady() const;
-
   private:
     void generateGraphsTYvoltage(PPresult *result);
     void generateGraphsTYspectrum(PPresult *result);
