@@ -150,7 +150,7 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, Expo
     connect(dsoWidget, &DsoWidget::triggerPositionChanged, dsoControl, &HantekDsoControl::setTriggerPosition);
     connect(dsoWidget, &DsoWidget::triggerLevelChanged, dsoControl, &HantekDsoControl::setTriggerLevel);
 
-    auto usedChanged = [this, dsoControl, spec](ChannelID channel, bool used) {
+    auto usedChanged = [this, dsoControl, spec](ChannelID channel) {
         if (channel >= (unsigned int)mSettings->scope.voltage.size())
             return;
 
@@ -169,7 +169,7 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, Expo
     connect(spectrumDock, &SpectrumDock::usedChanged, usedChanged);
 
     connect(voltageDock, &VoltageDock::modeChanged, dsoWidget, &DsoWidget::updateMathMode);
-    connect(voltageDock, &VoltageDock::gainChanged, [this, dsoControl, spec](ChannelID channel, double gain) {
+    connect(voltageDock, &VoltageDock::gainChanged, [this, dsoControl, spec](ChannelID channel ) {
         if (channel >= spec->channels)
             return;
         dsoControl->setGain(channel, mSettings->scope.gain(channel) * DIVS_VOLTAGE);

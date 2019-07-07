@@ -21,6 +21,12 @@ include(cmake/CPackInfos.cmake)
 # Enable C++ standard library hardening -> cheap range checks for C++ arrays, vectors, and strings.
 add_compile_options( -D_GLIBCXX_ASSERTIONS )
 
+if(MSVC)
+  add_compile_options(/W4)
+else()
+  add_compile_options(-Wall -Wextra -pedantic)
+endif()
+
 # Qt Widgets based Gui with OpenGL canvas
 add_subdirectory(openhantek)
 

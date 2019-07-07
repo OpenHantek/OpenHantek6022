@@ -44,7 +44,7 @@ DsoWidget::DsoWidget(DsoSettingsScope *scope, DsoSettingsView *view, const Dso::
         mainScope->updateCursor(cursorIndex);
         zoomScope->updateCursor(cursorIndex);
     });
-    connect(zoomScope, &GlScope::markerMoved, [this](unsigned cursorIndex, unsigned marker) {
+    connect(zoomScope, &GlScope::markerMoved, [this](unsigned cursorIndex) {
         mainScope->updateCursor(cursorIndex);
         zoomScope->updateCursor(cursorIndex);
     });

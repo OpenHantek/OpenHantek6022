@@ -49,7 +49,7 @@ void MathChannelGenerator::process(PPresult *result) {
                 calculate = []( double val1, double val2 ) -> double { return val1 * val2; };
                 break;
             default:
-                calculate = []( double val1, double val2 ) -> double { return 0.0; };
+                calculate = []( double, double ) -> double { return 0.0; };
                 break;
         }
         for (std::vector<double>::iterator it = resultData.begin(); it != resultData.end(); ++it) {
