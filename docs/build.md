@@ -24,7 +24,7 @@ Optionally install the program:
 If you do not install the program, you need to copy the file `firmware/60-hantek.rules` to `/lib/udev/rules.d/` yourself,
 and replug your device, otherwise you will not have the correct permissions to access usb devices.
 
-### [Apple MacOSX](#apple)
+### [MacOSX](#macosx)
 We recommend homebrew to install the required libraries.
 > brew update <br>
 > brew install libusb fftw qt5 cmake;
@@ -53,9 +53,19 @@ Hints for Visual Studio 2015/2017 users:
 
 Microsoft Windows needs an installed driver for every usb device:
 
-* Make sure your original Hantek driver is uninstalled.
-* Extract `cmake/winusb driver.zip` and customize the `libusb_device.inf` file for your device. The Vendor ID and Device ID as well as a unique GUID need to be entered like in the following example for a Hantek 6022BE.
-* Physically plug (or replug) oscilloscope into PC's. From the Windows device manager update driver for your device and point to your modified libusb_device.inf.
+* The easiest way is to use [Zadig](https://zadig.akeo.ie/) and install the libusbK driver two times:
+  - 1st install for the newly plugged scope without firmware (VID/PID 04B4/6022 for 6022BE or VID/PID 04B4/602A for 6022BL). 
+  - 2nd time for the scope with firmware uploaded (VID/PID 04B5/6022 for 6022BE or VID/PID 04B5/602A for 6022BL).
+
+
+* Read also black2279's wiki entry 
+[USB Drivers Installation with Zadig for Hantek 6022 (Windows)](https://github.com/black2279/OpenHantek6022/wiki/USB-Drivers-Installation-with-Zadig-for-Hantek-6022-%28Windows%29)
+
+
+* This is the old and more complex procedure
+  - Make sure your original Hantek driver is uninstalled.
+  - Extract `cmake/winusb driver.zip` and customize the `libusb_device.inf` file for your device. The Vendor ID and Device ID as well as a unique GUID need to be entered like in the following example for a Hantek 6022BE.
+  - Physically plug (or replug) oscilloscope into PC's. From the Windows device manager update driver for your device and point to your modified libusb_device.inf.
 
 ````
 ; =====================================================
@@ -73,6 +83,3 @@ Date = "08/12/2017"
 ; ========== END USER CONFIGURABLE SECTION ============
 ; =====================================================
 ````
-
-Read also black2279's wiki entry 
-[USB Drivers Installation with Zadig for Hantek 6022 (Windows)](https://github.com/black2279/OpenHantek6022/wiki/USB-Drivers-Installation-with-Zadig-for-Hantek-6022-%28Windows%29)
