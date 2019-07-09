@@ -5,13 +5,13 @@
 [![Stability: Active](https://masterminds.github.io/stability/active.svg)](https://masterminds.github.io/stability/active.html)
 
 OpenHantek6022 is a free software for Hantek and compatible (Voltcraft/Darkwire/Protek/Acetech) USB digital signal oscilloscopes. 
-It was initially developed by [David Gräff and others](https://github.com/OpenHantek/openhantek/graphs/contributors) on [github.com/OpenHantek/openhantek](https://github.com/OpenHantek/openhantek). After David [stopped maintaining](https://github.com/OpenHantek/openhantek/issues/277) the programm I cloned the repo to provide some updates - but only for Hantek 6022BE/BL on the linux platform.
+It was initially developed by [David Gräff and others](https://github.com/OpenHantek/openhantek/graphs/contributors) on [github.com/OpenHantek/openhantek](https://github.com/OpenHantek/openhantek). After David [stopped maintaining](https://github.com/OpenHantek/openhantek/issues/277) the programm I cloned the repo to provide updates - only for Hantek 6022BE/BL.
 
 <img alt="Image of main window on linux" width="100%" src="docs/images/screenshot_mainwindow.png">
 
 * Supported devices: Hantek 6022BE and 6022BL.
-* Fully supported operating system: Linux (developed under debian).
-* Other operating systems builds: MacOSX & [Windows](docs/images/screenshot_mainwindow_win.png) - partly tested.
+* Fully supported operating system: Linux (developed under debian stable).
+* Other operating systems builds: [Windows](docs/images/screenshot_mainwindow_win.png) (partly tested) & MacOSX (untested).
 * Uses [free open source firmware](https://github.com/Ho-Ro/Hantek6022API), no longer dependent on nonfree Hantek firmware.
 
 ## Features
@@ -44,10 +44,11 @@ It was initially developed by [David Gräff and others](https://github.com/OpenH
   This allows a minimum window size of 640*480 for old workstation computers.
 
 ## Install prebuilt binary
-* Get Linux (and untested MacOSX and Win) packages from the [Releases](https://github.com/OpenHantek/OpenHantek6022/releases) page.
+* Get Linux (and untested Win) packages from the [Releases](https://github.com/OpenHantek/OpenHantek6022/releases) page.
 * Get MacOSX package from [macports](https://www.macports.org/ports.php?by=name&substr=openhantek) - thx [ra1nb0w](https://github.com/ra1nb0w).
 * Get [Fedora rpm packages](https://pkgs.org/download/openhantek) - thx [Vascom](https://github.com/Vascom).
-* [Download (untested) Windows build](https://ci.appveyor.com/project/Ho-Ro/openhantek6022/build/artifacts).
+* [Download (untested) Windows build from last commit](https://ci.appveyor.com/project/Ho-Ro/openhantek6022/build/artifacts).
+* The MacOSX archive from Releases contains only the binary, you have to provide the necessary libraries on your own! Please have a look at the [build instructions](docs/build.md#apple).
 
 
 ## Building OpenHantek from source
