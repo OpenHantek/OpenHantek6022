@@ -28,14 +28,14 @@ struct DsoSettingsColorValues {
 /// \struct DsoSettingsView
 /// \brief Holds all view settings.
 struct DsoSettingsView {
-    DsoSettingsColorValues screen = {QColor(0xff, 0xff, 0xff, 0x7f), QColor(0x00, 0x00, 0x00, 0xff),
-                                     QColor(0xff, 0xff, 0xff, 0xff), QColor(0xff, 0xff, 0xff, 0x3f),
-                                     QColor(0xff, 0xff, 0xff, 0xbf), QColor(0xff, 0xff, 0xff, 0xff),
-                                     std::vector<QColor>(),          std::vector<QColor>()};
-    DsoSettingsColorValues print = {QColor(0x00, 0x00, 0x00, 0xbf), QColor(0x00, 0x00, 0x00, 0x00),
-                                    QColor(0x00, 0x00, 0x00, 0xff), QColor(0x00, 0x00, 0x00, 0x7f),
-                                    QColor(0x00, 0x00, 0x00, 0xef), QColor(0x00, 0x00, 0x00, 0xff),
-                                    std::vector<QColor>(),          std::vector<QColor>()};
+    DsoSettingsColorValues screen = {QColor(0xff, 0xff, 0xff, 0x7f), QColor(0x00, 0x00, 0x00, 0xff), // axes, background
+                                     QColor(0xff, 0xff, 0xff, 0xff), QColor(0xff, 0xff, 0xff, 0xbf), // border, grid
+                                     QColor(0xff, 0xff, 0xff, 0xbf), QColor(0xff, 0xff, 0xff, 0xff), // markers, text
+                                     std::vector<QColor>(),          std::vector<QColor>()};         // spectrum, voltage
+    DsoSettingsColorValues print = {QColor(0x00, 0x00, 0x00, 0xbf), QColor(0x00, 0x00, 0x00, 0x00),  // axes, background
+                                    QColor(0x00, 0x00, 0x00, 0xff), QColor(0x00, 0x00, 0x00, 0xbf),  // border, grid
+                                    QColor(0x00, 0x00, 0x00, 0xbf), QColor(0x00, 0x00, 0x00, 0xff),  // markers, text
+                                    std::vector<QColor>(),          std::vector<QColor>()};          // spectrum, voltage
     bool antialiasing = true;                                         ///< Antialiasing for the graphs
     bool digitalPhosphor = false;                                     ///< true slowly fades out the previous graphs
     unsigned digitalPhosphorDepth = 8;                                ///< Number of channels shown at one time

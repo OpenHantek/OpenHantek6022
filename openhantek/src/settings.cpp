@@ -13,21 +13,25 @@
 /// \param channels The new channel count, that will be applied to lists.
 DsoSettings::DsoSettings(const Dso::ControlSpecification* deviceSpecification) {
     // Add new channels to the list
+    unsigned char trace_hue[] = { 60, 240, 0, 120 }; // yellow, blue, red, green
+    unsigned index = 0;
     while (scope.spectrum.size() < deviceSpecification->channels) {
         // Spectrum
         DsoSettingsScopeSpectrum newSpectrum;
-        newSpectrum.name = QApplication::tr("SP%1").arg(scope.spectrum.size()+1);
+        newSpectrum.name = QApplication::tr("SP%1").arg(index+1);
         scope.spectrum.push_back(newSpectrum);
 
         // Voltage
         DsoSettingsScopeVoltage newVoltage;
-        newVoltage.name = QApplication::tr("CH%1").arg(scope.voltage.size()+1);
+        newVoltage.name = QApplication::tr("CH%1").arg(index+1);
         scope.voltage.push_back(newVoltage);
 
-        view.screen.voltage.push_back(QColor::fromHsv((int)(scope.spectrum.size()-1) * 60, 0xff, 0xff));
+        view.screen.voltage.push_back( QColor::fromHsv( trace_hue[ index ], 0xff, 0xff ) );
         view.screen.spectrum.push_back(view.screen.voltage.back().lighter());
         view.print.voltage.push_back(view.screen.voltage.back().darker(120));
         view.print.spectrum.push_back(view.screen.voltage.back().darker());
+        if ( ++index >= sizeof trace_hue )
+            index = 0;
     }
 
     DsoSettingsScopeSpectrum newSpectrum;
@@ -39,7 +43,7 @@ DsoSettings::DsoSettings(const Dso::ControlSpecification* deviceSpecification) {
     newVoltage.name = QApplication::tr("MATH");
     scope.voltage.push_back(newVoltage);
 
-    view.screen.voltage.push_back(QColor(0x7f, 0x7f, 0x7f, 0xff));
+    view.screen.voltage.push_back(QColor(0xff, 0x00, 0xff, 0xff)); // purple
     view.screen.spectrum.push_back(view.screen.voltage.back().lighter());
     view.print.voltage.push_back(view.screen.voltage.back());
     view.print.spectrum.push_back(view.print.voltage.back().darker());

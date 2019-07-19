@@ -83,9 +83,9 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, Expo
     spectrumDock = new SpectrumDock(scope, this);
     voltageDock = new VoltageDock(scope, spec, this);
 
+    addDockWidget(Qt::RightDockWidgetArea, voltageDock);
     addDockWidget(Qt::RightDockWidgetArea, horizontalDock);
     addDockWidget(Qt::RightDockWidgetArea, triggerDock);
-    addDockWidget(Qt::RightDockWidgetArea, voltageDock);
     addDockWidget(Qt::RightDockWidgetArea, spectrumDock);
 
     restoreGeometry(mSettings->mainWindowGeometry);

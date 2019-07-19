@@ -412,18 +412,28 @@ void DsoWidget::updateMarkerDetails() {
 
     QString prefix(tr("Markers"));
     if (view->zoom) {
-        prefix = tr("Zoom x%L1").arg(DIVS_TIME / divs, -1, 'g', 3);
+        if ( divs != 0.0 )
+            prefix = tr("Zoom x%L1").arg(DIVS_TIME / divs, -1, 'g', 3);
+        else // avoid div by zero
+            prefix = tr("Zoom ---");
         markerTimebaseLabel->setText(valueToString(time / DIVS_TIME, UNIT_SECONDS, 3) + tr("/div"));
         markerFrequencybaseLabel->setText(
             valueToString(divs * scope->horizontal.frequencybase / DIVS_TIME, UNIT_HERTZ, 4) + tr("/div"));
     }
     markerInfoLabel->setText(prefix.append(":  %1  %2").arg(markerToString(scope, 0)).arg(markerToString(scope, 1)));
     markerTimeLabel->setText(valueToString(time, UNIT_SECONDS, 4));
-    markerFrequencyLabel->setText(valueToString(1.0 / time, UNIT_HERTZ, 4));
+    if ( time != 0.0 )
+        markerFrequencyLabel->setText(valueToString(1.0 / time, UNIT_HERTZ, 4));
+    else // avoid div by zero
+        markerFrequencyLabel->setText( "--- Hz" );
 
     int index = 0;
-    cursorDataGrid->updateInfo(index++, true, QString(),
-        valueToString(time, UNIT_SECONDS, 4), valueToString(1.0 / time, UNIT_HERTZ, 4));
+    if ( time != 0.0 )
+        cursorDataGrid->updateInfo(index++, true, QString(),
+            valueToString(time, UNIT_SECONDS, 4), valueToString(1.0 / time, UNIT_HERTZ, 4));
+    else // avoid div by zero
+        cursorDataGrid->updateInfo(index++, true, QString(),
+            valueToString(time, UNIT_SECONDS, 4), "--- Hz");
 
     for (ChannelID channel = 0; channel < scope->voltage.size(); ++channel) {
         if (scope->voltage[channel].used) {
@@ -712,6 +722,8 @@ void DsoWidget::updateOffset(ChannelID channel, double value) {
 double DsoWidget::mainToZoom(double position) const {
     double m1 = scope->getMarker(0);
     double m2 = scope->getMarker(1);
+    if ( m1 == m2 )
+        m2 += 1e-9; // avoid div by zero
     if (m1 > m2) std::swap(m1, m2);
     return ((position - 0.5) * DIVS_TIME - m1) / (m2 - m1);
 }
