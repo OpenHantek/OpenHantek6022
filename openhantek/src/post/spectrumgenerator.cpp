@@ -261,7 +261,7 @@ void SpectrumGenerator::process(PPresult *result) {
         correlation.reset(nullptr);
 
         // Finally calculate the real spectrum (it's also used for frequency display)
-        // Convert values into dB (Relative to the reference level 0 dBu = 1V eff)
+        // Convert values into dB (Relative to the reference level 0 dBV = 1V eff)
         double offset = - postprocessing->spectrumReference - 20 * log10(dftLength);
         double offsetLimit = postprocessing->spectrumLimit - postprocessing->spectrumReference;
         double peakSpectrum = offsetLimit; // get a start value for peak search
