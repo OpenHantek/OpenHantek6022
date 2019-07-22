@@ -16,6 +16,7 @@ It was initially developed by [David Gräff and others](https://github.com/OpenH
 
 ## Features
 
+* :star: NEW: [User Manual](docs/OpenHantek6022_User_Manual.pdf) with technical specs and schematics.
 * Digital phosphor effect to notice even short spikes.
 * Voltage and Spectrum view for all device supported chanels.
 * :star: NEW: Checkbox for X10 probe - scope now shows the correct voltage. 

@@ -53,7 +53,7 @@ std::unique_ptr<USBDevice> SelectSupportedDevice::showSelectDeviceModal(libusb_c
         } else {
             ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(false);
             if (ui->cmbDevices->currentData(Qt::UserRole+2).toBool()) {
-                ui->labelReadyState->setText(tr("Upload in progress..."));
+                ui->labelReadyState->setText(tr("<p>Upload in progress...</p><p>If the upload takes more than 30 s, please close this window <br/>and restart the program!</p>"));
             } else {
                 ui->labelReadyState->setText(tr("Connection failed!"));
             }

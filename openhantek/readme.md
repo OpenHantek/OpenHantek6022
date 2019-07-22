@@ -76,7 +76,7 @@ scope graphs.
 
 ## Data flow
 
-* Raw 8-bit ADC values are collected in `HantekDsoControl::run()` and converted in `HantekDsoControl::convertRawDataToSamples()` to real-world double samples (scaled with voltage and sample rate). Also overdriving of the inputs is detected. The conversion uses either the factory calibration values from EEPROM or from a user supplied config file. Read more about [calibration](https://github.com/Ho-Ro/Hantek6022API/blob/master/README.md#create-calibration-values-for-openhantek).
+* Raw 8-bit ADC values are collected in `HantekDsoControl::run()` and converted in `HantekDsoControl::convertRawDataToSamples()` to real-world double samples (scaled with voltage and sample rate). The 10X oversampling for slower sample rates is done here. Also overdriving of the inputs is detected. The conversion uses either the factory calibration values from EEPROM or from a user supplied config file. Read more about [calibration](https://github.com/Ho-Ro/Hantek6022API/blob/master/README.md#create-calibration-values-for-openhantek).
   * `swTrigger()`
     * which checks if the signal is triggered and calculates the starting point for a stable display.
   * `triggering()` handles the trigger mode:
@@ -85,21 +85,20 @@ scope graphs.
 * The converted samples are emitted to PostProcessing::input() via signal/slot.
 * PostProzessing calls all processors that were registered in `main.cpp`.
   * `MathchannelGenerator::process()`
-    * which creates CH3 as one of these three data sample combinations: `CH1 + CH2`, `CH1 - CH2` or `CH2 - CH1`.
+    * which creates a third MATH channel as one of these data sample combinations: 
+      `CH1 + CH2`, `CH1 - CH2`, `CH2 - CH1`, `CH1 * CH2`, `CH1 AC` or `CH2 AC`.
   * `SpectrumGenerator::process()`
     * For each active channel:
       * Calculate the DC (average), AC (rms) and effective value ( sqrt( DC² + AC² ) ).
-      * Apply a user selected window function.
+      * Apply a user selected window function and scale the result accordingly.
       * Calculate the autocorrelation to get the frequency of the signal. This is quite inaccurate at high frequencies. In these cases the first peak value of the spectrum is used.
-      * Calculate the spectrum of the AC part of the signal.
+      * Calculate the spectrum of the AC part of the signal scaled as dBV.
   * `GraphGenerator::process()`
     * which works either in TY mode and creates two types of traces:
       * voltage over time `GraphGenerator::generateGraphsTYvoltage()`
       * spectrum over frequency `GraphGenerator::generateGraphsTYspectrum()`
     * or in XY mode and creates a voltage over voltage trace `GraphGenerator::generateGraphsXY()`.
-    * `GraphGenerator::generateGraphsTYvoltage()` calls
-      * `SoftwareTrigger::compute()` to find the trigger point in the voltage samples.
-    * Finally `useVoltSamplesTriggered()` collects the samples of all active voltage channels to create up to three (CH1, CH2, MATH) voltage traces.
-    * `GraphGenerator::generateGraphsTYspectrum()` creates also up to three (CH1, CH2, MATH) spectral traces.
+    * `GraphGenerator::generateGraphsTYvoltage()` creates up to three (CH1, CH2, MATH) voltage traces.
+    * `GraphGenerator::generateGraphsTYspectrum()` creates up to three (CH1, CH2, MATH) spectral traces.
 
 t.b.c.
