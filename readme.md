@@ -36,7 +36,7 @@ It was initially developed by [David Gräff and others](https://github.com/OpenH
 * Supports hardware and software triggered devices.
 * :star: NEW: Trigger modes: Normal, Auto and Single with green/red status display (top left).
 * :star: NEW: Shows a red channel warning (bottom left) if input data is clipped.
-* A zoom view with a freely selectable range.
+* A [zoom view](docs/images/screenshot_mainwindow_with_zoom.png) with a freely selectable range.
 * All settings can be saved to a configuration file and loaded again.
 * :star: NEW: Calibration values loaded from eeprom or a model configuration file.
 * :star: NEW: [Calibration program](https://github.com/Ho-Ro/Hantek6022API/blob/master/README.md#create-calibration-values-for-openhantek) to create these values automatically.
