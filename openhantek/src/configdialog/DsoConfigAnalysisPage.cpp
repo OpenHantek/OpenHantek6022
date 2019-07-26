@@ -12,12 +12,12 @@ DsoConfigAnalysisPage::DsoConfigAnalysisPage(DsoSettings *settings, QWidget *par
                           << tr("Nuttall") << tr("Blackman-Harris") << tr("Blackman-Nuttall") << tr("Flat top");
 
     // Initialize elements
-    windowFunctionLabel = new QLabel(tr("Window function"));
+    windowFunctionLabel = new QLabel(tr("<b>Window function</b>"));
     windowFunctionComboBox = new QComboBox();
     windowFunctionComboBox->addItems(windowFunctionStrings);
     windowFunctionComboBox->setCurrentIndex((int)settings->post.spectrumWindow);
 
-    referenceLevelLabel = new QLabel(tr("Reference level"));
+    referenceLevelLabel = new QLabel(tr("<b>Reference level</b><br/>0 dBu = -2.2 dBV<br/>0 dBm(@600 Ω) = -2.2 dBV<br/>0 dBm(@50 Ω) = -13 dBV"));
     referenceLevelSpinBox = new QDoubleSpinBox();
     referenceLevelSpinBox->setDecimals(1);
     referenceLevelSpinBox->setMinimum(-100.0);
@@ -28,7 +28,7 @@ DsoConfigAnalysisPage::DsoConfigAnalysisPage(DsoSettings *settings, QWidget *par
     referenceLevelLayout->addWidget(referenceLevelSpinBox);
     referenceLevelLayout->addWidget(referenceLevelUnitLabel);
 
-    minimumMagnitudeLabel = new QLabel(tr("Minimum magnitude"));
+    minimumMagnitudeLabel = new QLabel(tr("<b>Minimum magnitude</b>"));
     minimumMagnitudeSpinBox = new QDoubleSpinBox();
     minimumMagnitudeSpinBox->setDecimals(1);
     minimumMagnitudeSpinBox->setMinimum(-100.0);

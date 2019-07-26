@@ -71,17 +71,17 @@ bool ExporterCSV::save() {
     }
 
     // Start with channel names
-    csvStream << "\"t [s]\"";
+    csvStream << "\"t / s\"";
     for (ChannelID channel = 0; channel < chCount; ++channel) {
         if (voltageData[channel] != nullptr) {
-            csvStream << sep << "\"" << registry->settings->scope.voltage[channel].name << " [V]\"";
+            csvStream << sep << "\"" << registry->settings->scope.voltage[channel].name << " / V\"";
         }
     }
     if (isSpectrumUsed) {
-        csvStream << sep << "\"f [Hz]\"";
+        csvStream << sep << "\"f / Hz\"";
         for (ChannelID channel = 0; channel < chCount; ++channel) {
             if (spectrumData[channel] != nullptr) {
-                csvStream << sep << "\"" << registry->settings->scope.spectrum[channel].name << "[dB]\"";
+                csvStream << sep << "\"" << registry->settings->scope.spectrum[channel].name << " / dB\"";
             }
         }
     }
