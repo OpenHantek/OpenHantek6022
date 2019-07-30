@@ -21,6 +21,10 @@ Optionally install the program:
 
 > sudo make install
 
+Optionally create a debian package:
+
+> sudo make package
+
 If you do not install the program, you need to copy the file `firmware/60-hantek.rules` to `/lib/udev/rules.d/` yourself,
 and replug your device, otherwise you will not have the correct permissions to access usb devices.
 
@@ -51,18 +55,35 @@ Hints for Visual Studio 2015/2017 users:
 * Build for 64bit. 32bit builds theoretically work, but you are on your own then.
 * Use the **CMake GUI** to setup all required Qt include and library paths.
 
-Microsoft Windows needs an installed driver for every usb device:
+#### Microsoft Windows USB driver install (with Zadig)
 
-* The easiest way is to use [Zadig](https://zadig.akeo.ie/) and install the libusbK driver two times:
+The device specific USB driver shipped with the vendor software is not going to work in almost all cases. 
+You will need to install the WinUSB driver.
+
+For installing the WinUSB driver you can use the [Zadig](http://zadig.akeo.ie/) executable. 
+There are two versions, one for Windows XP (zadig_xp.exe), and another one for all other (Vista or higher)
+supported Windows versions (zadig.exe). Both 32 and 64 bit Windows versions are supported. 
+
+If you already installed the vendor driver previously, you need to run Zadig and switch to the WinUSB driver (see above). 
+There's no need to uninstall or deactivate the vendor driver manually, Zadig will handle all of this.
+
+Note: For Hantek 6022BE and 60222BL you have to assign the WinUSB driver via Zadig twice: 
+the first time for the initial USB VID/PID the device has when attaching it via USB, 
+and a second time after the firmware has been uploaded to the device and the device has "renumerated" 
+with a different VID/PID pair.
+
+See also the [Zadig wiki page](https://github.com/pbatard/libwdi/wiki/Zadig) for more information.
+
   - 1st install for the newly plugged scope without firmware (VID/PID 04B4/6022 for 6022BE or VID/PID 04B4/602A for 6022BL). 
   - 2nd time for the scope with firmware uploaded (VID/PID 04B5/6022 for 6022BE or VID/PID 04B5/602A for 6022BL).
 
+Some win user reports:
 
-* Read also black2279's wiki entry 
+* black2279's wiki entry 
 [USB Drivers Installation with Zadig for Hantek 6022 (Windows)](https://github.com/black2279/OpenHantek6022/wiki/USB-Drivers-Installation-with-Zadig-for-Hantek-6022-%28Windows%29)
+* raxis13's [success report](https://www.eevblog.com/forum/testgear/hantek-6022be-20mhz-usb-dso/msg2563869/#msg2563869)
 
-
-* This is the old and more complex procedure
+#### This is the old and more complex procedure (no positive feedback known)
   - Make sure your original Hantek driver is uninstalled.
   - Extract `cmake/winusb driver.zip` and customize the `libusb_device.inf` file for your device. The Vendor ID and Device ID as well as a unique GUID need to be entered like in the following example for a Hantek 6022BE.
   - Physically plug (or replug) oscilloscope into PC's. From the Windows device manager update driver for your device and point to your modified libusb_device.inf.
