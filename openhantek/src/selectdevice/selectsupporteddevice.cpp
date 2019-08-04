@@ -61,7 +61,7 @@ std::unique_ptr<USBDevice> SelectSupportedDevice::showSelectDeviceModal(libusb_c
     });
 
     QString messageNoDevices = tr("<p>OpenHantek did not find any compatible devices.</p>"
-                                "<p><img align='right' height='150' src='qrc:///switch.png'>"
+                                "<p><img align='right' height='150' src='qrc:///switch_6022BL.png'>"
                                 "Don't forget to switch your device into oscilloscope mode if it has multiple modes.</p>"
                                 );
     #if defined(Q_OS_WIN)

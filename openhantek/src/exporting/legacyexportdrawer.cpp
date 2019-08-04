@@ -198,10 +198,10 @@ bool LegacyExportDrawer::exportSamples(const PPresult *result, QPaintDevice* pai
 
                         // Draw graph
                         QPointF *graph = new QPointF[lastPosition - firstPosition + 1];
-
+                        // skip leading samples to show the correct trigger position 
                         for (unsigned int position = firstPosition; position <= lastPosition; ++position)
                             graph[position - firstPosition] = QPointF(position * horizontalFactor - DIVS_TIME / 2,
-                                                                      result->data(channel)->voltage.sample[position] /
+                                                                      result->data(channel)->voltage.sample[position + result->skipSamples] /
                                                                               settings->scope.gain(channel) +
                                                                           settings->scope.voltage[channel].offset);
 

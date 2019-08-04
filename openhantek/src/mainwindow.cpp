@@ -40,8 +40,10 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, Expo
     ui->actionSettings->setIcon(iconFont->icon(fa::gear));
     ui->actionManualCommand->setIcon(iconFont->icon(fa::edit));
     ui->actionDigital_phosphor->setIcon(QIcon(":/images/digitalphosphor.svg"));
-    ui->actionZoom->setIcon(iconFont->icon(fa::crop));
-    ui->actionCursors->setIcon(iconFont->icon(fa::crosshairs));
+    // ui->actionZoom->setIcon(iconFont->icon(fa::crop));
+    ui->actionZoom->setIcon(QIcon(":/images/search-plus.svg"));
+    // ui->actionMeasure->setIcon(iconFont->icon(fa::crosshairs));
+    ui->actionMeasure->setIcon(QIcon(":/images/drafting-compass.svg"));
 
     // Window title
     setWindowIcon(QIcon(":openhantek.png"));
@@ -266,17 +268,17 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, Expo
     });
     ui->actionZoom->setChecked(mSettings->view.zoom);
 
-    connect(ui->actionCursors, &QAction::toggled, [this](bool enabled) {
+    connect(ui->actionMeasure, &QAction::toggled, [this](bool enabled) {
         mSettings->view.cursorsVisible = enabled;
 
         if (mSettings->view.cursorsVisible)
-            this->ui->actionCursors->setStatusTip(tr("Hide measurements"));
+            this->ui->actionMeasure->setStatusTip(tr("Hide measurements"));
         else
-            this->ui->actionCursors->setStatusTip(tr("Show measurements"));
+            this->ui->actionMeasure->setStatusTip(tr("Show measurements"));
 
         this->dsoWidget->updateCursorGrid(enabled);
     });
-    ui->actionCursors->setChecked(mSettings->view.cursorsVisible);
+    ui->actionMeasure->setChecked(mSettings->view.cursorsVisible);
 
     connect(ui->actionAbout, &QAction::triggered, [this]() {
         QMessageBox::about(

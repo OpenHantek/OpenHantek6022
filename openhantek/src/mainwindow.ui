@@ -39,7 +39,7 @@
     </property>
     <addaction name="actionDigital_phosphor"/>
     <addaction name="actionZoom"/>
-    <addaction name="actionCursors"/>
+    <addaction name="actionMeasure"/>
     <addaction name="separator"/>
     <addaction name="actionManualCommand"/>
    </widget>
@@ -79,14 +79,11 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
-   <addaction name="actionOpen"/>
-   <addaction name="actionSave"/>
-   <addaction name="separator"/>
    <addaction name="actionSampling"/>
    <addaction name="separator"/>
    <addaction name="actionDigital_phosphor"/>
    <addaction name="actionZoom"/>
-   <addaction name="actionCursors"/>
+   <addaction name="actionMeasure"/>
    <addaction name="separator"/>
   </widget>
   <action name="actionOpen">
@@ -118,6 +115,17 @@
     <string>Ctrl+Q</string>
    </property>
   </action>
+  <action name="actionSampling">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Sampling</string>
+   </property>
+   <property name="shortcut">
+    <string>Space</string>
+   </property>
+  </action>
   <action name="actionDigital_phosphor">
    <property name="checkable">
     <bool>true</bool>
@@ -132,6 +140,14 @@
    </property>
    <property name="text">
     <string>Zoom</string>
+   </property>
+  </action>
+  <action name="actionMeasure">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Measure</string>
    </property>
   </action>
   <action name="actionDocking_windows">
@@ -154,31 +170,12 @@
     <string>Settings</string>
    </property>
   </action>
-  <action name="actionSampling">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>Sampling</string>
-   </property>
-   <property name="shortcut">
-    <string>Space</string>
-   </property>
-  </action>
   <action name="actionManualCommand">
    <property name="checkable">
     <bool>true</bool>
    </property>
    <property name="text">
     <string>Manual command</string>
-   </property>
-  </action>
-  <action name="actionCursors">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="text">
-    <string>Cursors</string>
    </property>
   </action>
  </widget>
