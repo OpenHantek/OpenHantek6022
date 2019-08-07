@@ -3,9 +3,9 @@
 #include <QDialog>
 
 class DsoConfigAnalysisPage;
-class DsoConfigColorsPage;
-class DsoConfigFilesPage;
 class DsoConfigScopePage;
+class DsoConfigColorsPage;
+class DsoConfigFilePage;
 class DsoSettings;
 
 class QHBoxLayout;
@@ -45,7 +45,7 @@ class DsoConfigDialog : public QDialog {
 
     DsoConfigAnalysisPage *analysisPage;
     DsoConfigColorsPage *colorsPage;
-    DsoConfigFilesPage *filesPage;
+    DsoConfigFilePage *filePage;
     DsoConfigScopePage *scopePage;
 
     QPushButton *acceptButton, *applyButton, *rejectButton;

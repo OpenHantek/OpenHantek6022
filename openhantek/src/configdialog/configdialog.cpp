@@ -12,9 +12,10 @@ anyway, ignore it
 #define CONFIG_FILE "HKEY_CURRENT_USER\\Software\\paranoiacs.net\\OpenHantek"
 #endif*/
 
-#define CONFIG_LIST_WIDTH 128     ///< The width of the page selection widget
-#define CONFIG_LIST_ITEMHEIGHT 80 ///< The height of one item in the page selection widget
-#define CONFIG_LIST_ICONSIZE 48   ///< The icon size in the page selection widget
+#define CONFIG_LIST_WIDTH 128      ///< The width of the page selection widget
+#define CONFIG_LIST_ITEMHEIGHT 100 ///< The height of one item in the page selection widget
+#define CONFIG_LIST_ICONWIDTH 80   ///< The icon size in the page selection widget
+#define CONFIG_LIST_ICONHEIGHT 64  ///< The icon size in the page selection widget
 
 #include <QDialog>
 #include <QHBoxLayout>
@@ -28,7 +29,7 @@ anyway, ignore it
 
 #include "DsoConfigAnalysisPage.h"
 #include "DsoConfigColorsPage.h"
-#include "DsoConfigFilesPage.h"
+#include "DsoConfigFilePage.h"
 #include "DsoConfigScopePage.h"
 
 #include "settings.h"
@@ -46,7 +47,7 @@ DsoConfigDialog::DsoConfigDialog(DsoSettings *settings, QWidget *parent, Qt::Win
 
     this->contentsWidget = new QListWidget;
     this->contentsWidget->setViewMode(QListView::IconMode);
-    this->contentsWidget->setIconSize(QSize(CONFIG_LIST_ICONSIZE, CONFIG_LIST_ICONSIZE));
+    this->contentsWidget->setIconSize(QSize(CONFIG_LIST_ICONWIDTH, CONFIG_LIST_ICONHEIGHT));
     this->contentsWidget->setMovement(QListView::Static);
     this->contentsWidget->setGridSize(
         QSize(CONFIG_LIST_WIDTH - 2 * this->contentsWidget->frameWidth(), CONFIG_LIST_ITEMHEIGHT));
@@ -56,13 +57,13 @@ DsoConfigDialog::DsoConfigDialog(DsoSettings *settings, QWidget *parent, Qt::Win
 
     this->analysisPage = new DsoConfigAnalysisPage(settings);
     this->colorsPage = new DsoConfigColorsPage(settings);
-    this->filesPage = new DsoConfigFilesPage(settings);
+    this->filePage = new DsoConfigFilePage(settings);
     this->scopePage = new DsoConfigScopePage(settings);
     this->pagesWidget = new QStackedWidget;
     this->pagesWidget->addWidget(this->analysisPage);
-    this->pagesWidget->addWidget(this->colorsPage);
-    this->pagesWidget->addWidget(this->filesPage);
     this->pagesWidget->addWidget(this->scopePage);
+    this->pagesWidget->addWidget(this->colorsPage);
+    this->pagesWidget->addWidget(this->filePage);
 
     this->acceptButton = new QPushButton(tr("&Ok"));
     this->acceptButton->setDefault(true);
@@ -102,19 +103,19 @@ DsoConfigDialog::~DsoConfigDialog() {}
 void DsoConfigDialog::createIcons() {
     QListWidgetItem *analysisButton = new QListWidgetItem(contentsWidget);
     analysisButton->setIcon(QIcon(":config/analysis.png"));
-    analysisButton->setText(tr("Analysis"));
+    analysisButton->setText(tr("Spectrum"));
+
+    QListWidgetItem *scopeButton = new QListWidgetItem(contentsWidget);
+    scopeButton->setIcon(QIcon(":config/scope.png"));
+    scopeButton->setText(tr("Scope"));
 
     QListWidgetItem *colorsButton = new QListWidgetItem(contentsWidget);
     colorsButton->setIcon(QIcon(":config/colors.png"));
     colorsButton->setText(tr("Colors"));
 
-    QListWidgetItem *filesButton = new QListWidgetItem(contentsWidget);
-    filesButton->setIcon(QIcon(":config/files.png"));
-    filesButton->setText(tr("Files"));
-
-    QListWidgetItem *scopeButton = new QListWidgetItem(contentsWidget);
-    scopeButton->setIcon(QIcon(":config/scope.png"));
-    scopeButton->setText(tr("Scope"));
+    QListWidgetItem *fileButton = new QListWidgetItem(contentsWidget);
+    fileButton->setIcon(QIcon(":config/file.png"));
+    fileButton->setText(tr("File"));
 
     connect(contentsWidget, &QListWidget::currentItemChanged, this,
             &DsoConfigDialog::changePage);
@@ -130,9 +131,9 @@ void DsoConfigDialog::accept() {
 /// \brief Saves the settings.
 void DsoConfigDialog::apply() {
     this->analysisPage->saveSettings();
-    this->colorsPage->saveSettings();
-    this->filesPage->saveSettings();
     this->scopePage->saveSettings();
+    this->colorsPage->saveSettings();
+    this->filePage->saveSettings();
 }
 
 /// \brief Change the config page.

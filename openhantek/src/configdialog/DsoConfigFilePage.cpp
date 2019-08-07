@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: GPL-2.0+
 
-#include "DsoConfigFilesPage.h"
+#include "DsoConfigFilePage.h"
 
-DsoConfigFilesPage::DsoConfigFilesPage(DsoSettings *settings, QWidget *parent) : QWidget(parent), settings(settings) {
+DsoConfigFilePage::DsoConfigFilePage(DsoSettings *settings, QWidget *parent) : QWidget(parent), settings(settings) {
     // Export group
     screenColorCheckBox = new QCheckBox(tr("Export Images with Screen Colors"));
     screenColorCheckBox->setChecked(settings->view.screenColorImages);
@@ -52,7 +52,7 @@ DsoConfigFilesPage::DsoConfigFilesPage(DsoSettings *settings, QWidget *parent) :
 }
 
 /// \brief Saves the new settings.
-void DsoConfigFilesPage::saveSettings() {
+void DsoConfigFilePage::saveSettings() {
     settings->alwaysSave = saveOnExitCheckBox->isChecked();
     settings->view.screenColorImages = screenColorCheckBox->isChecked();
     settings->exporting.imageSize.setWidth(imageWidthSpinBox->value());

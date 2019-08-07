@@ -16,13 +16,13 @@
 #include <QVBoxLayout>
 
 ////////////////////////////////////////////////////////////////////////////////
-/// \class DsoConfigFilesPage                                      configpages.h
+/// \class DsoConfigFilePage                                      configpages.h
 /// \brief Config page for file loading/saving.
-class DsoConfigFilesPage : public QWidget {
+class DsoConfigFilePage : public QWidget {
     Q_OBJECT
 
   public:
-    DsoConfigFilesPage(DsoSettings *settings, QWidget *parent = 0);
+    DsoConfigFilePage(DsoSettings *settings, QWidget *parent = 0);
 
   public slots:
     void saveSettings();
