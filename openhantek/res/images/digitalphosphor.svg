@@ -9,11 +9,11 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="16"
-   height="16"
+   width="64"
+   height="64"
    id="svg2816"
    version="1.1"
-   inkscape:version="0.47pre4 r22446"
+   inkscape:version="0.92.4 (5da689c313, 2019-01-14)"
    sodipodi:docname="digitalphosphor.svg"
    inkscape:export-filename="/home/oliver/Entwicklung/Qt/HantekDSO/res/images/actions/digitalphosphor.png"
    inkscape:export-xdpi="90"
@@ -63,9 +63,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="29.875"
-     inkscape:cx="8"
-     inkscape:cy="8"
+     inkscape:zoom="7.953125"
+     inkscape:cx="32"
+     inkscape:cy="31.999996"
      inkscape:current-layer="layer1"
      showgrid="true"
      inkscape:grid-bbox="true"
@@ -73,15 +73,24 @@
      inkscape:window-width="1045"
      inkscape:window-height="735"
      inkscape:window-x="0"
-     inkscape:window-y="121"
-     inkscape:window-maximized="0">
+     inkscape:window-y="6"
+     inkscape:window-maximized="0"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     objecttolerance="10000"
+     guidetolerance="10000"
+     gridtolerance="10000">
     <inkscape:grid
        type="xygrid"
        id="grid2826"
        empspacing="5"
        visible="true"
        enabled="true"
-       snapvisiblegridlinesonly="true" />
+       snapvisiblegridlinesonly="true"
+       originx="0.2764286"
+       originy="2.5898968" />
   </sodipodi:namedview>
   <metadata
      id="metadata2821">
@@ -99,22 +108,24 @@
      id="layer1"
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
-     transform="translate(0,-32)">
+     transform="translate(1.0234618,12.410088)">
     <path
-       style="fill:none;stroke:#ff0000;stroke-width:1;stroke-linecap:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;opacity:0.5"
-       d="m 1,40 c 3,-2 4,-2 7,0 3,2 4,2 7,0"
+       style="opacity:0.33000004;fill:none;stroke:#000000;stroke-width:3.82017493;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       d="m 0.90967101,19.589912 c 12.88579699,-8.119884 17.18106599,-8.119884 30.06686899,0 12.8858,8.119884 17.181068,8.119884 30.066865,0"
        id="path2828-6"
-       sodipodi:nodetypes="csc" />
+       sodipodi:nodetypes="csc"
+       inkscape:connector-curvature="0" />
     <path
-       style="fill:none;stroke:#ff0000;stroke-width:1;stroke-linecap:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;opacity:0.7"
-       d="m 1,40 c 3,-9 4,-9 7,0 3,9 4,9 7,0"
+       style="opacity:0.67000002;fill:none;stroke:#000000;stroke-width:3.99244857;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       d="m 0.98159892,19.589909 c 12.85497308,-40.00503 17.13996608,-40.00503 29.99494508,0 12.854976,40.005038 17.139968,40.005038 29.994941,0"
        id="path2828-65"
-       sodipodi:nodetypes="csc" />
+       sodipodi:nodetypes="csc"
+       inkscape:connector-curvature="0" />
     <path
-       style="fill:none;fill-opacity:0.24705882000000001;stroke:#ff0000;stroke-width:1;stroke-linecap:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
-       d="m 1,8 c 3,-5 4,-5 7,0 3,5 4,5 7,0"
+       style="fill:none;fill-opacity:0.24705882;stroke:#000000;stroke-width:4.02862692;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       d="m 1.005378,19.589905 c 12.844781,-22.6475665 17.126378,-22.6475665 29.971162,0 12.844781,22.647591 17.126377,22.647591 29.971159,0"
        id="path2828"
-       transform="translate(0,32)"
-       sodipodi:nodetypes="csc" />
+       sodipodi:nodetypes="csc"
+       inkscape:connector-curvature="0" />
   </g>
 </svg>

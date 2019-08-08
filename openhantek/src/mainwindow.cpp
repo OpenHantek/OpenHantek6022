@@ -46,7 +46,7 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, Expo
     ui->actionMeasure->setIcon(QIcon(":/images/drafting-compass.svg"));
 
     // Window title
-    setWindowIcon(QIcon(":openhantek.png"));
+    setWindowIcon(QIcon(":OpenHantek6022.svg"));
     setWindowTitle(
         tr("OpenHantek6022 (%1) - Device %2 (FW%3)") //" - Renderer %4")
             .arg(QString::fromStdString( VERSION))
@@ -288,6 +288,8 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, Expo
                "href='mailto:oliver.haag@gmail.com'>oliver.haag@gmail.com</a></p>"
                "<p>Copyright &copy; 2012-2019 OpenHantek community<br>"
                "<a href='https://github.com/OpenHantek'>https://github.com/OpenHantek</a></p>"
+               "<p>Open source firmware copyright &copy; 2019 Ho-Ro<br>"
+               "<a href='https://github.com/Ho-Ro/Hantek6022API'>https://github.com/Ho-Ro/Hantek6022API</a></p>"
             )
         );
     });
