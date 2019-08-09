@@ -14,36 +14,30 @@ After David [stopped maintaining](https://github.com/OpenHantek/openhantek/issue
 * Fully supported operating system: Linux (developed under debian stable).
 * Other operating systems builds: [Windows](docs/images/screenshot_mainwindow_win.png) (partly tested) & MacOSX (untested).
 * Uses [free open source firmware](https://github.com/Ho-Ro/Hantek6022API), no longer dependent on nonfree Hantek firmware.
+* Extensive [User Manual](docs/OpenHantek6022_User_Manual.pdf) with technical specs and schematics.
 
 ## Features
 
-* :star: NEW: [User Manual](docs/OpenHantek6022_User_Manual.pdf) with technical specs and schematics.
-* Digital phosphor effect to notice even short spikes.
 * Voltage and Spectrum view for all device supported chanels.
-* :star: NEW: Checkbox for X10 probe - scope now shows the correct voltage. 
-* :star: NEW: Show DC (average), AC (rms) and RMS values as well as frequency of displayed channels.
-* :star: NEW: Time base 100 ms/div .. 10 ns/div.
+* CH1 and CH2 name becomes red when input is clipped (bottom left).
+* Checkbox for X10 probes. 
+* Measure and display DC (average), AC (rms) and RMS values as well as frequency of active channels.
+* Math channel modes: Ch1+Ch2, Ch1-Ch2, Ch2-Ch1, Ch1*Ch2 and AC part of Ch1 or Ch2.
+* Time base 100 ms/div .. 10 ns/div.
 * Sample rates 100, 200, 500 kS/s, 1, 2, 5, 10, 12, 15, 24, 30 MS/s.
-* :star: NEW: Downsampling sample rates 10, 20, 50 kS/s.
-* Math channel with these modes: Ch1+Ch2, Ch1-Ch2, Ch2-Ch1.
-* :star: NEW: Math mode Ch1*Ch2,
-  e.g. for showing momentary power as product of voltage and current
-  (when measured with a 1 Ω shunt in the GND line 1 V in MATH equates 1 W).
-  Or use a current probe if you're lucky to own one.
-* :star: NEW: Math mode AC, calculate AC part of Ch1 or Ch2.
-* Freely configurable colors.
-* Export to CSV, JPG, PNG or print the graphs.
-* :star: NEW: Localized CSV file (decimal and data separator).
-* Supports hardware and software triggered devices.
-* :star: NEW: Trigger modes: Normal, Auto and Single with green/red status display (top left).
-* :star: NEW: Shows a red channel warning (bottom left) if input data is clipped.
+* Downsampling sample rates 10, 20, 50 kS/s.
+* Calibration output signal can be selected between 50 Hz .. 100 kHz in 1/2/5 steps.
+* Trigger modes: Normal, Auto and Single with green/red status display (top left).
+* Calibration values loaded from eeprom or a model configuration file.
+* [Calibration program](https://github.com/Ho-Ro/Hantek6022API/blob/master/README.md#create-calibration-values-for-openhantek) to create these values automatically.
+* Digital phosphor effect to notice even short spikes.
 * A [zoom view](docs/images/screenshot_mainwindow_with_zoom.png) with a freely selectable range.
-* All settings can be saved to a configuration file and loaded again.
-* :star: NEW: Calibration values loaded from eeprom or a model configuration file.
-* :star: NEW: [Calibration program](https://github.com/Ho-Ro/Hantek6022API/blob/master/README.md#create-calibration-values-for-openhantek) to create these values automatically.
-* Multiple instances with a different device each can be started.
+* Cursor measurement function for voltage, time, amplitude and frequency.
+* Export to CSV, JPG, PNG or print the graphs.
+* Freely configurable colors.
 * The dock views on the main window can be customized by dragging them around and stacking them.
   This allows a minimum window size of 640*480 for old workstation computers.
+* All settings can be saved to a configuration file and loaded again.
 
 ## Install prebuilt binary
 * Get Linux (and untested Win) packages from the [Releases](https://github.com/OpenHantek/OpenHantek6022/releases) page.
