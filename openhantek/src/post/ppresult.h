@@ -18,14 +18,12 @@ struct SampleValues {
 struct DataChannel {
     SampleValues voltage;   ///< The time-domain voltage levels (V)
     SampleValues spectrum;  ///< The frequency-domain power levels (dB)
-
-    double frequency = 0.0; ///< The frequency of the signal
+    bool valid = true;      ///< Not clipped, distorted, dropouts etc.
+    double rms = 0.0;       ///< The DC + AC rms value of the signal = sqrt( dc * dc + acc * ac )
     double dc = 0.0;        ///< The DC bias of the signal
     double ac = 0.0;        ///< The AC rms value of the signal
-    double rms = 0.0;       ///< The DC + AC rms value of the signal = sqrt( dc * dc + acc * ac )
-    bool valid = true;      ///< Not clipped, distorted, dropouts etc.
-    // Calculate peak-to-peak voltage
-    // double computeAmplitude() const;
+    double dB = 0.0;        ///< The AC rms value as dB (dBV or other depending on config)
+    double frequency = 0.0; ///< The frequency of the signal
 };
 
 typedef std::vector<QVector3D> ChannelGraph;

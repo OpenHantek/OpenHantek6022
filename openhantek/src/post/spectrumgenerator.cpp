@@ -184,6 +184,7 @@ void SpectrumGenerator::process(PPresult *result) {
         ac2 /= sampleCount;
         channelData->ac = sqrt( ac2 ); // rms of AC component
         channelData->rms = sqrt( dc * dc + ac2 ); // total rms = U eff
+        channelData->dB = 10.0 * log10( ac2 ) - postprocessing->spectrumReference;
 
         // Do discrete real to half-complex transformation
         /// \todo Check if record length is multiple of 2
