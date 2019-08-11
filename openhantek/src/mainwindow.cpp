@@ -40,9 +40,7 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, Expo
     ui->actionSettings->setIcon(iconFont->icon(fa::gear));
     ui->actionManualCommand->setIcon(iconFont->icon(fa::edit));
     ui->actionDigital_phosphor->setIcon(QIcon(":/images/digitalphosphor.svg"));
-    // ui->actionZoom->setIcon(iconFont->icon(fa::crop));
     ui->actionZoom->setIcon(QIcon(":/images/search-plus.svg"));
-    // ui->actionMeasure->setIcon(iconFont->icon(fa::crosshairs));
     ui->actionMeasure->setIcon(QIcon(":/images/drafting-compass.svg"));
 
     // Window title
@@ -52,7 +50,6 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, Expo
             .arg(QString::fromStdString( VERSION))
             .arg(QString::fromStdString(dsoControl->getDevice()->getModel()->name))
             .arg((unsigned int)dsoControl->getDevice()->getFwVersion(),4,16,QChar('0'))
-            //.arg(QSurfaceFormat::defaultFormat().renderableType() == QSurfaceFormat::OpenGL ? "OpenGL" : "OpenGL ES")
     );
 
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 6, 0))
