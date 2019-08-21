@@ -761,8 +761,8 @@ void HantekDsoControl::run() {
         emit samplesAvailable(&result); // let display run always to allow user interaction
     }
 
-    // Check if we're in single trigger mode
-    if (controlsettings.trigger.mode == Dso::TriggerMode::SINGLE && this->_samplingStarted)
+    // Stop sampling if we're in single trigger mode and have a triggered trace (txh No13)
+    if ( controlsettings.trigger.mode == Dso::TriggerMode::SINGLE && this->_samplingStarted && softwareTrigger() >= 0 )
         this->enableSampling(false);
 
     // Sampling completed, restart it when necessary
