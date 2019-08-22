@@ -547,20 +547,48 @@ Dso::ErrorCode HantekDsoControl::setTriggerPosition(double position) {
 }
 
 
-int HantekDsoControl::softwareTrigger() {
+unsigned HantekDsoControl::searchTriggerPoint( const std::vector<double> &samples, unsigned pre, unsigned post, double level, double slope ) {
+    size_t sampleCount = samples.size();    ///< number of available samples
+    const unsigned swTriggerThreshold = 5;  ///< Software trigger, threshold
+    const unsigned swTriggerSampleSet = 11; ///< Software trigger, sample set
+    double prev = INT_MAX * slope;
+    unsigned swTriggerStart = 0;
+    for (unsigned int i = pre; i < post; i++) {
+        if ( slope * samples[i] > slope * level && slope * prev < slope * level ) { // trigger condition met
+            // check for the next few SampleSet samples, if they are also above/below the trigger value
+            unsigned int before = 0;
+            for (unsigned int k = i - 1; k > i - swTriggerSampleSet && k > 0; k--) {
+                if ( slope * samples[k] < slope * level )
+                    before++;
+            }
+            unsigned int after = 0;
+            for (unsigned int k = i + 1; k < i + swTriggerSampleSet && k < sampleCount; k++) {
+                if ( slope * samples[k] > slope * level )
+                    after++;
+            }
+            // if at least >Threshold (=5) samples before and after trig meet the condition, set trigger
+            if ( before > swTriggerThreshold && after > swTriggerThreshold ) {
+                swTriggerStart = i-1;
+                break;
+            }
+        }
+        prev = samples[i];
+    }
+    return swTriggerStart;
+}
+
+
+unsigned HantekDsoControl::softwareTrigger() {
     ChannelID channel = controlsettings.trigger.source;
     // Trigger channel not in use
     if (!controlsettings.voltage[channel].used || result.data.empty()) {
-        return result.triggerPosition = -1;
+        return result.triggerPosition = 0;
     }
     //printf( "softwareTrigger()\n" );
-    const unsigned swTriggerThreshold = 5;                ///< Software trigger, threshold
-    const unsigned swTriggerSampleSet = 11;               ///< Software trigger, sample set
     unsigned int preTrigSamples = 0;
     unsigned int postTrigSamples = 0;
-    unsigned int swTriggerStart = 0;
-    int triggerPosition = -1;
-    result.triggerPosition = -1;
+    int triggerPosition = 0;
+    result.triggerPosition = 0;
     const std::vector<double> &samples = result.data[channel];
     double level = controlsettings.trigger.level[channel];
     size_t sampleCount = samples.size(); // number of available samples
@@ -578,7 +606,7 @@ int HantekDsoControl::softwareTrigger() {
         // For now #3 is chosen
         timestampDebug(QString("Too few samples to make a steady "
                                "picture. Decrease sample rate"));
-        return result.triggerPosition = -1;
+        return result.triggerPosition = 0;
     }
 
     preTrigSamples = (unsigned)(controlsettings.trigger.position * samplesDisplay); // samples left of trigger
@@ -589,58 +617,29 @@ int HantekDsoControl::softwareTrigger() {
     // |<pre<|                         // << = left = pre
     // |--(samp-(disp-pre))-------|>>|
     // |<<<<<|????????????????????|>>| // ?? = search for trigger in this range [left,right]
-    double prev;
-    bool (*opcmp)(double,double,double);
-    bool (*smplcmpBefore)(double,double);
-    bool (*smplcmpAfter)(double,double);
-    // define trigger condition
-    if (controlsettings.trigger.slope == Dso::Slope::Positive) {
-        prev = INT_MAX;
-        opcmp = [](double value, double level, double prev) { return value > level && prev <= level;};
-        smplcmpBefore = [](double sampleK, double value) { return sampleK < value;};
-        smplcmpAfter = [](double sampleK, double value) { return sampleK >= value;};
-    } else {
-        prev = INT_MIN;
-        opcmp = [](double value, double level, double prev) { return value < level && prev >= level;};
-        smplcmpBefore = [](double sampleK, double value) { return sampleK >= value;};
-        smplcmpAfter = [](double sampleK, double value) { return sampleK < value;};
-    }
+
     // search for trigger point in a range that leaves enough samples left and right of trigger for display
-    for (unsigned int i = preTrigSamples; i < postTrigSamples; i++) {
-        double value = samples[i];
-        if (opcmp(value, level, prev)) { // trigger condition met
-            // check for the next few SampleSet samples, if they are also above/below the trigger value
-            unsigned int risingBefore = 0;
-            for (unsigned int k = i - 1; k > i - swTriggerSampleSet && k > 0; k--) {
-                if (smplcmpBefore(samples[k], level))
-                    risingBefore++;
-            }
-            unsigned int risingAfter = 0;
-            for (unsigned int k = i + 1; k < i + swTriggerSampleSet && k < sampleCount; k++) {
-                if (smplcmpAfter(samples[k], level))
-                    risingAfter++;
-            }
-
-            // if at least >Threshold (=5) samples before and after trig meet the condition, set trigger
-            if (risingBefore > swTriggerThreshold && risingAfter > swTriggerThreshold) {
-                swTriggerStart = i-1;
-                break;
-            }
-        }
-        prev = value;
+    unsigned risingPoint = 0;
+    if (controlsettings.trigger.slope != Dso::Slope::Negative) { // Positive or Both -> get pos slope
+        risingPoint = searchTriggerPoint( samples, preTrigSamples, postTrigSamples, level, 1.0 );
     }
-    if (swTriggerStart == 0) {
-        // timestampDebug(QString("Trigger not asserted. Data ignored"));
-        preTrigSamples = 0; // preTrigSamples may never be greater than swTriggerStart
-        postTrigSamples = 0;
+    unsigned fallingPoint = 0;
+    if (controlsettings.trigger.slope != Dso::Slope::Positive) { // Negative or Both -> get neg slope
+        fallingPoint = searchTriggerPoint( samples, preTrigSamples, postTrigSamples, level, -1.0 );
     }
-    //printf("PPS(%d %d %d)\n", preTrigSamples, postTrigSamples, swTriggerStart);
 
-    if (postTrigSamples > preTrigSamples)
-        triggerPosition = ( swTriggerStart - preTrigSamples );
-    else
-        triggerPosition = -1;
-
+    if ( controlsettings.trigger.slope == Dso::Slope::Positive ) {
+        triggerPosition = risingPoint;
+    } else if ( controlsettings.trigger.slope == Dso::Slope::Negative ) {
+        triggerPosition = fallingPoint;
+    } else if ( 0 == risingPoint * fallingPoint ) { // at least one value is zero
+        triggerPosition = std::max( risingPoint, fallingPoint );
+    } else { // both are nonzero
+        triggerPosition = std::min( risingPoint, fallingPoint );
+    }
+    if ( triggerPosition ) // nonzero position -> triggered
+        triggerPosition -= preTrigSamples;  // shift to screen position
+    // printf( "triggerPosition %d\n", triggerPosition );
     return result.triggerPosition = triggerPosition;
 }
 
@@ -648,7 +647,7 @@ int HantekDsoControl::softwareTrigger() {
 void HantekDsoControl::triggering() {
     //printf( "HDC::triggering()\n" );
     static DSOsamples triggeredResult; // storage for last triggered trace samples
-    if ( result.triggerPosition >= 0 ) { // live trace has triggered
+    if ( result.triggerPosition > 0 ) { // live trace has triggered
         // Use this trace and save it also
         triggeredResult.data = result.data;
         triggeredResult.samplerate = result.samplerate;
@@ -665,7 +664,7 @@ void HantekDsoControl::triggering() {
     } else { // Not triggered and not NORMAL mode
         // Use the free running trace, discard history
         triggeredResult.data.clear(); // discard trace
-        triggeredResult.triggerPosition = -1; // not triggered
+        triggeredResult.triggerPosition = 0; // not triggered
         result.liveTrigger = false; // show red "TR" top left
     }
 }
@@ -762,7 +761,7 @@ void HantekDsoControl::run() {
     }
 
     // Stop sampling if we're in single trigger mode and have a triggered trace (txh No13)
-    if ( controlsettings.trigger.mode == Dso::TriggerMode::SINGLE && this->_samplingStarted && softwareTrigger() >= 0 )
+    if ( controlsettings.trigger.mode == Dso::TriggerMode::SINGLE && this->_samplingStarted && softwareTrigger() > 0 )
         this->enableSampling(false);
 
     // Sampling completed, restart it when necessary

@@ -41,9 +41,10 @@ extern Enum<Dso::TriggerMode, Dso::TriggerMode::AUTO, Dso::TriggerMode::SINGLE> 
 /// \brief The slope that causes a trigger.
 enum class Slope : uint8_t {
     Positive = 0, ///< From lower to higher voltage
-    Negative = 1  ///< From higher to lower voltage
+    Negative = 1, ///< From higher to lower voltage
+    Both = 2      ///< At 1st level crossing up or down
 };
-extern Enum<Dso::Slope, Dso::Slope::Positive, Dso::Slope::Negative> SlopeEnum;
+extern Enum<Dso::Slope, Dso::Slope::Positive, Dso::Slope::Both> SlopeEnum;
 
 /// \enum InterpolationMode
 /// \brief The different interpolation modes for the graphs.

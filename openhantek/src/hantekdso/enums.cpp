@@ -3,7 +3,7 @@
 
 namespace Dso {
     Enum<Dso::TriggerMode, Dso::TriggerMode::AUTO, Dso::TriggerMode::SINGLE> TriggerModeEnum;
-    Enum<Dso::Slope, Dso::Slope::Positive, Dso::Slope::Negative> SlopeEnum;
+    Enum<Dso::Slope, Dso::Slope::Positive, Dso::Slope::Both> SlopeEnum;
     Enum<Dso::GraphFormat, Dso::GraphFormat::TY, Dso::GraphFormat::XY> GraphFormatEnum;
 
     /// \brief Return string representation of the given channel mode.
@@ -79,6 +79,8 @@ namespace Dso {
         case Slope::Negative:
             return QString::fromUtf8("\u2198"); // "↘"
 #endif
+        case Slope::Both:
+            return QString::fromUtf8("X"); // "X"
         default:
             return QString();
         }
