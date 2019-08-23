@@ -151,7 +151,7 @@ class HantekDsoControl : public QObject {
     /// \brief Update the minimum and maximum supported samplerate.
     void updateSamplerateLimits();
 
-    unsigned searchTriggerPoint( const std::vector<double> &samples, unsigned pre, unsigned post, double level, double slope );
+    unsigned searchTriggerPoint( Dso::Slope dsoSlope );
 
     unsigned softwareTrigger();
 

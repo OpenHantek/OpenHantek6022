@@ -547,13 +547,37 @@ Dso::ErrorCode HantekDsoControl::setTriggerPosition(double position) {
 }
 
 
-unsigned HantekDsoControl::searchTriggerPoint( const std::vector<double> &samples, unsigned pre, unsigned post, double level, double slope ) {
+unsigned HantekDsoControl::searchTriggerPoint( Dso::Slope dsoSlope ) {
+    int slope;
+    if ( dsoSlope == Dso::Slope::Positive)
+        slope = 1;
+    else if ( dsoSlope == Dso::Slope::Negative )
+        slope = -1;
+    else return 0;
+
+    ChannelID channel = controlsettings.trigger.source;
+    const std::vector<double> &samples = result.data[channel];
     size_t sampleCount = samples.size();    ///< number of available samples
-    const unsigned swTriggerThreshold = 5;  ///< Software trigger, threshold
-    const unsigned swTriggerSampleSet = 11; ///< Software trigger, sample set
+    double level = controlsettings.trigger.level[channel];
+    double timeDisplay = controlsettings.samplerate.target.duration; // time for full screen width
+    double sampleRate = controlsettings.samplerate.current;
+    double samplesDisplay = timeDisplay * sampleRate;
+
+    unsigned preTrigSamples = (unsigned)(controlsettings.trigger.position * samplesDisplay); // samples left of trigger
+    unsigned postTrigSamples = (unsigned)sampleCount - ((unsigned)samplesDisplay - preTrigSamples); // samples right of trigger
+    // |-----------samples-----------| // available sample
+    // |--disp--|                      // display size
+    // |<<<<<T>>|--------------------| // >> = right = (disp-pre) i.e. right of trigger on screen
+    // |<pre<|                         // << = left = pre
+    // |--(samp-(disp-pre))-------|>>|
+    // |<<<<<|????????????????????|>>| // ?? = search for trigger in this range [left,right]
+
+    const unsigned swTriggerSampleSet = 5; // check this number of samples before/after trigger point ...
+    const unsigned swTriggerThreshold = 3;  // ... and get at least this number below or above trigger
+
     double prev = INT_MAX * slope;
     unsigned swTriggerStart = 0;
-    for (unsigned int i = pre; i < post; i++) {
+    for (unsigned int i = preTrigSamples; i < postTrigSamples; i++) {
         if ( slope * samples[i] > slope * level && slope * prev < slope * level ) { // trigger condition met
             // check for the next few SampleSet samples, if they are also above/below the trigger value
             unsigned int before = 0;
@@ -584,53 +608,37 @@ unsigned HantekDsoControl::softwareTrigger() {
     if (!controlsettings.voltage[channel].used || result.data.empty()) {
         return result.triggerPosition = 0;
     }
-    //printf( "softwareTrigger()\n" );
-    unsigned int preTrigSamples = 0;
-    unsigned int postTrigSamples = 0;
+    //printf( "HDC::softwareTrigger()\n" );
     int triggerPosition = 0;
     result.triggerPosition = 0;
-    const std::vector<double> &samples = result.data[channel];
-    double level = controlsettings.trigger.level[channel];
-    size_t sampleCount = samples.size(); // number of available samples
+
+    size_t sampleCount = result.data[channel].size(); // number of available samples
     double timeDisplay = controlsettings.samplerate.target.duration; // time for full screen width
     double sampleRate = controlsettings.samplerate.current;
     double samplesDisplay = timeDisplay * sampleRate;
-    // samples for full screen width
+    unsigned preTrigSamples = (unsigned)(controlsettings.trigger.position * samplesDisplay);
+    Dso::Slope slope = controlsettings.trigger.slope;
     //printf( "sC %lu, tD %g, sR %g, sD %g\n", sampleCount, timeDisplay, sampleRate, samplesDisplay );
     if (samplesDisplay >= sampleCount) {
         // For sure not enough samples to adjust for jitter.
-        // Following options exist:
-        //    1: Decrease sample rate
-        //    2: Change trigger mode to auto
-        //    3: Ignore samples
-        // For now #3 is chosen
-        timestampDebug(QString("Too few samples to make a steady "
-                               "picture. Decrease sample rate"));
+        timestampDebug(QString("Too few samples to make a steady picture. Decrease sample rate"));
         return result.triggerPosition = 0;
     }
 
-    preTrigSamples = (unsigned)(controlsettings.trigger.position * samplesDisplay); // samples left of trigger
-    postTrigSamples = (unsigned)sampleCount - ((unsigned)samplesDisplay - preTrigSamples); // samples right of trigger
-    // |-----------samples-----------| // available sample
-    // |--disp--|                      // display size
-    // |<<<<<T>>|--------------------| // >> = right = (disp-pre) i.e. right of trigger on screen
-    // |<pre<|                         // << = left = pre
-    // |--(samp-(disp-pre))-------|>>|
-    // |<<<<<|????????????????????|>>| // ?? = search for trigger in this range [left,right]
-
     // search for trigger point in a range that leaves enough samples left and right of trigger for display
     unsigned risingPoint = 0;
-    if (controlsettings.trigger.slope != Dso::Slope::Negative) { // Positive or Both -> get pos slope
-        risingPoint = searchTriggerPoint( samples, preTrigSamples, postTrigSamples, level, 1.0 );
-    }
-    unsigned fallingPoint = 0;
-    if (controlsettings.trigger.slope != Dso::Slope::Positive) { // Negative or Both -> get neg slope
-        fallingPoint = searchTriggerPoint( samples, preTrigSamples, postTrigSamples, level, -1.0 );
+    if ( slope != Dso::Slope::Negative ) { // Positive or Both -> get pos slope
+        risingPoint = searchTriggerPoint( Dso::Slope::Positive );
     }
 
-    if ( controlsettings.trigger.slope == Dso::Slope::Positive ) {
+    unsigned fallingPoint = 0;
+    if ( slope != Dso::Slope::Positive ) { // Negative or Both -> get neg slope
+        fallingPoint = searchTriggerPoint( Dso::Slope::Negative );
+    }
+
+    if ( slope == Dso::Slope::Positive ) {
         triggerPosition = risingPoint;
-    } else if ( controlsettings.trigger.slope == Dso::Slope::Negative ) {
+    } else if ( slope == Dso::Slope::Negative ) {
         triggerPosition = fallingPoint;
     } else if ( 0 == risingPoint * fallingPoint ) { // at least one value is zero
         triggerPosition = std::max( risingPoint, fallingPoint );
