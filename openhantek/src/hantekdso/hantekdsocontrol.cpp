@@ -603,13 +603,14 @@ unsigned HantekDsoControl::searchTriggerPoint( Dso::Slope dsoSlope ) {
 
 
 unsigned HantekDsoControl::softwareTrigger() {
+    static Dso::Slope nextSlope = Dso::Slope::Positive; // for alternating slope mode X
     ChannelID channel = controlsettings.trigger.source;
     // Trigger channel not in use
     if (!controlsettings.voltage[channel].used || result.data.empty()) {
         return result.triggerPosition = 0;
     }
     //printf( "HDC::softwareTrigger()\n" );
-    int triggerPosition = 0;
+    triggerPositionRaw = 0;
     result.triggerPosition = 0;
 
     size_t sampleCount = result.data[channel].size(); // number of available samples
@@ -617,7 +618,6 @@ unsigned HantekDsoControl::softwareTrigger() {
     double sampleRate = controlsettings.samplerate.current;
     double samplesDisplay = timeDisplay * sampleRate;
     unsigned preTrigSamples = (unsigned)(controlsettings.trigger.position * samplesDisplay);
-    Dso::Slope slope = controlsettings.trigger.slope;
     //printf( "sC %lu, tD %g, sR %g, sD %g\n", sampleCount, timeDisplay, sampleRate, samplesDisplay );
     if (samplesDisplay >= sampleCount) {
         // For sure not enough samples to adjust for jitter.
@@ -626,29 +626,20 @@ unsigned HantekDsoControl::softwareTrigger() {
     }
 
     // search for trigger point in a range that leaves enough samples left and right of trigger for display
-    unsigned risingPoint = 0;
-    if ( slope != Dso::Slope::Negative ) { // Positive or Both -> get pos slope
-        risingPoint = searchTriggerPoint( Dso::Slope::Positive );
+    if ( controlsettings.trigger.slope != Dso::Slope::Both  ) {
+        triggerPositionRaw = searchTriggerPoint( nextSlope = controlsettings.trigger.slope );
+    } else { // alternating trigger slope
+        triggerPositionRaw = searchTriggerPoint( nextSlope );
+        if ( triggerPositionRaw ) { // triggered -> change slope
+            nextSlope = nextSlope == Dso::Slope::Positive ? Dso::Slope::Negative : Dso::Slope::Positive;
+        }
     }
 
-    unsigned fallingPoint = 0;
-    if ( slope != Dso::Slope::Positive ) { // Negative or Both -> get neg slope
-        fallingPoint = searchTriggerPoint( Dso::Slope::Negative );
+    if ( triggerPositionRaw ) { // triggered
+        result.triggerPosition = triggerPositionRaw - preTrigSamples;  // shift to screen position
     }
-
-    if ( slope == Dso::Slope::Positive ) {
-        triggerPosition = risingPoint;
-    } else if ( slope == Dso::Slope::Negative ) {
-        triggerPosition = fallingPoint;
-    } else if ( 0 == risingPoint * fallingPoint ) { // at least one value is zero
-        triggerPosition = std::max( risingPoint, fallingPoint );
-    } else { // both are nonzero
-        triggerPosition = std::min( risingPoint, fallingPoint );
-    }
-    if ( triggerPosition ) // nonzero position -> triggered
-        triggerPosition -= preTrigSamples;  // shift to screen position
-    // printf( "triggerPosition %d\n", triggerPosition );
-    return result.triggerPosition = triggerPosition;
+    // printf( "nextSlope %c, triggerPositionRaw %d\n", "/\\"[(int)nextSlope], triggerPositionRaw );
+    return result.triggerPosition;
 }
 
 
@@ -769,8 +760,9 @@ void HantekDsoControl::run() {
     }
 
     // Stop sampling if we're in single trigger mode and have a triggered trace (txh No13)
-    if ( controlsettings.trigger.mode == Dso::TriggerMode::SINGLE && this->_samplingStarted && softwareTrigger() > 0 )
+    if ( controlsettings.trigger.mode == Dso::TriggerMode::SINGLE && this->_samplingStarted && triggerPositionRaw > 0 ) {
         this->enableSampling(false);
+    }
 
     // Sampling completed, restart it when necessary
     this->_samplingStarted = false;
