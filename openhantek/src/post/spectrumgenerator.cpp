@@ -14,6 +14,7 @@
 #include "glscope.h"
 #include "settings.h"
 #include "utils/printutils.h"
+#include "viewconstants.h"
 
 /// \brief Analyzes the data from the dso.
 SpectrumGenerator::SpectrumGenerator(const DsoSettingsScope *scope, const DsoSettingsPostProcessing *postprocessing)
@@ -165,15 +166,30 @@ void SpectrumGenerator::process(PPresult *result) {
 
         // Create sample buffer and apply window
         std::unique_ptr<double[]> windowedValues = std::unique_ptr<double[]>(new double[sampleCount]);
+
+        // calculate the peak-to-peak value of the displayed part of trace
+        double min = INT_MAX;
+        double max = INT_MIN;
+        unsigned dots = DIVS_TIME * scope->horizontal.timebase / channelData->voltage.interval;
+        for (unsigned int position = result->skipSamples; // left side of trace
+             position < result->skipSamples + dots; // right side
+             ++position) {
+            if ( channelData->voltage.sample[position] < min )
+                min = channelData->voltage.sample[position];
+            if ( channelData->voltage.sample[position] > max )
+                max = channelData->voltage.sample[position];
+        }
+        channelData->vpp = max - min;
+        //printf( "dots = %d, Vpp = %g\n", dots, channelData->vpp );
+
         // calculate the average value
         double dc = 0.0;
-
         for (unsigned int position = 0; position < sampleCount; ++position) {
             dc += channelData->voltage.sample[position];
         }
-
         dc /= sampleCount;
         channelData->dc = dc;
+
         // now strip DC bias, calculate rms of AC component and apply window for fft to AC component
         double ac2 = 0.0;
         for (unsigned int position = 0; position < sampleCount; ++position) {
