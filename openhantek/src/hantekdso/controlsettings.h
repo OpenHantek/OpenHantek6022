@@ -35,6 +35,7 @@ struct ControlSettingsTrigger {
     Dso::TriggerMode mode = Dso::TriggerMode::AUTO;              ///< The trigger mode
     Dso::Slope slope = Dso::Slope::Positive;                     ///< The trigger slope
     unsigned int source = 0;                                     ///< The trigger source
+    bool smooth = false;                                         ///< Don't trigger on glitches
 };
 
 /// \brief Stores the current amplification settings of the device.

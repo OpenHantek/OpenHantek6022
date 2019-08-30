@@ -60,6 +60,6 @@ class TriggerDock : public QDockWidget {
 
 signals:
     void modeChanged(Dso::TriggerMode);     ///< The trigger mode has been changed
-    void sourceChanged(unsigned int id);    ///< The trigger source has been changed
+    void sourceChanged(unsigned int id, bool smooth);    ///< The trigger source has been changed
     void slopeChanged(Dso::Slope);          ///< The trigger slope has been changed
 };

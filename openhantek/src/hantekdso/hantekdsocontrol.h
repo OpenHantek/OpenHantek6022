@@ -231,7 +231,7 @@ class HantekDsoControl : public QObject {
     /// \brief Set the trigger source.
     /// \param id The channel that should be used as trigger.
     /// \return See ::Dso::ErrorCode.
-    Dso::ErrorCode setTriggerSource(ChannelID channel);
+    Dso::ErrorCode setTriggerSource(ChannelID channel, bool smooth);
 
     /// \brief Set the trigger level.
     /// \param channel The channel that should be set.

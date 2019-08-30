@@ -24,6 +24,9 @@ TriggerDock::TriggerDock(DsoSettingsScope *scope, const Dso::ControlSpecificatio
     // Initialize lists for comboboxes
     for (ChannelID channel = 0; channel < mSpec->channels; ++channel)
         this->sourceStandardStrings << tr("CH%1").arg(channel + 1);
+    // add "smooth" source
+    for (ChannelID channel = 0; channel < mSpec->channels; ++channel)
+        this->sourceStandardStrings << tr("CH%1 smooth").arg(channel + 1);
 
     // Initialize elements
     this->modeLabel = new QLabel(tr("Mode"));
@@ -69,8 +72,9 @@ TriggerDock::TriggerDock(DsoSettingsScope *scope, const Dso::ControlSpecificatio
             });
     connect(this->sourceComboBox, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
             [this](int index) {
-                this->scope->trigger.source = (unsigned)index;
-                emit sourceChanged((unsigned)index);
+                bool smooth = index >= (int)mSpec->channels;
+                this->scope->trigger.source = (unsigned)index & (mSpec->channels - 1) ;
+                emit sourceChanged((unsigned)index & (mSpec->channels - 1), smooth );
             });
 }
 

@@ -69,7 +69,7 @@ void applySettingsToDevice(HantekDsoControl *dsoControl, DsoSettingsScope *scope
     dsoControl->setTriggerMode(scope->trigger.mode);
     dsoControl->setTriggerPosition(scope->trigger.position);
     dsoControl->setTriggerSlope(scope->trigger.slope);
-    dsoControl->setTriggerSource(scope->trigger.source);
+    dsoControl->setTriggerSource(scope->trigger.source, scope->trigger.smooth);
 }
 
 /// \brief Initialize resources and translations and show the main window.

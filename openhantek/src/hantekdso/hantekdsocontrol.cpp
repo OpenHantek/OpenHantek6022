@@ -508,11 +508,12 @@ Dso::ErrorCode HantekDsoControl::setTriggerMode(Dso::TriggerMode mode) {
 }
 
 
-Dso::ErrorCode HantekDsoControl::setTriggerSource(ChannelID channel) {
+Dso::ErrorCode HantekDsoControl::setTriggerSource(ChannelID channel, bool smooth) {
     if (!device->isConnected())
         return Dso::ErrorCode::CONNECTION;
-    //printf("setTriggerSource( %d )\n", channel);
+    //printf("setTriggerSource( %d, %d )\n", channel, smooth);
     controlsettings.trigger.source = channel;
+    controlsettings.trigger.smooth = smooth;
     return Dso::ErrorCode::NONE;
 }
 
@@ -572,8 +573,8 @@ unsigned HantekDsoControl::searchTriggerPoint( Dso::Slope dsoSlope ) {
     // |--(samp-(disp-pre))-------|>>|
     // |<<<<<|????????????????????|>>| // ?? = search for trigger in this range [left,right]
 
-    const unsigned swTriggerSampleSet = 5; // check this number of samples before/after trigger point ...
-    const unsigned swTriggerThreshold = 3;  // ... and get at least this number below or above trigger
+    const unsigned swTriggerSampleSet = controlsettings.trigger.smooth ? 10 : 2; // check this number of samples before/after trigger point ...
+    const unsigned swTriggerThreshold = controlsettings.trigger.smooth ? 5 : 1; // ... and get at least this number below or above trigger
 
     double prev = INT_MAX * slope;
     unsigned swTriggerStart = 0;
@@ -581,13 +582,13 @@ unsigned HantekDsoControl::searchTriggerPoint( Dso::Slope dsoSlope ) {
         if ( slope * samples[i] > slope * level && slope * prev < slope * level ) { // trigger condition met
             // check for the next few SampleSet samples, if they are also above/below the trigger value
             unsigned int before = 0;
-            for (unsigned int k = i - 1; k > i - swTriggerSampleSet && k > 0; k--) {
+            for (unsigned int k = i - 1; k >= i - swTriggerSampleSet && k > 0; k--) {
                 if ( slope * samples[k] < slope * level )
                     before++;
             }
             unsigned int after = 0;
-            for (unsigned int k = i + 1; k < i + swTriggerSampleSet && k < sampleCount; k++) {
-                if ( slope * samples[k] > slope * level )
+            for (unsigned int k = i + 1; k <= i + swTriggerSampleSet && k < sampleCount; k++) {
+                if ( slope * samples[k] >= slope * level )
                     after++;
             }
             // if at least >Threshold (=5) samples before and after trig meet the condition, set trigger

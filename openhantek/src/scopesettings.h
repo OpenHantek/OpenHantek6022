@@ -45,6 +45,7 @@ struct DsoSettingsScopeTrigger {
     double position = 0.5;                          ///< Horizontal position for pretrigger (middle of screen)
     Dso::Slope slope = Dso::Slope::Positive;        ///< Rising or falling edge causes trigger
     unsigned int source = 0;                        ///< Channel that is used as trigger source
+    bool smooth = false;                            ///< Don't trigger on glitches
 };
 
 /// \brief Base for DsoSettingsScopeSpectrum and DsoSettingsScopeVoltage
