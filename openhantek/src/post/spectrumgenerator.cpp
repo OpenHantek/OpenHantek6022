@@ -170,9 +170,11 @@ void SpectrumGenerator::process(PPresult *result) {
         // calculate the peak-to-peak value of the displayed part of trace
         double min = INT_MAX;
         double max = INT_MIN;
-        unsigned dots = DIVS_TIME * scope->horizontal.timebase / channelData->voltage.interval;
+        unsigned right = result->skipSamples + DIVS_TIME * scope->horizontal.timebase / channelData->voltage.interval;
+        if ( right > sampleCount )
+            right = sampleCount;
         for (unsigned int position = result->skipSamples; // left side of trace
-             position < result->skipSamples + dots; // right side
+             position < right; // right side
              ++position) {
             if ( channelData->voltage.sample[position] < min )
                 min = channelData->voltage.sample[position];
