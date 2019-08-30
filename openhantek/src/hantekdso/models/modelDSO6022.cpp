@@ -11,10 +11,11 @@ using namespace Hantek;
 
 static ModelDSO6022BE modelInstance;
 static ModelDSO6022BL modelInstance2;
+static ModelDSO2020 modelInstance3;
 #ifdef LCSOFT_TEST_BOARD
 // two test cases with simple EZUSB board (LCsoft) without EEPROM or with Saleae VID/PID EEPROM
-static ModelEzUSB modelInstance3;
-static ModelSaleae modelInstance4;
+static ModelEzUSB modelInstance4;
+static ModelSaleae modelInstance5;
 #endif
 
 static void initSpecifications(Dso::ControlSpecification& specification) {
@@ -115,6 +116,8 @@ void applyRequirements_(HantekDsoControl *dsoControl) {
     dsoControl->addCommand(new ControlSetCalFreq());
 }
 
+//                                              VID/PID active  VID/PID no FW   FW ver    FW name     Scope name
+//                                              |------------|  |------------|  |----|  |---------|  |----------|
 ModelDSO6022BE::ModelDSO6022BE() : DSOModel(ID, 0x04b5, 0x6022, 0x04b4, 0x6022, 0x0202, "dso6022be", "DSO-6022BE",
                                             Dso::ControlSpecification(2)) {
     initSpecifications(specification);
@@ -124,6 +127,7 @@ void ModelDSO6022BE::applyRequirements(HantekDsoControl *dsoControl) const {
     applyRequirements_(dsoControl);
 }
 
+// Hantek DSO-6022BL (scope or logic analyzer)
 ModelDSO6022BL::ModelDSO6022BL() : DSOModel(ID, 0x04b5, 0x602a, 0x04b4, 0x602a, 0x0202, "dso6022bl", "DSO-6022BL",
                                             Dso::ControlSpecification(2)) {
     initSpecifications(specification);
@@ -132,6 +136,17 @@ ModelDSO6022BL::ModelDSO6022BL() : DSOModel(ID, 0x04b5, 0x602a, 0x04b4, 0x602a, 
 void ModelDSO6022BL::applyRequirements(HantekDsoControl *dsoControl) const {
    applyRequirements_(dsoControl);
 }
+
+// Voltcraft DSO-2020 USB Oscilloscope
+ModelDSO2020::ModelDSO2020() : DSOModel(ID, 0x04b5, 0x6022, 0x04b4, 0x2020, 0x0202, "dso6022be", "DSO-2020",
+                                            Dso::ControlSpecification(2)) {
+    initSpecifications(specification);
+}
+
+void ModelDSO2020::applyRequirements(HantekDsoControl *dsoControl) const {
+    applyRequirements_(dsoControl);
+}
+
 
 #ifdef LCSOFT_TEST_BOARD
 // two test cases with simple EZUSB board (LCsoft) without EEPROM or with Saleae VID/PID EEPROM
