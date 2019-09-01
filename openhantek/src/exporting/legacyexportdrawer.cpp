@@ -33,13 +33,13 @@ bool LegacyExportDrawer::exportSamples(const PPresult *result, QPaintDevice* pai
     painter.setBrush(Qt::SolidPattern);
 
     // Draw the settings table
-    double stretchBase = (double)(paintDevice->width() - lineHeight * 10) / 4;
+    double stretchBase = (double)(paintDevice->width()) / 5;
 
     // Print trigger details
     painter.setPen(colorValues->voltage[settings->scope.trigger.source]);
     QString levelString = valueToString(settings->scope.voltage[settings->scope.trigger.source].trigger, UNIT_VOLTS, 3);
     QString pretriggerString = tr("%L1%").arg((int)(settings->scope.trigger.position * 100 + 0.5));
-    painter.drawText(QRectF(0, 0, lineHeight * 10, lineHeight),
+    painter.drawText(QRectF(0, 0, stretchBase, lineHeight),
                      tr("%1  %2  %3  %4")
                          .arg(settings->scope.voltage[settings->scope.trigger.source].name,
                               Dso::slopeString(settings->scope.trigger.slope), levelString, pretriggerString));
@@ -49,79 +49,112 @@ bool LegacyExportDrawer::exportSamples(const PPresult *result, QPaintDevice* pai
     { // DataAnalyser mutex lock
         // Print sample count
         painter.setPen(colorValues->text);
-        painter.drawText(QRectF(lineHeight * 10, 0, stretchBase, lineHeight), tr("%1 S").arg(result->sampleCount()),
+        painter.drawText(QRectF(stretchBase * 1, 0, stretchBase, lineHeight), tr("%1 S").arg(result->sampleCount()),
                          QTextOption(Qt::AlignRight));
         // Print samplerate
-        painter.drawText(QRectF(lineHeight * 10 + stretchBase, 0, stretchBase, lineHeight),
+        painter.drawText(QRectF(stretchBase * 2, 0, stretchBase, lineHeight),
                          valueToString(settings->scope.horizontal.samplerate, UNIT_SAMPLES) + tr("/s"),
                          QTextOption(Qt::AlignRight));
         // Print timebase
-        painter.drawText(QRectF(lineHeight * 10 + stretchBase * 2, 0, stretchBase, lineHeight),
+        painter.drawText(QRectF(stretchBase * 3, 0, stretchBase, lineHeight),
                          valueToString(settings->scope.horizontal.timebase, UNIT_SECONDS, 0) + tr("/div"),
                          QTextOption(Qt::AlignRight));
         // Print frequencybase
-        painter.drawText(QRectF(lineHeight * 10 + stretchBase * 3, 0, stretchBase, lineHeight),
+        painter.drawText(QRectF(stretchBase * 4, 0, stretchBase, lineHeight),
                          valueToString(settings->scope.horizontal.frequencybase, UNIT_HERTZ, 0) + tr("/div"),
                          QTextOption(Qt::AlignRight));
 
         // Draw the measurement table
-        stretchBase = (double)(paintDevice->width() - lineHeight * 6) / 16;
+        stretchBase = (double)(paintDevice->width() ) / 30;
         int channelCount = 0;
         for (int channel = settings->scope.voltage.size() - 1; channel >= 0; channel--) {
             if ((settings->scope.voltage[channel].used || settings->scope.spectrum[channel].used) &&
                 result->data(channel)) {
                 ++channelCount;
                 double top = (double)paintDevice->height() - channelCount * lineHeight;
-
+                double tPos=0.0, tWidth;
                 // Print label
+                tWidth = 2;
                 painter.setPen(colorValues->voltage[channel]);
-                painter.drawText(QRectF(0, top, lineHeight * 4, lineHeight), settings->scope.voltage[channel].name);
+                painter.drawText(
+                    QRectF( stretchBase * tPos, top, stretchBase * tWidth, lineHeight ),
+                    settings->scope.voltage[channel].name );
                 // Print coupling/math mode
-                if ((unsigned int)channel < deviceSpecification->channels)
-                    painter.drawText(QRectF(lineHeight * 4, top, lineHeight * 2, lineHeight),
-                                     Dso::couplingString(settings->scope.coupling(channel, deviceSpecification)));
+                tPos += tWidth;
+                tWidth = 3.5;
+                if ( (unsigned int)channel < deviceSpecification->channels )
+                    painter.drawText(
+                        QRectF( stretchBase * tPos, top, stretchBase * tWidth, lineHeight ),
+                        Dso::couplingString( settings->scope.coupling(channel, deviceSpecification) ) );
                 else
                     painter.drawText(
-                        QRectF(lineHeight * 4, top, lineHeight * 2, lineHeight),
-                        Dso::mathModeString(Dso::getMathMode(settings->scope.voltage[channel])));
+                        QRectF( stretchBase * tPos, top, stretchBase * tWidth, lineHeight ),
+                        Dso::mathModeString(Dso::getMathMode(settings->scope.voltage[channel]) ) );
 
                 // Print voltage gain
-                painter.drawText(QRectF(lineHeight * 6, top, stretchBase * 2, lineHeight),
-                                 valueToString(settings->scope.gain(channel), UNIT_VOLTS, 0) + tr("/div"),
-                                 QTextOption(Qt::AlignRight));
+                tPos += tWidth;
+                tWidth = 3;
+                painter.drawText( 
+                    QRectF( stretchBase * tPos, top, stretchBase * tWidth, lineHeight ),
+                        valueToString(settings->scope.gain(channel), UNIT_VOLTS, 0) + tr("/div"),
+                        QTextOption(Qt::AlignRight) );
                 // Print spectrum magnitude
+                tPos += tWidth;
+                tWidth = 3;
                 if (settings->scope.spectrum[channel].used) {
                     painter.setPen(colorValues->spectrum[channel]);
-                    painter.drawText(QRectF(lineHeight * 6 + stretchBase * 2, top, stretchBase * 2, lineHeight),
-                                     valueToString(settings->scope.spectrum[channel].magnitude, UNIT_DECIBEL, 0) +
-                                         tr("/div"),
-                                     QTextOption(Qt::AlignRight));
+                    painter.drawText( 
+                        QRectF( stretchBase * tPos, top, stretchBase * tWidth, lineHeight ),
+                            valueToString(settings->scope.spectrum[channel].magnitude, UNIT_DECIBEL, 0) +
+                            tr("/div"), QTextOption(Qt::AlignRight) );
                 }
 
-                // DC amplitude string representation (4 significant digits)
+                // Vpp Amplitude string representation (3 significant digits)
+                tPos += tWidth;
+                tWidth = 3;
                 painter.setPen(colorValues->text);
-                painter.drawText(QRectF(lineHeight * 6 + stretchBase * 4, top, stretchBase * 3, lineHeight),
-                                 valueToString(result->data(channel)->dc, UNIT_VOLTS, 4) + " =",
-                                 QTextOption(Qt::AlignRight));
-                // AC RMS amplitude string representation (4 significant digits)
+                painter.drawText( QRectF( stretchBase * tPos, top, stretchBase * tWidth, lineHeight ),
+                                 valueToString(result->data(channel)->vpp, UNIT_VOLTS, 3) + "pp",
+                                 QTextOption(Qt::AlignRight) );
+                // RMS Amplitude string representation (3 significant digits)
+                tPos += tWidth;
+                tWidth = 3.5;
                 painter.setPen(colorValues->text);
-                painter.drawText(QRectF(lineHeight * 6 + stretchBase * 7, top, stretchBase * 3, lineHeight),
-                                 valueToString(result->data(channel)->ac, UNIT_VOLTS, 4) + " ~",
-                                 QTextOption(Qt::AlignRight));
-                // DC + AC RMS amplitude string representation (4 significant digits)
+                painter.drawText(QRectF( stretchBase * tPos, top, stretchBase * tWidth, lineHeight ),
+                                 valueToString(result->data(channel)->rms, UNIT_VOLTS, 3) + "rms",
+                                 QTextOption(Qt::AlignRight) );
+                // DC Amplitude string representation (3 significant digits)
+                tPos += tWidth;
+                tWidth = 3;
                 painter.setPen(colorValues->text);
-                painter.drawText(QRectF(lineHeight * 6 + stretchBase * 10, top, stretchBase * 3, lineHeight),
-                                 valueToString(result->data(channel)->rms, UNIT_VOLTS, 4) + " eff",
-                                 QTextOption(Qt::AlignRight));
+                painter.drawText(QRectF( stretchBase * tPos, top, stretchBase * tWidth, lineHeight ),
+                                 valueToString(result->data(channel)->dc, UNIT_VOLTS, 3) + "=",
+                                 QTextOption(Qt::AlignRight) );
+                // AC Amplitude string representation (3 significant digits)
+                tPos += tWidth;
+                tWidth = 3;
+                painter.setPen(colorValues->text);
+                painter.drawText( QRectF( stretchBase * tPos, top, stretchBase * tWidth, lineHeight ),
+                                 valueToString(result->data(channel)->ac, UNIT_VOLTS, 3) + "~",
+                                 QTextOption(Qt::AlignRight) );
+                // dB Amplitude string representation (3 significant digits)
+                tPos += tWidth;
+                tWidth = 3;
+                painter.setPen(colorValues->text);
+                painter.drawText( QRectF( stretchBase * tPos, top, stretchBase * tWidth, lineHeight ),
+                                 valueToString(result->data(channel)->dB, UNIT_DECIBEL, 3),
+                                 QTextOption(Qt::AlignRight) );
                 // Frequency string representation (4 significant digits)
-                painter.drawText(QRectF(lineHeight * 6 + stretchBase * 13, top, stretchBase * 3, lineHeight),
+                tPos += tWidth;
+                tWidth = 3;
+                painter.drawText( QRectF( stretchBase * tPos, top, stretchBase * tWidth, lineHeight ),
                                  valueToString(result->data(channel)->frequency, UNIT_HERTZ, 4),
-                                 QTextOption(Qt::AlignRight));
+                                 QTextOption(Qt::AlignRight) );
             }
         }
 
         // Draw the marker table
-        stretchBase = (double)(paintDevice->width() - lineHeight * 10) / 4;
+        stretchBase = (double)paintDevice->width() / 5;
         painter.setPen(colorValues->text);
 
         // Calculate variables needed for zoomed scope
@@ -139,15 +172,15 @@ bool LegacyExportDrawer::exportSamples(const PPresult *result, QPaintDevice* pai
             painter.drawText(QRectF(0, top, stretchBase, lineHeight),
                              tr("Zoom x%L1").arg(DIVS_TIME / divs, -1, 'g', 3));
 
-            painter.drawText(QRectF(lineHeight * 10, top, stretchBase, lineHeight),
+            painter.drawText(QRectF(stretchBase, top, stretchBase, lineHeight),
                              valueToString(time, UNIT_SECONDS, 4), QTextOption(Qt::AlignRight));
-            painter.drawText(QRectF(lineHeight * 10 + stretchBase, top, stretchBase, lineHeight),
+            painter.drawText(QRectF(stretchBase * 2, top, stretchBase, lineHeight),
                              valueToString(1.0 / time, UNIT_HERTZ, 4), QTextOption(Qt::AlignRight));
 
-            painter.drawText(QRectF(lineHeight * 10 + stretchBase * 2, top, stretchBase, lineHeight),
+            painter.drawText(QRectF(stretchBase * 3, top, stretchBase, lineHeight),
                              valueToString(time / DIVS_TIME, UNIT_SECONDS, 3) + tr("/div"),
                              QTextOption(Qt::AlignRight));
-            painter.drawText(QRectF(lineHeight * 10 + stretchBase * 3, top, stretchBase, lineHeight),
+            painter.drawText(QRectF(stretchBase * 4, top, stretchBase, lineHeight),
                              valueToString(divs * settings->scope.horizontal.frequencybase / DIVS_TIME, UNIT_HERTZ, 3) +
                                  tr("/div"),
                              QTextOption(Qt::AlignRight));
@@ -157,9 +190,9 @@ bool LegacyExportDrawer::exportSamples(const PPresult *result, QPaintDevice* pai
 
             painter.drawText(QRectF(0, top, stretchBase, lineHeight), tr("Marker 1/2"));
 
-            painter.drawText(QRectF(lineHeight * 10, top, stretchBase * 2, lineHeight),
+            painter.drawText(QRectF(stretchBase * 0, top, stretchBase, lineHeight),
                              valueToString(time, UNIT_SECONDS, 4), QTextOption(Qt::AlignRight));
-            painter.drawText(QRectF(lineHeight * 10 + stretchBase * 2, top, stretchBase * 2, lineHeight),
+            painter.drawText(QRectF(stretchBase * 1, top, stretchBase, lineHeight),
                              valueToString(1.0 / time, UNIT_HERTZ, 4), QTextOption(Qt::AlignRight));
         }
 

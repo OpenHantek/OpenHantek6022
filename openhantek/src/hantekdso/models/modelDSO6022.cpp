@@ -9,9 +9,9 @@
 
 using namespace Hantek;
 
-static ModelDSO6022BE modelInstance;
-static ModelDSO6022BL modelInstance2;
-static ModelDSO2020 modelInstance3;
+static ModelDSO2020 modelInstance_20;
+static ModelDSO6022BE modelInstance_22;
+static ModelDSO6022BL modelInstance_2a;
 #ifdef LCSOFT_TEST_BOARD
 // two test cases with simple EZUSB board (LCsoft) without EEPROM or with Saleae VID/PID EEPROM
 static ModelEzUSB modelInstance4;

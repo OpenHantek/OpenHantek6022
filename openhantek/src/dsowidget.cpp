@@ -666,22 +666,22 @@ void DsoWidget::showNew(std::shared_ptr<PPresult> data) {
     updateRecordLength(data.get()->sampleCount());
     for (ChannelID channel = 0; channel < scope->voltage.size(); ++channel) {
         if (scope->voltage[channel].used && data.get()->data(channel)) {
-            // Vpp Amplitude string representation (4 significant digits)
+            // Vpp Amplitude string representation (3 significant digits)
             measurementVppLabel[channel]->setText(
                 valueToString( data.get()->data(channel)->vpp, UNIT_VOLTS, 3 ) + "pp" );
-            // RMS Amplitude string representation (4 significant digits)
+            // RMS Amplitude string representation (3 significant digits)
             measurementRMSLabel[channel]->setText(
                 valueToString( data.get()->data(channel)->rms, UNIT_VOLTS, 3 ) + "rms" );
-            // DC Amplitude string representation (4 significant digits)
+            // DC Amplitude string representation (3 significant digits)
             measurementDCLabel[channel]->setText(
                 valueToString( data.get()->data(channel)->dc, UNIT_VOLTS, 3 ) + "=" );
-            // AC Amplitude string representation (4 significant digits)
+            // AC Amplitude string representation (3 significant digits)
             measurementACLabel[channel]->setText(
                 valueToString( data.get()->data(channel)->ac, UNIT_VOLTS, 3 ) + "~" );
             // dB Amplitude string representation (3 significant digits)
             measurementdBLabel[channel]->setText(
                 valueToString( data.get()->data(channel)->dB, UNIT_DECIBEL, 3 ) );
-            // Frequency string representation (4 significant digits)
+            // Frequency string representation (3 significant digits)
             measurementFrequencyLabel[channel]->setText(
                 valueToString( data.get()->data(channel)->frequency, UNIT_HERTZ, 4 ) );
             // Highlight clipped channel
