@@ -138,6 +138,7 @@ void ModelDSO6022BL::applyRequirements(HantekDsoControl *dsoControl) const {
 }
 
 // Voltcraft DSO-2020 USB Oscilloscope
+// Scope starts up as model DS-2020 (VID/PID = 04b4/2020) but loads 6022BE firmware and looks like a 6022BE 
 ModelDSO2020::ModelDSO2020() : DSOModel(ID, 0x04b5, 0x6022, 0x04b4, 0x2020, 0x0202, "dso6022be", "DSO-2020",
                                             Dso::ControlSpecification(2)) {
     initSpecifications(specification);
@@ -150,7 +151,7 @@ void ModelDSO2020::applyRequirements(HantekDsoControl *dsoControl) const {
 
 #ifdef LCSOFT_TEST_BOARD
 // two test cases with simple EZUSB board (LCsoft) without EEPROM or with Saleae VID/PID EEPROM
-
+// after loading the FW they look like a 6022BE (without useful sample values as Port B and D are left open)
 ModelEzUSB::ModelEzUSB() : DSOModel(ID, 0x04b5, 0x6022, 0x04b4, 0x8613, 0x0202, "dso6022be", "LCsoft-EzUSB",
                                             Dso::ControlSpecification(2)) {
     initSpecifications(specification);

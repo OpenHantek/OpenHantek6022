@@ -107,7 +107,7 @@ bool USBDevice::connectDevice(QString &errorMessage) {
 
 USBDevice::~USBDevice() {
     disconnectFromDevice();
-#if defined(_WIN32) || defined(_WIN64)
+#if defined Q_OS_WIN
     if (device != nullptr)
         libusb_unref_device(device);
     device = nullptr;
@@ -152,7 +152,7 @@ void USBDevice::disconnectFromDevice() {
     }
     this->handle = nullptr;
 
-#if !defined(_WIN32) && !defined(_WIN64)
+#if !defined Q_OS_WIN
     libusb_unref_device(device);
 #endif
 

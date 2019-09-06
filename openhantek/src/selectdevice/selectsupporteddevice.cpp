@@ -60,21 +60,22 @@ std::unique_ptr<USBDevice> SelectSupportedDevice::showSelectDeviceModal(libusb_c
         }
     });
 
-    QString messageNoDevices = tr("<p>OpenHantek did not find any compatible devices.</p>"
+    QString messageNoDevices = tr("<p>OpenHantek6022 is searching for compatible devices...</p>"
                                 "<p><img align='right' height='150' src='qrc:///switch_6022BL.png'>"
                                 "Don't forget to switch your device into oscilloscope mode if it has multiple modes.</p>"
                                 );
     #if defined(Q_OS_WIN)
         messageNoDevices += tr("<p>Please make sure you have installed the windows usb driver correctly</p>");
     #elif defined(Q_OS_LINUX)
-        QFile file("/lib/udev/rules.d/60-hantek.rules");
-        if (!file.exists()) {
-            messageNoDevices += tr("<p>Please make sure you have copied the udev rules file to <b>%1</b> for correct USB access permissions.</p>").arg(file.fileName());
+        QFile libRules("/lib/udev/rules.d/60-hantek.rules");
+        QFile etcRules("/etc/udev/rules.d/60-hantek.rules");
+        if ( !libRules.exists() && !etcRules.exists() ) {
+            messageNoDevices += tr("<p>Please make sure you have copied the udev rules file to <b>%1</b> for correct USB access permissions.</p>").arg(libRules.fileName());
         }
     #else
     #endif
         messageNoDevices += tr("<p>Visit the build and run instruction "
-                          "<a href='https://github.com/OpenHantek/openhantek/blob/master/docs/build.md'>website</a> for help.</p>");
+                          "<a href='https://github.com/OpenHantek/OpenHantek6022/blob/master/docs/build.md'>website</a> for help.</p>");
 
     updateSupportedDevices();
 
