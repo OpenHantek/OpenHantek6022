@@ -1,7 +1,7 @@
 // define the version that is shown on top of the program
 // if undefined the build date will be used by OpenHantek
 
-#define OH_VERSION "v2.14"
+// #define OH_VERSION "v2.15-rc1"
 
 #ifdef OH_VERSION
 #undef VERSION

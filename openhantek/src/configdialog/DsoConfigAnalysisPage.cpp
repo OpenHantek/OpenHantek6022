@@ -17,7 +17,7 @@ DsoConfigAnalysisPage::DsoConfigAnalysisPage(DsoSettings *settings, QWidget *par
     windowFunctionComboBox->addItems(windowFunctionStrings);
     windowFunctionComboBox->setCurrentIndex((int)settings->post.spectrumWindow);
 
-    referenceLevelLabel = new QLabel(tr("<b>Reference level</b><br/>0 dBu = -2.2 dBV<br/>0 dBm(@600 Ω) = -2.2 dBV<br/>0 dBm(@50 Ω) = -13 dBV"));
+    referenceLevelLabel = new QLabel(tr("<b>Reference level</b><br/>0 dBu = -2.2 dBV<br/>0 dBm (@600 &Omega;) = -2.2 dBV<br/>0 dBm (@50 &Omega;) = -13 dBV"));
     referenceLevelSpinBox = new QDoubleSpinBox();
     referenceLevelSpinBox->setDecimals(1);
     referenceLevelSpinBox->setMinimum(-100.0);

@@ -414,7 +414,7 @@ static QString markerToString(DsoSettingsScope *scope, unsigned index) {
     else if (scope->horizontal.timebase < 1e-6)
         return QApplication::tr("%L1 ns").arg(value / 1e-9, 0, 'f', qBound(0, precision - 9, 3));
     else if (scope->horizontal.timebase < 1e-3)
-        return QApplication::tr("%L1 µs").arg(value / 1e-6, 0, 'f', qBound(0, precision - 6, 3));
+        return QApplication::tr("%L1 \u03BCs").arg(value / 1e-6, 0, 'f', qBound(0, precision - 6, 3));
     else if (scope->horizontal.timebase < 1)
         return QApplication::tr("%L1 ms").arg(value / 1e-3, 0, 'f', qBound(0, precision - 3, 3));
     else

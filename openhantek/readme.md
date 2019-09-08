@@ -7,10 +7,10 @@ Detailed information about an implementation are to be found in the specific dir
 ## Directory structure
 
 The *res* folder contains mostly binary resource data that are bundled with the executable,
-like icons, images and firmwares.
+like icons, images, firmwares and translations.
 
-The *translations* folder contains translations in the Qt format. Use Qt linguist
-as a handy graphical interface to translate OpenHantek.
+The *res/translations* folder contains translations in the Qt format. Use Qt linguist
+as a handy graphical interface to translate OpenHantek. A [Translation HowTo](res/translations/Translation_HowTo.md) is available.
 
 The source code within *src* can be divided into a **core**, that is responsible for device communication,
 data acquisition and post processing and the **graphical interface** with several custom widgets,

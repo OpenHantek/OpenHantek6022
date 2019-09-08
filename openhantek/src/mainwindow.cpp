@@ -280,7 +280,7 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, Expo
     connect(ui->actionAbout, &QAction::triggered, [this]() {
         QMessageBox::about(
             this, tr("About OpenHantek6022 (%1)").arg(VERSION),
-            tr("<p>This is a open source software for Hantek6022 USB oscilloscopes</p>"
+            tr("<p>Open source software for Hantek6022 USB oscilloscopes</p>"
                "<p>Copyright &copy; 2010, 2011 Oliver Haag</p>"
                "<p>Copyright &copy; 2012-2019 OpenHantek community<br/>"
                "<a href='https://github.com/OpenHantek'>https://github.com/OpenHantek</a></p>"
