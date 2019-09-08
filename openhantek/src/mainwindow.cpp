@@ -281,11 +281,10 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, Expo
         QMessageBox::about(
             this, tr("About OpenHantek6022 (%1)").arg(VERSION),
             tr("<p>This is a open source software for Hantek6022 USB oscilloscopes</p>"
-               "<p>Copyright &copy; 2010, 2011 Oliver Haag<br><a "
-               "href='mailto:oliver.haag@gmail.com'>oliver.haag@gmail.com</a></p>"
-               "<p>Copyright &copy; 2012-2019 OpenHantek community<br>"
+               "<p>Copyright &copy; 2010, 2011 Oliver Haag</p>"
+               "<p>Copyright &copy; 2012-2019 OpenHantek community<br/>"
                "<a href='https://github.com/OpenHantek'>https://github.com/OpenHantek</a></p>"
-               "<p>Open source firmware copyright &copy; 2019 Ho-Ro<br>"
+               "<p>Open source firmware copyright &copy; 2019 Ho-Ro<br/>"
                "<a href='https://github.com/Ho-Ro/Hantek6022API'>https://github.com/Ho-Ro/Hantek6022API</a></p>"
             )
         );

@@ -8,7 +8,6 @@
 #include <QSurfaceFormat>
 #include <QTranslator>
 #ifdef __linux__
-//#include <QStyle>
 #include <QStyleFactory>
 #endif
 #include <iostream>
@@ -101,7 +100,6 @@ int main(int argc, char *argv[]) {
     QApplication openHantekApplication(argc, argv);
 
 #ifdef __linux__
-    // qDebug() << QStyleFactory::keys();
     // Qt5 linux default
     // ("Breeze", "Windows", "Fusion")
     // with package qt5-style-plugins
