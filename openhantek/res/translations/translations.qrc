@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/translations">
+        <file>openhantek_de.ts</file>
+        <file>openhantek_fr.ts</file>
+        <file>openhantek_pt.ts</file>
+    </qresource>
+</RCC>

@@ -2,30 +2,61 @@
 
 ## Quick HowTo
 
-1. Go to the translation directory `OpenHantek6022/openhantek/res/translations`.
+Go to the translation directory `openhantek/res/translations`.
 
-2. Prepare a translation for a new language or update the translation for an already existing language 
-after adding or changing the text (e.g. use `<LANG> = fr` for a french translation):
+### Linux users 
 
-   `lupdate -recursive ../../src -ts openhantek_<LANG>.ts`
+3 simple shell scripts simplify the translation:
+```
+1.LUPDATE.sh
+2.LINGUIST.sh 
+3.LRELEASE.sh
+```
+Add your new language to the `LANGUAGES` line of `1.LUPDATE.sh`
+```
+LANGUAGES="openhantek_de.ts openhantek_fr.ts openhantek_pt.ts"
+```
+adapt your language in `2.LINGUIST.sh` 
+```
+linguist openhantek_de.ts
+```
+and call the 3 scripts in sequence.
 
-3. Translate the strings using linguist, unprocessed strings remain untranslated:
+### Other operating systems
 
-   `linguist openhantek_<LANG>.ts`
+Do it step by step:
 
-4. For a newly added language update the entries in the project file `openhantek.pro` accordingly.
+1. Update the translation for an already existing language after adding or changing the text 
+or prepare a translation for a new language (use e.g. `<LANG> = fr` for a french translation):
 
-5. Create the binary translation:
+`lupdate -recursive ../../src -ts openhantek_<LANG>.ts`
 
-   `lrelease openhantek.pro`
+2. Translate the strings using linguist, unprocessed strings remain untranslated:
 
-6. For a newly added language update the entries in the resource file `../translations.qrc` accordingly.
+`linguist openhantek_<LANG>.ts`
 
-7. Go to the `build` directory and issue these commands:
+3. For a newly added language update the entries in the project file `translations.pro` accordingly.
+```
+TRANSLATIONS = openhantek_de.ts openhantek_fr.ts openhantek_pt.ts
+```
 
-   `cmake ../`
-   `make clean`
-   `make -j2`
+4. Create the binary translation:
 
+`lrelease openhantek.pro`
+
+5. For a newly added language update the entries in the resource file `translations.qrc` accordingly.
+```
+<RCC>
+    <qresource prefix="/translations">
+        <file>openhantek_de.qm</file>
+        <file>openhantek_fr.qm</file>
+        <file>openhantek_pt.qm</file>
+    </qresource>
+</RCC>
+```
+
+### Create a new binary
+
+Go to the `build` directory and call `make -j2`
 
 Use the option `--translated` to have the program localized: `OpenHantek --translated`
