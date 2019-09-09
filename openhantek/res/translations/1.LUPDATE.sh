@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 LANGUAGES="openhantek_de.ts openhantek_fr.ts openhantek_pt.ts"
 
@@ -10,7 +10,7 @@ LUPDATE="lupdate -recursive"
 SRC=../../src
 
 for LANGUAGE in $LANGUAGES; do
-    ${LUPDATE} ${SRC} -ts $ANGUAGE
+    ${LUPDATE} ${SRC} -ts $LANGUAGE
 done
 
 # prepare step 3 (lrelease)
@@ -21,7 +21,7 @@ QRC=translations.qrc
 echo '<RCC>' > $QRC
 echo '    <qresource prefix="/translations">' >> $QRC
 for LANGUAGE in $LANGUAGES; do
-    echo "        <file>${LANGUAGE}</file>" >> $QRC
+    echo "        <file>${LANGUAGE/ts/qm}</file>" >> $QRC
 done
 echo '    </qresource>' >> $QRC
 echo '</RCC>' >> $QRC
