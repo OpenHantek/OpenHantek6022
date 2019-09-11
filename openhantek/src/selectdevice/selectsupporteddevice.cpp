@@ -49,19 +49,23 @@ std::unique_ptr<USBDevice> SelectSupportedDevice::showSelectDeviceModal(libusb_c
         }
         if (ui->cmbDevices->currentData(Qt::UserRole+1).toBool()) {
             ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(true);
-            ui->labelReadyState->setText(tr("Device ready to use"));
+            ui->labelReadyState->setText(
+                tr("<br/><p>The device is ready for use.</p><p>Please observe the "
+                   "<a href='https://github.com/OpenHantek/OpenHantek6022/blob/master/docs/OpenHantek6022_User_Manual.pdf'>"
+                   "user manual</a> for safe operation.</p>"));
         } else {
             ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(false);
             if (ui->cmbDevices->currentData(Qt::UserRole+2).toBool()) {
-                ui->labelReadyState->setText(tr("<p>Upload in progress...</p><p>If the upload takes more than 30 s, please close this window <br/>and restart the program!</p>"));
+                ui->labelReadyState->setText(tr("<p>Upload in progress ...</p>"
+                "<p>If the upload takes more than 30 s, please close this window <br/>and restart the program!</p>"));
             } else {
                 ui->labelReadyState->setText(tr("Connection failed!"));
             }
         }
     });
 
-    QString messageNoDevices = tr("<p>OpenHantek6022 is searching for compatible devices...</p>"
-                                "<p><img align='right' height='150' src='qrc:///switch_6022BL.png'>"
+    QString messageNoDevices = tr("<p>OpenHantek6022 is searching for compatible devices ...</p>"
+                                "<p><img align='right' height='200' src='qrc:///switch_6022BL.png'>"
                                 "Don't forget to switch your device into oscilloscope mode if it has multiple modes.</p>"
                                 );
     #if defined(Q_OS_WIN)

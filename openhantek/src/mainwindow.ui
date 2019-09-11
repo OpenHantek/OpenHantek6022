@@ -55,6 +55,7 @@
     <property name="title">
      <string>&amp;Help</string>
     </property>
+    <addaction name="actionUserManual"/>
     <addaction name="actionAbout"/>
    </widget>
    <widget class="QMenu" name="menuExport">
@@ -158,6 +159,11 @@
   <action name="actionToolbars">
    <property name="text">
     <string>Toolbars</string>
+   </property>
+  </action>
+  <action name="actionUserManual">
+   <property name="text">
+    <string>User Manual</string>
    </property>
   </action>
   <action name="actionAbout">

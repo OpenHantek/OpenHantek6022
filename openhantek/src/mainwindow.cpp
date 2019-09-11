@@ -23,6 +23,7 @@
 #include <QFileDialog>
 #include <QLineEdit>
 #include <QMessageBox>
+#include <QDesktopServices>
 
 #include "OH_VERSION.h"
 
@@ -30,8 +31,9 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, Expo
                        QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow), mSettings(settings), exporterRegistry(exporterRegistry) {
     ui->setupUi(this);
-    ui->actionSave->setIcon(iconFont->icon(fa::save));
     ui->actionAbout->setIcon(iconFont->icon(fa::questioncircle));
+    ui->actionUserManual->setIcon(iconFont->icon(fa::filepdfo));
+    ui->actionSave->setIcon(iconFont->icon(fa::save));
     ui->actionOpen->setIcon(iconFont->icon(fa::folderopen));
     ui->actionSampling->setIcon(iconFont->icon(fa::pause,
                                                {std::make_pair("text-selected-off", QChar(fa::play)),
@@ -276,6 +278,10 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, Expo
         this->dsoWidget->updateCursorGrid(enabled);
     });
     ui->actionMeasure->setChecked(mSettings->view.cursorsVisible);
+
+    connect(ui->actionUserManual, &QAction::triggered, [this]() {
+            QDesktopServices::openUrl(QUrl("https://github.com/OpenHantek/OpenHantek6022/blob/master/docs/OpenHantek6022_User_Manual.pdf"));
+    });
 
     connect(ui->actionAbout, &QAction::triggered, [this]() {
         QMessageBox::about(
