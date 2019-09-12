@@ -25,7 +25,8 @@ file(GLOB_RECURSE QRC "res/*.qrc")
 add_custom_target(format SOURCES ".clang-format"
     COMMAND "clang-format" "-style=file" "-i" "-sort-includes" ${SRC} ${HEADERS})
 
-#add_subdirectory(translations)
+# here the translation magic happens
+include(translations/Translations.cmake)
 
 add_definitions(-DVERSION="${CPACK_PACKAGE_VERSION}")
 
@@ -68,3 +69,4 @@ endif()
 install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION "bin")
 
 include(../cmake/copy_qt5_dlls_to_bin_dir.cmake)
+

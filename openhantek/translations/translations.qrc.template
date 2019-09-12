@@ -1,0 +1,4 @@
+<RCC>
+    <qresource prefix="/translations">@QRC_ITEMS@
+    </qresource>
+</RCC>

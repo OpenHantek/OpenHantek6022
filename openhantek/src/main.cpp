@@ -84,7 +84,6 @@ int main(int argc, char *argv[]) {
 #endif
 
     bool useGLES = false;
-    bool translated = false;
     {
         QCoreApplication parserApp(argc, argv);
         QCommandLineParser p;
@@ -92,11 +91,8 @@ int main(int argc, char *argv[]) {
         p.addVersionOption();
         QCommandLineOption useGlesOption("useGLES", QCoreApplication::tr("Use OpenGL ES instead of OpenGL"));
         p.addOption(useGlesOption);
-        QCommandLineOption translatedOption("translated", QCoreApplication::tr("Show translated UI (if available)"));
-        p.addOption(translatedOption);
         p.process(parserApp);
         useGLES = p.isSet(useGlesOption);
-        translated = p.isSet(translatedOption);
     }
 
     GlScope::fixOpenGLversion( useGLES ? QSurfaceFormat::OpenGLES : QSurfaceFormat::OpenGL );
@@ -117,11 +113,9 @@ int main(int argc, char *argv[]) {
         openHantekApplication.installTranslator(&qtTranslator);
 
     QTranslator openHantekTranslator;
-    if ( translated ) {
-        if (openHantekTranslator.load(QLocale(), QLatin1String("openhantek"), QLatin1String("_"),
-                                    QLatin1String(":/translations"))) {
-            openHantekApplication.installTranslator(&openHantekTranslator);
-        }
+    if (openHantekTranslator.load(QLocale(), QLatin1String("openhantek"), QLatin1String("_"),
+                                  QLatin1String(":/translations"))) {
+        openHantekApplication.installTranslator(&openHantekTranslator);
     }
 
     //////// Find matching usb devices ////////

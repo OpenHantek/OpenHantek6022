@@ -22,8 +22,8 @@ QVariant DevicesListModel::headerData(int section, Qt::Orientation orientation, 
         return QAbstractTableModel::headerData(section, orientation, role);
     if (role == Qt::DisplayRole) {
         switch(section) {
-        case 0: return tr("Devicename");
-        case 1: return tr("Status");
+            case 0: return QObject::tr("Devicename");
+        case 1: return QObject::tr("Status");
         default: return QVariant();
         }
     }

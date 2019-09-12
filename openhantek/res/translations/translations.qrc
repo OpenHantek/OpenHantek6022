@@ -1,7 +1,0 @@
-<RCC>
-    <qresource prefix="/translations">
-        <file>openhantek_de.qm</file>
-        <file>openhantek_fr.qm</file>
-        <file>openhantek_pt.qm</file>
-    </qresource>
-</RCC>

@@ -197,7 +197,7 @@ void GlScope::initializeGL() {
         return;
     }
     if (m_program) {
-        qWarning() << "OpenGL init called twice!";
+        qWarning() << tr("OpenGL init called twice!");
         return;
     }
 
@@ -260,13 +260,13 @@ void GlScope::initializeGL() {
     bool usesOpenGL = QSurfaceFormat::defaultFormat().renderableType()==QSurfaceFormat::OpenGL;
     if (!program->addShaderFromSourceCode(QOpenGLShader::Vertex, usesOpenGL ? vshaderDesktop : vshaderES) ||
         !program->addShaderFromSourceCode(QOpenGLShader::Fragment, usesOpenGL ? fshaderDesktop : fshaderES)) {
-        errorMessage = "Failed to compile OpenGL shader programs.\n" + program->log();
+        errorMessage = tr("Failed to compile OpenGL shader programs.\n") + program->log();
         return;
     }
 
     // Link shader pipeline
     if (!program->link() || !program->bind()) {
-        errorMessage = "Failed to link/bind OpenGL shader programs\n" + program->log();
+        errorMessage = tr("Failed to link/bind OpenGL shader programs.\n") + program->log();
         return;
     }
 
@@ -275,7 +275,7 @@ void GlScope::initializeGL() {
     colorLocation = program->uniformLocation("colour");
 
     if (vertexLocation == -1 || colorLocation == -1 || matrixLocation == -1) {
-        qWarning() << "Failed to locate shader variable";
+        qWarning() << tr("Failed to locate shader variable.");
         return;
     }
 
