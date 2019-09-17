@@ -843,13 +843,13 @@
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="21"/>
-        <source>%L1 μV</source>
+        <source>%L1 µV</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="48"/>
         <location filename="../src/dsowidget.cpp" line="417"/>
-        <source>%L1 μs</source>
+        <source>%L1 µs</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

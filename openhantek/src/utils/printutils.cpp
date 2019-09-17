@@ -18,7 +18,7 @@ QString valueToString(double value, Unit unit, int precision) {
         // Voltage string representation
         int logarithm = floor(log10(fabs(value)));
         if (fabs(value) < 1e-3)
-            return QApplication::tr("%L1 \u03BCV").arg(value / 1e-6, 0, format,
+            return QApplication::tr("%L1 µV").arg(value / 1e-6, 0, format,
                                                   (precision <= 0) ? precision
                                                                    : qBound(0, precision - 7 - logarithm, precision));
         else if (fabs(value) < 1.0)
@@ -45,7 +45,7 @@ QString valueToString(double value, Unit unit, int precision) {
                                                   (precision <= 0) ? precision
                                                                    : (precision - 10 - (int)floor(log10(fabs(value)))));
         else if (fabs(value) < 1e-3)
-            return QApplication::tr("%L1 \u03BCs").arg(value / 1e-6, 0, format,
+            return QApplication::tr("%L1 µs").arg(value / 1e-6, 0, format,
                                                   (precision <= 0) ? precision
                                                                    : (precision - 7 - (int)floor(log10(fabs(value)))));
         else if (fabs(value) < 1.0)
@@ -140,7 +140,7 @@ double stringToValue(const QString &text, Unit unit, bool *ok) {
     switch (unit) {
     case UNIT_VOLTS: {
         // Voltage string decoding
-        if (unitString.startsWith("\u03BC")) // my
+        if (unitString.startsWith("µ")) // my
             return value * 1e-6;
         else if (unitString.startsWith('m'))
             return value * 1e-3;
@@ -157,7 +157,7 @@ double stringToValue(const QString &text, Unit unit, bool *ok) {
             return value * 1e-12;
         else if (unitString.startsWith('n'))
             return value * 1e-9;
-        else if (unitString.startsWith("\u03BC")) // my
+        else if (unitString.startsWith("µ")) // my
             return value * 1e-6;
         else if (unitString.startsWith("min"))
             return value * 60;
