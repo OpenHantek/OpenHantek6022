@@ -52,7 +52,7 @@ void MathChannelGenerator::process(PPresult *result) {
                 calculate = []( double, double ) -> double { return 0.0; };
                 break;
         }
-        for (std::vector<double>::iterator it = resultData.begin(); it != resultData.end(); ++it) {
+        for (auto it = resultData.begin(), end = resultData.end(); it != end; ++it) {
             *it = sign * calculate( *ch1Iterator++, *ch2Iterator++ );
         }
     } else { // unary operators (calculate "AC coupling")
@@ -68,16 +68,18 @@ void MathChannelGenerator::process(PPresult *result) {
 
         // calculate DC component of channel...
         double average = 0;
-        for ( std::vector<double>::const_iterator srcIt = result->data( src )->voltage.sample.begin();
-              srcIt != result->data( src )->voltage.sample.end(); srcIt++ ) {
+        for ( auto srcIt = result->data( src )->voltage.sample.begin(),
+              srcEnd = result->data( src )->voltage.sample.end();
+              srcIt != srcEnd; ++srcIt ) {
             average += *srcIt;
         }
         average /= result->data( src )->voltage.sample.size();
 
         // ... and remove DC component to get AC
-        std::vector<double>::const_iterator srcIt = result->data( src )->voltage.sample.begin();
-        for ( std::vector<double>::iterator dstIt = resultData.begin(); dstIt != resultData.end(); ++dstIt ) {
-            *dstIt = sign * ( *srcIt++ - average );
+        auto srcIt = result->data( src )->voltage.sample.begin();
+        for ( auto dstIt = resultData.begin(), dstEnd = resultData.end(); 
+              dstIt != dstEnd; ++srcIt, ++dstIt ) {
+            *dstIt = sign * ( *srcIt - average );
         }
     }
 }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="de_DE">
+<TS version="2.1" language="de_DE">
 <context>
     <name></name>
     <message>
@@ -13,11 +13,11 @@
     <name>DevicesListModel</name>
     <message>
         <source>Devicename</source>
-        <translation>Gerätename</translation>
+        <translation type="vanished">Gerätename</translation>
     </message>
     <message>
         <source>Status</source>
-        <translation>Status</translation>
+        <translation type="vanished">Status</translation>
     </message>
 </context>
 <context>
@@ -854,11 +854,11 @@
     </message>
     <message>
         <source>%L1 μV</source>
-        <translation>%L1 µV</translation>
+        <translation type="vanished">%L1 µV</translation>
     </message>
     <message>
         <source>%L1 μs</source>
-        <translation>%L1 µs</translation>
+        <translation type="vanished">%L1 µs</translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="21"/>
@@ -1057,7 +1057,7 @@
     </message>
     <message>
         <source>Show translated UI (if available)</source>
-        <translation>Zeige deutsche Texte (sofern vorhanden)</translation>
+        <translation type="vanished">Zeige deutsche Texte (sofern vorhanden)</translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="17"/>
@@ -1234,7 +1234,7 @@
     <name>QObject</name>
     <message>
         <source>Translation loaded</source>
-        <translation>Übersetzung geladen</translation>
+        <translation type="vanished">Übersetzung geladen</translation>
     </message>
     <message>
         <location filename="../src/selectdevice/rawdeviceslistmodel.cpp" line="65"/>
@@ -1261,11 +1261,11 @@
     <name>RawDevicesListModel</name>
     <message>
         <source>%1:%2 - No access</source>
-        <translation>%1:%2 - Kein Zugriff</translation>
+        <translation type="vanished">%1:%2 - Kein Zugriff</translation>
     </message>
     <message>
         <source>%1:%2 (%3 - %4)</source>
-        <translation>%1:%2 (%3 - %4)</translation>
+        <translation type="vanished">%1:%2 (%3 - %4)</translation>
     </message>
 </context>
 <context>
@@ -1392,15 +1392,15 @@
     <name>UploadFirmware</name>
     <message>
         <source>Couldn&apos;t open device: %1</source>
-        <translation>Konnte Gerät nicht öffnen: %1</translation>
+        <translation type="vanished">Konnte Gerät nicht öffnen: %1</translation>
     </message>
     <message>
         <source>libusb_claim_interface() failed: %1</source>
-        <translation>libusb_claim_interface() - Fehler: %1</translation>
+        <translation type="vanished">libusb_claim_interface() - Fehler: %1</translation>
     </message>
     <message>
         <source>Writing the main firmware failed: %1</source>
-        <translation>Fehler beim Übertragen der Firmware: %1</translation>
+        <translation type="vanished">Fehler beim Übertragen der Firmware: %1</translation>
     </message>
 </context>
 <context>

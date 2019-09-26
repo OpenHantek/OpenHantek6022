@@ -20,11 +20,11 @@
 SpectrumGenerator::SpectrumGenerator(const DsoSettingsScope *scope, const DsoSettingsPostProcessing *postprocessing)
     : scope(scope), postprocessing(postprocessing) {}
 
+
 SpectrumGenerator::~SpectrumGenerator() {
     if (lastWindowBuffer) fftw_free(lastWindowBuffer);
 }
 
-//static double dB( double dB ) { return pow( 10.0, dB/20.0 ); }
 
 void SpectrumGenerator::process(PPresult *result) {
     // Calculate frequencies and spectrums
@@ -186,16 +186,18 @@ void SpectrumGenerator::process(PPresult *result) {
 
         // calculate the average value
         double dc = 0.0;
+        auto voltageIterator = channelData->voltage.sample.begin();
         for (unsigned int position = 0; position < sampleCount; ++position) {
-            dc += channelData->voltage.sample[position];
+            dc += *voltageIterator++;
         }
         dc /= sampleCount;
         channelData->dc = dc;
 
         // now strip DC bias, calculate rms of AC component and apply window for fft to AC component
         double ac2 = 0.0;
+        voltageIterator = channelData->voltage.sample.begin();
         for (unsigned int position = 0; position < sampleCount; ++position) {
-            double ac_sample = channelData->voltage.sample[position] - dc;
+            double ac_sample = *voltageIterator++ - dc;
             ac2 += ac_sample * ac_sample;
             windowedValues[position] = lastWindowBuffer[position] * ac_sample;
         }
@@ -230,21 +232,21 @@ void SpectrumGenerator::process(PPresult *result) {
 
         unsigned int position;
         // correct the (half-)complex values in spectrum (1st part real forward), (2nd part imag backwards) -> magnitude
-        std::vector<double>::iterator fwd = channelData->spectrum.sample.begin();
-        std::vector<double>::reverse_iterator rev = channelData->spectrum.sample.rbegin();
+        auto fwd = channelData->spectrum.sample.begin();  // forward iterator
+        auto rev = channelData->spectrum.sample.rbegin(); // reverse iterator
         // convert complex to magnitude square in place (*fwd) and into copy (powerSpectrum[])
         *fwd = *fwd * *fwd;
         powerSpectrum[ 0 ] = *fwd * norm;
-        fwd++; // spectrum[0] is only real
+        ++fwd; // spectrum[0] is only real
         for ( position = 1; position < dftLength; ++position ) {
             *fwd = ( *fwd * *fwd + *rev * *rev );
             powerSpectrum[ position ] = *fwd * norm;
-            fwd++;
-            rev++;
+            ++fwd;
+            ++rev;
         }
         *fwd = *fwd * *fwd;
         powerSpectrum[ position ] = *fwd * norm;
-        fwd++;
+        ++fwd;
         // Complex values, all zero for autocorrelation
         for (++position; position < sampleCount; ++position) {
             powerSpectrum[ position ] = 0;
@@ -286,8 +288,10 @@ void SpectrumGenerator::process(PPresult *result) {
         double peakSpectrum = offsetLimit; // get a start value for peak search
         unsigned int peakFreqPos = 0; // initial position of max spectrum peak
         position = 0;
-        for (std::vector<double>::iterator spectrumIterator = channelData->spectrum.sample.begin();
-             spectrumIterator != channelData->spectrum.sample.end(); ++spectrumIterator) {
+        for (auto spectrumIterator = channelData->spectrum.sample.begin(),
+             spectrumEnd = channelData->spectrum.sample.end();
+             spectrumIterator != spectrumEnd;
+             ++spectrumIterator, ++position) {
             // spectrum is power spectrum, but show amplitude spectrum -> 10 * log...
             double value = 10 * log10( *spectrumIterator ) + offset;
             // Check if this value has to be limited
@@ -299,7 +303,6 @@ void SpectrumGenerator::process(PPresult *result) {
                 peakSpectrum = value;
                 peakFreqPos = position;
             }
-            position++;
         }
 
         // Calculate both peak frequencies (correlation and spectrum) in Hz
