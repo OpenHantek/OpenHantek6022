@@ -3,6 +3,7 @@
 #include <QDebug>
 #include <QMutex>
 #include <exception>
+#include <math.h>
 
 #include "post/graphgenerator.h"
 #include "post/ppresult.h"
@@ -10,6 +11,7 @@
 #include "scopesettings.h"
 #include "utils/printutils.h"
 #include "viewconstants.h"
+#include "viewsettings.h"
 
 
 static const SampleValues &useSpecSamplesOf(ChannelID channel, const PPresult *result,
@@ -28,13 +30,41 @@ static const SampleValues &useVoltSamplesOf(ChannelID channel, const PPresult *r
 }
 
 
-GraphGenerator::GraphGenerator(const DsoSettingsScope *scope) : scope(scope) {}
+GraphGenerator::GraphGenerator(const DsoSettingsScope *scope, const DsoSettingsView *view) : scope(scope), view(view) {
+    // printf( "GraphGenerator::GraphGenerator()\n" );
+    prepareSinc();
+}
 
 
-void GraphGenerator::generateGraphsTYvoltage(PPresult *result) {
+void GraphGenerator::prepareSinc( void ) {
+    // prepare a sinc table (without sinc(0))
+    sinc.clear();
+    sinc.resize( sincSize );
+    auto sincIt = sinc.begin();
+    for ( unsigned int pos = 1; pos <= sincSize; ++pos, ++sincIt ) {
+        double t = pos * M_PI / oversample;
+        // Hann window: 0.5 + 0.5 cos, Hamming: 0.54 + 0.46 cos
+        double w = 0.54 + 0.46 * cos( pos * M_PI / sincSize );
+        *sincIt = w * sin( t ) / t;
+    }
+}
+
+
+void GraphGenerator::process(PPresult *data) {
+    //printf( "GraphGenerator::process()\n" );
+    if (scope->horizontal.format == Dso::GraphFormat::TY) {
+        ready = true;
+        generateGraphsTYvoltage(data, view);
+        generateGraphsTYspectrum(data);
+    } else
+        generateGraphsXY(data, scope);
+}
+
+
+void GraphGenerator::generateGraphsTYvoltage(PPresult *result, const DsoSettingsView *view) {
+    static unsigned lastDotCount = 0;
     //printf( "GraphGenerator::generateGraphsTYvoltage()\n" );
-    unsigned skipSamples = result->skipSamples;
-
+    const unsigned int skipSamples = result->skipSamples;
     result->vaChannelVoltage.resize(scope->voltage.size());
     for (ChannelID channel = 0; channel < scope->voltage.size(); ++channel) {
         ChannelGraph &target = result->vaChannelVoltage[channel];
@@ -46,31 +76,64 @@ void GraphGenerator::generateGraphsTYvoltage(PPresult *result) {
             target.clear();
             continue;
         }
-        // Check if the sample count has changed
-        size_t sampleCount = samples.sample.size();
-        if (sampleCount > 500000) {
-            qWarning() << "Sample count too high!";
-            throw new std::runtime_error("Sample count too high!");
+
+        // time distance between sampling points
+        float horizontalFactor = (float)(samples.interval / scope->horizontal.timebase);
+        // printf( "hF: %g\n", horizontalFactor );
+
+        // round up and add one dot (n+1 dots to display n lines) 
+        unsigned dotsOnScreen = DIVS_TIME / horizontalFactor + 0.99 + 1;
+
+        // avoid artefakts when switching screen resolution
+        if ( lastDotCount < dotsOnScreen ) {
+            lastDotCount = dotsOnScreen;
+            target.clear();
+            continue;
         }
-        sampleCount -= skipSamples;
-        size_t neededSize = sampleCount * 2;
+        lastDotCount = dotsOnScreen;
 
         // Set size directly to avoid reallocations
-        target.reserve(neededSize);
+        target.reserve( dotsOnScreen );
 
-        // What's the horizontal distance between sampling points?
-        float horizontalFactor = (float)(samples.interval / scope->horizontal.timebase);
-
-        // Fill vector array
-        std::vector<double>::const_iterator dataIterator = samples.sample.begin();
         const float gain = (float)scope->gain(channel);
         const float offset = (float)scope->voltage[channel].offset;
 
-        std::advance(dataIterator, skipSamples);
+        auto sampleIterator = samples.sample.cbegin() + skipSamples; // -> visible samples
 
-        for (unsigned int position = 0; position < sampleCount; ++position) {
-            target.push_back(QVector3D(position * horizontalFactor - DIVS_TIME / 2,
-                                       (float)*(dataIterator++) / gain + offset, 0.0));
+        // sinc interpolation in case of too less samples on screen
+        // https://ccrma.stanford.edu/~jos/resample/resample.pdf
+        if ( view->interpolation == Dso::INTERPOLATION_SINC
+            && dotsOnScreen < 100 // valid for timebase <= 500 ns/div
+            && skipSamples ) { // triggered trace
+            const unsigned int sincSize = sinc.size();
+            // we would need sincWidth, but we take what we get
+            const unsigned int left = std::min( sincWidth, skipSamples ); 
+            const unsigned int resampleSize = (left + dotsOnScreen + sincWidth) * oversample;
+            std::vector <double> resample;
+            resample.resize( resampleSize ); // prefill with zero
+            horizontalFactor /= oversample; // distance between (resampled) dots
+            dotsOnScreen = DIVS_TIME / horizontalFactor + 0.99 + 1; // dot count after resample
+            target.reserve( dotsOnScreen );
+            // sampleIt -> start of left margin
+            auto sampleIt = samples.sample.cbegin() + skipSamples - left;
+            for ( unsigned int resamplePos = 0; resamplePos < resampleSize; resamplePos += oversample, ++sampleIt ) {
+                resample[ resamplePos ] += *sampleIt; //  * sinc( 0 )
+                auto sincIt = sinc.cbegin(); // one half of sinc pulse without sinc(0) 
+                for ( unsigned int sincPos = 1; sincPos <= sincSize; ++sincPos, ++sincIt ) { // sinc( 1..n )
+                    const double conv = *sampleIt * *sincIt;
+                    if ( resamplePos >= sincPos ) // left half of sinc in visible range
+                        resample[ resamplePos - sincPos ] += conv;
+                    if ( resamplePos + sincPos < resampleSize ) // right half of sinc visible
+                        resample[ resamplePos + sincPos ] += conv;
+                }
+            }
+            sampleIterator = resample.cbegin() + left * oversample; // -> visible resamples
+        }
+        // printf("dotsOnScreen: %d\n", dotsOnScreen);
+        target.clear(); // remove all previous dots and fill in new trace
+        for (unsigned int position = 0; position < dotsOnScreen; ++position) {
+            target.push_back(QVector3D(MARGIN_LEFT + position * horizontalFactor,
+                                        *sampleIterator++ / gain + offset, 0.0 ));
         }
     }
 }
@@ -92,10 +155,6 @@ void GraphGenerator::generateGraphsTYspectrum(PPresult *result) {
         }
         // Check if the sample count has changed
         size_t sampleCount = samples.sample.size();
-        if (sampleCount > 500000) {
-            qWarning() << "Sample count too high!";
-            throw new std::runtime_error("Sample count too high!");
-        }
         size_t neededSize = sampleCount * 2;
 
         // Set size directly to avoid reallocations
@@ -114,17 +173,6 @@ void GraphGenerator::generateGraphsTYspectrum(PPresult *result) {
                                        (float)*(dataIterator++) / magnitude + offset, 0.0));
         }
     }
-}
-
-
-void GraphGenerator::process(PPresult *data) {
-    //printf( "GraphGenerator::process()\n" );
-    if (scope->horizontal.format == Dso::GraphFormat::TY) {
-        ready = true;
-        generateGraphsTYvoltage(data);
-        generateGraphsTYspectrum(data);
-    } else
-        generateGraphsXY(data, scope);
 }
 
 

@@ -41,7 +41,7 @@ void GlScope::fixOpenGLversion(QSurfaceFormat::RenderableType t) {
     // Prefer full desktop OpenGL without fixed pipeline
     QSurfaceFormat format;
     // TODO: check from time to time if warning has gone, comment next line for now
-    // format.setSamples(4); // antialiasing gives warning with some HW, Qt & OpenGL versions.
+    format.setSamples(4); // antialiasing gives warning with some HW, Qt & OpenGL versions.
     format.setProfile(QSurfaceFormat::CoreProfile);
     if (t==QSurfaceFormat::OpenGLES) {
         format.setVersion(2, 0);

@@ -356,7 +356,7 @@ void DsoWidget::setupSliders(DsoWidget::Sliders &sliders) {
     sliders.markerSlider = new LevelSlider(Qt::UpArrow);
     for (int marker = 0; marker < MARKER_COUNT; ++marker) {
         sliders.markerSlider->addSlider(QString::number(marker + 1), marker);
-        sliders.markerSlider->setLimits(marker, -DIVS_TIME / 2, DIVS_TIME / 2);
+        sliders.markerSlider->setLimits(marker, MARGIN_LEFT, MARGIN_RIGHT);
         sliders.markerSlider->setStep(marker, MARKER_STEP);
         sliders.markerSlider->setValue(marker, scope->horizontal.cursor.pos[marker].x());
         sliders.markerSlider->setIndexVisible(marker, true);

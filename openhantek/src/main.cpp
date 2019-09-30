@@ -20,6 +20,7 @@
 
 // Settings
 #include "settings.h"
+#include "viewsettings.h"
 #include "viewconstants.h"
 
 // DSO core logic
@@ -171,7 +172,7 @@ int main(int argc, char *argv[]) {
 
     SpectrumGenerator spectrumGenerator(&settings.scope, &settings.post);
     MathChannelGenerator mathchannelGenerator(&settings.scope, device->getModel()->spec()->channels);
-    GraphGenerator graphGenerator(&settings.scope);
+    GraphGenerator graphGenerator(&settings.scope, &settings.view);
 
     postProcessing.registerProcessor(&samplesToExportRaw);
     postProcessing.registerProcessor(&mathchannelGenerator);

@@ -278,6 +278,11 @@
         <translation>Linear</translation>
     </message>
     <message>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="8"/>
+        <source>Sinc</source>
+        <translation>Sinc</translation>
+    </message>
+    <message>
         <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="11"/>
         <source>Interpolation</source>
         <translation>Interpolation</translation>
@@ -1051,7 +1056,7 @@
         <translation>Sinc</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="92"/>
+        <location filename="../src/main.cpp" line="93"/>
         <source>Use OpenGL ES instead of OpenGL</source>
         <translation>Benutze OpenGL ES anstelle von OpenGL</translation>
     </message>
@@ -1370,7 +1375,7 @@
     <message>
         <location filename="../src/docks/TriggerDock.cpp" line="29"/>
         <source>CH%1 smooth</source>
-        <translation>Kanal%1 geglättet</translation>
+        <translation>CH%1 geglättet</translation>
     </message>
     <message>
         <location filename="../src/docks/TriggerDock.cpp" line="32"/>

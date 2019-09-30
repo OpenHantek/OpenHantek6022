@@ -8,10 +8,9 @@
 #include "hantekdso/controlspecification.h"
 #include "hantekdso/enums.h"
 #include "hantekprotocol/definitions.h"
+#include "viewconstants.h"
 #include <vector>
 
-#define MARKER_COUNT 2 ///< Number of markers
-#define MARKER_STEP (DIVS_TIME / 100.0)
 
 /// \brief Holds the cursor parameters
 struct DsoSettingsScopeCursor {
@@ -95,8 +94,10 @@ struct DsoSettingsScope {
     unsigned countChannels() const { return (unsigned)voltage.size(); }
 
     double getMarker(unsigned int marker) const {
-        return marker < MARKER_COUNT ? horizontal.cursor.pos[marker].x() : 0.0;
+        double x = qBound( MARGIN_LEFT, marker < MARKER_COUNT ? horizontal.cursor.pos[marker].x() : 0.0, MARGIN_RIGHT );
+        return x;
     }
+
     void setMarker(unsigned int marker, double value) {
         if (marker < MARKER_COUNT) horizontal.cursor.pos[marker].setX(value);
     }

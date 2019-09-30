@@ -267,6 +267,11 @@
         <translation>Linear</translation>
     </message>
     <message>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="8"/>
+        <source>Sinc</source>
+        <translation type="unfinished">Sinc</translation>
+    </message>
+    <message>
         <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="11"/>
         <source>Interpolation</source>
         <translation>Interpolação</translation>
@@ -1032,7 +1037,7 @@
         <translation type="unfinished">Sinc</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="92"/>
+        <location filename="../src/main.cpp" line="93"/>
         <source>Use OpenGL ES instead of OpenGL</source>
         <translation type="unfinished"></translation>
     </message>
