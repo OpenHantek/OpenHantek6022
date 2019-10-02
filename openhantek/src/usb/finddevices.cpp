@@ -10,7 +10,11 @@
 #include <algorithm>
 #include "ezusb.h"
 #include "utils/printutils.h"
-#include <libusb-1.0/libusb.h>
+#ifdef __FreeBSD__
+	#include <libusb.h>
+#else
+	#include <libusb-1.0/libusb.h>
+#endif
 
 #include "modelregistry.h"
 
