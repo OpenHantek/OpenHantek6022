@@ -10,7 +10,11 @@
 #include <algorithm>
 #include "ezusb.h"
 #include "utils/printutils.h"
-#include <libusb-1.0/libusb.h>
+#ifdef __FreeBSD__
+	#include <libusb.h>
+#else
+	#include <libusb-1.0/libusb.h>
+#endif
 
 #include "modelregistry.h"
 
@@ -62,7 +66,14 @@ int FindDevices::updateDeviceList() {
         }
     }
 
-    libusb_free_device_list(deviceList, true);
+	#if !defined(__FreeBSD__)
+		/*
+			ToDo: This introduces a potential resource leak if not executed
+			on FreeBSD. It seems there is a reference counting problem when
+			using libusb on FreeBSD.
+		*/
+		libusb_free_device_list(deviceList, true);
+	#endif
 
     return changes;
 }

@@ -4,7 +4,11 @@
 #include <QDebug>
 #include <QString>
 #include <QTemporaryFile>
-#include <libusb-1.0/libusb.h>
+#ifdef __FreeBSD__
+	#include <libusb.h>
+#else
+	#include <libusb-1.0/libusb.h>
+#endif
 #include <memory>
 
 #include "ezusb.h"
