@@ -808,25 +808,25 @@
 <context>
     <name>QApplication</name>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="40"/>
+        <location filename="../src/utils/printutils.cpp" line="44"/>
         <location filename="../src/dsowidget.cpp" line="413"/>
         <source>%L1 ps</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="44"/>
+        <location filename="../src/utils/printutils.cpp" line="48"/>
         <location filename="../src/dsowidget.cpp" line="415"/>
         <source>%L1 ns</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="52"/>
+        <location filename="../src/utils/printutils.cpp" line="56"/>
         <location filename="../src/dsowidget.cpp" line="419"/>
         <source>%L1 ms</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="56"/>
+        <location filename="../src/utils/printutils.cpp" line="60"/>
         <location filename="../src/dsowidget.cpp" line="421"/>
         <source>%L1 s</source>
         <translation type="unfinished"></translation>
@@ -852,78 +852,78 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="25"/>
+        <location filename="../src/utils/printutils.cpp" line="29"/>
         <source>%L1 mV</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="28"/>
+        <location filename="../src/utils/printutils.cpp" line="32"/>
         <source>%L1 V</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="33"/>
+        <location filename="../src/utils/printutils.cpp" line="37"/>
         <source>%L1 dB</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="21"/>
+        <location filename="../src/utils/printutils.cpp" line="25"/>
         <source>%L1 µV</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="48"/>
+        <location filename="../src/utils/printutils.cpp" line="52"/>
         <location filename="../src/dsowidget.cpp" line="417"/>
         <source>%L1 µs</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="59"/>
+        <location filename="../src/utils/printutils.cpp" line="63"/>
         <source>%L1 min</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="62"/>
+        <location filename="../src/utils/printutils.cpp" line="66"/>
         <source>%L1 h</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="70"/>
+        <location filename="../src/utils/printutils.cpp" line="74"/>
         <source>%L1 Hz</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="73"/>
+        <location filename="../src/utils/printutils.cpp" line="77"/>
         <source>%L1 kHz</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="76"/>
+        <location filename="../src/utils/printutils.cpp" line="80"/>
         <source>%L1 MHz</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="79"/>
+        <location filename="../src/utils/printutils.cpp" line="83"/>
         <source>%L1 GHz</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="86"/>
+        <location filename="../src/utils/printutils.cpp" line="90"/>
         <source>%L1 S</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="89"/>
+        <location filename="../src/utils/printutils.cpp" line="93"/>
         <source>%L1 kS</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="92"/>
+        <location filename="../src/utils/printutils.cpp" line="96"/>
         <source>%L1 MS</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="95"/>
+        <location filename="../src/utils/printutils.cpp" line="99"/>
         <source>%L1 GS</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1037,7 +1037,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="93"/>
+        <location filename="../src/main.cpp" line="97"/>
         <source>Use OpenGL ES instead of OpenGL</source>
         <translation type="unfinished"></translation>
     </message>
