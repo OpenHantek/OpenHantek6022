@@ -12,6 +12,7 @@ After David [stopped maintaining](https://github.com/OpenHantek/openhantek/issue
 
 * Supported devices: Hantek 6022BE and 6022BL as well as compatible scopes (e.g. Voltcraft DSO-2020).
 * Fully supported operating system: Linux (developed under debian stable).
+* Compiles under FreeBSD (packaging / installation: work in progress, thx @tspspi).
 * Other operating systems builds: [Windows](docs/images/screenshot_mainwindow_win.png) (partly tested) & MacOSX (untested).
 * Uses [free open source firmware](https://github.com/Ho-Ro/Hantek6022API), no longer dependent on nonfree Hantek firmware.
 * Extensive [User Manual](docs/OpenHantek6022_User_Manual.pdf) with technical specs and schematics.
@@ -31,6 +32,7 @@ After David [stopped maintaining](https://github.com/OpenHantek/openhantek/issue
 * Trigger modes: Normal, Auto and Single with green/red status display (top left).
 * Calibration values loaded from eeprom or a model configuration file.
 * [Calibration program](https://github.com/Ho-Ro/Hantek6022API/blob/master/README.md#create-calibration-values-for-openhantek) to create these values automatically.
+* Sinc interpolation for fast timebase settings.
 * Digital phosphor effect to notice even short spikes.
 * A [zoom view](docs/images/screenshot_mainwindow_with_zoom.png) with a freely selectable range.
 * Cursor measurement function for voltage, time, amplitude and frequency.

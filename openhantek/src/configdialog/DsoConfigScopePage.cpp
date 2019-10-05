@@ -29,8 +29,8 @@ DsoConfigScopePage::DsoConfigScopePage(DsoSettings *settings, QWidget *parent) :
 
     cursorsLabel = new QLabel(tr("Position"));
     cursorsComboBox = new QComboBox();
-    cursorsComboBox->addItem("Left", Qt::LeftToolBarArea);
-    cursorsComboBox->addItem("Right", Qt::RightToolBarArea);
+    cursorsComboBox->addItem(tr("Left"), Qt::LeftToolBarArea);
+    cursorsComboBox->addItem(tr("Right"), Qt::RightToolBarArea);
     cursorsComboBox->setCurrentIndex(settings->view.cursorGridPosition == Qt::LeftToolBarArea ? 0 : 1);
 
     cursorsLayout = new QGridLayout();

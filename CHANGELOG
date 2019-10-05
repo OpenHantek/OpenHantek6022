@@ -1,0 +1,77 @@
+v2.15
+2019-10-05
+Major changes from v2.14:
+Automatic translation (qt linguist),
+better automatic versioning (commit date & build number),
+Sinc interpolation for fast timebase settings,
+modification for FreeBSD compiling.
+
+v2.14
+2019-09-08
+Major changes from v2.13:
+Vpp measure, more oversampling, faster display refresh,
+alternating trigger, faster trigger (and new smooth trigger mode),
+add support for Voltcraft DSO-2020 USB oscilloscope.
+
+v2.13
+2019-08-09
+Major changes from v2.12:
+User manual, new icons.
+Calculate and display dB of AC value.
+
+v2.12
+2019-07-07
+Major changes from v2.11:
+Better frequency detection, Gauss window, 
+normalise all windows to 0 dBV display,
+new math mode CH1*CH2.
+
+v2.11
+2019-06-28
+Major changes from v2.10:
+New math mode, calculate AC part of CH1/CH2
+
+v2.10
+2019-06-10
+Major changes from v2.09:
+Use new FW 0202 that allows more and better structured sample rates,
+reload the correct FW version if the wrong version was loaded before.
+
+v2.09
+2019-05-25
+Major changes from v2.08:
+Add slower timebases 20, 50, 100 ms/div with increased samplesize.
+
+v2.08
+2019-05-24
+Major changes from v2.07:
+This release fixes the quite unstable spectrum display. The annoying amplitude jitter has gone.
+
+v2.07
+2019-05-22
+Major changes from v2.06:
+First complete free open source release.
+No longer dependent on nonfree Hantek firmware.
+
+v2.06
+2019-05-14
+Major changes from v2.05:
+Refactor triggering, move from postprocessing chain into earlier hantekdsocontrol.
+Last release with 2090,2150, 2250 and 5200 support.
+
+v2.05
+2019-05-10
+Major changes from v2.03:
+Increase sample size to 20000, better trigger modes
+
+v2.04 - removed due to issues with 10X probe display
+
+v2.03
+2019-05-05
+Major changes from v2.02:
+New checkbox for 10X probes.
+
+v2.02
+2019-04-26
+Major changes from v2.03:
+1st binary release after transfer to OpenHantek/OpenHantek6022
