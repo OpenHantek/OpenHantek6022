@@ -12,7 +12,7 @@ After David [stopped maintaining](https://github.com/OpenHantek/openhantek/issue
 
 * Supported devices: Hantek 6022BE and 6022BL as well as compatible scopes (e.g. Voltcraft DSO-2020).
 * Fully supported operating system: Linux (developed under debian stable).
-* Compiles under FreeBSD (packaging / installation: work in progress, thx @tspspi).
+* Compiles under FreeBSD (packaging / installation: work in progress, thx [tspspi](https://github.com/tspspi)).
 * Other operating systems builds: [Windows](docs/images/screenshot_mainwindow_win.png) (partly tested) & MacOSX (untested).
 * Uses [free open source firmware](https://github.com/Ho-Ro/Hantek6022API), no longer dependent on nonfree Hantek firmware.
 * Extensive [User Manual](docs/OpenHantek6022_User_Manual.pdf) with technical specs and schematics.
@@ -77,7 +77,8 @@ If the scope was used with a different software (old openhantek, sigrok or the w
 The top line of the program must display the correct firmware version (FW0202).
 
 ## Specifications, features, limitations and developer documentation
-Please refer to the [specifications, features, limitations](docs/limitations.md) and the [developer documentation](openhantek/readme.md) pages.
+I use this project mainly to explore how DSP can improve and extend the [limitations](docs/limitations.md) of this kind of low level hardware. It would have been easy to spend a few bucks more to buy a powerful scope - but it would be much less fun :)
+Please refer also to the [developer documentation](openhantek/readme.md) pages.
 
 ## Contribute
 We welcome any reported Github Issue if you have a problem with this software. Send us a pull request for enhancements and fixes. Some random notes:

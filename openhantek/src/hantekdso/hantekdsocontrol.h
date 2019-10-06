@@ -108,8 +108,6 @@ class HantekDsoControl : public QObject {
     const ControlCommand *getCommand(Hantek::ControlCode code) const;
 
   private:
-    //unsigned samplesRaw = 22 * 1024;
-    //unsigned samplesSkip = 20000 - samplesRaw;
     bool isFastRate() const;
     unsigned getRecordLength() const;
     void setDownsampling( unsigned downsampling ) { this->downsampling = downsampling; }
@@ -132,11 +130,6 @@ class HantekDsoControl : public QObject {
 
     /// \brief Converts raw oscilloscope data to sample data
     void convertRawDataToSamples(const std::vector<unsigned char> &rawData);
-
-    /// \brief Sets the size of the sample buffer without updating dependencies.
-    /// \param index The record length index that should be set.
-    /// \return The record length that has been set, 0 on error.
-    unsigned updateRecordLength(RecordLengthID size);
 
     /// \brief Sets the samplerate based on the parameters calculated by
     /// Control::getBestSamplerate.
@@ -253,21 +246,17 @@ class HantekDsoControl : public QObject {
     /// \param calfreq The calibration frequency.
     /// \return The tfrequency that has been set, ::Dso::ErrorCode on error.
     Dso::ErrorCode setCalFreq(double calfreq = 0.0);
-    //void forceTrigger();
 
   signals:
     void samplingStatusChanged(bool enabled); ///< The oscilloscope started/stopped sampling/waiting for trigger
     void statusMessage(const QString &message, int timeout); ///< Status message about the oscilloscope
     void samplesAvailable(const DSOsamples *samples);        ///< New sample data is available
 
-    void availableRecordLengthsChanged(const std::vector<unsigned> &recordLengths); ///< The available record
-                                                                                    /// lengths, empty list for
     /// The available samplerate range has changed
     void samplerateLimitsChanged(double minimum, double maximum);
     /// The available samplerate for fixed samplerate devices has changed
     void samplerateSet(int mode, QList<double> sampleSteps);
 
-    void recordLengthChanged(unsigned long duration); ///< The record length has changed
     void recordTimeChanged(double duration);          ///< The record time duration has changed
     void samplerateChanged(double samplerate);        ///< The samplerate has changed
 

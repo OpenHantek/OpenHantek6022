@@ -53,9 +53,9 @@ DsoWidget::DsoWidget(DsoSettingsScope *scope, DsoSettingsView *view, const Dso::
     settingsTriggerLabel = new QLabel();
     settingsTriggerLabel->setMinimumWidth(160);
     settingsTriggerLabel->setIndent(5);
-    settingsRecordLengthLabel = new QLabel();
-    settingsRecordLengthLabel->setAlignment(Qt::AlignRight);
-    settingsRecordLengthLabel->setPalette(palette);
+    settingsSamplesOnScreen = new QLabel();
+    settingsSamplesOnScreen->setAlignment(Qt::AlignRight);
+    settingsSamplesOnScreen->setPalette(palette);
     settingsSamplerateLabel = new QLabel();
     settingsSamplerateLabel->setAlignment(Qt::AlignRight);
     settingsSamplerateLabel->setPalette(palette);
@@ -74,7 +74,7 @@ DsoWidget::DsoWidget(DsoSettingsScope *scope, DsoSettingsView *view, const Dso::
     settingsLayout = new QHBoxLayout();
     settingsLayout->addWidget(swTriggerStatus);
     settingsLayout->addWidget(settingsTriggerLabel);
-    settingsLayout->addWidget(settingsRecordLengthLabel, 1);
+    settingsLayout->addWidget(settingsSamplesOnScreen, 1);
     settingsLayout->addWidget(settingsSamplerateLabel, 1);
     settingsLayout->addWidget(settingsTimebaseLabel, 1);
     settingsLayout->addWidget(settingsFrequencybaseLabel, 1);
@@ -518,20 +518,25 @@ void DsoWidget::updateVoltageDetails(ChannelID channel) {
 /// \brief Handles frequencybaseChanged signal from the horizontal dock.
 /// \param frequencybase The frequencybase used for displaying the trace.
 void DsoWidget::updateFrequencybase(double frequencybase) {
-    settingsFrequencybaseLabel->setText(valueToString(frequencybase, UNIT_HERTZ, 4) + tr("/div"));
+    settingsFrequencybaseLabel->setText(valueToString(frequencybase, UNIT_HERTZ, -1) + tr("/div"));
 }
 
 /// \brief Updates the samplerate field after changing the samplerate.
 /// \param samplerate The samplerate set in the oscilloscope.
 void DsoWidget::updateSamplerate(double samplerate) {
-    //printf( "updateSamplerate( %g )\n", samplerate );
-    settingsSamplerateLabel->setText(valueToString(samplerate, UNIT_SAMPLES, 4) + tr("/s"));
+    this->samplerate = samplerate;
+    dotsOnScreen = samplerate * timebase * DIVS_TIME + 0.99;
+    //printf( "DsoWidget::updateSamplerate( %g ) -> %d\n", samplerate, dotsOnScreen );
+    settingsSamplerateLabel->setText(valueToString(samplerate, UNIT_SAMPLES, -1) + tr("/s"));
 }
 
 /// \brief Handles timebaseChanged signal from the horizontal dock.
 /// \param timebase The timebase used for displaying the trace.
 void DsoWidget::updateTimebase(double timebase) {
-    settingsTimebaseLabel->setText(valueToString(timebase, UNIT_SECONDS, 4) + tr("/div"));
+    this->timebase = timebase;
+    dotsOnScreen = samplerate * timebase * DIVS_TIME + 0.99;
+    //printf( "DsoWidget::updateTimebase( %g ) -> %d\n", timebase, dotsOnScreen );
+    settingsTimebaseLabel->setText(valueToString(timebase, UNIT_SECONDS, -1) + tr("/div"));
     updateMarkerDetails();
 }
 
@@ -625,7 +630,7 @@ void DsoWidget::updateVoltageUsed(ChannelID channel, bool used) {
 
 /// \brief Change the record length.
 void DsoWidget::updateRecordLength(unsigned long size) {
-    settingsRecordLengthLabel->setText(valueToString(size, UNIT_SAMPLES, 4));
+    settingsSamplesOnScreen->setText(valueToString(size, UNIT_SAMPLES, -1) + tr(" on screen") );
 }
 
 /// \brief Show/hide the zoom view.
@@ -663,7 +668,7 @@ void DsoWidget::showNew(std::shared_ptr<PPresult> data) {
     triggerLabelPalette.setColor(QPalette::Background, data->softwareTriggerTriggered ? Qt::green : Qt::red);
     swTriggerStatus->setPalette(triggerLabelPalette);
     swTriggerStatus->setVisible(true);
-    updateRecordLength(data.get()->sampleCount());
+    updateRecordLength(dotsOnScreen);
     for (ChannelID channel = 0; channel < scope->voltage.size(); ++channel) {
         if (scope->voltage[channel].used && data.get()->data(channel)) {
             // Vpp Amplitude string representation (3 significant digits)

@@ -61,7 +61,7 @@ class DsoWidget : public QWidget {
 
     QHBoxLayout *settingsLayout;        ///< The table for the settings info
     QLabel *settingsTriggerLabel;       ///< The trigger details
-    QLabel *settingsRecordLengthLabel;  ///< The record length
+    QLabel *settingsSamplesOnScreen;    ///< The displayed dots on screen
     QLabel *settingsSamplerateLabel;    ///< The samplerate
     QLabel *settingsTimebaseLabel;      ///< The timebase of the main scope
     QLabel *settingsFrequencybaseLabel; ///< The frequencybase of the main scope
@@ -95,6 +95,11 @@ class DsoWidget : public QWidget {
 
     GlScope *mainScope;     ///< The main scope screen
     GlScope *zoomScope;     ///< The optional magnified scope screen
+
+  private:
+    double samplerate;
+    double timebase;
+    unsigned int dotsOnScreen;
 
   public slots:
     // Horizontal axis

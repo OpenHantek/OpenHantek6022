@@ -51,9 +51,6 @@ HorizontalDock::HorizontalDock(DsoSettingsScope *scope, QWidget *parent, Qt::Win
     this->frequencybaseSiSpinBox->setMinimum(1.0);
     this->frequencybaseSiSpinBox->setMaximum(100e6);
 
-    this->recordLengthLabel = new QLabel(tr("Record length"));
-    this->recordLengthComboBox = new QComboBox();
-
     this->formatLabel = new QLabel(tr("Format"));
     this->formatComboBox = new QComboBox();
     for (Dso::GraphFormat format: Dso::GraphFormatEnum)
@@ -78,8 +75,6 @@ HorizontalDock::HorizontalDock(DsoSettingsScope *scope, QWidget *parent, Qt::Win
     this->dockLayout->addWidget(this->samplerateSiSpinBox, row++, 1);
     this->dockLayout->addWidget(this->frequencybaseLabel, row, 0);
     this->dockLayout->addWidget(this->frequencybaseSiSpinBox, row++, 1);
-    //this->dockLayout->addWidget(this->recordLengthLabel, row, 0);
-    //this->dockLayout->addWidget(this->recordLengthComboBox, row++, 1);
     this->dockLayout->addWidget(this->formatLabel, row, 0);
     this->dockLayout->addWidget(this->formatComboBox, row++, 1);
     this->dockLayout->addWidget(this->calfreqLabel, row, 0);
@@ -92,7 +87,6 @@ HorizontalDock::HorizontalDock(DsoSettingsScope *scope, QWidget *parent, Qt::Win
     connect(this->samplerateSiSpinBox, SELECT<double>::OVERLOAD_OF(&QDoubleSpinBox::valueChanged), this, &HorizontalDock::samplerateSelected);
     connect(this->timebaseSiSpinBox, SELECT<double>::OVERLOAD_OF(&QDoubleSpinBox::valueChanged), this, &HorizontalDock::timebaseSelected);
     connect(this->frequencybaseSiSpinBox, SELECT<double>::OVERLOAD_OF(&QDoubleSpinBox::valueChanged), this, &HorizontalDock::frequencybaseSelected);
-    connect(this->recordLengthComboBox, SELECT<int>::OVERLOAD_OF(&QComboBox::currentIndexChanged), this, &HorizontalDock::recordLengthSelected);
     connect(this->formatComboBox, SELECT<int>::OVERLOAD_OF(&QComboBox::currentIndexChanged), this, &HorizontalDock::formatSelected);
     connect(this->calfreqSiSpinBox, SELECT<double>::OVERLOAD_OF(&QDoubleSpinBox::valueChanged), this, &HorizontalDock::calfreqSelected);
 
@@ -100,7 +94,6 @@ HorizontalDock::HorizontalDock(DsoSettingsScope *scope, QWidget *parent, Qt::Win
     this->setSamplerate(scope->horizontal.samplerate);
     this->setTimebase(scope->horizontal.timebase);
     this->setFrequencybase(scope->horizontal.frequencybase);
-    // this->setRecordLength(scope->horizontal.recordLength);
     this->setFormat(scope->horizontal.format);
     this->setCalfreq(scope->horizontal.calfreq);
 }
@@ -150,25 +143,6 @@ double HorizontalDock::setTimebase(double timebase) {
 }
 
 
-int addRecordLength(QComboBox *recordLengthComboBox, unsigned recordLength) {
-    recordLengthComboBox->addItem(
-        recordLength == UINT_MAX ? QCoreApplication::translate("HorizontalDock","Roll") : valueToString(recordLength, UNIT_SAMPLES, 3), recordLength);
-    return recordLengthComboBox->count()-1;
-}
-
-
-void HorizontalDock::setRecordLength(unsigned int recordLength) {
-    QSignalBlocker blocker(recordLengthComboBox);
-    int index = recordLengthComboBox->findData(recordLength);
-    scope->horizontal.recordLength = recordLength;
-
-    if (index == -1) {
-        index = addRecordLength(recordLengthComboBox, recordLength);
-    }
-    recordLengthComboBox->setCurrentIndex(index);
-}
-
-
 int HorizontalDock::setFormat(Dso::GraphFormat format) {
     QSignalBlocker blocker(formatComboBox);
     if (format >= Dso::GraphFormat::TY && format <= Dso::GraphFormat::XY) {
@@ -183,17 +157,6 @@ double HorizontalDock::setCalfreq(double calfreq) {
     QSignalBlocker blocker(calfreqSiSpinBox);
     calfreqSiSpinBox->setValue(calfreq);
     return calfreqSiSpinBox->value();
-}
-
-
-void HorizontalDock::setAvailableRecordLengths(const std::vector<unsigned> &recordLengths) {
-    QSignalBlocker blocker(recordLengthComboBox);
-
-    recordLengthComboBox->clear();
-    for (auto recordLength : recordLengths) {
-        addRecordLength(recordLengthComboBox, recordLength);
-    }
-    setRecordLength(scope->horizontal.recordLength);
 }
 
 
@@ -277,14 +240,6 @@ void HorizontalDock::calculateSamplerateSteps(double timebase) {
         //printf( "cSS limits: %g, %g\n", min, max );
         setSamplerateLimits( min, max );
     }
-}
-
-
-/// \brief Called when the record length combo box changes its value.
-/// \param index The index of the combo box item.
-void HorizontalDock::recordLengthSelected(int index) {
-    scope->horizontal.recordLength = this->recordLengthComboBox->itemData(index).toUInt();
-    emit recordLengthChanged((unsigned int)index);
 }
 
 

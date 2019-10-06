@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="de_DE">
+<TS version="2.1" language="de_DE">
 <context>
     <name></name>
     <message>
@@ -13,11 +13,11 @@
     <name>DevicesListModel</name>
     <message>
         <source>Devicename</source>
-        <translation>Gerätename</translation>
+        <translation type="vanished">Gerätename</translation>
     </message>
     <message>
         <source>Status</source>
-        <translation>Status</translation>
+        <translation type="vanished">Status</translation>
     </message>
 </context>
 <context>
@@ -331,7 +331,7 @@
         <location filename="../src/dsowidget.cpp" line="488"/>
         <location filename="../src/dsowidget.cpp" line="513"/>
         <location filename="../src/dsowidget.cpp" line="521"/>
-        <location filename="../src/dsowidget.cpp" line="534"/>
+        <location filename="../src/dsowidget.cpp" line="539"/>
         <source>/div</source>
         <translation>/div</translation>
     </message>
@@ -374,9 +374,18 @@
         <translation>%1  %2  %3  %4</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="528"/>
+        <location filename="../src/dsowidget.cpp" line="530"/>
         <source>/s</source>
         <translation>/s</translation>
+    </message>
+    <message>
+        <location filename="../src/dsowidget.cpp" line="633"/>
+        <source> on screen</source>
+        <translation> angezeigt</translation>
+    </message>
+    <message>
+        <source>%L1 S</source>
+        <translation type="obsolete">%L1 S</translation>
     </message>
 </context>
 <context>
@@ -454,24 +463,22 @@
         <translation>Frequenzbasis</translation>
     </message>
     <message>
-        <location filename="../src/docks/HorizontalDock.cpp" line="54"/>
         <source>Record length</source>
-        <translation>Satzlänge</translation>
+        <translation type="vanished">Satzlänge</translation>
     </message>
     <message>
-        <location filename="../src/docks/HorizontalDock.cpp" line="57"/>
+        <location filename="../src/docks/HorizontalDock.cpp" line="54"/>
         <source>Format</source>
         <translation>Format</translation>
     </message>
     <message>
-        <location filename="../src/docks/HorizontalDock.cpp" line="64"/>
+        <location filename="../src/docks/HorizontalDock.cpp" line="61"/>
         <source>Calibration out</source>
         <translation>Kalibriersignal</translation>
     </message>
     <message>
-        <location filename="../src/docks/HorizontalDock.cpp" line="155"/>
         <source>Roll</source>
-        <translation>Rollen</translation>
+        <translation type="vanished">Rollen</translation>
     </message>
 </context>
 <context>
@@ -655,83 +662,83 @@
         <translation>Ungültiger Befehl</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="197"/>
+        <location filename="../src/mainwindow.cpp" line="195"/>
         <source>&amp;Stop</source>
         <translation>&amp;Stop</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="198"/>
+        <location filename="../src/mainwindow.cpp" line="196"/>
         <source>Stop the oscilloscope</source>
         <translation>Das Oszilloskop anhalten</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="200"/>
+        <location filename="../src/mainwindow.cpp" line="198"/>
         <source>&amp;Start</source>
         <translation>&amp;Start</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="201"/>
+        <location filename="../src/mainwindow.cpp" line="199"/>
         <source>Start the oscilloscope</source>
         <translation>Startet das Oszilloskop</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="215"/>
+        <location filename="../src/mainwindow.cpp" line="211"/>
         <source>Open file</source>
         <translation>Datei öffnen</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="215"/>
-        <location filename="../src/mainwindow.cpp" line="228"/>
+        <location filename="../src/mainwindow.cpp" line="211"/>
+        <location filename="../src/mainwindow.cpp" line="224"/>
         <source>Settings (*.ini)</source>
         <translation>Einstellungen (*.ini)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="228"/>
+        <location filename="../src/mainwindow.cpp" line="224"/>
         <source>Save settings</source>
         <translation>Einstellungen speichern</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="252"/>
+        <location filename="../src/mainwindow.cpp" line="248"/>
         <source>Disable fading of previous graphs</source>
         <translation>Nachleuchten von vorigen Graphen deaktivieren</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="254"/>
+        <location filename="../src/mainwindow.cpp" line="250"/>
         <source>Enable fading of previous graphs</source>
         <translation>Nachleuchten von vorigen Graphen aktivieren</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="262"/>
+        <location filename="../src/mainwindow.cpp" line="258"/>
         <source>Hide magnified scope</source>
         <translation>Vergrößerte Anzeige ausblenden</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="264"/>
+        <location filename="../src/mainwindow.cpp" line="260"/>
         <source>Show magnified scope</source>
         <translation>Vergrößerte Anzeige anzeigen</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="274"/>
+        <location filename="../src/mainwindow.cpp" line="270"/>
         <source>Hide measurements</source>
         <translation>Messwerte ausblenden</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="276"/>
+        <location filename="../src/mainwindow.cpp" line="272"/>
         <source>Show measurements</source>
         <translation>Messwerte anzeigen</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="288"/>
+        <location filename="../src/mainwindow.cpp" line="284"/>
         <source>About OpenHantek6022 (%1)</source>
         <translation>Über OpenHantek6022 (%1)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="289"/>
+        <location filename="../src/mainwindow.cpp" line="285"/>
         <source>&lt;p&gt;Open source software for Hantek6022 USB oscilloscopes&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2010, 2011 Oliver Haag&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2012-2019 OpenHantek community&lt;br/&gt;&lt;a href=&apos;https://github.com/OpenHantek&apos;&gt;https://github.com/OpenHantek&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Open source firmware copyright &amp;copy; 2019 Ho-Ro&lt;br/&gt;&lt;a href=&apos;https://github.com/Ho-Ro/Hantek6022API&apos;&gt;https://github.com/Ho-Ro/Hantek6022API&lt;/a&gt;&lt;/p&gt;</source>
         <translation>&lt;p&gt;Open-Source-Software für Hantek6022 USB Oszilloskope&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2010, 2011 Oliver Haag&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2012-2019 OpenHantek community&lt;br/&gt;&lt;a href=&apos;https://github.com/OpenHantek&apos;&gt;https://github.com/OpenHantek&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Open-Source-Firmware - Copyright &amp;copy; 2019 Ho-Ro&lt;br/&gt;&lt;a href=&apos;https://github.com/Ho-Ro/Hantek6022API&apos;&gt;https://github.com/Ho-Ro/Hantek6022API&lt;/a&gt;&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="316"/>
+        <location filename="../src/mainwindow.cpp" line="312"/>
         <source>%1: %2</source>
         <translation>%1: %2</translation>
     </message>
@@ -869,11 +876,11 @@
     </message>
     <message>
         <source>%L1 μV</source>
-        <translation>%L1 µV</translation>
+        <translation type="vanished">%L1 µV</translation>
     </message>
     <message>
         <source>%L1 μs</source>
-        <translation>%L1 µs</translation>
+        <translation type="vanished">%L1 µs</translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="25"/>
@@ -1072,7 +1079,7 @@
     </message>
     <message>
         <source>Show translated UI (if available)</source>
-        <translation>Zeige deutsche Texte (sofern vorhanden)</translation>
+        <translation type="vanished">Zeige deutsche Texte (sofern vorhanden)</translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="17"/>
@@ -1249,7 +1256,7 @@
     <name>QObject</name>
     <message>
         <source>Translation loaded</source>
-        <translation>Übersetzung geladen</translation>
+        <translation type="vanished">Übersetzung geladen</translation>
     </message>
     <message>
         <location filename="../src/selectdevice/rawdeviceslistmodel.cpp" line="65"/>
@@ -1276,11 +1283,11 @@
     <name>RawDevicesListModel</name>
     <message>
         <source>%1:%2 - No access</source>
-        <translation>%1:%2 - Kein Zugriff</translation>
+        <translation type="vanished">%1:%2 - Kein Zugriff</translation>
     </message>
     <message>
         <source>%1:%2 (%3 - %4)</source>
-        <translation>%1:%2 (%3 - %4)</translation>
+        <translation type="vanished">%1:%2 (%3 - %4)</translation>
     </message>
 </context>
 <context>
@@ -1407,15 +1414,15 @@
     <name>UploadFirmware</name>
     <message>
         <source>Couldn&apos;t open device: %1</source>
-        <translation>Konnte Gerät nicht öffnen: %1</translation>
+        <translation type="vanished">Konnte Gerät nicht öffnen: %1</translation>
     </message>
     <message>
         <source>libusb_claim_interface() failed: %1</source>
-        <translation>libusb_claim_interface() - Fehler: %1</translation>
+        <translation type="vanished">libusb_claim_interface() - Fehler: %1</translation>
     </message>
     <message>
         <source>Writing the main firmware failed: %1</source>
-        <translation>Fehler beim Übertragen der Firmware: %1</translation>
+        <translation type="vanished">Fehler beim Übertragen der Firmware: %1</translation>
     </message>
 </context>
 <context>

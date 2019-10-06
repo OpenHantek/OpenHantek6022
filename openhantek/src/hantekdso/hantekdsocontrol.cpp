@@ -295,16 +295,6 @@ unsigned HantekDsoControl::updateSamplerate(unsigned downsampler, bool fastRate)
     // Update dependencies
     this->setTriggerPosition(controlsettings.trigger.position);
 
-    // Emit signals for changed settings
-    if (fastRateChanged) {
-        emit availableRecordLengthsChanged(controlsettings.samplerate.limits->recordLengths);
-        emit recordLengthChanged(getRecordLength());
-    }
-
-    // Check for Roll mode
-    emit recordTimeChanged((double)getRecordLength() / controlsettings.samplerate.current);
-    emit samplerateChanged(controlsettings.samplerate.current);
-
     return downsampler;
 }
 
@@ -330,7 +320,6 @@ void HantekDsoControl::updateSamplerateLimits() {
         if ( v.samplerate <= limit ) { sampleSteps << v.samplerate; }
     }
     //qDebug() << "HDC::updateSamplerateLimits " << sampleSteps;
-    //restoreTargets();
     emit samplerateSet(1, sampleSteps);
 }
 

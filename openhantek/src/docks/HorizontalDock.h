@@ -48,9 +48,6 @@ class HorizontalDock : public QDockWidget {
     /// \param format The format for the horizontal axis.
     /// \return Index of format-value, -1 on error.
     int setFormat(Dso::GraphFormat format);
-    /// \brief Updates the available record lengths in the combo box.
-    /// \param recordLengths The available record lengths for the combo box.
-    void setAvailableRecordLengths(const std::vector<unsigned> &recordLengths);
     /// \brief Updates the minimum and maximum of the samplerate spin box.
     /// \param minimum The minimum value the spin box should accept.
     /// \param maximum The minimum value the spin box should accept.
@@ -71,13 +68,11 @@ class HorizontalDock : public QDockWidget {
     QLabel *samplerateLabel;           ///< The label for the samplerate spinbox
     QLabel *timebaseLabel;             ///< The label for the timebase spinbox
     QLabel *frequencybaseLabel;        ///< The label for the frequencybase spinbox
-    QLabel *recordLengthLabel;         ///< The label for the record length combobox
     QLabel *formatLabel;               ///< The label for the format combobox
     QLabel *calfreqLabel;              ///< The label for the calibration frequency spinbox
     SiSpinBox *samplerateSiSpinBox;    ///< Selects the samplerate for aquisitions
     SiSpinBox *timebaseSiSpinBox;      ///< Selects the timebase for voltage graphs
     SiSpinBox *frequencybaseSiSpinBox; ///< Selects the frequencybase for spectrum graphs
-    QComboBox *recordLengthComboBox;   ///< Selects the record length for aquisitions
     QComboBox *formatComboBox;         ///< Selects the way the sampled data is
                                        ///  interpreted and shown
     SiSpinBox *calfreqSiSpinBox;       ///< Selects the calibration frequency
@@ -93,7 +88,6 @@ class HorizontalDock : public QDockWidget {
     void frequencybaseSelected(double frequencybase);
     void samplerateSelected(double samplerate);
     void timebaseSelected(double timebase);
-    void recordLengthSelected(int index);
     void formatSelected(int index);
     void calfreqSelected(double calfreq);
 

@@ -130,13 +130,11 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, Expo
     });
     connect(horizontalDock, &HorizontalDock::frequencybaseChanged, dsoWidget, &DsoWidget::updateFrequencybase);
     connect(dsoControl, &HantekDsoControl::samplerateChanged, [this, horizontalDock](double samplerate) {
-        if (mSettings->scope.horizontal.recordLength != UINT_MAX) {
-            // The timebase was set, let's adapt the samplerate accordingly
-            //printf( "samplerateChanged( %g )\n", samplerate );
-            mSettings->scope.horizontal.samplerate = samplerate;
-            horizontalDock->setSamplerate(samplerate);
-            dsoWidget->updateSamplerate(samplerate);
-        }
+        // The timebase was set, let's adapt the samplerate accordingly
+        //printf( "main::samplerateChanged( %g )\n", samplerate );
+        mSettings->scope.horizontal.samplerate = samplerate;
+        horizontalDock->setSamplerate(samplerate);
+        dsoWidget->updateSamplerate(samplerate);
     });
     connect(horizontalDock, &HorizontalDock::calfreqChanged, [dsoControl, this]() {
         dsoControl->setCalFreq(mSettings->scope.horizontal.calfreq);
@@ -205,8 +203,6 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, Expo
     connect(this->ui->actionSampling, &QAction::triggered, dsoControl, &HantekDsoControl::enableSampling);
     this->ui->actionSampling->setChecked(dsoControl->isSampling());
 
-    connect(dsoControl, &HantekDsoControl::availableRecordLengthsChanged, horizontalDock,
-            &HorizontalDock::setAvailableRecordLengths);
     connect(dsoControl, &HantekDsoControl::samplerateLimitsChanged, horizontalDock,
             &HorizontalDock::setSamplerateLimits);
     connect(dsoControl, &HantekDsoControl::samplerateSet, horizontalDock, &HorizontalDock::setSamplerateSteps);
