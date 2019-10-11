@@ -1,14 +1,21 @@
 # OpenHantek6022
-[![Build Status](https://travis-ci.org/OpenHantek/OpenHantek6022.svg)](https://travis-ci.org/OpenHantek/OpenHantek6022)
-[![Build status](https://ci.appveyor.com/api/projects/status/github/OpenHantek/openhantek6022?svg=true)](https://ci.appveyor.com/project/Ho-Ro/openhantek6022)  
-[![CodeFactor](https://www.codefactor.io/repository/github/openhantek/openhantek6022/badge)](https://www.codefactor.io/repository/github/openhantek/openhantek6022)
 [![Stability: Active](https://masterminds.github.io/stability/active.svg)](https://masterminds.github.io/stability/active.html)
+[![GitHub release (latest by date)](https://img.shields.io/github/v/release/OpenHantek/OpenHantek6022)][release]
+[![GitHub Release Date](https://img.shields.io/github/release-date/OpenHantek/OpenHantek6022?color=blue)][release]
+
+[![GitHub commits since latest release](https://img.shields.io/github/commits-since/OpenHantek/OpenHantek6022/latest?color=brightgreen)][commits]
+[![Build Status](https://travis-ci.org/OpenHantek/OpenHantek6022.svg)](https://travis-ci.org/OpenHantek/OpenHantek6022)
+[![Build status](https://ci.appveyor.com/api/projects/status/github/OpenHantek/openhantek6022?svg=true)](https://ci.appveyor.com/project/Ho-Ro/openhantek6022)
+[![CodeFactor](https://www.codefactor.io/repository/github/openhantek/openhantek6022/badge)](https://www.codefactor.io/repository/github/openhantek/openhantek6022)
+
+[release]: https://github.com/OpenHantek/OpenHantek6022/releases
+[commits]: https://github.com/OpenHantek/OpenHantek6022/commits/master
 
 OpenHantek6022 is a free software for Hantek and compatible (Voltcraft/Darkwire/Protek/Acetech) USB digital signal oscilloscopes. 
 It was initially developed by [David Gräff and others](https://github.com/OpenHantek/openhantek/graphs/contributors) on [github.com/OpenHantek/openhantek](https://github.com/OpenHantek/openhantek). 
 After David [stopped maintaining](https://github.com/OpenHantek/openhantek/issues/277) the programm I cloned the repo to provide updates - only for Hantek 6022BE/BL.
 
-<img alt="Image of main window on linux" width="100%" src="docs/images/screenshot_mainwindow.png">
+<p><img alt="Image of main window on linux" width="100%" src="docs/images/screenshot_mainwindow.png"></p>
 
 * Supported devices: Hantek 6022BE and 6022BL as well as compatible scopes (e.g. Voltcraft DSO-2020).
 * Fully supported operating system: Linux; developed under debian stable for amd64 architecture.
