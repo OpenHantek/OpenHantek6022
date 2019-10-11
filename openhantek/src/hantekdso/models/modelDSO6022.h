@@ -5,8 +5,6 @@
 class HantekDsoControl;
 using namespace Hantek;
 
-#define SAMPLESIZE_USED 20000
-
 
 struct ModelDSO6022BE : public DSOModel {
     static const int ID = 0x6022;

@@ -16,6 +16,7 @@
 
 #include <stdio.h>
 
+#include "viewconstants.h"
 #include "scopesettings.h"
 #include "hantekdsocontrol.h"
 #include "hantekprotocol/controlStructs.h"
@@ -548,7 +549,7 @@ unsigned HantekDsoControl::searchTriggerPoint( Dso::Slope dsoSlope ) {
     ChannelID channel = controlsettings.trigger.source;
     const std::vector<double> &samples = result.data[channel];
     size_t sampleCount = samples.size();    ///< number of available samples
-    double level = controlsettings.trigger.level[channel];
+    double level = controlsettings.trigger.level[channel] + 1e-12; //HACK to ensure triggering at 0 V ???
     double timeDisplay = controlsettings.samplerate.target.duration; // time for full screen width
     double sampleRate = controlsettings.samplerate.current;
     double samplesDisplay = timeDisplay * sampleRate;
@@ -562,8 +563,8 @@ unsigned HantekDsoControl::searchTriggerPoint( Dso::Slope dsoSlope ) {
     // |--(samp-(disp-pre))-------|>>|
     // |<<<<<|????????????????????|>>| // ?? = search for trigger in this range [left,right]
 
-    const unsigned swTriggerSampleSet = controlsettings.trigger.smooth ? 10 : 2; // check this number of samples before/after trigger point ...
-    const unsigned swTriggerThreshold = controlsettings.trigger.smooth ? 5 : 1; // ... and get at least this number below or above trigger
+    const unsigned swTriggerSampleSet = controlsettings.trigger.smooth ? 10 : 1; // check this number of samples before/after trigger point ...
+    const unsigned swTriggerThreshold = controlsettings.trigger.smooth ? 5 : 0; // ... and get at least this number below or above trigger
 
     double prev = INT_MAX * slope;
     unsigned swTriggerStart = 0;

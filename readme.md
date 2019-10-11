@@ -11,7 +11,7 @@ After David [stopped maintaining](https://github.com/OpenHantek/openhantek/issue
 <img alt="Image of main window on linux" width="100%" src="docs/images/screenshot_mainwindow.png">
 
 * Supported devices: Hantek 6022BE and 6022BL as well as compatible scopes (e.g. Voltcraft DSO-2020).
-* Fully supported operating system: Linux (developed under debian stable).
+* Fully supported operating system: Linux; developed under debian stable for amd64 architecture.
 * Compiles under FreeBSD (packaging / installation: work in progress, thx [tspspi](https://github.com/tspspi)).
 * Other operating systems builds: [Windows](docs/images/screenshot_mainwindow_win.png) (partly tested) & MacOSX (untested).
 * Uses [free open source firmware](https://github.com/Ho-Ro/Hantek6022API), no longer dependent on nonfree Hantek firmware.
@@ -23,17 +23,18 @@ After David [stopped maintaining](https://github.com/OpenHantek/openhantek/issue
 * CH1 and CH2 name becomes red when input is clipped (bottom left).
 * Checkbox for X10 probes. 
 * Measure and display Vpp, RMS, DC (average), AC (rms) and AC as dB values as well as frequency of active channels.
-* Math channel modes: Ch1+Ch2, Ch1-Ch2, Ch2-Ch1, Ch1*Ch2 and AC part of Ch1 or Ch2.
+* Math channel modes: CH1+CH2, CH1-CH2, CH2-CH1, CH1*CH2 and AC part of CH1 or CH2.
 * Time base 100 ms/div .. 10 ns/div.
-* Sample rates 100, 200, 500 kS/s, 1, 2, 5, 10, 12, 15, 24, 30 MS/s.
+* Sample rates 100, 200, 500 kS/s, 1, 2, 5, 10, 12, 15, 24, 30 MS/s (24 & 30 MS/s in CH1-only mode).
+* 48 MS/s not supported due to unstable USB data streaming.
 * Downsampling (up to 100x) increases solution and SNR.
 * Downsampling sample rates 10, 20, 50 kS/s.
 * Calibration output square wave signal frequency can be selected between 50 Hz .. 100 kHz in 1/2/5 steps.
 * Trigger modes: Normal, Auto and Single with green/red status display (top left).
 * Calibration values loaded from eeprom or a model configuration file.
 * [Calibration program](https://github.com/Ho-Ro/Hantek6022API/blob/master/README.md#create-calibration-values-for-openhantek) to create these values automatically.
-* Sinc interpolation for fast timebase settings.
-* Digital phosphor effect to notice even short spikes.
+* Sinc interpolation for fast timebase settings improves pictures with only few samples on screen.
+* Digital phosphor effect to notice even short spikes; simple eye-diagram display with alternating trigger slope.
 * A [zoom view](docs/images/screenshot_mainwindow_with_zoom.png) with a freely selectable range.
 * Cursor measurement function for voltage, time, amplitude and frequency.
 * Export to CSV, JPG, PNG or print the graphs.
@@ -47,7 +48,7 @@ After David [stopped maintaining](https://github.com/OpenHantek/openhantek/issue
 * Get MacOSX package from [macports](https://www.macports.org/ports.php?by=name&substr=openhantek) - thx [ra1nb0w](https://github.com/ra1nb0w).
 * Get [Fedora rpm packages](https://pkgs.org/download/openhantek) - thx [Vascom](https://github.com/Vascom).
 * [Download (untested) Windows build from last commit](https://ci.appveyor.com/project/Ho-Ro/openhantek6022/build/artifacts).
-* The MacOSX archive from Releases contains only the binary, you have to provide the necessary libraries on your own! Please have a look at the [build instructions](docs/build.md#apple).
+* The MacOSX archive from Releases contains only the dynamic linked binary, you have to provide the necessary libraries on your own! Please have a look at the [build instructions](docs/build.md#apple).
 
 
 ## Building OpenHantek from source

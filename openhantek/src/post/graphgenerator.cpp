@@ -13,6 +13,7 @@
 #include "viewconstants.h"
 #include "viewsettings.h"
 
+// M_PI is not mandatory in math.h / cmath
 #ifndef M_PI
 #define M_PI (3.14159265358979323846)
 #endif
@@ -65,7 +66,6 @@ void GraphGenerator::process(PPresult *data) {
 
 
 void GraphGenerator::generateGraphsTYvoltage(PPresult *result, const DsoSettingsView *view) {
-    static unsigned lastDotCount = 0;
     //printf( "GraphGenerator::generateGraphsTYvoltage()\n" );
     const unsigned int skipSamples = result->skipSamples;
     result->vaChannelVoltage.resize(scope->voltage.size());
@@ -86,15 +86,6 @@ void GraphGenerator::generateGraphsTYvoltage(PPresult *result, const DsoSettings
 
         // round up and add one dot (n+1 dots to display n lines) 
         unsigned dotsOnScreen = DIVS_TIME / horizontalFactor + 0.99 + 1;
-
-        // avoid artefakts when switching screen resolution
-        if ( lastDotCount < dotsOnScreen ) {
-            lastDotCount = dotsOnScreen;
-            target.clear();
-            continue;
-        }
-        lastDotCount = dotsOnScreen;
-
         // Set size directly to avoid reallocations
         target.reserve( dotsOnScreen );
 
@@ -106,19 +97,20 @@ void GraphGenerator::generateGraphsTYvoltage(PPresult *result, const DsoSettings
         // sinc interpolation in case of too less samples on screen
         // https://ccrma.stanford.edu/~jos/resample/resample.pdf
         if ( view->interpolation == Dso::INTERPOLATION_SINC
-            && dotsOnScreen < 100 // valid for timebase <= 500 ns/div
-            && skipSamples ) { // triggered trace
+            && dotsOnScreen < 100 ) { // valid for timebase <= 500 ns/div
             const unsigned int sincSize = sinc.size();
-            // we would need sincWidth, but we take what we get
-            const unsigned int left = std::min( sincWidth, skipSamples ); 
+            // if untriggered (skipSamples == 0) then reserve margin for left side of sinc()
+            const unsigned int skip = skipSamples ? skipSamples : sincWidth;
+            // we would need sincWidth on left side, but we take what we get
+            const unsigned int left = std::min( sincWidth, skip );
             const unsigned int resampleSize = (left + dotsOnScreen + sincWidth) * oversample;
             std::vector <double> resample;
-            resample.resize( resampleSize ); // prefill with zero
+            resample.resize( resampleSize ); // prefilled with zero
             horizontalFactor /= oversample; // distance between (resampled) dots
             dotsOnScreen = DIVS_TIME / horizontalFactor + 0.99 + 1; // dot count after resample
-            target.reserve( dotsOnScreen );
+            target.reserve( dotsOnScreen ); // increase target size
             // sampleIt -> start of left margin
-            auto sampleIt = samples.sample.cbegin() + skipSamples - left;
+            auto sampleIt = samples.sample.cbegin() + skip - left;
             for ( unsigned int resamplePos = 0; resamplePos < resampleSize; resamplePos += oversample, ++sampleIt ) {
                 resample[ resamplePos ] += *sampleIt; //  * sinc( 0 )
                 auto sincIt = sinc.cbegin(); // one half of sinc pulse without sinc(0) 
@@ -130,9 +122,11 @@ void GraphGenerator::generateGraphsTYvoltage(PPresult *result, const DsoSettings
                         resample[ resamplePos + sincPos ] += conv;
                 }
             }
-            sampleIterator = resample.cbegin() + left * oversample; // -> visible resamples
+            sampleIterator = resample.cbegin() + ( left + 0.5 ) * oversample; // -> visible resamples
         }
         // printf("dotsOnScreen: %d\n", dotsOnScreen);
+        if ( dotsOnScreen > SAMPLESIZE_USED / 2 + 1) // avoid target[] overrun
+            dotsOnScreen = SAMPLESIZE_USED / 2 + 1;  // typical 10001, defined in viewconstants.h
         target.clear(); // remove all previous dots and fill in new trace
         for (unsigned int position = 0; position < dotsOnScreen; ++position) {
             target.push_back(QVector3D(MARGIN_LEFT + position * horizontalFactor,
