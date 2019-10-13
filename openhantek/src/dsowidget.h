@@ -100,6 +100,7 @@ class DsoWidget : public QWidget {
     double samplerate;
     double timebase;
     unsigned int dotsOnScreen;
+    double pulseWidth = 0.0;
 
   public slots:
     // Horizontal axis

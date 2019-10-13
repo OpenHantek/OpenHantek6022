@@ -538,7 +538,8 @@ Dso::ErrorCode HantekDsoControl::setTriggerPosition(double position) {
 }
 
 
-unsigned HantekDsoControl::searchTriggerPoint( Dso::Slope dsoSlope ) {
+// search for trigger point from defined point, default startPos = 0;
+unsigned HantekDsoControl::searchTriggerPoint( Dso::Slope dsoSlope, unsigned int startPos ) {
     int slope;
     if ( dsoSlope == Dso::Slope::Positive)
         slope = 1;
@@ -549,12 +550,15 @@ unsigned HantekDsoControl::searchTriggerPoint( Dso::Slope dsoSlope ) {
     ChannelID channel = controlsettings.trigger.source;
     const std::vector<double> &samples = result.data[channel];
     size_t sampleCount = samples.size();    ///< number of available samples
-    double level = controlsettings.trigger.level[channel] + 1e-12; //HACK to ensure triggering at 0 V ???
+    // printf("searchTriggerPoint( %d, %d )\n", (int)dsoSlope, startPos );
+    if ( startPos >= sampleCount )
+        return 0;
+    double level = controlsettings.trigger.level[channel];
     double timeDisplay = controlsettings.samplerate.target.duration; // time for full screen width
     double sampleRate = controlsettings.samplerate.current;
     double samplesDisplay = timeDisplay * sampleRate;
 
-    unsigned preTrigSamples = (unsigned)(controlsettings.trigger.position * samplesDisplay); // samples left of trigger
+    unsigned preTrigSamples = startPos ? startPos : (unsigned)(controlsettings.trigger.position * samplesDisplay); // samples left of trigger
     unsigned postTrigSamples = (unsigned)sampleCount - ((unsigned)samplesDisplay - preTrigSamples); // samples right of trigger
     // |-----------samples-----------| // available sample
     // |--disp--|                      // display size
@@ -565,11 +569,14 @@ unsigned HantekDsoControl::searchTriggerPoint( Dso::Slope dsoSlope ) {
 
     const unsigned swTriggerSampleSet = controlsettings.trigger.smooth ? 10 : 1; // check this number of samples before/after trigger point ...
     const unsigned swTriggerThreshold = controlsettings.trigger.smooth ? 5 : 0; // ... and get at least this number below or above trigger
+    if ( postTrigSamples > sampleCount - 2 * ( swTriggerSampleSet + 1 ) )
+        postTrigSamples = sampleCount - 2 * ( swTriggerSampleSet + 1 );
+    // printf( "pre: %d, post %d\n", preTrigSamples, postTrigSamples );
 
     double prev = INT_MAX * slope;
     unsigned swTriggerStart = 0;
     for (unsigned int i = preTrigSamples; i < postTrigSamples; i++) {
-        if ( slope * samples[i] > slope * level && slope * prev < slope * level ) { // trigger condition met
+        if ( slope * samples[i] >= slope * level && slope * prev < slope * level ) { // trigger condition met
             // check for the next few SampleSet samples, if they are also above/below the trigger value
             unsigned int before = 0;
             for (unsigned int k = i - 1; k >= i - swTriggerSampleSet && k > 0; k--) {
@@ -603,6 +610,7 @@ unsigned HantekDsoControl::softwareTrigger() {
     //printf( "HDC::softwareTrigger()\n" );
     triggerPositionRaw = 0;
     result.triggerPosition = 0;
+    result.pulseWidth = 0.0;
 
     size_t sampleCount = result.data[channel].size(); // number of available samples
     double timeDisplay = controlsettings.samplerate.target.duration; // time for full screen width
@@ -617,12 +625,19 @@ unsigned HantekDsoControl::softwareTrigger() {
     }
 
     // search for trigger point in a range that leaves enough samples left and right of trigger for display
+    // find also the alternate slope after trigger point -> calculate pulse width.
     if ( controlsettings.trigger.slope != Dso::Slope::Both  ) {
         triggerPositionRaw = searchTriggerPoint( nextSlope = controlsettings.trigger.slope );
+        if ( triggerPositionRaw ) { // triggered -> search also following other slope (calculate pulse width)
+            if ( unsigned int slopePos2 = searchTriggerPoint( mirrorSlope( nextSlope ), triggerPositionRaw ) )
+                result.pulseWidth = (slopePos2 - triggerPositionRaw) / sampleRate;
+        }
     } else { // alternating trigger slope
         triggerPositionRaw = searchTriggerPoint( nextSlope );
         if ( triggerPositionRaw ) { // triggered -> change slope
-            nextSlope = nextSlope == Dso::Slope::Positive ? Dso::Slope::Negative : Dso::Slope::Positive;
+            nextSlope = mirrorSlope( nextSlope );
+            if ( unsigned int slopePos2 = searchTriggerPoint( nextSlope, triggerPositionRaw ) )
+                result.pulseWidth = (slopePos2 - triggerPositionRaw) / sampleRate;
         }
     }
 
@@ -643,7 +658,7 @@ void HantekDsoControl::triggering() {
         triggeredResult.samplerate = result.samplerate;
         triggeredResult.clipped = result.clipped;
         triggeredResult.triggerPosition = result.triggerPosition;
-        result.liveTrigger = true; // show green "TR" top left 
+        result.liveTrigger = true; // show green "TR" top left
     } else if ( controlsettings.trigger.mode == Dso::TriggerMode::NORMAL ) { // Not triggered in NORMAL mode
         // Use saved trace (even if it is empty)
         result.data = triggeredResult.data; 

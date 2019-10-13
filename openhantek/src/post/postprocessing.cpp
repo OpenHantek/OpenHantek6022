@@ -9,12 +9,14 @@ void PostProcessing::registerProcessor(Processor *processor) { processors.push_b
 void PostProcessing::convertData(const DSOsamples *source, PPresult *destination) {
     //printf( "PostProcessing::convertData()\n" );
     QReadLocker locker(&source->lock);
-    if ( source->triggerPosition >=0 ) {
+    if ( source->triggerPosition ) {
         destination->softwareTriggerTriggered = source->liveTrigger;
         destination->skipSamples = source->triggerPosition;
+        destination->pulseWidth = source->pulseWidth;
     } else {
         destination->softwareTriggerTriggered = false;
         destination->skipSamples = 0;
+        destination->pulseWidth = 0;
     }
 
     for (ChannelID channel = 0; channel < source->data.size(); ++channel) {

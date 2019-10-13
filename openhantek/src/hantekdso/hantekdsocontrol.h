@@ -144,7 +144,11 @@ class HantekDsoControl : public QObject {
     /// \brief Update the minimum and maximum supported samplerate.
     void updateSamplerateLimits();
 
-    unsigned searchTriggerPoint( Dso::Slope dsoSlope );
+    unsigned searchTriggerPoint( Dso::Slope dsoSlope, unsigned int startPos = 0 );
+
+    Dso::Slope mirrorSlope( Dso::Slope slope ) {
+        return ( slope == Dso::Slope::Positive ? Dso::Slope::Negative : Dso::Slope::Positive );
+    }
 
     unsigned softwareTrigger();
 

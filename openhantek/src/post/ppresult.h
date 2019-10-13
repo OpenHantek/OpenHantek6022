@@ -25,6 +25,7 @@ struct DataChannel {
     double ac = 0.0;        ///< The AC rms value of the signal
     double dB = 0.0;        ///< The AC rms value as dB (dBV or other depending on config)
     double frequency = 0.0; ///< The frequency of the signal
+    double pulseWidth = 0.0;///< The width of the triggered pulse
 };
 
 typedef std::vector<QVector3D> ChannelGraph;
@@ -49,6 +50,7 @@ class PPresult {
     bool softwareTriggerTriggered = false;
     /// skip samples at start of channel to get triggered tace on screen
     unsigned int skipSamples = 0;
+    double pulseWidth = 0.0;///< The width of the triggered pulse
 
     ChannelsGraphs vaChannelSpectrum;
     ChannelsGraphs vaChannelVoltage;

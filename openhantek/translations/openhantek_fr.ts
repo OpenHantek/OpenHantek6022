@@ -334,9 +334,9 @@
         <location filename="../src/dsowidget.cpp" line="435"/>
         <location filename="../src/dsowidget.cpp" line="437"/>
         <location filename="../src/dsowidget.cpp" line="488"/>
-        <location filename="../src/dsowidget.cpp" line="513"/>
-        <location filename="../src/dsowidget.cpp" line="521"/>
-        <location filename="../src/dsowidget.cpp" line="539"/>
+        <location filename="../src/dsowidget.cpp" line="523"/>
+        <location filename="../src/dsowidget.cpp" line="531"/>
+        <location filename="../src/dsowidget.cpp" line="549"/>
         <source>/div</source>
         <translation type="unfinished"></translation>
     </message>
@@ -358,17 +358,17 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="501"/>
-        <source>%1  %2  %3  %4</source>
+        <location filename="../src/dsowidget.cpp" line="508"/>
+        <source>%1  %2  %3  %4  %5</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="530"/>
+        <location filename="../src/dsowidget.cpp" line="540"/>
         <source>/s</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="633"/>
+        <location filename="../src/dsowidget.cpp" line="643"/>
         <source> on screen</source>
         <translation type="unfinished"></translation>
     </message>
