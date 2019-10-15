@@ -100,6 +100,11 @@ int main(int argc, char *argv[]) {
         useGLES = p.isSet(useGlesOption);
     }
 
+#ifdef __arm__
+    // HACK: Raspberry Pi crashes with OpenGL, use always OpenGLES
+    useGLES = true;
+#endif
+
     GlScope::fixOpenGLversion( useGLES ? QSurfaceFormat::OpenGLES : QSurfaceFormat::OpenGL );
 
     QApplication openHantekApplication(argc, argv);

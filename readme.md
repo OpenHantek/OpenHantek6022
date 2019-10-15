@@ -19,6 +19,7 @@ After David [stopped maintaining](https://github.com/OpenHantek/openhantek/issue
 
 * Supported devices: Hantek 6022BE and 6022BL as well as compatible scopes (e.g. Voltcraft DSO-2020).
 * Fully supported operating system: Linux; developed under debian stable for amd64 architecture.
+* Raspberry Pi packages (raspbian stable) are available on the [Releases](https://github.com/OpenHantek/OpenHantek6022/releases) page.
 * Compiles under FreeBSD (packaging / installation: work in progress, thx [tspspi](https://github.com/tspspi)).
 * Other operating systems builds: [Windows](docs/images/screenshot_mainwindow_win.png) (partly tested) & MacOSX (untested).
 * Uses [free open source firmware](https://github.com/Ho-Ro/Hantek6022API), no longer dependent on nonfree Hantek firmware.
@@ -51,7 +52,7 @@ After David [stopped maintaining](https://github.com/OpenHantek/openhantek/issue
 * All settings can be saved to a configuration file and loaded again.
 
 ## Install prebuilt binary
-* Get Linux (and untested Win) packages from the [Releases](https://github.com/OpenHantek/OpenHantek6022/releases) page.
+* Get Linux, Raspberry Pi (and untested Win) packages from the [Releases](https://github.com/OpenHantek/OpenHantek6022/releases) page.
 * Get MacOSX package from [macports](https://www.macports.org/ports.php?by=name&substr=openhantek) - thx [ra1nb0w](https://github.com/ra1nb0w).
 * Get [Fedora rpm packages](https://pkgs.org/download/openhantek) - thx [Vascom](https://github.com/Vascom).
 * [Download (untested) Windows build from last commit](https://ci.appveyor.com/project/Ho-Ro/openhantek6022/build/artifacts).

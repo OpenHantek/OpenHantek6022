@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="de_DE">
+<TS version="2.0" language="de_DE">
 <context>
     <name></name>
     <message>
@@ -13,11 +13,11 @@
     <name>DevicesListModel</name>
     <message>
         <source>Devicename</source>
-        <translation type="vanished">Gerätename</translation>
+        <translation>Gerätename</translation>
     </message>
     <message>
         <source>Status</source>
-        <translation type="vanished">Status</translation>
+        <translation>Status</translation>
     </message>
 </context>
 <context>
@@ -371,7 +371,7 @@
     <message>
         <location filename="../src/dsowidget.cpp" line="508"/>
         <source>%1  %2  %3  %4  %5</source>
-        <translation type="unfinished"></translation>
+        <translation>%1  %2  %3  %4 %5</translation>
     </message>
     <message>
         <source>%L1</source>
@@ -383,7 +383,7 @@
     </message>
     <message>
         <source>%1  %2  %3  %4</source>
-        <translation type="vanished">%1  %2  %3  %4</translation>
+        <translation>%1  %2  %3  %4</translation>
     </message>
     <message>
         <location filename="../src/dsowidget.cpp" line="540"/>
@@ -476,7 +476,7 @@
     </message>
     <message>
         <source>Record length</source>
-        <translation type="vanished">Satzlänge</translation>
+        <translation>Satzlänge</translation>
     </message>
     <message>
         <location filename="../src/docks/HorizontalDock.cpp" line="54"/>
@@ -490,7 +490,7 @@
     </message>
     <message>
         <source>Roll</source>
-        <translation type="vanished">Rollen</translation>
+        <translation>Rollen</translation>
     </message>
 </context>
 <context>
@@ -888,11 +888,11 @@
     </message>
     <message>
         <source>%L1 μV</source>
-        <translation type="vanished">%L1 µV</translation>
+        <translation>%L1 µV</translation>
     </message>
     <message>
         <source>%L1 μs</source>
-        <translation type="vanished">%L1 µs</translation>
+        <translation>%L1 µs</translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="25"/>
@@ -1091,7 +1091,7 @@
     </message>
     <message>
         <source>Show translated UI (if available)</source>
-        <translation type="vanished">Zeige deutsche Texte (sofern vorhanden)</translation>
+        <translation>Zeige deutsche Texte (sofern vorhanden)</translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="17"/>
@@ -1268,7 +1268,7 @@
     <name>QObject</name>
     <message>
         <source>Translation loaded</source>
-        <translation type="vanished">Übersetzung geladen</translation>
+        <translation>Übersetzung geladen</translation>
     </message>
     <message>
         <location filename="../src/selectdevice/rawdeviceslistmodel.cpp" line="65"/>
@@ -1295,11 +1295,11 @@
     <name>RawDevicesListModel</name>
     <message>
         <source>%1:%2 - No access</source>
-        <translation type="vanished">%1:%2 - Kein Zugriff</translation>
+        <translation>%1:%2 - Kein Zugriff</translation>
     </message>
     <message>
         <source>%1:%2 (%3 - %4)</source>
-        <translation type="vanished">%1:%2 (%3 - %4)</translation>
+        <translation>%1:%2 (%3 - %4)</translation>
     </message>
 </context>
 <context>
@@ -1426,15 +1426,15 @@
     <name>UploadFirmware</name>
     <message>
         <source>Couldn&apos;t open device: %1</source>
-        <translation type="vanished">Konnte Gerät nicht öffnen: %1</translation>
+        <translation>Konnte Gerät nicht öffnen: %1</translation>
     </message>
     <message>
         <source>libusb_claim_interface() failed: %1</source>
-        <translation type="vanished">libusb_claim_interface() - Fehler: %1</translation>
+        <translation>libusb_claim_interface() - Fehler: %1</translation>
     </message>
     <message>
         <source>Writing the main firmware failed: %1</source>
-        <translation type="vanished">Fehler beim Übertragen der Firmware: %1</translation>
+        <translation>Fehler beim Übertragen der Firmware: %1</translation>
     </message>
 </context>
 <context>
