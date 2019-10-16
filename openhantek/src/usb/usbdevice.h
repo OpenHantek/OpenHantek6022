@@ -58,7 +58,7 @@ class USBDevice : public QObject {
 
     /// \brief Bulk transfer to/from the oscilloscope.
     /// \param endpoint Endpoint number, also sets the direction of the transfer.
-    /// \param data Buffer for the sent/recieved data.
+    /// \param data Buffer for the sent/received data.
     /// \param length The length of the packet.
     /// \param attempts The number of attempts, that are done on timeouts.
     /// \param timeout The timeout in ms.
@@ -68,7 +68,7 @@ class USBDevice : public QObject {
                      unsigned int timeout = HANTEK_TIMEOUT);
 
     /// \brief Bulk write to the oscilloscope.
-    /// \param data Buffer for the sent/recieved data.
+    /// \param data Buffer for the sent/received data.
     /// \param length The length of the packet.
     /// \param attempts The number of attempts, that are done on timeouts.
     /// \return Number of sent bytes on success, libusb error code on error.
@@ -77,7 +77,7 @@ class USBDevice : public QObject {
     }
 
     /// \brief Bulk read from the oscilloscope.
-    /// \param data Buffer for the sent/recieved data.
+    /// \param data Buffer for the sent/received data.
     /// \param length The length of the packet.
     /// \param attempts The number of attempts, that are done on timeouts.
     /// \return Number of received bytes on success, libusb error code on error.
@@ -87,7 +87,7 @@ class USBDevice : public QObject {
     }
 
     /// \brief Multi packet bulk read from the oscilloscope.
-    /// \param data Buffer for the sent/recieved data.
+    /// \param data Buffer for the sent/received data.
     /// \param length The length of data contained in the packets.
     /// \param attempts The number of attempts, that are done on timeouts.
     /// \return Number of received bytes on success, libusb error code on error.
@@ -96,7 +96,7 @@ class USBDevice : public QObject {
     /// \brief Control transfer to the oscilloscope.
     /// \param type The request type, also sets the direction of the transfer.
     /// \param request The request field of the packet.
-    /// \param data Buffer for the sent/recieved data.
+    /// \param data Buffer for the sent/received data.
     /// \param length The length field of the packet.
     /// \param value The value field of the packet.
     /// \param index The index field of the packet.
@@ -106,7 +106,7 @@ class USBDevice : public QObject {
                         int index, int attempts = HANTEK_ATTEMPTS);
 
     /// \brief Control write to the oscilloscope.
-    /// \param command Buffer for the sent/recieved data.
+    /// \param command Buffer for the sent/received data.
     /// \return Number of sent bytes on success, libusb error code on error.
     template<class T>
     inline int controlWrite(const T *command) {
@@ -116,7 +116,7 @@ class USBDevice : public QObject {
     }
 
     /// \brief Control read to the oscilloscope.
-    /// \param command Buffer for the sent/recieved data.
+    /// \param command Buffer for the sent/received data.
     /// \return Number of received bytes on success, libusb error code on error.
     template<class T>
     inline int controlRead(const T *command) {
@@ -135,7 +135,7 @@ class USBDevice : public QObject {
      */
     inline unsigned long getUniqueUSBDeviceID() const { return uniqueUSBdeviceID; }
     /**
-     * The USB bus is organised in a tree hierarchy. A device is connected to a port on a bus device,
+     * The USB bus is organized in a tree hierarchy. A device is connected to a port on a bus device,
      * which is connected to a port on another bus device etc up to the root usb device.
      *
      * The USB 3.0 standard allows up to 7 levels with 256 devices on each level (1 Byte). We generate
@@ -147,7 +147,7 @@ class USBDevice : public QObject {
     /// \return The ::Model of the connected Hantek DSO.
     inline const DSOModel *getModel() const { return model; }
     /**
-     * Usually a maximaum packet length for in and outgoing packets is determined
+     * Usually a maximum packet length for in and outgoing packets is determined
      * by the underlying implementation and usb specification. E.g. the roll buffer
      * mode uses the maximum in length for transfer. Some devices do not support
      * that much data though and need an artification restriction.
