@@ -3,6 +3,7 @@
 #include "usb/uploadFirmware.h"
 #include "dsomodel.h"
 #include <QColor>
+#include <QDebug>
 
 DevicesListModel::DevicesListModel(FindDevices *findDevices) :findDevices(findDevices) {}
 
@@ -63,7 +64,7 @@ void DevicesListModel::updateDeviceList()
     beginInsertRows(QModelIndex(),0,(int)devices->size());
     for (auto &i : *devices) {
         DeviceListEntry entry;
-        entry.name= QString::fromStdString(i.second->getModel()->name);
+        entry.name = QString::fromStdString(i.second->getModel()->name);
         entry.id = i.first;
         if (i.second->needsFirmware()) {
             UploadFirmware uf;

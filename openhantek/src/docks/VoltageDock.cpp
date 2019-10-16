@@ -89,8 +89,8 @@ VoltageDock::VoltageDock(DsoSettingsScope *scope, const Dso::ControlSpecificatio
             this->setAttn( channel, attn );
             this->scope->voltage[channel].probeUsed = attn;
             this->scope->voltage[channel].probeAttn = attn ? ATTENUATION : 1;
+            emit probeAttnChanged( channel, attn, attn ? ATTENUATION : 1 ); // make sure to set the probe first, since this will influence the gain
             emit gainChanged(channel, this->scope->gain(channel));
-            emit probeAttnChanged( channel, attn, attn ? ATTENUATION : 1 );
         });
         connect(b.invertCheckBox, &QAbstractButton::toggled, [this,channel](bool checked) {
             this->scope->voltage[channel].inverted = checked;
