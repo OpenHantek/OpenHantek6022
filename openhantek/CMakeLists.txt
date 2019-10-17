@@ -34,6 +34,9 @@ set(EXECTYPE "")
 if(WIN32 AND MINGW)
     set(EXECTYPE WIN32)
 endif()
+if(APPLE)
+    set(EXECTYPE MACOSX_BUNDLE)
+endif()
 
 # make executable
 add_executable(${PROJECT_NAME} ${EXECTYPE} ${SRC} ${HEADERS} ${UI} ${QRC} ${TRANSLATION_BIN_FILES} ${TRANSLATION_QRC})
@@ -66,7 +69,10 @@ if(NOT WIN32)
 endif()
 
 # install commands
-install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION "bin")
-
+if (APPLE)
+   install(TARGETS ${PROJECT_NAME} BUNDLE DESTINATION ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app/Contents/MacOS/${PROJECT_NAME})
+else()
+	install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION "bin")
+endif()
 include(../cmake/copy_qt5_dlls_to_bin_dir.cmake)
 
