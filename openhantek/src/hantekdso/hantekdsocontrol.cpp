@@ -188,7 +188,7 @@ void HantekDsoControl::convertRawDataToSamples(const std::vector<unsigned char> 
 
     const size_t rawSampleCount = isFastRate() ? rawData.size() : (rawData.size() / 2);
     //printf("cRDTS, rawSampleCount %lu\n", rawSampleCount);
-    if ( 0 == rawSampleCount ) // nothing to convert
+    if ( 0 == rawSampleCount) // nothing to convert
         return;
 
     QWriteLocker locker(&result.lock);
@@ -204,7 +204,7 @@ void HantekDsoControl::convertRawDataToSamples(const std::vector<unsigned char> 
     //           rawSampleSize = ( ( n*20000 + 1024 ) / 1024 + 2) * 1024;
     // and skip over these samples to get 20000 samples (or n*20000)
 
-    unsigned sampleCount = ((rawSampleCount-1024) / 1000 - 1) * 1000;
+    unsigned sampleCount = (rawSampleCount > 1024) ? ((rawSampleCount - 1024)/1000 - 1)*1000 : rawSampleCount;
     unsigned skipSamples = rawSampleCount - sampleCount;
     unsigned downsampling = sampleCount / SAMPLESIZE_USED;
     //printf("sampleCount %u, downsampling %u\n", sampleCount, downsampling );
@@ -237,7 +237,7 @@ void HantekDsoControl::convertRawDataToSamples(const std::vector<unsigned char> 
             // get offset value from eeprom[ 8 .. 39 ]
             const unsigned char * pOff = (const unsigned char *) controlsettings.offsetLimit;
             pOff += 2 * gainID + channel; // point to gain/channel offset value in eeprom[ 8 .. 39 ]
-            shiftDataBuf = result.samplerate < 30e6 ? *pOff : *(pOff+16); // lowspeed / highspeed
+            shiftDataBuf = result.samplerate < 30e6 ? *pOff : *(pOff + 16); // lowspeed / highspeed
             pOff += 32; // now point to gain/channel gain value in eeprom[ 40 .. 55 ]
             if ( *pOff != 255 && *pOff != 0 ) { // eeprom content valid
                 // byte 128 - 125 ... 128 + 125 -> 1.0 - 0.250 ... 1.0 + 0.250 = 0.75 .. 1.25 
@@ -459,6 +459,7 @@ Dso::ErrorCode HantekDsoControl::setGain(ChannelID channel, double gain) {
     if (channel >= specification->channels)
         return Dso::ErrorCode::PARAMETER;
 
+    gain /= controlsettings.voltage[channel].probeAttn; // gain needs to be scaled by probe attenuation
     // Find lowest gain voltage thats at least as high as the requested
     unsigned gainID;
     for (gainID = 0; gainID < specification->gain.size() - 1; ++gainID)
@@ -472,7 +473,7 @@ Dso::ErrorCode HantekDsoControl::setGain(ChannelID channel, double gain) {
         modifyCommand<ControlSetVoltDIV_CH2>(ControlCode::CONTROL_SETVOLTDIV_CH2)
             ->setDiv(specification->gain[gainID].gainIndex);
     } else
-        qDebug("%s: Unsuported channel: %i\n", __func__, channel);
+        qDebug("%s: Unsupported channel: %i\n", __func__, channel);
     controlsettings.voltage[channel].gain = gainID;
     return Dso::ErrorCode::NONE;
 }
@@ -486,6 +487,22 @@ Dso::ErrorCode HantekDsoControl::setProbe( ChannelID channel, bool probeUsed, do
     //printf( "setProbe %g\n", probeAttn );
     return Dso::ErrorCode::NONE;
 }
+
+
+Dso::ErrorCode HantekDsoControl::setCoupling(ChannelID channel, Dso::Coupling coupling) {
+    if (!device->isConnected())
+        return Dso::ErrorCode::CONNECTION;
+
+    if (channel >= specification->channels)
+        return Dso::ErrorCode::PARAMETER;
+
+    modifyCommand<ControlSetCoupling>(ControlCode::CONTROL_SETCOUPLING)
+            ->setCoupling(channel, coupling == Dso::Coupling::DC);
+
+    controlsettings.voltage[channel].coupling = coupling;
+    return Dso::ErrorCode::NONE;
+}
+
 
 
 Dso::ErrorCode HantekDsoControl::setTriggerMode(Dso::TriggerMode mode) {

@@ -46,7 +46,8 @@ struct ControlSettingsVoltage {
     bool used = false;       ///< true, if the channel is used
     bool inverted = false;   ///< true, if the channel is inverted
     double probeAttn = 1.0;  ///< attenuation of probe
-    bool probeUsed = false;   ///< probe attn used
+    bool probeUsed = false;  ///< probe attn used
+    Dso::Coupling coupling = Dso::Coupling::DC; ///< The coupling
 };
 
 /// \brief Stores the current settings of the device.

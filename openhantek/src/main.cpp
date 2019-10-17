@@ -62,11 +62,12 @@ void applySettingsToDevice(HantekDsoControl *dsoControl, DsoSettingsScope *scope
                            const Dso::ControlSpecification *spec) {
     bool mathUsed = scope->anyUsed(spec->channels);
     for (ChannelID channel = 0; channel < spec->channels; ++channel) {
+        dsoControl->setProbe( channel, scope->voltage[channel].probeUsed, scope->voltage[channel].probeAttn );
         dsoControl->setGain(channel, scope->gain(channel) * DIVS_VOLTAGE);
         dsoControl->setTriggerLevel(channel, scope->voltage[channel].trigger);
         dsoControl->setChannelUsed(channel, mathUsed | scope->anyUsed(channel));
         dsoControl->setChannelInverted(channel, scope->voltage[channel].inverted);
-        dsoControl->setProbe( channel, scope->voltage[channel].probeUsed, scope->voltage[channel].probeAttn );
+        dsoControl->setCoupling(channel, Dso::Coupling(scope->voltage[channel].couplingOrMathIndex));
     }
 
     dsoControl->setRecordTime(scope->horizontal.timebase * DIVS_TIME);
@@ -119,13 +120,16 @@ int main(int argc, char *argv[]) {
 
     //////// Load translations ////////
     QTranslator qtTranslator;
-    if (qtTranslator.load("qt_" + QLocale::system().name(), QLibraryInfo::location(QLibraryInfo::TranslationsPath)))
-        openHantekApplication.installTranslator(&qtTranslator);
+    if (QLocale::system().name() != "en_US") { // somehow Qt on MacOS uses the german translation for en_US?!
+        if (qtTranslator.load("qt_" + QLocale::system().name(), QLibraryInfo::location(QLibraryInfo::TranslationsPath))) {
+           openHantekApplication.installTranslator(&qtTranslator);
+        }
 
-    QTranslator openHantekTranslator;
-    if (openHantekTranslator.load(QLocale(), QLatin1String("openhantek"), QLatin1String("_"),
-                                  QLatin1String(":/translations"))) {
-        openHantekApplication.installTranslator(&openHantekTranslator);
+        QTranslator openHantekTranslator;
+        if (openHantekTranslator.load(QLocale(), QLatin1String("openhantek"), QLatin1String("_"),
+                                      QLatin1String(":/translations"))) {
+            openHantekApplication.installTranslator(&openHantekTranslator);
+        }
     }
 
     //////// Find matching usb devices ////////

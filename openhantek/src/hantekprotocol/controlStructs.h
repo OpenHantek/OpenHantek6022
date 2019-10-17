@@ -142,4 +142,10 @@ struct ControlSetCalFreq : public ControlCommand {
     void setCalFreq(uint8_t val);
 };
 
+struct ControlSetCoupling : public ControlCommand {
+    ControlSetCoupling();
+    void setCoupling(ChannelID channel, bool dc);
+    bool ch1Coupling, ch2Coupling;
+};
+
 }

@@ -50,7 +50,7 @@ enum class ControlCode : uint8_t {
     CONTROL_SETTIMEDIV = 0xe2,
     CONTROL_ACQUIIRE_HARD_DATA = 0xe3,
     CONTROL_SETNUMCHANNELS = 0xe4,
-    // CONTROL_SETCOUPLING = 0xe5, // DC/AC not possible without hw modification
+    CONTROL_SETCOUPLING = 0xe5, // DC/AC not possible without hw modification on Hantek 6022, but implemented on Sainsmart DS120 
     CONTROL_SETCALFREQ = 0xe6
 };
 

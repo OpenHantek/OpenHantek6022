@@ -107,7 +107,7 @@ static void initSpecifications(Dso::ControlSpecification& specification) {
     specification.fixedUSBinLength = 0;
 }
 
-void applyRequirements_(HantekDsoControl *dsoControl) {
+static void applyRequirements_(HantekDsoControl *dsoControl) {
     dsoControl->addCommand(new ControlAcquireHardData());
     dsoControl->addCommand(new ControlSetTimeDIV());
     dsoControl->addCommand(new ControlSetVoltDIV_CH2());
