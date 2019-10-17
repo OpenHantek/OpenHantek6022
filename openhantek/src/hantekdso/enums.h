@@ -23,8 +23,8 @@ extern Enum<Dso::GraphFormat, Dso::GraphFormat::TY, Dso::GraphFormat::XY> GraphF
 /// \enum Coupling
 /// \brief The coupling modes for the channels.
 enum class Coupling {
-    AC, ///< Offset filtered out by condensator
     DC, ///< No filtering
+    AC, ///< Offset filtered out by capacitor
     GND ///< Channel is grounded
 };
 

@@ -53,7 +53,7 @@ VoltageDock::VoltageDock(DsoSettingsScope *scope, const Dso::ControlSpecificatio
         b.miscComboBox=(new QComboBox());
         b.gainComboBox=(new QComboBox());
         b.invertCheckBox=(new QCheckBox(tr("Invert")));
-        b.attnCheckBox=(new QCheckBox(tr("X10 probe")));
+        b.attnCheckBox=(new QCheckBox(tr("X10")));
         b.usedCheckBox=(new QCheckBox(scope->voltage[channel].name));
 
         channelBlocks.push_back(std::move(b));
@@ -66,13 +66,23 @@ VoltageDock::VoltageDock(DsoSettingsScope *scope, const Dso::ControlSpecificatio
         b.gainComboBox->addItems(gainStrings);
 
         dockLayout->addWidget( b.usedCheckBox, row, 0 );
-        dockLayout->addWidget( b.gainComboBox, row++, 1 );
+        dockLayout->addWidget( b.gainComboBox, row++, 1, 1, 2);
         dockLayout->addWidget( b.invertCheckBox, row, 0 );
         if (channel < spec->channels) {
-            dockLayout->addWidget( b.attnCheckBox, row++, 1) ;
+            dockLayout->addWidget( b.attnCheckBox, row, 1 ) ;
+            dockLayout->addWidget( b.miscComboBox, row++, 2 ) ;
+            setCoupling(channel, scope->voltage[channel].couplingOrMathIndex);
         } else {
-            dockLayout->addWidget( b.miscComboBox, row++, 1 );
+            dockLayout->addWidget( b.miscComboBox, row++, 1, 1, 2 );
             setMode(scope->voltage[channel].couplingOrMathIndex);
+        }
+
+        // draw divider line
+        if (channel < spec->channels) {
+            QFrame *divider = new QFrame();
+            divider->setLineWidth(1);
+            divider->setFrameShape(QFrame::HLine);
+            dockLayout->addWidget(divider, row++, 0, 1, 3);        
         }
 
         setGain(channel, scope->voltage[channel].gainStepIndex);
@@ -96,12 +106,12 @@ VoltageDock::VoltageDock(DsoSettingsScope *scope, const Dso::ControlSpecificatio
             this->scope->voltage[channel].inverted = checked;
             emit invertedChanged( channel, checked );
         });
-        connect(b.miscComboBox, SELECT<int>::OVERLOAD_OF(&QComboBox::currentIndexChanged), [this,channel,spec,scope](int index){
-            this->scope->voltage[channel].couplingOrMathIndex = (unsigned)index;
+        connect(b.miscComboBox, SELECT<int>::OVERLOAD_OF(&QComboBox::currentIndexChanged), [this,channel,spec,scope](int index) {
             if (channel < spec->channels) {
-                //printf("miscComboBox CH%d, index %d\n", channel, index );
-                //emit couplingChanged(channel, scope->coupling(channel, spec));
+                this->setCoupling(channel, (unsigned)index);
+                emit couplingChanged(channel, scope->coupling(channel, spec));
             } else {
+                this->scope->voltage[channel].couplingOrMathIndex = (unsigned)index;
                 emit modeChanged(Dso::getMathMode(this->scope->voltage[channel]));
             }
         });
@@ -127,6 +137,7 @@ void VoltageDock::setCoupling(ChannelID channel, unsigned couplingIndex) {
     if (couplingIndex >= spec->couplings.size()) return;
     QSignalBlocker blocker(channelBlocks[channel].miscComboBox);
     channelBlocks[channel].miscComboBox->setCurrentIndex((int)couplingIndex);
+    this->scope->voltage[channel].couplingOrMathIndex = couplingIndex;
 }
 
 void VoltageDock::setGain(ChannelID channel, unsigned gainStepIndex) {

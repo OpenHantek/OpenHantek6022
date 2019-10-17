@@ -56,4 +56,19 @@ ControlSetCalFreq::ControlSetCalFreq() : ControlCommand(ControlCode::CONTROL_SET
 
 void ControlSetCalFreq::setCalFreq(uint8_t val) { data()[0] = val; }
 
+
+ControlSetCoupling::ControlSetCoupling() 
+    : ControlCommand(ControlCode::CONTROL_SETCOUPLING, 0x11)
+    , ch1Coupling(false)
+    , ch2Coupling(false)
+{}
+
+void ControlSetCoupling::setCoupling(ChannelID channel, bool dc) {
+    if (channel == 0)
+        ch1Coupling = dc;
+    else
+        ch2Coupling = dc;
+    data()[0] = 0xFF & ((ch2Coupling << 4) | ch1Coupling);
+}
+
 }

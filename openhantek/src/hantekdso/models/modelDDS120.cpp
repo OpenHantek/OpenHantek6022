@@ -124,11 +124,11 @@ static void applyRequirements_(HantekDsoControl *dsoControl) {
     dsoControl->addCommand(new ControlSetVoltDIV_CH1());
     dsoControl->addCommand(new ControlSetNumChannels());
     dsoControl->addCommand(new ControlSetCalFreq());
+    dsoControl->addCommand(new ControlSetCoupling());
 }
 //                                        VID/PID active  VID/PID no FW   FW ver  FW name   Scope name
 //                                        |------------|  |------------|  |----|  |------|  |--------|
 ModelDDS120::ModelDDS120() : DSOModel(ID, 0x1d50, 0x608e, 0x8102, 0x8102, 0x02,   "dds120", "DDS120",
-//ModelDDS120::ModelDDS120() : DSOModel(ID, 0x04b5, 0x6022, 0x8102, 0x8102, 0x0202, "dso6022be", "DDS120",
                                             Dso::ControlSpecification(2)) {
     initSpecifications(specification);
 }

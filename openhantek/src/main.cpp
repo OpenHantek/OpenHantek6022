@@ -67,6 +67,7 @@ void applySettingsToDevice(HantekDsoControl *dsoControl, DsoSettingsScope *scope
         dsoControl->setTriggerLevel(channel, scope->voltage[channel].trigger);
         dsoControl->setChannelUsed(channel, mathUsed | scope->anyUsed(channel));
         dsoControl->setChannelInverted(channel, scope->voltage[channel].inverted);
+        dsoControl->setCoupling(channel, Dso::Coupling(scope->voltage[channel].couplingOrMathIndex));
     }
 
     dsoControl->setRecordTime(scope->horizontal.timebase * DIVS_TIME);

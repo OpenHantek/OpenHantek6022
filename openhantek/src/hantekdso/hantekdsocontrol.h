@@ -221,6 +221,12 @@ class HantekDsoControl : public QObject {
     /// \return error code.
     Dso::ErrorCode setGain(ChannelID channel, double gain);
 
+    /// \brief Sets the coupling for the given channel.
+    /// \param channel The channel that should be set.
+    /// \param coupling The coupling that should be set.
+    /// \return error code.
+    Dso::ErrorCode setCoupling(ChannelID channel, Dso::Coupling coupling);
+
     /// \brief Set the trigger mode.
     /// \return See ::Dso::ErrorCode.
     Dso::ErrorCode setTriggerMode(Dso::TriggerMode mode);

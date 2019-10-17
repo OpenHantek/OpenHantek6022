@@ -473,7 +473,7 @@ Dso::ErrorCode HantekDsoControl::setGain(ChannelID channel, double gain) {
         modifyCommand<ControlSetVoltDIV_CH2>(ControlCode::CONTROL_SETVOLTDIV_CH2)
             ->setDiv(specification->gain[gainID].gainIndex);
     } else
-        qDebug("%s: Unsuported channel: %i\n", __func__, channel);
+        qDebug("%s: Unsupported channel: %i\n", __func__, channel);
     controlsettings.voltage[channel].gain = gainID;
     return Dso::ErrorCode::NONE;
 }
@@ -487,6 +487,22 @@ Dso::ErrorCode HantekDsoControl::setProbe( ChannelID channel, bool probeUsed, do
     //printf( "setProbe %g\n", probeAttn );
     return Dso::ErrorCode::NONE;
 }
+
+
+Dso::ErrorCode HantekDsoControl::setCoupling(ChannelID channel, Dso::Coupling coupling) {
+    if (!device->isConnected())
+        return Dso::ErrorCode::CONNECTION;
+
+    if (channel >= specification->channels)
+        return Dso::ErrorCode::PARAMETER;
+
+    modifyCommand<ControlSetCoupling>(ControlCode::CONTROL_SETCOUPLING)
+            ->setCoupling(channel, coupling == Dso::Coupling::DC);
+
+    controlsettings.voltage[channel].coupling = coupling;
+    return Dso::ErrorCode::NONE;
+}
+
 
 
 Dso::ErrorCode HantekDsoControl::setTriggerMode(Dso::TriggerMode mode) {
