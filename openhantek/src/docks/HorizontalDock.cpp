@@ -67,6 +67,7 @@ HorizontalDock::HorizontalDock(DsoSettingsScope *scope, QWidget *parent, Qt::Win
     this->dockLayout = new QGridLayout();
     this->dockLayout->setColumnMinimumWidth(0, 64);
     this->dockLayout->setColumnStretch(1, 1);
+    this->dockLayout->setSpacing( DOCK_LAYOUT_SPACING );
 
     row = 0; // allows flexible shift up/down 
     this->dockLayout->addWidget(this->timebaseLabel, row, 0);

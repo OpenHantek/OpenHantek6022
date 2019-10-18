@@ -382,7 +382,8 @@ void DsoWidget::setMeasurementVisible(ChannelID channel) {
 
     measurementNameLabel[channel]->setVisible(visible);
     measurementMiscLabel[channel]->setVisible(visible);
-
+    measurementGainLabel[channel]->setVisible(visible);
+    measurementVppLabel[channel]->setVisible(visible);
     measurementRMSLabel[channel]->setVisible(visible);
     measurementDCLabel[channel]->setVisible(visible);
     measurementACLabel[channel]->setVisible(visible);
@@ -595,8 +596,8 @@ void DsoWidget::updateTriggerSource() {
 /// \brief Handles couplingChanged signal from the voltage dock.
 /// \param channel The channel whose coupling was changed.
 void DsoWidget::updateVoltageCoupling(ChannelID channel) {
-    if (channel >= (unsigned int)scope->voltage.size()) return;
-
+    if (channel >= (unsigned int)scope->voltage.size())
+        return;
     measurementMiscLabel[channel]->setText(Dso::couplingString(scope->coupling(channel, spec)));
 }
 
@@ -609,13 +610,12 @@ void DsoWidget::updateMathMode() {
 /// \brief Handles gainChanged signal from the voltage dock.
 /// \param channel The channel whose gain was changed.
 void DsoWidget::updateVoltageGain(ChannelID channel) {
-    if (channel >= (unsigned int)scope->voltage.size()) return;
-
+    if (channel >= (unsigned int)scope->voltage.size())
+        return;
     if (channel < spec->channels) {
         adaptTriggerLevelSlider(mainSliders, channel);
         adaptTriggerLevelSlider(zoomSliders, channel);
     }
-
     updateVoltageDetails(channel);
 }
 

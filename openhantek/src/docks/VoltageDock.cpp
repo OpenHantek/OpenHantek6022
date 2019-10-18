@@ -13,6 +13,7 @@
 #include "VoltageDock.h"
 #include "dockwindows.h"
 
+#include "viewconstants.h"
 #include "settings.h"
 #include "sispinbox.h"
 #include "utils/printutils.h"
@@ -44,18 +45,21 @@ VoltageDock::VoltageDock(DsoSettingsScope *scope, const Dso::ControlSpecificatio
     }
     dockLayout = new QGridLayout();
     dockLayout->setColumnMinimumWidth(0, 64);
-    dockLayout->setColumnStretch(1, 1);
-    dockLayout->setSpacing(5);
+    dockLayout->setColumnStretch(2, 1); // stretch ComboBox in last column
+    dockLayout->setSpacing( DOCK_LAYOUT_SPACING );
     // Initialize elements
     int row = 0;
     for (ChannelID channel = 0; channel < scope->voltage.size(); ++channel) {
         ChannelBlock b;
 
+        if (channel < spec->channels)
+            b.usedCheckBox = new QCheckBox( tr("CH&%1").arg( channel+1 ) ); // define shortcut <ALT>1 / <ALT>2
+        else
+            b.usedCheckBox = new QCheckBox( tr("&MATH"));
         b.miscComboBox = new QComboBox();
         b.gainComboBox = new QComboBox();
         b.invertCheckBox = new QCheckBox(tr("Invert"));
         b.attnCheckBox = new QCheckBox(tr("x10"));
-        b.usedCheckBox = new QCheckBox(scope->voltage[channel].name);
 
         channelBlocks.push_back(std::move(b));
 
@@ -90,7 +94,6 @@ VoltageDock::VoltageDock(DsoSettingsScope *scope, const Dso::ControlSpecificatio
         setUsed(channel, scope->voltage[channel].used);
         setAttn(channel, scope->voltage[channel].probeUsed);
         setInverted(channel, scope->voltage[channel].inverted);
-        //printf("VD::setInverted %d %d\n", channel, scope->voltage[channel].inverted);
 
         connect(b.gainComboBox, SELECT<int>::OVERLOAD_OF(&QComboBox::currentIndexChanged), [this,channel](int index) {
             this->scope->voltage[channel].gainStepIndex = (unsigned)index;

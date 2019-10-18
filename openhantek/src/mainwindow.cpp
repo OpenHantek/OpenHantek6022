@@ -75,14 +75,14 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, Expo
 
     // Docking windows
     // Create dock windows before the dso widget, they fix messed up settings
+    VoltageDock *voltageDock;
     HorizontalDock *horizontalDock;
     TriggerDock *triggerDock;
     SpectrumDock *spectrumDock;
-    VoltageDock *voltageDock;
+    voltageDock = new VoltageDock(scope, spec, this);
     horizontalDock = new HorizontalDock(scope, this);
     triggerDock = new TriggerDock(scope, spec, this);
     spectrumDock = new SpectrumDock(scope, this);
-    voltageDock = new VoltageDock(scope, spec, this);
 
     addDockWidget(Qt::RightDockWidgetArea, voltageDock);
     addDockWidget(Qt::RightDockWidgetArea, horizontalDock);
@@ -183,6 +183,7 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, Expo
             return;
         dsoControl->setChannelInverted( channel, inverted );
     });
+    connect(voltageDock, &VoltageDock::couplingChanged, dsoWidget, &DsoWidget::updateVoltageCoupling);
     connect(voltageDock, &VoltageDock::couplingChanged, [this, dsoControl, spec](ChannelID channel, Dso::Coupling coupling ) {
         if (channel >= spec->channels)
             return;
@@ -197,10 +198,10 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, Expo
     connect(dsoControl, &HantekDsoControl::samplingStatusChanged, [this, dsoControl](bool enabled) {
         QSignalBlocker blocker(this->ui->actionSampling);
         if (enabled) {
-            this->ui->actionSampling->setText(tr("&Stop"));
+            this->ui->actionSampling->setText(tr("Stop"));
             this->ui->actionSampling->setStatusTip(tr("Stop the oscilloscope"));
         } else {
-            this->ui->actionSampling->setText(tr("&Start"));
+            this->ui->actionSampling->setText(tr("Start"));
             this->ui->actionSampling->setStatusTip(tr("Start the oscilloscope"));
         }
         this->ui->actionSampling->setChecked(enabled);

@@ -12,6 +12,7 @@
 #include "SpectrumDock.h"
 #include "dockwindows.h"
 
+#include "viewconstants.h"
 #include "settings.h"
 #include "sispinbox.h"
 #include "utils/printutils.h"
@@ -34,6 +35,7 @@ SpectrumDock::SpectrumDock(DsoSettingsScope *scope, QWidget *parent, Qt::WindowF
     this->dockLayout = new QGridLayout();
     this->dockLayout->setColumnMinimumWidth(0, 64);
     this->dockLayout->setColumnStretch(1, 1);
+    this->dockLayout->setSpacing( DOCK_LAYOUT_SPACING );
 
     // Initialize elements
     for (ChannelID channel = 0; channel < scope->voltage.size(); ++channel) {

@@ -12,6 +12,7 @@
 #include "TriggerDock.h"
 #include "dockwindows.h"
 
+#include "viewconstants.h"
 #include "hantekdso/controlspecification.h"
 #include "settings.h"
 #include "sispinbox.h"
@@ -44,6 +45,7 @@ TriggerDock::TriggerDock(DsoSettingsScope *scope, const Dso::ControlSpecificatio
     this->dockLayout = new QGridLayout();
     this->dockLayout->setColumnMinimumWidth(0, 64);
     this->dockLayout->setColumnStretch(1, 1);
+    this->dockLayout->setSpacing( DOCK_LAYOUT_SPACING );
     this->dockLayout->addWidget(this->modeLabel, 0, 0);
     this->dockLayout->addWidget(this->modeComboBox, 0, 1);
     this->dockLayout->addWidget(this->sourceLabel, 1, 0);
