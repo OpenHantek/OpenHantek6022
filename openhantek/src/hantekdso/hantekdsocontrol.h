@@ -100,6 +100,7 @@ class HantekDsoControl : public QObject {
     /// \return See ::Dso::ErrorCode.
     Dso::ErrorCode stringCommand(const QString &commandString);
 
+    bool hasCommand(Hantek::ControlCode code);
     void addCommand(ControlCommand *newCommand, bool pending = true);
     template <class T> T *modifyCommand(Hantek::ControlCode code) {
         control[(uint8_t)code]->pending = true;

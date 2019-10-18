@@ -496,9 +496,9 @@ Dso::ErrorCode HantekDsoControl::setCoupling(ChannelID channel, Dso::Coupling co
     if (channel >= specification->channels)
         return Dso::ErrorCode::PARAMETER;
 
-    modifyCommand<ControlSetCoupling>(ControlCode::CONTROL_SETCOUPLING)
-            ->setCoupling(channel, coupling == Dso::Coupling::DC);
-
+    if (hasCommand(ControlCode::CONTROL_SETCOUPLING)) // don't send command if it is not implemented (like on the 6022)
+        modifyCommand<ControlSetCoupling>(ControlCode::CONTROL_SETCOUPLING)
+                ->setCoupling(channel, coupling == Dso::Coupling::DC);
     controlsettings.voltage[channel].coupling = coupling;
     return Dso::ErrorCode::NONE;
 }
@@ -734,6 +734,10 @@ Dso::ErrorCode HantekDsoControl::stringCommand(const QString &commandString) {
         return Dso::ErrorCode::UNSUPPORTED;
 }
 
+bool HantekDsoControl::hasCommand(Hantek::ControlCode code)
+{
+    return (control[uint8_t(code)] != 0);
+}
 
 void HantekDsoControl::addCommand(ControlCommand *newCommand, bool pending) {
     newCommand->pending = pending;
