@@ -11,7 +11,7 @@
 
 /// \brief Set the number of channels.
 /// \param channels The new channel count, that will be applied to lists.
-DsoSettings::DsoSettings(const Dso::ControlSpecification* deviceSpecification) {
+DsoSettings::DsoSettings(const Dso::ControlSpecification* deviceSpecification) : deviceSpecification(deviceSpecification) {
     // Add new channels to the list
     unsigned char trace_hue[] = { 60, 240, 0, 120 }; // yellow, blue, red, green
     unsigned index = 0;
@@ -114,12 +114,17 @@ void DsoSettings::load() {
         store->endGroup();
         store->endGroup();
     }
-    // Vertical axis
+    // Voltage
     for (ChannelID channel = 0; channel < scope.voltage.size(); ++channel) {
         store->beginGroup(QString("vertical%1").arg(channel));
         if (store->contains("gainStepIndex")) scope.voltage[channel].gainStepIndex = store->value("gainStepIndex").toUInt();
-        if (store->contains("couplingOrMathIndex")) scope.voltage[channel].couplingOrMathIndex =
+        if (store->contains("couplingOrMathIndex")) {
+            scope.voltage[channel].couplingOrMathIndex =
                 store->value("couplingOrMathIndex").toUInt();
+            if (channel < deviceSpecification->channels)
+                if ( scope.voltage[channel].couplingOrMathIndex >= deviceSpecification->couplings.size() )
+                    scope.voltage[channel].couplingOrMathIndex = 0; // set to default if out of range
+        }
         if (store->contains("inverted")) scope.voltage[channel].inverted = store->value("inverted").toBool();
         if (store->contains("offset")) scope.voltage[channel].offset = store->value("offset").toDouble();
         if (store->contains("trigger")) scope.voltage[channel].trigger = store->value("trigger").toDouble();
@@ -245,7 +250,7 @@ void DsoSettings::save() {
         store->endGroup();
         store->endGroup();
     }
-    // Vertical axis
+    // Voltage
     for (ChannelID channel = 0; channel < scope.voltage.size(); ++channel) {
         store->beginGroup(QString("vertical%1").arg(channel));
         store->setValue("gainStepIndex", scope.voltage[channel].gainStepIndex);

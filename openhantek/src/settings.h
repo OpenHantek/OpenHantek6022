@@ -35,4 +35,5 @@ class DsoSettings {
 
   private:
     std::unique_ptr<QSettings> store = std::unique_ptr<QSettings>(new QSettings);
+    const Dso::ControlSpecification *deviceSpecification;
 };

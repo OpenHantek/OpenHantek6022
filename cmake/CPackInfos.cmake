@@ -41,7 +41,7 @@ else()
     string(REPLACE " " ";" DESCRIBE_STATUS ${DESCRIBE_STATUS})
     list(GET DESCRIBE_STATUS 2 VCS_BRANCH)
 
-    message(STATUS "Version: ${VCS_BRANCH}") # /${VCS_REVISION}")
+    message(STATUS "Branch: ${VCS_BRANCH}") # /${VCS_REVISION}")
 
     execute_process(
         COMMAND ${GIT_EXECUTABLE} config --get remote.origin.url
@@ -71,6 +71,12 @@ string(TIMESTAMP CURRENT_TIME "%Y%m%d_%H:%M")
 
 
 if (UNIX)
+    execute_process(
+        COMMAND uname -m
+        WORKING_DIRECTORY "."
+        OUTPUT_VARIABLE CPACK_ARCH
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
     set(CPACK_PACKAGING_INSTALL_PREFIX "/usr")
     set(CPACK_GENERATOR TGZ)
     if (NOT APPLE)
@@ -82,7 +88,14 @@ if (UNIX)
 elseif(WIN32)
     set(CPACK_TARGET "win_")
     set(CPACK_GENERATOR ${CPACK_GENERATOR} ZIP NSIS)
+    if ((MSVC AND CMAKE_GENERATOR MATCHES "Win64+") OR (CMAKE_SIZEOF_VOID_P EQUAL 8))
+        set(CPACK_ARCH "amd64")
+    else()
+        set(CPACK_ARCH "x86")
+    endif()
 endif()
+
+message(STATUS "Architecture: ${CPACK_ARCH}")
 
 set(CPACK_PACKAGE_NAME "openhantek")
 string(TOLOWER ${CPACK_PACKAGE_NAME} CPACK_PACKAGE_NAME)
@@ -98,13 +111,6 @@ if (EXISTS "${CMAKE_SOURCE_DIR}/COPYING")
     set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/COPYING")
 endif()
 
-# ZIP+TGZ
-set(CPACK_ARCH)
-IF ((MSVC AND CMAKE_GENERATOR MATCHES "Win64+") OR (CMAKE_SIZEOF_VOID_P EQUAL 8))
-    set(CPACK_ARCH "amd64")
-else()
-    set(CPACK_ARCH "x86")
-endif()
 set(CPACK_STRIP_FILES 1)
 
 include(CMakeDetermineSystem)

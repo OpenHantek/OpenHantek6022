@@ -76,7 +76,8 @@ VoltageDock::VoltageDock(DsoSettingsScope *scope, const Dso::ControlSpecificatio
         if (channel < spec->channels) {
             dockLayout->addWidget( b.attnCheckBox, row, 1 ) ;
             dockLayout->addWidget( b.miscComboBox, row++, 2 ) ;
-            setCoupling(channel, scope->voltage[channel].couplingOrMathIndex);
+            if ( scope->voltage[channel].couplingOrMathIndex < couplingStrings.size() )
+                setCoupling(channel, scope->voltage[channel].couplingOrMathIndex);
         } else {
             dockLayout->addWidget( b.miscComboBox, row++, 1, 1, 2 );
             setMode(scope->voltage[channel].couplingOrMathIndex);
