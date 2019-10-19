@@ -105,9 +105,9 @@ void HantekDsoControl::updateInterval() {
     // Check the current oscilloscope state everytime 25% of the time
     //  the buffer should be refilled (-> cycleTime in ms)
     cycleTime = (int)( (double)SAMPLESIZE_USED * 250.0 / controlsettings.samplerate.current );
-    // Not more often than every 2 ms but at least once every 100 ms
-    cycleTime = qBound(2, cycleTime, 100);
-    //timestampDebug(QString("cycleTime %1").arg(cycleTime));
+    // Not more often than every 10 ms but at least once every 100 ms
+    // Slower update reduces CPU load but it worsens the triggering of rare events
+    cycleTime = qBound(10, cycleTime, 100);
 }
 
 
