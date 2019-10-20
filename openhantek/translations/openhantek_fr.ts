@@ -419,8 +419,8 @@
 <context>
     <name>HantekDsoControl</name>
     <message>
-        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="133"/>
-        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="134"/>
+        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="138"/>
+        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="139"/>
         <source>Couldn&apos;t get channel level data from oscilloscope</source>
         <translation type="unfinished"></translation>
     </message>

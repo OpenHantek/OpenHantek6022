@@ -30,11 +30,12 @@ include(translations/Translations.cmake)
 
 add_definitions(-DVERSION="${CPACK_PACKAGE_VERSION}")
 
+option(BUILD_MACOSX_BUNDLE "Build MacOS app bundle" ON)
 set(EXECTYPE "")
 if(WIN32 AND MINGW)
     set(EXECTYPE WIN32)
 endif()
-if(APPLE)
+if(APPLE AND BUILD_MACOSX_BUNDLE)
     set(EXECTYPE MACOSX_BUNDLE)
 endif()
 
@@ -69,7 +70,7 @@ if(NOT WIN32)
 endif()
 
 # install commands
-if (APPLE)
+if (APPLE AND BUILD_MACOSX_BUNDLE)
    install(TARGETS ${PROJECT_NAME} BUNDLE DESTINATION ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app/Contents/MacOS/${PROJECT_NAME})
 else()
 	install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION "bin")
