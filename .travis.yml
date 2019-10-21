@@ -34,8 +34,8 @@ script:
     - make -j4
     - sudo make -j4 package # TEST: build without release
     - ls -la . openhantek # TEST:
-    - [ -d packages ] && ls -laR packages # TEST: depends on make package
-    - [ -d OpenHantek.app ] && ls -laR OpenHantek.app # TEST: macosx specific
+    - test -d packages && ls -laR packages # TEST: depends on make package
+    - test -d OpenHantek.app && ls -laR OpenHantek.app # TEST: macosx specific
 
 before_deploy:
     - sudo make -j4 package
