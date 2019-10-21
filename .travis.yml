@@ -32,12 +32,12 @@ before_script:
 
 script:
     - make -j4
-    - sudo make -j4 package # 
-    - ls -la .
-    - ls -laR openhantek
+    - sudo make -j4 package # test build without release
+    - ls -la . packages openhantek
+    - ls -laR packages
 
 before_deploy:
-    - sudo make package
+    - sudo make -j4 package
 
 deploy:
   provider: releases
