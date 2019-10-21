@@ -32,10 +32,15 @@ before_script:
 
 script:
     - make -j4
+    - mkdir -p packages
     - sudo make -j4 package # TEST: build without release
     - ls -la . openhantek || true # TEST:
     - ls -laR packages || true # TEST: depends on make package
-    - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then ls -laR OpenHantek.app; ls -laR openhantek/OpenHantek.app; true; fi
+    - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then 
+          if [[ test -d openhantek/OpenHantek.app ]]; then 
+              tar -C openhantek -cvzf ../packages/OpenHantek.app.tgz OpenHantek.app;
+          fi
+      fi
 
 before_deploy:
     - sudo make -j4 package
