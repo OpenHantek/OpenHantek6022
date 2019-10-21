@@ -30,7 +30,7 @@ include(translations/Translations.cmake)
 
 add_definitions(-DVERSION="${CPACK_PACKAGE_VERSION}")
 
-option(BUILD_MACOSX_BUNDLE "Build MacOS app bundle" OFF)
+option(BUILD_MACOSX_BUNDLE "Build MacOS app bundle" ON)
 set(EXECTYPE "")
 if(WIN32 AND MINGW)
     set(EXECTYPE WIN32)
