@@ -35,6 +35,7 @@ script:
     - sudo make -j4 package # test build without release
     - ls -la . packages openhantek
     - ls -laR packages
+    - ls -laR OpenHantek.app
 
 before_deploy:
     - sudo make -j4 package
