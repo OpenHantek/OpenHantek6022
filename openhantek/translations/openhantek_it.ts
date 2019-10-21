@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="fr_FR">
+<TS version="2.0" language="it_IT">
 <context>
     <name></name>
     <message>
@@ -105,7 +105,7 @@
     <message>
         <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="50"/>
         <source>Spectrum</source>
-        <translation type="unfinished">Spectre</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -165,7 +165,7 @@
         <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="47"/>
         <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="51"/>
         <source>Spectrum</source>
-        <translation type="unfinished">Spectre</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="117"/>
@@ -198,7 +198,7 @@
     <message>
         <location filename="../src/configdialog/configdialog.cpp" line="106"/>
         <source>Spectrum</source>
-        <translation type="unfinished">Spectre</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/configdialog/configdialog.cpp" line="110"/>
@@ -430,7 +430,7 @@
     <message>
         <location filename="../src/docks/HorizontalDock.cpp" line="32"/>
         <source>Horizontal</source>
-        <translation>Horizontal</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/docks/HorizontalDock.cpp" line="35"/>
@@ -787,17 +787,17 @@
         <location filename="../src/selectdevice/newdevicemodelfromexisting.ui" line="157"/>
         <location filename="../src/selectdevice/newdevicemodelfromexisting.ui" line="173"/>
         <source>...</source>
-        <translation type="unfinished">...</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/selectdevice/newdevicemodelfromexisting.ui" line="189"/>
         <source>No USB devices found or your operating system prohibited enumerating devices.</source>
-        <translation>Aucun périphérique USB n&apos;a été trouvé ou votre système d&apos;exploitation n&apos;a interdit les périphériques de dénombrement.</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/selectdevice/newdevicemodelfromexisting.ui" line="203"/>
         <source>No access granted for the selected USB device. Your operating system may prohibit access. On Windows you might need to install a generic driver first. On Linux you need to install an udev rule to grant access to your currently logged in user.</source>
-        <translation>Aucun accès n&apos;est accordé pour le périphérique USB sélectionné. Votre système d&apos;exploitation peut en interdire l&apos;accès. Sous Windows, vous devrez peut-être d&apos;abord installer un pilote générique. Sous Linux, vous devez installer une règle udev pour autoriser l&apos;accès à votre utilisateur actuellement connecté.</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/selectdevice/newdevicemodelfromexisting.cpp" line="76"/>
@@ -920,7 +920,7 @@
     <message>
         <location filename="../src/settings.cpp" line="26"/>
         <source>CH%1</source>
-        <translation type="unfinished">CH%1</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/settings.cpp" line="38"/>
@@ -1113,12 +1113,12 @@
     <message>
         <location filename="../src/hantekdso/enums.cpp" line="15"/>
         <source>Voltage</source>
-        <translation type="unfinished">Tension</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/hantekdso/enums.cpp" line="17"/>
         <source>Spectrum</source>
-        <translation type="unfinished">Spectre</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/hantekdso/enums.cpp" line="28"/>
@@ -1245,17 +1245,17 @@
     <message>
         <location filename="../src/selectdevice/selectsupporteddevice.ui" line="14"/>
         <source>Select device</source>
-        <translation>Sélectionner l&apos;appareil</translation>
+        <translation>Seleziona apparecchio</translation>
     </message>
     <message>
         <location filename="../src/selectdevice/selectsupporteddevice.ui" line="27"/>
         <source>Supported device</source>
-        <translation>Appareil supporté</translation>
+        <translation>Apparecchio supportato</translation>
     </message>
     <message>
         <location filename="../src/selectdevice/selectsupporteddevice.ui" line="39"/>
         <source>Devices:</source>
-        <translation>Appareils:</translation>
+        <translation>Apparecchi:</translation>
     </message>
     <message>
         <location filename="../src/selectdevice/selectsupporteddevice.ui" line="46"/>
@@ -1266,57 +1266,57 @@
     <message>
         <location filename="../src/selectdevice/selectsupporteddevice.ui" line="86"/>
         <source>Try unsupported</source>
-        <translation>Essayez non supporté</translation>
+        <translation>Prova non supportato</translation>
     </message>
     <message>
         <location filename="../src/selectdevice/selectsupporteddevice.ui" line="92"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Your device might not directly be supported by OpenHantek6022. But it might be compatible to one of the existing devices. Help us to identify those devices and report back on our &lt;a href=&quot;https://github.com/OpenHantek/openhantek/issues&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;issue tracker&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>Il se peut que votre appareil ne soit pas directement pris en charge par OpenHantek6022. Mais il pourrait être compatible avec l&apos;un des appareils existants. Aidez-nous à identifier ces appareils et rapportez-nous sur notre &lt;a href=&quot;https://github.com/OpenHantek/openhantek/issues&quot;&gt;&lt;span style=&quot; text-decoration : souligné ; color:#000000ff ;&quot;&gt;issue tracker&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Il vostro dispositivo potrebbe non essere supportato direttamente da OpenHantek6022. Ma potrebbe essere compatibile con uno dei dispositivi esistenti. Aiutaci a identificare questi dispositivi e riportaci sul nostro &lt;a href=&quot;https://github.com/OpenHantek/openhantek/issues&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#000000ff;&quot;&gt;issue tracker&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../src/selectdevice/selectsupporteddevice.ui" line="108"/>
         <source>Add new device from template</source>
-        <translation>Ajouter un nouvel appareil à partir du template</translation>
+        <translation>Aggiungere un nuovo dispositivo dal template</translation>
     </message>
     <message>
         <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="53"/>
         <source>&lt;br/&gt;&lt;p&gt;The device is ready for use.&lt;/p&gt;&lt;p&gt;Please observe the &lt;a href=&apos;https://github.com/OpenHantek/OpenHantek6022/blob/master/docs/OpenHantek6022_User_Manual.pdf&apos;&gt;user manual&lt;/a&gt; for safe operation.&lt;/p&gt;</source>
-        <translation>&lt;br/&gt;&lt;p&gt;L&apos;appareil est prêt à l&apos;emploi.&lt;/p&gt;&lt;p&gt;Veuillez observer le &lt;a href=&apos;https://github.com/OpenHantek/OpenHantek6022/blob/master/docs/OpenHantek6022_User_Manual.pdf&apos;&gt;mode d&apos;emploi&lt;/a&gt; pour un fonctionnement sûr.&lt;/p&gt;</translation>
+        <translation>&lt;br/&gt;&lt;p&gt;Il dispositivo è pronto all&apos;uso.&lt;/p&gt;&lt;p&gt;Per un funzionamento sicuro, osservare il &lt;a href=&apos;https://github.com/OpenHantek/OpenHantek6022/blob/master/docs/OpenHantek6022_User_Manual.pdf&apos;&gt;manuale d&apos;uso.&lt;/a&gt;</translation>
     </message>
     <message>
         <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="59"/>
         <source>&lt;p&gt;Upload in progress ...&lt;/p&gt;&lt;p&gt;If the upload takes more than 30 s, please close this window &lt;br/&gt;and restart the program!&lt;/p&gt;</source>
-        <translation>&lt;p&gt;Téléchargement en cours...&lt;/p&gt;&lt;p&gt;Si le téléchargement dure plus de 30 s, fermez cette fenêtre &lt;br/&gt;et redémarrez le programme!&lt;/p&gt;</translation>
+        <translation>&lt;p&gt;Carica in corso ...&lt;/p&gt;&lt;p&gt;&lt;p&gt;Se il caricamento richiede più di 30 secondi, chiudi questa finestra &lt;br/&gt;e riavvia il programma!&lt;/p&gt;</translation>
     </message>
     <message>
         <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="62"/>
         <source>Connection failed!</source>
-        <translation>La connexion a échoué!</translation>
+        <translation>Il collegamento è fallito!</translation>
     </message>
     <message>
         <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="67"/>
         <source>&lt;p&gt;OpenHantek6022 is searching for compatible devices ...&lt;/p&gt;&lt;p&gt;&lt;img align=&apos;right&apos; height=&apos;200&apos; src=&apos;qrc:///switch_6022BL.png&apos;&gt;Don&apos;t forget to switch your device into oscilloscope mode if it has multiple modes.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;OpenHantek6022 recherche des périphériques compatibles...&lt;/p&gt;&lt;p&gt;&lt;img align=&apos;right&apos; height=&apos;200&apos; src=&apos;qrc:////switch_6022BL.png&apos;&gt;N&apos;oubliez pas de passer votre appareil en mode oscilloscope s&apos;il a plusieurs modes.&lt;/p&gt;</translation>
+        <translation>&lt;p&gt;ApertoHantek6022 è alla ricerca di dispositivi compatibili...&lt;/p&gt;&lt;p&gt;&lt;img align=&apos;right&apos; height=&apos;200&apos; src=&apos;qrc:////switch_6022BL.png&apos;&gt;Non dimenticare di passare il dispositivo in modalità oscilloscopio se ha più modalità.&lt;/p&gt;</translation>
     </message>
     <message>
         <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="72"/>
         <source>&lt;p&gt;Please make sure you have installed the windows usb driver correctly&lt;/p&gt;</source>
-        <translation>&lt;p&gt;Veuillez vous assurer que vous avez installé correctement le pilote usb de Windows&lt;/p&gt;</translation>
+        <translation>&lt;p&gt;Assicurati di aver installato correttamente il driver usb di Windows.&lt;/p&gt;</translation>
     </message>
     <message>
         <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="77"/>
         <source>&lt;p&gt;Please make sure you have copied the udev rules file to &lt;b&gt;%1&lt;/b&gt; for correct USB access permissions.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;Veuillez vous assurer d&apos;avoir copié le fichier de règles udev dans &lt;b&gt;%1&lt;/b&gt; pour les permissions d&apos;accès USB correctes.&lt;/p&gt;</translation>
+        <translation>&lt;p&gt;Assicurati di aver copiato il file delle regole udev in &lt;b&gt;%1&lt;/b&gt; per ottenere le corrette autorizzazioni di accesso USB.&lt;/p&gt;</translation>
     </message>
     <message>
         <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="81"/>
         <source>&lt;p&gt;Visit the build and run instruction &lt;a href=&apos;https://github.com/OpenHantek/OpenHantek6022/blob/master/docs/build.md&apos;&gt;website&lt;/a&gt; for help.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;Visitez l&apos;instruction build and run &lt;a href=&apos;https://github.com/OpenHantek/OpenHantek6022/blob/master/docs/build.md&apos;&gt;website&lt;/a&gt; pour de l&apos;aide.&lt;/p&gt;</translation>
+        <translation>&lt;p&gt;Visitare l&apos;istruzione di compilazione ed esecuzione &lt;a href=&apos;https://github.com/OpenHantek/OpenHantek6022/blob/master/docs/build.md&apos;&gt;sito web site&lt;/a&gt; per help.&lt;/p&gt;</translation>
     </message>
     <message>
         <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="112"/>
         <source>Can&apos;t initalize USB: %1</source>
-        <translation>Impossible d&apos;initialiser l&apos;USB: %1</translation>
+        <translation>Non può initalizzare USB: %1</translation>
     </message>
 </context>
 <context>
@@ -1324,7 +1324,7 @@
     <message>
         <location filename="../src/docks/SpectrumDock.cpp" line="28"/>
         <source>Spectrum</source>
-        <translation>Spectre</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1332,17 +1332,17 @@
     <message>
         <location filename="../src/docks/TriggerDock.cpp" line="23"/>
         <source>Trigger</source>
-        <translation>Trigger</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/docks/TriggerDock.cpp" line="27"/>
         <source>CH%1</source>
-        <translation>CH%1</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/docks/TriggerDock.cpp" line="30"/>
         <source>CH%1 smooth</source>
-        <translation>CH%1 lisse</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/docks/TriggerDock.cpp" line="33"/>
@@ -1365,27 +1365,27 @@
     <message>
         <location filename="../src/docks/VoltageDock.cpp" line="32"/>
         <source>Voltage</source>
-        <translation>Tension</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/docks/VoltageDock.cpp" line="56"/>
         <source>CH&amp;%1</source>
-        <translation>CH&amp;%1</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/docks/VoltageDock.cpp" line="58"/>
         <source>&amp;MATH</source>
-        <translation>&amp;MATH</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/docks/VoltageDock.cpp" line="61"/>
         <source>Invert</source>
-        <translation>Inverser</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/docks/VoltageDock.cpp" line="62"/>
         <source>x10</source>
-        <translation>x10</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>

@@ -1,4 +1,15 @@
-v2.15
+v2.16
+2019-10-15
+Major changes from v2.16-rc1:
+Display measured width of triggered pulse in top line.
+Set OpenGL ES as default for Raspberry Pi.
+
+v2.16-rc1
+2019-10-11
+Major changes from v2.15:
+Fix #26 (array overrun during fast increasing of timebase setting)
+
+v2.15 - withdrawn due to #26
 2019-10-05
 Major changes from v2.14:
 Automatic translation (qt linguist),

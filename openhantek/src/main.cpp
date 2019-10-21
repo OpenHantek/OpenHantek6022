@@ -120,12 +120,11 @@ int main(int argc, char *argv[]) {
 
     //////// Load translations ////////
     QTranslator qtTranslator;
+    QTranslator openHantekTranslator;
     if (QLocale::system().name() != "en_US") { // somehow Qt on MacOS uses the german translation for en_US?!
         if (qtTranslator.load("qt_" + QLocale::system().name(), QLibraryInfo::location(QLibraryInfo::TranslationsPath))) {
            openHantekApplication.installTranslator(&qtTranslator);
         }
-
-        QTranslator openHantekTranslator;
         if (openHantekTranslator.load(QLocale(), QLatin1String("openhantek"), QLatin1String("_"),
                                       QLatin1String(":/translations"))) {
             openHantekApplication.installTranslator(&openHantekTranslator);
