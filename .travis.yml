@@ -33,9 +33,9 @@ before_script:
 script:
     - make -j4
     - sudo make -j4 package # TEST: build without release
-    - ls -la . openhantek # TEST:
-    - test -d packages && ls -laR packages # TEST: depends on make package
-    - test -d OpenHantek.app && ls -laR OpenHantek.app # TEST: macosx specific
+    - ls -la . openhantek || true # TEST:
+    - ls -laR packages || true # TEST: depends on make package
+    - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then ls -laR OpenHantek.app; ls -laR openhantek/OpenHantek.app; true; fi
 
 before_deploy:
     - sudo make -j4 package
