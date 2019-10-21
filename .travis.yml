@@ -32,15 +32,15 @@ before_script:
 
 script:
     - make -j4
-    - mkdir -p packages
-    - sudo make -j4 package # TEST: build without release
     - ls -la . openhantek || true # TEST:
-    - ls -laR packages || true # TEST: depends on make package
     - if test -d openhantek/OpenHantek.app; then 
-          tar -C openhantek -cvzf ../packages/OpenHantek.app.tgz OpenHantek.app;
+          mkdir -p packages;
+          tar -C openhantek -cvzf packages/OpenHantek.app.tgz OpenHantek.app;
       else 
           true;
       fi
+    - sudo make -j4 package # TEST: build without release
+    - ls -laR packages || true # TEST: depends on make package
 
 before_deploy:
     - sudo make -j4 package
