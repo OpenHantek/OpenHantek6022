@@ -39,7 +39,7 @@ script:
     - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then 
           if [[ test -d openhantek/OpenHantek.app ]]; then 
               tar -C openhantek -cvzf ../packages/OpenHantek.app.tgz OpenHantek.app;
-          fi
+          fi;
       fi
 
 before_deploy:
