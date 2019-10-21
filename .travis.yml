@@ -32,7 +32,9 @@ before_script:
 
 script:
     - make -j4
-    - ls -laR . openhantek
+    - sudo make -j4 package # 
+    - ls -la .
+    - ls -laR openhantek
 
 before_deploy:
     - sudo make package
