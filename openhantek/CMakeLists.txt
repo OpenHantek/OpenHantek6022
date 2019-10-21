@@ -71,7 +71,9 @@ endif()
 
 # install commands
 if (APPLE AND BUILD_MACOSX_BUNDLE)
-   install(TARGETS ${PROJECT_NAME} BUNDLE DESTINATION ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app/Contents/MacOS/${PROJECT_NAME})
+    # no install, it's already in openhantek/OpenHantek.app/...
+    # install(TARGETS ${PROJECT_NAME} BUNDLE DESTINATION ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app/Contents/MacOS/${PROJECT_NAME})
+    # install(TARGETS ${PROJECT_NAME} BUNDLE DESTINATION ${CMAKE_BINARY_DIR}) # -> build
 else()
 	install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION "bin")
 endif()
