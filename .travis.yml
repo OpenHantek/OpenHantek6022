@@ -36,6 +36,7 @@ script:
     - sudo make -j4 package # these bottom lines go to before_deploy after test
     - if test -d openhantek/OpenHantek.app; then
           ls -laR openhantek/OpenHantek.app;
+          sudo macdeployqt openhantek/OpenHantek.app;
           sudo dylibbundler -od -b -x openhantek/OpenHantek.app/Contents/MacOS/OpenHantek -d openhantek/OpenHantek.app/Contents/libs/;
           ls -laR openhantek/OpenHantek.app;
           sudo tar -C openhantek -cvzf packages/openhantek_*_osx_*.tar.gz OpenHantek.app;
