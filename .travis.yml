@@ -31,14 +31,15 @@ before_script:
     - cmake -DCMAKE_CXX_COMPILER=$CMAKE_CXX_COMPILER -DCMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH ../
 
 script:
-    - make -j4
+    - make -j4 # create either a bin or a bundle (.app) - depending on openhantek/CMakeLists.txt
     - ls -l openhantek || true
-    - sudo make -j4 package # these bottom lines go to section before_deploy: after test
+
+before_deploy:
+    - ls -l packages || true
+    - sudo make -j4 package # simply pack the binary, otherwise populate the bundle below
     - if test -d openhantek/OpenHantek.app; then
           cd openhantek ;
-          ls -laR OpenHantek.app ;
           /usr/local/opt/qt5/bin/macdeployqt OpenHantek.app -always-overwrite -verbose=2 ;
-          ls -laR OpenHantek.app ;
           curl -o /tmp/macdeployqtfix.py https://raw.githubusercontent.com/arl/macdeployqtfix/master/macdeployqtfix.py ;
           python /tmp/macdeployqtfix.py OpenHantek.app/Contents/MacOS/OpenHantek /usr/local/opt/qt5 ;
           ls -laR OpenHantek.app ;
@@ -50,9 +51,6 @@ script:
       else 
           true;
       fi
-
-before_deploy:
-    - ls -l packages || true
 
 deploy:
   provider: releases
