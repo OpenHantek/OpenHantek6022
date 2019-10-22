@@ -22,7 +22,7 @@ matrix:
       os: osx
 
 before_install:
-    - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; brew install qt5 fftw binutils; export CMAKE_PREFIX_PATH=$(brew --prefix qt5); fi
+    - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; brew install qt5 fftw binutils dylibbundler; export CMAKE_PREFIX_PATH=$(brew --prefix qt5); fi
     - if [[ "$TRAVIS_OS_NAME" != "osx" ]]; then pip install cmake --user; fi
 
 before_script:
@@ -33,14 +33,17 @@ before_script:
 script:
     - make -j4
     - ls -l openhantek || true
-
-before_deploy:
-    - sudo make -j4 package
-    - if test -d openhantek/OpenHantek.app; then 
+    - sudo make -j4 package # these bottom lines go to before_deploy after test
+    - if test -d openhantek/OpenHantek.app; then
+          ls -laR openhantek/OpenHantek.app;
+          sudo dylibbundler -od -b -x openhantek/OpenHantek.app/Contents/MacOS/OpenHantek -d openhantek/OpenHantek.app/Contents/libs/;
+          ls -laR openhantek/OpenHantek.app;
           sudo tar -C openhantek -cvzf packages/openhantek_*_osx_*.tar.gz OpenHantek.app;
       else 
           true;
       fi
+
+before_deploy:
     - ls -l packages || true
 
 deploy:
