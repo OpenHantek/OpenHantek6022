@@ -33,13 +33,15 @@ before_script:
 script:
     - make -j4
     - ls -l openhantek || true
-    - sudo make -j4 package # these bottom lines go to before_deploy after test
+    - sudo make -j4 package # these bottom lines go to section before_deploy: after test
     - if test -d openhantek/OpenHantek.app; then
-          ls -laR openhantek/OpenHantek.app;
-          /usr/local/opt/qt5/bin/macdeployqt openhantek/OpenHantek.app;
-          sudo dylibbundler -od -b -x openhantek/OpenHantek.app/Contents/MacOS/OpenHantek -d openhantek/OpenHantek.app/Contents/libs/;
-          ls -laR openhantek/OpenHantek.app;
-          sudo tar -C openhantek -cvzf packages/openhantek_*_osx_*.tar.gz OpenHantek.app;
+          ls -laR openhantek/OpenHantek.app ;
+          /usr/local/opt/qt5/bin/macdeployqt openhantek/OpenHantek.app -always-overwrite -verbose=2 -qmldir=qml ;
+          ls -laR openhantek/OpenHantek.app ;
+          curl -o /tmp/macdeployqtfix.py https://raw.githubusercontent.com/arl/macdeployqtfix/master/macdeployqtfix.py ;
+          python /tmp/macdeployqtfix.py openhantek/OpenHantek.app/Contents/MacOS/OpenHantek /usr/local/opt/qt5 ;
+          ls -laR openhantek/OpenHantek.app ;
+          sudo tar -C openhantek -cvzf packages/openhantek_*_osx_*.tar.gz OpenHantek.app ;
       else 
           true;
       fi
