@@ -22,35 +22,41 @@ matrix:
       os: osx
 
 before_install:
-    - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; brew install qt5 fftw binutils dylibbundler; export CMAKE_PREFIX_PATH=$(brew --prefix qt5); fi
+    - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then 
+          brew update; brew install qt5 fftw binutils ; 
+          export CMAKE_PREFIX_PATH=$(brew --prefix qt5); 
+          echo "CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}" ; 
+      fi
     - if [[ "$TRAVIS_OS_NAME" != "osx" ]]; then pip install cmake --user; fi
 
 before_script:
     - mkdir build
     - cd build
-    - cmake -DCMAKE_CXX_COMPILER=$CMAKE_CXX_COMPILER -DCMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH ../
+    - cmake -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER} -D=${CMAKE_PREFIX_PATH} ../
 
 script:
     - make -j4 # create either a bin or a bundle (.app) - depending on openhantek/CMakeLists.txt
     - ls -l openhantek || true
-
-before_deploy:
-    - ls -l packages || true
     - sudo make -j4 package # simply pack the binary, otherwise populate the bundle below
+    - ls -l packages || true
     - if test -d openhantek/OpenHantek.app; then
+          if test -d /usr/local/opt/qt5/bin; then export PATH=/usr/local/opt/qt5/bin:${PATH} ; fi ;
           cd openhantek ;
-          /usr/local/opt/qt5/bin/macdeployqt OpenHantek.app -always-overwrite -verbose=2 ;
-          curl -o /tmp/macdeployqtfix.py https://raw.githubusercontent.com/arl/macdeployqtfix/master/macdeployqtfix.py ;
-          python /tmp/macdeployqtfix.py OpenHantek.app/Contents/MacOS/OpenHantek /usr/local/opt/qt5 ;
+          macdeployqt OpenHantek.app -always-overwrite -verbose=2 ;
+          curl -o macdeployqtfix.py https://raw.githubusercontent.com/iltommi/macdeployqtfix/master/macdeployqtfix.py ;
+          python macdeployqtfix.py OpenHantek.app/Contents/MacOS/OpenHantek /usr/local/opt/qt5 ;
           ls -laR OpenHantek.app ;
           sudo tar -cvzf ../packages/openhantek_*_osx_*.tar.gz OpenHantek.app ;
-          /usr/local/opt/qt5/bin/macdeployqt OpenHantek.app -dmg -no-plugins -verbose=2 ;
+          macdeployqt OpenHantek.app -dmg -no-plugins -verbose=2 ;
           sudo mv OpenHantek.dmg ../packages/$(basename ../packages/openhantek_*_osx_*.tar.gz .tar.gz).dmg ;
           cd .. ;
-          ls -la packages ; 
+          ls -l packages ; 
       else 
           true;
       fi
+
+before_deploy:
+    - ls -l packages || true
 
 deploy:
   provider: releases
