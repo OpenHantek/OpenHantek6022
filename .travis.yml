@@ -32,7 +32,7 @@ before_install:
 before_script:
     - mkdir build
     - cd build
-    - cmake -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER} -D=${CMAKE_PREFIX_PATH} ../
+    - cmake -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER} -DCMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH} ../
 
 script:
     - make -j4 # create either a bin or a bundle (.app) - depending on openhantek/CMakeLists.txt
@@ -40,11 +40,11 @@ script:
     - sudo make -j4 package # simply pack the binary, otherwise populate the bundle below
     - ls -l packages || true
     - if test -d openhantek/OpenHantek.app; then
-          if test -d /usr/local/opt/qt5/bin; then export PATH=/usr/local/opt/qt5/bin:${PATH} ; fi ;
+          export PATH=${CMAKE_PREFIX_PATH}/bin:${PATH} ;
           cd openhantek ;
           macdeployqt OpenHantek.app -always-overwrite -verbose=2 ;
           curl -o macdeployqtfix.py https://raw.githubusercontent.com/iltommi/macdeployqtfix/master/macdeployqtfix.py ;
-          python macdeployqtfix.py OpenHantek.app/Contents/MacOS/OpenHantek /usr/local/opt/qt5 ;
+          python macdeployqtfix.py OpenHantek.app/Contents/MacOS/OpenHantek ${CMAKE_PREFIX_PATH} ;
           ls -laR OpenHantek.app ;
           sudo tar -cvzf ../packages/openhantek_*_osx_*.tar.gz OpenHantek.app ;
           macdeployqt OpenHantek.app -dmg -no-plugins -verbose=2 ;
