@@ -37,6 +37,8 @@ before_script:
 script:
     - make -j4 # create either a bin or a bundle (.app) - depending on openhantek/CMakeLists.txt
     - ls -l openhantek || true
+
+before_deploy:
     - sudo make -j4 package # simply pack the binary, otherwise populate the bundle below
     - ls -l packages || true
     - if test -d openhantek/OpenHantek.app; then
@@ -49,12 +51,9 @@ script:
           macdeployqt OpenHantek.app -dmg -no-plugins -verbose=2 ;
           sudo mv OpenHantek.dmg ../packages/$(basename ../packages/openhantek_*_osx_*.tar.gz .tar.gz).dmg ;
           cd .. ;
-          ls -l packages ; 
       else 
           true;
       fi
-
-before_deploy:
     - ls -l packages || true
 
 deploy:
