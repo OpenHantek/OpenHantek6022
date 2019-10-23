@@ -1,3 +1,5 @@
+# openhantek/CMakeLists.txt
+
 project(OpenHantek CXX)
 
 find_package(Qt5Widgets REQUIRED)
@@ -37,10 +39,14 @@ if(WIN32 AND MINGW)
 endif()
 if(APPLE AND BUILD_MACOSX_BUNDLE)
     set(EXECTYPE MACOSX_BUNDLE)
+    set(MACOSX_BUNDLE_ICON_FILE openhantek.icns)
+    set(ICONS ${CMAKE_CURRENT_SOURCE_DIR}/res/images/openhantek.icns)
+    set_source_files_properties(${ICONS} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
 endif()
 
 # make executable
-add_executable(${PROJECT_NAME} ${EXECTYPE} ${SRC} ${HEADERS} ${UI} ${QRC} ${TRANSLATION_BIN_FILES} ${TRANSLATION_QRC})
+add_executable(${PROJECT_NAME} ${EXECTYPE} ${SRC} ${HEADERS} ${UI}
+${QRC} ${TRANSLATION_BIN_FILES} ${TRANSLATION_QRC} ${ICONS})
 target_link_libraries(${PROJECT_NAME} Qt5::Widgets Qt5::PrintSupport Qt5::OpenGL ${OPENGL_LIBRARIES} )
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_range_for)
 if(MSVC)
@@ -71,6 +77,10 @@ endif()
 
 # install commands
 if (APPLE AND BUILD_MACOSX_BUNDLE)
+    set_target_properties(${PROJECT_NAME} PROPERTIES
+        MACOSX_BUNDLE_NAME "${PROJECT_NAME}"
+        MACOSX_BUNDLE_GUI_IDENTIFIER "${PROJECT_NAME}"
+    )
     # no install, it's already in openhantek/OpenHantek.app/...
     # install(TARGETS ${PROJECT_NAME} BUNDLE DESTINATION ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app/Contents/MacOS/${PROJECT_NAME})
     # install(TARGETS ${PROJECT_NAME} BUNDLE DESTINATION ${CMAKE_BINARY_DIR}) # -> build

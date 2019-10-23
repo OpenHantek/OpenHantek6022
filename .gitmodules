@@ -1,0 +1,3 @@
+[submodule "macdeployqtfix"]
+	path = macdeployqtfix
+	url = https://github.com/iltommi/macdeployqtfix

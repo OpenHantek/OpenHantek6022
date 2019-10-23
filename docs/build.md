@@ -30,17 +30,41 @@ and replug your device, otherwise you will not have the correct permissions to a
 
 ### [MacOSX](#macosx)
 We recommend homebrew to install the required libraries.
-> brew update <br>
-> brew install libusb fftw qt5 cmake;
 
-After you've installed the requirements run the following commands inside the directory of this package:
-> mkdir build <br>
-> cd build <br>
-> cmake ../ -DCMAKE_PREFIX_PATH=/usr/local/Cellar/qt/5.10.1 <br>
-> make -j2
+    brew update
+    brew install libusb fftw qt5 cmake
 
-Please adjust the path to Qt5. You can find the path with the command:
-> brew info qt5
+If you want to build an OSX bundle make sure the option in `openhantek/CMakeLists.txt` is set accordingly:
+
+`option(BUILD_MACOSX_BUNDLE "Build MacOS app bundle" ON)`
+
+After you've installed the requirements run the following commands inside the top directory of this package:
+
+    mkdir build
+    cd build
+    cmake ..
+    #
+    make -j2
+    #
+    # now the target was created in subdir openhantek
+    # .. either as single binary OpenHantek, then you're done
+    # .. or as a bundle if enabled in ../../openhantek/CMakeLists.txt
+    # .. but this bundle is still a template as the dynlibs are not yet bundled
+    # .. this magic will happen now
+    #
+    cd openhantek
+    #
+    # deploy all necessary Qt dynlibs into the bundle
+    macdeployqt OpenHantek.app -always-overwrite -verbose=2
+    #
+    # find all other dependencies, and their dependencies, and their... (you got it!)
+    python ../../macdeployqtfix/macdeployqtfix.py OpenHantek.app/Contents/MacOS/OpenHantek $(brew --prefix qt5)
+    #
+    # finally create OpenHantek.dmg from OpenHantek.app
+    macdeployqt OpenHantek.app -dmg -no-plugins -verbose=2
+    #
+
+----
 
 ### [Windows](#windows)
 

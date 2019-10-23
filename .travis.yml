@@ -43,8 +43,7 @@ script:
           export PATH=${CMAKE_PREFIX_PATH}/bin:${PATH} ;
           cd openhantek ;
           macdeployqt OpenHantek.app -always-overwrite -verbose=2 ;
-          curl -o macdeployqtfix.py https://raw.githubusercontent.com/iltommi/macdeployqtfix/master/macdeployqtfix.py ;
-          python macdeployqtfix.py OpenHantek.app/Contents/MacOS/OpenHantek ${CMAKE_PREFIX_PATH} ;
+          python ../../macdeployqtfix/macdeployqtfix.py OpenHantek.app/Contents/MacOS/OpenHantek ${CMAKE_PREFIX_PATH} ;
           ls -laR OpenHantek.app ;
           sudo tar -cvzf ../packages/openhantek_*_osx_*.tar.gz OpenHantek.app ;
           macdeployqt OpenHantek.app -dmg -no-plugins -verbose=2 ;
