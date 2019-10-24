@@ -58,7 +58,7 @@ struct ControlSettings {
     std::vector<ControlSettingsVoltage> voltage; ///< The amplification settings
     ControlSettingsTrigger trigger;              ///< The trigger settings
     RecordLengthID recordLengthId = 1;           ///< The id in the record length array
-    unsigned usedChannels = 0;                   ///< Number of activated channels
+    unsigned channelCount = 0;                   ///< Number of activated channels
     unsigned swSampleMargin = 2000;              ///< Software trigger, sample margin
     Hantek::OffsetsPerGainStep *offsetLimit;     ///< Calibration data for the channel offsets
 

@@ -88,8 +88,8 @@ double HantekDsoControl::getMinSamplerate() const {
 
 
 double HantekDsoControl::getMaxSamplerate() const {
-    //printf( "usedChannels %d\n", controlsettings.usedChannels );
-    if (controlsettings.usedChannels <= 1) {
+    //printf( "channelCount %d\n", controlsettings.channelCount );
+    if (controlsettings.channelCount <= 1) {
         return specification->samplerate.multi.max;
     } else {
         return specification->samplerate.single.max;
@@ -437,7 +437,7 @@ Dso::ErrorCode HantekDsoControl::setChannelUsed(ChannelID channel, bool used) {
     else
         modifyCommand<ControlSetNumChannels>(ControlCode::CONTROL_SETNUMCHANNELS)->setDiv( 2 );
     // Check if fast rate mode availability changed
-    controlsettings.usedChannels = channelCount;
+    controlsettings.channelCount = channelCount;
     this->updateSamplerateLimits();
     this->restoreTargets();
     channelSetupChanged = true; // skip next raw samples block to avoid artefacts
