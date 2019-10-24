@@ -496,42 +496,46 @@
 <context>
     <name>LegacyExportDrawer</name>
     <message>
-        <location filename="../src/exporting/legacyexportdrawer.cpp" line="41"/>
+        <location filename="../src/exporting/legacyexportdrawer.cpp" line="42"/>
         <source>%L1%</source>
         <translation>%L1%</translation>
     </message>
     <message>
-        <location filename="../src/exporting/legacyexportdrawer.cpp" line="43"/>
         <source>%1  %2  %3  %4</source>
-        <translation>%1  %2  %3  %4</translation>
+        <translation type="vanished">%1  %2  %3  %4</translation>
     </message>
     <message>
-        <location filename="../src/exporting/legacyexportdrawer.cpp" line="52"/>
+        <location filename="../src/exporting/legacyexportdrawer.cpp" line="51"/>
+        <source>%1  %2  %3  %4 %5</source>
+        <translation type="unfinished">%1  %2  %3  %4 %5 {1 ?} {2 ?} {3 ?}</translation>
+    </message>
+    <message>
+        <location filename="../src/exporting/legacyexportdrawer.cpp" line="63"/>
         <source>%1 S</source>
         <translation>%1 S</translation>
     </message>
     <message>
-        <location filename="../src/exporting/legacyexportdrawer.cpp" line="56"/>
+        <location filename="../src/exporting/legacyexportdrawer.cpp" line="67"/>
         <source>/s</source>
         <translation>/s</translation>
     </message>
     <message>
-        <location filename="../src/exporting/legacyexportdrawer.cpp" line="60"/>
-        <location filename="../src/exporting/legacyexportdrawer.cpp" line="64"/>
-        <location filename="../src/exporting/legacyexportdrawer.cpp" line="99"/>
-        <location filename="../src/exporting/legacyexportdrawer.cpp" line="109"/>
-        <location filename="../src/exporting/legacyexportdrawer.cpp" line="181"/>
-        <location filename="../src/exporting/legacyexportdrawer.cpp" line="185"/>
+        <location filename="../src/exporting/legacyexportdrawer.cpp" line="71"/>
+        <location filename="../src/exporting/legacyexportdrawer.cpp" line="75"/>
+        <location filename="../src/exporting/legacyexportdrawer.cpp" line="110"/>
+        <location filename="../src/exporting/legacyexportdrawer.cpp" line="120"/>
+        <location filename="../src/exporting/legacyexportdrawer.cpp" line="192"/>
+        <location filename="../src/exporting/legacyexportdrawer.cpp" line="196"/>
         <source>/div</source>
         <translation>/div</translation>
     </message>
     <message>
-        <location filename="../src/exporting/legacyexportdrawer.cpp" line="173"/>
+        <location filename="../src/exporting/legacyexportdrawer.cpp" line="184"/>
         <source>Zoom x%L1</source>
         <translation>Zoom x%L1</translation>
     </message>
     <message>
-        <location filename="../src/exporting/legacyexportdrawer.cpp" line="191"/>
+        <location filename="../src/exporting/legacyexportdrawer.cpp" line="202"/>
         <source>Marker 1/2</source>
         <translation>Marker 1/2</translation>
     </message>

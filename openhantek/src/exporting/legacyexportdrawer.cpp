@@ -36,13 +36,24 @@ bool LegacyExportDrawer::exportSamples(const PPresult *result, QPaintDevice* pai
     double stretchBase = (double)(paintDevice->width()) / 5;
 
     // Print trigger details
+    double pulseWidth = result->data( 0 )->pulseWidth;
     painter.setPen(colorValues->voltage[settings->scope.trigger.source]);
     QString levelString = valueToString(settings->scope.voltage[settings->scope.trigger.source].trigger, UNIT_VOLTS, 3);
     QString pretriggerString = tr("%L1%").arg((int)(settings->scope.trigger.position * 100 + 0.5));
+    QString pre = Dso::slopeString(settings->scope.trigger.slope); // trigger slope
+    QString post = pre; // opposite trigger slope
+    if ( settings->scope.trigger.slope == Dso::Slope::Positive )
+        post = Dso::slopeString( Dso::Slope:: Negative );
+    else if ( settings->scope.trigger.slope == Dso::Slope::Negative )
+        post = Dso::slopeString( Dso::Slope:: Positive );
+    QString pulseWidthString = pulseWidth ? pre + valueToString( pulseWidth, UNIT_SECONDS, 3) + post : "";
     painter.drawText(QRectF(0, 0, stretchBase, lineHeight),
-                     tr("%1  %2  %3  %4")
-                         .arg(settings->scope.voltage[settings->scope.trigger.source].name,
-                              Dso::slopeString(settings->scope.trigger.slope), levelString, pretriggerString));
+                     tr( "%1  %2  %3  %4 %5" )
+                         .arg( settings->scope.voltage[settings->scope.trigger.source].name,
+                               Dso::slopeString(settings->scope.trigger.slope),
+                               levelString, pretriggerString, pulseWidthString
+                             )
+                    );
 
     double scopeHeight;
 

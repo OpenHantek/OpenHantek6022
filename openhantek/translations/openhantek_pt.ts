@@ -198,12 +198,12 @@
     <message>
         <location filename="../src/configdialog/configdialog.cpp" line="106"/>
         <source>Spectrum</source>
-        <translation type="unfinished">Espectro</translation>
+        <translation>Espectro</translation>
     </message>
     <message>
         <location filename="../src/configdialog/configdialog.cpp" line="118"/>
         <source>File</source>
-        <translation type="unfinished">Arquivo</translation>
+        <translation>Arquivo</translation>
     </message>
     <message>
         <location filename="../src/configdialog/configdialog.cpp" line="114"/>
@@ -221,37 +221,37 @@
     <message>
         <location filename="../src/configdialog/DsoConfigFilePage.cpp" line="7"/>
         <source>Export Images with Screen Colors</source>
-        <translation type="unfinished"></translation>
+        <translation>Exportar imagens com cores de tela</translation>
     </message>
     <message>
         <location filename="../src/configdialog/DsoConfigFilePage.cpp" line="10"/>
         <source>Image width</source>
-        <translation type="unfinished">Largura da imagem</translation>
+        <translation>Largura da imagem</translation>
     </message>
     <message>
         <location filename="../src/configdialog/DsoConfigFilePage.cpp" line="15"/>
         <source>Image height</source>
-        <translation type="unfinished">Altura da imagem</translation>
+        <translation>Altura da imagem</translation>
     </message>
     <message>
         <location filename="../src/configdialog/DsoConfigFilePage.cpp" line="28"/>
         <source>Export</source>
-        <translation type="unfinished">Exportar</translation>
+        <translation>Exportar</translation>
     </message>
     <message>
         <location filename="../src/configdialog/DsoConfigFilePage.cpp" line="32"/>
         <source>Save default settings on exit</source>
-        <translation type="unfinished">Salvar configuração padrão ao sair</translation>
+        <translation>Salvar configuração padrão ao sair</translation>
     </message>
     <message>
         <location filename="../src/configdialog/DsoConfigFilePage.cpp" line="34"/>
         <source>Save default settings now</source>
-        <translation type="unfinished">Salvar configuração padrão agora</translation>
+        <translation>Salvar configuração padrão agora</translation>
     </message>
     <message>
         <location filename="../src/configdialog/DsoConfigFilePage.cpp" line="40"/>
         <source>Configuration</source>
-        <translation type="unfinished">Configuração</translation>
+        <translation>Configuração</translation>
     </message>
 </context>
 <context>
@@ -269,7 +269,7 @@
     <message>
         <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="8"/>
         <source>Sinc</source>
-        <translation type="unfinished">Sinc</translation>
+        <translation>Sinc</translation>
     </message>
     <message>
         <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="11"/>
@@ -438,7 +438,7 @@
         <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="138"/>
         <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="139"/>
         <source>Couldn&apos;t get channel level data from oscilloscope</source>
-        <translation type="unfinished">Não foi possível obter dados do canal do osciloscópio</translation>
+        <translation>Não foi possível obter dados do canal do osciloscópio</translation>
     </message>
 </context>
 <context>
@@ -477,44 +477,48 @@
 <context>
     <name>LegacyExportDrawer</name>
     <message>
-        <location filename="../src/exporting/legacyexportdrawer.cpp" line="41"/>
+        <location filename="../src/exporting/legacyexportdrawer.cpp" line="42"/>
         <source>%L1%</source>
-        <translation type="unfinished">%L1%</translation>
+        <translation>%L1%</translation>
     </message>
     <message>
-        <location filename="../src/exporting/legacyexportdrawer.cpp" line="43"/>
         <source>%1  %2  %3  %4</source>
-        <translation type="unfinished">%1  %2  %3  %4</translation>
+        <translation type="vanished">%1  %2  %3  %4</translation>
     </message>
     <message>
-        <location filename="../src/exporting/legacyexportdrawer.cpp" line="52"/>
+        <location filename="../src/exporting/legacyexportdrawer.cpp" line="51"/>
+        <source>%1  %2  %3  %4 %5</source>
+        <translation type="unfinished">%1  %2  %3  %4 %5 {1 ?} {2 ?} {3 ?}</translation>
+    </message>
+    <message>
+        <location filename="../src/exporting/legacyexportdrawer.cpp" line="63"/>
         <source>%1 S</source>
-        <translation type="unfinished">%1 S</translation>
+        <translation>%1 S</translation>
     </message>
     <message>
-        <location filename="../src/exporting/legacyexportdrawer.cpp" line="56"/>
+        <location filename="../src/exporting/legacyexportdrawer.cpp" line="67"/>
         <source>/s</source>
-        <translation type="unfinished">/s</translation>
+        <translation>/s</translation>
     </message>
     <message>
-        <location filename="../src/exporting/legacyexportdrawer.cpp" line="60"/>
-        <location filename="../src/exporting/legacyexportdrawer.cpp" line="64"/>
-        <location filename="../src/exporting/legacyexportdrawer.cpp" line="99"/>
-        <location filename="../src/exporting/legacyexportdrawer.cpp" line="109"/>
-        <location filename="../src/exporting/legacyexportdrawer.cpp" line="181"/>
-        <location filename="../src/exporting/legacyexportdrawer.cpp" line="185"/>
+        <location filename="../src/exporting/legacyexportdrawer.cpp" line="71"/>
+        <location filename="../src/exporting/legacyexportdrawer.cpp" line="75"/>
+        <location filename="../src/exporting/legacyexportdrawer.cpp" line="110"/>
+        <location filename="../src/exporting/legacyexportdrawer.cpp" line="120"/>
+        <location filename="../src/exporting/legacyexportdrawer.cpp" line="192"/>
+        <location filename="../src/exporting/legacyexportdrawer.cpp" line="196"/>
         <source>/div</source>
-        <translation type="unfinished">/div</translation>
+        <translation>/div</translation>
     </message>
     <message>
-        <location filename="../src/exporting/legacyexportdrawer.cpp" line="173"/>
+        <location filename="../src/exporting/legacyexportdrawer.cpp" line="184"/>
         <source>Zoom x%L1</source>
-        <translation type="unfinished">Zoom x%L1</translation>
+        <translation>Zoom x%L1</translation>
     </message>
     <message>
-        <location filename="../src/exporting/legacyexportdrawer.cpp" line="191"/>
+        <location filename="../src/exporting/legacyexportdrawer.cpp" line="202"/>
         <source>Marker 1/2</source>
-        <translation type="unfinished">Construtor 1/2</translation>
+        <translation>Construtor 1/2</translation>
     </message>
 </context>
 <context>
@@ -527,27 +531,27 @@
     <message>
         <location filename="../src/mainwindow.ui" line="28"/>
         <source>&amp;File</source>
-        <translation type="unfinished">&amp;Arquivo</translation>
+        <translation>&amp;Arquivo</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="38"/>
         <source>&amp;View</source>
-        <translation type="unfinished">&amp;Ver</translation>
+        <translation>&amp;Ver</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="48"/>
         <source>&amp;Oscilloscope</source>
-        <translation type="unfinished">&amp;Osciloscópio</translation>
+        <translation>&amp;Osciloscópio</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="56"/>
         <source>&amp;Help</source>
-        <translation type="unfinished">&amp;Ajuda</translation>
+        <translation>&amp;Ajuda</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="63"/>
         <source>Export</source>
-        <translation type="unfinished">Exportar</translation>
+        <translation>Exportar</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="75"/>
@@ -562,7 +566,7 @@
     <message>
         <location filename="../src/mainwindow.ui" line="95"/>
         <source>Ctrl+O</source>
-        <translation type="unfinished">Ctrl+O</translation>
+        <translation>Ctrl+O</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="100"/>
@@ -572,7 +576,7 @@
     <message>
         <location filename="../src/mainwindow.ui" line="103"/>
         <source>Ctrl+S</source>
-        <translation type="unfinished">Ctrl+S</translation>
+        <translation>Ctrl+S</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="108"/>
@@ -587,7 +591,7 @@
     <message>
         <location filename="../src/mainwindow.ui" line="116"/>
         <source>Ctrl+Q</source>
-        <translation type="unfinished">Ctrl+Q</translation>
+        <translation>Ctrl+Q</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="124"/>
@@ -597,7 +601,7 @@
     <message>
         <location filename="../src/mainwindow.ui" line="127"/>
         <source>Space</source>
-        <translation type="unfinished">Espaço</translation>
+        <translation>Espaço</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="135"/>
@@ -637,7 +641,7 @@
     <message>
         <location filename="../src/mainwindow.ui" line="176"/>
         <source>Settings</source>
-        <translation type="unfinished">Configurações</translation>
+        <translation>Configurações</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="184"/>
@@ -652,7 +656,7 @@
     <message>
         <location filename="../src/mainwindow.cpp" line="116"/>
         <source>Invalid command</source>
-        <translation type="unfinished">Comando inválido</translation>
+        <translation>Comando inválido</translation>
     </message>
     <message>
         <source>&amp;Stop</source>
@@ -661,7 +665,7 @@
     <message>
         <location filename="../src/mainwindow.cpp" line="202"/>
         <source>Stop the oscilloscope</source>
-        <translation type="unfinished">Parar osciloscópio</translation>
+        <translation>Parar osciloscópio</translation>
     </message>
     <message>
         <source>&amp;Start</source>
@@ -680,43 +684,43 @@
     <message>
         <location filename="../src/mainwindow.cpp" line="205"/>
         <source>Start the oscilloscope</source>
-        <translation type="unfinished">Iniciar osciloscópio</translation>
+        <translation>Iniciar osciloscópio</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="217"/>
         <source>Open file</source>
-        <translation type="unfinished">Abrir arquivo</translation>
+        <translation>Abrir arquivo</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="217"/>
         <location filename="../src/mainwindow.cpp" line="230"/>
         <source>Settings (*.ini)</source>
-        <translation type="unfinished">Configurações (*.ini)</translation>
+        <translation>Configurações (*.ini)</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="230"/>
         <source>Save settings</source>
-        <translation type="unfinished">Salvar configurações</translation>
+        <translation>Salvar configurações</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="254"/>
         <source>Disable fading of previous graphs</source>
-        <translation type="unfinished">Desabilitar desaparecimento de gráficos anteriores</translation>
+        <translation>Desabilitar desaparecimento de gráficos anteriores</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="256"/>
         <source>Enable fading of previous graphs</source>
-        <translation type="unfinished">Habilitar desaparecimento de gráficos anteriores</translation>
+        <translation>Habilitar desaparecimento de gráficos anteriores</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="264"/>
         <source>Hide magnified scope</source>
-        <translation type="unfinished">Esconder/Ampliar osciloscópio</translation>
+        <translation>Esconder/Ampliar osciloscópio</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="266"/>
         <source>Show magnified scope</source>
-        <translation type="unfinished">Mostrar osciloscópio ampliado</translation>
+        <translation>Mostrar osciloscópio ampliado</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="276"/>
@@ -811,7 +815,7 @@
         <location filename="../src/selectdevice/newdevicemodelfromexisting.ui" line="157"/>
         <location filename="../src/selectdevice/newdevicemodelfromexisting.ui" line="173"/>
         <source>...</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">...</translation>
     </message>
     <message>
         <location filename="../src/selectdevice/newdevicemodelfromexisting.ui" line="189"/>
@@ -967,13 +971,13 @@
     <message>
         <location filename="../src/exporting/exportcsv.cpp" line="32"/>
         <source>Comma-Separated Values (*.csv)</source>
-        <translation type="unfinished">Separado por ponto e vírgula (*.csv)</translation>
+        <translation>Separado por ponto e vírgula (*.csv)</translation>
     </message>
     <message>
         <location filename="../src/exporting/exportimage.cpp" line="35"/>
         <location filename="../src/exporting/exportcsv.cpp" line="34"/>
         <source>Export file...</source>
-        <translation type="unfinished">Exportar arquivo...</translation>
+        <translation>Exportar arquivo...</translation>
     </message>
     <message>
         <location filename="../src/exporting/exportimage.cpp" line="21"/>
@@ -983,7 +987,7 @@
     <message>
         <location filename="../src/exporting/exportimage.cpp" line="32"/>
         <source>Portable Document Format (*.pdf)</source>
-        <translation type="unfinished">Portables Documenten Format (*.pdf)</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/exporting/exportimage.cpp" line="33"/>
@@ -998,107 +1002,107 @@
     <message>
         <location filename="../src/exporting/exportprint.cpp" line="38"/>
         <source>Print oscillograph</source>
-        <translation type="unfinished">Impressão</translation>
+        <translation>Impressão</translation>
     </message>
     <message>
         <location filename="../src/hantekdso/enums.cpp" line="15"/>
         <source>Voltage</source>
-        <translation type="unfinished">Voltagem</translation>
+        <translation>Voltagem</translation>
     </message>
     <message>
         <location filename="../src/hantekdso/enums.cpp" line="17"/>
         <source>Spectrum</source>
-        <translation type="unfinished">Espectro</translation>
+        <translation>Espectro</translation>
     </message>
     <message>
         <location filename="../src/hantekdso/enums.cpp" line="28"/>
         <source>T - Y</source>
-        <translation type="unfinished">T - Y</translation>
+        <translation>T - Y</translation>
     </message>
     <message>
         <location filename="../src/hantekdso/enums.cpp" line="30"/>
         <source>X - Y</source>
-        <translation type="unfinished">X - Y</translation>
+        <translation>X - Y</translation>
     </message>
     <message>
         <location filename="../src/hantekdso/enums.cpp" line="41"/>
         <source>AC</source>
-        <translation type="unfinished">AC</translation>
+        <translation>AC</translation>
     </message>
     <message>
         <location filename="../src/hantekdso/enums.cpp" line="43"/>
         <source>DC</source>
-        <translation type="unfinished">DC</translation>
+        <translation>DC</translation>
     </message>
     <message>
         <location filename="../src/hantekdso/enums.cpp" line="45"/>
         <source>GND</source>
-        <translation type="unfinished">GND</translation>
+        <translation>GND</translation>
     </message>
     <message>
         <location filename="../src/hantekdso/enums.cpp" line="57"/>
         <source>Auto</source>
-        <translation type="unfinished">Auto</translation>
+        <translation>Auto</translation>
     </message>
     <message>
         <location filename="../src/hantekdso/enums.cpp" line="59"/>
         <source>Normal</source>
-        <translation type="unfinished">Normal</translation>
+        <translation>Normal</translation>
     </message>
     <message>
         <location filename="../src/hantekdso/enums.cpp" line="61"/>
         <source>Single</source>
-        <translation type="unfinished">Simples</translation>
+        <translation>Simples</translation>
     </message>
     <message>
         <location filename="../src/hantekdso/enums.cpp" line="96"/>
         <source>Off</source>
-        <translation type="unfinished">Desligado</translation>
+        <translation>Desligado</translation>
     </message>
     <message>
         <location filename="../src/hantekdso/enums.cpp" line="98"/>
         <source>Linear</source>
-        <translation type="unfinished">Linear</translation>
+        <translation>Linear</translation>
     </message>
     <message>
         <location filename="../src/hantekdso/enums.cpp" line="100"/>
         <source>Sinc</source>
-        <translation type="unfinished">Sinc</translation>
+        <translation>Sinc</translation>
     </message>
     <message>
         <location filename="../src/main.cpp" line="98"/>
         <source>Use OpenGL ES instead of OpenGL</source>
-        <translation type="unfinished"></translation>
+        <translation>Usar OpenGL ES em vez de OpenGL</translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="17"/>
         <source>CH1 + CH2</source>
-        <translation type="unfinished">CH1 + CH2</translation>
+        <translation>CH1 + CH2</translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="19"/>
         <source>CH1 - CH2</source>
-        <translation type="unfinished">CH1 - CH2</translation>
+        <translation>CH1 - CH2</translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="21"/>
         <source>CH2 - CH1</source>
-        <translation type="unfinished">CH2 - CH1</translation>
+        <translation>CH2 - CH1</translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="23"/>
         <source>CH1 * CH2</source>
-        <translation type="unfinished"></translation>
+        <translation>CH1 * CH2</translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="25"/>
         <source>CH1 AC</source>
-        <translation type="unfinished"></translation>
+        <translation>CH1 AC</translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="27"/>
         <source>CH2 AC</source>
-        <translation type="unfinished"></translation>
+        <translation>CH2 AC</translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="37"/>
@@ -1173,42 +1177,42 @@
     <message>
         <location filename="../src/usb/usbdevice.cpp" line="18"/>
         <source>Success (no error)</source>
-        <translation type="unfinished">Sucesso (sem erro)</translation>
+        <translation>Sucesso (sem erro)</translation>
     </message>
     <message>
         <location filename="../src/usb/usbdevice.cpp" line="20"/>
         <source>Input/output error</source>
-        <translation type="unfinished">Erro na entrada/saida</translation>
+        <translation>Erro na entrada/saida</translation>
     </message>
     <message>
         <location filename="../src/usb/usbdevice.cpp" line="22"/>
         <source>Invalid parameter</source>
-        <translation type="unfinished">Parametro inválido</translation>
+        <translation>Parametro inválido</translation>
     </message>
     <message>
         <location filename="../src/usb/usbdevice.cpp" line="24"/>
         <source>Access denied (insufficient permissions)</source>
-        <translation type="unfinished">Acesso negado (permissões insuficientes)</translation>
+        <translation>Acesso negado (permissões insuficientes)</translation>
     </message>
     <message>
         <location filename="../src/usb/usbdevice.cpp" line="26"/>
         <source>No such device (it may have been disconnected)</source>
-        <translation type="unfinished">Não encontrado o dispositivo (pode estar desconectado)</translation>
+        <translation>Não encontrado o dispositivo (pode estar desconectado)</translation>
     </message>
     <message>
         <location filename="../src/usb/usbdevice.cpp" line="28"/>
         <source>Entity not found</source>
-        <translation type="unfinished">Entidade não encontrada</translation>
+        <translation>Entidade não encontrada</translation>
     </message>
     <message>
         <location filename="../src/usb/usbdevice.cpp" line="30"/>
         <source>Resource busy</source>
-        <translation type="unfinished">Recurso ocupado</translation>
+        <translation>Recurso ocupado</translation>
     </message>
     <message>
         <location filename="../src/usb/usbdevice.cpp" line="32"/>
         <source>Operation timed out</source>
-        <translation type="unfinished">Operação expirou</translation>
+        <translation>Operação expirou</translation>
     </message>
     <message>
         <location filename="../src/usb/usbdevice.cpp" line="34"/>
@@ -1223,22 +1227,22 @@
     <message>
         <location filename="../src/usb/usbdevice.cpp" line="38"/>
         <source>System call interrupted (perhaps due to signal)</source>
-        <translation type="unfinished">Chamada de sistema interrompida(talvez, devido ao sinal)</translation>
+        <translation>Chamada de sistema interrompida(talvez, devido ao sinal)</translation>
     </message>
     <message>
         <location filename="../src/usb/usbdevice.cpp" line="40"/>
         <source>Insufficient memory</source>
-        <translation type="unfinished">Memória insuficiente</translation>
+        <translation>Memória insuficiente</translation>
     </message>
     <message>
         <location filename="../src/usb/usbdevice.cpp" line="42"/>
         <source>Operation not supported or unimplemented on this platform</source>
-        <translation type="unfinished">Operação não suportada ou não implementada nesta plataforma</translation>
+        <translation>Operação não suportada ou não implementada nesta plataforma</translation>
     </message>
     <message>
         <location filename="../src/usb/usbdevice.cpp" line="44"/>
         <source>Other error</source>
-        <translation type="unfinished">Outro erro</translation>
+        <translation>Outro erro</translation>
     </message>
 </context>
 <context>
@@ -1269,78 +1273,78 @@
     <message>
         <location filename="../src/selectdevice/selectsupporteddevice.ui" line="14"/>
         <source>Select device</source>
-        <translation type="unfinished"></translation>
+        <translation>Selecione o dispositivo</translation>
     </message>
     <message>
         <location filename="../src/selectdevice/selectsupporteddevice.ui" line="27"/>
         <source>Supported device</source>
-        <translation type="unfinished"></translation>
+        <translation>Dispositivo suportado</translation>
     </message>
     <message>
         <location filename="../src/selectdevice/selectsupporteddevice.ui" line="39"/>
         <source>Devices:</source>
-        <translation type="unfinished"></translation>
+        <translation>Dispositivos:</translation>
     </message>
     <message>
         <location filename="../src/selectdevice/selectsupporteddevice.ui" line="46"/>
         <location filename="../src/selectdevice/selectsupporteddevice.ui" line="59"/>
         <source>...</source>
-        <translation type="unfinished"></translation>
+        <translation>...</translation>
     </message>
     <message>
         <location filename="../src/selectdevice/selectsupporteddevice.ui" line="86"/>
         <source>Try unsupported</source>
-        <translation type="unfinished"></translation>
+        <translation>Tente não suportado</translation>
     </message>
     <message>
         <location filename="../src/selectdevice/selectsupporteddevice.ui" line="92"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Your device might not directly be supported by OpenHantek6022. But it might be compatible to one of the existing devices. Help us to identify those devices and report back on our &lt;a href=&quot;https://github.com/OpenHantek/openhantek/issues&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;issue tracker&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt; Seu dispositivo pode não ser suportado diretamente pelo OpenHantek6022. Mas ele pode ser compatível com um dos dispositivos existentes. Ajude-nos a identificar esses dispositivos e a relatar a nossa &lt;a href=&quot;https://github.com/OpenHantek/openhantek/issues&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;issue tracker&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../src/selectdevice/selectsupporteddevice.ui" line="108"/>
         <source>Add new device from template</source>
-        <translation type="unfinished"></translation>
+        <translation>Adicionar novo dispositivo a partir do modelo</translation>
     </message>
     <message>
         <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="62"/>
         <source>Connection failed!</source>
-        <translation type="unfinished"></translation>
+        <translation>Conexão falhou!</translation>
     </message>
     <message>
         <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="53"/>
         <source>&lt;br/&gt;&lt;p&gt;The device is ready for use.&lt;/p&gt;&lt;p&gt;Please observe the &lt;a href=&apos;https://github.com/OpenHantek/OpenHantek6022/blob/master/docs/OpenHantek6022_User_Manual.pdf&apos;&gt;user manual&lt;/a&gt; for safe operation.&lt;/p&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;br/&gt;&gt;&lt;p&gt;O dispositivo está pronto para uso.&lt;/p&gt;&lt;p&gt;Por favor, observe o &lt;a href=&apos;https://github.com/OpenHantek/OpenHantek6022/blob/master/docs/OpenHantek6022_User_Manual.pdf&apos;&gt; manual do usuário&lt;/a&gt; para uma operação segura.&lt;/p&gt;</translation>
     </message>
     <message>
         <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="59"/>
         <source>&lt;p&gt;Upload in progress ...&lt;/p&gt;&lt;p&gt;If the upload takes more than 30 s, please close this window &lt;br/&gt;and restart the program!&lt;/p&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;p&gt;Upload em andamento ...&lt;/p&gt;&lt;p&gt;&gt;Se o upload demorar mais de 30 s, feche esta janela &lt;br/&gt;e reinicie o programa!&lt;/p&gt;</translation>
     </message>
     <message>
         <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="67"/>
         <source>&lt;p&gt;OpenHantek6022 is searching for compatible devices ...&lt;/p&gt;&lt;p&gt;&lt;img align=&apos;right&apos; height=&apos;200&apos; src=&apos;qrc:///switch_6022BL.png&apos;&gt;Don&apos;t forget to switch your device into oscilloscope mode if it has multiple modes.&lt;/p&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;p&gt;OpenHantek6022 está procurando por dispositivos compatíveis ...&lt;/p&gt;&lt;p&gt;&lt;img align=&apos;right&apos; height=&apos;200&apos; src=&apos;qrc:///switch_6022BL.png&apos;&gt;Não se esqueça de mudar seu dispositivo no modo osciloscópio se ele tiver vários modos.&lt;/p&gt;</translation>
     </message>
     <message>
         <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="72"/>
         <source>&lt;p&gt;Please make sure you have installed the windows usb driver correctly&lt;/p&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;Por favor, certifique-se de que instalou o driver usb do Windows corretamente&lt;/p&gt;</translation>
     </message>
     <message>
         <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="77"/>
         <source>&lt;p&gt;Please make sure you have copied the udev rules file to &lt;b&gt;%1&lt;/b&gt; for correct USB access permissions.&lt;/p&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;Por favor, tenha certeza de que você copiou o arquivo de regras do udev para &lt;b&gt;%1&lt;/b&gt; para obter as permissões de acesso USB corretas.&lt;/p&gt;</translation>
     </message>
     <message>
         <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="81"/>
         <source>&lt;p&gt;Visit the build and run instruction &lt;a href=&apos;https://github.com/OpenHantek/OpenHantek6022/blob/master/docs/build.md&apos;&gt;website&lt;/a&gt; for help.&lt;/p&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;p&gt;Visita a instrução de compilação e execução &lt;a href=&apos;https://github.com/OpenHantek/OpenHantek6022/blob/master/docs/build.md&apos;&gt;website&lt;/a&gt; para ajuda.&lt;/p&gt;</translation>
     </message>
     <message>
         <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="112"/>
         <source>Can&apos;t initalize USB: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Não é possível initalizar o USB: %1</translation>
     </message>
 </context>
 <context>
