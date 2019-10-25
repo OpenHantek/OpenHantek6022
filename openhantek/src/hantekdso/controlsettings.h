@@ -5,7 +5,7 @@
 #include "hantekprotocol/controlStructs.h"
 
 namespace Hantek {
-struct OffsetsPerGainStep;
+struct CalibrationValues;
 }
 
 namespace Dso {
@@ -60,7 +60,7 @@ struct ControlSettings {
     RecordLengthID recordLengthId = 1;           ///< The id in the record length array
     unsigned channelCount = 0;                   ///< Number of activated channels
     unsigned swSampleMargin = 2000;              ///< Software trigger, sample margin
-    Hantek::OffsetsPerGainStep *offsetLimit;     ///< Calibration data for the channel offsets
+    Hantek::CalibrationValues *calibrationValues;///< Calibration data for the channel offsets & gains
 
     Hantek::ControlBeginCommand beginCommandControl;
     Hantek::ControlGetLimits cmdGetLimits;

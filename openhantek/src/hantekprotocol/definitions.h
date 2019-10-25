@@ -19,17 +19,31 @@ enum class UsedChannels : uint8_t {
 };
 
 #pragma pack(push, 1)
-// TODO: define correct offset layout in EEPROM
+
+// The strct reflects the offset layout in EEPROM
+// All values are offset binariy bytes (0 -> 0x80)
+// The 1st 32 bytes are already factory calibration values
 // 16 byte offset at low speed:  CH0@20mV, CH1@20mV, CH0@50mV,...,CH1@5V
 // 16 byte offset at high speed: CH0@20mV, CH1@20mV, CH0@50mV,...,CH1@5V
+// The next 16 bytes are written by python calibration tool
 // 16 byte gain: CH0@20mV, CH1@20mV, CH0@50mV,...,CH1@5V
-struct Offset {
-    unsigned short start = 0x0000;
-    unsigned short end = 0xffff;
+// The next 32 bytes are an optional fractional part of offset (*250)
+// 16 byte offset (ls) fractional part: CH0@20mV, CH1@20mV, CH0@50mV,...,CH1@5V
+// 16 byte offset (hs) fractional part: CH0@20mV, CH1@20mV, CH0@50mV,...,CH1@5V
+
+struct Steps {
+    uint8_t step[ HANTEK_GAIN_STEPS ][ 2 ];
 };
 
-struct OffsetsPerGainStep {
-    Offset step[HANTEK_GAIN_STEPS];
+struct Offsets {
+    Steps ls;
+    Steps hs;
+};
+
+struct CalibrationValues {
+    Offsets off;
+    Steps gain;
+    Offsets fine;
 };
 
 #pragma pack(pop)

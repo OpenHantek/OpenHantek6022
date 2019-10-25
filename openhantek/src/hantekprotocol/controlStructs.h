@@ -9,12 +9,12 @@
 #include <memory>
 
 namespace Hantek {
-struct OffsetsPerGainStep;
+struct CalibrationValues;
 
-/// \enum BulkIndex
+/// \enum CommandIndex
 /// \brief Can be set by CONTROL_BEGINCOMMAND, maybe it allows multiple commands
 /// at the same time?
-enum BulkIndex {
+enum CommandIndex {
     COMMANDINDEX_0 = 0x03, ///< Used most of the time
     COMMANDINDEX_1 = 0x0a,
     COMMANDINDEX_2 = 0x09,
@@ -28,7 +28,7 @@ class ControlBeginCommand : public ControlCommand {
   public:
     /// \brief Sets the command index to the given value.
     /// \param index The CommandIndex for the command.
-    ControlBeginCommand(BulkIndex index = COMMANDINDEX_0);
+    ControlBeginCommand(CommandIndex index = COMMANDINDEX_0);
 };
 
 /// \brief The CONTROL_GETSPEED parser.
@@ -65,7 +65,7 @@ struct ControlAcquireHardData : public ControlCommand {
 };
 
 struct ControlGetLimits : public ControlCommand {
-    ControlGetLimits(size_t channels);
+    ControlGetLimits();
 };
 
 struct ControlSetCalFreq : public ControlCommand {

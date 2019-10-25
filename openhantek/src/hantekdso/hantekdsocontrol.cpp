@@ -140,11 +140,12 @@ Dso::ErrorCode HantekDsoControl::retrieveChannelLevelData() {
         emit communicationError();
         return Dso::ErrorCode::CONNECTION;
     }
-
-    memcpy(controlsettings.offsetLimit, controlsettings.cmdGetLimits.data(),
-           sizeof(OffsetsPerGainStep) * specification->channels);
-    //printf( "offsetLimit %d %d\n", sizeof(OffsetsPerGainStep), ((unsigned char*)controlsettings.offsetLimit)[0] );
-
+    memcpy(controlsettings.calibrationValues, controlsettings.cmdGetLimits.data(),
+           sizeof( CalibrationValues ) );
+//     printf("HDC::cV: %lu, %d, %g\n", sizeof( CalibrationValues ),
+//         controlsettings.calibrationValues->off.ls.step[ 7 ][ 0 ] - 0x80,
+//         (controlsettings.calibrationValues->fine.ls.step[ 7 ][ 0 ] - 0x80) / 250.0
+//     );
     return Dso::ErrorCode::NONE;
 }
 
@@ -232,23 +233,30 @@ void HantekDsoControl::convertRawDataToSamples(const std::vector<unsigned char> 
         const double gainStep = specification->gain[gainID].gainSteps;
         const double probeAttn = controlsettings.voltage[channel].probeAttn;
         const double sign = controlsettings.voltage[channel].inverted ? -1.0 : 1.0;
-        int shiftDataBuf = 0;
+        double offsetError = 0.0;
         double gainCalibration = 1.0;
 
         // shift + individual offset for each channel and gain
-        shiftDataBuf = specification->voltageOffset[ channel ][ gainID ];
+        offsetError = specification->voltageOffset[ channel ][ gainID ];
         gainCalibration = 1.0;
-        if ( !shiftDataBuf ) { // no config file value
-            // get offset value from eeprom[ 8 .. 39 ]
-            const unsigned char * pOff = (const unsigned char *) controlsettings.offsetLimit;
-            pOff += 2 * gainID + channel; // point to gain/channel offset value in eeprom[ 8 .. 39 ]
-            shiftDataBuf = result.samplerate < 30e6 ? *pOff : *(pOff + 16); // lowspeed / highspeed
-            pOff += 32; // now point to gain/channel gain value in eeprom[ 40 .. 55 ]
-            if ( *pOff != 255 && *pOff != 0 ) { // eeprom content valid
-                // byte 128 - 125 ... 128 + 125 -> 1.0 - 0.250 ... 1.0 + 0.250 = 0.75 .. 1.25 
-                gainCalibration = 1.0 + (*pOff - 0x80) / 500.0;
+        if ( !offsetError ) { // no config file value
+            // get offset value from eeprom[ 8 .. 39 and (if available) 56 .. 87]
+            int offsetFine = 0;
+            if ( result.samplerate < 30e6 ) {
+                offsetError = controlsettings.calibrationValues->off.ls.step[ gainID ][ channel ];
+                offsetFine = controlsettings.calibrationValues->fine.ls.step[ gainID ][ channel ];
+            } else {
+                offsetError = controlsettings.calibrationValues->off.hs.step[ gainID ][ channel ];
+                offsetFine = controlsettings.calibrationValues->fine.hs.step[ gainID ][ channel ];
             }
-            //printf( "sDB %d, gain_cal %f, ch %d, gIG %d\n", shiftDataBuf, gainCalibration, channel, gainID );
+            if ( offsetFine && offsetFine != 255 ) {
+                offsetError += (offsetFine - 0x80) / 250.0;
+            }
+            int gain = controlsettings.calibrationValues->gain.step[ gainID ][ channel ];
+            if ( gain && gain != 255 ) {
+                gainCalibration = 1.0 + (gain - 0x80) / 500.0;
+            }
+            //printf( "sDB %d, gC %f, ch %d, gID %d\n", shiftDataBuf, gainCalibration, channel, gainID );
         }
 
         // Convert data from the oscilloscope and write it into the sample buffer
@@ -260,12 +268,12 @@ void HantekDsoControl::convertRawDataToSamples(const std::vector<unsigned char> 
         result.clipped &= ~(0x01 << channel); // clear clipping flag
         for ( unsigned index = 0; index < result.data[ channel ].size();
             ++index, rawBufferPosition += activeChannels * downsampling ) { // advance either by one or two blocks
-            double sample = 0;
+            double sample = 0.0;
             for ( unsigned iii = 0; iii < downsampling * activeChannels; iii += activeChannels ) {
                 int rawSample = rawData[ rawBufferPosition + iii ]; // range 0...255
                 if ( rawSample == 0x00 || rawSample == 0xFF ) // min or max -> clipped
                     result.clipped |= 0x01 << channel;
-                sample += (double)(rawSample - shiftDataBuf); // int - int
+                sample += (double)rawSample - offsetError;
             }
             sample /= downsampling;
             result.data[ channel ][ index ] = sign * (sample / limit - offset) * gainCalibration * gainStep * probeAttn;

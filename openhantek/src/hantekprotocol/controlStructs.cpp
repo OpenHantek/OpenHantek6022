@@ -8,15 +8,17 @@
 
 namespace Hantek {
 
-ControlBeginCommand::ControlBeginCommand(BulkIndex index)
+ControlBeginCommand::ControlBeginCommand(CommandIndex index)
     : ControlCommand(Hantek::ControlCode::CONTROL_BEGINCOMMAND, 10) {
     data()[0] = 0x0f;
     data()[1] = (uint8_t)index;
 }
 
-ControlGetSpeed::ControlGetSpeed() : ControlCommand(Hantek::ControlCode::CONTROL_GETSPEED, 10) {}
+
+ControlGetSpeed::ControlGetSpeed() : ControlCommand(Hantek::ControlCode::CONTROL_GETSPEED, 10) { }
 
 ConnectionSpeed ControlGetSpeed::getSpeed() { return (ConnectionSpeed)data()[0]; }
+
 
 ControlSetVoltDIV_CH1::ControlSetVoltDIV_CH1() : ControlCommand(ControlCode::CONTROL_SETVOLTDIV_CH1, 1) {
     this->setDiv(5);
@@ -24,15 +26,20 @@ ControlSetVoltDIV_CH1::ControlSetVoltDIV_CH1() : ControlCommand(ControlCode::CON
 
 void ControlSetVoltDIV_CH1::setDiv(uint8_t val) { data()[0] = val; }
 
+
 ControlSetVoltDIV_CH2::ControlSetVoltDIV_CH2() : ControlCommand(ControlCode::CONTROL_SETVOLTDIV_CH2, 1) {
     this->setDiv(5);
 }
 
 void ControlSetVoltDIV_CH2::setDiv(uint8_t val) { data()[0] = val; }
 
-ControlSetTimeDIV::ControlSetTimeDIV() : ControlCommand(ControlCode::CONTROL_SETTIMEDIV, 1) { this->setDiv(1); }
+
+ControlSetTimeDIV::ControlSetTimeDIV() : ControlCommand(ControlCode::CONTROL_SETTIMEDIV, 1) {
+    this->setDiv(1);
+}
 
 void ControlSetTimeDIV::setDiv(uint8_t val) { data()[0] = val; }
+
 
 ControlSetNumChannels::ControlSetNumChannels() : ControlCommand(ControlCode::CONTROL_SETNUMCHANNELS, 1) { 
     this->setDiv(2);
@@ -40,21 +47,25 @@ ControlSetNumChannels::ControlSetNumChannels() : ControlCommand(ControlCode::CON
 
 void ControlSetNumChannels::setDiv(uint8_t val) { data()[0] = val; }
 
+
 ControlAcquireHardData::ControlAcquireHardData() : ControlCommand(ControlCode::CONTROL_ACQUIIRE_HARD_DATA, 1) {
     data()[0] = 0x01;
 }
 
-ControlGetLimits::ControlGetLimits(size_t channels)
-    : ControlCommand(ControlCode::CONTROL_VALUE, sizeof(OffsetsPerGainStep)*channels) {
+
+ControlGetLimits::ControlGetLimits()
+    : ControlCommand( ControlCode::CONTROL_VALUE, sizeof( CalibrationValues ) ) {
     value = (uint8_t)ControlValue::VALUE_OFFSETLIMITS;
     data()[0] = 0x01;
 }
+
 
 ControlSetCalFreq::ControlSetCalFreq() : ControlCommand(ControlCode::CONTROL_SETCALFREQ, 1) { 
     this->setCalFreq( 1 ); // 1kHz
 }
 
 void ControlSetCalFreq::setCalFreq(uint8_t val) { data()[0] = val; }
+
 
 ControlSetCoupling::ControlSetCoupling() 
     : ControlCommand(ControlCode::CONTROL_SETCOUPLING, 1)
@@ -70,5 +81,6 @@ void ControlSetCoupling::setCoupling(ChannelID channel, bool dc) {
         ch2Coupling = dc;
     data()[0] = 0xFF & ((ch2Coupling << 4) | ch1Coupling);
 }
+
 
 }
