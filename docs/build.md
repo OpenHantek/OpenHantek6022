@@ -25,7 +25,7 @@ Optionally create a debian package:
 
 > sudo make package
 
-If you do not install the program, you need to copy the file `firmware/60-hantek.rules` to `/lib/udev/rules.d/` yourself,
+If you do not install the program, you need to copy the file `utils/udev_rules/60-hantek.rules` to `/lib/udev/rules.d/` yourself,
 and replug your device, otherwise you will not have the correct permissions to access usb devices.
 
 ### [MacOSX](#macosx)

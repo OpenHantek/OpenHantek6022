@@ -22,10 +22,10 @@ matrix:
       os: osx
 
 before_install:
-    - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then 
-          brew update; brew install qt5 fftw binutils ; 
-          export CMAKE_PREFIX_PATH=$(brew --prefix qt5); 
-          echo "CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}" ; 
+    - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
+          brew update; brew install qt5 fftw binutils ;
+          export CMAKE_PREFIX_PATH=$(brew --prefix qt5);
+          echo "CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}" ;
       fi
     - if [[ "$TRAVIS_OS_NAME" != "osx" ]]; then pip install cmake --user; fi
 
@@ -41,10 +41,9 @@ script:
           export PATH=${CMAKE_PREFIX_PATH}/bin:${PATH} ;
           cd openhantek ;
           macdeployqt OpenHantek.app -always-overwrite -verbose=2 ;
-          python ../../macdeployqtfix/macdeployqtfix.py OpenHantek.app/Contents/MacOS/OpenHantek ${CMAKE_PREFIX_PATH} ;
-          ls -laR OpenHantek.app ;
-          xattr -lr OpenHantek.app ;
+          python ../../utils/macdeployqtfix/macdeployqtfix.py OpenHantek.app/Contents/MacOS/OpenHantek ${CMAKE_PREFIX_PATH} ;
           macdeployqt OpenHantek.app -dmg -no-plugins -verbose=2 ;
+          ls -lhAFRO@ OpenHantek.app ;
           xattr -l OpenHantek.dmg ;
           cd .. ;
       else
@@ -59,7 +58,7 @@ before_deploy:
           sudo tar -cvzf ../packages/openhantek_*_osx_*.tar.gz OpenHantek.app ;
           sudo mv OpenHantek.dmg ../packages/$(basename ../packages/openhantek_*_osx_*.tar.gz .tar.gz).dmg ;
           cd .. ;
-      else 
+      else
           true;
       fi
     - ls -l packages || true

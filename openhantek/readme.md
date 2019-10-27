@@ -76,9 +76,13 @@ scope graphs.
 
 ## Data flow
 
-* Raw 8-bit ADC values are collected in `HantekDsoControl::run()` and converted in `HantekDsoControl::convertRawDataToSamples()` to real-world double samples (scaled with voltage and sample rate). The 10X oversampling for slower sample rates is done here. Also overdriving of the inputs is detected. The conversion uses either the factory calibration values from EEPROM or from a user supplied config file. Read more about [calibration](https://github.com/Ho-Ro/Hantek6022API/blob/master/README.md#create-calibration-values-for-openhantek).
+* Raw 8-bit ADC values are collected in `HantekDsoControl::run()` and converted in `HantekDsoControl::convertRawDataToSamples()` to real-world double samples (scaled with voltage and sample rate). 
+The 10X..100X oversampling for slower sample rates is done here. Also overdriving of the inputs is detected. 
+The conversion uses either the factory calibration values from EEPROM or from a user supplied config file. 
+Read more about [calibration](https://github.com/Ho-Ro/Hantek6022API/blob/master/README.md#create-calibration-values-for-openhantek).
   * `swTrigger()`
-    * which checks if the signal is triggered and calculates the starting point for a stable display.
+    * which checks if the signal is triggered and calculates the starting point for a stable display. 
+    The time distance to the following opposite slope is measured and displayed as pulse width in the top row.
   * `triggering()` handles the trigger mode:
     * If the **trigger condition is false** and the **trigger mode is Normal** then we reuse the last triggered samples so that voltage and spectrum traces as well as the measurement at the scope's bottom lines are frozen until the trigger condition becomes true again.
     * If the **trigger condition is false** and the **trigger mode is not Normal** then we display a free running trace and discard the last saved samples.
@@ -89,7 +93,7 @@ scope graphs.
       `CH1 + CH2`, `CH1 - CH2`, `CH2 - CH1`, `CH1 * CH2`, `CH1 AC` or `CH2 AC`.
   * `SpectrumGenerator::process()`
     * For each active channel:
-      * Calculate the DC (average), AC (rms) and effective value ( sqrt( DC² + AC² ) ).
+      * Calculate the peak-to-peak, DC (average), AC (rms) and effective value ( sqrt( DC² + AC² ) ).
       * Apply a user selected window function and scale the result accordingly.
       * Calculate the autocorrelation to get the frequency of the signal. This is quite inaccurate at high frequencies. In these cases the first peak value of the spectrum is used.
       * Calculate the spectrum of the AC part of the signal scaled as dBV.
@@ -99,6 +103,7 @@ scope graphs.
       * spectrum over frequency `GraphGenerator::generateGraphsTYspectrum()`
     * or in XY mode and creates a voltage over voltage trace `GraphGenerator::generateGraphsXY()`.
     * `GraphGenerator::generateGraphsTYvoltage()` creates up to three (CH1, CH2, MATH) voltage traces.
+    For fast sample rates where less than 100 samples are displayed on screen a bandlimited (sinc) 10x upsampling creates a smoother display.
     * `GraphGenerator::generateGraphsTYspectrum()` creates up to three (CH1, CH2, MATH) spectral traces.
 
 t.b.c.
