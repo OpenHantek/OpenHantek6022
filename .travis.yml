@@ -43,7 +43,7 @@ script:
           macdeployqt OpenHantek.app -always-overwrite -verbose=2 ;
           python ../../utils/macdeployqtfix/macdeployqtfix.py OpenHantek.app/Contents/MacOS/OpenHantek ${CMAKE_PREFIX_PATH} ;
           macdeployqt OpenHantek.app -dmg -no-plugins -verbose=2 ;
-          ls -lhAFRO@ OpenHantek.app ;
+          ls -lhAFRO@ OpenHantek.* ;
           xattr -l OpenHantek.dmg ;
           cd .. ;
       else
