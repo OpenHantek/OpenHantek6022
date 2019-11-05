@@ -53,10 +53,12 @@ script:
     - ls -l openhantek || true
 
 before_deploy:
-    - if test -d openhantek/OpenHantek.dmg; then
+    - if test -d openhantek/OpenHantek.app; then
           cd openhantek ;
           sudo tar -cvzf ../packages/openhantek_*_osx_*.tar.gz OpenHantek.app ;
-          sudo mv OpenHantek.dmg ../packages/$(basename ../packages/openhantek_*_osx_*.tar.gz .tar.gz).dmg ;
+          if test -f OpenHantek.dmg ; then
+            sudo mv OpenHantek.dmg ../packages/$(basename ../packages/openhantek_*_osx_*.tar.gz .tar.gz).dmg ;
+          fi ;
           cd .. ;
       else
           true;

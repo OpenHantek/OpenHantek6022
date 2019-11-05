@@ -17,7 +17,7 @@ After David [stopped maintaining](https://github.com/OpenHantek/openhantek/issue
 
 <p><img alt="Image of main window on linux" width="100%" src="docs/images/screenshot_mainwindow.png"></p>
 
-* Supported devices: Hantek 6022BE and 6022BL as well as compatible scopes (e.g. Voltcraft DSO-2020).
+* Supported devices: Hantek 6022BE and 6022BL as well as compatible scopes (e.g. Voltcraft DSO-2020) and SainSmart DDS120 (thx [msiegert](https://github.com/msiegert)).
 * Fully supported operating system: Linux; developed under debian stable for amd64 architecture.
 * Raspberry Pi packages (raspbian stable) are available on the [Releases](https://github.com/OpenHantek/OpenHantek6022/releases) page.
 * Compiles under FreeBSD (packaging / installation: work in progress, thx [tspspi](https://github.com/tspspi)).
@@ -60,7 +60,6 @@ After David [stopped maintaining](https://github.com/OpenHantek/openhantek/issue
 * [Download (untested) Windows build from last commit](https://ci.appveyor.com/project/Ho-Ro/openhantek6022/build/artifacts).
 * The MacOSX archive from Releases contains only the dynamic linked binary, you have to provide the necessary libraries on your own! Please have a look at the [build instructions](docs/build.md#apple).
 
-
 ## Building OpenHantek from source
 You need the following software, to build OpenHantek from source:
 * [CMake 3.5+](https://cmake.org/download/)
@@ -85,7 +84,7 @@ The original Hantek driver doesn't work.
 ## Important!
 The scope doesn't store the firmware permanently in flash or eeprom, it must be uploaded after each power-up and is kept in ram 'til power-down.
 If the scope was used with a different software (old openhantek, sigrok or the windows software) the scope must be unplugged and replugged one-time before using it with OpenHantek6022 to enable the automatic loading of the correct firmware.
-The top line of the program must display the correct firmware version (FW0202).
+The top line of the program must display the correct firmware version (FW0204).
 
 ## Specifications, features, limitations and developer documentation
 I use this project mainly to explore how DSP can improve and extend the [limitations](docs/limitations.md) of this kind of low level hardware. It would have been easy to spend a few bucks more to buy a powerful scope - but it would be much less fun :)
