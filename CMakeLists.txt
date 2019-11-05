@@ -27,6 +27,15 @@ else()
   add_compile_options(-Wall -Wextra -pedantic)
 endif()
 
+# enable extra feature(s)
+if ( DEFINED HANTEK_AC )
+    add_compile_definitions( HANTEK_AC )
+endif()
+
+# show all compile definitions
+#get_directory_property( DirDefs COMPILE_DEFINITIONS )
+#message( "COMPILE_DEFINITIONS = ${DirDefs}" )
+
 # Qt Widgets based Gui with OpenGL canvas
 add_subdirectory(openhantek)
 

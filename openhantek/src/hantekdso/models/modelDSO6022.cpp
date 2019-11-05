@@ -102,8 +102,12 @@ static void initSpecifications(Dso::ControlSpecification& specification) {
     };
 
     specification.sampleSize = specification.fixedSampleRates.size();
-    //specification.couplings = {Dso::Coupling::DC};
-    specification.couplings = {Dso::Coupling::DC, Dso::Coupling::AC}; // requires AC/DC HW mod like DDS120
+#ifdef HANTEK_AC
+     // requires AC/DC HW mod like DDS120, enable with "cmake -D HANTEK_AC=1 .."
+    specification.couplings = {Dso::Coupling::DC, Dso::Coupling::AC};
+#else
+    specification.couplings = {Dso::Coupling::DC};
+#endif
     specification.triggerModes = {Dso::TriggerMode::AUTO, Dso::TriggerMode::NORMAL, Dso::TriggerMode::SINGLE};
     specification.fixedUSBinLength = 0;
 }

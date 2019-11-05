@@ -26,7 +26,6 @@ After David [stopped maintaining](https://github.com/OpenHantek/openhantek/issue
 * Extensive [User Manual](docs/OpenHantek6022_User_Manual.pdf) with technical specs and schematics.
 
 ## Features
-
 * Voltage and Spectrum view for all device supported chanels.
 * CH1 and CH2 name becomes red when input is clipped (bottom left).
 * Checkbox for X10 probes. 
@@ -50,6 +49,9 @@ After David [stopped maintaining](https://github.com/OpenHantek/openhantek/issue
 * The dock views on the main window can be customized by dragging them around and stacking them.
   This allows a minimum window size of 640*480 for old workstation computers.
 * All settings can be saved to a configuration file and loaded again.
+
+## AC coupling
+* A [little HW modification](docs/HANTEK6022_AC_Modification.pdf) adds AC coupling. OpenHantek6022 supports this feature since v2.17-rc5 / FW0204.
 
 ## Install prebuilt binary
 * Get Linux, Raspberry Pi (and untested Win) packages from the [Releases](https://github.com/OpenHantek/OpenHantek6022/releases) page.
