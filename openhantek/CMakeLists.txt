@@ -31,17 +31,31 @@ add_custom_target(format SOURCES ".clang-format"
 include(translations/Translations.cmake)
 
 add_definitions(-DVERSION="${CPACK_PACKAGE_VERSION}")
+message( STATUS "VERSION: ${CPACK_PACKAGE_VERSION}" )
 
-option(BUILD_MACOSX_BUNDLE "Build MacOS app bundle" ON)
 set(EXECTYPE "")
 if(WIN32 AND MINGW)
     set(EXECTYPE WIN32)
 endif()
-if(APPLE AND BUILD_MACOSX_BUNDLE)
-    set(EXECTYPE MACOSX_BUNDLE)
-    set(MACOSX_BUNDLE_ICON_FILE openhantek.icns)
-    set(ICONS ${CMAKE_CURRENT_SOURCE_DIR}/res/images/openhantek.icns)
-    set_source_files_properties(${ICONS} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
+
+# Enable MacOSX bundle magic in the next line
+option(BUILD_MACOSX_BUNDLE "Build MacOS app bundle" ON)
+#
+if( APPLE AND BUILD_MACOSX_BUNDLE )
+    # Use own template that defines NSPrincipalClass=NSApplication & NSHighResolutionCapable=True
+    set( MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_LIST_DIR}/../cmake/OpenHantekBundleInfo.plist.in )
+    #
+    set( EXECTYPE MACOSX_BUNDLE )
+    set( MACOSX_BUNDLE_BUNDLE_NAME "${PROJECT_NAME}" )
+    set( MACOSX_BUNDLE_INFO_STRING "Digital oscilloscope software for Hantek DSO6022" )
+    set( MACOSX_BUNDLE_GUI_IDENTIFIER "${PROJECT_NAME}" )
+    set( MACOSX_BUNDLE_SHORT_VERSION_STRING ${DATE_VERSION} )
+    set( MACOSX_BUNDLE_BUNDLE_VERSION ${CPACK_PACKAGE_VERSION} )
+    string(TIMESTAMP THISYEAR "%Y")
+    set( MACOSX_BUNDLE_COPYRIGHT "(C) 2012-${THISYEAR} OpenHantek community" )
+    set( MACOSX_BUNDLE_ICON_FILE openhantek.icns )
+    set( ICONS ${CMAKE_CURRENT_SOURCE_DIR}/res/images/openhantek.icns )
+    set_source_files_properties( ${ICONS} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources" )
 endif()
 
 # make executable
@@ -77,15 +91,15 @@ endif()
 
 # install commands
 if (APPLE AND BUILD_MACOSX_BUNDLE)
-    set_target_properties(${PROJECT_NAME} PROPERTIES
-        MACOSX_BUNDLE_NAME "${PROJECT_NAME}"
-        MACOSX_BUNDLE_GUI_IDENTIFIER "${PROJECT_NAME}"
-    )
+    # set_target_properties(${PROJECT_NAME} PROPERTIES
+    #    MACOSX_BUNDLE_NAME "${PROJECT_NAME}"
+    #    # MACOSX_BUNDLE_GUI_IDENTIFIER "${PROJECT_NAME}"
+    # )
     # no install, it's already in openhantek/OpenHantek.app/...
     # install(TARGETS ${PROJECT_NAME} BUNDLE DESTINATION ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app/Contents/MacOS/${PROJECT_NAME})
     # install(TARGETS ${PROJECT_NAME} BUNDLE DESTINATION ${CMAKE_BINARY_DIR}) # -> build
 else()
-	install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION "bin")
+    install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION "bin")
 endif()
 include(../cmake/copy_qt5_dlls_to_bin_dir.cmake)
 

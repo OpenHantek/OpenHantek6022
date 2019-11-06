@@ -40,9 +40,9 @@ script:
     - if test -d openhantek/OpenHantek.app; then
           export PATH=${CMAKE_PREFIX_PATH}/bin:${PATH} ;
           cd openhantek ;
-          macdeployqt OpenHantek.app -always-overwrite -verbose=2 ;
+          macdeployqt OpenHantek.app -always-overwrite -verbose=1 ;
           python ../../utils/macdeployqtfix/macdeployqtfix.py OpenHantek.app/Contents/MacOS/OpenHantek ${CMAKE_PREFIX_PATH} ;
-          create-dmg --volname OpenHantek OpenHantek.dmg OpenHantek.app ;
+          create-dmg --volname OpenHantek --volicon ../../openhantek/res/images/openhantek.icns --window-pos 200 120 --window-size 800 400 --icon-size 100 --icon "OpenHantek.app" 200 190 --hide-extension "OpenHantek.app" --app-drop-link 600 185 --eula ../../LICENSE OpenHantek.dmg OpenHantek.app ;
           ls -lhAFRO@ OpenHantek.* ;
           xattr -l OpenHantek.dmg ;
           cd .. ;

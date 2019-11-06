@@ -10,15 +10,16 @@ if (GIT_EXECUTABLE AND EXISTS "${CMAKE_SOURCE_DIR}/.git")
         COMMAND ${GIT_EXECUTABLE} rev-parse --short HEAD
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
         RESULT_VARIABLE CMD_RESULT
-        # OUTPUT_VARIABLE VCS_REVISION
+        OUTPUT_VARIABLE VCS_REVISION
         OUTPUT_STRIP_TRAILING_WHITESPACE
         )
 endif()
+# message( STATUS "VCS_REVISION: ${VCS_REVISION}" )
 
 if(NOT DEFINED CMD_RESULT)
     set(VCS_BRANCH "master")
     set(GIT_COMMIT_HASH "1")
-    # set(VCS_REVISION "na")
+    set(VCS_REVISION "na")
 else()
     execute_process(
         COMMAND git log -1 --format=%h
@@ -26,6 +27,7 @@ else()
         OUTPUT_VARIABLE GIT_COMMIT_HASH
         OUTPUT_STRIP_TRAILING_WHITESPACE
     )
+    # message( STATUS "GIT_COMMIT_HASH: ${GIT_COMMIT_HASH}" )
 
     execute_process(
         COMMAND ${GIT_EXECUTABLE} status
@@ -41,7 +43,7 @@ else()
     string(REPLACE " " ";" DESCRIBE_STATUS ${DESCRIBE_STATUS})
     list(GET DESCRIBE_STATUS 2 VCS_BRANCH)
 
-    message(STATUS "Branch: ${VCS_BRANCH}") # /${VCS_REVISION}")
+    # message(STATUS "Branch: ${VCS_BRANCH}") # /${VCS_REVISION}")
 
     execute_process(
         COMMAND ${GIT_EXECUTABLE} config --get remote.origin.url
@@ -50,6 +52,7 @@ else()
         OUTPUT_VARIABLE VCS_URL
         OUTPUT_STRIP_TRAILING_WHITESPACE
         )
+    # message( STATUS "VCS_URL: ${VCS_URL}")
 
     set(ENV{LANG} "en_US")
     if(GIT_VERSION_STRING VERSION_LESS 2.6)
