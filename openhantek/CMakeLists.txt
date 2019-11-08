@@ -43,13 +43,13 @@ option(BUILD_MACOSX_BUNDLE "Build MacOS app bundle" ON)
 #
 if( APPLE AND BUILD_MACOSX_BUNDLE )
     # Use own template that defines NSPrincipalClass=NSApplication & NSHighResolutionCapable=True
-    set( MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_LIST_DIR}/../cmake/OpenHantekBundleInfo.plist.in )
+    set_target_properties( ${PROJECT_NAME} PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_LIST_DIR}/../cmake/OpenHantekBundleInfo.plist.in )
     #
     set( EXECTYPE MACOSX_BUNDLE )
     set( MACOSX_BUNDLE_BUNDLE_NAME "${PROJECT_NAME}" )
     set( MACOSX_BUNDLE_INFO_STRING "Digital oscilloscope software for Hantek DSO6022" )
     set( MACOSX_BUNDLE_GUI_IDENTIFIER "${PROJECT_NAME}" )
-    set( MACOSX_BUNDLE_SHORT_VERSION_STRING ${DATE_VERSION} )
+    set( MACOSX_BUNDLE_SHORT_VERSION_STRING ${VCS_REVISION} )
     set( MACOSX_BUNDLE_BUNDLE_VERSION ${CPACK_PACKAGE_VERSION} )
     string(TIMESTAMP THISYEAR "%Y")
     set( MACOSX_BUNDLE_COPYRIGHT "(C) 2012-${THISYEAR} OpenHantek community" )

@@ -51,7 +51,7 @@ DsoWidget::DsoWidget(DsoSettingsScope *scope, DsoSettingsView *view, const Dso::
 
     // The table for the settings at screen top
     settingsTriggerLabel = new QLabel();
-    settingsTriggerLabel->setMinimumWidth(220);
+    settingsTriggerLabel->setMinimumWidth(320);
     settingsTriggerLabel->setIndent(5);
     settingsSamplesOnScreen = new QLabel();
     settingsSamplesOnScreen->setAlignment(Qt::AlignRight);
@@ -505,7 +505,12 @@ void DsoWidget::updateTriggerDetails() {
         post = Dso::slopeString( Dso::Slope:: Negative );
     else if ( scope->trigger.slope == Dso::Slope::Negative )
         post = Dso::slopeString( Dso::Slope:: Positive );
-    QString pulseWidthString = pulseWidth ? pre + valueToString( pulseWidth, UNIT_SECONDS, 3) + post : "";
+    QString pulseWidthString = pulseWidth1 ? pre + valueToString( pulseWidth1, UNIT_SECONDS, 3) + post : "";
+    pulseWidthString += pulseWidth2 ? valueToString( pulseWidth2, UNIT_SECONDS, 3) + pre : "";
+    if ( pulseWidth1 && pulseWidth2 ) {
+        int dutyCyle = 0.5 + ( 100.0 * pulseWidth1 ) / (pulseWidth1 + pulseWidth2);
+        pulseWidthString += " (" + QString::number( dutyCyle ) + "%)";
+    }
     settingsTriggerLabel->setText( tr( "%1  %2  %3  %4  %5" )
                                       .arg( scope->voltage[scope->trigger.source].name,
                                             Dso::slopeString(scope->trigger.slope),
@@ -679,7 +684,8 @@ void DsoWidget::showNew(std::shared_ptr<PPresult> data) {
     swTriggerStatus->setPalette(triggerLabelPalette);
     swTriggerStatus->setVisible(true);
     updateRecordLength(dotsOnScreen);
-    pulseWidth = data.get()->data( 0 )->pulseWidth;
+    pulseWidth1 = data.get()->data( 0 )->pulseWidth1;
+    pulseWidth2 = data.get()->data( 0 )->pulseWidth2;
     updateTriggerDetails();
     for (ChannelID channel = 0; channel < scope->voltage.size(); ++channel) {
         if (scope->voltage[channel].used && data.get()->data(channel)) {

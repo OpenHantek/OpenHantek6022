@@ -33,10 +33,11 @@ bool LegacyExportDrawer::exportSamples(const PPresult *result, QPaintDevice* pai
     painter.setBrush(Qt::SolidPattern);
 
     // Draw the settings table
-    double stretchBase = (double)(paintDevice->width()) / 5;
+    double stretchBase = (double)(paintDevice->width()) / 6;
 
     // Print trigger details
-    double pulseWidth = result->data( 0 )->pulseWidth;
+    double pulseWidth1 = result->data( 0 )->pulseWidth1;
+    double pulseWidth2 = result->data( 0 )->pulseWidth2;
     painter.setPen(colorValues->voltage[settings->scope.trigger.source]);
     QString levelString = valueToString(settings->scope.voltage[settings->scope.trigger.source].trigger, UNIT_VOLTS, 3);
     QString pretriggerString = tr("%L1%").arg((int)(settings->scope.trigger.position * 100 + 0.5));
@@ -46,8 +47,13 @@ bool LegacyExportDrawer::exportSamples(const PPresult *result, QPaintDevice* pai
         post = Dso::slopeString( Dso::Slope:: Negative );
     else if ( settings->scope.trigger.slope == Dso::Slope::Negative )
         post = Dso::slopeString( Dso::Slope:: Positive );
-    QString pulseWidthString = pulseWidth ? pre + valueToString( pulseWidth, UNIT_SECONDS, 3) + post : "";
-    painter.drawText(QRectF(0, 0, stretchBase, lineHeight),
+    QString pulseWidthString = pulseWidth1 ? pre + valueToString( pulseWidth1, UNIT_SECONDS, 3) + post : "";
+    pulseWidthString += pulseWidth2 ? valueToString( pulseWidth2, UNIT_SECONDS, 3) + pre : "";
+    if ( pulseWidth1 && pulseWidth2 ) {
+        int dutyCyle = 0.5 + ( 100.0 * pulseWidth1 ) / (pulseWidth1 + pulseWidth2);
+        pulseWidthString += " (" + QString::number( dutyCyle ) + "%)";
+    }
+    painter.drawText(QRectF( 0, 0, 2 * stretchBase, lineHeight ),
                      tr( "%1  %2  %3  %4 %5" )
                          .arg( settings->scope.voltage[settings->scope.trigger.source].name,
                                Dso::slopeString(settings->scope.trigger.slope),
@@ -60,18 +66,20 @@ bool LegacyExportDrawer::exportSamples(const PPresult *result, QPaintDevice* pai
     { // DataAnalyser mutex lock
         // Print sample count
         painter.setPen(colorValues->text);
-        painter.drawText(QRectF(stretchBase * 1, 0, stretchBase, lineHeight), tr("%1 S").arg(result->sampleCount()),
+        painter.drawText(QRectF(stretchBase * 2, 0, stretchBase, lineHeight), tr("%1 S on screen").arg(
+            int( settings->scope.horizontal.samplerate * settings->scope.horizontal.timebase * DIVS_TIME + 0.99 )
+        ),
                          QTextOption(Qt::AlignRight));
         // Print samplerate
-        painter.drawText(QRectF(stretchBase * 2, 0, stretchBase, lineHeight),
+        painter.drawText(QRectF(stretchBase * 3, 0, stretchBase, lineHeight),
                          valueToString(settings->scope.horizontal.samplerate, UNIT_SAMPLES) + tr("/s"),
                          QTextOption(Qt::AlignRight));
         // Print timebase
-        painter.drawText(QRectF(stretchBase * 3, 0, stretchBase, lineHeight),
+        painter.drawText(QRectF(stretchBase * 4, 0, stretchBase, lineHeight),
                          valueToString(settings->scope.horizontal.timebase, UNIT_SECONDS, 0) + tr("/div"),
                          QTextOption(Qt::AlignRight));
         // Print frequencybase
-        painter.drawText(QRectF(stretchBase * 4, 0, stretchBase, lineHeight),
+        painter.drawText(QRectF(stretchBase * 5, 0, stretchBase, lineHeight),
                          valueToString(settings->scope.horizontal.frequencybase, UNIT_HERTZ, 0) + tr("/div"),
                          QTextOption(Qt::AlignRight));
 

@@ -334,9 +334,9 @@
         <location filename="../src/dsowidget.cpp" line="436"/>
         <location filename="../src/dsowidget.cpp" line="438"/>
         <location filename="../src/dsowidget.cpp" line="489"/>
-        <location filename="../src/dsowidget.cpp" line="524"/>
-        <location filename="../src/dsowidget.cpp" line="532"/>
-        <location filename="../src/dsowidget.cpp" line="550"/>
+        <location filename="../src/dsowidget.cpp" line="529"/>
+        <location filename="../src/dsowidget.cpp" line="537"/>
+        <location filename="../src/dsowidget.cpp" line="555"/>
         <source>/div</source>
         <translation type="unfinished"></translation>
     </message>
@@ -358,17 +358,17 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="509"/>
+        <location filename="../src/dsowidget.cpp" line="514"/>
         <source>%1  %2  %3  %4  %5</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="541"/>
+        <location filename="../src/dsowidget.cpp" line="546"/>
         <source>/s</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="643"/>
+        <location filename="../src/dsowidget.cpp" line="648"/>
         <source> on screen</source>
         <translation type="unfinished"></translation>
     </message>
@@ -461,42 +461,42 @@
 <context>
     <name>LegacyExportDrawer</name>
     <message>
-        <location filename="../src/exporting/legacyexportdrawer.cpp" line="42"/>
+        <location filename="../src/exporting/legacyexportdrawer.cpp" line="43"/>
         <source>%L1%</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/exporting/legacyexportdrawer.cpp" line="51"/>
+        <location filename="../src/exporting/legacyexportdrawer.cpp" line="57"/>
         <source>%1  %2  %3  %4 %5</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/exporting/legacyexportdrawer.cpp" line="63"/>
-        <source>%1 S</source>
+        <location filename="../src/exporting/legacyexportdrawer.cpp" line="69"/>
+        <source>%1 S on screen</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/exporting/legacyexportdrawer.cpp" line="67"/>
+        <location filename="../src/exporting/legacyexportdrawer.cpp" line="75"/>
         <source>/s</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/exporting/legacyexportdrawer.cpp" line="71"/>
-        <location filename="../src/exporting/legacyexportdrawer.cpp" line="75"/>
-        <location filename="../src/exporting/legacyexportdrawer.cpp" line="110"/>
-        <location filename="../src/exporting/legacyexportdrawer.cpp" line="120"/>
-        <location filename="../src/exporting/legacyexportdrawer.cpp" line="192"/>
-        <location filename="../src/exporting/legacyexportdrawer.cpp" line="196"/>
+        <location filename="../src/exporting/legacyexportdrawer.cpp" line="79"/>
+        <location filename="../src/exporting/legacyexportdrawer.cpp" line="83"/>
+        <location filename="../src/exporting/legacyexportdrawer.cpp" line="118"/>
+        <location filename="../src/exporting/legacyexportdrawer.cpp" line="128"/>
+        <location filename="../src/exporting/legacyexportdrawer.cpp" line="200"/>
+        <location filename="../src/exporting/legacyexportdrawer.cpp" line="204"/>
         <source>/div</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/exporting/legacyexportdrawer.cpp" line="184"/>
+        <location filename="../src/exporting/legacyexportdrawer.cpp" line="192"/>
         <source>Zoom x%L1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/exporting/legacyexportdrawer.cpp" line="202"/>
+        <location filename="../src/exporting/legacyexportdrawer.cpp" line="210"/>
         <source>Marker 1/2</source>
         <translation type="unfinished"></translation>
     </message>

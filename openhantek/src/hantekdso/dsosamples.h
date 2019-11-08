@@ -13,6 +13,7 @@ struct DSOsamples {
     unsigned char clipped = 0;             ///< Bitmask of clipped channels
     bool liveTrigger = false;              ///< live samples are triggered
     int triggerPosition = -1;              ///< position for a triggered trace, < 0 = not triggered
-    double pulseWidth = 0.0;               ///< width from trigger point to next opposite slope
+    double pulseWidth1 = 0.0;              ///< width from trigger point to next opposite slope
+    double pulseWidth2 = 0.0;              ///< width from next opposite slope to third slope
     mutable QReadWriteLock lock;
 };

@@ -640,7 +640,8 @@ unsigned HantekDsoControl::softwareTrigger() {
     //printf( "HDC::softwareTrigger()\n" );
     triggerPositionRaw = 0;
     result.triggerPosition = 0;
-    result.pulseWidth = 0.0;
+    result.pulseWidth1 = 0.0;
+    result.pulseWidth2 = 0.0;
 
     size_t sampleCount = result.data[channel].size(); // number of available samples
     double timeDisplay = controlsettings.samplerate.target.duration; // time for full screen width
@@ -659,15 +660,26 @@ unsigned HantekDsoControl::softwareTrigger() {
     if ( controlsettings.trigger.slope != Dso::Slope::Both  ) {
         triggerPositionRaw = searchTriggerPoint( nextSlope = controlsettings.trigger.slope );
         if ( triggerPositionRaw ) { // triggered -> search also following other slope (calculate pulse width)
-            if ( unsigned int slopePos2 = searchTriggerPoint( mirrorSlope( nextSlope ), triggerPositionRaw ) )
-                result.pulseWidth = (slopePos2 - triggerPositionRaw) / sampleRate;
+            if ( unsigned int slopePos2 = searchTriggerPoint( mirrorSlope( nextSlope ), triggerPositionRaw ) ) {
+                result.pulseWidth1 = (slopePos2 - triggerPositionRaw) / sampleRate;
+                if ( unsigned int slopePos3 = searchTriggerPoint( nextSlope, slopePos2 ) ) {
+                    result.pulseWidth2 = (slopePos3 - slopePos2) / sampleRate;
+                    //printf("%g + %g = %g\n", result.pulseWidth1, result.pulseWidth2, result.pulseWidth1 + result.pulseWidth2 );
+                }
+            }
         }
     } else { // alternating trigger slope
         triggerPositionRaw = searchTriggerPoint( nextSlope );
         if ( triggerPositionRaw ) { // triggered -> change slope
+            Dso::Slope thirdSlope = nextSlope;
             nextSlope = mirrorSlope( nextSlope );
-            if ( unsigned int slopePos2 = searchTriggerPoint( nextSlope, triggerPositionRaw ) )
-                result.pulseWidth = (slopePos2 - triggerPositionRaw) / sampleRate;
+            if ( unsigned int slopePos2 = searchTriggerPoint( nextSlope, triggerPositionRaw ) ) {
+                result.pulseWidth1 = (slopePos2 - triggerPositionRaw) / sampleRate;
+                if ( unsigned int slopePos3 = searchTriggerPoint( thirdSlope, slopePos2 ) ) {
+                    result.pulseWidth2 = (slopePos3 - slopePos2) / sampleRate;
+                    //printf("%g + %g = %g\n", result.pulseWidth1, result.pulseWidth2, result.pulseWidth1 + result.pulseWidth2 );
+                }
+            }
         }
     }
 

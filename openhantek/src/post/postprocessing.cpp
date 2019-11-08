@@ -12,11 +12,13 @@ void PostProcessing::convertData(const DSOsamples *source, PPresult *destination
     if ( source->triggerPosition ) {
         destination->softwareTriggerTriggered = source->liveTrigger;
         destination->skipSamples = source->triggerPosition;
-        destination->pulseWidth = source->pulseWidth;
+        destination->pulseWidth1 = source->pulseWidth1;
+        destination->pulseWidth2 = source->pulseWidth2;
     } else {
         destination->softwareTriggerTriggered = false;
         destination->skipSamples = 0;
-        destination->pulseWidth = 0;
+        destination->pulseWidth1 = 0;
+        destination->pulseWidth2 = 0;
     }
 
     for (ChannelID channel = 0; channel < source->data.size(); ++channel) {
