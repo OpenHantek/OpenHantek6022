@@ -1101,7 +1101,7 @@
         <translation>Sinc</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="99"/>
+        <location filename="../src/main.cpp" line="98"/>
         <source>Use OpenGL ES instead of OpenGL</source>
         <translation>Benutze OpenGL ES anstelle von OpenGL</translation>
     </message>

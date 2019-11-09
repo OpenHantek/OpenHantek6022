@@ -1106,7 +1106,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="99"/>
+        <location filename="../src/main.cpp" line="98"/>
         <source>Use OpenGL ES instead of OpenGL</source>
         <translation type="unfinished"></translation>
     </message>
