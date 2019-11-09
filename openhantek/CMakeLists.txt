@@ -38,29 +38,10 @@ if(WIN32 AND MINGW)
     set(EXECTYPE WIN32)
 endif()
 
-# make executable
-add_executable(${PROJECT_NAME} ${EXECTYPE} ${SRC} ${HEADERS} ${UI}
-${QRC} ${TRANSLATION_BIN_FILES} ${TRANSLATION_QRC} ${ICONS})
-target_link_libraries(${PROJECT_NAME} Qt5::Widgets Qt5::PrintSupport Qt5::OpenGL ${OPENGL_LIBRARIES} )
-target_compile_features(${PROJECT_NAME} PRIVATE cxx_range_for)
-if(MSVC)
-    target_compile_options(${PROJECT_NAME} PRIVATE "/W4" "/wd4251" "/wd4127" "/wd4275" "/wd4200" "/nologo" "/J" "/Zi")
-    target_compile_options(${PROJECT_NAME} PRIVATE "$<$<CONFIG:DEBUG>:/MDd>")
-else()
-    target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wno-long-long -pedantic)
-    target_compile_options(${PROJECT_NAME} PRIVATE "$<$<CONFIG:DEBUG>:-DDEBUG>")
-    target_compile_options(${PROJECT_NAME} PRIVATE "$<$<CONFIG:DEBUG>:-O0>")
-    target_compile_options(${PROJECT_NAME} PRIVATE "$<$<CONFIG:RELEASE>:-fno-rtti>")
-endif()
-
-
 # Enable MacOSX bundle magic in the next line
 option(BUILD_MACOSX_BUNDLE "Build MacOS app bundle" ON)
 #
 if( APPLE AND BUILD_MACOSX_BUNDLE )
-    # Use own template that defines NSPrincipalClass=NSApplication & NSHighResolutionCapable=True
-    set_target_properties( ${PROJECT_NAME} PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_LIST_DIR}/../cmake/OpenHantekBundleInfo.plist.in )
-    #
     set( EXECTYPE MACOSX_BUNDLE )
     set( MACOSX_BUNDLE_BUNDLE_NAME "${PROJECT_NAME}" )
     set( MACOSX_BUNDLE_INFO_STRING "Digital oscilloscope software for Hantek DSO6022" )
@@ -74,6 +55,26 @@ if( APPLE AND BUILD_MACOSX_BUNDLE )
     set_source_files_properties( ${ICONS} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources" )
 endif()
 
+# make executable
+add_executable(${PROJECT_NAME} ${EXECTYPE} ${SRC} ${HEADERS} ${UI}
+${QRC} ${TRANSLATION_BIN_FILES} ${TRANSLATION_QRC} ${ICONS})
+target_link_libraries(${PROJECT_NAME} Qt5::Widgets Qt5::PrintSupport Qt5::OpenGL ${OPENGL_LIBRARIES} )
+target_compile_features(${PROJECT_NAME} PRIVATE cxx_range_for)
+if(MSVC)
+    target_compile_options(${PROJECT_NAME} PRIVATE "/W4" "/wd4251" "/wd4127" "/wd4275" "/wd4200" "/nologo" "/J" "/Zi")
+    target_compile_options(${PROJECT_NAME} PRIVATE "$<$<CONFIG:DEBUG>:/MDd>")
+else()
+    if( APPLE AND BUILD_MACOSX_BUNDLE )
+        # Use own template that defines NSPrincipalClass=NSApplication & NSHighResolutionCapable=True
+        set_target_properties( ${PROJECT_NAME} PROPERTIES
+            MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_LIST_DIR}/../cmake/OpenHantekBundleInfo.plist.in
+        )
+    endif()
+    target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wno-long-long -pedantic)
+    target_compile_options(${PROJECT_NAME} PRIVATE "$<$<CONFIG:DEBUG>:-DDEBUG>")
+    target_compile_options(${PROJECT_NAME} PRIVATE "$<$<CONFIG:DEBUG>:-O0>")
+    target_compile_options(${PROJECT_NAME} PRIVATE "$<$<CONFIG:RELEASE>:-fno-rtti>")
+endif()
 
 include(../cmake/fftw_on_windows.cmake)
 include(../cmake/libusb_on_windows.cmake)
@@ -93,10 +94,10 @@ endif()
 
 # install commands
 if (APPLE AND BUILD_MACOSX_BUNDLE)
-    # set_target_properties(${PROJECT_NAME} PROPERTIES
+    #set_target_properties(${PROJECT_NAME} PROPERTIES
     #    MACOSX_BUNDLE_NAME "${PROJECT_NAME}"
-    #    # MACOSX_BUNDLE_GUI_IDENTIFIER "${PROJECT_NAME}"
-    # )
+    #    MACOSX_BUNDLE_GUI_IDENTIFIER "${PROJECT_NAME}"
+    #)
     # no install, it's already in openhantek/OpenHantek.app/...
     # install(TARGETS ${PROJECT_NAME} BUNDLE DESTINATION ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app/Contents/MacOS/${PROJECT_NAME})
     # install(TARGETS ${PROJECT_NAME} BUNDLE DESTINATION ${CMAKE_BINARY_DIR}) # -> build
