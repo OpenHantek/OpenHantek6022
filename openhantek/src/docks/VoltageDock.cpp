@@ -159,6 +159,8 @@ void VoltageDock::setAttn(ChannelID channel, bool attn) {
     channelBlocks[channel].gainComboBox->addItems( attn ? attnStrings : gainStrings );
     channelBlocks[channel].gainComboBox->setCurrentIndex( index );
     channelBlocks[channel].attnCheckBox->setChecked(attn);
+    scope->voltage[channel].probeUsed = attn;
+    scope->voltage[channel].probeAttn = attn ? ATTENUATION : 1.0;
 }
 
 void VoltageDock::setMode(unsigned mathModeIndex) {
