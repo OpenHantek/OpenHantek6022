@@ -173,18 +173,27 @@ bool LegacyExportDrawer::exportSamples(const PPresult *result, QPaintDevice* pai
         }
 
         // Draw the marker table
-        stretchBase = (double)paintDevice->width() / 5;
         painter.setPen(colorValues->text);
 
         // Calculate variables needed for zoomed scope
         double m1 = settings->scope.getMarker(0);
         double m2 = settings->scope.getMarker(1);
-        double divs = fabs(m2 - m1);
-        double time = divs * settings->scope.horizontal.timebase;
+        if ( m1 > m2 )
+            std::swap( m1, m2 );
+        double divs = m2 - m1;
         double zoomFactor = DIVS_TIME / divs;
         double zoomOffset = (m1 + m2) / 2;
+        double time1 = m1 *  settings->scope.horizontal.timebase;
+        double time2 = m2 *  settings->scope.horizontal.timebase;
+        double time = divs * settings->scope.horizontal.timebase;
+        m1 += DIVS_TIME / 2; // zero at center -> zero at left margin
+        m2 += DIVS_TIME / 2;
+        double freq1 = m1 * settings->scope.horizontal.frequencybase;
+        double freq2 = m2 * settings->scope.horizontal.frequencybase;
+        double freq = freq2 - freq1;
 
         if (settings->view.zoom) {
+            stretchBase = (double)paintDevice->width() / 9;
             scopeHeight = (double)(paintDevice->height() - (channelCount + 5) * lineHeight) / 2;
             double top = 2.5 * lineHeight + scopeHeight;
 
@@ -192,27 +201,43 @@ bool LegacyExportDrawer::exportSamples(const PPresult *result, QPaintDevice* pai
                              tr("Zoom x%L1").arg(DIVS_TIME / divs, -1, 'g', 3));
 
             painter.drawText(QRectF(stretchBase, top, stretchBase, lineHeight),
-                             valueToString(time, UNIT_SECONDS, 4), QTextOption(Qt::AlignRight));
+                             valueToString( time1, UNIT_SECONDS, 4 ), QTextOption(Qt::AlignRight));
             painter.drawText(QRectF(stretchBase * 2, top, stretchBase, lineHeight),
-                             valueToString(1.0 / time, UNIT_HERTZ, 4), QTextOption(Qt::AlignRight));
-
+                             valueToString( time2, UNIT_SECONDS, 4 ), QTextOption(Qt::AlignRight));
             painter.drawText(QRectF(stretchBase * 3, top, stretchBase, lineHeight),
-                             valueToString(time / DIVS_TIME, UNIT_SECONDS, 3) + tr("/div"),
-                             QTextOption(Qt::AlignRight));
+                             valueToString( time, UNIT_SECONDS, 4 ), QTextOption(Qt::AlignRight));
             painter.drawText(QRectF(stretchBase * 4, top, stretchBase, lineHeight),
-                             valueToString(divs * settings->scope.horizontal.frequencybase / DIVS_TIME, UNIT_HERTZ, 3) +
+                             valueToString( freq1, UNIT_HERTZ, 4 ), QTextOption(Qt::AlignRight));
+            painter.drawText(QRectF(stretchBase * 5, top, stretchBase, lineHeight),
+                             valueToString( freq2, UNIT_HERTZ, 4 ), QTextOption(Qt::AlignRight));
+            painter.drawText(QRectF(stretchBase * 6, top, stretchBase, lineHeight),
+                             valueToString( freq, UNIT_HERTZ, 4 ), QTextOption(Qt::AlignRight));
+
+            painter.drawText(QRectF(stretchBase * 7, top, stretchBase, lineHeight),
+                             valueToString( time / DIVS_TIME, UNIT_SECONDS, 3 ) + tr("/div"),
+                             QTextOption(Qt::AlignRight));
+            painter.drawText(QRectF(stretchBase * 8, top, stretchBase, lineHeight),
+                             valueToString( freq / DIVS_TIME, UNIT_HERTZ, 3 ) +
                                  tr("/div"),
                              QTextOption(Qt::AlignRight));
         } else {
+            stretchBase = (double)paintDevice->width() / 7;
             scopeHeight = (double)paintDevice->height() - (channelCount + 4) * lineHeight;
             double top = 2.5 * lineHeight + scopeHeight;
 
             painter.drawText(QRectF(0, top, stretchBase, lineHeight), tr("Marker 1/2"));
-
-            painter.drawText(QRectF(stretchBase * 0, top, stretchBase, lineHeight),
-                             valueToString(time, UNIT_SECONDS, 4), QTextOption(Qt::AlignRight));
-            painter.drawText(QRectF(stretchBase * 1, top, stretchBase, lineHeight),
-                             valueToString(1.0 / time, UNIT_HERTZ, 4), QTextOption(Qt::AlignRight));
+            painter.drawText(QRectF(stretchBase, top, stretchBase, lineHeight),
+                             "t1: " + valueToString( time1, UNIT_SECONDS, 4 ), QTextOption(Qt::AlignRight));
+            painter.drawText(QRectF(stretchBase * 2, top, stretchBase, lineHeight),
+                             "t2: " + valueToString( time2, UNIT_SECONDS, 4 ), QTextOption(Qt::AlignRight));
+            painter.drawText(QRectF(stretchBase * 3, top, stretchBase, lineHeight),
+                             "Δt: " + valueToString( time, UNIT_SECONDS, 4 ), QTextOption(Qt::AlignRight));
+            painter.drawText(QRectF(stretchBase * 4, top, stretchBase, lineHeight),
+                             "f1: " + valueToString( freq1, UNIT_HERTZ, 4 ), QTextOption(Qt::AlignRight));
+            painter.drawText(QRectF(stretchBase * 5, top, stretchBase, lineHeight),
+                             "f2: " + valueToString( freq2, UNIT_HERTZ, 4 ), QTextOption(Qt::AlignRight));
+            painter.drawText(QRectF(stretchBase * 6, top, stretchBase, lineHeight),
+                             "Δf: " + valueToString( freq, UNIT_HERTZ, 4 ), QTextOption(Qt::AlignRight));
         }
 
         // Set DIVS_TIME x DIVS_VOLTAGE matrix for oscillograph

@@ -310,17 +310,16 @@
 <context>
     <name>DsoWidget</name>
     <message>
-        <location filename="../src/dsowidget.cpp" line="433"/>
         <source>Zoom x%L1</source>
-        <translation>Zoom x%L1</translation>
+        <translation type="vanished">Zoom x%L1</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="436"/>
-        <location filename="../src/dsowidget.cpp" line="438"/>
-        <location filename="../src/dsowidget.cpp" line="489"/>
-        <location filename="../src/dsowidget.cpp" line="529"/>
-        <location filename="../src/dsowidget.cpp" line="537"/>
-        <location filename="../src/dsowidget.cpp" line="555"/>
+        <location filename="../src/dsowidget.cpp" line="508"/>
+        <location filename="../src/dsowidget.cpp" line="510"/>
+        <location filename="../src/dsowidget.cpp" line="539"/>
+        <location filename="../src/dsowidget.cpp" line="579"/>
+        <location filename="../src/dsowidget.cpp" line="587"/>
+        <location filename="../src/dsowidget.cpp" line="606"/>
         <source>/div</source>
         <translation>/div</translation>
     </message>
@@ -331,39 +330,58 @@
     </message>
     <message>
         <location filename="../src/dsowidget.cpp" line="176"/>
-        <location filename="../src/dsowidget.cpp" line="430"/>
         <source>Markers</source>
         <translation type="unfinished">Marcadores</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="435"/>
-        <source>Zoom ---</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/dsowidget.cpp" line="460"/>
-        <location filename="../src/dsowidget.cpp" line="473"/>
+        <location filename="../src/dsowidget.cpp" line="455"/>
+        <location filename="../src/dsowidget.cpp" line="469"/>
         <source>ON</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="460"/>
-        <location filename="../src/dsowidget.cpp" line="473"/>
+        <location filename="../src/dsowidget.cpp" line="455"/>
+        <location filename="../src/dsowidget.cpp" line="469"/>
         <source>OFF</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="501"/>
+        <location filename="../src/dsowidget.cpp" line="498"/>
+        <source>Markers  </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/dsowidget.cpp" line="499"/>
+        <source>Time: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/dsowidget.cpp" line="500"/>
+        <source>Frequency: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/dsowidget.cpp" line="503"/>
+        <source>Zoom x%L1  </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/dsowidget.cpp" line="505"/>
+        <source>Zoom ---  </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/dsowidget.cpp" line="551"/>
         <source>%L1%</source>
         <translation>%L1%</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="514"/>
+        <location filename="../src/dsowidget.cpp" line="564"/>
         <source>%1  %2  %3  %4  %5</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="648"/>
+        <location filename="../src/dsowidget.cpp" line="699"/>
         <source> on screen</source>
         <translation type="unfinished"></translation>
     </message>
@@ -380,7 +398,7 @@
         <translation type="vanished">%1  %2  %3  %4</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="546"/>
+        <location filename="../src/dsowidget.cpp" line="597"/>
         <source>/s</source>
         <translation>/s</translation>
     </message>
@@ -509,18 +527,18 @@
         <location filename="../src/exporting/legacyexportdrawer.cpp" line="83"/>
         <location filename="../src/exporting/legacyexportdrawer.cpp" line="118"/>
         <location filename="../src/exporting/legacyexportdrawer.cpp" line="128"/>
-        <location filename="../src/exporting/legacyexportdrawer.cpp" line="200"/>
-        <location filename="../src/exporting/legacyexportdrawer.cpp" line="204"/>
+        <location filename="../src/exporting/legacyexportdrawer.cpp" line="217"/>
+        <location filename="../src/exporting/legacyexportdrawer.cpp" line="221"/>
         <source>/div</source>
         <translation>/div</translation>
     </message>
     <message>
-        <location filename="../src/exporting/legacyexportdrawer.cpp" line="192"/>
+        <location filename="../src/exporting/legacyexportdrawer.cpp" line="201"/>
         <source>Zoom x%L1</source>
         <translation>Zoom x%L1</translation>
     </message>
     <message>
-        <location filename="../src/exporting/legacyexportdrawer.cpp" line="210"/>
+        <location filename="../src/exporting/legacyexportdrawer.cpp" line="228"/>
         <source>Marker 1/2</source>
         <translation>Construtor 1/2</translation>
     </message>
@@ -861,25 +879,25 @@
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="44"/>
-        <location filename="../src/dsowidget.cpp" line="414"/>
+        <location filename="../src/dsowidget.cpp" line="415"/>
         <source>%L1 ps</source>
         <translation>%L1 ps</translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="48"/>
-        <location filename="../src/dsowidget.cpp" line="416"/>
+        <location filename="../src/dsowidget.cpp" line="417"/>
         <source>%L1 ns</source>
         <translation>%L1 ns</translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="56"/>
-        <location filename="../src/dsowidget.cpp" line="420"/>
+        <location filename="../src/dsowidget.cpp" line="421"/>
         <source>%L1 ms</source>
         <translation>%L1 ms</translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="60"/>
-        <location filename="../src/dsowidget.cpp" line="422"/>
+        <location filename="../src/dsowidget.cpp" line="423"/>
         <source>%L1 s</source>
         <translation>%L1 s</translation>
     </message>
@@ -890,7 +908,7 @@
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="52"/>
-        <location filename="../src/dsowidget.cpp" line="418"/>
+        <location filename="../src/dsowidget.cpp" line="419"/>
         <source>%L1 µs</source>
         <translation type="unfinished"></translation>
     </message>

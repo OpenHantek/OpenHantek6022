@@ -81,7 +81,7 @@ DsoWidget::DsoWidget(DsoSettingsScope *scope, DsoSettingsView *view, const Dso::
 
     // The table for the marker details
     markerInfoLabel = new QLabel();
-    markerInfoLabel->setMinimumWidth(160);
+    markerInfoLabel->setAlignment(Qt::AlignLeft);
     markerInfoLabel->setPalette(palette);
     markerTimeLabel = new QLabel();
     markerTimeLabel->setAlignment(Qt::AlignRight);
@@ -406,54 +406,32 @@ void DsoWidget::setMeasurementVisible(ChannelID channel) {
     if (!scope->spectrum[channel].used) { measurementMagnitudeLabel[channel]->setText(QString()); }
 }
 
-static QString markerToString(DsoSettingsScope *scope, unsigned index) {
-    double value = (DIVS_TIME * (0.5 - scope->trigger.position) + scope->getMarker(index)) * scope->horizontal.timebase;
-    int precision = 3 - (int)floor(log10(fabs(value)));
-
-    if (scope->horizontal.timebase < 1e-9)
-        return QApplication::tr("%L1 ps").arg(value / 1e-12, 0, 'f', qBound(0, precision - 12, 3));
-    else if (scope->horizontal.timebase < 1e-6)
-        return QApplication::tr("%L1 ns").arg(value / 1e-9, 0, 'f', qBound(0, precision - 9, 3));
-    else if (scope->horizontal.timebase < 1e-3)
-        return QApplication::tr("%L1 µs").arg(value / 1e-6, 0, 'f', qBound(0, precision - 6, 3));
-    else if (scope->horizontal.timebase < 1)
-        return QApplication::tr("%L1 ms").arg(value / 1e-3, 0, 'f', qBound(0, precision - 3, 3));
-    else
-        return QApplication::tr("%L1 s").arg(value, 0, 'f', qBound(0, precision, 3));
-}
 
 /// \brief Update the label about the marker measurements
 void DsoWidget::updateMarkerDetails() {
-    double divs = fabs(scope->horizontal.cursor.pos[1].x() - scope->horizontal.cursor.pos[0].x());
+    double div0 = scope->horizontal.cursor.pos[0].x();
+    double div1 = scope->horizontal.cursor.pos[1].x();
+    if ( div0 > div1 )
+        std::swap( div0, div1 );
+    double divs = div1 - div0;
+    double time0 = div0 * scope->horizontal.timebase;
+    double time1 = div1 * scope->horizontal.timebase;
     double time = divs * scope->horizontal.timebase;
-
-    QString prefix(tr("Markers"));
-    if (view->zoom) {
-        if ( divs != 0.0 )
-            prefix = tr("Zoom x%L1").arg(DIVS_TIME / divs, -1, 'g', 3);
-        else // avoid div by zero
-            prefix = tr("Zoom ---");
-        markerTimebaseLabel->setText(valueToString(time / DIVS_TIME, UNIT_SECONDS, 3) + tr("/div"));
-        markerFrequencybaseLabel->setText(
-            valueToString(divs * scope->horizontal.frequencybase / DIVS_TIME, UNIT_HERTZ, 4) + tr("/div"));
-    }
-    markerInfoLabel->setText(prefix.append(":  %1  %2").arg(markerToString(scope, 0)).arg(markerToString(scope, 1)));
-    markerTimeLabel->setText(valueToString(time, UNIT_SECONDS, 4));
-    if ( time != 0.0 )
-        markerFrequencyLabel->setText(valueToString(1.0 / time, UNIT_HERTZ, 4));
-    else // avoid div by zero
-        markerFrequencyLabel->setText( "--- Hz" );
+    div0 += DIVS_TIME / 2; // zero at center -> zero at left margin
+    div1 += DIVS_TIME / 2;
+    double freq0 = div0 * scope->horizontal.frequencybase;
+    double freq1 = div1 * scope->horizontal.frequencybase;
+    double freq = divs * scope->horizontal.frequencybase;
+    bool timeUsed = false;
+    bool freqUsed = false;
 
     int index = 0;
-    if ( time != 0.0 )
-        cursorDataGrid->updateInfo(index++, true, QString(),
-            valueToString(time, UNIT_SECONDS, 4), valueToString(1.0 / time, UNIT_HERTZ, 4));
-    else // avoid div by zero
-        cursorDataGrid->updateInfo(index++, true, QString(),
-            valueToString(time, UNIT_SECONDS, 4), "--- Hz");
+    cursorDataGrid->updateInfo(index++, true, QString(),
+        valueToString(time, UNIT_SECONDS, 3), valueToString( freq, UNIT_HERTZ, 3 ) );
 
     for (ChannelID channel = 0; channel < scope->voltage.size(); ++channel) {
         if (scope->voltage[channel].used) {
+            timeUsed = true; // at least one voltage channel used -> show marker time details
             QPointF p0 = scope->voltage[channel].cursor.pos[0];
             QPointF p1 = scope->voltage[channel].cursor.pos[1];
             cursorDataGrid->updateInfo(index, true,
@@ -467,6 +445,7 @@ void DsoWidget::updateMarkerDetails() {
     }
     for (ChannelID channel = 0; channel < scope->spectrum.size(); ++channel) {
         if (scope->spectrum[channel].used) {
+            freqUsed = true; // at least one spec channel used -> show marker freq details
             QPointF p0 = scope->spectrum[channel].cursor.pos[0];
             QPointF p1 = scope->spectrum[channel].cursor.pos[1];
             cursorDataGrid->updateInfo(index, true,
@@ -477,6 +456,53 @@ void DsoWidget::updateMarkerDetails() {
             cursorDataGrid->updateInfo(index, false);
         }
         ++index;
+    }
+
+    if ( DIVS_TIME == divs || (div0 == 0 && div1 == 0) || (div0 == DIVS_TIME && div1 == DIVS_TIME) ) {
+        // markers at left/right margins -> don't display
+        markerInfoLabel->setVisible( false );
+        markerTimeLabel->setVisible( false );
+        markerFrequencyLabel->setVisible( false );
+        markerTimebaseLabel->setVisible( false );
+        markerFrequencybaseLabel->setVisible( false );
+    } else {
+        markerInfoLabel->setVisible( true );
+        markerTimeLabel->setVisible( true );
+        markerFrequencyLabel->setVisible( true );
+        markerTimebaseLabel->setVisible( view->zoom );
+        markerFrequencybaseLabel->setVisible( view->zoom );
+        QString mInfo( tr( "Markers  ") );
+        QString mTime( tr( "Time: ") );
+        QString mFreq( tr( "Frequency: ") );
+        if (view->zoom) {
+            if ( divs != 0.0 )
+                mInfo = tr( "Zoom x%L1  " ).arg( DIVS_TIME / divs, -1, 'g', 3 );
+            else // avoid div by zero
+                mInfo = tr( "Zoom ---  " );
+            mTime = " t: ";
+            mFreq = " f: ";
+            markerTimebaseLabel->setText("  " + valueToString( time / DIVS_TIME, UNIT_SECONDS, 3 ) + tr("/div"));
+            markerTimebaseLabel->setVisible( timeUsed );
+            markerFrequencybaseLabel->setText( "  " + valueToString( freq / DIVS_TIME, UNIT_HERTZ, 3 ) + tr("/div"));
+            markerFrequencybaseLabel->setVisible( freqUsed );
+        }
+        markerInfoLabel->setText( mInfo );
+        if ( timeUsed )
+            markerTimeLabel->setText( mTime.append( "%1 -> %2,  Δt: %3 " )
+                .arg( valueToString( time0, UNIT_SECONDS, 4 ) )
+                .arg( valueToString( time1, UNIT_SECONDS, 4 ) )
+                .arg( valueToString( time, UNIT_SECONDS, 4 ) )
+            );
+        else
+            markerTimeLabel->setText( "" );
+        if ( freqUsed )
+            markerFrequencyLabel->setText( mFreq.append( "%1 -> %2,  Δf: %3 " )
+                .arg( valueToString( freq0, UNIT_HERTZ, 4) )
+                .arg( valueToString( freq1, UNIT_HERTZ, 4) )
+                .arg( valueToString( freq, UNIT_HERTZ, 4) )
+            );
+        else
+            markerFrequencyLabel->setText( "" );
     }
 }
 
@@ -535,6 +561,7 @@ void DsoWidget::updateVoltageDetails(ChannelID channel) {
 /// \param frequencybase The frequencybase used for displaying the trace.
 void DsoWidget::updateFrequencybase(double frequencybase) {
     settingsFrequencybaseLabel->setText(valueToString(frequencybase, UNIT_HERTZ, -1) + tr("/div"));
+    updateMarkerDetails();
 }
 
 /// \brief Updates the samplerate field after changing the samplerate.
