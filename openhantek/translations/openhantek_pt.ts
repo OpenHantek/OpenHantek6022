@@ -314,12 +314,12 @@
         <translation type="vanished">Zoom x%L1</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="508"/>
-        <location filename="../src/dsowidget.cpp" line="510"/>
-        <location filename="../src/dsowidget.cpp" line="539"/>
-        <location filename="../src/dsowidget.cpp" line="579"/>
+        <location filename="../src/dsowidget.cpp" line="483"/>
+        <location filename="../src/dsowidget.cpp" line="485"/>
+        <location filename="../src/dsowidget.cpp" line="520"/>
+        <location filename="../src/dsowidget.cpp" line="560"/>
+        <location filename="../src/dsowidget.cpp" line="568"/>
         <location filename="../src/dsowidget.cpp" line="587"/>
-        <location filename="../src/dsowidget.cpp" line="606"/>
         <source>/div</source>
         <translation>/div</translation>
     </message>
@@ -334,54 +334,54 @@
         <translation type="unfinished">Marcadores</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="455"/>
-        <location filename="../src/dsowidget.cpp" line="469"/>
+        <location filename="../src/dsowidget.cpp" line="437"/>
+        <location filename="../src/dsowidget.cpp" line="451"/>
         <source>ON</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="455"/>
-        <location filename="../src/dsowidget.cpp" line="469"/>
+        <location filename="../src/dsowidget.cpp" line="437"/>
+        <location filename="../src/dsowidget.cpp" line="451"/>
         <source>OFF</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="498"/>
+        <location filename="../src/dsowidget.cpp" line="473"/>
         <source>Markers  </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="499"/>
+        <location filename="../src/dsowidget.cpp" line="474"/>
         <source>Time: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="500"/>
+        <location filename="../src/dsowidget.cpp" line="475"/>
         <source>Frequency: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="503"/>
+        <location filename="../src/dsowidget.cpp" line="478"/>
         <source>Zoom x%L1  </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="505"/>
+        <location filename="../src/dsowidget.cpp" line="480"/>
         <source>Zoom ---  </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="551"/>
+        <location filename="../src/dsowidget.cpp" line="532"/>
         <source>%L1%</source>
         <translation>%L1%</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="564"/>
+        <location filename="../src/dsowidget.cpp" line="545"/>
         <source>%1  %2  %3  %4  %5</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="699"/>
+        <location filename="../src/dsowidget.cpp" line="680"/>
         <source> on screen</source>
         <translation type="unfinished"></translation>
     </message>
@@ -398,7 +398,7 @@
         <translation type="vanished">%1  %2  %3  %4</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="597"/>
+        <location filename="../src/dsowidget.cpp" line="578"/>
         <source>/s</source>
         <translation>/s</translation>
     </message>
@@ -527,18 +527,18 @@
         <location filename="../src/exporting/legacyexportdrawer.cpp" line="83"/>
         <location filename="../src/exporting/legacyexportdrawer.cpp" line="118"/>
         <location filename="../src/exporting/legacyexportdrawer.cpp" line="128"/>
-        <location filename="../src/exporting/legacyexportdrawer.cpp" line="217"/>
-        <location filename="../src/exporting/legacyexportdrawer.cpp" line="221"/>
+        <location filename="../src/exporting/legacyexportdrawer.cpp" line="215"/>
+        <location filename="../src/exporting/legacyexportdrawer.cpp" line="219"/>
         <source>/div</source>
         <translation>/div</translation>
     </message>
     <message>
-        <location filename="../src/exporting/legacyexportdrawer.cpp" line="201"/>
+        <location filename="../src/exporting/legacyexportdrawer.cpp" line="199"/>
         <source>Zoom x%L1</source>
         <translation>Zoom x%L1</translation>
     </message>
     <message>
-        <location filename="../src/exporting/legacyexportdrawer.cpp" line="228"/>
+        <location filename="../src/exporting/legacyexportdrawer.cpp" line="226"/>
         <source>Marker 1/2</source>
         <translation>Construtor 1/2</translation>
     </message>
@@ -879,25 +879,21 @@
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="44"/>
-        <location filename="../src/dsowidget.cpp" line="415"/>
         <source>%L1 ps</source>
         <translation>%L1 ps</translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="48"/>
-        <location filename="../src/dsowidget.cpp" line="417"/>
         <source>%L1 ns</source>
         <translation>%L1 ns</translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="56"/>
-        <location filename="../src/dsowidget.cpp" line="421"/>
         <source>%L1 ms</source>
         <translation>%L1 ms</translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="60"/>
-        <location filename="../src/dsowidget.cpp" line="423"/>
         <source>%L1 s</source>
         <translation>%L1 s</translation>
     </message>
@@ -908,7 +904,6 @@
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="52"/>
-        <location filename="../src/dsowidget.cpp" line="419"/>
         <source>%L1 µs</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1329,7 +1324,7 @@
         <translation>Adicionar novo dispositivo a partir do modelo</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="62"/>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="65"/>
         <source>Connection failed!</source>
         <translation>Conexão falhou!</translation>
     </message>
@@ -1339,32 +1334,36 @@
         <translation>&lt;br/&gt;&gt;&lt;p&gt;O dispositivo está pronto para uso.&lt;/p&gt;&lt;p&gt;Por favor, observe o &lt;a href=&apos;https://github.com/OpenHantek/OpenHantek6022/blob/master/docs/OpenHantek6022_User_Manual.pdf&apos;&gt; manual do usuário&lt;/a&gt; para uma operação segura.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="59"/>
         <source>&lt;p&gt;Upload in progress ...&lt;/p&gt;&lt;p&gt;If the upload takes more than 30 s, please close this window &lt;br/&gt;and restart the program!&lt;/p&gt;</source>
-        <translation>&lt;p&gt;Upload em andamento ...&lt;/p&gt;&lt;p&gt;&gt;Se o upload demorar mais de 30 s, feche esta janela &lt;br/&gt;e reinicie o programa!&lt;/p&gt;</translation>
+        <translation type="vanished">&lt;p&gt;Upload em andamento ...&lt;/p&gt;&lt;p&gt;&gt;Se o upload demorar mais de 30 s, feche esta janela &lt;br/&gt;e reinicie o programa!&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="67"/>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="59"/>
+        <source>&lt;p&gt;Upload in progress ...&lt;/p&gt;&lt;p&gt;&lt;b&gt;If the upload takes more than 30 s, please close this window &lt;br/&gt;and restart the program!&lt;/b&gt;&lt;/p&gt;&lt;p&gt;In this case, please unplug other USB devices on the same bus!&lt;br/&gt;You can check this under Linux with: &lt;pre&gt;lsusb; lsusb -t&lt;/pre&gt;&lt;/p&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="70"/>
         <source>&lt;p&gt;OpenHantek6022 is searching for compatible devices ...&lt;/p&gt;&lt;p&gt;&lt;img align=&apos;right&apos; height=&apos;200&apos; src=&apos;qrc:///switch_6022BL.png&apos;&gt;Don&apos;t forget to switch your device into oscilloscope mode if it has multiple modes.&lt;/p&gt;</source>
         <translation>&lt;p&gt;OpenHantek6022 está procurando por dispositivos compatíveis ...&lt;/p&gt;&lt;p&gt;&lt;img align=&apos;right&apos; height=&apos;200&apos; src=&apos;qrc:///switch_6022BL.png&apos;&gt;Não se esqueça de mudar seu dispositivo no modo osciloscópio se ele tiver vários modos.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="72"/>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="75"/>
         <source>&lt;p&gt;Please make sure you have installed the windows usb driver correctly&lt;/p&gt;</source>
         <translation>&lt;Por favor, certifique-se de que instalou o driver usb do Windows corretamente&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="77"/>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="80"/>
         <source>&lt;p&gt;Please make sure you have copied the udev rules file to &lt;b&gt;%1&lt;/b&gt; for correct USB access permissions.&lt;/p&gt;</source>
         <translation>&lt;Por favor, tenha certeza de que você copiou o arquivo de regras do udev para &lt;b&gt;%1&lt;/b&gt; para obter as permissões de acesso USB corretas.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="81"/>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="84"/>
         <source>&lt;p&gt;Visit the build and run instruction &lt;a href=&apos;https://github.com/OpenHantek/OpenHantek6022/blob/master/docs/build.md&apos;&gt;website&lt;/a&gt; for help.&lt;/p&gt;</source>
         <translation>&lt;p&gt;Visita a instrução de compilação e execução &lt;a href=&apos;https://github.com/OpenHantek/OpenHantek6022/blob/master/docs/build.md&apos;&gt;website&lt;/a&gt; para ajuda.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="112"/>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="115"/>
         <source>Can&apos;t initalize USB: %1</source>
         <translation>Não é possível initalizar o USB: %1</translation>
     </message>

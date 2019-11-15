@@ -57,7 +57,10 @@ std::unique_ptr<USBDevice> SelectSupportedDevice::showSelectDeviceModal(libusb_c
             ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(false);
             if (ui->cmbDevices->currentData(Qt::UserRole+2).toBool()) {
                 ui->labelReadyState->setText(tr("<p>Upload in progress ...</p>"
-                "<p>If the upload takes more than 30 s, please close this window <br/>and restart the program!</p>"));
+                "<p><b>If the upload takes more than 30 s, please close this window <br/>and restart the program!</b></p>"
+                "<p>In this case, please unplug other USB devices on the same bus!<br/>"
+                "You can check this under Linux with: <pre>lsusb; lsusb -t</pre></p>"
+                ));
             } else {
                 ui->labelReadyState->setText(tr("Connection failed!"));
             }

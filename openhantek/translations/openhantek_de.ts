@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="de_DE">
+<TS version="2.0" language="de_DE">
 <context>
     <name></name>
     <message>
@@ -13,11 +13,11 @@
     <name>DevicesListModel</name>
     <message>
         <source>Devicename</source>
-        <translation type="vanished">Gerätename</translation>
+        <translation>Gerätename</translation>
     </message>
     <message>
         <source>Status</source>
-        <translation type="vanished">Status</translation>
+        <translation>Status</translation>
     </message>
 </context>
 <context>
@@ -322,15 +322,15 @@
     <name>DsoWidget</name>
     <message>
         <source>Zoom x%L1</source>
-        <translation type="vanished">Zoom x%L1</translation>
+        <translation>Zoom x%L1</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="508"/>
-        <location filename="../src/dsowidget.cpp" line="510"/>
-        <location filename="../src/dsowidget.cpp" line="539"/>
-        <location filename="../src/dsowidget.cpp" line="579"/>
+        <location filename="../src/dsowidget.cpp" line="483"/>
+        <location filename="../src/dsowidget.cpp" line="485"/>
+        <location filename="../src/dsowidget.cpp" line="520"/>
+        <location filename="../src/dsowidget.cpp" line="560"/>
+        <location filename="../src/dsowidget.cpp" line="568"/>
         <location filename="../src/dsowidget.cpp" line="587"/>
-        <location filename="../src/dsowidget.cpp" line="606"/>
         <source>/div</source>
         <translation>/div</translation>
     </message>
@@ -346,52 +346,52 @@
     </message>
     <message>
         <source>Zoom ---</source>
-        <translation type="vanished">Zoom ---</translation>
+        <translation>Zoom ---</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="455"/>
-        <location filename="../src/dsowidget.cpp" line="469"/>
+        <location filename="../src/dsowidget.cpp" line="437"/>
+        <location filename="../src/dsowidget.cpp" line="451"/>
         <source>ON</source>
         <translation>EIN</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="455"/>
-        <location filename="../src/dsowidget.cpp" line="469"/>
+        <location filename="../src/dsowidget.cpp" line="437"/>
+        <location filename="../src/dsowidget.cpp" line="451"/>
         <source>OFF</source>
         <translation>AUS</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="498"/>
+        <location filename="../src/dsowidget.cpp" line="473"/>
         <source>Markers  </source>
-        <translation type="unfinished"></translation>
+        <translation>Merker </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="499"/>
+        <location filename="../src/dsowidget.cpp" line="474"/>
         <source>Time: </source>
-        <translation type="unfinished"></translation>
+        <translation>Zeit: </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="500"/>
+        <location filename="../src/dsowidget.cpp" line="475"/>
         <source>Frequency: </source>
-        <translation type="unfinished"></translation>
+        <translation>Frequenz: </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="503"/>
+        <location filename="../src/dsowidget.cpp" line="478"/>
         <source>Zoom x%L1  </source>
-        <translation type="unfinished"></translation>
+        <translation>Zoom x%L1</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="505"/>
+        <location filename="../src/dsowidget.cpp" line="480"/>
         <source>Zoom ---  </source>
-        <translation type="unfinished"></translation>
+        <translation>Zoom ---</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="551"/>
+        <location filename="../src/dsowidget.cpp" line="532"/>
         <source>%L1%</source>
         <translation>%L1%</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="564"/>
+        <location filename="../src/dsowidget.cpp" line="545"/>
         <source>%1  %2  %3  %4  %5</source>
         <translation>%1  %2  %3  %4 %5</translation>
     </message>
@@ -405,15 +405,15 @@
     </message>
     <message>
         <source>%1  %2  %3  %4</source>
-        <translation type="vanished">%1  %2  %3  %4</translation>
+        <translation>%1  %2  %3  %4</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="597"/>
+        <location filename="../src/dsowidget.cpp" line="578"/>
         <source>/s</source>
         <translation>/s</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="699"/>
+        <location filename="../src/dsowidget.cpp" line="680"/>
         <source> on screen</source>
         <translation> angezeigt</translation>
     </message>
@@ -498,7 +498,7 @@
     </message>
     <message>
         <source>Record length</source>
-        <translation type="vanished">Satzlänge</translation>
+        <translation>Satzlänge</translation>
     </message>
     <message>
         <location filename="../src/docks/HorizontalDock.cpp" line="54"/>
@@ -512,7 +512,7 @@
     </message>
     <message>
         <source>Roll</source>
-        <translation type="vanished">Rollen</translation>
+        <translation>Rollen</translation>
     </message>
 </context>
 <context>
@@ -524,21 +524,21 @@
     </message>
     <message>
         <source>%1  %2  %3  %4</source>
-        <translation type="vanished">%1  %2  %3  %4</translation>
+        <translation>%1  %2  %3  %4</translation>
     </message>
     <message>
         <location filename="../src/exporting/legacyexportdrawer.cpp" line="57"/>
         <source>%1  %2  %3  %4 %5</source>
-        <translation type="unfinished">%1  %2  %3  %4 %5 {1 ?} {2 ?} {3 ?}</translation>
+        <translation>%1  %2  %3  %4 %5</translation>
     </message>
     <message>
         <source>%1 S</source>
-        <translation type="vanished">%1 S</translation>
+        <translation>%1 S</translation>
     </message>
     <message>
         <location filename="../src/exporting/legacyexportdrawer.cpp" line="69"/>
         <source>%1 S on screen</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 S angezeigt</translation>
     </message>
     <message>
         <location filename="../src/exporting/legacyexportdrawer.cpp" line="75"/>
@@ -550,18 +550,18 @@
         <location filename="../src/exporting/legacyexportdrawer.cpp" line="83"/>
         <location filename="../src/exporting/legacyexportdrawer.cpp" line="118"/>
         <location filename="../src/exporting/legacyexportdrawer.cpp" line="128"/>
-        <location filename="../src/exporting/legacyexportdrawer.cpp" line="217"/>
-        <location filename="../src/exporting/legacyexportdrawer.cpp" line="221"/>
+        <location filename="../src/exporting/legacyexportdrawer.cpp" line="215"/>
+        <location filename="../src/exporting/legacyexportdrawer.cpp" line="219"/>
         <source>/div</source>
         <translation>/div</translation>
     </message>
     <message>
-        <location filename="../src/exporting/legacyexportdrawer.cpp" line="201"/>
+        <location filename="../src/exporting/legacyexportdrawer.cpp" line="199"/>
         <source>Zoom x%L1</source>
         <translation>Zoom x%L1</translation>
     </message>
     <message>
-        <location filename="../src/exporting/legacyexportdrawer.cpp" line="228"/>
+        <location filename="../src/exporting/legacyexportdrawer.cpp" line="226"/>
         <source>Marker 1/2</source>
         <translation>Marker 1/2</translation>
     </message>
@@ -705,7 +705,7 @@
     </message>
     <message>
         <source>&amp;Stop</source>
-        <translation type="vanished">&amp;Stop</translation>
+        <translation>&amp;Stop</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="202"/>
@@ -714,7 +714,7 @@
     </message>
     <message>
         <source>&amp;Start</source>
-        <translation type="vanished">&amp;Start</translation>
+        <translation>&amp;Start</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="201"/>
@@ -902,35 +902,31 @@
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="44"/>
-        <location filename="../src/dsowidget.cpp" line="415"/>
         <source>%L1 ps</source>
         <translation>%L1 ps</translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="48"/>
-        <location filename="../src/dsowidget.cpp" line="417"/>
         <source>%L1 ns</source>
         <translation>%L1 ns</translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="56"/>
-        <location filename="../src/dsowidget.cpp" line="421"/>
         <source>%L1 ms</source>
         <translation>%L1 ms</translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="60"/>
-        <location filename="../src/dsowidget.cpp" line="423"/>
         <source>%L1 s</source>
         <translation>%L1 s</translation>
     </message>
     <message>
         <source>%L1 μV</source>
-        <translation type="vanished">%L1 µV</translation>
+        <translation>%L1 µV</translation>
     </message>
     <message>
         <source>%L1 μs</source>
-        <translation type="vanished">%L1 µs</translation>
+        <translation>%L1 µs</translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="25"/>
@@ -939,7 +935,6 @@
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="52"/>
-        <location filename="../src/dsowidget.cpp" line="419"/>
         <source>%L1 µs</source>
         <translation>%L1 µs</translation>
     </message>
@@ -1129,7 +1124,7 @@
     </message>
     <message>
         <source>Show translated UI (if available)</source>
-        <translation type="vanished">Zeige deutsche Texte (sofern vorhanden)</translation>
+        <translation>Zeige deutsche Texte (sofern vorhanden)</translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="17"/>
@@ -1306,7 +1301,7 @@
     <name>QObject</name>
     <message>
         <source>Translation loaded</source>
-        <translation type="vanished">Übersetzung geladen</translation>
+        <translation>Übersetzung geladen</translation>
     </message>
     <message>
         <location filename="../src/selectdevice/rawdeviceslistmodel.cpp" line="65"/>
@@ -1333,11 +1328,11 @@
     <name>RawDevicesListModel</name>
     <message>
         <source>%1:%2 - No access</source>
-        <translation type="vanished">%1:%2 - Kein Zugriff</translation>
+        <translation>%1:%2 - Kein Zugriff</translation>
     </message>
     <message>
         <source>%1:%2 (%3 - %4)</source>
-        <translation type="vanished">%1:%2 (%3 - %4)</translation>
+        <translation>%1:%2 (%3 - %4)</translation>
     </message>
 </context>
 <context>
@@ -1379,7 +1374,7 @@
         <translation>Ein neues Gerät aus einer Vorlage erstellen</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="62"/>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="65"/>
         <source>Connection failed!</source>
         <translation>Verbindungsfehler!</translation>
     </message>
@@ -1389,32 +1384,36 @@
         <translation>&lt;br/&gt;&lt;p&gt;Das Gerät ist bereit.&lt;/p&gt;&lt;p&gt;Das &lt;a href=&apos;https://github.com/OpenHantek/OpenHantek6022/blob/master/docs/OpenHantek6022_User_Manual.pdf&apos;&gt;Benutzerhandbuch&lt;/a&gt; gibt Hinweise für den sicheren Gebrauch.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="59"/>
         <source>&lt;p&gt;Upload in progress ...&lt;/p&gt;&lt;p&gt;If the upload takes more than 30 s, please close this window &lt;br/&gt;and restart the program!&lt;/p&gt;</source>
         <translation>&lt;p&gt;Firmware wird geladen...&lt;/p&gt;&lt;p&gt;Sollte dies länger als 30 s dauern, bitte abbrechen &lt;br/&gt;und das Programm neu starten!&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="67"/>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="59"/>
+        <source>&lt;p&gt;Upload in progress ...&lt;/p&gt;&lt;p&gt;&lt;b&gt;If the upload takes more than 30 s, please close this window &lt;br/&gt;and restart the program!&lt;/b&gt;&lt;/p&gt;&lt;p&gt;In this case, please unplug other USB devices on the same bus!&lt;br/&gt;You can check this under Linux with: &lt;pre&gt;lsusb; lsusb -t&lt;/pre&gt;&lt;/p&gt;</source>
+        <translation>&lt;p&gt;Firmware wird geladen...&lt;/p&gt;&lt;p&gt;&lt;b&gt;Sollte dies länger als 30 s dauern, bitte abbrechen &lt;br/&gt;und das Programm neu starten!&lt;/b&gt;&lt;/p&gt;In diesem Fall bitte andere USB-Geräte auf dem selben Bus entfernen!&lt;br/&gt;Anzeige der USB-Belegung unter Linux : &lt;pre&gt;lsusb; lsusb -t&lt;/pre&gt;&lt;/p&gt;</translation>
+    </message>
+    <message>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="70"/>
         <source>&lt;p&gt;OpenHantek6022 is searching for compatible devices ...&lt;/p&gt;&lt;p&gt;&lt;img align=&apos;right&apos; height=&apos;200&apos; src=&apos;qrc:///switch_6022BL.png&apos;&gt;Don&apos;t forget to switch your device into oscilloscope mode if it has multiple modes.&lt;/p&gt;</source>
         <translation>&lt;p&gt;OpenHantek6022 sucht nach kompatiblen Geräten ...&lt;/p&gt;&lt;p&gt;&lt;img align=&apos;right&apos; height=&apos;150&apos; src=&apos;qrc:///switch_6022BL.png&apos;&gt;Bitte das Gerät in den Oszilloskop-Modus schalten, falls es mehrere Funktionen besitzt.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="72"/>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="75"/>
         <source>&lt;p&gt;Please make sure you have installed the windows usb driver correctly&lt;/p&gt;</source>
         <translation>&lt;p&gt;Bitter sichrstellen, dass der korrekte Windows-Treiber installiert ist.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="77"/>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="80"/>
         <source>&lt;p&gt;Please make sure you have copied the udev rules file to &lt;b&gt;%1&lt;/b&gt; for correct USB access permissions.&lt;/p&gt;</source>
         <translation>&lt;p&gt;Bitte sicherstellen, dass eine udev-Regel nach &lt;b&gt;%1&lt;/b&gt; kopiert wurde um den USB-Zugriff zu ermöglichen.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="81"/>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="84"/>
         <source>&lt;p&gt;Visit the build and run instruction &lt;a href=&apos;https://github.com/OpenHantek/OpenHantek6022/blob/master/docs/build.md&apos;&gt;website&lt;/a&gt; for help.&lt;/p&gt;</source>
         <translation>&lt;p&gt;&lt;a href=&apos;https://github.com/OpenHantek/OpenHantek6022/blob/master/docs/build.md&apos;&gt;Informationen&lt;/a&gt; zur Erstellung des Programms.&lt;/p&gt; </translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="112"/>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="115"/>
         <source>Can&apos;t initalize USB: %1</source>
         <translation>Kann USB nicht initialisieren: %1</translation>
     </message>
@@ -1464,15 +1463,15 @@
     <name>UploadFirmware</name>
     <message>
         <source>Couldn&apos;t open device: %1</source>
-        <translation type="vanished">Konnte Gerät nicht öffnen: %1</translation>
+        <translation>Konnte Gerät nicht öffnen: %1</translation>
     </message>
     <message>
         <source>libusb_claim_interface() failed: %1</source>
-        <translation type="vanished">libusb_claim_interface() - Fehler: %1</translation>
+        <translation>libusb_claim_interface() - Fehler: %1</translation>
     </message>
     <message>
         <source>Writing the main firmware failed: %1</source>
-        <translation type="vanished">Fehler beim Übertragen der Firmware: %1</translation>
+        <translation>Fehler beim Übertragen der Firmware: %1</translation>
     </message>
 </context>
 <context>
@@ -1504,7 +1503,7 @@
     </message>
     <message>
         <source>X10 probe</source>
-        <translation type="vanished">X10 Tastkopf</translation>
+        <translation>X10 Tastkopf</translation>
     </message>
 </context>
 </TS>

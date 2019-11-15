@@ -1,7 +1,7 @@
 // define the version that is shown on top of the program
 // if undefined (for development commits) the build will be shown by OpenHantek
 
-#define OH_VERSION "v2.17-rc8"
+#define OH_VERSION "3.0.0"
 
 
 # ifdef OH_VERSION

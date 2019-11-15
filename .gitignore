@@ -12,3 +12,5 @@ firmware/hex
 *.json
 *.kate-swp
 .directory
+.kdev4
+*.kdev4

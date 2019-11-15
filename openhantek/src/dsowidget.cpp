@@ -84,10 +84,10 @@ DsoWidget::DsoWidget(DsoSettingsScope *scope, DsoSettingsView *view, const Dso::
     markerInfoLabel->setAlignment(Qt::AlignLeft);
     markerInfoLabel->setPalette(palette);
     markerTimeLabel = new QLabel();
-    markerTimeLabel->setAlignment(Qt::AlignRight);
+    markerTimeLabel->setAlignment(Qt::AlignLeft);
     markerTimeLabel->setPalette(palette);
     markerFrequencyLabel = new QLabel();
-    markerFrequencyLabel->setAlignment(Qt::AlignRight);
+    markerFrequencyLabel->setAlignment(Qt::AlignLeft);
     markerFrequencyLabel->setPalette(palette);
     markerTimebaseLabel = new QLabel();
     markerTimebaseLabel->setAlignment(Qt::AlignRight);
@@ -409,18 +409,17 @@ void DsoWidget::setMeasurementVisible(ChannelID channel) {
 
 /// \brief Update the label about the marker measurements
 void DsoWidget::updateMarkerDetails() {
-    double div0 = scope->horizontal.cursor.pos[0].x();
-    double div1 = scope->horizontal.cursor.pos[1].x();
-    if ( div0 > div1 )
-        std::swap( div0, div1 );
-    double divs = div1 - div0;
-    double time0 = div0 * scope->horizontal.timebase;
-    double time1 = div1 * scope->horizontal.timebase;
+    double m1 = scope->horizontal.cursor.pos[0].x() + DIVS_TIME / 2; // zero at center -> zero at left margin
+    double m2 = scope->horizontal.cursor.pos[1].x() + DIVS_TIME / 2; // zero at center -> zero at left margin
+    if ( m1 > m2 )
+        std::swap( m1, m2 );
+    double divs = m2 - m1;
+    // t = 0 at trigger position
+    double time0 = ( m1 - DIVS_TIME * scope->trigger.position ) * scope->horizontal.timebase;
+    double time1 = ( m2 - DIVS_TIME * scope->trigger.position ) * scope->horizontal.timebase;
     double time = divs * scope->horizontal.timebase;
-    div0 += DIVS_TIME / 2; // zero at center -> zero at left margin
-    div1 += DIVS_TIME / 2;
-    double freq0 = div0 * scope->horizontal.frequencybase;
-    double freq1 = div1 * scope->horizontal.frequencybase;
+    double freq0 = m1 * scope->horizontal.frequencybase;
+    double freq1 = m2 * scope->horizontal.frequencybase;
     double freq = divs * scope->horizontal.frequencybase;
     bool timeUsed = false;
     bool freqUsed = false;
@@ -458,7 +457,7 @@ void DsoWidget::updateMarkerDetails() {
         ++index;
     }
 
-    if ( DIVS_TIME == divs || (div0 == 0 && div1 == 0) || (div0 == DIVS_TIME && div1 == DIVS_TIME) ) {
+    if ( DIVS_TIME == divs || ( m1 == 0 && m2 == 0) || ( m1 == DIVS_TIME && m2 == DIVS_TIME) ) {
         // markers at left/right margins -> don't display
         markerInfoLabel->setVisible( false );
         markerTimeLabel->setVisible( false );
@@ -487,21 +486,27 @@ void DsoWidget::updateMarkerDetails() {
             markerFrequencybaseLabel->setVisible( freqUsed );
         }
         markerInfoLabel->setText( mInfo );
-        if ( timeUsed )
-            markerTimeLabel->setText( mTime.append( "%1 -> %2,  Δt: %3 " )
-                .arg( valueToString( time0, UNIT_SECONDS, 4 ) )
-                .arg( valueToString( time1, UNIT_SECONDS, 4 ) )
-                .arg( valueToString( time, UNIT_SECONDS, 4 ) )
-            );
-        else
+        if ( timeUsed ) {
+            mTime += QString( "%1" ).arg( valueToString( time0, UNIT_SECONDS, 4 ) );
+            if ( time )
+                mTime += QString( " -> %1,  Δt: %2 (%3) ")
+                    .arg( valueToString( time1, UNIT_SECONDS, 4 ) )
+                    .arg( valueToString( time, UNIT_SECONDS, 4 ) )
+                    .arg( valueToString( 1/time, UNIT_HERTZ, 4) )
+                ;
+            markerTimeLabel->setText( mTime );
+        } else {
             markerTimeLabel->setText( "" );
-        if ( freqUsed )
-            markerFrequencyLabel->setText( mFreq.append( "%1 -> %2,  Δf: %3 " )
-                .arg( valueToString( freq0, UNIT_HERTZ, 4) )
-                .arg( valueToString( freq1, UNIT_HERTZ, 4) )
-                .arg( valueToString( freq, UNIT_HERTZ, 4) )
-            );
-        else
+        }
+        if ( freqUsed ) {
+             mFreq += QString( "%1" ).arg( valueToString( freq0, UNIT_HERTZ, 4) );
+            if ( freq )
+                mFreq += QString( " -> %2,  Δf: %3 " )
+                    .arg( valueToString( freq1, UNIT_HERTZ, 4) )
+                    .arg( valueToString( freq, UNIT_HERTZ, 4) )
+                ;
+            markerFrequencyLabel->setText( mFreq );
+        } else
             markerFrequencyLabel->setText( "" );
     }
 }
@@ -524,7 +529,7 @@ void DsoWidget::updateTriggerDetails() {
     tablePalette.setColor(QPalette::WindowText, view->screen.voltage[scope->trigger.source]);
     settingsTriggerLabel->setPalette(tablePalette);
     QString levelString = valueToString(scope->voltage[scope->trigger.source].trigger, UNIT_VOLTS, 3);
-    QString pretriggerString = tr("%L1%").arg((int)(scope->trigger.position * 100 + 0.5));
+    QString pretriggerString = tr("%L1%").arg( (int)round(scope->trigger.position * 100 ) );
     QString pre = Dso::slopeString(scope->trigger.slope); // trigger slope
     QString post = pre; // opposite trigger slope
     if ( scope->trigger.slope == Dso::Slope::Positive )

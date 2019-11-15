@@ -176,18 +176,16 @@ bool LegacyExportDrawer::exportSamples(const PPresult *result, QPaintDevice* pai
         painter.setPen(colorValues->text);
 
         // Calculate variables needed for zoomed scope
-        double m1 = settings->scope.getMarker(0);
-        double m2 = settings->scope.getMarker(1);
+        double m1 = settings->scope.getMarker(0) + DIVS_TIME / 2; // zero at center -> zero at left margin
+        double m2 = settings->scope.getMarker(1) + DIVS_TIME / 2; // zero at center -> zero at left margin
         if ( m1 > m2 )
             std::swap( m1, m2 );
         double divs = m2 - m1;
         double zoomFactor = DIVS_TIME / divs;
         double zoomOffset = (m1 + m2) / 2;
-        double time1 = m1 *  settings->scope.horizontal.timebase;
-        double time2 = m2 *  settings->scope.horizontal.timebase;
+        double time1 = ( m1 - DIVS_TIME * settings->scope.trigger.position) * settings->scope.horizontal.timebase;
+        double time2 = ( m2 - DIVS_TIME * settings->scope.trigger.position) * settings->scope.horizontal.timebase;
         double time = divs * settings->scope.horizontal.timebase;
-        m1 += DIVS_TIME / 2; // zero at center -> zero at left margin
-        m2 += DIVS_TIME / 2;
         double freq1 = m1 * settings->scope.horizontal.frequencybase;
         double freq2 = m2 * settings->scope.horizontal.frequencybase;
         double freq = freq2 - freq1;
@@ -221,7 +219,7 @@ bool LegacyExportDrawer::exportSamples(const PPresult *result, QPaintDevice* pai
                                  tr("/div"),
                              QTextOption(Qt::AlignRight));
         } else {
-            stretchBase = (double)paintDevice->width() / 7;
+            stretchBase = (double)paintDevice->width() / 8;
             scopeHeight = (double)paintDevice->height() - (channelCount + 4) * lineHeight;
             double top = 2.5 * lineHeight + scopeHeight;
 
@@ -230,13 +228,18 @@ bool LegacyExportDrawer::exportSamples(const PPresult *result, QPaintDevice* pai
                              "t1: " + valueToString( time1, UNIT_SECONDS, 4 ), QTextOption(Qt::AlignRight));
             painter.drawText(QRectF(stretchBase * 2, top, stretchBase, lineHeight),
                              "t2: " + valueToString( time2, UNIT_SECONDS, 4 ), QTextOption(Qt::AlignRight));
-            painter.drawText(QRectF(stretchBase * 3, top, stretchBase, lineHeight),
+            if ( time ) {
+                painter.drawText(QRectF(stretchBase * 3, top, stretchBase, lineHeight),
                              "Δt: " + valueToString( time, UNIT_SECONDS, 4 ), QTextOption(Qt::AlignRight));
-            painter.drawText(QRectF(stretchBase * 4, top, stretchBase, lineHeight),
-                             "f1: " + valueToString( freq1, UNIT_HERTZ, 4 ), QTextOption(Qt::AlignRight));
+                painter.drawText(QRectF(stretchBase * 4, top, stretchBase, lineHeight),
+                             " (=" + valueToString( 1/time, UNIT_HERTZ, 4 ) + ")", QTextOption(Qt::AlignLeft));
+            }
             painter.drawText(QRectF(stretchBase * 5, top, stretchBase, lineHeight),
-                             "f2: " + valueToString( freq2, UNIT_HERTZ, 4 ), QTextOption(Qt::AlignRight));
+                             "f1: " + valueToString( freq1, UNIT_HERTZ, 4 ), QTextOption(Qt::AlignRight));
             painter.drawText(QRectF(stretchBase * 6, top, stretchBase, lineHeight),
+                             "f2: " + valueToString( freq2, UNIT_HERTZ, 4 ), QTextOption(Qt::AlignRight));
+            if ( freq)
+                painter.drawText(QRectF(stretchBase * 7, top, stretchBase, lineHeight),
                              "Δf: " + valueToString( freq, UNIT_HERTZ, 4 ), QTextOption(Qt::AlignRight));
         }
 
@@ -325,10 +328,27 @@ bool LegacyExportDrawer::exportSamples(const PPresult *result, QPaintDevice* pai
                 break;
 
             case Dso::GraphFormat::XY:
+                // TODO: create also XY image
                 break;
 
             default:
                 break;
+            }
+
+            if ( !zoomed ) { // draw marker lines and trigger position
+                const double trig = DIVS_TIME * ( settings->scope.trigger.position - 0.5 );
+                const double tick = (double)DIVS_TIME / 250.0;
+                const double top = DIVS_VOLTAGE/2;
+                const double bottom = -DIVS_VOLTAGE/2;
+                const double left = -DIVS_TIME/2;
+                //const double right = DIVS_TIME/2;
+                painter.setPen( QPen(colorValues->markers, 0) );
+                // markers
+                painter.drawLine( QLineF( m1 + left, bottom - 4 * tick, m1 + left, top ) );
+                painter.drawLine( QLineF( m2 + left, bottom - 4 * tick, m2 + left, top ) );
+                // trigger point (t=0)
+                painter.drawLine( QLineF( trig - tick, top + 4 * tick, trig, top ) );
+                painter.drawLine( QLineF( trig + tick, top + 4 * tick, trig, top ) );
             }
 
             // Set DIVS_TIME / zoomFactor x DIVS_VOLTAGE matrix for zoomed
