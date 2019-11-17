@@ -1170,17 +1170,17 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/enums.cpp" line="96"/>
+        <location filename="../src/hantekdso/enums.cpp" line="98"/>
         <source>Off</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/enums.cpp" line="98"/>
+        <location filename="../src/hantekdso/enums.cpp" line="100"/>
         <source>Linear</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/enums.cpp" line="100"/>
+        <location filename="../src/hantekdso/enums.cpp" line="102"/>
         <source>Sinc</source>
         <translation type="unfinished"></translation>
     </message>

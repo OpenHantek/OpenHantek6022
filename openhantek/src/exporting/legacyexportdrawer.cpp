@@ -329,6 +329,38 @@ bool LegacyExportDrawer::exportSamples(const PPresult *result, QPaintDevice* pai
 
             case Dso::GraphFormat::XY:
                 // TODO: create also XY image
+                    if ( settings->scope.voltage[ 0 ].used && result->data( 0 )
+                        && settings->scope.voltage[ 1 ].used && result->data( 1 ) ) {
+                        painter.setPen(QPen(colorValues->voltage[ 0 ], 0));
+
+                        // What's the horizontal distance between sampling points?
+                        double horizontalFactor =
+                            result->data( 0 )->voltage.interval / settings->scope.horizontal.timebase;
+                        // How many samples are visible?
+                        double centerPosition, centerOffset;
+                        if (zoomed) {
+                            centerPosition = (zoomOffset + DIVS_TIME / 2) / horizontalFactor;
+                            centerOffset = DIVS_TIME / horizontalFactor / zoomFactor / 2;
+                        } else {
+                            centerPosition = DIVS_TIME / 2 / horizontalFactor;
+                            centerOffset = DIVS_TIME / horizontalFactor / 2;
+                        }
+                        unsigned int firstPosition = qMax((int)(centerPosition - centerOffset), 0);
+                        unsigned int lastPosition = qMin((int)(centerPosition + centerOffset),
+                                                         (int)result->data( 0 )->voltage.sample.size() - 1);
+
+                        // Draw graph
+                        QPointF *graph = new QPointF[lastPosition - firstPosition + 1];
+                        // skip leading samples to show the correct trigger position
+                        for (unsigned int position = firstPosition; position <= lastPosition; ++position)
+                            graph[ position - firstPosition ] =
+                             QPointF( result->data( 0 )->voltage.sample[position + result->skipSamples] /
+                                        settings->scope.gain( 0 ) + settings->scope.voltage[ 0 ].offset,
+                                      result->data( 1 )->voltage.sample[position + result->skipSamples] /
+                                        settings->scope.gain( 1 ) + settings->scope.voltage[ 1 ].offset );
+                        painter.drawPolyline(graph, lastPosition - firstPosition + 1);
+                        delete[] graph;
+                    }
                 break;
 
             default:

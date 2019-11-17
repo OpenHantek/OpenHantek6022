@@ -487,23 +487,23 @@ void DsoWidget::updateMarkerDetails() {
         }
         markerInfoLabel->setText( mInfo );
         if ( timeUsed ) {
-            mTime += QString( "%1" ).arg( valueToString( time0, UNIT_SECONDS, 4 ) );
+            mTime += QString( "%1" ).arg( valueToString( time0, UNIT_SECONDS, 3 ) );
             if ( time )
-                mTime += QString( " -> %1,  Δt: %2 (%3) ")
-                    .arg( valueToString( time1, UNIT_SECONDS, 4 ) )
-                    .arg( valueToString( time, UNIT_SECONDS, 4 ) )
-                    .arg( valueToString( 1/time, UNIT_HERTZ, 4) )
+                mTime += QString( " ... %1,  Δt: %2 (%3) ")
+                    .arg( valueToString( time1, UNIT_SECONDS, 3 ) )
+                    .arg( valueToString( time, UNIT_SECONDS, 3 ) )
+                    .arg( valueToString( 1/time, UNIT_HERTZ, 3) )
                 ;
             markerTimeLabel->setText( mTime );
         } else {
             markerTimeLabel->setText( "" );
         }
         if ( freqUsed ) {
-             mFreq += QString( "%1" ).arg( valueToString( freq0, UNIT_HERTZ, 4) );
+             mFreq += QString( "%1" ).arg( valueToString( freq0, UNIT_HERTZ, 3 ) );
             if ( freq )
-                mFreq += QString( " -> %2,  Δf: %3 " )
-                    .arg( valueToString( freq1, UNIT_HERTZ, 4) )
-                    .arg( valueToString( freq, UNIT_HERTZ, 4) )
+                mFreq += QString( " ... %2,  Δf: %3 " )
+                    .arg( valueToString( freq1, UNIT_HERTZ, 3 ) )
+                    .arg( valueToString( freq, UNIT_HERTZ, 3 ) )
                 ;
             markerFrequencyLabel->setText( mFreq );
         } else

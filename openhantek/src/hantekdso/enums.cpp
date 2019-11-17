@@ -73,14 +73,16 @@ namespace Dso {
             return QString::fromUtf8("/");
         case Slope::Negative:
             return QString::fromUtf8("\\");
+        case Slope::Both:
+            return QString::fromUtf8("X");
 #else
         case Slope::Positive:
             return QString::fromUtf8("\u2197"); // "↗"
         case Slope::Negative:
             return QString::fromUtf8("\u2198"); // "↘"
-#endif
         case Slope::Both:
-            return QString::fromUtf8("X"); // "X"
+            return QString::fromUtf8("\u2928"); // "⤨"
+#endif
         default:
             return QString();
         }
