@@ -647,7 +647,7 @@ unsigned HantekDsoControl::softwareTrigger() {
     double timeDisplay = controlsettings.samplerate.target.duration; // time for full screen width
     double sampleRate = controlsettings.samplerate.current;
     double samplesDisplay = timeDisplay * sampleRate;
-    unsigned preTrigSamples = (unsigned)(controlsettings.trigger.position * samplesDisplay);
+    //unsigned preTrigSamples = (unsigned)(controlsettings.trigger.position * samplesDisplay);
     //printf( "sC %lu, tD %g, sR %g, sD %g\n", sampleCount, timeDisplay, sampleRate, samplesDisplay );
     if (samplesDisplay >= sampleCount) {
         // For sure not enough samples to adjust for jitter.
