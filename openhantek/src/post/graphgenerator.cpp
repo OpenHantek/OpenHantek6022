@@ -67,7 +67,6 @@ void GraphGenerator::process(PPresult *data) {
 
 void GraphGenerator::generateGraphsTYvoltage(PPresult *result, const DsoSettingsView *view) {
     //printf( "GraphGenerator::generateGraphsTYvoltage()\n" );
-    const unsigned int skipSamples = result->skipSamples;
     result->vaChannelVoltage.resize(scope->voltage.size());
     for (ChannelID channel = 0; channel < scope->voltage.size(); ++channel) {
         ChannelGraph &target = result->vaChannelVoltage[channel];
@@ -83,24 +82,31 @@ void GraphGenerator::generateGraphsTYvoltage(PPresult *result, const DsoSettings
         // time distance between sampling points
         float horizontalFactor = (float)(samples.interval / scope->horizontal.timebase);
         // printf( "hF: %g\n", horizontalFactor );
-
-        // round up and add one dot (n+1 dots to display n lines) 
-        unsigned dotsOnScreen = DIVS_TIME / horizontalFactor + 0.99 + 1;
-        // Set size directly to avoid reallocations
-        target.reserve( dotsOnScreen );
+        unsigned dotsOnScreen = DIVS_TIME / horizontalFactor + 0.99; // round up
+        unsigned preTrigSamples = (unsigned)(scope->trigger.position * dotsOnScreen);
+        // align displayed trace with trigger mark on screen ...
+        // ... also if trig pos or time/div was changed on a "frozen" or single trace
+        int leftmostSample = result->skipSamples - preTrigSamples; // 1st sample to show
+        int leftmostPosition = 0; // start position on display
+        if ( leftmostSample < 0 ) { // trig pos or time/div was increased
+            leftmostPosition = -leftmostSample; // trace can't start on left margin
+            leftmostSample = 0; // show as much as we have on left side
+        }
+        // Set size directly to avoid reallocations (n+1 dots to display n lines)
+        target.reserve( ++dotsOnScreen );
 
         const float gain = (float)scope->gain(channel);
         const float offset = (float)scope->voltage[channel].offset;
 
-        auto sampleIterator = samples.sample.cbegin() + skipSamples; // -> visible samples
-
+        auto sampleIterator = samples.sample.cbegin() + leftmostSample; // -> visible samples
+        auto sampleEnd = samples.sample.cend();
         // sinc interpolation in case of too less samples on screen
         // https://ccrma.stanford.edu/~jos/resample/resample.pdf
         if ( view->interpolation == Dso::INTERPOLATION_SINC
             && dotsOnScreen < 100 ) { // valid for timebase <= 500 ns/div
             const unsigned int sincSize = sinc.size();
             // if untriggered (skipSamples == 0) then reserve margin for left side of sinc()
-            const unsigned int skip = skipSamples ? skipSamples : sincWidth;
+            const unsigned int skip = leftmostSample ? leftmostSample : sincWidth;
             // we would need sincWidth on left side, but we take what we get
             const unsigned int left = std::min( sincWidth, skip );
             const unsigned int resampleSize = (left + dotsOnScreen + sincWidth) * oversample;
@@ -124,13 +130,13 @@ void GraphGenerator::generateGraphsTYvoltage(PPresult *result, const DsoSettings
             }
             sampleIterator = resample.cbegin() + ( left + 0.5 ) * oversample; // -> visible resamples
         }
-        // printf("dotsOnScreen: %d\n", dotsOnScreen);
-        if ( dotsOnScreen > SAMPLESIZE_USED / 2 + 1) // avoid target[] overrun
-            dotsOnScreen = SAMPLESIZE_USED / 2 + 1;  // typical 10001, defined in viewconstants.h
+        // printf("samples: %lu, dotsOnScreen: %d\n", samples.sample.size(), dotsOnScreen);
         target.clear(); // remove all previous dots and fill in new trace
-        for (unsigned int position = 0; position < dotsOnScreen; ++position) {
+        for (unsigned int position = leftmostPosition;
+             position < dotsOnScreen && sampleIterator < sampleEnd;
+             ++position, ++sampleIterator) {
             target.push_back(QVector3D(MARGIN_LEFT + position * horizontalFactor,
-                                        *sampleIterator++ / gain + offset, 0.0 ));
+                                        *sampleIterator / gain + offset, 0.0 ));
         }
     }
 }

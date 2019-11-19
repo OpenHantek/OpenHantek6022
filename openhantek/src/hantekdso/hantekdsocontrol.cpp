@@ -684,7 +684,7 @@ unsigned HantekDsoControl::softwareTrigger() {
     }
 
     if ( triggerPositionRaw ) { // triggered
-        result.triggerPosition = triggerPositionRaw - preTrigSamples;  // shift to screen position
+        result.triggerPosition = triggerPositionRaw; // align trace to trigger position
     }
     // printf( "nextSlope %c, triggerPositionRaw %d\n", "/\\"[(int)nextSlope], triggerPositionRaw );
     return result.triggerPosition;
