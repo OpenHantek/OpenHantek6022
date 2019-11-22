@@ -19,7 +19,7 @@
 #include "utils/printutils.h"
 
 // probe attenuation
-#if not defined ATTENUATION
+#ifndef ATTENUATION
 #define ATTENUATION 10
 #endif
 
