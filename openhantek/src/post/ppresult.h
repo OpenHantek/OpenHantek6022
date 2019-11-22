@@ -49,8 +49,8 @@ class PPresult {
 
     /// sw trigger status
     bool softwareTriggerTriggered = false;
-    /// skip samples at start of channel to get triggered tace on screen
-    unsigned int skipSamples = 0;
+    /// skip samples at start of channel to get triggered trace on screen
+    int triggerPosition = -1;///< Not triggered
     double pulseWidth1 = 0.0;///< The width of the triggered pulse
     double pulseWidth2 = 0.0;///< The width of the following pulse
 

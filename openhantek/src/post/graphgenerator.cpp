@@ -86,7 +86,7 @@ void GraphGenerator::generateGraphsTYvoltage(PPresult *result, const DsoSettings
         unsigned preTrigSamples = (unsigned)(scope->trigger.position * dotsOnScreen);
         // align displayed trace with trigger mark on screen ...
         // ... also if trig pos or time/div was changed on a "frozen" or single trace
-        int leftmostSample = result->skipSamples - preTrigSamples; // 1st sample to show
+        int leftmostSample = result->triggerPosition - preTrigSamples; // 1st sample to show
         int leftmostPosition = 0; // start position on display
         if ( leftmostSample < 0 ) { // trig pos or time/div was increased
             leftmostPosition = -leftmostSample; // trace can't start on left margin

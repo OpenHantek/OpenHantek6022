@@ -639,7 +639,7 @@ unsigned HantekDsoControl::softwareTrigger() {
     }
     //printf( "HDC::softwareTrigger()\n" );
     triggerPositionRaw = 0;
-    result.triggerPosition = 0;
+    result.triggerPosition = -1; // not triggered
     result.pulseWidth1 = 0.0;
     result.pulseWidth2 = 0.0;
 
@@ -694,7 +694,7 @@ unsigned HantekDsoControl::softwareTrigger() {
 void HantekDsoControl::triggering() {
     //printf( "HDC::triggering()\n" );
     static DSOsamples triggeredResult; // storage for last triggered trace samples
-    if ( result.triggerPosition > 0 ) { // live trace has triggered
+    if ( result.triggerPosition >= 0 ) { // live trace has triggered
         // Use this trace and save it also
         triggeredResult.data = result.data;
         triggeredResult.samplerate = result.samplerate;
@@ -711,7 +711,7 @@ void HantekDsoControl::triggering() {
     } else { // Not triggered and not NORMAL mode
         // Use the free running trace, discard history
         triggeredResult.data.clear(); // discard trace
-        triggeredResult.triggerPosition = 0; // not triggered
+        triggeredResult.triggerPosition = -1; // not triggered
         result.liveTrigger = false; // show red "TR" top left
     }
 }

@@ -281,7 +281,7 @@ bool LegacyExportDrawer::exportSamples(const PPresult *result, QPaintDevice* pai
                         // skip leading samples to show the correct trigger position 
                         for (unsigned int position = firstPosition; position <= lastPosition; ++position)
                             graph[position - firstPosition] = QPointF(position * horizontalFactor - DIVS_TIME / 2,
-                                                                      result->data(channel)->voltage.sample[position + result->skipSamples] /
+                                                                      result->data(channel)->voltage.sample[position + result->triggerPosition] /
                                                                               settings->scope.gain(channel) +
                                                                           settings->scope.voltage[channel].offset);
 
@@ -354,9 +354,9 @@ bool LegacyExportDrawer::exportSamples(const PPresult *result, QPaintDevice* pai
                         // skip leading samples to show the correct trigger position
                         for (unsigned int position = firstPosition; position <= lastPosition; ++position)
                             graph[ position - firstPosition ] =
-                             QPointF( result->data( 0 )->voltage.sample[position + result->skipSamples] /
+                             QPointF( result->data( 0 )->voltage.sample[position + result->triggerPosition] /
                                         settings->scope.gain( 0 ) + settings->scope.voltage[ 0 ].offset,
-                                      result->data( 1 )->voltage.sample[position + result->skipSamples] /
+                                      result->data( 1 )->voltage.sample[position + result->triggerPosition] /
                                         settings->scope.gain( 1 ) + settings->scope.voltage[ 1 ].offset );
                         painter.drawPolyline(graph, lastPosition - firstPosition + 1);
                         delete[] graph;

@@ -19,7 +19,9 @@
 #include "utils/printutils.h"
 
 // probe attenuation
-#define ATTENUATION 10.0
+#if not defined ATTENUATION
+#define ATTENUATION 10
+#endif
 
 template<typename... Args> struct SELECT {
     template<typename C, typename R>
@@ -59,7 +61,7 @@ VoltageDock::VoltageDock(DsoSettingsScope *scope, const Dso::ControlSpecificatio
         b.miscComboBox = new QComboBox();
         b.gainComboBox = new QComboBox();
         b.invertCheckBox = new QCheckBox(tr("Invert"));
-        b.attnCheckBox = new QCheckBox(tr("x10"));
+        b.attnCheckBox = new QCheckBox(tr("X%1").arg( ATTENUATION ) );
 
         channelBlocks.push_back(std::move(b));
 

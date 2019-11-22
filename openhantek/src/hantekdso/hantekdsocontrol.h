@@ -176,7 +176,7 @@ class HantekDsoControl : public QObject {
     bool _samplingStarted = false;
     int cycleTime = 0;
     bool channelSetupChanged = false;
-    unsigned triggerPositionRaw = 0;
+    int triggerPositionRaw = -1; // not triggered
 
   public slots:
     /// \brief If sampling is disabled, no samplesAvailable() signals are send anymore, no samples
