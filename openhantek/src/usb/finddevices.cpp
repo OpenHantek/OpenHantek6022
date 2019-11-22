@@ -65,6 +65,10 @@ int FindDevices::updateDeviceList() {
         }
     }
 
+// TODO: test on FreeBSD
+#if 1
+    libusb_free_device_list( deviceList, false );
+#else
     #if !defined(__FreeBSD__)
         /*
         ToDo: This introduces a potential resource leak if not executed
@@ -73,6 +77,7 @@ int FindDevices::updateDeviceList() {
         */
         libusb_free_device_list( deviceList, false );
     #endif
+#endif
 
     return changes;
 }

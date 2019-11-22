@@ -38,13 +38,16 @@ bool UploadFirmware::startUpload(USBDevice *device) {
     if (!temp_firmware_path) return false;
     temp_firmware_path->open();
 
-    /* We need to claim the first interface */
+#ifndef __FreeBSD__
+    // We need to claim the first interface, reported to give an error on FreeBSD
     status = libusb_set_auto_detach_kernel_driver(handle, 1);
     if (status != LIBUSB_SUCCESS) {
         errorMessage = TR("libusb_set_auto_detach_kernel_driver() failed: %1").arg(libusb_error_name(status));
         libusb_close(handle);
         return false;
     }
+#endif
+
     status = libusb_claim_interface(handle, 0);
     if (status != LIBUSB_SUCCESS) {
         errorMessage = TR("libusb_claim_interface() failed: %1").arg(libusb_error_name(status));
