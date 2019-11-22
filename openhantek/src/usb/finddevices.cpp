@@ -36,12 +36,11 @@ int FindDevices::updateDeviceList() {
         // Get device descriptor
         struct libusb_device_descriptor descriptor;
         libusb_get_device_descriptor(device, &descriptor);
-
         DeviceList::const_iterator inList = devices.find(USBDevice::computeUSBdeviceID(device));
 
-        if (inList != devices.end()) {
+        if ( inList != devices.end()) {
             inList->second->setFindIteration(findIteration);
-            continue;
+            //continue;
         }
 
         for (DSOModel* model : ModelRegistry::get()->models()) {
@@ -66,14 +65,14 @@ int FindDevices::updateDeviceList() {
         }
     }
 
-	#if !defined(__FreeBSD__)
-		/*
-			ToDo: This introduces a potential resource leak if not executed
-			on FreeBSD. It seems there is a reference counting problem when
-			using libusb on FreeBSD.
-		*/
-		libusb_free_device_list(deviceList, true);
-	#endif
+    #if !defined(__FreeBSD__)
+        /*
+        ToDo: This introduces a potential resource leak if not executed
+        on FreeBSD. It seems there is a reference counting problem when
+        using libusb on FreeBSD.
+        */
+        libusb_free_device_list( deviceList, false );
+    #endif
 
     return changes;
 }

@@ -1302,32 +1302,36 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="65"/>
         <source>Connection failed!</source>
-        <translation>La connexion a échoué!</translation>
+        <translation type="vanished">La connexion a échoué!</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="70"/>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="65"/>
+        <source>&lt;p&gt;&lt;br/&gt;&lt;b&gt;Connection failed!&lt;/p&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="72"/>
         <source>&lt;p&gt;OpenHantek6022 is searching for compatible devices ...&lt;/p&gt;&lt;p&gt;&lt;img align=&apos;right&apos; height=&apos;200&apos; src=&apos;qrc:///switch_6022BL.png&apos;&gt;Don&apos;t forget to switch your device into oscilloscope mode if it has multiple modes.&lt;/p&gt;</source>
         <translation>&lt;p&gt;OpenHantek6022 recherche des périphériques compatibles...&lt;/p&gt;&lt;p&gt;&lt;img align=&apos;right&apos; height=&apos;200&apos; src=&apos;qrc:////switch_6022BL.png&apos;&gt;N&apos;oubliez pas de passer votre appareil en mode oscilloscope s&apos;il a plusieurs modes.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="75"/>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="77"/>
         <source>&lt;p&gt;Please make sure you have installed the windows usb driver correctly&lt;/p&gt;</source>
         <translation>&lt;p&gt;Veuillez vous assurer que vous avez installé correctement le pilote usb de Windows&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="80"/>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="82"/>
         <source>&lt;p&gt;Please make sure you have copied the udev rules file to &lt;b&gt;%1&lt;/b&gt; for correct USB access permissions.&lt;/p&gt;</source>
         <translation>&lt;p&gt;Veuillez vous assurer d&apos;avoir copié le fichier de règles udev dans &lt;b&gt;%1&lt;/b&gt; pour les permissions d&apos;accès USB correctes.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="84"/>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="86"/>
         <source>&lt;p&gt;Visit the build and run instruction &lt;a href=&apos;https://github.com/OpenHantek/OpenHantek6022/blob/master/docs/build.md&apos;&gt;website&lt;/a&gt; for help.&lt;/p&gt;</source>
         <translation>&lt;p&gt;Visitez l&apos;instruction build and run &lt;a href=&apos;https://github.com/OpenHantek/OpenHantek6022/blob/master/docs/build.md&apos;&gt;website&lt;/a&gt; pour de l&apos;aide.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="115"/>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="116"/>
         <source>Can&apos;t initalize USB: %1</source>
         <translation>Impossible d&apos;initialiser l&apos;USB: %1</translation>
     </message>
@@ -1376,29 +1380,33 @@
 <context>
     <name>VoltageDock</name>
     <message>
-        <location filename="../src/docks/VoltageDock.cpp" line="32"/>
+        <location filename="../src/docks/VoltageDock.cpp" line="34"/>
         <source>Voltage</source>
         <translation>Tension</translation>
     </message>
     <message>
-        <location filename="../src/docks/VoltageDock.cpp" line="56"/>
+        <location filename="../src/docks/VoltageDock.cpp" line="58"/>
         <source>CH&amp;%1</source>
         <translation>CH&amp;%1</translation>
     </message>
     <message>
-        <location filename="../src/docks/VoltageDock.cpp" line="58"/>
+        <location filename="../src/docks/VoltageDock.cpp" line="60"/>
         <source>&amp;MATH</source>
         <translation>&amp;MATH</translation>
     </message>
     <message>
-        <location filename="../src/docks/VoltageDock.cpp" line="61"/>
+        <location filename="../src/docks/VoltageDock.cpp" line="63"/>
         <source>Invert</source>
         <translation>Inverser</translation>
     </message>
     <message>
-        <location filename="../src/docks/VoltageDock.cpp" line="62"/>
+        <location filename="../src/docks/VoltageDock.cpp" line="64"/>
+        <source>X%1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>x10</source>
-        <translation>x10</translation>
+        <translation type="vanished">x10</translation>
     </message>
 </context>
 </TS>

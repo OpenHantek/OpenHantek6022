@@ -61,8 +61,10 @@ std::unique_ptr<USBDevice> SelectSupportedDevice::showSelectDeviceModal(libusb_c
                 "<p>In this case, please unplug other USB devices on the same bus!<br/>"
                 "You can check this under Linux with: <pre>lsusb; lsusb -t</pre></p>"
                 ));
-            } else {
-                ui->labelReadyState->setText(tr("Connection failed!"));
+            } else { // something went wrong, inform user
+                ui->labelReadyState->setText( tr( "<p><br/><b>Connection failed!</p>" )
+                    + ui->cmbDevices->currentData( Qt::UserRole + 3 ).toString()
+                );
             }
         }
     });
@@ -91,11 +93,10 @@ std::unique_ptr<USBDevice> SelectSupportedDevice::showSelectDeviceModal(libusb_c
     connect(&timer, &QTimer::timeout, [this, &model, &findDevices, &messageNoDevices]() {
         if (findDevices->updateDeviceList())
             model->updateDeviceList();
-        if (model->rowCount(QModelIndex())) {
+        if (model->rowCount(QModelIndex()))
             ui->cmbDevices->setCurrentIndex(0);
-        } else {
+        else
             ui->labelReadyState->setText(messageNoDevices);
-        }
     });
     timer.start();
     QCoreApplication::sendEvent(&timer, new QTimerEvent(timer.timerId())); // immediate timer event
