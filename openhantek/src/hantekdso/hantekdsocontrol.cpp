@@ -620,7 +620,7 @@ unsigned HantekDsoControl::searchTriggerPoint( Dso::Slope dsoSlope, unsigned int
             }
             // if at least >Threshold (=5) samples before and after trig meet the condition, set trigger
             if ( before > swTriggerThreshold && after > swTriggerThreshold ) {
-                swTriggerStart = i-1;
+                swTriggerStart = i;
                 break;
             }
         }

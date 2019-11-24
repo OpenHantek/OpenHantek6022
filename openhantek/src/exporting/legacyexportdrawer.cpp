@@ -238,7 +238,7 @@ bool LegacyExportDrawer::exportSamples(const PPresult *result, QPaintDevice* pai
                              "f1: " + valueToString( freq1, UNIT_HERTZ, 4 ), QTextOption(Qt::AlignRight));
             painter.drawText(QRectF(stretchBase * 6, top, stretchBase, lineHeight),
                              "f2: " + valueToString( freq2, UNIT_HERTZ, 4 ), QTextOption(Qt::AlignRight));
-            if ( freq)
+            if ( freq )
                 painter.drawText(QRectF(stretchBase * 7, top, stretchBase, lineHeight),
                              "Δf: " + valueToString( freq, UNIT_HERTZ, 4 ), QTextOption(Qt::AlignRight));
         }
@@ -264,6 +264,16 @@ bool LegacyExportDrawer::exportSamples(const PPresult *result, QPaintDevice* pai
                         double horizontalFactor =
                             result->data(channel)->voltage.interval / settings->scope.horizontal.timebase;
                         // How many samples are visible?
+                        int dotsOnScreen = DIVS_TIME / horizontalFactor + 0.99; // round up
+                        // align displayed trace with trigger mark on screen ...
+                        // ... also if trig pos or time/div was changed on a "frozen" or single trace
+                        int preTrigSamples = (int)(settings->scope.trigger.position * dotsOnScreen);
+                        int leftmostSample = result->triggerPosition - preTrigSamples; // 1st sample to show
+                        int leftmostPosition = 0; // start position on display
+                        if ( leftmostSample < 0 ) { // trig pos or time/div was increased
+                            leftmostPosition = -leftmostSample; // trace can't start on left margin
+                            leftmostSample = 0; // show as much as we have on left side
+                        }
                         double centerPosition, centerOffset;
                         if (zoomed) {
                             centerPosition = (zoomOffset + DIVS_TIME / 2) / horizontalFactor;
@@ -277,15 +287,23 @@ bool LegacyExportDrawer::exportSamples(const PPresult *result, QPaintDevice* pai
                                                          (int)result->data(channel)->voltage.sample.size() - 1);
 
                         // Draw graph
-                        QPointF *graph = new QPointF[lastPosition - firstPosition + 1];
-                        // skip leading samples to show the correct trigger position 
-                        for (unsigned int position = firstPosition; position <= lastPosition; ++position)
-                            graph[position - firstPosition] = QPointF(position * horizontalFactor - DIVS_TIME / 2,
-                                                                      result->data(channel)->voltage.sample[position + result->triggerPosition] /
-                                                                              settings->scope.gain(channel) +
-                                                                          settings->scope.voltage[channel].offset);
-
-                        painter.drawPolyline(graph, lastPosition - firstPosition + 1);
+                        QPointF *graph = new QPointF[ lastPosition - firstPosition + 1 ];
+                        // skip leading samples to show the correct trigger position
+                        auto sampleIterator = result->data(channel)->voltage.sample.cbegin() + leftmostSample; // -> visible samples
+                        auto sampleEnd = result->data(channel)->voltage.sample.cend();
+                        int pointCount = 0;
+                        double gain = settings->scope.gain(channel);
+                        double offset = settings->scope.voltage[channel].offset;
+                        for ( int position = leftmostPosition;
+                              position < dotsOnScreen && sampleIterator < sampleEnd;
+                              ++position, ++sampleIterator) {
+                            graph[ position - leftmostPosition ]
+                                = QPointF( position * horizontalFactor - DIVS_TIME / 2,
+                                           *sampleIterator / gain + offset
+                                         );
+                            ++pointCount;
+                        }
+                        painter.drawPolyline( graph, pointCount );
                         delete[] graph;
                     }
                 }
@@ -312,15 +330,16 @@ bool LegacyExportDrawer::exportSamples(const PPresult *result, QPaintDevice* pai
                                                          (int)result->data(channel)->spectrum.sample.size() - 1);
 
                         // Draw graph
-                        QPointF *graph = new QPointF[lastPosition - firstPosition + 1];
+                        double megnitude = settings->scope.spectrum[channel].magnitude;
+                        double offset = settings->scope.spectrum[channel].offset;
+                        QPointF *graph = new QPointF[ lastPosition - firstPosition + 1 ];
 
-                        for (unsigned int position = firstPosition; position <= lastPosition; ++position)
+                        for (unsigned int position = firstPosition; position <= lastPosition; ++position) {
                             graph[position - firstPosition] =
                                 QPointF(position * horizontalFactor - DIVS_TIME / 2,
-                                        result->data(channel)->spectrum.sample[position] /
-                                                settings->scope.spectrum[channel].magnitude +
-                                            settings->scope.spectrum[channel].offset);
-
+                                        result->data(channel)->spectrum.sample[position] / magnitude + offset
+                                       );
+                        }
                         painter.drawPolyline(graph, lastPosition - firstPosition + 1);
                         delete[] graph;
                     }
@@ -328,39 +347,27 @@ bool LegacyExportDrawer::exportSamples(const PPresult *result, QPaintDevice* pai
                 break;
 
             case Dso::GraphFormat::XY:
-                // TODO: create also XY image
-                    if ( settings->scope.voltage[ 0 ].used && result->data( 0 )
-                        && settings->scope.voltage[ 1 ].used && result->data( 1 ) ) {
-                        painter.setPen(QPen(colorValues->voltage[ 0 ], 0));
-
-                        // What's the horizontal distance between sampling points?
-                        double horizontalFactor =
-                            result->data( 0 )->voltage.interval / settings->scope.horizontal.timebase;
-                        // How many samples are visible?
-                        double centerPosition, centerOffset;
-                        if (zoomed) {
-                            centerPosition = (zoomOffset + DIVS_TIME / 2) / horizontalFactor;
-                            centerOffset = DIVS_TIME / horizontalFactor / zoomFactor / 2;
-                        } else {
-                            centerPosition = DIVS_TIME / 2 / horizontalFactor;
-                            centerOffset = DIVS_TIME / horizontalFactor / 2;
-                        }
-                        unsigned int firstPosition = qMax((int)(centerPosition - centerOffset), 0);
-                        unsigned int lastPosition = qMin((int)(centerPosition + centerOffset),
-                                                         (int)result->data( 0 )->voltage.sample.size() - 1);
-
-                        // Draw graph
-                        QPointF *graph = new QPointF[lastPosition - firstPosition + 1];
-                        // skip leading samples to show the correct trigger position
-                        for (unsigned int position = firstPosition; position <= lastPosition; ++position)
-                            graph[ position - firstPosition ] =
-                             QPointF( result->data( 0 )->voltage.sample[position + result->triggerPosition] /
-                                        settings->scope.gain( 0 ) + settings->scope.voltage[ 0 ].offset,
-                                      result->data( 1 )->voltage.sample[position + result->triggerPosition] /
-                                        settings->scope.gain( 1 ) + settings->scope.voltage[ 1 ].offset );
-                        painter.drawPolyline(graph, lastPosition - firstPosition + 1);
-                        delete[] graph;
+                if ( settings->scope.voltage[ 0 ].used && result->data( 0 )
+                     && settings->scope.voltage[ 1 ].used && result->data( 1 ) ) {
+                    double gain0 = settings->scope.gain( 0 );
+                    double offset0 = settings->scope.voltage[ 0 ].offset;
+                    double gain1 = settings->scope.gain( 1 );
+                    double offset1 = settings->scope.voltage[ 1 ].offset;
+                    painter.setPen( QPen( colorValues->voltage[ 0 ], 0) );
+                    unsigned int size = std::min( result->data( 0 )->voltage.sample.size(),
+                                                  result->data( 1 )->voltage.sample.size()
+                                                );
+                    // Draw graph
+                    QPointF *graph = new QPointF[ size ];
+                    for (unsigned int index = 0; index < size; ++index ) {
+                        graph[ index ] =
+                            QPointF( result->data( 0 )->voltage.sample[ index ] / gain0 + offset0,
+                                     result->data( 1 )->voltage.sample[ index ] / gain1 + offset1
+                                   );
                     }
+                    painter.drawPolyline( graph, size );
+                    delete[] graph;
+                }
                 break;
 
             default:
@@ -400,6 +407,7 @@ bool LegacyExportDrawer::exportSamples(const PPresult *result, QPaintDevice* pai
 
     return true;
 }
+
 
 void LegacyExportDrawer::drawGrids(QPainter &painter, const DsoSettingsColorValues *colorValues, double lineHeight, double scopeHeight,
                          int scopeWidth, bool isPrinter, bool zoom) {

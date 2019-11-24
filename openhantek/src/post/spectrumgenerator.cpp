@@ -8,7 +8,7 @@
 #include <QTimer>
 
 #include <fftw3.h>
-
+#include "ppresult.h"
 #include "spectrumgenerator.h"
 
 #include "glscope.h"
@@ -28,6 +28,7 @@ SpectrumGenerator::~SpectrumGenerator() {
 
 void SpectrumGenerator::process(PPresult *result) {
     // Calculate frequencies and spectrums
+
     for (ChannelID channel = 0; channel < result->channelCount(); ++channel) {
         DataChannel *const channelData = result->modifyData(channel);
 
@@ -171,12 +172,19 @@ void SpectrumGenerator::process(PPresult *result) {
         double min = INT_MAX;
         double max = INT_MIN;
         // TODO: adapt triggerPosition (left = tP - preTrig; right = left + dotsOnScreen)
-        unsigned right = result->triggerPosition + DIVS_TIME * scope->horizontal.timebase / channelData->voltage.interval;
-        if ( right > sampleCount )
-            right = sampleCount;
-        for (unsigned int position = result->triggerPosition; // left side of trace
-             position < right; // right side
-             ++position) {
+        float horizontalFactor = (float)(result->data(channel)->voltage.interval / scope->horizontal.timebase);
+        unsigned dotsOnScreen = DIVS_TIME / horizontalFactor + 0.99; // round up
+        unsigned preTrigSamples = (unsigned)(scope->trigger.position * dotsOnScreen);
+        int left = result->triggerPosition - preTrigSamples; // 1st sample to show
+        int right = left + dotsOnScreen; // last sample to show
+        if ( left < 0 ) // trig pos or time/div was increased
+            left = 0; // show as much as we have on left side
+        //unsigned right = result->triggerPosition + DIVS_TIME * scope->horizontal.timebase / channelData->voltage.interval;
+        if ( right >= (int)sampleCount )
+            right = sampleCount-1 ;
+        for ( int position = left; // left side of trace
+             position <= right; // right side
+             ++position ) {
             if ( channelData->voltage.sample[position] < min )
                 min = channelData->voltage.sample[position];
             if ( channelData->voltage.sample[position] > max )

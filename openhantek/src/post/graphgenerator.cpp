@@ -5,8 +5,8 @@
 #include <exception>
 #include <math.h>
 
-#include "post/graphgenerator.h"
-#include "post/ppresult.h"
+#include "graphgenerator.h"
+#include "ppresult.h"
 #include "hantekdso/controlspecification.h"
 #include "scopesettings.h"
 #include "utils/printutils.h"
