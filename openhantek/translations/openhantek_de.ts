@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="de_DE">
+<TS version="2.0" language="de_DE">
 <context>
     <name></name>
     <message>
@@ -13,11 +13,11 @@
     <name>DevicesListModel</name>
     <message>
         <source>Devicename</source>
-        <translation type="vanished">Gerätename</translation>
+        <translation>Gerätename</translation>
     </message>
     <message>
         <source>Status</source>
-        <translation type="vanished">Status</translation>
+        <translation>Status</translation>
     </message>
 </context>
 <context>
@@ -322,7 +322,7 @@
     <name>DsoWidget</name>
     <message>
         <source>Zoom x%L1</source>
-        <translation type="vanished">Zoom x%L1</translation>
+        <translation>Zoom x%L1</translation>
     </message>
     <message>
         <location filename="../src/dsowidget.cpp" line="483"/>
@@ -346,7 +346,7 @@
     </message>
     <message>
         <source>Zoom ---</source>
-        <translation type="vanished">Zoom ---</translation>
+        <translation>Zoom ---</translation>
     </message>
     <message>
         <location filename="../src/dsowidget.cpp" line="437"/>
@@ -405,7 +405,7 @@
     </message>
     <message>
         <source>%1  %2  %3  %4</source>
-        <translation type="vanished">%1  %2  %3  %4</translation>
+        <translation>%1  %2  %3  %4</translation>
     </message>
     <message>
         <location filename="../src/dsowidget.cpp" line="578"/>
@@ -498,7 +498,7 @@
     </message>
     <message>
         <source>Record length</source>
-        <translation type="vanished">Satzlänge</translation>
+        <translation>Satzlänge</translation>
     </message>
     <message>
         <location filename="../src/docks/HorizontalDock.cpp" line="54"/>
@@ -512,7 +512,7 @@
     </message>
     <message>
         <source>Roll</source>
-        <translation type="vanished">Rollen</translation>
+        <translation>Rollen</translation>
     </message>
 </context>
 <context>
@@ -524,7 +524,7 @@
     </message>
     <message>
         <source>%1  %2  %3  %4</source>
-        <translation type="vanished">%1  %2  %3  %4</translation>
+        <translation>%1  %2  %3  %4</translation>
     </message>
     <message>
         <location filename="../src/exporting/legacyexportdrawer.cpp" line="57"/>
@@ -533,7 +533,7 @@
     </message>
     <message>
         <source>%1 S</source>
-        <translation type="vanished">%1 S</translation>
+        <translation>%1 S</translation>
     </message>
     <message>
         <location filename="../src/exporting/legacyexportdrawer.cpp" line="69"/>
@@ -705,7 +705,7 @@
     </message>
     <message>
         <source>&amp;Stop</source>
-        <translation type="vanished">&amp;Stop</translation>
+        <translation>&amp;Stop</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="202"/>
@@ -714,7 +714,7 @@
     </message>
     <message>
         <source>&amp;Start</source>
-        <translation type="vanished">&amp;Start</translation>
+        <translation>&amp;Start</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="201"/>
@@ -922,11 +922,11 @@
     </message>
     <message>
         <source>%L1 μV</source>
-        <translation type="vanished">%L1 µV</translation>
+        <translation>%L1 µV</translation>
     </message>
     <message>
         <source>%L1 μs</source>
-        <translation type="vanished">%L1 µs</translation>
+        <translation>%L1 µs</translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="25"/>
@@ -1124,7 +1124,7 @@
     </message>
     <message>
         <source>Show translated UI (if available)</source>
-        <translation type="vanished">Zeige deutsche Texte (sofern vorhanden)</translation>
+        <translation>Zeige deutsche Texte (sofern vorhanden)</translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="17"/>
@@ -1301,7 +1301,7 @@
     <name>QObject</name>
     <message>
         <source>Translation loaded</source>
-        <translation type="vanished">Übersetzung geladen</translation>
+        <translation>Übersetzung geladen</translation>
     </message>
     <message>
         <location filename="../src/selectdevice/rawdeviceslistmodel.cpp" line="65"/>
@@ -1328,11 +1328,11 @@
     <name>RawDevicesListModel</name>
     <message>
         <source>%1:%2 - No access</source>
-        <translation type="vanished">%1:%2 - Kein Zugriff</translation>
+        <translation>%1:%2 - Kein Zugriff</translation>
     </message>
     <message>
         <source>%1:%2 (%3 - %4)</source>
-        <translation type="vanished">%1:%2 (%3 - %4)</translation>
+        <translation>%1:%2 (%3 - %4)</translation>
     </message>
 </context>
 <context>
@@ -1375,16 +1375,20 @@
     </message>
     <message>
         <source>Connection failed!</source>
-        <translation type="vanished">Verbindungsfehler!</translation>
+        <translation>Verbindungsfehler!</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="53"/>
         <source>&lt;br/&gt;&lt;p&gt;The device is ready for use.&lt;/p&gt;&lt;p&gt;Please observe the &lt;a href=&apos;https://github.com/OpenHantek/OpenHantek6022/blob/master/docs/OpenHantek6022_User_Manual.pdf&apos;&gt;user manual&lt;/a&gt; for safe operation.&lt;/p&gt;</source>
         <translation>&lt;br/&gt;&lt;p&gt;Das Gerät ist bereit.&lt;/p&gt;&lt;p&gt;Das &lt;a href=&apos;https://github.com/OpenHantek/OpenHantek6022/blob/master/docs/OpenHantek6022_User_Manual.pdf&apos;&gt;Benutzerhandbuch&lt;/a&gt; gibt Hinweise für den sicheren Gebrauch.&lt;/p&gt;</translation>
     </message>
     <message>
         <source>&lt;p&gt;Upload in progress ...&lt;/p&gt;&lt;p&gt;If the upload takes more than 30 s, please close this window &lt;br/&gt;and restart the program!&lt;/p&gt;</source>
-        <translation type="vanished">&lt;p&gt;Firmware wird geladen...&lt;/p&gt;&lt;p&gt;Sollte dies länger als 30 s dauern, bitte abbrechen &lt;br/&gt;und das Programm neu starten!&lt;/p&gt;</translation>
+        <translation>&lt;p&gt;Firmware wird geladen...&lt;/p&gt;&lt;p&gt;Sollte dies länger als 30 s dauern, bitte abbrechen &lt;br/&gt;und das Programm neu starten!&lt;/p&gt;</translation>
+    </message>
+    <message>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="53"/>
+        <source>&lt;br/&gt;&lt;p&gt;&lt;b&gt;The device is ready for use.&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Please observe the &lt;a href=&apos;https://github.com/OpenHantek/OpenHantek6022/blob/master/docs/OpenHantek6022_User_Manual.pdf&apos;&gt;user manual&lt;/a&gt; for safe operation.&lt;/p&gt;</source>
+        <translation>&lt;br/&gt;&lt;p&gt;&lt;b&gt;Das Gerät ist bereit.&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Das &lt;a href=&apos;https://github.com/OpenHantek/OpenHantek6022/blob/master/docs/OpenHantek6022_User_Manual.pdf&apos;&gt;Benutzerhandbuch&lt;/a&gt; gibt Hinweise für den sicheren Gebrauch.&lt;/p&gt;</translation>
     </message>
     <message>
         <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="59"/>
@@ -1467,15 +1471,15 @@
     <name>UploadFirmware</name>
     <message>
         <source>Couldn&apos;t open device: %1</source>
-        <translation type="vanished">Konnte Gerät nicht öffnen: %1</translation>
+        <translation>Konnte Gerät nicht öffnen: %1</translation>
     </message>
     <message>
         <source>libusb_claim_interface() failed: %1</source>
-        <translation type="vanished">libusb_claim_interface() - Fehler: %1</translation>
+        <translation>libusb_claim_interface() - Fehler: %1</translation>
     </message>
     <message>
         <source>Writing the main firmware failed: %1</source>
-        <translation type="vanished">Fehler beim Übertragen der Firmware: %1</translation>
+        <translation>Fehler beim Übertragen der Firmware: %1</translation>
     </message>
 </context>
 <context>
@@ -1507,15 +1511,15 @@
     </message>
     <message>
         <source>x%1</source>
-        <translation type="vanished">x%1</translation>
+        <translation>x%1</translation>
     </message>
     <message>
         <source>x10</source>
-        <translation type="vanished">x10</translation>
+        <translation>x10</translation>
     </message>
     <message>
         <source>X10 probe</source>
-        <translation type="vanished">X10 Tastkopf</translation>
+        <translation>X10 Tastkopf</translation>
     </message>
 </context>
 </TS>

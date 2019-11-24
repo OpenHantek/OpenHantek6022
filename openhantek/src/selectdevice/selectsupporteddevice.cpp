@@ -50,7 +50,7 @@ std::unique_ptr<USBDevice> SelectSupportedDevice::showSelectDeviceModal(libusb_c
         if (ui->cmbDevices->currentData(Qt::UserRole+1).toBool()) {
             ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(true);
             ui->labelReadyState->setText(
-                tr("<br/><p>The device is ready for use.</p><p>Please observe the "
+                tr("<br/><p><b>The device is ready for use.</b></p><p>Please observe the "
                    "<a href='https://github.com/OpenHantek/OpenHantek6022/blob/master/docs/OpenHantek6022_User_Manual.pdf'>"
                    "user manual</a> for safe operation.</p>"));
         } else {
