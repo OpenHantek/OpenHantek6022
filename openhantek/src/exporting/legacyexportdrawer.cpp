@@ -330,7 +330,7 @@ bool LegacyExportDrawer::exportSamples(const PPresult *result, QPaintDevice* pai
                                                          (int)result->data(channel)->spectrum.sample.size() - 1);
 
                         // Draw graph
-                        double megnitude = settings->scope.spectrum[channel].magnitude;
+                        double magnitude = settings->scope.spectrum[channel].magnitude;
                         double offset = settings->scope.spectrum[channel].offset;
                         QPointF *graph = new QPointF[ lastPosition - firstPosition + 1 ];
 
