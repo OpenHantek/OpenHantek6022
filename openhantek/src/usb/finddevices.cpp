@@ -40,7 +40,6 @@ int FindDevices::updateDeviceList() {
 
         if ( inList != devices.end()) {
             inList->second->setFindIteration(findIteration);
-            //continue;
         }
 
         for (DSOModel* model : ModelRegistry::get()->models()) {
@@ -64,21 +63,7 @@ int FindDevices::updateDeviceList() {
             ++it;
         }
     }
-
-// TODO: test on FreeBSD
-#if 1
     libusb_free_device_list( deviceList, false );
-#else
-    #if !defined(__FreeBSD__)
-        /*
-        ToDo: This introduces a potential resource leak if not executed
-        on FreeBSD. It seems there is a reference counting problem when
-        using libusb on FreeBSD.
-        */
-        libusb_free_device_list( deviceList, false );
-    #endif
-#endif
-
     return changes;
 }
 
