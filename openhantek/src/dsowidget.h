@@ -24,8 +24,8 @@ class DsoWidget : public QWidget {
 
   public:
     struct Sliders {
-        LevelSlider *offsetSlider;          ///< The sliders for the graph offsets
-        LevelSlider *triggerPositionSlider; ///< The slider for the pretrigger
+        LevelSlider *voltageOffsetSlider;   ///< The sliders for the graph offsets
+        LevelSlider *triggerOffsetSlider;   ///< The slider for the pretrigger
         LevelSlider *triggerLevelSlider;    ///< The sliders for the trigger level
         LevelSlider *markerSlider;          ///< The sliders for the markers
     };
@@ -44,7 +44,7 @@ class DsoWidget : public QWidget {
     virtual void showEvent(QShowEvent *event);
     void setupSliders(Sliders &sliders);
     void adaptTriggerLevelSlider(DsoWidget::Sliders &sliders, ChannelID channel);
-    void adaptTriggerPositionSlider();
+    void adaptTriggerOffsetSlider();
     void setMeasurementVisible(ChannelID channel);
     void updateMarkerDetails();
     void updateSpectrumDetails(ChannelID channel);
@@ -135,13 +135,13 @@ class DsoWidget : public QWidget {
   private slots:
     // Sliders
     void updateOffset(ChannelID channel, double value);
-    void updateTriggerPosition(int index, double value, bool mainView = true);
+    void updateTriggerOffset(int index, double value, bool mainView = true);
     void updateTriggerLevel(ChannelID channel, double value);
     void updateMarker(int marker, double value);
 
   signals:
     // Sliders
-    void offsetChanged(ChannelID channel, double value);       ///< A graph offset has been changed
+    void voltageOffsetChanged (ChannelID channel, double value);       ///< A graph offset has been changed
     void triggerPositionChanged(double value);                    ///< The pretrigger has been changed
     void triggerLevelChanged(ChannelID channel, double value); ///< A trigger level has been changed
 };

@@ -307,7 +307,7 @@ unsigned HantekDsoControl::updateSamplerate(unsigned downsampler, bool fastRate)
             controlsettings.samplerate.limits->max / specification->bufferDividers[controlsettings.recordLengthId];
 
     // Update dependencies
-    this->setTriggerPosition(controlsettings.trigger.position);
+    this->setTriggerOffset (controlsettings.trigger.position);
 
     return downsampler;
 }
@@ -559,7 +559,7 @@ Dso::ErrorCode HantekDsoControl::setTriggerSlope(Dso::Slope slope) {
 
 
 // set trigger position (0.0 - 1.0)
-Dso::ErrorCode HantekDsoControl::setTriggerPosition(double position) {
+Dso::ErrorCode HantekDsoControl::setTriggerOffset (double position) {
     if (!device->isConnected())
         return Dso::ErrorCode::CONNECTION;
     //printf("setTriggerPosition( %g )\n", position);
@@ -630,61 +630,59 @@ unsigned HantekDsoControl::searchTriggerPoint( Dso::Slope dsoSlope, unsigned int
 }
 
 
-unsigned HantekDsoControl::softwareTrigger() {
+int HantekDsoControl::softwareTrigger() {
     static Dso::Slope nextSlope = Dso::Slope::Positive; // for alternating slope mode X
     ChannelID channel = controlsettings.trigger.source;
     // Trigger channel not in use
-    if (!controlsettings.voltage[channel].used || result.data.empty()) {
-        return result.triggerPosition = 0;
+    if ( !controlsettings.voltage[ channel ].used || result.data.empty() ) {
+        return result.triggerPosition = -1;
     }
     //printf( "HDC::softwareTrigger()\n" );
-    triggerPositionRaw = 0;
+    triggeredPositionRaw = -1;
     result.triggerPosition = -1; // not triggered
     result.pulseWidth1 = 0.0;
     result.pulseWidth2 = 0.0;
 
-    size_t sampleCount = result.data[channel].size(); // number of available samples
+    size_t sampleCount = result.data[ channel ].size(); // number of available samples
     double timeDisplay = controlsettings.samplerate.target.duration; // time for full screen width
     double sampleRate = controlsettings.samplerate.current;
     double samplesDisplay = timeDisplay * sampleRate;
     //unsigned preTrigSamples = (unsigned)(controlsettings.trigger.position * samplesDisplay);
     //printf( "sC %lu, tD %g, sR %g, sD %g\n", sampleCount, timeDisplay, sampleRate, samplesDisplay );
-    if (samplesDisplay >= sampleCount) {
+    if ( samplesDisplay >= sampleCount ) {
         // For sure not enough samples to adjust for jitter.
-        timestampDebug(QString("Too few samples to make a steady picture. Decrease sample rate"));
-        return result.triggerPosition = 0;
+        timestampDebug( QString( "Too few samples to make a steady picture. Decrease sample rate" ) );
+        return result.triggerPosition = -1;
     }
 
     // search for trigger point in a range that leaves enough samples left and right of trigger for display
     // find also the alternate slope after trigger point -> calculate pulse width.
     if ( controlsettings.trigger.slope != Dso::Slope::Both  ) {
-        triggerPositionRaw = searchTriggerPoint( nextSlope = controlsettings.trigger.slope );
-        if ( triggerPositionRaw ) { // triggered -> search also following other slope (calculate pulse width)
-            if ( unsigned int slopePos2 = searchTriggerPoint( mirrorSlope( nextSlope ), triggerPositionRaw ) ) {
-                result.pulseWidth1 = (slopePos2 - triggerPositionRaw) / sampleRate;
+        triggeredPositionRaw = searchTriggerPoint( nextSlope = controlsettings.trigger.slope );
+        if ( triggeredPositionRaw ) { // triggered -> search also following other slope (calculate pulse width)
+            if ( unsigned int slopePos2 = searchTriggerPoint( mirrorSlope( nextSlope ), triggeredPositionRaw ) ) {
+                result.pulseWidth1 = ( slopePos2 - triggeredPositionRaw ) / sampleRate;
                 if ( unsigned int slopePos3 = searchTriggerPoint( nextSlope, slopePos2 ) ) {
-                    result.pulseWidth2 = (slopePos3 - slopePos2) / sampleRate;
-                    //printf("%g + %g = %g\n", result.pulseWidth1, result.pulseWidth2, result.pulseWidth1 + result.pulseWidth2 );
+                    result.pulseWidth2 = ( slopePos3 - slopePos2 ) / sampleRate;
                 }
             }
         }
     } else { // alternating trigger slope
-        triggerPositionRaw = searchTriggerPoint( nextSlope );
-        if ( triggerPositionRaw ) { // triggered -> change slope
+        triggeredPositionRaw = searchTriggerPoint( nextSlope );
+        if ( triggeredPositionRaw ) { // triggered -> change slope
             Dso::Slope thirdSlope = nextSlope;
             nextSlope = mirrorSlope( nextSlope );
-            if ( unsigned int slopePos2 = searchTriggerPoint( nextSlope, triggerPositionRaw ) ) {
-                result.pulseWidth1 = (slopePos2 - triggerPositionRaw) / sampleRate;
+            if ( unsigned int slopePos2 = searchTriggerPoint( nextSlope, triggeredPositionRaw ) ) {
+                result.pulseWidth1 = ( slopePos2 - triggeredPositionRaw ) / sampleRate;
                 if ( unsigned int slopePos3 = searchTriggerPoint( thirdSlope, slopePos2 ) ) {
-                    result.pulseWidth2 = (slopePos3 - slopePos2) / sampleRate;
-                    //printf("%g + %g = %g\n", result.pulseWidth1, result.pulseWidth2, result.pulseWidth1 + result.pulseWidth2 );
+                    result.pulseWidth2 = ( slopePos3 - slopePos2 ) / sampleRate;
                 }
             }
         }
     }
 
-    if ( triggerPositionRaw ) { // triggered
-        result.triggerPosition = triggerPositionRaw; // align trace to trigger position
+    if ( triggeredPositionRaw >= 0 ) { // triggered
+        result.triggerPosition = triggeredPositionRaw; // align trace to trigger position
     }
     // printf( "nextSlope %c, triggerPositionRaw %d\n", "/\\"[(int)nextSlope], triggerPositionRaw );
     return result.triggerPosition;
@@ -722,10 +720,10 @@ Dso::ErrorCode HantekDsoControl::setCalFreq( double calfreq ) {
     if ( cf == 0 ) // 50, 100, 200, 500 -> 105, 110, 120, 150
         cf = 100 + calfreq / 10;
     //printf( "HDC::setCalFreq( %g ) -> %d\n", calfreq, cf );
-    if (!device->isConnected())
+    if ( !device->isConnected() )
         return Dso::ErrorCode::CONNECTION;
     // control command for setting
-    modifyCommand<ControlSetCalFreq>(ControlCode::CONTROL_SETCALFREQ)
+    modifyCommand<ControlSetCalFreq>( ControlCode::CONTROL_SETCALFREQ )
         ->setCalFreq( cf );
     return Dso::ErrorCode::NONE;
 }
@@ -812,7 +810,7 @@ void HantekDsoControl::run() {
     }
 
     // Stop sampling if we're in single trigger mode and have a triggered trace (txh No13)
-    if ( controlsettings.trigger.mode == Dso::TriggerMode::SINGLE && this->_samplingStarted && triggerPositionRaw > 0 ) {
+    if ( controlsettings.trigger.mode == Dso::TriggerMode::SINGLE && this->_samplingStarted && triggeredPositionRaw > 0 ) {
         this->enableSampling(false);
     }
 

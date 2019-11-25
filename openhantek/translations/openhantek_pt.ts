@@ -1336,7 +1336,6 @@
         <translation>&lt;p&gt;Upload em andamento ...&lt;/p&gt;&lt;p&gt;&gt;Se o upload demorar mais de 30 s, feche esta janela &lt;br/&gt;e reinicie o programa!&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="53"/>
         <source>&lt;br/&gt;&lt;p&gt;&lt;b&gt;The device is ready for use.&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Please observe the &lt;a href=&apos;https://github.com/OpenHantek/OpenHantek6022/blob/master/docs/OpenHantek6022_User_Manual.pdf&apos;&gt;user manual&lt;/a&gt; for safe operation.&lt;/p&gt;</source>
         <translation>&lt;br/&gt;&gt;&lt;p&gt;&lt;b&gt;O dispositivo está pronto para uso.&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Por favor, observe o &lt;a href=&apos;https://github.com/OpenHantek/OpenHantek6022/blob/master/docs/OpenHantek6022_User_Manual.pdf&apos;&gt; manual do usuário&lt;/a&gt; para uma operação segura.&lt;/p&gt;</translation>
     </message>
@@ -1346,9 +1345,18 @@
         <translation>&lt;p&gt;Upload em andamento ...&lt;/p&gt;&lt;p&gt;&gt;&lt;b&gt;Se o upload demorar mais de 30 s, feche esta janela &lt;br/&gt;e reinicie o programa!&lt;/b&gt;&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="65"/>
         <source>&lt;p&gt;&lt;br/&gt;&lt;b&gt;Connection failed!&lt;/p&gt;</source>
         <translation>&lt;p&gt;&lt;br/&gt;&lt;b&gt;Conexão falhou!&lt;/p&gt;</translation>
+    </message>
+    <message>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="53"/>
+        <source>&lt;p&gt;&lt;br/&gt;&lt;b&gt;The device is ready for use.&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Please observe the &lt;a href=&apos;https://github.com/OpenHantek/OpenHantek6022/blob/master/docs/OpenHantek6022_User_Manual.pdf&apos;&gt;user manual&lt;/a&gt; for safe operation.&lt;/p&gt;</source>
+        <translation>&lt;p&gt;&lt;br/&gt;&lt;b&gt;O dispositivo está pronto para uso.&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Por favor, observe o &lt;a href=&apos;https://github.com/OpenHantek/OpenHantek6022/blob/master/docs/OpenHantek6022_User_Manual.pdf&apos;&gt; manual do usuário&lt;/a&gt; para uma operação segura.&lt;/p&gt;</translation>
+    </message>
+    <message>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="65"/>
+        <source>&lt;p&gt;&lt;br/&gt;&lt;b&gt;Connection failed!&lt;/b&gt;&lt;/p&gt;</source>
+        <translation>&lt;p&gt;&lt;br/&gt;&lt;b&gt;Conexão falhou!&lt;/b&gt;&lt;/p&gt;</translation>
     </message>
     <message>
         <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="72"/>

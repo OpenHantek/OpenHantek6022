@@ -90,7 +90,7 @@ void DsoSettings::load() {
     // Trigger
     store->beginGroup("trigger");
     if (store->contains("mode")) scope.trigger.mode = (Dso::TriggerMode)store->value("mode").toUInt();
-    if (store->contains("position")) scope.trigger.position = store->value("position").toDouble();
+    if (store->contains("position")) scope.trigger.offset = store->value("position").toDouble();
     if (store->contains("slope")) scope.trigger.slope = (Dso::Slope)store->value("slope").toUInt();
     if (store->contains("source")) scope.trigger.source = store->value("source").toUInt();
     store->endGroup();
@@ -228,7 +228,7 @@ void DsoSettings::save() {
     // Trigger
     store->beginGroup("trigger");
     store->setValue("mode", (unsigned)scope.trigger.mode);
-    store->setValue("position", scope.trigger.position);
+    store->setValue("position", scope.trigger.offset );
     store->setValue("slope", (unsigned)scope.trigger.slope);
     store->setValue("source", scope.trigger.source);
     store->endGroup();

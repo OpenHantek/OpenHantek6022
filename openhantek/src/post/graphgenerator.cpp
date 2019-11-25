@@ -83,10 +83,10 @@ void GraphGenerator::generateGraphsTYvoltage(PPresult *result, const DsoSettings
         float horizontalFactor = (float)(samples.interval / scope->horizontal.timebase);
         // printf( "hF: %g\n", horizontalFactor );
         unsigned dotsOnScreen = DIVS_TIME / horizontalFactor + 0.99; // round up
-        unsigned preTrigSamples = (unsigned)(scope->trigger.position * dotsOnScreen);
+        unsigned preTrigSamples = (unsigned)(scope->trigger.offset * dotsOnScreen);
         // align displayed trace with trigger mark on screen ...
         // ... also if trig pos or time/div was changed on a "frozen" or single trace
-        int leftmostSample = result->triggerPosition - preTrigSamples; // 1st sample to show
+        int leftmostSample = result->triggeredPosition - preTrigSamples; // 1st sample to show
         int leftmostPosition = 0; // start position on display
         if ( leftmostSample < 0 ) { // trig pos or time/div was increased
             leftmostPosition = -leftmostSample; // trace can't start on left margin
@@ -179,30 +179,30 @@ void GraphGenerator::generateGraphsTYspectrum(PPresult *result) {
 }
 
 
-void GraphGenerator::generateGraphsXY(PPresult *result, const DsoSettingsScope *scope) {
-    result->vaChannelVoltage.resize(scope->voltage.size());
+void GraphGenerator::generateGraphsXY( PPresult *result, const DsoSettingsScope *scope ) {
+    result->vaChannelVoltage.resize( scope->voltage.size() );
 
     // Delete all spectrum graphs
-    for (ChannelGraph &data : result->vaChannelSpectrum) data.clear();
+    for ( ChannelGraph &data : result->vaChannelSpectrum ) data.clear();
 
     // Generate voltage graphs for pairs of channels
-    for (ChannelID channel = 0; channel < scope->voltage.size(); channel += 2) {
+    for ( ChannelID channel = 0; channel < scope->voltage.size(); channel += 2 ) {
         // We need pairs of channels.
-        if (channel + 1 == scope->voltage.size()) {
-            result->vaChannelVoltage[channel].clear();
+        if ( channel + 1 == scope->voltage.size() ) {
+            result->vaChannelVoltage[ channel ].clear();
             continue;
         }
 
         const ChannelID xChannel = channel;
         const ChannelID yChannel = channel + 1;
 
-        const SampleValues &xSamples = useVoltSamplesOf(xChannel, result, scope);
-        const SampleValues &ySamples = useVoltSamplesOf(yChannel, result, scope);
+        const SampleValues &xSamples = useVoltSamplesOf( xChannel, result, scope );
+        const SampleValues &ySamples = useVoltSamplesOf( yChannel, result, scope );
 
         // The channels need to be active
         if (!xSamples.sample.size() || !ySamples.sample.size()) {
-            result->vaChannelVoltage[channel].clear();
-            result->vaChannelVoltage[channel + 1].clear();
+            result->vaChannelVoltage[ channel ].clear();
+            result->vaChannelVoltage[ channel + 1 ].clear();
             continue;
         }
 
@@ -214,14 +214,14 @@ void GraphGenerator::generateGraphsXY(PPresult *result, const DsoSettingsScope *
         // Fill vector array
         std::vector<double>::const_iterator xIterator = xSamples.sample.begin();
         std::vector<double>::const_iterator yIterator = ySamples.sample.begin();
-        const double xGain = scope->gain(xChannel);
-        const double yGain = scope->gain(yChannel);
-        const double xOffset = scope->voltage[xChannel].offset;
-        const double yOffset = scope->voltage[yChannel].offset;
+        const double xGain = scope->gain( xChannel );
+        const double yGain = scope->gain( yChannel );
+        const double xOffset = ( scope->trigger.offset - 0.5 ) * DIVS_VOLTAGE;
+        const double yOffset = scope->voltage[ yChannel ].offset;
 
-        for (unsigned int position = 0; position < sampleCount; ++position) {
-            drawLines.push_back(QVector3D((float)(*(xIterator++) / xGain + xOffset),
-                                          (float)(*(yIterator++) / yGain + yOffset), 0.0));
+        for ( unsigned int position = 0; position < sampleCount; ++position ) {
+            drawLines.push_back(QVector3D( (float)( *( xIterator++ ) / xGain + xOffset ),
+                                           (float)( *( yIterator++ ) / yGain + yOffset ), 0.0 ) );
         }
     }
 }

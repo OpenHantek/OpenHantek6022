@@ -72,7 +72,7 @@ void applySettingsToDevice(HantekDsoControl *dsoControl, DsoSettingsScope *scope
 
     dsoControl->setRecordTime(scope->horizontal.timebase * DIVS_TIME);
     dsoControl->setTriggerMode(scope->trigger.mode);
-    dsoControl->setTriggerPosition(scope->trigger.position);
+    dsoControl->setTriggerOffset (scope->trigger.offset );
     dsoControl->setTriggerSlope(scope->trigger.slope);
     dsoControl->setTriggerSource(scope->trigger.source, scope->trigger.smooth);
 }

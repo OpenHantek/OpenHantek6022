@@ -11,12 +11,12 @@ void PostProcessing::convertData(const DSOsamples *source, PPresult *destination
     QReadLocker locker(&source->lock);
     if ( source->triggerPosition ) {
         destination->softwareTriggerTriggered = source->liveTrigger;
-        destination->triggerPosition = source->triggerPosition;
+        destination->triggeredPosition = source->triggerPosition;
         destination->pulseWidth1 = source->pulseWidth1;
         destination->pulseWidth2 = source->pulseWidth2;
     } else {
         destination->softwareTriggerTriggered = false;
-        destination->triggerPosition = 0;
+        destination->triggeredPosition = 0;
         destination->pulseWidth1 = 0;
         destination->pulseWidth2 = 0;
     }

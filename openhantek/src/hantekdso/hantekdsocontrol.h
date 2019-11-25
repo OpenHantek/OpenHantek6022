@@ -151,7 +151,7 @@ class HantekDsoControl : public QObject {
         return ( slope == Dso::Slope::Positive ? Dso::Slope::Negative : Dso::Slope::Positive );
     }
 
-    unsigned softwareTrigger();
+    int softwareTrigger();
 
     void triggering();
 
@@ -176,7 +176,7 @@ class HantekDsoControl : public QObject {
     bool _samplingStarted = false;
     int cycleTime = 0;
     bool channelSetupChanged = false;
-    int triggerPositionRaw = -1; // not triggered
+    int triggeredPositionRaw = -1; // not triggered
 
   public slots:
     /// \brief If sampling is disabled, no samplesAvailable() signals are send anymore, no samples
@@ -251,7 +251,7 @@ class HantekDsoControl : public QObject {
     /// \brief Set the trigger position.
     /// \param position The new trigger position (in s).
     /// \return The trigger position that has been set.
-    Dso::ErrorCode setTriggerPosition(double position);
+    Dso::ErrorCode setTriggerOffset (double position);
 
     /// \brief Sets the calibration frequency of the oscilloscope.
     /// \param calfreq The calibration frequency.

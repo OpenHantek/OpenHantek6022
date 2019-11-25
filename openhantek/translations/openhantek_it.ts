@@ -1298,21 +1298,29 @@
     <message>
         <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="59"/>
         <source>&lt;p&gt;Upload in progress ...&lt;/p&gt;&lt;p&gt;&lt;b&gt;If the upload takes more than 30 s, please close this window &lt;br/&gt;and restart the program!&lt;/b&gt;&lt;/p&gt;&lt;p&gt;In this case, please unplug other USB devices on the same bus!&lt;br/&gt;You can check this under Linux with: &lt;pre&gt;lsusb; lsusb -t&lt;/pre&gt;&lt;/p&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">&lt;p&gt;Carica in corso ...&lt;/p&gt;&lt;p&gt;&lt;p&gt;Se il caricamento richiede più di 30 secondi, chiudi questa finestra &lt;br/&gt;e riavvia il programma!&lt;/p&gt;</translation>
     </message>
     <message>
         <source>Connection failed!</source>
         <translation>Il collegamento è fallito!</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="53"/>
         <source>&lt;br/&gt;&lt;p&gt;&lt;b&gt;The device is ready for use.&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Please observe the &lt;a href=&apos;https://github.com/OpenHantek/OpenHantek6022/blob/master/docs/OpenHantek6022_User_Manual.pdf&apos;&gt;user manual&lt;/a&gt; for safe operation.&lt;/p&gt;</source>
         <translation>&lt;br/&gt;&lt;p&gt;&lt;b&gt;Il dispositivo è pronto all&apos;uso.&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Per un funzionamento sicuro, osservare il &lt;a href=&apos;https://github.com/OpenHantek/OpenHantek6022/blob/master/docs/OpenHantek6022_User_Manual.pdf&apos;&gt;manuale d&apos;uso.&lt;/a&gt;</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="65"/>
         <source>&lt;p&gt;&lt;br/&gt;&lt;b&gt;Connection failed!&lt;/p&gt;</source>
         <translation>&lt;p&gt;&lt;br/&gt;&lt;b&gt;Il collegamento è fallito!&lt;/p&gt;</translation>
+    </message>
+    <message>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="53"/>
+        <source>&lt;p&gt;&lt;br/&gt;&lt;b&gt;The device is ready for use.&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Please observe the &lt;a href=&apos;https://github.com/OpenHantek/OpenHantek6022/blob/master/docs/OpenHantek6022_User_Manual.pdf&apos;&gt;user manual&lt;/a&gt; for safe operation.&lt;/p&gt;</source>
+        <translation>&lt;p&gt;&lt;br/&gt;&lt;b&gt;Il dispositivo è pronto all&apos;uso.&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Per un funzionamento sicuro, osservare il &lt;a href=&apos;https://github.com/OpenHantek/OpenHantek6022/blob/master/docs/OpenHantek6022_User_Manual.pdf&apos;&gt;manuale d&apos;uso.&lt;/a&gt;</translation>
+    </message>
+    <message>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="65"/>
+        <source>&lt;p&gt;&lt;br/&gt;&lt;b&gt;Connection failed!&lt;/b&gt;&lt;/p&gt;</source>
+        <translation>&lt;p&gt;&lt;br/&gt;&lt;b&gt;Il collegamento è fallito!&lt;/b&gt;&lt;/p&gt;</translation>
     </message>
     <message>
         <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="72"/>

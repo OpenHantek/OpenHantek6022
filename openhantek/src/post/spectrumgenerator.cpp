@@ -174,8 +174,8 @@ void SpectrumGenerator::process(PPresult *result) {
         // TODO: adapt triggerPosition (left = tP - preTrig; right = left + dotsOnScreen)
         float horizontalFactor = (float)(result->data(channel)->voltage.interval / scope->horizontal.timebase);
         unsigned dotsOnScreen = DIVS_TIME / horizontalFactor + 0.99; // round up
-        unsigned preTrigSamples = (unsigned)(scope->trigger.position * dotsOnScreen);
-        int left = result->triggerPosition - preTrigSamples; // 1st sample to show
+        unsigned preTrigSamples = (unsigned)(scope->trigger.offset * dotsOnScreen);
+        int left = result->triggeredPosition - preTrigSamples; // 1st sample to show
         int right = left + dotsOnScreen; // last sample to show
         if ( left < 0 ) // trig pos or time/div was increased
             left = 0; // show as much as we have on left side

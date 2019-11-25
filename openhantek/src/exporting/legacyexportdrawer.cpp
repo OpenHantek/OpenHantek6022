@@ -40,7 +40,7 @@ bool LegacyExportDrawer::exportSamples(const PPresult *result, QPaintDevice* pai
     double pulseWidth2 = result->data( 0 )->pulseWidth2;
     painter.setPen(colorValues->voltage[settings->scope.trigger.source]);
     QString levelString = valueToString(settings->scope.voltage[settings->scope.trigger.source].trigger, UNIT_VOLTS, 3);
-    QString pretriggerString = tr("%L1%").arg((int)(settings->scope.trigger.position * 100 + 0.5));
+    QString pretriggerString = tr("%L1%").arg((int)(settings->scope.trigger.offset * 100 + 0.5));
     QString pre = Dso::slopeString(settings->scope.trigger.slope); // trigger slope
     QString post = pre; // opposite trigger slope
     if ( settings->scope.trigger.slope == Dso::Slope::Positive )
@@ -183,8 +183,8 @@ bool LegacyExportDrawer::exportSamples(const PPresult *result, QPaintDevice* pai
         double divs = m2 - m1;
         double zoomFactor = DIVS_TIME / divs;
         double zoomOffset = (m1 + m2) / 2;
-        double time1 = ( m1 - DIVS_TIME * settings->scope.trigger.position) * settings->scope.horizontal.timebase;
-        double time2 = ( m2 - DIVS_TIME * settings->scope.trigger.position) * settings->scope.horizontal.timebase;
+        double time1 = ( m1 - DIVS_TIME * settings->scope.trigger.offset ) * settings->scope.horizontal.timebase;
+        double time2 = ( m2 - DIVS_TIME * settings->scope.trigger.offset ) * settings->scope.horizontal.timebase;
         double time = divs * settings->scope.horizontal.timebase;
         double freq1 = m1 * settings->scope.horizontal.frequencybase;
         double freq2 = m2 * settings->scope.horizontal.frequencybase;
@@ -267,8 +267,8 @@ bool LegacyExportDrawer::exportSamples(const PPresult *result, QPaintDevice* pai
                         int dotsOnScreen = DIVS_TIME / horizontalFactor + 0.99; // round up
                         // align displayed trace with trigger mark on screen ...
                         // ... also if trig pos or time/div was changed on a "frozen" or single trace
-                        int preTrigSamples = (int)(settings->scope.trigger.position * dotsOnScreen);
-                        int leftmostSample = result->triggerPosition - preTrigSamples; // 1st sample to show
+                        int preTrigSamples = (int)(settings->scope.trigger.offset * dotsOnScreen);
+                        int leftmostSample = result->triggeredPosition - preTrigSamples; // 1st sample to show
                         int leftmostPosition = 0; // start position on display
                         if ( leftmostSample < 0 ) { // trig pos or time/div was increased
                             leftmostPosition = -leftmostSample; // trace can't start on left margin
@@ -349,20 +349,20 @@ bool LegacyExportDrawer::exportSamples(const PPresult *result, QPaintDevice* pai
             case Dso::GraphFormat::XY:
                 if ( settings->scope.voltage[ 0 ].used && result->data( 0 )
                      && settings->scope.voltage[ 1 ].used && result->data( 1 ) ) {
-                    double gain0 = settings->scope.gain( 0 );
-                    double offset0 = settings->scope.voltage[ 0 ].offset;
-                    double gain1 = settings->scope.gain( 1 );
-                    double offset1 = settings->scope.voltage[ 1 ].offset;
+                    const double xGain = settings->scope.gain( 0 );
+                    const double yGain = settings->scope.gain( 1 );
+                    const double xOffset = ( settings->scope.trigger.offset - 0.5 ) * DIVS_VOLTAGE;
+                    const double yOffset = settings->scope.voltage[ 1 ].offset;
                     painter.setPen( QPen( colorValues->voltage[ 0 ], 0) );
-                    unsigned int size = std::min( result->data( 0 )->voltage.sample.size(),
-                                                  result->data( 1 )->voltage.sample.size()
-                                                );
+                    const unsigned int size = std::min( result->data( 0 )->voltage.sample.size(),
+                                                        result->data( 1 )->voltage.sample.size()
+                                                      );
                     // Draw graph
                     QPointF *graph = new QPointF[ size ];
                     for (unsigned int index = 0; index < size; ++index ) {
                         graph[ index ] =
-                            QPointF( result->data( 0 )->voltage.sample[ index ] / gain0 + offset0,
-                                     result->data( 1 )->voltage.sample[ index ] / gain1 + offset1
+                            QPointF( result->data( 0 )->voltage.sample[ index ] / xGain + xOffset,
+                                     result->data( 1 )->voltage.sample[ index ] / yGain + yOffset
                                    );
                     }
                     painter.drawPolyline( graph, size );
@@ -375,7 +375,7 @@ bool LegacyExportDrawer::exportSamples(const PPresult *result, QPaintDevice* pai
             }
 
             if ( !zoomed ) { // draw marker lines and trigger position
-                const double trig = DIVS_TIME * ( settings->scope.trigger.position - 0.5 );
+                const double trig = DIVS_TIME * ( settings->scope.trigger.offset - 0.5 );
                 const double tick = (double)DIVS_TIME / 250.0;
                 const double top = DIVS_VOLTAGE/2;
                 const double bottom = -DIVS_VOLTAGE/2;
