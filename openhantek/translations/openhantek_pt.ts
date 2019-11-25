@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="pt_BR">
+<TS version="2.1" language="pt_BR">
 <context>
     <name></name>
     <message>
@@ -311,7 +311,7 @@
     <name>DsoWidget</name>
     <message>
         <source>Zoom x%L1</source>
-        <translation>Zoom x%L1</translation>
+        <translation type="vanished">Zoom x%L1</translation>
     </message>
     <message>
         <location filename="../src/dsowidget.cpp" line="483"/>
@@ -395,7 +395,7 @@
     </message>
     <message>
         <source>%1  %2  %3  %4</source>
-        <translation>%1  %2  %3  %4</translation>
+        <translation type="vanished">%1  %2  %3  %4</translation>
     </message>
     <message>
         <location filename="../src/dsowidget.cpp" line="578"/>
@@ -501,7 +501,7 @@
     </message>
     <message>
         <source>%1  %2  %3  %4</source>
-        <translation>%1  %2  %3  %4</translation>
+        <translation type="vanished">%1  %2  %3  %4</translation>
     </message>
     <message>
         <location filename="../src/exporting/legacyexportdrawer.cpp" line="57"/>
@@ -510,7 +510,7 @@
     </message>
     <message>
         <source>%1 S</source>
-        <translation>%1 S</translation>
+        <translation type="vanished">%1 S</translation>
     </message>
     <message>
         <location filename="../src/exporting/legacyexportdrawer.cpp" line="69"/>
@@ -1325,19 +1325,19 @@
     </message>
     <message>
         <source>Connection failed!</source>
-        <translation>Conexão falhou!</translation>
+        <translation type="vanished">Conexão falhou!</translation>
     </message>
     <message>
         <source>&lt;br/&gt;&lt;p&gt;The device is ready for use.&lt;/p&gt;&lt;p&gt;Please observe the &lt;a href=&apos;https://github.com/OpenHantek/OpenHantek6022/blob/master/docs/OpenHantek6022_User_Manual.pdf&apos;&gt;user manual&lt;/a&gt; for safe operation.&lt;/p&gt;</source>
-        <translation>&lt;br/&gt;&gt;&lt;p&gt;O dispositivo está pronto para uso.&lt;/p&gt;&lt;p&gt;Por favor, observe o &lt;a href=&apos;https://github.com/OpenHantek/OpenHantek6022/blob/master/docs/OpenHantek6022_User_Manual.pdf&apos;&gt; manual do usuário&lt;/a&gt; para uma operação segura.&lt;/p&gt;</translation>
+        <translation type="vanished">&lt;br/&gt;&gt;&lt;p&gt;O dispositivo está pronto para uso.&lt;/p&gt;&lt;p&gt;Por favor, observe o &lt;a href=&apos;https://github.com/OpenHantek/OpenHantek6022/blob/master/docs/OpenHantek6022_User_Manual.pdf&apos;&gt; manual do usuário&lt;/a&gt; para uma operação segura.&lt;/p&gt;</translation>
     </message>
     <message>
         <source>&lt;p&gt;Upload in progress ...&lt;/p&gt;&lt;p&gt;If the upload takes more than 30 s, please close this window &lt;br/&gt;and restart the program!&lt;/p&gt;</source>
-        <translation>&lt;p&gt;Upload em andamento ...&lt;/p&gt;&lt;p&gt;&gt;Se o upload demorar mais de 30 s, feche esta janela &lt;br/&gt;e reinicie o programa!&lt;/p&gt;</translation>
+        <translation type="vanished">&lt;p&gt;Upload em andamento ...&lt;/p&gt;&lt;p&gt;&gt;Se o upload demorar mais de 30 s, feche esta janela &lt;br/&gt;e reinicie o programa!&lt;/p&gt;</translation>
     </message>
     <message>
         <source>&lt;br/&gt;&lt;p&gt;&lt;b&gt;The device is ready for use.&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Please observe the &lt;a href=&apos;https://github.com/OpenHantek/OpenHantek6022/blob/master/docs/OpenHantek6022_User_Manual.pdf&apos;&gt;user manual&lt;/a&gt; for safe operation.&lt;/p&gt;</source>
-        <translation>&lt;br/&gt;&gt;&lt;p&gt;&lt;b&gt;O dispositivo está pronto para uso.&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Por favor, observe o &lt;a href=&apos;https://github.com/OpenHantek/OpenHantek6022/blob/master/docs/OpenHantek6022_User_Manual.pdf&apos;&gt; manual do usuário&lt;/a&gt; para uma operação segura.&lt;/p&gt;</translation>
+        <translation type="vanished">&lt;br/&gt;&gt;&lt;p&gt;&lt;b&gt;O dispositivo está pronto para uso.&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Por favor, observe o &lt;a href=&apos;https://github.com/OpenHantek/OpenHantek6022/blob/master/docs/OpenHantek6022_User_Manual.pdf&apos;&gt; manual do usuário&lt;/a&gt; para uma operação segura.&lt;/p&gt;</translation>
     </message>
     <message>
         <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="59"/>
@@ -1346,7 +1346,7 @@
     </message>
     <message>
         <source>&lt;p&gt;&lt;br/&gt;&lt;b&gt;Connection failed!&lt;/p&gt;</source>
-        <translation>&lt;p&gt;&lt;br/&gt;&lt;b&gt;Conexão falhou!&lt;/p&gt;</translation>
+        <translation type="vanished">&lt;p&gt;&lt;br/&gt;&lt;b&gt;Conexão falhou!&lt;/p&gt;</translation>
     </message>
     <message>
         <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="53"/>

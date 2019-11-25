@@ -353,7 +353,7 @@ bool LegacyExportDrawer::exportSamples(const PPresult *result, QPaintDevice* pai
                     const double yGain = settings->scope.gain( 1 );
                     const double xOffset = ( settings->scope.trigger.offset - 0.5 ) * DIVS_VOLTAGE;
                     const double yOffset = settings->scope.voltage[ 1 ].offset;
-                    painter.setPen( QPen( colorValues->voltage[ 0 ], 0) );
+                    painter.setPen( QPen( colorValues->voltage[ 1 ], 0) );
                     const unsigned int size = std::min( result->data( 0 )->voltage.sample.size(),
                                                         result->data( 1 )->voltage.sample.size()
                                                       );

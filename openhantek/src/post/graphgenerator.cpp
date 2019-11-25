@@ -200,16 +200,16 @@ void GraphGenerator::generateGraphsXY( PPresult *result, const DsoSettingsScope 
         const SampleValues &ySamples = useVoltSamplesOf( yChannel, result, scope );
 
         // The channels need to be active
-        if (!xSamples.sample.size() || !ySamples.sample.size()) {
-            result->vaChannelVoltage[ channel ].clear();
-            result->vaChannelVoltage[ channel + 1 ].clear();
+        if ( !xSamples.sample.size() || !ySamples.sample.size() ) {
+            result->vaChannelVoltage[ xChannel ].clear();
+            result->vaChannelVoltage[ yChannel ].clear();
             continue;
         }
 
         // Check if the sample count has changed
-        const size_t sampleCount = std::min(xSamples.sample.size(), ySamples.sample.size());
-        ChannelGraph &drawLines = result->vaChannelVoltage[channel];
-        drawLines.reserve(sampleCount * 2);
+        const size_t sampleCount = std::min( xSamples.sample.size(), ySamples.sample.size() );
+        ChannelGraph &drawLines = result->vaChannelVoltage[ yChannel ]; // color of y channel
+        drawLines.reserve( sampleCount * 2 );
 
         // Fill vector array
         std::vector<double>::const_iterator xIterator = xSamples.sample.begin();
