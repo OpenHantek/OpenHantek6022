@@ -18,9 +18,11 @@
 
 #include "modelregistry.h"
 
-FindDevices::FindDevices(libusb_context *context) : context(context) {}
 
-// Iterate through all usb devices
+FindDevices::FindDevices( libusb_context *context ) : context( context ) {}
+
+
+// Iterate all devices on USB and keep track of all supported scopes
 int FindDevices::updateDeviceList() {
     libusb_device **deviceList;
     ssize_t deviceCount = libusb_get_device_list(context, &deviceList);
@@ -31,50 +33,68 @@ int FindDevices::updateDeviceList() {
     ++findIteration;
     int changes = 0;
 
-    for (ssize_t deviceIterator = 0; deviceIterator < deviceCount; ++deviceIterator) {
-        libusb_device *device = deviceList[deviceIterator];
+    for (ssize_t deviceIndex = 0; deviceIndex < deviceCount; ++deviceIndex ) {
+        libusb_device *device = deviceList[ deviceIndex ];
         // Get device descriptor
         struct libusb_device_descriptor descriptor;
-        libusb_get_device_descriptor(device, &descriptor);
-        DeviceList::const_iterator inList = devices.find(USBDevice::computeUSBdeviceID(device));
+        libusb_get_device_descriptor( device, &descriptor );
 
-        if ( inList != devices.end()) {
-            inList->second->setFindIteration(findIteration);
+        if ( 0x1d6b == descriptor.idVendor ) // skip linux foundation devices, e.g. usb root hubs
+            continue;
+
+        const UniqueUSBid USBid = USBDevice::computeUSBdeviceID( device );
+
+        DeviceList::const_iterator inList = devices.find( USBid );
+        if ( inList != devices.end()) { // already in list, update heartbeat only
+            inList->second->setFindIteration( findIteration );
+            continue;
         }
-
+        // else check against all supported models for match
         for (DSOModel* model : ModelRegistry::get()->models()) {
             // Check VID and PID for firmware flashed devices
             bool supported = descriptor.idVendor == model->vendorID && descriptor.idProduct == model->productID;
             // Devices without firmware have different VID/PIDs
             supported |= descriptor.idVendor == model->vendorIDnoFirmware && descriptor.idProduct == model->productIDnoFirmware;
-            if (supported) {
+            if (supported) { // put matching device into list
                 ++changes;
-                devices[USBDevice::computeUSBdeviceID(device)] = std::unique_ptr<USBDevice>(new USBDevice(model, device, findIteration));
+                // printf( "+ %016lX %s\n", USBid, model->name.c_str() );
+                devices[ USBid ] = std::unique_ptr<USBDevice>(new USBDevice( model, device, findIteration ) );
+                break; // stop after 1st supported model (there can be more models with identical VID/PID)
             }
         }
     }
 
     // Remove non existing devices
-    for (DeviceList::iterator it=devices.begin();it!=devices.end();) {
-        if (it->second->getFindIteration() != findIteration) {
+    for ( DeviceList::iterator it=devices.begin(); it!=devices.end(); ) {
+        if ( it->second->getFindIteration() != findIteration ) { // heartbeat not up to date, no more on the bus
             ++changes;
-            it = devices.erase(it);
+            // printf( "- %016lX\n", it->first );
+            it = devices.erase( it ); // it points to next entry
         } else {
             ++it;
         }
     }
-    libusb_free_device_list( deviceList, false );
-    return changes;
+#ifdef __linux__
+    libusb_free_device_list( deviceList, true );
+#else
+    // TODO check if this crashes on FreeBSD, MacOSX, Windows
+    // TODO check if change true -> false solves it
+    libusb_free_device_list( deviceList, true );
+#endif
+    return changes; // report number of all detected bus changes (added + removed devices)
 }
+
 
 const FindDevices::DeviceList* FindDevices::getDevices()
 {
     return &devices;
 }
 
-std::unique_ptr<USBDevice> FindDevices::takeDevice(UniqueUSBid id)
+
+std::unique_ptr<USBDevice> FindDevices::takeDevice( UniqueUSBid id )
 {
-    DeviceList::iterator i = devices.find(id);
-    if (i==devices.end()) return nullptr;
-    return std::move(i->second);
+    DeviceList::iterator it = devices.find( id );
+    if ( it == devices.end() )
+        return nullptr;
+    return std::move( it->second );
 }

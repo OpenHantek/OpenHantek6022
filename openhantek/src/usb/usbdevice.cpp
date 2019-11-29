@@ -46,15 +46,34 @@ QString libUsbErrorString(int error) {
 }
 
 
-UniqueUSBid USBDevice::computeUSBdeviceID(libusb_device *device) {
-    UniqueUSBid v = 0;
-    libusb_get_port_numbers(device, (uint8_t *)&v, sizeof(v));
-    return v;
+UniqueUSBid USBDevice::computeUSBdeviceID(libusb_device *device ) {
+    // Returns a 64-bit value that uniquely identifies a device on the bus
+    // bbppVVVVPPPPFFFF
+    //             ^^^^-- Firmware version
+    //         ^^^^------ Product ID
+    //     ^^^^---------- Vendor ID
+    //   ^^-------------- USB port
+    // ^^---------------- USB bus
+
+    // Get device descriptor
+    struct libusb_device_descriptor descriptor;
+    libusb_get_device_descriptor(device, &descriptor);
+    // collect values and arrange them
+    UniqueUSBid uid = libusb_get_bus_number( device );
+    uid <<= 8;
+    uid |= libusb_get_port_number( device );
+    uid <<= 16;
+    uid |= descriptor.idVendor;
+    uid <<= 16;
+    uid |= descriptor.idProduct;
+    uid <<= 16;
+    uid |= descriptor.bcdDevice;
+    return uid;
 }
 
 
 USBDevice::USBDevice(DSOModel *model, libusb_device *device, unsigned findIteration)
-    : model(model), device(device), findIteration(findIteration), uniqueUSBdeviceID(computeUSBdeviceID(device)) {
+    : model(model), device(device), findIteration(findIteration), uniqueUSBdeviceID( computeUSBdeviceID( device ) ) {
     libusb_ref_device(device);
     libusb_get_device_descriptor(device, &descriptor);
 }

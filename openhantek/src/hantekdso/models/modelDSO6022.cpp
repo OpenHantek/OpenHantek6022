@@ -9,14 +9,10 @@
 
 using namespace Hantek;
 
-static ModelDSO2020 modelInstance_20;
-static ModelDSO6022BE modelInstance_22;
-static ModelDSO6022BL modelInstance_2a;
-#ifdef LCSOFT_TEST_BOARD
-// two test cases with simple EZUSB board (LCsoft) without EEPROM or with Saleae VID/PID EEPROM
-static ModelEzUSB modelInstance4;
-static ModelSaleae modelInstance5;
-#endif
+static ModelDSO6022BE modelInstance_6022be;
+static ModelDSO6022BL modelInstance_6022bl;
+
+static ModelDSO2020 modelInstance_2020;
 
 static void initSpecifications(Dso::ControlSpecification& specification) {
     // we drop 2K + 480 sample values due to unreliable start of stream
@@ -122,6 +118,9 @@ static void applyRequirements_(HantekDsoControl *dsoControl) {
     dsoControl->addCommand(new ControlSetCalFreq());      // 0xE6
 }
 
+
+// Hantek DSO-6022BE (this is the base model)
+//
 //                                              VID/PID active  VID/PID no FW   FW ver    FW name     Scope name
 //                                              |------------|  |------------|  |----|  |---------|  |----------|
 ModelDSO6022BE::ModelDSO6022BE() : DSOModel(ID, 0x04b5, 0x6022, 0x04b4, 0x6022, 0x0204, "dso6022be", "DSO-6022BE",
@@ -133,6 +132,7 @@ void ModelDSO6022BE::applyRequirements(HantekDsoControl *dsoControl) const {
     applyRequirements_(dsoControl);
 }
 
+
 // Hantek DSO-6022BL (scope or logic analyzer)
 ModelDSO6022BL::ModelDSO6022BL() : DSOModel(ID, 0x04b5, 0x602a, 0x04b4, 0x602a, 0x0204, "dso6022bl", "DSO-6022BL",
                                             Dso::ControlSpecification(2)) {
@@ -143,7 +143,8 @@ void ModelDSO6022BL::applyRequirements(HantekDsoControl *dsoControl) const {
    applyRequirements_(dsoControl);
 }
 
-// Voltcraft DSO-2020 USB Oscilloscope
+
+// Voltcraft DSO-2020 USB Oscilloscope (HW is identical to 6022)
 // Scope starts up as model DS-2020 (VID/PID = 04b4/2020) but loads 6022BE firmware and looks like a 6022BE 
 ModelDSO2020::ModelDSO2020() : DSOModel(ID, 0x04b5, 0x6022, 0x04b4, 0x2020, 0x0204, "dso6022be", "DSO-2020",
                                             Dso::ControlSpecification(2)) {
@@ -155,9 +156,18 @@ void ModelDSO2020::applyRequirements(HantekDsoControl *dsoControl) const {
 }
 
 
-#ifdef LCSOFT_TEST_BOARD
-// two test cases with simple EZUSB board (LCsoft) without EEPROM or with Saleae VID/PID EEPROM
+
+// two test cases with simple EZUSB board (LCsoft) without EEPROM or with Saleae VID/PID in EEPROM
 // after loading the FW they look like a 6022BE (without useful sample values as Port B and D are left open)
+// LCSOFT_TEST_BOARD is #defined/#undefined in modelDSO6022.h
+
+#ifdef LCSOFT_TEST_BOARD
+
+static ModelEzUSB modelInstance_EzUSB;
+static ModelSaleae modelInstance_Saleae;
+
+
+// LCSOFT without EEPROM reports EzUSB VID/PID
 ModelEzUSB::ModelEzUSB() : DSOModel(ID, 0x04b5, 0x6022, 0x04b4, 0x8613, 0x0204, "dso6022be", "LCsoft-EzUSB",
                                             Dso::ControlSpecification(2)) {
     initSpecifications(specification);
@@ -167,6 +177,8 @@ void ModelEzUSB::applyRequirements(HantekDsoControl *dsoControl) const {
    applyRequirements_(dsoControl);
 }
 
+
+// Saleae VID/PID in EEPROM
 ModelSaleae::ModelSaleae() : DSOModel(ID, 0x04b5, 0x6022, 0x0925, 0x3881, 0x0204, "dso6022be", "LCsoft-Saleae",
                                             Dso::ControlSpecification(2)) {
     initSpecifications(specification);

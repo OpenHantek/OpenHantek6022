@@ -28,9 +28,14 @@ struct ModelDSO2020 : public DSOModel {
 };
 
 
+// two test cases with simple EZUSB board (LCsoft) without EEPROM or with Saleae VID/PID in EEPROM
+// after loading the FW they look like a 6022BE (without useful sample values as Port B and D are left open)
+// LCSOFT_TEST_BOARD is also used in modelDSO6022.cpp
+
 // #define LCSOFT_TEST_BOARD
+
 #ifdef LCSOFT_TEST_BOARD
-// two test cases with simple EZUSB board (LCsoft) without EEPROM or with Saleae VID/PID EEPROM
+
 struct ModelEzUSB : public DSOModel {
     static const int ID = 0x6022;
     ModelEzUSB();
@@ -42,4 +47,5 @@ struct ModelSaleae : public DSOModel {
     ModelSaleae();
     void applyRequirements(HantekDsoControl* dsoControl) const override;
 };
+
 #endif

@@ -15,7 +15,7 @@
 
 class DSOModel;
 
-typedef unsigned long UniqueUSBid;
+typedef uint64_t UniqueUSBid;
 
 
 /// \brief Returns string representation for libusb errors.
@@ -133,15 +133,11 @@ class USBDevice : public QObject {
     /**
      * @return Return the unique usb device id {@link USBDevice::computeUSBdeviceID()}.
      */
-    inline unsigned long getUniqueUSBDeviceID() const { return uniqueUSBdeviceID; }
+    inline UniqueUSBid getUniqueUSBDeviceID() const { return uniqueUSBdeviceID; }
     /**
-     * The USB bus is organized in a tree hierarchy. A device is connected to a port on a bus device,
-     * which is connected to a port on another bus device etc up to the root usb device.
-     *
-     * The USB 3.0 standard allows up to 7 levels with 256 devices on each level (1 Byte). We generate
-     * a unique number for the connected device.
+     * ID built from bus, port, VID, PID and FW version
      */
-    static UniqueUSBid computeUSBdeviceID(libusb_device *device);
+    static UniqueUSBid computeUSBdeviceID( libusb_device *device );
 
     /// \brief Get the oscilloscope model.
     /// \return The ::Model of the connected Hantek DSO.
@@ -167,7 +163,7 @@ class USBDevice : public QObject {
     libusb_device *device; ///< The USB handle for the oscilloscope
     libusb_device_handle *handle = nullptr;
     unsigned findIteration;
-    const unsigned long uniqueUSBdeviceID;
+    const UniqueUSBid uniqueUSBdeviceID;
     int interface;
     int outPacketLength; ///< Packet length for the OUT endpoint
     int inPacketLength;  ///< Packet length for the IN endpoint
