@@ -13,9 +13,8 @@
 #include "newdevicemodelfromexisting.h"
 #include "modelregistry.h"
 
-SelectSupportedDevice::SelectSupportedDevice(QWidget *parent) :
-    QDialog(parent),
-    ui(new Ui::SelectSupportedDevice)
+SelectSupportedDevice::SelectSupportedDevice( QWidget *parent ) :
+    QDialog( parent ), ui( new Ui::SelectSupportedDevice )
 {
     ui->setupUi(this);
     newDeviceFromExistingDialog = new NewDeviceModelFromExisting(this);
@@ -47,7 +46,7 @@ std::unique_ptr<USBDevice> SelectSupportedDevice::showSelectDeviceModal(libusb_c
             ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(false);
             return;
         }
-        if (ui->cmbDevices->currentData(Qt::UserRole+1).toBool()) {
+        if (ui->cmbDevices->currentData( Qt::UserRole + 1 ).toBool()) { // canConnect
             ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(true);
             ui->labelReadyState->setText(
                 tr("<p><br/><b>The device is ready for use.</b></p><p>Please observe the "
@@ -55,7 +54,7 @@ std::unique_ptr<USBDevice> SelectSupportedDevice::showSelectDeviceModal(libusb_c
                    "user manual</a> for safe operation.</p>"));
         } else {
             ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(false);
-            if (ui->cmbDevices->currentData(Qt::UserRole+2).toBool()) {
+            if (ui->cmbDevices->currentData( Qt::UserRole + 2 ).toBool()) { // needFirmware
                 ui->labelReadyState->setText(tr("<p>Upload in progress ...</p>"
                 "<p><b>If the upload takes more than 30 s, please close this window <br/>and restart the program!</b></p>"
                 "<p>In this case, please unplug other USB devices on the same bus!<br/>"
@@ -81,7 +80,6 @@ std::unique_ptr<USBDevice> SelectSupportedDevice::showSelectDeviceModal(libusb_c
         if ( !libRules.exists() && !etcRules.exists() ) {
             messageNoDevices += tr("<p>Please make sure you have copied the udev rules file to <b>%1</b> for correct USB access permissions.</p>").arg(libRules.fileName());
         }
-    #else
     #endif
         messageNoDevices += tr("<p>Visit the build and run instruction "
                           "<a href='https://github.com/OpenHantek/OpenHantek6022/blob/master/docs/build.md'>website</a> for help.</p>");
@@ -91,12 +89,19 @@ std::unique_ptr<USBDevice> SelectSupportedDevice::showSelectDeviceModal(libusb_c
     QTimer timer;
     timer.setInterval(1000);
     connect(&timer, &QTimer::timeout, [this, &model, &findDevices, &messageNoDevices]() {
-        if (findDevices->updateDeviceList())
+        if ( findDevices->updateDeviceList() ) { // searching...
             model->updateDeviceList();
-        if (model->rowCount(QModelIndex()))
-            ui->cmbDevices->setCurrentIndex(0);
-        else
+        }
+        if ( model->rowCount( QModelIndex() ) ) { // device ready
+            ui->cmbDevices->setCurrentIndex( 0 );
+            // HACK: "click()" the "OK" button (if enabled) to start the scope automatically
+            if ( model->rowCount( QModelIndex() ) == 1 // only one device available...
+                && ui->buttonBox->button(QDialogButtonBox::Ok)->isEnabled() ) { // ...and ready to run
+                ui->buttonBox->button(QDialogButtonBox::Ok)->click(); // start it without user activity
+            }
+        } else {
             ui->labelReadyState->setText(messageNoDevices);
+        }
     });
     timer.start();
     QCoreApplication::sendEvent(&timer, new QTimerEvent(timer.timerId())); // immediate timer event
