@@ -26,16 +26,13 @@ static void initSpecifications(Dso::ControlSpecification& specification) {
     specification.samplerate.multi.maxDownsampler = 100;
     specification.samplerate.multi.recordLengths = { UINT_MAX };
     specification.bufferDividers = { 1000 , 1 , 1 };
-    // This data was based on testing and depends on Divider.
-    // Input divider: 100/1009 = 1% too low display
-    // Amplifier gain: x1 (ok), x2 (ok), x5.1 (2% too high), x10.1 (1% too high)
-    // Overall gain: x1 1% too low, x2 1% to low, x5 1% to high, x10 ok
+    // This data was based on testing and depends on divider.
     // The sample value at the top of the screen with gain error correction
-    specification.voltageLimit[0] = { 40 , 100 , 200 , 202 , 198 , 198 , 396 , 990 };
-    specification.voltageLimit[1] = { 40 , 100 , 200 , 202 , 198 , 198 , 396 , 990 };
+    specification.voltageLimit[0] = { 32 , 80 , 160 , 155 , 170 , 165 , 330 , 820 };
+    specification.voltageLimit[1] = { 32 , 80 , 160 , 155 , 170 , 165 , 330 , 820 };
     // theoretical offset, will be corrected by individual config file
-    specification.voltageOffset[0] = { 136, 136, 136, 136, 136, 136, 136, 136 };
-    specification.voltageOffset[1] = { 132, 132, 132, 132, 132, 132, 132, 132 };
+    specification.voltageOffset[0] = { 0, 0, 0, 0, 0, 0, 0, 0 };
+    specification.voltageOffset[1] = { 0, 0, 0, 0, 0, 0, 0, 0 };
 
     // read the real calibration values from file
     const char* ranges[] = { "20mV", "50mV","100mV", "200mV", "500mV", "1000mV", "2000mV", "5000mV" }; 
@@ -48,7 +45,7 @@ static void initSpecifications(Dso::ControlSpecification& specification) {
     for ( unsigned ch = 0; ch < 2; ch++ ) {
         settings.beginGroup( channels[ ch ] );
         for ( unsigned iii = 0; iii < RANGES; iii++ ) {
-            double calibration = settings.value( ranges[ iii ], ch == 0 ? 1.18 : 1.21 ).toDouble();
+            double calibration = settings.value( ranges[ iii ], 0.0 ).toDouble();
             if ( calibration )
                 specification.voltageLimit[ ch ][ iii ] /= calibration;
         }
@@ -83,8 +80,6 @@ static void initSpecifications(Dso::ControlSpecification& specification) {
         {  1, 40.00}         // 7      1         40.0V
     };
 
-    // Possible sample rates with custom fw from https://github.com/Ho-Ro/Hantek6022API
-    // 60k, 100k, 200k, 500k, 1M, 2M, 3M, 4M, 5M, 6M, 8M, 10M, 12M, 15M, 16M, 24M, 30M (, 48M)
     // 48M is unstable in 1 channel mode
     // 24M, 30M and 48M are unstable in 2 channel mode
 // define VERY_SLOW_SAMPLES to get timebase up to 1 s/div at the expense of very slow reaction time (up to 20 s)
@@ -99,9 +94,9 @@ static void initSpecifications(Dso::ControlSpecification& specification) {
         { 10e3,   1, 100}, // 100x downsampling from  1 MS/s!
         { 20e3,   2, 100}, // 100x downsampling from  2 MS/s!
         { 50e3,   5, 100}, // 100x downsampling from  5 MS/s!
-        {100e3,   8,  80}, // 100x downsampling from  8 MS/s
-        {200e3,   8,  40}, //  50x downsampling from  8 MS/s
-        {500e3,   8,  16}, //  20x downsampling from  8 MS/s
+        {100e3,   8,  80}, //  80x downsampling from  8 MS/s
+        {200e3,   8,  40}, //  40x downsampling from  8 MS/s
+        {500e3,   8,  16}, //  16x downsampling from  8 MS/s
         {  1e6,   8,   8}, //   8x downsampling from  8 MS/s
         {  2e6,   8,   4}, //   4x downsampling from  8 MS/s
         {  5e6,  15,   3}, //   3x downsampling from 15 MS/s
@@ -127,9 +122,9 @@ static void applyRequirements_(HantekDsoControl *dsoControl) {
     dsoControl->addCommand(new ControlSetCalFreq());      // 0xE6
 }
 
-//                                        VID/PID active  VID/PID no FW   FW ver  FW name   Scope name
-//                                        |------------|  |------------|  |----|  |------|  |--------|
-ModelDDS120::ModelDDS120() : DSOModel(ID, 0x1d50, 0x608e, 0x8102, 0x8102, 0x02,   "dds120", "DDS120",
+//                                        VID/PID active  VID/PID no FW   FW ver  FW name  Scope name
+//                                        |------------|  |------------|  |----|  |------|  |------|
+ModelDDS120::ModelDDS120() : DSOModel(ID, 0x1d50, 0x608e, 0x8102, 0x8102, 0x0002, "dds120", "DDS120",
                                             Dso::ControlSpecification(2)) {
     initSpecifications(specification);
 }
