@@ -74,12 +74,13 @@ int FindDevices::updateDeviceList() {
             ++it;
         }
     }
-#ifdef __linux__
-    libusb_free_device_list( deviceList, true );
+#if defined __FreeBSD__
+    libusb_free_device_list( deviceList, false ); // free the list but don't unref the devices
 #else
-    // TODO check if this crashes on FreeBSD, MacOSX, Windows
+    // TODO check if this crashes on MacOSX, Windows
     // TODO check if change true -> false solves it
-    libusb_free_device_list( deviceList, true );
+    // move it up by appending " || defined __YOUR_OS__" to the line "#if defined ..."
+    libusb_free_device_list( deviceList, true ); // linux and some other systems unref also the USB devices
 #endif
     return changes; // report number of all detected bus changes (added + removed devices)
 }

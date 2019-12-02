@@ -57,8 +57,6 @@ std::unique_ptr<USBDevice> SelectSupportedDevice::showSelectDeviceModal(libusb_c
             if (ui->cmbDevices->currentData( Qt::UserRole + 2 ).toBool()) { // needFirmware
                 ui->labelReadyState->setText(tr("<p>Upload in progress ...</p>"
                 "<p><b>If the upload takes more than 30 s, please close this window <br/>and restart the program!</b></p>"
-                "<p>In this case, please unplug other USB devices on the same bus!<br/>"
-                "You can check this under Linux with: <pre>lsusb; lsusb -t</pre></p>"
                 ));
             } else { // something went wrong, inform user
                 ui->labelReadyState->setText( tr( "<p><br/><b>Connection failed!</b></p>" )
@@ -95,9 +93,8 @@ std::unique_ptr<USBDevice> SelectSupportedDevice::showSelectDeviceModal(libusb_c
         if ( model->rowCount( QModelIndex() ) ) { // device ready
             ui->cmbDevices->setCurrentIndex( 0 );
             // HACK: "click()" the "OK" button (if enabled) to start the scope automatically
-            if ( model->rowCount( QModelIndex() ) == 1 // only one device available...
-                && ui->buttonBox->button(QDialogButtonBox::Ok)->isEnabled() ) { // ...and ready to run
-                ui->buttonBox->button(QDialogButtonBox::Ok)->click(); // start it without user activity
+            if ( ui->buttonBox->button( QDialogButtonBox::Ok )->isEnabled() ) { // if scope is ready to run
+                ui->buttonBox->button( QDialogButtonBox::Ok )->click(); // start it without user activity
             }
         } else {
             ui->labelReadyState->setText(messageNoDevices);

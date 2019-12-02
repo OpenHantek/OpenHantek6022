@@ -178,13 +178,16 @@ void ModelEzUSB::applyRequirements(HantekDsoControl *dsoControl) const {
 }
 
 
+
 // Saleae VID/PID in EEPROM
 ModelSaleae::ModelSaleae() : DSOModel(ID, 0x04b5, 0x6022, 0x0925, 0x3881, 0x0204, "dso6022be", "LCsoft-Saleae",
                                             Dso::ControlSpecification(2)) {
     initSpecifications(specification);
 }
 
+
 void ModelSaleae::applyRequirements(HantekDsoControl *dsoControl) const {
    applyRequirements_(dsoControl);
 }
+
 #endif
