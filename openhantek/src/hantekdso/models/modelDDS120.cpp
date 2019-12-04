@@ -28,8 +28,10 @@ static void initSpecifications(Dso::ControlSpecification& specification) {
     specification.bufferDividers = { 1000 , 1 , 1 };
     // This data was based on testing and depends on divider.
     // The sample value at the top of the screen with gain error correction
-    specification.voltageLimit[0] = { 32 , 80 , 160 , 155 , 170 , 165 , 330 , 820 };
-    specification.voltageLimit[1] = { 32 , 80 , 160 , 155 , 170 , 165 , 330 , 820 };
+    // TODO: check if 20x is possible for 1st and 2nd value
+    // double the values accordingly 32 -> 64 & 80 -> 160 and change 10 -> 20 in specification.gain below
+    specification.voltageLimit[0] = { 64 , 160 , 160 , 155 , 170 , 165 , 330 , 820 };
+    specification.voltageLimit[1] = { 64 , 160 , 160 , 155 , 170 , 165 , 330 , 820 };
     // theoretical offset, will be corrected by individual config file
     specification.voltageOffset[0] = { 0, 0, 0, 0, 0, 0, 0, 0 };
     specification.voltageOffset[1] = { 0, 0, 0, 0, 0, 0, 0, 0 };
@@ -69,27 +71,36 @@ static void initSpecifications(Dso::ControlSpecification& specification) {
     settings.endGroup(); // offset
 
     // HW gain, voltage steps in V/screenheight (ranges 20,50,100,200,500,1000,2000,5000 mV)
+    // DDS120 has gainsteps 20x, 10x, 5x, 2x and 1x (as well as also 4x)
+    // Hantek has only 10x, 5x, 2x, 1x
+    // TODO: check if 20x is possible for ID 0 and ID 1
+    // change 10 to 20 and double the values of specification.voltageLimit[] above
     specification.gain = {  // ID, HW gain, full scale voltage
-        { 10,  0.16},        // 0     10         160mV
-        { 10,  0.40},        // 1     10         400mV
-        { 10,  0.80},        // 2     10         800mV
-        {  5,  1.60},        // 3      5          1.6V
-        {  2,  4.00},        // 4      2          4.0V
-        {  1,  8.00},        // 5      1          8.0V
-        {  1, 16.00},        // 6      1         16.0V
-        {  1, 40.00}         // 7      1         40.0V
+        { 20,  0.16},        // 0     20         160mV =  20mV/div
+        { 20,  0.40},        // 1     20         400mV =  50mV/div
+        { 10,  0.80},        // 2     10         800mV = 100mV/div
+        {  5,  1.60},        // 3      5          1.6V = 200mV/div
+        {  2,  4.00},        // 4      2          4.0V = 500mV/div
+        {  1,  8.00},        // 5      1          8.0V =    1V/div
+        {  1, 16.00},        // 6      1         16.0V =    2V/div
+        {  1, 40.00}         // 7      1         40.0V =    5V/div
     };
+
+
+// This model uses the sigrok firmware that has a slightly different coding for the sample rate than my Hantek6022API version.
+// 10=100k, 20=200k, 50=500k, 11=10M (Hantek: 110=100k, 120=200k, 150=500k, 10=10M)
 
     // 48M is unstable in 1 channel mode
     // 24M, 30M and 48M are unstable in 2 channel mode
+
 // define VERY_SLOW_SAMPLES to get timebase up to 1 s/div at the expense of very slow reaction time (up to 20 s)
 //#define VERY_SLOW_SAMPLES
     specification.fixedSampleRates = { 
     // samplerate, sampleId, downsampling
 #ifdef VERY_SLOW_SAMPLES
-        {  1e3, 110, 100}, 
-        {  2e3, 120, 100}, 
-        {  5e3, 150, 100}, // massive downsampling from 100, 200, 500 kS/s!
+        {  1e3, 10, 100},
+        {  2e3, 20, 100},
+        {  5e3, 50, 100},  // massive downsampling from 100, 200, 500 kS/s!
 #endif
         { 10e3,   1, 100}, // 100x downsampling from  1 MS/s!
         { 20e3,   2, 100}, // 100x downsampling from  2 MS/s!
@@ -100,7 +111,7 @@ static void initSpecifications(Dso::ControlSpecification& specification) {
         {  1e6,   8,   8}, //   8x downsampling from  8 MS/s
         {  2e6,   8,   4}, //   4x downsampling from  8 MS/s
         {  5e6,  15,   3}, //   3x downsampling from 15 MS/s
-        // { 10e6,  30,   3}, //   3x downsampling from 30 MS/s
+        { 10e6,  11,   1}, // no downsampling, 11 means 10 MS/s
         { 15e6,  15,   1}, // no downsampling
         { 30e6,  30,   1}, // no downsampling
         { 48e6,  48,   1}  // no downsampling
