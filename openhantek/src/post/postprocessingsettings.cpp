@@ -28,6 +28,8 @@ QString mathModeString(MathMode mode) {
     }
     return QString();
 }
+
+#if 0
 /// \brief Return string representation of the given dft window function.
 /// \param window The ::WindowFunction that should be returned as string.
 /// \return The string that should be used in labels etc.
@@ -66,4 +68,6 @@ QString windowFunctionString(WindowFunction window) {
     }
     return QString();
 }
+#endif
+
 }

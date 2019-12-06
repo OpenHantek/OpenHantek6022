@@ -7,7 +7,7 @@ class ExporterRegistry;
 class ExporterProcessor : public Processor
 {
 public:
-    ExporterProcessor(ExporterRegistry* registry);
+    explicit ExporterProcessor(ExporterRegistry* registry);
     void process(PPresult *) override;
 private:
     ExporterRegistry* registry;

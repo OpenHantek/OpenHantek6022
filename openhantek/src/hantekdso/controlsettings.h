@@ -54,6 +54,8 @@ struct ControlSettingsVoltage {
 struct ControlSettings {
     ControlSettings(const ControlSamplerateLimits *limits, size_t channelCount);
     ~ControlSettings();
+    ControlSettings( const ControlSettings& ) = delete;
+    ControlSettings operator=( const ControlSettings& ) = delete;
     ControlSettingsSamplerate samplerate;        ///< The samplerate settings
     std::vector<ControlSettingsVoltage> voltage; ///< The amplification settings
     ControlSettingsTrigger trigger;              ///< The trigger settings

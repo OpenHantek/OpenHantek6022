@@ -40,7 +40,7 @@ struct FixedSampleRate {
 
 /// \brief Stores the specifications of the currently connected device.
 struct ControlSpecification {
-    ControlSpecification(unsigned channels);
+    explicit ControlSpecification( unsigned channels );
     const ChannelID channels;
 
     // Limits

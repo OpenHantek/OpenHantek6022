@@ -11,6 +11,9 @@
 struct libusb_context;
 class NewDeviceModelFromExisting;
 
+// define if this tab is also designed in "selectsupporteddevice.ui"
+// #define NEW_DEVICE_FROM_EXISTING_DIALOG
+
 /**
  * Offers the user a device selection dialog. If you call any of the -Modal methods,
  * the method will block and show a dialog for selection or for a usb error
@@ -32,5 +35,7 @@ private:
     void updateSupportedDevices();
     std::unique_ptr<Ui::SelectSupportedDevice> ui;
     UniqueUSBid selectedDevice = 0;
+#ifdef NEW_DEVICE_FROM_EXISTING_DIALOG
     NewDeviceModelFromExisting* newDeviceFromExistingDialog;
+#endif
 };

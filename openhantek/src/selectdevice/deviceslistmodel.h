@@ -12,7 +12,7 @@ class FindDevices;
  */
 class DevicesListModel: public QAbstractTableModel {
 public:
-    DevicesListModel(FindDevices* findDevices);
+    explicit DevicesListModel( FindDevices* findDevices );
     // QAbstractItemModel interface
     int rowCount(const QModelIndex &parent) const override;
     int columnCount(const QModelIndex &parent) const override;

@@ -19,7 +19,6 @@ void MathChannelGenerator::process(PPresult *result) {
     DataChannel *const channelData = result->modifyData(physicalChannels);
     std::vector<double> &resultData = channelData->voltage.sample;
 
-    unsigned src = 0;
     const double sign = scope->voltage[physicalChannels].inverted ? -1.0 : 1.0;
 
     if ( Dso::getMathMode( scope->voltage[physicalChannels] ) < Dso::MathMode::AC_CH1 ) { // binary operations
@@ -56,6 +55,7 @@ void MathChannelGenerator::process(PPresult *result) {
             *it = sign * calculate( *ch1Iterator++, *ch2Iterator++ );
         }
     } else { // unary operators (calculate "AC coupling")
+        unsigned src = 0;
         if ( Dso::getMathMode( scope->voltage[physicalChannels] ) == Dso::MathMode::AC_CH1 )
             src = 0;
         else if ( Dso::getMathMode( scope->voltage[physicalChannels] ) == Dso::MathMode::AC_CH2 )

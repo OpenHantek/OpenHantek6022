@@ -42,7 +42,7 @@ void HantekDsoControl::enableSampling(bool enabled) {
 
 const USBDevice *HantekDsoControl::getDevice() const { return device; }
 
-const DSOsamples &HantekDsoControl::getLastSamples() { return result; }
+// const DSOsamples &HantekDsoControl::getLastSamples() { return result; }
 
 
 HantekDsoControl::HantekDsoControl(USBDevice *device)
@@ -69,7 +69,7 @@ HantekDsoControl::~HantekDsoControl() {
     }
 }
 
-
+#if 0
 unsigned HantekDsoControl::getChannelCount() const { return specification->channels; }
 
 
@@ -95,6 +95,7 @@ double HantekDsoControl::getMaxSamplerate() const {
         return specification->samplerate.single.max;
     }
 }
+#endif
 
 
 bool HantekDsoControl::isSampling() const { return sampling; }
@@ -832,6 +833,7 @@ void HantekDsoControl::run() {
 }
 
 
+#if 0
 int HantekDsoControl::getConnectionSpeed() const {
     int errorCode;
     ControlGetSpeed response;
@@ -855,3 +857,4 @@ int HantekDsoControl::getPacketSize() const {
         return s;
     return 0;
 }
+#endif

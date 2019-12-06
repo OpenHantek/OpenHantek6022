@@ -295,7 +295,7 @@ static int parse_ihex(FILE *image, void *context, bool (*is_external)(uint32_t a
         }
 
         if (type != 0) {
-            logerror("unsupported record type: %u\n", type);
+            logerror("unsupported record type: %d\n", type);
             return -3;
         }
 

@@ -25,7 +25,7 @@ void Graph::writeData(PPresult *data, QOpenGLShaderProgram *program, int vertexL
     int offset = 0;
     vaoVoltage.resize(data->vaChannelVoltage.size());
     vaoSpectrum.resize(data->vaChannelSpectrum.size());
-    for (ChannelID channel = 0; channel < vaoVoltage.size(); ++channel) {
+    for (ChannelID channel = 0; channel < std::max( vaoVoltage.size(), vaoSpectrum.size() ); ++channel) {
         int dataSize;
 
         // Voltage channel

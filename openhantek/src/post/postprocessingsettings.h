@@ -36,7 +36,7 @@ enum class WindowFunction : int {
 extern Enum<Dso::WindowFunction, Dso::WindowFunction::RECTANGULAR, Dso::WindowFunction::FLATTOP> WindowFunctionEnum;
 
 QString mathModeString(MathMode mode);
-QString windowFunctionString(WindowFunction window);
+// QString windowFunctionString(WindowFunction window);
 }
 
 Q_DECLARE_METATYPE(Dso::MathMode)

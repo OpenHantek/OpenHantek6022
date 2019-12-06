@@ -35,7 +35,7 @@ typedef std::vector<ChannelGraph> ChannelsGraphs;
 /// Post processing results
 class PPresult {
   public:
-    PPresult(unsigned int channelCount);
+    explicit PPresult(unsigned int channelCount);
 
     /// \brief Returns the analyzed data.
     /// \param channel Channel, whose data should be returned.

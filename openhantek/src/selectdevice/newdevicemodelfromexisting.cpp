@@ -61,6 +61,7 @@ NewDeviceModelFromExisting::NewDeviceModelFromExisting(QWidget *parent) :
     }
 }
 
+#if 0
 void NewDeviceModelFromExisting::setUSBcontext(libusb_context *context)
 {
     this->context = context;
@@ -70,6 +71,7 @@ RawDeviceListEntry *NewDeviceModelFromExisting::getSelectedEntry()
 {
     return (RawDeviceListEntry*) ui->cmbUSBdevices->currentData(RawDevicesListModel::EntryPointerRole).value<void*>();
 }
+#endif
 
 void NewDeviceModelFromExisting::accept()
 {

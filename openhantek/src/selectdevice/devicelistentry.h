@@ -10,8 +10,8 @@
 struct DeviceListEntry {
     UniqueUSBid id;
     QString name;
-    bool canConnect;
-    bool needFirmware;
+    bool canConnect = false;
+    bool needFirmware = false;
     QString errorMessage;
     QString getStatus() const {
         return errorMessage.size()? errorMessage : (canConnect?"Ready":(needFirmware?"Firmware upload":"Cannot connect"));

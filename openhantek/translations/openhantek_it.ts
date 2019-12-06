@@ -433,8 +433,8 @@
 <context>
     <name>HantekDsoControl</name>
     <message>
-        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="138"/>
         <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="139"/>
+        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="140"/>
         <source>Couldn&apos;t get channel level data from oscilloscope</source>
         <translation type="unfinished"></translation>
     </message>
@@ -814,12 +814,12 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/newdevicemodelfromexisting.cpp" line="76"/>
+        <location filename="../src/selectdevice/newdevicemodelfromexisting.cpp" line="78"/>
         <source>Sorry</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/newdevicemodelfromexisting.cpp" line="76"/>
+        <location filename="../src/selectdevice/newdevicemodelfromexisting.cpp" line="78"/>
         <source>This is not yet implemented!</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1045,72 +1045,72 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/post/postprocessingsettings.cpp" line="37"/>
+        <location filename="../src/post/postprocessingsettings.cpp" line="39"/>
         <source>Rectangular</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/post/postprocessingsettings.cpp" line="39"/>
+        <location filename="../src/post/postprocessingsettings.cpp" line="41"/>
         <source>Hamming</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/post/postprocessingsettings.cpp" line="41"/>
+        <location filename="../src/post/postprocessingsettings.cpp" line="43"/>
         <source>Hann</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/post/postprocessingsettings.cpp" line="43"/>
+        <location filename="../src/post/postprocessingsettings.cpp" line="45"/>
         <source>Cosine</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/post/postprocessingsettings.cpp" line="45"/>
+        <location filename="../src/post/postprocessingsettings.cpp" line="47"/>
         <source>Lanczos</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/post/postprocessingsettings.cpp" line="47"/>
+        <location filename="../src/post/postprocessingsettings.cpp" line="49"/>
         <source>Bartlett</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/post/postprocessingsettings.cpp" line="49"/>
+        <location filename="../src/post/postprocessingsettings.cpp" line="51"/>
         <source>Triangular</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/post/postprocessingsettings.cpp" line="51"/>
+        <location filename="../src/post/postprocessingsettings.cpp" line="53"/>
         <source>Gauss</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/post/postprocessingsettings.cpp" line="53"/>
+        <location filename="../src/post/postprocessingsettings.cpp" line="55"/>
         <source>Bartlett-Hann</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/post/postprocessingsettings.cpp" line="55"/>
+        <location filename="../src/post/postprocessingsettings.cpp" line="57"/>
         <source>Blackman</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/post/postprocessingsettings.cpp" line="59"/>
+        <location filename="../src/post/postprocessingsettings.cpp" line="61"/>
         <source>Nuttall</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/post/postprocessingsettings.cpp" line="61"/>
+        <location filename="../src/post/postprocessingsettings.cpp" line="63"/>
         <source>Blackman-Harris</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/post/postprocessingsettings.cpp" line="63"/>
+        <location filename="../src/post/postprocessingsettings.cpp" line="65"/>
         <source>Blackman-Nuttall</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/post/postprocessingsettings.cpp" line="65"/>
+        <location filename="../src/post/postprocessingsettings.cpp" line="67"/>
         <source>Flat top</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1120,67 +1120,67 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/enums.cpp" line="15"/>
+        <location filename="../src/hantekdso/enums.cpp" line="16"/>
         <source>Voltage</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/enums.cpp" line="17"/>
+        <location filename="../src/hantekdso/enums.cpp" line="18"/>
         <source>Spectrum</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/enums.cpp" line="28"/>
+        <location filename="../src/hantekdso/enums.cpp" line="30"/>
         <source>T - Y</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/enums.cpp" line="30"/>
+        <location filename="../src/hantekdso/enums.cpp" line="32"/>
         <source>X - Y</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/enums.cpp" line="41"/>
+        <location filename="../src/hantekdso/enums.cpp" line="43"/>
         <source>AC</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/enums.cpp" line="43"/>
+        <location filename="../src/hantekdso/enums.cpp" line="45"/>
         <source>DC</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/enums.cpp" line="45"/>
+        <location filename="../src/hantekdso/enums.cpp" line="47"/>
         <source>GND</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/enums.cpp" line="57"/>
+        <location filename="../src/hantekdso/enums.cpp" line="59"/>
         <source>Auto</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/enums.cpp" line="59"/>
+        <location filename="../src/hantekdso/enums.cpp" line="61"/>
         <source>Normal</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/enums.cpp" line="61"/>
+        <location filename="../src/hantekdso/enums.cpp" line="63"/>
         <source>Single</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/enums.cpp" line="98"/>
+        <location filename="../src/hantekdso/enums.cpp" line="101"/>
         <source>Off</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/enums.cpp" line="100"/>
+        <location filename="../src/hantekdso/enums.cpp" line="103"/>
         <source>Linear</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/enums.cpp" line="102"/>
+        <location filename="../src/hantekdso/enums.cpp" line="105"/>
         <source>Sinc</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1273,19 +1273,16 @@
         <translation>...</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.ui" line="86"/>
         <source>Try unsupported</source>
-        <translation>Prova non supportato</translation>
+        <translation type="vanished">Prova non supportato</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.ui" line="92"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Your device might not directly be supported by OpenHantek6022. But it might be compatible to one of the existing devices. Help us to identify those devices and report back on our &lt;a href=&quot;https://github.com/OpenHantek/openhantek/issues&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;issue tracker&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Il vostro dispositivo potrebbe non essere supportato direttamente da OpenHantek6022. Ma potrebbe essere compatibile con uno dei dispositivi esistenti. Aiutaci a identificare questi dispositivi e riportaci sul nostro &lt;a href=&quot;https://github.com/OpenHantek/openhantek/issues&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#000000ff;&quot;&gt;issue tracker&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation type="vanished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Il vostro dispositivo potrebbe non essere supportato direttamente da OpenHantek6022. Ma potrebbe essere compatibile con uno dei dispositivi esistenti. Aiutaci a identificare questi dispositivi e riportaci sul nostro &lt;a href=&quot;https://github.com/OpenHantek/openhantek/issues&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#000000ff;&quot;&gt;issue tracker&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.ui" line="108"/>
         <source>Add new device from template</source>
-        <translation>Aggiungere un nuovo dispositivo dal template</translation>
+        <translation type="vanished">Aggiungere un nuovo dispositivo dal template</translation>
     </message>
     <message>
         <source>&lt;br/&gt;&lt;p&gt;The device is ready for use.&lt;/p&gt;&lt;p&gt;Please observe the &lt;a href=&apos;https://github.com/OpenHantek/OpenHantek6022/blob/master/docs/OpenHantek6022_User_Manual.pdf&apos;&gt;user manual&lt;/a&gt; for safe operation.&lt;/p&gt;</source>
@@ -1312,42 +1309,42 @@
         <translation type="vanished">&lt;p&gt;&lt;br/&gt;&lt;b&gt;Il collegamento è fallito!&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="52"/>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="57"/>
         <source>&lt;p&gt;&lt;br/&gt;&lt;b&gt;The device is ready for use.&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Please observe the &lt;a href=&apos;https://github.com/OpenHantek/OpenHantek6022/blob/master/docs/OpenHantek6022_User_Manual.pdf&apos;&gt;user manual&lt;/a&gt; for safe operation.&lt;/p&gt;</source>
         <translation>&lt;p&gt;&lt;br/&gt;&lt;b&gt;Il dispositivo è pronto all&apos;uso.&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Per un funzionamento sicuro, osservare il &lt;a href=&apos;https://github.com/OpenHantek/OpenHantek6022/blob/master/docs/OpenHantek6022_User_Manual.pdf&apos;&gt;manuale d&apos;uso.&lt;/a&gt;</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="58"/>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="63"/>
         <source>&lt;p&gt;Upload in progress ...&lt;/p&gt;&lt;p&gt;&lt;b&gt;If the upload takes more than 30 s, please close this window &lt;br/&gt;and restart the program!&lt;/b&gt;&lt;/p&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="62"/>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="67"/>
         <source>&lt;p&gt;&lt;br/&gt;&lt;b&gt;Connection failed!&lt;/b&gt;&lt;/p&gt;</source>
         <translation>&lt;p&gt;&lt;br/&gt;&lt;b&gt;Il collegamento è fallito!&lt;/b&gt;&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="69"/>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="74"/>
         <source>&lt;p&gt;OpenHantek6022 is searching for compatible devices ...&lt;/p&gt;&lt;p&gt;&lt;img align=&apos;right&apos; height=&apos;200&apos; src=&apos;qrc:///switch_6022BL.png&apos;&gt;Don&apos;t forget to switch your device into oscilloscope mode if it has multiple modes.&lt;/p&gt;</source>
         <translation>&lt;p&gt;ApertoHantek6022 è alla ricerca di dispositivi compatibili...&lt;/p&gt;&lt;p&gt;&lt;img align=&apos;right&apos; height=&apos;200&apos; src=&apos;qrc:////switch_6022BL.png&apos;&gt;Non dimenticare di passare il dispositivo in modalità oscilloscopio se ha più modalità.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="74"/>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="79"/>
         <source>&lt;p&gt;Please make sure you have installed the windows usb driver correctly&lt;/p&gt;</source>
         <translation>&lt;p&gt;Assicurati di aver installato correttamente il driver usb di Windows.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="79"/>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="84"/>
         <source>&lt;p&gt;Please make sure you have copied the udev rules file to &lt;b&gt;%1&lt;/b&gt; for correct USB access permissions.&lt;/p&gt;</source>
         <translation>&lt;p&gt;Assicurati di aver copiato il file delle regole udev in &lt;b&gt;%1&lt;/b&gt; per ottenere le corrette autorizzazioni di accesso USB.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="82"/>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="87"/>
         <source>&lt;p&gt;Visit the build and run instruction &lt;a href=&apos;https://github.com/OpenHantek/OpenHantek6022/blob/master/docs/build.md&apos;&gt;website&lt;/a&gt; for help.&lt;/p&gt;</source>
         <translation>&lt;p&gt;Visitare l&apos;istruzione di compilazione ed esecuzione &lt;a href=&apos;https://github.com/OpenHantek/OpenHantek6022/blob/master/docs/build.md&apos;&gt;sito web site&lt;/a&gt; per help.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="118"/>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="125"/>
         <source>Can&apos;t initalize USB: %1</source>
         <translation>Non può initalizzare USB: %1</translation>
     </message>

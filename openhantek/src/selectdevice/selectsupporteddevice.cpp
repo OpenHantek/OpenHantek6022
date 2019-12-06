@@ -17,7 +17,9 @@ SelectSupportedDevice::SelectSupportedDevice( QWidget *parent ) :
     QDialog( parent ), ui( new Ui::SelectSupportedDevice )
 {
     ui->setupUi(this);
+#ifdef NEW_DEVICE_FROM_EXISTING_DIALOG
     newDeviceFromExistingDialog = new NewDeviceModelFromExisting(this);
+#endif
     ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(false);
     qRegisterMetaType<UniqueUSBid>("UniqueUSBid");
     connect(ui->buttonBox, &QDialogButtonBox::accepted, [this]() {
@@ -29,15 +31,18 @@ SelectSupportedDevice::SelectSupportedDevice( QWidget *parent ) :
     connect(ui->buttonBox, &QDialogButtonBox::helpRequested, [this]() {
         QDesktopServices::openUrl(QUrl("https://github.com/OpenHantek/OpenHantek6022"));
     });
+#ifdef NEW_DEVICE_FROM_EXISTING_DIALOG
     connect(ui->btnAddDevice, &QPushButton::clicked, [this]() {
         newDeviceFromExistingDialog->setModal(true);
         newDeviceFromExistingDialog->show();
     });
+#endif
+
 }
 
 std::unique_ptr<USBDevice> SelectSupportedDevice::showSelectDeviceModal(libusb_context *context)
 {
-    newDeviceFromExistingDialog->setUSBcontext(context);
+//     newDeviceFromExistingDialog->setUSBcontext(context);
     std::unique_ptr<FindDevices> findDevices = std::unique_ptr<FindDevices>(new FindDevices(context));
     std::unique_ptr<DevicesListModel> model = std::unique_ptr<DevicesListModel>(new DevicesListModel(findDevices.get()));
     ui->cmbDevices->setModel(model.get());
@@ -114,7 +119,9 @@ std::unique_ptr<USBDevice> SelectSupportedDevice::showSelectDeviceModal(libusb_c
 void SelectSupportedDevice::showLibUSBFailedDialogModel(int error)
 {
     ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(false);
+#ifdef NEW_DEVICE_FROM_EXISTING_DIALOG
     ui->btnAddDevice->setEnabled(false);
+#endif
     ui->labelReadyState->setText(tr("Can't initalize USB: %1").arg(libUsbErrorString(error)));
     show();
     QCoreApplication::instance()->exec();

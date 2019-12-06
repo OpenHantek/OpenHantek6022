@@ -38,7 +38,7 @@ class HantekDsoControl : public QObject {
      * if run() is called.
      * @param device The usb device. This object does not take ownership.
      */
-    HantekDsoControl(USBDevice *device);
+    explicit HantekDsoControl( USBDevice *device );
 
     /// \brief Cleans up
     ~HantekDsoControl();
@@ -49,6 +49,7 @@ class HantekDsoControl : public QObject {
     /// there.
     void run();
 
+#if 0
     /// \brief Gets the physical channel count for this oscilloscope.
     /// \return The number of physical channels.
     unsigned getChannelCount() const;
@@ -68,6 +69,7 @@ class HantekDsoControl : public QObject {
     /// \brief Get maximum samplerate for this oscilloscope.
     /// \return The maximum samplerate for the current configuration in S/s.
     double getMaxSamplerate() const;
+#endif
 
     double getSamplerate() const;
 
@@ -78,6 +80,7 @@ class HantekDsoControl : public QObject {
     /// Return the associated usb device.
     const USBDevice *getDevice() const;
 
+#if 0
     /// \brief Gets the speed of the connection.
     /// \return The ::ConnectionSpeed of the USB connection.
     int getConnectionSpeed() const;
@@ -88,6 +91,7 @@ class HantekDsoControl : public QObject {
 
     /// Return the last sample set
     const DSOsamples &getLastSamples();
+#endif
 
     /// \brief Sends control commands directly.
     /// <p>

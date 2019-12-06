@@ -28,7 +28,7 @@ class ControlBeginCommand : public ControlCommand {
   public:
     /// \brief Sets the command index to the given value.
     /// \param index The CommandIndex for the command.
-    ControlBeginCommand(CommandIndex index = COMMANDINDEX_0);
+    explicit ControlBeginCommand( CommandIndex index = COMMANDINDEX_0 );
 };
 
 /// \brief The CONTROL_GETSPEED parser.
@@ -37,7 +37,7 @@ class ControlGetSpeed : public ControlCommand {
     ControlGetSpeed();
     /// \brief Gets the speed of the connection.
     /// \return The speed level of the USB connection.
-    ConnectionSpeed getSpeed();
+//     ConnectionSpeed getSpeed();
 };
 
 struct ControlSetVoltDIV_CH1 : public ControlCommand {

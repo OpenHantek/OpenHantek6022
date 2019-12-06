@@ -84,9 +84,8 @@ void SpectrumGenerator::process(PPresult *result) {
                 break;
             case Dso::WindowFunction::GAUSS: {
                 const double sigma = 0.5;
-                double w;
                 for (unsigned int windowPosition = 0; windowPosition < lastRecordLength; ++windowPosition) {
-                    w = ( (double)windowPosition - lastRecordLength / 2.0 ) / ( sigma * lastRecordLength / 2.0 );
+                    double w = ( (double)windowPosition - lastRecordLength / 2.0 ) / ( sigma * lastRecordLength / 2.0 );
                     w *= w;
                     weight += *(lastWindowBuffer + windowPosition) = exp( -w );
                 }

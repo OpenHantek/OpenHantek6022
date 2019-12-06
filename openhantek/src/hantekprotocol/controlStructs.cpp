@@ -17,7 +17,7 @@ ControlBeginCommand::ControlBeginCommand(CommandIndex index)
 
 ControlGetSpeed::ControlGetSpeed() : ControlCommand(Hantek::ControlCode::CONTROL_GETSPEED, 10) { }
 
-ConnectionSpeed ControlGetSpeed::getSpeed() { return (ConnectionSpeed)data()[0]; }
+// ConnectionSpeed ControlGetSpeed::getSpeed() { return (ConnectionSpeed)data()[0]; }
 
 
 ControlSetVoltDIV_CH1::ControlSetVoltDIV_CH1() : ControlCommand(ControlCode::CONTROL_SETVOLTDIV_CH1, 1) {

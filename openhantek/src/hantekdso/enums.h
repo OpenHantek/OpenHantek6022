@@ -55,12 +55,12 @@ enum InterpolationMode {
     INTERPOLATION_COUNT    ///< Total number of interpolation modes
 };
 
-QString channelModeString(ChannelMode mode);
+// QString channelModeString(ChannelMode mode);
 QString graphFormatString(GraphFormat format);
 QString couplingString(Coupling coupling);
 QString triggerModeString(TriggerMode mode);
 QString slopeString(Slope slope);
-QString interpolationModeString(InterpolationMode interpolation);
+// QString interpolationModeString(InterpolationMode interpolation);
 }
 
 Q_DECLARE_METATYPE(Dso::TriggerMode)

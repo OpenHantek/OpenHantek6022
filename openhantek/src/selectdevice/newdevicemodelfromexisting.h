@@ -18,8 +18,8 @@ class NewDeviceModelFromExisting : public QDialog
 
 public:
     explicit NewDeviceModelFromExisting(QWidget *parent = 0);
-    void setUSBcontext(libusb_context* context);
-    RawDeviceListEntry* getSelectedEntry();
+//     void setUSBcontext(libusb_context* context);
+//     RawDeviceListEntry* getSelectedEntry();
 private:
     std::unique_ptr<Ui::NewDeviceModelFromExisting> ui;
     libusb_context* context = nullptr;

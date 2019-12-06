@@ -6,6 +6,7 @@ namespace Dso {
     Enum<Dso::Slope, Dso::Slope::Positive, Dso::Slope::Both> SlopeEnum;
     Enum<Dso::GraphFormat, Dso::GraphFormat::TY, Dso::GraphFormat::XY> GraphFormatEnum;
 
+#if 0
     /// \brief Return string representation of the given channel mode.
     /// \param mode The ::ChannelMode that should be returned as string.
     /// \return The string that should be used in labels etc., empty when invalid.
@@ -18,6 +19,7 @@ namespace Dso {
         }
         return QString();
     }
+#endif
 
     /// \brief Return string representation of the given graph format.
     /// \param format The ::GraphFormat that should be returned as string.
@@ -88,6 +90,7 @@ namespace Dso {
         }
     }
 
+#if 0
     /// \brief Return string representation of the given graph interpolation mode.
     /// \param interpolation The ::InterpolationMode that should be returned as
     /// string.
@@ -104,4 +107,6 @@ namespace Dso {
             return QString();
         }
     }
+#endif
+
 }
