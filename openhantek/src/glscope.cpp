@@ -450,6 +450,21 @@ void GlScope::resizeGL(int width, int height) {
     m_program->release();
 }
 
+// draw 4 small crosses @ (x,y), (-x,y), (x,-y) and (-x,-y)
+// section 0:grid, 1:axes, 2:border
+void GlScope::draw4Cross( std::vector<QVector3D> &va, int section, float x, float y ) {
+    const float d = 0.05; // cross size
+    for ( int xSign : { -1, 1 } ) {
+        for ( int ySign : { -1, 1 } ) {
+            gridDrawCounts[ section ] += 4;
+            va.push_back( QVector3D( xSign * ( x - d ), ySign * y, 0 ) );
+            va.push_back( QVector3D( xSign * ( x + d ), ySign * y, 0 ) );
+            va.push_back( QVector3D( xSign * x, ySign * ( y - d ), 0 ) );
+            va.push_back( QVector3D( xSign * x, ySign * ( y + d ), 0 ) );
+        }
+    }
+}
+
 void GlScope::generateGrid(QOpenGLShaderProgram *program) {
     gridDrawCounts[0] = 0;
     gridDrawCounts[1] = 0;
@@ -469,27 +484,27 @@ void GlScope::generateGrid(QOpenGLShaderProgram *program) {
         program->setAttributeBuffer(vertexLocation, GL_FLOAT, 0, 3, 0);
     }
 
-    // Draw vertical lines
-    for (int div = 1; div < DIVS_TIME / 2; ++div) {
+    // Draw vertical dot lines
+    for (int vDiv = 1; vDiv < DIVS_TIME / 2; ++vDiv ) {
         for (int dot = 1; dot < DIVS_VOLTAGE / 2 * DIVS_SUB; ++dot) {
             float dotPosition = (float)dot / DIVS_SUB;
             gridDrawCounts[0] += 4;
-            vaGrid.push_back(QVector3D(-div, -dotPosition, 0));
-            vaGrid.push_back(QVector3D(-div, dotPosition, 0));
-            vaGrid.push_back(QVector3D(div, -dotPosition, 0));
-            vaGrid.push_back(QVector3D(div, dotPosition, 0));
+            vaGrid.push_back(QVector3D(-vDiv, -dotPosition, 0));
+            vaGrid.push_back(QVector3D(-vDiv, dotPosition, 0));
+            vaGrid.push_back(QVector3D( vDiv, -dotPosition, 0));
+            vaGrid.push_back(QVector3D( vDiv, dotPosition, 0));
         }
     }
-    // Draw horizontal lines
-    for (int div = 1; div < DIVS_VOLTAGE / 2; ++div) {
+    // Draw horizontal dot lines
+    for (int hDiv = 1; hDiv < DIVS_VOLTAGE / 2; ++hDiv ) {
         for (int dot = 1; dot < DIVS_TIME / 2 * DIVS_SUB; ++dot) {
             if (dot % DIVS_SUB == 0) continue; // Already done by vertical lines
             float dotPosition = (float)dot / DIVS_SUB;
             gridDrawCounts[0] += 4;
-            vaGrid.push_back(QVector3D(-dotPosition, -div, 0));
-            vaGrid.push_back(QVector3D(dotPosition, -div, 0));
-            vaGrid.push_back(QVector3D(-dotPosition, div, 0));
-            vaGrid.push_back(QVector3D(dotPosition, div, 0));
+            vaGrid.push_back(QVector3D(-dotPosition, -hDiv, 0));
+            vaGrid.push_back(QVector3D(dotPosition, -hDiv, 0));
+            vaGrid.push_back(QVector3D(-dotPosition, hDiv, 0));
+            vaGrid.push_back(QVector3D(dotPosition, hDiv, 0));
         }
     }
 
@@ -528,6 +543,20 @@ void GlScope::generateGrid(QOpenGLShaderProgram *program) {
         vaGrid.push_back(QVector3D(0.05f, -linePosition, 0));
     }
 
+    // Draw vertical cross lines
+    for (int vDiv = 1; vDiv < DIVS_TIME / 2; ++vDiv ) {
+        for (int hDiv = 1; hDiv < DIVS_VOLTAGE / 2; ++hDiv ) {
+            draw4Cross( vaGrid, 1, vDiv, hDiv );
+        }
+    }
+    // Draw horizontal cross lines
+    for (int hDiv = 1; hDiv < DIVS_VOLTAGE / 2; ++hDiv ) {
+        for (int vDiv = 1; vDiv < DIVS_TIME / 2; ++vDiv ) {
+            if ( vDiv % DIVS_SUB == 0) continue; // Already done by vertical lines
+            draw4Cross( vaGrid, 1, vDiv, hDiv );
+        }
+    }
+
     {
         m_vaoGrid[2].create();
         QOpenGLVertexArrayObject::Binder b(&m_vaoGrid[2]);
@@ -557,7 +586,7 @@ void GlScope::drawGrid() {
     gl->glDrawArrays(GL_POINTS, 0, gridDrawCounts[0]);
     m_vaoGrid[0].release();
 
-    // Axes
+    // Axes and div crosses
     m_vaoGrid[1].bind();
     m_program->setUniformValue(colorLocation, view->screen.axes);
     gl->glDrawArrays(GL_LINES, 0, gridDrawCounts[1]);

@@ -109,6 +109,8 @@ class GlScope : public QOpenGLWidget {
     QOpenGLVertexArrayObject m_vaoGrid[3];
     GLsizei gridDrawCounts[3];
     void generateGrid(QOpenGLShaderProgram *program);
+    void draw4Cross( std::vector<QVector3D> &va, int section, float x, float y );
+
 
     // Graphs
     std::list<Graph> m_GraphHistory;
