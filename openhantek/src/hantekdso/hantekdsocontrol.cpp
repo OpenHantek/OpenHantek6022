@@ -631,16 +631,16 @@ unsigned HantekDsoControl::searchTriggerPoint( Dso::Slope dsoSlope, unsigned int
 }
 
 
-int HantekDsoControl::softwareTrigger() {
+unsigned HantekDsoControl::softwareTrigger() {
     static Dso::Slope nextSlope = Dso::Slope::Positive; // for alternating slope mode X
     ChannelID channel = controlsettings.trigger.source;
     // Trigger channel not in use
     if ( !controlsettings.voltage[ channel ].used || result.data.empty() ) {
-        return result.triggerPosition = -1;
+        return result.triggerPosition = 0;
     }
     //printf( "HDC::softwareTrigger()\n" );
-    triggeredPositionRaw = -1;
-    result.triggerPosition = -1; // not triggered
+    triggeredPositionRaw = 0;
+    result.triggerPosition = 0; // not triggered
     result.pulseWidth1 = 0.0;
     result.pulseWidth2 = 0.0;
 
@@ -682,7 +682,7 @@ int HantekDsoControl::softwareTrigger() {
         }
     }
 
-    if ( triggeredPositionRaw >= 0 ) { // triggered
+    if ( triggeredPositionRaw  ) { // triggered
         result.triggerPosition = triggeredPositionRaw; // align trace to trigger position
     }
     // printf( "nextSlope %c, triggerPositionRaw %d\n", "/\\"[(int)nextSlope], triggerPositionRaw );
@@ -693,7 +693,7 @@ int HantekDsoControl::softwareTrigger() {
 void HantekDsoControl::triggering() {
     //printf( "HDC::triggering()\n" );
     static DSOsamples triggeredResult; // storage for last triggered trace samples
-    if ( result.triggerPosition >= 0 ) { // live trace has triggered
+    if ( result.triggerPosition ) { // live trace has triggered
         // Use this trace and save it also
         triggeredResult.data = result.data;
         triggeredResult.samplerate = result.samplerate;
@@ -710,7 +710,7 @@ void HantekDsoControl::triggering() {
     } else { // Not triggered and not NORMAL mode
         // Use the free running trace, discard history
         triggeredResult.data.clear(); // discard trace
-        triggeredResult.triggerPosition = -1; // not triggered
+        triggeredResult.triggerPosition = 0; // not triggered
         result.liveTrigger = false; // show red "TR" top left
     }
 }

@@ -37,7 +37,6 @@ SelectSupportedDevice::SelectSupportedDevice( QWidget *parent ) :
         newDeviceFromExistingDialog->show();
     });
 #endif
-
 }
 
 std::unique_ptr<USBDevice> SelectSupportedDevice::showSelectDeviceModal(libusb_context *context)

@@ -155,7 +155,7 @@ class HantekDsoControl : public QObject {
         return ( slope == Dso::Slope::Positive ? Dso::Slope::Negative : Dso::Slope::Positive );
     }
 
-    int softwareTrigger();
+    unsigned softwareTrigger();
 
     void triggering();
 
