@@ -218,7 +218,7 @@ void GraphGenerator::generateGraphsXY( PPresult *result, const DsoSettingsScope 
         std::vector<double>::const_iterator yIterator = ySamples.sample.begin();
         const double xGain = scope->gain( xChannel );
         const double yGain = scope->gain( yChannel );
-        const double xOffset = ( scope->trigger.offset - 0.5 ) * DIVS_VOLTAGE;
+        const double xOffset = ( scope->trigger.offset - 0.5 ) * DIVS_TIME;
         const double yOffset = scope->voltage[ yChannel ].offset;
 
         for ( unsigned int position = 0; position < sampleCount; ++position ) {

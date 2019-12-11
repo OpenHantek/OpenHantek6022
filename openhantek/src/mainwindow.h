@@ -37,6 +37,8 @@ class MainWindow : public QMainWindow {
 
   private:
     Ui::MainWindow *ui;
+    QIcon iconPause;
+    QIcon iconPlay;
 
     // Central widgets
     DsoWidget *dsoWidget;

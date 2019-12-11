@@ -1,12 +1,18 @@
 <RCC>
     <qresource prefix="/">
-        <file alias="OpenHantek6022.svg">images/OpenHantek6022.svg</file>
         <file alias="switch_6022BL.png">images/switch_6022BL.png</file>
         <file>images/fontawesome-4.7.0.ttf</file>
         <file>images/OpenHantek6022.svg</file>
         <file>images/digitalphosphor.svg</file>
-        <file>images/drafting-compass.svg</file>
-        <file>images/search-plus.svg</file>
+        <file>images/measure.svg</file>
+        <file>images/pause.svg</file>
+        <file>images/play.svg</file>
+        <file>images/zoom.svg</file>
+        <file>images/darktheme/digitalphosphor.svg</file>
+        <file>images/darktheme/measure.svg</file>
+        <file>images/darktheme/pause.svg</file>
+        <file>images/darktheme/play.svg</file>
+        <file>images/darktheme/zoom.svg</file>
     </qresource>
     <qresource prefix="/actions"/>
 </RCC>

@@ -14,7 +14,7 @@
    id="svg2816"
    version="1.1"
    inkscape:version="0.92.4 (5da689c313, 2019-01-14)"
-   sodipodi:docname="digitalphosphor.svg"
+   sodipodi:docname="digitalphosphor_white.svg"
    inkscape:export-filename="/home/oliver/Entwicklung/Qt/HantekDSO/res/images/actions/digitalphosphor.png"
    inkscape:export-xdpi="90"
    inkscape:export-ydpi="90">
@@ -112,19 +112,19 @@
      inkscape:groupmode="layer"
      transform="translate(1.0234618,12.41009)">
     <path
-       style="opacity:0.33000004;fill:none;stroke:#000000;stroke-width:4.90883732;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       style="opacity:0.33000004;fill:none;stroke:#fcffff;stroke-width:4.90883732;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        d="m 1.4641738,19.589901 c 12.6496972,-7.971861 16.8662672,-7.971861 29.5159692,0 12.6497,7.97185 16.866269,7.97185 29.515966,0"
        id="path2828-6"
        sodipodi:nodetypes="csc"
        inkscape:connector-curvature="0" />
     <path
-       style="opacity:0.67000002;fill:none;stroke:#000000;stroke-width:4.92130089;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       style="opacity:0.67000002;fill:none;stroke:#fffffd;stroke-width:4.92130089;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        d="m 1.4641738,19.589901 c 12.6481522,-39.385798 16.8642072,-39.385798 29.5123652,0 12.648155,39.385801 16.86421,39.385801 29.512361,0"
        id="path2828-65"
        sodipodi:nodetypes="csc"
        inkscape:connector-curvature="0" />
     <path
-       style="fill:none;fill-opacity:0.24705882;stroke:#000000;stroke-width:4.92518568;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       style="fill:none;fill-opacity:0.24705882;stroke:#ffffff;stroke-width:4.92518568;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        d="m 1.4565576,19.000013 c 12.6514174,-22.3087598 16.8685614,-22.3087598 29.5199824,0 12.651419,22.308784 16.868562,22.308784 29.519979,0"
        id="path2828"
        sodipodi:nodetypes="csc"

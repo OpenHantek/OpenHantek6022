@@ -24,31 +24,34 @@
 #include <QLineEdit>
 #include <QMessageBox>
 #include <QDesktopServices>
+#include <QPalette>
 
 #include "OH_VERSION.h"
 
 MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, ExporterRegistry *exporterRegistry,
                        QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow), mSettings(settings), exporterRegistry(exporterRegistry) {
+    QString iconPath = QString( ":/images/" );
+    if ( QPalette().color( QPalette::Window ).lightness() < 128 ) // automatic light/dark icon switch
+        iconPath += "darktheme/"; // select top window icons accordingly
     ui->setupUi(this);
-    ui->actionAbout->setIcon(iconFont->icon(fa::questioncircle));
-    ui->actionUserManual->setIcon(iconFont->icon(fa::filepdfo));
-    ui->actionSave->setIcon(iconFont->icon(fa::save));
+    iconPause = QIcon( iconPath + "pause.svg" );
+    iconPlay = QIcon( iconPath + "play.svg" );
+    ui->actionSampling->setIcon( iconPause );
+    ui->actionDigital_phosphor->setIcon( QIcon( iconPath + "digitalphosphor.svg" ) );
+    ui->actionZoom->setIcon( QIcon( iconPath + "zoom.svg" ) );
+    ui->actionMeasure->setIcon( QIcon( iconPath + "measure.svg" ) );
     ui->actionOpen->setIcon(iconFont->icon(fa::folderopen));
-    ui->actionSampling->setIcon(iconFont->icon(fa::pause,
-                                               {std::make_pair("text-selected-off", QChar(fa::play)),
-                                                std::make_pair("text-off", QChar(fa::play)),
-                                                std::make_pair("text-active-off", QChar(fa::play))}));
+    ui->actionSave->setIcon(iconFont->icon(fa::save));
     ui->actionSettings->setIcon(iconFont->icon(fa::gear));
     ui->actionManualCommand->setIcon(iconFont->icon(fa::edit));
-    ui->actionDigital_phosphor->setIcon(QIcon(":/images/digitalphosphor.svg"));
-    ui->actionZoom->setIcon(QIcon(":/images/search-plus.svg"));
-    ui->actionMeasure->setIcon(QIcon(":/images/drafting-compass.svg"));
+    ui->actionAbout->setIcon(iconFont->icon(fa::questioncircle));
+    ui->actionUserManual->setIcon(iconFont->icon(fa::filepdfo));
 
     // Window title
-    setWindowIcon(QIcon(":OpenHantek6022.svg"));
+    setWindowIcon( QIcon( ":/images/OpenHantek6022.svg" ) );
     setWindowTitle(
-        tr("OpenHantek6022 (%1) - Device %2 (FW%3)") //" - Renderer %4")
+        tr("OpenHantek6022 (%1) - Device %2 (FW%3)")
             .arg(QString::fromStdString( VERSION))
             .arg(QString::fromStdString(dsoControl->getDevice()->getModel()->name))
             .arg((unsigned int)dsoControl->getDevice()->getFwVersion(),4,16,QChar('0'))
@@ -198,9 +201,11 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, Expo
     connect(dsoControl, &HantekDsoControl::samplingStatusChanged, [this, dsoControl](bool enabled) {
         QSignalBlocker blocker(this->ui->actionSampling);
         if (enabled) {
+            this->ui->actionSampling->setIcon( this->iconPause );
             this->ui->actionSampling->setText(tr("Stop"));
             this->ui->actionSampling->setStatusTip(tr("Stop the oscilloscope"));
         } else {
+            this->ui->actionSampling->setIcon( this->iconPlay );
             this->ui->actionSampling->setText(tr("Start"));
             this->ui->actionSampling->setStatusTip(tr("Start the oscilloscope"));
         }
