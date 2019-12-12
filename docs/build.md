@@ -28,6 +28,10 @@ Optionally create a debian package:
 If you do not install the program, you need to copy the file `utils/udev_rules/60-hantek.rules` to `/lib/udev/rules.d/` yourself,
 and replug your device, otherwise you will not have the correct permissions to access usb devices.
 
+If you detect that icons are not displayed correctly, please check if the Qt SVG library is installed on your system.
+The Linux systems mentioned above include this lib when you install according to the provided lists.
+However, an [alpine linux](https://alpinelinux.org/) user [reported](https://github.com/OpenHantek/OpenHantek6022/issues/42#issuecomment-564329632) that he had to install `qt5-qtsvg` separately.
+
 ### [MacOSX](#macosx)
 We recommend homebrew to install the required libraries.
 
