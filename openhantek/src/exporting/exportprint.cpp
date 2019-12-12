@@ -16,7 +16,7 @@ ExporterPrint::ExporterPrint() {}
 
 void ExporterPrint::create(ExporterRegistry *registry) { this->registry = registry; data.reset(); }
 
-QIcon ExporterPrint::icon() { return iconFont->icon(fa::print); }
+int ExporterPrint::faIcon() { return fa::print; }
 
 QString ExporterPrint::name() { return QCoreApplication::tr("Print"); }
 

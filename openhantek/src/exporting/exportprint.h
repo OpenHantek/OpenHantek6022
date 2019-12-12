@@ -8,7 +8,7 @@ class ExporterPrint : public ExporterInterface
 public:
     ExporterPrint();
     void create(ExporterRegistry *registry) override;
-    QIcon icon() override;
+    int faIcon() override;
     QString name() override;
     Type type() override;
     bool samples(const std::shared_ptr<PPresult>data) override;

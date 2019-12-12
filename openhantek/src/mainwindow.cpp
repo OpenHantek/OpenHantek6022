@@ -25,15 +25,20 @@
 #include <QMessageBox>
 #include <QDesktopServices>
 #include <QPalette>
+// #include <QMetaType>
 
 #include "OH_VERSION.h"
 
 MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, ExporterRegistry *exporterRegistry,
                        QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow), mSettings(settings), exporterRegistry(exporterRegistry) {
+    QVariantMap colorMap;
     QString iconPath = QString( ":/images/" );
-    if ( QPalette().color( QPalette::Window ).lightness() < 128 ) // automatic light/dark icon switch
+    if ( QPalette().color( QPalette::Window ).lightness() < 128 ) {// automatic light/dark icon switch
         iconPath += "darktheme/"; // select top window icons accordingly
+        colorMap.insert("color-off", QColor(255,255,255));
+        colorMap.insert("color-active", QColor(255,255,255));
+    }
     ui->setupUi(this);
     iconPause = QIcon( iconPath + "pause.svg" );
     iconPlay = QIcon( iconPath + "play.svg" );
@@ -41,12 +46,12 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, Expo
     ui->actionDigital_phosphor->setIcon( QIcon( iconPath + "digitalphosphor.svg" ) );
     ui->actionZoom->setIcon( QIcon( iconPath + "zoom.svg" ) );
     ui->actionMeasure->setIcon( QIcon( iconPath + "measure.svg" ) );
-    ui->actionOpen->setIcon(iconFont->icon(fa::folderopen));
-    ui->actionSave->setIcon(iconFont->icon(fa::save));
-    ui->actionSettings->setIcon(iconFont->icon(fa::gear));
-    ui->actionManualCommand->setIcon(iconFont->icon(fa::edit));
-    ui->actionAbout->setIcon(iconFont->icon(fa::questioncircle));
-    ui->actionUserManual->setIcon(iconFont->icon(fa::filepdfo));
+    ui->actionOpen->setIcon(iconFont->icon( fa::folderopen, colorMap ) );
+    ui->actionSave->setIcon(iconFont->icon( fa::save, colorMap ) );
+    ui->actionSettings->setIcon(iconFont->icon( fa::gear, colorMap ) );
+    ui->actionManualCommand->setIcon(iconFont->icon( fa::edit, colorMap ) );
+    ui->actionAbout->setIcon(iconFont->icon( fa::questioncircle, colorMap ) );
+    ui->actionUserManual->setIcon(iconFont->icon( fa::filepdfo, colorMap ) );
 
     // Window title
     setWindowIcon( QIcon( ":/images/OpenHantek6022.svg" ) );
@@ -62,7 +67,7 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, Expo
 #endif
 
     for (auto *exporter : *exporterRegistry) {
-        QAction *action = new QAction(exporter->icon(), exporter->name(), this);
+        QAction *action = new QAction(iconFont->icon( exporter->faIcon(), colorMap ), exporter->name(), this);
         action->setCheckable(exporter->type() == ExporterInterface::Type::ContinousExport);
         connect(action, &QAction::triggered, [exporter, exporterRegistry](bool checked) {
             exporterRegistry->setExporterEnabled(
