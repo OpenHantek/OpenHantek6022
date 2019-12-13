@@ -46,6 +46,7 @@ After David [stopped maintaining](https://github.com/OpenHantek/openhantek/issue
 * Cursor measurement function for voltage, time, amplitude and frequency.
 * Export to CSV, JPG, PNG or print the graphs.
 * Freely configurable colors.
+* Automatic adaption of iconset for light and [dark themes](docs/images/screenshot_mainwindow_dark.png).
 * The dock views on the main window can be customized by dragging them around and stacking them.
   This allows a minimum window size of 640*480 for old workstation computers.
 * All settings can be saved to a configuration file and loaded again.

@@ -14,8 +14,8 @@
    id="svg2816"
    version="1.1"
    inkscape:version="0.92.4 (5da689c313, 2019-01-14)"
-   sodipodi:docname="digitalphosphor_white.svg"
-   inkscape:export-filename="/home/oliver/Entwicklung/Qt/HantekDSO/res/images/actions/digitalphosphor.png"
+   sodipodi:docname="digitalphosphor.svg"
+   inkscape:export-filename="digitalphosphor.png"
    inkscape:export-xdpi="90"
    inkscape:export-ydpi="90">
   <defs
@@ -64,16 +64,16 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="5.5353202"
-     inkscape:cx="29.31108"
-     inkscape:cy="35.015627"
+     inkscape:cx="37.349749"
+     inkscape:cy="22.27255"
      inkscape:current-layer="layer1"
      showgrid="true"
      inkscape:grid-bbox="true"
      inkscape:document-units="px"
      inkscape:window-width="1045"
      inkscape:window-height="735"
-     inkscape:window-x="2664"
-     inkscape:window-y="169"
+     inkscape:window-x="227"
+     inkscape:window-y="6"
      inkscape:window-maximized="0"
      fit-margin-top="0"
      fit-margin-left="0"
@@ -102,7 +102,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -112,19 +112,19 @@
      inkscape:groupmode="layer"
      transform="translate(1.0234618,12.41009)">
     <path
-       style="opacity:0.33000004;fill:none;stroke:#fcffff;stroke-width:4.90883732;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       style="opacity:0.33000004;fill:none;stroke:#d0d0d0;stroke-width:4.90883732;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        d="m 1.4641738,19.589901 c 12.6496972,-7.971861 16.8662672,-7.971861 29.5159692,0 12.6497,7.97185 16.866269,7.97185 29.515966,0"
        id="path2828-6"
        sodipodi:nodetypes="csc"
        inkscape:connector-curvature="0" />
     <path
-       style="opacity:0.67000002;fill:none;stroke:#fffffd;stroke-width:4.92130089;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       style="opacity:0.67000002;fill:none;stroke:#d0d0d0;stroke-width:4.92130089;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        d="m 1.4641738,19.589901 c 12.6481522,-39.385798 16.8642072,-39.385798 29.5123652,0 12.648155,39.385801 16.86421,39.385801 29.512361,0"
        id="path2828-65"
        sodipodi:nodetypes="csc"
        inkscape:connector-curvature="0" />
     <path
-       style="fill:none;fill-opacity:0.24705882;stroke:#ffffff;stroke-width:4.92518568;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       style="fill:none;fill-opacity:0.24705882;stroke:#d0d0d0;stroke-width:4.92518568;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        d="m 1.4565576,19.000013 c 12.6514174,-22.3087598 16.8685614,-22.3087598 29.5199824,0 12.651419,22.308784 16.868562,22.308784 29.519979,0"
        id="path2828"
        sodipodi:nodetypes="csc"

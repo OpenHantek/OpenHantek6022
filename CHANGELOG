@@ -1,3 +1,22 @@
+3.0.1
+2019-12-13
+More robust USB handling for all OSs
+Improve manipulation and export of frozen or single traces
+Export XY display
+Automatic icon selection for light/dark themes
+Eye candy
+Automatic start after FW upload
+
+3.0.0
+2019-11-15
+Major changes:
+Support for Sainsmart DDS120
+Support for Hantek6022 AC HW modification
+Update to FW 0203
+MacOSX bundle
+Measure duty cycle of triggered trace
+New versioning scheme
+
 v2.16
 2019-10-15
 Major changes from v2.16-rc1:

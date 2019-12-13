@@ -13,7 +13,7 @@
    inkscape:version="0.92.4 (5da689c313, 2019-01-14)"
    width="64"
    height="64"
-   sodipodi:docname="play_white.svg">
+   sodipodi:docname="play.svg">
   <metadata
      id="metadata3011">
     <rdf:RDF>
@@ -22,7 +22,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -41,10 +41,10 @@
      inkscape:window-height="480"
      id="namedview3007"
      showgrid="false"
-     inkscape:zoom="4.2142857"
-     inkscape:cx="35.395086"
-     inkscape:cy="29.896405"
-     inkscape:window-x="2574"
+     inkscape:zoom="2.97995"
+     inkscape:cx="36.058007"
+     inkscape:cy="26.200395"
+     inkscape:window-x="321"
      inkscape:window-y="209"
      inkscape:window-maximized="0"
      inkscape:current-layer="svg3001"
@@ -54,11 +54,11 @@
   <g
      transform="matrix(1.1144279,0,0,-1.0098566,112,1286.3083)"
      id="g3003"
-     style="fill:#ffffff;fill-opacity:1">
+     style="fill:#d0d0d0;fill-opacity:1">
     <path
        d="M 1384,609 56,-129 Q 33,-142 16.5,-132 0,-122 0,-96 v 1472 q 0,26 16.5,36 16.5,10 39.5,-3 L 1384,671 q 23,-13 23,-31 0,-18 -23,-31 z"
        id="path3005"
        inkscape:connector-curvature="0"
-       style="fill:#ffffff;fill-opacity:1" />
+       style="fill:#d0d0d0;fill-opacity:1" />
   </g>
 </svg>

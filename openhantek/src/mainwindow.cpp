@@ -25,20 +25,21 @@
 #include <QMessageBox>
 #include <QDesktopServices>
 #include <QPalette>
-// #include <QMetaType>
 
 #include "OH_VERSION.h"
 
 MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, ExporterRegistry *exporterRegistry,
                        QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow), mSettings(settings), exporterRegistry(exporterRegistry) {
+
     QVariantMap colorMap;
     QString iconPath = QString( ":/images/" );
     if ( QPalette().color( QPalette::Window ).lightness() < 128 ) {// automatic light/dark icon switch
         iconPath += "darktheme/"; // select top window icons accordingly
-        colorMap.insert("color-off", QColor(255,255,255));
-        colorMap.insert("color-active", QColor(255,255,255));
+        colorMap.insert( "color-off", QColor( 208, 208, 208 ) ); // light grey normal
+        colorMap.insert( "color-active", QColor( 255, 255, 255 ) ); // white when selected
     }
+
     ui->setupUi(this);
     iconPause = QIcon( iconPath + "pause.svg" );
     iconPlay = QIcon( iconPath + "play.svg" );
