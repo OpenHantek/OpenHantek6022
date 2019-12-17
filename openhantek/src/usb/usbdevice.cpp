@@ -46,26 +46,31 @@ QString libUsbErrorString(int error) {
 }
 
 
-UniqueUSBid USBDevice::computeUSBdeviceID(libusb_device *device ) {
+UniqueUSBid USBDevice::computeUSBdeviceID( libusb_device *device ) {
     // Returns a 64-bit value that uniquely identifies a device on the bus
-    // bbppVVVVPPPPFFFF
-    //             ^^^^-- Firmware version
-    //         ^^^^------ Product ID
-    //     ^^^^---------- Vendor ID
-    //   ^^-------------- USB port
-    // ^^---------------- USB bus
+    // bus/ports define a constant plug position
+    // VID/FW changes with FW upload
+    // bpppppppVVVVFFFF
+    //             ^^^^-- Firmware version (16bit)(can change after upload of new FW over old FW)
+    //         ^^^^------ Vendor ID (16 bit)(changes with FW upload to device w/o FW)
+    //  ^^^^^^^---------- USB ports tree (as shown by "lsusb -t"), max 7 ports, port = 1..15, 0 = none
+    // ^----------------- USB bus, bus = 1..15
 
     // Get device descriptor
     struct libusb_device_descriptor descriptor;
     libusb_get_device_descriptor(device, &descriptor);
     // collect values and arrange them
-    UniqueUSBid uid = libusb_get_bus_number( device );
-    uid <<= 8;
-    uid |= libusb_get_port_number( device );
+    UniqueUSBid uid = libusb_get_bus_number( device ) & 0x0F; // typically no more than 15 busses
+    const int treeSize = 7; // port tree max size is 7
+    uint8_t ports[ treeSize ];
+    int nPorts = libusb_get_port_numbers( device, ports, sizeof( ports ) );
+    for ( int iii = 0; iii < treeSize; ++iii ) {
+        uid <<= 4;
+        if ( iii < nPorts )
+            uid |= ports[ iii ] & 0x0F;
+    }
     uid <<= 16;
     uid |= descriptor.idVendor;
-    uid <<= 16;
-    uid |= descriptor.idProduct;
     uid <<= 16;
     uid |= descriptor.bcdDevice;
     return uid;
