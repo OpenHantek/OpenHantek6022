@@ -225,31 +225,44 @@ DsoWidget::DsoWidget(DsoSettingsScope *scope, DsoSettingsView *view, const Dso::
     mainLayout->setColumnMinimumWidth(4, mainSliders.triggerOffsetSlider->postMargin());
     mainLayout->setSpacing(0);
     int row = 0;
-    mainLayout->addLayout(settingsLayout, row++, 1, 1, 5);
-    // 5x5 box for mainScope & mainSliders
-    mainLayout->setRowMinimumHeight(row + 1, mainSliders.voltageOffsetSlider->preMargin());
-    mainLayout->setRowMinimumHeight(row + 3, mainSliders.voltageOffsetSlider->postMargin());
-    mainLayout->setRowStretch(row + 2, 1);
-    mainLayout->addWidget(mainScope, row + 2, 3);
-    mainLayout->addWidget(mainSliders.voltageOffsetSlider, row + 1, 1, 3, 2, Qt::AlignRight);
+    // display settings on top of scope
+    mainLayout->addLayout(settingsLayout, row, 1, 1, 5);
+    ++row;
+    // 5x5 box for mainScope & mainSliders & markerSlider
     mainLayout->addWidget(mainSliders.triggerOffsetSlider, row, 2, 2, 3, Qt::AlignBottom);
-    mainLayout->addWidget(mainSliders.triggerLevelSlider, row + 1, 4, 3, 2, Qt::AlignLeft);
-    mainLayout->addWidget(mainSliders.markerSlider, row + 3, 2, 2, 3, Qt::AlignTop);
-    row += 5;
+    ++row;
+    mainLayout->setRowMinimumHeight(row, mainSliders.voltageOffsetSlider->preMargin());
+    mainLayout->addWidget(mainSliders.voltageOffsetSlider, row, 1, 3, 2, Qt::AlignRight);
+    mainLayout->addWidget(mainSliders.triggerLevelSlider, row, 4, 3, 2, Qt::AlignLeft);
+    ++row;
+    mainLayout->setRowStretch(row, 1); // the scope gets max space
+    mainLayout->addWidget(mainScope, row, 3);
+    ++row;
+    mainLayout->setRowMinimumHeight(row, mainSliders.voltageOffsetSlider->postMargin());
+    mainLayout->addWidget(mainSliders.markerSlider, row, 2, 2, 3, Qt::AlignTop);
+    row += 2; // end 5x5 box
     // Separators and markerLayout
-    mainLayout->setRowMinimumHeight(row++, 5);
-    mainLayout->addLayout(markerLayout, row++, 1, 1, 5);
-    mainLayout->setRowMinimumHeight(row++, 4);
-    // 5x5 box for zoomScope & zoomSliders
-    zoomScopeRow = row + 2;
-    mainLayout->addWidget(zoomScope, zoomScopeRow, 3);
-    mainLayout->addWidget(zoomSliders.voltageOffsetSlider, row + 1, 1, 3, 2, Qt::AlignRight);
+    mainLayout->setRowMinimumHeight(row, 4);
+    ++row;
+    mainLayout->addLayout(markerLayout, row, 1, 1, 5);
+    ++row;
+    mainLayout->setRowMinimumHeight(row, 4);
+    ++row;
+    // 5x4 box for zoomScope & zoomSliders
     mainLayout->addWidget(zoomSliders.triggerOffsetSlider, row, 2, 2, 3, Qt::AlignBottom);
-    mainLayout->addWidget(zoomSliders.triggerLevelSlider, row + 1, 4, 3, 2, Qt::AlignLeft);
-    row += 5;
+    ++row;
+    mainLayout->setRowMinimumHeight(row, zoomSliders.voltageOffsetSlider->preMargin());
+    mainLayout->addWidget(zoomSliders.voltageOffsetSlider, row, 1, 3, 2, Qt::AlignRight);
+    mainLayout->addWidget(zoomSliders.triggerLevelSlider, row, 4, 3, 2, Qt::AlignLeft);
+    ++row;
+    mainLayout->addWidget(zoomScope, zoomScopeRow = row, 3);
+    ++row;
+    mainLayout->setRowMinimumHeight(row, zoomSliders.voltageOffsetSlider->postMargin());
+    ++row; // end 5x4 box
     // Separator and embedded measurementLayout
-    mainLayout->setRowMinimumHeight(row++, 8);
-    mainLayout->addLayout(measurementLayout, row++, 1, 1, 5);
+    mainLayout->setRowMinimumHeight(row, 8);
+    ++row;
+    mainLayout->addLayout(measurementLayout, row, 1, 1, 5);
 
     updateCursorGrid(view->cursorsVisible);
 

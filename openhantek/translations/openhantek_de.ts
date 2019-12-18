@@ -325,12 +325,12 @@
         <translation type="vanished">Zoom x%L1</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="483"/>
-        <location filename="../src/dsowidget.cpp" line="485"/>
-        <location filename="../src/dsowidget.cpp" line="520"/>
-        <location filename="../src/dsowidget.cpp" line="560"/>
-        <location filename="../src/dsowidget.cpp" line="568"/>
-        <location filename="../src/dsowidget.cpp" line="587"/>
+        <location filename="../src/dsowidget.cpp" line="496"/>
+        <location filename="../src/dsowidget.cpp" line="498"/>
+        <location filename="../src/dsowidget.cpp" line="533"/>
+        <location filename="../src/dsowidget.cpp" line="573"/>
+        <location filename="../src/dsowidget.cpp" line="581"/>
+        <location filename="../src/dsowidget.cpp" line="600"/>
         <source>/div</source>
         <translation>/div</translation>
     </message>
@@ -349,49 +349,49 @@
         <translation type="vanished">Zoom ---</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="437"/>
-        <location filename="../src/dsowidget.cpp" line="451"/>
+        <location filename="../src/dsowidget.cpp" line="450"/>
+        <location filename="../src/dsowidget.cpp" line="464"/>
         <source>ON</source>
         <translation>EIN</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="437"/>
-        <location filename="../src/dsowidget.cpp" line="451"/>
+        <location filename="../src/dsowidget.cpp" line="450"/>
+        <location filename="../src/dsowidget.cpp" line="464"/>
         <source>OFF</source>
         <translation>AUS</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="473"/>
+        <location filename="../src/dsowidget.cpp" line="486"/>
         <source>Markers  </source>
         <translation>Merker </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="474"/>
+        <location filename="../src/dsowidget.cpp" line="487"/>
         <source>Time: </source>
         <translation>Zeit: </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="475"/>
+        <location filename="../src/dsowidget.cpp" line="488"/>
         <source>Frequency: </source>
         <translation>Frequenz: </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="478"/>
+        <location filename="../src/dsowidget.cpp" line="491"/>
         <source>Zoom x%L1  </source>
         <translation>Zoom x%L1</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="480"/>
+        <location filename="../src/dsowidget.cpp" line="493"/>
         <source>Zoom ---  </source>
         <translation>Zoom ---</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="532"/>
+        <location filename="../src/dsowidget.cpp" line="545"/>
         <source>%L1%</source>
         <translation>%L1%</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="545"/>
+        <location filename="../src/dsowidget.cpp" line="558"/>
         <source>%1  %2  %3  %4  %5</source>
         <translation>%1  %2  %3  %4 %5</translation>
     </message>
@@ -408,12 +408,12 @@
         <translation type="vanished">%1  %2  %3  %4</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="578"/>
+        <location filename="../src/dsowidget.cpp" line="591"/>
         <source>/s</source>
         <translation>/s</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="680"/>
+        <location filename="../src/dsowidget.cpp" line="693"/>
         <source> on screen</source>
         <translation> angezeigt</translation>
     </message>
