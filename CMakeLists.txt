@@ -52,6 +52,18 @@ if("${CMAKE_SYSTEM}" MATCHES "Linux")
   else()
     message(WARNING "Could not find udev rules directory (/lib/udev/rules.d/), skipping installation of udev rules.")
   endif()
+  if(EXISTS "/usr/share/applications/")
+    install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/utils/applications/openhantek.desktop"
+      DESTINATION "/usr/share/applications/" COMPONENT Runtime)
+  else()
+    message(WARNING "Could not find applications directory (/usr/share/applications/), skipping installation of desktop file.")
+  endif()
+  if(EXISTS "/usr/share/icons/")
+    install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/openhantek/res/images/OpenHantek6022.svg"
+      DESTINATION "/usr/share/icons/" COMPONENT Runtime)
+  else()
+    message(WARNING "Could not find icons directory (/usr/share/icons/), skipping installation of icon.")
+  endif()
 endif()
 
 # Add auxiliary files to the project, so that these files appear in VisualStudio/QtCreator
