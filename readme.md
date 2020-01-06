@@ -56,6 +56,7 @@ After David [stopped maintaining](https://github.com/OpenHantek/openhantek/issue
 
 ## Install prebuilt binary
 * Get Linux, Raspberry Pi (and untested Win) packages from the [Releases](https://github.com/OpenHantek/OpenHantek6022/releases) page.
+To install the downloaded *.deb package go to the download directory and issue the command `apt install ./openhantek_..._amd64.deb`. This command installs automatically all dependencies of the program.
 * Get MacOSX package from [macports](https://www.macports.org/ports.php?by=name&substr=openhantek) - thx [ra1nb0w](https://github.com/ra1nb0w).
 * Get [Fedora rpm packages](https://pkgs.org/download/openhantek) - thx [Vascom](https://github.com/Vascom).
 * [Download (untested) Windows build from last commit](https://ci.appveyor.com/project/Ho-Ro/openhantek6022/build/artifacts).
