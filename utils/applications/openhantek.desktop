@@ -5,5 +5,5 @@ Name=Digital Storage Oscilloscope
 Comment=DSO software for Hantek DSO6022 USB hardware
 Type=Application
 Exec=OpenHantek
-Icon=OpenHantek6022.svg
+Icon=OpenHantek6022
 Categories=Development;Engineering;Electronics;

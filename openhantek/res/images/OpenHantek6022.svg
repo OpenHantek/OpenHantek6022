@@ -15,9 +15,9 @@
    version="1.1"
    inkscape:version="0.92.4 (5da689c313, 2019-01-14)"
    sodipodi:docname="OpenHantek6022.svg"
-   inkscape:export-filename="/home/oliver/Entwicklung/Qt/HantekDSO/res/images/hantekdso.png"
-   inkscape:export-xdpi="90"
-   inkscape:export-ydpi="90">
+   inkscape:export-filename="/home/horo/projects/Measure/OpenHantek/OpenHantek6022/openhantek/res/images/OpenHantek6022_48x48.png"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96">
   <defs
      id="defs4">
     <inkscape:perspective
@@ -50,15 +50,15 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="14.142136"
-     inkscape:cx="22.727634"
+     inkscape:cx="25.084009"
      inkscape:cy="23.288169"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
      inkscape:window-width="1007"
      inkscape:window-height="722"
-     inkscape:window-x="2565"
-     inkscape:window-y="161"
+     inkscape:window-x="265"
+     inkscape:window-y="19"
      inkscape:window-maximized="0"
      inkscape:showpageshadow="false"
      showborder="true"
@@ -120,7 +120,7 @@
        sodipodi:nodetypes="cc"
        inkscape:connector-curvature="0" />
     <rect
-       style="fill:none;stroke:#ffffff;stroke-width:2.04444551;stroke-linejoin:square;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       style="fill:none;stroke:#ffffff;stroke-width:2.04444551;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        id="rect3598"
        width="46"
        height="46.000076"

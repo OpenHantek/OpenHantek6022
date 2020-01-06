@@ -58,11 +58,17 @@ if("${CMAKE_SYSTEM}" MATCHES "Linux")
   else()
     message(WARNING "Could not find applications directory (/usr/share/applications/), skipping installation of desktop file.")
   endif()
-  if(EXISTS "/usr/share/icons/")
-    install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/openhantek/res/images/OpenHantek6022.svg"
-      DESTINATION "/usr/share/icons/" COMPONENT Runtime)
+  if(EXISTS "/usr/share/icons/hicolor/48x48/apps/")
+    install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/openhantek/res/images/OpenHantek6022_48x48.png"
+      DESTINATION "/usr/share/icons/hicolor/48x48/apps/" COMPONENT Runtime)
   else()
-    message(WARNING "Could not find icons directory (/usr/share/icons/), skipping installation of icon.")
+    message(WARNING "Could not find icons directory (/usr/share/icons/hicolor/48x48/apps/), skipping installation of icon.")
+  endif()
+  if(EXISTS "/usr/share/icons/hicolor/scalable/apps/")
+    install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/openhantek/res/images/OpenHantek6022.svg"
+      DESTINATION "/usr/share/icons/hicolor/scalable/apps/" COMPONENT Runtime)
+  else()
+    message(WARNING "Could not find icons directory (/usr/share/icons/hicolor/scalable/apps/), skipping installation of icon.")
   endif()
 endif()
 
