@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=OpenHantek
+GenericName=Digital Storage Oscilloscope
+Comment=DSO software for Hantek DSO6022 USB hardware
+Exec=OpenHantek
+Icon=OpenHantek
+Categories=Development;Engineering;Electronics;

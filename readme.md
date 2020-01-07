@@ -55,33 +55,37 @@ After David [stopped maintaining](https://github.com/OpenHantek/openhantek/issue
 * A [little HW modification](docs/HANTEK6022_AC_Modification.pdf) adds AC coupling. OpenHantek6022 supports this feature since v2.17-rc5 / FW0204.
 
 ## Install prebuilt binary
-* Get Linux, Raspberry Pi (and untested Win) packages from the [Releases](https://github.com/OpenHantek/OpenHantek6022/releases) page.
-To install the downloaded *.deb package go to the download directory and issue the command `apt install ./openhantek_..._amd64.deb`. This command installs automatically all dependencies of the program.
-* Get MacOSX package from [macports](https://www.macports.org/ports.php?by=name&substr=openhantek) - thx [ra1nb0w](https://github.com/ra1nb0w).
+* Download Linux, Raspberry Pi, Win and MacOSX packages from the [Releases](https://github.com/OpenHantek/OpenHantek6022/releases) page. (the Win and MacOSX packages are not tested, neither is the installation of the *.rpm packages).
+* To install the downloaded *.deb package, open a terminal window, go to the download directory and enter the command (as root) `apt install ./openhantek_..._amd64.deb`.
+This command will automatically install all dependencies of the program as well.
+* For installation of *.rpm packages follow similar rules, e.g. `dnf install ./openhantek-...-1.x86_64.rpm`.
+* Get MacOSX packages from [macports](https://www.macports.org/ports.php?by=name&substr=openhantek) - thx [ra1nb0w](https://github.com/ra1nb0w).
 * Get [Fedora rpm packages](https://pkgs.org/download/openhantek) - thx [Vascom](https://github.com/Vascom).
 * [Download (untested) Windows build from last commit](https://ci.appveyor.com/project/Ho-Ro/openhantek6022/build/artifacts).
-* The MacOSX archive from Releases contains only the dynamic linked binary, you have to provide the necessary libraries on your own! Please have a look at the [build instructions](docs/build.md#apple).
 
 ## Building OpenHantek from source
 You need the following software, to build OpenHantek from source:
 * [CMake 3.5+](https://cmake.org/download/)
 * [Qt 5.4+](https://www1.qt.io/download-open-source/)
-* [FFTW 3+ (prebuild files will be downloaded on windows)](http://www.fftw.org/)
-* libusb-1.0, version >= 1.0.16 (prebuild files will be used on windows)
+* [FFTW 3+](http://www.fftw.org/) (prebuild files will be downloaded on windows)
+* [libusb-1.0](https://libusb.info/), version >= 1.0.16 (prebuild files will be used on windows)
 * A compiler that supports C++11 - tested with gcc, clang and msvc
 
 We have build instructions available for [Linux](docs/build.md#linux), [Apple MacOSX](docs/build.md#macosx) and [Microsoft Windows](docs/build.md#windows).
 
 ## Run OpenHantek
-With the original OpenHantek version you needed an OpenGL 3.2+ or OpenGL ES 2.0+ capable graphics hardware.
-OpenHantek6022 runs also on legacy HW/SW (OpenGL 2.1+ or OpenGL ES 1.2+) with the patch [coozoo@01b42d3](https://github.com/coozoo/openhantek/commit/01b42d3db2921a0aa83ea6808147ea6257de3f28)
+On a Linux system start the program via the menu entry *OpenHantek (Digital Storage Oscilloscope)* or from a terminal window as `OpenHantek`.
+
+OpenHantek6022 runs also on legacy HW/SW that supports at least OpenGL 2.1+ or OpenGL ES 1.2+.
 OpenGL is preferred, if available. Overwrite this behaviour by starting OpenHantek
 from the command line like this: `OpenHantek --useGLES`.
+
+Raspberry Pi uses OpenGL ES automatically.
 
 USB access for the device is required:
 * As seen on the [Microsoft Windows build instructions](docs/build.md#windows) page, you have to assign an usb driver to the device.
 The original Hantek driver doesn't work.
-* On Linux, you need to copy the file `utils/udev_rules/60-hantek.rules` to `/etc/udev/rules.d/` or `/lib/udev/rules.d/` and replug your device.
+* On Linux, you need to copy the file `utils/udev_rules/60-hantek.rules` to `/etc/udev/rules.d/` or `/lib/udev/rules.d/` and replug your device. If OpenHantek is installed from a *.deb or *.rpm package this file is installed automatically.
 
 ## Important!
 The scope doesn't store the firmware permanently in flash or eeprom, it must be uploaded after each power-up and is kept in ram 'til power-down.

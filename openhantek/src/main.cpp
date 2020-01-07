@@ -81,7 +81,7 @@ void applySettingsToDevice(HantekDsoControl *dsoControl, DsoSettingsScope *scope
 int main(int argc, char *argv[]) {
     //////// Set application information ////////
     QCoreApplication::setOrganizationName("OpenHantek");
-    QCoreApplication::setOrganizationDomain("www.openhantek.org");
+    QCoreApplication::setOrganizationDomain("openhantek.org");
     QCoreApplication::setApplicationName("OpenHantek6022");
     QCoreApplication::setApplicationVersion(VERSION);
     QCoreApplication::setAttribute(Qt::AA_UseHighDpiPixmaps, true);

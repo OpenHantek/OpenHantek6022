@@ -53,19 +53,19 @@ if("${CMAKE_SYSTEM}" MATCHES "Linux")
     message(WARNING "Could not find udev rules directory (/lib/udev/rules.d/), skipping installation of udev rules.")
   endif()
   if(EXISTS "/usr/share/applications/")
-    install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/utils/applications/openhantek.desktop"
+    install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/utils/applications/OpenHantek.desktop"
       DESTINATION "/usr/share/applications/" COMPONENT Runtime)
   else()
     message(WARNING "Could not find applications directory (/usr/share/applications/), skipping installation of desktop file.")
   endif()
   if(EXISTS "/usr/share/icons/hicolor/48x48/apps/")
-    install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/openhantek/res/images/OpenHantek6022_48x48.png"
-      DESTINATION "/usr/share/icons/hicolor/48x48/apps/" COMPONENT Runtime)
+    install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/openhantek/res/images/OpenHantek.png"
+      DESTINATION /usr/share/icons/hicolor/48x48/apps/ COMPONENT Runtime)
   else()
     message(WARNING "Could not find icons directory (/usr/share/icons/hicolor/48x48/apps/), skipping installation of icon.")
   endif()
   if(EXISTS "/usr/share/icons/hicolor/scalable/apps/")
-    install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/openhantek/res/images/OpenHantek6022.svg"
+    install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/openhantek/res/images/OpenHantek.svg"
       DESTINATION "/usr/share/icons/hicolor/scalable/apps/" COMPONENT Runtime)
   else()
     message(WARNING "Could not find icons directory (/usr/share/icons/hicolor/scalable/apps/), skipping installation of icon.")

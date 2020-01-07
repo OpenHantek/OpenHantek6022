@@ -55,7 +55,7 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, Expo
     ui->actionUserManual->setIcon(iconFont->icon( fa::filepdfo, colorMap ) );
 
     // Window title
-    setWindowIcon( QIcon( ":/images/OpenHantek6022.svg" ) );
+    setWindowIcon( QIcon( ":/images/OpenHantek.svg" ) );
     setWindowTitle(
         tr("OpenHantek6022 (%1) - Device %2 (FW%3)")
             .arg(QString::fromStdString( VERSION))
@@ -301,9 +301,9 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, Expo
             this, tr("About OpenHantek6022 (%1)").arg(VERSION),
             tr("<p>Open source software for Hantek6022 USB oscilloscopes</p>"
                "<p>Copyright &copy; 2010, 2011 Oliver Haag</p>"
-               "<p>Copyright &copy; 2012-2019 OpenHantek community<br/>"
+               "<p>Copyright &copy; 2012-2020 OpenHantek community<br/>"
                "<a href='https://github.com/OpenHantek'>https://github.com/OpenHantek</a></p>"
-               "<p>Open source firmware copyright &copy; 2019 Ho-Ro<br/>"
+               "<p>Open source firmware copyright &copy; 2019-2020 Ho-Ro<br/>"
                "<a href='https://github.com/Ho-Ro/Hantek6022API'>https://github.com/Ho-Ro/Hantek6022API</a></p>"
             )
         );
