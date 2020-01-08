@@ -87,8 +87,8 @@ GlScope::GlScope(DsoSettingsScope *scope, DsoSettingsView *view, QWidget *parent
 GlScope::~GlScope() {/* virtual destructor necessary */}
 
 QPointF GlScope::eventToPosition(QMouseEvent *event) {
-    QPointF position((double)(event->x() - width() / 2) * DIVS_TIME / (double)width(),
-                     (double)(height() / 2 - event->y()) * DIVS_VOLTAGE / (double)height());
+    QPointF position( double( event->x() - width() / 2 ) * DIVS_TIME / double( width() ),
+                      double( height() / 2 - event->y() ) * DIVS_VOLTAGE / double( height() ) );
     if (zoomed) {
         double m1 = scope->getMarker(0);
         double m2 = scope->getMarker(1);
@@ -292,7 +292,7 @@ void GlScope::initializeGL() {
     gl->glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     QColor bg = view->screen.background;
-    gl->glClearColor((GLfloat)bg.redF(), (GLfloat)bg.greenF(), (GLfloat)bg.blueF(), (GLfloat)bg.alphaF());
+    gl->glClearColor( GLfloat( bg.redF() ), GLfloat( bg.greenF() ), GLfloat( bg.blueF() ), GLfloat( bg.alphaF() ) );
 
     generateGrid(program.get());
 
@@ -344,34 +344,34 @@ void GlScope::generateVertices(unsigned marker, const DsoSettingsScopeCursor &cu
         break;
     case DsoSettingsScopeCursor::VERTICAL:
         vaMarker[marker] = {
-            QVector3D(cursor.pos[0].x(), -DIVS_VOLTAGE, Z_ORDER),
-            QVector3D(cursor.pos[0].x(),  DIVS_VOLTAGE, Z_ORDER),
-            QVector3D(cursor.pos[1].x(),  DIVS_VOLTAGE, Z_ORDER),
-            QVector3D(cursor.pos[1].x(), -DIVS_VOLTAGE, Z_ORDER)
+            QVector3D(GLfloat( cursor.pos[0].x() ), -GLfloat( DIVS_VOLTAGE ), Z_ORDER),
+            QVector3D(GLfloat( cursor.pos[0].x() ),  GLfloat( DIVS_VOLTAGE ), Z_ORDER),
+            QVector3D(GLfloat( cursor.pos[1].x() ),  GLfloat( DIVS_VOLTAGE ), Z_ORDER),
+            QVector3D(GLfloat( cursor.pos[1].x() ), -GLfloat( DIVS_VOLTAGE ), Z_ORDER)
         };
         break;
     case DsoSettingsScopeCursor::HORIZONTAL:
         vaMarker[marker] = {
-            QVector3D(-DIVS_TIME, cursor.pos[0].y(), Z_ORDER),
-            QVector3D( DIVS_TIME, cursor.pos[0].y(), Z_ORDER),
-            QVector3D( DIVS_TIME, cursor.pos[1].y(), Z_ORDER),
-            QVector3D(-DIVS_TIME, cursor.pos[1].y(), Z_ORDER)
+            QVector3D(-GLfloat( DIVS_TIME ), GLfloat( cursor.pos[0].y() ), Z_ORDER),
+            QVector3D( GLfloat( DIVS_TIME ), GLfloat( cursor.pos[0].y() ), Z_ORDER),
+            QVector3D( GLfloat( DIVS_TIME ), GLfloat( cursor.pos[1].y() ), Z_ORDER),
+            QVector3D(-GLfloat( DIVS_TIME ), GLfloat( cursor.pos[1].y() ), Z_ORDER)
         };
         break;
     case DsoSettingsScopeCursor::RECTANGULAR:
         if ((cursor.pos[1].x() - cursor.pos[0].x()) * (cursor.pos[1].y() - cursor.pos[0].y()) > 0.0) {
             vaMarker[marker] = {
-                QVector3D(cursor.pos[0].x(), cursor.pos[0].y(), Z_ORDER),
-                QVector3D(cursor.pos[1].x(), cursor.pos[0].y(), Z_ORDER),
-                QVector3D(cursor.pos[1].x(), cursor.pos[1].y(), Z_ORDER),
-                QVector3D(cursor.pos[0].x(), cursor.pos[1].y(), Z_ORDER)
+                QVector3D(GLfloat( cursor.pos[0].x() ), GLfloat( cursor.pos[0].y() ), Z_ORDER),
+                QVector3D(GLfloat( cursor.pos[1].x() ), GLfloat( cursor.pos[0].y() ), Z_ORDER),
+                QVector3D(GLfloat( cursor.pos[1].x() ), GLfloat( cursor.pos[1].y() ), Z_ORDER),
+                QVector3D(GLfloat( cursor.pos[0].x() ), GLfloat( cursor.pos[1].y() ), Z_ORDER)
             };
         } else {
             vaMarker[marker] = {
-                QVector3D(cursor.pos[0].x(), cursor.pos[0].y(), Z_ORDER),
-                QVector3D(cursor.pos[0].x(), cursor.pos[1].y(), Z_ORDER),
-                QVector3D(cursor.pos[1].x(), cursor.pos[1].y(), Z_ORDER),
-                QVector3D(cursor.pos[1].x(), cursor.pos[0].y(), Z_ORDER)
+                QVector3D(GLfloat( cursor.pos[0].x() ), GLfloat( cursor.pos[0].y() ), Z_ORDER),
+                QVector3D(GLfloat( cursor.pos[0].x() ), GLfloat( cursor.pos[1].y() ), Z_ORDER),
+                QVector3D(GLfloat( cursor.pos[1].x() ), GLfloat( cursor.pos[1].y() ), Z_ORDER),
+                QVector3D(GLfloat( cursor.pos[1].x() ), GLfloat( cursor.pos[0].y() ), Z_ORDER)
             };
         }
         break;
@@ -407,8 +407,8 @@ void GlScope::paintGL() {
     // Apply zoom settings via matrix transformation
     if (zoomed) {
         QMatrix4x4 m;
-        m.scale(QVector3D(DIVS_TIME / (GLfloat)fabs(scope->getMarker(1) - scope->getMarker(0)), 1.0f, 1.0f));
-        m.translate((GLfloat) - (scope->getMarker(0) + scope->getMarker(1)) / 2, 0.0f, 0.0f);
+        m.scale( QVector3D( GLfloat( DIVS_TIME ) / GLfloat( fabs( scope->getMarker(1) - scope->getMarker(0) ) ), 1.0f, 1.0f ) );
+        m.translate( - GLfloat( scope->getMarker(0) + scope->getMarker(1) ) / 2, 0.0f, 0.0f );
         m_program->setUniformValue(matrixLocation, pmvMatrix * m);
     }
 
@@ -418,9 +418,9 @@ void GlScope::paintGL() {
     for (Graph &graph : m_GraphHistory) {
         for (ChannelID channel = 0; channel < scope->voltage.size(); ++channel) {
             if (scope->horizontal.format == Dso::GraphFormat::TY) {
-                drawSpectrumChannelGraph(channel, graph, (int)historyIndex);
+                drawSpectrumChannelGraph(channel, graph, int( historyIndex) );
             }
-            drawVoltageChannelGraph(channel, graph, (int)historyIndex);
+            drawVoltageChannelGraph(channel, graph, int( historyIndex) );
         }
         ++historyIndex;
     }
@@ -434,16 +434,16 @@ void GlScope::paintGL() {
 void GlScope::resizeGL(int width, int height) {
     if (!shaderCompileSuccess) return;
     auto *gl = context()->functions();
-    gl->glViewport(0, 0, (GLint)width, (GLint)height);
+    gl->glViewport( 0, 0, GLint( width ), GLint( height ) );
 
     // Set axes to div-scale and apply correction for exact pixelization
-    float pixelizationWidthCorrection = (float)width / (width - 1);
-    float pixelizationHeightCorrection = (float)height / (height - 1);
+    float pixelizationWidthCorrection = float( width ) / ( width - 1 );
+    float pixelizationHeightCorrection = float( height ) / ( height - 1 );
 
     pmvMatrix.setToIdentity();
-    pmvMatrix.ortho(-(DIVS_TIME / 2.0f) * pixelizationWidthCorrection, (DIVS_TIME / 2.0f) * pixelizationWidthCorrection,
-                    -(DIVS_VOLTAGE / 2.0f) * pixelizationHeightCorrection,
-                    (DIVS_VOLTAGE / 2.0f) * pixelizationHeightCorrection, -1.0f, 1.0f);
+    pmvMatrix.ortho( -float( DIVS_TIME ) / 2.0f * pixelizationWidthCorrection, float( DIVS_TIME ) / 2.0f * pixelizationWidthCorrection,
+                     -float( DIVS_VOLTAGE ) / 2.0f * pixelizationHeightCorrection,
+                      float( DIVS_VOLTAGE ) / 2.0f * pixelizationHeightCorrection, -1.0f, 1.0f);
 
     m_program->bind();
     m_program->setUniformValue(matrixLocation, pmvMatrix);
@@ -453,7 +453,7 @@ void GlScope::resizeGL(int width, int height) {
 // draw 4 small crosses @ (x,y), (-x,y), (x,-y) and (-x,-y)
 // section 0:grid, 1:axes, 2:border
 void GlScope::draw4Cross( std::vector<QVector3D> &va, int section, float x, float y ) {
-    const float d = 0.05; // cross size
+    const float d = 0.05f; // cross size
     for ( int xSign : { -1, 1 } ) {
         for ( int ySign : { -1, 1 } ) {
             gridDrawCounts[ section ] += 4;
@@ -487,24 +487,24 @@ void GlScope::generateGrid(QOpenGLShaderProgram *program) {
     // Draw vertical dot lines
     for (int vDiv = 1; vDiv < DIVS_TIME / 2; ++vDiv ) {
         for (int dot = 1; dot < DIVS_VOLTAGE / 2 * DIVS_SUB; ++dot) {
-            float dotPosition = (float)dot / DIVS_SUB;
+            float dotPosition = float( dot ) / DIVS_SUB;
             gridDrawCounts[0] += 4;
             vaGrid.push_back(QVector3D(-vDiv, -dotPosition, 0));
-            vaGrid.push_back(QVector3D(-vDiv, dotPosition, 0));
+            vaGrid.push_back(QVector3D(-vDiv,  dotPosition, 0));
             vaGrid.push_back(QVector3D( vDiv, -dotPosition, 0));
-            vaGrid.push_back(QVector3D( vDiv, dotPosition, 0));
+            vaGrid.push_back(QVector3D( vDiv,  dotPosition, 0));
         }
     }
     // Draw horizontal dot lines
     for (int hDiv = 1; hDiv < DIVS_VOLTAGE / 2; ++hDiv ) {
         for (int dot = 1; dot < DIVS_TIME / 2 * DIVS_SUB; ++dot) {
             if (dot % DIVS_SUB == 0) continue; // Already done by vertical lines
-            float dotPosition = (float)dot / DIVS_SUB;
+            float dotPosition = float( dot ) / DIVS_SUB;
             gridDrawCounts[0] += 4;
             vaGrid.push_back(QVector3D(-dotPosition, -hDiv, 0));
-            vaGrid.push_back(QVector3D(dotPosition, -hDiv, 0));
-            vaGrid.push_back(QVector3D(-dotPosition, hDiv, 0));
-            vaGrid.push_back(QVector3D(dotPosition, hDiv, 0));
+            vaGrid.push_back(QVector3D( dotPosition, -hDiv, 0));
+            vaGrid.push_back(QVector3D(-dotPosition,  hDiv, 0));
+            vaGrid.push_back(QVector3D( dotPosition,  hDiv, 0));
         }
     }
 
@@ -526,7 +526,7 @@ void GlScope::generateGrid(QOpenGLShaderProgram *program) {
     vaGrid.push_back(QVector3D(0, DIVS_VOLTAGE / 2, 0));
     // Subdiv lines on horizontal axis
     for (int line = 1; line < DIVS_TIME / 2 * DIVS_SUB; ++line) {
-        float linePosition = (float)line / DIVS_SUB;
+        float linePosition = float( line ) / DIVS_SUB;
         gridDrawCounts[1] += 4;
         vaGrid.push_back(QVector3D(linePosition, -0.05f, 0));
         vaGrid.push_back(QVector3D(linePosition, 0.05f, 0));
@@ -535,7 +535,7 @@ void GlScope::generateGrid(QOpenGLShaderProgram *program) {
     }
     // Subdiv lines on vertical axis
     for (int line = 1; line < DIVS_VOLTAGE / 2 * DIVS_SUB; ++line) {
-        float linePosition = (float)line / DIVS_SUB;
+        float linePosition = float( line ) / DIVS_SUB;
         gridDrawCounts[1] += 4;
         vaGrid.push_back(QVector3D(-0.05f, linePosition, 0));
         vaGrid.push_back(QVector3D(0.05f, linePosition, 0));

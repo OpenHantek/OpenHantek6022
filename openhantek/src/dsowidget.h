@@ -137,7 +137,7 @@ class DsoWidget : public QWidget {
     void updateOffset(ChannelID channel, double value);
     void updateTriggerOffset(int index, double value, bool mainView = true);
     void updateTriggerLevel(ChannelID channel, double value);
-    void updateMarker(int marker, double value);
+    void updateMarker( unsigned marker, double value);
 
   signals:
     // Sliders

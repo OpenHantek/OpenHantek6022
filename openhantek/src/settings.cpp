@@ -39,7 +39,7 @@ DsoSettings::DsoSettings(const Dso::ControlSpecification* deviceSpecification) :
     scope.spectrum.push_back(newSpectrum);
 
     DsoSettingsScopeVoltage newVoltage;
-    newVoltage.couplingOrMathIndex = (unsigned)Dso::MathMode::ADD_CH1_CH2;
+    newVoltage.couplingOrMathIndex = unsigned( Dso::MathMode::ADD_CH1_CH2 );
     newVoltage.name = QApplication::tr("MATH");
     scope.voltage.push_back(newVoltage);
 
@@ -75,13 +75,13 @@ void DsoSettings::load() {
     store->beginGroup("scope");
     // Horizontal axis
     store->beginGroup("horizontal");
-    if (store->contains("format")) scope.horizontal.format = (Dso::GraphFormat)store->value("format").toInt();
+    if (store->contains("format")) scope.horizontal.format = Dso::GraphFormat( store->value("format").toInt() );
     if (store->contains("frequencybase"))
         scope.horizontal.frequencybase = store->value("frequencybase").toDouble();
     for (int marker = 0; marker < MARKER_COUNT; ++marker) {
         QString name;
         name = QString("marker%1").arg(marker);
-        if (store->contains(name)) scope.setMarker(marker, store->value(name).toDouble());
+        if (store->contains(name)) scope.setMarker( unsigned( marker ), store->value(name).toDouble());
     }
     if (store->contains("timebase")) scope.horizontal.timebase = store->value("timebase").toDouble();
     if (store->contains("recordLength")) scope.horizontal.recordLength = store->value("recordLength").toUInt();
@@ -89,9 +89,9 @@ void DsoSettings::load() {
     store->endGroup();
     // Trigger
     store->beginGroup("trigger");
-    if (store->contains("mode")) scope.trigger.mode = (Dso::TriggerMode)store->value("mode").toUInt();
+    if (store->contains("mode")) scope.trigger.mode = Dso::TriggerMode( store->value("mode").toUInt() );
     if (store->contains("position")) scope.trigger.offset = store->value("position").toDouble();
-    if (store->contains("slope")) scope.trigger.slope = (Dso::Slope)store->value("slope").toUInt();
+    if (store->contains("slope")) scope.trigger.slope = Dso::Slope( store->value("slope").toUInt() );
     if (store->contains("source")) scope.trigger.source = store->value("source").toUInt();
     store->endGroup();
     // Spectrum
@@ -152,7 +152,7 @@ void DsoSettings::load() {
     if (store->contains("spectrumReference"))
         post.spectrumReference = store->value("spectrumReference").toDouble();
     if (store->contains("spectrumWindow"))
-        post.spectrumWindow = (Dso::WindowFunction)store->value("spectrumWindow").toInt();
+        post.spectrumWindow = Dso::WindowFunction( store->value("spectrumWindow").toInt() );
     store->endGroup();
 
     // View
@@ -189,11 +189,11 @@ void DsoSettings::load() {
     // Other view settings
     if (store->contains("digitalPhosphor")) view.digitalPhosphor = store->value("digitalPhosphor").toBool();
     if (store->contains("interpolation"))
-        view.interpolation = (Dso::InterpolationMode)store->value("interpolation").toInt();
+        view.interpolation = Dso::InterpolationMode( store->value("interpolation").toInt() );
     if (store->contains("screenColorImages")) view.screenColorImages = store->value("screenColorImages").toBool();
     if (store->contains("zoom")) view.zoom = store->value("zoom").toBool();
     if (store->contains("cursorGridPosition"))
-        view.cursorGridPosition = (Qt::ToolBarArea)store->value("cursorGridPosition").toUInt();
+        view.cursorGridPosition = Qt::ToolBarArea( store->value("cursorGridPosition").toUInt() );
     if (store->contains("cursorsVisible")) view.cursorsVisible = store->value("cursorsVisible").toBool();
     store->endGroup();
 
@@ -220,16 +220,16 @@ void DsoSettings::save() {
     store->setValue("format", scope.horizontal.format);
     store->setValue("frequencybase", scope.horizontal.frequencybase);
     for (int marker = 0; marker < MARKER_COUNT; ++marker)
-        store->setValue(QString("marker%1").arg(marker), scope.getMarker(marker));
+        store->setValue(QString("marker%1").arg(marker), scope.getMarker( unsigned( marker) ) );
     store->setValue("timebase", scope.horizontal.timebase);
     store->setValue("recordLength", scope.horizontal.recordLength);
     store->setValue("samplerate", scope.horizontal.samplerate);
     store->endGroup();
     // Trigger
     store->beginGroup("trigger");
-    store->setValue("mode", (unsigned)scope.trigger.mode);
+    store->setValue("mode", unsigned( scope.trigger.mode) );
     store->setValue("position", scope.trigger.offset );
-    store->setValue("slope", (unsigned)scope.trigger.slope);
+    store->setValue("slope", unsigned( scope.trigger.slope) );
     store->setValue("source", scope.trigger.source);
     store->endGroup();
     // Spectrum
@@ -276,7 +276,7 @@ void DsoSettings::save() {
     // Post processing
     store->setValue("spectrumLimit", post.spectrumLimit);
     store->setValue("spectrumReference", post.spectrumReference);
-    store->setValue("spectrumWindow", (int)post.spectrumWindow);
+    store->setValue("spectrumWindow", unsigned( post.spectrumWindow ) );
     store->endGroup();
 
     // View

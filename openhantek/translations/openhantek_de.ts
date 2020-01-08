@@ -413,7 +413,7 @@
         <translation>/s</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="693"/>
+        <location filename="../src/dsowidget.cpp" line="691"/>
         <source> on screen</source>
         <translation> angezeigt</translation>
     </message>

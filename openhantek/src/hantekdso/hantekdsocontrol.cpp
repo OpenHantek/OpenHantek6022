@@ -105,7 +105,7 @@ bool HantekDsoControl::isSampling() const { return sampling; }
 void HantekDsoControl::updateInterval() {
     // Check the current oscilloscope state everytime 25% of the time
     //  the buffer should be refilled (-> cycleTime in ms)
-    cycleTime = (int)( (double)SAMPLESIZE_USED * 250.0 / controlsettings.samplerate.current );
+    cycleTime = int( SAMPLESIZE_USED  * 250.0 / controlsettings.samplerate.current );
     // Slower update reduces CPU load but it worsens the triggering of rare events
 #ifdef __arm__
     // RPi: Not more often than every 50 ms but at least once every 500 ms
@@ -176,7 +176,7 @@ std::vector<unsigned char> HantekDsoControl::getSamples(unsigned &previousSample
         qWarning() << "bulkReadMulti: Getting sample data failed: " << libUsbErrorString( retval );
         return std::vector<unsigned char>();
     }
-    data.resize( (size_t)retval );
+    data.resize( size_t( retval ) );
     //printf( "bulkReadMulti( %d ) -> %d\n", rawSampleCount, retval );
 
     static unsigned id = 0;
@@ -193,7 +193,7 @@ void HantekDsoControl::convertRawDataToSamples(const std::vector<unsigned char> 
         return;
     }
 
-    const size_t rawSampleCount = isFastRate() ? rawData.size() : (rawData.size() / 2);
+    const unsigned rawSampleCount = unsigned( isFastRate() ? rawData.size() : (rawData.size() / 2) );
     //printf("cRDTS, rawSampleCount %lu\n", rawSampleCount);
     if ( 0 == rawSampleCount) // nothing to convert
         return;
@@ -217,7 +217,7 @@ void HantekDsoControl::convertRawDataToSamples(const std::vector<unsigned char> 
     //printf("sampleCount %u, downsampling %u\n", sampleCount, downsampling );
 
     // Convert channel data
-    unsigned short activeChannels = specification->channels;
+    unsigned activeChannels = specification->channels;
     // Channels are using their separate buffers
     for (ChannelID channel = 0; channel < specification->channels; ++channel) {
         if ( isFastRate() ) { // one channel mode only with CH1 (channel == 0)
@@ -274,7 +274,7 @@ void HantekDsoControl::convertRawDataToSamples(const std::vector<unsigned char> 
                 int rawSample = rawData[ rawBufferPosition + iii ]; // range 0...255
                 if ( rawSample == 0x00 || rawSample == 0xFF ) // min or max -> clipped
                     result.clipped |= 0x01 << channel;
-                sample += (double)rawSample - offsetError;
+                sample += double( rawSample ) - offsetError;
             }
             sample /= downsampling;
             result.data[ channel ][ index ] = sign * (sample / limit - offset) * gainCalibration * gainStep * probeAttn;
@@ -358,7 +358,7 @@ Dso::ErrorCode HantekDsoControl::setSamplerate(double samplerate) {
     setDownsampling( specification->fixedSampleRates[sampleId].downsampling );
     channelSetupChanged = true; // skip next raw samples block to avoid artefacts
     // Check for Roll mode
-    emit recordTimeChanged((double)(getRecordLength() - controlsettings.swSampleMargin) /
+    emit recordTimeChanged(double( getRecordLength() - controlsettings.swSampleMargin ) /
                            controlsettings.samplerate.current);
     emit samplerateChanged(controlsettings.samplerate.current);
 
@@ -580,7 +580,7 @@ unsigned HantekDsoControl::searchTriggerPoint( Dso::Slope dsoSlope, unsigned int
 
     ChannelID channel = controlsettings.trigger.source;
     const std::vector<double> &samples = result.data[channel];
-    size_t sampleCount = samples.size();    ///< number of available samples
+    unsigned sampleCount = unsigned( samples.size() );    ///< number of available samples
     // printf("searchTriggerPoint( %d, %d )\n", (int)dsoSlope, startPos );
     if ( startPos >= sampleCount )
         return 0;
@@ -589,8 +589,8 @@ unsigned HantekDsoControl::searchTriggerPoint( Dso::Slope dsoSlope, unsigned int
     double sampleRate = controlsettings.samplerate.current;
     double samplesDisplay = timeDisplay * sampleRate;
 
-    unsigned preTrigSamples = startPos ? startPos : (unsigned)(controlsettings.trigger.position * samplesDisplay); // samples left of trigger
-    unsigned postTrigSamples = (unsigned)sampleCount - ((unsigned)samplesDisplay - preTrigSamples); // samples right of trigger
+    unsigned preTrigSamples = startPos ? startPos : unsigned(controlsettings.trigger.position * samplesDisplay); // samples left of trigger
+    unsigned postTrigSamples = unsigned( sampleCount ) - (unsigned( samplesDisplay ) - preTrigSamples); // samples right of trigger
     // |-----------samples-----------| // available sample
     // |--disp--|                      // display size
     // |<<<<<T>>|--------------------| // >> = right = (disp-pre) i.e. right of trigger on screen
@@ -653,7 +653,7 @@ unsigned HantekDsoControl::softwareTrigger() {
     if ( samplesDisplay >= sampleCount ) {
         // For sure not enough samples to adjust for jitter.
         timestampDebug( QString( "Too few samples to make a steady picture. Decrease sample rate" ) );
-        return result.triggerPosition = -1;
+        return result.triggerPosition = 0;
     }
 
     // search for trigger point in a range that leaves enough samples left and right of trigger for display
@@ -717,15 +717,15 @@ void HantekDsoControl::triggering() {
 
 
 Dso::ErrorCode HantekDsoControl::setCalFreq( double calfreq ) {
-    unsigned int cf = (int)calfreq / 1000; // 1000, ..., 100000 -> 1, ..., 100
+    unsigned int cf = unsigned( calfreq ) / 1000; // 1000, ..., 100000 -> 1, ..., 100
     if ( cf == 0 ) // 50, 100, 200, 500 -> 105, 110, 120, 150
-        cf = 100 + calfreq / 10;
+        cf = 100 + unsigned( calfreq ) / 10;
     //printf( "HDC::setCalFreq( %g ) -> %d\n", calfreq, cf );
     if ( !device->isConnected() )
         return Dso::ErrorCode::CONNECTION;
     // control command for setting
     modifyCommand<ControlSetCalFreq>( ControlCode::CONTROL_SETCALFREQ )
-        ->setCalFreq( cf );
+        ->setCalFreq( uint8_t( cf ) );
     return Dso::ErrorCode::NONE;
 }
 
@@ -751,16 +751,15 @@ Dso::ErrorCode HantekDsoControl::stringCommand(const QString &commandString) {
         if (!control[codeIndex])
             return Dso::ErrorCode::UNSUPPORTED;
 
-        ControlCommand *c = modifyCommand<ControlCommand>((ControlCode)codeIndex);
-        hexParse(data, c->data(), c->size());
+        ControlCommand *c = modifyCommand<ControlCommand>(ControlCode( codeIndex ) );
+        hexParse(data, c->data(), unsigned( c->size() ) );
         return Dso::ErrorCode::NONE;
     } else
         return Dso::ErrorCode::UNSUPPORTED;
 }
 
-bool HantekDsoControl::hasCommand(Hantek::ControlCode code)
-{
-    return (control[uint8_t(code)] != 0);
+bool HantekDsoControl::hasCommand(Hantek::ControlCode code) {
+    return ( control[uint8_t(code)] != nullptr );
 }
 
 void HantekDsoControl::addCommand(ControlCommand *newCommand, bool pending) {
@@ -771,7 +770,7 @@ void HantekDsoControl::addCommand(ControlCommand *newCommand, bool pending) {
 }
 
 
-const ControlCommand *HantekDsoControl::getCommand(ControlCode code) const { return control[(uint8_t)code]; }
+const ControlCommand *HantekDsoControl::getCommand(ControlCode code) const { return control[ uint8_t( code ) ]; }
 
 
 void HantekDsoControl::run() {
@@ -786,7 +785,7 @@ void HantekDsoControl::run() {
 
             errorCode = device->controlWrite(controlCommand);
             if (errorCode < 0) {
-                qWarning("Sending control command %2x failed: %s", (uint8_t)controlCommand->code,
+                qWarning("Sending control command %2x failed: %s", uint8_t( controlCommand->code ),
                          libUsbErrorString(errorCode).toLocal8Bit().data());
 
                 if (errorCode == LIBUSB_ERROR_NO_DEVICE) {

@@ -214,7 +214,7 @@ int main(int argc, char *argv[]) {
     //////// Clean up ////////
 
     // wait 2 * record time (delay is ms) for dso to finish
-    unsigned waitForDso = 2000 * dsoControl.getSamplesize() / dsoControl.getSamplerate();
+    unsigned waitForDso = unsigned( 2000 * dsoControl.getSamplesize() / dsoControl.getSamplerate() );
     if ( waitForDso < 10000 ) // minimum 10 s
         waitForDso = 10000;
     dsoControlThread.quit();

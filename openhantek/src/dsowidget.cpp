@@ -152,16 +152,16 @@ DsoWidget::DsoWidget(DsoSettingsScope *scope, DsoSettingsView *view, const Dso::
         measurementFrequencyLabel[channel]->setPalette(palette);
         setMeasurementVisible(channel);
         iii = 0;
-        measurementLayout->addWidget(measurementNameLabel[channel], (int)channel, iii++);
-        measurementLayout->addWidget(measurementMiscLabel[channel], (int)channel, iii++);
-        measurementLayout->addWidget(measurementGainLabel[channel], (int)channel, iii++);
-        measurementLayout->addWidget(measurementMagnitudeLabel[channel], (int)channel, iii++);
-        measurementLayout->addWidget(measurementVppLabel[channel], (int)channel, iii++);
-        measurementLayout->addWidget(measurementRMSLabel[channel], (int)channel, iii++);
-        measurementLayout->addWidget(measurementDCLabel[channel], (int)channel, iii++);
-        measurementLayout->addWidget(measurementACLabel[channel], (int)channel, iii++);
-        measurementLayout->addWidget(measurementdBLabel[channel], (int)channel, iii++);
-        measurementLayout->addWidget(measurementFrequencyLabel[channel], (int)channel, iii++);
+        measurementLayout->addWidget(measurementNameLabel[channel], int(channel), iii++);
+        measurementLayout->addWidget(measurementMiscLabel[channel], int(channel), iii++);
+        measurementLayout->addWidget(measurementGainLabel[channel], int(channel), iii++);
+        measurementLayout->addWidget(measurementMagnitudeLabel[channel], int(channel), iii++);
+        measurementLayout->addWidget(measurementVppLabel[channel], int(channel), iii++);
+        measurementLayout->addWidget(measurementRMSLabel[channel], int(channel), iii++);
+        measurementLayout->addWidget(measurementDCLabel[channel], int(channel), iii++);
+        measurementLayout->addWidget(measurementACLabel[channel], int(channel), iii++);
+        measurementLayout->addWidget(measurementdBLabel[channel], int(channel), iii++);
+        measurementLayout->addWidget(measurementFrequencyLabel[channel], int(channel), iii++);
         if ((unsigned)channel < spec->channels)
             updateVoltageCoupling((unsigned)channel);
         else
@@ -348,14 +348,14 @@ void DsoWidget::setupSliders(DsoWidget::Sliders &sliders) {
     sliders.triggerOffsetSlider = new LevelSlider(Qt::DownArrow);
     sliders.triggerOffsetSlider->addSlider();
     sliders.triggerOffsetSlider->setLimits(0, 0.0, 1.0);
-    sliders.triggerOffsetSlider->setStep(0, 0.2 / (double)DIVS_TIME);
+    sliders.triggerOffsetSlider->setStep(0, 0.2 / double(DIVS_TIME));
     sliders.triggerOffsetSlider->setValue(0, scope->trigger.offset );
     sliders.triggerOffsetSlider->setIndexVisible(0, true);
 
     // The sliders for the trigger levels
     sliders.triggerLevelSlider = new LevelSlider(Qt::LeftArrow);
     for (ChannelID channel = 0; channel < spec->channels; ++channel) {
-        sliders.triggerLevelSlider->addSlider((int)channel);
+        sliders.triggerLevelSlider->addSlider(int(channel));
         sliders.triggerLevelSlider->setColor(channel,
                                              (channel == scope->trigger.source)
                                                  ? view->screen.voltage[channel]
@@ -379,10 +379,10 @@ void DsoWidget::setupSliders(DsoWidget::Sliders &sliders) {
 /// \brief Set the trigger level sliders minimum and maximum to the new values.
 void DsoWidget::adaptTriggerLevelSlider(DsoWidget::Sliders &sliders, ChannelID channel) {
     //printf( "DW::adaptTriggerLevelSlider( %d )\n", channel );
-    sliders.triggerLevelSlider->setLimits((int)channel,
+    sliders.triggerLevelSlider->setLimits(int(channel),
                                           (-DIVS_VOLTAGE / 2 - scope->voltage[channel].offset) * scope->gain(channel),
                                           ( DIVS_VOLTAGE / 2 - scope->voltage[channel].offset) * scope->gain(channel) );
-    sliders.triggerLevelSlider->setStep((int)channel, scope->gain(channel) * 0.05);
+    sliders.triggerLevelSlider->setStep(int(channel), scope->gain(channel) * 0.05);
     double value = sliders.triggerLevelSlider->value(channel); 
     if ( value  ) { // ignore when first called at init
         updateTriggerLevel(channel, value);
@@ -470,7 +470,7 @@ void DsoWidget::updateMarkerDetails() {
         ++index;
     }
 
-    if ( DIVS_TIME == divs || ( m1 == 0 && m2 == 0) || ( m1 == DIVS_TIME && m2 == DIVS_TIME) ) {
+    if ( divs >= DIVS_TIME || ( m1 <= 0 && m2 <= 0) || ( m1 >= DIVS_TIME && m2 >= DIVS_TIME) ) {
         // markers at left/right margins -> don't display
         markerInfoLabel->setVisible( false );
         markerTimeLabel->setVisible( false );
@@ -501,7 +501,7 @@ void DsoWidget::updateMarkerDetails() {
         markerInfoLabel->setText( mInfo );
         if ( timeUsed ) {
             mTime += QString( "%1" ).arg( valueToString( time0, UNIT_SECONDS, 3 ) );
-            if ( time )
+            if ( time > 0 )
                 mTime += QString( " ... %1,  Δt: %2 (%3) ")
                     .arg( valueToString( time1, UNIT_SECONDS, 3 ) )
                     .arg( valueToString( time, UNIT_SECONDS, 3 ) )
@@ -513,7 +513,7 @@ void DsoWidget::updateMarkerDetails() {
         }
         if ( freqUsed ) {
              mFreq += QString( "%1" ).arg( valueToString( freq0, UNIT_HERTZ, 3 ) );
-            if ( freq )
+            if ( freq > 0 )
                 mFreq += QString( " ... %2,  Δf: %3 " )
                     .arg( valueToString( freq1, UNIT_HERTZ, 3 ) )
                     .arg( valueToString( freq, UNIT_HERTZ, 3 ) )
@@ -542,7 +542,7 @@ void DsoWidget::updateTriggerDetails() {
     tablePalette.setColor(QPalette::WindowText, view->screen.voltage[scope->trigger.source]);
     settingsTriggerLabel->setPalette(tablePalette);
     QString levelString = valueToString(scope->voltage[scope->trigger.source].trigger, UNIT_VOLTS, 3);
-    QString pretriggerString = tr("%L1%").arg( (int)round(scope->trigger.offset * 100 ) );
+    QString pretriggerString = tr("%L1%").arg( int( round(scope->trigger.offset * 100 ) ) );
     QString pre = Dso::slopeString(scope->trigger.slope); // trigger slope
     QString post = pre; // opposite trigger slope
     if ( scope->trigger.slope == Dso::Slope::Positive )
@@ -586,7 +586,7 @@ void DsoWidget::updateFrequencybase(double frequencybase) {
 /// \param samplerate The samplerate set in the oscilloscope.
 void DsoWidget::updateSamplerate(double samplerate) {
     this->samplerate = samplerate;
-    dotsOnScreen = samplerate * timebase * DIVS_TIME + 0.99;
+    dotsOnScreen = unsigned( samplerate * timebase * DIVS_TIME + 0.99 );
     //printf( "DsoWidget::updateSamplerate( %g ) -> %d\n", samplerate, dotsOnScreen );
     settingsSamplerateLabel->setText(valueToString(samplerate, UNIT_SAMPLES, -1) + tr("/s"));
 }
@@ -595,7 +595,7 @@ void DsoWidget::updateSamplerate(double samplerate) {
 /// \param timebase The timebase used for displaying the trace.
 void DsoWidget::updateTimebase(double timebase) {
     this->timebase = timebase;
-    dotsOnScreen = samplerate * timebase * DIVS_TIME + 0.99;
+    dotsOnScreen = unsigned( samplerate * timebase * DIVS_TIME + 0.99 );
     //printf( "DsoWidget::updateTimebase( %g ) -> %d\n", timebase, dotsOnScreen );
     settingsTimebaseLabel->setText(valueToString(timebase, UNIT_SECONDS, -1) + tr("/div"));
     updateMarkerDetails();
@@ -609,9 +609,7 @@ void DsoWidget::updateSpectrumMagnitude(ChannelID channel) { updateSpectrumDetai
 /// \param channel The channel whose used-state was changed.
 /// \param used The new used-state for the channel.
 void DsoWidget::updateSpectrumUsed(ChannelID channel, bool used) {
-    if (channel >= (unsigned int)scope->voltage.size()) return;
-
-//    if (!used && cursorDataGrid->spectrumCursors[channel].selector->isChecked()) cursorDataGrid->selectItem(0);
+    if (channel >= unsigned( scope->voltage.size() ) ) return;
 
     mainSliders.voltageOffsetSlider->setIndexVisible(scope->voltage.size() + channel, used);
     zoomSliders.voltageOffsetSlider->setIndexVisible(scope->voltage.size() + channel, used);
@@ -646,7 +644,7 @@ void DsoWidget::updateTriggerSource() {
 /// \brief Handles couplingChanged signal from the voltage dock.
 /// \param channel The channel whose coupling was changed.
 void DsoWidget::updateVoltageCoupling(ChannelID channel) {
-    if (channel >= (unsigned int)scope->voltage.size())
+    if ( channel >= unsigned( scope->voltage.size() ) )
         return;
     measurementMiscLabel[channel]->setText(Dso::couplingString(scope->coupling(channel, spec)));
 }
@@ -660,7 +658,7 @@ void DsoWidget::updateMathMode() {
 /// \brief Handles gainChanged signal from the voltage dock.
 /// \param channel The channel whose gain was changed.
 void DsoWidget::updateVoltageGain(ChannelID channel) {
-    if (channel >= (unsigned int)scope->voltage.size())
+    if ( channel >= unsigned( scope->voltage.size() ) )
         return;
     if (channel < spec->channels) {
         adaptTriggerLevelSlider(mainSliders, channel);
@@ -673,7 +671,7 @@ void DsoWidget::updateVoltageGain(ChannelID channel) {
 /// \param channel The channel whose used-state was changed.
 /// \param used The new used-state for the channel.
 void DsoWidget::updateVoltageUsed(ChannelID channel, bool used) {
-    if (channel >= (unsigned int)scope->voltage.size()) return;
+    if ( channel >= unsigned( scope->voltage.size() ) ) return;
 
 //    if (!used && cursorDataGrid->voltageCursors[channel].selector->isChecked()) cursorDataGrid->selectItem(0);
 
@@ -891,8 +889,8 @@ void DsoWidget::updateTriggerLevel(ChannelID channel, double value) {
 /// \brief Handles valueChanged signal from the marker slider.
 /// \param marker The index of the slider.
 /// \param value The new marker position.
-void DsoWidget::updateMarker(int marker, double value) {
-    scope->setMarker(marker, value);
+void DsoWidget::updateMarker( unsigned marker, double value ) {
+    scope->setMarker( marker, value );
     adaptTriggerOffsetSlider();
     updateMarkerDetails();
 }

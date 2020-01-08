@@ -42,7 +42,7 @@ void Graph::writeData(PPresult *data, QOpenGLShaderProgram *program, int vertexL
             program->enableAttributeArray(vertexLocation);
             program->setAttributeBuffer(vertexLocation, GL_FLOAT, offset, 3, 0);
             v.first->release();
-            v.second = (int)gVoltage.size();
+            v.second = int( gVoltage.size() );
             offset += dataSize;
         }
 
@@ -60,7 +60,7 @@ void Graph::writeData(PPresult *data, QOpenGLShaderProgram *program, int vertexL
             program->enableAttributeArray(vertexLocation);
             program->setAttributeBuffer(vertexLocation, GL_FLOAT, offset, 3, 0);
             s.first->release();
-            s.second = (int)gSpectrum.size();
+            s.second = int( gSpectrum.size() );
             offset += dataSize;
         }
     }

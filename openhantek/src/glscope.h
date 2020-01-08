@@ -27,9 +27,9 @@ class GlScope : public QOpenGLWidget {
 
   public:
     static GlScope *createNormal(DsoSettingsScope *scope, DsoSettingsView *view,
-                                 QWidget *parent = 0);
+                                 QWidget *parent = nullptr);
     static GlScope *createZoomed(DsoSettingsScope *scope, DsoSettingsView *view,
-                                 QWidget *parent = 0);
+                                 QWidget *parent = nullptr);
 
     /**
      * We need at least OpenGL 3.2 with shader version 150 or
@@ -48,8 +48,8 @@ class GlScope : public QOpenGLWidget {
     /// \brief Initializes the scope widget.
     /// \param settings The settings that should be used.
     /// \param parent The parent widget.
-    GlScope(DsoSettingsScope *scope, DsoSettingsView *view, QWidget *parent = 0);
-    virtual ~GlScope();
+    GlScope(DsoSettingsScope *scope, DsoSettingsView *view, QWidget *parent = nullptr);
+    ~GlScope() override;
     GlScope(const GlScope&) = delete;
 
     /// \brief Initializes OpenGL output.
