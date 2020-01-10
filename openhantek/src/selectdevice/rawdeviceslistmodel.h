@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: GPL-2.0+
+
 #pragma once
 
 #include <QAbstractTableModel>
@@ -11,7 +12,7 @@
  */
 class RawDevicesListModel: public QAbstractTableModel {
 public:
-    RawDevicesListModel(libusb_context *context, QObject *parent = 0);
+    RawDevicesListModel(libusb_context *context, QObject *parent = nullptr);
     // QAbstractItemModel interface
     int rowCount(const QModelIndex &parent) const override;
     int columnCount(const QModelIndex &parent) const override;

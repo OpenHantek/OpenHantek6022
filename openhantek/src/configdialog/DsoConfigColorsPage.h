@@ -23,7 +23,7 @@ class DsoConfigColorsPage : public QWidget {
     Q_OBJECT
 
   public:
-    DsoConfigColorsPage(DsoSettings *settings, QWidget *parent = 0);
+    DsoConfigColorsPage(DsoSettings *settings, QWidget *parent = nullptr);
 
   public slots:
     void saveSettings();

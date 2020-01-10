@@ -11,7 +11,7 @@ namespace Hantek {
 ControlBeginCommand::ControlBeginCommand(CommandIndex index)
     : ControlCommand(Hantek::ControlCode::CONTROL_BEGINCOMMAND, 10) {
     data()[0] = 0x0f;
-    data()[1] = (uint8_t)index;
+    data()[1] = uint8_t(index);
 }
 
 
@@ -55,7 +55,7 @@ ControlAcquireHardData::ControlAcquireHardData() : ControlCommand(ControlCode::C
 
 ControlGetLimits::ControlGetLimits()
     : ControlCommand( ControlCode::CONTROL_VALUE, sizeof( CalibrationValues ) ) {
-    value = (uint8_t)ControlValue::VALUE_OFFSETLIMITS;
+    value = uint8_t(ControlValue::VALUE_OFFSETLIMITS);
     data()[0] = 0x01;
 }
 

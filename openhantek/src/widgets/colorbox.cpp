@@ -49,7 +49,7 @@ const QColor ColorBox::getColor() { return this->color; }
 /// \param color The new color.
 void ColorBox::setColor(QColor color) {
     this->color = color;
-    this->setText(QString("#%1").arg((unsigned int)this->color.rgba(), 8, 16, QChar('0')));
+    this->setText(QString("#%1").arg(unsigned(this->color.rgba()), 8, 16, QChar('0')));
     this->setPalette(QPalette(this->color));
 
     emit colorChanged(this->color);
@@ -60,7 +60,7 @@ void ColorBox::waitForColor() {
     this->setFocus();
     this->setDown(true);
 
-    QColor color = QColorDialog::getColor(this->color, this, 0, QColorDialog::ShowAlphaChannel);
+    QColor color = QColorDialog::getColor(this->color, this, nullptr, QColorDialog::ShowAlphaChannel);
 
     if (color.isValid()) this->setColor(color);
 }

@@ -13,18 +13,15 @@ public:
          m_value( value )
       { }
 
-      T operator*( void ) const
-      {
-         return (T)m_value;
+      T operator*( void ) const {
+         return T(m_value);
       }
 
-      void operator++( void )
-      {
+      void operator++( void ) {
          ++m_value;
       }
 
-      bool operator!=( Iterator rhs )
-      {
+      bool operator!=( Iterator rhs ) {
          return m_value != rhs.m_value;
       }
 
@@ -34,13 +31,11 @@ public:
 };
 
 template< typename T, T first, T last >
-typename Enum<T,first,last>::Iterator begin( Enum<T,first,last> )
-{
-   return typename Enum<T,first,last>::Iterator( (int)first );
+typename Enum<T,first,last>::Iterator begin( Enum<T,first,last> ) {
+   return typename Enum<T,first,last>::Iterator( int(first) );
 }
 
 template< typename T, T first, T last >
-typename Enum<T,first,last>::Iterator end( Enum<T,first,last> )
-{
-   return typename Enum<T,first,last>::Iterator( ((int)last) + 1 );
+typename Enum<T,first,last>::Iterator end( Enum<T,first,last> ) {
+   return typename Enum<T,first,last>::Iterator( int(last) + 1 );
 }

@@ -10,7 +10,7 @@ class ColorBox : public QPushButton {
     Q_OBJECT
 
   public:
-    ColorBox(QColor color, QWidget *parent = 0);
+    ColorBox(QColor color, QWidget *parent = nullptr);
     ~ColorBox();
 
     const QColor getColor();

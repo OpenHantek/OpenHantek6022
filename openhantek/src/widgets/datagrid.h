@@ -27,7 +27,7 @@ public:
         void configure(const QString &text, const QColor &bgColor, const QColor &fgColor);
     };
 
-    unsigned addItem(const QString &text, const QColor &fgColor);
+    int addItem(const QString &text, const QColor &fgColor);
     void setBackgroundColor(const QColor &bgColor);
     void configureItem(unsigned index, const QColor &fgColor);
     void updateInfo(unsigned index, bool visible, const QString &strShape = QString(),

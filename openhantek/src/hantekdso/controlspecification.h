@@ -46,7 +46,6 @@ struct ControlSpecification {
     // Limits
     ControlSpecificationSamplerate samplerate;  ///< The samplerate specifications
     std::vector<RecordLengthID> bufferDividers; ///< Samplerate dividers for record lengths
-    unsigned char sampleSize;                   ///< Number of bits per sample
 
     /// For devices that support only fixed sample rates
     std::vector<FixedSampleRate> fixedSampleRates;
@@ -54,9 +53,9 @@ struct ControlSpecification {
     // Calibration
 
     /// The sample values at the top of the screen
-    typedef std::vector<unsigned short> VoltageLimit;
+    typedef std::vector<int> VoltageLimit;
     std::vector<VoltageLimit> voltageLimit; // Per channel
-    typedef std::vector<unsigned short> VoltageOffset;
+    typedef std::vector<int> VoltageOffset;
     std::vector<VoltageOffset> voltageOffset; // Per channel
 
     /// Gain levels

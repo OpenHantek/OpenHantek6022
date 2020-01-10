@@ -52,7 +52,8 @@ HantekDsoControl::HantekDsoControl(USBDevice *device)
 
     qRegisterMetaType<DSOsamples *>();
 
-    if (specification->fixedUSBinLength) device->overwriteInPacketLength(specification->fixedUSBinLength);
+    if ( specification->fixedUSBinLength )
+        device->overwriteInPacketLength( unsigned( specification->fixedUSBinLength ) );
 
     // Apply special requirements by the devices model
     device->getModel()->applyRequirements(this);
@@ -229,7 +230,7 @@ void HantekDsoControl::convertRawDataToSamples(const std::vector<unsigned char> 
         }
         //result.data[channel].resize(rawSampleCount);
         const unsigned gainID = controlsettings.voltage[channel].gain;
-        const unsigned short limit = specification->voltageLimit[channel][gainID];
+        const int limit = specification->voltageLimit[channel][gainID];
         const double offset = controlsettings.voltage[channel].offsetReal;
         const double gainStep = specification->gain[gainID].gainSteps;
         const double probeAttn = controlsettings.voltage[channel].probeAttn;
@@ -240,7 +241,7 @@ void HantekDsoControl::convertRawDataToSamples(const std::vector<unsigned char> 
         // shift + individual offset for each channel and gain
         offsetError = specification->voltageOffset[ channel ][ gainID ];
         gainCalibration = 1.0;
-        if ( !offsetError ) { // no config file value
+        if ( !bool(offsetError) ) { // no config file value
             // get offset value from eeprom[ 8 .. 39 and (if available) 56 .. 87]
             int offsetFine = 0;
             if ( result.samplerate < 30e6 ) {
@@ -350,8 +351,10 @@ Dso::ErrorCode HantekDsoControl::setSamplerate(double samplerate) {
         controlsettings.samplerate.target.samplerateSet = ControlSettingsSamplerateTarget::Samplerrate;
     }
     unsigned sampleId;
-    for (sampleId = 0; sampleId < specification->fixedSampleRates.size() - 1; ++sampleId)
-        if (specification->fixedSampleRates[sampleId].samplerate == samplerate) break;
+    for (sampleId = 0; sampleId < specification->fixedSampleRates.size() - 1; ++sampleId) {
+        if ( specification->fixedSampleRates[sampleId].samplerate == samplerate )
+            break;
+    }
     modifyCommand<ControlSetTimeDIV>(ControlCode::CONTROL_SETTIMEDIV)
         ->setDiv(specification->fixedSampleRates[sampleId].id);
     controlsettings.samplerate.current = samplerate;

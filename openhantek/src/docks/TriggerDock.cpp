@@ -59,24 +59,24 @@ TriggerDock::TriggerDock(DsoSettingsScope *scope, const Dso::ControlSpecificatio
     // Set values
     setMode(scope->trigger.mode);
     setSlope(scope->trigger.slope);
-    setSource(scope->trigger.source);
+    setSource(int(scope->trigger.source));
 
     // Connect signals and slots
     connect(this->modeComboBox, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
-            [this, spec](int index) {
-                this->scope->trigger.mode = mSpec->triggerModes[(unsigned)index];
+            [this](int index) {
+                this->scope->trigger.mode = mSpec->triggerModes[unsigned(index)];
                 emit modeChanged(this->scope->trigger.mode);
             });
     connect(this->slopeComboBox, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
             [this](int index) {
-                this->scope->trigger.slope = (Dso::Slope)index;
+                this->scope->trigger.slope = Dso::Slope(index);
                 emit slopeChanged(this->scope->trigger.slope);
             });
     connect(this->sourceComboBox, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
-            [this](int index) {
-                bool smooth = index >= (int)mSpec->channels;
-                this->scope->trigger.source = (unsigned)index & (mSpec->channels - 1) ;
-                emit sourceChanged((unsigned)index & (mSpec->channels - 1), smooth );
+            [this](unsigned index) {
+                bool smooth = index >= mSpec->channels;
+                this->scope->trigger.source = index & (mSpec->channels - 1) ;
+                emit sourceChanged(index & (mSpec->channels - 1), smooth );
             });
 }
 
@@ -89,18 +89,18 @@ void TriggerDock::closeEvent(QCloseEvent *event) {
 }
 
 void TriggerDock::setMode(Dso::TriggerMode mode) {
-    int index = std::find(mSpec->triggerModes.begin(), mSpec->triggerModes.end(), mode) - mSpec->triggerModes.begin();
+    int index = int(std::find(mSpec->triggerModes.begin(), mSpec->triggerModes.end(), mode) - mSpec->triggerModes.begin());
     QSignalBlocker blocker(modeComboBox);
     modeComboBox->setCurrentIndex(index);
 }
 
 void TriggerDock::setSlope(Dso::Slope slope) {
     QSignalBlocker blocker(slopeComboBox);
-    slopeComboBox->setCurrentIndex((int)slope);
+    slopeComboBox->setCurrentIndex(int(slope));
 }
 
-void TriggerDock::setSource(unsigned int id) {
-    if ( id >= (unsigned int)this->sourceStandardStrings.count() )
+void TriggerDock::setSource(int id) {
+    if ( id >= this->sourceStandardStrings.count() )
         return;
     QSignalBlocker blocker(sourceComboBox);
     sourceComboBox->setCurrentIndex(id);

@@ -15,8 +15,8 @@ class SiSpinBox : public QDoubleSpinBox {
     Q_OBJECT
 
   public:
-    explicit SiSpinBox(QWidget *parent = 0);
-    SiSpinBox(Unit unit, QWidget *parent = 0);
+    explicit SiSpinBox(QWidget *parent = nullptr);
+    SiSpinBox(Unit unit, QWidget *parent = nullptr);
     ~SiSpinBox();
 
     QValidator::State validate(QString &input, int &pos) const;

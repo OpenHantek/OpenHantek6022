@@ -25,7 +25,7 @@ QString valueToString(double value, Unit unit, int precision = -1);
 /// \param unit The base unit of the value.
 /// \param ok Pointer to a success-flag, true on success, false on error.
 /// \return Decoded value.
-double stringToValue(const QString &text, Unit unit, bool *ok = 0);
+double stringToValue(const QString &text, Unit unit, bool *ok = nullptr);
 
 /// \brief Returns the hex dump for the given data.
 /// \param data Pointer to the data bytes that should be dumped.

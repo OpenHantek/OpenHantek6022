@@ -29,7 +29,7 @@ class LevelSlider : public QWidget {
     Q_OBJECT
 
   public:
-    LevelSlider(Qt::ArrowType direction = Qt::RightArrow, QWidget *parent = 0);
+    LevelSlider(Qt::ArrowType direction = Qt::RightArrow, QWidget *parent = nullptr);
     ~LevelSlider();
 
     QSize sizeHint() const;

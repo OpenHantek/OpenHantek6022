@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: GPL-2.0+
+
 #include "selectsupporteddevice.h"
 
 #include <QTimer>
@@ -28,8 +30,13 @@ SelectSupportedDevice::SelectSupportedDevice( QWidget *parent ) :
         }
         QCoreApplication::instance()->quit();
     });
-    connect(ui->buttonBox, &QDialogButtonBox::helpRequested, [this]() {
-        QDesktopServices::openUrl(QUrl("https://github.com/OpenHantek/OpenHantek6022"));
+    connect(ui->buttonBox, &QDialogButtonBox::helpRequested, []() {
+        QString usrManualPath( "/usr/share/doc/OpenHantek/OpenHantek6022_User_Manual.pdf" );
+        QFile userManual( usrManualPath );
+        if ( userManual.exists() )
+            QDesktopServices::openUrl( QUrl( "file://" + usrManualPath ) );
+        else
+            QDesktopServices::openUrl( QUrl( "https://github.com/OpenHantek/OpenHantek6022/blob/master/docs/OpenHantek6022_User_Manual.pdf" ) );
     });
 #ifdef NEW_DEVICE_FROM_EXISTING_DIALOG
     connect(ui->btnAddDevice, &QPushButton::clicked, [this]() {

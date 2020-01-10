@@ -107,8 +107,8 @@ class HantekDsoControl : public QObject {
     bool hasCommand(Hantek::ControlCode code);
     void addCommand(ControlCommand *newCommand, bool pending = true);
     template <class T> T *modifyCommand(Hantek::ControlCode code) {
-        control[(uint8_t)code]->pending = true;
-        return static_cast<T *>(control[(uint8_t)code]);
+        control[ uint8_t( code ) ]->pending = true;
+        return static_cast<T *>(control[ uint8_t( code ) ] );
     }
     const ControlCommand *getCommand(Hantek::ControlCode code) const;
 
@@ -161,7 +161,7 @@ class HantekDsoControl : public QObject {
 
   private:
     /// Pointers to control commands
-    ControlCommand *control[255] = {0};
+    ControlCommand *control[255] = { nullptr };
     ControlCommand *firstControlCommand = nullptr;
 
     // Communication with device

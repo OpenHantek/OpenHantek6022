@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5 FATAL_ERROR)
-project(OpenHantekProject)
+project(OpenHantek)
 
 set(OpenGL_GL_PREFERENCE GLVND)
 
@@ -46,29 +46,35 @@ if (WIN32)
 endif()
 
 if("${CMAKE_SYSTEM}" MATCHES "Linux")
-  if(IS_DIRECTORY /lib/udev/rules.d/)
+  if(EXISTS "/lib/udev/rules.d/")
     install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/utils/udev_rules/60-hantek.rules"
-	 DESTINATION /lib/udev/rules.d/ COMPONENT Runtime)
+      DESTINATION "/lib/udev/rules.d/" COMPONENT Runtime)
   else()
     message(WARNING "Could not find udev rules directory (/lib/udev/rules.d/), skipping installation of udev rules.")
   endif()
-  if(IS_DIRECTORY /usr/share/applications/)
+  if(EXISTS "/usr/share/applications/")
     install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/utils/applications/OpenHantek.desktop"
-	 DESTINATION /usr/share/applications/ COMPONENT Runtime)
+      DESTINATION "/usr/share/applications/" COMPONENT Runtime)
   else()
     message(WARNING "Could not find applications directory (/usr/share/applications/), skipping installation of desktop file.")
   endif()
-  if(IS_DIRECTORY /usr/share/icons/hicolor/48x48/apps/)
+  if(EXISTS "/usr/share/icons/hicolor/48x48/apps/")
     install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/openhantek/res/images/OpenHantek.png"
       DESTINATION /usr/share/icons/hicolor/48x48/apps/ COMPONENT Runtime)
   else()
     message(WARNING "Could not find icons directory (/usr/share/icons/hicolor/48x48/apps/), skipping installation of icon.")
   endif()
-  if(IS_DIRECTORY /usr/share/icons/hicolor/scalable/apps/)
+  if(EXISTS "/usr/share/icons/hicolor/scalable/apps/")
     install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/openhantek/res/images/OpenHantek.svg"
-	 DESTINATION /usr/share/icons/hicolor/scalable/apps/ COMPONENT Runtime)
+      DESTINATION "/usr/share/icons/hicolor/scalable/apps/" COMPONENT Runtime)
   else()
     message(WARNING "Could not find icons directory (/usr/share/icons/hicolor/scalable/apps/), skipping installation of icon.")
+  endif()
+  if(EXISTS "/usr/share/doc/")
+    install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/docs/OpenHantek6022_User_Manual.pdf"
+            DESTINATION "/usr/share/doc/OpenHantek" COMPONENT Runtime)
+  else()
+    message(WARNING "Could not find doc directory (/usr/share/doc/), skipping installation of user manual.")
   endif()
 endif()
 

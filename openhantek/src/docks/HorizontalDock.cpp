@@ -164,9 +164,9 @@ double HorizontalDock::setCalfreq(double calfreq) {
 void HorizontalDock::setSamplerateLimits(double minimum, double maximum) {
     //printf( "HD::setSamplerateLimits( %g, %g )\n", minimum, maximum );
     QSignalBlocker blocker(samplerateSiSpinBox);
-    if ( minimum )
+    if ( bool(minimum) )
         this->samplerateSiSpinBox->setMinimum(minimum);
-    if ( maximum )
+    if ( bool(maximum) )
         this->samplerateSiSpinBox->setMaximum(maximum);
 }
 
@@ -247,7 +247,7 @@ void HorizontalDock::calculateSamplerateSteps(double timebase) {
 /// \brief Called when the format combo box changes its value.
 /// \param index The index of the combo box item.
 void HorizontalDock::formatSelected(int index) {
-    scope->horizontal.format = (Dso::GraphFormat)index;
+    scope->horizontal.format = Dso::GraphFormat(index);
     emit formatChanged(scope->horizontal.format);
 }
 

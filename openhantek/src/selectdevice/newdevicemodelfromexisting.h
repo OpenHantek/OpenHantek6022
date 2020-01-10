@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: GPL-2.0+
+
 #pragma once
 
 #include <QDialog>
@@ -17,7 +18,7 @@ class NewDeviceModelFromExisting : public QDialog
     Q_OBJECT
 
 public:
-    explicit NewDeviceModelFromExisting(QWidget *parent = 0);
+    explicit NewDeviceModelFromExisting(QWidget *parent = nullptr);
 //     void setUSBcontext(libusb_context* context);
 //     RawDeviceListEntry* getSelectedEntry();
 private:

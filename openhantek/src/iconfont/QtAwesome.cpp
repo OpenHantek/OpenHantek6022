@@ -98,7 +98,7 @@ class QtAwesomeIconPainterIconEngine : public QIconEngine {
     QtAwesomeIconPainterIconEngine(QtAwesome *awesome, QtAwesomeIconPainter *painter, const QVariantMap &options)
         : awesomeRef_(awesome), iconPainterRef_(painter), options_(options) {}
 
-    virtual ~QtAwesomeIconPainterIconEngine() {}
+    ~QtAwesomeIconPainterIconEngine() override {}
 
     QtAwesomeIconPainterIconEngine *clone() const override {
         return new QtAwesomeIconPainterIconEngine(awesomeRef_, iconPainterRef_, options_);

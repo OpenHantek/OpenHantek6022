@@ -27,7 +27,7 @@ int FindDevices::updateDeviceList() {
     libusb_device **deviceList;
     ssize_t deviceCount = libusb_get_device_list(context, &deviceList);
     if (deviceCount < 0) {
-        return (int) deviceCount;
+        return int(deviceCount);
     }
 
     ++findIteration;

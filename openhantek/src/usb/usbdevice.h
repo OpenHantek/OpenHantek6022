@@ -110,8 +110,8 @@ class USBDevice : public QObject {
     /// \return Number of sent bytes on success, libusb error code on error.
     template<class T>
     inline int controlWrite(const T *command) {
-        return controlTransfer(LIBUSB_REQUEST_TYPE_VENDOR | LIBUSB_ENDPOINT_OUT, (uint8_t)command->code,
-                               (unsigned char *)command->data(), (unsigned)command->size(), command->value, 0,
+        return controlTransfer(LIBUSB_REQUEST_TYPE_VENDOR | LIBUSB_ENDPOINT_OUT, uint8_t(command->code),
+                               const_cast<unsigned char *>(command->data()), unsigned(command->size()), command->value, 0,
                                HANTEK_ATTEMPTS);
     }
 
@@ -120,8 +120,8 @@ class USBDevice : public QObject {
     /// \return Number of received bytes on success, libusb error code on error.
     template<class T>
     inline int controlRead(const T *command) {
-        return controlTransfer(LIBUSB_REQUEST_TYPE_VENDOR | LIBUSB_ENDPOINT_IN, (uint8_t)command->code,
-                               (unsigned char *)command->data(), (unsigned)command->size(), command->value, 0,
+        return controlTransfer(LIBUSB_REQUEST_TYPE_VENDOR | LIBUSB_ENDPOINT_IN, uint8_t(command->code),
+                               const_cast<unsigned char *>(command->data()), unsigned(command->size()), command->value, 0,
                                HANTEK_ATTEMPTS);
     }
 
@@ -148,7 +148,7 @@ class USBDevice : public QObject {
      * mode uses the maximum in length for transfer. Some devices do not support
      * that much data though and need an artification restriction.
      */
-    inline void overwriteInPacketLength(int len) { inPacketLength = len; }
+    inline void overwriteInPacketLength(unsigned len) { inPacketLength = len; }
 
   protected:
 //     int claimInterface(const libusb_interface_descriptor *interfaceDescriptor, int endpointOut, int endPointIn);
@@ -165,8 +165,8 @@ class USBDevice : public QObject {
     unsigned findIteration;
     const UniqueUSBid uniqueUSBdeviceID;
     int interface;
-    int outPacketLength; ///< Packet length for the OUT endpoint
-    int inPacketLength;  ///< Packet length for the IN endpoint
+    unsigned outPacketLength; ///< Packet length for the OUT endpoint
+    unsigned inPacketLength;  ///< Packet length for the IN endpoint
 
   signals:
     void deviceDisconnected(); ///< The device has been disconnected

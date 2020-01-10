@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: GPL-2.0+
+
 #include <QDir>
 #include <QSettings>
 #include "modelDSO6022.h"
@@ -52,7 +54,7 @@ static void initSpecifications(Dso::ControlSpecification& specification) {
         settings.beginGroup( channels[ ch ] );
         for ( unsigned iii = 0; iii < RANGES; iii++ ) {
             double calibration = settings.value( ranges[ iii ], "0.0" ).toDouble();
-            if ( calibration )
+            if ( bool( calibration ) )
                 specification.voltageLimit[ ch ][ iii ] /= calibration;
         }
         settings.endGroup(); // channels
@@ -97,7 +99,6 @@ static void initSpecifications(Dso::ControlSpecification& specification) {
         { 24e6,  24,   1} , { 30e6,  30,   1}  // no oversampling
     };
 
-    specification.sampleSize = specification.fixedSampleRates.size();
 #ifdef HANTEK_AC
      // requires AC/DC HW mod like DDS120, enable with "cmake -D HANTEK_AC=1 .."
     specification.couplings = {Dso::Coupling::DC, Dso::Coupling::AC};

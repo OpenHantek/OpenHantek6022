@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: GPL-2.0+
+
 #ifndef QTAWESOMEANIMATION_H
 #define QTAWESOMEANIMATION_H
 

@@ -15,7 +15,7 @@ DsoConfigAnalysisPage::DsoConfigAnalysisPage(DsoSettings *settings, QWidget *par
     windowFunctionLabel = new QLabel(tr("<b>Window function</b>"));
     windowFunctionComboBox = new QComboBox();
     windowFunctionComboBox->addItems(windowFunctionStrings);
-    windowFunctionComboBox->setCurrentIndex((int)settings->post.spectrumWindow);
+    windowFunctionComboBox->setCurrentIndex(int(settings->post.spectrumWindow));
 
     referenceLevelLabel = new QLabel(tr("<b>Reference level</b><br/>0 dBu = -2.2 dBV<br/>0 dBm (@600 &Omega;) = -2.2 dBV<br/>0 dBm (@50 &Omega;) = -13 dBV"));
     referenceLevelSpinBox = new QDoubleSpinBox();
@@ -59,7 +59,7 @@ DsoConfigAnalysisPage::DsoConfigAnalysisPage(DsoSettings *settings, QWidget *par
 
 /// \brief Saves the new settings.
 void DsoConfigAnalysisPage::saveSettings() {
-    settings->post.spectrumWindow = (Dso::WindowFunction)windowFunctionComboBox->currentIndex();
+    settings->post.spectrumWindow = Dso::WindowFunction(windowFunctionComboBox->currentIndex());
     settings->post.spectrumReference = referenceLevelSpinBox->value();
     settings->post.spectrumLimit = minimumMagnitudeSpinBox->value();
 }

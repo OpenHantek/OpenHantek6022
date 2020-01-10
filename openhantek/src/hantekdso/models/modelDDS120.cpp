@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: GPL-2.0+
+
 #include <QDir>
 #include <QSettings>
 #include "modelDDS120.h"
@@ -48,7 +50,7 @@ static void initSpecifications(Dso::ControlSpecification& specification) {
         settings.beginGroup( channels[ ch ] );
         for ( unsigned iii = 0; iii < RANGES; iii++ ) {
             double calibration = settings.value( ranges[ iii ], 0.0 ).toDouble();
-            if ( calibration )
+            if ( bool( calibration ) )
                 specification.voltageLimit[ ch ][ iii ] /= calibration;
         }
         settings.endGroup(); // channels
@@ -117,7 +119,6 @@ static void initSpecifications(Dso::ControlSpecification& specification) {
         { 48e6,  48,   1}  // no downsampling
     };
 
-    specification.sampleSize = specification.fixedSampleRates.size();
     specification.couplings = {Dso::Coupling::DC, Dso::Coupling::AC};
     specification.triggerModes = {Dso::TriggerMode::AUTO, Dso::TriggerMode::NORMAL, Dso::TriggerMode::SINGLE};
     specification.fixedUSBinLength = 0;

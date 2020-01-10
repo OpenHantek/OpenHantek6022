@@ -45,8 +45,8 @@ SpectrumDock::SpectrumDock(DsoSettingsScope *scope, QWidget *parent, Qt::WindowF
 
         channelBlocks.push_back(b);
 
-        this->dockLayout->addWidget(b.usedCheckBox, (int)channel, 0);
-        this->dockLayout->addWidget(b.magnitudeComboBox, (int)channel, 1);
+        this->dockLayout->addWidget(b.usedCheckBox, int(channel), 0);
+        this->dockLayout->addWidget(b.magnitudeComboBox, int(channel), 1);
 
         b.magnitudeComboBox->addItems(this->magnitudeStrings);
         this->setMagnitude(channel, scope->spectrum[channel].magnitude);
@@ -88,7 +88,7 @@ int SpectrumDock::setMagnitude(ChannelID channel, double magnitude) {
 
     auto indexIt = std::find(magnitudeSteps.begin(),magnitudeSteps.end(),magnitude);
     if (indexIt == magnitudeSteps.end()) return -1;
-    int index = (int)std::distance(magnitudeSteps.begin(), indexIt);
+    int index = int(std::distance(magnitudeSteps.begin(), indexIt));
     channelBlocks[channel].magnitudeComboBox->setCurrentIndex(index);
     return index;
 }

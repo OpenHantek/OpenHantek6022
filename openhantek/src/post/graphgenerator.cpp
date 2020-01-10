@@ -80,13 +80,13 @@ void GraphGenerator::generateGraphsTYvoltage(PPresult *result, const DsoSettings
         }
 
         // time distance between sampling points
-        float horizontalFactor = (float)(samples.interval / scope->horizontal.timebase);
+        double horizontalFactor = (samples.interval / scope->horizontal.timebase);
         // printf( "hF: %g\n", horizontalFactor );
-        unsigned dotsOnScreen = DIVS_TIME / horizontalFactor + 0.99; // round up
-        unsigned preTrigSamples = (unsigned)(scope->trigger.offset * dotsOnScreen);
+        unsigned dotsOnScreen = unsigned( DIVS_TIME / horizontalFactor + 0.99 ); // round up
+        unsigned preTrigSamples = unsigned(scope->trigger.offset * dotsOnScreen);
         // align displayed trace with trigger mark on screen ...
         // ... also if trig pos or time/div was changed on a "frozen" or single trace
-        int leftmostSample = result->triggeredPosition;
+        int leftmostSample = int( result->triggeredPosition);
         if ( leftmostSample ) // adjust position if triggered, else start from sample[0]
             leftmostSample -= preTrigSamples; // shift samples to show a stable trace
         int leftmostPosition = 0; // start position on display
@@ -97,8 +97,8 @@ void GraphGenerator::generateGraphsTYvoltage(PPresult *result, const DsoSettings
         // Set size directly to avoid reallocations (n+1 dots to display n lines)
         target.reserve( ++dotsOnScreen );
 
-        const float gain = (float)scope->gain(channel);
-        const float offset = (float)scope->voltage[channel].offset;
+        const double gain = scope->gain(channel);
+        const double offset = scope->voltage[channel].offset;
 
         auto sampleIterator = samples.sample.cbegin() + leftmostSample; // -> visible samples
         auto sampleEnd = samples.sample.cend();
@@ -106,16 +106,16 @@ void GraphGenerator::generateGraphsTYvoltage(PPresult *result, const DsoSettings
         // https://ccrma.stanford.edu/~jos/resample/resample.pdf
         if ( view->interpolation == Dso::INTERPOLATION_SINC
             && dotsOnScreen < 100 ) { // valid for timebase <= 500 ns/div
-            const unsigned int sincSize = sinc.size();
+            const unsigned int sincSize = unsigned(sinc.size());
             // if untriggered (skipSamples == 0) then reserve margin for left side of sinc()
-            const unsigned int skip = leftmostSample ? leftmostSample : sincWidth;
+            const unsigned int skip = leftmostSample ? unsigned(leftmostSample) : sincWidth;
             // we would need sincWidth on left side, but we take what we get
             const unsigned int left = std::min( sincWidth, skip );
             const unsigned int resampleSize = (left + dotsOnScreen + sincWidth) * oversample;
             std::vector <double> resample;
             resample.resize( resampleSize ); // prefilled with zero
             horizontalFactor /= oversample; // distance between (resampled) dots
-            dotsOnScreen = DIVS_TIME / horizontalFactor + 0.99 + 1; // dot count after resample
+            dotsOnScreen = unsigned(DIVS_TIME / horizontalFactor + 0.99 + 1); // dot count after resample
             target.reserve( dotsOnScreen ); // increase target size
             // sampleIt -> start of left margin
             auto sampleIt = samples.sample.cbegin() + skip - left;
@@ -130,15 +130,15 @@ void GraphGenerator::generateGraphsTYvoltage(PPresult *result, const DsoSettings
                         resample[ resamplePos + sincPos ] += conv;
                 }
             }
-            sampleIterator = resample.cbegin() + ( left + 0.5 ) * oversample; // -> visible resamples
+            sampleIterator = resample.cbegin() + int( ( left + 0.5 ) * oversample ); // -> visible resamples
         }
         // printf("samples: %lu, dotsOnScreen: %d\n", samples.sample.size(), dotsOnScreen);
         target.clear(); // remove all previous dots and fill in new trace
-        for (unsigned int position = leftmostPosition;
+        for (unsigned int position = unsigned(leftmostPosition);
              position < dotsOnScreen && sampleIterator < sampleEnd;
              ++position, ++sampleIterator) {
-            target.push_back(QVector3D(MARGIN_LEFT + position * horizontalFactor,
-                                        *sampleIterator / gain + offset, 0.0 ));
+            target.push_back(QVector3D(float(MARGIN_LEFT + position * horizontalFactor),
+                                        float(*sampleIterator / gain + offset), 0.0f ));
         }
     }
 }
@@ -166,16 +166,16 @@ void GraphGenerator::generateGraphsTYspectrum(PPresult *result) {
         target.reserve(neededSize);
 
         // What's the horizontal distance between sampling points?
-        float horizontalFactor = (float)(samples.interval / scope->horizontal.frequencybase);
+        double horizontalFactor = samples.interval / scope->horizontal.frequencybase;
 
         // Fill vector array
         std::vector<double>::const_iterator dataIterator = samples.sample.begin();
-        const float magnitude = (float)scope->spectrum[channel].magnitude;
-        const float offset = (float)scope->spectrum[channel].offset;
+        const double magnitude = scope->spectrum[channel].magnitude;
+        const double offset = scope->spectrum[channel].offset;
 
         for (unsigned int position = 0; position < sampleCount; ++position) {
-            target.push_back(QVector3D(position * horizontalFactor - DIVS_TIME / 2,
-                                       (float)*(dataIterator++) / magnitude + offset, 0.0));
+            target.push_back( QVector3D( float( position * horizontalFactor - DIVS_TIME / 2 ),
+                                         float( *(dataIterator++) / magnitude + offset), 0.0f ) );
         }
     }
 }
@@ -222,8 +222,8 @@ void GraphGenerator::generateGraphsXY( PPresult *result, const DsoSettingsScope 
         const double yOffset = scope->voltage[ yChannel ].offset;
 
         for ( unsigned int position = 0; position < sampleCount; ++position ) {
-            drawLines.push_back(QVector3D( (float)( *( xIterator++ ) / xGain + xOffset ),
-                                           (float)( *( yIterator++ ) / yGain + yOffset ), 0.0 ) );
+            drawLines.push_back(QVector3D( float( *( xIterator++ ) / xGain + xOffset ),
+                                           float( *( yIterator++ ) / yGain + yOffset ), 0.0 ) );
         }
     }
 }

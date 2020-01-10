@@ -66,7 +66,7 @@ GlScope::GlScope(DsoSettingsScope *scope, DsoSettingsView *view, QWidget *parent
     QOpenGLContext context;
     context.create();
     context.makeCurrent(&surface);
-    QString glVersion = (const char*)context.functions()->glGetString(GL_VERSION);
+    QString glVersion = reinterpret_cast<const char*>( context.functions()->glGetString(GL_VERSION) );
     GLSLversion = glVersion >= "3.2" ? 150 : 120; // version string "3.2 xxxx" > "3.2" is true
     // qDebug() << glVersion;
     // qDebug() << GLSLversion;
@@ -389,7 +389,7 @@ void GlScope::updateCursor(unsigned index) {
     // Write coordinates to GPU
     makeCurrent();
     m_marker.bind();
-    m_marker.write(0, vaMarker.data(), vaMarker.size() * sizeof(Vertices));
+    m_marker.write( 0, vaMarker.data(), int( vaMarker.size() * sizeof( Vertices ) ) );
 }
 
 void GlScope::paintGL() {
@@ -601,11 +601,11 @@ void GlScope::drawGrid() {
 
 void GlScope::drawVertices(QOpenGLFunctions *gl, unsigned marker, QColor color) {
     m_program->setUniformValue(colorLocation, (marker == selectedCursor) ? color : color.darker());
-    gl->glDrawArrays(GL_LINE_LOOP, GLint(marker * VERTICES_ARRAY_SIZE), VERTICES_ARRAY_SIZE);
+    gl->glDrawArrays( GL_LINE_LOOP, GLint( marker * VERTICES_ARRAY_SIZE), GLint( VERTICES_ARRAY_SIZE ) );
     if (cursorInfo[marker]->shape == DsoSettingsScopeCursor::RECTANGULAR) {
         color.setAlphaF(0.25);
         m_program->setUniformValue(colorLocation, color.darker());
-        gl->glDrawArrays(GL_TRIANGLE_FAN, GLint(marker * VERTICES_ARRAY_SIZE), VERTICES_ARRAY_SIZE);
+        gl->glDrawArrays( GL_TRIANGLE_FAN, GLint( marker * VERTICES_ARRAY_SIZE ), GLint( VERTICES_ARRAY_SIZE ) );
     }
 }
 

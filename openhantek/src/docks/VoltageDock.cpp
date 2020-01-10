@@ -78,7 +78,7 @@ VoltageDock::VoltageDock(DsoSettingsScope *scope, const Dso::ControlSpecificatio
         if (channel < spec->channels) {
             dockLayout->addWidget( b.attnCheckBox, row, 1 ) ;
             dockLayout->addWidget( b.miscComboBox, row++, 2 ) ;
-            if ( (int)scope->voltage[channel].couplingOrMathIndex < couplingStrings.size() )
+            if ( int(scope->voltage[channel].couplingOrMathIndex) < couplingStrings.size() )
                 setCoupling(channel, scope->voltage[channel].couplingOrMathIndex);
         } else {
             dockLayout->addWidget( b.miscComboBox, row++, 1, 1, 2 );
@@ -98,8 +98,8 @@ VoltageDock::VoltageDock(DsoSettingsScope *scope, const Dso::ControlSpecificatio
         setAttn(channel, scope->voltage[channel].probeUsed);
         setInverted(channel, scope->voltage[channel].inverted);
 
-        connect(b.gainComboBox, SELECT<int>::OVERLOAD_OF(&QComboBox::currentIndexChanged), [this,channel](int index) {
-            this->scope->voltage[channel].gainStepIndex = (unsigned)index;
+        connect(b.gainComboBox, SELECT<int>::OVERLOAD_OF(&QComboBox::currentIndexChanged), [this,channel](unsigned index) {
+            this->scope->voltage[channel].gainStepIndex = index;
             emit gainChanged( channel, this->scope->gain(channel) );
         });
         connect(b.attnCheckBox, &QAbstractButton::toggled, [this,channel](bool attn) {
@@ -113,8 +113,8 @@ VoltageDock::VoltageDock(DsoSettingsScope *scope, const Dso::ControlSpecificatio
             this->scope->voltage[channel].inverted = checked;
             emit invertedChanged( channel, checked );
         });
-        connect(b.miscComboBox, SELECT<int>::OVERLOAD_OF(&QComboBox::currentIndexChanged), [this,channel,spec,scope](int index) {
-            this->scope->voltage[channel].couplingOrMathIndex = (unsigned)index;
+        connect(b.miscComboBox, SELECT<int>::OVERLOAD_OF(&QComboBox::currentIndexChanged), [this,channel,spec,scope](unsigned index) {
+            this->scope->voltage[channel].couplingOrMathIndex = index;
             if (channel < spec->channels) {
                 //setCoupling(channel, (unsigned)index);
                 emit couplingChanged(channel, scope->coupling(channel, spec));
@@ -143,14 +143,14 @@ void VoltageDock::setCoupling(ChannelID channel, unsigned couplingIndex) {
     if (channel >= spec->channels) return;
     if (couplingIndex >= spec->couplings.size()) return;
     QSignalBlocker blocker(channelBlocks[channel].miscComboBox);
-    channelBlocks[channel].miscComboBox->setCurrentIndex((int)couplingIndex);    
+    channelBlocks[channel].miscComboBox->setCurrentIndex(int(couplingIndex));
 }
 
 void VoltageDock::setGain(ChannelID channel, unsigned gainStepIndex) {
     if (channel >= scope->voltage.size()) return;
     if (gainStepIndex >= scope->gainSteps.size()) return;
     QSignalBlocker blocker(channelBlocks[channel].gainComboBox);
-    channelBlocks[channel].gainComboBox->setCurrentIndex((unsigned)gainStepIndex);
+    channelBlocks[channel].gainComboBox->setCurrentIndex(int(gainStepIndex));
 }
 
 void VoltageDock::setAttn(ChannelID channel, bool attn) {
@@ -167,7 +167,7 @@ void VoltageDock::setAttn(ChannelID channel, bool attn) {
 
 void VoltageDock::setMode(unsigned mathModeIndex) {
     QSignalBlocker blocker(channelBlocks[spec->channels].miscComboBox);
-    channelBlocks[spec->channels].miscComboBox->setCurrentIndex((int)mathModeIndex);
+    channelBlocks[spec->channels].miscComboBox->setCurrentIndex(int(mathModeIndex));
 }
 
 void VoltageDock::setUsed(ChannelID channel, bool used) {

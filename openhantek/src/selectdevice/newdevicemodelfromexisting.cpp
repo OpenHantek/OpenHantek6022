@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: GPL-2.0+
+
 #include "newdevicemodelfromexisting.h"
 
 #include "dsomodel.h"
@@ -33,7 +35,7 @@ NewDeviceModelFromExisting::NewDeviceModelFromExisting(QWidget *parent) :
     ui->cmbUSBdevices->setModel(deviceListModel);
     deviceListModel->updateDeviceList();
 
-    connect(ui->btnRefresh, &QPushButton::clicked, [this,deviceListModel] {
+    connect(ui->btnRefresh, &QPushButton::clicked, [deviceListModel] {
         deviceListModel->updateDeviceList();
     });
 

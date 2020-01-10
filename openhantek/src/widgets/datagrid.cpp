@@ -15,7 +15,7 @@ DataGrid::DataGrid(QWidget *parent) : QGroupBox(parent)
     cursorsSelectorGroup->setExclusive(true);
 
     connect(cursorsSelectorGroup,
-            static_cast<void(QButtonGroup::*)(int)>(&QButtonGroup::buttonPressed), [this] (int index) {
+            static_cast<void(QButtonGroup::*)(int)>(&QButtonGroup::buttonPressed), [this] (unsigned index) {
         emit itemSelected(index);
     });
 
@@ -82,16 +82,16 @@ void DataGrid::configureItem(unsigned index, const QColor &fgColor) {
     }
 }
 
-unsigned DataGrid::addItem(const QString &text, const QColor &fgColor) {
-    unsigned index = items.size();
-    items.resize(index + 1);
+int DataGrid::addItem(const QString &text, const QColor &fgColor) {
+    int index = int(items.size());
+    items.resize(ulong(index + 1));
 
-    CursorInfo& info = items.at(index);
+    CursorInfo& info = items.at(ulong(index));
     info.configure(text, backgroundColor, fgColor);
     cursorsSelectorGroup->addButton(info.selector, index);
 
     connect(info.shape, &QPushButton::clicked, [this, index] () {
-        emit itemUpdated(index);
+        emit itemUpdated( unsigned(index) );
     });
 
     cursorsLayout->addWidget(info.selector, 3 * index, 0);

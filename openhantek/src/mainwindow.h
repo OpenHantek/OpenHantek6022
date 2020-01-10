@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: GPL-2.0+
+
 #pragma once
 #include "post/ppresult.h"
 #include <QMainWindow>
@@ -25,8 +27,8 @@ class MainWindow : public QMainWindow {
 
   public:
     explicit MainWindow(HantekDsoControl *dsoControl, DsoSettings *mSettings, ExporterRegistry *exporterRegistry,
-                        QWidget *parent = 0);
-    ~MainWindow();
+                        QWidget *parent = nullptr);
+    ~MainWindow() override;
   public slots:
     void showNewData(std::shared_ptr<PPresult> data);
     void exporterStatusChanged(const QString &exporterName, const QString &status);

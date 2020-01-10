@@ -36,7 +36,7 @@
 /// \param parent The parent widget.
 LevelSlider::LevelSlider(Qt::ArrowType direction, QWidget *parent) : QWidget(parent) {
     QFont font = this->font();
-    font.setPointSize(font.pointSize() * 0.8);
+    font.setPointSize(int(font.pointSize() * 0.8));
     this->setFont(font);
 
     this->pressedSlider = -1;
@@ -127,9 +127,9 @@ const QColor LevelSlider::color(int index) const {
 /// \param color The new color for the slider.
 /// \return The index of the slider, -1 on error.
 void LevelSlider::setColor(unsigned index, QColor color) {
-    if (index >= (unsigned)this->slider.count()) return;
+    if (int(index) >= this->slider.count()) return;
 
-    this->slider[(int)index]->color = color;
+    this->slider[int(index)]->color = color;
     this->repaint();
 }
 
@@ -169,9 +169,9 @@ bool LevelSlider::visible(int index) const {
 /// \param visible true to show the slider, false to hide it.
 /// \return The index of the slider, -1 on error.
 void LevelSlider::setIndexVisible(unsigned index, bool visible) {
-    if (index >= (unsigned)this->slider.count()) return;
+    if (int(index) >= this->slider.count()) return;
 
-    this->slider[(int)index]->visible = visible;
+    this->slider[int(index)]->visible = visible;
     this->repaint();
 }
 
@@ -289,12 +289,12 @@ void LevelSlider::mouseMoveEvent(QMouseEvent *event) {
     if (this->_direction == Qt::RightArrow || this->_direction == Qt::LeftArrow)
         value = this->slider[pressedSlider]->maximum -
                 (this->slider[pressedSlider]->maximum - this->slider[pressedSlider]->minimum) *
-                    ((double)event->y() - this->_preMargin + 0.5) /
+                    (double(event->y()) - this->_preMargin + 0.5) /
                     (this->height() - this->_preMargin - this->_postMargin - 1);
     else
         value = this->slider[pressedSlider]->minimum +
                 (this->slider[pressedSlider]->maximum - this->slider[pressedSlider]->minimum) *
-                    ((double)event->x() - this->_preMargin + 0.5) /
+                    (double(event->x()) - this->_preMargin + 0.5) /
                     (this->width() - this->_preMargin - this->_postMargin - 1);
 
     // Move the slider
@@ -438,7 +438,7 @@ void LevelSlider::paintEvent(QPaintEvent *event) {
                 }
             }
             // Draw text
-            painter.drawText(textRect, alignment, (*slider)->text);
+            painter.drawText(textRect, int(alignment), (*slider)->text);
         }
     }
 
@@ -467,10 +467,10 @@ QRect LevelSlider::calculateRect(int sliderId) {
                 QRect(0, // Start at the left side
                       // The needle should be center-aligned, 0.5 pixel offset for
                       // exact pixelization
-                      (long)((double)(this->height() - this->_preMargin - this->_postMargin - 1) *
+                      int((this->height() - this->_preMargin - this->_postMargin - 1) *
                                  (this->slider[sliderId]->maximum - this->slider[sliderId]->value) /
                                  (this->slider[sliderId]->maximum - this->slider[sliderId]->minimum) +
-                             0.5f) +
+                             0.5) +
                           this->_preMargin - 3,
                       this->sliderWidth, // Fill the whole width
                       7                  // The needle is 7 px wide
@@ -482,10 +482,10 @@ QRect LevelSlider::calculateRect(int sliderId) {
                 QRect(0, // Start at the left side
                       // The needle is at the bottom, the text above it, 0.5 pixel
                       // offset for exact pixelization
-                      (long)((double)(this->height() - this->_preMargin - this->_postMargin - 1) *
+                      int((this->height() - this->_preMargin - this->_postMargin - 1) *
                                  (this->slider[sliderId]->maximum - this->slider[sliderId]->value) /
                                  (this->slider[sliderId]->maximum - this->slider[sliderId]->minimum) +
-                             0.5f),
+                             0.5),
                       this->sliderWidth,    // Fill the whole width
                       this->preMargin() + 1 // Use the full margin
                       );
@@ -498,10 +498,10 @@ QRect LevelSlider::calculateRect(int sliderId) {
             this->slider[sliderId]->rect = QRect(
                 // The needle should be center-aligned, 0.5 pixel offset for exact
                 // pixelization
-                (long)((double)(this->width() - this->_preMargin - this->_postMargin - 1) *
+                int((this->width() - this->_preMargin - this->_postMargin - 1) *
                            (this->slider[sliderId]->value - this->slider[sliderId]->minimum) /
                            (this->slider[sliderId]->maximum - this->slider[sliderId]->minimum) +
-                       0.5f) +
+                       0.5) +
                     this->_preMargin - 3,
                 0,                // Start at the top
                 7,                // The needle is 7 px wide
@@ -514,10 +514,10 @@ QRect LevelSlider::calculateRect(int sliderId) {
             this->slider[sliderId]->rect = QRect(
                 // The needle is at the right side, the text before it, 0.5 pixel
                 // offset for exact pixelization
-                (long)((double)(this->width() - this->_preMargin - this->_postMargin - 1) *
+                int((this->width() - this->_preMargin - this->_postMargin - 1) *
                            (this->slider[sliderId]->value - this->slider[sliderId]->minimum) /
                            (this->slider[sliderId]->maximum - this->slider[sliderId]->minimum) +
-                       0.5f) +
+                       0.5) +
                     this->_preMargin - sliderLength + 1,
                 0,                // Start at the top
                 sliderLength,     // The width depends on the text

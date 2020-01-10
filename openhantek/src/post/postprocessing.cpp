@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: GPL-2.0+
+
 #include "postprocessing.h"
 
 PostProcessing::PostProcessing(unsigned channelCount) : channelCount(channelCount) {

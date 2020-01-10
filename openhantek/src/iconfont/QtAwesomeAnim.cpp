@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: GPL-2.0+
+
 #include "QtAwesomeAnim.h"
 
 #include <QPainter>
@@ -7,7 +9,7 @@
 #include <cmath>
 
 QtAwesomeAnimation::QtAwesomeAnimation(QWidget *parentWidget, int interval, double step)
-    : parentWidgetRef_(parentWidget), timer_(0), interval_(interval), step_(step), angle_(0.0f) {}
+    : parentWidgetRef_(parentWidget), timer_(nullptr), interval_(interval), step_(step), angle_(0.0) {}
 
 void QtAwesomeAnimation::setup(QPainter &painter, const QRect &rect) {
     // first time set the timer
@@ -22,9 +24,9 @@ void QtAwesomeAnimation::setup(QPainter &painter, const QRect &rect) {
         painter.setPen(pen);
         double val = 1 + sin(angle_) / 2;
         if (val >= 0.5)
-            painter.drawArc(rect, 0 * 16, 16 * (360 - (val - 0.5) * 2 * 360));
+            painter.drawArc(rect, 0 * 16, int(16 * (360 - (val - 0.5) * 2 * 360)));
         else
-            painter.drawArc(rect, 0 * 16, 16 * (val * 2) * 360);
+            painter.drawArc(rect, 0 * 16, int(16 * (val * 2) * 360));
     }
 }
 

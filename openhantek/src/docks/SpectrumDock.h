@@ -24,7 +24,7 @@ class SpectrumDock : public QDockWidget {
     /// \param settings The target settings object.
     /// \param parent The parent widget.
     /// \param flags Flags for the window manager.
-    SpectrumDock(DsoSettingsScope *scope, QWidget *parent, Qt::WindowFlags flags = 0);
+    SpectrumDock(DsoSettingsScope *scope, QWidget *parent, Qt::WindowFlags flags = nullptr);
 
     /// \brief Sets the magnitude for a channel.
     /// \param channel The channel, whose magnitude should be set.

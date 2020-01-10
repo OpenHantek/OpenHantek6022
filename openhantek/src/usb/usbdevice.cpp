@@ -102,7 +102,7 @@ bool USBDevice::connectDevice(QString &errorMessage) {
     errorCode = LIBUSB_ERROR_NOT_FOUND;
     libusb_config_descriptor *configDescriptor;
     libusb_get_config_descriptor(device, 0, &configDescriptor);
-    for (int interfaceIndex = 0; interfaceIndex < (int)configDescriptor->bNumInterfaces; ++interfaceIndex) {
+    for (int interfaceIndex = 0; interfaceIndex < int(configDescriptor->bNumInterfaces); ++interfaceIndex) {
         const libusb_interface *interface = &configDescriptor->interface[interfaceIndex];
         if (interface->num_altsetting < 1)
             continue;
@@ -184,7 +184,7 @@ void USBDevice::disconnectFromDevice() {
 }
 
 
-bool USBDevice::isConnected() { return this->handle != 0; }
+bool USBDevice::isConnected() { return this->handle != nullptr; }
 
 
 bool USBDevice::needsFirmware() {
@@ -203,7 +203,7 @@ int USBDevice::bulkTransfer(unsigned char endpoint, const unsigned char *data, u
     int transferred = 0;
     for (int attempt = 0; (attempt < attempts || attempts == -1) && errorCode == LIBUSB_ERROR_TIMEOUT; ++attempt)
         errorCode =
-            libusb_bulk_transfer(this->handle, endpoint, (unsigned char *)data, (int)length, &transferred, timeout);
+            libusb_bulk_transfer(this->handle, endpoint, const_cast<unsigned char *>(data), int(length), &transferred, timeout);
 
     if (errorCode == LIBUSB_ERROR_NO_DEVICE)
         disconnectFromDevice();
@@ -252,7 +252,7 @@ int USBDevice::controlTransfer(unsigned char type, unsigned char request, unsign
     //    type, request, data[0], length, value, index, attempts ); 
 
     for (int attempt = 0; (attempt < attempts || attempts == -1) && errorCode == LIBUSB_ERROR_TIMEOUT; ++attempt)
-        errorCode = libusb_control_transfer(this->handle, type, request, value, index, data, length, HANTEK_TIMEOUT);
+        errorCode = libusb_control_transfer(this->handle, type, request, uint16_t(value), uint16_t(index), data, uint16_t(length), HANTEK_TIMEOUT);
 
     if (errorCode == LIBUSB_ERROR_NO_DEVICE)
         disconnectFromDevice();

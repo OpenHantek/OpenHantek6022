@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: GPL-2.0+
+
 #pragma once
 
 #include "ui_selectsupporteddevice.h"
@@ -27,7 +28,7 @@ class SelectSupportedDevice : public QDialog
     Q_OBJECT
 
 public:
-    explicit SelectSupportedDevice(QWidget *parent = 0);
+    explicit SelectSupportedDevice(QWidget *parent = nullptr);
     std::unique_ptr<USBDevice> showSelectDeviceModal(libusb_context *context);
     void showLibUSBFailedDialogModel(int error);
 private:

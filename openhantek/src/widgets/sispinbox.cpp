@@ -101,7 +101,7 @@ void SiSpinBox::stepBy(int steps) {
     if (!this->steppedTo) { // No step done directly before this one, so we need
                             // to check where we are
         // Get how often the steps have to be fully ran through
-        int stepsFully = (this->mode == 0) ? (int)floor(log(this->value() / this->steps.first()) / log(stepsSpan)) : 0;
+        int stepsFully = (this->mode == 0) ? int(floor(log(this->value() / this->steps.first()) / log(stepsSpan))) : 0;
         // And now the remaining multiple
         double stepMultiple =
             (this->mode == 0) ? this->value() / pow(stepsSpan, stepsFully) : this->value() / this->minimum();
@@ -124,7 +124,7 @@ void SiSpinBox::stepBy(int steps) {
         if (!this->mode) {
             int stepsId = this->stepId % stepsCount;
             if (stepsId < 0) stepsId += stepsCount;
-            value = pow(stepsSpan, floor((double)this->stepId / stepsCount)) * this->steps[stepsId];
+            value = pow(stepsSpan, floor(double(this->stepId) / stepsCount)) * this->steps[stepsId];
         } else {
             stepId = std::min(std::max(stepId, 0), stepsCount);
             value = this->steps[stepId];
@@ -140,7 +140,7 @@ void SiSpinBox::stepBy(int steps) {
 /// \param unit The unit shown for the value in the spin box.
 /// \return true on success, false on invalid unit.
 bool SiSpinBox::setUnit(Unit unit) {
-    if ((unsigned int)unit >= UNIT_COUNT) return false;
+    if (unit >= UNIT_COUNT) return false;
 
     this->unit = unit;
     return true;

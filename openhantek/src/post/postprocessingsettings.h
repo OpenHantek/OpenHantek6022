@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: GPL-2.0+
+
 #pragma once
 
 #include "utils/enumclass.h"
@@ -10,7 +12,7 @@ enum class MathMode : unsigned { ADD_CH1_CH2, SUB_CH2_FROM_CH1, SUB_CH1_FROM_CH2
 extern Enum<Dso::MathMode, Dso::MathMode::ADD_CH1_CH2, Dso::MathMode::AC_CH2> MathModeEnum;
 
 template<class T>
-inline MathMode getMathMode(T& t) { return (MathMode)t.couplingOrMathIndex; }
+inline MathMode getMathMode(T& t) { return MathMode(t.couplingOrMathIndex); }
 
 /// \enum WindowFunction
 /// \brief The supported window functions.

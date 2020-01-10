@@ -27,7 +27,7 @@ class TriggerDock : public QDockWidget {
     /// \param spec
     /// \param parent The parent widget.
     /// \param flags Flags for the window manager.
-    TriggerDock(DsoSettingsScope *scope, const Dso::ControlSpecification* mSpec, QWidget *parent, Qt::WindowFlags flags = 0);
+    TriggerDock(DsoSettingsScope *scope, const Dso::ControlSpecification* mSpec, QWidget *parent, Qt::WindowFlags flags = nullptr);
 
     /// \brief Changes the trigger mode if the new mode is supported.
     /// \param mode The trigger mode.
@@ -35,7 +35,7 @@ class TriggerDock : public QDockWidget {
 
     /// \brief Changes the trigger source if the new source is supported.
     /// \param id The number of the channel, that should be used as trigger.
-    void setSource(unsigned int id);
+    void setSource(int id);
 
     /// \brief Changes the trigger slope if the new slope is supported.
     /// \param slope The trigger slope.

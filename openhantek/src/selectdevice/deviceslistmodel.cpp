@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: GPL-2.0+
+
 #include "deviceslistmodel.h"
 #include "usb/finddevices.h"
 #include "usb/uploadFirmware.h"
@@ -9,7 +11,7 @@ DevicesListModel::DevicesListModel(FindDevices *findDevices) :findDevices(findDe
 
 int DevicesListModel::rowCount(const QModelIndex &) const
 {
-    return (int)entries.size();
+    return int(entries.size());
 }
 
 int DevicesListModel::columnCount(const QModelIndex &) const
@@ -34,7 +36,7 @@ QVariant DevicesListModel::headerData(int section, Qt::Orientation orientation, 
 QVariant DevicesListModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid()) return QVariant();
-    const unsigned row = (unsigned)index.row();
+    const unsigned row = unsigned(index.row());
     if (role==Qt::UserRole) return QVariant::fromValue(entries[row].id);
     if (role==Qt::UserRole+1) return QVariant::fromValue(entries[row].canConnect);
     if (role==Qt::UserRole+2) return QVariant::fromValue(entries[row].needFirmware);
@@ -62,7 +64,7 @@ void DevicesListModel::updateDeviceList()
     entries.clear();
     endResetModel();
     const FindDevices::DeviceList* devices = findDevices->getDevices();
-    beginInsertRows(QModelIndex(),0,(int)devices->size());
+    beginInsertRows(QModelIndex(),0,int(devices->size()));
     for (auto &i : *devices) {
         DeviceListEntry entry;
         entry.name = QString::fromStdString(i.second->getModel()->name);

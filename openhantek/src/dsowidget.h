@@ -35,7 +35,7 @@ class DsoWidget : public QWidget {
     /// \param dataAnalyzer The data analyzer that should be used as data source.
     /// \param parent The parent widget.
     /// \param flags Flags for the window manager.
-    DsoWidget(DsoSettingsScope* scope, DsoSettingsView* view, const Dso::ControlSpecification* spec, QWidget *parent = 0, Qt::WindowFlags flags = 0);
+    DsoWidget(DsoSettingsScope* scope, DsoSettingsView* view, const Dso::ControlSpecification* spec, QWidget *parent = nullptr, Qt::WindowFlags flags = nullptr);
 
     // Data arrived
     void showNew(std::shared_ptr<PPresult> data);

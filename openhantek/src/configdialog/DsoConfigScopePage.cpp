@@ -16,7 +16,7 @@ DsoConfigScopePage::DsoConfigScopePage(DsoSettings *settings, QWidget *parent) :
     digitalPhosphorDepthSpinBox = new QSpinBox();
     digitalPhosphorDepthSpinBox->setMinimum(2);
     digitalPhosphorDepthSpinBox->setMaximum(99);
-    digitalPhosphorDepthSpinBox->setValue(settings->view.digitalPhosphorDepth);
+    digitalPhosphorDepthSpinBox->setValue(int(settings->view.digitalPhosphorDepth));
 
     graphLayout = new QGridLayout();
     graphLayout->addWidget(interpolationLabel, 1, 0);
@@ -50,7 +50,7 @@ DsoConfigScopePage::DsoConfigScopePage(DsoSettings *settings, QWidget *parent) :
 
 /// \brief Saves the new settings.
 void DsoConfigScopePage::saveSettings() {
-    settings->view.interpolation = (Dso::InterpolationMode)interpolationComboBox->currentIndex();
-    settings->view.digitalPhosphorDepth = digitalPhosphorDepthSpinBox->value();
-    settings->view.cursorGridPosition = (Qt::ToolBarArea)cursorsComboBox->currentData().toUInt();
+    settings->view.interpolation = Dso::InterpolationMode(interpolationComboBox->currentIndex());
+    settings->view.digitalPhosphorDepth = unsigned(digitalPhosphorDepthSpinBox->value());
+    settings->view.cursorGridPosition = Qt::ToolBarArea(cursorsComboBox->currentData().toUInt());
 }

@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: GPL-2.0+
+
 #include "mainwindow.h"
 #include "iconfont/QtAwesome.h"
 #include "ui_mainwindow.h"
@@ -60,7 +62,7 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, Expo
         tr("OpenHantek6022 (%1) - Device %2 (FW%3)")
             .arg(QString::fromStdString( VERSION))
             .arg(QString::fromStdString(dsoControl->getDevice()->getModel()->name))
-            .arg((unsigned int)dsoControl->getDevice()->getFwVersion(),4,16,QChar('0'))
+            .arg(dsoControl->getDevice()->getFwVersion(),4,16,QChar('0'))
     );
 
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 6, 0))
@@ -111,7 +113,7 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, Expo
 
     statusBar()->addPermanentWidget(commandEdit, 1);
 
-    connect(ui->actionManualCommand, &QAction::toggled, [this, commandEdit](bool checked) {
+    connect(ui->actionManualCommand, &QAction::toggled, [ commandEdit](bool checked) {
         commandEdit->setVisible(checked);
         if (checked)
             commandEdit->setFocus();
@@ -159,7 +161,7 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, Expo
     connect(dsoWidget, &DsoWidget::triggerLevelChanged, dsoControl, &HantekDsoControl::setTriggerLevel);
 
     auto usedChanged = [this, dsoControl, spec](ChannelID channel) {
-        if (channel >= (unsigned int)mSettings->scope.voltage.size())
+        if (channel >= mSettings->scope.voltage.size())
             return;
 
         bool mathUsed = mSettings->scope.anyUsed(spec->channels);
@@ -182,18 +184,18 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, Expo
             return;
         dsoControl->setGain(channel, mSettings->scope.gain(channel) * DIVS_VOLTAGE);
     });
-    connect(voltageDock, &VoltageDock::probeAttnChanged, [this, dsoControl, spec](ChannelID channel, bool probeUsed, double probeAttn ) {
+    connect(voltageDock, &VoltageDock::probeAttnChanged, [ dsoControl, spec](ChannelID channel, bool probeUsed, double probeAttn ) {
         if (channel >= spec->channels)
             return;
         dsoControl->setProbe( channel, probeUsed, probeAttn );
     });
-    connect(voltageDock, &VoltageDock::invertedChanged, [this, dsoControl, spec](ChannelID channel, bool inverted) {
+    connect(voltageDock, &VoltageDock::invertedChanged, [ dsoControl, spec](ChannelID channel, bool inverted) {
         if (channel >= spec->channels)
             return;
         dsoControl->setChannelInverted( channel, inverted );
     });
     connect(voltageDock, &VoltageDock::couplingChanged, dsoWidget, &DsoWidget::updateVoltageCoupling);
-    connect(voltageDock, &VoltageDock::couplingChanged, [this, dsoControl, spec](ChannelID channel, Dso::Coupling coupling ) {
+    connect(voltageDock, &VoltageDock::couplingChanged, [ dsoControl, spec](ChannelID channel, Dso::Coupling coupling ) {
         if (channel >= spec->channels)
             return;
         dsoControl->setCoupling( channel, coupling );
@@ -204,7 +206,7 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, Expo
     connect(spectrumDock, &SpectrumDock::magnitudeChanged, dsoWidget, &DsoWidget::updateSpectrumMagnitude);
 
     // Started/stopped signals from oscilloscope
-    connect(dsoControl, &HantekDsoControl::samplingStatusChanged, [this, dsoControl](bool enabled) {
+    connect(dsoControl, &HantekDsoControl::samplingStatusChanged, [this](bool enabled) {
         QSignalBlocker blocker(this->ui->actionSampling);
         if (enabled) {
             this->ui->actionSampling->setIcon( this->iconPause );
@@ -292,8 +294,13 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, Expo
     });
     ui->actionMeasure->setChecked(mSettings->view.cursorsVisible);
 
-    connect(ui->actionUserManual, &QAction::triggered, [this]() {
-            QDesktopServices::openUrl(QUrl("https://github.com/OpenHantek/OpenHantek6022/blob/master/docs/OpenHantek6022_User_Manual.pdf"));
+    connect(ui->actionUserManual, &QAction::triggered, []() {
+        QString usrManualPath( "/usr/share/doc/OpenHantek/OpenHantek6022_User_Manual.pdf" );
+        QFile userManual( usrManualPath );
+        if ( userManual.exists() )
+            QDesktopServices::openUrl( QUrl( "file://" + usrManualPath ) );
+        else
+            QDesktopServices::openUrl( QUrl( "https://github.com/OpenHantek/OpenHantek6022/blob/master/docs/OpenHantek6022_User_Manual.pdf" ) );
     });
 
     connect(ui->actionAbout, &QAction::triggered, [this]() {

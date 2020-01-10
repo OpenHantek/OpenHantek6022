@@ -453,8 +453,8 @@
 <context>
     <name>HantekDsoControl</name>
     <message>
-        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="139"/>
         <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="140"/>
+        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="141"/>
         <source>Couldn&apos;t get channel level data from oscilloscope</source>
         <translation>Não foi possível obter dados do canal do osciloscópio</translation>
     </message>
@@ -671,12 +671,12 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="60"/>
+        <location filename="../src/mainwindow.cpp" line="62"/>
         <source>OpenHantek6022 (%1) - Device %2 (FW%3)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="125"/>
+        <location filename="../src/mainwindow.cpp" line="127"/>
         <source>Invalid command</source>
         <translation>Comando inválido</translation>
     </message>
@@ -685,7 +685,7 @@
         <translation type="obsolete">&amp;Parar</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="212"/>
+        <location filename="../src/mainwindow.cpp" line="214"/>
         <source>Stop the oscilloscope</source>
         <translation>Parar osciloscópio</translation>
     </message>
@@ -694,78 +694,78 @@
         <translation type="obsolete">&amp;Iniciar</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="211"/>
+        <location filename="../src/mainwindow.cpp" line="213"/>
         <source>Stop</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="215"/>
+        <location filename="../src/mainwindow.cpp" line="217"/>
         <source>Start</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="216"/>
+        <location filename="../src/mainwindow.cpp" line="218"/>
         <source>Start the oscilloscope</source>
         <translation>Iniciar osciloscópio</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="228"/>
+        <location filename="../src/mainwindow.cpp" line="230"/>
         <source>Open file</source>
         <translation>Abrir arquivo</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="228"/>
-        <location filename="../src/mainwindow.cpp" line="241"/>
+        <location filename="../src/mainwindow.cpp" line="230"/>
+        <location filename="../src/mainwindow.cpp" line="243"/>
         <source>Settings (*.ini)</source>
         <translation>Configurações (*.ini)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="241"/>
+        <location filename="../src/mainwindow.cpp" line="243"/>
         <source>Save settings</source>
         <translation>Salvar configurações</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="265"/>
+        <location filename="../src/mainwindow.cpp" line="267"/>
         <source>Disable fading of previous graphs</source>
         <translation>Desabilitar desaparecimento de gráficos anteriores</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="267"/>
+        <location filename="../src/mainwindow.cpp" line="269"/>
         <source>Enable fading of previous graphs</source>
         <translation>Habilitar desaparecimento de gráficos anteriores</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="275"/>
+        <location filename="../src/mainwindow.cpp" line="277"/>
         <source>Hide magnified scope</source>
         <translation>Esconder/Ampliar osciloscópio</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="277"/>
+        <location filename="../src/mainwindow.cpp" line="279"/>
         <source>Show magnified scope</source>
         <translation>Mostrar osciloscópio ampliado</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="287"/>
+        <location filename="../src/mainwindow.cpp" line="289"/>
         <source>Hide measurements</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="289"/>
+        <location filename="../src/mainwindow.cpp" line="291"/>
         <source>Show measurements</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="301"/>
+        <location filename="../src/mainwindow.cpp" line="308"/>
         <source>About OpenHantek6022 (%1)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="302"/>
+        <location filename="../src/mainwindow.cpp" line="309"/>
         <source>&lt;p&gt;Open source software for Hantek6022 USB oscilloscopes&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2010, 2011 Oliver Haag&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2012-2020 OpenHantek community&lt;br/&gt;&lt;a href=&apos;https://github.com/OpenHantek&apos;&gt;https://github.com/OpenHantek&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Open source firmware copyright &amp;copy; 2019-2020 Ho-Ro&lt;br/&gt;&lt;a href=&apos;https://github.com/Ho-Ro/Hantek6022API&apos;&gt;https://github.com/Ho-Ro/Hantek6022API&lt;/a&gt;&lt;/p&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="329"/>
+        <location filename="../src/mainwindow.cpp" line="336"/>
         <source>%1: %2</source>
         <translation type="unfinished"></translation>
     </message>
@@ -850,12 +850,12 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/newdevicemodelfromexisting.cpp" line="78"/>
+        <location filename="../src/selectdevice/newdevicemodelfromexisting.cpp" line="80"/>
         <source>Sorry</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/newdevicemodelfromexisting.cpp" line="78"/>
+        <location filename="../src/selectdevice/newdevicemodelfromexisting.cpp" line="80"/>
         <source>This is not yet implemented!</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1022,67 +1022,67 @@
         <translation>Impressão</translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/enums.cpp" line="16"/>
+        <location filename="../src/hantekdso/enums.cpp" line="18"/>
         <source>Voltage</source>
         <translation>Voltagem</translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/enums.cpp" line="18"/>
+        <location filename="../src/hantekdso/enums.cpp" line="20"/>
         <source>Spectrum</source>
         <translation>Espectro</translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/enums.cpp" line="30"/>
+        <location filename="../src/hantekdso/enums.cpp" line="32"/>
         <source>T - Y</source>
         <translation>T - Y</translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/enums.cpp" line="32"/>
+        <location filename="../src/hantekdso/enums.cpp" line="34"/>
         <source>X - Y</source>
         <translation>X - Y</translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/enums.cpp" line="43"/>
+        <location filename="../src/hantekdso/enums.cpp" line="45"/>
         <source>AC</source>
         <translation>AC</translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/enums.cpp" line="45"/>
+        <location filename="../src/hantekdso/enums.cpp" line="47"/>
         <source>DC</source>
         <translation>DC</translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/enums.cpp" line="47"/>
+        <location filename="../src/hantekdso/enums.cpp" line="49"/>
         <source>GND</source>
         <translation>GND</translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/enums.cpp" line="59"/>
+        <location filename="../src/hantekdso/enums.cpp" line="61"/>
         <source>Auto</source>
         <translation>Auto</translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/enums.cpp" line="61"/>
+        <location filename="../src/hantekdso/enums.cpp" line="63"/>
         <source>Normal</source>
         <translation>Normal</translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/enums.cpp" line="63"/>
+        <location filename="../src/hantekdso/enums.cpp" line="65"/>
         <source>Single</source>
         <translation>Simples</translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/enums.cpp" line="101"/>
+        <location filename="../src/hantekdso/enums.cpp" line="103"/>
         <source>Off</source>
         <translation>Desligado</translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/enums.cpp" line="103"/>
+        <location filename="../src/hantekdso/enums.cpp" line="105"/>
         <source>Linear</source>
         <translation>Linear</translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/enums.cpp" line="105"/>
+        <location filename="../src/hantekdso/enums.cpp" line="107"/>
         <source>Sinc</source>
         <translation>Sinc</translation>
     </message>
@@ -1092,102 +1092,102 @@
         <translation>Usar OpenGL ES em vez de OpenGL</translation>
     </message>
     <message>
-        <location filename="../src/post/postprocessingsettings.cpp" line="17"/>
+        <location filename="../src/post/postprocessingsettings.cpp" line="19"/>
         <source>CH1 + CH2</source>
         <translation>CH1 + CH2</translation>
     </message>
     <message>
-        <location filename="../src/post/postprocessingsettings.cpp" line="19"/>
+        <location filename="../src/post/postprocessingsettings.cpp" line="21"/>
         <source>CH1 - CH2</source>
         <translation>CH1 - CH2</translation>
     </message>
     <message>
-        <location filename="../src/post/postprocessingsettings.cpp" line="21"/>
+        <location filename="../src/post/postprocessingsettings.cpp" line="23"/>
         <source>CH2 - CH1</source>
         <translation>CH2 - CH1</translation>
     </message>
     <message>
-        <location filename="../src/post/postprocessingsettings.cpp" line="23"/>
+        <location filename="../src/post/postprocessingsettings.cpp" line="25"/>
         <source>CH1 * CH2</source>
         <translation>CH1 * CH2</translation>
     </message>
     <message>
-        <location filename="../src/post/postprocessingsettings.cpp" line="25"/>
+        <location filename="../src/post/postprocessingsettings.cpp" line="27"/>
         <source>CH1 AC</source>
         <translation>CH1 AC</translation>
     </message>
     <message>
-        <location filename="../src/post/postprocessingsettings.cpp" line="27"/>
+        <location filename="../src/post/postprocessingsettings.cpp" line="29"/>
         <source>CH2 AC</source>
         <translation>CH2 AC</translation>
     </message>
     <message>
-        <location filename="../src/post/postprocessingsettings.cpp" line="39"/>
+        <location filename="../src/post/postprocessingsettings.cpp" line="41"/>
         <source>Rectangular</source>
         <translation type="unfinished">Retangular</translation>
     </message>
     <message>
-        <location filename="../src/post/postprocessingsettings.cpp" line="41"/>
+        <location filename="../src/post/postprocessingsettings.cpp" line="43"/>
         <source>Hamming</source>
         <translation type="unfinished">Hamming</translation>
     </message>
     <message>
-        <location filename="../src/post/postprocessingsettings.cpp" line="43"/>
+        <location filename="../src/post/postprocessingsettings.cpp" line="45"/>
         <source>Hann</source>
         <translation type="unfinished">Hann</translation>
     </message>
     <message>
-        <location filename="../src/post/postprocessingsettings.cpp" line="45"/>
+        <location filename="../src/post/postprocessingsettings.cpp" line="47"/>
         <source>Cosine</source>
         <translation type="unfinished">Cosseno</translation>
     </message>
     <message>
-        <location filename="../src/post/postprocessingsettings.cpp" line="47"/>
+        <location filename="../src/post/postprocessingsettings.cpp" line="49"/>
         <source>Lanczos</source>
         <translation type="unfinished">Lanczos</translation>
     </message>
     <message>
-        <location filename="../src/post/postprocessingsettings.cpp" line="49"/>
+        <location filename="../src/post/postprocessingsettings.cpp" line="51"/>
         <source>Bartlett</source>
         <translation type="unfinished">Bartlett</translation>
     </message>
     <message>
-        <location filename="../src/post/postprocessingsettings.cpp" line="51"/>
+        <location filename="../src/post/postprocessingsettings.cpp" line="53"/>
         <source>Triangular</source>
         <translation type="unfinished">Triangular</translation>
     </message>
     <message>
-        <location filename="../src/post/postprocessingsettings.cpp" line="53"/>
+        <location filename="../src/post/postprocessingsettings.cpp" line="55"/>
         <source>Gauss</source>
         <translation type="unfinished">Gauss</translation>
     </message>
     <message>
-        <location filename="../src/post/postprocessingsettings.cpp" line="55"/>
+        <location filename="../src/post/postprocessingsettings.cpp" line="57"/>
         <source>Bartlett-Hann</source>
         <translation type="unfinished">Bartlett-Hann</translation>
     </message>
     <message>
-        <location filename="../src/post/postprocessingsettings.cpp" line="57"/>
+        <location filename="../src/post/postprocessingsettings.cpp" line="59"/>
         <source>Blackman</source>
         <translation type="unfinished">Blackman</translation>
     </message>
     <message>
-        <location filename="../src/post/postprocessingsettings.cpp" line="61"/>
+        <location filename="../src/post/postprocessingsettings.cpp" line="63"/>
         <source>Nuttall</source>
         <translation type="unfinished">Nuttall</translation>
     </message>
     <message>
-        <location filename="../src/post/postprocessingsettings.cpp" line="63"/>
+        <location filename="../src/post/postprocessingsettings.cpp" line="65"/>
         <source>Blackman-Harris</source>
         <translation type="unfinished">Blackman-Harris</translation>
     </message>
     <message>
-        <location filename="../src/post/postprocessingsettings.cpp" line="65"/>
+        <location filename="../src/post/postprocessingsettings.cpp" line="67"/>
         <source>Blackman-Nuttall</source>
         <translation type="unfinished">Blackman-Nuttall</translation>
     </message>
     <message>
-        <location filename="../src/post/postprocessingsettings.cpp" line="67"/>
+        <location filename="../src/post/postprocessingsettings.cpp" line="69"/>
         <source>Flat top</source>
         <translation type="unfinished">Flat Top</translation>
     </message>
@@ -1265,22 +1265,22 @@
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../src/selectdevice/rawdeviceslistmodel.cpp" line="65"/>
+        <location filename="../src/selectdevice/rawdeviceslistmodel.cpp" line="64"/>
         <source>%1:%2 - No access</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/rawdeviceslistmodel.cpp" line="69"/>
+        <location filename="../src/selectdevice/rawdeviceslistmodel.cpp" line="68"/>
         <source>%1:%2 (%3 - %4)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/deviceslistmodel.cpp" line="26"/>
+        <location filename="../src/selectdevice/deviceslistmodel.cpp" line="28"/>
         <source>Devicename</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/deviceslistmodel.cpp" line="27"/>
+        <location filename="../src/selectdevice/deviceslistmodel.cpp" line="29"/>
         <source>Status</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1345,42 +1345,42 @@
         <translation type="vanished">&lt;p&gt;&lt;br/&gt;&lt;b&gt;Conexão falhou!&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="56"/>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="63"/>
         <source>&lt;p&gt;&lt;br/&gt;&lt;b&gt;The device is ready for use.&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Please observe the &lt;a href=&apos;https://github.com/OpenHantek/OpenHantek6022/blob/master/docs/OpenHantek6022_User_Manual.pdf&apos;&gt;user manual&lt;/a&gt; for safe operation.&lt;/p&gt;</source>
         <translation>&lt;p&gt;&lt;br/&gt;&lt;b&gt;O dispositivo está pronto para uso.&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Por favor, observe o &lt;a href=&apos;https://github.com/OpenHantek/OpenHantek6022/blob/master/docs/OpenHantek6022_User_Manual.pdf&apos;&gt; manual do usuário&lt;/a&gt; para uma operação segura.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="62"/>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="69"/>
         <source>&lt;p&gt;Upload in progress ...&lt;/p&gt;&lt;p&gt;&lt;b&gt;If the upload takes more than 30 s, please close this window &lt;br/&gt;and restart the program!&lt;/b&gt;&lt;/p&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="66"/>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="73"/>
         <source>&lt;p&gt;&lt;br/&gt;&lt;b&gt;Connection failed!&lt;/b&gt;&lt;/p&gt;</source>
         <translation>&lt;p&gt;&lt;br/&gt;&lt;b&gt;Conexão falhou!&lt;/b&gt;&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="73"/>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="80"/>
         <source>&lt;p&gt;OpenHantek6022 is searching for compatible devices ...&lt;/p&gt;&lt;p&gt;&lt;img align=&apos;right&apos; height=&apos;200&apos; src=&apos;qrc:///switch_6022BL.png&apos;&gt;Don&apos;t forget to switch your device into oscilloscope mode if it has multiple modes.&lt;/p&gt;</source>
         <translation>&lt;p&gt;OpenHantek6022 está procurando por dispositivos compatíveis ...&lt;/p&gt;&lt;p&gt;&lt;img align=&apos;right&apos; height=&apos;200&apos; src=&apos;qrc:///switch_6022BL.png&apos;&gt;Não se esqueça de mudar seu dispositivo no modo osciloscópio se ele tiver vários modos.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="78"/>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="85"/>
         <source>&lt;p&gt;Please make sure you have installed the windows usb driver correctly&lt;/p&gt;</source>
         <translation>&lt;Por favor, certifique-se de que instalou o driver usb do Windows corretamente&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="83"/>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="90"/>
         <source>&lt;p&gt;Please make sure you have copied the udev rules file to &lt;b&gt;%1&lt;/b&gt; for correct USB access permissions.&lt;/p&gt;</source>
         <translation>&lt;Por favor, tenha certeza de que você copiou o arquivo de regras do udev para &lt;b&gt;%1&lt;/b&gt; para obter as permissões de acesso USB corretas.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="86"/>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="93"/>
         <source>&lt;p&gt;Visit the build and run instruction &lt;a href=&apos;https://github.com/OpenHantek/OpenHantek6022/blob/master/docs/build.md&apos;&gt;website&lt;/a&gt; for help.&lt;/p&gt;</source>
         <translation>&lt;p&gt;Visita a instrução de compilação e execução &lt;a href=&apos;https://github.com/OpenHantek/OpenHantek6022/blob/master/docs/build.md&apos;&gt;website&lt;/a&gt; para ajuda.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="124"/>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="131"/>
         <source>Can&apos;t initalize USB: %1</source>
         <translation>Não é possível initalizar o USB: %1</translation>
     </message>
