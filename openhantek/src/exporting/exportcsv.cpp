@@ -14,7 +14,7 @@
 
 ExporterCSV::ExporterCSV() {}
 
-void ExporterCSV::create(ExporterRegistry *registry) { this->registry = registry; data.reset(); }
+void ExporterCSV::create(ExporterRegistry *newRegistry) { this->registry = newRegistry; data.reset(); }
 
 int ExporterCSV::faIcon() { return fa::filetexto; }
 
@@ -22,8 +22,8 @@ QString ExporterCSV::name() { return QCoreApplication::tr("Export CSV"); }
 
 ExporterInterface::Type ExporterCSV::type() { return Type::SnapshotExport; }
 
-bool ExporterCSV::samples(const std::shared_ptr<PPresult> data) {
-    this->data = std::move(data);
+bool ExporterCSV::samples(const std::shared_ptr<PPresult> newData) {
+    data = std::move(newData);
     return false;
 }
 

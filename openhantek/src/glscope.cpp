@@ -312,7 +312,7 @@ void GlScope::initializeGL() {
     shaderCompileSuccess = true;
 }
 
-void GlScope::showData(std::shared_ptr<PPresult> data) {
+void GlScope::showData(std::shared_ptr<PPresult> newData) {
     if (!shaderCompileSuccess) return;
     makeCurrent();
     // Remove too much entries
@@ -325,7 +325,7 @@ void GlScope::showData(std::shared_ptr<PPresult> data) {
     m_GraphHistory.splice(m_GraphHistory.begin(), m_GraphHistory, std::prev(m_GraphHistory.end()));
 
     // Add new entry
-    m_GraphHistory.front().writeData(data.get(), m_program.get(), vertexLocation);
+    m_GraphHistory.front().writeData(newData.get(), m_program.get(), vertexLocation);
     // doneCurrent();
 
     update();

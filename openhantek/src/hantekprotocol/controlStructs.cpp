@@ -69,18 +69,17 @@ void ControlSetCalFreq::setCalFreq(uint8_t val) { data()[0] = val; }
 
 ControlSetCoupling::ControlSetCoupling() 
     : ControlCommand(ControlCode::CONTROL_SETCOUPLING, 1)
-    , ch1Coupling(true)
-    , ch2Coupling(true) {
+    , ch1Coupling(0x01)
+    , ch2Coupling(0x10) {
     data()[0] = 0x11;
 }
 
 void ControlSetCoupling::setCoupling(ChannelID channel, bool dc) {
     if (channel == 0)
-        ch1Coupling = dc;
+        ch1Coupling = dc ? 0x01 : 0x00;
     else
-        ch2Coupling = dc;
-    data()[0] = 0xFF & ((ch2Coupling << 4) | ch1Coupling);
+        ch2Coupling = dc ? 0x10 : 0x00;
+    data()[0] = 0xFF & ( ch2Coupling | ch1Coupling );
 }
-
 
 }

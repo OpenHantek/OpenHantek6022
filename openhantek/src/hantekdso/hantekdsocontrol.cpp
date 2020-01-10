@@ -125,7 +125,7 @@ bool HantekDsoControl::isFastRate() const {
 
 unsigned HantekDsoControl::getRecordLength() const {
     unsigned rawsize = SAMPLESIZE_USED;
-    rawsize *= this->downsampling; // take more samples
+    rawsize *= this->downsamplingNumber; // take more samples
     rawsize = ( (rawsize + 1024) / 1024 + 2 ) * 1024; // adjust for skipping of minimal 2018 leading samples
     //printf( "getRecordLength: %d\n", rawsize );
     return rawsize;
@@ -214,7 +214,7 @@ void HantekDsoControl::convertRawDataToSamples(const std::vector<unsigned char> 
 
     unsigned sampleCount = (rawSampleCount > 1024) ? ((rawSampleCount - 1024)/1000 - 1)*1000 : rawSampleCount;
     unsigned skipSamples = rawSampleCount - sampleCount;
-    unsigned downsampling = sampleCount / SAMPLESIZE_USED;
+    unsigned rawDownsampling = sampleCount / SAMPLESIZE_USED;
     //printf("sampleCount %u, downsampling %u\n", sampleCount, downsampling );
 
     // Convert channel data
@@ -264,20 +264,20 @@ void HantekDsoControl::convertRawDataToSamples(const std::vector<unsigned char> 
         // Convert data from the oscilloscope and write it into the sample buffer
         unsigned rawBufferPosition = 0;
 
-        result.data[channel].resize( sampleCount / downsampling );
+        result.data[channel].resize( sampleCount / rawDownsampling );
         rawBufferPosition += skipSamples * activeChannels; // skip first unstable samples
         rawBufferPosition += channel;
         result.clipped &= ~(0x01 << channel); // clear clipping flag
         for ( unsigned index = 0; index < result.data[ channel ].size();
-            ++index, rawBufferPosition += activeChannels * downsampling ) { // advance either by one or two blocks
+            ++index, rawBufferPosition += activeChannels * rawDownsampling ) { // advance either by one or two blocks
             double sample = 0.0;
-            for ( unsigned iii = 0; iii < downsampling * activeChannels; iii += activeChannels ) {
+            for ( unsigned iii = 0; iii < rawDownsampling * activeChannels; iii += activeChannels ) {
                 int rawSample = rawData[ rawBufferPosition + iii ]; // range 0...255
                 if ( rawSample == 0x00 || rawSample == 0xFF ) // min or max -> clipped
                     result.clipped |= 0x01 << channel;
                 sample += double( rawSample ) - offsetError;
             }
-            sample /= downsampling;
+            sample /= rawDownsampling;
             result.data[ channel ][ index ] = sign * (sample / limit - offset) * gainCalibration * gainStep * probeAttn;
         }
     }

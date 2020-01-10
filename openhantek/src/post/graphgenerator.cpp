@@ -58,14 +58,14 @@ void GraphGenerator::process(PPresult *data) {
     //printf( "GraphGenerator::process()\n" );
     if (scope->horizontal.format == Dso::GraphFormat::TY) {
         ready = true;
-        generateGraphsTYvoltage(data, view);
+        generateGraphsTYvoltage(data);
         generateGraphsTYspectrum(data);
     } else
-        generateGraphsXY(data, scope);
+        generateGraphsXY(data);
 }
 
 
-void GraphGenerator::generateGraphsTYvoltage(PPresult *result, const DsoSettingsView *view) {
+void GraphGenerator::generateGraphsTYvoltage(PPresult *result) {
     //printf( "GraphGenerator::generateGraphsTYvoltage()\n" );
     result->vaChannelVoltage.resize(scope->voltage.size());
     for (ChannelID channel = 0; channel < scope->voltage.size(); ++channel) {
@@ -106,7 +106,6 @@ void GraphGenerator::generateGraphsTYvoltage(PPresult *result, const DsoSettings
         // https://ccrma.stanford.edu/~jos/resample/resample.pdf
         if ( view->interpolation == Dso::INTERPOLATION_SINC
             && dotsOnScreen < 100 ) { // valid for timebase <= 500 ns/div
-            const unsigned int sincSize = unsigned(sinc.size());
             // if untriggered (skipSamples == 0) then reserve margin for left side of sinc()
             const unsigned int skip = leftmostSample ? unsigned(leftmostSample) : sincWidth;
             // we would need sincWidth on left side, but we take what we get
@@ -181,7 +180,7 @@ void GraphGenerator::generateGraphsTYspectrum(PPresult *result) {
 }
 
 
-void GraphGenerator::generateGraphsXY( PPresult *result, const DsoSettingsScope *scope ) {
+void GraphGenerator::generateGraphsXY(PPresult *result) {
     result->vaChannelVoltage.resize( scope->voltage.size() );
 
     // Delete all spectrum graphs

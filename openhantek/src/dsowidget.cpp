@@ -717,42 +717,42 @@ void DsoWidget::updateZoom(bool enabled) {
 }
 
 /// \brief Prints analyzed data.
-void DsoWidget::showNew(std::shared_ptr<PPresult> data) {
-    mainScope->showData(data);
-    zoomScope->showData(data);
+void DsoWidget::showNew(std::shared_ptr<PPresult> analysedData) {
+    mainScope->showData(analysedData);
+    zoomScope->showData(analysedData);
 
     QPalette triggerLabelPalette = palette();
     triggerLabelPalette.setColor(QPalette::WindowText, Qt::black);
-    triggerLabelPalette.setColor(QPalette::Background, data->softwareTriggerTriggered ? Qt::green : Qt::red);
+    triggerLabelPalette.setColor(QPalette::Background, analysedData->softwareTriggerTriggered ? Qt::green : Qt::red);
     swTriggerStatus->setPalette(triggerLabelPalette);
     swTriggerStatus->setVisible(true);
     updateRecordLength(dotsOnScreen);
-    pulseWidth1 = data.get()->data( 0 )->pulseWidth1;
-    pulseWidth2 = data.get()->data( 0 )->pulseWidth2;
+    pulseWidth1 = analysedData.get()->data( 0 )->pulseWidth1;
+    pulseWidth2 = analysedData.get()->data( 0 )->pulseWidth2;
     updateTriggerDetails();
     for (ChannelID channel = 0; channel < scope->voltage.size(); ++channel) {
-        if (scope->voltage[channel].used && data.get()->data(channel)) {
+        if (scope->voltage[channel].used && analysedData.get()->data(channel)) {
             // Vpp Amplitude string representation (3 significant digits)
             measurementVppLabel[channel]->setText(
-                valueToString( data.get()->data(channel)->vpp, UNIT_VOLTS, 3 ) + "pp" );
+                valueToString( analysedData.get()->data(channel)->vpp, UNIT_VOLTS, 3 ) + "pp" );
             // RMS Amplitude string representation (3 significant digits)
             measurementRMSLabel[channel]->setText(
-                valueToString( data.get()->data(channel)->rms, UNIT_VOLTS, 3 ) + "rms" );
+                valueToString( analysedData.get()->data(channel)->rms, UNIT_VOLTS, 3 ) + "rms" );
             // DC Amplitude string representation (3 significant digits)
             measurementDCLabel[channel]->setText(
-                valueToString( data.get()->data(channel)->dc, UNIT_VOLTS, 3 ) + "=" );
+                valueToString( analysedData.get()->data(channel)->dc, UNIT_VOLTS, 3 ) + "=" );
             // AC Amplitude string representation (3 significant digits)
             measurementACLabel[channel]->setText(
-                valueToString( data.get()->data(channel)->ac, UNIT_VOLTS, 3 ) + "~" );
+                valueToString( analysedData.get()->data(channel)->ac, UNIT_VOLTS, 3 ) + "~" );
             // dB Amplitude string representation (3 significant digits)
             measurementdBLabel[channel]->setText(
-                valueToString( data.get()->data(channel)->dB, UNIT_DECIBEL, 3 ) );
+                valueToString( analysedData.get()->data(channel)->dB, UNIT_DECIBEL, 3 ) );
             // Frequency string representation (3 significant digits)
             measurementFrequencyLabel[channel]->setText(
-                valueToString( data.get()->data(channel)->frequency, UNIT_HERTZ, 4 ) );
+                valueToString( analysedData.get()->data(channel)->frequency, UNIT_HERTZ, 4 ) );
             // Highlight clipped channel
             QPalette validPalette;
-            if ( data.get()->data(channel)->valid ) { // normal display
+            if ( analysedData.get()->data(channel)->valid ) { // normal display
                 validPalette.setColor( QPalette::WindowText, view->screen.voltage[channel] );
                 validPalette.setColor( QPalette::Background, view->screen.background );
             } else { // warning

@@ -38,7 +38,7 @@ class DsoWidget : public QWidget {
     DsoWidget(DsoSettingsScope* scope, DsoSettingsView* view, const Dso::ControlSpecification* spec, QWidget *parent = nullptr, Qt::WindowFlags flags = nullptr);
 
     // Data arrived
-    void showNew(std::shared_ptr<PPresult> data);
+    void showNew(std::shared_ptr<PPresult> analysedData);
 
   protected:
     virtual void showEvent(QShowEvent *event);

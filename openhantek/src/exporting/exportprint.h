@@ -7,11 +7,11 @@ class ExporterPrint : public ExporterInterface
 {
 public:
     ExporterPrint();
-    void create(ExporterRegistry *registry) override;
+    void create(ExporterRegistry *newRegistry) override;
     int faIcon() override;
     QString name() override;
     Type type() override;
-    bool samples(const std::shared_ptr<PPresult>data) override;
+    bool samples(const std::shared_ptr<PPresult>newData) override;
     bool save() override;
     float progress() override;
 private:

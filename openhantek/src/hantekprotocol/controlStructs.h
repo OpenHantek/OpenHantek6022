@@ -78,7 +78,7 @@ struct ControlSetCalFreq : public ControlCommand {
 struct ControlSetCoupling : public ControlCommand {
     ControlSetCoupling();
     void setCoupling(ChannelID channel, bool dc);
-    bool ch1Coupling, ch2Coupling;
+    uint8_t ch1Coupling, ch2Coupling;
 };
 
 }

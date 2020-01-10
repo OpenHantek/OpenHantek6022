@@ -14,7 +14,7 @@
 
 ExporterPrint::ExporterPrint() {}
 
-void ExporterPrint::create(ExporterRegistry *registry) { this->registry = registry; data.reset(); }
+void ExporterPrint::create(ExporterRegistry *newRegistry) { registry = newRegistry; data.reset(); }
 
 int ExporterPrint::faIcon() { return fa::print; }
 
@@ -22,8 +22,8 @@ QString ExporterPrint::name() { return QCoreApplication::tr("Print"); }
 
 ExporterInterface::Type ExporterPrint::type() { return Type::SnapshotExport; }
 
-bool ExporterPrint::samples(const std::shared_ptr<PPresult> data) {
-    this->data = std::move(data);
+bool ExporterPrint::samples(const std::shared_ptr<PPresult> newData) {
+    data = std::move(newData);
     return false;
 }
 

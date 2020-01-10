@@ -24,10 +24,10 @@ class GraphGenerator : public QObject, public Processor {
 
   public:
     GraphGenerator(const DsoSettingsScope *scope, const DsoSettingsView *view);
-    void generateGraphsXY(PPresult *result, const DsoSettingsScope *scope);
+    void generateGraphsXY(PPresult *result);
 
   private:
-    void generateGraphsTYvoltage(PPresult *result, const DsoSettingsView *view);
+    void generateGraphsTYvoltage(PPresult *result);
     void generateGraphsTYspectrum(PPresult *result);
 
     bool ready = false;

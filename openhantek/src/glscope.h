@@ -40,7 +40,7 @@ class GlScope : public QOpenGLWidget {
      * Show new post processed data
      * @param data
      */
-    void showData(std::shared_ptr<PPresult> data);
+    void showData(std::shared_ptr<PPresult> newData);
     void updateCursor(unsigned index = 0);
     void cursorSelected(unsigned index) { selectedCursor = index; updateCursor(index); }
 

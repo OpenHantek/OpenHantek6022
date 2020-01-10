@@ -14,7 +14,7 @@
 
 ExporterImage::ExporterImage() {}
 
-void ExporterImage::create(ExporterRegistry *registry) { this->registry = registry; data.reset(); }
+void ExporterImage::create(ExporterRegistry *newRegistry) { this->registry = newRegistry; data.reset(); }
 
 int ExporterImage::faIcon() { return fa::image; }
 
@@ -22,8 +22,8 @@ QString ExporterImage::name() { return QCoreApplication::tr("Export Image/PDF");
 
 ExporterInterface::Type ExporterImage::type() { return Type::SnapshotExport; }
 
-bool ExporterImage::samples(const std::shared_ptr<PPresult> data) {
-    this->data = std::move(data);
+bool ExporterImage::samples(const std::shared_ptr<PPresult> newData) {
+    data = std::move(newData);
     return false;
 }
 
