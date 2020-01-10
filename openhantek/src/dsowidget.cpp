@@ -584,8 +584,8 @@ void DsoWidget::updateFrequencybase(double frequencybase) {
 
 /// \brief Updates the samplerate field after changing the samplerate.
 /// \param samplerate The samplerate set in the oscilloscope.
-void DsoWidget::updateSamplerate(double samplerate) {
-    this->samplerate = samplerate;
+void DsoWidget::updateSamplerate(double newSamplerate) {
+    samplerate = newSamplerate;
     dotsOnScreen = unsigned( samplerate * timebase * DIVS_TIME + 0.99 );
     //printf( "DsoWidget::updateSamplerate( %g ) -> %d\n", samplerate, dotsOnScreen );
     settingsSamplerateLabel->setText(valueToString(samplerate, UNIT_SAMPLES, -1) + tr("/s"));
@@ -593,8 +593,8 @@ void DsoWidget::updateSamplerate(double samplerate) {
 
 /// \brief Handles timebaseChanged signal from the horizontal dock.
 /// \param timebase The timebase used for displaying the trace.
-void DsoWidget::updateTimebase(double timebase) {
-    this->timebase = timebase;
+void DsoWidget::updateTimebase(double newTimebase) {
+    timebase = newTimebase;
     dotsOnScreen = unsigned( samplerate * timebase * DIVS_TIME + 0.99 );
     //printf( "DsoWidget::updateTimebase( %g ) -> %d\n", timebase, dotsOnScreen );
     settingsTimebaseLabel->setText(valueToString(timebase, UNIT_SECONDS, -1) + tr("/div"));

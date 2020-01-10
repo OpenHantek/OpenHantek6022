@@ -86,15 +86,15 @@ void SiSpinBox::fixup(QString &input) const {
 }
 
 /// \brief Increase/decrease the values in fixed steps.
-/// \param steps The number of steps, positive means increase.
-void SiSpinBox::stepBy(int steps) {
+/// \param doStep The number of steps, positive means increase.
+void SiSpinBox::stepBy(int doStep) {
     double stepsSpan = this->steps.last() / this->steps.first();
     int stepsCount = this->steps.size() - 1;
     double value = 0;
 
-    // Skip if we are already at a limit or if steps is null
-    if (steps == 0 || (steps < 0 && this->value() <= this->minimum()) ||
-        (steps > 0 && this->value() >= this->maximum())) {
+    // Skip if we are already at a limit or if doStep is null
+    if (doStep == 0 || (doStep < 0 && this->value() <= this->minimum()) ||
+        (doStep > 0 && this->value() >= this->maximum())) {
         return;
     }
 
@@ -115,11 +115,11 @@ void SiSpinBox::stepBy(int steps) {
         this->stepId = stepsFully * stepsCount + remainingSteps;
         // We need to do one step less down if we are inbetween two of them since
         // our step is lower than the value
-        if (steps < 0 && this->steps[remainingSteps] < stepMultiple) ++this->stepId;
+        if (doStep < 0 && this->steps[remainingSteps] < stepMultiple) ++this->stepId;
     }
 
-    int subStep = steps / abs(steps);
-    for (int i = 0; i != steps; i += subStep) {
+    int subStep = doStep / abs(doStep);
+    for (int i = 0; i != doStep; i += subStep) {
         this->stepId += subStep;
         if (!this->mode) {
             int stepsId = this->stepId % stepsCount;
@@ -137,12 +137,12 @@ void SiSpinBox::stepBy(int steps) {
 }
 
 /// \brief Set the unit for this spin box.
-/// \param unit The unit shown for the value in the spin box.
+/// \param newUnit The unit shown for the value in the spin box.
 /// \return true on success, false on invalid unit.
-bool SiSpinBox::setUnit(Unit unit) {
-    if (unit >= UNIT_COUNT) return false;
+bool SiSpinBox::setUnit(Unit newUnit) {
+    if (newUnit >= UNIT_COUNT) return false;
 
-    this->unit = unit;
+    this->unit = newUnit;
     return true;
 }
 
@@ -151,14 +151,14 @@ bool SiSpinBox::setUnit(Unit unit) {
 void SiSpinBox::setUnitPostfix(const QString &postfix) { this->unitPostfix = postfix; }
 
 /// \brief Set the steps the spin box will take.
-/// \param steps The steps, will be extended with the ratio from the start after
+/// \param newSteps The steps, will be extended with the ratio from the start after
 /// the last element.
-void SiSpinBox::setSteps(const QList<double> &steps) { this->steps = steps; }
+void SiSpinBox::setSteps(const QList<double> &newSteps) { this->steps = newSteps; }
 
 /// \brief Set the mode.
 /// \param mode The mode, the value 0 will have fixed interval, otherwise the
 /// value will have interval within steps itself.
-void SiSpinBox::setMode(const int mode) { this->mode = mode; }
+void SiSpinBox::setMode(const int newMode) { this->mode = newMode; }
 
 /// \brief Generic initializations.
 void SiSpinBox::init() {

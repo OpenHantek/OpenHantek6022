@@ -115,7 +115,7 @@ class HantekDsoControl : public QObject {
   private:
     bool isFastRate() const;
     unsigned getRecordLength() const;
-    void setDownsampling( unsigned downsampling ) { this->downsampling = downsampling; }
+    void setDownsampling( unsigned downsampling_ ) { downsampling = downsampling_; }
 
     Dso::ErrorCode retrieveChannelLevelData();
     /// Get the number of samples that are expected returned by the scope.

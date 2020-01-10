@@ -164,7 +164,7 @@ class USBDevice : public QObject {
     libusb_device_handle *handle = nullptr;
     unsigned findIteration;
     const UniqueUSBid uniqueUSBdeviceID;
-    int interface;
+    int nInterface;
     unsigned outPacketLength; ///< Packet length for the OUT endpoint
     unsigned inPacketLength;  ///< Packet length for the IN endpoint
 

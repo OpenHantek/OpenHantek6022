@@ -244,8 +244,8 @@ bool LegacyExportDrawer::exportSamples(const PPresult *result, QPaintDevice* pai
         }
 
         // Set DIVS_TIME x DIVS_VOLTAGE matrix for oscillograph
-        painter.setMatrix(QMatrix((paintDevice->width() - 1) / DIVS_TIME, 0, 0, -(scopeHeight - 1) / DIVS_VOLTAGE,
-                                  double( paintDevice->width() - 1 ) / 2, (scopeHeight - 1) / 2 + lineHeight * 1.5),
+        painter.setTransform( QTransform( QMatrix( (paintDevice->width() - 1) / DIVS_TIME, 0, 0, -(scopeHeight - 1) / DIVS_VOLTAGE,
+                                  double( paintDevice->width() - 1 ) / 2, (scopeHeight - 1) / 2 + lineHeight * 1.5 ) ),
                           false);
 
         // Draw the graphs
@@ -392,11 +392,11 @@ bool LegacyExportDrawer::exportSamples(const PPresult *result, QPaintDevice* pai
 
             // Set DIVS_TIME / zoomFactor x DIVS_VOLTAGE matrix for zoomed
             // oscillograph
-            painter.setMatrix(QMatrix((paintDevice->width() - 1) / DIVS_TIME * zoomFactor, 0, 0,
+            painter.setTransform( QTransform( QMatrix( (paintDevice->width() - 1) / DIVS_TIME * zoomFactor, 0, 0,
                                       -(scopeHeight - 1) / DIVS_VOLTAGE,
                                       (double( paintDevice->width() ) - 1) / 2 -
                                           zoomOffset * zoomFactor * (paintDevice->width() - 1) / DIVS_TIME,
-                                      (scopeHeight - 1) * 1.5 + lineHeight * 4),
+                                      (scopeHeight - 1) * 1.5 + lineHeight * 4 ) ),
                               false);
         }
     } // dataanalyser mutex release
@@ -414,9 +414,9 @@ void LegacyExportDrawer::drawGrids(QPainter &painter, const DsoSettingsColorValu
     painter.setRenderHint(QPainter::Antialiasing, false);
     for (int zoomed = 0; zoomed < (zoom ? 2 : 1); ++zoomed) {
         // Set DIVS_TIME x DIVS_VOLTAGE matrix for oscillograph
-        painter.setMatrix(QMatrix((scopeWidth - 1) / DIVS_TIME, 0, 0, -(scopeHeight - 1) / DIVS_VOLTAGE,
+        painter.setTransform( QTransform( QMatrix( (scopeWidth - 1) / DIVS_TIME, 0, 0, -(scopeHeight - 1) / DIVS_VOLTAGE,
                                   double(scopeWidth - 1) / 2,
-                                  (scopeHeight - 1) * (zoomed + 0.5) + lineHeight * 1.5 + lineHeight * 2.5 * zoomed),
+                                  (scopeHeight - 1) * (zoomed + 0.5) + lineHeight * 1.5 + lineHeight * 2.5 * zoomed) ),
                           false);
 
         // Grid lines

@@ -364,17 +364,17 @@ void LevelSlider::paintEvent(QPaintEvent *event) {
         alignment = Qt::AlignRight | Qt::AlignBottom;
     }
 
-    QList<LevelSliderParameters *>::iterator slider = this->slider.end();
-    while (slider != this->slider.begin()) {
-        --slider;
+    QList<LevelSliderParameters *>::iterator sliderIt = this->slider.end();
+    while (sliderIt != this->slider.begin()) {
+        --sliderIt;
 
-        if (!(*slider)->visible) continue;
+        if (!(*sliderIt)->visible) continue;
 
-        painter.setPen((*slider)->color);
+        painter.setPen((*sliderIt)->color);
 
-        if ((*slider)->text.isEmpty()) {
+        if ((*sliderIt)->text.isEmpty()) {
             QVector<QPoint> needlePoints;
-            QRect& sRect = (*slider)->rect;
+            QRect& sRect = (*sliderIt)->rect;
             const int W = this->sliderWidth;
 
             switch (this->_direction) {
@@ -410,35 +410,35 @@ void LevelSlider::paintEvent(QPaintEvent *event) {
                 break;
             }
 
-            painter.setBrush(QBrush((*slider)->color, isEnabled() ? Qt::SolidPattern : Qt::NoBrush));
+            painter.setBrush(QBrush((*sliderIt)->color, isEnabled() ? Qt::SolidPattern : Qt::NoBrush));
             painter.drawPolygon(QPolygon(needlePoints));
             painter.setBrush(Qt::NoBrush);
         } else {
             // Get rect for text and draw needle
-            QRect textRect = (*slider)->rect;
+            QRect textRect = (*sliderIt)->rect;
             if (this->_direction == Qt::UpArrow || this->_direction == Qt::DownArrow) {
                 textRect.setRight(textRect.right() - 1);
                 if (this->_direction == Qt::UpArrow) {
                     textRect.setTop(textRect.top() + 1);
-                    painter.drawLine((*slider)->rect.right(), 0, (*slider)->rect.right(), 7);
+                    painter.drawLine((*sliderIt)->rect.right(), 0, (*sliderIt)->rect.right(), 7);
                 } else {
                     textRect.setBottom(textRect.bottom() - 1);
-                    painter.drawLine((*slider)->rect.right(), this->sliderWidth - 8, (*slider)->rect.right(),
+                    painter.drawLine((*sliderIt)->rect.right(), this->sliderWidth - 8, (*sliderIt)->rect.right(),
                                      this->sliderWidth - 1);
                 }
             } else {
                 textRect.setBottom(textRect.bottom() - 1);
                 if (this->_direction == Qt::LeftArrow) {
                     textRect.setLeft(textRect.left() + 1);
-                    painter.drawLine(0, (*slider)->rect.bottom(), 7, (*slider)->rect.bottom());
+                    painter.drawLine(0, (*sliderIt)->rect.bottom(), 7, (*sliderIt)->rect.bottom());
                 } else {
                     textRect.setRight(textRect.right() - 1);
-                    painter.drawLine(this->sliderWidth - 8, (*slider)->rect.bottom(), this->sliderWidth - 1,
-                                     (*slider)->rect.bottom());
+                    painter.drawLine(this->sliderWidth - 8, (*sliderIt)->rect.bottom(), this->sliderWidth - 1,
+                                     (*sliderIt)->rect.bottom());
                 }
             }
             // Draw text
-            painter.drawText(textRect, int(alignment), (*slider)->text);
+            painter.drawText(textRect, int(alignment), (*sliderIt)->text);
         }
     }
 
@@ -533,26 +533,28 @@ QRect LevelSlider::calculateRect(int sliderId) {
 /// \return The calculated width of the slider.
 int LevelSlider::calculateWidth() {
     // At least 12 px for the needles
-    this->sliderWidth = 12;
+    sliderWidth = 12;
 
     // Is it a vertical slider?
     if (this->_direction == Qt::RightArrow || this->_direction == Qt::LeftArrow) {
-        for (QList<LevelSliderParameters *>::iterator slider = this->slider.begin(); slider != this->slider.end();
-             ++slider) {
-            int sliderWidth = this->fontMetrics().size(0, (*slider)->text).width();
-            if (sliderWidth > this->sliderWidth) this->sliderWidth = sliderWidth;
+        for (QList<LevelSliderParameters *>::iterator sliderIt = slider.begin(); sliderIt != slider.end();
+             ++sliderIt) {
+            int newSliderWidth = this->fontMetrics().size(0, (*sliderIt)->text).width();
+            if ( newSliderWidth > sliderWidth )
+                sliderWidth = newSliderWidth;
         }
     }
     // Or a horizontal slider?
     else {
-        for (QList<LevelSliderParameters *>::iterator slider = this->slider.begin(); slider != this->slider.end();
-             ++slider) {
-            int sliderWidth = this->fontMetrics().size(0, (*slider)->text).height();
-            if (sliderWidth > this->sliderWidth) this->sliderWidth = sliderWidth;
+        for (QList<LevelSliderParameters *>::iterator sliderIt = slider.begin(); sliderIt != slider.end();
+             ++sliderIt) {
+            int newSliderWidth = this->fontMetrics().size(0, (*sliderIt)->text).height();
+            if ( newSliderWidth > sliderWidth )
+                sliderWidth = newSliderWidth;
         }
     }
 
-    return this->sliderWidth;
+    return sliderWidth;
 }
 
 /// \brief Fix the value if it's outside the limits.

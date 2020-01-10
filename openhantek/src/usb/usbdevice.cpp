@@ -103,11 +103,11 @@ bool USBDevice::connectDevice(QString &errorMessage) {
     libusb_config_descriptor *configDescriptor;
     libusb_get_config_descriptor(device, 0, &configDescriptor);
     for (int interfaceIndex = 0; interfaceIndex < int(configDescriptor->bNumInterfaces); ++interfaceIndex) {
-        const libusb_interface *interface = &configDescriptor->interface[interfaceIndex];
-        if (interface->num_altsetting < 1)
+        const libusb_interface *pInterface = &configDescriptor->interface[interfaceIndex];
+        if (pInterface->num_altsetting < 1)
             continue;
 
-        const libusb_interface_descriptor *interfaceDescriptor = &interface->altsetting[0];
+        const libusb_interface_descriptor *interfaceDescriptor = &pInterface->altsetting[0];
         if ( interfaceDescriptor->bInterfaceClass == LIBUSB_CLASS_VENDOR_SPEC &&
             interfaceDescriptor->bInterfaceSubClass == 0 && interfaceDescriptor->bInterfaceProtocol == 0 ) {
             errorCode = claimInterface( interfaceDescriptor );
@@ -144,7 +144,7 @@ int USBDevice::claimInterface( const libusb_interface_descriptor *interfaceDescr
     if (errorCode < 0)
         return errorCode;
 
-    interface = interfaceDescriptor->bInterfaceNumber;
+    nInterface = interfaceDescriptor->bInterfaceNumber;
 
     // Check the maximum endpoint packet size
     const libusb_endpoint_descriptor *endpointDescriptor;
@@ -168,8 +168,8 @@ void USBDevice::disconnectFromDevice() {
 
     if (this->handle) {
         // Release claimed interface
-        if (this->interface != -1) libusb_release_interface(this->handle, this->interface);
-        this->interface = -1;
+        if (nInterface != -1) libusb_release_interface(this->handle, nInterface);
+        nInterface = -1;
 
         // Close device handle
         libusb_close(this->handle);
