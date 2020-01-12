@@ -11,8 +11,8 @@ Graph::Graph() : buffer(QOpenGLBuffer::VertexBuffer) {
 void Graph::writeData(PPresult *data, QOpenGLShaderProgram *program, int vertexLocation) {
     // Determine memory
     int neededMemory = 0;
-    for (ChannelGraph &cg : data->vaChannelVoltage) neededMemory += cg.size() * sizeof(QVector3D);
-    for (ChannelGraph &cg : data->vaChannelSpectrum) neededMemory += cg.size() * sizeof(QVector3D);
+    for (ChannelGraph &cg : data->vaChannelVoltage) neededMemory += int( cg.size() * sizeof(QVector3D) );
+    for (ChannelGraph &cg : data->vaChannelSpectrum) neededMemory += int( cg.size() * sizeof(QVector3D) );
 
     buffer.bind();
     program->bind();

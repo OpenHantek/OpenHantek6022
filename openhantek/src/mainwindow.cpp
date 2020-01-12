@@ -328,8 +328,8 @@ MainWindow::~MainWindow() {
     delete ui;
 }
 
-void MainWindow::showNewData(std::shared_ptr<PPresult> data) {
-    dsoWidget->showNew(data);
+void MainWindow::showNewData(std::shared_ptr<PPresult> newData) {
+    dsoWidget->showNew( newData );
 }
 
 void MainWindow::exporterStatusChanged(const QString &exporterName, const QString &status) {

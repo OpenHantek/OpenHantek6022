@@ -527,18 +527,18 @@
         <location filename="../src/exporting/legacyexportdrawer.cpp" line="83"/>
         <location filename="../src/exporting/legacyexportdrawer.cpp" line="118"/>
         <location filename="../src/exporting/legacyexportdrawer.cpp" line="128"/>
-        <location filename="../src/exporting/legacyexportdrawer.cpp" line="215"/>
-        <location filename="../src/exporting/legacyexportdrawer.cpp" line="219"/>
+        <location filename="../src/exporting/legacyexportdrawer.cpp" line="216"/>
+        <location filename="../src/exporting/legacyexportdrawer.cpp" line="220"/>
         <source>/div</source>
         <translation>/div</translation>
     </message>
     <message>
-        <location filename="../src/exporting/legacyexportdrawer.cpp" line="199"/>
+        <location filename="../src/exporting/legacyexportdrawer.cpp" line="200"/>
         <source>Zoom x%L1</source>
         <translation>Zoom x%L1</translation>
     </message>
     <message>
-        <location filename="../src/exporting/legacyexportdrawer.cpp" line="226"/>
+        <location filename="../src/exporting/legacyexportdrawer.cpp" line="227"/>
         <source>Marker 1/2</source>
         <translation>Construtor 1/2</translation>
     </message>

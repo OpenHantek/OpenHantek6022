@@ -30,7 +30,7 @@ class MainWindow : public QMainWindow {
                         QWidget *parent = nullptr);
     ~MainWindow() override;
   public slots:
-    void showNewData(std::shared_ptr<PPresult> data);
+    void showNewData(std::shared_ptr<PPresult> newData);
     void exporterStatusChanged(const QString &exporterName, const QString &status);
     void exporterProgressChanged();
 

@@ -243,16 +243,26 @@ bool LegacyExportDrawer::exportSamples(const PPresult *result, QPaintDevice* pai
                              "Δf: " + valueToString( freq, UNIT_HERTZ, 4 ), QTextOption(Qt::AlignRight));
         }
 
-        // Set DIVS_TIME x DIVS_VOLTAGE matrix for oscillograph
-        painter.setTransform( QTransform( QMatrix( (paintDevice->width() - 1) / DIVS_TIME, 0, 0, -(scopeHeight - 1) / DIVS_VOLTAGE,
-                                  double( paintDevice->width() - 1 ) / 2, (scopeHeight - 1) / 2 + lineHeight * 1.5 ) ),
-                          false);
 
         // Draw the graphs
         painter.setRenderHint(QPainter::Antialiasing);
         painter.setBrush(Qt::NoBrush);
 
         for (int zoomed = 0; zoomed < (settings->view.zoom ? 2 : 1); ++zoomed) {
+            double m11 = paintDevice->width() / DIVS_TIME;
+            double m22 = -scopeHeight / DIVS_VOLTAGE;
+            double dx = double( paintDevice->width() ) / 2;
+            double dy = scopeHeight / 2 + lineHeight * 1.5;
+            if ( zoomed ) { // zoom (m11) and shift in x direction (dx), move down (dy)
+                m11 = paintDevice->width() / DIVS_TIME * zoomFactor;
+                dx = double( paintDevice->width() ) / 2
+                   + ( 0.5 - zoomOffset / DIVS_TIME ) * zoomFactor * paintDevice->width();
+                dy = scopeHeight * 1.5 + lineHeight * 4;
+            }
+            // Set DIVS_TIME x DIVS_VOLTAGE matrix for (non-zoomed / zoomed) oscillograph
+            // false: don't combine with current matrix -> replace
+            painter.setTransform( QTransform( QMatrix ( m11, 0, 0, m22, dx, dy ) ), false );
+
             switch (settings->scope.horizontal.format) {
             case Dso::GraphFormat::TY:
                 // Add graphs for channels
@@ -269,33 +279,27 @@ bool LegacyExportDrawer::exportSamples(const PPresult *result, QPaintDevice* pai
                         // ... also if trig pos or time/div was changed on a "frozen" or single trace
                         int preTrigSamples = int( settings->scope.trigger.offset * dotsOnScreen );
                         int leftmostSample = int( result->triggeredPosition ) - preTrigSamples; // 1st sample to show
+                        int rightmostSample = leftmostSample + dotsOnScreen;
                         int leftmostPosition = 0; // start position on display
                         if ( leftmostSample < 0 ) { // trig pos or time/div was increased
                             leftmostPosition = -leftmostSample; // trace can't start on left margin
                             leftmostSample = 0; // show as much as we have on left side
                         }
-                        double centerPosition, centerOffset;
-                        if (zoomed) {
-                            centerPosition = (zoomOffset + DIVS_TIME / 2) / horizontalFactor;
-                            centerOffset = DIVS_TIME / horizontalFactor / zoomFactor / 2;
-                        } else {
-                            centerPosition = DIVS_TIME / 2 / horizontalFactor;
-                            centerOffset = DIVS_TIME / horizontalFactor / 2;
-                        }
-                        unsigned int firstPosition = unsigned( qMax( int( centerPosition - centerOffset ), 0 ) );
-                        unsigned int lastPosition = unsigned( qMin( int( centerPosition + centerOffset ),
-                                                              int( result->data(channel)->voltage.sample.size() ) - 1 ) );
+                        int lastPosition = qMin( int( DIVS_TIME / horizontalFactor ),
+                                                 int( result->data(channel)->voltage.sample.size() ) );
 
                         // Draw graph
-                        QPointF *graph = new QPointF[ lastPosition - firstPosition + 1 ];
+                        QPointF *graph = new QPointF[ result->data(channel)->voltage.sample.size() + 1 ];
                         // skip leading samples to show the correct trigger position
                         auto sampleIterator = result->data(channel)->voltage.sample.cbegin() + leftmostSample; // -> visible samples
+                        auto displayEnd = result->data(channel)->voltage.sample.cbegin() + rightmostSample;
                         auto sampleEnd = result->data(channel)->voltage.sample.cend();
                         int pointCount = 0;
                         double gain = settings->scope.gain(channel);
                         double offset = settings->scope.voltage[unsigned(channel)].offset;
                         for ( int position = leftmostPosition;
-                              position < dotsOnScreen && sampleIterator < sampleEnd;
+                              position < dotsOnScreen && position < lastPosition
+                              && sampleIterator < sampleEnd && sampleIterator < displayEnd;
                               ++position, ++sampleIterator) {
                             graph[ position - leftmostPosition ]
                                 = QPointF( position * horizontalFactor - DIVS_TIME / 2,
@@ -317,30 +321,21 @@ bool LegacyExportDrawer::exportSamples(const PPresult *result, QPaintDevice* pai
                         double horizontalFactor =
                             result->data(channel)->spectrum.interval / settings->scope.horizontal.frequencybase;
                         // How many samples are visible?
-                        double centerPosition, centerOffset;
-                        if (zoomed) {
-                            centerPosition = (zoomOffset + DIVS_TIME / 2) / horizontalFactor;
-                            centerOffset = DIVS_TIME / horizontalFactor / zoomFactor / 2;
-                        } else {
-                            centerPosition = DIVS_TIME / 2 / horizontalFactor;
-                            centerOffset = DIVS_TIME / horizontalFactor / 2;
-                        }
-                        unsigned int firstPosition = unsigned( qMax( int( centerPosition - centerOffset ), 0 ) );
-                        unsigned int lastPosition = unsigned( qMin( int(centerPosition + centerOffset),
+                        unsigned int lastPosition = unsigned( qMin( int( DIVS_TIME / horizontalFactor ),
                                                               int(result->data(channel)->spectrum.sample.size() ) - 1 ) );
 
                         // Draw graph
                         double magnitude = settings->scope.spectrum[unsigned(channel)].magnitude;
                         double offset = settings->scope.spectrum[unsigned(channel)].offset;
-                        QPointF *graph = new QPointF[ lastPosition - firstPosition + 1 ];
+                        QPointF *graph = new QPointF[ result->data(channel)->spectrum.sample.size() + 1 ];
 
-                        for (unsigned int position = firstPosition; position <= lastPosition; ++position) {
-                            graph[position - firstPosition] =
+                        for (unsigned int position = 0; position <= lastPosition; ++position) {
+                            graph[ position ] =
                                 QPointF(position * horizontalFactor - DIVS_TIME / 2,
                                         result->data(channel)->spectrum.sample[position] / magnitude + offset
                                        );
                         }
-                        painter.drawPolyline( graph, int( lastPosition - firstPosition ) + 1 );
+                        painter.drawPolyline( graph, int ( lastPosition + 1 ) );
                         delete[] graph;
                     }
                 }
@@ -351,15 +346,16 @@ bool LegacyExportDrawer::exportSamples(const PPresult *result, QPaintDevice* pai
                      && settings->scope.voltage[ 1 ].used && result->data( 1 ) ) {
                     const double xGain = settings->scope.gain( 0 );
                     const double yGain = settings->scope.gain( 1 );
-                    const double xOffset = ( settings->scope.trigger.offset - 0.5 ) * DIVS_VOLTAGE;
+                    const double xOffset = ( settings->scope.trigger.offset - 0.5 ) * DIVS_TIME;
                     const double yOffset = settings->scope.voltage[ 1 ].offset;
                     painter.setPen( QPen( colorValues->voltage[ 1 ], 0) );
-                    const unsigned int size = unsigned( std::min( int( result->data( 0 )->voltage.sample.size() ),
+                    const unsigned size = unsigned( std::min( int( result->data( 0 )->voltage.sample.size() ),
                                                                   int( result->data( 1 )->voltage.sample.size() )
-                                                      ) );
+                                                             )
+                                                  );
                     // Draw graph
                     QPointF *graph = new QPointF[ size ];
-                    for (unsigned int index = 0; index < size; ++index ) {
+                    for ( unsigned int index = 0; index < size; ++index ) {
                         graph[ index ] =
                             QPointF( result->data( 0 )->voltage.sample[ index ] / xGain + xOffset,
                                      result->data( 1 )->voltage.sample[ index ] / yGain + yOffset
@@ -368,9 +364,6 @@ bool LegacyExportDrawer::exportSamples(const PPresult *result, QPaintDevice* pai
                     painter.drawPolyline( graph, int( size ) );
                     delete[] graph;
                 }
-                break;
-
-            default:
                 break;
             }
 
@@ -389,15 +382,6 @@ bool LegacyExportDrawer::exportSamples(const PPresult *result, QPaintDevice* pai
                 painter.drawLine( QLineF( trig - tick, top + 4 * tick, trig, top ) );
                 painter.drawLine( QLineF( trig + tick, top + 4 * tick, trig, top ) );
             }
-
-            // Set DIVS_TIME / zoomFactor x DIVS_VOLTAGE matrix for zoomed
-            // oscillograph
-            painter.setTransform( QTransform( QMatrix( (paintDevice->width() - 1) / DIVS_TIME * zoomFactor, 0, 0,
-                                      -(scopeHeight - 1) / DIVS_VOLTAGE,
-                                      (double( paintDevice->width() ) - 1) / 2 -
-                                          zoomOffset * zoomFactor * (paintDevice->width() - 1) / DIVS_TIME,
-                                      (scopeHeight - 1) * 1.5 + lineHeight * 4 ) ),
-                              false);
         }
     } // dataanalyser mutex release
 
