@@ -453,8 +453,8 @@
 <context>
     <name>HantekDsoControl</name>
     <message>
-        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="140"/>
-        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="141"/>
+        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="121"/>
+        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="122"/>
         <source>Couldn&apos;t get channel level data from oscilloscope</source>
         <translation>Não foi possível obter dados do canal do osciloscópio</translation>
     </message>
@@ -527,18 +527,18 @@
         <location filename="../src/exporting/legacyexportdrawer.cpp" line="83"/>
         <location filename="../src/exporting/legacyexportdrawer.cpp" line="118"/>
         <location filename="../src/exporting/legacyexportdrawer.cpp" line="128"/>
-        <location filename="../src/exporting/legacyexportdrawer.cpp" line="216"/>
-        <location filename="../src/exporting/legacyexportdrawer.cpp" line="220"/>
+        <location filename="../src/exporting/legacyexportdrawer.cpp" line="215"/>
+        <location filename="../src/exporting/legacyexportdrawer.cpp" line="219"/>
         <source>/div</source>
         <translation>/div</translation>
     </message>
     <message>
-        <location filename="../src/exporting/legacyexportdrawer.cpp" line="200"/>
+        <location filename="../src/exporting/legacyexportdrawer.cpp" line="199"/>
         <source>Zoom x%L1</source>
         <translation>Zoom x%L1</translation>
     </message>
     <message>
-        <location filename="../src/exporting/legacyexportdrawer.cpp" line="227"/>
+        <location filename="../src/exporting/legacyexportdrawer.cpp" line="226"/>
         <source>Marker 1/2</source>
         <translation>Construtor 1/2</translation>
     </message>

@@ -99,25 +99,6 @@ double HantekDsoControl::getMaxSamplerate() const {
 #endif
 
 
-bool HantekDsoControl::isSampling() const { return sampling; }
-
-
-/// \brief Updates the interval of the periodic thread timer.
-void HantekDsoControl::updateInterval() {
-    // Check the current oscilloscope state everytime 25% of the time
-    //  the buffer should be refilled (-> cycleTime in ms)
-    cycleTime = int( SAMPLESIZE_USED  * 250.0 / controlsettings.samplerate.current );
-    // Slower update reduces CPU load but it worsens the triggering of rare events
-#ifdef __arm__
-    // RPi: Not more often than every 50 ms but at least once every 500 ms
-    cycleTime = qBound(50, cycleTime, 500);
-#else
-    // Not more often than every 10 ms but at least once every 100 ms
-    cycleTime = qBound(10, cycleTime, 100);
-#endif
-}
-
-
 bool HantekDsoControl::isFastRate() const {
     return controlsettings.voltage[0].used && !controlsettings.voltage[1].used;
 }
@@ -776,8 +757,28 @@ void HantekDsoControl::addCommand(ControlCommand *newCommand, bool pending) {
 const ControlCommand *HantekDsoControl::getCommand(ControlCode code) const { return control[ uint8_t( code ) ]; }
 
 
+bool HantekDsoControl::isSampling() const { return sampling; }
+
+
+/// \brief Updates the interval of the periodic thread timer.
+void HantekDsoControl::updateInterval() {
+    // Check the current oscilloscope state everytime 25% of the time
+    //  the buffer should be refilled (-> cycleTime in ms)
+    cycleTime = int( SAMPLESIZE_USED  * 250.0 / controlsettings.samplerate.current );
+    // Slower update reduces CPU load but it worsens the triggering of rare events
+#ifdef __arm__
+    // RPi: Not more often than every 50 ms but at least once every 500 ms
+    cycleTime = qBound(50, cycleTime, 500);
+#else
+    // Not more often than every 1 ms but at least once every 100 ms
+    cycleTime = qBound(1, cycleTime, 100);
+#endif
+}
+
+
 void HantekDsoControl::run() {
     int errorCode = 0;
+    static int delayDisplay = 0;
     // Send all pending control commands
     ControlCommand *controlCommand = firstControlCommand;
     while (controlCommand) {
@@ -804,29 +805,34 @@ void HantekDsoControl::run() {
     // State machine for the device communication
     {
         std::vector<unsigned char> rawData = this->getSamples(expectedSampleCount);
-        if (this->_samplingStarted) { // feed new samples to postprocess and display
+        if ( samplingStarted ) { // feed new samples to postprocess and display
             convertRawDataToSamples(rawData);
             softwareTrigger(); // detect trigger point of latest samples
             triggering();      // present either free running or last triggered trace
         } // else don't update, reuse old values
-        emit samplesAvailable(&result); // let display run always to allow user interaction
+        if ( ( result.liveTrigger && controlsettings.trigger.mode != Dso::TriggerMode::SINGLE
+             && isSampling() ) || ( delayDisplay += cycleTime ) > 20 ) {
+            delayDisplay = 0;
+            emit samplesAvailable(&result); // let display run always to allow user interaction
+            printf("cycleTime: %d\n", cycleTime);
+        }
     }
 
     // Stop sampling if we're in single trigger mode and have a triggered trace (txh No13)
-    if ( controlsettings.trigger.mode == Dso::TriggerMode::SINGLE && this->_samplingStarted && triggeredPositionRaw > 0 ) {
-        this->enableSampling(false);
+    if ( controlsettings.trigger.mode == Dso::TriggerMode::SINGLE && samplingStarted && triggeredPositionRaw > 0 ) {
+        enableSampling(false);
     }
 
     // Sampling completed, restart it when necessary
-    this->_samplingStarted = false;
+    samplingStarted = false;
 
-    if (this->sampling) {
+    if ( sampling ) {
         // Sampling hasn't started, update the expected sample count
         expectedSampleCount = this->getSampleCount();
         timestampDebug("Starting to capture");
-        this->_samplingStarted = true;
+        samplingStarted = true;
     }
-    this->updateInterval();
+    updateInterval();
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 4, 0))
     QTimer::singleShot(cycleTime, this, &HantekDsoControl::run);
 #else
