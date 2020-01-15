@@ -10,6 +10,7 @@
 #include "dsosamples.h"
 #include "errorcodes.h"
 #include "states.h"
+#include "viewconstants.h"
 #include "utils/printutils.h"
 
 #include "hantekprotocol/controlStructs.h"
@@ -43,55 +44,20 @@ class HantekDsoControl : public QObject {
     /// \brief Cleans up
     ~HantekDsoControl();
 
-    /// Call this to start the processing. This method will call itself
-    /// periodically from there on.
-    /// It is wise to move this class object to an own thread and call run from
-    /// there.
+    /// Call this to start the processing.
+    /// This method will call itself periodically from there on.
+    /// Move this class object to an own thread and call run from there.
     void run();
 
-#if 0
-    /// \brief Gets the physical channel count for this oscilloscope.
-    /// \return The number of physical channels.
-    unsigned getChannelCount() const;
+    double getSamplerate() const { return controlsettings.samplerate.current; }
 
-    /// Return the read-only device control settings. Use the set- Methods to change
-    /// device settings.
-    const Dso::ControlSettings *getDeviceSettings() const;
+    unsigned getSamplesize() const { return SAMPLESIZE_USED; }
 
-    /// \brief Get available record lengths for this oscilloscope.
-    /// \return The number of physical channels, empty list for continuous.
-    const std::vector<unsigned> &getAvailableRecordLengths() const;
-
-    /// \brief Get minimum samplerate for this oscilloscope.
-    /// \return The minimum samplerate for the current configuration in S/s.
-    double getMinSamplerate() const;
-
-    /// \brief Get maximum samplerate for this oscilloscope.
-    /// \return The maximum samplerate for the current configuration in S/s.
-    double getMaxSamplerate() const;
-#endif
-
-    double getSamplerate() const;
-
-    unsigned getSamplesize() const;
-
-    bool isSampling() const;
+    bool isSampling() const { return sampling; }
 
     /// Return the associated usb device.
-    const USBDevice *getDevice() const;
+    const USBDevice *getDevice() const { return device; }
 
-#if 0
-    /// \brief Gets the speed of the connection.
-    /// \return The ::ConnectionSpeed of the USB connection.
-    int getConnectionSpeed() const;
-
-    /// \brief Gets the maximum size of one packet transmitted via bulk transfer.
-    /// \return The maximum packet size in bytes, negative libusb error code on error.
-    int getPacketSize() const;
-
-    /// Return the last sample set
-    const DSOsamples &getLastSamples();
-#endif
 
     /// \brief Sends control commands directly.
     /// <p>
@@ -104,24 +70,97 @@ class HantekDsoControl : public QObject {
     /// \return See ::Dso::ErrorCode.
     Dso::ErrorCode stringCommand(const QString &commandString);
 
-    bool hasCommand(Hantek::ControlCode code);
     void addCommand(ControlCommand *newCommand, bool pending = true);
+
     template <class T> T *modifyCommand(Hantek::ControlCode code) {
         control[ uint8_t( code ) ]->pending = true;
         return static_cast<T *>(control[ uint8_t( code ) ] );
     }
-    const ControlCommand *getCommand(Hantek::ControlCode code) const;
+
+    bool hasCommand(Hantek::ControlCode code) { return ( control[uint8_t(code)] != nullptr ); }
+
+    const ControlCommand *getCommand(Hantek::ControlCode code) const { return control[ uint8_t( code ) ]; }
+
+// Attic for no more used public procedures
+#if 0
+    /// \brief Gets the physical channel count for this oscilloscope.
+    /// \return The number of physical channels.
+    unsigned getChannelCount() const { return specification->channels; }
+
+    /// Return the read-only device control settings. Use the set- Methods to change
+    /// device settings.
+    const Dso::ControlSettings *getDeviceSettings() const { return &controlsettings; }
+
+    /// \brief Get available record lengths for this oscilloscope.
+    /// \return The number of physical channels, empty list for continuous.
+    const std::vector<unsigned> &getAvailableRecordLengths() const {
+        return controlsettings.samplerate.limits->recordLengths;
+    }
+
+    /// \brief Get minimum samplerate for this oscilloscope.
+    /// \return The minimum samplerate for the current configuration in S/s.
+    double getMinSamplerate() const {
+        //printf( "getMinSamplerate\n" );
+        return (double)specification->samplerate.single.base / specification->samplerate.single.maxDownsampler;
+    }
+
+    /// \brief Get maximum samplerate for this oscilloscope.
+    /// \return The maximum samplerate for the current configuration in S/s.
+    double getMaxSamplerate() const {
+        //printf( "channelCount %d\n", controlsettings.channelCount );
+        if (controlsettings.channelCount <= 1) {
+            return specification->samplerate.multi.max;
+        } else {
+            return specification->samplerate.single.max;
+        }
+    }
+
+    /// \brief Gets the speed of the connection.
+    /// \return The ::ConnectionSpeed of the USB connection.
+    int getConnectionSpeed() const {
+        ControlGetSpeed response;
+        int errorCode = device->controlRead(&response);
+        if (errorCode < 0) return errorCode;
+        return response.getSpeed();
+    }
+
+    /// \brief Gets the maximum size of one packet transmitted via bulk transfer.
+    /// \return The maximum packet size in bytes, negative libusb error code on error.
+    int getPacketSize() const {
+        const int s = getConnectionSpeed();
+        if (s == CONNECTION_FULLSPEED)
+            return 64;
+        else if (s == CONNECTION_HIGHSPEED)
+            return 512;
+        else if (s > CONNECTION_HIGHSPEED) {
+            qWarning() << "Unknown USB speed. Please correct source code in USBDevice::getPacketSize()";
+            throw new std::runtime_error("Unknown USB speed");
+        } else if (s < 0)
+            return s;
+        return 0;
+    }
+
+    /// Return the last sample set
+    const DSOsamples &getLastSamples() { return result; }
+#endif
 
   private:
-    bool isFastRate() const;
+    bool isFastRate() const {
+        return controlsettings.voltage[0].used && !controlsettings.voltage[1].used;
+    }
+
     unsigned getRecordLength() const;
-    void setDownsampling( unsigned downsampling_ ) { downsamplingNumber = downsampling_; }
+
+    void setDownsampling( unsigned downsampling ) { downsamplingNumber = downsampling; }
 
     Dso::ErrorCode retrieveChannelLevelData();
+
     /// Get the number of samples that are expected returned by the scope.
     /// In rolling mode this is depends on the usb speed and packet size.
     /// \return The total number of samples the scope should return.
-    unsigned getSampleCount() const;
+    unsigned getSampleCount() const {
+        return isFastRate() ? getRecordLength() : getRecordLength() * specification->channels;
+    }
 
     void updateInterval();
 
@@ -157,9 +196,8 @@ class HantekDsoControl : public QObject {
 
     unsigned softwareTrigger();
 
-    void triggering();
+    bool triggering();
 
-  private:
     /// Pointers to control commands
     ControlCommand *control[255] = { nullptr };
     ControlCommand *firstControlCommand = nullptr;
@@ -178,7 +216,8 @@ class HantekDsoControl : public QObject {
     unsigned expectedSampleCount = 0; ///< The expected total number of samples at
                                       /// the last check before sampling started
     bool samplingStarted = false;
-    int cycleTime = 0;
+    int acquireInterval = 0;
+    int displayInterval = 0;
     bool channelSetupChanged = false;
     unsigned triggeredPositionRaw = 0; // not triggered
 

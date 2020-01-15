@@ -53,7 +53,6 @@ extern Enum<Dso::Slope, Dso::Slope::Positive, Dso::Slope::Both> SlopeEnum;
 enum InterpolationMode {
     INTERPOLATION_OFF = 0, ///< Just dots for each sample
     INTERPOLATION_LINEAR,  ///< Sample dots connected by lines
-    INTERPOLATION_SINC,    ///< Smooth graph through the dots
     INTERPOLATION_COUNT    ///< Total number of interpolation modes
 };
 

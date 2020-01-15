@@ -267,9 +267,8 @@
         <translation>Linear</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="8"/>
         <source>Sinc</source>
-        <translation>Sinc</translation>
+        <translation type="vanished">Sinc</translation>
     </message>
     <message>
         <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="11"/>
@@ -453,8 +452,8 @@
 <context>
     <name>HantekDsoControl</name>
     <message>
-        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="121"/>
-        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="122"/>
+        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="363"/>
+        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="364"/>
         <source>Couldn&apos;t get channel level data from oscilloscope</source>
         <translation>Não foi possível obter dados do canal do osciloscópio</translation>
     </message>
@@ -1082,9 +1081,8 @@
         <translation>Linear</translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/enums.cpp" line="107"/>
         <source>Sinc</source>
-        <translation>Sinc</translation>
+        <translation type="vanished">Sinc</translation>
     </message>
     <message>
         <location filename="../src/main.cpp" line="98"/>

@@ -180,7 +180,7 @@ int main(int argc, char *argv[]) {
 
     SpectrumGenerator spectrumGenerator(&settings.scope, &settings.post);
     MathChannelGenerator mathchannelGenerator(&settings.scope, device->getModel()->spec()->channels);
-    GraphGenerator graphGenerator(&settings.scope, &settings.view);
+    GraphGenerator graphGenerator(&settings.scope);
 
     postProcessing.registerProcessor(&samplesToExportRaw);
     postProcessing.registerProcessor(&mathchannelGenerator);

@@ -13,10 +13,6 @@
 #include "viewconstants.h"
 #include "viewsettings.h"
 
-// M_PI is not mandatory in math.h / cmath
-#ifndef M_PI
-#define M_PI (3.14159265358979323846)
-#endif
 
 static const SampleValues &useSpecSamplesOf(ChannelID channel, const PPresult *result,
                                             const DsoSettingsScope *scope) {
@@ -34,23 +30,8 @@ static const SampleValues &useVoltSamplesOf(ChannelID channel, const PPresult *r
 }
 
 
-GraphGenerator::GraphGenerator(const DsoSettingsScope *scope, const DsoSettingsView *view) : scope(scope), view(view) {
+GraphGenerator::GraphGenerator(const DsoSettingsScope *scope /*, const DsoSettingsView *view */) : scope(scope) /*, view(view) */{
     // printf( "GraphGenerator::GraphGenerator()\n" );
-    prepareSinc();
-}
-
-
-void GraphGenerator::prepareSinc( void ) {
-    // prepare a sinc table (without sinc(0))
-    sinc.clear();
-    sinc.resize( sincSize );
-    auto sincIt = sinc.begin();
-    for ( unsigned int pos = 1; pos <= sincSize; ++pos, ++sincIt ) {
-        double t = pos * M_PI / oversample;
-        // Hann window: 0.5 + 0.5 cos, Hamming: 0.54 + 0.46 cos
-        double w = 0.54 + 0.46 * cos( pos * M_PI / sincSize );
-        *sincIt = w * sin( t ) / t;
-    }
 }
 
 
@@ -82,7 +63,7 @@ void GraphGenerator::generateGraphsTYvoltage(PPresult *result) {
         // time distance between sampling points
         double horizontalFactor = (samples.interval / scope->horizontal.timebase);
         // printf( "hF: %g\n", horizontalFactor );
-        unsigned dotsOnScreen = unsigned( DIVS_TIME / horizontalFactor + 0.99 ); // round up
+        unsigned dotsOnScreen = unsigned( ceil( DIVS_TIME / horizontalFactor ) );
         unsigned preTrigSamples = unsigned(scope->trigger.offset * dotsOnScreen);
         // align displayed trace with trigger mark on screen ...
         // ... also if trig pos or time/div was changed on a "frozen" or single trace
@@ -102,35 +83,6 @@ void GraphGenerator::generateGraphsTYvoltage(PPresult *result) {
 
         auto sampleIterator = samples.sample.cbegin() + leftmostSample; // -> visible samples
         auto sampleEnd = samples.sample.cend();
-        // sinc interpolation in case of too less samples on screen
-        // https://ccrma.stanford.edu/~jos/resample/resample.pdf
-        if ( view->interpolation == Dso::INTERPOLATION_SINC
-            && dotsOnScreen < 100 ) { // valid for timebase <= 500 ns/div
-            // if untriggered (skipSamples == 0) then reserve margin for left side of sinc()
-            const unsigned int skip = leftmostSample ? unsigned(leftmostSample) : sincWidth;
-            // we would need sincWidth on left side, but we take what we get
-            const unsigned int left = std::min( sincWidth, skip );
-            const unsigned int resampleSize = (left + dotsOnScreen + sincWidth) * oversample;
-            std::vector <double> resample;
-            resample.resize( resampleSize ); // prefilled with zero
-            horizontalFactor /= oversample; // distance between (resampled) dots
-            dotsOnScreen = unsigned(DIVS_TIME / horizontalFactor + 0.99 + 1); // dot count after resample
-            target.reserve( dotsOnScreen ); // increase target size
-            // sampleIt -> start of left margin
-            auto sampleIt = samples.sample.cbegin() + skip - left;
-            for ( unsigned int resamplePos = 0; resamplePos < resampleSize; resamplePos += oversample, ++sampleIt ) {
-                resample[ resamplePos ] += *sampleIt; //  * sinc( 0 )
-                auto sincIt = sinc.cbegin(); // one half of sinc pulse without sinc(0) 
-                for ( unsigned int sincPos = 1; sincPos <= sincSize; ++sincPos, ++sincIt ) { // sinc( 1..n )
-                    const double conv = *sampleIt * *sincIt;
-                    if ( resamplePos >= sincPos ) // left half of sinc in visible range
-                        resample[ resamplePos - sincPos ] += conv;
-                    if ( resamplePos + sincPos < resampleSize ) // right half of sinc visible
-                        resample[ resamplePos + sincPos ] += conv;
-                }
-            }
-            sampleIterator = resample.cbegin() + int( ( left + 0.5 ) * oversample ); // -> visible resamples
-        }
         // printf("samples: %lu, dotsOnScreen: %d\n", samples.sample.size(), dotsOnScreen);
         target.clear(); // remove all previous dots and fill in new trace
         for (unsigned int position = unsigned(leftmostPosition);

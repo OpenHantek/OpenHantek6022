@@ -103,8 +103,6 @@ namespace Dso {
             return QCoreApplication::tr("Off");
         case INTERPOLATION_LINEAR:
             return QCoreApplication::tr("Linear");
-        case INTERPOLATION_SINC:
-            return QCoreApplication::tr("Sinc");
         default:
             return QString();
         }

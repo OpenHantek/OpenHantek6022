@@ -5,7 +5,7 @@
 DsoConfigScopePage::DsoConfigScopePage(DsoSettings *settings, QWidget *parent) : QWidget(parent), settings(settings) {
     // Initialize lists for comboboxes
     QStringList interpolationStrings;
-    interpolationStrings << tr("Off") << tr("Linear") << tr("Sinc");
+    interpolationStrings << tr("Off") << tr("Linear");
 
     // Initialize elements
     interpolationLabel = new QLabel(tr("Interpolation"));

@@ -23,7 +23,7 @@ class GraphGenerator : public QObject, public Processor {
     Q_OBJECT
 
   public:
-    GraphGenerator(const DsoSettingsScope *scope, const DsoSettingsView *view);
+    GraphGenerator(const DsoSettingsScope *scope );
     void generateGraphsXY(PPresult *result);
 
   private:
@@ -32,14 +32,6 @@ class GraphGenerator : public QObject, public Processor {
 
     bool ready = false;
     const DsoSettingsScope *scope;
-    const DsoSettingsView *view;
-    
-    void prepareSinc( void );
-    std::vector <double> sinc;
-    const unsigned int sincWidth = 5;
-    const unsigned int oversample = 10;
-    const unsigned int sincSize = sincWidth * oversample;
-
     // Processor interface
     void process(PPresult *data) override;
 };

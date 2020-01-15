@@ -36,7 +36,7 @@ void PostProcessing::convertData(const DSOsamples *source, PPresult *destination
 }
 
 void PostProcessing::input(const DSOsamples *data) {
-    //printf( "PostProcessing::input()\n" );
+    // printf( "PostProcessing::input()\n" );
     currentData.reset(new PPresult(channelCount));
     convertData(data, currentData.get());
     for (Processor *p : processors) 
