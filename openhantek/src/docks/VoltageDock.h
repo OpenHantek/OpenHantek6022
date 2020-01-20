@@ -7,10 +7,14 @@
 #include <QCheckBox>
 #include <QComboBox>
 #include <QLabel>
+#include <QSpinBox>
 
 #include "scopesettings.h"
 #include "hantekdso/controlspecification.h"
 #include "post/postprocessingsettings.h"
+
+#define ATTENUATION_MIN 1     ///< Minimum probe attenuation
+#define ATTENUATION_MAX 1000  ///< Maximum probe attenuation
 
 class SiSpinBox;
 
@@ -39,8 +43,8 @@ class VoltageDock : public QDockWidget {
 
     /// \brief Sets the probe attenuation for a channel.
     /// \param channel The channel, whose attn should be set.
-    /// \param attn The attn .
-    void setAttn(ChannelID channel, bool attn);
+    /// \param attn The attn value.
+    void setAttn(ChannelID channel, double attnValue);
 
     /// \brief Sets the mode for the math channel.
     /// \param mathModeIndex The math-mode index.
@@ -63,11 +67,12 @@ class VoltageDock : public QDockWidget {
     QWidget *dockWidget;               ///< The main widget for the dock window
 
     struct ChannelBlock {
-        QCheckBox * usedCheckBox;   ///< Enable/disable a specific channel
-        QComboBox * gainComboBox;   ///< Select the vertical gain for the channels
-        QComboBox * miscComboBox;   ///< Select coupling for real and mode for math channels
-        QCheckBox * invertCheckBox; ///< Select if the channels should be displayed inverted
-        QCheckBox * attnCheckBox;   ///< Select if probe (x10) is used
+        QCheckBox *usedCheckBox;    ///< Enable/disable a specific channel
+        QComboBox *gainComboBox;    ///< Select the vertical gain for the channels
+        QComboBox *miscComboBox;    ///< Select coupling for real and mode for math channels
+        QCheckBox *invertCheckBox;  ///< Select if the channels should be displayed inverted
+        QLabel    *attnLabel;       ///< The label for the attn value (x)
+        QSpinBox  *attnSpinBox;     ///< Enter the attenuation probe value
     };
 
     std::vector<ChannelBlock> channelBlocks;
@@ -85,6 +90,6 @@ class VoltageDock : public QDockWidget {
     void gainChanged(ChannelID channel, double gain);                ///< A gain has been selected
     void modeChanged(Dso::MathMode mode);                            ///< The mode for the math channels has been changed
     void usedChanged(ChannelID channel, bool used);                  ///< A channel has been enabled/disabled
-    void probeAttnChanged(ChannelID channel, bool probeUsed, double probeAttn); ///< A channel probe gain has been changed
+    void probeAttnChanged(ChannelID channel, bool probeUsed, double probeAttn); ///< A channel probe attenuation has been changed
     void invertedChanged(ChannelID channel, bool inverted);          ///< A channel "inverted" has been toggled
 };

@@ -1427,28 +1427,28 @@
 <context>
     <name>VoltageDock</name>
     <message>
-        <location filename="../src/docks/VoltageDock.cpp" line="34"/>
+        <location filename="../src/docks/VoltageDock.cpp" line="26"/>
         <source>Voltage</source>
         <translation>Voltagem</translation>
     </message>
     <message>
-        <location filename="../src/docks/VoltageDock.cpp" line="58"/>
+        <location filename="../src/docks/VoltageDock.cpp" line="50"/>
         <source>CH&amp;%1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/docks/VoltageDock.cpp" line="60"/>
+        <location filename="../src/docks/VoltageDock.cpp" line="52"/>
         <source>&amp;MATH</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/docks/VoltageDock.cpp" line="63"/>
+        <location filename="../src/docks/VoltageDock.cpp" line="55"/>
         <source>Invert</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/docks/VoltageDock.cpp" line="64"/>
-        <source>X%1</source>
+        <location filename="../src/docks/VoltageDock.cpp" line="56"/>
+        <source>x</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

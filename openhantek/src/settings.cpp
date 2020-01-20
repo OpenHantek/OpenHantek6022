@@ -129,6 +129,7 @@ void DsoSettings::load() {
         if (store->contains("offset")) scope.voltage[channel].offset = store->value("offset").toDouble();
         if (store->contains("trigger")) scope.voltage[channel].trigger = store->value("trigger").toDouble();
         if (store->contains("probeUsed")) scope.voltage[channel].probeUsed = store->value("probeUsed").toBool();
+        if (store->contains("probeAttn")) scope.voltage[channel].probeAttn = store->value("probeAttn").toDouble();
         if (store->contains("used"))
             scope.voltage[channel].used = store->value("used").toBool();
         else if ( 0 == channel ) // no "used" entry -> no config file: ch0 is active as default
@@ -260,6 +261,7 @@ void DsoSettings::save() {
         store->setValue("trigger", scope.voltage[channel].trigger);
         store->setValue("used", scope.voltage[channel].used);
         store->setValue("probeUsed", scope.voltage[channel].probeUsed);
+        store->setValue("probeAttn", scope.voltage[channel].probeAttn);
         store->beginGroup("cursor");
         store->setValue("shape", scope.voltage[channel].cursor.shape);
         for (int marker = 0; marker < MARKER_COUNT; ++marker) {
