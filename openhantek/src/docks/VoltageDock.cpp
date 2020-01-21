@@ -39,7 +39,8 @@ VoltageDock::VoltageDock(DsoSettingsScope *scope, const Dso::ControlSpecificatio
 
     dockLayout = new QGridLayout();
     dockLayout->setColumnMinimumWidth(0, 64);
-    dockLayout->setColumnStretch(3, 1); // stretch ComboBox in last column
+    dockLayout->setColumnStretch(1, 1); // stretch ComboBox in 2nd (middle) column
+    dockLayout->setColumnStretch(2, 1); // stretch ComboBox in 3rd (last) column
     dockLayout->setSpacing( DOCK_LAYOUT_SPACING );
     // Initialize elements
     int row = 0;
@@ -53,10 +54,10 @@ VoltageDock::VoltageDock(DsoSettingsScope *scope, const Dso::ControlSpecificatio
         b.miscComboBox = new QComboBox();
         b.gainComboBox = new QComboBox();
         b.invertCheckBox = new QCheckBox(tr("Invert"));
-        b.attnLabel = new QLabel(tr("x"));
         b.attnSpinBox = new QSpinBox();
         b.attnSpinBox->setMinimum(ATTENUATION_MIN);
         b.attnSpinBox->setMaximum(ATTENUATION_MAX);
+        b.attnSpinBox->setPrefix(tr("x"));
 
         channelBlocks.push_back(std::move(b));
 
@@ -68,16 +69,15 @@ VoltageDock::VoltageDock(DsoSettingsScope *scope, const Dso::ControlSpecificatio
         b.gainComboBox->addItems(gainStrings);
 
         dockLayout->addWidget( b.usedCheckBox, row, 0 );
-        dockLayout->addWidget( b.gainComboBox, row++, 1, 1, 3);
+        dockLayout->addWidget( b.gainComboBox, row++, 1, 1, 2);
         dockLayout->addWidget( b.invertCheckBox, row, 0 );
         if (channel < spec->channels) {
-            dockLayout->addWidget( b.attnLabel, row, 1, Qt::AlignRight) ;
-            dockLayout->addWidget( b.attnSpinBox, row, 2, 1, 1 ) ;
-            dockLayout->addWidget( b.miscComboBox, row++, 3, 1, 1) ;
+            dockLayout->addWidget( b.attnSpinBox, row, 1, 1, 1 ) ;
+            dockLayout->addWidget( b.miscComboBox, row++, 2, 1, 1) ;
             if ( int(scope->voltage[channel].couplingOrMathIndex) < couplingStrings.size() )
                 setCoupling(channel, scope->voltage[channel].couplingOrMathIndex);
         } else {
-            dockLayout->addWidget( b.miscComboBox, row++, 1, 1, 3 );
+            dockLayout->addWidget( b.miscComboBox, row++, 1, 1, 2 );
             setMode(scope->voltage[channel].couplingOrMathIndex);
         }
 
@@ -86,7 +86,7 @@ VoltageDock::VoltageDock(DsoSettingsScope *scope, const Dso::ControlSpecificatio
             QFrame *divider = new QFrame();
             divider->setLineWidth(1);
             divider->setFrameShape(QFrame::HLine);
-            dockLayout->addWidget(divider, row++, 0, 1, 4);        
+            dockLayout->addWidget(divider, row++, 0, 1, 3);
         }
 
         setGain(channel, scope->voltage[channel].gainStepIndex);
@@ -99,10 +99,9 @@ VoltageDock::VoltageDock(DsoSettingsScope *scope, const Dso::ControlSpecificatio
             emit gainChanged( channel, this->scope->gain(channel) );
         });
         connect(b.attnSpinBox, SELECT<int>::OVERLOAD_OF(&QSpinBox::valueChanged), [this,channel](unsigned attnValue) {
-            this->scope->voltage[channel].probeUsed = true;
             this->scope->voltage[channel].probeAttn = attnValue;
             setAttn( channel, attnValue );
-            emit probeAttnChanged( channel, true, attnValue ); // make sure to set the probe first, since this will influence the gain
+            emit probeAttnChanged( channel, attnValue ); // make sure to set the probe first, since this will influence the gain
             emit gainChanged(channel, this->scope->gain(channel));
         });
         connect(b.invertCheckBox, &QAbstractButton::toggled, [this,channel](bool checked) {
@@ -160,7 +159,6 @@ void VoltageDock::setAttn(ChannelID channel, double attnValue) {
     channelBlocks[channel].gainComboBox->clear();
     channelBlocks[channel].gainComboBox->addItems( gainStrings );
     channelBlocks[channel].gainComboBox->setCurrentIndex( index );
-    scope->voltage[channel].probeUsed = true;
     scope->voltage[channel].probeAttn = attnValue;
     channelBlocks[channel].attnSpinBox->setValue(int(attnValue));
 }

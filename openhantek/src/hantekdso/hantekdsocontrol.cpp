@@ -262,10 +262,9 @@ Dso::ErrorCode HantekDsoControl::setGain(ChannelID channel, double gain) {
 }
 
 
-Dso::ErrorCode HantekDsoControl::setProbe( ChannelID channel, bool probeUsed, double probeAttn ) {
+Dso::ErrorCode HantekDsoControl::setProbe(ChannelID channel, double probeAttn ) {
     if (channel >= specification->channels)
         return Dso::ErrorCode::PARAMETER;
-    controlsettings.voltage[channel].probeUsed = probeUsed;
     controlsettings.voltage[channel].probeAttn = probeAttn;
     //printf( "setProbe %g\n", probeAttn );
     return Dso::ErrorCode::NONE;

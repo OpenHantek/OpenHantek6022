@@ -452,8 +452,8 @@
 <context>
     <name>HantekDsoControl</name>
     <message>
+        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="362"/>
         <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="363"/>
-        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="364"/>
         <source>Couldn&apos;t get channel level data from oscilloscope</source>
         <translation>Não foi possível obter dados do canal do osciloscópio</translation>
     </message>
@@ -1432,22 +1432,22 @@
         <translation>Voltagem</translation>
     </message>
     <message>
-        <location filename="../src/docks/VoltageDock.cpp" line="50"/>
+        <location filename="../src/docks/VoltageDock.cpp" line="51"/>
         <source>CH&amp;%1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/docks/VoltageDock.cpp" line="52"/>
+        <location filename="../src/docks/VoltageDock.cpp" line="53"/>
         <source>&amp;MATH</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/docks/VoltageDock.cpp" line="55"/>
+        <location filename="../src/docks/VoltageDock.cpp" line="56"/>
         <source>Invert</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/docks/VoltageDock.cpp" line="56"/>
+        <location filename="../src/docks/VoltageDock.cpp" line="60"/>
         <source>x</source>
         <translation type="unfinished"></translation>
     </message>

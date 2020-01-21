@@ -68,7 +68,6 @@ struct DsoSettingsScopeVoltage : public DsoSettingsScopeChannel {
     unsigned gainStepIndex = 6;       ///< The vertical resolution in V/div (default = 1.0)
     unsigned couplingOrMathIndex = 0; ///< Different index: coupling for real- and mode for math-channels
     bool inverted = false;            ///< true if the channel is inverted (mirrored on cross-axis)
-    bool probeUsed = false;            ///< true if scope attenuation is used
     double probeAttn = 1.0;           ///< attenuation of probe
 };
 

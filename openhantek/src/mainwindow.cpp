@@ -184,10 +184,10 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, Expo
             return;
         dsoControl->setGain(channel, mSettings->scope.gain(channel) * DIVS_VOLTAGE);
     });
-    connect(voltageDock, &VoltageDock::probeAttnChanged, [ dsoControl, spec](ChannelID channel, bool probeUsed, double probeAttn ) {
+    connect(voltageDock, &VoltageDock::probeAttnChanged, [ dsoControl, spec](ChannelID channel, double probeAttn ) {
         if (channel >= spec->channels)
             return;
-        dsoControl->setProbe( channel, probeUsed, probeAttn );
+        dsoControl->setProbe( channel, probeAttn );
     });
     connect(voltageDock, &VoltageDock::invertedChanged, [ dsoControl, spec](ChannelID channel, bool inverted) {
         if (channel >= spec->channels)
