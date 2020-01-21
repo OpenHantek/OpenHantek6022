@@ -1,10 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0+
 
-#include <QCheckBox>
 #include <QCloseEvent>
-#include <QComboBox>
 #include <QDockWidget>
-#include <QLabel>
 #include <QSignalBlocker>
 #include <QDebug>
 
@@ -17,11 +14,6 @@
 #include "settings.h"
 #include "sispinbox.h"
 #include "utils/printutils.h"
-
-// probe attenuation
-#ifndef ATTENUATION
-#define ATTENUATION 10
-#endif
 
 template<typename... Args> struct SELECT {
     template<typename C, typename R>
@@ -43,11 +35,11 @@ VoltageDock::VoltageDock(DsoSettingsScope *scope, const Dso::ControlSpecificatio
 
     for (double gainStep: scope->gainSteps) {
         gainStrings << valueToString(gainStep, UNIT_VOLTS, 0);
-        attnStrings << valueToString(gainStep * ATTENUATION, UNIT_VOLTS, 0);
     }
+
     dockLayout = new QGridLayout();
     dockLayout->setColumnMinimumWidth(0, 64);
-    dockLayout->setColumnStretch(2, 1); // stretch ComboBox in last column
+    dockLayout->setColumnStretch(3, 1); // stretch ComboBox in last column
     dockLayout->setSpacing( DOCK_LAYOUT_SPACING );
     // Initialize elements
     int row = 0;
@@ -61,7 +53,10 @@ VoltageDock::VoltageDock(DsoSettingsScope *scope, const Dso::ControlSpecificatio
         b.miscComboBox = new QComboBox();
         b.gainComboBox = new QComboBox();
         b.invertCheckBox = new QCheckBox(tr("Invert"));
-        b.attnCheckBox = new QCheckBox(tr("X%1").arg( ATTENUATION ) );
+        b.attnLabel = new QLabel(tr("x"));
+        b.attnSpinBox = new QSpinBox();
+        b.attnSpinBox->setMinimum(ATTENUATION_MIN);
+        b.attnSpinBox->setMaximum(ATTENUATION_MAX);
 
         channelBlocks.push_back(std::move(b));
 
@@ -73,15 +68,16 @@ VoltageDock::VoltageDock(DsoSettingsScope *scope, const Dso::ControlSpecificatio
         b.gainComboBox->addItems(gainStrings);
 
         dockLayout->addWidget( b.usedCheckBox, row, 0 );
-        dockLayout->addWidget( b.gainComboBox, row++, 1, 1, 2);
+        dockLayout->addWidget( b.gainComboBox, row++, 1, 1, 3);
         dockLayout->addWidget( b.invertCheckBox, row, 0 );
         if (channel < spec->channels) {
-            dockLayout->addWidget( b.attnCheckBox, row, 1 ) ;
-            dockLayout->addWidget( b.miscComboBox, row++, 2 ) ;
+            dockLayout->addWidget( b.attnLabel, row, 1, Qt::AlignRight) ;
+            dockLayout->addWidget( b.attnSpinBox, row, 2, 1, 1 ) ;
+            dockLayout->addWidget( b.miscComboBox, row++, 3, 1, 1) ;
             if ( int(scope->voltage[channel].couplingOrMathIndex) < couplingStrings.size() )
                 setCoupling(channel, scope->voltage[channel].couplingOrMathIndex);
         } else {
-            dockLayout->addWidget( b.miscComboBox, row++, 1, 1, 2 );
+            dockLayout->addWidget( b.miscComboBox, row++, 1, 1, 3 );
             setMode(scope->voltage[channel].couplingOrMathIndex);
         }
 
@@ -90,23 +86,23 @@ VoltageDock::VoltageDock(DsoSettingsScope *scope, const Dso::ControlSpecificatio
             QFrame *divider = new QFrame();
             divider->setLineWidth(1);
             divider->setFrameShape(QFrame::HLine);
-            dockLayout->addWidget(divider, row++, 0, 1, 3);        
+            dockLayout->addWidget(divider, row++, 0, 1, 4);        
         }
 
         setGain(channel, scope->voltage[channel].gainStepIndex);
         setUsed(channel, scope->voltage[channel].used);
-        setAttn(channel, scope->voltage[channel].probeUsed);
+        setAttn(channel, scope->voltage[channel].probeAttn);
         setInverted(channel, scope->voltage[channel].inverted);
 
         connect(b.gainComboBox, SELECT<int>::OVERLOAD_OF(&QComboBox::currentIndexChanged), [this,channel](unsigned index) {
             this->scope->voltage[channel].gainStepIndex = index;
             emit gainChanged( channel, this->scope->gain(channel) );
         });
-        connect(b.attnCheckBox, &QAbstractButton::toggled, [this,channel](bool attn) {
-            this->scope->voltage[channel].probeUsed = attn;
-            this->scope->voltage[channel].probeAttn = attn ? ATTENUATION : 1;
-            setAttn( channel, attn );
-            emit probeAttnChanged( channel, attn, attn ? ATTENUATION : 1 ); // make sure to set the probe first, since this will influence the gain
+        connect(b.attnSpinBox, SELECT<int>::OVERLOAD_OF(&QSpinBox::valueChanged), [this,channel](unsigned attnValue) {
+            this->scope->voltage[channel].probeUsed = true;
+            this->scope->voltage[channel].probeAttn = attnValue;
+            setAttn( channel, attnValue );
+            emit probeAttnChanged( channel, true, attnValue ); // make sure to set the probe first, since this will influence the gain
             emit gainChanged(channel, this->scope->gain(channel));
         });
         connect(b.invertCheckBox, &QAbstractButton::toggled, [this,channel](bool checked) {
@@ -153,16 +149,20 @@ void VoltageDock::setGain(ChannelID channel, unsigned gainStepIndex) {
     channelBlocks[channel].gainComboBox->setCurrentIndex(int(gainStepIndex));
 }
 
-void VoltageDock::setAttn(ChannelID channel, bool attn) {
+void VoltageDock::setAttn(ChannelID channel, double attnValue) {
     if (channel >= scope->voltage.size()) return;
     QSignalBlocker blocker(channelBlocks[channel].gainComboBox);
     int index = channelBlocks[channel].gainComboBox->currentIndex();
+    gainStrings.clear();
+    for (double gainStep: scope->gainSteps) {
+        gainStrings << valueToString(gainStep * attnValue, UNIT_VOLTS, 0);
+    }
     channelBlocks[channel].gainComboBox->clear();
-    channelBlocks[channel].gainComboBox->addItems( attn ? attnStrings : gainStrings );
+    channelBlocks[channel].gainComboBox->addItems( gainStrings );
     channelBlocks[channel].gainComboBox->setCurrentIndex( index );
-    channelBlocks[channel].attnCheckBox->setChecked(attn);
-    scope->voltage[channel].probeUsed = attn;
-    scope->voltage[channel].probeAttn = attn ? ATTENUATION : 1.0;
+    scope->voltage[channel].probeUsed = true;
+    scope->voltage[channel].probeAttn = attnValue;
+    channelBlocks[channel].attnSpinBox->setValue(int(attnValue));
 }
 
 void VoltageDock::setMode(unsigned mathModeIndex) {
