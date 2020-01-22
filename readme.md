@@ -28,7 +28,7 @@ After David [stopped maintaining](https://github.com/OpenHantek/openhantek/issue
 ## Features
 * Voltage and Spectrum view for all device supported chanels.
 * CH1 and CH2 name becomes red when input is clipped (bottom left).
-* Checkbox for X10 probes. 
+* Settable probe attenuation factor 1..1000 to accommodate a variety of different probes.
 * Measure and display Vpp, RMS, DC (average), AC (rms) and AC as dB values as well as frequency of active channels.
 * Math channel modes: CH1+CH2, CH1-CH2, CH2-CH1, CH1*CH2 and AC part of CH1 or CH2.
 * Time base 100 ms/div .. 10 ns/div.
