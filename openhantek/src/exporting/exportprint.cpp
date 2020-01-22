@@ -5,7 +5,7 @@
 #include "iconfont/QtAwesome.h"
 #include "legacyexportdrawer.h"
 #include "post/ppresult.h"
-#include "settings.h"
+#include "dsosettings.h"
 #include "viewsettings.h"
 
 #include <QCoreApplication>

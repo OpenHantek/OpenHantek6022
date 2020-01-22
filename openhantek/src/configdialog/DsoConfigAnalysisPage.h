@@ -2,7 +2,7 @@
 
 #include <QWidget>
 
-#include "settings.h"
+#include "dsosettings.h"
 
 #include <QCheckBox>
 #include <QComboBox>

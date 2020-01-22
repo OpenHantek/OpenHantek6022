@@ -5,7 +5,7 @@
 #include <QDebug>
 #include <QSettings>
 
-#include "settings.h"
+#include "dsosettings.h"
 
 #include "dsowidget.h"
 

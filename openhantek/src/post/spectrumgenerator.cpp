@@ -12,7 +12,7 @@
 #include "spectrumgenerator.h"
 
 #include "glscope.h"
-#include "settings.h"
+#include "dsosettings.h"
 #include "utils/printutils.h"
 #include "viewconstants.h"
 

@@ -13,7 +13,7 @@
 #include "controlspecification.h"
 #include "post/graphgenerator.h"
 #include "post/ppresult.h"
-#include "settings.h"
+#include "dsosettings.h"
 #include "utils/printutils.h"
 #include "viewconstants.h"
 

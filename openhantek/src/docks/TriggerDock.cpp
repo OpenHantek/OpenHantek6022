@@ -14,7 +14,7 @@
 
 #include "viewconstants.h"
 #include "hantekdso/controlspecification.h"
-#include "settings.h"
+#include "dsosettings.h"
 #include "sispinbox.h"
 #include "utils/printutils.h"
 

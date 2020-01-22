@@ -3,7 +3,7 @@
 #include "exportcsv.h"
 #include "exporterregistry.h"
 #include "post/ppresult.h"
-#include "settings.h"
+#include "dsosettings.h"
 #include "iconfont/QtAwesome.h"
 
 #include <QCoreApplication>

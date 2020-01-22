@@ -7,7 +7,7 @@
 
 #include "controlspecification.h"
 #include "post/ppresult.h"
-#include "settings.h"
+#include "dsosettings.h"
 
 ExporterRegistry::ExporterRegistry(const Dso::ControlSpecification *deviceSpecification, DsoSettings *settings,
                                    QObject *parent)

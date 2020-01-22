@@ -19,7 +19,7 @@
 #include <memory>
 
 // Settings
-#include "settings.h"
+#include "dsosettings.h"
 #include "viewsettings.h"
 #include "viewconstants.h"
 

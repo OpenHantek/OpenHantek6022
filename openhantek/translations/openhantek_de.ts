@@ -993,22 +993,22 @@
         <translation>%L1 GS</translation>
     </message>
     <message>
-        <location filename="../src/settings.cpp" line="26"/>
+        <location filename="../src/dsosettings.cpp" line="26"/>
         <source>CH%1</source>
         <translation>CH%1</translation>
     </message>
     <message>
-        <location filename="../src/settings.cpp" line="21"/>
+        <location filename="../src/dsosettings.cpp" line="21"/>
         <source>SP%1</source>
         <translation>SP%1</translation>
     </message>
     <message>
-        <location filename="../src/settings.cpp" line="43"/>
+        <location filename="../src/dsosettings.cpp" line="43"/>
         <source>MATH</source>
         <translation>MATH</translation>
     </message>
     <message>
-        <location filename="../src/settings.cpp" line="38"/>
+        <location filename="../src/dsosettings.cpp" line="38"/>
         <source>SPM</source>
         <translation>SPM</translation>
     </message>

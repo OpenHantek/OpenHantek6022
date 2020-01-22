@@ -20,7 +20,7 @@
 #include "usb/usbdevice.h"
 #include "viewconstants.h"
 
-#include "settings.h"
+#include "dsosettings.h"
 
 #include <QFileDialog>
 #include <QLineEdit>

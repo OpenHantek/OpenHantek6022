@@ -114,7 +114,7 @@ Dso::ErrorCode HantekDsoControl::setSamplerate(double samplerate) {
     }
     unsigned sampleId;
     for (sampleId = 0; sampleId < specification->fixedSampleRates.size() - 1; ++sampleId) {
-        if ( specification->fixedSampleRates[sampleId].samplerate == samplerate )
+        if ( long(round(specification->fixedSampleRates[sampleId].samplerate)) == long(round(samplerate)) ) // dont compare double == double
             break;
     }
     modifyCommand<ControlSetTimeDIV>(ControlCode::CONTROL_SETTIMEDIV)

@@ -32,7 +32,7 @@ anyway, ignore it
 #include "DsoConfigFilePage.h"
 #include "DsoConfigScopePage.h"
 
-#include "settings.h"
+#include "dsosettings.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 // class DsoConfigDialog

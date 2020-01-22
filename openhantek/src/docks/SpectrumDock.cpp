@@ -13,7 +13,7 @@
 #include "dockwindows.h"
 
 #include "viewconstants.h"
-#include "settings.h"
+#include "dsosettings.h"
 #include "sispinbox.h"
 #include "utils/printutils.h"
 
