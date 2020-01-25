@@ -14,4 +14,4 @@ layout: default
    - A [little HW modification](HANTEK6022_AC_Modification.pdf) adds AC coupling. OpenHantek6022 supports this feature since v2.17-rc5 / FW0204.
    - No HW trigger available, SW trigger seaches for trigger condition and positions the trace window accordingly.
    - Can detect rising or falling edge (also alternating from trace to trace) of the signal, displayed trigger position can be at 0..100% of screen width.
-   - At fast timebase settings (<1µs/div) only few sampled values are available on screen. In these cases a bandlimited sinc interpolation creates additional points in between without adding spectral components outside the Nyquist frequency band.
+   - At fast timebase settings (<1Âµs/div) only few sampled values are available on screen. In these cases a bandlimited sinc interpolation creates additional points in between without adding spectral components outside the Nyquist frequency band.

@@ -421,6 +421,8 @@ void GlScope::paintGL() {
                 drawSpectrumChannelGraph(channel, graph, int( historyIndex) );
             }
             drawVoltageChannelGraph(channel, graph, int( historyIndex) );
+//            if (!zoomed)
+                drawHistoChannelGraph(channel, graph, int( historyIndex) );
         }
         ++historyIndex;
     }
@@ -645,6 +647,17 @@ void GlScope::drawVoltageChannelGraph(ChannelID channel, Graph &graph, int histo
     QOpenGLVertexArrayObject::Binder b(v.first);
     const GLenum dMode = (view->interpolation == Dso::INTERPOLATION_OFF) ? GL_POINTS : GL_LINE_STRIP;
     context()->functions()->glDrawArrays(dMode, 0, v.second);
+}
+
+void GlScope::drawHistoChannelGraph(ChannelID channel, Graph &graph, int historyIndex) {
+    if (!scope->voltage[channel].used) return;
+
+    m_program->setUniformValue(colorLocation, view->screen.voltage[channel].darker(100 + 10 * historyIndex));
+    Graph::VaoCount &h = graph.vaoHisto[channel];
+
+    QOpenGLVertexArrayObject::Binder b(h.first);
+    const GLenum dMode = (view->interpolation == Dso::INTERPOLATION_OFF) ? GL_POINTS : GL_LINES;
+    context()->functions()->glDrawArrays(dMode, 0, h.second);
 }
 
 void GlScope::drawSpectrumChannelGraph(ChannelID channel, Graph &graph, int historyIndex) {

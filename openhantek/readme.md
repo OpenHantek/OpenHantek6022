@@ -93,7 +93,7 @@ Read more about [calibration](https://github.com/Ho-Ro/Hantek6022API/blob/master
       `CH1 + CH2`, `CH1 - CH2`, `CH2 - CH1`, `CH1 * CH2`, `CH1 AC` or `CH2 AC`.
   * `SpectrumGenerator::process()`
     * For each active channel:
-      * Calculate the peak-to-peak, DC (average), AC (rms) and effective value ( sqrt( DC² + AC² ) ).
+      * Calculate the peak-to-peak, DC (average), AC (rms) and effective value ( sqrt( DCÂ² + ACÂ² ) ).
       * Apply a user selected window function and scale the result accordingly.
       * Calculate the autocorrelation to get the frequency of the signal. This is quite inaccurate at high frequencies. In these cases the first peak value of the spectrum is used.
       * Calculate the spectrum of the AC part of the signal scaled as dBV.
@@ -103,7 +103,10 @@ Read more about [calibration](https://github.com/Ho-Ro/Hantek6022API/blob/master
       * spectrum over frequency `GraphGenerator::generateGraphsTYspectrum()`
     * or in XY mode and creates a voltage over voltage trace `GraphGenerator::generateGraphsXY()`.
     * `GraphGenerator::generateGraphsTYvoltage()` creates up to three (CH1, CH2, MATH) voltage traces.
-    For fast sample rates where less than 100 samples are displayed on screen a bandlimited (sinc) 10x upsampling creates a smoother display.
     * `GraphGenerator::generateGraphsTYspectrum()` creates up to three (CH1, CH2, MATH) spectral traces.
+  * Finally `PostProcessing` emits the signal `processingFinished()` that is connected to:
+    * `ExporterRegistry::input()` that takes care of exporting to CSV data or PDF/PNG image as well as printing the PDF.
+    * `MainWindow::showNewData()`.
+ * `MainWindow::showNewData()` calls `DsoWidget::showNew()` that calls `GlScope::showData()` that calls `Graph::writeData()`.
 
 t.b.c.

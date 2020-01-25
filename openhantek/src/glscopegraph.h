@@ -25,5 +25,6 @@ struct Graph {
     int allocatedMem = 0;
     QOpenGLBuffer buffer;
     std::vector<VaoCount> vaoVoltage;
+    std::vector<VaoCount> vaoHisto;
     std::vector<VaoCount> vaoSpectrum;
 };

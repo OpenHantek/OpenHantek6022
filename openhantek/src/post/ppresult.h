@@ -56,6 +56,7 @@ class PPresult {
 
     ChannelsGraphs vaChannelSpectrum;
     ChannelsGraphs vaChannelVoltage;
+    ChannelsGraphs vaChannelHisto;
 
   private:
     std::vector<DataChannel> analyzedData; ///< The analyzed data for each channel

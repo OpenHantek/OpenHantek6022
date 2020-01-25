@@ -49,14 +49,17 @@ void GraphGenerator::process(PPresult *data) {
 void GraphGenerator::generateGraphsTYvoltage(PPresult *result) {
     //printf( "GraphGenerator::generateGraphsTYvoltage()\n" );
     result->vaChannelVoltage.resize(scope->voltage.size());
+    result->vaChannelHisto.resize(scope->voltage.size());
     for (ChannelID channel = 0; channel < scope->voltage.size(); ++channel) {
         ChannelGraph &graphVoltage = result->vaChannelVoltage[channel];
+        ChannelGraph &graphHisto = result->vaChannelHisto[channel];
         const SampleValues &samples = useVoltSamplesOf(channel, result, scope);
 
         // Check if this channel is used and available at the data analyzer
         if (samples.sample.empty()) {
             // Delete all vector arrays
             graphVoltage.clear();
+            graphHisto.clear();
             continue;
         }
 
@@ -75,8 +78,10 @@ void GraphGenerator::generateGraphsTYvoltage(PPresult *result) {
             leftmostPosition = -leftmostSample; // trace can't start on left margin
             leftmostSample = 0; // show as much as we have on left side
         }
+#define X 100
         // Set size directly to avoid reallocations (n+1 dots to display n lines)
         graphVoltage.reserve( ++dotsOnScreen );
+        graphHisto.reserve( 2 * ( X * 8 + 2 ) );
 
         const double gain = scope->gain(channel);
         const double offset = scope->voltage[channel].offset;
@@ -85,12 +90,31 @@ void GraphGenerator::generateGraphsTYvoltage(PPresult *result) {
         auto sampleEnd = samples.sample.cend();
         // printf("samples: %lu, dotsOnScreen: %d\n", samples.sample.size(), dotsOnScreen);
         graphVoltage.clear(); // remove all previous dots and fill in new trace
+        graphHisto.clear(); // remove all previous dots and fill in new trace
+        unsigned bins[ X * 8 + 2 ] = { 0 };
         for (unsigned int position = unsigned(leftmostPosition);
              position < dotsOnScreen && sampleIterator < sampleEnd;
              ++position, ++sampleIterator) {
+            double y = *sampleIterator / gain + offset;
+            int bin = int( X * (y+4) );
+            if ( bin > 0 && bin < X * 8 + 1 )
+                ++bins[bin];
             graphVoltage.push_back(QVector3D(float(MARGIN_LEFT + position * horizontalFactor),
-                                        float(*sampleIterator / gain + offset), 0.0f ));
+                                        float(y), 0.0f ));
         }
+        unsigned max = 0;
+        for ( int bin = 0; bin < X * 8 + 1; ++bin ) {
+            if ( bins[ bin ] > max ) {
+                max = bins[ bin ];
+            }
+        }
+        for ( int bin = 0; bin < X * 8 + 1; ++bin ) {
+            graphHisto.push_back(QVector3D(float(MARGIN_LEFT),
+                                        float(double( bin ) / X - 4.0 ), 0.0f ) );
+            graphHisto.push_back(QVector3D(float(MARGIN_LEFT + double(bins[bin]) / max),
+                                        float( double( bin ) / X - 4.0 ), 0.0f ) );
+        }
+
     }
 }
 
