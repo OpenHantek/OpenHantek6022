@@ -50,13 +50,13 @@ void GraphGenerator::generateGraphsTYvoltage(PPresult *result) {
     //printf( "GraphGenerator::generateGraphsTYvoltage()\n" );
     result->vaChannelVoltage.resize(scope->voltage.size());
     for (ChannelID channel = 0; channel < scope->voltage.size(); ++channel) {
-        ChannelGraph &target = result->vaChannelVoltage[channel];
+        ChannelGraph &graphVoltage = result->vaChannelVoltage[channel];
         const SampleValues &samples = useVoltSamplesOf(channel, result, scope);
 
         // Check if this channel is used and available at the data analyzer
         if (samples.sample.empty()) {
             // Delete all vector arrays
-            target.clear();
+            graphVoltage.clear();
             continue;
         }
 
@@ -76,7 +76,7 @@ void GraphGenerator::generateGraphsTYvoltage(PPresult *result) {
             leftmostSample = 0; // show as much as we have on left side
         }
         // Set size directly to avoid reallocations (n+1 dots to display n lines)
-        target.reserve( ++dotsOnScreen );
+        graphVoltage.reserve( ++dotsOnScreen );
 
         const double gain = scope->gain(channel);
         const double offset = scope->voltage[channel].offset;
@@ -84,11 +84,11 @@ void GraphGenerator::generateGraphsTYvoltage(PPresult *result) {
         auto sampleIterator = samples.sample.cbegin() + leftmostSample; // -> visible samples
         auto sampleEnd = samples.sample.cend();
         // printf("samples: %lu, dotsOnScreen: %d\n", samples.sample.size(), dotsOnScreen);
-        target.clear(); // remove all previous dots and fill in new trace
+        graphVoltage.clear(); // remove all previous dots and fill in new trace
         for (unsigned int position = unsigned(leftmostPosition);
              position < dotsOnScreen && sampleIterator < sampleEnd;
              ++position, ++sampleIterator) {
-            target.push_back(QVector3D(float(MARGIN_LEFT + position * horizontalFactor),
+            graphVoltage.push_back(QVector3D(float(MARGIN_LEFT + position * horizontalFactor),
                                         float(*sampleIterator / gain + offset), 0.0f ));
         }
     }
@@ -100,13 +100,13 @@ void GraphGenerator::generateGraphsTYspectrum(PPresult *result) {
     ready = true;
     result->vaChannelSpectrum.resize(scope->spectrum.size());
     for (ChannelID channel = 0; channel < scope->voltage.size(); ++channel) {
-        ChannelGraph &target = result->vaChannelSpectrum[channel];
+        ChannelGraph &graphSpectrum = result->vaChannelSpectrum[channel];
         const SampleValues &samples = useSpecSamplesOf(channel, result, scope);
 
         // Check if this channel is used and available at the data analyzer
         if (samples.sample.empty()) {
             // Delete all vector arrays
-            target.clear();
+            graphSpectrum.clear();
             continue;
         }
         // Check if the sample count has changed
@@ -114,7 +114,7 @@ void GraphGenerator::generateGraphsTYspectrum(PPresult *result) {
         size_t neededSize = sampleCount * 2;
 
         // Set size directly to avoid reallocations
-        target.reserve(neededSize);
+        graphSpectrum.reserve(neededSize);
 
         // What's the horizontal distance between sampling points?
         double horizontalFactor = samples.interval / scope->horizontal.frequencybase;
@@ -125,7 +125,7 @@ void GraphGenerator::generateGraphsTYspectrum(PPresult *result) {
         const double offset = scope->spectrum[channel].offset;
 
         for (unsigned int position = 0; position < sampleCount; ++position) {
-            target.push_back( QVector3D( float( position * horizontalFactor - DIVS_TIME / 2 ),
+            graphSpectrum.push_back( QVector3D( float( position * horizontalFactor - DIVS_TIME / 2 ),
                                          float( *(dataIterator++) / magnitude + offset), 0.0f ) );
         }
     }
@@ -161,8 +161,8 @@ void GraphGenerator::generateGraphsXY(PPresult *result) {
 
         // Check if the sample count has changed
         const size_t sampleCount = std::min( xSamples.sample.size(), ySamples.sample.size() );
-        ChannelGraph &drawLines = result->vaChannelVoltage[ yChannel ]; // color of y channel
-        drawLines.reserve( sampleCount * 2 );
+        ChannelGraph &graphXY = result->vaChannelVoltage[ yChannel ]; // color of y channel
+        graphXY.reserve( sampleCount * 2 );
 
         // Fill vector array
         std::vector<double>::const_iterator xIterator = xSamples.sample.begin();
@@ -173,7 +173,7 @@ void GraphGenerator::generateGraphsXY(PPresult *result) {
         const double yOffset = scope->voltage[ yChannel ].offset;
 
         for ( unsigned int position = 0; position < sampleCount; ++position ) {
-            drawLines.push_back(QVector3D( float( *( xIterator++ ) / xGain + xOffset ),
+            graphXY.push_back(QVector3D( float( *( xIterator++ ) / xGain + xOffset ),
                                            float( *( yIterator++ ) / yGain + yOffset ), 0.0 ) );
         }
     }
