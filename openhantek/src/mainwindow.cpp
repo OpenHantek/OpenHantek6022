@@ -243,6 +243,8 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, Expo
         QString fileName = QFileDialog::getSaveFileName(this, tr("Save settings"), "", tr("Settings (*.ini)"));
         if (fileName.isEmpty())
             return;
+        if (!fileName.endsWith(".ini"))
+            fileName.append(".ini");
         mSettings->mainWindowGeometry = saveGeometry();
         mSettings->mainWindowState = saveState();
         mSettings->setFilename(fileName);
