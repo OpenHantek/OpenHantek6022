@@ -42,9 +42,10 @@ After David [stopped maintaining](https://github.com/OpenHantek/openhantek/issue
 * [Calibration program](https://github.com/Ho-Ro/Hantek6022API/blob/master/README.md#create-calibration-values-for-openhantek) to create these values automatically.
 * Sinc interpolation for fast timebase settings improves pictures with only few samples on screen.
 * Digital phosphor effect to notice even short spikes; simple eye-diagram display with alternating trigger slope.
+* Histogram function for voltage channels on right screen margin.
 * A [zoom view](docs/images/screenshot_mainwindow_with_zoom.png) with a freely selectable range.
 * Cursor measurement function for voltage, time, amplitude and frequency.
-* Export to CSV, JPG, PNG or print the graphs.
+* Export of the graphs to CSV, JPG, PNG file or to the printer.
 * Freely configurable colors.
 * Automatic adaption of iconset for light and [dark themes](docs/images/screenshot_mainwindow_dark.png).
 * The dock views on the main window can be customized by dragging them around and stacking them.

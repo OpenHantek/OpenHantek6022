@@ -4,11 +4,13 @@
         <file>images/fontawesome-4.7.0.ttf</file>
         <file>images/OpenHantek.svg</file>
         <file>images/digitalphosphor.svg</file>
+        <file>images/histogram.svg</file>
         <file>images/measure.svg</file>
         <file>images/pause.svg</file>
         <file>images/play.svg</file>
         <file>images/zoom.svg</file>
         <file>images/darktheme/digitalphosphor.svg</file>
+        <file>images/darktheme/histogram.svg</file>
         <file>images/darktheme/measure.svg</file>
         <file>images/darktheme/pause.svg</file>
         <file>images/darktheme/play.svg</file>

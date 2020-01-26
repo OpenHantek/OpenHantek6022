@@ -187,6 +187,7 @@ void DsoSettings::load() {
     }
     store->endGroup();
     // Other view settings
+    if (store->contains("histogram") ) scope.histogram = store->value("histogram").toBool();
     if (store->contains("digitalPhosphor")) view.digitalPhosphor = store->value("digitalPhosphor").toBool();
     if (store->contains("interpolation"))
         view.interpolation = Dso::InterpolationMode( store->value("interpolation").toInt() );
@@ -224,14 +225,14 @@ void DsoSettings::save() {
     store->setValue("timebase", scope.horizontal.timebase);
     store->setValue("recordLength", scope.horizontal.recordLength);
     store->setValue("samplerate", scope.horizontal.samplerate);
-    store->endGroup();
+    store->endGroup(); // horizontal
     // Trigger
     store->beginGroup("trigger");
     store->setValue("mode", unsigned( scope.trigger.mode) );
     store->setValue("position", scope.trigger.offset );
     store->setValue("slope", unsigned( scope.trigger.slope) );
     store->setValue("source", scope.trigger.source);
-    store->endGroup();
+    store->endGroup(); // trigger
     // Spectrum
     for (ChannelID channel = 0; channel < scope.spectrum.size(); ++channel) {
         store->beginGroup(QString("spectrum%1").arg(channel));
@@ -247,8 +248,8 @@ void DsoSettings::save() {
             name = QString("y%1").arg(marker);
             store->setValue(name, scope.spectrum[channel].cursor.pos[marker].y());
         }
-        store->endGroup();
-        store->endGroup();
+        store->endGroup(); // cursor
+        store->endGroup(); // spectrum%1
     }
     // Voltage
     for (ChannelID channel = 0; channel < scope.voltage.size(); ++channel) {
@@ -269,15 +270,15 @@ void DsoSettings::save() {
             name = QString("y%1").arg(marker);
             store->setValue(name, scope.voltage[channel].cursor.pos[marker].y());
         }
-        store->endGroup();
-        store->endGroup();
+        store->endGroup(); // cursor
+        store->endGroup(); // vertical%1
     }
 
     // Post processing
     store->setValue("spectrumLimit", post.spectrumLimit);
     store->setValue("spectrumReference", post.spectrumReference);
     store->setValue("spectrumWindow", unsigned( post.spectrumWindow ) );
-    store->endGroup();
+    store->endGroup(); //scope
 
     // View
     store->beginGroup("view");
@@ -304,21 +305,22 @@ void DsoSettings::save() {
         store->setValue("text", colors->text.name(QColor::HexArgb));
         for (ChannelID channel = 0; channel < scope.voltage.size(); ++channel)
             store->setValue(QString("voltage%1").arg(channel), colors->voltage[channel].name(QColor::HexArgb));
-        store->endGroup();
+        store->endGroup(); // screen / print
     }
-    store->endGroup();
+    store->endGroup(); // color
 
     // Other view settings
+    store->setValue("histogram", scope.histogram);
     store->setValue("digitalPhosphor", view.digitalPhosphor);
     store->setValue("interpolation", view.interpolation);
     store->setValue("screenColorImages", view.screenColorImages);
     store->setValue("zoom", view.zoom);
     store->setValue("cursorGridPosition", view.cursorGridPosition);
     store->setValue("cursorsVisible", view.cursorsVisible);
-    store->endGroup();
+    store->endGroup(); // view
 
     store->beginGroup("window");
     store->setValue("geometry", mainWindowGeometry);
     store->setValue("state", mainWindowState);
-    store->endGroup();
+    store->endGroup(); // window
 }

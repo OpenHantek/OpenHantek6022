@@ -80,6 +80,8 @@ struct DsoSettingsScope {
     DsoSettingsScopeHorizontal horizontal;                          ///< Settings for the horizontal axis
     DsoSettingsScopeTrigger trigger;                                ///< Settings for the trigger
 
+    bool histogram = false;
+
     double gain(unsigned channel) const {
         return gainSteps[voltage[channel].gainStepIndex] * voltage[channel].probeAttn;
     }

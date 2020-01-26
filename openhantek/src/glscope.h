@@ -76,7 +76,7 @@ class GlScope : public QOpenGLWidget {
     void drawVertices(QOpenGLFunctions *gl, unsigned marker, QColor color);
 
     void drawVoltageChannelGraph(ChannelID channel, Graph &graph, int historyIndex);
-    void drawHistoChannelGraph(ChannelID channel, Graph &graph, int historyIndex);
+    void drawHistogramChannelGraph(ChannelID channel, Graph &graph, int historyIndex);
     void drawSpectrumChannelGraph(ChannelID channel, Graph &graph, int historyIndex);
     QPointF eventToPosition(QMouseEvent *event);
   signals:

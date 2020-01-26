@@ -178,8 +178,9 @@ void GlScope::mouseReleaseEvent(QMouseEvent *event) {
 }
 
 void GlScope::paintEvent(QPaintEvent *event) {
+    static bool success = false;
     // Draw error message if OpenGL failed
-    if (!shaderCompileSuccess) {
+    if ( !shaderCompileSuccess && !success ) {
         QPainter painter(this);
         painter.setRenderHint(QPainter::Antialiasing, true);
         QFont font = painter.font();
@@ -187,8 +188,10 @@ void GlScope::paintEvent(QPaintEvent *event) {
         painter.setFont(font);
         painter.drawText(rect(), Qt::AlignCenter, errorMessage);
         event->accept();
-    } else
+    } else {
+        success = true;
         QOpenGLWidget::paintEvent(event);
+    }
 }
 
 void GlScope::initializeGL() {
@@ -421,8 +424,7 @@ void GlScope::paintGL() {
                 drawSpectrumChannelGraph(channel, graph, int( historyIndex) );
             }
             drawVoltageChannelGraph(channel, graph, int( historyIndex) );
-//            if (!zoomed)
-                drawHistoChannelGraph(channel, graph, int( historyIndex) );
+            drawHistogramChannelGraph(channel, graph, int( historyIndex) );
         }
         ++historyIndex;
     }
@@ -649,11 +651,11 @@ void GlScope::drawVoltageChannelGraph(ChannelID channel, Graph &graph, int histo
     context()->functions()->glDrawArrays(dMode, 0, v.second);
 }
 
-void GlScope::drawHistoChannelGraph(ChannelID channel, Graph &graph, int historyIndex) {
+void GlScope::drawHistogramChannelGraph(ChannelID channel, Graph &graph, int historyIndex) {
     if (!scope->voltage[channel].used) return;
 
     m_program->setUniformValue(colorLocation, view->screen.voltage[channel].darker(100 + 10 * historyIndex));
-    Graph::VaoCount &h = graph.vaoHisto[channel];
+    Graph::VaoCount &h = graph.vaoHistogram[channel];
 
     QOpenGLVertexArrayObject::Binder b(h.first);
     const GLenum dMode = (view->interpolation == Dso::INTERPOLATION_OFF) ? GL_POINTS : GL_LINES;

@@ -26,7 +26,7 @@ class MainWindow : public QMainWindow {
     Q_OBJECT
 
   public:
-    explicit MainWindow(HantekDsoControl *dsoControl, DsoSettings *mSettings, ExporterRegistry *exporterRegistry,
+    explicit MainWindow(HantekDsoControl *dsoControl, DsoSettings *dsoSettings, ExporterRegistry *exporterRegistry,
                         QWidget *parent = nullptr);
     ~MainWindow() override;
   public slots:
@@ -46,6 +46,6 @@ class MainWindow : public QMainWindow {
     DsoWidget *dsoWidget;
 
     // Settings used for the whole program
-    DsoSettings *mSettings;
+    DsoSettings *dsoSettings;
     ExporterRegistry *exporterRegistry;
 };

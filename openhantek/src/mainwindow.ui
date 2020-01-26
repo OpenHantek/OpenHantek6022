@@ -38,6 +38,7 @@
      <string>&amp;View</string>
     </property>
     <addaction name="actionDigital_phosphor"/>
+    <addaction name="actionHistogram"/>
     <addaction name="actionZoom"/>
     <addaction name="actionMeasure"/>
     <addaction name="separator"/>
@@ -83,6 +84,7 @@
    <addaction name="actionSampling"/>
    <addaction name="separator"/>
    <addaction name="actionDigital_phosphor"/>
+   <addaction name="actionHistogram"/>
    <addaction name="actionZoom"/>
    <addaction name="actionMeasure"/>
    <addaction name="separator"/>
@@ -133,6 +135,14 @@
    </property>
    <property name="text">
     <string>Digital phosphor</string>
+   </property>
+  </action>
+  <action name="actionHistogram">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Histogram</string>
    </property>
   </action>
   <action name="actionZoom">

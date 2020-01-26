@@ -32,7 +32,7 @@
 
 MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, ExporterRegistry *exporterRegistry,
                        QWidget *parent)
-    : QMainWindow(parent), ui(new Ui::MainWindow), mSettings(settings), exporterRegistry(exporterRegistry) {
+    : QMainWindow(parent), ui(new Ui::MainWindow), dsoSettings(settings), exporterRegistry(exporterRegistry) {
 
     QVariantMap colorMap;
     QString iconPath = QString( ":/images/" );
@@ -47,6 +47,7 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, Expo
     iconPlay = QIcon( iconPath + "play.svg" );
     ui->actionSampling->setIcon( iconPause );
     ui->actionDigital_phosphor->setIcon( QIcon( iconPath + "digitalphosphor.svg" ) );
+    ui->actionHistogram->setIcon( QIcon( iconPath + "histogram.svg" ) );
     ui->actionZoom->setIcon( QIcon( iconPath + "zoom.svg" ) );
     ui->actionMeasure->setIcon( QIcon( iconPath + "measure.svg" ) );
     ui->actionOpen->setIcon(iconFont->icon( fa::folderopen, colorMap ) );
@@ -79,7 +80,7 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, Expo
         ui->menuExport->addAction(action);
     }
 
-    DsoSettingsScope *scope = &(mSettings->scope);
+    DsoSettingsScope *scope = &(dsoSettings->scope);
     const Dso::ControlSpecification *spec = dsoControl->getDevice()->getModel()->spec();
 
     registerDockMetaTypes();
@@ -100,11 +101,11 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, Expo
     addDockWidget(Qt::RightDockWidgetArea, triggerDock);
     addDockWidget(Qt::RightDockWidgetArea, spectrumDock);
 
-    restoreGeometry(mSettings->mainWindowGeometry);
-    restoreState(mSettings->mainWindowState);
+    restoreGeometry(dsoSettings->mainWindowGeometry);
+    restoreState(dsoSettings->mainWindowState);
 
     // Central oszilloscope widget
-    dsoWidget = new DsoWidget(&mSettings->scope, &mSettings->view, spec);
+    dsoWidget = new DsoWidget(&dsoSettings->scope, &dsoSettings->view, spec);
     setCentralWidget(dsoWidget);
 
     // Command field inside the status bar
@@ -132,23 +133,23 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, Expo
 
     // Connect signals to DSO controller and widget
     connect(horizontalDock, &HorizontalDock::samplerateChanged, [dsoControl, this]() {
-        dsoControl->setSamplerate(mSettings->scope.horizontal.samplerate);
-        this->dsoWidget->updateSamplerate(mSettings->scope.horizontal.samplerate);
+        dsoControl->setSamplerate(dsoSettings->scope.horizontal.samplerate);
+        this->dsoWidget->updateSamplerate(dsoSettings->scope.horizontal.samplerate);
     });
     connect(horizontalDock, &HorizontalDock::timebaseChanged, [dsoControl, this]() {
-        dsoControl->setRecordTime(mSettings->scope.horizontal.timebase * DIVS_TIME);
-        this->dsoWidget->updateTimebase(mSettings->scope.horizontal.timebase);
+        dsoControl->setRecordTime(dsoSettings->scope.horizontal.timebase * DIVS_TIME);
+        this->dsoWidget->updateTimebase(dsoSettings->scope.horizontal.timebase);
     });
     connect(horizontalDock, &HorizontalDock::frequencybaseChanged, dsoWidget, &DsoWidget::updateFrequencybase);
     connect(dsoControl, &HantekDsoControl::samplerateChanged, [this, horizontalDock](double samplerate) {
         // The timebase was set, let's adapt the samplerate accordingly
         //printf( "main::samplerateChanged( %g )\n", samplerate );
-        mSettings->scope.horizontal.samplerate = samplerate;
+        dsoSettings->scope.horizontal.samplerate = samplerate;
         horizontalDock->setSamplerate(samplerate);
         dsoWidget->updateSamplerate(samplerate);
     });
     connect(horizontalDock, &HorizontalDock::calfreqChanged, [dsoControl, this]() {
-        dsoControl->setCalFreq(mSettings->scope.horizontal.calfreq);
+        dsoControl->setCalFreq(dsoSettings->scope.horizontal.calfreq);
     });
 
     connect(triggerDock, &TriggerDock::modeChanged, dsoControl, &HantekDsoControl::setTriggerMode);
@@ -161,18 +162,18 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, Expo
     connect(dsoWidget, &DsoWidget::triggerLevelChanged, dsoControl, &HantekDsoControl::setTriggerLevel);
 
     auto usedChanged = [this, dsoControl, spec](ChannelID channel) {
-        if (channel >= mSettings->scope.voltage.size())
+        if (channel >= dsoSettings->scope.voltage.size())
             return;
 
-        bool mathUsed = mSettings->scope.anyUsed(spec->channels);
+        bool mathUsed = dsoSettings->scope.anyUsed(spec->channels);
 
         // Normal channel, check if voltage/spectrum or math channel is used
         if (channel < spec->channels)
-            dsoControl->setChannelUsed(channel, mathUsed | mSettings->scope.anyUsed(channel));
+            dsoControl->setChannelUsed(channel, mathUsed | dsoSettings->scope.anyUsed(channel));
         // Math channel, update all channels
         else if (channel == spec->channels) {
             for (ChannelID c = 0; c < spec->channels; ++c)
-                dsoControl->setChannelUsed(c, mathUsed | mSettings->scope.anyUsed(c));
+                dsoControl->setChannelUsed(c, mathUsed | dsoSettings->scope.anyUsed(c));
         }
     };
     connect(voltageDock, &VoltageDock::usedChanged, usedChanged);
@@ -182,7 +183,7 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, Expo
     connect(voltageDock, &VoltageDock::gainChanged, [this, dsoControl, spec](ChannelID channel ) {
         if (channel >= spec->channels)
             return;
-        dsoControl->setGain(channel, mSettings->scope.gain(channel) * DIVS_VOLTAGE);
+        dsoControl->setGain(channel, dsoSettings->scope.gain(channel) * DIVS_VOLTAGE);
     });
     connect(voltageDock, &VoltageDock::probeAttnChanged, [ dsoControl, spec](ChannelID channel, double probeAttn ) {
         if (channel >= spec->channels)
@@ -229,70 +230,80 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, Expo
     connect(ui->actionOpen, &QAction::triggered, [this]() {
         QString fileName = QFileDialog::getOpenFileName(this, tr("Open file"), "", tr("Settings (*.ini)"));
         if (!fileName.isEmpty()) {
-            if (mSettings->setFilename(fileName)) { mSettings->load(); }
+            if (dsoSettings->setFilename(fileName)) { dsoSettings->load(); }
         }
     });
 
     connect(ui->actionSave, &QAction::triggered, [this]() {
-        mSettings->mainWindowGeometry = saveGeometry();
-        mSettings->mainWindowState = saveState();
-        mSettings->save();
+        dsoSettings->mainWindowGeometry = saveGeometry();
+        dsoSettings->mainWindowState = saveState();
+        dsoSettings->save();
     });
 
     connect(ui->actionSave_as, &QAction::triggered, [this]() {
         QString fileName = QFileDialog::getSaveFileName(this, tr("Save settings"), "", tr("Settings (*.ini)"));
         if (fileName.isEmpty())
             return;
-        mSettings->mainWindowGeometry = saveGeometry();
-        mSettings->mainWindowState = saveState();
-        mSettings->setFilename(fileName);
-        mSettings->save();
+        dsoSettings->mainWindowGeometry = saveGeometry();
+        dsoSettings->mainWindowState = saveState();
+        dsoSettings->setFilename(fileName);
+        dsoSettings->save();
     });
 
     connect(ui->actionExit, &QAction::triggered, this, &QWidget::close);
 
     connect(ui->actionSettings, &QAction::triggered, [this]() {
-        mSettings->mainWindowGeometry = saveGeometry();
-        mSettings->mainWindowState = saveState();
+        dsoSettings->mainWindowGeometry = saveGeometry();
+        dsoSettings->mainWindowState = saveState();
 
-        DsoConfigDialog *configDialog = new DsoConfigDialog(this->mSettings, this);
+        DsoConfigDialog *configDialog = new DsoConfigDialog(this->dsoSettings, this);
         configDialog->setModal(true);
         configDialog->show();
     });
 
     connect(this->ui->actionDigital_phosphor, &QAction::toggled, [this](bool enabled) {
-        mSettings->view.digitalPhosphor = enabled;
+        dsoSettings->view.digitalPhosphor = enabled;
 
-        if (mSettings->view.digitalPhosphor)
+        if (dsoSettings->view.digitalPhosphor)
             this->ui->actionDigital_phosphor->setStatusTip(tr("Disable fading of previous graphs"));
         else
             this->ui->actionDigital_phosphor->setStatusTip(tr("Enable fading of previous graphs"));
     });
-    this->ui->actionDigital_phosphor->setChecked(mSettings->view.digitalPhosphor);
+    this->ui->actionDigital_phosphor->setChecked(dsoSettings->view.digitalPhosphor);
+
+    connect(ui->actionHistogram, &QAction::toggled, [this](bool enabled) {
+        dsoSettings->scope.histogram = enabled;
+
+        if (dsoSettings->scope.histogram)
+            this->ui->actionHistogram->setStatusTip(tr("Hide histogram"));
+        else
+            this->ui->actionHistogram->setStatusTip(tr("Show histogram"));
+    });
+    ui->actionHistogram->setChecked(dsoSettings->scope.histogram);
 
     connect(ui->actionZoom, &QAction::toggled, [this](bool enabled) {
-        mSettings->view.zoom = enabled;
+        dsoSettings->view.zoom = enabled;
 
-        if (mSettings->view.zoom)
+        if (dsoSettings->view.zoom)
             this->ui->actionZoom->setStatusTip(tr("Hide magnified scope"));
         else
             this->ui->actionZoom->setStatusTip(tr("Show magnified scope"));
 
         this->dsoWidget->updateZoom(enabled);
     });
-    ui->actionZoom->setChecked(mSettings->view.zoom);
+    ui->actionZoom->setChecked(dsoSettings->view.zoom);
 
     connect(ui->actionMeasure, &QAction::toggled, [this](bool enabled) {
-        mSettings->view.cursorsVisible = enabled;
+        dsoSettings->view.cursorsVisible = enabled;
 
-        if (mSettings->view.cursorsVisible)
+        if (dsoSettings->view.cursorsVisible)
             this->ui->actionMeasure->setStatusTip(tr("Hide measurements"));
         else
             this->ui->actionMeasure->setStatusTip(tr("Show measurements"));
 
         this->dsoWidget->updateCursorGrid(enabled);
     });
-    ui->actionMeasure->setChecked(mSettings->view.cursorsVisible);
+    ui->actionMeasure->setChecked(dsoSettings->view.cursorsVisible);
 
     connect(ui->actionUserManual, &QAction::triggered, []() {
         QString usrManualPath( "/usr/share/doc/OpenHantek/OpenHantek6022_User_Manual.pdf" );
@@ -316,11 +327,11 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, Expo
         );
     });
 
-    dsoWidget->updateTimebase(mSettings->scope.horizontal.timebase);
+    dsoWidget->updateTimebase(dsoSettings->scope.horizontal.timebase);
 
     for (ChannelID channel = 0; channel < spec->channels; ++channel) {
-        this->dsoWidget->updateVoltageUsed(channel, mSettings->scope.voltage[channel].used);
-        this->dsoWidget->updateSpectrumUsed(channel, mSettings->scope.spectrum[channel].used);
+        this->dsoWidget->updateVoltageUsed(channel, dsoSettings->scope.voltage[channel].used);
+        this->dsoWidget->updateSpectrumUsed(channel, dsoSettings->scope.spectrum[channel].used);
     }
 }
 
@@ -343,10 +354,10 @@ void MainWindow::exporterProgressChanged() {
 /// \brief Save the settings before exiting.
 /// \param event The close event that should be handled.
 void MainWindow::closeEvent(QCloseEvent *event) {
-    if (mSettings->alwaysSave) {
-        mSettings->mainWindowGeometry = saveGeometry();
-        mSettings->mainWindowState = saveState();
-        mSettings->save();
+    if (dsoSettings->alwaysSave) {
+        dsoSettings->mainWindowGeometry = saveGeometry();
+        dsoSettings->mainWindowState = saveState();
+        dsoSettings->save();
     }
     QMainWindow::closeEvent(event);
 }

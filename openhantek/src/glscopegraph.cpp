@@ -12,7 +12,7 @@ void Graph::writeData(PPresult *data, QOpenGLShaderProgram *program, int vertexL
     // Determine memory
     int neededMemory = 0;
     for (ChannelGraph &cg : data->vaChannelVoltage) neededMemory += int( cg.size() * sizeof(QVector3D) );
-    for (ChannelGraph &cg : data->vaChannelHisto) neededMemory += int( cg.size() * sizeof(QVector3D) );
+    for (ChannelGraph &cg : data->vaChannelHistogram) neededMemory += int( cg.size() * sizeof(QVector3D) );
     for (ChannelGraph &cg : data->vaChannelSpectrum) neededMemory += int( cg.size() * sizeof(QVector3D) );
 
     buffer.bind();
@@ -27,9 +27,9 @@ void Graph::writeData(PPresult *data, QOpenGLShaderProgram *program, int vertexL
     // Write data to buffer
     int offset = 0;
     vaoVoltage.resize(data->vaChannelVoltage.size());
-    vaoHisto.resize(data->vaChannelHisto.size());
+    vaoHistogram.resize(data->vaChannelHistogram.size());
     vaoSpectrum.resize(data->vaChannelSpectrum.size());
-    for (ChannelID channel = 0; channel < std::max( std::max(vaoVoltage.size(), vaoHisto.size()), vaoSpectrum.size() ); ++channel) {
+    for (ChannelID channel = 0; channel < std::max( std::max(vaoVoltage.size(), vaoHistogram.size()), vaoSpectrum.size() ); ++channel) {
         int dataSize;
 
         // Voltage channel
@@ -50,21 +50,21 @@ void Graph::writeData(PPresult *data, QOpenGLShaderProgram *program, int vertexL
             offset += dataSize;
         }
 
-        // Histo channel
-        if (channel < vaoHisto.size()) {
-            VaoCount &h = vaoHisto[channel];
+        // Histogram channel
+        if (channel < vaoHistogram.size()) {
+            VaoCount &h = vaoHistogram[channel];
             if (!h.first) {
                 h.first = new QOpenGLVertexArrayObject;
                 if (!h.first->create()) throw new std::runtime_error("QOpenGLVertexArrayObject create failed");
             }
-            ChannelGraph &gHisto = data->vaChannelHisto[channel];
+            ChannelGraph &gHistogram = data->vaChannelHistogram[channel];
             h.first->bind();
-            dataSize = int(gHisto.size() * sizeof(QVector3D));
-            buffer.write(offset, gHisto.data(), dataSize);
+            dataSize = int(gHistogram.size() * sizeof(QVector3D));
+            buffer.write(offset, gHistogram.data(), dataSize);
             program->enableAttributeArray(vertexLocation);
             program->setAttributeBuffer(vertexLocation, GL_FLOAT, offset, 3, 0);
             h.first->release();
-            h.second = int( gHisto.size() );
+            h.second = int( gHistogram.size() );
             offset += dataSize;
         }
 
@@ -95,7 +95,7 @@ Graph::~Graph() {
         vao.first->destroy();
         delete vao.first;
     }
-    for (auto &vao : vaoHisto) {
+    for (auto &vao : vaoHistogram) {
         vao.first->destroy();
         delete vao.first;
     }
