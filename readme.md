@@ -40,7 +40,6 @@ After David [stopped maintaining](https://github.com/OpenHantek/openhantek/issue
 * Trigger modes: Normal, Auto and Single with green/red status display (top left).
 * Calibration values loaded from eeprom or a model configuration file.
 * [Calibration program](https://github.com/Ho-Ro/Hantek6022API/blob/master/README.md#create-calibration-values-for-openhantek) to create these values automatically.
-* Sinc interpolation for fast timebase settings improves pictures with only few samples on screen.
 * Digital phosphor effect to notice even short spikes; simple eye-diagram display with alternating trigger slope.
 * Histogram function for voltage channels on right screen margin.
 * A [zoom view](docs/images/screenshot_mainwindow_with_zoom.png) with a freely selectable range.

@@ -61,8 +61,8 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, Expo
     setWindowIcon( QIcon( ":/images/OpenHantek.svg" ) );
     setWindowTitle(
         tr("OpenHantek6022 (%1) - Device %2 (FW%3)")
-            .arg(QString::fromStdString( VERSION))
-            .arg(QString::fromStdString(dsoControl->getDevice()->getModel()->name))
+            .arg( QString::fromStdString( VERSION),
+                  QString::fromStdString(dsoControl->getDevice()->getModel()->name))
             .arg(dsoControl->getDevice()->getFwVersion(),4,16,QChar('0'))
     );
 
@@ -344,7 +344,7 @@ void MainWindow::showNewData(std::shared_ptr<PPresult> newData) {
 }
 
 void MainWindow::exporterStatusChanged(const QString &exporterName, const QString &status) {
-    ui->statusbar->showMessage(tr("%1: %2").arg(exporterName).arg(status));
+    ui->statusbar->showMessage(tr("%1: %2").arg(exporterName, status));
 }
 
 void MainWindow::exporterProgressChanged() { 

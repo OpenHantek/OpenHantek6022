@@ -52,9 +52,9 @@ void DataGrid::CursorInfo::configure(const QString &text, const QColor &bgColor,
             color: %3;
             border: 1px dotted %2;
         }
-    )").arg(bgColor.name(QColor::HexArgb))
-       .arg(fgColor.name(QColor::HexArgb))
-       .arg(fgColor.darker().name(QColor::HexArgb)));
+    )").arg(bgColor.name(QColor::HexArgb),
+            fgColor.name(QColor::HexArgb),
+            fgColor.darker().name(QColor::HexArgb)));
 
     shape->setStyleSheet(QString(R"(
         QPushButton {
@@ -62,8 +62,8 @@ void DataGrid::CursorInfo::configure(const QString &text, const QColor &bgColor,
             background-color: %1;
             border: none
         }
-    )").arg(bgColor.name(QColor::HexArgb))
-       .arg(fgColor.name(QColor::HexArgb)));
+    )").arg(bgColor.name(QColor::HexArgb),
+            fgColor.name(QColor::HexArgb)));
 
     deltaXLabel->setPalette(palette);
     deltaYLabel->setPalette(palette);
