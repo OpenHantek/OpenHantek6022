@@ -61,6 +61,11 @@ class HorizontalDock : public QDockWidget {
     /// \param calfreq The calibration frequency in hertz.
     double setCalfreq( double calfreq );
 
+  public slots:
+    /// \brief Loads settings into GUI
+    /// \param scope Settings to load
+    void loadSettings(DsoSettingsScope *scope);
+
   protected:
     void closeEvent(QCloseEvent *event);
     QGridLayout *dockLayout;           ///< The main layout for the dock window

@@ -74,11 +74,8 @@ VoltageDock::VoltageDock(DsoSettingsScope *scope, const Dso::ControlSpecificatio
         if (channel < spec->channels) {
             dockLayout->addWidget( b.attnSpinBox, row, 1, 1, 1 ) ;
             dockLayout->addWidget( b.miscComboBox, row++, 2, 1, 1) ;
-            if ( int(scope->voltage[channel].couplingOrMathIndex) < couplingStrings.size() )
-                setCoupling(channel, scope->voltage[channel].couplingOrMathIndex);
         } else {
             dockLayout->addWidget( b.miscComboBox, row++, 1, 1, 2 );
-            setMode(scope->voltage[channel].couplingOrMathIndex);
         }
 
         // draw divider line
@@ -88,11 +85,6 @@ VoltageDock::VoltageDock(DsoSettingsScope *scope, const Dso::ControlSpecificatio
             divider->setFrameShape(QFrame::HLine);
             dockLayout->addWidget(divider, row++, 0, 1, 3);
         }
-
-        setGain(channel, scope->voltage[channel].gainStepIndex);
-        setUsed(channel, scope->voltage[channel].used);
-        setAttn(channel, scope->voltage[channel].probeAttn);
-        setInverted(channel, scope->voltage[channel].inverted);
 
         connect(b.gainComboBox, SELECT<int>::OVERLOAD_OF(&QComboBox::currentIndexChanged), [this,channel](unsigned index) {
             this->scope->voltage[channel].gainStepIndex = index;
@@ -123,8 +115,30 @@ VoltageDock::VoltageDock(DsoSettingsScope *scope, const Dso::ControlSpecificatio
         });
     }
 
+    // Load settings into GUI
+    this->loadSettings(scope, spec);
+    
     dockWidget = new QWidget();
     SetupDockWidget(this, dockWidget, dockLayout);
+}
+
+void VoltageDock::loadSettings(DsoSettingsScope *scope, const Dso::ControlSpecification *spec) {
+
+    for (ChannelID channel = 0; channel < scope->voltage.size(); ++channel) {
+
+        if (channel < spec->channels) {
+            if ( int(scope->voltage[channel].couplingOrMathIndex) < couplingStrings.size() )
+                setCoupling(channel, scope->voltage[channel].couplingOrMathIndex);
+        } 
+        else {
+            setMode(scope->voltage[channel].couplingOrMathIndex);
+        }
+
+        setGain(channel, scope->voltage[channel].gainStepIndex);
+        setUsed(channel, scope->voltage[channel].used);
+        setAttn(channel, scope->voltage[channel].probeAttn);
+        setInverted(channel, scope->voltage[channel].inverted);
+    }
 }
 
 /// \brief Don't close the dock, just hide it

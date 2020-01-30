@@ -452,8 +452,8 @@
 <context>
     <name>HantekDsoControl</name>
     <message>
-        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="362"/>
-        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="363"/>
+        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="382"/>
+        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="383"/>
         <source>Couldn&apos;t get channel level data from oscilloscope</source>
         <translation>Não foi possível obter dados do canal do osciloscópio</translation>
     </message>
@@ -708,63 +708,63 @@
         <translation>Iniciar osciloscópio</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="230"/>
+        <location filename="../src/mainwindow.cpp" line="238"/>
         <source>Open file</source>
         <translation>Abrir arquivo</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="230"/>
-        <location filename="../src/mainwindow.cpp" line="243"/>
+        <location filename="../src/mainwindow.cpp" line="238"/>
+        <location filename="../src/mainwindow.cpp" line="259"/>
         <source>Settings (*.ini)</source>
         <translation>Configurações (*.ini)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="243"/>
+        <location filename="../src/mainwindow.cpp" line="259"/>
         <source>Save settings</source>
         <translation>Salvar configurações</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="267"/>
+        <location filename="../src/mainwindow.cpp" line="285"/>
         <source>Disable fading of previous graphs</source>
         <translation>Desabilitar desaparecimento de gráficos anteriores</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="269"/>
+        <location filename="../src/mainwindow.cpp" line="287"/>
         <source>Enable fading of previous graphs</source>
         <translation>Habilitar desaparecimento de gráficos anteriores</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="277"/>
+        <location filename="../src/mainwindow.cpp" line="295"/>
         <source>Hide magnified scope</source>
         <translation>Esconder/Ampliar osciloscópio</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="279"/>
+        <location filename="../src/mainwindow.cpp" line="297"/>
         <source>Show magnified scope</source>
         <translation>Mostrar osciloscópio ampliado</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="289"/>
+        <location filename="../src/mainwindow.cpp" line="307"/>
         <source>Hide measurements</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="291"/>
+        <location filename="../src/mainwindow.cpp" line="309"/>
         <source>Show measurements</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="308"/>
+        <location filename="../src/mainwindow.cpp" line="326"/>
         <source>About OpenHantek6022 (%1)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="309"/>
+        <location filename="../src/mainwindow.cpp" line="327"/>
         <source>&lt;p&gt;Open source software for Hantek6022 USB oscilloscopes&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2010, 2011 Oliver Haag&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2012-2020 OpenHantek community&lt;br/&gt;&lt;a href=&apos;https://github.com/OpenHantek&apos;&gt;https://github.com/OpenHantek&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Open source firmware copyright &amp;copy; 2019-2020 Ho-Ro&lt;br/&gt;&lt;a href=&apos;https://github.com/Ho-Ro/Hantek6022API&apos;&gt;https://github.com/Ho-Ro/Hantek6022API&lt;/a&gt;&lt;/p&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="336"/>
+        <location filename="../src/mainwindow.cpp" line="356"/>
         <source>%1: %2</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1085,7 +1085,7 @@
         <translation type="vanished">Sinc</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="98"/>
+        <location filename="../src/main.cpp" line="78"/>
         <source>Use OpenGL ES instead of OpenGL</source>
         <translation>Usar OpenGL ES em vez de OpenGL</translation>
     </message>

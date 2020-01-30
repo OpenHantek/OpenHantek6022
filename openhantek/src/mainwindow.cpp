@@ -226,10 +226,26 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, Expo
             &HorizontalDock::setSamplerateLimits);
     connect(dsoControl, &HantekDsoControl::samplerateSet, horizontalDock, &HorizontalDock::setSamplerateSteps);
 
-    connect(ui->actionOpen, &QAction::triggered, [this]() {
+    // Load settings to GUI
+    connect(this, &MainWindow::settingsLoaded, voltageDock, &VoltageDock::loadSettings);
+    connect(this, &MainWindow::settingsLoaded, horizontalDock, &HorizontalDock::loadSettings);
+    connect(this, &MainWindow::settingsLoaded, spectrumDock, &SpectrumDock::loadSettings);
+    connect(this, &MainWindow::settingsLoaded, triggerDock, &TriggerDock::loadSettings);
+    connect(this, &MainWindow::settingsLoaded, dsoControl, &HantekDsoControl::applySettings);
+    connect(this, &MainWindow::settingsLoaded, dsoWidget, &DsoWidget::updateSlidersSettings);
+
+    connect(ui->actionOpen, &QAction::triggered, [this, spec]() {
         QString fileName = QFileDialog::getOpenFileName(this, tr("Open file"), "", tr("Settings (*.ini)"));
         if (!fileName.isEmpty()) {
             if (mSettings->setFilename(fileName)) { mSettings->load(); }
+            emit settingsLoaded(&mSettings->scope, spec);
+
+            dsoWidget->updateTimebase(mSettings->scope.horizontal.timebase);
+
+            for (ChannelID channel = 0; channel < spec->channels; ++channel) {
+                this->dsoWidget->updateVoltageUsed(channel, mSettings->scope.voltage[channel].used);
+                this->dsoWidget->updateSpectrumUsed(channel, mSettings->scope.spectrum[channel].used);
+            }
         }
     });
 
@@ -317,6 +333,8 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, Expo
             )
         );
     });
+
+    emit settingsLoaded(&mSettings->scope, spec);
 
     dsoWidget->updateTimebase(mSettings->scope.horizontal.timebase);
 

@@ -385,7 +385,7 @@ void DsoWidget::adaptTriggerLevelSlider(DsoWidget::Sliders &sliders, ChannelID c
     sliders.triggerLevelSlider->setStep(int(channel), scope->gain(channel) * 0.05);
     double value = sliders.triggerLevelSlider->value(int(channel));
     if ( bool(value) ) { // ignore when first called at init
-        updateTriggerLevel(channel, value);
+//        updateTriggerLevel(channel, value);
     }
 }
 
@@ -892,5 +892,58 @@ void DsoWidget::updateTriggerLevel(ChannelID channel, double value) {
 void DsoWidget::updateMarker( unsigned marker, double value ) {
     scope->setMarker( marker, value );
     adaptTriggerOffsetSlider();
+    updateMarkerDetails();
+}
+
+/// \brief Update the sliders settings.
+void DsoWidget::updateSlidersSettings() {
+    
+    // The offset sliders for all possible channels
+    for (ChannelID channel = 0; channel < scope->voltage.size(); ++channel) {
+        updateOffset(channel, scope->voltage[channel].offset);
+        mainSliders.voltageOffsetSlider->setColor((channel), view->screen.voltage[channel]);
+        mainSliders.voltageOffsetSlider->setValue(int(channel), scope->voltage[channel].offset);
+        mainSliders.voltageOffsetSlider->setIndexVisible(channel, scope->voltage[channel].used);
+        zoomSliders.voltageOffsetSlider->setColor((channel), view->screen.voltage[channel]);
+        zoomSliders.voltageOffsetSlider->setValue(int(channel), scope->voltage[channel].offset);
+        zoomSliders.voltageOffsetSlider->setIndexVisible(channel, scope->voltage[channel].used);
+
+        updateOffset(int(scope->voltage.size() + channel), scope->spectrum[channel].offset);
+        mainSliders.voltageOffsetSlider->setColor(unsigned( scope->voltage.size() ) + channel, view->screen.spectrum[channel]);
+        mainSliders.voltageOffsetSlider->setValue(int( scope->voltage.size() + channel ), scope->spectrum[channel].offset);
+        mainSliders.voltageOffsetSlider->setIndexVisible(unsigned(scope->voltage.size()) + channel, scope->spectrum[channel].used);
+        zoomSliders.voltageOffsetSlider->setColor(unsigned( scope->voltage.size() ) + channel, view->screen.spectrum[channel]);
+        zoomSliders.voltageOffsetSlider->setValue(int( scope->voltage.size() + channel ), scope->spectrum[channel].offset);
+        zoomSliders.voltageOffsetSlider->setIndexVisible(unsigned(scope->voltage.size()) + channel, scope->spectrum[channel].used);
+    }
+
+    // The trigger position slider
+    mainSliders.triggerOffsetSlider->setValue(0, scope->trigger.offset );
+    updateTriggerOffset(0, scope->trigger.offset, true);
+    updateTriggerOffset(0, scope->trigger.offset, false);
+
+    // The sliders for the trigger levels
+    for (ChannelID channel = 0; channel < spec->channels; ++channel) {
+        mainSliders.triggerLevelSlider->setValue(int(channel), scope->voltage[channel].trigger);
+        adaptTriggerLevelSlider(mainSliders, channel);
+        mainSliders.triggerLevelSlider->setColor(channel,
+                                             (channel == scope->trigger.source)
+                                                 ? view->screen.voltage[channel]
+                                                 : view->screen.voltage[channel].darker());
+        mainSliders.triggerLevelSlider->setIndexVisible(channel, scope->voltage[channel].used);
+        zoomSliders.triggerLevelSlider->setValue(int(channel), scope->voltage[channel].trigger);
+        adaptTriggerLevelSlider(zoomSliders, channel);
+        zoomSliders.triggerLevelSlider->setColor(channel,
+                                             (channel == scope->trigger.source)
+                                                 ? view->screen.voltage[channel]
+                                                 : view->screen.voltage[channel].darker());
+        zoomSliders.triggerLevelSlider->setIndexVisible(channel, scope->voltage[channel].used);
+    }
+    updateTriggerDetails();
+
+    // The marker slider
+    for (int marker = 0; marker < MARKER_COUNT; ++marker) {
+        mainSliders.markerSlider->setValue(marker, scope->horizontal.cursor.pos[marker].x());
+    }
     updateMarkerDetails();
 }

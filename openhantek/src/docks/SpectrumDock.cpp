@@ -49,8 +49,6 @@ SpectrumDock::SpectrumDock(DsoSettingsScope *scope, QWidget *parent, Qt::WindowF
         this->dockLayout->addWidget(b.magnitudeComboBox, int(channel), 1);
 
         b.magnitudeComboBox->addItems(this->magnitudeStrings);
-        this->setMagnitude(channel, scope->spectrum[channel].magnitude);
-        this->setUsed(channel, scope->spectrum[channel].used);
 
         // Connect signals and slots
         connect(b.usedCheckBox, &QCheckBox::toggled, [this,channel](bool checked) {
@@ -70,8 +68,21 @@ SpectrumDock::SpectrumDock(DsoSettingsScope *scope, QWidget *parent, Qt::WindowF
         });
     }
 
+    // Load settings into GUI
+    this->loadSettings(scope);
+
     dockWidget = new QWidget();
     SetupDockWidget(this, dockWidget, dockLayout);
+}
+
+void SpectrumDock::loadSettings(DsoSettingsScope *scope) {
+
+    // Initialize elements
+    for (ChannelID channel = 0; channel < scope->voltage.size(); ++channel) {
+        this->setMagnitude(channel, scope->spectrum[channel].magnitude);
+        this->setUsed(channel, scope->spectrum[channel].used);
+    }
+
 }
 
 /// \brief Don't close the dock, just hide it

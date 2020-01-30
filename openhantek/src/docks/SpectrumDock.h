@@ -38,6 +38,11 @@ class SpectrumDock : public QDockWidget {
     /// \return Index of channel, INT_MAX on error.
     unsigned setUsed(ChannelID channel, bool used);
 
+  public slots:
+    /// \brief Loads settings into GUI
+    /// \param scope Settings to load
+    void loadSettings(DsoSettingsScope *scope);
+
   protected:
     void closeEvent(QCloseEvent *event);
 

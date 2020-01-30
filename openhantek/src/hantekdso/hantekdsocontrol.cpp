@@ -337,6 +337,26 @@ Dso::ErrorCode HantekDsoControl::setTriggerOffset (double position) {
 }
 
 
+// Initialize the device with the current settings.
+void HantekDsoControl::applySettings(DsoSettingsScope *scope) {
+    bool mathUsed = scope->anyUsed(specification->channels);
+    for (ChannelID channel = 0; channel < specification->channels; ++channel) {
+        setProbe(channel, scope->voltage[channel].probeAttn);
+        setGain(channel, scope->gain(channel) * DIVS_VOLTAGE);
+        setTriggerLevel(channel, scope->voltage[channel].trigger);
+        setChannelUsed(channel, mathUsed | scope->anyUsed(channel));
+        setChannelInverted(channel, scope->voltage[channel].inverted);
+        setCoupling(channel, Dso::Coupling(scope->voltage[channel].couplingOrMathIndex));
+    }
+
+    setRecordTime(scope->horizontal.timebase * DIVS_TIME);
+    setTriggerMode(scope->trigger.mode);
+    setTriggerOffset (scope->trigger.offset);
+    setTriggerSlope(scope->trigger.slope);
+    setTriggerSource(scope->trigger.source, scope->trigger.smooth);
+}
+
+
 /// \brief Start sampling process.
 void HantekDsoControl::enableSampling(bool enabled) {
     sampling = enabled;

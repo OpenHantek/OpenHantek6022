@@ -60,6 +60,12 @@ class VoltageDock : public QDockWidget {
     /// \param used True if the channel should be inverted, false otherwise.
     void setInverted(ChannelID channel, bool inverted);
 
+  public slots:
+    /// \brief Loads settings into GUI
+    /// \param scope Settings to load
+    /// \param spec Current scope specifications
+    void loadSettings(DsoSettingsScope *scope, const Dso::ControlSpecification *spec);
+
   protected:
     void closeEvent(QCloseEvent *event);
 
