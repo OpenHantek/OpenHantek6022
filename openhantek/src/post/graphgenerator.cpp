@@ -79,7 +79,7 @@ void GraphGenerator::generateGraphsTYvoltage(PPresult *result) {
             leftmostSample = 0; // show as much as we have on left side
         }
 
-        const unsigned binsPerDiv = 25;
+        const unsigned binsPerDiv = 40;
 
         // Set size directly to avoid reallocations (n+1 dots to display n lines)
         graphVoltage.reserve( ++dotsOnScreen );
@@ -105,7 +105,7 @@ void GraphGenerator::generateGraphsTYvoltage(PPresult *result) {
                 int bin = int( round( binsPerDiv * ( y + DIVS_VOLTAGE / 2) ) );
                 if ( bin > 0 && bin < binsPerDiv * DIVS_VOLTAGE + 1 ) // if trace is on screen
                     ++bins[ bin ]; // count value
-                if ( x < DIVS_TIME / 2 - 1 ) { // show trace unless in last div
+                if ( x < DIVS_TIME / 2 - 1.1 ) { // show trace unless in last div + 10% margin
                     graphVoltage.push_back(QVector3D( float( x ), float( y ), 0.0f ));
                 }
             }
@@ -117,7 +117,6 @@ void GraphGenerator::generateGraphsTYvoltage(PPresult *result) {
                     max = bins[ bin ];
                 }
             }
-            max *= 1.25; // scale to 80% div
             for ( int bin = 0; bin < binsPerDiv * DIVS_VOLTAGE + 1; ++bin ) {
                 if ( bins[ bin ] ) { // show bar (= start and end point) if value exists
                     double y = double( bin ) / binsPerDiv - DIVS_VOLTAGE / 2 - double( channel ) / binsPerDiv / 2;

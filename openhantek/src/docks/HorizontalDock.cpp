@@ -84,21 +84,26 @@ HorizontalDock::HorizontalDock(DsoSettingsScope *scope, QWidget *parent, Qt::Win
     this->dockWidget = new QWidget();
     SetupDockWidget(this, dockWidget, dockLayout);
 
+    // Load settings into GUI
+    this->loadSettings(scope);
+    
     // Connect signals and slots
     connect(this->samplerateSiSpinBox, SELECT<double>::OVERLOAD_OF(&QDoubleSpinBox::valueChanged), this, &HorizontalDock::samplerateSelected);
     connect(this->timebaseSiSpinBox, SELECT<double>::OVERLOAD_OF(&QDoubleSpinBox::valueChanged), this, &HorizontalDock::timebaseSelected);
     connect(this->frequencybaseSiSpinBox, SELECT<double>::OVERLOAD_OF(&QDoubleSpinBox::valueChanged), this, &HorizontalDock::frequencybaseSelected);
     connect(this->formatComboBox, SELECT<int>::OVERLOAD_OF(&QComboBox::currentIndexChanged), this, &HorizontalDock::formatSelected);
     connect(this->calfreqSiSpinBox, SELECT<double>::OVERLOAD_OF(&QDoubleSpinBox::valueChanged), this, &HorizontalDock::calfreqSelected);
+}
 
-    // Set values
+void HorizontalDock::loadSettings(DsoSettingsScope *scope) {
+
+     // Set values
     this->setSamplerate(scope->horizontal.samplerate);
     this->setTimebase(scope->horizontal.timebase);
     this->setFrequencybase(scope->horizontal.frequencybase);
     this->setFormat(scope->horizontal.format);
     this->setCalfreq(scope->horizontal.calfreq);
 }
-
 
 /// \brief Don't close the dock, just hide it.
 /// \param event The close event that should be handled.

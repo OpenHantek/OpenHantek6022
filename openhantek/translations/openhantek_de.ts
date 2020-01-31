@@ -437,29 +437,29 @@
 <context>
     <name>GlScope</name>
     <message>
-        <location filename="../src/glscope.cpp" line="199"/>
+        <location filename="../src/glscope.cpp" line="195"/>
         <source>System does not support OpenGL Shading Language (GLSL)</source>
         <translation>System unterstützt nicht OpenGL Shading Language (GLSL)</translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="203"/>
+        <location filename="../src/glscope.cpp" line="199"/>
         <source>OpenGL init called twice!</source>
         <translation>OpenGL init wurde doppelt aufgerufen!</translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="266"/>
+        <location filename="../src/glscope.cpp" line="262"/>
         <source>Failed to compile OpenGL shader programs.
 </source>
         <translation>Fehler beim Übersetzen der OpenGL Shader-Programme.</translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="272"/>
+        <location filename="../src/glscope.cpp" line="268"/>
         <source>Failed to link/bind OpenGL shader programs.
 </source>
         <translation>Fehler beim Linken der OpenGL Shader-Programme.</translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="281"/>
+        <location filename="../src/glscope.cpp" line="277"/>
         <source>Failed to locate shader variable.</source>
         <translation>Kann Shader-Variable nicht lokalisieren.</translation>
     </message>
@@ -467,8 +467,8 @@
 <context>
     <name>HantekDsoControl</name>
     <message>
-        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="362"/>
-        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="363"/>
+        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="382"/>
+        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="383"/>
         <source>Couldn&apos;t get channel level data from oscilloscope</source>
         <translation>Konnte Kanalpegeldaten des Oszilloskops nicht lesen</translation>
     </message>
@@ -655,7 +655,7 @@
     <message>
         <location filename="../src/mainwindow.ui" line="145"/>
         <source>Histogram</source>
-        <translation type="unfinished"></translation>
+        <translation>Histogramm</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="153"/>
@@ -736,68 +736,68 @@
         <translation>Startet das Oszilloskop</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="231"/>
+        <location filename="../src/mainwindow.cpp" line="239"/>
         <source>Open file</source>
         <translation>Datei öffnen</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="231"/>
-        <location filename="../src/mainwindow.cpp" line="244"/>
+        <location filename="../src/mainwindow.cpp" line="239"/>
+        <location filename="../src/mainwindow.cpp" line="264"/>
         <source>Settings (*.ini)</source>
         <translation>Einstellungen (*.ini)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="244"/>
+        <location filename="../src/mainwindow.cpp" line="264"/>
         <source>Save settings</source>
         <translation>Einstellungen speichern</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="268"/>
+        <location filename="../src/mainwindow.cpp" line="297"/>
         <source>Disable fading of previous graphs</source>
         <translation>Nachleuchten von vorigen Graphen deaktivieren</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="270"/>
+        <location filename="../src/mainwindow.cpp" line="299"/>
         <source>Enable fading of previous graphs</source>
         <translation>Nachleuchten von vorigen Graphen aktivieren</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="278"/>
+        <location filename="../src/mainwindow.cpp" line="307"/>
         <source>Hide histogram</source>
-        <translation type="unfinished"></translation>
+        <translation>Histogramm ausblenden</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="280"/>
+        <location filename="../src/mainwindow.cpp" line="309"/>
         <source>Show histogram</source>
-        <translation type="unfinished"></translation>
+        <translation>Histogramm einblenden</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="288"/>
+        <location filename="../src/mainwindow.cpp" line="317"/>
         <source>Hide magnified scope</source>
         <translation>Vergrößerte Anzeige ausblenden</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="290"/>
+        <location filename="../src/mainwindow.cpp" line="319"/>
         <source>Show magnified scope</source>
         <translation>Vergrößerte Anzeige anzeigen</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="300"/>
+        <location filename="../src/mainwindow.cpp" line="329"/>
         <source>Hide measurements</source>
         <translation>Messwerte ausblenden</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="302"/>
+        <location filename="../src/mainwindow.cpp" line="331"/>
         <source>Show measurements</source>
         <translation>Messwerte anzeigen</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="319"/>
+        <location filename="../src/mainwindow.cpp" line="348"/>
         <source>About OpenHantek6022 (%1)</source>
         <translation>Über OpenHantek6022 (%1)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="320"/>
+        <location filename="../src/mainwindow.cpp" line="349"/>
         <source>&lt;p&gt;Open source software for Hantek6022 USB oscilloscopes&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2010, 2011 Oliver Haag&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2012-2020 OpenHantek community&lt;br/&gt;&lt;a href=&apos;https://github.com/OpenHantek&apos;&gt;https://github.com/OpenHantek&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Open source firmware copyright &amp;copy; 2019-2020 Ho-Ro&lt;br/&gt;&lt;a href=&apos;https://github.com/Ho-Ro/Hantek6022API&apos;&gt;https://github.com/Ho-Ro/Hantek6022API&lt;/a&gt;&lt;/p&gt;</source>
         <translation>&lt;p&gt;Open-Source-Software für Hantek6022 USB Oszilloskope&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2010, 2011 Oliver Haag&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2012-2020 OpenHantek community&lt;br/&gt;&lt;a href=&apos;https://github.com/OpenHantek&apos;&gt;https://github.com/OpenHantek&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Open-Source-Firmware - Copyright &amp;copy; 2019-2020 Ho-Ro&lt;br/&gt;&lt;a href=&apos;https://github.com/Ho-Ro/Hantek6022API&apos;&gt;https://github.com/Ho-Ro/Hantek6022API&lt;/a&gt;&lt;/p&gt;</translation>
     </message>
@@ -806,7 +806,7 @@
         <translation type="vanished">&lt;p&gt;Open-Source-Software für Hantek6022 USB Oszilloskope&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2010, 2011 Oliver Haag&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2012-2019 OpenHantek community&lt;br/&gt;&lt;a href=&apos;https://github.com/OpenHantek&apos;&gt;https://github.com/OpenHantek&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Open-Source-Firmware - Copyright &amp;copy; 2019 Ho-Ro&lt;br/&gt;&lt;a href=&apos;https://github.com/Ho-Ro/Hantek6022API&apos;&gt;https://github.com/Ho-Ro/Hantek6022API&lt;/a&gt;&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="347"/>
+        <location filename="../src/mainwindow.cpp" line="382"/>
         <source>%1: %2</source>
         <translation>%1: %2</translation>
     </message>
@@ -1136,7 +1136,7 @@
         <translation type="vanished">Sinc</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="98"/>
+        <location filename="../src/main.cpp" line="78"/>
         <source>Use OpenGL ES instead of OpenGL</source>
         <translation>Benutze OpenGL ES anstelle von OpenGL</translation>
     </message>
@@ -1550,7 +1550,7 @@
     <message>
         <location filename="../src/docks/VoltageDock.cpp" line="60"/>
         <source>x</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 </TS>

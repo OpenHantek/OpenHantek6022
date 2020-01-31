@@ -41,6 +41,11 @@ class TriggerDock : public QDockWidget {
     /// \param slope The trigger slope.
     void setSlope(Dso::Slope slope);
 
+  public slots:
+    /// \brief Loads settings into GUI
+    /// \param scope Settings to load
+    void loadSettings(DsoSettingsScope *scope);
+
   protected:
     void closeEvent(QCloseEvent *event);
 

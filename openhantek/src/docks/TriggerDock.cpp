@@ -56,11 +56,9 @@ TriggerDock::TriggerDock(DsoSettingsScope *scope, const Dso::ControlSpecificatio
     this->dockWidget = new QWidget();
     SetupDockWidget(this, dockWidget, dockLayout);
 
-    // Set values
-    setMode(scope->trigger.mode);
-    setSlope(scope->trigger.slope);
-    setSource(int(scope->trigger.source));
-
+    // Load settings into GUI
+    this->loadSettings(scope);
+    
     // Connect signals and slots
     connect(this->modeComboBox, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
             [this](int index) {
@@ -78,6 +76,14 @@ TriggerDock::TriggerDock(DsoSettingsScope *scope, const Dso::ControlSpecificatio
                 this->scope->trigger.source = index & (mSpec->channels - 1) ;
                 emit sourceChanged(index & (mSpec->channels - 1), smooth );
             });
+}
+
+void TriggerDock::loadSettings(DsoSettingsScope *scope) {
+
+    // Set values
+    setMode(scope->trigger.mode);
+    setSlope(scope->trigger.slope);
+    setSource(int(scope->trigger.source));
 }
 
 /// \brief Don't close the dock, just hide it

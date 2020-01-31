@@ -6,6 +6,7 @@
 #include <limits>
 
 #include "controlsettings.h"
+#include "scopesettings.h"
 #include "controlspecification.h"
 #include "dsosamples.h"
 #include "errorcodes.h"
@@ -300,6 +301,10 @@ class HantekDsoControl : public QObject {
     /// \return The tfrequency that has been set, ::Dso::ErrorCode on error.
     Dso::ErrorCode setCalFreq(double calfreq = 0.0);
 
+    /// \brief Initializes the device with the current settings.
+    /// \param scope The settings for the oscilloscope.    
+    void applySettings(DsoSettingsScope *scope);
+    
   signals:
     void samplingStatusChanged(bool enabled); ///< The oscilloscope started/stopped sampling/waiting for trigger
     void statusMessage(const QString &message, int timeout); ///< Status message about the oscilloscope

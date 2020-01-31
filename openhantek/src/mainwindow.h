@@ -5,6 +5,8 @@
 #include <QMainWindow>
 #include <memory>
 
+#include "scopesettings.h"
+
 class SpectrumGenerator;
 class HantekDsoControl;
 class DsoSettings;
@@ -48,4 +50,7 @@ class MainWindow : public QMainWindow {
     // Settings used for the whole program
     DsoSettings *dsoSettings;
     ExporterRegistry *exporterRegistry;
+
+  signals:
+    void settingsLoaded(DsoSettingsScope *scope, const Dso::ControlSpecification *spec);
 };

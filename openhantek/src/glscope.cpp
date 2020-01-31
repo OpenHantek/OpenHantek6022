@@ -178,18 +178,14 @@ void GlScope::mouseReleaseEvent(QMouseEvent *event) {
 }
 
 void GlScope::paintEvent(QPaintEvent *event) {
-    static bool success = false;
-    // Draw error message if OpenGL failed
-    if ( !shaderCompileSuccess && !success ) {
-        QPainter painter(this);
-        painter.setRenderHint(QPainter::Antialiasing, true);
-        QFont font = painter.font();
-        font.setPointSize(18);
-        painter.setFont(font);
-        painter.drawText(rect(), Qt::AlignCenter, errorMessage);
+    // print error message if OpenGL failed
+    static int fails = 0;
+    if ( !shaderCompileSuccess ) {
+        if ( fails++ ) // at least two times in sequence
+            qDebug() << "paintEvent(), shader compile failed " << fails << errorMessage;
         event->accept();
     } else {
-        success = true;
+        fails = 0;
         QOpenGLWidget::paintEvent(event);
     }
 }
@@ -522,12 +518,13 @@ void GlScope::generateGrid(QOpenGLShaderProgram *program) {
 
     // Axes
     // Horizontal axis
-    gridDrawCounts[1] += 4;
+    gridDrawCounts[1] += 2;
     vaGrid.push_back(QVector3D(-DIVS_TIME / 2, 0, 0));
-    vaGrid.push_back(QVector3D(DIVS_TIME / 2, 0, 0));
+    vaGrid.push_back(QVector3D( DIVS_TIME / 2, 0, 0));
     // Vertical axis
+    gridDrawCounts[1] += 2;
     vaGrid.push_back(QVector3D(0, -DIVS_VOLTAGE / 2, 0));
-    vaGrid.push_back(QVector3D(0, DIVS_VOLTAGE / 2, 0));
+    vaGrid.push_back(QVector3D(0,  DIVS_VOLTAGE / 2, 0));
     // Subdiv lines on horizontal axis
     for (int line = 1; line < DIVS_TIME / 2 * DIVS_SUB; ++line) {
         float linePosition = float( line ) / DIVS_SUB;

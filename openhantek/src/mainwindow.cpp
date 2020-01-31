@@ -227,10 +227,30 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, Expo
             &HorizontalDock::setSamplerateLimits);
     connect(dsoControl, &HantekDsoControl::samplerateSet, horizontalDock, &HorizontalDock::setSamplerateSteps);
 
-    connect(ui->actionOpen, &QAction::triggered, [this]() {
+    // Load settings to GUI
+    connect(this, &MainWindow::settingsLoaded, voltageDock, &VoltageDock::loadSettings);
+    connect(this, &MainWindow::settingsLoaded, horizontalDock, &HorizontalDock::loadSettings);
+    connect(this, &MainWindow::settingsLoaded, spectrumDock, &SpectrumDock::loadSettings);
+    connect(this, &MainWindow::settingsLoaded, triggerDock, &TriggerDock::loadSettings);
+    connect(this, &MainWindow::settingsLoaded, dsoControl, &HantekDsoControl::applySettings);
+    connect(this, &MainWindow::settingsLoaded, dsoWidget, &DsoWidget::updateSlidersSettings);
+
+    connect(ui->actionOpen, &QAction::triggered, [this, spec]() {
         QString fileName = QFileDialog::getOpenFileName(this, tr("Open file"), "", tr("Settings (*.ini)"));
         if (!fileName.isEmpty()) {
+//<<<<<<< HEAD
+//            if (dsoSettings->setFilename(fileName)) { dsoSettings->load(); }
+//=======
             if (dsoSettings->setFilename(fileName)) { dsoSettings->load(); }
+            emit settingsLoaded(&dsoSettings->scope, spec);
+
+            dsoWidget->updateTimebase(dsoSettings->scope.horizontal.timebase);
+
+            for (ChannelID channel = 0; channel < spec->channels; ++channel) {
+                this->dsoWidget->updateVoltageUsed(channel, dsoSettings->scope.voltage[channel].used);
+                this->dsoWidget->updateSpectrumUsed(channel, dsoSettings->scope.spectrum[channel].used);
+            }
+//>>>>>>> f7d71096908eace3cdeb0af63672def11d10ab7b
         }
     });
 
@@ -244,10 +264,19 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, Expo
         QString fileName = QFileDialog::getSaveFileName(this, tr("Save settings"), "", tr("Settings (*.ini)"));
         if (fileName.isEmpty())
             return;
+//<<<<<<< HEAD
+//        dsoSettings->mainWindowGeometry = saveGeometry();
+//        dsoSettings->mainWindowState = saveState();
+//        dsoSettings->setFilename(fileName);
+//        dsoSettings->save();
+//=======
+        if (!fileName.endsWith(".ini"))
+            fileName.append(".ini");
         dsoSettings->mainWindowGeometry = saveGeometry();
         dsoSettings->mainWindowState = saveState();
         dsoSettings->setFilename(fileName);
         dsoSettings->save();
+//>>>>>>> f7d71096908eace3cdeb0af63672def11d10ab7b
     });
 
     connect(ui->actionExit, &QAction::triggered, this, &QWidget::close);
@@ -327,7 +356,13 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, Expo
         );
     });
 
+//<<<<<<< HEAD
+//    dsoWidget->updateTimebase(dsoSettings->scope.horizontal.timebase);
+//=======
+    emit settingsLoaded(&dsoSettings->scope, spec);
+
     dsoWidget->updateTimebase(dsoSettings->scope.horizontal.timebase);
+//>>>>>>> f7d71096908eace3cdeb0af63672def11d10ab7b
 
     for (ChannelID channel = 0; channel < spec->channels; ++channel) {
         this->dsoWidget->updateVoltageUsed(channel, dsoSettings->scope.voltage[channel].used);
