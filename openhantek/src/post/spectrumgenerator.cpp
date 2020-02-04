@@ -11,7 +11,6 @@
 #include "ppresult.h"
 #include "spectrumgenerator.h"
 
-#include "glscope.h"
 #include "dsosettings.h"
 #include "utils/printutils.h"
 #include "viewconstants.h"

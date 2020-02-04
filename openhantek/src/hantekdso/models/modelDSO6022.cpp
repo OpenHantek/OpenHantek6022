@@ -53,9 +53,10 @@ static void initSpecifications(Dso::ControlSpecification& specification) {
     for ( unsigned ch = 0; ch < 2; ch++ ) {
         settings.beginGroup( channels[ ch ] );
         for ( unsigned iii = 0; iii < RANGES; iii++ ) {
-            double calibration = settings.value( ranges[ iii ], "0.0" ).toDouble();
-            if ( bool( calibration ) )
-                specification.voltageLimit[ ch ][ iii ] /= calibration;
+            double gain = settings.value( ranges[ iii ], "0.0" ).toDouble();
+            //printf( "ch%d %s: gain = %g\n", ch, ranges[ iii ], gain );
+            if ( bool( gain ) )
+                specification.voltageLimit[ ch ][ iii ] /= gain;
         }
         settings.endGroup(); // channels
     }
@@ -65,10 +66,9 @@ static void initSpecifications(Dso::ControlSpecification& specification) {
     for ( unsigned ch = 0; ch < 2; ch++ ) {
         settings.beginGroup( channels[ ch ] );
         for ( unsigned iii = 0; iii < RANGES; iii++ ) {
-            //settings.setValue( ranges[ iii ], iii );
-            // set to 0x80 if no value from conf file
+            // set to 0x00 if no value from conf file
             int offset = settings.value( ranges[ iii ], "255" ).toInt();
-            //printf( "%d: %d\n", iii, offset );
+            //printf( "ch%d %s: offset = %d\n", ch, ranges[ iii ], offset );
             if ( offset != 255 ) // value exists in config file
                 specification.voltageOffset[ ch ][ iii ] = 0x80 - offset;
         }

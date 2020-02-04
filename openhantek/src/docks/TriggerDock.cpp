@@ -79,7 +79,6 @@ TriggerDock::TriggerDock(DsoSettingsScope *scope, const Dso::ControlSpecificatio
 }
 
 void TriggerDock::loadSettings(DsoSettingsScope *scope) {
-
     // Set values
     setMode(scope->trigger.mode);
     setSlope(scope->trigger.slope);

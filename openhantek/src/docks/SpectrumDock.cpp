@@ -76,13 +76,11 @@ SpectrumDock::SpectrumDock(DsoSettingsScope *scope, QWidget *parent, Qt::WindowF
 }
 
 void SpectrumDock::loadSettings(DsoSettingsScope *scope) {
-
     // Initialize elements
     for (ChannelID channel = 0; channel < scope->voltage.size(); ++channel) {
         this->setMagnitude(channel, scope->spectrum[channel].magnitude);
         this->setUsed(channel, scope->spectrum[channel].used);
     }
-
 }
 
 /// \brief Don't close the dock, just hide it

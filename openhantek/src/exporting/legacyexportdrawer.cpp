@@ -289,6 +289,7 @@ bool LegacyExportDrawer::exportSamples(const PPresult *result, QPaintDevice* pai
                                                  int( result->data(channel)->voltage.sample.size() ) );
 
                         // Draw graph
+                        const unsigned binsPerDiv = 50;
                         QPointF *graph = new QPointF[ result->data(channel)->voltage.sample.size() + 1 ];
                         // skip leading samples to show the correct trigger position
                         auto sampleIterator = result->data(channel)->voltage.sample.cbegin() + leftmostSample; // -> visible samples
@@ -297,18 +298,49 @@ bool LegacyExportDrawer::exportSamples(const PPresult *result, QPaintDevice* pai
                         int pointCount = 0;
                         double gain = settings->scope.gain(channel);
                         double offset = settings->scope.voltage[unsigned(channel)].offset;
+                        unsigned bins[ int( binsPerDiv * DIVS_VOLTAGE ) ] = { 0 };
                         for ( int position = leftmostPosition;
                               position < dotsOnScreen && position < lastPosition
                               && sampleIterator < sampleEnd && sampleIterator < displayEnd;
                               ++position, ++sampleIterator) {
-                            graph[ position - leftmostPosition ]
-                                = QPointF( position * horizontalFactor - DIVS_TIME / 2,
-                                           *sampleIterator / gain + offset
-                                         );
-                            ++pointCount;
+                            double x = MARGIN_LEFT + position * horizontalFactor;
+                            double y = *sampleIterator / gain + offset;
+                            if ( !settings->scope.histogram ) {
+                                graph[ position - leftmostPosition ] = QPointF( x, y );
+                                ++pointCount;
+                            } else {
+                                int bin = int( round( binsPerDiv * ( y + DIVS_VOLTAGE / 2) ) );
+                                if ( bin > 0 && bin < binsPerDiv * DIVS_VOLTAGE ) // if trace is on screen
+                                    ++bins[ bin ]; // count value
+                                if ( x < MARGIN_RIGHT - 1.1 ) {
+                                    graph[ position - leftmostPosition ] = QPointF( x, y );
+                                    ++pointCount;
+                                }
+                            }
                         }
                         painter.drawPolyline( graph, pointCount );
                         delete[] graph;
+
+                        // Draw histogram
+                        if ( settings->scope.histogram ) { // scale and display the histogram
+                            QPointF *graph = new QPointF[ int( 2 * binsPerDiv * DIVS_VOLTAGE ) ];
+                            double max = 0; // find max histo count
+                            pointCount = 0;
+                            for ( int bin = 0; bin < binsPerDiv * DIVS_VOLTAGE; ++bin ) {
+                                if ( bins[ bin ] > max ) {
+                                    max = bins[ bin ];
+                                }
+                            }
+                            for ( int bin = 0; bin < binsPerDiv * DIVS_VOLTAGE; ++bin ) {
+                                if ( bins[ bin ] ) { // show bar (= start and end point) if value exists
+                                    double y = double( bin ) / binsPerDiv - DIVS_VOLTAGE / 2 - double( channel ) / binsPerDiv / 2;
+                                    graph[ pointCount++ ] = QPointF( MARGIN_RIGHT, y );
+                                    graph[ pointCount++ ] = QPointF( MARGIN_RIGHT - bins[ bin ] / max, y );
+                                }
+                            }
+                            painter.drawLines( graph, pointCount/2 );
+                            delete[] graph;
+                        }
                     }
                 }
 
@@ -331,7 +363,7 @@ bool LegacyExportDrawer::exportSamples(const PPresult *result, QPaintDevice* pai
 
                         for (unsigned int position = 0; position <= lastPosition; ++position) {
                             graph[ position ] =
-                                QPointF(position * horizontalFactor - DIVS_TIME / 2,
+                                QPointF(MARGIN_LEFT + position * horizontalFactor,
                                         result->data(channel)->spectrum.sample[position] / magnitude + offset
                                        );
                         }

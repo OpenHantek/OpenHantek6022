@@ -96,8 +96,7 @@ HorizontalDock::HorizontalDock(DsoSettingsScope *scope, QWidget *parent, Qt::Win
 }
 
 void HorizontalDock::loadSettings(DsoSettingsScope *scope) {
-
-     // Set values
+    // Set values
     this->setSamplerate(scope->horizontal.samplerate);
     this->setTimebase(scope->horizontal.timebase);
     this->setFrequencybase(scope->horizontal.frequencybase);

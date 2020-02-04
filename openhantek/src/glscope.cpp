@@ -56,7 +56,6 @@ void GlScope::fixOpenGLversion(QSurfaceFormat::RenderableType t) {
 
 GlScope::GlScope(DsoSettingsScope *scope, DsoSettingsView *view, QWidget *parent)
     : QOpenGLWidget(parent), scope(scope), view(view) {
-
     // get OpenGL version to define appropriate OpenGLSL version
     // reason:
     // some not so new intel graphic driver report a very conservative version
@@ -84,7 +83,7 @@ GlScope::GlScope(DsoSettingsScope *scope, DsoSettingsView *view, QWidget *parent
     vaMarker.resize(cursorInfo.size());
 }
 
-GlScope::~GlScope() {/* virtual destructor necessary */}
+GlScope::~GlScope() { /* virtual destructor necessary */ }
 
 QPointF GlScope::eventToPosition(QMouseEvent *event) {
     QPointF position( double( event->x() - width() / 2 ) * DIVS_TIME / double( width() ),
@@ -178,16 +177,17 @@ void GlScope::mouseReleaseEvent(QMouseEvent *event) {
 }
 
 void GlScope::paintEvent(QPaintEvent *event) {
-    // print error message if OpenGL failed
-    static int fails = 0;
-    if ( !shaderCompileSuccess ) {
-        if ( fails++ ) // at least two times in sequence
-            qDebug() << "paintEvent(), shader compile failed " << fails << errorMessage;
-        event->accept();
-    } else {
-        fails = 0;
+    if ( shaderCompileSuccess ) {
         QOpenGLWidget::paintEvent(event);
+    } else if ( !zoomed ) { // draw error message on normal view if OpenGL failed
+        QPainter painter( this );
+        painter.setRenderHint( QPainter::Antialiasing, true );
+        QFont font = painter.font();
+        font.setPointSize( 18 );
+        painter.setFont( font );
+        painter.drawText( rect(), Qt::AlignCenter|Qt::TextWordWrap, errorMessage);
     }
+    event->accept(); // consume the event
 }
 
 void GlScope::initializeGL() {
@@ -250,7 +250,7 @@ void GlScope::initializeGL() {
           out vec4 flatColor;
           void main() { flatColor = colour; }
     )";
-
+//GLSLversion = 150;
     const char *vshaderDesktop = GLSLversion == 120 ? vshaderDesktop120 : vshaderDesktop150;
     const char *fshaderDesktop = GLSLversion == 120 ? fshaderDesktop120 : fshaderDesktop150;
 

@@ -79,11 +79,11 @@ void GraphGenerator::generateGraphsTYvoltage(PPresult *result) {
             leftmostSample = 0; // show as much as we have on left side
         }
 
-        const unsigned binsPerDiv = 40;
+        const unsigned binsPerDiv = 50;
 
         // Set size directly to avoid reallocations (n+1 dots to display n lines)
         graphVoltage.reserve( ++dotsOnScreen );
-        graphHistogram.reserve( int( 2 * ( binsPerDiv * DIVS_VOLTAGE + 1 ) ) );
+        graphHistogram.reserve( int( 2 * ( binsPerDiv * DIVS_VOLTAGE ) ) );
 
         const double gain = scope->gain(channel);
         const double offset = scope->voltage[channel].offset;
@@ -93,7 +93,7 @@ void GraphGenerator::generateGraphsTYvoltage(PPresult *result) {
         // printf("samples: %lu, dotsOnScreen: %d\n", samples.sample.size(), dotsOnScreen);
         graphVoltage.clear(); // remove all previous dots and fill in new trace
         graphHistogram.clear(); // remove all previous dots and fill in new trace
-        unsigned bins[ int( binsPerDiv * DIVS_VOLTAGE + 1 ) ] = { 0 };
+        unsigned bins[ int( binsPerDiv * DIVS_VOLTAGE ) ] = { 0 };
         for (unsigned int position = unsigned(leftmostPosition);
              position < dotsOnScreen && sampleIterator < sampleEnd;
              ++position, ++sampleIterator) {
@@ -103,21 +103,21 @@ void GraphGenerator::generateGraphsTYvoltage(PPresult *result) {
                 graphVoltage.push_back(QVector3D( float( x ), float( y ), 0.0f ));
             } else { // histogram replaces trace in rightmost div
                 int bin = int( round( binsPerDiv * ( y + DIVS_VOLTAGE / 2) ) );
-                if ( bin > 0 && bin < binsPerDiv * DIVS_VOLTAGE + 1 ) // if trace is on screen
+                if ( bin > 0 && bin < binsPerDiv * DIVS_VOLTAGE ) // if trace is on screen
                     ++bins[ bin ]; // count value
-                if ( x < DIVS_TIME / 2 - 1.1 ) { // show trace unless in last div + 10% margin
+                if ( x < MARGIN_RIGHT - 1.1 ) { // show trace unless in last div + 10% margin
                     graphVoltage.push_back(QVector3D( float( x ), float( y ), 0.0f ));
                 }
             }
         }
         if ( scope->histogram ) { // scale and display the histogram
             double max = 0; // find max histo count
-            for ( int bin = 0; bin < binsPerDiv * DIVS_VOLTAGE + 1; ++bin ) {
+            for ( int bin = 0; bin < binsPerDiv * DIVS_VOLTAGE; ++bin ) {
                 if ( bins[ bin ] > max ) {
                     max = bins[ bin ];
                 }
             }
-            for ( int bin = 0; bin < binsPerDiv * DIVS_VOLTAGE + 1; ++bin ) {
+            for ( int bin = 0; bin < binsPerDiv * DIVS_VOLTAGE; ++bin ) {
                 if ( bins[ bin ] ) { // show bar (= start and end point) if value exists
                     double y = double( bin ) / binsPerDiv - DIVS_VOLTAGE / 2 - double( channel ) / binsPerDiv / 2;
                     graphHistogram.push_back( QVector3D( float( MARGIN_RIGHT ), float( y ), 0 ) );

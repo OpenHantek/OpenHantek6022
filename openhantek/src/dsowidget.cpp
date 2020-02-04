@@ -793,11 +793,11 @@ void DsoWidget::updateOffset(ChannelID channel, double value) {
         scope->spectrum[channel - scope->voltage.size()].offset = value;
 
     if (channel < scope->voltage.size() * 2) {
-        if (mainSliders.voltageOffsetSlider->value( int( channel ) ) != value) {
+        if ( mainSliders.voltageOffsetSlider->value( int( channel ) ) != value ) { // double != comparison is safe in this case
             const QSignalBlocker blocker(mainSliders.voltageOffsetSlider );
             mainSliders.voltageOffsetSlider->setValue( int( channel ), value );
         }
-        if (zoomSliders.voltageOffsetSlider->value( int( channel ) ) != value) {
+        if ( zoomSliders.voltageOffsetSlider->value( int( channel ) ) != value ) { // double != comparison is safe in this case
             const QSignalBlocker blocker(zoomSliders.voltageOffsetSlider );
             zoomSliders.voltageOffsetSlider->setValue( int( channel ), value );
         }
@@ -810,10 +810,8 @@ void DsoWidget::updateOffset(ChannelID channel, double value) {
 double DsoWidget::mainToZoom(double position) const {
     double m1 = scope->getMarker(0);
     double m2 = scope->getMarker(1);
-    if ( m1 == m2 )
-        m2 += 1e-9; // avoid div by zero
     if (m1 > m2) std::swap(m1, m2);
-    return ((position - 0.5) * DIVS_TIME - m1) / (m2 - m1);
+    return ((position - 0.5) * DIVS_TIME - m1) / std::max( m2 - m1, 1e-9 );
 }
 
 /// \brief Translate horizontal position (0..1) from zoom view to main view.
@@ -872,11 +870,11 @@ void DsoWidget::updateTriggerLevel(ChannelID channel, double value) {
     //printf("DW::updateTriggerLevel( %d, %g )\n", channel, value);
     scope->voltage[channel].trigger = value;
 
-    if (mainSliders.triggerLevelSlider->value( int( channel ) ) != value ) {
+    if ( mainSliders.triggerLevelSlider->value( int( channel ) ) != value ) { // double != comparison is safe in this case
         const QSignalBlocker blocker(mainSliders.triggerLevelSlider);
         mainSliders.triggerLevelSlider->setValue( int( channel ), value );
     }
-    if (zoomSliders.triggerLevelSlider->value( int( channel ) ) != value) {
+    if ( zoomSliders.triggerLevelSlider->value( int( channel ) ) != value ) { // double != comparison is safe in this case
         const QSignalBlocker blocker(zoomSliders.triggerLevelSlider);
         zoomSliders.triggerLevelSlider->setValue( int( channel ), value );
     }
@@ -897,7 +895,6 @@ void DsoWidget::updateMarker( unsigned marker, double value ) {
 
 /// \brief Update the sliders settings.
 void DsoWidget::updateSlidersSettings() {
-    
     // The offset sliders for all possible channels
     for (ChannelID channel = 0; channel < scope->voltage.size(); ++channel) {
         updateOffset(channel, scope->voltage[channel].offset);
@@ -908,7 +905,7 @@ void DsoWidget::updateSlidersSettings() {
         zoomSliders.voltageOffsetSlider->setValue(int(channel), scope->voltage[channel].offset);
         zoomSliders.voltageOffsetSlider->setIndexVisible(channel, scope->voltage[channel].used);
 
-        updateOffset(int(scope->voltage.size() + channel), scope->spectrum[channel].offset);
+        updateOffset(unsigned(scope->voltage.size() + channel), scope->spectrum[channel].offset);
         mainSliders.voltageOffsetSlider->setColor(unsigned( scope->voltage.size() ) + channel, view->screen.spectrum[channel]);
         mainSliders.voltageOffsetSlider->setValue(int( scope->voltage.size() + channel ), scope->spectrum[channel].offset);
         mainSliders.voltageOffsetSlider->setIndexVisible(unsigned(scope->voltage.size()) + channel, scope->spectrum[channel].used);

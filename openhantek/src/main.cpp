@@ -197,14 +197,17 @@ int main(int argc, char *argv[]) {
         waitForDso = 10000;
     dsoControlThread.quit();
     dsoControlThread.wait( waitForDso );
+    putchar('.');
 
     postProcessingThread.quit();
     postProcessingThread.wait(10000);
+    putchar('.');
 
     if (context && device != nullptr) { 
         device.reset(); // causes libusb_close(), which must be called before libusb_exit() 
         libusb_exit(context); 
     }
+    puts(".");
 
     return res;
 }

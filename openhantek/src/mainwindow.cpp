@@ -238,9 +238,6 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, Expo
     connect(ui->actionOpen, &QAction::triggered, [this, spec]() {
         QString fileName = QFileDialog::getOpenFileName(this, tr("Open file"), "", tr("Settings (*.ini)"));
         if (!fileName.isEmpty()) {
-//<<<<<<< HEAD
-//            if (dsoSettings->setFilename(fileName)) { dsoSettings->load(); }
-//=======
             if (dsoSettings->setFilename(fileName)) { dsoSettings->load(); }
             emit settingsLoaded(&dsoSettings->scope, spec);
 
@@ -250,7 +247,6 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, Expo
                 this->dsoWidget->updateVoltageUsed(channel, dsoSettings->scope.voltage[channel].used);
                 this->dsoWidget->updateSpectrumUsed(channel, dsoSettings->scope.spectrum[channel].used);
             }
-//>>>>>>> f7d71096908eace3cdeb0af63672def11d10ab7b
         }
     });
 
@@ -264,19 +260,12 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, Expo
         QString fileName = QFileDialog::getSaveFileName(this, tr("Save settings"), "", tr("Settings (*.ini)"));
         if (fileName.isEmpty())
             return;
-//<<<<<<< HEAD
-//        dsoSettings->mainWindowGeometry = saveGeometry();
-//        dsoSettings->mainWindowState = saveState();
-//        dsoSettings->setFilename(fileName);
-//        dsoSettings->save();
-//=======
         if (!fileName.endsWith(".ini"))
             fileName.append(".ini");
         dsoSettings->mainWindowGeometry = saveGeometry();
         dsoSettings->mainWindowState = saveState();
         dsoSettings->setFilename(fileName);
         dsoSettings->save();
-//>>>>>>> f7d71096908eace3cdeb0af63672def11d10ab7b
     });
 
     connect(ui->actionExit, &QAction::triggered, this, &QWidget::close);
@@ -356,13 +345,9 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, Expo
         );
     });
 
-//<<<<<<< HEAD
-//    dsoWidget->updateTimebase(dsoSettings->scope.horizontal.timebase);
-//=======
     emit settingsLoaded(&dsoSettings->scope, spec);
 
     dsoWidget->updateTimebase(dsoSettings->scope.horizontal.timebase);
-//>>>>>>> f7d71096908eace3cdeb0af63672def11d10ab7b
 
     for (ChannelID channel = 0; channel < spec->channels; ++channel) {
         this->dsoWidget->updateVoltageUsed(channel, dsoSettings->scope.voltage[channel].used);

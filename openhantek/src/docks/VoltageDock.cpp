@@ -123,9 +123,7 @@ VoltageDock::VoltageDock(DsoSettingsScope *scope, const Dso::ControlSpecificatio
 }
 
 void VoltageDock::loadSettings(DsoSettingsScope *scope, const Dso::ControlSpecification *spec) {
-
     for (ChannelID channel = 0; channel < scope->voltage.size(); ++channel) {
-
         if (channel < spec->channels) {
             if ( int(scope->voltage[channel].couplingOrMathIndex) < couplingStrings.size() )
                 setCoupling(channel, scope->voltage[channel].couplingOrMathIndex);
@@ -168,7 +166,7 @@ void VoltageDock::setAttn(ChannelID channel, double attnValue) {
     int index = channelBlocks[channel].gainComboBox->currentIndex();
     gainStrings.clear();
     for (double gainStep: scope->gainSteps) {
-        gainStrings << valueToString(gainStep * attnValue, UNIT_VOLTS, 0);
+        gainStrings << valueToString(gainStep * attnValue, UNIT_VOLTS, -1); // auto format
     }
     channelBlocks[channel].gainComboBox->clear();
     channelBlocks[channel].gainComboBox->addItems( gainStrings );
