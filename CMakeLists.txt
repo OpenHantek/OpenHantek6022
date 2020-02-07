@@ -29,7 +29,11 @@ endif()
 
 # enable extra feature(s)
 if ( DEFINED HANTEK_AC )
-    add_compile_definitions( HANTEK_AC )
+    if( ${CMAKE_VERSION} VERSION_LESS "3.12.0" )
+	   add_definitions( -DHANTEK_AC ) # deprecated
+    else()
+	   add_compile_definitions( HANTEK_AC ) # introduced with 3.12
+    endif()
 endif()
 
 # show all compile definitions
