@@ -650,98 +650,98 @@
         <translation>OpenHantek6022 (%1) - %2 (FW%3)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="129"/>
+        <location filename="../src/mainwindow.cpp" line="128"/>
         <source>Invalid command</source>
         <translation>Commande invalide</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="215"/>
+        <location filename="../src/mainwindow.cpp" line="214"/>
         <source>Stop</source>
         <translation>Arrêter</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="216"/>
+        <location filename="../src/mainwindow.cpp" line="215"/>
         <source>Stop the oscilloscope</source>
         <translation>Arrêter l&apos;oscilloscope</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="219"/>
+        <location filename="../src/mainwindow.cpp" line="218"/>
         <source>Start</source>
         <translation>Démarrer</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="220"/>
+        <location filename="../src/mainwindow.cpp" line="219"/>
         <source>Start the oscilloscope</source>
         <translation>Démarrer l&apos;oscilloscope</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="240"/>
+        <location filename="../src/mainwindow.cpp" line="239"/>
         <source>Open file</source>
         <translation>Ouvrir une configuration</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="240"/>
-        <location filename="../src/mainwindow.cpp" line="261"/>
+        <location filename="../src/mainwindow.cpp" line="239"/>
+        <location filename="../src/mainwindow.cpp" line="260"/>
         <source>Settings (*.ini)</source>
         <translation>Réglages (*.ini)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="261"/>
+        <location filename="../src/mainwindow.cpp" line="260"/>
         <source>Save settings</source>
         <translation>Enregistrer les réglages</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="287"/>
+        <location filename="../src/mainwindow.cpp" line="286"/>
         <source>Disable fading of previous graphs</source>
         <translation>Désactiver l&apos;estompage des graphes précédents</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="289"/>
+        <location filename="../src/mainwindow.cpp" line="288"/>
         <source>Enable fading of previous graphs</source>
         <translation>Activer l&apos;estompage des graphes précédents</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="297"/>
+        <location filename="../src/mainwindow.cpp" line="296"/>
         <source>Hide histogram</source>
         <translation>Cacher l’histogramme</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="299"/>
+        <location filename="../src/mainwindow.cpp" line="298"/>
         <source>Show histogram</source>
         <translation>Montrer l’histogramme</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="307"/>
+        <location filename="../src/mainwindow.cpp" line="306"/>
         <source>Hide magnified scope</source>
         <translation>Cacher la vue agrandie</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="309"/>
+        <location filename="../src/mainwindow.cpp" line="308"/>
         <source>Show magnified scope</source>
         <translation>Montrer la vue agrandie</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="319"/>
+        <location filename="../src/mainwindow.cpp" line="318"/>
         <source>Hide measurements</source>
         <translation>Cacher les mesures</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="321"/>
+        <location filename="../src/mainwindow.cpp" line="320"/>
         <source>Show measurements</source>
         <translation>Montrer les mesures</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="338"/>
+        <location filename="../src/mainwindow.cpp" line="337"/>
         <source>About OpenHantek6022 (%1)</source>
         <translation>A propos de OpenHantek6022 (%1)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="339"/>
+        <location filename="../src/mainwindow.cpp" line="338"/>
         <source>&lt;p&gt;Open source software for Hantek6022 USB oscilloscopes&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2010, 2011 Oliver Haag&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2012-2020 OpenHantek community&lt;br/&gt;&lt;a href=&apos;https://github.com/OpenHantek&apos;&gt;https://github.com/OpenHantek&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Open source firmware copyright &amp;copy; 2019-2020 Ho-Ro&lt;br/&gt;&lt;a href=&apos;https://github.com/Ho-Ro/Hantek6022API&apos;&gt;https://github.com/Ho-Ro/Hantek6022API&lt;/a&gt;&lt;/p&gt;</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="368"/>
+        <location filename="../src/mainwindow.cpp" line="367"/>
         <source>%1: %2</source>
         <translation></translation>
     </message>
@@ -1127,7 +1127,7 @@
         <translation>Flat Top</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="78"/>
+        <location filename="../src/main.cpp" line="79"/>
         <source>Use OpenGL ES instead of OpenGL</source>
         <translation>Utilisez OpenGL ES à la place de OpenGL</translation>
     </message>

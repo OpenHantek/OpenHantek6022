@@ -22,14 +22,6 @@ static void initSpecifications(Dso::ControlSpecification& specification) {
     // the screen two times (for pre/post trigger) at 10ms/div = 100ms/screen
     // SAMPLESIZE defined in modelDSO6022.h
     // adapt accordingly in HantekDsoControl::convertRawDataToSamples()
-    specification.samplerate.single.base = 1e6;
-    specification.samplerate.single.max = 30e6;
-    specification.samplerate.single.maxDownsampler = 10;
-    specification.samplerate.single.recordLengths = { UINT_MAX };
-    specification.samplerate.multi.base = 1e6;
-    specification.samplerate.multi.max = 15e6;
-    specification.samplerate.multi.maxDownsampler = 10;
-    specification.samplerate.multi.recordLengths = { UINT_MAX };
     specification.bufferDividers = { 1000 , 1 , 1 };
     // This data was based on testing and depends on Divider.
     // Input divider: 100/1009 = 1% too low display
@@ -86,6 +78,17 @@ static void initSpecifications(Dso::ControlSpecification& specification) {
     // 60k, 100k, 200k, 500k, 1M, 2M, 3M, 4M, 5M, 6M, 8M, 10M, 12M, 15M, 16M, 24M, 30M (, 48M)
     // 48M is unstable in 1 channel mode
     // 24M, 30M and 48M are unstable in 2 channel mode
+    // these unstable settings are disabled
+
+    specification.samplerate.single.base = 1e6;
+    specification.samplerate.single.max = 30e6;
+    specification.samplerate.single.maxDownsampler = 10;
+    specification.samplerate.single.recordLengths = { UINT_MAX };
+    specification.samplerate.multi.base = 1e6;
+    specification.samplerate.multi.max = 15e6;
+    specification.samplerate.multi.maxDownsampler = 10;
+    specification.samplerate.multi.recordLengths = { UINT_MAX };
+
 // define VERY_SLOW_SAMPLES to get timebase up to 1s/div at the expense of very slow reaction time (up to 20 s)
 //#define VERY_SLOW_SAMPLES
     specification.fixedSampleRates = { // samplerate, sampleId, downsampling
@@ -96,7 +99,7 @@ static void initSpecifications(Dso::ControlSpecification& specification) {
         {100e3,  10, 100} , {200e3,  10,  50} , {500e3,  10,  20} , // 100x, 50x, 20x downsampling from 10 MS/s
         {  1e6,  10,  10} , {  2e6,  10,   5} , {  5e6,  10,   2} , // 10x,   5x,  2x downsampling from 10 MS/s
         { 10e6,  10,   1} , { 12e6,  12,   1} , { 15e6,  15,   1} , // no oversampling
-        { 24e6,  24,   1} , { 30e6,  30,   1}  // no oversampling
+        { 24e6,  24,   1} , { 30e6,  30,   1} , { 48e6,  48,   1}   // no oversampling
     };
 
 #ifdef HANTEK_AC

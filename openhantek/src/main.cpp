@@ -9,6 +9,7 @@
 #include <QTranslator>
 #ifdef __linux__
 #include <QStyleFactory>
+#include <sched.h>
 #endif
 #include <iostream>
 #ifdef __FreeBSD__
@@ -96,6 +97,21 @@ int main(int argc, char *argv[]) {
     // with package qt5-style-plugins
     // ("Breeze", "bb10dark", "bb10bright", "cleanlooks", "gtk2", "cde", "motif", "plastique", "Windows", "Fusion")
     openHantekApplication.setStyle( QStyleFactory::create( "Fusion" ) ); // smaller widgets allow stacking of all docks
+#endif
+
+#ifdef __linux__
+    // try to set realtime priority to improve USB allocation
+    // this works if the user is member of a realtime group, e.g. audio:
+    // 1. set limits in /etc/security/limits.d:
+    //    @audio - rtprio 99
+    // 2. add user to the group, e.g. audio:
+    //    usermod -a -G audio <your_user_name>
+    // or set the limits only for your user in /etc/security/limits.d:
+    //    <your_user_name> - rtprio 99
+    struct sched_param schedParam;
+    schedParam.sched_priority = 49; // set RT priority level 50
+    sched_setscheduler( 0, SCHED_FIFO, &schedParam ); // and RT FIFO scheduler
+    // but ignore any error if user has no realtime rights
 #endif
 
     //////// Load translations ////////
