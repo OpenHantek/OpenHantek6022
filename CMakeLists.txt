@@ -75,10 +75,12 @@ if("${CMAKE_SYSTEM}" MATCHES "Linux")
     message(WARNING "Could not find icons directory (/usr/share/icons/hicolor/scalable/apps/), skipping installation of icon.")
   endif()
   if(EXISTS "/usr/share/doc/")
-    install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/docs/OpenHantek6022_User_Manual.pdf"
-            DESTINATION "/usr/share/doc/OpenHantek" COMPONENT Runtime)
+    install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/CHANGELOG"
+                  "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE"
+                  "${CMAKE_CURRENT_SOURCE_DIR}/docs/OpenHantek6022_User_Manual.pdf"
+            DESTINATION "/usr/share/doc/openhantek" COMPONENT Runtime)
   else()
-    message(WARNING "Could not find doc directory (/usr/share/doc/), skipping installation of user manual.")
+    message(WARNING "Could not find doc directory (/usr/share/doc/), skipping installation of user documentation.")
   endif()
 endif()
 

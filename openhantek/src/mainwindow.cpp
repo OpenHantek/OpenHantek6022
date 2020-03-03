@@ -324,7 +324,7 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, Expo
     ui->actionMeasure->setChecked(dsoSettings->view.cursorsVisible);
 
     connect(ui->actionUserManual, &QAction::triggered, []() {
-        QString usrManualPath( "/usr/share/doc/OpenHantek/OpenHantek6022_User_Manual.pdf" );
+        QString usrManualPath( USR_MANUAL_PATH );
         QFile userManual( usrManualPath );
         if ( userManual.exists() )
             QDesktopServices::openUrl( QUrl( "file://" + usrManualPath ) );

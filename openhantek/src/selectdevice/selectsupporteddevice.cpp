@@ -14,6 +14,7 @@
 #include "deviceslistmodel.h"
 #include "newdevicemodelfromexisting.h"
 #include "modelregistry.h"
+#include "viewconstants.h"
 
 SelectSupportedDevice::SelectSupportedDevice( QWidget *parent ) :
     QDialog( parent ), ui( new Ui::SelectSupportedDevice )
@@ -31,7 +32,7 @@ SelectSupportedDevice::SelectSupportedDevice( QWidget *parent ) :
         QCoreApplication::instance()->quit();
     });
     connect(ui->buttonBox, &QDialogButtonBox::helpRequested, []() {
-        QString usrManualPath( "/usr/share/doc/OpenHantek/OpenHantek6022_User_Manual.pdf" );
+        QString usrManualPath( USR_MANUAL_PATH );
         QFile userManual( usrManualPath );
         if ( userManual.exists() )
             QDesktopServices::openUrl( QUrl( "file://" + usrManualPath ) );
