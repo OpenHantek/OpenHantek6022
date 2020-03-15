@@ -35,7 +35,7 @@ static void initSpecifications(Dso::ControlSpecification& specification) {
     specification.voltageOffset[1] = { 0, 0, 0, 0, 0, 0, 0, 0 };
 
     // read the real calibration values from file
-    const char* ranges[] = { "20mV", "50mV","100mV", "200mV", "500mV", "1000mV", "2000mV", "5000mV" }; 
+    const char* ranges[] = { "20mV", "50mV","100mV", "200mV", "500mV", "1000mV", "2000mV", "5000mV" };
     const char* channels[] = { "ch0", "ch1" };
     //printf( "read config file\n" );
     const unsigned RANGES = 8;
@@ -74,11 +74,12 @@ static void initSpecifications(Dso::ControlSpecification& specification) {
         {2,4.00} , {1,8.00} , {1,16.00} , {1,40.00}
     };
 
-    // Possible sample rates with custom fw from https://github.com/Ho-Ro/Hantek6022API
-    // 60k, 100k, 200k, 500k, 1M, 2M, 3M, 4M, 5M, 6M, 8M, 10M, 12M, 15M, 16M, 24M, 30M (, 48M)
-    // 48M is unstable in 1 channel mode
-    // 24M, 30M and 48M are unstable in 2 channel mode
+    // Possible raw sample rates with custom fw from https://github.com/Ho-Ro/Hantek6022API
+    // 20k, 50k, 60k, 100k, 200k, 500k, 1M, 2M, 3M, 4M, 5M, 6M, 8M, 10M, 12M, 15M, 16M, 24M, 30M (, 48M)
+    // 48M is unusable in 1 channel mode due to massive USB overrun
+    // 24M, 30M and 48M are unusable in 2 channel mode
     // these unstable settings are disabled
+    // Lower effective sample rates < 10 MS/s use oversampling to increase the SNR
 
     specification.samplerate.single.base = 1e6;
     specification.samplerate.single.max = 30e6;
@@ -127,7 +128,7 @@ static void applyRequirements_(HantekDsoControl *dsoControl) {
 //
 //                                              VID/PID active  VID/PID no FW   FW ver    FW name     Scope name
 //                                              |------------|  |------------|  |----|  |---------|  |----------|
-ModelDSO6022BE::ModelDSO6022BE() : DSOModel(ID, 0x04b5, 0x6022, 0x04b4, 0x6022, 0x0204, "dso6022be", "DSO-6022BE",
+ModelDSO6022BE::ModelDSO6022BE() : DSOModel(ID, 0x04b5, 0x6022, 0x04b4, 0x6022, 0x0205, "dso6022be", "DSO-6022BE",
                                             Dso::ControlSpecification(2)) {
     initSpecifications(specification);
 }
@@ -138,7 +139,7 @@ void ModelDSO6022BE::applyRequirements(HantekDsoControl *dsoControl) const {
 
 
 // Hantek DSO-6022BL (scope or logic analyzer)
-ModelDSO6022BL::ModelDSO6022BL() : DSOModel(ID, 0x04b5, 0x602a, 0x04b4, 0x602a, 0x0204, "dso6022bl", "DSO-6022BL",
+ModelDSO6022BL::ModelDSO6022BL() : DSOModel(ID, 0x04b5, 0x602a, 0x04b4, 0x602a, 0x0205, "dso6022bl", "DSO-6022BL",
                                             Dso::ControlSpecification(2)) {
     initSpecifications(specification);
 }
@@ -149,8 +150,8 @@ void ModelDSO6022BL::applyRequirements(HantekDsoControl *dsoControl) const {
 
 
 // Voltcraft DSO-2020 USB Oscilloscope (HW is identical to 6022)
-// Scope starts up as model DS-2020 (VID/PID = 04b4/2020) but loads 6022BE firmware and looks like a 6022BE 
-ModelDSO2020::ModelDSO2020() : DSOModel(ID, 0x04b5, 0x6022, 0x04b4, 0x2020, 0x0204, "dso6022be", "DSO-2020",
+// Scope starts up as model DS-2020 (VID/PID = 04b4/2020) but loads 6022BE firmware and looks like a 6022BE
+ModelDSO2020::ModelDSO2020() : DSOModel(ID, 0x04b5, 0x6022, 0x04b4, 0x2020, 0x0205, "dso6022be", "DSO-2020",
                                             Dso::ControlSpecification(2)) {
     initSpecifications(specification);
 }
@@ -172,7 +173,7 @@ static ModelSaleae modelInstance_Saleae;
 
 
 // LCSOFT without EEPROM reports EzUSB VID/PID
-ModelEzUSB::ModelEzUSB() : DSOModel(ID, 0x04b5, 0x6022, 0x04b4, 0x8613, 0x0204, "dso6022be", "LCsoft-EzUSB",
+ModelEzUSB::ModelEzUSB() : DSOModel(ID, 0x04b5, 0x6022, 0x04b4, 0x8613, 0x0205, "dso6022be", "LCsoft-EzUSB",
                                             Dso::ControlSpecification(2)) {
     initSpecifications(specification);
 }
@@ -184,7 +185,7 @@ void ModelEzUSB::applyRequirements(HantekDsoControl *dsoControl) const {
 
 
 // Saleae VID/PID in EEPROM
-ModelSaleae::ModelSaleae() : DSOModel(ID, 0x04b5, 0x6022, 0x0925, 0x3881, 0x0204, "dso6022be", "LCsoft-Saleae",
+ModelSaleae::ModelSaleae() : DSOModel(ID, 0x04b5, 0x6022, 0x0925, 0x3881, 0x0205, "dso6022be", "LCsoft-Saleae",
                                             Dso::ControlSpecification(2)) {
     initSpecifications(specification);
 }
