@@ -110,7 +110,7 @@ void GraphGenerator::generateGraphsTYvoltage(PPresult *result) {
                 }
             }
         }
-        if ( scope->histogram ) { // scale and display the histogram
+        if ( (scope->horizontal.format == Dso::GraphFormat::TY) && scope->histogram ) { // scale and display the histogram
             double max = 0; // find max histo count
             for ( int bin = 0; bin < binsPerDiv * DIVS_VOLTAGE; ++bin ) {
                 if ( bins[ bin ] > max ) {
@@ -167,6 +167,7 @@ void GraphGenerator::generateGraphsTYspectrum(PPresult *result) {
 
 
 void GraphGenerator::generateGraphsXY(PPresult *result) {
+    //puts("generateGraphXY()");
     result->vaChannelVoltage.resize( scope->voltage.size() );
 
     // Delete all spectrum graphs
