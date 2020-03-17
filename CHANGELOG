@@ -1,3 +1,15 @@
+3.0.3
+2020-03-17
+FW 0205
+Fix histogram issue when switching TY -> XY
+
+3.0.2
+2020-03-01
+Apply realtime prio and scheduler
+Histogram for TY voltage traces
+Variable probe gain setting
+French translation complete
+
 3.0.1
 2019-12-13
 More robust USB handling for all OSs

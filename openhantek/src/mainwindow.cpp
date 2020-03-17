@@ -151,6 +151,9 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, Expo
     connect(horizontalDock, &HorizontalDock::calfreqChanged, [dsoControl, this]() {
         dsoControl->setCalFreq(dsoSettings->scope.horizontal.calfreq);
     });
+    connect(horizontalDock, &HorizontalDock::formatChanged, [this]( Dso::GraphFormat format ) {
+        ui->actionHistogram->setEnabled( format == Dso::GraphFormat::TY );
+    });
 
     connect(triggerDock, &TriggerDock::modeChanged, dsoControl, &HantekDsoControl::setTriggerMode);
     connect(triggerDock, &TriggerDock::modeChanged, dsoWidget, &DsoWidget::updateTriggerMode);
@@ -298,6 +301,7 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, Expo
             this->ui->actionHistogram->setStatusTip(tr("Show histogram"));
     });
     ui->actionHistogram->setChecked(dsoSettings->scope.histogram);
+    ui->actionHistogram->setEnabled( scope->horizontal.format == Dso::GraphFormat::TY );
 
     connect(ui->actionZoom, &QAction::toggled, [this](bool enabled) {
         dsoSettings->view.zoom = enabled;
