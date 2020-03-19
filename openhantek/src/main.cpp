@@ -99,7 +99,7 @@ int main(int argc, char *argv[]) {
     openHantekApplication.setStyle( QStyleFactory::create( "Fusion" ) ); // smaller widgets allow stacking of all docks
 #endif
 
-#ifdef __linux__
+#ifdef __linux_rt__
     // try to set realtime priority to improve USB allocation
     // this works if the user is member of a realtime group, e.g. audio:
     // 1. set limits in /etc/security/limits.d:

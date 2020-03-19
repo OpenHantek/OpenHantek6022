@@ -51,14 +51,14 @@ HantekDsoControl::~HantekDsoControl() {
 }
 
 
-unsigned HantekDsoControl::updateSamplerate(unsigned downsampler, bool fastRate) {
-    //qDebug() << "updateSamplerate( " << downsampler << ", " << fastRate << " )";
+unsigned HantekDsoControl::updateSamplerate(unsigned downsampler) {
+    //qDebug() << "updateSamplerate( " << downsampler << ", " << isFastRate() << " )";
     // Get samplerate limits
     const ControlSamplerateLimits *limits =
-        fastRate ? &specification->samplerate.multi : &specification->samplerate.single;
+        isFastRate() ? &specification->samplerate.multi : &specification->samplerate.single;
 
     // Update settings
-    bool fastRateChanged = fastRate != (controlsettings.samplerate.limits == &specification->samplerate.multi);
+    bool fastRateChanged = isFastRate() != (controlsettings.samplerate.limits == &specification->samplerate.multi);
     if (fastRateChanged) { controlsettings.samplerate.limits = limits; }
 
     controlsettings.samplerate.downsampler = downsampler;
@@ -88,7 +88,7 @@ void HantekDsoControl::restoreTargets() {
 
 void HantekDsoControl::updateSamplerateLimits() {
     QList<double> sampleSteps;
-    double limit = ( isFastRate() ) ?
+    double limit = isFastRate() ?
         specification->samplerate.single.max : specification->samplerate.multi.max;
 
     if ( controlsettings.samplerate.current > limit ) {
@@ -162,7 +162,7 @@ Dso::ErrorCode HantekDsoControl::setRecordTime(double duration) {
         }
     }
     double samplerate = specification->fixedSampleRates[sampleId].samplerate;
-    //qDebug() << "sampleId:" << sampleId << srLimit << samplerate;
+    //qDebug() << "HDC::sRT: sampleId:" << sampleId << srLimit << samplerate;
     // Usable sample value
     modifyCommand<ControlSetTimeDIV>(ControlCode::CONTROL_SETTIMEDIV)
         ->setDiv(specification->fixedSampleRates[sampleId].id);
@@ -195,6 +195,7 @@ Dso::ErrorCode HantekDsoControl::setChannelUsed(ChannelID channel, bool used) {
         return Dso::ErrorCode::PARAMETER;
     // Update settings
     controlsettings.voltage[channel].used = used;
+    setFastRate( !controlsettings.voltage[1].used );
     ChannelID channelCount = 0;
     for (unsigned c = 0; c < specification->channels; ++c) {
         if (controlsettings.voltage[c].used) ++channelCount;

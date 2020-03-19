@@ -143,7 +143,7 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, Expo
     connect(horizontalDock, &HorizontalDock::frequencybaseChanged, dsoWidget, &DsoWidget::updateFrequencybase);
     connect(dsoControl, &HantekDsoControl::samplerateChanged, [this, horizontalDock](double samplerate) {
         // The timebase was set, let's adapt the samplerate accordingly
-        //printf( "main::samplerateChanged( %g )\n", samplerate );
+        //printf( "mainwindow::samplerateChanged( %g )\n", samplerate );
         dsoSettings->scope.horizontal.samplerate = samplerate;
         horizontalDock->setSamplerate(samplerate);
         dsoWidget->updateSamplerate(samplerate);

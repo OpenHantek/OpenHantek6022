@@ -146,8 +146,14 @@ class HantekDsoControl : public QObject {
 #endif
 
   private:
+    bool fastRate = true;
+
+    void setFastRate( bool fast ) {
+        fastRate = fast;
+    }
+
     bool isFastRate() const {
-        return controlsettings.voltage[0].used && !controlsettings.voltage[1].used;
+        return fastRate;
     }
 
     unsigned getRecordLength() const;
@@ -181,7 +187,7 @@ class HantekDsoControl : public QObject {
     /// \param downsampler The downsampling factor.
     /// \param fastRate true, if one channel uses all buffers.
     /// \return The downsampling factor that has been set.
-    unsigned updateSamplerate(unsigned downsampler, bool fastRate);
+    unsigned updateSamplerate(unsigned downsampler);
 
     /// \brief Restore the samplerate/timebase targets after divider updates.
     void restoreTargets();
