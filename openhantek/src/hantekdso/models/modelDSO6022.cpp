@@ -23,16 +23,22 @@ static void initSpecifications(Dso::ControlSpecification& specification) {
     // SAMPLESIZE defined in modelDSO6022.h
     // adapt accordingly in HantekDsoControl::convertRawDataToSamples()
     specification.bufferDividers = { 1000 , 1 , 1 };
-    // This data was based on testing and depends on Divider.
+    // Define the scaling between ADC sample values and real input voltage
+    // Everything is scaled on the full screen height (8 divs)
+    // The voltage/div setting:      20m   50m  100m  200m  500m    1V    2V    5V
+    // Equivalent input voltage:   0.16V  0.4V  0.8V  1.6V    4V    8V   16V   40V
+    // Theoretical gain setting:     x10   x10   x10   x5    x2     x1    x1    x1
+    // mV / digit:                     4     4     4     8    20    40    40    40
+    // The real input front end introduces a gain error
     // Input divider: 100/1009 = 1% too low display
     // Amplifier gain: x1 (ok), x2 (ok), x5.1 (2% too high), x10.1 (1% too high)
-    // Overall gain: x1 1% too low, x2 1% to low, x5 1% to high, x10 ok
-    // The sample value at the top of the screen with gain error correction
-    specification.voltageLimit[0] = { 40 , 100 , 200 , 202 , 198 , 198 , 396 , 990 };
-    specification.voltageLimit[1] = { 40 , 100 , 200 , 202 , 198 , 198 , 396 , 990 };
-    // theoretical offset, will be corrected by individual config file
+    // Overall resulting gain: x1 1% too low, x2 1% to low, x5 1% to high, x10 ok
+    // The sample value for full screen (8 divs) with theoretical gain setting
+    specification.voltageScale[0] = { 40 , 100 , 200 , 202 , 198 , 198 , 396 , 990 };
+    specification.voltageScale[1] = { 40 , 100 , 200 , 202 , 198 , 198 , 396 , 990 };
     specification.voltageOffset[0] = { 0, 0, 0, 0, 0, 0, 0, 0 };
     specification.voltageOffset[1] = { 0, 0, 0, 0, 0, 0, 0, 0 };
+    // Gain and offset can be corrected by individual config values from EEPROM or file
 
     // read the real calibration values from file
     const char* ranges[] = { "20mV", "50mV","100mV", "200mV", "500mV", "1000mV", "2000mV", "5000mV" };
@@ -48,7 +54,7 @@ static void initSpecifications(Dso::ControlSpecification& specification) {
             double gain = settings.value( ranges[ iii ], "0.0" ).toDouble();
             //printf( "ch%d %s: gain = %g\n", ch, ranges[ iii ], gain );
             if ( bool( gain ) )
-                specification.voltageLimit[ ch ][ iii ] /= gain;
+                specification.voltageScale[ ch ][ iii ] /= gain;
         }
         settings.endGroup(); // channels
     }

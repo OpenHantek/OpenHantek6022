@@ -43,7 +43,6 @@ struct ControlSettingsTrigger {
 /// \brief Stores the current amplification settings of the device.
 struct ControlSettingsVoltage {
     double offset = 0.0;     ///< The screen offset for each channel
-    double offsetReal = 0.0; ///< The real offset for each channel (Due to quantization)
     unsigned gain = 0;       ///< The gain id
     bool used = false;       ///< true, if the channel is used
     bool inverted = false;   ///< true, if the channel is inverted

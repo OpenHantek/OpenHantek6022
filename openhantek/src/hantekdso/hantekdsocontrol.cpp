@@ -473,8 +473,7 @@ void HantekDsoControl::convertRawDataToSamples(const std::vector<unsigned char> 
         }
         //result.data[channel].resize(rawSampleCount);
         const unsigned gainID = controlsettings.voltage[channel].gain;
-        const int limit = specification->voltageLimit[channel][gainID];
-        const double offset = controlsettings.voltage[channel].offsetReal;
+        const int voltageScale = specification->voltageScale[channel][gainID];
         const double gainStep = specification->gain[gainID].gainSteps;
         const double probeAttn = controlsettings.voltage[channel].probeAttn;
         const double sign = controlsettings.voltage[channel].inverted ? -1.0 : 1.0;
@@ -521,7 +520,7 @@ void HantekDsoControl::convertRawDataToSamples(const std::vector<unsigned char> 
                 sample += double( rawSample ) - offsetError;
             }
             sample /= rawDownsampling;
-            result.data[ channel ][ index ] = sign * (sample / limit - offset) * gainCalibration * gainStep * probeAttn;
+            result.data[ channel ][ index ] = sign * sample / voltageScale * gainCalibration * gainStep * probeAttn;
         }
     }
 }

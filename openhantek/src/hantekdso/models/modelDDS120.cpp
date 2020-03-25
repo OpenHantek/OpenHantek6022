@@ -32,8 +32,8 @@ static void initSpecifications(Dso::ControlSpecification& specification) {
     // The sample value at the top of the screen with gain error correction
     // TODO: check if 20x is possible for 1st and 2nd value
     // double the values accordingly 32 -> 64 & 80 -> 160 and change 10 -> 20 in specification.gain below
-    specification.voltageLimit[0] = { 64 , 160 , 160 , 155 , 170 , 165 , 330 , 820 };
-    specification.voltageLimit[1] = { 64 , 160 , 160 , 155 , 170 , 165 , 330 , 820 };
+    specification.voltageScale[0] = { 64 , 160 , 160 , 155 , 170 , 165 , 330 , 820 };
+    specification.voltageScale[1] = { 64 , 160 , 160 , 155 , 170 , 165 , 330 , 820 };
     // theoretical offset, will be corrected by individual config file
     specification.voltageOffset[0] = { 0, 0, 0, 0, 0, 0, 0, 0 };
     specification.voltageOffset[1] = { 0, 0, 0, 0, 0, 0, 0, 0 };
@@ -51,7 +51,7 @@ static void initSpecifications(Dso::ControlSpecification& specification) {
         for ( unsigned iii = 0; iii < RANGES; iii++ ) {
             double calibration = settings.value( ranges[ iii ], 0.0 ).toDouble();
             if ( bool( calibration ) )
-                specification.voltageLimit[ ch ][ iii ] /= calibration;
+                specification.voltageScale[ ch ][ iii ] /= calibration;
         }
         settings.endGroup(); // channels
     }

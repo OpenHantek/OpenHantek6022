@@ -53,8 +53,8 @@ struct ControlSpecification {
     // Calibration
 
     /// The sample values at the top of the screen
-    typedef std::vector<int> VoltageLimit;
-    std::vector<VoltageLimit> voltageLimit; // Per channel
+    typedef std::vector<int> VoltageScale;
+    std::vector<VoltageScale> voltageScale; // Per channel
     typedef std::vector<int> VoltageOffset;
     std::vector<VoltageOffset> voltageOffset; // Per channel
 
