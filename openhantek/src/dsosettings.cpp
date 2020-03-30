@@ -86,6 +86,7 @@ void DsoSettings::load() {
     if (store->contains("timebase")) scope.horizontal.timebase = store->value("timebase").toDouble();
     if (store->contains("recordLength")) scope.horizontal.recordLength = store->value("recordLength").toUInt();
     if (store->contains("samplerate")) scope.horizontal.samplerate = store->value("samplerate").toDouble();
+    if (store->contains("calfreq")) scope.horizontal.calfreq = store->value("calfreq").toDouble();
     store->endGroup();
     // Trigger
     store->beginGroup("trigger");
@@ -225,6 +226,7 @@ void DsoSettings::save() {
     store->setValue("timebase", scope.horizontal.timebase);
     store->setValue("recordLength", scope.horizontal.recordLength);
     store->setValue("samplerate", scope.horizontal.samplerate);
+    store->setValue("calfreq", scope.horizontal.calfreq);
     store->endGroup(); // horizontal
     // Trigger
     store->beginGroup("trigger");

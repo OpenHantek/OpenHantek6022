@@ -351,6 +351,7 @@ void HantekDsoControl::applySettings(DsoSettingsScope *scope) {
     }
 
     setRecordTime(scope->horizontal.timebase * DIVS_TIME);
+    setCalFreq(scope->horizontal.calfreq);
     setTriggerMode(scope->trigger.mode);
     setTriggerOffset (scope->trigger.offset);
     setTriggerSlope(scope->trigger.slope);
