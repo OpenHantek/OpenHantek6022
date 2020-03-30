@@ -74,6 +74,37 @@ The plan is to retire this legacy class and replace the paint code with
 a `GlScope` class shared OpenGL drawing code for at least the grid and the
 scope graphs.
 
+## Persistent settings
+
+Persisent settings are stored in the file `~/.config/OpenHantek/OpenHantek6022.conf`.
+Settings are written at program shutdown or with menu entry `File/Save settings` (`Ctrl-S`).
+The save/load happens in `src/dsosettings.cpp` in the functions `DsoSettings::save()` and `DsoSettings::load()`.
+After loading of the settings the values will be applied to the internal status as well as to the GUI.
+
+An example of making the calibration output frequency (parameter `calfreq`) persistent can be seen in commit [26c1a49](https://github.com/OpenHantek/OpenHantek6022/commit/26c1a49146818aab7419b319705878a5f072460f)
+
+`openhantek/src/dsosettings.cpp`
+
+    void DsoSettings::save() {
+        ...
+	   store->setValue("calfreq", scope.horizontal.calfreq);
+	   ...
+    }
+
+    void DsoSettings::load() {
+        ...
+	   if (store->contains("calfreq")) scope.horizontal.calfreq = store->value("calfreq").toDouble();
+	   ...
+    }
+
+`openhantek/src/hantekdso/hantekdsocontrol.cpp`
+
+    void HantekDsoControl::applySettings(DsoSettingsScope *scope) {
+        ...
+	   setCalFreq(scope->horizontal.calfreq);
+	   ...
+    }
+
 ## Data flow
 
 * Raw 8-bit ADC values are collected in `HantekDsoControl::run()` and converted in `HantekDsoControl::convertRawDataToSamples()` to real-world double samples (scaled with voltage and sample rate). 

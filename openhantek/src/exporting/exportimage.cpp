@@ -18,7 +18,7 @@ void ExporterImage::create(ExporterRegistry *newRegistry) { this->registry = new
 
 int ExporterImage::faIcon() { return fa::image; }
 
-QString ExporterImage::name() { return QCoreApplication::tr("Export Image/PDF"); }
+QString ExporterImage::name() { return QCoreApplication::tr("Export Image/PDF .."); }
 
 ExporterInterface::Type ExporterImage::type() { return Type::SnapshotExport; }
 
@@ -32,7 +32,7 @@ bool ExporterImage::save() {
     filters << QCoreApplication::tr("Portable Document Format (*.pdf)")
             << QCoreApplication::tr("Image (*.png *.xpm *.jpg)");
 
-    QFileDialog fileDialog(nullptr, QCoreApplication::tr("Export file..."), QString(), filters.join(";;"));
+    QFileDialog fileDialog(nullptr, QCoreApplication::tr("Export file .."), QString(), filters.join(";;"));
     fileDialog.setFileMode(QFileDialog::AnyFile);
     fileDialog.setAcceptMode(QFileDialog::AcceptSave);
     if (fileDialog.exec() != QDialog::Accepted) return false;

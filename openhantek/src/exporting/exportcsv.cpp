@@ -18,7 +18,7 @@ void ExporterCSV::create(ExporterRegistry *newRegistry) { this->registry = newRe
 
 int ExporterCSV::faIcon() { return fa::filetexto; }
 
-QString ExporterCSV::name() { return QCoreApplication::tr("Export CSV"); }
+QString ExporterCSV::name() { return QCoreApplication::tr("Export CSV .."); }
 
 ExporterInterface::Type ExporterCSV::type() { return Type::SnapshotExport; }
 
@@ -31,7 +31,7 @@ bool ExporterCSV::save() {
     QStringList filters;
     filters << QCoreApplication::tr("Comma-Separated Values (*.csv)");
 
-    QFileDialog fileDialog(nullptr, QCoreApplication::tr("Export file..."), QString(), filters.join(";;"));
+    QFileDialog fileDialog(nullptr, QCoreApplication::tr("Export file .."), QString(), filters.join(";;"));
     fileDialog.setFileMode(QFileDialog::AnyFile);
     fileDialog.setAcceptMode(QFileDialog::AcceptSave);
     if (fileDialog.exec() != QDialog::Accepted) return false;
