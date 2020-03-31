@@ -88,52 +88,52 @@ void SiSpinBox::fixup(QString &input) const {
 /// \brief Increase/decrease the values in fixed steps.
 /// \param doStep The number of steps, positive means increase.
 void SiSpinBox::stepBy(int doStep) {
-    double stepsSpan = this->steps.last() / this->steps.first();
-    int stepsCount = this->steps.size() - 1;
-    double value = 0;
-
     // Skip if we are already at a limit or if doStep is null
     if (doStep == 0 || (doStep < 0 && this->value() <= this->minimum()) ||
         (doStep > 0 && this->value() >= this->maximum())) {
         return;
     }
-
-    if (!this->steppedTo) { // No step done directly before this one, so we need
-                            // to check where we are
-        // Get how often the steps have to be fully ran through
-        int stepsFully = (this->mode == 0) ? int(floor(log(this->value() / this->steps.first()) / log(stepsSpan))) : 0;
-        // And now the remaining multiple
-        double stepMultiple =
-            (this->mode == 0) ? this->value() / pow(stepsSpan, stepsFully) : this->value() / this->minimum();
-        // Now get the neighbours of the current value from our steps list
-        int remainingSteps = 0;
-        for (; remainingSteps <= stepsCount; ++remainingSteps) {
-            if (this->steps[remainingSteps] > stepMultiple) break;
+    int stepsCount = this->steps.size() - 1;
+    if ( 0 == mode ) { // this is a regular 1/2/5.. spinbox
+        double stepsSpan = this->steps.last() / this->steps.first();
+        double value = 0;
+        if (!this->steppedTo) { // No step done directly before this one,
+                                // ... so we need to check where we are
+            // Get how often the steps have to be fully ran through
+            int stepsFully = int(floor(log(this->value() / this->steps.first()) / log(stepsSpan)));
+            // And now the remaining multiple
+            double stepMultiple = this->value() / pow(stepsSpan, stepsFully);
+            // Now get the neighbours of the current value from our steps list
+            int remainingSteps = 0;
+            for (; remainingSteps <= stepsCount; ++remainingSteps) {
+                if (this->steps[remainingSteps] > stepMultiple) break;
+            }
+            if (remainingSteps > 0) // Shouldn't happen, but double may have rounding errors
+                --remainingSteps;
+            this->stepId = stepsFully * stepsCount + remainingSteps;
+            // We need to do one step less down if we are inbetween two of them since
+            // our step is lower than the value
+            if (doStep < 0 && this->steps[remainingSteps] < stepMultiple) ++this->stepId;
         }
-        if (remainingSteps > 0) // Shouldn't happen, but double may have rounding errors
-            --remainingSteps;
-        this->stepId = stepsFully * stepsCount + remainingSteps;
-        // We need to do one step less down if we are inbetween two of them since
-        // our step is lower than the value
-        if (doStep < 0 && this->steps[remainingSteps] < stepMultiple) ++this->stepId;
-    }
-
-    int subStep = doStep / abs(doStep);
-    for (int i = 0; i != doStep; i += subStep) {
-        this->stepId += subStep;
-        if (!this->mode) {
+        int subStep = doStep / abs(doStep);
+        for (int i = 0; i != doStep; i += subStep) {
+            this->stepId += subStep;
             int stepsId = this->stepId % stepsCount;
             if (stepsId < 0) stepsId += stepsCount;
             value = pow(stepsSpan, floor(double(this->stepId) / stepsCount)) * this->steps[stepsId];
-        } else {
-            stepId = std::min(std::max(stepId, 0), stepsCount);
-            value = this->steps[stepId];
+            if (value <= this->minimum() || value >= this->maximum()) break;
         }
-        if (value <= this->minimum() || value >= this->maximum()) break;
+        this->setValue(value);
+        this->steppedTo = true;
+    } else { // irregular spinbox, e.g. sample rate ..10/12/15/24/30.., check always
+        stepId = 0;
+        for ( auto it = steps.cbegin(); it != steps.end(); ++it, ++stepId )
+            if ( abs( this->value() - *it ) < 1e-12 ) // found
+                break;
+        // apply the requested up or down step(s) with bound check
+        stepId = qBound( 0, stepId + doStep, stepsCount );
+        setValue( steps[ stepId ] );
     }
-    this->setValue(value);
-    value = this->value();
-    this->steppedTo = true;
 }
 
 /// \brief Set the unit for this spin box.
