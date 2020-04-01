@@ -377,12 +377,13 @@ unsigned HantekDsoControl::getRecordLength() const {
 
 
 Dso::ErrorCode HantekDsoControl::retrieveChannelLevelData() {
-    // Get channel level data
+    // Get calibration data from EEPROM
     //printf( "retrieveChannelLevelData()\n" );
     int errorCode = device->controlRead(&controlsettings.cmdGetLimits);
-    if (errorCode < 0) {
-        qWarning() << tr("Couldn't get channel level data from oscilloscope");
-        emit statusMessage(tr("Couldn't get channel level data from oscilloscope"), 0);
+    if ( errorCode < 0) {
+        memset(controlsettings.calibrationValues, 0xFF, sizeof( CalibrationValues ) );
+        qWarning() << tr("Couldn't get calibration data from oscilloscope");
+        emit statusMessage(tr("Couldn't get calibration data from oscilloscope"), 0);
         emit communicationError();
         return Dso::ErrorCode::CONNECTION;
     }
@@ -478,27 +479,28 @@ void HantekDsoControl::convertRawDataToSamples(const std::vector<unsigned char> 
         const double gainStep = specification->gain[gainID].gainSteps;
         const double probeAttn = controlsettings.voltage[channel].probeAttn;
         const double sign = controlsettings.voltage[channel].inverted ? -1.0 : 1.0;
-        double offsetError = 0.0;
-        double gainCalibration = 1.0;
 
         // shift + individual offset for each channel and gain
-        offsetError = specification->voltageOffset[ channel ][ gainID ];
-        gainCalibration = 1.0;
-        if ( !bool(offsetError) ) { // no config file value
+        double gainCalibration = 1.0;
+        double voltageOffset = specification->voltageOffset[ channel ][ gainID ];
+        if ( !bool(voltageOffset) ) { // no config file value
             // get offset value from eeprom[ 8 .. 39 and (if available) 56 .. 87]
-            int offsetFine = 0;
+            int offsetRaw;
+            int offsetFine;
             if ( result.samplerate < 30e6 ) {
-                offsetError = controlsettings.calibrationValues->off.ls.step[ gainID ][ channel ];
+                offsetRaw = controlsettings.calibrationValues->off.ls.step[ gainID ][ channel ];
                 offsetFine = controlsettings.calibrationValues->fine.ls.step[ gainID ][ channel ];
             } else {
-                offsetError = controlsettings.calibrationValues->off.hs.step[ gainID ][ channel ];
+                offsetRaw = controlsettings.calibrationValues->off.hs.step[ gainID ][ channel ];
                 offsetFine = controlsettings.calibrationValues->fine.hs.step[ gainID ][ channel ];
             }
-            if ( offsetFine && offsetFine != 255 ) {
-                offsetError += (offsetFine - 0x80) / 250.0;
+            if ( offsetRaw && offsetRaw != 255 && offsetFine && offsetFine != 255 ) { // data valid
+                voltageOffset = offsetRaw + (offsetFine - 0x80) / 250.0;
+            } else { // no offset correction
+                voltageOffset = 0x80; // ADC has "binary offset" format (0x80 = 0V)
             }
             int gain = controlsettings.calibrationValues->gain.step[ gainID ][ channel ];
-            if ( gain && gain != 255 ) {
+            if ( gain && gain != 255 ) { // data valid
                 gainCalibration = 1.0 + (gain - 0x80) / 500.0;
             }
             //printf( "sDB %d, gC %f, ch %d, gID %d\n", shiftDataBuf, gainCalibration, channel, gainID );
@@ -518,7 +520,7 @@ void HantekDsoControl::convertRawDataToSamples(const std::vector<unsigned char> 
                 int rawSample = rawData[ rawBufferPosition + iii ]; // range 0...255
                 if ( rawSample == 0x00 || rawSample == 0xFF ) // min or max -> clipped
                     result.clipped |= 0x01 << channel;
-                sample += double( rawSample ) - offsetError;
+                sample += double( rawSample ) - voltageOffset;
             }
             sample /= rawDownsampling;
             result.data[ channel ][ index ] = sign * sample / voltageScale * gainCalibration * gainStep * probeAttn;

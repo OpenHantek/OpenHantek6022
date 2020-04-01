@@ -10,17 +10,6 @@
     </message>
 </context>
 <context>
-    <name>DevicesListModel</name>
-    <message>
-        <source>Devicename</source>
-        <translation type="vanished">Gerätename</translation>
-    </message>
-    <message>
-        <source>Status</source>
-        <translation type="vanished">Status</translation>
-    </message>
-</context>
-<context>
     <name>DsoConfigAnalysisPage</name>
     <message>
         <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="9"/>
@@ -278,10 +267,6 @@
         <translation>Linear</translation>
     </message>
     <message>
-        <source>Sinc</source>
-        <translation type="vanished">Sinc</translation>
-    </message>
-    <message>
         <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="11"/>
         <source>Interpolation</source>
         <translation>Interpolation</translation>
@@ -320,10 +305,6 @@
 <context>
     <name>DsoWidget</name>
     <message>
-        <source>Zoom x%L1</source>
-        <translation type="vanished">Zoom x%L1</translation>
-    </message>
-    <message>
         <location filename="../src/dsowidget.cpp" line="496"/>
         <location filename="../src/dsowidget.cpp" line="498"/>
         <location filename="../src/dsowidget.cpp" line="533"/>
@@ -342,10 +323,6 @@
         <location filename="../src/dsowidget.cpp" line="176"/>
         <source>Markers</source>
         <translation>Marker</translation>
-    </message>
-    <message>
-        <source>Zoom ---</source>
-        <translation type="vanished">Zoom ---</translation>
     </message>
     <message>
         <location filename="../src/dsowidget.cpp" line="450"/>
@@ -395,18 +372,6 @@
         <translation>%1  %2  %3  %4 %5</translation>
     </message>
     <message>
-        <source>%L1</source>
-        <translation type="obsolete">%L1% {1?}</translation>
-    </message>
-    <message>
-        <source>%1  %2  %3  %4 %5</source>
-        <translation type="obsolete">%1  %2  %3  %4 %5 {1 ?} {2 ?} {3 ?}</translation>
-    </message>
-    <message>
-        <source>%1  %2  %3  %4</source>
-        <translation type="vanished">%1  %2  %3  %4</translation>
-    </message>
-    <message>
         <location filename="../src/dsowidget.cpp" line="591"/>
         <source>/s</source>
         <translation>/s</translation>
@@ -415,10 +380,6 @@
         <location filename="../src/dsowidget.cpp" line="691"/>
         <source> on screen</source>
         <translation> angezeigt</translation>
-    </message>
-    <message>
-        <source>%L1 S</source>
-        <translation type="obsolete">%L1 S</translation>
     </message>
 </context>
 <context>
@@ -467,10 +428,14 @@
 <context>
     <name>HantekDsoControl</name>
     <message>
-        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="384"/>
         <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="385"/>
+        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="386"/>
+        <source>Couldn&apos;t get calibration data from oscilloscope</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Couldn&apos;t get channel level data from oscilloscope</source>
-        <translation>Konnte Kanalpegeldaten des Oszilloskops nicht lesen</translation>
+        <translation type="vanished">Konnte Kanalpegeldaten des Oszilloskops nicht lesen</translation>
     </message>
 </context>
 <context>
@@ -496,10 +461,6 @@
         <translation>Frequenzbasis</translation>
     </message>
     <message>
-        <source>Record length</source>
-        <translation type="vanished">Satzlänge</translation>
-    </message>
-    <message>
         <location filename="../src/docks/HorizontalDock.cpp" line="54"/>
         <source>Format</source>
         <translation>Format</translation>
@@ -508,10 +469,6 @@
         <location filename="../src/docks/HorizontalDock.cpp" line="61"/>
         <source>Calibration out</source>
         <translation>Kalibriersignal</translation>
-    </message>
-    <message>
-        <source>Roll</source>
-        <translation type="vanished">Rollen</translation>
     </message>
 </context>
 <context>
@@ -522,17 +479,9 @@
         <translation>%L1%</translation>
     </message>
     <message>
-        <source>%1  %2  %3  %4</source>
-        <translation type="vanished">%1  %2  %3  %4</translation>
-    </message>
-    <message>
         <location filename="../src/exporting/legacyexportdrawer.cpp" line="57"/>
         <source>%1  %2  %3  %4 %5</source>
         <translation>%1  %2  %3  %4 %5</translation>
-    </message>
-    <message>
-        <source>%1 S</source>
-        <translation type="vanished">%1 S</translation>
     </message>
     <message>
         <location filename="../src/exporting/legacyexportdrawer.cpp" line="69"/>
@@ -603,26 +552,14 @@
         <translation>Werkzeugleiste</translation>
     </message>
     <message>
-        <source>Open layout</source>
-        <translation type="vanished">Layout öffnen</translation>
-    </message>
-    <message>
         <location filename="../src/mainwindow.ui" line="97"/>
         <source>Ctrl+O</source>
         <translation>Strg+O</translation>
     </message>
     <message>
-        <source>Save layout</source>
-        <translation type="vanished">Layout speichern</translation>
-    </message>
-    <message>
         <location filename="../src/mainwindow.ui" line="105"/>
         <source>Ctrl+S</source>
         <translation>Strg+S</translation>
-    </message>
-    <message>
-        <source>Save as ...</source>
-        <translation type="vanished">Speichern unter...</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="94"/>
@@ -700,14 +637,6 @@
         <translation>Einstellungen ..</translation>
     </message>
     <message>
-        <source>About</source>
-        <translation type="vanished">Über</translation>
-    </message>
-    <message>
-        <source>Settings</source>
-        <translation type="vanished">Einstellungen</translation>
-    </message>
-    <message>
         <location filename="../src/mainwindow.ui" line="194"/>
         <source>Manual command</source>
         <translation>Manuelles Kommando</translation>
@@ -723,17 +652,9 @@
         <translation>Ungültiger Befehl</translation>
     </message>
     <message>
-        <source>&amp;Stop</source>
-        <translation type="vanished">&amp;Stop</translation>
-    </message>
-    <message>
         <location filename="../src/mainwindow.cpp" line="218"/>
         <source>Stop the oscilloscope</source>
         <translation>Das Oszilloskop anhalten</translation>
-    </message>
-    <message>
-        <source>&amp;Start</source>
-        <translation type="vanished">&amp;Start</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="217"/>
@@ -816,10 +737,6 @@
         <location filename="../src/mainwindow.cpp" line="342"/>
         <source>&lt;p&gt;Open source software for Hantek6022 USB oscilloscopes&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2010, 2011 Oliver Haag&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2012-2020 OpenHantek community&lt;br/&gt;&lt;a href=&apos;https://github.com/OpenHantek&apos;&gt;https://github.com/OpenHantek&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Open source firmware copyright &amp;copy; 2019-2020 Ho-Ro&lt;br/&gt;&lt;a href=&apos;https://github.com/Ho-Ro/Hantek6022API&apos;&gt;https://github.com/Ho-Ro/Hantek6022API&lt;/a&gt;&lt;/p&gt;</source>
         <translation>&lt;p&gt;Open-Source-Software für Hantek6022 USB Oszilloskope&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2010, 2011 Oliver Haag&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2012-2020 OpenHantek community&lt;br/&gt;&lt;a href=&apos;https://github.com/OpenHantek&apos;&gt;https://github.com/OpenHantek&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Open-Source-Firmware - Copyright &amp;copy; 2019-2020 Ho-Ro&lt;br/&gt;&lt;a href=&apos;https://github.com/Ho-Ro/Hantek6022API&apos;&gt;https://github.com/Ho-Ro/Hantek6022API&lt;/a&gt;&lt;/p&gt;</translation>
-    </message>
-    <message>
-        <source>&lt;p&gt;Open source software for Hantek6022 USB oscilloscopes&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2010, 2011 Oliver Haag&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2012-2019 OpenHantek community&lt;br/&gt;&lt;a href=&apos;https://github.com/OpenHantek&apos;&gt;https://github.com/OpenHantek&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Open source firmware copyright &amp;copy; 2019 Ho-Ro&lt;br/&gt;&lt;a href=&apos;https://github.com/Ho-Ro/Hantek6022API&apos;&gt;https://github.com/Ho-Ro/Hantek6022API&lt;/a&gt;&lt;/p&gt;</source>
-        <translation type="vanished">&lt;p&gt;Open-Source-Software für Hantek6022 USB Oszilloskope&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2010, 2011 Oliver Haag&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2012-2019 OpenHantek community&lt;br/&gt;&lt;a href=&apos;https://github.com/OpenHantek&apos;&gt;https://github.com/OpenHantek&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Open-Source-Firmware - Copyright &amp;copy; 2019 Ho-Ro&lt;br/&gt;&lt;a href=&apos;https://github.com/Ho-Ro/Hantek6022API&apos;&gt;https://github.com/Ho-Ro/Hantek6022API&lt;/a&gt;&lt;/p&gt;</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="371"/>
@@ -956,14 +873,6 @@
         <translation>%L1 s</translation>
     </message>
     <message>
-        <source>%L1 μV</source>
-        <translation type="vanished">%L1 µV</translation>
-    </message>
-    <message>
-        <source>%L1 μs</source>
-        <translation type="vanished">%L1 µs</translation>
-    </message>
-    <message>
         <location filename="../src/utils/printutils.cpp" line="25"/>
         <source>%L1 µV</source>
         <translation>%L1 µV</translation>
@@ -1047,10 +956,6 @@
 <context>
     <name>QCoreApplication</name>
     <message>
-        <source>Export CSV</source>
-        <translation type="vanished">Exportiere CSV</translation>
-    </message>
-    <message>
         <location filename="../src/exporting/exportcsv.cpp" line="21"/>
         <source>Export CSV ..</source>
         <translation>Exportiere CSV ..</translation>
@@ -1059,14 +964,6 @@
         <location filename="../src/exporting/exportcsv.cpp" line="32"/>
         <source>Comma-Separated Values (*.csv)</source>
         <translation>Kommagetrennte Werte (*.csv)</translation>
-    </message>
-    <message>
-        <source>Export file...</source>
-        <translation type="vanished">Datei exportieren...</translation>
-    </message>
-    <message>
-        <source>Export Image/PDF</source>
-        <translation type="vanished">Exportiere Graphik/PDF</translation>
     </message>
     <message>
         <location filename="../src/exporting/exportimage.cpp" line="21"/>
@@ -1088,10 +985,6 @@
         <location filename="../src/exporting/exportcsv.cpp" line="34"/>
         <source>Export file ..</source>
         <translation>Datei exportieren ..</translation>
-    </message>
-    <message>
-        <source>Print</source>
-        <translation type="vanished">Drucken</translation>
     </message>
     <message>
         <location filename="../src/exporting/exportprint.cpp" line="21"/>
@@ -1164,17 +1057,9 @@
         <translation>Linear</translation>
     </message>
     <message>
-        <source>Sinc</source>
-        <translation type="vanished">Sinc</translation>
-    </message>
-    <message>
         <location filename="../src/main.cpp" line="79"/>
         <source>Use OpenGL ES instead of OpenGL</source>
         <translation>Benutze OpenGL ES anstelle von OpenGL</translation>
-    </message>
-    <message>
-        <source>Show translated UI (if available)</source>
-        <translation type="vanished">Zeige deutsche Texte (sofern vorhanden)</translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="19"/>
@@ -1350,10 +1235,6 @@
 <context>
     <name>QObject</name>
     <message>
-        <source>Translation loaded</source>
-        <translation type="vanished">Übersetzung geladen</translation>
-    </message>
-    <message>
         <location filename="../src/selectdevice/rawdeviceslistmodel.cpp" line="64"/>
         <source>%1:%2 - No access</source>
         <translation>%1:%2 - Kein Zugriff</translation>
@@ -1372,17 +1253,6 @@
         <location filename="../src/selectdevice/deviceslistmodel.cpp" line="29"/>
         <source>Status</source>
         <translation>Status</translation>
-    </message>
-</context>
-<context>
-    <name>RawDevicesListModel</name>
-    <message>
-        <source>%1:%2 - No access</source>
-        <translation type="vanished">%1:%2 - Kein Zugriff</translation>
-    </message>
-    <message>
-        <source>%1:%2 (%3 - %4)</source>
-        <translation type="vanished">%1:%2 (%3 - %4)</translation>
     </message>
 </context>
 <context>
@@ -1409,42 +1279,6 @@
         <translation>...</translation>
     </message>
     <message>
-        <source>Try unsupported</source>
-        <translation type="vanished">Probiere ein nicht unterstütztes Gerät</translation>
-    </message>
-    <message>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Your device might not directly be supported by OpenHantek6022. But it might be compatible to one of the existing devices. Help us to identify those devices and report back on our &lt;a href=&quot;https://github.com/OpenHantek/openhantek/issues&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;issue tracker&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="vanished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Das Gerät wird vielleicht nicht von OpenHantek6022 unterstützt. Aber es könnte mit einem der vorhandenen Geräte kompatibel sein. Bitte hilf uns diese Geräte zu identifizieren und berichte auf unserem &lt;a href=&quot;https://github.com/OpenHantek/OpenHantek6022/issues&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Tracker&lt;/span&gt;&lt;/a&gt;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
-    </message>
-    <message>
-        <source>Add new device from template</source>
-        <translation type="vanished">Ein neues Gerät aus einer Vorlage erstellen</translation>
-    </message>
-    <message>
-        <source>Connection failed!</source>
-        <translation type="vanished">Verbindungsfehler!</translation>
-    </message>
-    <message>
-        <source>&lt;br/&gt;&lt;p&gt;The device is ready for use.&lt;/p&gt;&lt;p&gt;Please observe the &lt;a href=&apos;https://github.com/OpenHantek/OpenHantek6022/blob/master/docs/OpenHantek6022_User_Manual.pdf&apos;&gt;user manual&lt;/a&gt; for safe operation.&lt;/p&gt;</source>
-        <translation type="vanished">&lt;br/&gt;&lt;p&gt;Das Gerät ist bereit.&lt;/p&gt;&lt;p&gt;Das &lt;a href=&apos;https://github.com/OpenHantek/OpenHantek6022/blob/master/docs/OpenHantek6022_User_Manual.pdf&apos;&gt;Benutzerhandbuch&lt;/a&gt; gibt Hinweise für den sicheren Gebrauch.&lt;/p&gt;</translation>
-    </message>
-    <message>
-        <source>&lt;p&gt;Upload in progress ...&lt;/p&gt;&lt;p&gt;If the upload takes more than 30 s, please close this window &lt;br/&gt;and restart the program!&lt;/p&gt;</source>
-        <translation type="vanished">&lt;p&gt;Firmware wird geladen...&lt;/p&gt;&lt;p&gt;Sollte dies länger als 30 s dauern, bitte abbrechen &lt;br/&gt;und das Programm neu starten!&lt;/p&gt;</translation>
-    </message>
-    <message>
-        <source>&lt;br/&gt;&lt;p&gt;&lt;b&gt;The device is ready for use.&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Please observe the &lt;a href=&apos;https://github.com/OpenHantek/OpenHantek6022/blob/master/docs/OpenHantek6022_User_Manual.pdf&apos;&gt;user manual&lt;/a&gt; for safe operation.&lt;/p&gt;</source>
-        <translation type="vanished">&lt;br/&gt;&lt;p&gt;&lt;b&gt;Das Gerät ist bereit.&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Das &lt;a href=&apos;https://github.com/OpenHantek/OpenHantek6022/blob/master/docs/OpenHantek6022_User_Manual.pdf&apos;&gt;Benutzerhandbuch&lt;/a&gt; gibt Hinweise für den sicheren Gebrauch.&lt;/p&gt;</translation>
-    </message>
-    <message>
-        <source>&lt;p&gt;Upload in progress ...&lt;/p&gt;&lt;p&gt;&lt;b&gt;If the upload takes more than 30 s, please close this window &lt;br/&gt;and restart the program!&lt;/b&gt;&lt;/p&gt;&lt;p&gt;In this case, please unplug other USB devices on the same bus!&lt;br/&gt;You can check this under Linux with: &lt;pre&gt;lsusb; lsusb -t&lt;/pre&gt;&lt;/p&gt;</source>
-        <translation type="vanished">&lt;p&gt;Firmware wird geladen...&lt;/p&gt;&lt;p&gt;&lt;b&gt;Sollte dies länger als 30 s dauern, bitte abbrechen &lt;br/&gt;und das Programm neu starten!&lt;/b&gt;&lt;/p&gt;In diesem Fall bitte andere USB-Geräte auf dem selben Bus entfernen!&lt;br/&gt;Anzeige der USB-Belegung unter Linux : &lt;pre&gt;lsusb; lsusb -t&lt;/pre&gt;&lt;/p&gt;</translation>
-    </message>
-    <message>
-        <source>&lt;p&gt;&lt;br/&gt;&lt;b&gt;Connection failed!&lt;/p&gt;</source>
-        <translation type="vanished">&lt;p&gt;&lt;br/&gt;&lt;b&gt;Verbindungsfehler!&lt;/p&gt;</translation>
-    </message>
-    <message>
         <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="64"/>
         <source>&lt;p&gt;&lt;br/&gt;&lt;b&gt;The device is ready for use.&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Please observe the &lt;a href=&apos;https://github.com/OpenHantek/OpenHantek6022/blob/master/docs/OpenHantek6022_User_Manual.pdf&apos;&gt;user manual&lt;/a&gt; for safe operation.&lt;/p&gt;</source>
         <translation>&lt;p&gt;&lt;br/&gt;&lt;b&gt;Das Gerät ist bereit.&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Das &lt;a href=&apos;https://github.com/OpenHantek/OpenHantek6022/blob/master/docs/OpenHantek6022_User_Manual.pdf&apos;&gt;Benutzerhandbuch&lt;/a&gt; gibt Hinweise für den sicheren Gebrauch.&lt;/p&gt;</translation>
@@ -1467,7 +1301,7 @@
     <message>
         <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="86"/>
         <source>&lt;p&gt;Please make sure you have installed the windows usb driver correctly&lt;/p&gt;</source>
-        <translation>&lt;p&gt;Bitter sichrstellen, dass der korrekte Windows-Treiber installiert ist.&lt;/p&gt;</translation>
+        <translation>&lt;p&gt;Bitte sicherstellen, dass der korrekte Windows-Treiber installiert ist.&lt;/p&gt;</translation>
     </message>
     <message>
         <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="91"/>
@@ -1527,21 +1361,6 @@
     </message>
 </context>
 <context>
-    <name>UploadFirmware</name>
-    <message>
-        <source>Couldn&apos;t open device: %1</source>
-        <translation type="vanished">Konnte Gerät nicht öffnen: %1</translation>
-    </message>
-    <message>
-        <source>libusb_claim_interface() failed: %1</source>
-        <translation type="vanished">libusb_claim_interface() - Fehler: %1</translation>
-    </message>
-    <message>
-        <source>Writing the main firmware failed: %1</source>
-        <translation type="vanished">Fehler beim Übertragen der Firmware: %1</translation>
-    </message>
-</context>
-<context>
     <name>VoltageDock</name>
     <message>
         <location filename="../src/docks/VoltageDock.cpp" line="26"/>
@@ -1562,22 +1381,6 @@
         <location filename="../src/docks/VoltageDock.cpp" line="56"/>
         <source>Invert</source>
         <translation>Invertiert</translation>
-    </message>
-    <message>
-        <source>X%1</source>
-        <translation type="vanished">X%1</translation>
-    </message>
-    <message>
-        <source>x%1</source>
-        <translation type="vanished">x%1</translation>
-    </message>
-    <message>
-        <source>x10</source>
-        <translation type="vanished">x10</translation>
-    </message>
-    <message>
-        <source>X10 probe</source>
-        <translation type="vanished">X10 Tastkopf</translation>
     </message>
     <message>
         <location filename="../src/docks/VoltageDock.cpp" line="60"/>

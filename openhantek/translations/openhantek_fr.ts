@@ -430,10 +430,14 @@
 <context>
     <name>HantekDsoControl</name>
     <message>
-        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="384"/>
         <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="385"/>
+        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="386"/>
+        <source>Couldn&apos;t get calibration data from oscilloscope</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Couldn&apos;t get channel level data from oscilloscope</source>
-        <translation>Impossible d&apos;obtenir les données de niveau du canal depuis l&apos;oscilloscope</translation>
+        <translation type="vanished">Impossible d&apos;obtenir les données de niveau du canal depuis l&apos;oscilloscope</translation>
     </message>
 </context>
 <context>
