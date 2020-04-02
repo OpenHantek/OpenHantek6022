@@ -17,7 +17,11 @@ After David [stopped maintaining](https://github.com/OpenHantek/openhantek/issue
 
 <p><img alt="Image of main window on linux" width="100%" src="docs/images/screenshot_mainwindow.png"></p>
 
-* Supported devices: Hantek 6022BE and 6022BL as well as compatible scopes (e.g. Voltcraft DSO-2020) and SainSmart DDS120 (thx [msiegert](https://github.com/msiegert)).
+* Supported devices:
+ * Hantek 6022BE and 6022BL as well as compatible scopes (e.g. Voltcraft DSO-2020).
+ * SainSmart DDS120 (thx [msiegert](https://github.com/msiegert)) - this device has a different analog front end
+ and uses the sigrok firmware, which has [some limitations](https://sigrok.org/wiki/SainSmart_DDS120/Info#Open-source_firmware_details)
+ compared to the Hantek scopes (see [#69](https://github.com/OpenHantek/OpenHantek6022/issues/69#issuecomment-607341694)).
 * Fully supported operating system: Linux; developed under debian stable for amd64 architecture.
 * Raspberry Pi packages (raspbian stable) are available on the [Releases](https://github.com/OpenHantek/OpenHantek6022/releases) page.
 * Compiles under FreeBSD (packaging / installation: work in progress, thx [tspspi](https://github.com/tspspi)).

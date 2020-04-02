@@ -105,6 +105,65 @@ An example of making the calibration output frequency (parameter `calfreq`) pers
 	   ...
     }
 
+## Scope interface
+
+The scope receives control commands via endpoint 0 and provides the sampled data via bulk transfer on endpoint 6.
+The firmware command parser:
+
+    BOOL handle_vendorcommand(BYTE cmd)
+    {
+     stop_sampling();
+
+     /* Set red LED, toggle after timeout. */
+	LED_RED();
+	ledcounter = ledinit;
+
+     /* Clear EP0BCH/L for each valid command. */
+	if ( cmd >= 0xe0 && cmd <= 0xe6 ) {
+	     EP0BCH = 0;
+		EP0BCL = 0;
+		while ( EP0CS & bmEPBUSY )
+		     ;
+			}
+
+     switch (cmd) {
+	     case 0xa2:
+		     return eeprom();
+
+          case 0xe0:
+		     return set_voltage( 0, EP0BUF[0] );
+
+          case 0xe1:
+		     return set_voltage( 1, EP0BUF[0] );
+
+          case 0xe2:
+		     return set_samplerate( EP0BUF[0] );
+
+          case 0xe3:
+		     if ( EP0BUF[0] == 1 ) {
+			         /* Set green LED while sampling. */
+				    LED_GREEN();
+				    ledcounter = 0;
+				    start_sampling();
+				}
+			return TRUE;
+
+          case 0xe4:
+		     return set_numchannels( EP0BUF[0] );
+
+          case 0xe5:
+		     SET_COUPLING( EP0BUF[0] );
+			return TRUE;
+
+          case 0xe6:
+		     return set_calibration_pulse( EP0BUF[0] );
+
+     }
+
+     return FALSE; /* Not handled by handlers. */
+    }
+
+
 ## Data flow
 
 * Raw 8-bit ADC values are collected in `HantekDsoControl::run()` and converted in `HantekDsoControl::convertRawDataToSamples()` to real-world double samples (scaled with voltage and sample rate). 
