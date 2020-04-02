@@ -180,7 +180,7 @@ class HantekDsoControl : public QObject {
     std::vector<unsigned char> getSamples(unsigned &expectedSampleCount) const;
 
     /// \brief Converts raw oscilloscope data to sample data
-    void convertRawDataToSamples(const std::vector<unsigned char> &rawData);
+    void convertRawDataToSamples( const std::vector<unsigned char> &rawData, unsigned numChannels );
 
     /// \brief Sets the samplerate based on the parameters calculated by
     /// Control::getBestSamplerate.

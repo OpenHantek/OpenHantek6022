@@ -195,28 +195,22 @@ Dso::ErrorCode HantekDsoControl::setChannelUsed(ChannelID channel, bool used) {
         return Dso::ErrorCode::PARAMETER;
     // Update settings
     controlsettings.voltage[channel].used = used;
-    setFastRate( !controlsettings.voltage[1].used );
-    ChannelID channelCount = 0;
-    for (unsigned c = 0; c < specification->channels; ++c) {
-        if (controlsettings.voltage[c].used) ++channelCount;
-    }
     // Calculate the UsedChannels field for the command
     UsedChannels usedChannels = UsedChannels::USED_CH1;
+    controlsettings.channelCount = 1;
 
     if (controlsettings.voltage[1].used) {
+        controlsettings.channelCount = 2;
         if (controlsettings.voltage[0].used) {
             usedChannels = UsedChannels::USED_CH1CH2;
         } else {
             usedChannels = UsedChannels::USED_CH2;
         }
     }
+    setFastRate( usedChannels == UsedChannels::USED_CH1 );
     //qDebug() << "usedChannels" << (int)usedChannels;
-    if ( usedChannels == UsedChannels::USED_CH1 )
-        modifyCommand<ControlSetNumChannels>(ControlCode::CONTROL_SETNUMCHANNELS)->setDiv( 1 );
-    else
-        modifyCommand<ControlSetNumChannels>(ControlCode::CONTROL_SETNUMCHANNELS)->setDiv( 2 );
+    modifyCommand<ControlSetNumChannels>(ControlCode::CONTROL_SETNUMCHANNELS)->setDiv( isFastRate() ? 1 : 2 );
     // Check if fast rate mode availability changed
-    controlsettings.channelCount = channelCount;
     this->updateSamplerateLimits();
     this->restoreTargets();
     channelSetupChanged = true; // skip next raw samples block to avoid artefacts
@@ -433,13 +427,14 @@ std::vector<unsigned char> HantekDsoControl::getSamples(unsigned &previousSample
 }
 
 
-void HantekDsoControl::convertRawDataToSamples(const std::vector<unsigned char> &rawData) {
+void HantekDsoControl::convertRawDataToSamples(const std::vector<unsigned char> &rawData, unsigned activeChannels) {
     if ( channelSetupChanged ) { // skip the next conversion to avoid artefacts due to channel switch
         channelSetupChanged = false;
         return;
     }
-
-    const unsigned rawSampleCount = unsigned( isFastRate() ? rawData.size() : (rawData.size() / 2) );
+    if ( isFastRate() != (1 == activeChannels) ) // avoid possible race condition
+        return;
+    const unsigned rawSampleCount = unsigned( rawData.size() ) / activeChannels;
     //printf("cRDTS, rawSampleCount %lu\n", rawSampleCount);
     if ( 0 == rawSampleCount) // nothing to convert
         return;
@@ -463,17 +458,8 @@ void HantekDsoControl::convertRawDataToSamples(const std::vector<unsigned char> 
     //printf("sampleCount %u, downsampling %u\n", sampleCount, downsampling );
 
     // Convert channel data
-    unsigned activeChannels = specification->channels;
     // Channels are using their separate buffers
-    for (ChannelID channel = 0; channel < specification->channels; ++channel) {
-        if ( isFastRate() ) { // one channel mode only with CH1 (channel == 0)
-            activeChannels = 1;
-            if ( channel > 0 ) { // skip unused channel
-                result.data[channel].clear();
-                continue;
-            }
-        }
-        //result.data[channel].resize(rawSampleCount);
+    for (ChannelID channel = 0; channel < activeChannels; ++channel) {
         const unsigned gainID = controlsettings.voltage[channel].gain;
         const int voltageScale = specification->voltageScale[channel][gainID];
         const double gainStep = specification->gain[gainID].gainSteps;
@@ -700,6 +686,7 @@ void HantekDsoControl::run() {
     int errorCode = 0;
     static int delayDisplay = 0;
     static bool lastTriggered = false;
+    static unsigned activeChannels = 2;
     // Send all pending control commands
     ControlCommand *controlCommand = firstControlCommand;
     while (controlCommand) {
@@ -707,6 +694,8 @@ void HantekDsoControl::run() {
             timestampDebug(QString("Sending control command %1:%2")
                                .arg(QString::number(controlCommand->code, 16),
                                     hexDump(controlCommand->data(), controlCommand->size())));
+            if ( controlCommand->code == uint8_t( ControlCode::CONTROL_SETNUMCHANNELS ) )
+                activeChannels = *controlCommand->data();
 
             errorCode = device->controlWrite(controlCommand);
             if (errorCode < 0) {
@@ -727,7 +716,7 @@ void HantekDsoControl::run() {
     bool triggered = false;
     std::vector<unsigned char> rawData = this->getSamples(expectedSampleCount);
     if ( samplingStarted ) {
-        convertRawDataToSamples(rawData); // process new samples
+        convertRawDataToSamples(rawData, activeChannels); // process new samples
         softwareTrigger(); // detect trigger point
         triggered = triggering(); // present either free running or last triggered trace
     }

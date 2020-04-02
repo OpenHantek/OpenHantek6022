@@ -428,8 +428,8 @@
 <context>
     <name>HantekDsoControl</name>
     <message>
-        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="385"/>
-        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="386"/>
+        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="379"/>
+        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="380"/>
         <source>Couldn&apos;t get calibration data from oscilloscope</source>
         <translation type="unfinished"></translation>
     </message>
