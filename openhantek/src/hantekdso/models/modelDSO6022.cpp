@@ -76,8 +76,14 @@ static void initSpecifications(Dso::ControlSpecification& specification) {
 
     // HW gain, voltage steps in V/screenheight (ranges 20,50,100,200,500,1000,2000,5000 mV)
     specification.gain = {
-        {10,0.16} , {10,0.40} , {10,0.80} , {5,1.60} ,
-        {2,4.00} , {1,8.00} , {1,16.00} , {1,40.00}
+        {10,  0.16},
+        {10,  0.40},
+        {10,  0.80},
+        { 5,  1.60},
+        { 2,  4.00},
+        { 1,  8.00},
+        { 1, 16.00},
+        { 1, 40.00}
     };
 
     // Possible raw sample rates with custom fw from https://github.com/Ho-Ro/Hantek6022API
@@ -100,13 +106,25 @@ static void initSpecifications(Dso::ControlSpecification& specification) {
 //#define VERY_SLOW_SAMPLES
     specification.fixedSampleRates = { // samplerate, sampleId, downsampling
 #ifdef VERY_SLOW_SAMPLES
-        {  1e3, 110, 100} , {  2e3, 120, 100} , { 5e3, 150, 100} , // massive downsampling from 100, 200, 500 kS/s!
+        {  1e3, 110, 100}, // 100x downsampling from 100, 200, 500 kS/s!
+        {  2e3, 120, 100}, //
+        {  5e3, 150, 100}, //
 #endif
-        { 10e3,   1, 100} , { 20e3,   2, 100} , { 50e3,   5, 100} , // 100x downsampling from 1, 2, 5 MS/s!
-        {100e3,  10, 100} , {200e3,  10,  50} , {500e3,  10,  20} , // 100x, 50x, 20x downsampling from 10 MS/s
-        {  1e6,  10,  10} , {  2e6,  10,   5} , {  5e6,  10,   2} , // 10x,   5x,  2x downsampling from 10 MS/s
-        { 10e6,  10,   1} , { 12e6,  12,   1} , { 15e6,  15,   1} , // no oversampling
-        { 24e6,  24,   1} , { 30e6,  30,   1} , { 48e6,  48,   1}   // no oversampling
+        { 10e3,   1, 100}, // 100x downsampling from 1, 2, 5, 10 MS/s!
+        { 20e3,   2, 100}, //
+        { 50e3,   5, 100}, //
+        {100e3,  10, 100}, //
+        {200e3,  10,  50}, // 50x, 20x 10x, 5x, 2x downsampling from 10 MS/s
+        {500e3,  10,  20}, //
+        {  1e6,  10,  10}, //
+        {  2e6,  10,   5}, //
+        {  5e6,  10,   2}, //
+        { 10e6,  10,   1}, // no oversampling
+        { 12e6,  12,   1}, //
+        { 15e6,  15,   1}, //
+        { 24e6,  24,   1}, //
+        { 30e6,  30,   1}, //
+        { 48e6,  48,   1}  //
     };
 
 #ifdef HANTEK_AC
@@ -117,6 +135,9 @@ static void initSpecifications(Dso::ControlSpecification& specification) {
 #endif
     specification.triggerModes = {Dso::TriggerMode::AUTO, Dso::TriggerMode::NORMAL, Dso::TriggerMode::SINGLE};
     specification.fixedUSBinLength = 0;
+
+    // calibration frequency (requires >FW0206)
+    specification.calfreqSteps = { 50, 60, 100, 200, 500, 1e3, 2e3, 5e3, 10e3, 20e3, 50e3, 100e3 };
 }
 
 static void applyRequirements_(HantekDsoControl *dsoControl) {

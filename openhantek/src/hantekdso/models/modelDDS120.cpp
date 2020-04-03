@@ -20,7 +20,7 @@ static void initSpecifications(Dso::ControlSpecification& specification) {
     // SAMPLESIZE defined in modelDDS120.h
     // adapt accordingly in HantekDsoControl::convertRawDataToSamples()
     specification.samplerate.single.base = 1e6;
-    specification.samplerate.single.max = 48e6;
+    specification.samplerate.single.max = 30e6;
     specification.samplerate.single.maxDownsampler = 100;
     specification.samplerate.single.recordLengths = { UINT_MAX };
     specification.samplerate.multi.base = 1e6;
@@ -115,6 +115,7 @@ static void initSpecifications(Dso::ControlSpecification& specification) {
         {  5e6,  15,   3}, //   3x downsampling from 15 MS/s
         { 10e6,  11,   1}, // no downsampling, 11 means 10 MS/s
         { 15e6,  15,   1}, // no downsampling
+        { 24e6,  24,   1}, // no downsampling
         { 30e6,  30,   1}, // no downsampling
         { 48e6,  48,   1}  // no downsampling
     };
@@ -122,6 +123,7 @@ static void initSpecifications(Dso::ControlSpecification& specification) {
     specification.couplings = {Dso::Coupling::DC, Dso::Coupling::AC};
     specification.triggerModes = {Dso::TriggerMode::AUTO, Dso::TriggerMode::NORMAL, Dso::TriggerMode::SINGLE};
     specification.fixedUSBinLength = 0;
+    specification.calfreqSteps = { 100, 1000, 10000, 50000 }; // use calibration frequency steps of sigrok FW
 }
 
 static void applyRequirements_(HantekDsoControl *dsoControl) {

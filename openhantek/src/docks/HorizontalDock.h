@@ -8,6 +8,7 @@
 #include <vector>
 
 #include "hantekdso/enums.h"
+#include "hantekdso/controlspecification.h"
 
 class QLabel;
 class QCheckBox;
@@ -16,6 +17,7 @@ class QComboBox;
 class SiSpinBox;
 
 struct DsoSettingsScope;
+//struct ControlSpecification;
 
 Q_DECLARE_METATYPE(std::vector<unsigned>)
 Q_DECLARE_METATYPE(std::vector<double>)
@@ -30,7 +32,7 @@ class HorizontalDock : public QDockWidget {
     /// \param settings The target settings object.
     /// \param parent The parent widget.
     /// \param flags Flags for the window manager.
-    HorizontalDock(DsoSettingsScope *scope, QWidget *parent, Qt::WindowFlags flags = nullptr);
+    HorizontalDock(DsoSettingsScope *scope, const Dso::ControlSpecification *spec, QWidget *parent, Qt::WindowFlags flags = nullptr);
 
     /// \brief Changes the frequencybase.
     /// \param frequencybase The frequencybase in hertz.

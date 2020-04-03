@@ -66,5 +66,7 @@ struct ControlSpecification {
     std::vector<TriggerMode> triggerModes = {TriggerMode::AUTO, TriggerMode::NORMAL,
                                              TriggerMode::SINGLE};
     int fixedUSBinLength = 0;
+
+    QList<double> calfreqSteps;
 };
 }

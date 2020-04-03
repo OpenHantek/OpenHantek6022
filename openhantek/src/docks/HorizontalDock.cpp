@@ -28,7 +28,7 @@ template<typename... Args> struct SELECT {
     }
 };
 
-HorizontalDock::HorizontalDock(DsoSettingsScope *scope, QWidget *parent, Qt::WindowFlags flags)
+HorizontalDock::HorizontalDock(DsoSettingsScope *scope, const Dso::ControlSpecification *spec, QWidget *parent, Qt::WindowFlags flags)
     : QDockWidget(tr("Horizontal"), parent, flags), scope(scope) {
 
     // Initialize elements
@@ -56,13 +56,12 @@ HorizontalDock::HorizontalDock(DsoSettingsScope *scope, QWidget *parent, Qt::Win
     for (Dso::GraphFormat format: Dso::GraphFormatEnum)
         this->formatComboBox->addItem(Dso::graphFormatString(format));
 
-    calfreqSteps << 1.0 << 2.0 << 5.0 << 10.0;
 
     this->calfreqLabel = new QLabel(tr("Calibration out"));
     this->calfreqSiSpinBox = new SiSpinBox(UNIT_HERTZ);
-    this->calfreqSiSpinBox->setSteps(calfreqSteps); // 1,2,5,10
-    this->calfreqSiSpinBox->setMinimum(50);
-    this->calfreqSiSpinBox->setMaximum(100e3);
+    this->calfreqSiSpinBox->setSteps(spec->calfreqSteps);
+    this->calfreqSiSpinBox->setMinimum(spec->calfreqSteps.first());
+    this->calfreqSiSpinBox->setMaximum(spec->calfreqSteps.last());
 
     this->dockLayout = new QGridLayout();
     this->dockLayout->setColumnMinimumWidth(0, 64);

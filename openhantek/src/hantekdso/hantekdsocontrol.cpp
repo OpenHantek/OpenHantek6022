@@ -176,8 +176,11 @@ Dso::ErrorCode HantekDsoControl::setRecordTime(double duration) {
 
 Dso::ErrorCode HantekDsoControl::setCalFreq( double calfreq ) {
     unsigned int cf = unsigned( calfreq ) / 1000; // 1000, ..., 100000 -> 1, ..., 100
-    if ( cf == 0 ) // 50, 100, 200, 500 -> 105, 110, 120, 150
+    if ( cf == 0 ) { // 50, 60, 100, 200, 500 -> 105, 106, 110, 120, 150
         cf = 100 + unsigned( calfreq ) / 10;
+        if ( 110 == cf ) // special case for sigrok FW (e.g. DDS120) 100Hz -> 0
+            cf = 0;
+    }
     //printf( "HDC::setCalFreq( %g ) -> %d\n", calfreq, cf );
     if ( !device->isConnected() )
         return Dso::ErrorCode::CONNECTION;

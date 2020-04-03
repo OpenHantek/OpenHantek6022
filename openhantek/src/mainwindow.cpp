@@ -92,7 +92,7 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, Expo
     TriggerDock *triggerDock;
     SpectrumDock *spectrumDock;
     voltageDock = new VoltageDock(scope, spec, this);
-    horizontalDock = new HorizontalDock(scope, this);
+    horizontalDock = new HorizontalDock(scope,spec, this);
     triggerDock = new TriggerDock(scope, spec, this);
     spectrumDock = new SpectrumDock(scope, this);
 
