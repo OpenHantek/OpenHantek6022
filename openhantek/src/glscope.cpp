@@ -149,6 +149,7 @@ void GlScope::mouseMoveEvent(QMouseEvent *event) {
     if (!(zoomed && selectedCursor == 0) && (event->buttons() & Qt::LeftButton) != 0) {
         QPointF position = eventToPosition(event);
         if (selectedMarker == NO_MARKER) {
+            //qDebug() << "mouseMoveEvent";
             // User started draging outside the snap area of any marker:
             // move all markers to current position and select last marker in the array.
             for (unsigned marker = 0; marker < MARKER_COUNT; ++marker) {
@@ -168,11 +169,41 @@ void GlScope::mouseReleaseEvent(QMouseEvent *event) {
     if (!(zoomed && selectedCursor == 0) && event->button() == Qt::LeftButton) {
         QPointF position = eventToPosition(event);
         if (selectedMarker < MARKER_COUNT) {
+            //qDebug() << "mouseReleaseEvent";
             cursorInfo[selectedCursor]->pos[selectedMarker] = position;
             emit markerMoved(selectedCursor, selectedMarker);
         }
         selectedMarker = NO_MARKER;
     }
+    event->accept();
+}
+
+void GlScope::mouseDoubleClickEvent(QMouseEvent *event) {
+    if (!(zoomed && selectedCursor == 0) && (event->buttons() & Qt::LeftButton) != 0) {
+        // left double click positions two markers left and right of clicked pos with zoom=100
+        QPointF position = eventToPosition(event);
+        if (selectedMarker == NO_MARKER) {
+            //qDebug() << "mouseDoubleClickEvent";
+            // User double clicked outside the snap area of any marker:
+            // move all markers but the last left of current position.
+            unsigned marker;
+            for (marker = 0; marker < MARKER_COUNT-1; ++marker) {
+                cursorInfo[selectedCursor]->pos[marker] = position - QPointF( 0.05, 0 );
+                emit markerMoved(selectedCursor, marker);
+            }
+            // move last marker right of current position to make zoom=100.
+            cursorInfo[selectedCursor]->pos[marker] = position + QPointF( 0.05, 0 );
+            emit markerMoved(selectedCursor, marker);
+            //  select no marker
+            selectedMarker = NO_MARKER;
+        }
+    } else if (!(zoomed && selectedCursor == 0) && (event->buttons() & Qt::RightButton) != 0) {
+        // right double click moves all markers out of the way
+        cursorInfo[selectedCursor]->pos[0] = QPointF( MARGIN_LEFT, 0 );
+        cursorInfo[selectedCursor]->pos[1] = QPointF( MARGIN_RIGHT, 0 );
+        emit markerMoved(selectedCursor, 0);
+        emit markerMoved(selectedCursor, 1);
+}
     event->accept();
 }
 

@@ -398,29 +398,29 @@
 <context>
     <name>GlScope</name>
     <message>
-        <location filename="../src/glscope.cpp" line="195"/>
+        <location filename="../src/glscope.cpp" line="226"/>
         <source>System does not support OpenGL Shading Language (GLSL)</source>
         <translation>System unterstützt nicht OpenGL Shading Language (GLSL)</translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="199"/>
+        <location filename="../src/glscope.cpp" line="230"/>
         <source>OpenGL init called twice!</source>
         <translation>OpenGL init wurde doppelt aufgerufen!</translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="262"/>
+        <location filename="../src/glscope.cpp" line="293"/>
         <source>Failed to compile OpenGL shader programs.
 </source>
         <translation>Fehler beim Übersetzen der OpenGL Shader-Programme.\n</translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="268"/>
+        <location filename="../src/glscope.cpp" line="299"/>
         <source>Failed to link/bind OpenGL shader programs.
 </source>
         <translation>Fehler beim Linken der OpenGL Shader-Programme.</translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="277"/>
+        <location filename="../src/glscope.cpp" line="308"/>
         <source>Failed to locate shader variable.</source>
         <translation>Kann Shader-Variable nicht lokalisieren.</translation>
     </message>
@@ -428,8 +428,8 @@
 <context>
     <name>HantekDsoControl</name>
     <message>
-        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="379"/>
-        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="380"/>
+        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="382"/>
+        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="383"/>
         <source>Couldn&apos;t get calibration data from oscilloscope</source>
         <translation type="unfinished"></translation>
     </message>
@@ -466,7 +466,7 @@
         <translation>Format</translation>
     </message>
     <message>
-        <location filename="../src/docks/HorizontalDock.cpp" line="61"/>
+        <location filename="../src/docks/HorizontalDock.cpp" line="60"/>
         <source>Calibration out</source>
         <translation>Kalibriersignal</translation>
     </message>
