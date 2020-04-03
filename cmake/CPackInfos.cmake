@@ -120,7 +120,7 @@ include(CMakeDetermineSystem)
 # Linux DEB (tested on debian stretch and buster)
 # Architecture for package and file name are automatically detected
 set(CPACK_DEBIAN_PACKAGE_SECTION "electronics")
-set(CPACK_DEBIAN_PACKAGE_DEPENDS "libqt5core5a, libqt5opengl5, libopengl0, libusb-1.0-0, libfftw3-3")
+set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
 set(CPACK_DEBIAN_FILE_NAME "DEB-DEFAULT")
 
 # Linux RPM (not tested on debian)
