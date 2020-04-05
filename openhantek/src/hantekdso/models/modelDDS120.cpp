@@ -89,41 +89,53 @@ static void initSpecifications(Dso::ControlSpecification& specification) {
     };
 
 
-// This model uses the sigrok firmware that has a slightly different coding for the sample rate than my Hantek6022API version.
-// 10=100k, 20=200k, 50=500k, 11=10M (Hantek: 110=100k, 120=200k, 150=500k, 10=10M)
+    // Possible raw sample rates with custom fw from https://github.com/Ho-Ro/Hantek6022API
+    // 20k, 50k, 64k, 100k, 200k, 500k, 1M, 2M, 3M, 4M, 5M, 6M, 8M, 10M, 12M, 15M, 16M, 24M, 30M (, 48M)
+    // 48M is unusable in 1 channel mode due to massive USB overrun
+    // 24M, 30M and 48M are unusable in 2 channel mode
+    // these unstable settings are disabled
+    // Lower effective sample rates < 10 MS/s use oversampling to increase the SNR
 
-    // 48M is unstable in 1 channel mode
-    // 24M, 30M and 48M are unstable in 2 channel mode
+    specification.samplerate.single.base = 1e6;
+    specification.samplerate.single.max = 30e6;
+    specification.samplerate.single.maxDownsampler = 10;
+    specification.samplerate.single.recordLengths = { UINT_MAX };
+    specification.samplerate.multi.base = 1e6;
+    specification.samplerate.multi.max = 15e6;
+    specification.samplerate.multi.maxDownsampler = 10;
+    specification.samplerate.multi.recordLengths = { UINT_MAX };
 
-// define VERY_SLOW_SAMPLES to get timebase up to 1 s/div at the expense of very slow reaction time (up to 20 s)
+// define VERY_SLOW_SAMPLES to get timebase up to 1s/div at the expense of very slow reaction time (up to 20 s)
 //#define VERY_SLOW_SAMPLES
-    specification.fixedSampleRates = { 
-    // samplerate, sampleId, downsampling
+    specification.fixedSampleRates = { // samplerate, sampleId, downsampling
 #ifdef VERY_SLOW_SAMPLES
-        {  1e3, 10, 100},
-        {  2e3, 20, 100},
-        {  5e3, 50, 100},  // massive downsampling from 100, 200, 500 kS/s!
+        {  1e3, 110, 100}, // 100x downsampling from 100, 200, 500 kS/s!
+        {  2e3, 120, 100}, //
+        {  5e3, 150, 100}, //
 #endif
-        { 10e3,   1, 100}, // 100x downsampling from  1 MS/s!
-        { 20e3,   2, 100}, // 100x downsampling from  2 MS/s!
-        { 50e3,   5, 100}, // 100x downsampling from  5 MS/s!
-        {100e3,   8,  80}, //  80x downsampling from  8 MS/s
-        {200e3,   8,  40}, //  40x downsampling from  8 MS/s
-        {500e3,   8,  16}, //  16x downsampling from  8 MS/s
-        {  1e6,   8,   8}, //   8x downsampling from  8 MS/s
-        {  2e6,   8,   4}, //   4x downsampling from  8 MS/s
-        {  5e6,  15,   3}, //   3x downsampling from 15 MS/s
-        { 10e6,  11,   1}, // no downsampling, 11 means 10 MS/s
-        { 15e6,  15,   1}, // no downsampling
-        { 24e6,  24,   1}, // no downsampling
-        { 30e6,  30,   1}, // no downsampling
-        { 48e6,  48,   1}  // no downsampling
+        { 10e3,   1, 100}, // 100x downsampling from 1, 2, 5, 10 MS/s!
+        { 20e3,   2, 100}, //
+        { 50e3,   5, 100}, //
+        {100e3,  10, 100}, //
+        {200e3,  10,  50}, // 50x, 20x 10x, 5x, 2x downsampling from 10 MS/s
+        {500e3,  10,  20}, //
+        {  1e6,  10,  10}, //
+        {  2e6,  10,   5}, //
+        {  5e6,  10,   2}, //
+        { 10e6,  10,   1}, // no oversampling
+        { 12e6,  12,   1}, //
+        { 15e6,  15,   1}, //
+        { 24e6,  24,   1}, //
+        { 30e6,  30,   1}, //
+        { 48e6,  48,   1}  //
     };
+
 
     specification.couplings = {Dso::Coupling::DC, Dso::Coupling::AC};
     specification.triggerModes = {Dso::TriggerMode::AUTO, Dso::TriggerMode::NORMAL, Dso::TriggerMode::SINGLE};
     specification.fixedUSBinLength = 0;
-    specification.calfreqSteps = { 100, 1000, 10000, 50000 }; // use calibration frequency steps of sigrok FW
+    // calibration frequency (requires >FW0206)
+    specification.calfreqSteps = { 50, 60, 100, 200, 500, 1e3, 2e3, 5e3, 10e3, 20e3, 50e3, 100e3 };
 }
 
 static void applyRequirements_(HantekDsoControl *dsoControl) {
@@ -138,7 +150,7 @@ static void applyRequirements_(HantekDsoControl *dsoControl) {
 
 //                                        VID/PID active  VID/PID no FW   FW ver  FW name  Scope name
 //                                        |------------|  |------------|  |----|  |------|  |------|
-ModelDDS120::ModelDDS120() : DSOModel(ID, 0x1d50, 0x608e, 0x8102, 0x8102, 0x0002, "dds120", "DDS120",
+ModelDDS120::ModelDDS120() : DSOModel(ID, 0x04b5, 0x0120, 0x8102, 0x8102, 0x0206, "dds120", "DDS120",
                                             Dso::ControlSpecification(2)) {
     initSpecifications(specification);
 }
