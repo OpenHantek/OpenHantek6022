@@ -428,14 +428,17 @@
 <context>
     <name>HantekDsoControl</name>
     <message>
-        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="382"/>
-        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="383"/>
         <source>Couldn&apos;t get calibration data from oscilloscope</source>
-        <translation>Konnte Kalibrierdaten des Oszilloskops nicht lesen</translation>
+        <translation type="vanished">Konnte Kalibrierdaten des Oszilloskops nicht lesen</translation>
     </message>
     <message>
         <source>Couldn&apos;t get channel level data from oscilloscope</source>
         <translation type="vanished">Konnte Kanalpegeldaten des Oszilloskops nicht lesen</translation>
+    </message>
+    <message>
+        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="385"/>
+        <source>Couldn&apos;t get calibration data from oscilloscope&apos;s EEPROM. Use a config file for calibration!</source>
+        <translation>Konnte Kalibrierdaten des Oszilloskops nicht lesen, benutze eine config-Datei für die Kalibrierung!</translation>
     </message>
 </context>
 <context>

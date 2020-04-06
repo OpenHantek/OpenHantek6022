@@ -138,6 +138,7 @@ static void initSpecifications(Dso::ControlSpecification& specification) {
 
     // calibration frequency (requires >FW0206)
     specification.calfreqSteps = { 50, 60, 100, 200, 500, 1e3, 2e3, 5e3, 10e3, 20e3, 50e3, 100e3 };
+    specification.hasCalibrationStorage = true;
 }
 
 static void applyRequirements_(HantekDsoControl *dsoControl) {

@@ -376,11 +376,15 @@ unsigned HantekDsoControl::getRecordLength() const {
 Dso::ErrorCode HantekDsoControl::retrieveChannelLevelData() {
     // Get calibration data from EEPROM
     //printf( "retrieveChannelLevelData()\n" );
-    int errorCode = device->controlRead(&controlsettings.cmdGetLimits);
+    int errorCode = -1;
+    if ( specification->hasCalibrationStorage )
+        errorCode = device->controlRead(&controlsettings.cmdGetLimits);
     if ( errorCode < 0) {
+        // invalidate the calibration values.
         memset(controlsettings.calibrationValues, 0xFF, sizeof( CalibrationValues ) );
-        qWarning() << tr("Couldn't get calibration data from oscilloscope");
-        emit statusMessage(tr("Couldn't get calibration data from oscilloscope"), 0);
+        QString message = tr("Couldn't get calibration data from oscilloscope's EEPROM. Use a config file for calibration!");
+        qWarning() << message;
+        emit statusMessage( message , 0);
         emit communicationError();
         return Dso::ErrorCode::CONNECTION;
     }

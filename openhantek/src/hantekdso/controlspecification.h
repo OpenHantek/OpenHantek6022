@@ -51,7 +51,8 @@ struct ControlSpecification {
     std::vector<FixedSampleRate> fixedSampleRates;
 
     // Calibration
-
+    /// DSO6022 has calibration in small EEPROM, DDS120 has big fw EEPROM
+    bool hasCalibrationStorage = true;
     /// The sample values at the top of the screen
     typedef std::vector<int> VoltageScale;
     std::vector<VoltageScale> voltageScale; // Per channel
