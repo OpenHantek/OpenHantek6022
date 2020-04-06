@@ -377,7 +377,7 @@ Dso::ErrorCode HantekDsoControl::retrieveChannelLevelData() {
     // Get calibration data from EEPROM
     //printf( "retrieveChannelLevelData()\n" );
     int errorCode = -1;
-    if ( specification->hasCalibrationStorage )
+    if ( specification->hasCalibrationEEPROM )
         errorCode = device->controlRead(&controlsettings.cmdGetLimits);
     if ( errorCode < 0) {
         // invalidate the calibration values.

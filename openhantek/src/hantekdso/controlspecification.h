@@ -15,14 +15,13 @@ using namespace Hantek;
 struct ControlSamplerateLimits {
     double base;                         ///< The base for sample rate calculations
     double max;                          ///< The maximum sample rate
-    unsigned int maxDownsampler;         ///< The maximum downsampling ratio
     std::vector<unsigned> recordLengths; ///< Available record lengths, UINT_MAX means rolling
 };
 
 /// \brief Stores the samplerate limits.
 struct ControlSpecificationSamplerate {
-    ControlSamplerateLimits single = {50e6, 50e6, 0, std::vector<unsigned>()};  ///< The limits for single channel mode
-    ControlSamplerateLimits multi = {100e6, 100e6, 0, std::vector<unsigned>()}; ///< The limits for multi channel mode
+    ControlSamplerateLimits single = {50e6, 50e6, std::vector<unsigned>()};  ///< The limits for single channel mode
+    ControlSamplerateLimits multi = {100e6, 100e6, std::vector<unsigned>()}; ///< The limits for multi channel mode
 };
 
 struct ControlSpecificationGainLevel {
@@ -52,7 +51,7 @@ struct ControlSpecification {
 
     // Calibration
     /// DSO6022 has calibration in small EEPROM, DDS120 has big fw EEPROM
-    bool hasCalibrationStorage = true;
+    bool hasCalibrationEEPROM = true;
     /// The sample values at the top of the screen
     typedef std::vector<int> VoltageScale;
     std::vector<VoltageScale> voltageScale; // Per channel

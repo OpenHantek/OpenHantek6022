@@ -95,11 +95,9 @@ static void initSpecifications(Dso::ControlSpecification& specification) {
 
     specification.samplerate.single.base = 1e6;
     specification.samplerate.single.max = 30e6;
-    specification.samplerate.single.maxDownsampler = 10;
     specification.samplerate.single.recordLengths = { UINT_MAX };
     specification.samplerate.multi.base = 1e6;
     specification.samplerate.multi.max = 15e6;
-    specification.samplerate.multi.maxDownsampler = 10;
     specification.samplerate.multi.recordLengths = { UINT_MAX };
 
 // define VERY_SLOW_SAMPLES to get timebase up to 1s/div at the expense of very slow reaction time (up to 20 s)
@@ -138,7 +136,7 @@ static void initSpecifications(Dso::ControlSpecification& specification) {
 
     // calibration frequency (requires >FW0206)
     specification.calfreqSteps = { 50, 60, 100, 200, 500, 1e3, 2e3, 5e3, 10e3, 20e3, 50e3, 100e3 };
-    specification.hasCalibrationStorage = true;
+    specification.hasCalibrationEEPROM = true;
 }
 
 static void applyRequirements_(HantekDsoControl *dsoControl) {
