@@ -367,7 +367,7 @@ void HantekDsoControl::enableSampling(bool enabled) {
 unsigned HantekDsoControl::getRecordLength() const {
     unsigned rawsize = SAMPLESIZE_USED;
     rawsize *= this->downsamplingNumber; // take more samples
-    rawsize = ( (rawsize + 1024) / 1024 + 2 ) * 1024; // adjust for skipping of minimal 2018 leading samples
+    rawsize = ( (rawsize + 1024) / 1024 + 2 ) * 1024; // adjust for skipping of minimal 2048 leading samples
     //printf( "getRecordLength: %d\n", rawsize );
     return rawsize;
 }
@@ -441,10 +441,23 @@ void HantekDsoControl::convertRawDataToSamples(const std::vector<unsigned char> 
     }
     if ( isFastRate() != (1 == activeChannels) ) // avoid possible race condition
         return;
+
+    // The 1st two or three frames (512 byte) of the raw sample stream are unreliable
+    // (Maybe because the common mode input voltage of ADC is handled far out of spec and has to settle)
+    // Solution: sample at least 2048 more values -> rawSampleSize (must be multiple of 1024)
+    //           rawSampleSize = ( ( n*20000 + 1024 ) / 1024 + 2) * 1024;
+    // and skip over these additional samples to get 20000 samples (or n*20000 if oversampled)
+
     const unsigned rawSampleCount = unsigned( rawData.size() ) / activeChannels;
-    //printf("cRDTS, rawSampleCount %lu\n", rawSampleCount);
-    if ( 0 == rawSampleCount) // nothing to convert
+    // TODO: is this needed? rawSampleCount should always be > SAMPLESIZE_USED (=20000)
+    const unsigned sampleCount = (rawSampleCount > 1024) ? ((rawSampleCount - 1024)/1000 - 1)*1000 : rawSampleCount;
+    const unsigned rawDownsampling = sampleCount / SAMPLESIZE_USED;
+    //qDebug() << "HDC::cRDTS rawSampleCount sampleCount:" << rawSampleCount << sampleCount;
+    if ( 0 == rawSampleCount || 0 == sampleCount || 0 == rawDownsampling ) {// nothing to convert
+        qDebug() << "HDC::cRDTS rawSampleCount sampleCount rawDownsampling:" << rawSampleCount << sampleCount << rawDownsampling;
         return;
+    }
+    const unsigned skipSamples = rawSampleCount - sampleCount;
 
     QWriteLocker locker(&result.lock);
     result.samplerate = controlsettings.samplerate.current;
@@ -459,9 +472,6 @@ void HantekDsoControl::convertRawDataToSamples(const std::vector<unsigned char> 
     //           rawSampleSize = ( ( n*20000 + 1024 ) / 1024 + 2) * 1024;
     // and skip over these samples to get 20000 samples (or n*20000)
 
-    unsigned sampleCount = (rawSampleCount > 1024) ? ((rawSampleCount - 1024)/1000 - 1)*1000 : rawSampleCount;
-    unsigned skipSamples = rawSampleCount - sampleCount;
-    unsigned rawDownsampling = sampleCount / SAMPLESIZE_USED;
     //printf("sampleCount %u, downsampling %u\n", sampleCount, downsampling );
 
     // Convert channel data
