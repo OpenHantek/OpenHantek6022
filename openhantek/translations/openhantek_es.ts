@@ -738,7 +738,12 @@
         <translation>&lt;p&gt;Software de código abierto para osciloscopios USB Hantek6022&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2010, 2011 Oliver Haag&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2012-2020 OpenHantek community&lt;br/&gt;&lt;a href=&apos;https://github.com/OpenHantek&apos;&gt;https://github.com/OpenHantek&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Firmware de código abierto copyright &amp;copy; 2019-2020 Ho-Ro&lt;br/&gt;&lt;a href=&apos;https://github.com/Ho-Ro/Hantek6022API&apos;&gt;https://github.com/Ho-Ro/Hantek6022API&lt;/a&gt;&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="371"/>
+        <location filename="../src/mainwindow.cpp" line="348"/>
+        <source>&lt;p&gt;Running since %1 seconds.&lt;/p&gt;</source>
+        <translation>&lt;p&gt;El programa ha estado funcionando durante %1 segundos.&lt;/p&gt;</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="372"/>
         <source>%1: %2</source>
         <translation></translation>
     </message>

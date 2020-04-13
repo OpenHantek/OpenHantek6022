@@ -42,7 +42,7 @@ unsigned int hexParse(const QString dump, unsigned char *data, unsigned int leng
 
 /// \brief Print debug information with timestamp.
 /// \param text Text that will be output via qDebug.
-#ifdef DEBUG
+#ifdef TIMESTAMPDEBUG
 inline void timestampDebug(const QString& text) {
     qDebug("%s: %s", QTime::currentTime().toString("hh:mm:ss.zzz").toLatin1().constData(), text.toLatin1().constData());
 }

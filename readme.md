@@ -20,10 +20,10 @@ After David [stopped maintaining](https://github.com/OpenHantek/openhantek/issue
 * Supported devices:
  * Hantek 6022BE and 6022BL as well as compatible scopes (e.g. Voltcraft DSO-2020).
  * SainSmart DDS120 (thx [msiegert](https://github.com/msiegert)) - this device has a different analog front end
- and uses the sigrok firmware, which has [some limitations](https://sigrok.org/wiki/SainSmart_DDS120/Info#Open-source_firmware_details)
+ and uses the [slightly improved sigrok firmware](https://github.com/Ho-Ro/sigrok-firmware-fx2lafw), which has [some limitations](https://sigrok.org/wiki/SainSmart_DDS120/Info#Open-source_firmware_details)
  compared to the Hantek scopes (see [#69](https://github.com/OpenHantek/OpenHantek6022/issues/69#issuecomment-607341694)).
 * Fully supported operating system: Linux; developed under debian stable for amd64 architecture.
-* Raspberry Pi packages (raspbian stable) are available on the [Releases](https://github.com/OpenHantek/OpenHantek6022/releases) page.
+* Raspberry Pi packages (raspbian stable) are available on the [Releases](https://github.com/OpenHantek/OpenHantek6022/releases) page. (For RPI4 see [#28](https://github.com/OpenHantek/OpenHantek6022/issues/28).)
 * Compiles under FreeBSD (packaging / installation: work in progress, thx [tspspi](https://github.com/tspspi)).
 * Other operating systems builds: [Windows](docs/images/screenshot_mainwindow_win.png) (partly tested) & MacOSX (untested).
 * Uses [free open source firmware](https://github.com/Ho-Ro/Hantek6022API), no longer dependent on nonfree Hantek firmware.
@@ -36,10 +36,9 @@ After David [stopped maintaining](https://github.com/OpenHantek/openhantek/issue
 * Measure and display Vpp, RMS, DC (average), AC (rms) and AC as dB values as well as frequency of active channels.
 * Math channel modes: CH1+CH2, CH1-CH2, CH2-CH1, CH1*CH2 and AC part of CH1 or CH2.
 * Time base 100 ms/div .. 10 ns/div.
-* Sample rates 100, 200, 500 kS/s, 1, 2, 5, 10, 12, 15, 24, 30 MS/s (24 & 30 MS/s in CH1-only mode).
+* Sample rates 10, 20, 50, 100, 200, 500 kS/s, 1, 2, 5, 10, 12, 15, 24, 30 MS/s (24 & 30 MS/s in CH1-only mode).
 * 48 MS/s not supported due to unstable USB data streaming.
 * Downsampling (up to 100x) increases solution and SNR.
-* Downsampling sample rates 10, 20, 50 kS/s.
 * Calibration output square wave signal frequency can be selected between 50 Hz .. 100 kHz in 1/2/5 steps.
 * Trigger modes: Normal, Auto and Single with green/red status display (top left).
 * Calibration values loaded from eeprom or a model configuration file.
