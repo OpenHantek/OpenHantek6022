@@ -3,6 +3,7 @@
 #pragma once
 #include "post/ppresult.h"
 #include <QMainWindow>
+#include <QElapsedTimer>
 #include <memory>
 
 #include "scopesettings.h"
@@ -31,6 +32,8 @@ class MainWindow : public QMainWindow {
     explicit MainWindow(HantekDsoControl *dsoControl, DsoSettings *dsoSettings, ExporterRegistry *exporterRegistry,
                         QWidget *parent = nullptr);
     ~MainWindow() override;
+    QElapsedTimer elapsedTime;
+
   public slots:
     void showNewData(std::shared_ptr<PPresult> newData);
     void exporterStatusChanged(const QString &exporterName, const QString &status);

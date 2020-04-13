@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0+
 
-// #define DEBUG
+// #define TIMESTAMPDEBUG
 
 #include <assert.h>
 #include <cmath>
@@ -615,7 +615,7 @@ unsigned HantekDsoControl::softwareTrigger() {
     //printf( "sC %lu, tD %g, sR %g, sD %g\n", sampleCount, timeDisplay, sampleRate, samplesDisplay );
     if ( samplesDisplay >= sampleCount ) {
         // For sure not enough samples to adjust for jitter.
-        timestampDebug( QString( "Too few samples to make a steady picture. Decrease sample rate" ) );
+        qDebug() << "Too few samples to make a steady picture. Decrease sample rate";
         return result.triggerPosition = 0;
     }
 

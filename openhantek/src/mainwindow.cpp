@@ -41,7 +41,7 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, Expo
         colorMap.insert( "color-off", QColor( 208, 208, 208 ) ); // light grey normal
         colorMap.insert( "color-active", QColor( 255, 255, 255 ) ); // white when selected
     }
-
+    elapsedTime.start();
     ui->setupUi(this);
     iconPause = QIcon( iconPath + "pause.svg" );
     iconPlay = QIcon( iconPath + "play.svg" );
@@ -344,8 +344,9 @@ MainWindow::MainWindow(HantekDsoControl *dsoControl, DsoSettings *settings, Expo
                "<p>Copyright &copy; 2012-2020 OpenHantek community<br/>"
                "<a href='https://github.com/OpenHantek'>https://github.com/OpenHantek</a></p>"
                "<p>Open source firmware copyright &copy; 2019-2020 Ho-Ro<br/>"
-               "<a href='https://github.com/Ho-Ro/Hantek6022API'>https://github.com/Ho-Ro/Hantek6022API</a></p>"
-            )
+               "<a href='https://github.com/Ho-Ro/Hantek6022API'>https://github.com/Ho-Ro/Hantek6022API</a></p>") +
+               tr("<p>Running since %1 seconds.</p>"
+            ).arg( elapsedTime.elapsed() / 1000 )
         );
     });
 

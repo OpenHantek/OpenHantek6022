@@ -1,3 +1,13 @@
+3.0.4
+2020-04-13
+Better marker setting/removing
+Fix sample rate spinbox handling
+Fix race condition when switching 1ch/2ch
+Persistent calibration out frequency
+FW 0206
+Updated DDS120 FW 0100 (supports more calibration out frequencies)
+Spanish translation
+
 3.0.3
 2020-03-17
 FW 0205

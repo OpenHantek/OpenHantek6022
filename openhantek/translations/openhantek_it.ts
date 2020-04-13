@@ -734,7 +734,12 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="371"/>
+        <location filename="../src/mainwindow.cpp" line="348"/>
+        <source>&lt;p&gt;Running since %1 seconds.&lt;/p&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="372"/>
         <source>%1: %2</source>
         <translation type="unfinished"></translation>
     </message>
