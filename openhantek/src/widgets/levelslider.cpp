@@ -35,9 +35,9 @@
 /// \param direction The side on which the sliders are shown.
 /// \param parent The parent widget.
 LevelSlider::LevelSlider( Qt::ArrowType direction, QWidget *parent ) : QWidget( parent ) {
-    QFont font = this->font();
-    font.setPointSize( int( font.pointSize() * 0.8 ) );
-    this->setFont( font );
+    // Set pixel values based on the current dpi scaling
+    this->needleWidth = ( (int)( 0.55 * this->fontMetrics().height() ) ) + 1; // always an odd number
+    this->sliderWidth = (int)( 1.2 * this->fontMetrics().height() );
 
     this->pressedSlider = -1;
 
@@ -285,10 +285,10 @@ int LevelSlider::setDirection( Qt::ArrowType direction ) {
 
     if ( this->_direction == Qt::RightArrow || this->_direction == Qt::LeftArrow ) {
         this->_preMargin = this->fontMetrics().lineSpacing();
-        this->_postMargin = 3;
+        this->_postMargin = ( this->needleWidth - 1 ) / 2;
     } else {
         this->_preMargin = this->fontMetrics().averageCharWidth() * 3;
-        this->_postMargin = 3;
+        this->_postMargin = ( this->needleWidth - 1 ) / 2;
     }
 
     return this->_direction;
@@ -393,31 +393,39 @@ void LevelSlider::paintEvent( QPaintEvent *event ) {
 
         if ( ( *sliderIt )->text.isEmpty() ) {
             QVector<QPoint> needlePoints;
-            QRect &sRect = ( *sliderIt )->rect;
-            const int W = this->sliderWidth;
+            QRect &needleRect = ( *sliderIt )->rect;
+            const int peak = 1; // distance from slider to the tip of the needle
+            const int shoulder =
+                peak + this->needleWidth / 2; // distance from slider to the straight part of the needle
 
             switch ( this->_direction ) {
             case Qt::LeftArrow:
-                needlePoints << QPoint( sRect.left() + 4, sRect.top() ) << QPoint( sRect.left() + 1, sRect.top() + 3 )
-                             << QPoint( sRect.left() + 4, sRect.top() + 6 )
-                             << QPoint( sRect.left() + W, sRect.top() + 6 ) << QPoint( sRect.left() + W, sRect.top() );
+                needlePoints << QPoint( needleRect.left() + shoulder, needleRect.top() )
+                             << QPoint( needleRect.left() + peak, needleRect.top() + this->needleWidth / 2 )
+                             << QPoint( needleRect.left() + shoulder, needleRect.bottom() )
+                             << QPoint( needleRect.right(), needleRect.bottom() )
+                             << QPoint( needleRect.right(), needleRect.top() );
                 break;
             case Qt::UpArrow:
-                needlePoints << QPoint( sRect.left(), sRect.top() + 4 ) << QPoint( sRect.left() + 3, sRect.top() + 1 )
-                             << QPoint( sRect.left() + 6, sRect.top() + 4 )
-                             << QPoint( sRect.left() + 6, sRect.top() + W ) << QPoint( sRect.left(), sRect.top() + W );
+                needlePoints << QPoint( needleRect.left(), needleRect.top() + shoulder )
+                             << QPoint( needleRect.left() + this->needleWidth / 2, needleRect.top() + peak )
+                             << QPoint( needleRect.right(), needleRect.top() + shoulder )
+                             << QPoint( needleRect.right(), needleRect.bottom() )
+                             << QPoint( needleRect.left(), needleRect.bottom() );
                 break;
             case Qt::DownArrow:
-                needlePoints << QPoint( sRect.left(), sRect.top() + W - 5 )
-                             << QPoint( sRect.left() + 3, sRect.top() + W - 2 )
-                             << QPoint( sRect.left() + 6, sRect.top() + W - 5 )
-                             << QPoint( sRect.left() + 6, sRect.top() ) << QPoint( sRect.left(), sRect.top() );
+                needlePoints << QPoint( needleRect.left(), needleRect.bottom() - shoulder )
+                             << QPoint( needleRect.left() + this->needleWidth / 2, needleRect.bottom() - peak )
+                             << QPoint( needleRect.right(), needleRect.bottom() - shoulder )
+                             << QPoint( needleRect.right(), needleRect.top() )
+                             << QPoint( needleRect.left(), needleRect.top() );
                 break;
             case Qt::RightArrow:
-                needlePoints << QPoint( sRect.left() + W - 5, sRect.top() )
-                             << QPoint( sRect.left() + W - 2, sRect.top() + 3 )
-                             << QPoint( sRect.left() + W - 5, sRect.top() + 6 )
-                             << QPoint( sRect.left(), sRect.top() + 6 ) << QPoint( sRect.left(), sRect.top() );
+                needlePoints << QPoint( needleRect.right() - shoulder, needleRect.top() )
+                             << QPoint( needleRect.right() - peak, needleRect.top() + this->needleWidth / 2 )
+                             << QPoint( needleRect.right() - shoulder, needleRect.bottom() )
+                             << QPoint( needleRect.left(), needleRect.bottom() )
+                             << QPoint( needleRect.left(), needleRect.top() );
                 break;
             default:
                 break;
@@ -485,9 +493,9 @@ QRect LevelSlider::calculateRect( int sliderId ) {
                                 ( this->slider[ sliderId ]->maximum - this->slider[ sliderId ]->value ) /
                                 ( this->slider[ sliderId ]->maximum - this->slider[ sliderId ]->minimum ) +
                             0.5 ) +
-                           this->_preMargin - 3,
+                           this->_preMargin - ( this->needleWidth / 2 ),
                        this->sliderWidth, // Fill the whole width
-                       7                  // The needle is 7 px wide
+                       this->needleWidth  // one needle width high
                 );
         }
         // Or a thin needle with text?
@@ -516,10 +524,10 @@ QRect LevelSlider::calculateRect( int sliderId ) {
                          ( this->slider[ sliderId ]->value - this->slider[ sliderId ]->minimum ) /
                          ( this->slider[ sliderId ]->maximum - this->slider[ sliderId ]->minimum ) +
                      0.5 ) +
-                    this->_preMargin - 3,
-                0,                // Start at the top
-                7,                // The needle is 7 px wide
-                this->sliderWidth // Fill the whole height
+                    this->_preMargin - ( this->needleWidth / 2 ),
+                0, // Start at the top
+                this->needleWidth,
+                this->sliderWidth // As high as the slider
             );
         }
         // Or a thin needle with text?
@@ -546,9 +554,6 @@ QRect LevelSlider::calculateRect( int sliderId ) {
 /// \brief Search for the widest slider element.
 /// \return The calculated width of the slider.
 int LevelSlider::calculateWidth() {
-    // At least 12 px for the needles
-    sliderWidth = 12;
-
     // Is it a vertical slider?
     if ( this->_direction == Qt::RightArrow || this->_direction == Qt::LeftArrow ) {
         for ( QList<LevelSliderParameters *>::iterator sliderIt = slider.begin(); sliderIt != slider.end();
