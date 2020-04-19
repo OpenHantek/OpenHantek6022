@@ -106,7 +106,7 @@ DsoWidget::DsoWidget( DsoSettingsScope *scope, DsoSettingsView *view, const Dso:
     QPalette tablePalette = palette;
     measurementLayout = new QGridLayout();
     int iii = 0;
-    measurementLayout->setColumnMinimumWidth( iii++, 50 );
+    measurementLayout->setColumnMinimumWidth( iii++, 80 );
     measurementLayout->setColumnMinimumWidth( iii++, 30 );
     measurementLayout->setColumnStretch( iii++, 3 );
     measurementLayout->setColumnStretch( iii++, 3 );
