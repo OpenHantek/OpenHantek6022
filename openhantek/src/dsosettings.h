@@ -15,8 +15,8 @@
 /// \brief Holds the settings of the program.
 class DsoSettings {
   public:
-    explicit DsoSettings(const Dso::ControlSpecification *deviceSpecification);
-    bool setFilename(const QString &filename);
+    explicit DsoSettings( const Dso::ControlSpecification *deviceSpecification );
+    bool setFilename( const QString &filename );
 
     DsoSettingsExport exporting;    ///< General options of the program
     DsoSettingsScope scope;         ///< All oscilloscope related settings
@@ -34,6 +34,6 @@ class DsoSettings {
     void save();
 
   private:
-    std::unique_ptr<QSettings> store = std::unique_ptr<QSettings>(new QSettings);
+    std::unique_ptr<QSettings> store = std::unique_ptr<QSettings>( new QSettings );
     const Dso::ControlSpecification *deviceSpecification;
 };

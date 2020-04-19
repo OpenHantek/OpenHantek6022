@@ -2,31 +2,32 @@
 
 #pragma once
 
-#include <QAbstractTableModel>
 #include "rawdevicelistentry.h"
 #include "usb/usbdevice.h"
+#include <QAbstractTableModel>
 
 /**
  * Provides a Model for the Qt Model/View concept. The {@see FindDevices} is required
  * to update the list of available devices.
  */
-class RawDevicesListModel: public QAbstractTableModel {
-public:
-    RawDevicesListModel(libusb_context *context, QObject *parent = nullptr);
+class RawDevicesListModel : public QAbstractTableModel {
+  public:
+    RawDevicesListModel( libusb_context *context, QObject *parent = nullptr );
     // QAbstractItemModel interface
-    int rowCount(const QModelIndex &parent) const override;
-    int columnCount(const QModelIndex &parent) const override;
-    QVariant data(const QModelIndex &index, int role) const override;
+    int rowCount( const QModelIndex &parent ) const override;
+    int columnCount( const QModelIndex &parent ) const override;
+    QVariant data( const QModelIndex &index, int role ) const override;
     void updateDeviceList();
 
     enum Roles {
-        ProductIDRole = Qt::UserRole+0,
-        VendorIDRole = Qt::UserRole+1,
-        AccessRole = Qt::UserRole+2,
-        DeviceNameRole =  Qt::UserRole+3,
-        EntryPointerRole = Qt::UserRole+4
+        ProductIDRole = Qt::UserRole + 0,
+        VendorIDRole = Qt::UserRole + 1,
+        AccessRole = Qt::UserRole + 2,
+        DeviceNameRole = Qt::UserRole + 3,
+        EntryPointerRole = Qt::UserRole + 4
     };
-private:
+
+  private:
     std::vector<RawDeviceListEntry> entries;
     libusb_context *context;
 };

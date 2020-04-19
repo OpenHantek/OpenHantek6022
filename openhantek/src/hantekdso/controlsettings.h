@@ -3,8 +3,8 @@
 #pragma once
 
 #include "enums.h"
-#include "hantekprotocol/types.h"
 #include "hantekprotocol/controlStructs.h"
+#include "hantekprotocol/types.h"
 
 namespace Hantek {
 struct CalibrationValues;
@@ -24,47 +24,47 @@ struct ControlSettingsSamplerateTarget {
 /// \brief Stores the current samplerate settings of the device.
 struct ControlSettingsSamplerate {
     ControlSettingsSamplerateTarget target; ///< The target samplerate values
-    const ControlSamplerateLimits * limits; ///< The samplerate limits
+    const ControlSamplerateLimits *limits;  ///< The samplerate limits
     unsigned int downsampler = 1;           ///< The variable downsampling factor
     double current = 1e8;                   ///< The current samplerate
 };
 
 /// \brief Stores the current trigger settings of the device.
 struct ControlSettingsTrigger {
-    std::vector<double> level;                                   ///< The trigger level for each channel in V
-    double position = 0.0;                                       ///< The current pretrigger position
-    unsigned int point = 0;                                      ///< The trigger position in Hantek coding
-    Dso::TriggerMode mode = Dso::TriggerMode::AUTO;              ///< The trigger mode
-    Dso::Slope slope = Dso::Slope::Positive;                     ///< The trigger slope
-    unsigned int source = 0;                                     ///< The trigger source
-    bool smooth = false;                                         ///< Don't trigger on glitches
+    std::vector<double> level;                      ///< The trigger level for each channel in V
+    double position = 0.0;                          ///< The current pretrigger position
+    unsigned int point = 0;                         ///< The trigger position in Hantek coding
+    Dso::TriggerMode mode = Dso::TriggerMode::AUTO; ///< The trigger mode
+    Dso::Slope slope = Dso::Slope::Positive;        ///< The trigger slope
+    unsigned int source = 0;                        ///< The trigger source
+    bool smooth = false;                            ///< Don't trigger on glitches
 };
 
 /// \brief Stores the current amplification settings of the device.
 struct ControlSettingsVoltage {
-    double offset = 0.0;     ///< The screen offset for each channel
-    unsigned gain = 0;       ///< The gain id
-    bool used = false;       ///< true, if the channel is used
-    bool inverted = false;   ///< true, if the channel is inverted
-    double probeAttn = 1.0;  ///< attenuation of probe
+    double offset = 0.0;                        ///< The screen offset for each channel
+    unsigned gain = 0;                          ///< The gain id
+    bool used = false;                          ///< true, if the channel is used
+    bool inverted = false;                      ///< true, if the channel is inverted
+    double probeAttn = 1.0;                     ///< attenuation of probe
     Dso::Coupling coupling = Dso::Coupling::DC; ///< The coupling
 };
 
 /// \brief Stores the current settings of the device.
 struct ControlSettings {
-    ControlSettings(const ControlSamplerateLimits *limits, size_t channelCount);
+    ControlSettings( const ControlSamplerateLimits *limits, size_t channelCount );
     ~ControlSettings();
-    ControlSettings( const ControlSettings& ) = delete;
-    ControlSettings operator=( const ControlSettings& ) = delete;
-    ControlSettingsSamplerate samplerate;        ///< The samplerate settings
-    std::vector<ControlSettingsVoltage> voltage; ///< The amplification settings
-    ControlSettingsTrigger trigger;              ///< The trigger settings
-    RecordLengthID recordLengthId = 1;           ///< The id in the record length array
-    unsigned channelCount = 0;                   ///< Number of activated channels
-    unsigned swSampleMargin = 2000;              ///< Software trigger, sample margin
-    Hantek::CalibrationValues *calibrationValues;///< Calibration data for the channel offsets & gains
+    ControlSettings( const ControlSettings & ) = delete;
+    ControlSettings operator=( const ControlSettings & ) = delete;
+    ControlSettingsSamplerate samplerate;         ///< The samplerate settings
+    std::vector<ControlSettingsVoltage> voltage;  ///< The amplification settings
+    ControlSettingsTrigger trigger;               ///< The trigger settings
+    RecordLengthID recordLengthId = 1;            ///< The id in the record length array
+    unsigned channelCount = 0;                    ///< Number of activated channels
+    unsigned swSampleMargin = 2000;               ///< Software trigger, sample margin
+    Hantek::CalibrationValues *calibrationValues; ///< Calibration data for the channel offsets & gains
 
     Hantek::ControlBeginCommand beginCommandControl;
     Hantek::ControlGetLimits cmdGetLimits;
 };
-}
+} // namespace Dso

@@ -12,4 +12,4 @@ enum class ErrorCode {
     PARAMETER = -3    ///< Parameter out of range
 };
 
-}
+} // namespace Dso

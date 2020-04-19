@@ -22,7 +22,7 @@ class DsoConfigFilePage : public QWidget {
     Q_OBJECT
 
   public:
-    DsoConfigFilePage(DsoSettings *settings, QWidget *parent = nullptr);
+    DsoConfigFilePage( DsoSettings *settings, QWidget *parent = nullptr );
 
   public slots:
     void saveSettings();

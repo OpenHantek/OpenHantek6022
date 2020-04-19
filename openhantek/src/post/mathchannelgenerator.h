@@ -7,13 +7,13 @@
 struct DsoSettingsScope;
 class PPresult;
 
-class MathChannelGenerator : public Processor
-{
-public:
-    MathChannelGenerator(const DsoSettingsScope *scope, unsigned physicalChannels);
+class MathChannelGenerator : public Processor {
+  public:
+    MathChannelGenerator( const DsoSettingsScope *scope, unsigned physicalChannels );
     virtual ~MathChannelGenerator();
-    void process(PPresult *) override;
-private:
+    void process( PPresult * ) override;
+
+  private:
     const unsigned physicalChannels;
     const DsoSettingsScope *scope;
 };

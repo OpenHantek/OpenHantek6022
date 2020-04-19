@@ -21,7 +21,7 @@ class DsoConfigAnalysisPage : public QWidget {
     Q_OBJECT
 
   public:
-    DsoConfigAnalysisPage(DsoSettings *settings, QWidget *parent = nullptr);
+    DsoConfigAnalysisPage( DsoSettings *settings, QWidget *parent = nullptr );
 
   public slots:
     void saveSettings();

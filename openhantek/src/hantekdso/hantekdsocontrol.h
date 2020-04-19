@@ -6,13 +6,13 @@
 #include <limits>
 
 #include "controlsettings.h"
-#include "scopesettings.h"
 #include "controlspecification.h"
 #include "dsosamples.h"
 #include "errorcodes.h"
+#include "scopesettings.h"
 #include "states.h"
-#include "viewconstants.h"
 #include "utils/printutils.h"
+#include "viewconstants.h"
 
 #include "hantekprotocol/controlStructs.h"
 #include "hantekprotocol/definitions.h"
@@ -69,18 +69,18 @@ class HantekDsoControl : public QObject {
     /// </p>
     /// \param command The command as string (Has to be parsed).
     /// \return See ::Dso::ErrorCode.
-    Dso::ErrorCode stringCommand(const QString &commandString);
+    Dso::ErrorCode stringCommand( const QString &commandString );
 
-    void addCommand(ControlCommand *newCommand, bool pending = true);
+    void addCommand( ControlCommand *newCommand, bool pending = true );
 
-    template <class T> T *modifyCommand(Hantek::ControlCode code) {
+    template <class T> T *modifyCommand( Hantek::ControlCode code ) {
         control[ uint8_t( code ) ]->pending = true;
-        return static_cast<T *>(control[ uint8_t( code ) ] );
+        return static_cast<T *>( control[ uint8_t( code ) ] );
     }
 
-    bool hasCommand(Hantek::ControlCode code) { return ( control[uint8_t(code)] != nullptr ); }
+    bool hasCommand( Hantek::ControlCode code ) { return ( control[ uint8_t( code ) ] != nullptr ); }
 
-    const ControlCommand *getCommand(Hantek::ControlCode code) const { return control[ uint8_t( code ) ]; }
+    const ControlCommand *getCommand( Hantek::ControlCode code ) const { return control[ uint8_t( code ) ]; }
 
 // Attic for no more used public procedures
 #if 0
@@ -148,13 +148,9 @@ class HantekDsoControl : public QObject {
   private:
     bool fastRate = true;
 
-    void setFastRate( bool fast ) {
-        fastRate = fast;
-    }
+    void setFastRate( bool fast ) { fastRate = fast; }
 
-    bool isFastRate() const {
-        return fastRate;
-    }
+    bool isFastRate() const { return fastRate; }
 
     unsigned getRecordLength() const;
 
@@ -174,10 +170,10 @@ class HantekDsoControl : public QObject {
     /// \brief Calculates the trigger point from the CommandGetCaptureState data.
     /// \param value The data value that contains the trigger point.
     /// \return The calculated trigger point for the given data.
-    static unsigned calculateTriggerPoint(unsigned value);
+    static unsigned calculateTriggerPoint( unsigned value );
 
     /// \brief Gets sample data from the oscilloscope
-    std::vector<unsigned char> getSamples(unsigned &expectedSampleCount) const;
+    std::vector<unsigned char> getSamples( unsigned &expectedSampleCount ) const;
 
     /// \brief Converts raw oscilloscope data to sample data
     void convertRawDataToSamples( const std::vector<unsigned char> &rawData, unsigned numChannels );
@@ -187,7 +183,7 @@ class HantekDsoControl : public QObject {
     /// \param downsampler The downsampling factor.
     /// \param fastRate true, if one channel uses all buffers.
     /// \return The downsampling factor that has been set.
-    unsigned updateSamplerate(unsigned downsampler);
+    unsigned updateSamplerate( unsigned downsampler );
 
     /// \brief Restore the samplerate/timebase targets after divider updates.
     void restoreTargets();
@@ -206,7 +202,7 @@ class HantekDsoControl : public QObject {
     bool triggering();
 
     /// Pointers to control commands
-    ControlCommand *control[255] = { nullptr };
+    ControlCommand *control[ 255 ] = {nullptr};
     ControlCommand *firstControlCommand = nullptr;
 
     // Communication with device
@@ -218,7 +214,7 @@ class HantekDsoControl : public QObject {
     Dso::ControlSettings controlsettings;           ///< The current settings of the device
 
     // Results
-    unsigned downsamplingNumber = 1;        ///< Number of downsamples to reduce sample rate
+    unsigned downsamplingNumber = 1; ///< Number of downsamples to reduce sample rate
     DSOsamples result;
     unsigned expectedSampleCount = 0; ///< The expected total number of samples at
                                       /// the last check before sampling started
@@ -232,99 +228,99 @@ class HantekDsoControl : public QObject {
     /// \brief If sampling is disabled, no samplesAvailable() signals are send anymore, no samples
     /// are fetched from the device and no processing takes place.
     /// \param enabled Enables/Disables sampling
-    void enableSampling(bool enabled);
+    void enableSampling( bool enabled );
 
     /// \brief Sets the samplerate of the oscilloscope.
     /// \param samplerate The samplerate that should be met (S/s), 0.0 to restore
     /// current samplerate.
     /// \return The samplerate that has been set, 0.0 on error.
-    Dso::ErrorCode setSamplerate(double samplerate = 0.0);
+    Dso::ErrorCode setSamplerate( double samplerate = 0.0 );
 
     /// \brief Sets the time duration of one aquisition by adapting the samplerate.
     /// \param duration The record time duration that should be met (s), 0.0 to
     /// restore current record time.
     /// \return The record time duration that has been set, 0.0 on error.
-    Dso::ErrorCode setRecordTime(double duration = 0.0);
+    Dso::ErrorCode setRecordTime( double duration = 0.0 );
 
     /// \brief Enables/disables filtering of the given channel.
     /// \param channel The channel that should be set.
     /// \param used true if the channel should be sampled.
     /// \return See ::Dso::ErrorCode.
-    Dso::ErrorCode setChannelUsed(ChannelID channel, bool used);
+    Dso::ErrorCode setChannelUsed( ChannelID channel, bool used );
 
     /// \brief Enables/disables inverting of the given channel.
     /// \param channel The channel that should be set.
     /// \param used true if the channel is inverted.
     /// \return See ::Dso::ErrorCode.
-    Dso::ErrorCode setChannelInverted(ChannelID channel, bool inverted);
+    Dso::ErrorCode setChannelInverted( ChannelID channel, bool inverted );
 
     /// \brief Sets the gain for the given channel.
     /// Get the actual gain by specification.gainSteps[gainId]
     /// \param channel The channel that should be set.
     /// \param gain The gain that should be met (V/div).
     /// \return The gain that has been set, ::Dso::ErrorCode on error.
-    Dso::ErrorCode setProbe(ChannelID channel, double probeAttn);
+    Dso::ErrorCode setProbe( ChannelID channel, double probeAttn );
 
     /// \brief Sets the probe gain for the given channel.
     /// \param channel The channel that should be set.
     /// \param probeAttn gain of probe is set.
     /// \return error code.
-    Dso::ErrorCode setGain(ChannelID channel, double gain);
+    Dso::ErrorCode setGain( ChannelID channel, double gain );
 
     /// \brief Sets the coupling for the given channel.
     /// \param channel The channel that should be set.
     /// \param coupling The coupling that should be set.
     /// \return error code.
-    Dso::ErrorCode setCoupling(ChannelID channel, Dso::Coupling coupling);
+    Dso::ErrorCode setCoupling( ChannelID channel, Dso::Coupling coupling );
 
     /// \brief Set the trigger mode.
     /// \return See ::Dso::ErrorCode.
-    Dso::ErrorCode setTriggerMode(Dso::TriggerMode mode);
+    Dso::ErrorCode setTriggerMode( Dso::TriggerMode mode );
 
     /// \brief Set the trigger source.
     /// \param id The channel that should be used as trigger.
     /// \return See ::Dso::ErrorCode.
-    Dso::ErrorCode setTriggerSource(ChannelID channel, bool smooth);
+    Dso::ErrorCode setTriggerSource( ChannelID channel, bool smooth );
 
     /// \brief Set the trigger level.
     /// \param channel The channel that should be set.
     /// \param level The new trigger level (V).
     /// \return See ::Dso::ErrorCode.
-    Dso::ErrorCode setTriggerLevel(ChannelID channel, double level);
+    Dso::ErrorCode setTriggerLevel( ChannelID channel, double level );
 
     /// \brief Set the trigger slope.
     /// \param slope The Slope that should cause a trigger.
     /// \return See ::Dso::ErrorCode.
-    Dso::ErrorCode setTriggerSlope(Dso::Slope slope);
+    Dso::ErrorCode setTriggerSlope( Dso::Slope slope );
 
     /// \brief Set the trigger position.
     /// \param position The new trigger position (in s).
     /// \return The trigger position that has been set.
-    Dso::ErrorCode setTriggerOffset (double position);
+    Dso::ErrorCode setTriggerOffset( double position );
 
     /// \brief Sets the calibration frequency of the oscilloscope.
     /// \param calfreq The calibration frequency.
     /// \return The tfrequency that has been set, ::Dso::ErrorCode on error.
-    Dso::ErrorCode setCalFreq(double calfreq = 0.0);
+    Dso::ErrorCode setCalFreq( double calfreq = 0.0 );
 
     /// \brief Initializes the device with the current settings.
-    /// \param scope The settings for the oscilloscope.    
-    void applySettings(DsoSettingsScope *scope);
-    
+    /// \param scope The settings for the oscilloscope.
+    void applySettings( DsoSettingsScope *scope );
+
   signals:
-    void samplingStatusChanged(bool enabled); ///< The oscilloscope started/stopped sampling/waiting for trigger
-    void statusMessage(const QString &message, int timeout); ///< Status message about the oscilloscope
-    void samplesAvailable(const DSOsamples *samples);        ///< New sample data is available
+    void samplingStatusChanged( bool enabled ); ///< The oscilloscope started/stopped sampling/waiting for trigger
+    void statusMessage( const QString &message, int timeout ); ///< Status message about the oscilloscope
+    void samplesAvailable( const DSOsamples *samples );        ///< New sample data is available
 
     /// The available samplerate range has changed
-    void samplerateLimitsChanged(double minimum, double maximum);
+    void samplerateLimitsChanged( double minimum, double maximum );
     /// The available samplerate for fixed samplerate devices has changed
-    void samplerateSet(int mode, QList<double> sampleSteps);
+    void samplerateSet( int mode, QList<double> sampleSteps );
 
-    void recordTimeChanged(double duration);          ///< The record time duration has changed
-    void samplerateChanged(double samplerate);        ///< The samplerate has changed
+    void recordTimeChanged( double duration );   ///< The record time duration has changed
+    void samplerateChanged( double samplerate ); ///< The samplerate has changed
 
     void communicationError() const;
 };
 
-Q_DECLARE_METATYPE(DSOsamples *)
+Q_DECLARE_METATYPE( DSOsamples * )

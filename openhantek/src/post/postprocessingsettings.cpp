@@ -13,20 +13,20 @@ Enum<Dso::WindowFunction, Dso::WindowFunction::RECTANGULAR, Dso::WindowFunction:
 /// \brief Return string representation of the given math mode.
 /// \param mode The ::MathMode that should be returned as string.
 /// \return The string that should be used in labels etc.
-QString mathModeString(MathMode mode) {
-    switch (mode) {
+QString mathModeString( MathMode mode ) {
+    switch ( mode ) {
     case MathMode::ADD_CH1_CH2:
-        return QCoreApplication::tr("CH1 + CH2");
+        return QCoreApplication::tr( "CH1 + CH2" );
     case MathMode::SUB_CH2_FROM_CH1:
-        return QCoreApplication::tr("CH1 - CH2");
+        return QCoreApplication::tr( "CH1 - CH2" );
     case MathMode::SUB_CH1_FROM_CH2:
-        return QCoreApplication::tr("CH2 - CH1");
+        return QCoreApplication::tr( "CH2 - CH1" );
     case MathMode::MUL_CH1_CH2:
-        return QCoreApplication::tr("CH1 * CH2");
+        return QCoreApplication::tr( "CH1 * CH2" );
     case MathMode::AC_CH1:
-        return QCoreApplication::tr("CH1 AC");
+        return QCoreApplication::tr( "CH1 AC" );
     case MathMode::AC_CH2:
-        return QCoreApplication::tr("CH2 AC");
+        return QCoreApplication::tr( "CH2 AC" );
     }
     return QString();
 }
@@ -72,4 +72,4 @@ QString windowFunctionString(WindowFunction window) {
 }
 #endif
 
-}
+} // namespace Dso

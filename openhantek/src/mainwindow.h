@@ -2,8 +2,8 @@
 
 #pragma once
 #include "post/ppresult.h"
-#include <QMainWindow>
 #include <QElapsedTimer>
+#include <QMainWindow>
 #include <memory>
 
 #include "scopesettings.h"
@@ -29,18 +29,18 @@ class MainWindow : public QMainWindow {
     Q_OBJECT
 
   public:
-    explicit MainWindow(HantekDsoControl *dsoControl, DsoSettings *dsoSettings, ExporterRegistry *exporterRegistry,
-                        QWidget *parent = nullptr);
+    explicit MainWindow( HantekDsoControl *dsoControl, DsoSettings *dsoSettings, ExporterRegistry *exporterRegistry,
+                         QWidget *parent = nullptr );
     ~MainWindow() override;
     QElapsedTimer elapsedTime;
 
   public slots:
-    void showNewData(std::shared_ptr<PPresult> newData);
-    void exporterStatusChanged(const QString &exporterName, const QString &status);
+    void showNewData( std::shared_ptr<PPresult> newData );
+    void exporterStatusChanged( const QString &exporterName, const QString &status );
     void exporterProgressChanged();
 
   protected:
-    void closeEvent(QCloseEvent *event) override;
+    void closeEvent( QCloseEvent *event ) override;
 
   private:
     Ui::MainWindow *ui;
@@ -55,5 +55,5 @@ class MainWindow : public QMainWindow {
     ExporterRegistry *exporterRegistry;
 
   signals:
-    void settingsLoaded(DsoSettingsScope *scope, const Dso::ControlSpecification *spec);
+    void settingsLoaded( DsoSettingsScope *scope, const Dso::ControlSpecification *spec );
 };
