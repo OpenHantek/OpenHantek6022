@@ -77,6 +77,7 @@ class LevelSlider : public QWidget {
     int pressedSlider;                     ///< The currently pressed (moved) slider
     int sliderWidth;                       ///< The slider width (dimension orthogonal to the sliding
                                            /// direction)
+    int needleWidth;                       ///< Width of the needle (parallel to sliding direction)
 
     Qt::ArrowType _direction; ///< The direction the sliders point to
     int _preMargin;           ///< The margin before the minimum slider position
