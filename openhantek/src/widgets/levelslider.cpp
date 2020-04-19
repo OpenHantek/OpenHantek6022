@@ -65,7 +65,7 @@ int LevelSlider::addSlider(int index) { return this->addSlider("", index); }
 /// \param text The text that will be shown next to the slider.
 /// \param index The index where the slider should be inserted, 0 to append.
 /// \return The index of the slider, -1 on error.
-int LevelSlider::addSlider(const QString& text, int index) {
+int LevelSlider::addSlider(const QString &text, int index) {
     if (index < -1) return -1;
 
     LevelSliderParameters *parameters = new LevelSliderParameters;
@@ -374,37 +374,31 @@ void LevelSlider::paintEvent(QPaintEvent *event) {
 
         if ((*sliderIt)->text.isEmpty()) {
             QVector<QPoint> needlePoints;
-            QRect& sRect = (*sliderIt)->rect;
+            QRect &sRect = (*sliderIt)->rect;
             const int W = this->sliderWidth;
 
             switch (this->_direction) {
             case Qt::LeftArrow:
-                needlePoints << QPoint(sRect.left() + 4, sRect.top()    )
-                             << QPoint(sRect.left() + 1, sRect.top() + 3)
-                             << QPoint(sRect.left() + 4, sRect.top() + 6)
-                             << QPoint(sRect.left() + W, sRect.top() + 6)
-                             << QPoint(sRect.left() + W, sRect.top()    );
+                needlePoints << QPoint(sRect.left() + 4, sRect.top()) << QPoint(sRect.left() + 1, sRect.top() + 3)
+                             << QPoint(sRect.left() + 4, sRect.top() + 6) << QPoint(sRect.left() + W, sRect.top() + 6)
+                             << QPoint(sRect.left() + W, sRect.top());
                 break;
             case Qt::UpArrow:
-                needlePoints << QPoint(sRect.left(),     sRect.top() + 4)
-                             << QPoint(sRect.left() + 3, sRect.top() + 1)
-                             << QPoint(sRect.left() + 6, sRect.top() + 4)
-                             << QPoint(sRect.left() + 6, sRect.top() + W)
-                             << QPoint(sRect.left(),     sRect.top() + W);
+                needlePoints << QPoint(sRect.left(), sRect.top() + 4) << QPoint(sRect.left() + 3, sRect.top() + 1)
+                             << QPoint(sRect.left() + 6, sRect.top() + 4) << QPoint(sRect.left() + 6, sRect.top() + W)
+                             << QPoint(sRect.left(), sRect.top() + W);
                 break;
             case Qt::DownArrow:
-                needlePoints << QPoint(sRect.left(),     sRect.top() + W - 5)
+                needlePoints << QPoint(sRect.left(), sRect.top() + W - 5)
                              << QPoint(sRect.left() + 3, sRect.top() + W - 2)
-                             << QPoint(sRect.left() + 6, sRect.top() + W - 5)
-                             << QPoint(sRect.left() + 6, sRect.top()        )
-                             << QPoint(sRect.left(),     sRect.top()        );
+                             << QPoint(sRect.left() + 6, sRect.top() + W - 5) << QPoint(sRect.left() + 6, sRect.top())
+                             << QPoint(sRect.left(), sRect.top());
                 break;
             case Qt::RightArrow:
-                needlePoints << QPoint(sRect.left() + W - 5, sRect.top()    )
+                needlePoints << QPoint(sRect.left() + W - 5, sRect.top())
                              << QPoint(sRect.left() + W - 2, sRect.top() + 3)
-                             << QPoint(sRect.left() + W - 5, sRect.top() + 6)
-                             << QPoint(sRect.left(),         sRect.top() + 6)
-                             << QPoint(sRect.left(),         sRect.top()    );
+                             << QPoint(sRect.left() + W - 5, sRect.top() + 6) << QPoint(sRect.left(), sRect.top() + 6)
+                             << QPoint(sRect.left(), sRect.top());
                 break;
             default:
                 break;
@@ -465,30 +459,30 @@ QRect LevelSlider::calculateRect(int sliderId) {
         if (this->slider[sliderId]->text.isEmpty()) {
             this->slider[sliderId]->rect =
                 QRect(0, // Start at the left side
-                      // The needle should be center-aligned, 0.5 pixel offset for
-                      // exact pixelization
+                         // The needle should be center-aligned, 0.5 pixel offset for
+                         // exact pixelization
                       int((this->height() - this->_preMargin - this->_postMargin - 1) *
-                                 (this->slider[sliderId]->maximum - this->slider[sliderId]->value) /
-                                 (this->slider[sliderId]->maximum - this->slider[sliderId]->minimum) +
-                             0.5) +
+                              (this->slider[sliderId]->maximum - this->slider[sliderId]->value) /
+                              (this->slider[sliderId]->maximum - this->slider[sliderId]->minimum) +
+                          0.5) +
                           this->_preMargin - 3,
                       this->sliderWidth, // Fill the whole width
                       7                  // The needle is 7 px wide
-                      );
+                );
         }
         // Or a thin needle with text?
         else {
             this->slider[sliderId]->rect =
                 QRect(0, // Start at the left side
-                      // The needle is at the bottom, the text above it, 0.5 pixel
-                      // offset for exact pixelization
+                         // The needle is at the bottom, the text above it, 0.5 pixel
+                         // offset for exact pixelization
                       int((this->height() - this->_preMargin - this->_postMargin - 1) *
-                                 (this->slider[sliderId]->maximum - this->slider[sliderId]->value) /
-                                 (this->slider[sliderId]->maximum - this->slider[sliderId]->minimum) +
-                             0.5),
+                              (this->slider[sliderId]->maximum - this->slider[sliderId]->value) /
+                              (this->slider[sliderId]->maximum - this->slider[sliderId]->minimum) +
+                          0.5),
                       this->sliderWidth,    // Fill the whole width
                       this->preMargin() + 1 // Use the full margin
-                      );
+                );
         }
     }
     // Or a horizontal slider?
@@ -499,14 +493,14 @@ QRect LevelSlider::calculateRect(int sliderId) {
                 // The needle should be center-aligned, 0.5 pixel offset for exact
                 // pixelization
                 int((this->width() - this->_preMargin - this->_postMargin - 1) *
-                           (this->slider[sliderId]->value - this->slider[sliderId]->minimum) /
-                           (this->slider[sliderId]->maximum - this->slider[sliderId]->minimum) +
-                       0.5) +
+                        (this->slider[sliderId]->value - this->slider[sliderId]->minimum) /
+                        (this->slider[sliderId]->maximum - this->slider[sliderId]->minimum) +
+                    0.5) +
                     this->_preMargin - 3,
                 0,                // Start at the top
                 7,                // The needle is 7 px wide
                 this->sliderWidth // Fill the whole height
-                );
+            );
         }
         // Or a thin needle with text?
         else {
@@ -515,14 +509,14 @@ QRect LevelSlider::calculateRect(int sliderId) {
                 // The needle is at the right side, the text before it, 0.5 pixel
                 // offset for exact pixelization
                 int((this->width() - this->_preMargin - this->_postMargin - 1) *
-                           (this->slider[sliderId]->value - this->slider[sliderId]->minimum) /
-                           (this->slider[sliderId]->maximum - this->slider[sliderId]->minimum) +
-                       0.5) +
+                        (this->slider[sliderId]->value - this->slider[sliderId]->minimum) /
+                        (this->slider[sliderId]->maximum - this->slider[sliderId]->minimum) +
+                    0.5) +
                     this->_preMargin - sliderLength + 1,
                 0,                // Start at the top
                 sliderLength,     // The width depends on the text
                 this->sliderWidth // Fill the whole height
-                );
+            );
         }
     }
 
@@ -537,20 +531,16 @@ int LevelSlider::calculateWidth() {
 
     // Is it a vertical slider?
     if (this->_direction == Qt::RightArrow || this->_direction == Qt::LeftArrow) {
-        for (QList<LevelSliderParameters *>::iterator sliderIt = slider.begin(); sliderIt != slider.end();
-             ++sliderIt) {
+        for (QList<LevelSliderParameters *>::iterator sliderIt = slider.begin(); sliderIt != slider.end(); ++sliderIt) {
             int newSliderWidth = this->fontMetrics().size(0, (*sliderIt)->text).width();
-            if ( newSliderWidth > sliderWidth )
-                sliderWidth = newSliderWidth;
+            if (newSliderWidth > sliderWidth) sliderWidth = newSliderWidth;
         }
     }
     // Or a horizontal slider?
     else {
-        for (QList<LevelSliderParameters *>::iterator sliderIt = slider.begin(); sliderIt != slider.end();
-             ++sliderIt) {
+        for (QList<LevelSliderParameters *>::iterator sliderIt = slider.begin(); sliderIt != slider.end(); ++sliderIt) {
             int newSliderWidth = this->fontMetrics().size(0, (*sliderIt)->text).height();
-            if ( newSliderWidth > sliderWidth )
-                sliderWidth = newSliderWidth;
+            if (newSliderWidth > sliderWidth) sliderWidth = newSliderWidth;
         }
     }
 
