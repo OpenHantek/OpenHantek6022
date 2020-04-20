@@ -45,8 +45,7 @@ bool ExporterPrint::save() {
 
     const DsoSettingsColorValues *colorValues = &( registry->settings->view.print );
 
-    LegacyExportDrawer::exportSamples( data.get(), printer.get(), registry->deviceSpecification, registry->settings, true,
-                                       colorValues );
+    LegacyExportDrawer::exportSamples( data.get(), printer.get(), registry->deviceSpecification, registry->settings, colorValues );
 
     return true;
 }

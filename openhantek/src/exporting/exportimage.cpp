@@ -71,7 +71,7 @@ bool ExporterImage::save() {
     if ( !paintDevice )
         return false;
 
-    LegacyExportDrawer::exportSamples( data.get(), paintDevice.get(), registry->deviceSpecification, registry->settings, false,
+    LegacyExportDrawer::exportSamples( data.get(), paintDevice.get(), registry->deviceSpecification, registry->settings,
                                        colorValues );
 
     if ( !isPdf )
