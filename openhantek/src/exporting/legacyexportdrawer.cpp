@@ -21,7 +21,7 @@
 
 bool LegacyExportDrawer::exportSamples( const PPresult *result, QPaintDevice *paintDevice,
                                         const Dso::ControlSpecification *deviceSpecification, const DsoSettings *settings,
-                                        bool isPrinter, const DsoSettingsColorValues *colorValues ) {
+                                        const DsoSettingsColorValues *colorValues ) {
     // Create a painter for our device
     QPainter painter( paintDevice );
 
@@ -38,7 +38,7 @@ bool LegacyExportDrawer::exportSamples( const PPresult *result, QPaintDevice *pa
     // Print trigger details
     double pulseWidth1 = result->data( 0 )->pulseWidth1;
     double pulseWidth2 = result->data( 0 )->pulseWidth2;
-    painter.setPen( colorValues->voltage[ settings->scope.trigger.source ] );
+    painter.setPen( colorForWhiteBackground( colorValues->voltage[ settings->scope.trigger.source ] ) );
     QString levelString = valueToString( settings->scope.voltage[ settings->scope.trigger.source ].trigger, UNIT_VOLTS, 3 );
     QString pretriggerString = tr( "%L1%" ).arg( int( settings->scope.trigger.offset * 100 + 0.5 ) );
     QString pre = Dso::slopeString( settings->scope.trigger.slope ); // trigger slope
@@ -93,7 +93,7 @@ bool LegacyExportDrawer::exportSamples( const PPresult *result, QPaintDevice *pa
                 double tPos = 0.0, tWidth;
                 // Print label
                 tWidth = 2;
-                painter.setPen( colorValues->voltage[ unsigned( channel ) ] );
+                painter.setPen( colorForWhiteBackground( colorValues->voltage[ unsigned( channel ) ] ) );
                 painter.drawText( QRectF( stretchBase * tPos, top, stretchBase * tWidth, lineHeight ),
                                   settings->scope.voltage[ unsigned( channel ) ].name );
                 // Print coupling/math mode
@@ -234,6 +234,7 @@ bool LegacyExportDrawer::exportSamples( const PPresult *result, QPaintDevice *pa
                                   "Δf: " + valueToString( freq, UNIT_HERTZ, 4 ), QTextOption( Qt::AlignRight ) );
         }
 
+        drawGrids( painter, colorValues, lineHeight, scopeHeight, paintDevice->width(), settings->view.zoom );
 
         // Draw the graphs
         painter.setRenderHint( QPainter::Antialiasing );
@@ -401,7 +402,6 @@ bool LegacyExportDrawer::exportSamples( const PPresult *result, QPaintDevice *pa
         }
     } // dataanalyser mutex release
 
-    drawGrids( painter, colorValues, lineHeight, scopeHeight, paintDevice->width(), isPrinter, settings->view.zoom );
     painter.end();
 
     return true;
@@ -409,7 +409,7 @@ bool LegacyExportDrawer::exportSamples( const PPresult *result, QPaintDevice *pa
 
 
 void LegacyExportDrawer::drawGrids( QPainter &painter, const DsoSettingsColorValues *colorValues, double lineHeight,
-                                    double scopeHeight, int scopeWidth, bool isPrinter, bool zoom ) {
+                                    double scopeHeight, int scopeWidth, bool zoom ) {
     painter.setRenderHint( QPainter::Antialiasing, false );
     for ( int zoomed = 0; zoomed < ( zoom ? 2 : 1 ); ++zoomed ) {
         // Set DIVS_TIME x DIVS_VOLTAGE matrix for oscillograph
@@ -419,61 +419,41 @@ void LegacyExportDrawer::drawGrids( QPainter &painter, const DsoSettingsColorVal
                                  ( scopeHeight - 1 ) * ( zoomed + 0.5 ) + lineHeight * 1.5 + lineHeight * 2.5 * zoomed ) ),
             false );
 
+        // Borders
+        painter.setPen( QPen( colorValues->border, 0 ) );
+        painter.setBrush( colorValues->background );
+        painter.drawRect( QRectF( -DIVS_TIME / 2, -DIVS_VOLTAGE / 2, DIVS_TIME, DIVS_VOLTAGE ) );
+
         // Grid lines
         painter.setPen( QPen( colorValues->grid, 0 ) );
+        painter.setBrush( colorValues->grid );
 
-        if ( isPrinter ) {
-            // Draw vertical lines
-            for ( int div = 1; div < DIVS_TIME / 2; ++div ) {
-                for ( int dot = 1; dot < DIVS_VOLTAGE / 2 * 5; ++dot ) {
-                    painter.drawLine( QPointF( double( -div ) - 0.02, double( -dot ) / 5 ),
-                                      QPointF( double( -div ) + 0.02, double( -dot ) / 5 ) );
-                    painter.drawLine( QPointF( double( -div ) - 0.02, double( dot ) / 5 ),
-                                      QPointF( double( -div ) + 0.02, double( dot ) / 5 ) );
-                    painter.drawLine( QPointF( double( div ) - 0.02, double( -dot ) / 5 ),
-                                      QPointF( double( div ) + 0.02, double( -dot ) / 5 ) );
-                    painter.drawLine( QPointF( double( div ) - 0.02, double( dot ) / 5 ),
-                                      QPointF( double( div ) + 0.02, double( dot ) / 5 ) );
+        const double grid_dot_size = 0.01;
+
+        for ( int x_sign = -1; x_sign <= 1; x_sign += 2 ) {
+            for ( int y_sign = -1; y_sign <= 1; y_sign += 2 ) {
+                // for each of the 4 quadrants:
+
+                // Draw vertical lines
+                for ( int x = 1; x < DIVS_TIME / 2; ++x ) {
+                    for ( int y_index = 1; y_index < DIVS_VOLTAGE / 2 * 5; ++y_index ) {
+                        painter.drawEllipse( QPointF( x_sign * x, y_sign * y_index / 5.0 ), grid_dot_size / 2, grid_dot_size / 2 );
+                    }
                 }
-            }
-            // Draw horizontal lines
-            for ( int div = 1; div < DIVS_VOLTAGE / 2; ++div ) {
-                for ( int dot = 1; dot < DIVS_TIME / 2 * 5; ++dot ) {
-                    painter.drawLine( QPointF( double( -dot ) / 5, double( -div ) - 0.02 ),
-                                      QPointF( double( -dot ) / 5, double( -div ) + 0.02 ) );
-                    painter.drawLine( QPointF( double( dot ) / 5, double( -div ) - 0.02 ),
-                                      QPointF( double( dot ) / 5, double( -div ) + 0.02 ) );
-                    painter.drawLine( QPointF( double( -dot ) / 5, double( div ) - 0.02 ),
-                                      QPointF( double( -dot ) / 5, double( div ) + 0.02 ) );
-                    painter.drawLine( QPointF( double( dot ) / 5, double( div ) - 0.02 ),
-                                      QPointF( double( dot ) / 5, double( div ) + 0.02 ) );
-                }
-            }
-        } else {
-            // Draw vertical lines
-            for ( int div = 1; div < DIVS_TIME / 2; ++div ) {
-                for ( int dot = 1; dot < DIVS_VOLTAGE / 2 * 5; ++dot ) {
-                    painter.drawPoint( QPointF( -div, double( -dot ) / 5 ) );
-                    painter.drawPoint( QPointF( -div, double( dot ) / 5 ) );
-                    painter.drawPoint( QPointF( div, double( -dot ) / 5 ) );
-                    painter.drawPoint( QPointF( div, double( dot ) / 5 ) );
-                }
-            }
-            // Draw horizontal lines
-            for ( int div = 1; div < DIVS_VOLTAGE / 2; ++div ) {
-                for ( int dot = 1; dot < DIVS_TIME / 2 * 5; ++dot ) {
-                    if ( dot % 5 == 0 )
-                        continue; // Already done by vertical lines
-                    painter.drawPoint( QPointF( double( -dot ) / 5, -div ) );
-                    painter.drawPoint( QPointF( double( dot ) / 5, -div ) );
-                    painter.drawPoint( QPointF( double( -dot ) / 5, div ) );
-                    painter.drawPoint( QPointF( double( dot ) / 5, div ) );
+                // Draw horizontal lines
+                for ( int x_index = 1; x_index < DIVS_TIME / 2 * 5; ++x_index ) {
+                    for ( int y = 1; y < DIVS_VOLTAGE / 2; ++y ) {
+                        if ( y % 5 == 0 )
+                            continue; // Already done by vertical lines
+                        painter.drawEllipse( QPointF( x_sign * x_index / 5.0, y_sign * y ), grid_dot_size / 2, grid_dot_size / 2 );
+                    }
                 }
             }
         }
 
         // Axes
         painter.setPen( QPen( colorValues->axes, 0 ) );
+        painter.setBrush( QBrush( QColor::fromRgbF( 0, 0, 0, 0 ) ) ); // do not fill shapes
         painter.drawLine( QPointF( -DIVS_TIME / 2, 0 ), QPointF( DIVS_TIME / 2, 0 ) );
         painter.drawLine( QPointF( 0, -DIVS_VOLTAGE / 2 ), QPointF( 0, DIVS_VOLTAGE / 2 ) );
         for ( double div = 0.2; div <= DIVS_TIME / 2; div += 0.2 ) {
@@ -484,9 +464,17 @@ void LegacyExportDrawer::drawGrids( QPainter &painter, const DsoSettingsColorVal
             painter.drawLine( QPointF( -0.05, div ), QPointF( 0.05, div ) );
             painter.drawLine( QPointF( -0.05, -div ), QPointF( 0.05, -div ) );
         }
-
-        // Borders
-        painter.setPen( QPen( colorValues->border, 0 ) );
-        painter.drawRect( QRectF( -DIVS_TIME / 2, -DIVS_VOLTAGE / 2, DIVS_TIME, DIVS_VOLTAGE ) );
     }
+}
+
+QColor LegacyExportDrawer::colorForWhiteBackground( const QColor &originalColor ) {
+    int h, s, l;
+    originalColor.getHsl( &h, &s, &l );
+    const int maxLightness = 110;
+    if ( l > maxLightness ) {
+        l = maxLightness;
+    }
+    QColor newColor;
+    newColor.setHsl( h, s, l, 255 );
+    return newColor;
 }

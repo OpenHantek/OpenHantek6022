@@ -28,9 +28,12 @@ class LegacyExportDrawer {
   public:
     /// Draw the graphs coming from source and labels to the destination paintdevice.
     static bool exportSamples( const PPresult *source, QPaintDevice *dest, const Dso::ControlSpecification *deviceSpecification,
-                               const DsoSettings *settings, bool isPrinter, const DsoSettingsColorValues *colorValues );
+                               const DsoSettings *settings, const DsoSettingsColorValues *colorValues );
 
   private:
     static void drawGrids( QPainter &painter, const DsoSettingsColorValues *colorValues, double lineHeight, double scopeHeight,
-                           int scopeWidth, bool isPrinter, bool zoom );
+                           int scopeWidth, bool zoom );
+
+    /// Adjust color to be readable on a white background
+    static QColor colorForWhiteBackground( const QColor &originalColor );
 };
