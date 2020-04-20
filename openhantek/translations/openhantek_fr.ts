@@ -315,69 +315,69 @@
         <translation>Repères</translation>
     </message>
     <message>
+        <location filename="../src/dsowidget.cpp" line="494"/>
         <location filename="../src/dsowidget.cpp" line="496"/>
-        <location filename="../src/dsowidget.cpp" line="498"/>
-        <location filename="../src/dsowidget.cpp" line="533"/>
+        <location filename="../src/dsowidget.cpp" line="527"/>
+        <location filename="../src/dsowidget.cpp" line="565"/>
         <location filename="../src/dsowidget.cpp" line="573"/>
-        <location filename="../src/dsowidget.cpp" line="581"/>
-        <location filename="../src/dsowidget.cpp" line="600"/>
+        <location filename="../src/dsowidget.cpp" line="592"/>
         <source>/div</source>
         <translation>/div</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="450"/>
-        <location filename="../src/dsowidget.cpp" line="464"/>
+        <location filename="../src/dsowidget.cpp" line="447"/>
+        <location filename="../src/dsowidget.cpp" line="462"/>
         <source>ON</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="450"/>
-        <location filename="../src/dsowidget.cpp" line="464"/>
+        <location filename="../src/dsowidget.cpp" line="447"/>
+        <location filename="../src/dsowidget.cpp" line="462"/>
         <source>OFF</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="486"/>
+        <location filename="../src/dsowidget.cpp" line="484"/>
         <source>Markers  </source>
         <translation>Repères  </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="487"/>
+        <location filename="../src/dsowidget.cpp" line="485"/>
         <source>Time: </source>
         <translation>Temps : </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="488"/>
+        <location filename="../src/dsowidget.cpp" line="486"/>
         <source>Frequency: </source>
         <translation>Fréquence : </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="491"/>
+        <location filename="../src/dsowidget.cpp" line="489"/>
         <source>Zoom x%L1  </source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="493"/>
+        <location filename="../src/dsowidget.cpp" line="491"/>
         <source>Zoom ---  </source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="545"/>
+        <location filename="../src/dsowidget.cpp" line="539"/>
         <source>%L1%</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="558"/>
+        <location filename="../src/dsowidget.cpp" line="552"/>
         <source>%1  %2  %3  %4  %5</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="591"/>
+        <location filename="../src/dsowidget.cpp" line="583"/>
         <source>/s</source>
         <translation>/s</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="691"/>
+        <location filename="../src/dsowidget.cpp" line="680"/>
         <source> on screen</source>
         <translation> à l&apos;écran</translation>
     </message>
@@ -757,12 +757,12 @@
     <message>
         <location filename="../src/mainwindow.cpp" line="342"/>
         <source>&lt;p&gt;Open source software for Hantek6022 USB oscilloscopes&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2010, 2011 Oliver Haag&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2012-2020 OpenHantek community&lt;br/&gt;&lt;a href=&apos;https://github.com/OpenHantek&apos;&gt;https://github.com/OpenHantek&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Open source firmware copyright &amp;copy; 2019-2020 Ho-Ro&lt;br/&gt;&lt;a href=&apos;https://github.com/Ho-Ro/Hantek6022API&apos;&gt;https://github.com/Ho-Ro/Hantek6022API&lt;/a&gt;&lt;/p&gt;</source>
-        <translation></translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="348"/>
         <source>&lt;p&gt;Running since %1 seconds.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;Le programme est en cours depuis %1 secondes.&lt;/p&gt;</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="372"/>

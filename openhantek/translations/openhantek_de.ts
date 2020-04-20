@@ -305,12 +305,12 @@
 <context>
     <name>DsoWidget</name>
     <message>
+        <location filename="../src/dsowidget.cpp" line="494"/>
         <location filename="../src/dsowidget.cpp" line="496"/>
-        <location filename="../src/dsowidget.cpp" line="498"/>
-        <location filename="../src/dsowidget.cpp" line="533"/>
+        <location filename="../src/dsowidget.cpp" line="527"/>
+        <location filename="../src/dsowidget.cpp" line="565"/>
         <location filename="../src/dsowidget.cpp" line="573"/>
-        <location filename="../src/dsowidget.cpp" line="581"/>
-        <location filename="../src/dsowidget.cpp" line="600"/>
+        <location filename="../src/dsowidget.cpp" line="592"/>
         <source>/div</source>
         <translation>/div</translation>
     </message>
@@ -325,59 +325,59 @@
         <translation>Marker</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="450"/>
-        <location filename="../src/dsowidget.cpp" line="464"/>
+        <location filename="../src/dsowidget.cpp" line="447"/>
+        <location filename="../src/dsowidget.cpp" line="462"/>
         <source>ON</source>
         <translation>EIN</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="450"/>
-        <location filename="../src/dsowidget.cpp" line="464"/>
+        <location filename="../src/dsowidget.cpp" line="447"/>
+        <location filename="../src/dsowidget.cpp" line="462"/>
         <source>OFF</source>
         <translation>AUS</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="486"/>
+        <location filename="../src/dsowidget.cpp" line="484"/>
         <source>Markers  </source>
         <translation>Merker </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="487"/>
+        <location filename="../src/dsowidget.cpp" line="485"/>
         <source>Time: </source>
         <translation>Zeit: </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="488"/>
+        <location filename="../src/dsowidget.cpp" line="486"/>
         <source>Frequency: </source>
         <translation>Frequenz: </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="491"/>
+        <location filename="../src/dsowidget.cpp" line="489"/>
         <source>Zoom x%L1  </source>
         <translation>Zoom x%L1</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="493"/>
+        <location filename="../src/dsowidget.cpp" line="491"/>
         <source>Zoom ---  </source>
         <translation>Zoom ---</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="545"/>
+        <location filename="../src/dsowidget.cpp" line="539"/>
         <source>%L1%</source>
         <translation>%L1%</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="558"/>
+        <location filename="../src/dsowidget.cpp" line="552"/>
         <source>%1  %2  %3  %4  %5</source>
         <translation>%1  %2  %3  %4 %5</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="591"/>
+        <location filename="../src/dsowidget.cpp" line="583"/>
         <source>/s</source>
         <translation>/s</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="691"/>
+        <location filename="../src/dsowidget.cpp" line="680"/>
         <source> on screen</source>
         <translation> angezeigt</translation>
     </message>
@@ -744,7 +744,7 @@
     <message>
         <location filename="../src/mainwindow.cpp" line="348"/>
         <source>&lt;p&gt;Running since %1 seconds.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;Programm läuft seit %1 Sekunden.&lt;/p&gt;</translation>
+        <translation>&lt;p&gt;Laufzeit %1 Sekunden.&lt;/p&gt;</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="372"/>
