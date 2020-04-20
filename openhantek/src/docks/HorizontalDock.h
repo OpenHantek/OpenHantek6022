@@ -7,8 +7,8 @@
 
 #include <vector>
 
-#include "hantekdso/enums.h"
 #include "hantekdso/controlspecification.h"
+#include "hantekdso/enums.h"
 
 class QLabel;
 class QCheckBox;
@@ -17,10 +17,10 @@ class QComboBox;
 class SiSpinBox;
 
 struct DsoSettingsScope;
-//struct ControlSpecification;
+// struct ControlSpecification;
 
-Q_DECLARE_METATYPE(std::vector<unsigned>)
-Q_DECLARE_METATYPE(std::vector<double>)
+Q_DECLARE_METATYPE( std::vector< unsigned > )
+Q_DECLARE_METATYPE( std::vector< double > )
 
 /// \brief Dock window for the horizontal axis.
 /// It contains the settings for the timebase and the display format.
@@ -32,33 +32,34 @@ class HorizontalDock : public QDockWidget {
     /// \param settings The target settings object.
     /// \param parent The parent widget.
     /// \param flags Flags for the window manager.
-    HorizontalDock(DsoSettingsScope *scope, const Dso::ControlSpecification *spec, QWidget *parent, Qt::WindowFlags flags = nullptr);
+    HorizontalDock( DsoSettingsScope *scope, const Dso::ControlSpecification *spec, QWidget *parent,
+                    Qt::WindowFlags flags = nullptr );
 
     /// \brief Changes the frequencybase.
     /// \param frequencybase The frequencybase in hertz.
-    void setFrequencybase(double timebase);
+    void setFrequencybase( double timebase );
     /// \brief Changes the samplerate.
     /// \param samplerate The samplerate in seconds.
-    double setSamplerate(double samplerate);
+    double setSamplerate( double samplerate );
     /// \brief Changes the timebase.
     /// \param timebase The timebase in seconds.
-    double setTimebase(double timebase);
+    double setTimebase( double timebase );
     /// \brief Changes the record length if the new value is supported.
     /// \param recordLength The record length in samples.
-    void setRecordLength(unsigned int recordLength);
+    void setRecordLength( unsigned int recordLength );
     /// \brief Changes the format if the new value is supported.
     /// \param format The format for the horizontal axis.
     /// \return Index of format-value, -1 on error.
-    int setFormat(Dso::GraphFormat format);
+    int setFormat( Dso::GraphFormat format );
     /// \brief Updates the minimum and maximum of the samplerate spin box.
     /// \param minimum The minimum value the spin box should accept.
     /// \param maximum The minimum value the spin box should accept.
-    void setSamplerateLimits(double minimum, double maximum);
+    void setSamplerateLimits( double minimum, double maximum );
     /// \brief Updates the mode and steps of the samplerate spin box.
     /// \param mode The mode value the spin box should accept.
     /// \param steps The steps value the spin box should accept.
-    void setSamplerateSteps(int mode, QList<double> sampleSteps);
-    void calculateSamplerateSteps(double timebase);
+    void setSamplerateSteps( int mode, QList< double > sampleSteps );
+    void calculateSamplerateSteps( double timebase );
     /// \brief Changes the calibration frequency.
     /// \param calfreq The calibration frequency in hertz.
     double setCalfreq( double calfreq );
@@ -66,10 +67,10 @@ class HorizontalDock : public QDockWidget {
   public slots:
     /// \brief Loads settings into GUI
     /// \param scope Settings to load
-    void loadSettings(DsoSettingsScope *scope);
+    void loadSettings( DsoSettingsScope *scope );
 
   protected:
-    void closeEvent(QCloseEvent *event);
+    void closeEvent( QCloseEvent *event );
     QGridLayout *dockLayout;           ///< The main layout for the dock window
     QWidget *dockWidget;               ///< The main widget for the dock window
     QLabel *samplerateLabel;           ///< The label for the samplerate spinbox
@@ -84,25 +85,25 @@ class HorizontalDock : public QDockWidget {
                                        ///  interpreted and shown
     SiSpinBox *calfreqSiSpinBox;       ///< Selects the calibration frequency
 
-    DsoSettingsScope *scope;           ///< The settings provided by the parent class
-    QList<double> timebaseSteps;       ///< Steps for the timebase spinbox
-    QList<double> calfreqSteps;        ///< Steps for the calfreq spinbox
-    QList<double> samplerateSteps;     ///< Possible sampe rates
+    DsoSettingsScope *scope;         ///< The settings provided by the parent class
+    QList< double > timebaseSteps;   ///< Steps for the timebase spinbox
+    QList< double > calfreqSteps;    ///< Steps for the calfreq spinbox
+    QList< double > samplerateSteps; ///< Possible sampe rates
 
-    QStringList formatStrings;         ///< Strings for the formats
+    QStringList formatStrings; ///< Strings for the formats
 
   protected slots:
-    void frequencybaseSelected(double frequencybase);
-    void samplerateSelected(double samplerate);
-    void timebaseSelected(double timebase);
-    void formatSelected(int index);
-    void calfreqSelected(double calfreq);
+    void frequencybaseSelected( double frequencybase );
+    void samplerateSelected( double samplerate );
+    void timebaseSelected( double timebase );
+    void formatSelected( int index );
+    void calfreqSelected( double calfreq );
 
   signals:
-    void frequencybaseChanged(double frequencybase);      ///< The frequencybase has been changed
-    void samplerateChanged(double samplerate);            ///< The samplerate has been changed
-    void timebaseChanged(double timebase);                ///< The timebase has been changed
-    void recordLengthChanged(unsigned long recordLength); ///< The recordd length has been changed
-    void formatChanged(Dso::GraphFormat format);          ///< The viewing format has been changed
-    void calfreqChanged(double calfreq);                  ///< The timebase has been changed
+    void frequencybaseChanged( double frequencybase );      ///< The frequencybase has been changed
+    void samplerateChanged( double samplerate );            ///< The samplerate has been changed
+    void timebaseChanged( double timebase );                ///< The timebase has been changed
+    void recordLengthChanged( unsigned long recordLength ); ///< The recordd length has been changed
+    void formatChanged( Dso::GraphFormat format );          ///< The viewing format has been changed
+    void calfreqChanged( double calfreq );                  ///< The timebase has been changed
 };

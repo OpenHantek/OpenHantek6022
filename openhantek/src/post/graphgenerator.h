@@ -23,15 +23,15 @@ class GraphGenerator : public QObject, public Processor {
     Q_OBJECT
 
   public:
-    GraphGenerator(const DsoSettingsScope *scope );
+    GraphGenerator( const DsoSettingsScope *scope );
 
   private:
-    void generateGraphsTYvoltage(PPresult *result);
-    void generateGraphsTYspectrum(PPresult *result);
-    void generateGraphsXY(PPresult *result);
+    void generateGraphsTYvoltage( PPresult *result );
+    void generateGraphsTYspectrum( PPresult *result );
+    void generateGraphsXY( PPresult *result );
 
     bool ready = false;
     const DsoSettingsScope *scope;
     // Processor interface
-    void process(PPresult *data) override;
+    void process( PPresult *data ) override;
 };

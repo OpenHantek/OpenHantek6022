@@ -13,16 +13,16 @@
 #endif
 #include <iostream>
 #ifdef __FreeBSD__
-	#include <libusb.h>
+#include <libusb.h>
 #else
-	#include <libusb-1.0/libusb.h>
+#include <libusb-1.0/libusb.h>
 #endif
 #include <memory>
 
 // Settings
 #include "dsosettings.h"
-#include "viewsettings.h"
 #include "viewconstants.h"
+#include "viewsettings.h"
 
 // DSO core logic
 #include "dsomodel.h"
@@ -59,27 +59,27 @@
 using namespace Hantek;
 
 /// \brief Initialize resources and translations and show the main window.
-int main(int argc, char *argv[]) {
+int main( int argc, char *argv[] ) {
     //////// Set application information ////////
-    QCoreApplication::setOrganizationName("OpenHantek");
-    QCoreApplication::setOrganizationDomain("openhantek.org");
-    QCoreApplication::setApplicationName("OpenHantek6022");
-    QCoreApplication::setApplicationVersion(VERSION);
-    QCoreApplication::setAttribute(Qt::AA_UseHighDpiPixmaps, true);
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 6, 0))
-    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling, true);
+    QCoreApplication::setOrganizationName( "OpenHantek" );
+    QCoreApplication::setOrganizationDomain( "openhantek.org" );
+    QCoreApplication::setApplicationName( "OpenHantek6022" );
+    QCoreApplication::setApplicationVersion( VERSION );
+    QCoreApplication::setAttribute( Qt::AA_UseHighDpiPixmaps, true );
+#if ( QT_VERSION >= QT_VERSION_CHECK( 5, 6, 0 ) )
+    QCoreApplication::setAttribute( Qt::AA_EnableHighDpiScaling, true );
 #endif
 
     bool useGLES = false;
     {
-        QCoreApplication parserApp(argc, argv);
+        QCoreApplication parserApp( argc, argv );
         QCommandLineParser p;
         p.addHelpOption();
         p.addVersionOption();
-        QCommandLineOption useGlesOption("useGLES", QCoreApplication::tr("Use OpenGL ES instead of OpenGL"));
-        p.addOption(useGlesOption);
-        p.process(parserApp);
-        useGLES = p.isSet(useGlesOption);
+        QCommandLineOption useGlesOption( "useGLES", QCoreApplication::tr( "Use OpenGL ES instead of OpenGL" ) );
+        p.addOption( useGlesOption );
+        p.process( parserApp );
+        useGLES = p.isSet( useGlesOption );
     }
 
 #ifdef __arm__
@@ -89,7 +89,7 @@ int main(int argc, char *argv[]) {
 
     GlScope::fixOpenGLversion( useGLES ? QSurfaceFormat::OpenGLES : QSurfaceFormat::OpenGL );
 
-    QApplication openHantekApplication(argc, argv);
+    QApplication openHantekApplication( argc, argv );
 
 #ifdef __linux__
     // Qt5 linux default
@@ -109,7 +109,7 @@ int main(int argc, char *argv[]) {
     // or set the limits only for your user in /etc/security/limits.d:
     //    <your_user_name> - rtprio 99
     struct sched_param schedParam;
-    schedParam.sched_priority = 49; // set RT priority level 50
+    schedParam.sched_priority = 49;                   // set RT priority level 50
     sched_setscheduler( 0, SCHED_FIFO, &schedParam ); // and RT FIFO scheduler
     // but ignore any error if user has no realtime rights
 #endif
@@ -117,90 +117,87 @@ int main(int argc, char *argv[]) {
     //////// Load translations ////////
     QTranslator qtTranslator;
     QTranslator openHantekTranslator;
-    if (QLocale::system().name() != "en_US") { // somehow Qt on MacOS uses the german translation for en_US?!
-        if (qtTranslator.load("qt_" + QLocale::system().name(), QLibraryInfo::location(QLibraryInfo::TranslationsPath))) {
-           openHantekApplication.installTranslator(&qtTranslator);
+    if ( QLocale::system().name() != "en_US" ) { // somehow Qt on MacOS uses the german translation for en_US?!
+        if ( qtTranslator.load( "qt_" + QLocale::system().name(), QLibraryInfo::location( QLibraryInfo::TranslationsPath ) ) ) {
+            openHantekApplication.installTranslator( &qtTranslator );
         }
-        if (openHantekTranslator.load(QLocale(), QLatin1String("openhantek"), QLatin1String("_"),
-                                      QLatin1String(":/translations"))) {
-            openHantekApplication.installTranslator(&openHantekTranslator);
+        if ( openHantekTranslator.load( QLocale(), QLatin1String( "openhantek" ), QLatin1String( "_" ),
+                                        QLatin1String( ":/translations" ) ) ) {
+            openHantekApplication.installTranslator( &openHantekTranslator );
         }
     }
 
     //////// Find matching usb devices ////////
     libusb_context *context = nullptr;
-    int error = libusb_init(&context);
-    if (error) {
-        SelectSupportedDevice().showLibUSBFailedDialogModel(error);
+    int error = libusb_init( &context );
+    if ( error ) {
+        SelectSupportedDevice().showLibUSBFailedDialogModel( error );
         return -1;
     }
-    std::unique_ptr<USBDevice> device = SelectSupportedDevice().showSelectDeviceModal(context);
+    std::unique_ptr< USBDevice > device = SelectSupportedDevice().showSelectDeviceModal( context );
 
     QString errorMessage;
-    if (device == nullptr || !device->connectDevice(errorMessage)) {
-        libusb_exit(context);
+    if ( device == nullptr || !device->connectDevice( errorMessage ) ) {
+        libusb_exit( context );
         return -1;
     }
 
     //////// Create DSO control object and move it to a separate thread ////////
     QThread dsoControlThread;
-    dsoControlThread.setObjectName("dsoControlThread");
-    HantekDsoControl dsoControl(device.get());
-    dsoControl.moveToThread(&dsoControlThread);
-    QObject::connect(&dsoControlThread, &QThread::started, &dsoControl, &HantekDsoControl::run);
-    QObject::connect(&dsoControl, &HantekDsoControl::communicationError, QCoreApplication::instance(),
-                     &QCoreApplication::quit);
-    QObject::connect(device.get(), &USBDevice::deviceDisconnected, QCoreApplication::instance(),
-                     &QCoreApplication::quit);
+    dsoControlThread.setObjectName( "dsoControlThread" );
+    HantekDsoControl dsoControl( device.get() );
+    dsoControl.moveToThread( &dsoControlThread );
+    QObject::connect( &dsoControlThread, &QThread::started, &dsoControl, &HantekDsoControl::run );
+    QObject::connect( &dsoControl, &HantekDsoControl::communicationError, QCoreApplication::instance(), &QCoreApplication::quit );
+    QObject::connect( device.get(), &USBDevice::deviceDisconnected, QCoreApplication::instance(), &QCoreApplication::quit );
 
     //////// Create settings object ////////
-    DsoSettings settings(device->getModel()->spec());
+    DsoSettings settings( device->getModel()->spec() );
 
     //////// Create exporters ////////
-    ExporterRegistry exportRegistry(device->getModel()->spec(), &settings);
+    ExporterRegistry exportRegistry( device->getModel()->spec(), &settings );
 
     ExporterCSV exporterCSV;
     ExporterImage exportImage;
     ExporterPrint exportPrint;
 
-    ExporterProcessor samplesToExportRaw(&exportRegistry);
+    ExporterProcessor samplesToExportRaw( &exportRegistry );
 
-    exportRegistry.registerExporter(&exporterCSV);
-    exportRegistry.registerExporter(&exportImage);
-    exportRegistry.registerExporter(&exportPrint);
+    exportRegistry.registerExporter( &exporterCSV );
+    exportRegistry.registerExporter( &exportImage );
+    exportRegistry.registerExporter( &exportPrint );
 
     //////// Create post processing objects ////////
     QThread postProcessingThread;
-    postProcessingThread.setObjectName("postProcessingThread");
-    PostProcessing postProcessing(settings.scope.countChannels());
+    postProcessingThread.setObjectName( "postProcessingThread" );
+    PostProcessing postProcessing( settings.scope.countChannels() );
 
-    SpectrumGenerator spectrumGenerator(&settings.scope, &settings.post);
-    MathChannelGenerator mathchannelGenerator(&settings.scope, device->getModel()->spec()->channels);
-    GraphGenerator graphGenerator(&settings.scope);
+    SpectrumGenerator spectrumGenerator( &settings.scope, &settings.post );
+    MathChannelGenerator mathchannelGenerator( &settings.scope, device->getModel()->spec()->channels );
+    GraphGenerator graphGenerator( &settings.scope );
 
-    postProcessing.registerProcessor(&samplesToExportRaw);
-    postProcessing.registerProcessor(&mathchannelGenerator);
-    postProcessing.registerProcessor(&spectrumGenerator);
-    postProcessing.registerProcessor(&graphGenerator);
+    postProcessing.registerProcessor( &samplesToExportRaw );
+    postProcessing.registerProcessor( &mathchannelGenerator );
+    postProcessing.registerProcessor( &spectrumGenerator );
+    postProcessing.registerProcessor( &graphGenerator );
 
-    postProcessing.moveToThread(&postProcessingThread);
-    QObject::connect(&dsoControl, &HantekDsoControl::samplesAvailable, &postProcessing, &PostProcessing::input);
-    QObject::connect(&postProcessing, &PostProcessing::processingFinished, &exportRegistry, &ExporterRegistry::input,
-                     Qt::DirectConnection);
+    postProcessing.moveToThread( &postProcessingThread );
+    QObject::connect( &dsoControl, &HantekDsoControl::samplesAvailable, &postProcessing, &PostProcessing::input );
+    QObject::connect( &postProcessing, &PostProcessing::processingFinished, &exportRegistry, &ExporterRegistry::input,
+                      Qt::DirectConnection );
 
     //////// Create main window ////////
     iconFont->initFontAwesome();
-    MainWindow openHantekMainWindow(&dsoControl, &settings, &exportRegistry);
-    QObject::connect(&postProcessing, &PostProcessing::processingFinished, &openHantekMainWindow,
-                     &MainWindow::showNewData);
-    QObject::connect(&exportRegistry, &ExporterRegistry::exporterProgressChanged, &openHantekMainWindow,
-                     &MainWindow::exporterProgressChanged);
-    QObject::connect(&exportRegistry, &ExporterRegistry::exporterStatusChanged, &openHantekMainWindow,
-                     &MainWindow::exporterStatusChanged);
+    MainWindow openHantekMainWindow( &dsoControl, &settings, &exportRegistry );
+    QObject::connect( &postProcessing, &PostProcessing::processingFinished, &openHantekMainWindow, &MainWindow::showNewData );
+    QObject::connect( &exportRegistry, &ExporterRegistry::exporterProgressChanged, &openHantekMainWindow,
+                      &MainWindow::exporterProgressChanged );
+    QObject::connect( &exportRegistry, &ExporterRegistry::exporterStatusChanged, &openHantekMainWindow,
+                      &MainWindow::exporterStatusChanged );
     openHantekMainWindow.show();
 
     //////// Start DSO thread and go into GUI main loop
-    dsoControl.enableSampling(true);
+    dsoControl.enableSampling( true );
     postProcessingThread.start();
     dsoControlThread.start();
     int res = openHantekApplication.exec();
@@ -217,12 +214,12 @@ int main(int argc, char *argv[]) {
     std::cout << "stopped ";
 
     postProcessingThread.quit();
-    postProcessingThread.wait(10000);
+    postProcessingThread.wait( 10000 );
     std::cout << "after ";
 
-    if (context && device != nullptr) {
-        device.reset(); // causes libusb_close(), which must be called before libusb_exit() 
-        libusb_exit(context); 
+    if ( context && device != nullptr ) {
+        device.reset(); // causes libusb_close(), which must be called before libusb_exit()
+        libusb_exit( context );
     }
     std::cout << openHantekMainWindow.elapsedTime.elapsed() / 1000 << " s\n";
 

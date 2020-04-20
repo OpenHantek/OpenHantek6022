@@ -2,10 +2,10 @@
 
 #pragma once
 
+#include "rawdevicelistentry.h"
+#include "ui_newdevicemodelfromexisting.h"
 #include <QDialog>
 #include <memory>
-#include "ui_newdevicemodelfromexisting.h"
-#include "rawdevicelistentry.h"
 
 namespace Ui {
 class NewDeviceModelFromExisting;
@@ -13,19 +13,18 @@ class NewDeviceModelFromExisting;
 
 struct libusb_context;
 
-class NewDeviceModelFromExisting : public QDialog
-{
+class NewDeviceModelFromExisting : public QDialog {
     Q_OBJECT
 
-public:
-    explicit NewDeviceModelFromExisting(QWidget *parent = nullptr);
-//     void setUSBcontext(libusb_context* context);
-//     RawDeviceListEntry* getSelectedEntry();
-private:
-    std::unique_ptr<Ui::NewDeviceModelFromExisting> ui;
-    libusb_context* context = nullptr;
+  public:
+    explicit NewDeviceModelFromExisting( QWidget *parent = nullptr );
+    //     void setUSBcontext(libusb_context* context);
+    //     RawDeviceListEntry* getSelectedEntry();
+  private:
+    std::unique_ptr< Ui::NewDeviceModelFromExisting > ui;
+    libusb_context *context = nullptr;
 
     // QDialog interface
-public slots:
+  public slots:
     void accept() override;
 };

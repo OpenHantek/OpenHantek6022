@@ -15,28 +15,28 @@ class SiSpinBox : public QDoubleSpinBox {
     Q_OBJECT
 
   public:
-    explicit SiSpinBox(QWidget *parent = nullptr);
-    SiSpinBox(Unit unit, QWidget *parent = nullptr);
+    explicit SiSpinBox( QWidget *parent = nullptr );
+    SiSpinBox( Unit unit, QWidget *parent = nullptr );
     ~SiSpinBox();
 
-    QValidator::State validate(QString &input, int &pos) const;
-    double valueFromText(const QString &text) const;
-    QString textFromValue(double val) const;
-    void fixup(QString &input) const;
-    void stepBy(int steps);
-    bool setUnit(Unit unit);
-    void setUnitPostfix(const QString &postfix);
-    void setSteps(const QList<double> &steps);
-    void setMode(const int mode);
+    QValidator::State validate( QString &input, int &pos ) const;
+    double valueFromText( const QString &text ) const;
+    QString textFromValue( double val ) const;
+    void fixup( QString &input ) const;
+    void stepBy( int steps );
+    bool setUnit( Unit unit );
+    void setUnitPostfix( const QString &postfix );
+    void setSteps( const QList< double > &steps );
+    void setMode( const int mode );
 
   private:
     void init();
     void setBackground();
 
-    Unit unit;           ///< The SI unit used for this spin box
-    QString unitPostfix; ///< Shown after the unit
-    QList<double> steps; ///< The steps, begins from start after last element
-    int mode;            ///< The mode, fixed or constant
+    Unit unit;             ///< The SI unit used for this spin box
+    QString unitPostfix;   ///< Shown after the unit
+    QList< double > steps; ///< The steps, begins from start after last element
+    int mode;              ///< The mode, fixed or constant
 
     bool steppedTo; ///< true, if the current value was reached using stepBy
     int stepId;     ///< The index of the last step reached using stepBy

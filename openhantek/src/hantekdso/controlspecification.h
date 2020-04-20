@@ -13,15 +13,15 @@ using namespace Hantek;
 
 /// \brief Stores the samplerate limits for calculations.
 struct ControlSamplerateLimits {
-    double base;                         ///< The base for sample rate calculations
-    double max;                          ///< The maximum sample rate
-    std::vector<unsigned> recordLengths; ///< Available record lengths, UINT_MAX means rolling
+    double base;                           ///< The base for sample rate calculations
+    double max;                            ///< The maximum sample rate
+    std::vector< unsigned > recordLengths; ///< Available record lengths, UINT_MAX means rolling
 };
 
 /// \brief Stores the samplerate limits.
 struct ControlSpecificationSamplerate {
-    ControlSamplerateLimits single = {50e6, 50e6, std::vector<unsigned>()};  ///< The limits for single channel mode
-    ControlSamplerateLimits multi = {100e6, 100e6, std::vector<unsigned>()}; ///< The limits for multi channel mode
+    ControlSamplerateLimits single = {50e6, 50e6, std::vector< unsigned >()};  ///< The limits for single channel mode
+    ControlSamplerateLimits multi = {100e6, 100e6, std::vector< unsigned >()}; ///< The limits for multi channel mode
 };
 
 struct ControlSpecificationGainLevel {
@@ -43,30 +43,29 @@ struct ControlSpecification {
     const ChannelID channels;
 
     // Limits
-    ControlSpecificationSamplerate samplerate;  ///< The samplerate specifications
-    std::vector<RecordLengthID> bufferDividers; ///< Samplerate dividers for record lengths
+    ControlSpecificationSamplerate samplerate;    ///< The samplerate specifications
+    std::vector< RecordLengthID > bufferDividers; ///< Samplerate dividers for record lengths
 
     /// For devices that support only fixed sample rates
-    std::vector<FixedSampleRate> fixedSampleRates;
+    std::vector< FixedSampleRate > fixedSampleRates;
 
     // Calibration
     /// DSO6022 has calibration in small EEPROM, DDS120 has big fw EEPROM
     bool hasCalibrationEEPROM = true;
     /// The sample values at the top of the screen
-    typedef std::vector<int> VoltageScale;
-    std::vector<VoltageScale> voltageScale; // Per channel
-    typedef std::vector<int> VoltageOffset;
-    std::vector<VoltageOffset> voltageOffset; // Per channel
+    typedef std::vector< int > VoltageScale;
+    std::vector< VoltageScale > voltageScale; // Per channel
+    typedef std::vector< int > VoltageOffset;
+    std::vector< VoltageOffset > voltageOffset; // Per channel
 
     /// Gain levels
-    std::vector<ControlSpecificationGainLevel> gain;
+    std::vector< ControlSpecificationGainLevel > gain;
 
     // Features
-    std::vector<Coupling> couplings = {Dso::Coupling::DC, Dso::Coupling::AC};
-    std::vector<TriggerMode> triggerModes = {TriggerMode::AUTO, TriggerMode::NORMAL,
-                                             TriggerMode::SINGLE};
+    std::vector< Coupling > couplings = {Dso::Coupling::DC, Dso::Coupling::AC};
+    std::vector< TriggerMode > triggerModes = {TriggerMode::AUTO, TriggerMode::NORMAL, TriggerMode::SINGLE};
     int fixedUSBinLength = 0;
 
-    QList<double> calfreqSteps;
+    QList< double > calfreqSteps;
 };
-}
+} // namespace Dso

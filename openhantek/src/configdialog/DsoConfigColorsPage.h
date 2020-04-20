@@ -23,7 +23,7 @@ class DsoConfigColorsPage : public QWidget {
     Q_OBJECT
 
   public:
-    DsoConfigColorsPage(DsoSettings *settings, QWidget *parent = nullptr);
+    DsoConfigColorsPage( DsoSettings *settings, QWidget *parent = nullptr );
 
   public slots:
     void saveSettings();
@@ -40,15 +40,15 @@ class DsoConfigColorsPage : public QWidget {
     QLabel *axesLabel, *backgroundLabel, *borderLabel, *gridLabel, *markersLabel, *textLabel;
     ColorBox *axesColorBox, *backgroundColorBox, *borderColorBox, *gridColorBox, *markersColorBox, *textColorBox;
 
-    ColorBox *printAxesColorBox, *printBackgroundColorBox, *printBorderColorBox, *printGridColorBox,
-        *printMarkersColorBox, *printTextColorBox;
+    ColorBox *printAxesColorBox, *printBackgroundColorBox, *printBorderColorBox, *printGridColorBox, *printMarkersColorBox,
+        *printTextColorBox;
 
     QLabel *graphLabel;
 
     QLabel *screenChannelLabel, *screenSpectrumLabel, *printChannelLabel, *printSpectrumLabel;
-    std::vector<QLabel *> colorLabel;
-    std::vector<ColorBox *> screenChannelColorBox;
-    std::vector<ColorBox *> screenSpectrumColorBox;
-    std::vector<ColorBox *> printChannelColorBox;
-    std::vector<ColorBox *> printSpectrumColorBox;
+    std::vector< QLabel * > colorLabel;
+    std::vector< ColorBox * > screenChannelColorBox;
+    std::vector< ColorBox * > screenSpectrumColorBox;
+    std::vector< ColorBox * > printChannelColorBox;
+    std::vector< ColorBox * > printSpectrumColorBox;
 };

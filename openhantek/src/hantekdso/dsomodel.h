@@ -32,10 +32,10 @@ class DSOModel {
 
   public:
     /// This model may need to modify the HantekDsoControl class to work correctly
-    virtual void applyRequirements(HantekDsoControl *) const = 0;
-    DSOModel(int id, unsigned vendorID, unsigned productID, unsigned vendorIDnoFirmware, unsigned productIDnoFirmware,
-             unsigned firmwareVersion,
-             const std::string &firmwareToken, const std::string &name, const Dso::ControlSpecification &&specification);
+    virtual void applyRequirements( HantekDsoControl * ) const = 0;
+    DSOModel( int id, unsigned vendorID, unsigned productID, unsigned vendorIDnoFirmware, unsigned productIDnoFirmware,
+              unsigned firmwareVersion, const std::string &firmwareToken, const std::string &name,
+              const Dso::ControlSpecification &&specification );
     virtual ~DSOModel() = default;
     /// Return the device specifications
     inline const Dso::ControlSpecification *spec() const { return &specification; }

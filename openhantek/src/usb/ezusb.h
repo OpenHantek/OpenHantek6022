@@ -16,7 +16,7 @@
  *    GNU General Public License for more details.
  *
  *    You should have received a copy of the GNU General Public License
- *    along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+ *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <inttypes.h>
@@ -34,7 +34,7 @@ struct libusb_device_handle;
  *
  * The target processor is reset at the end of this upload.
  */
-extern int ezusb_load_ram(libusb_device_handle *device, const char *path, int fx_type, int stage);
+extern int ezusb_load_ram( libusb_device_handle *device, const char *path, int fx_type, int stage );
 
 /* Verbosity level (default 1). Can be increased or decreased with options v/q
  */

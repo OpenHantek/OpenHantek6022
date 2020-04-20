@@ -28,4 +28,4 @@ enum CaptureState {
     CAPTURE_ERROR = 1000
 };
 
-}
+} // namespace Hantek

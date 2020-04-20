@@ -9,10 +9,9 @@ namespace Dso {
 /// \enum MathMode
 /// \brief The different math modes for the math-channel.
 enum class MathMode : unsigned { ADD_CH1_CH2, SUB_CH2_FROM_CH1, SUB_CH1_FROM_CH2, MUL_CH1_CH2, AC_CH1, AC_CH2 };
-extern Enum<Dso::MathMode, Dso::MathMode::ADD_CH1_CH2, Dso::MathMode::AC_CH2> MathModeEnum;
+extern Enum< Dso::MathMode, Dso::MathMode::ADD_CH1_CH2, Dso::MathMode::AC_CH2 > MathModeEnum;
 
-template<class T>
-inline MathMode getMathMode(T& t) { return MathMode(t.couplingOrMathIndex); }
+template < class T > inline MathMode getMathMode( T &t ) { return MathMode( t.couplingOrMathIndex ); }
 
 /// \enum WindowFunction
 /// \brief The supported window functions.
@@ -35,17 +34,17 @@ enum class WindowFunction : int {
     BLACKMANNUTTALL, ///< Blackman-Nuttall window
     FLATTOP          ///< Flat top window
 };
-extern Enum<Dso::WindowFunction, Dso::WindowFunction::RECTANGULAR, Dso::WindowFunction::FLATTOP> WindowFunctionEnum;
+extern Enum< Dso::WindowFunction, Dso::WindowFunction::RECTANGULAR, Dso::WindowFunction::FLATTOP > WindowFunctionEnum;
 
-QString mathModeString(MathMode mode);
+QString mathModeString( MathMode mode );
 // QString windowFunctionString(WindowFunction window);
-}
+} // namespace Dso
 
-Q_DECLARE_METATYPE(Dso::MathMode)
-Q_DECLARE_METATYPE(Dso::WindowFunction)
+Q_DECLARE_METATYPE( Dso::MathMode )
+Q_DECLARE_METATYPE( Dso::WindowFunction )
 
 struct DsoSettingsPostProcessing {
     Dso::WindowFunction spectrumWindow = Dso::WindowFunction::HAMMING; ///< Window function for DFT
-    double spectrumReference = 0.0;                                 ///< Reference level for spectrum in dBu
-    double spectrumLimit = -60.0; ///< Minimum magnitude of the spectrum (Avoids peaks)
+    double spectrumReference = 0.0;                                    ///< Reference level for spectrum in dBu
+    double spectrumLimit = -60.0;                                      ///< Minimum magnitude of the spectrum (Avoids peaks)
 };

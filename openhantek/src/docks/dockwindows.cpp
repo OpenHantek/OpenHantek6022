@@ -8,29 +8,29 @@
 
 #include <cmath>
 
-#include "post/postprocessingsettings.h"
+#include "dockwindows.h"
 #include "hantekdso/enums.h"
 #include "hantekprotocol/types.h"
-#include "dockwindows.h"
+#include "post/postprocessingsettings.h"
 
-void SetupDockWidget(QDockWidget *dockWindow, QWidget *dockWidget, QLayout *layout) {
-    dockWindow->setObjectName(dockWindow->windowTitle());
-    dockWindow->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
-    dockWidget->setLayout(layout);
-    dockWidget->setSizePolicy(QSizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed, QSizePolicy::DefaultType));
-    dockWindow->setWidget(dockWidget);
+void SetupDockWidget( QDockWidget *dockWindow, QWidget *dockWidget, QLayout *layout ) {
+    dockWindow->setObjectName( dockWindow->windowTitle() );
+    dockWindow->setAllowedAreas( Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea );
+    dockWidget->setLayout( layout );
+    dockWidget->setSizePolicy( QSizePolicy( QSizePolicy::Minimum, QSizePolicy::Fixed, QSizePolicy::DefaultType ) );
+    dockWindow->setWidget( dockWidget );
 }
 
 void registerDockMetaTypes() {
-    qRegisterMetaType<Dso::TriggerMode>();
-    qRegisterMetaType<Dso::MathMode>();
-    qRegisterMetaType<Dso::Slope>();
-    qRegisterMetaType<Dso::Coupling>();
-    qRegisterMetaType<Dso::GraphFormat>();
-    qRegisterMetaType<Dso::ChannelMode>();
-    qRegisterMetaType<Dso::WindowFunction>();
-    qRegisterMetaType<Dso::InterpolationMode>();
-    qRegisterMetaType<std::vector<unsigned> >();
-    qRegisterMetaType<std::vector<double> >();
-    qRegisterMetaType<ChannelID>("ChannelID");
+    qRegisterMetaType< Dso::TriggerMode >();
+    qRegisterMetaType< Dso::MathMode >();
+    qRegisterMetaType< Dso::Slope >();
+    qRegisterMetaType< Dso::Coupling >();
+    qRegisterMetaType< Dso::GraphFormat >();
+    qRegisterMetaType< Dso::ChannelMode >();
+    qRegisterMetaType< Dso::WindowFunction >();
+    qRegisterMetaType< Dso::InterpolationMode >();
+    qRegisterMetaType< std::vector< unsigned > >();
+    qRegisterMetaType< std::vector< double > >();
+    qRegisterMetaType< ChannelID >( "ChannelID" );
 }

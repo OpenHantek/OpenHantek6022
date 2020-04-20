@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include <QString>
 #include <QPointF>
+#include <QString>
 
 #include "hantekdso/controlspecification.h"
 #include "hantekdso/enums.h"
@@ -14,13 +14,8 @@
 
 /// \brief Holds the cursor parameters
 struct DsoSettingsScopeCursor {
-    enum CursorShape {
-        NONE,
-        HORIZONTAL,
-        VERTICAL,
-        RECTANGULAR
-    } shape = NONE;
-    QPointF pos[MARKER_COUNT] = {{-1.0, -1.0}, {1.0, 1.0}};    ///< Position in div
+    enum CursorShape { NONE, HORIZONTAL, VERTICAL, RECTANGULAR } shape = NONE;
+    QPointF pos[ MARKER_COUNT ] = {{-1.0, -1.0}, {1.0, 1.0}}; ///< Position in div
 };
 
 /// \brief Holds the settings for the horizontal axis.
@@ -41,7 +36,7 @@ struct DsoSettingsScopeHorizontal {
 /// TODO Use ControlSettingsTrigger
 struct DsoSettingsScopeTrigger {
     Dso::TriggerMode mode = Dso::TriggerMode::AUTO; ///< Automatic, normal or single trigger
-    double offset = 0.5;                          ///< Horizontal position for pretrigger (middle of screen)
+    double offset = 0.5;                            ///< Horizontal position for pretrigger (middle of screen)
     Dso::Slope slope = Dso::Slope::Positive;        ///< Rising or falling edge causes trigger
     unsigned int source = 0;                        ///< Channel that is used as trigger source
     bool smooth = false;                            ///< Don't trigger on glitches
@@ -49,8 +44,8 @@ struct DsoSettingsScopeTrigger {
 
 /// \brief Base for DsoSettingsScopeSpectrum and DsoSettingsScopeVoltage
 struct DsoSettingsScopeChannel {
-    QString name;       ///< Name of this channel
-    bool used = false;  ///< true if the channel is turned on
+    QString name;      ///< Name of this channel
+    bool used = false; ///< true if the channel is turned on
     DsoSettingsScopeCursor cursor;
 };
 
@@ -73,33 +68,31 @@ struct DsoSettingsScopeVoltage : public DsoSettingsScopeChannel {
 
 /// \brief Holds the settings for the oscilloscope.
 struct DsoSettingsScope {
-    std::vector<double> gainSteps = {2e-2, 5e-2, 1e-1, 2e-1,
-                                     5e-1, 1e0,  2e0,  5e0};        ///< The selectable voltage gain steps in V/div
-    std::vector<DsoSettingsScopeSpectrum> spectrum;                 ///< Spectrum analysis settings
-    std::vector<DsoSettingsScopeVoltage> voltage;                   ///< Settings for the normal graphs
-    DsoSettingsScopeHorizontal horizontal;                          ///< Settings for the horizontal axis
-    DsoSettingsScopeTrigger trigger;                                ///< Settings for the trigger
+    std::vector< double > gainSteps = {2e-2, 5e-2, 1e-1, 2e-1, 5e-1, 1e0, 2e0, 5e0}; ///< The selectable voltage gain steps in V/div
+    std::vector< DsoSettingsScopeSpectrum > spectrum;                                ///< Spectrum analysis settings
+    std::vector< DsoSettingsScopeVoltage > voltage;                                  ///< Settings for the normal graphs
+    DsoSettingsScopeHorizontal horizontal;                                           ///< Settings for the horizontal axis
+    DsoSettingsScopeTrigger trigger;                                                 ///< Settings for the trigger
 
     bool histogram = false;
 
-    double gain(unsigned channel) const {
-        return gainSteps[voltage[channel].gainStepIndex] * voltage[channel].probeAttn;
-    }
+    double gain( unsigned channel ) const { return gainSteps[ voltage[ channel ].gainStepIndex ] * voltage[ channel ].probeAttn; }
 
-    bool anyUsed(ChannelID channel) { return voltage[channel].used | spectrum[channel].used; }
+    bool anyUsed( ChannelID channel ) { return voltage[ channel ].used | spectrum[ channel ].used; }
 
-    Dso::Coupling coupling(ChannelID channel, const Dso::ControlSpecification *deviceSpecification) const {
-        return deviceSpecification->couplings[voltage[channel].couplingOrMathIndex];
+    Dso::Coupling coupling( ChannelID channel, const Dso::ControlSpecification *deviceSpecification ) const {
+        return deviceSpecification->couplings[ voltage[ channel ].couplingOrMathIndex ];
     }
     // Channels, including math channels
-    unsigned countChannels() const { return unsigned(voltage.size()); }
+    unsigned countChannels() const { return unsigned( voltage.size() ); }
 
-    double getMarker(unsigned int marker) const {
-        double x = qBound( MARGIN_LEFT, marker < MARKER_COUNT ? horizontal.cursor.pos[marker].x() : 0.0, MARGIN_RIGHT );
+    double getMarker( unsigned int marker ) const {
+        double x = qBound( MARGIN_LEFT, marker < MARKER_COUNT ? horizontal.cursor.pos[ marker ].x() : 0.0, MARGIN_RIGHT );
         return x;
     }
 
-    void setMarker(unsigned int marker, double value) {
-        if (marker < MARKER_COUNT) horizontal.cursor.pos[marker].setX(value);
+    void setMarker( unsigned int marker, double value ) {
+        if ( marker < MARKER_COUNT )
+            horizontal.cursor.pos[ marker ].setX( value );
     }
 };

@@ -18,7 +18,7 @@ enum class UsedChannels : uint8_t {
     USED_CH1CH2, ///< Channel 1 and 2 are both activated
 };
 
-#pragma pack(push, 1)
+#pragma pack( push, 1 )
 
 // The strct reflects the offset layout in EEPROM
 // All values are offset binariy bytes (0 -> 0x80)
@@ -46,6 +46,6 @@ struct CalibrationValues {
     Offsets fine;
 };
 
-#pragma pack(pop)
+#pragma pack( pop )
 
-}
+} // namespace Hantek

@@ -39,27 +39,27 @@ class ControlGetSpeed : public ControlCommand {
     ControlGetSpeed();
     /// \brief Gets the speed of the connection.
     /// \return The speed level of the USB connection.
-//     ConnectionSpeed getSpeed();
+    //     ConnectionSpeed getSpeed();
 };
 
 struct ControlSetVoltDIV_CH1 : public ControlCommand {
     ControlSetVoltDIV_CH1();
-    void setDiv(uint8_t val);
+    void setDiv( uint8_t val );
 };
 
 struct ControlSetVoltDIV_CH2 : public ControlCommand {
     ControlSetVoltDIV_CH2();
-    void setDiv(uint8_t val);
+    void setDiv( uint8_t val );
 };
 
 struct ControlSetTimeDIV : public ControlCommand {
     ControlSetTimeDIV();
-    void setDiv(uint8_t val);
+    void setDiv( uint8_t val );
 };
 
 struct ControlSetNumChannels : public ControlCommand {
     ControlSetNumChannels();
-    void setDiv(uint8_t val);
+    void setDiv( uint8_t val );
 };
 
 struct ControlAcquireHardData : public ControlCommand {
@@ -72,13 +72,13 @@ struct ControlGetLimits : public ControlCommand {
 
 struct ControlSetCalFreq : public ControlCommand {
     ControlSetCalFreq();
-    void setCalFreq(uint8_t val);
+    void setCalFreq( uint8_t val );
 };
 
 struct ControlSetCoupling : public ControlCommand {
     ControlSetCoupling();
-    void setCoupling(ChannelID channel, bool dc);
+    void setCoupling( ChannelID channel, bool dc );
     uint8_t ch1Coupling, ch2Coupling;
 };
 
-}
+} // namespace Hantek

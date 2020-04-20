@@ -14,28 +14,28 @@
 /// \struct DsoSettingsColorValues
 /// \brief Holds the color values for the oscilloscope screen.
 struct DsoSettingsColorValues {
-    QColor axes;                  ///< X- and Y-axis and subdiv lines on them
-    QColor background;            ///< The scope background
-    QColor border;                ///< The border of the scope screen
-    QColor grid;                  ///< The color of the grid
-    QColor markers;               ///< The color of the markers
-    QColor text;                  ///< The default text color
-    std::vector<QColor> spectrum; ///< The colors of the spectrum graphs
-    std::vector<QColor> voltage;  ///< The colors of the voltage graphs
+    QColor axes;                    ///< X- and Y-axis and subdiv lines on them
+    QColor background;              ///< The scope background
+    QColor border;                  ///< The border of the scope screen
+    QColor grid;                    ///< The color of the grid
+    QColor markers;                 ///< The color of the markers
+    QColor text;                    ///< The default text color
+    std::vector< QColor > spectrum; ///< The colors of the spectrum graphs
+    std::vector< QColor > voltage;  ///< The colors of the voltage graphs
 };
 
 ////////////////////////////////////////////////////////////////////////////////
 /// \struct DsoSettingsView
 /// \brief Holds all view settings.
 struct DsoSettingsView {
-    DsoSettingsColorValues screen = {QColor(0xff, 0xff, 0xff, 0x7f), QColor(0x00, 0x00, 0x00, 0xff), // axes, background
-                                     QColor(0xff, 0xff, 0xff, 0xff), QColor(0xff, 0xff, 0xff, 0xbf), // border, grid
-                                     QColor(0xff, 0xff, 0xff, 0xbf), QColor(0xff, 0xff, 0xff, 0xff), // markers, text
-                                     std::vector<QColor>(),          std::vector<QColor>()};         // spectrum, voltage
-    DsoSettingsColorValues print = {QColor(0x00, 0x00, 0x00, 0xbf), QColor(0x00, 0x00, 0x00, 0x00),  // axes, background
-                                    QColor(0x00, 0x00, 0x00, 0xff), QColor(0x00, 0x00, 0x00, 0xbf),  // border, grid
-                                    QColor(0x00, 0x00, 0x00, 0xbf), QColor(0x00, 0x00, 0x00, 0xff),  // markers, text
-                                    std::vector<QColor>(),          std::vector<QColor>()};          // spectrum, voltage
+    DsoSettingsColorValues screen = {QColor( 0xff, 0xff, 0xff, 0x7f ), QColor( 0x00, 0x00, 0x00, 0xff ), // axes, background
+                                     QColor( 0xff, 0xff, 0xff, 0xff ), QColor( 0xff, 0xff, 0xff, 0xbf ), // border, grid
+                                     QColor( 0xff, 0xff, 0xff, 0xbf ), QColor( 0xff, 0xff, 0xff, 0xff ), // markers, text
+                                     std::vector< QColor >(),          std::vector< QColor >()};         // spectrum, voltage
+    DsoSettingsColorValues print = {QColor( 0x00, 0x00, 0x00, 0xbf ), QColor( 0x00, 0x00, 0x00, 0x00 ),  // axes, background
+                                    QColor( 0x00, 0x00, 0x00, 0xff ), QColor( 0x00, 0x00, 0x00, 0xbf ),  // border, grid
+                                    QColor( 0x00, 0x00, 0x00, 0xbf ), QColor( 0x00, 0x00, 0x00, 0xff ),  // markers, text
+                                    std::vector< QColor >(),          std::vector< QColor >()};          // spectrum, voltage
     bool antialiasing = true;                                         ///< Antialiasing for the graphs
     bool digitalPhosphor = false;                                     ///< true slowly fades out the previous graphs
     unsigned digitalPhosphorDepth = 8;                                ///< Number of channels shown at one time
@@ -45,7 +45,5 @@ struct DsoSettingsView {
     Qt::ToolBarArea cursorGridPosition = Qt::RightToolBarArea;
     bool cursorsVisible = false;
 
-    unsigned digitalPhosphorDraws() const {
-        return digitalPhosphor ? digitalPhosphorDepth : 1;
-    }
+    unsigned digitalPhosphorDraws() const { return digitalPhosphor ? digitalPhosphorDepth : 1; }
 };
