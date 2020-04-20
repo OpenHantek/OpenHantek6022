@@ -45,17 +45,25 @@ bool ExporterImage::save() {
 
     const DsoSettingsColorValues *colorValues = &( registry->settings->view.print );
 
+    QString fileName = fileDialog.selectedFiles().first();
+
     if ( !isPdf ) {
+        if ( !fileName.endsWith( ".png" ) && !fileName.endsWith( ".xpm" ) && !fileName.endsWith( ".jpg" ) ) {
+            fileName += ".png";
+        }
         // We need a QPixmap for image-export
         QPixmap *qPixmap = new QPixmap( registry->settings->exporting.imageSize );
         qPixmap->fill( colorValues->background );
         paintDevice = std::unique_ptr< QPaintDevice >( qPixmap );
     } else {
+        if ( !fileName.endsWith( ".pdf" ) ) {
+            fileName += ".pdf";
+        }
         // We need a QPrinter for printing, pdf- and ps-export
         std::unique_ptr< QPrinter > printer = std::unique_ptr< QPrinter >( new QPrinter( QPrinter::HighResolution ) );
         printer->setOrientation( registry->settings->view.zoom ? QPrinter::Portrait : QPrinter::Landscape );
         printer->setPageMargins( 20, 20, 20, 20, QPrinter::Millimeter );
-        printer->setOutputFileName( fileDialog.selectedFiles().first() );
+        printer->setOutputFileName( fileName );
         printer->setOutputFormat( QPrinter::PdfFormat );
         paintDevice = std::move( printer );
     }
@@ -67,7 +75,7 @@ bool ExporterImage::save() {
                                        colorValues );
 
     if ( !isPdf )
-        static_cast< QPixmap * >( paintDevice.get() )->save( fileDialog.selectedFiles().first() );
+        static_cast< QPixmap * >( paintDevice.get() )->save( fileName );
     return true;
 }
 
