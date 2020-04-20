@@ -2,7 +2,7 @@
 
 #include "controlspecification.h"
 
-Dso::ControlSpecification::ControlSpecification( unsigned channels ) : channels( channels ) {
-    voltageScale.resize( channels );
-    voltageOffset.resize( channels );
+Dso::ControlSpecification::ControlSpecification(unsigned channels) : channels(channels) {
+    voltageScale.resize(channels);
+    voltageOffset.resize(channels);
 }

@@ -2,15 +2,15 @@
 
 #pragma once
 
-#include <QGridLayout>
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QList>
+#include <QGridLayout>
 #include <memory>
 
 #include "glscope.h"
-#include "hantekdso/controlspecification.h"
 #include "levelslider.h"
+#include "hantekdso/controlspecification.h"
 
 class SpectrumGenerator;
 struct DsoSettingsScope;
@@ -24,10 +24,10 @@ class DsoWidget : public QWidget {
 
   public:
     struct Sliders {
-        LevelSlider *voltageOffsetSlider; ///< The sliders for the graph offsets
-        LevelSlider *triggerOffsetSlider; ///< The slider for the pretrigger
-        LevelSlider *triggerLevelSlider;  ///< The sliders for the trigger level
-        LevelSlider *markerSlider;        ///< The sliders for the markers
+        LevelSlider *voltageOffsetSlider;   ///< The sliders for the graph offsets
+        LevelSlider *triggerOffsetSlider;   ///< The slider for the pretrigger
+        LevelSlider *triggerLevelSlider;    ///< The sliders for the trigger level
+        LevelSlider *markerSlider;          ///< The sliders for the markers
     };
 
     /// \brief Initializes the components of the oszilloscope-screen.
@@ -35,30 +35,29 @@ class DsoWidget : public QWidget {
     /// \param dataAnalyzer The data analyzer that should be used as data source.
     /// \param parent The parent widget.
     /// \param flags Flags for the window manager.
-    DsoWidget( DsoSettingsScope *scope, DsoSettingsView *view, const Dso::ControlSpecification *spec,
-               QWidget *parent = nullptr, Qt::WindowFlags flags = nullptr );
+    DsoWidget(DsoSettingsScope* scope, DsoSettingsView* view, const Dso::ControlSpecification* spec, QWidget *parent = nullptr, Qt::WindowFlags flags = nullptr);
 
     // Data arrived
-    void showNew( std::shared_ptr<PPresult> analysedData );
+    void showNew(std::shared_ptr<PPresult> analysedData);
 
   protected:
-    virtual void showEvent( QShowEvent *event );
-    void setupSliders( Sliders &sliders );
-    void adaptTriggerLevelSlider( DsoWidget::Sliders &sliders, ChannelID channel );
+    virtual void showEvent(QShowEvent *event);
+    void setupSliders(Sliders &sliders);
+    void adaptTriggerLevelSlider(DsoWidget::Sliders &sliders, ChannelID channel);
     void adaptTriggerOffsetSlider();
-    void setMeasurementVisible( ChannelID channel );
+    void setMeasurementVisible(ChannelID channel);
     void updateMarkerDetails();
-    void updateSpectrumDetails( ChannelID channel );
+    void updateSpectrumDetails(ChannelID channel);
     void updateTriggerDetails();
-    void updateVoltageDetails( ChannelID channel );
+    void updateVoltageDetails(ChannelID channel);
 
-    double mainToZoom( double position ) const;
-    double zoomToMain( double position ) const;
+    double mainToZoom(double position) const;
+    double zoomToMain(double position) const;
 
     Sliders mainSliders;
     Sliders zoomSliders;
 
-    QGridLayout *mainLayout; ///< The main layout for this widget
+    QGridLayout *mainLayout;            ///< The main layout for this widget
 
     QHBoxLayout *settingsLayout;        ///< The table for the settings info
     QLabel *settingsTriggerLabel;       ///< The trigger details
@@ -67,7 +66,7 @@ class DsoWidget : public QWidget {
     QLabel *settingsTimebaseLabel;      ///< The timebase of the main scope
     QLabel *settingsFrequencybaseLabel; ///< The frequencybase of the main scope
 
-    QLabel *swTriggerStatus; ///< The status of SW trigger
+    QLabel *swTriggerStatus;          ///< The status of SW trigger
 
     QHBoxLayout *markerLayout;        ///< The table for the marker details
     QLabel *markerInfoLabel;          ///< The info about the zoom factor
@@ -76,7 +75,7 @@ class DsoWidget : public QWidget {
     QLabel *markerTimebaseLabel;      ///< The timebase for the zoomed scope
     QLabel *markerFrequencybaseLabel; ///< The frequencybase for the zoomed scope
 
-    QGridLayout *measurementLayout;                  ///< The table for the signal details
+    QGridLayout *measurementLayout;            ///< The table for the signal details
     std::vector<QLabel *> measurementNameLabel;      ///< The name of the channel
     std::vector<QLabel *> measurementGainLabel;      ///< The gain for the voltage (V/div)
     std::vector<QLabel *> measurementMagnitudeLabel; ///< The magnitude for the spectrum (dB/div)
@@ -90,12 +89,12 @@ class DsoWidget : public QWidget {
 
     DataGrid *cursorDataGrid;
 
-    DsoSettingsScope *scope;
-    DsoSettingsView *view;
-    const Dso::ControlSpecification *spec;
+    DsoSettingsScope* scope;
+    DsoSettingsView* view;
+    const Dso::ControlSpecification* spec;
 
-    GlScope *mainScope; ///< The main scope screen
-    GlScope *zoomScope; ///< The optional magnified scope screen
+    GlScope *mainScope;     ///< The main scope screen
+    GlScope *zoomScope;     ///< The optional magnified scope screen
 
   private:
     double samplerate;
@@ -107,9 +106,9 @@ class DsoWidget : public QWidget {
   public slots:
     // Horizontal axis
     // void horizontalFormatChanged(HorizontalFormat format);
-    void updateFrequencybase( double frequencybase );
-    void updateSamplerate( double samplerate );
-    void updateTimebase( double timebase );
+    void updateFrequencybase(double frequencybase);
+    void updateSamplerate(double samplerate);
+    void updateTimebase(double timebase);
 
     // Trigger
     void updateTriggerMode();
@@ -117,35 +116,35 @@ class DsoWidget : public QWidget {
     void updateTriggerSource();
 
     // Spectrum
-    void updateSpectrumMagnitude( ChannelID channel );
-    void updateSpectrumUsed( ChannelID channel, bool used );
+    void updateSpectrumMagnitude(ChannelID channel);
+    void updateSpectrumUsed(ChannelID channel, bool used);
 
     // Vertical axis
-    void updateVoltageCoupling( ChannelID channel );
+    void updateVoltageCoupling(ChannelID channel);
     void updateMathMode();
-    void updateVoltageGain( ChannelID channel );
-    void updateVoltageUsed( ChannelID channel, bool used );
+    void updateVoltageGain(ChannelID channel);
+    void updateVoltageUsed(ChannelID channel, bool used);
 
     // Menus
-    void updateRecordLength( unsigned long size );
+    void updateRecordLength(unsigned long size);
 
     // Scope control
-    void updateZoom( bool enabled );
-    void updateCursorGrid( bool enabled );
+    void updateZoom(bool enabled);
+    void updateCursorGrid(bool enabled);
 
     // Scope control
     void updateSlidersSettings();
 
   private slots:
     // Sliders
-    void updateOffset( ChannelID channel, double value );
-    void updateTriggerOffset( int index, double value, bool mainView = true );
-    void updateTriggerLevel( ChannelID channel, double value );
-    void updateMarker( unsigned marker, double value );
+    void updateOffset(ChannelID channel, double value);
+    void updateTriggerOffset(int index, double value, bool mainView = true);
+    void updateTriggerLevel(ChannelID channel, double value);
+    void updateMarker( unsigned marker, double value);
 
   signals:
     // Sliders
-    void voltageOffsetChanged( ChannelID channel, double value ); ///< A graph offset has been changed
-    void triggerPositionChanged( double value );                  ///< The pretrigger has been changed
-    void triggerLevelChanged( ChannelID channel, double value );  ///< A trigger level has been changed
+    void voltageOffsetChanged (ChannelID channel, double value);       ///< A graph offset has been changed
+    void triggerPositionChanged(double value);                    ///< The pretrigger has been changed
+    void triggerLevelChanged(ChannelID channel, double value); ///< A trigger level has been changed
 };

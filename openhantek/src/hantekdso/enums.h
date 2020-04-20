@@ -36,7 +36,7 @@ enum class TriggerMode {
     AUTO,   ///< Automatic without trigger event
     NORMAL, ///< Normal hardware trigger (or software trigger) mode
     SINGLE  ///< Stop after the first trigger event
-};          // <class T, T first, T last>
+}; // <class T, T first, T last>
 extern Enum<Dso::TriggerMode, Dso::TriggerMode::AUTO, Dso::TriggerMode::SINGLE> TriggerModeEnum;
 
 /// \enum Slope
@@ -57,16 +57,16 @@ enum InterpolationMode {
 };
 
 // QString channelModeString(ChannelMode mode);
-QString graphFormatString( GraphFormat format );
-QString couplingString( Coupling coupling );
-QString triggerModeString( TriggerMode mode );
-QString slopeString( Slope slope );
+QString graphFormatString(GraphFormat format);
+QString couplingString(Coupling coupling);
+QString triggerModeString(TriggerMode mode);
+QString slopeString(Slope slope);
 // QString interpolationModeString(InterpolationMode interpolation);
-} // namespace Dso
+}
 
-Q_DECLARE_METATYPE( Dso::TriggerMode )
-Q_DECLARE_METATYPE( Dso::Slope )
-Q_DECLARE_METATYPE( Dso::Coupling )
-Q_DECLARE_METATYPE( Dso::GraphFormat )
-Q_DECLARE_METATYPE( Dso::ChannelMode )
-Q_DECLARE_METATYPE( Dso::InterpolationMode )
+Q_DECLARE_METATYPE(Dso::TriggerMode)
+Q_DECLARE_METATYPE(Dso::Slope)
+Q_DECLARE_METATYPE(Dso::Coupling)
+Q_DECLARE_METATYPE(Dso::GraphFormat)
+Q_DECLARE_METATYPE(Dso::ChannelMode)
+Q_DECLARE_METATYPE(Dso::InterpolationMode)

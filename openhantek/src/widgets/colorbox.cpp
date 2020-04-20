@@ -32,9 +32,9 @@
 /// \brief Initializes the widget.
 /// \param color_ Initial color value.
 /// \param parent The parent widget.
-ColorBox::ColorBox( QColor color_, QWidget *parent ) : QPushButton( parent ) {
-    setColor( color_ );
-    connect( this, &QAbstractButton::clicked, this, &ColorBox::waitForColor );
+ColorBox::ColorBox(QColor color_, QWidget *parent) : QPushButton(parent) {
+    setColor(color_);
+    connect(this, &QAbstractButton::clicked, this, &ColorBox::waitForColor);
 }
 
 /// \brief Cleans up the widget.
@@ -46,18 +46,17 @@ const QColor ColorBox::getColor() { return color; }
 
 /// \brief Sets the color.
 /// \param newColor The new color.
-void ColorBox::setColor( QColor newColor ) {
+void ColorBox::setColor(QColor newColor) {
     color = newColor;
-    setText( QString( "#%1" ).arg( unsigned( color.rgba() ), 8, 16, QChar( '0' ) ) );
-    setPalette( QPalette( color ) );
-    emit colorChanged( color );
+    setText(QString("#%1").arg(unsigned(color.rgba()), 8, 16, QChar('0')));
+    setPalette(QPalette(color));
+    emit colorChanged(color);
 }
 
 /// \brief Wait for the color dialog and apply chosen color.
 void ColorBox::waitForColor() {
     setFocus();
-    setDown( true );
-    QColor newColor = QColorDialog::getColor( color, this, nullptr, QColorDialog::ShowAlphaChannel );
-    if ( newColor.isValid() )
-        setColor( newColor );
+    setDown(true);
+    QColor newColor = QColorDialog::getColor(color, this, nullptr, QColorDialog::ShowAlphaChannel);
+    if (newColor.isValid()) setColor(newColor);
 }

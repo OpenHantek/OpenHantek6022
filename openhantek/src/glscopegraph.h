@@ -15,10 +15,10 @@
 
 struct Graph {
     explicit Graph();
-    Graph( const Graph & ) = delete;
-    Graph( const Graph && ) = delete;
+    Graph(const Graph &) = delete;
+    Graph(const Graph &&) = delete;
     ~Graph();
-    void writeData( PPresult *data, QOpenGLShaderProgram *program, int vertexLocation );
+    void writeData(PPresult *data, QOpenGLShaderProgram *program, int vertexLocation);
     typedef std::pair<QOpenGLVertexArrayObject *, GLsizei> VaoCount;
 
   public:

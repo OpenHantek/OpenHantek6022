@@ -2,19 +2,19 @@
 
 #pragma once
 
-#include <QCheckBox>
-#include <QComboBox>
 #include <QDockWidget>
 #include <QGridLayout>
+#include <QCheckBox>
+#include <QComboBox>
 #include <QLabel>
 #include <QSpinBox>
 
+#include "scopesettings.h"
 #include "hantekdso/controlspecification.h"
 #include "post/postprocessingsettings.h"
-#include "scopesettings.h"
 
-#define ATTENUATION_MIN 1    ///< Minimum probe attenuation
-#define ATTENUATION_MAX 1000 ///< Maximum probe attenuation
+#define ATTENUATION_MIN 1     ///< Minimum probe attenuation
+#define ATTENUATION_MAX 1000  ///< Maximum probe attenuation
 
 class SiSpinBox;
 
@@ -29,56 +29,55 @@ class VoltageDock : public QDockWidget {
     /// \param settings The target settings object.
     /// \param parent The parent widget.
     /// \param flags Flags for the window manager.
-    VoltageDock( DsoSettingsScope *scope, const Dso::ControlSpecification *spec, QWidget *parent,
-                 Qt::WindowFlags flags = nullptr );
+    VoltageDock(DsoSettingsScope *scope, const Dso::ControlSpecification* spec, QWidget *parent, Qt::WindowFlags flags = nullptr);
 
     /// \brief Sets the coupling for a channel.
     /// \param channel The channel, whose coupling should be set.
     /// \param couplingIndex The coupling-mode index.
-    void setCoupling( ChannelID channel, unsigned couplingIndex );
+    void setCoupling(ChannelID channel, unsigned couplingIndex);
 
     /// \brief Sets the gain for a channel.
     /// \param channel The channel, whose gain should be set.
     /// \param gain The gain in volts.
-    void setGain( ChannelID channel, unsigned gainStepIndex );
+    void setGain(ChannelID channel, unsigned gainStepIndex);
 
     /// \brief Sets the probe attenuation for a channel.
     /// \param channel The channel, whose attn should be set.
     /// \param attn The attn value.
-    void setAttn( ChannelID channel, double attnValue );
+    void setAttn(ChannelID channel, double attnValue);
 
     /// \brief Sets the mode for the math channel.
     /// \param mathModeIndex The math-mode index.
-    void setMode( unsigned mathModeIndex );
+    void setMode(unsigned mathModeIndex);
 
     /// \brief Enables/disables a channel.
     /// \param channel The channel, that should be enabled/disabled.
     /// \param used True if the channel should be enabled, false otherwise.
-    void setUsed( ChannelID channel, bool used );
+    void setUsed(ChannelID channel, bool used);
 
     /// \brief Set channel inverted.
     /// \param channel The channel, that should be inverted.
     /// \param used True if the channel should be inverted, false otherwise.
-    void setInverted( ChannelID channel, bool inverted );
+    void setInverted(ChannelID channel, bool inverted);
 
   public slots:
     /// \brief Loads settings into GUI
     /// \param scope Settings to load
     /// \param spec Current scope specifications
-    void loadSettings( DsoSettingsScope *scope, const Dso::ControlSpecification *spec );
+    void loadSettings(DsoSettingsScope *scope, const Dso::ControlSpecification *spec);
 
   protected:
-    void closeEvent( QCloseEvent *event );
+    void closeEvent(QCloseEvent *event);
 
-    QGridLayout *dockLayout; ///< The main layout for the dock window
-    QWidget *dockWidget;     ///< The main widget for the dock window
+    QGridLayout *dockLayout;           ///< The main layout for the dock window
+    QWidget *dockWidget;               ///< The main widget for the dock window
 
     struct ChannelBlock {
-        QCheckBox *usedCheckBox;   ///< Enable/disable a specific channel
-        QComboBox *gainComboBox;   ///< Select the vertical gain for the channels
-        QComboBox *miscComboBox;   ///< Select coupling for real and mode for math channels
-        QCheckBox *invertCheckBox; ///< Select if the channels should be displayed inverted
-        QSpinBox *attnSpinBox;     ///< Enter the attenuation probe value
+        QCheckBox *usedCheckBox;    ///< Enable/disable a specific channel
+        QComboBox *gainComboBox;    ///< Select the vertical gain for the channels
+        QComboBox *miscComboBox;    ///< Select coupling for real and mode for math channels
+        QCheckBox *invertCheckBox;  ///< Select if the channels should be displayed inverted
+        QSpinBox  *attnSpinBox;     ///< Enter the attenuation probe value
     };
 
     std::vector<ChannelBlock> channelBlocks;
@@ -92,10 +91,10 @@ class VoltageDock : public QDockWidget {
     QStringList attnStrings;     ///< String representations for the probe attn steps
 
   signals:
-    void couplingChanged( ChannelID channel, Dso::Coupling coupling ); ///< A coupling has been selected
-    void gainChanged( ChannelID channel, double gain );                ///< A gain has been selected
-    void modeChanged( Dso::MathMode mode );                       ///< The mode for the math channels has been changed
-    void usedChanged( ChannelID channel, bool used );             ///< A channel has been enabled/disabled
-    void probeAttnChanged( ChannelID channel, double probeAttn ); ///< A channel probe attenuation has been changed
-    void invertedChanged( ChannelID channel, bool inverted );     ///< A channel "inverted" has been toggled
+    void couplingChanged(ChannelID channel, Dso::Coupling coupling); ///< A coupling has been selected
+    void gainChanged(ChannelID channel, double gain);                ///< A gain has been selected
+    void modeChanged(Dso::MathMode mode);                            ///< The mode for the math channels has been changed
+    void usedChanged(ChannelID channel, bool used);                  ///< A channel has been enabled/disabled
+    void probeAttnChanged(ChannelID channel, double probeAttn);      ///< A channel probe attenuation has been changed
+    void invertedChanged(ChannelID channel, bool inverted);          ///< A channel "inverted" has been toggled
 };

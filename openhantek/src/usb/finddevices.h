@@ -3,9 +3,9 @@
 #pragma once
 
 #include <QString>
-#include <list>
-#include <map>
 #include <memory>
+#include <map>
+#include <list>
 
 #include "usbdevice.h"
 
@@ -20,7 +20,7 @@ struct libusb_context;
  *
  * Do not close the given usb context before this class object is destroyed.
  */
-class FindDevices {
+class FindDevices{
   public:
     typedef std::map<UniqueUSBid, std::unique_ptr<USBDevice>> DeviceList;
     explicit FindDevices( libusb_context *context );
@@ -33,8 +33,7 @@ class FindDevices {
      * @param id The unique usb id for the current bus layout
      * @return A shared reference to the
      */
-    std::unique_ptr<USBDevice> takeDevice( UniqueUSBid id );
-
+    std::unique_ptr<USBDevice> takeDevice(UniqueUSBid id);
   private:
     libusb_context *context; ///< The usb context used for this device
     DeviceList devices;

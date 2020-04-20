@@ -1,56 +1,51 @@
 // SPDX-License-Identifier: GPL-2.0+
 
 #include "exportcsv.h"
-#include "dsosettings.h"
 #include "exporterregistry.h"
-#include "iconfont/QtAwesome.h"
 #include "post/ppresult.h"
+#include "dsosettings.h"
+#include "iconfont/QtAwesome.h"
 
 #include <QCoreApplication>
+#include <QTextStream>
 #include <QFile>
 #include <QFileDialog>
 #include <QLocale>
-#include <QTextStream>
 
 ExporterCSV::ExporterCSV() {}
 
-void ExporterCSV::create( ExporterRegistry *newRegistry ) {
-    this->registry = newRegistry;
-    data.reset();
-}
+void ExporterCSV::create(ExporterRegistry *newRegistry) { this->registry = newRegistry; data.reset(); }
 
 int ExporterCSV::faIcon() { return fa::filetexto; }
 
-QString ExporterCSV::name() { return QCoreApplication::tr( "Export CSV .." ); }
+QString ExporterCSV::name() { return QCoreApplication::tr("Export CSV .."); }
 
 ExporterInterface::Type ExporterCSV::type() { return Type::SnapshotExport; }
 
-bool ExporterCSV::samples( const std::shared_ptr<PPresult> newData ) {
-    data = std::move( newData );
+bool ExporterCSV::samples(const std::shared_ptr<PPresult> newData) {
+    data = std::move(newData);
     return false;
 }
 
 bool ExporterCSV::save() {
     QStringList filters;
-    filters << QCoreApplication::tr( "Comma-Separated Values (*.csv)" );
+    filters << QCoreApplication::tr("Comma-Separated Values (*.csv)");
 
-    QFileDialog fileDialog( nullptr, QCoreApplication::tr( "Export file .." ), QString(), filters.join( ";;" ) );
-    fileDialog.setFileMode( QFileDialog::AnyFile );
-    fileDialog.setAcceptMode( QFileDialog::AcceptSave );
-    if ( fileDialog.exec() != QDialog::Accepted )
-        return false;
+    QFileDialog fileDialog(nullptr, QCoreApplication::tr("Export file .."), QString(), filters.join(";;"));
+    fileDialog.setFileMode(QFileDialog::AnyFile);
+    fileDialog.setAcceptMode(QFileDialog::AcceptSave);
+    if (fileDialog.exec() != QDialog::Accepted) return false;
 
-    QFile csvFile( fileDialog.selectedFiles().first() );
-    if ( !csvFile.open( QIODevice::WriteOnly | QIODevice::Text ) )
-        return false;
+    QFile csvFile(fileDialog.selectedFiles().first());
+    if (!csvFile.open(QIODevice::WriteOnly | QIODevice::Text)) return false;
 
-    QTextStream csvStream( &csvFile );
-    csvStream.setRealNumberNotation( QTextStream::FixedNotation );
-    csvStream.setRealNumberPrecision( 10 );
+    QTextStream csvStream(&csvFile);
+    csvStream.setRealNumberNotation(QTextStream::FixedNotation);
+    csvStream.setRealNumberPrecision(10);
 
     size_t chCount = registry->settings->scope.voltage.size();
-    std::vector<const SampleValues *> voltageData( size_t( chCount ), nullptr );
-    std::vector<const SampleValues *> spectrumData( size_t( chCount ), nullptr );
+    std::vector<const SampleValues *> voltageData(size_t(chCount), nullptr);
+    std::vector<const SampleValues *> spectrumData(size_t(chCount), nullptr);
     size_t maxRow = 0;
     bool isSpectrumUsed = false;
     double timeInterval = 0;
@@ -59,17 +54,17 @@ bool ExporterCSV::save() {
     // use semicolon as data separator if comma is already used as decimal separator - e.g. with german locale
     const char *sep = QLocale::system().decimalPoint() == ',' ? ";" : ",";
 
-    for ( ChannelID channel = 0; channel < chCount; ++channel ) {
-        if ( data->data( channel ) ) {
-            if ( registry->settings->scope.voltage[ channel ].used ) {
-                voltageData[ channel ] = &( data->data( channel )->voltage );
-                maxRow = std::max( maxRow, voltageData[ channel ]->sample.size() );
-                timeInterval = data->data( channel )->voltage.interval;
+    for (ChannelID channel = 0; channel < chCount; ++channel) {
+        if (data->data(channel)) {
+            if (registry->settings->scope.voltage[channel].used) {
+                voltageData[channel] = &(data->data(channel)->voltage);
+                maxRow = std::max(maxRow, voltageData[channel]->sample.size());
+                timeInterval = data->data(channel)->voltage.interval;
             }
-            if ( registry->settings->scope.spectrum[ channel ].used ) {
-                spectrumData[ channel ] = &( data->data( channel )->spectrum );
-                maxRow = std::max( maxRow, spectrumData[ channel ]->sample.size() );
-                freqInterval = data->data( channel )->spectrum.interval;
+            if (registry->settings->scope.spectrum[channel].used) {
+                spectrumData[channel] = &(data->data(channel)->spectrum);
+                maxRow = std::max(maxRow, spectrumData[channel]->sample.size());
+                freqInterval = data->data(channel)->spectrum.interval;
                 isSpectrumUsed = true;
             }
         }
@@ -77,39 +72,39 @@ bool ExporterCSV::save() {
 
     // Start with channel names
     csvStream << "\"t / s\"";
-    for ( ChannelID channel = 0; channel < chCount; ++channel ) {
-        if ( voltageData[ channel ] != nullptr ) {
-            csvStream << sep << "\"" << registry->settings->scope.voltage[ channel ].name << " / V\"";
+    for (ChannelID channel = 0; channel < chCount; ++channel) {
+        if (voltageData[channel] != nullptr) {
+            csvStream << sep << "\"" << registry->settings->scope.voltage[channel].name << " / V\"";
         }
     }
-    if ( isSpectrumUsed ) {
+    if (isSpectrumUsed) {
         csvStream << sep << "\"f / Hz\"";
-        for ( ChannelID channel = 0; channel < chCount; ++channel ) {
-            if ( spectrumData[ channel ] != nullptr ) {
-                csvStream << sep << "\"" << registry->settings->scope.spectrum[ channel ].name << " / dB\"";
+        for (ChannelID channel = 0; channel < chCount; ++channel) {
+            if (spectrumData[channel] != nullptr) {
+                csvStream << sep << "\"" << registry->settings->scope.spectrum[channel].name << " / dB\"";
             }
         }
     }
     csvStream << "\n";
 
-    for ( unsigned int row = 0; row < maxRow; ++row ) {
+    for (unsigned int row = 0; row < maxRow; ++row) {
         csvStream << QLocale::system().toString( timeInterval * row );
-        for ( ChannelID channel = 0; channel < chCount; ++channel ) {
-            if ( voltageData[ channel ] != nullptr ) {
+        for (ChannelID channel = 0; channel < chCount; ++channel) {
+            if (voltageData[channel] != nullptr) {
                 csvStream << sep;
-                if ( row < voltageData[ channel ]->sample.size() ) {
-                    csvStream << QLocale::system().toString( voltageData[ channel ]->sample[ row ] );
+                if (row < voltageData[channel]->sample.size()) {
+                    csvStream << QLocale::system().toString( voltageData[channel]->sample[row] );
                 }
             }
         }
 
-        if ( isSpectrumUsed ) {
+        if (isSpectrumUsed) {
             csvStream << sep << QLocale::system().toString( freqInterval * row );
-            for ( ChannelID channel = 0; channel < chCount; ++channel ) {
-                if ( spectrumData[ channel ] != nullptr ) {
+            for (ChannelID channel = 0; channel < chCount; ++channel) {
+                if (spectrumData[channel] != nullptr) {
                     csvStream << sep;
-                    if ( row < spectrumData[ channel ]->sample.size() ) {
-                        csvStream << QLocale::system().toString( spectrumData[ channel ]->sample[ row ] );
+                    if (row < spectrumData[channel]->sample.size()) { 
+                        csvStream << QLocale::system().toString( spectrumData[channel]->sample[row] );
                     }
                 }
             }
@@ -123,4 +118,6 @@ bool ExporterCSV::save() {
 }
 
 
-float ExporterCSV::progress() { return data ? 1.0f : 0; }
+float ExporterCSV::progress() { 
+    return data ? 1.0f : 0;
+}

@@ -28,14 +28,14 @@
 #include <string.h>
 
 #ifdef __FreeBSD__
-#include <libusb.h>
+	#include <libusb.h>
 #else
-#include <libusb-1.0/libusb.h>
+	#include <libusb-1.0/libusb.h>
 #endif
 
 #include "ezusb.h"
 
-#define logerror( ... ) fprintf( stderr, __VA_ARGS__ )
+#define logerror(...) fprintf(stderr, __VA_ARGS__)
 
 /*
  * This file contains functions for uploading firmware into Cypress
@@ -58,12 +58,11 @@ int verbose = 0;
  * return true if [addr,addr+len] includes external RAM
  * for Anchorchips EZ-USB or Cypress EZ-USB FX
  */
-static bool fx_is_external( uint32_t addr, size_t len ) {
+static bool fx_is_external(uint32_t addr, size_t len) {
     /* with 8KB RAM, 0x0000-0x1b3f can be written
      * we can't tell if it's a 4KB device here
      */
-    if ( addr <= 0x1b3f )
-        return ( ( addr + len ) > 0x1b40 );
+    if (addr <= 0x1b3f) return ((addr + len) > 0x1b40);
 
     /* there may be more RAM; unclear if we can write it.
      * some bulk buffers may be unused, 0x1b3f-0x1f3f
@@ -76,14 +75,13 @@ static bool fx_is_external( uint32_t addr, size_t len ) {
  * return true if [addr,addr+len] includes external RAM
  * for Cypress EZ-USB FX2
  */
-static bool fx2_is_external( uint32_t addr, size_t len ) {
+static bool fx2_is_external(uint32_t addr, size_t len) {
     /* 1st 8KB for data/code, 0x0000-0x1fff */
-    if ( addr <= 0x1fff )
-        return ( ( addr + len ) > 0x2000 );
+    if (addr <= 0x1fff) return ((addr + len) > 0x2000);
 
     /* and 512 for data, 0xe000-0xe1ff */
-    else if ( addr >= 0xe000 && addr <= 0xe1ff )
-        return ( ( addr + len ) > 0xe200 );
+    else if (addr >= 0xe000 && addr <= 0xe1ff)
+        return ((addr + len) > 0xe200);
 
     /* otherwise, it's certainly external */
     else
@@ -94,14 +92,13 @@ static bool fx2_is_external( uint32_t addr, size_t len ) {
  * return true if [addr,addr+len] includes external RAM
  * for Cypress EZ-USB FX2LP
  */
-static bool fx2lp_is_external( uint32_t addr, size_t len ) {
+static bool fx2lp_is_external(uint32_t addr, size_t len) {
     /* 1st 16KB for data/code, 0x0000-0x3fff */
-    if ( addr <= 0x3fff )
-        return ( ( addr + len ) > 0x4000 );
+    if (addr <= 0x3fff) return ((addr + len) > 0x4000);
 
     /* and 512 for data, 0xe000-0xe1ff */
-    else if ( addr >= 0xe000 && addr <= 0xe1ff )
-        return ( ( addr + len ) > 0xe200 );
+    else if (addr >= 0xe000 && addr <= 0xe1ff)
+        return ((addr + len) > 0xe200);
 
     /* otherwise, it's certainly external */
     else
@@ -123,66 +120,60 @@ static bool fx2lp_is_external( uint32_t addr, size_t len ) {
 /*
  * Issues the specified vendor-specific write request.
  */
-static int ezusb_write( libusb_device_handle *device, const char *label, uint8_t opcode, uint32_t addr,
-                        const unsigned char *data, size_t len ) {
+static int ezusb_write(libusb_device_handle *device, const char *label, uint8_t opcode, uint32_t addr,
+                       const unsigned char *data, size_t len) {
     int status;
 
-    if ( verbose > 1 )
-        logerror( "%s, addr 0x%08x len %4u (0x%04x)\n", label, addr, unsigned( len ), unsigned( len ) );
-    status = libusb_control_transfer(
-        device, LIBUSB_ENDPOINT_OUT | LIBUSB_REQUEST_TYPE_VENDOR | LIBUSB_RECIPIENT_DEVICE, opcode, addr & 0xFFFF,
-        addr >> 16, const_cast<unsigned char *>( data ), uint16_t( len ), 1000 );
-    if ( status != signed( len ) ) {
-        if ( status < 0 )
-            logerror( "%s: %s\n", label, libusb_error_name( status ) );
+    if (verbose > 1) logerror("%s, addr 0x%08x len %4u (0x%04x)\n", label, addr, unsigned(len), unsigned(len) );
+    status = libusb_control_transfer(device, LIBUSB_ENDPOINT_OUT | LIBUSB_REQUEST_TYPE_VENDOR | LIBUSB_RECIPIENT_DEVICE,
+                                     opcode, addr & 0xFFFF, addr >> 16, const_cast<unsigned char*>(data), uint16_t(len), 1000);
+    if (status != signed(len) ) {
+        if (status < 0)
+            logerror("%s: %s\n", label, libusb_error_name(status));
         else
-            logerror( "%s ==> %d\n", label, status );
+            logerror("%s ==> %d\n", label, status);
     }
-    return ( status < 0 ) ? -EIO : 0;
+    return (status < 0) ? -EIO : 0;
 }
 
 /*
  * Issues the specified vendor-specific read request.
  */
-static int ezusb_read( libusb_device_handle *device, const char *label, uint8_t opcode, uint32_t addr,
-                       const unsigned char *data, size_t len ) {
+static int ezusb_read(libusb_device_handle *device, const char *label, uint8_t opcode, uint32_t addr,
+                      const unsigned char *data, size_t len) {
     int status;
 
-    if ( verbose > 1 )
-        logerror( "%s, addr 0x%08x len %4u (0x%04x)\n", label, addr, unsigned( len ), unsigned( len ) );
-    status = libusb_control_transfer( device, LIBUSB_ENDPOINT_IN | LIBUSB_REQUEST_TYPE_VENDOR | LIBUSB_RECIPIENT_DEVICE,
-                                      opcode, addr & 0xFFFF, addr >> 16, const_cast<unsigned char *>( data ),
-                                      uint16_t( len ), 1000 );
-    if ( status != signed( len ) ) {
-        if ( status < 0 )
-            logerror( "%s: %s\n", label, libusb_error_name( status ) );
+    if (verbose > 1) logerror("%s, addr 0x%08x len %4u (0x%04x)\n", label, addr, unsigned(len), unsigned(len) );
+    status = libusb_control_transfer(device, LIBUSB_ENDPOINT_IN | LIBUSB_REQUEST_TYPE_VENDOR | LIBUSB_RECIPIENT_DEVICE,
+                                     opcode, addr & 0xFFFF, addr >> 16, const_cast<unsigned char *>(data), uint16_t(len), 1000);
+    if (status != signed(len)) {
+        if (status < 0)
+            logerror("%s: %s\n", label, libusb_error_name(status));
         else
-            logerror( "%s ==> %d\n", label, status );
+            logerror("%s ==> %d\n", label, status);
     }
-    return ( status < 0 ) ? -EIO : 0;
+    return (status < 0) ? -EIO : 0;
 }
 
 /*
  * Modifies the CPUCS register to stop or reset the CPU.
  * Returns false on error.
  */
-static bool ezusb_cpucs( libusb_device_handle *device, uint32_t addr, bool doRun ) {
+static bool ezusb_cpucs(libusb_device_handle *device, uint32_t addr, bool doRun) {
     int status;
     uint8_t data = doRun ? 0x00 : 0x01;
 
-    if ( verbose )
-        logerror( "%s\n", data ? "stop CPU" : "reset CPU" );
-    status =
-        libusb_control_transfer( device, LIBUSB_ENDPOINT_OUT | LIBUSB_REQUEST_TYPE_VENDOR | LIBUSB_RECIPIENT_DEVICE,
-                                 RW_INTERNAL, addr & 0xFFFF, addr >> 16, &data, 1, 1000 );
-    if ( ( status != 1 ) &&
-         /* We may get an I/O error from libusb as the device disappears */
-         ( ( !doRun ) || ( status != LIBUSB_ERROR_IO ) ) ) {
+    if (verbose) logerror("%s\n", data ? "stop CPU" : "reset CPU");
+    status = libusb_control_transfer(device, LIBUSB_ENDPOINT_OUT | LIBUSB_REQUEST_TYPE_VENDOR | LIBUSB_RECIPIENT_DEVICE,
+                                     RW_INTERNAL, addr & 0xFFFF, addr >> 16, &data, 1, 1000);
+    if ((status != 1) &&
+        /* We may get an I/O error from libusb as the device disappears */
+        ((!doRun) || (status != LIBUSB_ERROR_IO))) {
         const char *mesg = "can't modify CPUCS";
-        if ( status < 0 )
-            logerror( "%s: %s\n", mesg, libusb_error_name( status ) );
+        if (status < 0)
+            logerror("%s: %s\n", mesg, libusb_error_name(status));
         else
-            logerror( "%s\n", mesg );
+            logerror("%s\n", mesg);
         return false;
     } else
         return true;
@@ -192,21 +183,19 @@ static bool ezusb_cpucs( libusb_device_handle *device, uint32_t addr, bool doRun
  * Send an FX3 jump to address command
  * Returns false on error.
  */
-static bool ezusb_fx3_jump( libusb_device_handle *device, uint32_t addr ) {
+static bool ezusb_fx3_jump(libusb_device_handle *device, uint32_t addr) {
     int status;
 
-    if ( verbose )
-        logerror( "transfer execution to Program Entry at 0x%08x\n", addr );
-    status =
-        libusb_control_transfer( device, LIBUSB_ENDPOINT_OUT | LIBUSB_REQUEST_TYPE_VENDOR | LIBUSB_RECIPIENT_DEVICE,
-                                 RW_INTERNAL, addr & 0xFFFF, addr >> 16, nullptr, 0, 1000 );
+    if (verbose) logerror("transfer execution to Program Entry at 0x%08x\n", addr);
+    status = libusb_control_transfer(device, LIBUSB_ENDPOINT_OUT | LIBUSB_REQUEST_TYPE_VENDOR | LIBUSB_RECIPIENT_DEVICE,
+                                     RW_INTERNAL, addr & 0xFFFF, addr >> 16, nullptr, 0, 1000);
     /* We may get an I/O error from libusb as the device disappears */
-    if ( ( status != 0 ) && ( status != LIBUSB_ERROR_IO ) ) {
+    if ((status != 0) && (status != LIBUSB_ERROR_IO)) {
         const char *mesg = "failed to send jump command";
-        if ( status < 0 )
-            logerror( "%s: %s\n", mesg, libusb_error_name( status ) );
+        if (status < 0)
+            logerror("%s: %s\n", mesg, libusb_error_name(status));
         else
-            logerror( "%s\n", mesg );
+            logerror("%s\n", mesg);
         return false;
     } else
         return true;
@@ -230,10 +219,9 @@ static bool ezusb_fx3_jump( libusb_device_handle *device, uint32_t addr ) {
  * Caller is responsible for halting CPU as needed, such as when
  * overwriting a second stage loader.
  */
-static int parse_ihex( FILE *image, void *context, bool ( *is_external )( uint32_t addr, size_t len ),
-                       int ( *poke )( void *context, uint32_t addr, bool external, const unsigned char *data,
-                                      size_t len ) ) {
-    unsigned char data[ 1023 ];
+static int parse_ihex(FILE *image, void *context, bool (*is_external)(uint32_t addr, size_t len),
+                      int (*poke)(void *context, uint32_t addr, bool external, const unsigned char *data, size_t len)) {
+    unsigned char data[1023];
     uint32_t data_addr = 0;
     size_t data_len = 0;
     int rc;
@@ -250,108 +238,100 @@ static int parse_ihex( FILE *image, void *context, bool ( *is_external )( uint32
      * Note that EEPROM segments max out at 1023 bytes; the upload protocol
      * allows segments of up to 64 KBytes (more than a loader could handle).
      */
-    for ( ;; ) {
-        char buf[ 512 ], *cp;
+    for (;;) {
+        char buf[512], *cp;
         char tmp, type;
         size_t len;
         unsigned idx, off;
 
-        cp = fgets( buf, sizeof( buf ), image );
-        if ( cp == nullptr ) {
-            logerror( "EOF without EOF record!\n" );
+        cp = fgets(buf, sizeof(buf), image);
+        if (cp == nullptr) {
+            logerror("EOF without EOF record!\n");
             break;
         }
 
         /* EXTENSION: "# comment-till-end-of-line", for copyrights etc */
-        if ( buf[ 0 ] == '#' )
-            continue;
+        if (buf[0] == '#') continue;
 
-        if ( buf[ 0 ] != ':' ) {
-            logerror( "not an ihex record: %s", buf );
+        if (buf[0] != ':') {
+            logerror("not an ihex record: %s", buf);
             return -2;
         }
 
         /* ignore any newline */
-        cp = strchr( buf, '\n' );
-        if ( cp )
-            *cp = 0;
+        cp = strchr(buf, '\n');
+        if (cp) *cp = 0;
 
-        if ( verbose >= 3 )
-            logerror( "** LINE: %s\n", buf );
+        if (verbose >= 3) logerror("** LINE: %s\n", buf);
 
         /* Read the length field (up to 16 bytes) */
-        tmp = buf[ 3 ];
-        buf[ 3 ] = 0;
-        len = strtoul( buf + 1, nullptr, 16 );
-        buf[ 3 ] = tmp;
+        tmp = buf[3];
+        buf[3] = 0;
+        len = strtoul(buf + 1, nullptr, 16);
+        buf[3] = tmp;
 
         /* Read the target offset (address up to 64KB) */
-        tmp = buf[ 7 ];
-        buf[ 7 ] = 0;
-        off = unsigned( strtoul( buf + 3, nullptr, 16 ) );
-        buf[ 7 ] = tmp;
+        tmp = buf[7];
+        buf[7] = 0;
+        off = unsigned(strtoul(buf + 3, nullptr, 16));
+        buf[7] = tmp;
 
         /* Initialize data_addr */
-        if ( first_line ) {
+        if (first_line) {
             data_addr = off;
             first_line = 0;
         }
 
         /* Read the record type */
-        tmp = buf[ 9 ];
-        buf[ 9 ] = 0;
-        type = char( strtoul( buf + 7, nullptr, 16 ) );
-        buf[ 9 ] = tmp;
+        tmp = buf[9];
+        buf[9] = 0;
+        type = char(strtoul(buf + 7, nullptr, 16));
+        buf[9] = tmp;
 
         /* If this is an EOF record, then make it so. */
-        if ( type == 1 ) {
-            if ( verbose >= 2 )
-                logerror( "EOF on hexfile\n" );
+        if (type == 1) {
+            if (verbose >= 2) logerror("EOF on hexfile\n");
             break;
         }
 
-        if ( type != 0 ) {
-            logerror( "unsupported record type: %d\n", type );
+        if (type != 0) {
+            logerror("unsupported record type: %d\n", type);
             return -3;
         }
 
-        if ( ( len * 2 ) + 11 > strlen( buf ) ) {
-            logerror( "record too short?\n" );
+        if ((len * 2) + 11 > strlen(buf)) {
+            logerror("record too short?\n");
             return -4;
         }
 
         /* flush the saved data if it's not contiguous,
-         * or when we've buffered as much as we can.
-         */
-        if ( data_len != 0 && ( off != ( data_addr + data_len )
-                                /* || !merge */
-                                || ( data_len + len ) > sizeof( data ) ) ) {
-            if ( is_external )
-                external = is_external( data_addr, data_len );
-            rc = poke( context, data_addr, external, data, data_len );
-            if ( rc < 0 )
-                return -1;
+        * or when we've buffered as much as we can.
+        */
+        if (data_len != 0 && (off != (data_addr + data_len)
+                              /* || !merge */
+                              || (data_len + len) > sizeof(data))) {
+            if (is_external) external = is_external(data_addr, data_len);
+            rc = poke(context, data_addr, external, data, data_len);
+            if (rc < 0) return -1;
             data_addr = off;
             data_len = 0;
         }
 
         /* append to saved data, flush later */
-        for ( idx = 0, cp = buf + 9; idx < len; idx += 1, cp += 2 ) {
-            tmp = cp[ 2 ];
-            cp[ 2 ] = 0;
-            data[ data_len + idx ] = uint8_t( strtoul( cp, nullptr, 16 ) );
-            cp[ 2 ] = tmp;
+        for (idx = 0, cp = buf + 9; idx < len; idx += 1, cp += 2) {
+            tmp = cp[2];
+            cp[2] = 0;
+            data[data_len + idx] = uint8_t(strtoul(cp, nullptr, 16));
+            cp[2] = tmp;
         }
         data_len += len;
     }
 
     /* flush any data remaining */
-    if ( data_len != 0 ) {
-        if ( is_external )
-            external = is_external( data_addr, data_len );
-        rc = poke( context, data_addr, external, data, data_len );
-        if ( rc < 0 )
-            return -1;
+    if (data_len != 0) {
+        if (is_external) external = is_external(data_addr, data_len);
+        rc = poke(context, data_addr, external, data, data_len);
+        if (rc < 0) return -1;
     }
     return 0;
 }
@@ -375,37 +355,33 @@ struct ram_poke_context {
 
 #define RETRY_LIMIT 5
 
-static int ram_poke( void *context, uint32_t addr, bool external, const unsigned char *data, size_t len ) {
-    struct ram_poke_context *ctx = static_cast<struct ram_poke_context *>( context );
+static int ram_poke(void *context, uint32_t addr, bool external, const unsigned char *data, size_t len) {
+    struct ram_poke_context *ctx = static_cast<struct ram_poke_context *>(context);
     int rc;
     unsigned retry = 0;
 
-    switch ( ctx->mode ) {
+    switch (ctx->mode) {
     case internal_only: /* CPU should be stopped */
-        if ( external ) {
-            logerror( "can't write %u bytes external memory at 0x%08x\n", unsigned( len ), addr );
+        if (external) {
+            logerror("can't write %u bytes external memory at 0x%08x\n", unsigned(len), addr);
             return -EINVAL;
         }
         break;
     case skip_internal: /* CPU must be running */
-        if ( !external ) {
-            if ( verbose >= 2 ) {
-                logerror( "SKIP on-chip RAM, %u bytes at 0x%08x\n", unsigned( len ), addr );
-            }
+        if (!external) {
+            if (verbose >= 2) { logerror("SKIP on-chip RAM, %u bytes at 0x%08x\n", unsigned(len), addr); }
             return 0;
         }
         break;
     case skip_external: /* CPU should be stopped */
-        if ( external ) {
-            if ( verbose >= 2 ) {
-                logerror( "SKIP external RAM, %u bytes at 0x%08x\n", unsigned( len ), addr );
-            }
+        if (external) {
+            if (verbose >= 2) { logerror("SKIP external RAM, %u bytes at 0x%08x\n", unsigned(len), addr); }
             return 0;
         }
         break;
     case _undef:
     default:
-        logerror( "bug\n" );
+        logerror("bug\n");
         return -EDOM;
     }
 
@@ -415,11 +391,10 @@ static int ram_poke( void *context, uint32_t addr, bool external, const unsigned
     /* Retry this till we get a real error. Control messages are not
      * NAKed (just dropped) so time out means is a real problem.
      */
-    while ( ( rc = ezusb_write( ctx->device, external ? "write external" : "write on-chip",
-                                external ? RW_MEMORY : RW_INTERNAL, addr, data, len ) ) < 0 &&
-            retry < RETRY_LIMIT ) {
-        if ( rc != LIBUSB_ERROR_TIMEOUT )
-            break;
+    while ((rc = ezusb_write(ctx->device, external ? "write external" : "write on-chip",
+                             external ? RW_MEMORY : RW_INTERNAL, addr, data, len)) < 0 &&
+           retry < RETRY_LIMIT) {
+        if (rc != LIBUSB_ERROR_TIMEOUT) break;
         retry += 1;
     }
     return rc;
@@ -429,113 +404,108 @@ static int ram_poke( void *context, uint32_t addr, bool external, const unsigned
  * Load a Cypress Image file into target RAM.
  * See http://www.cypress.com/?docID=41351 (AN76405 PDF) for more info.
  */
-static int fx3_load_ram( libusb_device_handle *device, const char *path ) {
+static int fx3_load_ram(libusb_device_handle *device, const char *path) {
     uint32_t dCheckSum, dExpectedCheckSum, dAddress, i, dLen, dLength;
     uint32_t *dImageBuf;
-    unsigned char *bBuf, hBuf[ 4 ], blBuf[ 4 ], rBuf[ 4096 ];
+    unsigned char *bBuf, hBuf[4], blBuf[4], rBuf[4096];
     FILE *image;
     int ret = 0;
 
-    image = fopen( path, "rb" );
-    if ( image == nullptr ) {
-        logerror( "unable to open '%s' for input\n", path );
+    image = fopen(path, "rb");
+    if (image == nullptr) {
+        logerror("unable to open '%s' for input\n", path);
         return -2;
-    } else if ( verbose )
-        logerror( "open firmware image %s for RAM upload\n", path );
+    } else if (verbose)
+        logerror("open firmware image %s for RAM upload\n", path);
 
     // Read header
-    if ( fread( hBuf, sizeof( char ), sizeof( hBuf ), image ) != sizeof( hBuf ) ) {
-        logerror( "could not read image header" );
+    if (fread(hBuf, sizeof(char), sizeof(hBuf), image) != sizeof(hBuf)) {
+        logerror("could not read image header");
         ret = -3;
         goto exit;
     }
 
     // check "CY" signature byte and format
-    if ( ( hBuf[ 0 ] != 'C' ) || ( hBuf[ 1 ] != 'Y' ) ) {
-        logerror( "image doesn't have a CYpress signature\n" );
+    if ((hBuf[0] != 'C') || (hBuf[1] != 'Y')) {
+        logerror("image doesn't have a CYpress signature\n");
         ret = -3;
         goto exit;
     }
 
     // Check bImageType
-    switch ( hBuf[ 3 ] ) {
+    switch (hBuf[3]) {
     case 0xB0:
-        if ( verbose )
-            logerror( "normal FW binary %s image with checksum\n", ( hBuf[ 2 ] & 0x01 ) ? "data" : "executable" );
+        if (verbose) logerror("normal FW binary %s image with checksum\n", (hBuf[2] & 0x01) ? "data" : "executable");
         break;
     case 0xB1:
-        logerror( "security binary image is not currently supported\n" );
+        logerror("security binary image is not currently supported\n");
         ret = -3;
         goto exit;
     case 0xB2:
-        logerror( "VID:PID image is not currently supported\n" );
+        logerror("VID:PID image is not currently supported\n");
         ret = -3;
         goto exit;
     default:
-        logerror( "invalid image type 0x%02X\n", hBuf[ 3 ] );
+        logerror("invalid image type 0x%02X\n", hBuf[3]);
         ret = -3;
         goto exit;
     }
 
     // Read the bootloader version
-    if ( verbose ) {
-        if ( ( ezusb_read( device, "read bootloader version", RW_INTERNAL, 0xFFFF0020, blBuf, 4 ) < 0 ) ) {
-            logerror( "Could not read bootloader version\n" );
+    if (verbose) {
+        if ((ezusb_read(device, "read bootloader version", RW_INTERNAL, 0xFFFF0020, blBuf, 4) < 0)) {
+            logerror("Could not read bootloader version\n");
             ret = -8;
             goto exit;
         }
-        logerror( "FX3 bootloader version: 0x%02X%02X%02X%02X\n", blBuf[ 3 ], blBuf[ 2 ], blBuf[ 1 ], blBuf[ 0 ] );
+        logerror("FX3 bootloader version: 0x%02X%02X%02X%02X\n", blBuf[3], blBuf[2], blBuf[1], blBuf[0]);
     }
 
     dCheckSum = 0;
-    if ( verbose )
-        logerror( "writing image...\n" );
-    while ( 1 ) {
-        if ( ( fread( &dLength, sizeof( uint32_t ), 1, image ) != 1 ) ||   // read dLength
-             ( fread( &dAddress, sizeof( uint32_t ), 1, image ) != 1 ) ) { // read dAddress
-            logerror( "could not read image" );
+    if (verbose) logerror("writing image...\n");
+    while (1) {
+        if ((fread(&dLength, sizeof(uint32_t), 1, image) != 1) ||  // read dLength
+            (fread(&dAddress, sizeof(uint32_t), 1, image) != 1)) { // read dAddress
+            logerror("could not read image");
             ret = -3;
             goto exit;
         }
-        if ( dLength == 0 )
-            break; // done
+        if (dLength == 0) break; // done
 
         // coverity[tainted_data]
-        dImageBuf = static_cast<uint32_t *>( calloc( dLength, sizeof( uint32_t ) ) );
-        if ( dImageBuf == nullptr ) {
-            logerror( "could not allocate buffer for image chunk\n" );
+        dImageBuf = static_cast<uint32_t *>(calloc(dLength, sizeof(uint32_t)));
+        if (dImageBuf == nullptr) {
+            logerror("could not allocate buffer for image chunk\n");
             ret = -4;
             goto exit;
         }
 
         // read sections
-        if ( fread( dImageBuf, sizeof( uint32_t ), dLength, image ) != dLength ) {
-            logerror( "could not read image" );
-            free( dImageBuf );
+        if (fread(dImageBuf, sizeof(uint32_t), dLength, image) != dLength) {
+            logerror("could not read image");
+            free(dImageBuf);
             ret = -3;
             goto exit;
         }
-        for ( i = 0; i < dLength; i++ )
-            dCheckSum += dImageBuf[ i ];
+        for (i = 0; i < dLength; i++) dCheckSum += dImageBuf[i];
         dLength <<= 2; // convert to Byte length
-        bBuf = reinterpret_cast<unsigned char *>( dImageBuf );
+        bBuf = reinterpret_cast<unsigned char *>(dImageBuf);
 
-        while ( dLength > 0 ) {
+        while (dLength > 0) {
             dLen = 4096; // 4K max
-            if ( dLen > dLength )
-                dLen = dLength;
-            if ( ( ezusb_write( device, "write firmware", RW_INTERNAL, dAddress, bBuf, dLen ) < 0 ) ||
-                 ( ezusb_read( device, "read firmware", RW_INTERNAL, dAddress, rBuf, dLen ) < 0 ) ) {
-                logerror( "R/W error\n" );
-                free( dImageBuf );
+            if (dLen > dLength) dLen = dLength;
+            if ((ezusb_write(device, "write firmware", RW_INTERNAL, dAddress, bBuf, dLen) < 0) ||
+                (ezusb_read(device, "read firmware", RW_INTERNAL, dAddress, rBuf, dLen) < 0)) {
+                logerror("R/W error\n");
+                free(dImageBuf);
                 ret = -5;
                 goto exit;
             }
             // Verify data: rBuf with bBuf
-            for ( i = 0; i < dLen; i++ ) {
-                if ( rBuf[ i ] != bBuf[ i ] ) {
-                    logerror( "verify error" );
-                    free( dImageBuf );
+            for (i = 0; i < dLen; i++) {
+                if (rBuf[i] != bBuf[i]) {
+                    logerror("verify error");
+                    free(dImageBuf);
                     ret = -6;
                     goto exit;
                 }
@@ -545,23 +515,21 @@ static int fx3_load_ram( libusb_device_handle *device, const char *path ) {
             bBuf += dLen;
             dAddress += dLen;
         }
-        free( dImageBuf );
+        free(dImageBuf);
     }
 
     // read pre-computed checksum data
-    if ( ( fread( &dExpectedCheckSum, sizeof( uint32_t ), 1, image ) != 1 ) || ( dCheckSum != dExpectedCheckSum ) ) {
-        logerror( "checksum error\n" );
+    if ((fread(&dExpectedCheckSum, sizeof(uint32_t), 1, image) != 1) || (dCheckSum != dExpectedCheckSum)) {
+        logerror("checksum error\n");
         ret = -7;
         goto exit;
     }
 
     // transfer execution to Program Entry
-    if ( !ezusb_fx3_jump( device, dAddress ) ) {
-        ret = -6;
-    }
+    if (!ezusb_fx3_jump(device, dAddress)) { ret = -6; }
 
 exit:
-    fclose( image );
+    fclose(image);
     return ret;
 }
 
@@ -579,27 +547,26 @@ exit:
  * memory is written, expecting a second stage loader to have already
  * been loaded.  Then file is re-parsed and on-chip memory is written.
  */
-int ezusb_load_ram( libusb_device_handle *device, const char *path, int fx_type, int stage ) {
+int ezusb_load_ram(libusb_device_handle *device, const char *path, int fx_type, int stage) {
     FILE *image;
     uint32_t cpucs_addr;
-    bool ( *is_external )( uint32_t off, size_t len );
+    bool (*is_external)(uint32_t off, size_t len);
     struct ram_poke_context ctx;
     int status;
     int ret = 0;
 
-    if ( fx_type == FX_TYPE_FX3 )
-        return fx3_load_ram( device, path );
+    if (fx_type == FX_TYPE_FX3) return fx3_load_ram(device, path);
 
-    image = fopen( path, "rb" );
-    if ( image == nullptr ) {
-        logerror( "%s: unable to open for input.\n", path );
+    image = fopen(path, "rb");
+    if (image == nullptr) {
+        logerror("%s: unable to open for input.\n", path);
         return -2;
-    } else if ( verbose > 1 )
-        logerror( "open firmware image %s for RAM upload\n", path );
+    } else if (verbose > 1)
+        logerror("open firmware image %s for RAM upload\n", path);
 
 
     /* EZ-USB original/FX and FX2 devices differ, apart from the 8051 core */
-    switch ( fx_type ) {
+    switch (fx_type) {
     case FX_TYPE_FX2LP:
         cpucs_addr = 0xe600;
         is_external = fx2lp_is_external;
@@ -615,11 +582,11 @@ int ezusb_load_ram( libusb_device_handle *device, const char *path, int fx_type,
     }
 
     /* use only first stage loader? */
-    if ( stage == 0 ) {
+    if (stage == 0) {
         ctx.mode = internal_only;
 
         /* if required, halt the CPU while we overwrite its code/data */
-        if ( cpucs_addr && !ezusb_cpucs( device, cpucs_addr, false ) ) {
+        if (cpucs_addr && !ezusb_cpucs(device, cpucs_addr, false)) {
             ret = -1;
             goto exit;
         }
@@ -629,52 +596,49 @@ int ezusb_load_ram( libusb_device_handle *device, const char *path, int fx_type,
         ctx.mode = skip_internal;
 
         /* let CPU run; overwrite the 2nd stage loader later */
-        if ( verbose )
-            logerror( "2nd stage: write external memory\n" );
+        if (verbose) logerror("2nd stage: write external memory\n");
     }
 
     /* scan the image, first (maybe only) time */
     ctx.device = device;
     ctx.total = ctx.count = 0;
-    status = parse_ihex( image, &ctx, is_external, ram_poke );
-    if ( status < 0 ) {
-        logerror( "unable to upload %s\n", path );
+    status = parse_ihex(image, &ctx, is_external, ram_poke);
+    if (status < 0) {
+        logerror("unable to upload %s\n", path);
         ret = status;
         goto exit;
     }
 
     /* second part of 2nd stage: rescan */
-    if ( stage ) {
+    if (stage) {
         ctx.mode = skip_external;
 
         /* if needed, halt the CPU while we overwrite the 1st stage loader */
-        if ( cpucs_addr && !ezusb_cpucs( device, cpucs_addr, false ) ) {
+        if (cpucs_addr && !ezusb_cpucs(device, cpucs_addr, false)) {
             ret = -1;
             goto exit;
         }
 
         /* at least write the interrupt vectors (at 0x0000) for reset! */
-        rewind( image );
-        if ( verbose )
-            logerror( "2nd stage: write on-chip memory\n" );
-        status = parse_ihex( image, &ctx, is_external, ram_poke );
-        if ( status < 0 ) {
-            logerror( "unable to completely upload %s\n", path );
+        rewind(image);
+        if (verbose) logerror("2nd stage: write on-chip memory\n");
+        status = parse_ihex(image, &ctx, is_external, ram_poke);
+        if (status < 0) {
+            logerror("unable to completely upload %s\n", path);
             ret = status;
             goto exit;
         }
     }
 
-    if ( verbose && ( ctx.count != 0 ) ) {
-        logerror( "... WROTE: %d bytes, %d segments, avg %d\n", int( ctx.total ), int( ctx.count ),
-                  int( ctx.total / ctx.count ) );
+    if (verbose && (ctx.count != 0)) {
+        logerror("... WROTE: %d bytes, %d segments, avg %d\n", int(ctx.total), int(ctx.count),
+                 int(ctx.total / ctx.count));
     }
 
     /* if required, reset the CPU so it runs what we just uploaded */
-    if ( cpucs_addr && !ezusb_cpucs( device, cpucs_addr, true ) )
-        ret = -1;
+    if (cpucs_addr && !ezusb_cpucs(device, cpucs_addr, true)) ret = -1;
 
 exit:
-    fclose( image );
+    fclose(image);
     return ret;
 }

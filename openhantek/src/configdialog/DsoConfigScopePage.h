@@ -21,7 +21,7 @@ class DsoConfigScopePage : public QWidget {
     Q_OBJECT
 
   public:
-    DsoConfigScopePage( DsoSettings *settings, QWidget *parent = nullptr );
+    DsoConfigScopePage(DsoSettings *settings, QWidget *parent = nullptr);
 
   public slots:
     void saveSettings();
