@@ -7,6 +7,6 @@ ModelRegistry *ModelRegistry::get() {
     return &inst;
 }
 
-void ModelRegistry::add( DSOModel *model ) { supportedModels.push_back( model ); }
+void ModelRegistry::add(DSOModel *model) { supportedModels.push_back(model); }
 
 const std::list<DSOModel *> ModelRegistry::models() const { return supportedModels; }

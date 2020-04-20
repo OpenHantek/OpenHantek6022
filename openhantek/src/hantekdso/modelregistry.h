@@ -5,11 +5,10 @@
 #include "dsomodel.h"
 
 class ModelRegistry {
-  public:
+public:
     static ModelRegistry *get();
-    void add( DSOModel *model );
-    const std::list<DSOModel *> models() const;
-
-  private:
-    std::list<DSOModel *> supportedModels;
+    void add(DSOModel* model);
+    const std::list<DSOModel*> models() const;
+private:
+    std::list<DSOModel*> supportedModels;
 };

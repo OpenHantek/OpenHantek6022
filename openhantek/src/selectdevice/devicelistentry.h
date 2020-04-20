@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "usb/usbdevice.h"
 #include <QString>
+#include "usb/usbdevice.h"
 
 /**
  * Represents an entry in the {@link DevicesListModel}.
@@ -15,7 +15,6 @@ struct DeviceListEntry {
     bool needFirmware = false;
     QString errorMessage;
     QString getStatus() const {
-        return errorMessage.size() ? errorMessage
-                                   : ( canConnect ? "Ready" : ( needFirmware ? "Firmware upload" : "Cannot connect" ) );
+        return errorMessage.size()? errorMessage : (canConnect?"Ready":(needFirmware?"Firmware upload":"Cannot connect"));
     }
 };

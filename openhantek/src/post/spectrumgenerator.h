@@ -8,10 +8,10 @@
 #include <QThread>
 #include <memory>
 
-#include "dsosamples.h"
-#include "postprocessingsettings.h"
 #include "ppresult.h"
+#include "dsosamples.h"
 #include "utils/printutils.h"
+#include "postprocessingsettings.h"
 
 #include "processor.h"
 
@@ -23,15 +23,15 @@ struct DsoSettingsScope;
 /// time-/frequencysteps between two values.
 class SpectrumGenerator : public Processor {
   public:
-    SpectrumGenerator( const DsoSettingsScope *scope, const DsoSettingsPostProcessing *postprocessing );
+    SpectrumGenerator(const DsoSettingsScope* scope, const DsoSettingsPostProcessing* postprocessing);
     virtual ~SpectrumGenerator();
 
   private:
-    const DsoSettingsScope *scope;
-    const DsoSettingsPostProcessing *postprocessing;
-    unsigned int lastRecordLength = 0;                          ///< The record length of the previously analyzed data
-    Dso::WindowFunction lastWindow = Dso::WindowFunction( -1 ); ///< The previously used dft window function
+    const DsoSettingsScope* scope;
+    const DsoSettingsPostProcessing* postprocessing;
+    unsigned int lastRecordLength = 0;                        ///< The record length of the previously analyzed data
+    Dso::WindowFunction lastWindow = Dso::WindowFunction(-1); ///< The previously used dft window function
     double *lastWindowBuffer = nullptr;
     // Processor interface
-    void process( PPresult *data ) override;
+    void process(PPresult *data) override;
 };

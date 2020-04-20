@@ -104,18 +104,16 @@ We welcome any reported Github Issue if you have a problem with this software. S
    - Read [how to properly contribute to open source projects on GitHub][10].
    - Create a separate branch other than *master* for your changes. It is not possible to directly commit to master on this repository.
    - Write [good commit messages][11].
-   - [Sign-off][12] your commits.
    - Use the same [coding style and spacing][13]
      (install clang-format. Use make target: `make format` or execute directly from the openhantek directory: `clang-format -style=file src/*`).
-   - Open a [pull request][14] with a clear title and description.
+   - Open a [pull request][12] with a clear title and description.
    - Read [Add a new device](docs/adddevice.md) if you want to know how to add a device.
    - We recommend QtCreator as IDE on all platforms. It comes with CMake support, a decent compiler, and Qt out of the box.
 
 [10]: http://gun.io/blog/how-to-github-fork-branch-and-pull-request
 [11]: http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html
-[12]: https://github.com/probot/dco/blob/master/README.md
+[12]: https://help.github.com/articles/using-pull-requests
 [13]: http://llvm.org/docs/CodingStandards.html
-[14]: https://help.github.com/articles/using-pull-requests
 
 ## Other DSO open source software
 * [Firmware used by OpenHantek and python bindings for 6022BE/BL](https://github.com/Ho-Ro/Hantek6022API)

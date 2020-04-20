@@ -11,14 +11,14 @@ using namespace Hantek;
 struct ModelDSO6022BE : public DSOModel {
     static const int ID = 0x6022;
     ModelDSO6022BE();
-    void applyRequirements( HantekDsoControl *dsoControl ) const override;
+    void applyRequirements(HantekDsoControl* dsoControl) const override;
 };
 
 
 struct ModelDSO6022BL : public DSOModel {
     static const int ID = 0x602a;
     ModelDSO6022BL();
-    void applyRequirements( HantekDsoControl *dsoControl ) const override;
+    void applyRequirements(HantekDsoControl* dsoControl) const override;
 };
 
 
@@ -26,7 +26,7 @@ struct ModelDSO6022BL : public DSOModel {
 struct ModelDSO2020 : public DSOModel {
     static const int ID = 0x6022;
     ModelDSO2020();
-    void applyRequirements( HantekDsoControl *dsoControl ) const override;
+    void applyRequirements(HantekDsoControl* dsoControl) const override;
 };
 
 
@@ -41,13 +41,13 @@ struct ModelDSO2020 : public DSOModel {
 struct ModelEzUSB : public DSOModel {
     static const int ID = 0x6022;
     ModelEzUSB();
-    void applyRequirements( HantekDsoControl *dsoControl ) const override;
+    void applyRequirements(HantekDsoControl* dsoControl) const override;
 };
 
 struct ModelSaleae : public DSOModel {
     static const int ID = 0x6022;
     ModelSaleae();
-    void applyRequirements( HantekDsoControl *dsoControl ) const override;
+    void applyRequirements(HantekDsoControl* dsoControl) const override;
 };
 
 #endif

@@ -5,13 +5,17 @@
 
 namespace Dso {
 
-ControlSettings::ControlSettings( const ControlSamplerateLimits *limits, size_t channelCount ) : cmdGetLimits() {
+ControlSettings::ControlSettings(const ControlSamplerateLimits * limits, size_t channelCount) : cmdGetLimits()
+{
     samplerate.limits = limits;
-    trigger.level.resize( channelCount );
-    voltage.resize( channelCount );
+    trigger.level.resize(channelCount);
+    voltage.resize(channelCount);
     calibrationValues = new Hantek::CalibrationValues;
 }
 
-ControlSettings::~ControlSettings() { delete calibrationValues; }
+ControlSettings::~ControlSettings()
+{
+    delete calibrationValues;
+}
 
-} // namespace Dso
+}

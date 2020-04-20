@@ -28,7 +28,7 @@ class PostProcessing : public QObject {
      * of the processors.
      * @param processor
      */
-    void registerProcessor( Processor *processor );
+    void registerProcessor(Processor *processor);
 
 
   private:
@@ -38,7 +38,7 @@ class PostProcessing : public QObject {
     std::vector<Processor *> processors;
     ///
     std::unique_ptr<PPresult> currentData;
-    static void convertData( const DSOsamples *source, PPresult *destination );
+    static void convertData(const DSOsamples *source, PPresult *destination);
 
   public slots:
     /**
@@ -46,10 +46,10 @@ class PostProcessing : public QObject {
      * this class object into another thread.
      * @param data
      */
-    void input( const DSOsamples *data );
+    void input(const DSOsamples *data);
 
-  signals:
-    void processingFinished( std::shared_ptr<PPresult> result );
+signals:
+    void processingFinished(std::shared_ptr<PPresult> result);
 };
 
-Q_DECLARE_METATYPE( std::shared_ptr<PPresult> )
+Q_DECLARE_METATYPE(std::shared_ptr<PPresult>)

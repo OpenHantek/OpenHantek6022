@@ -24,16 +24,16 @@ class ExporterRegistry : public QObject {
     Q_OBJECT
 
   public:
-    explicit ExporterRegistry( const Dso::ControlSpecification *deviceSpecification, DsoSettings *settings,
-                               QObject *parent = nullptr );
+    explicit ExporterRegistry(const Dso::ControlSpecification *deviceSpecification, DsoSettings *settings,
+                              QObject *parent = nullptr);
 
     // Sample input. This will proably be performed in the post processing
     // thread context. Do not open GUI dialogs or interrupt the control flow.
-    void addRawSamples( PPresult *data );
-    void input( std::shared_ptr<PPresult> data );
+    void addRawSamples(PPresult *data);
+    void input(std::shared_ptr<PPresult> data);
 
-    void registerExporter( ExporterInterface *exporter );
-    void setExporterEnabled( ExporterInterface *exporter, bool enabled );
+    void registerExporter(ExporterInterface *exporter);
+    void setExporterEnabled(ExporterInterface *exporter, bool enabled);
 
     void checkForWaitingExporters();
 
@@ -58,9 +58,9 @@ class ExporterRegistry : public QObject {
     ///
     /// @return Return true if the exporter has finished and want to be removed from the
     ///     enabledExporters list.
-    bool processData( std::shared_ptr<PPresult> &data, ExporterInterface *const &exporter );
+    bool processData(std::shared_ptr<PPresult> &data, ExporterInterface *const &exporter);
 
   signals:
-    void exporterStatusChanged( const QString &exporterName, const QString &status );
+    void exporterStatusChanged(const QString &exporterName, const QString &status);
     void exporterProgressChanged();
 };

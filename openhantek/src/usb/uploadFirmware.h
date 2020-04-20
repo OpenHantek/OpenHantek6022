@@ -12,9 +12,8 @@ class USBDevice;
  */
 class UploadFirmware {
   public:
-    bool startUpload( USBDevice *device );
+    bool startUpload(USBDevice *device);
     const QString &getErrorMessage() const;
-
   private:
     QString errorMessage;
 };

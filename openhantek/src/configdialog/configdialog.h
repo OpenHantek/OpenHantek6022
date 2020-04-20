@@ -22,14 +22,14 @@ class DsoConfigDialog : public QDialog {
     Q_OBJECT
 
   public:
-    DsoConfigDialog( DsoSettings *settings, QWidget *parent = nullptr, Qt::WindowFlags flags = nullptr );
+    DsoConfigDialog(DsoSettings *settings, QWidget *parent = nullptr, Qt::WindowFlags flags = nullptr);
     ~DsoConfigDialog();
 
   public slots:
     void accept();
     void apply();
 
-    void changePage( QListWidgetItem *current, QListWidgetItem *previous );
+    void changePage(QListWidgetItem *current, QListWidgetItem *previous);
 
   private:
     void createIcons();

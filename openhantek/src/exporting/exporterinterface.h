@@ -15,15 +15,15 @@ class PPresult;
  * in the main routine to make an Exporter available.
  */
 class ExporterInterface {
-  public:
+public:
     /**
-     * Starts up this exporter. Aquires resources etc. Do not call this directly, it
-     * will be called by the exporter registry at some point. Release your resources in the
-     * destructor as usual.
-     * @param registry The exporter registry instance. This is used to obtain a reference
-     *        to the settings.
-     */
-    virtual void create( ExporterRegistry *registry ) = 0;
+    * Starts up this exporter. Aquires resources etc. Do not call this directly, it
+    * will be called by the exporter registry at some point. Release your resources in the
+    * destructor as usual.
+    * @param registry The exporter registry instance. This is used to obtain a reference
+    *        to the settings.
+    */
+    virtual void create(ExporterRegistry *registry) = 0;
 
     /**
      * @return Return the icon representation of this exporter. Will be used in graphical
@@ -53,7 +53,7 @@ class ExporterInterface {
      * If it is a snapshot exporter, only one set of samples will be received.
      * @return Return true if you want to receive another sample or false if you are done (progres()==1).
      */
-    virtual bool samples( const std::shared_ptr<PPresult> ) = 0;
+    virtual bool samples(const std::shared_ptr<PPresult>) = 0;
 
     /**
      * Exporter: Save your received data and perform any conversions necessary.
@@ -73,6 +73,6 @@ class ExporterInterface {
      */
     virtual float progress() = 0;
 
-  protected:
+protected:
     ExporterRegistry *registry;
 };

@@ -15,19 +15,19 @@ class SiSpinBox : public QDoubleSpinBox {
     Q_OBJECT
 
   public:
-    explicit SiSpinBox( QWidget *parent = nullptr );
-    SiSpinBox( Unit unit, QWidget *parent = nullptr );
+    explicit SiSpinBox(QWidget *parent = nullptr);
+    SiSpinBox(Unit unit, QWidget *parent = nullptr);
     ~SiSpinBox();
 
-    QValidator::State validate( QString &input, int &pos ) const;
-    double valueFromText( const QString &text ) const;
-    QString textFromValue( double val ) const;
-    void fixup( QString &input ) const;
-    void stepBy( int steps );
-    bool setUnit( Unit unit );
-    void setUnitPostfix( const QString &postfix );
-    void setSteps( const QList<double> &steps );
-    void setMode( const int mode );
+    QValidator::State validate(QString &input, int &pos) const;
+    double valueFromText(const QString &text) const;
+    QString textFromValue(double val) const;
+    void fixup(QString &input) const;
+    void stepBy(int steps);
+    bool setUnit(Unit unit);
+    void setUnitPostfix(const QString &postfix);
+    void setSteps(const QList<double> &steps);
+    void setMode(const int mode);
 
   private:
     void init();

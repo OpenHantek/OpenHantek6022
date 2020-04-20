@@ -2,18 +2,16 @@
 
 #pragma once
 
-#include "exportsettings.h"
 #include <QPainter>
 #include <QPrinter>
 #include <QSize>
 #include <memory>
+#include "exportsettings.h"
 
 class DsoSettings;
 class PPresult;
 struct DsoSettingsColorValues;
-namespace Dso {
-struct ControlSpecification;
-}
+namespace Dso { struct ControlSpecification; }
 
 /// \brief Exports the oscilloscope screen to a file or prints it.
 /// TODO
@@ -27,11 +25,11 @@ struct ControlSpecification;
 class LegacyExportDrawer {
   public:
     /// Draw the graphs coming from source and labels to the destination paintdevice.
-    static bool exportSamples( const PPresult *source, QPaintDevice *dest,
-                               const Dso::ControlSpecification *deviceSpecification, const DsoSettings *settings,
-                               bool isPrinter, const DsoSettingsColorValues *colorValues );
+    static bool exportSamples(const PPresult *source, QPaintDevice* dest,
+                       const Dso::ControlSpecification* deviceSpecification,
+                       const DsoSettings *settings, bool isPrinter, const DsoSettingsColorValues *colorValues);
 
   private:
-    static void drawGrids( QPainter &painter, const DsoSettingsColorValues *colorValues, double lineHeight,
-                           double scopeHeight, int scopeWidth, bool isPrinter, bool zoom );
+    static void drawGrids(QPainter &painter, const DsoSettingsColorValues *colorValues, double lineHeight, double scopeHeight,
+                   int scopeWidth, bool isPrinter, bool zoom);
 };

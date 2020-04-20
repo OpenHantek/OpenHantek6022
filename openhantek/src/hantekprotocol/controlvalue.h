@@ -44,4 +44,5 @@ enum class ControlValue : uint8_t {
     VALUE_ETSCORRECTION = 0x70
 };
 
-} // namespace Hantek
+}
+

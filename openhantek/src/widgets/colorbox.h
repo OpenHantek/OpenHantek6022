@@ -10,18 +10,18 @@ class ColorBox : public QPushButton {
     Q_OBJECT
 
   public:
-    ColorBox( QColor color, QWidget *parent = nullptr );
+    ColorBox(QColor color, QWidget *parent = nullptr);
     ~ColorBox();
 
     const QColor getColor();
 
   public slots:
-    void setColor( QColor color );
+    void setColor(QColor color);
     void waitForColor();
 
   private:
     QColor color;
 
   signals:
-    void colorChanged( QColor color ); ///< The color has been changed
+    void colorChanged(QColor color); ///< The color has been changed
 };
