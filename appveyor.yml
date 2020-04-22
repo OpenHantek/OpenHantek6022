@@ -30,9 +30,11 @@ build_script:
 artifacts:
   - path: $(dir64)\openhantek\$(configuration)
     name: OpenHantek-Win-$(arch64)-$(configuration)-b$(APPVEYOR_BUILD_NUMBER)
-  - path: $(dir64)\packages\*.exe
-    name: OpenHantek-Win-$(arch64)-$(configuration)-b$(APPVEYOR_BUILD_NUMBER).exe
+  - path: $(dir64)\packages
+    name: OpenHantek-Win-$(arch64)-$(configuration)-b$(APPVEYOR_BUILD_NUMBER)
   - path: $(dir32)\openhantek\$(configuration)
+    name: OpenHantek-Win-$(arch32)-$(configuration)-b$(APPVEYOR_BUILD_NUMBER)
+  - path: $(dir32)\packages
     name: OpenHantek-Win-$(arch32)-$(configuration)-b$(APPVEYOR_BUILD_NUMBER)
 
 deploy:
