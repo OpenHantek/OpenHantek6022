@@ -30,11 +30,7 @@ build_script:
 artifacts:
   - path: $(dir64)\openhantek\$(configuration)
     name: OpenHantek-Win-$(arch64)-$(configuration)-b$(APPVEYOR_BUILD_NUMBER)
-  - path: $(dir64)\packages
-    name: OpenHantek-Win-$(arch64)-$(configuration)-b$(APPVEYOR_BUILD_NUMBER)
   - path: $(dir32)\openhantek\$(configuration)
-    name: OpenHantek-Win-$(arch32)-$(configuration)-b$(APPVEYOR_BUILD_NUMBER)
-  - path: $(dir32)\packages
     name: OpenHantek-Win-$(arch32)-$(configuration)-b$(APPVEYOR_BUILD_NUMBER)
 
 deploy:
@@ -42,10 +38,10 @@ deploy:
     provider: GitHub
     auth_token:
         secure: 4TSFa7zTbxPVDkS9pGWO0BIPD9r2NnnHGe03pg5rjEuvSH5pntkmMdLM7MePJLma
-    artifact: /.*\.zip,.*\.exe/
+    artifact: /.*\.zip/
     draft: true
     prerelease: true
     force_update: true
     on:
-      #branch: master                 # release from master branch only
+      branch: master                 # release from master branch only
       APPVEYOR_REPO_TAG: true        # deploy on tag push only
