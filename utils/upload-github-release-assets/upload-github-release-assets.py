@@ -32,6 +32,8 @@ ap.add_argument( "-r", "--repo", default = REPO,
 	help = f"specify the repository, default = '{REPO}'" )
 ap.add_argument( "-t", "--tag", default = 'latest',
 	help = f"specify a tag, default = 'latest'" )
+ap.add_argument( "-u", "--unstable", action='store_true',
+	help = f"select 'unstable' release, overide '-t' or '--tag'" )
 ap.add_argument( 'files', metavar='FILE', type=str, nargs='*',
 	help = f"file to be uploaded" )
 
@@ -40,6 +42,8 @@ options = ap.parse_args()
 OWNER = options.owner
 REPO = options.repo
 TAG = options.tag
+if options.unstable:
+	TAG = 'unstable'
 
 files = options.files
 
@@ -124,11 +128,16 @@ UPLOADURL = rj[ 'upload_url' ].rsplit('{')[0]
 # uncomment to pretty print the response
 #print( json.dumps( rj, indent=4 ) )
 
+assets = rj['assets']
+# check if we have any files to display
+if not assets:
+	sys.exit() # we are done
+
 
 # get (and show) already uploaded assets
 print( f"{(RELEASES + TAG).ljust(50)}              updated   dl" )
 already_uploaded_assets = {}
-for a in rj['assets']:
+for a in assets:
 	name = a['name']
 	url = a['url']
 	already_uploaded_assets[ name ] = url
