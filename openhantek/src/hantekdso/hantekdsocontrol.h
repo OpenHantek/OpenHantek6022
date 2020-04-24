@@ -82,6 +82,9 @@ class HantekDsoControl : public QObject {
 
     const ControlCommand *getCommand( Hantek::ControlCode code ) const { return control[ uint8_t( code ) ]; }
 
+    /// \brief Stops the device.
+    void stopSampling();
+
 // Attic for no more used public procedures
 #if 0
     /// \brief Gets the physical channel count for this oscilloscope.

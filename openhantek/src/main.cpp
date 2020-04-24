@@ -205,6 +205,7 @@ int main( int argc, char *argv[] ) {
     //////// Clean up ////////
 
     std::cout << "OpenHantek6022 ";
+
     // wait 2 * record time (delay is ms) for dso to finish
     unsigned waitForDso = unsigned( 2000 * dsoControl.getSamplesize() / dsoControl.getSamplerate() );
     if ( waitForDso < 10000 ) // minimum 10 s
@@ -216,6 +217,8 @@ int main( int argc, char *argv[] ) {
     postProcessingThread.quit();
     postProcessingThread.wait( 10000 );
     std::cout << "after ";
+
+    dsoControl.stopSampling();
 
     if ( context && device != nullptr ) {
         device.reset(); // causes libusb_close(), which must be called before libusb_exit()

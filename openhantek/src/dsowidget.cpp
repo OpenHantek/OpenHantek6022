@@ -242,11 +242,9 @@ DsoWidget::DsoWidget( DsoSettingsScope *scope, DsoSettingsView *view, const Dso:
     mainLayout->addWidget( mainSliders.markerSlider, row, 2, 2, 3, Qt::AlignTop );
     row += 2; // end 5x5 box
     // Separators and markerLayout
-    mainLayout->setRowMinimumHeight( row, 4 );
     ++row;
     mainLayout->addLayout( markerLayout, row, 1, 1, 5 );
     ++row;
-    mainLayout->setRowMinimumHeight( row, 4 );
     ++row;
     // 5x4 box for zoomScope & zoomSliders
     mainLayout->addWidget( zoomSliders.triggerOffsetSlider, row, 2, 2, 3, Qt::AlignBottom );
@@ -260,7 +258,6 @@ DsoWidget::DsoWidget( DsoSettingsScope *scope, DsoSettingsView *view, const Dso:
     mainLayout->setRowMinimumHeight( row, zoomSliders.voltageOffsetSlider->postMargin() );
     ++row; // end 5x4 box
     // Separator and embedded measurementLayout
-    mainLayout->setRowMinimumHeight( row, 8 );
     ++row;
     mainLayout->addLayout( measurementLayout, row, 1, 1, 5 );
 

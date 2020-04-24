@@ -396,9 +396,22 @@ Dso::ErrorCode HantekDsoControl::retrieveChannelLevelData() {
 }
 
 
+void HantekDsoControl::stopSampling() {
+    auto controlCommand = ControlStopSampling();
+    timestampDebug( QString( "Sending control command %1:%2" )
+                        .arg( QString::number( controlCommand.code, 16 ),
+                              hexDump( controlCommand.data(), unsigned( controlCommand.size() ) ) ) );
+    int errorCode = device->controlWrite( &controlCommand );
+    if ( errorCode < 0 ) {
+        qWarning() << "controlWrite: stop sampling failed: " << libUsbErrorString( errorCode );
+        emit communicationError();
+    }
+}
+
+
 std::vector< unsigned char > HantekDsoControl::getSamples( unsigned &previousSampleCount ) const {
     int errorCode;
-    errorCode = device->controlWrite( getCommand( ControlCode::CONTROL_ACQUIIRE_HARD_DATA ) );
+    errorCode = device->controlWrite( getCommand( ControlCode::CONTROL_STARTSAMPLING ) );
     if ( errorCode < 0 ) {
         qWarning() << "controlWrite: Getting sample data failed: " << libUsbErrorString( errorCode );
         emit communicationError();
@@ -451,10 +464,6 @@ void HantekDsoControl::convertRawDataToSamples( const std::vector< unsigned char
     const unsigned sampleCount = ( rawSampleCount > 1024 ) ? ( ( rawSampleCount - 1024 ) / 1000 - 1 ) * 1000 : rawSampleCount;
     const unsigned rawDownsampling = sampleCount / SAMPLESIZE_USED;
     // qDebug() << "HDC::cRDTS rawSampleCount sampleCount:" << rawSampleCount << sampleCount;
-    if ( 0 == rawSampleCount || 0 == sampleCount || 0 == rawDownsampling ) { // nothing to convert
-        qDebug() << "HDC::cRDTS rawSampleCount sampleCount rawDownsampling:" << rawSampleCount << sampleCount << rawDownsampling;
-        return;
-    }
     const unsigned skipSamples = rawSampleCount - sampleCount;
 
     QWriteLocker locker( &result.lock );
@@ -713,7 +722,7 @@ void HantekDsoControl::run() {
         if ( controlCommand->pending ) {
             timestampDebug( QString( "Sending control command %1:%2" )
                                 .arg( QString::number( controlCommand->code, 16 ),
-                                      hexDump( controlCommand->data(), controlCommand->size() ) ) );
+                                      hexDump( controlCommand->data(), unsigned( controlCommand->size() ) ) ) );
             if ( controlCommand->code == uint8_t( ControlCode::CONTROL_SETNUMCHANNELS ) )
                 activeChannels = *controlCommand->data();
 

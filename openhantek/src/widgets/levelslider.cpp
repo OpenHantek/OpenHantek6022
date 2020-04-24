@@ -285,10 +285,10 @@ int LevelSlider::setDirection( Qt::ArrowType direction ) {
 
     if ( this->_direction == Qt::RightArrow || this->_direction == Qt::LeftArrow ) {
         this->_preMargin = this->fontMetrics().lineSpacing();
-        this->_postMargin = ( this->needleWidth - 1 ) / 2;
+        this->_postMargin = ( this->needleWidth );
     } else {
-        this->_preMargin = this->fontMetrics().averageCharWidth() * 3;
-        this->_postMargin = ( this->needleWidth - 1 ) / 2;
+        this->_preMargin = this->fontMetrics().averageCharWidth() * 5;
+        this->_postMargin = ( this->needleWidth ) * 2;
     }
 
     return this->_direction;

@@ -3,21 +3,9 @@
 #include <cstring>
 
 #include "controlStructs.h"
-#include "controlvalue.h"
 #include "definitions.h"
 
 namespace Hantek {
-
-ControlBeginCommand::ControlBeginCommand( CommandIndex index ) : ControlCommand( Hantek::ControlCode::CONTROL_BEGINCOMMAND, 10 ) {
-    data()[ 0 ] = 0x0f;
-    data()[ 1 ] = uint8_t( index );
-}
-
-
-ControlGetSpeed::ControlGetSpeed() : ControlCommand( Hantek::ControlCode::CONTROL_GETSPEED, 10 ) {}
-
-// ConnectionSpeed ControlGetSpeed::getSpeed() { return (ConnectionSpeed)data()[0]; }
-
 
 ControlSetVoltDIV_CH1::ControlSetVoltDIV_CH1() : ControlCommand( ControlCode::CONTROL_SETVOLTDIV_CH1, 1 ) { this->setDiv( 5 ); }
 
@@ -39,13 +27,14 @@ ControlSetNumChannels::ControlSetNumChannels() : ControlCommand( ControlCode::CO
 void ControlSetNumChannels::setDiv( uint8_t val ) { data()[ 0 ] = val; }
 
 
-ControlAcquireHardData::ControlAcquireHardData() : ControlCommand( ControlCode::CONTROL_ACQUIIRE_HARD_DATA, 1 ) {
-    data()[ 0 ] = 0x01;
-}
+ControlStartSampling::ControlStartSampling() : ControlCommand( ControlCode::CONTROL_STARTSAMPLING, 1 ) { data()[ 0 ] = 0x01; }
 
 
-ControlGetLimits::ControlGetLimits() : ControlCommand( ControlCode::CONTROL_VALUE, sizeof( CalibrationValues ) ) {
-    value = uint8_t( ControlValue::VALUE_OFFSETLIMITS );
+ControlStopSampling::ControlStopSampling() : ControlCommand( ControlCode::CONTROL_STARTSAMPLING, 1 ) { data()[ 0 ] = 0x00; }
+
+
+ControlGetLimits::ControlGetLimits() : ControlCommand( ControlCode::CONTROL_GETEEPROM, sizeof( CalibrationValues ) ) {
+    value = uint8_t( 8 ); // get calibration values from EEPROM offset 8
     data()[ 0 ] = 0x01;
 }
 

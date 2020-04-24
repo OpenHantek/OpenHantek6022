@@ -315,69 +315,69 @@
         <translation>Repères</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="499"/>
-        <location filename="../src/dsowidget.cpp" line="501"/>
-        <location filename="../src/dsowidget.cpp" line="532"/>
-        <location filename="../src/dsowidget.cpp" line="570"/>
-        <location filename="../src/dsowidget.cpp" line="578"/>
-        <location filename="../src/dsowidget.cpp" line="597"/>
+        <location filename="../src/dsowidget.cpp" line="496"/>
+        <location filename="../src/dsowidget.cpp" line="498"/>
+        <location filename="../src/dsowidget.cpp" line="529"/>
+        <location filename="../src/dsowidget.cpp" line="567"/>
+        <location filename="../src/dsowidget.cpp" line="575"/>
+        <location filename="../src/dsowidget.cpp" line="594"/>
         <source>/div</source>
         <translation>/div</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="451"/>
-        <location filename="../src/dsowidget.cpp" line="467"/>
+        <location filename="../src/dsowidget.cpp" line="448"/>
+        <location filename="../src/dsowidget.cpp" line="464"/>
         <source>ON</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="452"/>
-        <location filename="../src/dsowidget.cpp" line="467"/>
+        <location filename="../src/dsowidget.cpp" line="449"/>
+        <location filename="../src/dsowidget.cpp" line="464"/>
         <source>OFF</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="489"/>
+        <location filename="../src/dsowidget.cpp" line="486"/>
         <source>Markers  </source>
         <translation>Repères  </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="490"/>
+        <location filename="../src/dsowidget.cpp" line="487"/>
         <source>Time: </source>
         <translation>Temps : </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="491"/>
+        <location filename="../src/dsowidget.cpp" line="488"/>
         <source>Frequency: </source>
         <translation>Fréquence : </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="494"/>
+        <location filename="../src/dsowidget.cpp" line="491"/>
         <source>Zoom x%L1  </source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="496"/>
+        <location filename="../src/dsowidget.cpp" line="493"/>
         <source>Zoom ---  </source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="544"/>
+        <location filename="../src/dsowidget.cpp" line="541"/>
         <source>%L1%</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="557"/>
+        <location filename="../src/dsowidget.cpp" line="554"/>
         <source>%1  %2  %3  %4  %5</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="588"/>
+        <location filename="../src/dsowidget.cpp" line="585"/>
         <source>/s</source>
         <translation>/s</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="688"/>
+        <location filename="../src/dsowidget.cpp" line="685"/>
         <source> on screen</source>
         <translation> à l&apos;écran</translation>
     </message>
@@ -519,36 +519,43 @@
     <name>MainWindow</name>
     <message>
         <location filename="../src/mainwindow.ui" line="14"/>
+        <location filename="../src/ui_mainwindow.h" line="150"/>
         <source>MainWindow</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="28"/>
+        <location filename="../src/ui_mainwindow.h" line="178"/>
         <source>&amp;File</source>
         <translation>&amp;Fichier</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="38"/>
+        <location filename="../src/ui_mainwindow.h" line="179"/>
         <source>&amp;View</source>
         <translation>&amp;Affichage</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="49"/>
+        <location filename="../src/ui_mainwindow.h" line="180"/>
         <source>&amp;Oscilloscope</source>
         <translation>&amp;Oscilloscope</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="57"/>
+        <location filename="../src/ui_mainwindow.h" line="181"/>
         <source>&amp;Help</source>
         <translation>A&amp;ide</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="64"/>
+        <location filename="../src/ui_mainwindow.h" line="182"/>
         <source>Export</source>
         <translation>Exporter</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="76"/>
+        <location filename="../src/ui_mainwindow.h" line="183"/>
         <source>toolBar</source>
         <translation>Barre d&apos;outils</translation>
     </message>
@@ -558,6 +565,7 @@
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="97"/>
+        <location filename="../src/ui_mainwindow.h" line="153"/>
         <source>Ctrl+O</source>
         <translation>Ctrl+O</translation>
     </message>
@@ -567,6 +575,7 @@
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="105"/>
+        <location filename="../src/ui_mainwindow.h" line="157"/>
         <source>Ctrl+S</source>
         <translation>Ctrl+E</translation>
     </message>
@@ -576,76 +585,91 @@
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="94"/>
+        <location filename="../src/ui_mainwindow.h" line="151"/>
         <source>Open settings ..</source>
         <translation>&amp;Ouvrir une configuration ..</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="110"/>
+        <location filename="../src/ui_mainwindow.h" line="159"/>
         <source>Save settings as ..</source>
         <translation>Enregistrer la configuration &amp;sous ..</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="115"/>
+        <location filename="../src/ui_mainwindow.h" line="160"/>
         <source>Exit</source>
         <translation>&amp;Quitter</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="118"/>
+        <location filename="../src/ui_mainwindow.h" line="162"/>
         <source>Ctrl+Q</source>
         <translation>Ctrl+Q</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="126"/>
+        <location filename="../src/ui_mainwindow.h" line="164"/>
         <source>Sampling</source>
         <translation>Echantillonnage</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="129"/>
+        <location filename="../src/ui_mainwindow.h" line="166"/>
         <source>Space</source>
         <translation>Espace</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="137"/>
+        <location filename="../src/ui_mainwindow.h" line="168"/>
         <source>Digital phosphor</source>
         <translation>&amp;Phosphore numérique</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="145"/>
+        <location filename="../src/ui_mainwindow.h" line="169"/>
         <source>Histogram</source>
         <translation>Histogramme</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="153"/>
+        <location filename="../src/ui_mainwindow.h" line="170"/>
         <source>Zoom</source>
         <translation>&amp;Zoom</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="161"/>
+        <location filename="../src/ui_mainwindow.h" line="171"/>
         <source>Measure</source>
         <translation>&amp;Mesures</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="166"/>
+        <location filename="../src/ui_mainwindow.h" line="172"/>
         <source>Docking windows</source>
         <translation>Fenêtres ancrables</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="171"/>
+        <location filename="../src/ui_mainwindow.h" line="173"/>
         <source>Toolbars</source>
         <translation>Barres d&apos;outils</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="176"/>
+        <location filename="../src/ui_mainwindow.h" line="174"/>
         <source>User Manual</source>
         <translation>&amp;Manuel utilisateur...</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="181"/>
+        <location filename="../src/ui_mainwindow.h" line="175"/>
         <source>About ..</source>
         <translation>&amp;A propos...</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="186"/>
+        <location filename="../src/ui_mainwindow.h" line="176"/>
         <source>Settings ..</source>
         <translation>&amp;Réglages...</translation>
     </message>
@@ -659,6 +683,7 @@
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="194"/>
+        <location filename="../src/ui_mainwindow.h" line="177"/>
         <source>Manual command</source>
         <translation>&amp;Ligne de commande</translation>
     </message>
@@ -705,6 +730,7 @@
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="102"/>
+        <location filename="../src/ui_mainwindow.h" line="155"/>
         <location filename="../src/mainwindow.cpp" line="259"/>
         <source>Save settings</source>
         <translation>Enregistrer les réglages</translation>
@@ -774,78 +800,95 @@
     <name>NewDeviceModelFromExisting</name>
     <message>
         <location filename="../src/selectdevice/newdevicemodelfromexisting.ui" line="14"/>
+        <location filename="../src/selectdevice/ui_newdevicemodelfromexisting.h" line="245"/>
         <source>New device from template</source>
         <translation>Nouveau périphérique depuis un modèle</translation>
     </message>
     <message>
         <location filename="../src/selectdevice/newdevicemodelfromexisting.ui" line="20"/>
+        <location filename="../src/selectdevice/ui_newdevicemodelfromexisting.h" line="246"/>
         <source>Select USB device</source>
         <translation>Sélectionner un périphérique USB</translation>
     </message>
     <message>
         <location filename="../src/selectdevice/newdevicemodelfromexisting.ui" line="32"/>
+        <location filename="../src/selectdevice/ui_newdevicemodelfromexisting.h" line="247"/>
         <source>Refresh</source>
         <translation>Rafraichir</translation>
     </message>
     <message>
         <location filename="../src/selectdevice/newdevicemodelfromexisting.ui" line="39"/>
         <location filename="../src/selectdevice/newdevicemodelfromexisting.ui" line="42"/>
+        <location filename="../src/selectdevice/ui_newdevicemodelfromexisting.h" line="249"/>
+        <location filename="../src/selectdevice/ui_newdevicemodelfromexisting.h" line="253"/>
         <source>This is usually indicated by a light (red flashing)</source>
         <translation>Ceci est généralement indiqué pour une lumière (rouge clignotante)</translation>
     </message>
     <message>
         <location filename="../src/selectdevice/newdevicemodelfromexisting.ui" line="45"/>
+        <location filename="../src/selectdevice/ui_newdevicemodelfromexisting.h" line="256"/>
         <source>Firmware is uploaded already*</source>
         <translation>Le firmware est déjà téléchargé*</translation>
     </message>
     <message>
         <location filename="../src/selectdevice/newdevicemodelfromexisting.ui" line="71"/>
+        <location filename="../src/selectdevice/ui_newdevicemodelfromexisting.h" line="257"/>
         <source>Template selection</source>
         <translation>Sélection du modèle</translation>
     </message>
     <message>
         <location filename="../src/selectdevice/newdevicemodelfromexisting.ui" line="83"/>
+        <location filename="../src/selectdevice/ui_newdevicemodelfromexisting.h" line="259"/>
         <source>Select the existing model that should be used as template for your device. You may need to restart OpenHantek and try different models until it works for you.</source>
         <translation>Selectionner un appareil existant qui pourrait servir de modèle pour votre appareil. Il peut être nécessaire de relancer le logiciel et d&apos;essayer différents modèles.</translation>
     </message>
     <message>
         <location filename="../src/selectdevice/newdevicemodelfromexisting.ui" line="96"/>
+        <location filename="../src/selectdevice/ui_newdevicemodelfromexisting.h" line="264"/>
         <source>Please enter a model name</source>
         <translation>Entrer un nom de modèle</translation>
     </message>
     <message>
         <location filename="../src/selectdevice/newdevicemodelfromexisting.ui" line="110"/>
+        <location filename="../src/selectdevice/ui_newdevicemodelfromexisting.h" line="265"/>
         <source>Firmware files</source>
         <translation>Fichiers de firmware</translation>
     </message>
     <message>
         <location filename="../src/selectdevice/newdevicemodelfromexisting.ui" line="116"/>
+        <location filename="../src/selectdevice/ui_newdevicemodelfromexisting.h" line="267"/>
         <source>Please select the firmware files in hex format, extracted from the windows driver for example. You need to open this dialog again after the firmware has been uploaded.</source>
         <translation>Selectionner les fichiers au format héxadécimal, extraits du pilote Windows par exemple. Il peut être nécessaire de réouvrir cette fenêtre après le téléchargement du firmware.</translation>
     </message>
     <message>
         <location filename="../src/selectdevice/newdevicemodelfromexisting.ui" line="131"/>
+        <location filename="../src/selectdevice/ui_newdevicemodelfromexisting.h" line="271"/>
         <source>Firmware</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../src/selectdevice/newdevicemodelfromexisting.ui" line="138"/>
+        <location filename="../src/selectdevice/ui_newdevicemodelfromexisting.h" line="272"/>
         <source>Loader</source>
         <translation>Chargeur</translation>
     </message>
     <message>
         <location filename="../src/selectdevice/newdevicemodelfromexisting.ui" line="157"/>
         <location filename="../src/selectdevice/newdevicemodelfromexisting.ui" line="173"/>
+        <location filename="../src/selectdevice/ui_newdevicemodelfromexisting.h" line="273"/>
+        <location filename="../src/selectdevice/ui_newdevicemodelfromexisting.h" line="274"/>
         <source>...</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../src/selectdevice/newdevicemodelfromexisting.ui" line="189"/>
+        <location filename="../src/selectdevice/ui_newdevicemodelfromexisting.h" line="275"/>
         <source>No USB devices found or your operating system prohibited enumerating devices.</source>
         <translation>Aucun périphérique USB n&apos;a été trouvé ou votre système d&apos;exploitation interdit l&apos;énumération des périphériques.</translation>
     </message>
     <message>
         <location filename="../src/selectdevice/newdevicemodelfromexisting.ui" line="203"/>
+        <location filename="../src/selectdevice/ui_newdevicemodelfromexisting.h" line="279"/>
         <source>No access granted for the selected USB device. Your operating system may prohibit access. On Windows you might need to install a generic driver first. On Linux you need to install an udev rule to grant access to your currently logged in user.</source>
         <translation>Aucun accès n&apos;est autorisé pour le périphérique USB sélectionné. Votre système d&apos;exploitation peut interdire cet accès. Sous Windows, vous devrez peut-être d&apos;abord installer un pilote générique. Sous Linux, vous devez installer une règle udev pour autoriser l&apos;accès pour l&apos;utilisateur courant.</translation>
     </message>
@@ -1300,22 +1343,27 @@
     <name>SelectSupportedDevice</name>
     <message>
         <location filename="../src/selectdevice/selectsupporteddevice.ui" line="14"/>
+        <location filename="../src/selectdevice/ui_selectsupporteddevice.h" line="107"/>
         <source>Select device</source>
         <translation>Sélectionner l&apos;appareil</translation>
     </message>
     <message>
         <location filename="../src/selectdevice/selectsupporteddevice.ui" line="27"/>
+        <location filename="../src/selectdevice/ui_selectsupporteddevice.h" line="112"/>
         <source>Supported device</source>
         <translation>Appareil supporté</translation>
     </message>
     <message>
         <location filename="../src/selectdevice/selectsupporteddevice.ui" line="39"/>
+        <location filename="../src/selectdevice/ui_selectsupporteddevice.h" line="108"/>
         <source>Devices:</source>
         <translation>Appareils :</translation>
     </message>
     <message>
         <location filename="../src/selectdevice/selectsupporteddevice.ui" line="46"/>
         <location filename="../src/selectdevice/selectsupporteddevice.ui" line="59"/>
+        <location filename="../src/selectdevice/ui_selectsupporteddevice.h" line="109"/>
+        <location filename="../src/selectdevice/ui_selectsupporteddevice.h" line="110"/>
         <source>...</source>
         <translation>...</translation>
     </message>
