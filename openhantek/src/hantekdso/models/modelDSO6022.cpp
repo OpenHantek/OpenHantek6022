@@ -132,13 +132,13 @@ static void initSpecifications( Dso::ControlSpecification &specification ) {
 }
 
 static void applyRequirements_( HantekDsoControl *dsoControl ) {
-    dsoControl->addCommand( new ControlSetVoltDIV_CH1() );  // 0xE0
-    dsoControl->addCommand( new ControlSetVoltDIV_CH2() );  // 0xE1
-    dsoControl->addCommand( new ControlSetTimeDIV() );      // 0xE2
-    dsoControl->addCommand( new ControlAcquireHardData() ); // 0xE3
-    dsoControl->addCommand( new ControlSetNumChannels() );  // 0xE4
-    dsoControl->addCommand( new ControlSetCoupling() );     // 0xE5 (no effect w/o AC/DC HW mod)
-    dsoControl->addCommand( new ControlSetCalFreq() );      // 0xE6
+    dsoControl->addCommand( new ControlSetVoltDIV_CH1() ); // 0xE0
+    dsoControl->addCommand( new ControlSetVoltDIV_CH2() ); // 0xE1
+    dsoControl->addCommand( new ControlSetTimeDIV() );     // 0xE2
+    dsoControl->addCommand( new ControlStartSampling() );  // 0xE3
+    dsoControl->addCommand( new ControlSetNumChannels() ); // 0xE4
+    dsoControl->addCommand( new ControlSetCoupling() );    // 0xE5 (no effect w/o AC/DC HW mod)
+    dsoControl->addCommand( new ControlSetCalFreq() );     // 0xE6
 }
 
 

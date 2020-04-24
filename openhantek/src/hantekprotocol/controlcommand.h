@@ -10,6 +10,7 @@ enum class ControlCode : uint8_t;
 }
 
 class ControlCommand : public std::vector< uint8_t > {
+
   protected:
     ControlCommand( Hantek::ControlCode code, unsigned size );
 

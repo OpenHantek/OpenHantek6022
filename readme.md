@@ -58,10 +58,14 @@ After David [stopped maintaining](https://github.com/OpenHantek/openhantek/issue
 * A [little HW modification](docs/HANTEK6022_AC_Modification.pdf) adds AC coupling. OpenHantek6022 supports this feature since v2.17-rc5 / FW0204.
 
 ## Install prebuilt binary
-* Download Linux, Raspberry Pi, Win and MacOSX packages from the [Releases](https://github.com/OpenHantek/OpenHantek6022/releases) page. (the Win and MacOSX packages are not tested, neither is the installation of the *.rpm packages).
-* To install the downloaded *.deb package, open a terminal window, go to the download directory and enter the command (as root) `apt install ./openhantek_..._amd64.deb`.
+* Download Linux, Raspberry Pi, Win and MacOSX packages from the [Releases](https://github.com/OpenHantek/OpenHantek6022/releases) page.
+(The RPi, Win and MacOSX packages are not tested, neither is the installation of the `*.rpm` packages. For RPi4 see also [issue #28](https://github.com/OpenHantek/OpenHantek6022/issues/28).)
+* If you want to follow ongoing development, packages built from the last commit are available in the [unstable release](https://github.com/OpenHantek/OpenHantek6022/releases/tag/unstable).
+* As I develop on a *Debian stable* system the preferred (native) package format is `*.deb`.
+* To install the downloaded `*.deb` package, open a terminal window, go to the download directory and enter the command (as root) `apt install ./openhantek_..._amd64.deb`.
 This command will automatically install all dependencies of the program as well.
-* For installation of *.rpm packages follow similar rules, e.g. `dnf install ./openhantek-...-1.x86_64.rpm`.
+* For installation of `*.rpm` packages follow similar rules, e.g. `dnf install ./openhantek-...-1.x86_64.rpm`.
+* The `*.tar.gz` achives contain only the binary for quick testing, they do not work without an recently installed complete package. Do not report any issues about the `*.tag.gz`!
 * Get MacOSX packages from [macports](https://www.macports.org/ports.php?by=name&substr=openhantek) - thx [ra1nb0w](https://github.com/ra1nb0w).
 * Get [Fedora rpm packages](https://pkgs.org/download/openhantek) - thx [Vascom](https://github.com/Vascom).
 * [Download (untested) Windows build from last commit](https://ci.appveyor.com/project/Ho-Ro/openhantek6022/build/artifacts).

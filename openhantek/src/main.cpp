@@ -204,7 +204,9 @@ int main( int argc, char *argv[] ) {
 
     //////// Clean up ////////
 
+    dsoControl.stopSampling();
     std::cout << "OpenHantek6022 ";
+
     // wait 2 * record time (delay is ms) for dso to finish
     unsigned waitForDso = unsigned( 2000 * dsoControl.getSamplesize() / dsoControl.getSamplerate() );
     if ( waitForDso < 10000 ) // minimum 10 s

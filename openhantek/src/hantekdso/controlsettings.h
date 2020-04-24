@@ -63,8 +63,6 @@ struct ControlSettings {
     unsigned channelCount = 0;                     ///< Number of activated channels
     unsigned swSampleMargin = 2000;                ///< Software trigger, sample margin
     Hantek::CalibrationValues *calibrationValues;  ///< Calibration data for the channel offsets & gains
-
-    Hantek::ControlBeginCommand beginCommandControl;
     Hantek::ControlGetLimits cmdGetLimits;
 };
 } // namespace Dso
