@@ -44,6 +44,9 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
     ui->setupUi( this );
     iconPause = QIcon( iconPath + "pause.svg" );
     iconPlay = QIcon( iconPath + "play.svg" );
+#ifdef Q_OS_WIN
+    ui->actionSampling->setShortcut( QKeySequence( "S" ) ); // Start / Stop
+#endif
     ui->actionSampling->setIcon( iconPause );
     ui->actionDigital_phosphor->setIcon( QIcon( iconPath + "digitalphosphor.svg" ) );
     ui->actionHistogram->setIcon( QIcon( iconPath + "histogram.svg" ) );

@@ -513,259 +513,233 @@
     <name>MainWindow</name>
     <message>
         <location filename="../src/mainwindow.ui" line="14"/>
-        <location filename="../src/ui_mainwindow.h" line="150"/>
         <source>MainWindow</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="28"/>
-        <location filename="../src/ui_mainwindow.h" line="178"/>
         <source>&amp;File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="38"/>
-        <location filename="../src/ui_mainwindow.h" line="179"/>
         <source>&amp;View</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="49"/>
-        <location filename="../src/ui_mainwindow.h" line="180"/>
         <source>&amp;Oscilloscope</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="57"/>
-        <location filename="../src/ui_mainwindow.h" line="181"/>
         <source>&amp;Help</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="64"/>
-        <location filename="../src/ui_mainwindow.h" line="182"/>
         <source>Export</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="76"/>
-        <location filename="../src/ui_mainwindow.h" line="183"/>
         <source>toolBar</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="97"/>
-        <location filename="../src/ui_mainwindow.h" line="153"/>
         <source>Ctrl+O</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="105"/>
-        <location filename="../src/ui_mainwindow.h" line="157"/>
         <source>Ctrl+S</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="94"/>
-        <location filename="../src/ui_mainwindow.h" line="151"/>
         <source>Open settings ..</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="110"/>
-        <location filename="../src/ui_mainwindow.h" line="159"/>
         <source>Save settings as ..</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="115"/>
-        <location filename="../src/ui_mainwindow.h" line="160"/>
         <source>Exit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="118"/>
-        <location filename="../src/ui_mainwindow.h" line="162"/>
         <source>Ctrl+Q</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="126"/>
-        <location filename="../src/ui_mainwindow.h" line="164"/>
         <source>Sampling</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="129"/>
-        <location filename="../src/ui_mainwindow.h" line="166"/>
         <source>Space</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="137"/>
-        <location filename="../src/ui_mainwindow.h" line="168"/>
         <source>Digital phosphor</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="145"/>
-        <location filename="../src/ui_mainwindow.h" line="169"/>
         <source>Histogram</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="153"/>
-        <location filename="../src/ui_mainwindow.h" line="170"/>
         <source>Zoom</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="161"/>
-        <location filename="../src/ui_mainwindow.h" line="171"/>
         <source>Measure</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="166"/>
-        <location filename="../src/ui_mainwindow.h" line="172"/>
         <source>Docking windows</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="171"/>
-        <location filename="../src/ui_mainwindow.h" line="173"/>
         <source>Toolbars</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="176"/>
-        <location filename="../src/ui_mainwindow.h" line="174"/>
         <source>User Manual</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="181"/>
-        <location filename="../src/ui_mainwindow.h" line="175"/>
         <source>About ..</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="186"/>
-        <location filename="../src/ui_mainwindow.h" line="176"/>
         <source>Settings ..</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="194"/>
-        <location filename="../src/ui_mainwindow.h" line="177"/>
         <source>Manual command</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="62"/>
+        <location filename="../src/mainwindow.cpp" line="66"/>
         <source>OpenHantek6022 (%1) - Device %2 (FW%3)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="125"/>
+        <location filename="../src/mainwindow.cpp" line="129"/>
         <source>Invalid command</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="212"/>
+        <location filename="../src/mainwindow.cpp" line="216"/>
         <source>Stop</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="213"/>
+        <location filename="../src/mainwindow.cpp" line="217"/>
         <source>Stop the oscilloscope</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="216"/>
+        <location filename="../src/mainwindow.cpp" line="220"/>
         <source>Start</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="217"/>
+        <location filename="../src/mainwindow.cpp" line="221"/>
         <source>Start the oscilloscope</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="236"/>
+        <location filename="../src/mainwindow.cpp" line="240"/>
         <source>Open file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="236"/>
-        <location filename="../src/mainwindow.cpp" line="259"/>
+        <location filename="../src/mainwindow.cpp" line="240"/>
+        <location filename="../src/mainwindow.cpp" line="263"/>
         <source>Settings (*.ini)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="102"/>
-        <location filename="../src/ui_mainwindow.h" line="155"/>
-        <location filename="../src/mainwindow.cpp" line="259"/>
+        <location filename="../src/mainwindow.cpp" line="263"/>
         <source>Save settings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="285"/>
+        <location filename="../src/mainwindow.cpp" line="289"/>
         <source>Disable fading of previous graphs</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="287"/>
+        <location filename="../src/mainwindow.cpp" line="291"/>
         <source>Enable fading of previous graphs</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="295"/>
+        <location filename="../src/mainwindow.cpp" line="299"/>
         <source>Hide histogram</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="297"/>
+        <location filename="../src/mainwindow.cpp" line="301"/>
         <source>Show histogram</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="306"/>
+        <location filename="../src/mainwindow.cpp" line="310"/>
         <source>Hide magnified scope</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="308"/>
+        <location filename="../src/mainwindow.cpp" line="312"/>
         <source>Show magnified scope</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="318"/>
+        <location filename="../src/mainwindow.cpp" line="322"/>
         <source>Hide measurements</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="320"/>
+        <location filename="../src/mainwindow.cpp" line="324"/>
         <source>Show measurements</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="338"/>
+        <location filename="../src/mainwindow.cpp" line="342"/>
         <source>About OpenHantek6022 (%1)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="339"/>
+        <location filename="../src/mainwindow.cpp" line="343"/>
         <source>&lt;p&gt;Open source software for Hantek6022 USB oscilloscopes&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2010, 2011 Oliver Haag&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2012-2020 OpenHantek community&lt;br/&gt;&lt;a href=&apos;https://github.com/OpenHantek&apos;&gt;https://github.com/OpenHantek&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Open source firmware copyright &amp;copy; 2019-2020 Ho-Ro&lt;br/&gt;&lt;a href=&apos;https://github.com/Ho-Ro/Hantek6022API&apos;&gt;https://github.com/Ho-Ro/Hantek6022API&lt;/a&gt;&lt;/p&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="345"/>
+        <location filename="../src/mainwindow.cpp" line="349"/>
         <source>&lt;p&gt;Running since %1 seconds.&lt;/p&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="363"/>
+        <location filename="../src/mainwindow.cpp" line="367"/>
         <source>%1: %2</source>
         <translation type="unfinished"></translation>
     </message>
@@ -774,27 +748,27 @@
     <name>NewDeviceModelFromExisting</name>
     <message>
         <location filename="../src/selectdevice/newdevicemodelfromexisting.ui" line="14"/>
-        <location filename="../src/selectdevice/ui_newdevicemodelfromexisting.h" line="245"/>
+        <location filename="../src/selectdevice/ui_newdevicemodelfromexisting.h" line="247"/>
         <source>New device from template</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/selectdevice/newdevicemodelfromexisting.ui" line="20"/>
-        <location filename="../src/selectdevice/ui_newdevicemodelfromexisting.h" line="246"/>
+        <location filename="../src/selectdevice/ui_newdevicemodelfromexisting.h" line="248"/>
         <source>Select USB device</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/selectdevice/newdevicemodelfromexisting.ui" line="32"/>
-        <location filename="../src/selectdevice/ui_newdevicemodelfromexisting.h" line="247"/>
+        <location filename="../src/selectdevice/ui_newdevicemodelfromexisting.h" line="249"/>
         <source>Refresh</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/selectdevice/newdevicemodelfromexisting.ui" line="39"/>
         <location filename="../src/selectdevice/newdevicemodelfromexisting.ui" line="42"/>
-        <location filename="../src/selectdevice/ui_newdevicemodelfromexisting.h" line="249"/>
-        <location filename="../src/selectdevice/ui_newdevicemodelfromexisting.h" line="253"/>
+        <location filename="../src/selectdevice/ui_newdevicemodelfromexisting.h" line="251"/>
+        <location filename="../src/selectdevice/ui_newdevicemodelfromexisting.h" line="254"/>
         <source>This is usually indicated by a light (red flashing)</source>
         <translation type="unfinished"></translation>
     </message>
@@ -812,57 +786,57 @@
     </message>
     <message>
         <location filename="../src/selectdevice/newdevicemodelfromexisting.ui" line="83"/>
-        <location filename="../src/selectdevice/ui_newdevicemodelfromexisting.h" line="259"/>
+        <location filename="../src/selectdevice/ui_newdevicemodelfromexisting.h" line="258"/>
         <source>Select the existing model that should be used as template for your device. You may need to restart OpenHantek and try different models until it works for you.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/selectdevice/newdevicemodelfromexisting.ui" line="96"/>
-        <location filename="../src/selectdevice/ui_newdevicemodelfromexisting.h" line="264"/>
+        <location filename="../src/selectdevice/ui_newdevicemodelfromexisting.h" line="259"/>
         <source>Please enter a model name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/selectdevice/newdevicemodelfromexisting.ui" line="110"/>
-        <location filename="../src/selectdevice/ui_newdevicemodelfromexisting.h" line="265"/>
+        <location filename="../src/selectdevice/ui_newdevicemodelfromexisting.h" line="260"/>
         <source>Firmware files</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/selectdevice/newdevicemodelfromexisting.ui" line="116"/>
-        <location filename="../src/selectdevice/ui_newdevicemodelfromexisting.h" line="267"/>
+        <location filename="../src/selectdevice/ui_newdevicemodelfromexisting.h" line="261"/>
         <source>Please select the firmware files in hex format, extracted from the windows driver for example. You need to open this dialog again after the firmware has been uploaded.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/selectdevice/newdevicemodelfromexisting.ui" line="131"/>
-        <location filename="../src/selectdevice/ui_newdevicemodelfromexisting.h" line="271"/>
+        <location filename="../src/selectdevice/ui_newdevicemodelfromexisting.h" line="262"/>
         <source>Firmware</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/selectdevice/newdevicemodelfromexisting.ui" line="138"/>
-        <location filename="../src/selectdevice/ui_newdevicemodelfromexisting.h" line="272"/>
+        <location filename="../src/selectdevice/ui_newdevicemodelfromexisting.h" line="263"/>
         <source>Loader</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/selectdevice/newdevicemodelfromexisting.ui" line="157"/>
         <location filename="../src/selectdevice/newdevicemodelfromexisting.ui" line="173"/>
-        <location filename="../src/selectdevice/ui_newdevicemodelfromexisting.h" line="273"/>
-        <location filename="../src/selectdevice/ui_newdevicemodelfromexisting.h" line="274"/>
+        <location filename="../src/selectdevice/ui_newdevicemodelfromexisting.h" line="264"/>
+        <location filename="../src/selectdevice/ui_newdevicemodelfromexisting.h" line="265"/>
         <source>...</source>
         <translation>...</translation>
     </message>
     <message>
         <location filename="../src/selectdevice/newdevicemodelfromexisting.ui" line="189"/>
-        <location filename="../src/selectdevice/ui_newdevicemodelfromexisting.h" line="275"/>
+        <location filename="../src/selectdevice/ui_newdevicemodelfromexisting.h" line="266"/>
         <source>No USB devices found or your operating system prohibited enumerating devices.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/selectdevice/newdevicemodelfromexisting.ui" line="203"/>
-        <location filename="../src/selectdevice/ui_newdevicemodelfromexisting.h" line="279"/>
+        <location filename="../src/selectdevice/ui_newdevicemodelfromexisting.h" line="267"/>
         <source>No access granted for the selected USB device. Your operating system may prohibit access. On Windows you might need to install a generic driver first. On Linux you need to install an udev rule to grant access to your currently logged in user.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1301,27 +1275,27 @@
     <name>SelectSupportedDevice</name>
     <message>
         <location filename="../src/selectdevice/selectsupporteddevice.ui" line="14"/>
-        <location filename="../src/selectdevice/ui_selectsupporteddevice.h" line="107"/>
+        <location filename="../src/selectdevice/ui_selectsupporteddevice.h" line="110"/>
         <source>Select device</source>
         <translation>Seleziona apparecchio</translation>
     </message>
     <message>
         <location filename="../src/selectdevice/selectsupporteddevice.ui" line="27"/>
-        <location filename="../src/selectdevice/ui_selectsupporteddevice.h" line="112"/>
+        <location filename="../src/selectdevice/ui_selectsupporteddevice.h" line="114"/>
         <source>Supported device</source>
         <translation>Apparecchio supportato</translation>
     </message>
     <message>
         <location filename="../src/selectdevice/selectsupporteddevice.ui" line="39"/>
-        <location filename="../src/selectdevice/ui_selectsupporteddevice.h" line="108"/>
+        <location filename="../src/selectdevice/ui_selectsupporteddevice.h" line="111"/>
         <source>Devices:</source>
         <translation>Apparecchi:</translation>
     </message>
     <message>
         <location filename="../src/selectdevice/selectsupporteddevice.ui" line="46"/>
         <location filename="../src/selectdevice/selectsupporteddevice.ui" line="59"/>
-        <location filename="../src/selectdevice/ui_selectsupporteddevice.h" line="109"/>
-        <location filename="../src/selectdevice/ui_selectsupporteddevice.h" line="110"/>
+        <location filename="../src/selectdevice/ui_selectsupporteddevice.h" line="112"/>
+        <location filename="../src/selectdevice/ui_selectsupporteddevice.h" line="113"/>
         <source>...</source>
         <translation>...</translation>
     </message>
