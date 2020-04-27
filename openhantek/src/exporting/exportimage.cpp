@@ -21,7 +21,7 @@ void ExporterImage::create( ExporterRegistry *newRegistry ) {
 
 int ExporterImage::faIcon() { return fa::image; }
 
-QString ExporterImage::name() { return QCoreApplication::tr( "Export Image/PDF .." ); }
+QString ExporterImage::name() { return QCoreApplication::tr( "Export &Image/PDF .." ); }
 
 ExporterInterface::Type ExporterImage::type() { return Type::SnapshotExport; }
 

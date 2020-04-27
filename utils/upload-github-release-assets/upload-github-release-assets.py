@@ -172,7 +172,7 @@ for ASSET in files:
 
 	# if an asset with same name already exists, delete its URL
 	if NAME in already_uploaded_assets.keys():
-		print( ' - delete remote file', end='' )
+		print( ' - delete remote file', flush=True, end='' )
 		try:	# delete existing asset (URL)
 			response = requests.delete( already_uploaded_assets[ NAME ], headers=headers, timeout=timeout )
 			if not response:
@@ -192,7 +192,7 @@ for ASSET in files:
 
 	try:
 		with open( ASSET, 'rb' ) as asset:
-			print( ' - upload', end = '' )
+			print( ' - upload', flush=True, end = '' )
 			try:
 				response = requests.post( UPLOADURL, headers=headers, params=params, data=asset, timeout=timeout )
 				if not response:

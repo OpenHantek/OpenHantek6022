@@ -21,7 +21,7 @@ void ExporterCSV::create( ExporterRegistry *newRegistry ) {
 
 int ExporterCSV::faIcon() { return fa::filetexto; }
 
-QString ExporterCSV::name() { return QCoreApplication::tr( "Export CSV .." ); }
+QString ExporterCSV::name() { return QCoreApplication::tr( "Export &CSV .." ); }
 
 ExporterInterface::Type ExporterCSV::type() { return Type::SnapshotExport; }
 

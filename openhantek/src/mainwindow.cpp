@@ -44,14 +44,26 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
     ui->setupUi( this );
     iconPause = QIcon( iconPath + "pause.svg" );
     iconPlay = QIcon( iconPath + "play.svg" );
-#ifdef Q_OS_WIN
-    ui->actionSampling->setShortcut( QKeySequence( "S" ) ); // Start / Stop
-#endif
     ui->actionSampling->setIcon( iconPause );
-    ui->actionDigital_phosphor->setIcon( QIcon( iconPath + "digitalphosphor.svg" ) );
+    QList< QKeySequence > shortcuts; // provide multiple shortcuts for ui->actionSampling.
+    // 1st entry in list is shown as shortcut in menu
+#ifdef Q_OS_WIN
+    shortcuts << QKeySequence( Qt::Key::Key_S ); // WIN: <space> is grabbed by buttons, e.g. CH1
+#endif
+    shortcuts << QKeySequence( Qt::Key::Key_Space );
+    shortcuts << QKeySequence( Qt::Key::Key_Pause );
+#ifndef Q_OS_WIN
+    shortcuts << QKeySequence( Qt::Key::Key_S ); // else put this shortcut at the end of the list
+#endif
+    ui->actionSampling->setShortcuts( shortcuts );
+    ui->actionPhosphor->setIcon( QIcon( iconPath + "phosphor.svg" ) );
+    ui->actionPhosphor->setShortcut( Qt::Key::Key_P );
     ui->actionHistogram->setIcon( QIcon( iconPath + "histogram.svg" ) );
+    ui->actionHistogram->setShortcut( Qt::Key::Key_H );
     ui->actionZoom->setIcon( QIcon( iconPath + "zoom.svg" ) );
+    ui->actionZoom->setShortcut( Qt::Key::Key_Z );
     ui->actionMeasure->setIcon( QIcon( iconPath + "measure.svg" ) );
+    ui->actionMeasure->setShortcut( Qt::Key::Key_M );
     ui->actionOpen->setIcon( iconFont->icon( fa::folderopen, colorMap ) );
     ui->actionSave->setIcon( iconFont->icon( fa::save, colorMap ) );
     ui->actionSettings->setIcon( iconFont->icon( fa::gear, colorMap ) );
@@ -281,15 +293,15 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
         configDialog->show();
     } );
 
-    connect( this->ui->actionDigital_phosphor, &QAction::toggled, [this]( bool enabled ) {
+    connect( this->ui->actionPhosphor, &QAction::toggled, [this]( bool enabled ) {
         dsoSettings->view.digitalPhosphor = enabled;
 
         if ( dsoSettings->view.digitalPhosphor )
-            this->ui->actionDigital_phosphor->setStatusTip( tr( "Disable fading of previous graphs" ) );
+            this->ui->actionPhosphor->setStatusTip( tr( "Disable fading of previous graphs" ) );
         else
-            this->ui->actionDigital_phosphor->setStatusTip( tr( "Enable fading of previous graphs" ) );
+            this->ui->actionPhosphor->setStatusTip( tr( "Enable fading of previous graphs" ) );
     } );
-    this->ui->actionDigital_phosphor->setChecked( dsoSettings->view.digitalPhosphor );
+    this->ui->actionPhosphor->setChecked( dsoSettings->view.digitalPhosphor );
 
     connect( ui->actionHistogram, &QAction::toggled, [this]( bool enabled ) {
         dsoSettings->scope.histogram = enabled;

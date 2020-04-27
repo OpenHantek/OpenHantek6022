@@ -49,7 +49,7 @@ VoltageDock::VoltageDock( DsoSettingsScope *scope, const Dso::ControlSpecificati
         if ( channel < spec->channels )
             b.usedCheckBox = new QCheckBox( tr( "CH&%1" ).arg( channel + 1 ) ); // define shortcut <ALT>1 / <ALT>2
         else
-            b.usedCheckBox = new QCheckBox( tr( "&MATH" ) );
+            b.usedCheckBox = new QCheckBox( tr( "MA&TH" ) );
         b.miscComboBox = new QComboBox();
         b.gainComboBox = new QComboBox();
         b.invertCheckBox = new QCheckBox( tr( "Invert" ) );

@@ -417,7 +417,7 @@
         <location filename="../src/glscope.cpp" line="306"/>
         <source>Failed to link/bind OpenGL shader programs.
 </source>
-        <translation>Fehler beim Linken der OpenGL Shader-Programme.</translation>
+        <translation>Fehler beim Linken der OpenGL Shader-Programme.\n</translation>
     </message>
     <message>
         <location filename="../src/glscope.cpp" line="315"/>
@@ -540,14 +540,68 @@
         <translation>&amp;Oszilloskop</translation>
     </message>
     <message>
+        <location filename="../src/mainwindow.ui" line="64"/>
+        <source>&amp;Export</source>
+        <translation>&amp;Export</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.ui" line="110"/>
+        <source>Save settings &amp;as ..</source>
+        <translation>Einstellungen speichern &amp;als ..</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.ui" line="115"/>
+        <source>&amp;Exit</source>
+        <translation>&amp;Exit</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.ui" line="137"/>
+        <source>&amp;Phosphor</source>
+        <translation>&amp;Phosphor</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.ui" line="145"/>
+        <source>&amp;Histogram</source>
+        <translation>&amp;Histogram</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.ui" line="153"/>
+        <source>&amp;Zoom</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.ui" line="161"/>
+        <source>&amp;Measure</source>
+        <translation>&amp;Messen</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.ui" line="176"/>
+        <source>&amp;User Manual</source>
+        <translation>&amp;Benutzerhandbuch</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.ui" line="181"/>
+        <source>&amp;About ..</source>
+        <translation>&amp;Über ..</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.ui" line="186"/>
+        <source>&amp;Settings ..</source>
+        <translation>&amp;Einstellungen ..</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.ui" line="194"/>
+        <source>Manual &amp;command</source>
+        <translation>Manuelles &amp;Kommando</translation>
+    </message>
+    <message>
         <location filename="../src/mainwindow.ui" line="57"/>
         <source>&amp;Help</source>
         <translation>&amp;Hilfe</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="64"/>
         <source>Export</source>
-        <translation>Export</translation>
+        <translation type="vanished">Export</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="76"/>
@@ -555,9 +609,19 @@
         <translation>Werkzeugleiste</translation>
     </message>
     <message>
+        <location filename="../src/mainwindow.ui" line="94"/>
+        <source>&amp;Open settings ..</source>
+        <translation>Eistellungen &amp;laden ..</translation>
+    </message>
+    <message>
         <location filename="../src/mainwindow.ui" line="97"/>
         <source>Ctrl+O</source>
         <translation>Strg+O</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.ui" line="102"/>
+        <source>&amp;Save settings</source>
+        <translation>Einstellungen &amp;speichern</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="105"/>
@@ -565,19 +629,20 @@
         <translation>Strg+S</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="94"/>
+        <source>Digital Phosphor</source>
+        <translation type="vanished">Digitaler Phosphor</translation>
+    </message>
+    <message>
         <source>Open settings ..</source>
-        <translation>Eistellungen laden ..</translation>
+        <translation type="vanished">Eistellungen laden ..</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="110"/>
         <source>Save settings as ..</source>
-        <translation>Einstellungen speichern als ..</translation>
+        <translation type="vanished">Einstellungen speichern als ..</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="115"/>
         <source>Exit</source>
-        <translation>Beenden</translation>
+        <translation type="vanished">Beenden</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="118"/>
@@ -595,24 +660,20 @@
         <translation>Leertaste</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="137"/>
         <source>Digital phosphor</source>
-        <translation>Digitaler Phosphor</translation>
+        <translation type="vanished">Digitaler Phosphor</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="145"/>
         <source>Histogram</source>
-        <translation>Histogramm</translation>
+        <translation type="vanished">Histogramm</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="153"/>
         <source>Zoom</source>
-        <translation>Zoom</translation>
+        <translation type="vanished">Zoom</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="161"/>
         <source>Measure</source>
-        <translation>Messen</translation>
+        <translation type="vanished">Messen</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="166"/>
@@ -625,129 +686,124 @@
         <translation>Werkzeugleisten</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="176"/>
         <source>User Manual</source>
-        <translation>Benutzerhandbuch</translation>
+        <translation type="vanished">Benutzerhandbuch</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="181"/>
         <source>About ..</source>
-        <translation>Über ..</translation>
+        <translation type="vanished">Über ..</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="186"/>
         <source>Settings ..</source>
-        <translation>Einstellungen ..</translation>
+        <translation type="vanished">Einstellungen ..</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="194"/>
         <source>Manual command</source>
-        <translation>Manuelles Kommando</translation>
+        <translation type="vanished">Manuelles Kommando</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="66"/>
+        <location filename="../src/mainwindow.cpp" line="77"/>
         <source>OpenHantek6022 (%1) - Device %2 (FW%3)</source>
         <translation>OpenHantek6022 (%1) - Device %2 (FW%3)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="129"/>
+        <location filename="../src/mainwindow.cpp" line="140"/>
         <source>Invalid command</source>
         <translation>Ungültiger Befehl</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="217"/>
+        <location filename="../src/mainwindow.cpp" line="228"/>
         <source>Stop the oscilloscope</source>
         <translation>Das Oszilloskop anhalten</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="216"/>
+        <location filename="../src/mainwindow.cpp" line="227"/>
         <source>Stop</source>
         <translation>Stop</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="220"/>
+        <location filename="../src/mainwindow.cpp" line="231"/>
         <source>Start</source>
         <translation>Start</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="221"/>
+        <location filename="../src/mainwindow.cpp" line="232"/>
         <source>Start the oscilloscope</source>
         <translation>Startet das Oszilloskop</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="240"/>
+        <location filename="../src/mainwindow.cpp" line="251"/>
         <source>Open file</source>
         <translation>Datei öffnen</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="240"/>
-        <location filename="../src/mainwindow.cpp" line="263"/>
+        <location filename="../src/mainwindow.cpp" line="251"/>
+        <location filename="../src/mainwindow.cpp" line="274"/>
         <source>Settings (*.ini)</source>
         <translation>Einstellungen (*.ini)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="102"/>
-        <location filename="../src/mainwindow.cpp" line="263"/>
+        <location filename="../src/mainwindow.cpp" line="274"/>
         <source>Save settings</source>
         <translation>Einstellungen speichern</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="289"/>
+        <location filename="../src/mainwindow.cpp" line="300"/>
         <source>Disable fading of previous graphs</source>
         <translation>Nachleuchten von vorigen Graphen deaktivieren</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="291"/>
+        <location filename="../src/mainwindow.cpp" line="302"/>
         <source>Enable fading of previous graphs</source>
         <translation>Nachleuchten von vorigen Graphen aktivieren</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="299"/>
+        <location filename="../src/mainwindow.cpp" line="310"/>
         <source>Hide histogram</source>
         <translation>Histogramm ausblenden</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="301"/>
+        <location filename="../src/mainwindow.cpp" line="312"/>
         <source>Show histogram</source>
         <translation>Histogramm einblenden</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="310"/>
+        <location filename="../src/mainwindow.cpp" line="321"/>
         <source>Hide magnified scope</source>
         <translation>Vergrößerte Anzeige ausblenden</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="312"/>
+        <location filename="../src/mainwindow.cpp" line="323"/>
         <source>Show magnified scope</source>
         <translation>Vergrößerte Anzeige anzeigen</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="322"/>
+        <location filename="../src/mainwindow.cpp" line="333"/>
         <source>Hide measurements</source>
         <translation>Messwerte ausblenden</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="324"/>
+        <location filename="../src/mainwindow.cpp" line="335"/>
         <source>Show measurements</source>
         <translation>Messwerte anzeigen</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="342"/>
+        <location filename="../src/mainwindow.cpp" line="353"/>
         <source>About OpenHantek6022 (%1)</source>
         <translation>Über OpenHantek6022 (%1)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="343"/>
+        <location filename="../src/mainwindow.cpp" line="354"/>
         <source>&lt;p&gt;Open source software for Hantek6022 USB oscilloscopes&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2010, 2011 Oliver Haag&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2012-2020 OpenHantek community&lt;br/&gt;&lt;a href=&apos;https://github.com/OpenHantek&apos;&gt;https://github.com/OpenHantek&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Open source firmware copyright &amp;copy; 2019-2020 Ho-Ro&lt;br/&gt;&lt;a href=&apos;https://github.com/Ho-Ro/Hantek6022API&apos;&gt;https://github.com/Ho-Ro/Hantek6022API&lt;/a&gt;&lt;/p&gt;</source>
         <translation>&lt;p&gt;Open-Source-Software für Hantek6022 USB Oszilloskope&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2010, 2011 Oliver Haag&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2012-2020 OpenHantek community&lt;br/&gt;&lt;a href=&apos;https://github.com/OpenHantek&apos;&gt;https://github.com/OpenHantek&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Open-Source-Firmware - Copyright &amp;copy; 2019-2020 Ho-Ro&lt;br/&gt;&lt;a href=&apos;https://github.com/Ho-Ro/Hantek6022API&apos;&gt;https://github.com/Ho-Ro/Hantek6022API&lt;/a&gt;&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="349"/>
+        <location filename="../src/mainwindow.cpp" line="360"/>
         <source>&lt;p&gt;Running since %1 seconds.&lt;/p&gt;</source>
         <translation>&lt;p&gt;Laufzeit %1 Sekunden.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="367"/>
+        <location filename="../src/mainwindow.cpp" line="378"/>
         <source>%1: %2</source>
         <translation>%1: %2</translation>
     </message>
@@ -756,96 +812,79 @@
     <name>NewDeviceModelFromExisting</name>
     <message>
         <location filename="../src/selectdevice/newdevicemodelfromexisting.ui" line="14"/>
-        <location filename="../src/selectdevice/ui_newdevicemodelfromexisting.h" line="247"/>
         <source>New device from template</source>
         <translation>Neues Gerät aus Vorlage</translation>
     </message>
     <message>
         <location filename="../src/selectdevice/newdevicemodelfromexisting.ui" line="20"/>
-        <location filename="../src/selectdevice/ui_newdevicemodelfromexisting.h" line="248"/>
         <source>Select USB device</source>
         <translatorcomment>mindestens zwei Leerzeichen am Ende, damit der Text nicht abgeschnitten dargestellt wird (?)</translatorcomment>
         <translation>USB-Gerät auswählen   </translation>
     </message>
     <message>
         <location filename="../src/selectdevice/newdevicemodelfromexisting.ui" line="32"/>
-        <location filename="../src/selectdevice/ui_newdevicemodelfromexisting.h" line="249"/>
         <source>Refresh</source>
         <translation>Erneuern</translation>
     </message>
     <message>
         <location filename="../src/selectdevice/newdevicemodelfromexisting.ui" line="39"/>
         <location filename="../src/selectdevice/newdevicemodelfromexisting.ui" line="42"/>
-        <location filename="../src/selectdevice/ui_newdevicemodelfromexisting.h" line="251"/>
-        <location filename="../src/selectdevice/ui_newdevicemodelfromexisting.h" line="254"/>
         <source>This is usually indicated by a light (red flashing)</source>
         <translation>Dies wird üblicherweise durch eine rot-blinkende LED angezeigt</translation>
     </message>
     <message>
         <location filename="../src/selectdevice/newdevicemodelfromexisting.ui" line="45"/>
-        <location filename="../src/selectdevice/ui_newdevicemodelfromexisting.h" line="256"/>
         <source>Firmware is uploaded already*</source>
         <translation>Firmware ist bereits geladen*</translation>
     </message>
     <message>
         <location filename="../src/selectdevice/newdevicemodelfromexisting.ui" line="71"/>
-        <location filename="../src/selectdevice/ui_newdevicemodelfromexisting.h" line="257"/>
         <source>Template selection</source>
         <translation>Vorlage auswählen</translation>
     </message>
     <message>
         <location filename="../src/selectdevice/newdevicemodelfromexisting.ui" line="83"/>
-        <location filename="../src/selectdevice/ui_newdevicemodelfromexisting.h" line="258"/>
         <source>Select the existing model that should be used as template for your device. You may need to restart OpenHantek and try different models until it works for you.</source>
         <translation>Bitte ein Modell auswählen, das als Vorlage verwendet werden soll. Möglicherweise muss dies mehrfach mit unterschiedlichen Modellen probiert werden.</translation>
     </message>
     <message>
         <location filename="../src/selectdevice/newdevicemodelfromexisting.ui" line="96"/>
-        <location filename="../src/selectdevice/ui_newdevicemodelfromexisting.h" line="259"/>
         <source>Please enter a model name</source>
         <translation>Bitte einen Modell-Namen eingeben</translation>
     </message>
     <message>
         <location filename="../src/selectdevice/newdevicemodelfromexisting.ui" line="110"/>
-        <location filename="../src/selectdevice/ui_newdevicemodelfromexisting.h" line="260"/>
         <source>Firmware files</source>
         <translation>Firmware-Dateien</translation>
     </message>
     <message>
         <location filename="../src/selectdevice/newdevicemodelfromexisting.ui" line="116"/>
-        <location filename="../src/selectdevice/ui_newdevicemodelfromexisting.h" line="261"/>
         <source>Please select the firmware files in hex format, extracted from the windows driver for example. You need to open this dialog again after the firmware has been uploaded.</source>
         <translation>Bitte eine Firmware im hex-Format auswählen, die z.B. aus dem Windows-Treiber extrahiert wurde. Dieser Dialog muss nach dem Laden der Firmware erneut geöffnet werden.</translation>
     </message>
     <message>
         <location filename="../src/selectdevice/newdevicemodelfromexisting.ui" line="131"/>
-        <location filename="../src/selectdevice/ui_newdevicemodelfromexisting.h" line="262"/>
         <source>Firmware</source>
         <translation>Firmware</translation>
     </message>
     <message>
         <location filename="../src/selectdevice/newdevicemodelfromexisting.ui" line="138"/>
-        <location filename="../src/selectdevice/ui_newdevicemodelfromexisting.h" line="263"/>
         <source>Loader</source>
         <translation>Loader</translation>
     </message>
     <message>
         <location filename="../src/selectdevice/newdevicemodelfromexisting.ui" line="157"/>
         <location filename="../src/selectdevice/newdevicemodelfromexisting.ui" line="173"/>
-        <location filename="../src/selectdevice/ui_newdevicemodelfromexisting.h" line="264"/>
-        <location filename="../src/selectdevice/ui_newdevicemodelfromexisting.h" line="265"/>
         <source>...</source>
         <translation>...</translation>
     </message>
     <message>
         <location filename="../src/selectdevice/newdevicemodelfromexisting.ui" line="189"/>
-        <location filename="../src/selectdevice/ui_newdevicemodelfromexisting.h" line="266"/>
         <source>No USB devices found or your operating system prohibited enumerating devices.</source>
         <translation>Kein USB-Gerät gefunden oder das Betriebssystem erlaubt keinen Zugriff darauf.</translation>
     </message>
     <message>
         <location filename="../src/selectdevice/newdevicemodelfromexisting.ui" line="203"/>
-        <location filename="../src/selectdevice/ui_newdevicemodelfromexisting.h" line="267"/>
         <source>No access granted for the selected USB device. Your operating system may prohibit access. On Windows you might need to install a generic driver first. On Linux you need to install an udev rule to grant access to your currently logged in user.</source>
         <translation>Kein Zugriff auf das USB-Gerät. Das Betriebssystem blockiert möglicherweise den Zugriff. Für Windows muss eventuell zuerst ein Treiber geladen werden. Für Linux ist eine udev-Datei erforderlich, die den Zugriff auf das Gerät erlaubt.</translation>
     </message>
@@ -981,9 +1020,13 @@
 <context>
     <name>QCoreApplication</name>
     <message>
-        <location filename="../src/exporting/exportcsv.cpp" line="24"/>
         <source>Export CSV ..</source>
-        <translation>Exportiere CSV ..</translation>
+        <translation type="vanished">Exportiere CSV ..</translation>
+    </message>
+    <message>
+        <location filename="../src/exporting/exportcsv.cpp" line="24"/>
+        <source>Export &amp;CSV ..</source>
+        <translation>Exportiere &amp;CSV ..</translation>
     </message>
     <message>
         <location filename="../src/exporting/exportcsv.cpp" line="35"/>
@@ -991,9 +1034,13 @@
         <translation>Kommagetrennte Werte (*.csv)</translation>
     </message>
     <message>
-        <location filename="../src/exporting/exportimage.cpp" line="24"/>
         <source>Export Image/PDF ..</source>
-        <translation>Exportiere Graphik/PDF ..</translation>
+        <translation type="vanished">Exportiere Graphik/PDF ..</translation>
+    </message>
+    <message>
+        <location filename="../src/exporting/exportimage.cpp" line="24"/>
+        <source>Export &amp;Image/PDF ..</source>
+        <translation>Exportiere &amp;Graphik/PDF ..</translation>
     </message>
     <message>
         <location filename="../src/exporting/exportimage.cpp" line="35"/>
@@ -1012,9 +1059,13 @@
         <translation>Datei exportieren ..</translation>
     </message>
     <message>
-        <location filename="../src/exporting/exportprint.cpp" line="24"/>
         <source>Print ..</source>
-        <translation>Drucken ..</translation>
+        <translation type="vanished">Drucken ..</translation>
+    </message>
+    <message>
+        <location filename="../src/exporting/exportprint.cpp" line="24"/>
+        <source>&amp;Print ..</source>
+        <translation>&amp;Drucken ..</translation>
     </message>
     <message>
         <location filename="../src/exporting/exportprint.cpp" line="41"/>
@@ -1284,27 +1335,22 @@
     <name>SelectSupportedDevice</name>
     <message>
         <location filename="../src/selectdevice/selectsupporteddevice.ui" line="14"/>
-        <location filename="../src/selectdevice/ui_selectsupporteddevice.h" line="110"/>
         <source>Select device</source>
         <translation>Gerät auswählen</translation>
     </message>
     <message>
         <location filename="../src/selectdevice/selectsupporteddevice.ui" line="27"/>
-        <location filename="../src/selectdevice/ui_selectsupporteddevice.h" line="114"/>
         <source>Supported device</source>
         <translation>Unterstützte Geräte</translation>
     </message>
     <message>
         <location filename="../src/selectdevice/selectsupporteddevice.ui" line="39"/>
-        <location filename="../src/selectdevice/ui_selectsupporteddevice.h" line="111"/>
         <source>Devices:</source>
         <translation>Geräte:</translation>
     </message>
     <message>
         <location filename="../src/selectdevice/selectsupporteddevice.ui" line="46"/>
         <location filename="../src/selectdevice/selectsupporteddevice.ui" line="59"/>
-        <location filename="../src/selectdevice/ui_selectsupporteddevice.h" line="112"/>
-        <location filename="../src/selectdevice/ui_selectsupporteddevice.h" line="113"/>
         <source>...</source>
         <translation>...</translation>
     </message>
@@ -1341,7 +1387,7 @@
     <message>
         <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="93"/>
         <source>&lt;p&gt;Visit the build and run instruction &lt;a href=&apos;https://github.com/OpenHantek/OpenHantek6022/blob/master/docs/build.md&apos;&gt;website&lt;/a&gt; for help.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;&lt;a href=&apos;https://github.com/OpenHantek/OpenHantek6022/blob/master/docs/build.md&apos;&gt;Informationen&lt;/a&gt; zur Erstellung des Programms.&lt;/p&gt; </translation>
+        <translation>&lt;p&gt;&lt;a href=&apos;https://github.com/OpenHantek/OpenHantek6022/blob/master/docs/build.md&apos;&gt;Informationen&lt;/a&gt; zur Erstellung des Programms.&lt;/p&gt;</translation>
     </message>
     <message>
         <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="130"/>
@@ -1352,7 +1398,7 @@
 <context>
     <name>SpectrumDock</name>
     <message>
-        <location filename="../src/docks/SpectrumDock.cpp" line="27"/>
+        <location filename="../src/docks/SpectrumDock.cpp" line="28"/>
         <source>Spectrum</source>
         <translation>Spektrum</translation>
     </message>
@@ -1404,8 +1450,12 @@
     </message>
     <message>
         <location filename="../src/docks/VoltageDock.cpp" line="52"/>
+        <source>MA&amp;TH</source>
+        <translation>MA&amp;TH</translation>
+    </message>
+    <message>
         <source>&amp;MATH</source>
-        <translation>&amp;MATH</translation>
+        <translation type="vanished">&amp;MATH</translation>
     </message>
     <message>
         <location filename="../src/docks/VoltageDock.cpp" line="55"/>

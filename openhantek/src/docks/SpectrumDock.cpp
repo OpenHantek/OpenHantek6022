@@ -3,6 +3,7 @@
 #include <QCheckBox>
 #include <QCloseEvent>
 #include <QComboBox>
+#include <QDebug>
 #include <QDockWidget>
 #include <QLabel>
 #include <QSignalBlocker>
@@ -27,7 +28,7 @@ SpectrumDock::SpectrumDock( DsoSettingsScope *scope, QWidget *parent, Qt::Window
     : QDockWidget( tr( "Spectrum" ), parent, flags ), scope( scope ) {
 
     // Initialize lists for comboboxes
-    this->magnitudeSteps = {1e0, 2e0, 3e0, 6e0, 1e1, 2e1, 3e1, 6e1, 1e2, 2e2, 3e2, 6e2};
+    this->magnitudeSteps = {1, 2, 3, 6, 10, 20, 40, 60, 80, 100};
     for ( const auto &magnitude : magnitudeSteps )
         this->magnitudeStrings << valueToString( magnitude, UNIT_DECIBEL, 0 );
 
@@ -40,7 +41,9 @@ SpectrumDock::SpectrumDock( DsoSettingsScope *scope, QWidget *parent, Qt::Window
     for ( ChannelID channel = 0; channel < scope->voltage.size(); ++channel ) {
         ChannelBlock b;
         b.magnitudeComboBox = ( new QComboBox() );
-        b.usedCheckBox = ( new QCheckBox( scope->voltage[ channel ].name ) );
+        QString name = scope->spectrum[ channel ].name;
+        name.insert( int( channel ), '&' ); // &SP1, S&P2, SP&M
+        b.usedCheckBox = ( new QCheckBox( name ) );
 
         channelBlocks.push_back( b );
 

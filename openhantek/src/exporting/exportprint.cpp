@@ -21,7 +21,7 @@ void ExporterPrint::create( ExporterRegistry *newRegistry ) {
 
 int ExporterPrint::faIcon() { return fa::print; }
 
-QString ExporterPrint::name() { return QCoreApplication::tr( "Print .." ); }
+QString ExporterPrint::name() { return QCoreApplication::tr( "&Print .." ); }
 
 ExporterInterface::Type ExporterPrint::type() { return Type::SnapshotExport; }
 
