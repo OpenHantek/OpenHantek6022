@@ -82,7 +82,6 @@ endif()
 
 include(../cmake/fftw_on_windows.cmake)
 include(../cmake/libusb_on_windows.cmake)
-include(../cmake/icon_on_windows.cmake)
 
 if(NOT WIN32)
     find_package(libusb REQUIRED)
