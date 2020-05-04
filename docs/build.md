@@ -2,7 +2,7 @@
 layout: default
 ---
 ### [Linux](#linux)
-For debian (stretch and newer), Ubuntu 17.04+ and Mint 17+ and other deb based distributions install named requirements like this:
+For Debian (stretch and newer), Ubuntu 17.04+ and Mint 17+ and other deb based distributions install named requirements like this:
 > apt install g++ make cmake qttools5-dev qttools5-dev-tools libfftw3-dev binutils-dev libusb-1.0-0-dev libqt5opengl5-dev mesa-common-dev libgl1-mesa-dev libgles2-mesa-dev
 
 For distributions using dnf package manager (Fedora 21+) use this command:
@@ -12,25 +12,47 @@ For OpenSUSE and related distributions use this command
 > zypper install make cmake gcc-c++ qt5-qtbase-devel qt5-qttools-devel qt5-qttranslations  binutils-devel libusb-devel Mesa-libGL-devel Mesa-libGLESv2-devel fftw3-devel 
 
 After you've installed the requirements run the following commands inside the directory of this package:
-> mkdir build <br>
-> cd build <br>
-> cmake ../ <br>
-> make -j2
 
-Optionally install the program:
+    mkdir build
+    cd build
+    cmake ..
+    make -j2
 
-> sudo make install
-
-Optionally create a debian package:
-
-> sudo make package
-
+After success you can test the newly built program `openhantek/OpenHantek`.
+Due to the included debug information this file is quite big (~20 MB), but the size can be reduced with `strip openhantek/OpenHantek` if you want to put it into a user directory. 
 If you do not install the program, you need to copy the file `utils/udev_rules/60-hantek.rules` to `/lib/udev/rules.d/` yourself,
-and replug your device, otherwise you will not have the correct permissions to access usb devices.
+and replug your device, otherwise you will not have the correct USB permissions to access the device.
+
+You can install the program with `sudo make install`, but it is highly recommended to create a debian package,
+which allows a clear installation and removal of the package:
+
+    sudo rm -f packages/*
+    sudo make package
+    sudo apt install packages/openhantek_*_amd64.deb
 
 If you detect that icons are not displayed correctly, please check if the Qt SVG library is installed on your system.
 The Linux systems mentioned above include this lib when you install according to the provided lists.
 However, an [alpine linux](https://alpinelinux.org/) user [reported](https://github.com/OpenHantek/OpenHantek6022/issues/42#issuecomment-564329632) that he had to install `qt5-qtsvg` separately.
+
+### [RaspberryPi](#raspberrypi)
+The general Linux requirements from above also apply to the RPi; precompiled packages are available as [release](https://github.com/OpenHantek/OpenHantek6022/releases) assets.
+Please note, it is important that the correct graphics driver is selected,
+the OpenGL implementation of Qt requires the `Original non-GL desktop driver`, e.g. on my *RPi3B+*:
+
+    sudo raspi-config
+
+![Screenshot_20200429_110134](https://user-images.githubusercontent.com/12542359/80594903-22788180-8a24-11ea-9859-eebd51542823.png)
+
+![Screenshot_20200429_110204](https://user-images.githubusercontent.com/12542359/80594920-2c9a8000-8a24-11ea-8629-9584cfaf367f.png)
+
+![Screenshot_20200429_110341](https://user-images.githubusercontent.com/12542359/80594963-3cb25f80-8a24-11ea-9d5a-8ca90e836581.png)
+
+Only the 1st setting `G1 Legacy        Original non-GL desktop driver` worked for `OpenHantek6022`, the other two resulted in an error as below:
+
+    QEGLPlatformContext: eglMakeCurrent failed: 3009
+    QOpenGLFunctions created with non-current context
+
+Setting `Original non-GL desktop driver` was reported to work also on *RPi4B+*.
 
 ### [MacOSX](#macosx)
 We recommend homebrew to install the required libraries.
@@ -40,7 +62,7 @@ We recommend homebrew to install the required libraries.
 
 If you want to build an OSX bundle make sure the option in `openhantek/CMakeLists.txt` is set accordingly:
 
-`option(BUILD_MACOSX_BUNDLE "Build MacOS app bundle" ON)`
+    option(BUILD_MACOSX_BUNDLE "Build MacOS app bundle" ON)
 
 After you've installed the requirements run the following commands inside the top directory of this package:
 
