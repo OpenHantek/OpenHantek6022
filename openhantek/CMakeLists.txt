@@ -24,6 +24,10 @@ file(GLOB_RECURSE HEADERS "src/*.h")
 file(GLOB_RECURSE UI "src/*.ui")
 file(GLOB_RECURSE QRC "res/*.qrc")
 
+if(WIN32)
+    file(GLOB_RECURSE RC "res/*.rc")
+endif()
+
 add_custom_target(format SOURCES ".clang-format"
     COMMAND "clang-format" "-style=file" "-i" "-sort-includes" ${SRC} ${HEADERS})
 
@@ -57,7 +61,7 @@ endif()
 
 # make executable
 add_executable(${PROJECT_NAME} ${EXECTYPE} ${SRC} ${HEADERS} ${UI}
-${QRC} ${TRANSLATION_BIN_FILES} ${TRANSLATION_QRC} ${ICONS})
+${QRC} ${RC} ${TRANSLATION_BIN_FILES} ${TRANSLATION_QRC} ${ICONS})
 target_link_libraries(${PROJECT_NAME} Qt5::Widgets Qt5::PrintSupport Qt5::OpenGL ${OPENGL_LIBRARIES} )
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_range_for)
 if(MSVC)
