@@ -19,7 +19,7 @@ static void initSpecifications( Dso::ControlSpecification &specification ) {
     // the screen two times (for pre/post trigger) at 10ms/div = 100ms/screen
     // SAMPLESIZE defined in modelDDS120.h
     // adapt accordingly in HantekDsoControl::convertRawDataToSamples()
-    specification.bufferDividers = {1000, 1, 1};
+
     // This data was based on testing and depends on divider.
     // The sample value at the top of the screen with gain error correction
     // TODO: check if 20x is possible for 1st and 2nd value

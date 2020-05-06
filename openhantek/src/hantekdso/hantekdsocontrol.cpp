@@ -25,20 +25,16 @@
 using namespace Hantek;
 using namespace Dso;
 
-HantekDsoControl::HantekDsoControl( USBDevice *device )
-    : device( device ), specification( device->getModel()->spec() ),
-      controlsettings( &( specification->samplerate.single ), specification->channels ) {
-    if ( device == nullptr )
-        throw new std::runtime_error( "No usb device for HantekDsoControl" );
 
+HantekDsoControl::HantekDsoControl( USBDevice *device, const DSOModel *model )
+    : device( device ), model( model ), specification( model->spec() ),
+      controlsettings( &( specification->samplerate.single ), specification->channels ) {
     qRegisterMetaType< DSOsamples * >();
 
-    if ( specification->fixedUSBinLength )
+    if ( device && specification->fixedUSBinLength )
         device->overwriteInPacketLength( unsigned( specification->fixedUSBinLength ) );
-
     // Apply special requirements by the devices model
-    device->getModel()->applyRequirements( this );
-
+    model->applyRequirements( this );
     retrieveChannelLevelData();
 }
 
@@ -52,30 +48,7 @@ HantekDsoControl::~HantekDsoControl() {
 }
 
 
-unsigned HantekDsoControl::updateSamplerate( unsigned downsampler ) {
-    // qDebug() << "updateSamplerate( " << downsampler << ", " << isFastRate() << " )";
-    // Get samplerate limits
-    const ControlSamplerateLimits *limits = isFastRate() ? &specification->samplerate.multi : &specification->samplerate.single;
-
-    // Update settings
-    bool fastRateChanged = isFastRate() != ( controlsettings.samplerate.limits == &specification->samplerate.multi );
-    if ( fastRateChanged ) {
-        controlsettings.samplerate.limits = limits;
-    }
-
-    controlsettings.samplerate.downsampler = downsampler;
-    if ( downsampler )
-        controlsettings.samplerate.current =
-            controlsettings.samplerate.limits->base / specification->bufferDividers[ controlsettings.recordLengthId ] / downsampler;
-    else
-        controlsettings.samplerate.current =
-            controlsettings.samplerate.limits->max / specification->bufferDividers[ controlsettings.recordLengthId ];
-
-    // Update dependencies
-    this->setTriggerOffset( controlsettings.trigger.position );
-
-    return downsampler;
-}
+bool HantekDsoControl::deviceIsConnected() { return device ? device->isConnected() : true; }
 
 
 void HantekDsoControl::restoreTargets() {
@@ -106,7 +79,7 @@ void HantekDsoControl::updateSamplerateLimits() {
 
 Dso::ErrorCode HantekDsoControl::setSamplerate( double samplerate ) {
     // printf( "HDC::setSamplerate( %g )\n", samplerate );
-    if ( !device->isConnected() )
+    if ( !deviceIsConnected() )
         return Dso::ErrorCode::CONNECTION;
 
     if ( samplerate == 0.0 ) {
@@ -135,7 +108,7 @@ Dso::ErrorCode HantekDsoControl::setSamplerate( double samplerate ) {
 
 Dso::ErrorCode HantekDsoControl::setRecordTime( double duration ) {
     // printf( "setRecordTime( %g )\n", duration );
-    if ( !device->isConnected() )
+    if ( !deviceIsConnected() )
         return Dso::ErrorCode::CONNECTION;
 
     if ( duration == 0.0 ) {
@@ -183,7 +156,7 @@ Dso::ErrorCode HantekDsoControl::setCalFreq( double calfreq ) {
             cf = 0;
     }
     // printf( "HDC::setCalFreq( %g ) -> %d\n", calfreq, cf );
-    if ( !device->isConnected() )
+    if ( !deviceIsConnected() )
         return Dso::ErrorCode::CONNECTION;
     // control command for setting
     modifyCommand< ControlSetCalFreq >( ControlCode::CONTROL_SETCALFREQ )->setCalFreq( uint8_t( cf ) );
@@ -192,7 +165,7 @@ Dso::ErrorCode HantekDsoControl::setCalFreq( double calfreq ) {
 
 
 Dso::ErrorCode HantekDsoControl::setChannelUsed( ChannelID channel, bool used ) {
-    if ( !device->isConnected() )
+    if ( !deviceIsConnected() )
         return Dso::ErrorCode::CONNECTION;
     if ( channel >= specification->channels )
         return Dso::ErrorCode::PARAMETER;
@@ -211,7 +184,7 @@ Dso::ErrorCode HantekDsoControl::setChannelUsed( ChannelID channel, bool used ) 
         }
     }
     setFastRate( usedChannels == UsedChannels::USED_CH1 );
-    // qDebug() << "usedChannels" << (int)usedChannels;
+    // qDebug() << "usedChannels" << int( usedChannels );
     modifyCommand< ControlSetNumChannels >( ControlCode::CONTROL_SETNUMCHANNELS )->setDiv( isFastRate() ? 1 : 2 );
     // Check if fast rate mode availability changed
     this->updateSamplerateLimits();
@@ -222,7 +195,7 @@ Dso::ErrorCode HantekDsoControl::setChannelUsed( ChannelID channel, bool used ) 
 
 
 Dso::ErrorCode HantekDsoControl::setChannelInverted( ChannelID channel, bool inverted ) {
-    if ( !device->isConnected() )
+    if ( !deviceIsConnected() )
         return Dso::ErrorCode::CONNECTION;
     if ( channel >= specification->channels )
         return Dso::ErrorCode::PARAMETER;
@@ -234,7 +207,7 @@ Dso::ErrorCode HantekDsoControl::setChannelInverted( ChannelID channel, bool inv
 
 
 Dso::ErrorCode HantekDsoControl::setGain( ChannelID channel, double gain ) {
-    if ( !device->isConnected() )
+    if ( !deviceIsConnected() )
         return Dso::ErrorCode::CONNECTION;
 
     if ( channel >= specification->channels )
@@ -270,7 +243,7 @@ Dso::ErrorCode HantekDsoControl::setProbe( ChannelID channel, double probeAttn )
 
 
 Dso::ErrorCode HantekDsoControl::setCoupling( ChannelID channel, Dso::Coupling coupling ) {
-    if ( !device->isConnected() )
+    if ( !deviceIsConnected() )
         return Dso::ErrorCode::CONNECTION;
 
     if ( channel >= specification->channels )
@@ -285,7 +258,7 @@ Dso::ErrorCode HantekDsoControl::setCoupling( ChannelID channel, Dso::Coupling c
 
 
 Dso::ErrorCode HantekDsoControl::setTriggerMode( Dso::TriggerMode mode ) {
-    if ( !device->isConnected() )
+    if ( !deviceIsConnected() )
         return Dso::ErrorCode::CONNECTION;
     controlsettings.trigger.mode = mode;
     if ( Dso::TriggerMode::SINGLE != mode )
@@ -295,7 +268,7 @@ Dso::ErrorCode HantekDsoControl::setTriggerMode( Dso::TriggerMode mode ) {
 
 
 Dso::ErrorCode HantekDsoControl::setTriggerSource( ChannelID channel, bool smooth ) {
-    if ( !device->isConnected() )
+    if ( !deviceIsConnected() )
         return Dso::ErrorCode::CONNECTION;
     // printf("setTriggerSource( %d, %d )\n", channel, smooth);
     controlsettings.trigger.source = channel;
@@ -305,7 +278,7 @@ Dso::ErrorCode HantekDsoControl::setTriggerSource( ChannelID channel, bool smoot
 
 // trigger level in Volt
 Dso::ErrorCode HantekDsoControl::setTriggerLevel( ChannelID channel, double level ) {
-    if ( !device->isConnected() )
+    if ( !deviceIsConnected() )
         return Dso::ErrorCode::CONNECTION;
     if ( channel >= specification->channels )
         return Dso::ErrorCode::PARAMETER;
@@ -316,7 +289,7 @@ Dso::ErrorCode HantekDsoControl::setTriggerLevel( ChannelID channel, double leve
 
 
 Dso::ErrorCode HantekDsoControl::setTriggerSlope( Dso::Slope slope ) {
-    if ( !device->isConnected() )
+    if ( !deviceIsConnected() )
         return Dso::ErrorCode::CONNECTION;
     // printf("setTriggerSlope( %d )\n", (int)slope);
     controlsettings.trigger.slope = slope;
@@ -326,7 +299,7 @@ Dso::ErrorCode HantekDsoControl::setTriggerSlope( Dso::Slope slope ) {
 
 // set trigger position (0.0 - 1.0)
 Dso::ErrorCode HantekDsoControl::setTriggerOffset( double position ) {
-    if ( !device->isConnected() )
+    if ( !deviceIsConnected() )
         return Dso::ErrorCode::CONNECTION;
     // printf("setTriggerPosition( %g )\n", position);
     controlsettings.trigger.position = position;
@@ -376,16 +349,20 @@ Dso::ErrorCode HantekDsoControl::retrieveChannelLevelData() {
     // Get calibration data from EEPROM
     // printf( "retrieveChannelLevelData()\n" );
     int errorCode = -1;
-    if ( specification->hasCalibrationEEPROM )
+    if ( device && specification->hasCalibrationEEPROM )
         errorCode = device->controlRead( &controlsettings.cmdGetLimits );
     if ( errorCode < 0 ) {
         // invalidate the calibration values.
         memset( controlsettings.calibrationValues, 0xFF, sizeof( CalibrationValues ) );
-        QString message = tr( "Couldn't get calibration data from oscilloscope's EEPROM. Use a config file for calibration!" );
-        qWarning() << message;
-        emit statusMessage( message, 0 );
-        emit communicationError();
-        return Dso::ErrorCode::CONNECTION;
+        if ( device ) {
+            QString message = tr( "Couldn't get calibration data from oscilloscope's EEPROM. Use a config file for calibration!" );
+            qWarning() << message;
+            emit statusMessage( message, 0 );
+            emit communicationError();
+            return Dso::ErrorCode::CONNECTION;
+        } else {
+            return Dso::ErrorCode::NONE;
+        }
     }
     memcpy( controlsettings.calibrationValues, controlsettings.cmdGetLimits.data(), sizeof( CalibrationValues ) );
     //     printf("HDC::cV: %lu, %d, %g\n", sizeof( CalibrationValues ),
@@ -397,6 +374,8 @@ Dso::ErrorCode HantekDsoControl::retrieveChannelLevelData() {
 
 
 void HantekDsoControl::stopSampling() {
+    if ( !device )
+        return;
     auto controlCommand = ControlStopSampling();
     timestampDebug( QString( "Sending control command %1:%2" )
                         .arg( QString::number( controlCommand.code, 16 ),
@@ -440,6 +419,41 @@ std::vector< unsigned char > HantekDsoControl::getSamples( unsigned &previousSam
     static unsigned id = 0;
     ++id;
     timestampDebug( QString( "Received packet %1" ).arg( id ) );
+
+    return data;
+}
+
+
+std::vector< unsigned char > HantekDsoControl::getDummySamples( unsigned &previousSampleCount ) const {
+    static int counter = 0;
+    static uint8_t ch1 = 128;
+    static uint8_t ch2 = 128;
+    unsigned rawSampleCount = this->getSampleCount();
+    if ( rawSampleCount < previousSampleCount ) {
+        std::swap( rawSampleCount, previousSampleCount );
+    } else {
+        previousSampleCount = rawSampleCount;
+    }
+    std::vector< unsigned char > data( rawSampleCount );
+    auto it = data.begin();
+    for ( unsigned iii = 0; iii < rawSampleCount; ++iii ) {
+        if ( ++counter > 98 ) {
+            counter = 0;
+            if ( --ch1 < 78 ) {
+                ch1 = 178;
+                ch2 = ch2 < 153 ? 178 : 128;
+            }
+        }
+        *it++ = ch1;
+        if ( !isFastRate() ) {
+            *it++ = ch2;
+            ++iii;
+        }
+    }
+
+    static unsigned id = 0;
+    ++id;
+    timestampDebug( QString( "Received dummy packet %1" ).arg( id ) );
 
     return data;
 }
@@ -660,7 +674,7 @@ unsigned HantekDsoControl::softwareTrigger() {
     if ( triggeredPositionRaw ) {                      // triggered
         result.triggerPosition = triggeredPositionRaw; // align trace to trigger position
     }
-    // printf( "nextSlope %c, triggerPositionRaw %d\n", "/\\"[(int)nextSlope], triggerPositionRaw );
+    // printf( "nextSlope %c, triggerPositionRaw %d\n", "/\\"[ int( nextSlope ) ], triggeredPositionRaw );
     return result.triggerPosition;
 }
 
@@ -726,24 +740,33 @@ void HantekDsoControl::run() {
             if ( controlCommand->code == uint8_t( ControlCode::CONTROL_SETNUMCHANNELS ) )
                 activeChannels = *controlCommand->data();
 
-            errorCode = device->controlWrite( controlCommand );
-            if ( errorCode < 0 ) {
-                qWarning( "Sending control command %2x failed: %s", uint8_t( controlCommand->code ),
-                          libUsbErrorString( errorCode ).toLocal8Bit().data() );
+            if ( device ) { // do the USB communication
+                errorCode = device->controlWrite( controlCommand );
+                if ( errorCode < 0 ) {
+                    qWarning( "Sending control command %2x failed: %s", uint8_t( controlCommand->code ),
+                              libUsbErrorString( errorCode ).toLocal8Bit().data() );
 
-                if ( errorCode == LIBUSB_ERROR_NO_DEVICE ) {
-                    emit communicationError();
-                    return;
+                    if ( errorCode == LIBUSB_ERROR_NO_DEVICE ) {
+                        emit communicationError();
+                        return;
+                    }
+                } else {
+                    controlCommand->pending = false;
                 }
-            } else
+            } else {
                 controlCommand->pending = false;
+            }
         }
         controlCommand = controlCommand->next;
     }
 
     // State machine for the device communication
     bool triggered = false;
-    std::vector< unsigned char > rawData = this->getSamples( expectedSampleCount );
+    std::vector< unsigned char > rawData;
+    if ( device )
+        rawData = this->getSamples( expectedSampleCount );
+    else
+        rawData = this->getDummySamples( expectedSampleCount );
     if ( samplingStarted ) {
         convertRawDataToSamples( rawData, activeChannels ); // process new samples
         softwareTrigger();                                  // detect trigger point
@@ -751,7 +774,8 @@ void HantekDsoControl::run() {
     }
     // always run the display (slowly) to allow user interaction
     // ... but update immediately if new triggered data is available
-    if ( ( triggered && !lastTriggered ) || ( delayDisplay += acquireInterval ) >= displayInterval ) {
+    if ( ( controlsettings.trigger.slope == Dso::Slope::Both ) || ( triggered && !lastTriggered ) ||
+         ( delayDisplay += acquireInterval ) >= displayInterval ) {
         delayDisplay = 0;
         emit samplesAvailable( &result );
         // printf( "acquireInterval: %d, displayInterval: %d\n", acquireInterval, displayInterval );
@@ -790,7 +814,7 @@ void HantekDsoControl::addCommand( ControlCommand *newCommand, bool pending ) {
 
 
 Dso::ErrorCode HantekDsoControl::stringCommand( const QString &commandString ) {
-    if ( !device->isConnected() )
+    if ( !deviceIsConnected() )
         return Dso::ErrorCode::CONNECTION;
 
     QStringList commandParts = commandString.split( ' ', QString::SkipEmptyParts );

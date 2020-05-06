@@ -132,6 +132,7 @@ void DsoSettings::load() {
         store->endGroup();
     }
     // Voltage
+    bool defaultConfig = deviceSpecification->isDemoDevice; // use default channel setting in demo mode
     for ( ChannelID channel = 0; channel < scope.voltage.size(); ++channel ) {
         store->beginGroup( QString( "vertical%1" ).arg( channel ) );
         if ( store->contains( "gainStepIndex" ) )
@@ -152,8 +153,16 @@ void DsoSettings::load() {
             scope.voltage[ channel ].probeAttn = store->value( "probeAttn" ).toDouble();
         if ( store->contains( "used" ) )
             scope.voltage[ channel ].used = store->value( "used" ).toBool();
-        else if ( 0 == channel ) // no "used" entry -> no config file: ch0 is active as default
-            scope.voltage[ channel ].used = true;
+        else                      // no config file found, e.g. 1st run
+            defaultConfig = true; // start with default config
+
+        if ( defaultConfig ) { // useful default: show both voltage channels
+            scope.voltage[ 0 ].used = true;
+            scope.voltage[ 0 ].offset = DIVS_VOLTAGE / 4; // mid of upper screen half
+            scope.voltage[ 1 ].used = true;
+            scope.voltage[ 1 ].offset = -DIVS_VOLTAGE / 4; // mid of lower screen half
+        }
+
         store->beginGroup( "cursor" );
         if ( store->contains( "shape" ) )
             scope.voltage[ channel ].cursor.shape = DsoSettingsScopeCursor::CursorShape( store->value( "shape" ).toUInt() );

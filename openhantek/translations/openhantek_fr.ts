@@ -434,7 +434,7 @@
         <translation type="vanished">Impossible d&apos;obtenir les données de niveau du canal depuis l&apos;oscilloscope</translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="384"/>
+        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="358"/>
         <source>Couldn&apos;t get calibration data from oscilloscope&apos;s EEPROM. Use a config file for calibration!</source>
         <translation>Impossible d&apos;obtenir les données de niveau du canal depuis l&apos;oscilloscope. Utilisez un fichier de configuration pour la calibration !</translation>
     </message>
@@ -540,67 +540,67 @@
     <message>
         <location filename="../src/mainwindow.ui" line="64"/>
         <source>&amp;Export</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Exporter</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="94"/>
         <source>&amp;Open settings ..</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Ouvrir une configuration ..</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="102"/>
         <source>&amp;Save settings</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Enregistrer les réglages</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="110"/>
         <source>Save settings &amp;as ..</source>
-        <translation type="unfinished"></translation>
+        <translation>Enregistrer la configuration &amp;sous ..</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="115"/>
         <source>&amp;Exit</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Quitter</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="137"/>
         <source>&amp;Phosphor</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="145"/>
         <source>&amp;Histogram</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="153"/>
         <source>&amp;Zoom</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="161"/>
         <source>&amp;Measure</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="176"/>
         <source>&amp;User Manual</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Manuel utilisateur</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="181"/>
         <source>&amp;About ..</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;A propos ..</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="186"/>
         <source>&amp;Settings ..</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Réglages ..</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="194"/>
         <source>Manual &amp;command</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Ligne de commande</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="57"/>
@@ -721,103 +721,108 @@
         <translation>OpenHantek6022 (%1) - %2 (FW%3)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="140"/>
+        <location filename="../src/mainwindow.cpp" line="80"/>
+        <source>OpenHantek6022 (%1) - Device %2</source>
+        <translation>OpenHantek6022 (%1) - %2</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="142"/>
         <source>Invalid command</source>
         <translation>Commande invalide</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="227"/>
+        <location filename="../src/mainwindow.cpp" line="229"/>
         <source>Stop</source>
         <translation>Arrêter</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="228"/>
+        <location filename="../src/mainwindow.cpp" line="230"/>
         <source>Stop the oscilloscope</source>
         <translation>Arrêter l&apos;oscilloscope</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="231"/>
+        <location filename="../src/mainwindow.cpp" line="233"/>
         <source>Start</source>
         <translation>Démarrer</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="232"/>
+        <location filename="../src/mainwindow.cpp" line="234"/>
         <source>Start the oscilloscope</source>
         <translation>Démarrer l&apos;oscilloscope</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="251"/>
+        <location filename="../src/mainwindow.cpp" line="253"/>
         <source>Open file</source>
         <translation>Ouvrir une configuration</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="251"/>
-        <location filename="../src/mainwindow.cpp" line="274"/>
+        <location filename="../src/mainwindow.cpp" line="253"/>
+        <location filename="../src/mainwindow.cpp" line="276"/>
         <source>Settings (*.ini)</source>
         <translation>Réglages (*.ini)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="274"/>
+        <location filename="../src/mainwindow.cpp" line="276"/>
         <source>Save settings</source>
         <translation>Enregistrer les réglages</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="300"/>
+        <location filename="../src/mainwindow.cpp" line="302"/>
         <source>Disable fading of previous graphs</source>
         <translation>Désactiver l&apos;estompage des graphes précédents</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="302"/>
+        <location filename="../src/mainwindow.cpp" line="304"/>
         <source>Enable fading of previous graphs</source>
         <translation>Activer l&apos;estompage des graphes précédents</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="310"/>
+        <location filename="../src/mainwindow.cpp" line="312"/>
         <source>Hide histogram</source>
         <translation>Cacher l’histogramme</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="312"/>
+        <location filename="../src/mainwindow.cpp" line="314"/>
         <source>Show histogram</source>
         <translation>Montrer l’histogramme</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="321"/>
+        <location filename="../src/mainwindow.cpp" line="323"/>
         <source>Hide magnified scope</source>
         <translation>Cacher la vue agrandie</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="323"/>
+        <location filename="../src/mainwindow.cpp" line="325"/>
         <source>Show magnified scope</source>
         <translation>Montrer la vue agrandie</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="333"/>
+        <location filename="../src/mainwindow.cpp" line="335"/>
         <source>Hide measurements</source>
         <translation>Cacher les mesures</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="335"/>
+        <location filename="../src/mainwindow.cpp" line="337"/>
         <source>Show measurements</source>
         <translation>Montrer les mesures</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="353"/>
+        <location filename="../src/mainwindow.cpp" line="355"/>
         <source>About OpenHantek6022 (%1)</source>
         <translation>A propos de OpenHantek6022 (%1)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="354"/>
+        <location filename="../src/mainwindow.cpp" line="356"/>
         <source>&lt;p&gt;Open source software for Hantek6022 USB oscilloscopes&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2010, 2011 Oliver Haag&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2012-2020 OpenHantek community&lt;br/&gt;&lt;a href=&apos;https://github.com/OpenHantek&apos;&gt;https://github.com/OpenHantek&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Open source firmware copyright &amp;copy; 2019-2020 Ho-Ro&lt;br/&gt;&lt;a href=&apos;https://github.com/Ho-Ro/Hantek6022API&apos;&gt;https://github.com/Ho-Ro/Hantek6022API&lt;/a&gt;&lt;/p&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="360"/>
+        <location filename="../src/mainwindow.cpp" line="362"/>
         <source>&lt;p&gt;Running since %1 seconds.&lt;/p&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;p&gt;En cours depuis %1 secondes.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="378"/>
+        <location filename="../src/mainwindow.cpp" line="380"/>
         <source>%1: %2</source>
         <translation></translation>
     </message>
@@ -1203,7 +1208,12 @@
         <translation>Flat Top</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="79"/>
+        <location filename="../src/main.cpp" line="81"/>
+        <source>Demo mode without scope HW</source>
+        <translation>Mode démo sans équipement</translation>
+    </message>
+    <message>
+        <location filename="../src/main.cpp" line="83"/>
         <source>Use OpenGL ES instead of OpenGL</source>
         <translation>Utilisez OpenGL ES à la place de OpenGL</translation>
     </message>
@@ -1278,7 +1288,7 @@
     <message>
         <location filename="../src/exporting/exportprint.cpp" line="24"/>
         <source>&amp;Print ..</source>
-        <translation type="unfinished"></translation>
+        <translation>Im&amp;primer ..</translation>
     </message>
     <message>
         <location filename="../src/exporting/exportprint.cpp" line="41"/>
@@ -1296,7 +1306,7 @@
     <message>
         <location filename="../src/exporting/exportimage.cpp" line="24"/>
         <source>Export &amp;Image/PDF ..</source>
-        <translation type="unfinished"></translation>
+        <translation>Exporter &amp;image/PDF ..</translation>
     </message>
     <message>
         <location filename="../src/exporting/exportimage.cpp" line="35"/>
@@ -1329,7 +1339,7 @@
     <message>
         <location filename="../src/exporting/exportcsv.cpp" line="24"/>
         <source>Export &amp;CSV ..</source>
-        <translation type="unfinished"></translation>
+        <translation>Exporter &amp;CSV ..</translation>
     </message>
     <message>
         <location filename="../src/exporting/exportcsv.cpp" line="35"/>
@@ -1512,7 +1522,7 @@
     <message>
         <location filename="../src/docks/VoltageDock.cpp" line="52"/>
         <source>MA&amp;TH</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>&amp;MATH</source>

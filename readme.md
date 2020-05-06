@@ -13,7 +13,7 @@
 
 OpenHantek6022 is a free software for Hantek and compatible (Voltcraft/Darkwire/Protek/Acetech) USB digital signal oscilloscopes. 
 It was initially developed by [David Gräff and others](https://github.com/OpenHantek/openhantek/graphs/contributors) on [github.com/OpenHantek/openhantek](https://github.com/OpenHantek/openhantek). 
-After David [stopped maintaining](https://github.com/OpenHantek/openhantek/issues/277) the programm I cloned the repo to provide updates - only for Hantek 6022BE/BL.
+After David [stopped maintaining](https://github.com/OpenHantek/openhantek/issues/277) the programm I cloned the repo to provide updates - **but only for Hantek 6022BE/BL**.
 
 <p><img alt="Image of main window on linux" width="100%" src="docs/images/screenshot_mainwindow.png"></p>
 
@@ -22,8 +22,9 @@ After David [stopped maintaining](https://github.com/OpenHantek/openhantek/issue
  * SainSmart DDS120 (thx [msiegert](https://github.com/msiegert)) - this device has a different analog front end
  and uses the [slightly improved sigrok firmware](https://github.com/Ho-Ro/sigrok-firmware-fx2lafw), which has [some limitations](https://sigrok.org/wiki/SainSmart_DDS120/Info#Open-source_firmware_details)
  compared to the Hantek scopes (see [#69](https://github.com/OpenHantek/OpenHantek6022/issues/69#issuecomment-607341694)).
+* Demo mode is provided by the `-d` or `--demoMode` command line option.
 * Fully supported operating system: Linux; developed under debian stable for amd64 architecture.
-* Raspberry Pi packages (raspbian stable) are available on the [Releases](https://github.com/OpenHantek/OpenHantek6022/releases) page. (For RPI4 see [#28](https://github.com/OpenHantek/OpenHantek6022/issues/28).)
+* Raspberry Pi packages (raspbian stable) are available on the [Releases](https://github.com/OpenHantek/OpenHantek6022/releases) page, check this [setup requirement](docs/build.md#raspberrypi).
 * Compiles under FreeBSD (packaging / installation: work in progress, thx [tspspi](https://github.com/tspspi)).
 * Other operating systems builds: [Windows](docs/images/screenshot_mainwindow_win.png) (partly tested) & MacOSX (untested).
 * Uses [free open source firmware](https://github.com/Ho-Ro/Hantek6022API), no longer dependent on nonfree Hantek firmware.
@@ -53,6 +54,7 @@ After David [stopped maintaining](https://github.com/OpenHantek/openhantek/issue
 * The dock views on the main window can be customized by dragging them around and stacking them.
   This allows a minimum window size of 640*480 for old workstation computers.
 * All settings can be saved to a configuration file and loaded again.
+* French, German, Russian and Spanish localisation complete, Italian and Portuguese translation ongoing.
 
 ## AC coupling
 * A [little HW modification](docs/HANTEK6022_AC_Modification.pdf) adds AC coupling. OpenHantek6022 supports this feature since v2.17-rc5 / FW0204.
@@ -65,7 +67,7 @@ After David [stopped maintaining](https://github.com/OpenHantek/openhantek/issue
 * To install the downloaded `*.deb` package, open a terminal window, go to the download directory and enter the command (as root) `apt install ./openhantek_..._amd64.deb`.
 This command will automatically install all dependencies of the program as well.
 * For installation of `*.rpm` packages follow similar rules, e.g. `dnf install ./openhantek-...-1.x86_64.rpm`.
-* The `*.tar.gz` achives contain only the binary for quick testing, they do not work without an recently installed complete package. Do not report any issues about the `*.tag.gz`!
+* The `*.tar.gz` achives contain only the binary for quick testing, they do not work without an recently installed complete package. Do not report any issues about the `*.tar.gz`!
 * Get MacOSX packages from [macports](https://www.macports.org/ports.php?by=name&substr=openhantek) - thx [ra1nb0w](https://github.com/ra1nb0w).
 * Get [Fedora rpm packages](https://pkgs.org/download/openhantek) - thx [Vascom](https://github.com/Vascom).
 * [Download (untested) Windows build from last commit](https://ci.appveyor.com/project/Ho-Ro/openhantek6022/build/artifacts).
@@ -78,39 +80,41 @@ You need the following software, to build OpenHantek from source:
 * [libusb-1.0](https://libusb.info/), version >= 1.0.16 (prebuild files will be used on windows)
 * A compiler that supports C++11 - tested with gcc, clang and msvc
 
-We have build instructions available for [Linux](docs/build.md#linux), [Apple MacOSX](docs/build.md#macosx) and [Microsoft Windows](docs/build.md#windows).
+We have build instructions available for [Linux](docs/build.md#linux), [Raspberry Pi](docs/build.md#raspberrypi), [Apple MacOSX](docs/build.md#macosx) and [Microsoft Windows](docs/build.md#windows).
 
-## Run OpenHantek
+## Run OpenHantek6022
 On a Linux system start the program via the menu entry *OpenHantek (Digital Storage Oscilloscope)* or from a terminal window as `OpenHantek`.
 
-OpenHantek6022 runs also on legacy HW/SW that supports at least OpenGL 2.1+ or OpenGL ES 1.2+.
-OpenGL is preferred, if available. Overwrite this behaviour by starting OpenHantek
+You can explore the look and feel of OpenHantek6022 without the need for real scope hardware by running it from the command line as: `OpenHantek --demoMode`.
+
+OpenHantek6022 runs also on legacy HW/SW that supports at least *OpenGL* 2.1+ or *OpenGL ES* 1.2+.
+OpenGL is preferred, select *OpenGL ES* by starting OpenHantek
 from the command line like this: `OpenHantek --useGLES`.
 
-Raspberry Pi uses OpenGL ES automatically.
+Raspberry Pi uses OpenGL ES automatically, check also the [graphics driver setup](docs/build.md#raspberrypi).
 
-USB access for the device is required:
+USB access for the device is required (unless using demo mode):
 * As seen on the [Microsoft Windows build instructions](docs/build.md#windows) page, you have to assign an usb driver to the device.
 The original Hantek driver doesn't work.
-* On Linux, you need to copy the file `utils/udev_rules/60-hantek.rules` to `/etc/udev/rules.d/` or `/lib/udev/rules.d/` and replug your device. If OpenHantek is installed from a *.deb or *.rpm package this file is installed automatically.
+* On Linux, you need to copy the file `utils/udev_rules/60-hantek.rules` to `/etc/udev/rules.d/` or `/lib/udev/rules.d/` and replug your device. If OpenHantek is installed from a *.deb or *.rpm package this file is installed automatically into `/lib/udev/rules.d/`.
 
 ## Important!
 The scope doesn't store the firmware permanently in flash or eeprom, it must be uploaded after each power-up and is kept in ram 'til power-down.
 If the scope was used with a different software (old openhantek, sigrok or the windows software) the scope must be unplugged and replugged one-time before using it with OpenHantek6022 to enable the automatic loading of the correct firmware.
-The top line of the program must display the correct firmware version (FW0204).
+The top line of the program must display the correct firmware version (FW0206).
 
 ## Specifications, features, limitations and developer documentation
-I use this project mainly to explore how DSP can improve and extend the [limitations](docs/limitations.md) of this kind of low level hardware. It would have been easy to spend a few bucks more to buy a powerful scope - but it would be much less fun :)
+I use this project mainly to explore how DSP software can improve and extend the [limitations](docs/limitations.md) of this kind of low level hardware. It would have been easy to spend a few bucks more to buy a powerful scope - but it would be much less fun :)
 Please refer also to the [developer documentation](openhantek/readme.md) pages.
 
 ## Contribute
-We welcome any reported Github Issue if you have a problem with this software. Send us a pull request for enhancements and fixes. Some random notes:
+We welcome any reported GitHub issue if you have a problem with this software. Send us a pull request for enhancements and fixes. Some random notes:
    - Read [how to properly contribute to open source projects on GitHub][10].
    - Create a separate branch other than *master* for your changes. It is not possible to directly commit to master on this repository.
    - Write [good commit messages][11].
    - Use the same [coding style and spacing][13] -> install clang-format and use make target: `make format` or execute directly: `clang-format -style=file -i *.cpp *.h`.
    - It is mandatory that your commits are [Signed-off-by:][12], e.g. use git's command line option `-s` to append it automatically to your commit message:
-     `git commit -s -m 'This is my good	    commit message'`
+     `git commit -s -m 'This is my good	commit message'`
    - Open a [pull request][14] with a clear title and description.
    - Read [Add a new device](docs/adddevice.md) if you want to know how to add a device.
    - We recommend QtCreator as IDE on all platforms. It comes with CMake support, a decent compiler, and Qt out of the box.

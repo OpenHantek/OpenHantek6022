@@ -43,8 +43,7 @@ struct ControlSpecification {
     const ChannelID channels;
 
     // Limits
-    ControlSpecificationSamplerate samplerate;    ///< The samplerate specifications
-    std::vector< RecordLengthID > bufferDividers; ///< Samplerate dividers for record lengths
+    ControlSpecificationSamplerate samplerate; ///< The samplerate specifications
 
     /// For devices that support only fixed sample rates
     std::vector< FixedSampleRate > fixedSampleRates;
@@ -52,6 +51,7 @@ struct ControlSpecification {
     // Calibration
     /// DSO6022 has calibration in small EEPROM, DDS120 has big fw EEPROM
     bool hasCalibrationEEPROM = true;
+    bool isDemoDevice = false;
     /// The sample values at the top of the screen
     typedef std::vector< int > VoltageScale;
     std::vector< VoltageScale > voltageScale; // Per channel

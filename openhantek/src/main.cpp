@@ -50,6 +50,8 @@
 // OpenGL setup
 #include "glscope.h"
 
+#include "models/modelDEMO.h"
+
 #ifndef VERSION
 #error "You need to run the cmake buildsystem!"
 #endif
@@ -69,16 +71,19 @@ int main( int argc, char *argv[] ) {
 #if ( QT_VERSION >= QT_VERSION_CHECK( 5, 6, 0 ) )
     QCoreApplication::setAttribute( Qt::AA_EnableHighDpiScaling, true );
 #endif
-
+    bool demoMode = false;
     bool useGLES = false;
     {
         QCoreApplication parserApp( argc, argv );
         QCommandLineParser p;
         p.addHelpOption();
         p.addVersionOption();
-        QCommandLineOption useGlesOption( "useGLES", QCoreApplication::tr( "Use OpenGL ES instead of OpenGL" ) );
+        QCommandLineOption demoModeOption( {"d", "demoMode"}, QCoreApplication::tr( "Demo mode without scope HW" ) );
+        p.addOption( demoModeOption );
+        QCommandLineOption useGlesOption( {"e", "useGLES"}, QCoreApplication::tr( "Use OpenGL ES instead of OpenGL" ) );
         p.addOption( useGlesOption );
         p.process( parserApp );
+        demoMode = p.isSet( demoModeOption );
         useGLES = p.isSet( useGlesOption );
     }
 
@@ -129,33 +134,43 @@ int main( int argc, char *argv[] ) {
 
     //////// Find matching usb devices ////////
     libusb_context *context = nullptr;
-    int error = libusb_init( &context );
-    if ( error ) {
-        SelectSupportedDevice().showLibUSBFailedDialogModel( error );
-        return -1;
-    }
-    std::unique_ptr< USBDevice > device = SelectSupportedDevice().showSelectDeviceModal( context );
 
-    QString errorMessage;
-    if ( device == nullptr || !device->connectDevice( errorMessage ) ) {
-        libusb_exit( context );
-        return -1;
+    std::unique_ptr< USBDevice > device = nullptr;
+
+    if ( !demoMode ) {
+        int error = libusb_init( &context );
+        if ( error ) {
+            SelectSupportedDevice().showLibUSBFailedDialogModel( error );
+            return -1;
+        }
+        device = SelectSupportedDevice().showSelectDeviceModal( context );
+
+        QString errorMessage;
+        if ( device == nullptr || !device->connectDevice( errorMessage ) ) {
+            libusb_exit( context );
+            return -1;
+        }
     }
+
+    const DSOModel *model = demoMode ? new ModelDEMO() : device->getModel();
+    // qDebug() << "model: " << model->name.data();
 
     //////// Create DSO control object and move it to a separate thread ////////
     QThread dsoControlThread;
     dsoControlThread.setObjectName( "dsoControlThread" );
-    HantekDsoControl dsoControl( device.get() );
+    HantekDsoControl dsoControl( device ? device.get() : nullptr, model );
     dsoControl.moveToThread( &dsoControlThread );
     QObject::connect( &dsoControlThread, &QThread::started, &dsoControl, &HantekDsoControl::run );
     QObject::connect( &dsoControl, &HantekDsoControl::communicationError, QCoreApplication::instance(), &QCoreApplication::quit );
-    QObject::connect( device.get(), &USBDevice::deviceDisconnected, QCoreApplication::instance(), &QCoreApplication::quit );
+    if ( !demoMode )
+        QObject::connect( device.get(), &USBDevice::deviceDisconnected, QCoreApplication::instance(), &QCoreApplication::quit );
 
+    const Dso::ControlSpecification *spec = model->spec();
     //////// Create settings object ////////
-    DsoSettings settings( device->getModel()->spec() );
+    DsoSettings settings( spec );
 
     //////// Create exporters ////////
-    ExporterRegistry exportRegistry( device->getModel()->spec(), &settings );
+    ExporterRegistry exportRegistry( spec, &settings );
 
     ExporterCSV exporterCSV;
     ExporterImage exportImage;
@@ -173,7 +188,7 @@ int main( int argc, char *argv[] ) {
     PostProcessing postProcessing( settings.scope.countChannels() );
 
     SpectrumGenerator spectrumGenerator( &settings.scope, &settings.post );
-    MathChannelGenerator mathchannelGenerator( &settings.scope, device->getModel()->spec()->channels );
+    MathChannelGenerator mathchannelGenerator( &settings.scope, spec->channels );
     GraphGenerator graphGenerator( &settings.scope );
 
     postProcessing.registerProcessor( &samplesToExportRaw );
@@ -219,11 +234,11 @@ int main( int argc, char *argv[] ) {
     std::cout << "after ";
 
     dsoControl.stopSampling();
-
-    if ( context && device != nullptr ) {
+    if ( device && context ) {
         device.reset(); // causes libusb_close(), which must be called before libusb_exit()
         libusb_exit( context );
     }
+
     std::cout << openHantekMainWindow.elapsedTime.elapsed() / 1000 << " s\n";
 
     return res;

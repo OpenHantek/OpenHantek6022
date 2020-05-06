@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0+
 
-#include "modelDSO6022.h"
+#include "modelDEMO.h"
 #include "hantekdsocontrol.h"
 #include "hantekprotocol/controlStructs.h"
 #include "usb/usbdevice.h"
@@ -11,10 +11,7 @@
 
 using namespace Hantek;
 
-static ModelDSO6022BE modelInstance_6022be;
-static ModelDSO6022BL modelInstance_6022bl;
-
-static ModelDSO2020 modelInstance_2020;
+static ModelDEMO modelInstance_DEMO;
 
 static void initSpecifications( Dso::ControlSpecification &specification ) {
     // we drop 2K + 480 sample values due to unreliable start of stream
@@ -29,23 +26,19 @@ static void initSpecifications( Dso::ControlSpecification &specification ) {
     // Equivalent input voltage:   0.16V  0.4V  0.8V  1.6V    4V    8V   16V   40V
     // Theoretical gain setting:     x10   x10   x10   x5    x2     x1    x1    x1
     // mV / digit:                     4     4     4     8    20    40    40    40
-    // The real input front end introduces a gain error
-    // Input divider: 100/1009 = 1% too low display
-    // Amplifier gain: x1 (ok), x2 (ok), x5.1 (2% too high), x10.1 (1% too high)
-    // Overall resulting gain: x1 1% too low, x2 1% to low, x5 1% to high, x10 ok
     // The sample value for full screen (8 divs) with theoretical gain setting
-    specification.voltageScale[ 0 ] = {40, 100, 200, 202, 198, 198, 396, 990};
-    specification.voltageScale[ 1 ] = {40, 100, 200, 202, 198, 198, 396, 990};
+    specification.voltageScale[ 0 ] = {40, 100, 200, 200, 200, 200, 400, 1000};
+    specification.voltageScale[ 1 ] = {40, 100, 200, 200, 200, 200, 400, 1000};
     specification.voltageOffset[ 0 ] = {0, 0, 0, 0, 0, 0, 0, 0};
     specification.voltageOffset[ 1 ] = {0, 0, 0, 0, 0, 0, 0, 0};
-    // Gain and offset can be corrected by individual config values from EEPROM or file
+    // Gain and offset can be corrected by individual config values from file
 
     // read the real calibration values from file
     const char *ranges[] = {"20mV", "50mV", "100mV", "200mV", "500mV", "1000mV", "2000mV", "5000mV"};
     const char *channels[] = {"ch0", "ch1"};
     // printf( "read config file\n" );
     const unsigned RANGES = 8;
-    QSettings settings( QDir::homePath() + "/.config/OpenHantek/modelDSO6022.conf", QSettings::IniFormat );
+    QSettings settings( QDir::homePath() + "/.config/OpenHantek/modelDEMO.conf", QSettings::IniFormat );
 
     settings.beginGroup( "gain" );
     for ( unsigned ch = 0; ch < 2; ch++ ) {
@@ -117,18 +110,14 @@ static void initSpecifications( Dso::ControlSpecification &specification ) {
         {48e6, 48, 1}     //
     };
 
-#ifdef HANTEK_AC
-    // requires AC/DC HW mod like DDS120, enable with "cmake -D HANTEK_AC=1 .."
-    specification.couplings = {Dso::Coupling::DC, Dso::Coupling::AC};
-#else
     specification.couplings = {Dso::Coupling::DC};
-#endif
     specification.triggerModes = {Dso::TriggerMode::AUTO, Dso::TriggerMode::NORMAL, Dso::TriggerMode::SINGLE};
     specification.fixedUSBinLength = 0;
 
     // calibration frequency (requires >FW0206)
     specification.calfreqSteps = {50, 60, 100, 200, 500, 1e3, 2e3, 5e3, 10e3, 20e3, 50e3, 100e3};
     specification.hasCalibrationEEPROM = true;
+    specification.isDemoDevice = true;
 }
 
 static void applyRequirements_( HantekDsoControl *dsoControl ) {
@@ -142,65 +131,12 @@ static void applyRequirements_( HantekDsoControl *dsoControl ) {
 }
 
 
-// Hantek DSO-6022BE (this is the base model)
+// DEMO similar to Hantek DSO-6022BE
 //
 //                                              VID/PID active  VID/PID no FW   FW ver    FW name     Scope name
 //                                              |------------|  |------------|  |----|  |---------|  |----------|
-ModelDSO6022BE::ModelDSO6022BE()
-    : DSOModel( ID, 0x04b5, 0x6022, 0x04b4, 0x6022, 0x0206, "dso6022be", "DSO-6022BE", Dso::ControlSpecification( 2 ) ) {
+ModelDEMO::ModelDEMO() : DSOModel( ID, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, "demo", "DEMO", Dso::ControlSpecification( 2 ) ) {
     initSpecifications( specification );
 }
 
-void ModelDSO6022BE::applyRequirements( HantekDsoControl *dsoControl ) const { applyRequirements_( dsoControl ); }
-
-
-// Hantek DSO-6022BL (scope or logic analyzer)
-ModelDSO6022BL::ModelDSO6022BL()
-    : DSOModel( ID, 0x04b5, 0x602a, 0x04b4, 0x602a, 0x0206, "dso6022bl", "DSO-6022BL", Dso::ControlSpecification( 2 ) ) {
-    initSpecifications( specification );
-}
-
-void ModelDSO6022BL::applyRequirements( HantekDsoControl *dsoControl ) const { applyRequirements_( dsoControl ); }
-
-
-// Voltcraft DSO-2020 USB Oscilloscope (HW is identical to 6022)
-// Scope starts up as model DS-2020 (VID/PID = 04b4/2020) but loads 6022BE firmware and looks like a 6022BE
-ModelDSO2020::ModelDSO2020()
-    : DSOModel( ID, 0x04b5, 0x6022, 0x04b4, 0x2020, 0x0206, "dso6022be", "DSO-2020", Dso::ControlSpecification( 2 ) ) {
-    initSpecifications( specification );
-}
-
-void ModelDSO2020::applyRequirements( HantekDsoControl *dsoControl ) const { applyRequirements_( dsoControl ); }
-
-
-// two test cases with simple EZUSB board (LCsoft) without EEPROM or with Saleae VID/PID in EEPROM
-// after loading the FW they look like a 6022BE (without useful sample values as Port B and D are left open)
-// LCSOFT_TEST_BOARD is #defined/#undefined in modelDSO6022.h
-
-#ifdef LCSOFT_TEST_BOARD
-
-static ModelEzUSB modelInstance_EzUSB;
-static ModelSaleae modelInstance_Saleae;
-
-
-// LCSOFT without EEPROM reports EzUSB VID/PID
-ModelEzUSB::ModelEzUSB()
-    : DSOModel( ID, 0x04b5, 0x6022, 0x04b4, 0x8613, 0x0206, "dso6022be", "LCsoft-EzUSB", Dso::ControlSpecification( 2 ) ) {
-    initSpecifications( specification );
-    specification.hasCalibrationEEPROM = false; // (big) EEPROM, disabled by address jumper
-}
-
-void ModelEzUSB::applyRequirements( HantekDsoControl *dsoControl ) const { applyRequirements_( dsoControl ); }
-
-
-// Saleae VID/PID in EEPROM
-ModelSaleae::ModelSaleae()
-    : DSOModel( ID, 0x04b5, 0x6022, 0x0925, 0x3881, 0x0206, "dso6022be", "LCsoft-Saleae", Dso::ControlSpecification( 2 ) ) {
-    initSpecifications( specification );
-    specification.hasCalibrationEEPROM = false; // we have a big EEPROM
-}
-
-
-void ModelSaleae::applyRequirements( HantekDsoControl *dsoControl ) const { applyRequirements_( dsoControl ); }
-
-#endif
+void ModelDEMO::applyRequirements( HantekDsoControl *dsoControl ) const { applyRequirements_( dsoControl ); }
