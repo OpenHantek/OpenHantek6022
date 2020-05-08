@@ -160,7 +160,7 @@ int main( int argc, char *argv[] ) {
     dsoControlThread.setObjectName( "dsoControlThread" );
     HantekDsoControl dsoControl( device ? device.get() : nullptr, model );
     dsoControl.moveToThread( &dsoControlThread );
-    QObject::connect( &dsoControlThread, &QThread::started, &dsoControl, &HantekDsoControl::run );
+    QObject::connect( &dsoControlThread, &QThread::started, &dsoControl, &HantekDsoControl::stateMachine );
     QObject::connect( &dsoControl, &HantekDsoControl::communicationError, QCoreApplication::instance(), &QCoreApplication::quit );
     if ( !demoMode )
         QObject::connect( device.get(), &USBDevice::deviceDisconnected, QCoreApplication::instance(), &QCoreApplication::quit );

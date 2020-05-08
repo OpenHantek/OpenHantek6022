@@ -620,14 +620,14 @@ unsigned HantekDsoControl::searchTriggerPoint( Dso::Slope dsoSlope, unsigned int
 }
 
 
-unsigned HantekDsoControl::softwareTrigger() {
+unsigned HantekDsoControl::searchTriggerPosition() {
     static Dso::Slope nextSlope = Dso::Slope::Positive; // for alternating slope mode X
     ChannelID channel = controlsettings.trigger.source;
     // Trigger channel not in use
     if ( !controlsettings.voltage[ channel ].used || result.data.empty() ) {
         return result.triggerPosition = 0;
     }
-    // printf( "HDC::softwareTrigger()\n" );
+    // printf( "HDC::searchTriggerPosition()\n" );
     triggeredPositionRaw = 0;
     result.triggerPosition = 0; // not triggered
     result.pulseWidth1 = 0.0;
@@ -679,8 +679,8 @@ unsigned HantekDsoControl::softwareTrigger() {
 }
 
 
-bool HantekDsoControl::triggering() {
-    // printf( "HDC::triggering()\n" );
+bool HantekDsoControl::provideTriggeredData() {
+    // printf( "HDC::provideTriggeredData()\n" );
     static DSOsamples triggeredResult; // storage for last triggered trace samples
     if ( result.triggerPosition ) {    // live trace has triggered
         // Use this trace and save it also
@@ -710,26 +710,29 @@ bool HantekDsoControl::triggering() {
 void HantekDsoControl::updateInterval() {
     // Check the current oscilloscope state everytime 25% of the time
     //  the buffer should be refilled (-> acquireInterval in ms)
-    acquireInterval = int( SAMPLESIZE_USED * 250.0 / controlsettings.samplerate.current );
+    // Use real 100% rate for demo device
+    acquireInterval = int( SAMPLESIZE_USED * ( device ? 250.0 : 1000.0 ) / controlsettings.samplerate.current );
     // Slower update reduces CPU load but it worsens the triggering of rare events
-    // Display can be filled at slower rate
+    // Display can be filled at slower rate (not faster than displayInterval)
 #ifdef __arm__
     // RPi: Not more often than every 10 ms but at least once every 100 ms
     acquireInterval = qBound( 10, acquireInterval, 100 );
-    displayInterval = 20;
+    displayInterval = 20; // update display at least every 20 ms
 #else
     // Not more often than every 1 ms but at least once every 100 ms
     acquireInterval = qBound( 1, acquireInterval, 100 );
-    displayInterval = 10;
+    displayInterval = 10; // update display at least every 10 ms
 #endif
 }
 
 
-void HantekDsoControl::run() {
+/// \brief State machine for the device communication
+void HantekDsoControl::stateMachine() {
+    static int delayDisplay = 0;       // timer for display
+    static bool lastTriggered = false; // state of last frame
+    static bool skipEven = true;       // even or odd frames were skipped
+    static uint8_t activeChannels = 2; // detect 1 <-> 2 channel change
     int errorCode = 0;
-    static int delayDisplay = 0;
-    static bool lastTriggered = false;
-    static unsigned activeChannels = 2;
     // Send all pending control commands
     ControlCommand *controlCommand = firstControlCommand;
     while ( controlCommand ) {
@@ -740,7 +743,7 @@ void HantekDsoControl::run() {
             if ( controlCommand->code == uint8_t( ControlCode::CONTROL_SETNUMCHANNELS ) )
                 activeChannels = *controlCommand->data();
 
-            if ( device ) { // do the USB communication
+            if ( device ) { // do the USB communication with scope HW
                 errorCode = device->controlWrite( controlCommand );
                 if ( errorCode < 0 ) {
                     qWarning( "Sending control command %2x failed: %s", uint8_t( controlCommand->code ),
@@ -760,7 +763,6 @@ void HantekDsoControl::run() {
         controlCommand = controlCommand->next;
     }
 
-    // State machine for the device communication
     bool triggered = false;
     std::vector< unsigned char > rawData;
     if ( device )
@@ -769,18 +771,26 @@ void HantekDsoControl::run() {
         rawData = this->getDummySamples( expectedSampleCount );
     if ( samplingStarted ) {
         convertRawDataToSamples( rawData, activeChannels ); // process new samples
-        softwareTrigger();                                  // detect trigger point
-        triggered = triggering();                           // present either free running or last triggered trace
+        searchTriggerPosition();                            // detect trigger point
+        triggered = provideTriggeredData();                 // present either free running or last triggered trace
     }
-    // always run the display (slowly) to allow user interaction
-    // ... but update immediately if new triggered data is available
-    if ( ( controlsettings.trigger.slope == Dso::Slope::Both ) || ( triggered && !lastTriggered ) ||
-         ( delayDisplay += acquireInterval ) >= displayInterval ) {
+    delayDisplay += acquireInterval;
+    // always run the display (slowly at t=displayInterval) to allow user interaction
+    // ... but update immediately if new triggered data is available after untriggered
+    // skip an even number of frames when slope == Dso::Slope::Both
+    if ( ( triggered && !lastTriggered )                                 // show new data immediately
+         || ( ( delayDisplay >= displayInterval )                        // or wait some time ...
+              && ( ( controlsettings.trigger.slope != Dso::Slope::Both ) // ... for ↗ or ↘ slope
+                   || skipEven ) ) )                                     // and drop even no. of frames
+    {
         delayDisplay = 0;
+        skipEven = true; // zero frames -> even
         emit samplesAvailable( &result );
-        // printf( "acquireInterval: %d, displayInterval: %d\n", acquireInterval, displayInterval );
+    } else {
+        skipEven = !skipEven;
     }
-    lastTriggered = triggered;
+
+    lastTriggered = triggered; // save state
 
     // Stop sampling if we're in single trigger mode and have a triggered trace (txh No13)
     if ( controlsettings.trigger.mode == Dso::TriggerMode::SINGLE && samplingStarted && triggeredPositionRaw > 0 ) {
@@ -796,11 +806,11 @@ void HantekDsoControl::run() {
         timestampDebug( "Starting to capture" );
         samplingStarted = true;
     }
-    updateInterval();
+    updateInterval(); // calculate new acquire timing
 #if ( QT_VERSION >= QT_VERSION_CHECK( 5, 4, 0 ) )
-    QTimer::singleShot( acquireInterval, this, &HantekDsoControl::run );
+    QTimer::singleShot( acquireInterval, this, &HantekDsoControl::stateMachine );
 #else
-    QTimer::singleShot( acquireInterval, this, SLOT( run() ) );
+    QTimer::singleShot( acquireInterval, this, SLOT( stateMachine() ) );
 #endif
 }
 

@@ -50,7 +50,7 @@ class HantekDsoControl : public QObject {
     /// Call this to start the processing.
     /// This method will call itself periodically from there on.
     /// Move this class object to an own thread and call run from there.
-    void run();
+    void stateMachine();
 
     double getSamplerate() const { return controlsettings.samplerate.current; }
 
@@ -199,9 +199,9 @@ class HantekDsoControl : public QObject {
         return ( slope == Dso::Slope::Positive ? Dso::Slope::Negative : Dso::Slope::Positive );
     }
 
-    unsigned softwareTrigger();
+    unsigned searchTriggerPosition();
 
-    bool triggering();
+    bool provideTriggeredData();
 
     /// Pointers to control commands
     ControlCommand *control[ 255 ] = {nullptr};
