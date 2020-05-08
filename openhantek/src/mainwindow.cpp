@@ -101,14 +101,11 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
 
     // Docking windows
     // Create dock windows before the dso widget, they fix messed up settings
-    VoltageDock *voltageDock;
-    HorizontalDock *horizontalDock;
-    TriggerDock *triggerDock;
-    SpectrumDock *spectrumDock;
-    voltageDock = new VoltageDock( scope, spec, this );
-    horizontalDock = new HorizontalDock( scope, spec, this );
-    triggerDock = new TriggerDock( scope, spec, this );
-    spectrumDock = new SpectrumDock( scope, this );
+
+    VoltageDock *voltageDock = new VoltageDock( scope, spec, this );
+    HorizontalDock *horizontalDock = new HorizontalDock( scope, spec, this );
+    TriggerDock *triggerDock = new TriggerDock( scope, spec, this );
+    SpectrumDock *spectrumDock = new SpectrumDock( scope, this );
 
     addDockWidget( Qt::RightDockWidgetArea, voltageDock );
     addDockWidget( Qt::RightDockWidgetArea, horizontalDock );

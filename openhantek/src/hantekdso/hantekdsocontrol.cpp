@@ -425,9 +425,13 @@ std::vector< unsigned char > HantekDsoControl::getSamples( unsigned &previousSam
 
 
 std::vector< unsigned char > HantekDsoControl::getDummySamples( unsigned &previousSampleCount ) const {
+    const uint8_t V_zero = 128;   // ADC = 0V
+    const uint8_t V_plus_1 = 153; // ADC = 1V
+    const uint8_t V_plus_2 = 178; // ADC = 2V
+    const uint8_t V_minus_2 = 78; // ADC = -2V
+    static uint8_t ch1 = V_zero;
+    static uint8_t ch2 = V_zero;
     static int counter = 0;
-    static uint8_t ch1 = 128;
-    static uint8_t ch2 = 128;
     unsigned rawSampleCount = this->getSampleCount();
     if ( rawSampleCount < previousSampleCount ) {
         std::swap( rawSampleCount, previousSampleCount );
@@ -435,19 +439,30 @@ std::vector< unsigned char > HantekDsoControl::getDummySamples( unsigned &previo
         previousSampleCount = rawSampleCount;
     }
     std::vector< unsigned char > data( rawSampleCount );
-    auto it = data.begin();
-    for ( unsigned iii = 0; iii < rawSampleCount; ++iii ) {
-        if ( ++counter > 98 ) {
+    auto end = data.end();
+    const int deltaT = 99;
+    for ( auto it = data.begin(); it != end; ++it ) {
+        // deltaT (=99) defines the frequency of the dummy signals:
+        // ch1 = 1 kHz and ch2 = 500 Hz for samplerate = 100 kS/s .. 10 MS/s
+        // for samplerates below this range the frequency decreases proportional:
+        // - samplerate = 50 kS/s -> 500 Hz / 250 Hz
+        // - samplerate = 20 kS/s -> 200 Hz / 100 Hz
+        // - samplerate = 10 kS/s -> 100 Hz / 50 Hz
+        // similar if you're above:
+        // - samplerate = 30 MS/s -> 3000 Hz (only ch1)
+        // - samplerate = 24 MS/s -> 2400 Hz (only ch1)
+        // - samplerate = 15 MS/s -> 1500 Hz / 750 Hz
+        // - samplerate = 12 MS/s -> 1200 Hz / 600 Hz
+        if ( ++counter >= deltaT ) {
             counter = 0;
-            if ( --ch1 < 78 ) {
-                ch1 = 178;
-                ch2 = ch2 < 153 ? 178 : 128;
+            if ( --ch1 < V_minus_2 ) {
+                ch1 = V_plus_2;
+                ch2 = ch2 <= V_plus_1 ? V_plus_2 : V_zero;
             }
         }
-        *it++ = ch1;
+        *it = ch1;
         if ( !isFastRate() ) {
-            *it++ = ch2;
-            ++iii;
+            *++it = ch2;
         }
     }
 
