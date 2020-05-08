@@ -756,92 +756,73 @@
 <context>
     <name>NewDeviceModelFromExisting</name>
     <message>
-        <location filename="../src/selectdevice/newdevicemodelfromexisting.ui" line="14"/>
         <source>New device from template</source>
-        <translation>Новое устройство из шаблона</translation>
+        <translation type="vanished">Новое устройство из шаблона</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/newdevicemodelfromexisting.ui" line="20"/>
         <source>Select USB device</source>
         <translatorcomment>как минимум два пробела в конце, чтобы текст не обрезался (?)</translatorcomment>
-        <translation>Выберите USB устройство   </translation>
+        <translation type="vanished">Выберите USB устройство   </translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/newdevicemodelfromexisting.ui" line="32"/>
         <source>Refresh</source>
-        <translation>Обновить</translation>
+        <translation type="vanished">Обновить</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/newdevicemodelfromexisting.ui" line="39"/>
-        <location filename="../src/selectdevice/newdevicemodelfromexisting.ui" line="42"/>
         <source>This is usually indicated by a light (red flashing)</source>
-        <translation>Это обычно обозначается светом (мигает красным)</translation>
+        <translation type="vanished">Это обычно обозначается светом (мигает красным)</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/newdevicemodelfromexisting.ui" line="45"/>
         <source>Firmware is uploaded already*</source>
-        <translation>Прошивка уже загружена*</translation>
+        <translation type="vanished">Прошивка уже загружена*</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/newdevicemodelfromexisting.ui" line="71"/>
         <source>Template selection</source>
-        <translation>Выбор шаблона</translation>
+        <translation type="vanished">Выбор шаблона</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/newdevicemodelfromexisting.ui" line="83"/>
         <source>Select the existing model that should be used as template for your device. You may need to restart OpenHantek and try different models until it works for you.</source>
-        <translation>Выберите существующую модель, которая должна использоваться в качестве шаблона для вашего устройства. Возможно потребуется перезапускать OpenHantek и пробовать другие модели, пока не заработает.</translation>
+        <translation type="vanished">Выберите существующую модель, которая должна использоваться в качестве шаблона для вашего устройства. Возможно потребуется перезапускать OpenHantek и пробовать другие модели, пока не заработает.</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/newdevicemodelfromexisting.ui" line="96"/>
         <source>Please enter a model name</source>
-        <translation>Введите название модели</translation>
+        <translation type="vanished">Введите название модели</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/newdevicemodelfromexisting.ui" line="110"/>
         <source>Firmware files</source>
-        <translation>Файлы прошивок</translation>
+        <translation type="vanished">Файлы прошивок</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/newdevicemodelfromexisting.ui" line="116"/>
         <source>Please select the firmware files in hex format, extracted from the windows driver for example. You need to open this dialog again after the firmware has been uploaded.</source>
-        <translation>Пожалуйста, выберите файлы прошивки в шестнадцатеричном формате, извлечённые, например, из драйвера Windows. Вам нужно снова открыть этот диалог после загрузки прошивки.</translation>
+        <translation type="vanished">Пожалуйста, выберите файлы прошивки в шестнадцатеричном формате, извлечённые, например, из драйвера Windows. Вам нужно снова открыть этот диалог после загрузки прошивки.</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/newdevicemodelfromexisting.ui" line="131"/>
         <source>Firmware</source>
-        <translation>Прошивка</translation>
+        <translation type="vanished">Прошивка</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/newdevicemodelfromexisting.ui" line="138"/>
         <source>Loader</source>
-        <translation>Загрузчик</translation>
+        <translation type="vanished">Загрузчик</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/newdevicemodelfromexisting.ui" line="157"/>
-        <location filename="../src/selectdevice/newdevicemodelfromexisting.ui" line="173"/>
         <source>...</source>
-        <translation>...</translation>
+        <translation type="vanished">...</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/newdevicemodelfromexisting.ui" line="189"/>
         <source>No USB devices found or your operating system prohibited enumerating devices.</source>
-        <translation>Устройства USB не найдены или в вашей операционной системе запрещено перечислять устройства.</translation>
+        <translation type="vanished">Устройства USB не найдены или в вашей операционной системе запрещено перечислять устройства.</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/newdevicemodelfromexisting.ui" line="203"/>
         <source>No access granted for the selected USB device. Your operating system may prohibit access. On Windows you might need to install a generic driver first. On Linux you need to install an udev rule to grant access to your currently logged in user.</source>
-        <translation>Нет доступа к выбранному USB-устройству. Возможно ваша операционная система запрещает доступ. В Windows вам может понадобиться сначала установить универсальный драйвер. В Linux вам нужно установить правило udev, чтобы предоставить доступ текущему пользователю системы.</translation>
+        <translation type="vanished">Нет доступа к выбранному USB-устройству. Возможно ваша операционная система запрещает доступ. В Windows вам может понадобиться сначала установить универсальный драйвер. В Linux вам нужно установить правило udev, чтобы предоставить доступ текущему пользователю системы.</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/newdevicemodelfromexisting.cpp" line="75"/>
         <source>Sorry</source>
-        <translation>Извините</translation>
+        <translation type="vanished">Извините</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/newdevicemodelfromexisting.cpp" line="75"/>
         <source>This is not yet implemented!</source>
-        <translation>Это пока не реализовано!</translation>
+        <translation type="vanished">Это пока не реализовано!</translation>
     </message>
 </context>
 <context>
@@ -1277,58 +1258,67 @@
         <translation>Выберите устройство</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.ui" line="27"/>
         <source>Supported device</source>
-        <translation>Поддерживаемое устройство</translation>
+        <translation type="vanished">Поддерживаемое устройство</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.ui" line="39"/>
+        <location filename="../src/selectdevice/selectsupporteddevice.ui" line="29"/>
         <source>Devices:</source>
         <translation>Устройства:</translation>
     </message>
     <message>
+        <location filename="../src/selectdevice/selectsupporteddevice.ui" line="36"/>
         <location filename="../src/selectdevice/selectsupporteddevice.ui" line="46"/>
-        <location filename="../src/selectdevice/selectsupporteddevice.ui" line="59"/>
         <source>...</source>
         <translation>...</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="62"/>
+        <location filename="../src/selectdevice/selectsupporteddevice.ui" line="75"/>
+        <source>Demo Mode</source>
+        <translation>демонстрационного режима</translation>
+    </message>
+    <message>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="53"/>
         <source>&lt;p&gt;&lt;br/&gt;&lt;b&gt;The device is ready for use.&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Please observe the &lt;a href=&apos;https://github.com/OpenHantek/OpenHantek6022/blob/master/docs/OpenHantek6022_User_Manual.pdf&apos;&gt;user manual&lt;/a&gt; for safe operation.&lt;/p&gt;</source>
         <translation>&lt;p&gt;&lt;br/&gt;&lt;b&gt;Устройство готово к работе.&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Пожалуйста изучите &lt;a href=&apos;https://github.com/OpenHantek/OpenHantek6022/blob/master/docs/OpenHantek6022_User_Manual.pdf&apos;&gt;руководство пользователя&lt;/a&gt; для безопасной эксплуатации устройства.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="68"/>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="59"/>
         <source>&lt;p&gt;Upload in progress ...&lt;/p&gt;&lt;p&gt;&lt;b&gt;If the upload takes more than 30 s, please close this window &lt;br/&gt;and restart the program!&lt;/b&gt;&lt;/p&gt;</source>
         <translation>&lt;p&gt;Идёт процесс загрузки ...&lt;/p&gt;&lt;p&gt;&lt;b&gt;Если загрузка занимает более 30 секунд, закройте это окно &lt;br/&gt;и перезапустите программу!&lt;/b&gt;&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="72"/>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="63"/>
         <source>&lt;p&gt;&lt;br/&gt;&lt;b&gt;Connection failed!&lt;/b&gt;&lt;/p&gt;</source>
         <translation>&lt;p&gt;&lt;br/&gt;&lt;b&gt;Соединение не удалось!&lt;/b&gt;&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="78"/>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="69"/>
         <source>&lt;p&gt;OpenHantek6022 is searching for compatible devices ...&lt;/p&gt;&lt;p&gt;&lt;img align=&apos;right&apos; height=&apos;200&apos; src=&apos;qrc:///switch_6022BL.png&apos;&gt;Don&apos;t forget to switch your device into oscilloscope mode if it has multiple modes.&lt;/p&gt;</source>
         <translation>&lt;p&gt;OpenHantek6022 ищет совместимые устройства ...&lt;/p&gt;&lt;p&gt;&lt;img align=&apos;right&apos; height=&apos;200&apos; src=&apos;qrc:///switch_6022BL.png&apos;&gt;Не забудьте переключить ваше устройство в режим осциллографа если оно имеет несколько режимов.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="82"/>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="73"/>
         <source>&lt;p&gt;Please make sure you have installed the windows usb driver correctly&lt;/p&gt;</source>
         <translation>&lt;p&gt;Убедитесь в корректно установленных USB драйверах для Windows&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="88"/>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="79"/>
         <source>&lt;p&gt;Please make sure you have copied the udev rules file to &lt;b&gt;%1&lt;/b&gt; for correct USB access permissions.&lt;/p&gt;</source>
         <translation>&lt;p&gt;Пожалуйста, убедитесь, что вы скопировали файл правил udev &lt;b&gt;%1&lt;/b&gt; для корректных прав доступа к USB.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="93"/>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="84"/>
         <source>&lt;p&gt;Visit the build and run instruction &lt;a href=&apos;https://github.com/OpenHantek/OpenHantek6022/blob/master/docs/build.md&apos;&gt;website&lt;/a&gt; for help.&lt;/p&gt;</source>
         <translation>&lt;p&gt;Посетите &lt;a href=&apos;https://github.com/OpenHantek/OpenHantek6022/blob/master/docs/build.md&apos;&gt;вебсайт&lt;/a&gt; с инструкциями по компиляции и запуску программы.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="130"/>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="86"/>
+        <source>&lt;hr/&gt;&lt;p&gt;Even without a device you can explore the program&apos;s function. Just press the &lt;b&gt;Demo Mode&lt;/b&gt; button below.&lt;/p&gt;</source>
+        <translation>&lt;hr/&gt;&lt;p&gt;Вы можете изучить функции программы без устройства, просто нажмите кнопку &lt;b&gt;демонстрационного режима&lt;/b&gt; кнопки.&lt;/p&gt;</translation>
+    </message>
+    <message>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="120"/>
         <source>Can&apos;t initalize USB: %1</source>
         <translation>Не удалось инициализировать USB: %1</translation>
     </message>

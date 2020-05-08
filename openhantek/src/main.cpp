@@ -143,10 +143,10 @@ int main( int argc, char *argv[] ) {
             SelectSupportedDevice().showLibUSBFailedDialogModel( error );
             return -1;
         }
-        device = SelectSupportedDevice().showSelectDeviceModal( context );
+        device = SelectSupportedDevice().showSelectDeviceModal( context, demoMode );
 
         QString errorMessage;
-        if ( device == nullptr || !device->connectDevice( errorMessage ) ) {
+        if ( !demoMode && ( device == nullptr || !device->connectDevice( errorMessage ) ) ) {
             libusb_exit( context );
             return -1;
         }

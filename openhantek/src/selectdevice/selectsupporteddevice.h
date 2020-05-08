@@ -5,15 +5,12 @@
 #include "ui_selectsupporteddevice.h"
 
 #include <QDialog>
+#include <QPushButton>
 
 #include "usb/usbdevice.h"
 #include <memory>
 
 struct libusb_context;
-class NewDeviceModelFromExisting;
-
-// define if this tab is also designed in "selectsupporteddevice.ui"
-// #define NEW_DEVICE_FROM_EXISTING_DIALOG
 
 /**
  * Offers the user a device selection dialog. If you call any of the -Modal methods,
@@ -28,7 +25,7 @@ class SelectSupportedDevice : public QDialog {
 
   public:
     explicit SelectSupportedDevice( QWidget *parent = nullptr );
-    std::unique_ptr< USBDevice > showSelectDeviceModal( libusb_context *context );
+    std::unique_ptr< USBDevice > showSelectDeviceModal( libusb_context *context, bool &demoMode );
     void showLibUSBFailedDialogModel( int error );
 
   private:
@@ -36,7 +33,5 @@ class SelectSupportedDevice : public QDialog {
     void updateSupportedDevices();
     std::unique_ptr< Ui::SelectSupportedDevice > ui;
     UniqueUSBid selectedDevice = 0;
-#ifdef NEW_DEVICE_FROM_EXISTING_DIALOG
-    NewDeviceModelFromExisting *newDeviceFromExistingDialog;
-#endif
+    bool demoModeClicked = false;
 };

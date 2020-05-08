@@ -804,91 +804,68 @@
 <context>
     <name>NewDeviceModelFromExisting</name>
     <message>
-        <location filename="../src/selectdevice/newdevicemodelfromexisting.ui" line="14"/>
         <source>New device from template</source>
-        <translation>Nuevo dispositivo desde plantilla</translation>
+        <translation type="vanished">Nuevo dispositivo desde plantilla</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/newdevicemodelfromexisting.ui" line="20"/>
         <source>Select USB device</source>
-        <translation>Seleccionar dispositivo USB</translation>
+        <translation type="vanished">Seleccionar dispositivo USB</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/newdevicemodelfromexisting.ui" line="32"/>
         <source>Refresh</source>
-        <translation>Actualizar</translation>
+        <translation type="vanished">Actualizar</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/newdevicemodelfromexisting.ui" line="39"/>
-        <location filename="../src/selectdevice/newdevicemodelfromexisting.ui" line="42"/>
         <source>This is usually indicated by a light (red flashing)</source>
-        <translation>Se indica generalmente con una luz (roja intermitente)</translation>
+        <translation type="vanished">Se indica generalmente con una luz (roja intermitente)</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/newdevicemodelfromexisting.ui" line="45"/>
         <source>Firmware is uploaded already*</source>
-        <translation>El firmware ya está cargado*</translation>
+        <translation type="vanished">El firmware ya está cargado*</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/newdevicemodelfromexisting.ui" line="71"/>
         <source>Template selection</source>
-        <translation>Selección de la plantilla</translation>
+        <translation type="vanished">Selección de la plantilla</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/newdevicemodelfromexisting.ui" line="83"/>
         <source>Select the existing model that should be used as template for your device. You may need to restart OpenHantek and try different models until it works for you.</source>
-        <translation>Seleccionar el modelo existente que debiera ser usado como plantilla para su dispositivo. Puede necesitar reiniciar OpenHantek y probar modelos diferentes hasta que funcione.</translation>
+        <translation type="vanished">Seleccionar el modelo existente que debiera ser usado como plantilla para su dispositivo. Puede necesitar reiniciar OpenHantek y probar modelos diferentes hasta que funcione.</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/newdevicemodelfromexisting.ui" line="96"/>
         <source>Please enter a model name</source>
-        <translation>Introduzca el nombre del modelo</translation>
+        <translation type="vanished">Introduzca el nombre del modelo</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/newdevicemodelfromexisting.ui" line="110"/>
         <source>Firmware files</source>
-        <translation>Archivos del firmware</translation>
+        <translation type="vanished">Archivos del firmware</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/newdevicemodelfromexisting.ui" line="116"/>
         <source>Please select the firmware files in hex format, extracted from the windows driver for example. You need to open this dialog again after the firmware has been uploaded.</source>
-        <translation>Seleccione los archivos del firmware en formato hex, extraídos del controlador de windows por ejemplo. Necesita abrir este diálogo otra vez después de que el firmware haya sido cargado.</translation>
+        <translation type="vanished">Seleccione los archivos del firmware en formato hex, extraídos del controlador de windows por ejemplo. Necesita abrir este diálogo otra vez después de que el firmware haya sido cargado.</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/newdevicemodelfromexisting.ui" line="131"/>
         <source>Firmware</source>
-        <translation>Firmware</translation>
+        <translation type="vanished">Firmware</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/newdevicemodelfromexisting.ui" line="138"/>
         <source>Loader</source>
-        <translation>Cargador</translation>
+        <translation type="vanished">Cargador</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/newdevicemodelfromexisting.ui" line="157"/>
-        <location filename="../src/selectdevice/newdevicemodelfromexisting.ui" line="173"/>
-        <source>...</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../src/selectdevice/newdevicemodelfromexisting.ui" line="189"/>
         <source>No USB devices found or your operating system prohibited enumerating devices.</source>
-        <translation>Ningún dispositivo USB encontrado o su sistema operativo no permite enumerar dispositivos.</translation>
+        <translation type="vanished">Ningún dispositivo USB encontrado o su sistema operativo no permite enumerar dispositivos.</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/newdevicemodelfromexisting.ui" line="203"/>
         <source>No access granted for the selected USB device. Your operating system may prohibit access. On Windows you might need to install a generic driver first. On Linux you need to install an udev rule to grant access to your currently logged in user.</source>
-        <translation>Acceso no permitido para el dispositivo USB seleccionado. Su sistema operativo puede haber impedido el acceso. En Windows puede que primero necesite instalar un controlador genérico. En Linux necesita instalar una regla udev para permitir el acceso al usuario actual.</translation>
+        <translation type="vanished">Acceso no permitido para el dispositivo USB seleccionado. Su sistema operativo puede haber impedido el acceso. En Windows puede que primero necesite instalar un controlador genérico. En Linux necesita instalar una regla udev para permitir el acceso al usuario actual.</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/newdevicemodelfromexisting.cpp" line="75"/>
         <source>Sorry</source>
-        <translation>Lo siento</translation>
+        <translation type="vanished">Lo siento</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/newdevicemodelfromexisting.cpp" line="75"/>
         <source>This is not yet implemented!</source>
-        <translation>¡Todavía no implementado!</translation>
+        <translation type="vanished">¡Todavía no implementado!</translation>
     </message>
 </context>
 <context>
@@ -1336,58 +1313,67 @@
         <translation>Seleccionar dispositivo</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.ui" line="27"/>
         <source>Supported device</source>
-        <translation>Dispositivo compatible</translation>
+        <translation type="vanished">Dispositivo compatible</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.ui" line="39"/>
+        <location filename="../src/selectdevice/selectsupporteddevice.ui" line="29"/>
         <source>Devices:</source>
         <translation>Dispositivos:</translation>
     </message>
     <message>
+        <location filename="../src/selectdevice/selectsupporteddevice.ui" line="36"/>
         <location filename="../src/selectdevice/selectsupporteddevice.ui" line="46"/>
-        <location filename="../src/selectdevice/selectsupporteddevice.ui" line="59"/>
         <source>...</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="62"/>
+        <location filename="../src/selectdevice/selectsupporteddevice.ui" line="75"/>
+        <source>Demo Mode</source>
+        <translation>Modo de demostración</translation>
+    </message>
+    <message>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="53"/>
         <source>&lt;p&gt;&lt;br/&gt;&lt;b&gt;The device is ready for use.&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Please observe the &lt;a href=&apos;https://github.com/OpenHantek/OpenHantek6022/blob/master/docs/OpenHantek6022_User_Manual.pdf&apos;&gt;user manual&lt;/a&gt; for safe operation.&lt;/p&gt;</source>
         <translation>&lt;p&gt;&lt;br/&gt;&lt;b&gt;El dispositivo está listo para su uso.&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Lea con detenimiento el &lt;a href=&apos;https://github.com/OpenHantek/OpenHantek6022/blob/master/docs/OpenHantek6022_User_Manual.pdf&apos;&gt;manual del usuario&lt;/a&gt; para una operacion segura.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="68"/>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="59"/>
         <source>&lt;p&gt;Upload in progress ...&lt;/p&gt;&lt;p&gt;&lt;b&gt;If the upload takes more than 30 s, please close this window &lt;br/&gt;and restart the program!&lt;/b&gt;&lt;/p&gt;</source>
         <translation>&lt;p&gt;Carga en progreso ...&lt;/p&gt;&lt;p&gt;&lt;b&gt;Si la carga durase más de 30 s, cierre esta ventana &lt;br/&gt;y reinicie el programa.&lt;/b&gt;&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="72"/>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="63"/>
         <source>&lt;p&gt;&lt;br/&gt;&lt;b&gt;Connection failed!&lt;/b&gt;&lt;/p&gt;</source>
         <translation>&lt;p&gt;&lt;br/&gt;&lt;b&gt;Ha fallado la conexión.&lt;/b&gt;&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="78"/>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="69"/>
         <source>&lt;p&gt;OpenHantek6022 is searching for compatible devices ...&lt;/p&gt;&lt;p&gt;&lt;img align=&apos;right&apos; height=&apos;200&apos; src=&apos;qrc:///switch_6022BL.png&apos;&gt;Don&apos;t forget to switch your device into oscilloscope mode if it has multiple modes.&lt;/p&gt;</source>
         <translation>&lt;p&gt;OpenHantek6022 está buscando dispositivos compatibles...&lt;/p&gt;&lt;p&gt;&lt;img align=&apos;right&apos; height=&apos;200&apos; src=&apos;qrc:///switch_6022BL.png&apos;&gt;No olvide cambiar su dispositivo al modo osciloscopio si tiene múltiples modos.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="82"/>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="73"/>
         <source>&lt;p&gt;Please make sure you have installed the windows usb driver correctly&lt;/p&gt;</source>
         <translation>&lt;p&gt;Asegúrese de que ha instalado el controlador USB de Windows correctamente&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="88"/>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="79"/>
         <source>&lt;p&gt;Please make sure you have copied the udev rules file to &lt;b&gt;%1&lt;/b&gt; for correct USB access permissions.&lt;/p&gt;</source>
         <translation>&lt;p&gt;Asegúrese de que ha copiado las reglas udev en &lt;b&gt;%1&lt;/b&gt; para permisos de acceso USB correctos.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="93"/>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="84"/>
         <source>&lt;p&gt;Visit the build and run instruction &lt;a href=&apos;https://github.com/OpenHantek/OpenHantek6022/blob/master/docs/build.md&apos;&gt;website&lt;/a&gt; for help.&lt;/p&gt;</source>
         <translation>&lt;p&gt;Visite las instrucciones de compilación y ejecución en el &lt;a href=&apos;https://github.com/OpenHantek/OpenHantek6022/blob/master/docs/build.md&apos;&gt;sitio web&lt;/a&gt; para más ayuda.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="130"/>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="86"/>
+        <source>&lt;hr/&gt;&lt;p&gt;Even without a device you can explore the program&apos;s function. Just press the &lt;b&gt;Demo Mode&lt;/b&gt; button below.&lt;/p&gt;</source>
+        <translation>&lt;hr/&gt;&lt;p&gt;Incluso sin un dispositivo puedes explorar la función del programa, sólo tienes que pulsar el botón &lt;b&gt;Modo de demostración&lt;/b&gt;.&lt;/p&gt;</translation>
+    </message>
+    <message>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="120"/>
         <source>Can&apos;t initalize USB: %1</source>
         <translation>No se puede inicializar USB: %1</translation>
     </message>

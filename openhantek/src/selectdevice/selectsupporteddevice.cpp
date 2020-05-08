@@ -11,16 +11,12 @@
 #include "deviceslistmodel.h"
 #include "dsomodel.h"
 #include "modelregistry.h"
-#include "newdevicemodelfromexisting.h"
 #include "usb/finddevices.h"
 #include "usb/uploadFirmware.h"
 #include "viewconstants.h"
 
 SelectSupportedDevice::SelectSupportedDevice( QWidget *parent ) : QDialog( parent ), ui( new Ui::SelectSupportedDevice ) {
     ui->setupUi( this );
-#ifdef NEW_DEVICE_FROM_EXISTING_DIALOG
-    newDeviceFromExistingDialog = new NewDeviceModelFromExisting( this );
-#endif
     ui->buttonBox->button( QDialogButtonBox::Ok )->setEnabled( false );
     qRegisterMetaType< UniqueUSBid >( "UniqueUSBid" );
     connect( ui->buttonBox, &QDialogButtonBox::accepted, [this]() {
@@ -38,15 +34,10 @@ SelectSupportedDevice::SelectSupportedDevice( QWidget *parent ) : QDialog( paren
             QDesktopServices::openUrl(
                 QUrl( "https://github.com/OpenHantek/OpenHantek6022/blob/master/docs/OpenHantek6022_User_Manual.pdf" ) );
     } );
-#ifdef NEW_DEVICE_FROM_EXISTING_DIALOG
-    connect( ui->btnAddDevice, &QPushButton::clicked, [this]() {
-        newDeviceFromExistingDialog->setModal( true );
-        newDeviceFromExistingDialog->show();
-    } );
-#endif
+    connect( ui->btnDemoMode, &QPushButton::clicked, [this]() { demoModeClicked = true; } );
 }
 
-std::unique_ptr< USBDevice > SelectSupportedDevice::showSelectDeviceModal( libusb_context *context ) {
+std::unique_ptr< USBDevice > SelectSupportedDevice::showSelectDeviceModal( libusb_context *context, bool &demoMode ) {
     //     newDeviceFromExistingDialog->setUSBcontext(context);
     std::unique_ptr< FindDevices > findDevices = std::unique_ptr< FindDevices >( new FindDevices( context ) );
     std::unique_ptr< DevicesListModel > model = std::unique_ptr< DevicesListModel >( new DevicesListModel( findDevices.get() ) );
@@ -92,6 +83,8 @@ std::unique_ptr< USBDevice > SelectSupportedDevice::showSelectDeviceModal( libus
     messageNoDevices +=
         tr( "<p>Visit the build and run instruction "
             "<a href='https://github.com/OpenHantek/OpenHantek6022/blob/master/docs/build.md'>website</a> for help.</p>" );
+    messageNoDevices += tr( "<hr/><p>Even without a device you can explore the program's function. "
+                            "Just press the <b>Demo Mode</b> button below.</p>" );
 
     updateSupportedDevices();
 
@@ -118,15 +111,12 @@ std::unique_ptr< USBDevice > SelectSupportedDevice::showSelectDeviceModal( libus
     QCoreApplication::instance()->exec();
     timer.stop();
     close();
-
+    demoMode = demoModeClicked;
     return findDevices->takeDevice( selectedDevice );
 }
 
 void SelectSupportedDevice::showLibUSBFailedDialogModel( int error ) {
     ui->buttonBox->button( QDialogButtonBox::Ok )->setEnabled( false );
-#ifdef NEW_DEVICE_FROM_EXISTING_DIALOG
-    ui->btnAddDevice->setEnabled( false );
-#endif
     ui->labelReadyState->setText( tr( "Can't initalize USB: %1" ).arg( libUsbErrorString( error ) ) );
     show();
     QCoreApplication::instance()->exec();
