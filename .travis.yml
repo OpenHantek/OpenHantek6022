@@ -1,5 +1,5 @@
 language: cpp
-dist: xenial
+dist: bionic
 
 addons:
   apt:
@@ -15,7 +15,7 @@ addons:
 matrix:
   include:
     - compiler: gcc
-      env: CMAKE_CXX_COMPILER=g++-5
+      env: CMAKE_CXX_COMPILER=/usr/bin/g++
       os: linux
     - compiler: clang
       env: CMAKE_CXX_COMPILER=/usr/bin/clang++
