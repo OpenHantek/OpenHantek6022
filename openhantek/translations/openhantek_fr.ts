@@ -4,7 +4,7 @@
 <context>
     <name></name>
     <message>
-        <location filename="../src/usb/usbdevice.cpp" line="97"/>
+        <location filename="../src/usb/scopedevice.cpp" line="97"/>
         <source>Couldn&apos;t open device: %1</source>
         <translation>Impossible d&apos;ouvrir le périphérique : %1</translation>
     </message>
@@ -1011,72 +1011,72 @@
 <context>
     <name>QCoreApplication</name>
     <message>
-        <location filename="../src/usb/usbdevice.cpp" line="18"/>
+        <location filename="../src/usb/scopedevice.cpp" line="18"/>
         <source>Success (no error)</source>
         <translation>Réussi (pas d&apos;erreur)</translation>
     </message>
     <message>
-        <location filename="../src/usb/usbdevice.cpp" line="20"/>
+        <location filename="../src/usb/scopedevice.cpp" line="20"/>
         <source>Input/output error</source>
         <translation>Erreur d&apos;entrée/sortie</translation>
     </message>
     <message>
-        <location filename="../src/usb/usbdevice.cpp" line="22"/>
+        <location filename="../src/usb/scopedevice.cpp" line="22"/>
         <source>Invalid parameter</source>
         <translation>Paramètre invalide</translation>
     </message>
     <message>
-        <location filename="../src/usb/usbdevice.cpp" line="24"/>
+        <location filename="../src/usb/scopedevice.cpp" line="24"/>
         <source>Access denied (insufficient permissions)</source>
         <translation>Accès refusé (permissions insuffisantes)</translation>
     </message>
     <message>
-        <location filename="../src/usb/usbdevice.cpp" line="26"/>
+        <location filename="../src/usb/scopedevice.cpp" line="26"/>
         <source>No such device (it may have been disconnected)</source>
         <translation>Aucun périphérique (il peut avoir été déconnecté)</translation>
     </message>
     <message>
-        <location filename="../src/usb/usbdevice.cpp" line="28"/>
+        <location filename="../src/usb/scopedevice.cpp" line="28"/>
         <source>Entity not found</source>
         <translation>Entité non trouvée</translation>
     </message>
     <message>
-        <location filename="../src/usb/usbdevice.cpp" line="30"/>
+        <location filename="../src/usb/scopedevice.cpp" line="30"/>
         <source>Resource busy</source>
         <translation>Ressource occupée</translation>
     </message>
     <message>
-        <location filename="../src/usb/usbdevice.cpp" line="32"/>
+        <location filename="../src/usb/scopedevice.cpp" line="32"/>
         <source>Operation timed out</source>
         <translation>Opération trop longue</translation>
     </message>
     <message>
-        <location filename="../src/usb/usbdevice.cpp" line="34"/>
+        <location filename="../src/usb/scopedevice.cpp" line="34"/>
         <source>Overflow</source>
         <translation>Dépassement de capacité</translation>
     </message>
     <message>
-        <location filename="../src/usb/usbdevice.cpp" line="36"/>
+        <location filename="../src/usb/scopedevice.cpp" line="36"/>
         <source>Pipe error</source>
         <translation>Erreur de pipe</translation>
     </message>
     <message>
-        <location filename="../src/usb/usbdevice.cpp" line="38"/>
+        <location filename="../src/usb/scopedevice.cpp" line="38"/>
         <source>System call interrupted (perhaps due to signal)</source>
         <translation>Appel système interrompu (peut-être à cause du signal)</translation>
     </message>
     <message>
-        <location filename="../src/usb/usbdevice.cpp" line="40"/>
+        <location filename="../src/usb/scopedevice.cpp" line="40"/>
         <source>Insufficient memory</source>
         <translation>Mémoire insuffisante</translation>
     </message>
     <message>
-        <location filename="../src/usb/usbdevice.cpp" line="42"/>
+        <location filename="../src/usb/scopedevice.cpp" line="42"/>
         <source>Operation not supported or unimplemented on this platform</source>
         <translation>Opération non supportée sur ce système</translation>
     </message>
     <message>
-        <location filename="../src/usb/usbdevice.cpp" line="44"/>
+        <location filename="../src/usb/scopedevice.cpp" line="44"/>
         <source>Other error</source>
         <translation>Autre erreur</translation>
     </message>

@@ -42,7 +42,7 @@ int FindDevices::updateDeviceList() {
         if ( 0x1d6b == descriptor.idVendor ) // skip linux foundation devices, e.g. usb root hubs
             continue;
 
-        const UniqueUSBid USBid = USBDevice::computeUSBdeviceID( device );
+        const UniqueUSBid USBid = ScopeDevice::computeUSBdeviceID( device );
 
         DeviceList::const_iterator inList = devices.find( USBid );
         if ( inList != devices.end() ) { // already in list, update heartbeat only
@@ -58,7 +58,7 @@ int FindDevices::updateDeviceList() {
             if ( supported ) { // put matching device into list
                 ++changes;
                 // printf( "+ %016lX %s\n", USBid, model->name.c_str() );
-                devices[ USBid ] = std::unique_ptr< USBDevice >( new USBDevice( model, device, findIteration ) );
+                devices[ USBid ] = std::unique_ptr< ScopeDevice >( new ScopeDevice( model, device, findIteration ) );
                 break; // stop after 1st supported model (there can be more models with identical VID/PID)
             }
         }
@@ -89,7 +89,7 @@ int FindDevices::updateDeviceList() {
 const FindDevices::DeviceList *FindDevices::getDevices() { return &devices; }
 
 
-std::unique_ptr< USBDevice > FindDevices::takeDevice( UniqueUSBid id ) {
+std::unique_ptr< ScopeDevice > FindDevices::takeDevice( UniqueUSBid id ) {
     DeviceList::iterator it = devices.find( id );
     if ( it == devices.end() )
         return nullptr;

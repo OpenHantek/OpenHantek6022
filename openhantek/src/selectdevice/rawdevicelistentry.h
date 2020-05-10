@@ -3,7 +3,7 @@
 #pragma once
 
 #include "dsomodel.h"
-#include "usb/usbdevice.h"
+#include "usb/scopedevice.h"
 #include <QString>
 /**
  * Represents an entry in the {@link DevicesListModel}.

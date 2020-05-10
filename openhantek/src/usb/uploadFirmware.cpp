@@ -12,20 +12,20 @@
 #include <memory>
 
 #include "ezusb.h"
+#include "scopedevice.h"
 #include "uploadFirmware.h"
-#include "usbdevice.h"
 
 #include "dsomodel.h"
 
 #define TR( str ) ( QString( "UploadFirmware: " ) + QCoreApplication::translate( "UploadFirmware", str ) )
 
-bool UploadFirmware::startUpload( USBDevice *device ) {
-    if ( device->isConnected() || !device->needsFirmware() )
+bool UploadFirmware::startUpload( ScopeDevice *scopeDevice ) {
+    if ( scopeDevice->isConnected() || !scopeDevice->needsFirmware() )
         return false;
 
     // Open device
     libusb_device_handle *handle;
-    int status = libusb_open( device->getRawDevice(), &handle );
+    int status = libusb_open( scopeDevice->getUSBDevice(), &handle );
     if ( status != LIBUSB_SUCCESS ) {
         handle = nullptr;
         errorMessage = TR( "Couldn't open device: %1" ).arg( libUsbErrorString( status ) );
@@ -33,7 +33,8 @@ bool UploadFirmware::startUpload( USBDevice *device ) {
     }
 
     // Write firmware from resources to temp files
-    QFile firmwareRes( QString( ":/firmware/%1-firmware.hex" ).arg( QString::fromStdString( device->getModel()->firmwareToken ) ) );
+    QFile firmwareRes(
+        QString( ":/firmware/%1-firmware.hex" ).arg( QString::fromStdString( scopeDevice->getModel()->firmwareToken ) ) );
     auto temp_firmware_path = std::unique_ptr< QTemporaryFile >( QTemporaryFile::createNativeFile( firmwareRes ) );
     if ( !temp_firmware_path )
         return false;

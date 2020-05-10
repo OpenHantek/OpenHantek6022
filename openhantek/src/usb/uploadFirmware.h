@@ -4,7 +4,7 @@
 
 #include <QString>
 
-class USBDevice;
+class ScopeDevice;
 
 /**
  * Extracts the firmware from the applications resources, and uploads the
@@ -12,7 +12,7 @@ class USBDevice;
  */
 class UploadFirmware {
   public:
-    bool startUpload( USBDevice *device );
+    bool startUpload( ScopeDevice *scopeDevice );
     const QString &getErrorMessage() const;
 
   private:

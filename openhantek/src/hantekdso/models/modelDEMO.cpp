@@ -3,7 +3,7 @@
 #include "modelDEMO.h"
 #include "hantekdsocontrol.h"
 #include "hantekprotocol/controlStructs.h"
-#include "usb/usbdevice.h"
+#include "usb/scopedevice.h"
 #include <QDir>
 #include <QSettings>
 

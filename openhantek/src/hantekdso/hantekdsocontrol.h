@@ -26,7 +26,7 @@
 #include <QThread>
 #include <QTimer>
 
-class USBDevice;
+class ScopeDevice;
 
 /// \brief The DsoControl abstraction layer for %Hantek USB DSOs.
 /// TODO Please anyone, refactor this class into smaller pieces (Separation of Concerns!).
@@ -42,7 +42,7 @@ class HantekDsoControl : public QObject {
      * if run() is called.
      * @param device The usb device. This object does not take ownership.
      */
-    explicit HantekDsoControl( USBDevice *device, const DSOModel *model );
+    explicit HantekDsoControl( ScopeDevice *device, const DSOModel *model );
 
     /// \brief Cleans up
     ~HantekDsoControl();
@@ -59,7 +59,7 @@ class HantekDsoControl : public QObject {
     bool isSampling() const { return sampling; }
 
     /// Return the associated usb device.
-    const USBDevice *getDevice() const { return device; }
+    const ScopeDevice *getDevice() const { return device; }
 
     /// Return the associated scope model.
     const DSOModel *getModel() const { return model; }
@@ -208,7 +208,7 @@ class HantekDsoControl : public QObject {
     ControlCommand *firstControlCommand = nullptr;
 
     // Communication with device
-    USBDevice *device;        ///< The USB device for the oscilloscope
+    ScopeDevice *device;      ///< The USB device for the oscilloscope
     bool deviceIsConnected(); ///< USB status, always true for demo device
     bool sampling = false;    ///< true, if the oscilloscope is taking samples
 

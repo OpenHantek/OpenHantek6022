@@ -17,7 +17,7 @@
 #include "exporting/exporterinterface.h"
 #include "exporting/exporterregistry.h"
 #include "hantekdsocontrol.h"
-#include "usb/usbdevice.h"
+#include "usb/scopedevice.h"
 #include "viewconstants.h"
 
 #include "dsosettings.h"

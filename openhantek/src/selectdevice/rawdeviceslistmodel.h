@@ -3,7 +3,7 @@
 #pragma once
 
 #include "rawdevicelistentry.h"
-#include "usb/usbdevice.h"
+#include "usb/scopedevice.h"
 #include <QAbstractTableModel>
 
 /**

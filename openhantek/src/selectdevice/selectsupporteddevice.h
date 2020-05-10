@@ -7,7 +7,7 @@
 #include <QDialog>
 #include <QPushButton>
 
-#include "usb/usbdevice.h"
+#include "usb/scopedevice.h"
 #include <memory>
 
 struct libusb_context;
@@ -25,7 +25,7 @@ class SelectSupportedDevice : public QDialog {
 
   public:
     explicit SelectSupportedDevice( QWidget *parent = nullptr );
-    std::unique_ptr< USBDevice > showSelectDeviceModal( libusb_context *context, bool &demoMode );
+    std::unique_ptr< ScopeDevice > showSelectDeviceModal( libusb_context *context, bool &demoMode );
     void showLibUSBFailedDialogModel( int error );
 
   private:

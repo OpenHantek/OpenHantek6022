@@ -4,7 +4,7 @@
 <context>
     <name></name>
     <message>
-        <location filename="../src/usb/usbdevice.cpp" line="97"/>
+        <location filename="../src/usb/scopedevice.cpp" line="97"/>
         <source>Couldn&apos;t open device: %1</source>
         <translation>Невозможно открыть устройство: %1</translation>
     </message>
@@ -1157,72 +1157,72 @@
         <translation>С плоской вершиной</translation>
     </message>
     <message>
-        <location filename="../src/usb/usbdevice.cpp" line="18"/>
+        <location filename="../src/usb/scopedevice.cpp" line="18"/>
         <source>Success (no error)</source>
         <translation>Успех (без ошибок)</translation>
     </message>
     <message>
-        <location filename="../src/usb/usbdevice.cpp" line="20"/>
+        <location filename="../src/usb/scopedevice.cpp" line="20"/>
         <source>Input/output error</source>
         <translation>Ошибка ввода/вывода</translation>
     </message>
     <message>
-        <location filename="../src/usb/usbdevice.cpp" line="22"/>
+        <location filename="../src/usb/scopedevice.cpp" line="22"/>
         <source>Invalid parameter</source>
         <translation>Недопустимый параметр</translation>
     </message>
     <message>
-        <location filename="../src/usb/usbdevice.cpp" line="24"/>
+        <location filename="../src/usb/scopedevice.cpp" line="24"/>
         <source>Access denied (insufficient permissions)</source>
         <translation>Доступ запрещён (несовместимые разрешения)</translation>
     </message>
     <message>
-        <location filename="../src/usb/usbdevice.cpp" line="26"/>
+        <location filename="../src/usb/scopedevice.cpp" line="26"/>
         <source>No such device (it may have been disconnected)</source>
         <translation>Нет такого устройства (возможно оно не подключено)</translation>
     </message>
     <message>
-        <location filename="../src/usb/usbdevice.cpp" line="28"/>
+        <location filename="../src/usb/scopedevice.cpp" line="28"/>
         <source>Entity not found</source>
         <translation>Объект не найден</translation>
     </message>
     <message>
-        <location filename="../src/usb/usbdevice.cpp" line="30"/>
+        <location filename="../src/usb/scopedevice.cpp" line="30"/>
         <source>Resource busy</source>
         <translation>Ресурс занят</translation>
     </message>
     <message>
-        <location filename="../src/usb/usbdevice.cpp" line="32"/>
+        <location filename="../src/usb/scopedevice.cpp" line="32"/>
         <source>Operation timed out</source>
         <translation>Таймаут операции</translation>
     </message>
     <message>
-        <location filename="../src/usb/usbdevice.cpp" line="34"/>
+        <location filename="../src/usb/scopedevice.cpp" line="34"/>
         <source>Overflow</source>
         <translation>Переполнение</translation>
     </message>
     <message>
-        <location filename="../src/usb/usbdevice.cpp" line="36"/>
+        <location filename="../src/usb/scopedevice.cpp" line="36"/>
         <source>Pipe error</source>
         <translation>Отказ линии</translation>
     </message>
     <message>
-        <location filename="../src/usb/usbdevice.cpp" line="38"/>
+        <location filename="../src/usb/scopedevice.cpp" line="38"/>
         <source>System call interrupted (perhaps due to signal)</source>
         <translation>Системный вызов прерван (возможно, из-за сигнала)</translation>
     </message>
     <message>
-        <location filename="../src/usb/usbdevice.cpp" line="40"/>
+        <location filename="../src/usb/scopedevice.cpp" line="40"/>
         <source>Insufficient memory</source>
         <translation>Недостаточно памяти</translation>
     </message>
     <message>
-        <location filename="../src/usb/usbdevice.cpp" line="42"/>
+        <location filename="../src/usb/scopedevice.cpp" line="42"/>
         <source>Operation not supported or unimplemented on this platform</source>
         <translation>Операция не поддерживается или не реализована на этой платформе</translation>
     </message>
     <message>
-        <location filename="../src/usb/usbdevice.cpp" line="44"/>
+        <location filename="../src/usb/scopedevice.cpp" line="44"/>
         <source>Other error</source>
         <translation>Другая ошибка</translation>
     </message>

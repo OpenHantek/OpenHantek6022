@@ -25,13 +25,13 @@ QString libUsbErrorString( int error );
 
 /// \brief This class handles the USB communication with an usb device that has
 /// one in and one out endpoint.
-class USBDevice : public QObject {
+class ScopeDevice : public QObject {
     Q_OBJECT
 
   public:
-    explicit USBDevice( DSOModel *model, libusb_device *device, unsigned findIteration = 0 );
-    USBDevice( const USBDevice & ) = delete;
-    ~USBDevice();
+    explicit ScopeDevice( DSOModel *model, libusb_device *device, unsigned findIteration = 0 );
+    ScopeDevice( const ScopeDevice & ) = delete;
+    ~ScopeDevice();
     bool connectDevice( QString &errorMessage );
     void disconnectFromDevice();
 
@@ -62,8 +62,7 @@ class USBDevice : public QObject {
     /// \param length The length of the packet.
     /// \param attempts The number of attempts, that are done on timeouts.
     /// \param timeout The timeout in ms.
-    /// \return Number of transferred bytes on success, libusb error code on
-    /// error.
+    /// \return Number of transferred bytes on success, libusb error code on error.
     int bulkTransfer( unsigned char endpoint, const unsigned char *data, unsigned int length, int attempts = HANTEK_ATTEMPTS,
                       unsigned int timeout = HANTEK_TIMEOUT );
 
@@ -125,7 +124,7 @@ class USBDevice : public QObject {
     /**
      * @return Returns the raw libusb device
      */
-    inline libusb_device *getRawDevice() const { return device; }
+    inline libusb_device *getUSBDevice() const { return device; }
 
     /**
      * @return Return the unique usb device id {@link USBDevice::computeUSBdeviceID()}.

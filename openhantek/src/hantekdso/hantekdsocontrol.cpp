@@ -20,13 +20,13 @@
 #include "hantekprotocol/controlStructs.h"
 #include "models/modelDSO6022.h"
 #include "scopesettings.h"
-#include "usb/usbdevice.h"
+#include "usb/scopedevice.h"
 
 using namespace Hantek;
 using namespace Dso;
 
 
-HantekDsoControl::HantekDsoControl( USBDevice *device, const DSOModel *model )
+HantekDsoControl::HantekDsoControl( ScopeDevice *device, const DSOModel *model )
     : device( device ), model( model ), specification( model->spec() ),
       controlsettings( &( specification->samplerate.single ), specification->channels ) {
     qRegisterMetaType< DSOsamples * >();

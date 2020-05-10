@@ -27,7 +27,7 @@
 // DSO core logic
 #include "dsomodel.h"
 #include "hantekdsocontrol.h"
-#include "usb/usbdevice.h"
+#include "usb/scopedevice.h"
 
 // Post processing
 #include "post/graphgenerator.h"
@@ -135,7 +135,7 @@ int main( int argc, char *argv[] ) {
     //////// Find matching usb devices ////////
     libusb_context *context = nullptr;
 
-    std::unique_ptr< USBDevice > device = nullptr;
+    std::unique_ptr< ScopeDevice > scopeDevice = nullptr;
 
     if ( !demoMode ) {
         int error = libusb_init( &context );
@@ -143,27 +143,34 @@ int main( int argc, char *argv[] ) {
             SelectSupportedDevice().showLibUSBFailedDialogModel( error );
             return -1;
         }
-        device = SelectSupportedDevice().showSelectDeviceModal( context, demoMode );
-
-        QString errorMessage;
-        if ( !demoMode && ( device == nullptr || !device->connectDevice( errorMessage ) ) ) {
-            libusb_exit( context );
-            return -1;
+        // SelectSupportedDevive returns a real device unless demoMode is true
+        scopeDevice = SelectSupportedDevice().showSelectDeviceModal( context, demoMode );
+        if ( demoMode ) {
+            libusb_exit( context ); // stop all USB activities
+            context = nullptr;
+        } else {
+            QString errorMessage;
+            if ( scopeDevice == nullptr || !scopeDevice->connectDevice( errorMessage ) ) {
+                libusb_exit( context ); // clean USB
+                return -1;
+            }
         }
     }
 
-    const DSOModel *model = demoMode ? new ModelDEMO() : device->getModel();
+    // Here we have either a connected scope device or a demo device w/o hardware
+    const DSOModel *model = demoMode ? new ModelDEMO() : scopeDevice->getModel();
     // qDebug() << "model: " << model->name.data();
 
     //////// Create DSO control object and move it to a separate thread ////////
     QThread dsoControlThread;
     dsoControlThread.setObjectName( "dsoControlThread" );
-    HantekDsoControl dsoControl( device ? device.get() : nullptr, model );
+    HantekDsoControl dsoControl( scopeDevice ? scopeDevice.get() : nullptr, model );
     dsoControl.moveToThread( &dsoControlThread );
     QObject::connect( &dsoControlThread, &QThread::started, &dsoControl, &HantekDsoControl::stateMachine );
     QObject::connect( &dsoControl, &HantekDsoControl::communicationError, QCoreApplication::instance(), &QCoreApplication::quit );
-    if ( !demoMode )
-        QObject::connect( device.get(), &USBDevice::deviceDisconnected, QCoreApplication::instance(), &QCoreApplication::quit );
+    if ( scopeDevice )
+        QObject::connect( scopeDevice.get(), &ScopeDevice::deviceDisconnected, QCoreApplication::instance(),
+                          &QCoreApplication::quit );
 
     const Dso::ControlSpecification *spec = model->spec();
     //////// Create settings object ////////
@@ -215,12 +222,14 @@ int main( int argc, char *argv[] ) {
     dsoControl.enableSampling( true );
     postProcessingThread.start();
     dsoControlThread.start();
-    int res = openHantekApplication.exec();
+    int appStatus = openHantekApplication.exec();
 
-    //////// Clean up ////////
+    //////// Application closed, clean up step by step ////////
 
+    std::cout << std::unitbuf; // enable automatic flushing
     std::cout << "OpenHantek6022 ";
 
+    // first stop the data acquisition
     // wait 2 * record time (delay is ms) for dso to finish
     unsigned waitForDso = unsigned( 2000 * dsoControl.getSamplesize() / dsoControl.getSamplerate() );
     if ( waitForDso < 10000 ) // minimum 10 s
@@ -229,17 +238,18 @@ int main( int argc, char *argv[] ) {
     dsoControlThread.wait( waitForDso );
     std::cout << "stopped ";
 
+    // next stop the data processing
     postProcessingThread.quit();
     postProcessingThread.wait( 10000 );
     std::cout << "after ";
 
-    dsoControl.stopSampling();
-    if ( device && context ) {
-        device.reset(); // causes libusb_close(), which must be called before libusb_exit()
+    // finally stop the USB communication
+    dsoControl.stopSampling(); // send USB control command
+    if ( scopeDevice )
+        scopeDevice.reset(); // destroys unique_pointer, causes libusb_close(), must be called before libusb_exit()
+    if ( context )
         libusb_exit( context );
-    }
-
     std::cout << openHantekMainWindow.elapsedTime.elapsed() / 1000 << " s\n";
 
-    return res;
+    return appStatus;
 }

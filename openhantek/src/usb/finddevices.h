@@ -7,7 +7,7 @@
 #include <map>
 #include <memory>
 
-#include "usbdevice.h"
+#include "scopedevice.h"
 
 struct libusb_context;
 
@@ -22,7 +22,7 @@ struct libusb_context;
  */
 class FindDevices {
   public:
-    typedef std::map< UniqueUSBid, std::unique_ptr< USBDevice > > DeviceList;
+    typedef std::map< UniqueUSBid, std::unique_ptr< ScopeDevice > > DeviceList;
     explicit FindDevices( libusb_context *context );
     /// Updates the device list. To clear the list, just dispose this object
     /// \return If negative it represents a libusb error code otherwise the amount of updates
@@ -33,7 +33,7 @@ class FindDevices {
      * @param id The unique usb id for the current bus layout
      * @return A shared reference to the
      */
-    std::unique_ptr< USBDevice > takeDevice( UniqueUSBid id );
+    std::unique_ptr< ScopeDevice > takeDevice( UniqueUSBid id );
 
   private:
     libusb_context *context; ///< The usb context used for this device

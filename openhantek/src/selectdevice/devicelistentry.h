@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "usb/usbdevice.h"
+#include "usb/scopedevice.h"
 #include <QString>
 
 /**

@@ -4,7 +4,7 @@
 #include <QList>
 #include <iostream>
 
-#include "usbdevice.h"
+#include "scopedevice.h"
 
 #include "hantekdso/dsomodel.h"
 // #include "hantekprotocol/bulkStructs.h"
@@ -46,7 +46,7 @@ QString libUsbErrorString( int error ) {
 }
 
 
-UniqueUSBid USBDevice::computeUSBdeviceID( libusb_device *device ) {
+UniqueUSBid ScopeDevice::computeUSBdeviceID( libusb_device *device ) {
     // Returns a 64-bit value that uniquely identifies a device on the bus
     // bus/ports define a constant plug position
     // VID/FW changes with FW upload
@@ -77,14 +77,14 @@ UniqueUSBid USBDevice::computeUSBdeviceID( libusb_device *device ) {
 }
 
 
-USBDevice::USBDevice( DSOModel *model, libusb_device *device, unsigned findIteration )
+ScopeDevice::ScopeDevice( DSOModel *model, libusb_device *device, unsigned findIteration )
     : model( model ), device( device ), findIteration( findIteration ), uniqueUSBdeviceID( computeUSBdeviceID( device ) ) {
     libusb_ref_device( device );
     libusb_get_device_descriptor( device, &descriptor );
 }
 
 
-bool USBDevice::connectDevice( QString &errorMessage ) {
+bool ScopeDevice::connectDevice( QString &errorMessage ) {
     if ( needsFirmware() )
         return false;
     if ( isConnected() )
@@ -129,7 +129,7 @@ bool USBDevice::connectDevice( QString &errorMessage ) {
 }
 
 
-USBDevice::~USBDevice() {
+ScopeDevice::~ScopeDevice() {
     disconnectFromDevice();
 #if defined Q_OS_WIN
     if ( device != nullptr )
@@ -139,7 +139,7 @@ USBDevice::~USBDevice() {
 }
 
 
-int USBDevice::claimInterface( const libusb_interface_descriptor *interfaceDescriptor ) {
+int ScopeDevice::claimInterface( const libusb_interface_descriptor *interfaceDescriptor ) {
     int errorCode = libusb_claim_interface( this->handle, interfaceDescriptor->bInterfaceNumber );
     if ( errorCode < 0 )
         return errorCode;
@@ -162,7 +162,7 @@ int USBDevice::claimInterface( const libusb_interface_descriptor *interfaceDescr
 }
 
 
-void USBDevice::disconnectFromDevice() {
+void ScopeDevice::disconnectFromDevice() {
     if ( !device )
         return;
 
@@ -185,16 +185,16 @@ void USBDevice::disconnectFromDevice() {
 }
 
 
-bool USBDevice::isConnected() { return this->handle != nullptr; }
+bool ScopeDevice::isConnected() { return this->handle != nullptr; }
 
 
-bool USBDevice::needsFirmware() {
+bool ScopeDevice::needsFirmware() {
     return this->descriptor.idProduct != model->productID || this->descriptor.idVendor != model->vendorID ||
            this->descriptor.bcdDevice < model->firmwareVersion;
 }
 
 
-int USBDevice::bulkTransfer( unsigned char endpoint, const unsigned char *data, unsigned int length, int attempts,
+int ScopeDevice::bulkTransfer( unsigned char endpoint, const unsigned char *data, unsigned int length, int attempts,
                              unsigned int timeout ) {
     if ( !this->handle )
         return LIBUSB_ERROR_NO_DEVICE;
@@ -215,7 +215,7 @@ int USBDevice::bulkTransfer( unsigned char endpoint, const unsigned char *data, 
 
 
 #define BIG_BLOCK
-int USBDevice::bulkReadMulti( unsigned char *data, unsigned length, int attempts ) {
+int ScopeDevice::bulkReadMulti( unsigned char *data, unsigned length, int attempts ) {
     if ( !this->handle )
         return LIBUSB_ERROR_NO_DEVICE;
         // printf("USBDevice::bulkReadMulti( %d )\n", length );
@@ -242,7 +242,7 @@ int USBDevice::bulkReadMulti( unsigned char *data, unsigned length, int attempts
 }
 
 
-int USBDevice::controlTransfer( unsigned char type, unsigned char request, unsigned char *data, unsigned int length, int value,
+int ScopeDevice::controlTransfer( unsigned char type, unsigned char request, unsigned char *data, unsigned int length, int value,
                                 int index, int attempts ) {
     if ( !this->handle )
         return LIBUSB_ERROR_NO_DEVICE;

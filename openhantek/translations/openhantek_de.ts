@@ -4,7 +4,7 @@
 <context>
     <name></name>
     <message>
-        <location filename="../src/usb/usbdevice.cpp" line="97"/>
+        <location filename="../src/usb/scopedevice.cpp" line="97"/>
         <source>Couldn&apos;t open device: %1</source>
         <translation>Konnte Gerät %1 nicht öffnen</translation>
     </message>
@@ -1229,72 +1229,72 @@
         <translation>Flat Top</translation>
     </message>
     <message>
-        <location filename="../src/usb/usbdevice.cpp" line="18"/>
+        <location filename="../src/usb/scopedevice.cpp" line="18"/>
         <source>Success (no error)</source>
         <translation>Erfolgreich (Kein Fehler)</translation>
     </message>
     <message>
-        <location filename="../src/usb/usbdevice.cpp" line="20"/>
+        <location filename="../src/usb/scopedevice.cpp" line="20"/>
         <source>Input/output error</source>
         <translation>Ein-/Ausgabe Fehler</translation>
     </message>
     <message>
-        <location filename="../src/usb/usbdevice.cpp" line="22"/>
+        <location filename="../src/usb/scopedevice.cpp" line="22"/>
         <source>Invalid parameter</source>
         <translation>Ungültiger Parameter</translation>
     </message>
     <message>
-        <location filename="../src/usb/usbdevice.cpp" line="24"/>
+        <location filename="../src/usb/scopedevice.cpp" line="24"/>
         <source>Access denied (insufficient permissions)</source>
         <translation>Zugriff verweigert (Unzureichende Berechtigungen)</translation>
     </message>
     <message>
-        <location filename="../src/usb/usbdevice.cpp" line="26"/>
+        <location filename="../src/usb/scopedevice.cpp" line="26"/>
         <source>No such device (it may have been disconnected)</source>
         <translation>Gerät nicht vorhanden (Möglicherweise wurde es abgesteckt)</translation>
     </message>
     <message>
-        <location filename="../src/usb/usbdevice.cpp" line="28"/>
+        <location filename="../src/usb/scopedevice.cpp" line="28"/>
         <source>Entity not found</source>
         <translation>Datensatz nicht gefunden</translation>
     </message>
     <message>
-        <location filename="../src/usb/usbdevice.cpp" line="30"/>
+        <location filename="../src/usb/scopedevice.cpp" line="30"/>
         <source>Resource busy</source>
         <translation>Quelle belegt</translation>
     </message>
     <message>
-        <location filename="../src/usb/usbdevice.cpp" line="32"/>
+        <location filename="../src/usb/scopedevice.cpp" line="32"/>
         <source>Operation timed out</source>
         <translation>Zeitüberschreitung</translation>
     </message>
     <message>
-        <location filename="../src/usb/usbdevice.cpp" line="34"/>
+        <location filename="../src/usb/scopedevice.cpp" line="34"/>
         <source>Overflow</source>
         <translation>Überlauf</translation>
     </message>
     <message>
-        <location filename="../src/usb/usbdevice.cpp" line="36"/>
+        <location filename="../src/usb/scopedevice.cpp" line="36"/>
         <source>Pipe error</source>
         <translation>Leitungsfehler</translation>
     </message>
     <message>
-        <location filename="../src/usb/usbdevice.cpp" line="38"/>
+        <location filename="../src/usb/scopedevice.cpp" line="38"/>
         <source>System call interrupted (perhaps due to signal)</source>
         <translation>Systemaufruf unterbrochen (Möglicherweise aufgrund eines Signals)</translation>
     </message>
     <message>
-        <location filename="../src/usb/usbdevice.cpp" line="40"/>
+        <location filename="../src/usb/scopedevice.cpp" line="40"/>
         <source>Insufficient memory</source>
         <translation>Unzureichender Speicher</translation>
     </message>
     <message>
-        <location filename="../src/usb/usbdevice.cpp" line="42"/>
+        <location filename="../src/usb/scopedevice.cpp" line="42"/>
         <source>Operation not supported or unimplemented on this platform</source>
         <translation>Vorgang auf diesem System nicht unterstützt oder nicht implementiert</translation>
     </message>
     <message>
-        <location filename="../src/usb/usbdevice.cpp" line="44"/>
+        <location filename="../src/usb/scopedevice.cpp" line="44"/>
         <source>Other error</source>
         <translation>Anderer Fehler</translation>
     </message>
