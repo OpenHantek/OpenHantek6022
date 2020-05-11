@@ -73,12 +73,11 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
 
     // Window title
     setWindowIcon( QIcon( ":/images/OpenHantek.svg" ) );
-    setWindowTitle( dsoControl->getDevice()
+    setWindowTitle( dsoControl->getDevice()->isRealHW()
                         ? tr( "OpenHantek6022 (%1) - Device %2 (FW%3)" )
                               .arg( QString::fromStdString( VERSION ), QString::fromStdString( dsoControl->getModel()->name ) )
                               .arg( dsoControl->getDevice()->getFwVersion(), 4, 16, QChar( '0' ) )
-                        : tr( "OpenHantek6022 (%1) - Device %2" )
-                              .arg( QString::fromStdString( VERSION ), QString::fromStdString( dsoControl->getModel()->name ) ) );
+                        : tr( "OpenHantek6022 (%1) - " ).arg( QString::fromStdString( VERSION ) ) + tr( "Demo Mode" ) );
 
 #if ( QT_VERSION >= QT_VERSION_CHECK( 5, 6, 0 ) )
     setDockOptions( dockOptions() | QMainWindow::GroupedDragging );

@@ -155,11 +155,12 @@ int main( int argc, char *argv[] ) {
                 return -1;
             }
         }
+    } else {
+        scopeDevice = std::unique_ptr< ScopeDevice >( new ScopeDevice() );
     }
 
     // Here we have either a connected scope device or a demo device w/o hardware
-    const DSOModel *model = demoMode ? new ModelDEMO() : scopeDevice->getModel();
-    // qDebug() << "model: " << model->name.data();
+    const DSOModel *model = scopeDevice->getModel();
 
     //////// Create DSO control object and move it to a separate thread ////////
     QThread dsoControlThread;

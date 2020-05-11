@@ -4,7 +4,7 @@
 <context>
     <name></name>
     <message>
-        <location filename="../src/usb/scopedevice.cpp" line="97"/>
+        <location filename="../src/usb/scopedevice.cpp" line="100"/>
         <source>Couldn&apos;t open device: %1</source>
         <translation>Impossible d&apos;ouvrir le périphérique : %1</translation>
     </message>
@@ -721,108 +721,117 @@
         <translation>OpenHantek6022 (%1) - %2 (FW%3)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="80"/>
         <source>OpenHantek6022 (%1) - Device %2</source>
-        <translation>OpenHantek6022 (%1) - %2</translation>
+        <translation type="vanished">OpenHantek6022 (%1) - %2</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="139"/>
+        <location filename="../src/mainwindow.cpp" line="80"/>
+        <source>Demo Mode</source>
+        <translation>Mode Démo</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="80"/>
+        <source>OpenHantek6022 (%1) - </source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="138"/>
         <source>Invalid command</source>
         <translation>Commande invalide</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="226"/>
+        <location filename="../src/mainwindow.cpp" line="225"/>
         <source>Stop</source>
         <translation>Arrêter</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="227"/>
+        <location filename="../src/mainwindow.cpp" line="226"/>
         <source>Stop the oscilloscope</source>
         <translation>Arrêter l&apos;oscilloscope</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="230"/>
+        <location filename="../src/mainwindow.cpp" line="229"/>
         <source>Start</source>
         <translation>Démarrer</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="231"/>
+        <location filename="../src/mainwindow.cpp" line="230"/>
         <source>Start the oscilloscope</source>
         <translation>Démarrer l&apos;oscilloscope</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="250"/>
+        <location filename="../src/mainwindow.cpp" line="249"/>
         <source>Open file</source>
         <translation>Ouvrir une configuration</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="250"/>
-        <location filename="../src/mainwindow.cpp" line="273"/>
+        <location filename="../src/mainwindow.cpp" line="249"/>
+        <location filename="../src/mainwindow.cpp" line="272"/>
         <source>Settings (*.ini)</source>
         <translation>Réglages (*.ini)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="273"/>
+        <location filename="../src/mainwindow.cpp" line="272"/>
         <source>Save settings</source>
         <translation>Enregistrer les réglages</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="299"/>
+        <location filename="../src/mainwindow.cpp" line="298"/>
         <source>Disable fading of previous graphs</source>
         <translation>Désactiver l&apos;estompage des graphes précédents</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="301"/>
+        <location filename="../src/mainwindow.cpp" line="300"/>
         <source>Enable fading of previous graphs</source>
         <translation>Activer l&apos;estompage des graphes précédents</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="309"/>
+        <location filename="../src/mainwindow.cpp" line="308"/>
         <source>Hide histogram</source>
         <translation>Cacher l’histogramme</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="311"/>
+        <location filename="../src/mainwindow.cpp" line="310"/>
         <source>Show histogram</source>
         <translation>Montrer l’histogramme</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="320"/>
+        <location filename="../src/mainwindow.cpp" line="319"/>
         <source>Hide magnified scope</source>
         <translation>Cacher la vue agrandie</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="322"/>
+        <location filename="../src/mainwindow.cpp" line="321"/>
         <source>Show magnified scope</source>
         <translation>Montrer la vue agrandie</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="332"/>
+        <location filename="../src/mainwindow.cpp" line="331"/>
         <source>Hide measurements</source>
         <translation>Cacher les mesures</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="334"/>
+        <location filename="../src/mainwindow.cpp" line="333"/>
         <source>Show measurements</source>
         <translation>Montrer les mesures</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="352"/>
+        <location filename="../src/mainwindow.cpp" line="351"/>
         <source>About OpenHantek6022 (%1)</source>
         <translation>A propos de OpenHantek6022 (%1)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="353"/>
+        <location filename="../src/mainwindow.cpp" line="352"/>
         <source>&lt;p&gt;Open source software for Hantek6022 USB oscilloscopes&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2010, 2011 Oliver Haag&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2012-2020 OpenHantek community&lt;br/&gt;&lt;a href=&apos;https://github.com/OpenHantek&apos;&gt;https://github.com/OpenHantek&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Open source firmware copyright &amp;copy; 2019-2020 Ho-Ro&lt;br/&gt;&lt;a href=&apos;https://github.com/Ho-Ro/Hantek6022API&apos;&gt;https://github.com/Ho-Ro/Hantek6022API&lt;/a&gt;&lt;/p&gt;</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="359"/>
+        <location filename="../src/mainwindow.cpp" line="358"/>
         <source>&lt;p&gt;Running since %1 seconds.&lt;/p&gt;</source>
         <translation>&lt;p&gt;En cours depuis %1 secondes.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="377"/>
+        <location filename="../src/mainwindow.cpp" line="376"/>
         <source>%1: %2</source>
         <translation></translation>
     </message>
@@ -1443,7 +1452,7 @@
         <translation>&lt;hr/&gt;&lt;p&gt;Même sans appareil, vous pouvez explorer la fonction du programme, il suffit d&apos;appuyer sur le bouton &lt;b&gt;Mode Démo&lt;/b&gt;.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="120"/>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="122"/>
         <source>Can&apos;t initalize USB: %1</source>
         <translation>Impossible d&apos;initialiser l&apos;USB: %1</translation>
     </message>

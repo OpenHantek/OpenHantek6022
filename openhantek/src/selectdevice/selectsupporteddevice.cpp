@@ -112,6 +112,8 @@ std::unique_ptr< ScopeDevice > SelectSupportedDevice::showSelectDeviceModal( lib
     timer.stop();
     close();
     demoMode = demoModeClicked;
+    if ( demoModeClicked )
+        return std::unique_ptr< ScopeDevice >( new ScopeDevice() );
     return findDevices->takeDevice( selectedDevice );
 }
 

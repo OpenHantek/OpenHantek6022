@@ -42,7 +42,7 @@ class HantekDsoControl : public QObject {
      * if run() is called.
      * @param device The usb device. This object does not take ownership.
      */
-    explicit HantekDsoControl( ScopeDevice *device, const DSOModel *model );
+    explicit HantekDsoControl( ScopeDevice *scopeDevice, const DSOModel *model );
 
     /// \brief Cleans up
     ~HantekDsoControl();
@@ -59,7 +59,7 @@ class HantekDsoControl : public QObject {
     bool isSampling() const { return sampling; }
 
     /// Return the associated usb device.
-    const ScopeDevice *getDevice() const { return device; }
+    const ScopeDevice *getDevice() const { return scopeDevice; }
 
     /// Return the associated scope model.
     const DSOModel *getModel() const { return model; }
@@ -182,7 +182,7 @@ class HantekDsoControl : public QObject {
     std::vector< unsigned char > getSamples( unsigned &expectedSampleCount ) const;
 
     /// \brief Gets dummy data from the demo device
-    std::vector< unsigned char > getDummySamples( unsigned &expectedSampleCount ) const;
+    std::vector< unsigned char > getDemoSamples( unsigned &expectedSampleCount ) const;
 
     /// \brief Converts raw oscilloscope data to sample data
     void convertRawDataToSamples( const std::vector< unsigned char > &rawData, unsigned numChannels );
@@ -208,9 +208,9 @@ class HantekDsoControl : public QObject {
     ControlCommand *firstControlCommand = nullptr;
 
     // Communication with device
-    ScopeDevice *device;      ///< The USB device for the oscilloscope
-    bool deviceIsConnected(); ///< USB status, always true for demo device
-    bool sampling = false;    ///< true, if the oscilloscope is taking samples
+    ScopeDevice *scopeDevice;  ///< The USB device for the oscilloscope
+    bool deviceNotConnected(); ///< USB status, always false for demo device
+    bool sampling = false;     ///< true, if the oscilloscope is taking samples
 
     // Device setup
     const DSOModel *model;                          ///< The attached scope model

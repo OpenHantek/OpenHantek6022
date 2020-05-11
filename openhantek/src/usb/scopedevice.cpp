@@ -84,6 +84,9 @@ ScopeDevice::ScopeDevice( DSOModel *model, libusb_device *device, unsigned findI
 }
 
 
+ScopeDevice::ScopeDevice() : model( new ModelDEMO ), device( nullptr ), uniqueUSBdeviceID( 0 ), realHW( false ) {}
+
+
 bool ScopeDevice::connectDevice( QString &errorMessage ) {
     if ( needsFirmware() )
         return false;
@@ -185,7 +188,7 @@ void ScopeDevice::disconnectFromDevice() {
 }
 
 
-bool ScopeDevice::isConnected() { return this->handle != nullptr; }
+bool ScopeDevice::isConnected() { return isDemoDevice() || this->handle != nullptr; }
 
 
 bool ScopeDevice::needsFirmware() {
@@ -195,7 +198,7 @@ bool ScopeDevice::needsFirmware() {
 
 
 int ScopeDevice::bulkTransfer( unsigned char endpoint, const unsigned char *data, unsigned int length, int attempts,
-                             unsigned int timeout ) {
+                               unsigned int timeout ) {
     if ( !this->handle )
         return LIBUSB_ERROR_NO_DEVICE;
 
@@ -243,7 +246,7 @@ int ScopeDevice::bulkReadMulti( unsigned char *data, unsigned length, int attemp
 
 
 int ScopeDevice::controlTransfer( unsigned char type, unsigned char request, unsigned char *data, unsigned int length, int value,
-                                int index, int attempts ) {
+                                  int index, int attempts ) {
     if ( !this->handle )
         return LIBUSB_ERROR_NO_DEVICE;
 

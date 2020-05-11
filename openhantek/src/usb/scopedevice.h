@@ -11,6 +11,7 @@
 #endif
 #include <memory>
 
+#include "models/modelDEMO.h"
 #include "usbdevicedefinitions.h"
 
 class DSOModel;
@@ -30,6 +31,7 @@ class ScopeDevice : public QObject {
 
   public:
     explicit ScopeDevice( DSOModel *model, libusb_device *device, unsigned findIteration = 0 );
+    explicit ScopeDevice();
     ScopeDevice( const ScopeDevice & ) = delete;
     ~ScopeDevice();
     bool connectDevice( QString &errorMessage );
@@ -38,6 +40,10 @@ class ScopeDevice : public QObject {
     /// \brief Check if the oscilloscope is connected.
     /// \return true, if a connection is up.
     bool isConnected();
+
+    /// \brief Distinguish between real hw or demo device
+    bool isRealHW() const { return realHW; }
+    bool isDemoDevice() const { return !realHW; }
 
     /**
      * @return Return true if this device needs a firmware first
@@ -163,6 +169,9 @@ class ScopeDevice : public QObject {
     int nInterface;
     unsigned outPacketLength; ///< Packet length for the OUT endpoint
     unsigned inPacketLength;  ///< Packet length for the IN endpoint
+
+  private:
+    bool realHW = true;
 
   signals:
     void deviceDisconnected(); ///< The device has been disconnected
