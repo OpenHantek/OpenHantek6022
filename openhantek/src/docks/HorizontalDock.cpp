@@ -36,7 +36,7 @@ HorizontalDock::HorizontalDock( DsoSettingsScope *scope, const Dso::ControlSpeci
     this->samplerateSiSpinBox = new SiSpinBox( UNIT_SAMPLES );
     this->samplerateSiSpinBox->setMinimum( 1 );
     this->samplerateSiSpinBox->setMaximum( 1e8 );
-    this->samplerateSiSpinBox->setUnitPostfix( "/s" );
+    this->samplerateSiSpinBox->setUnitPostfix( tr( "/s" ) );
 
     timebaseSteps << 1.0 << 2.0 << 5.0 << 10.0;
 

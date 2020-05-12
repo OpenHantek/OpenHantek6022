@@ -446,6 +446,11 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../src/docks/HorizontalDock.cpp" line="39"/>
+        <source>/s</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../src/docks/HorizontalDock.cpp" line="43"/>
         <source>Timebase</source>
         <translation type="unfinished"></translation>

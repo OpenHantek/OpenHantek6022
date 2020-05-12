@@ -299,7 +299,7 @@
     <message>
         <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="40"/>
         <source>Cursors</source>
-        <translation>Курсорыr</translation>
+        <translation>Курсоры</translation>
     </message>
 </context>
 <context>
@@ -444,6 +444,11 @@
         <location filename="../src/docks/HorizontalDock.cpp" line="35"/>
         <source>Samplerate</source>
         <translation>Дискретизация</translation>
+    </message>
+    <message>
+        <location filename="../src/docks/HorizontalDock.cpp" line="39"/>
+        <source>/s</source>
+        <translation>/с</translation>
     </message>
     <message>
         <location filename="../src/docks/HorizontalDock.cpp" line="43"/>

@@ -454,6 +454,11 @@
         <translation>Samplerate</translation>
     </message>
     <message>
+        <location filename="../src/docks/HorizontalDock.cpp" line="39"/>
+        <source>/s</source>
+        <translation>/s</translation>
+    </message>
+    <message>
         <location filename="../src/docks/HorizontalDock.cpp" line="43"/>
         <source>Timebase</source>
         <translation>Zeitbasis</translation>

@@ -95,7 +95,7 @@
         <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="27"/>
         <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="38"/>
         <source>dBV</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="32"/>
@@ -330,7 +330,7 @@
     <message>
         <location filename="../src/dsowidget.cpp" line="176"/>
         <source>Markers</source>
-        <translation type="unfinished">Marcadores</translation>
+        <translation>Marcadores</translation>
     </message>
     <message>
         <location filename="../src/dsowidget.cpp" line="448"/>
@@ -347,7 +347,7 @@
     <message>
         <location filename="../src/dsowidget.cpp" line="486"/>
         <source>Markers  </source>
-        <translation type="unfinished"></translation>
+        <translation>Marcadores</translation>
     </message>
     <message>
         <location filename="../src/dsowidget.cpp" line="487"/>
@@ -474,6 +474,11 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../src/docks/HorizontalDock.cpp" line="39"/>
+        <source>/s</source>
+        <translation>/s</translation>
+    </message>
+    <message>
         <location filename="../src/docks/HorizontalDock.cpp" line="43"/>
         <source>Timebase</source>
         <translation>Tempo base</translation>
@@ -508,7 +513,7 @@
     <message>
         <location filename="../src/exporting/legacyexportdrawer.cpp" line="57"/>
         <source>%1  %2  %3  %4 %5</source>
-        <translation type="unfinished">%1  %2  %3  %4 %5 {1 ?} {2 ?} {3 ?}</translation>
+        <translation>%1  %2  %3  %4 %5</translation>
     </message>
     <message>
         <source>%1 S</source>
@@ -964,7 +969,7 @@
     <message>
         <location filename="../src/exporting/exportimage.cpp" line="35"/>
         <source>Image (*.png *.xpm *.jpg)</source>
-        <translation type="unfinished">Imagem (*.png *.xpm *.jpg)</translation>
+        <translation>Imagem (*.png *.xpm *.jpg)</translation>
     </message>
     <message>
         <location filename="../src/exporting/exportimage.cpp" line="37"/>
@@ -1089,72 +1094,72 @@
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="41"/>
         <source>Rectangular</source>
-        <translation type="unfinished">Retangular</translation>
+        <translation>Retangular</translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="43"/>
         <source>Hamming</source>
-        <translation type="unfinished">Hamming</translation>
+        <translation>Hamming</translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="45"/>
         <source>Hann</source>
-        <translation type="unfinished">Hann</translation>
+        <translation>Hann</translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="47"/>
         <source>Cosine</source>
-        <translation type="unfinished">Cosseno</translation>
+        <translation>Cosseno</translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="49"/>
         <source>Lanczos</source>
-        <translation type="unfinished">Lanczos</translation>
+        <translation>Lanczos</translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="51"/>
         <source>Bartlett</source>
-        <translation type="unfinished">Bartlett</translation>
+        <translation>Bartlett</translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="53"/>
         <source>Triangular</source>
-        <translation type="unfinished">Triangular</translation>
+        <translation>Triangular</translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="55"/>
         <source>Gauss</source>
-        <translation type="unfinished">Gauss</translation>
+        <translation>Gauss</translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="57"/>
         <source>Bartlett-Hann</source>
-        <translation type="unfinished">Bartlett-Hann</translation>
+        <translation>Bartlett-Hann</translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="59"/>
         <source>Blackman</source>
-        <translation type="unfinished">Blackman</translation>
+        <translation>Blackman</translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="63"/>
         <source>Nuttall</source>
-        <translation type="unfinished">Nuttall</translation>
+        <translation>Nuttall</translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="65"/>
         <source>Blackman-Harris</source>
-        <translation type="unfinished">Blackman-Harris</translation>
+        <translation>Blackman-Harris</translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="67"/>
         <source>Blackman-Nuttall</source>
-        <translation type="unfinished">Blackman-Nuttall</translation>
+        <translation>Blackman-Nuttall</translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="69"/>
         <source>Flat top</source>
-        <translation type="unfinished">Flat Top</translation>
+        <translation>Flat Top</translation>
     </message>
     <message>
         <location filename="../src/usb/scopedevice.cpp" line="18"/>
@@ -1199,12 +1204,12 @@
     <message>
         <location filename="../src/usb/scopedevice.cpp" line="34"/>
         <source>Overflow</source>
-        <translation type="unfinished">Transbordamento</translation>
+        <translation>Transbordamento</translation>
     </message>
     <message>
         <location filename="../src/usb/scopedevice.cpp" line="36"/>
         <source>Pipe error</source>
-        <translation type="unfinished">Erro de redirecionamento</translation>
+        <translation>Erro de redirecionamento</translation>
     </message>
     <message>
         <location filename="../src/usb/scopedevice.cpp" line="38"/>
@@ -1410,22 +1415,22 @@
     <message>
         <location filename="../src/docks/VoltageDock.cpp" line="50"/>
         <source>CH&amp;%1</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/docks/VoltageDock.cpp" line="52"/>
         <source>MA&amp;TH</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/docks/VoltageDock.cpp" line="55"/>
         <source>Invert</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/docks/VoltageDock.cpp" line="59"/>
         <source>x</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 </TS>
