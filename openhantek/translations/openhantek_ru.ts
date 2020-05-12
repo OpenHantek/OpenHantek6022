@@ -673,7 +673,7 @@
     <message>
         <location filename="../src/mainwindow.cpp" line="80"/>
         <source>Demo Mode</source>
-        <translation>демонстрационного режима</translation>
+        <translation>Демо Режим</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="80"/>
@@ -1314,7 +1314,7 @@
     <message>
         <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="73"/>
         <source>&lt;p&gt;Please make sure you have installed the windows usb driver correctly&lt;/p&gt;</source>
-        <translation>&lt;p&gt;Убедитесь в корректно установленных USB драйверах для Windows&lt;/p&gt;</translation>
+        <translation>&lt;p&gt;Убедитесь в корректно установленных USB драйверах для Windows.&lt;/p&gt;</translation>
     </message>
     <message>
         <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="79"/>
@@ -1329,7 +1329,7 @@
     <message>
         <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="86"/>
         <source>&lt;hr/&gt;&lt;p&gt;Even without a device you can explore the program&apos;s function. Just press the &lt;b&gt;Demo Mode&lt;/b&gt; button below.&lt;/p&gt;</source>
-        <translation>&lt;hr/&gt;&lt;p&gt;Вы можете изучить функции программы без устройства, просто нажмите кнопку &lt;b&gt;демонстрационного режима&lt;/b&gt; кнопки.&lt;/p&gt;</translation>
+        <translation>&lt;hr/&gt;&lt;p&gt;Вы можете изучить функции программы без устройства, просто нажмите кнопку &lt;b&gt;Демо Режима&lt;/b&gt;.&lt;/p&gt;</translation>
     </message>
     <message>
         <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="122"/>
