@@ -8,21 +8,6 @@ Enum< Dso::TriggerMode, Dso::TriggerMode::AUTO, Dso::TriggerMode::SINGLE > Trigg
 Enum< Dso::Slope, Dso::Slope::Positive, Dso::Slope::Both > SlopeEnum;
 Enum< Dso::GraphFormat, Dso::GraphFormat::TY, Dso::GraphFormat::XY > GraphFormatEnum;
 
-#if 0
-    /// \brief Return string representation of the given channel mode.
-    /// \param mode The ::ChannelMode that should be returned as string.
-    /// \return The string that should be used in labels etc., empty when invalid.
-    QString channelModeString(ChannelMode mode) {
-        switch (mode) {
-        case ChannelMode::Voltage:
-            return QCoreApplication::tr("Voltage");
-        case ChannelMode::Spectrum:
-            return QCoreApplication::tr("Spectrum");
-        }
-        return QString();
-    }
-#endif
-
 /// \brief Return string representation of the given graph format.
 /// \param format The ::GraphFormat that should be returned as string.
 /// \return The string that should be used in labels etc.
@@ -90,20 +75,5 @@ QString slopeString( Slope slope ) {
     }
     return QString();
 }
-
-#if 0
-    /// \brief Return string representation of the given graph interpolation mode.
-    /// \param interpolation The ::InterpolationMode that should be returned as
-    /// string.
-    /// \return The string that should be used in labels etc.
-    QString interpolationModeString(InterpolationMode interpolation) {
-        switch (interpolation) {
-        case INTERPOLATION_OFF:
-            return QCoreApplication::tr("Off");
-        case INTERPOLATION_LINEAR:
-            return QCoreApplication::tr("Linear");
-        }
-    }
-#endif
 
 } // namespace Dso

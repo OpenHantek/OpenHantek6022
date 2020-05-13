@@ -16,132 +16,115 @@
 
 QtAwesome *iconFont = new QtAwesome();
 
-/// The font-awesome icon painter
-class QtAwesomeCharIconPainter : public QtAwesomeIconPainter {
-  protected:
-    QStringList optionKeysForModeAndState( const QString &key, QIcon::Mode mode, QIcon::State state ) {
-        QString modePostfix;
-        switch ( mode ) {
-        case QIcon::Disabled:
-            modePostfix = "-disabled";
-            break;
-        case QIcon::Active:
-            modePostfix = "-active";
-            break;
-        case QIcon::Selected:
-            modePostfix = "-selected";
-            break;
-        case QIcon::Normal:
-            break;
-        }
+QtAwesomeIconPainter::~QtAwesomeIconPainter() {}
 
-        QString statePostfix;
-        if ( state == QIcon::Off ) {
-            statePostfix = "-off";
-        }
+QStringList QtAwesomeCharIconPainter::optionKeysForModeAndState( const QString &key, QIcon::Mode mode, QIcon::State state ) {
+    QString modePostfix;
+    switch ( mode ) {
+    case QIcon::Disabled:
+        modePostfix = "-disabled";
+        break;
+    case QIcon::Active:
+        modePostfix = "-active";
+        break;
+    case QIcon::Selected:
+        modePostfix = "-selected";
+        break;
+    case QIcon::Normal:
+        break;
+    }
 
-        // the keys that need to bet tested:   key-mode-state | key-mode | key-state | key
-        QStringList result;
-        if ( !modePostfix.isEmpty() ) {
-            if ( !statePostfix.isEmpty() ) {
-                result.push_back( key + modePostfix + statePostfix );
-            }
-            result.push_back( key + modePostfix );
-        }
+    QString statePostfix;
+    if ( state == QIcon::Off ) {
+        statePostfix = "-off";
+    }
+
+    // the keys that need to bet tested:   key-mode-state | key-mode | key-state | key
+    QStringList result;
+    if ( !modePostfix.isEmpty() ) {
         if ( !statePostfix.isEmpty() ) {
-            result.push_back( key + statePostfix );
+            result.push_back( key + modePostfix + statePostfix );
         }
-
-        return result;
+        result.push_back( key + modePostfix );
+    }
+    if ( !statePostfix.isEmpty() ) {
+        result.push_back( key + statePostfix );
     }
 
-    QVariant optionValueForModeAndState( const QString &baseKey, QIcon::Mode mode, QIcon::State state,
-                                         const QVariantMap &options ) {
-        foreach ( QString key, optionKeysForModeAndState( baseKey, mode, state ) ) {
-            if ( options.contains( key ) )
-                return options.value( key );
-        }
-        return options.value( baseKey );
+    return result;
+}
+
+QVariant QtAwesomeCharIconPainter::optionValueForModeAndState( const QString &baseKey, QIcon::Mode mode, QIcon::State state,
+                                                               const QVariantMap &options ) {
+    foreach ( QString key, optionKeysForModeAndState( baseKey, mode, state ) ) {
+        if ( options.contains( key ) )
+            return options.value( key );
+    }
+    return options.value( baseKey );
+}
+
+
+void QtAwesomeCharIconPainter::paint( QtAwesome *awesome, QPainter *painter, const QRect &rect, QIcon::Mode mode,
+                                      QIcon::State state, const QVariantMap &options ) {
+    Q_UNUSED( mode );
+    Q_UNUSED( state );
+    Q_UNUSED( options );
+
+    painter->save();
+
+    // set the default options
+    QColor color = optionValueForModeAndState( "color", mode, state, options ).value< QColor >();
+    QString text = optionValueForModeAndState( "text", mode, state, options ).toString();
+
+    if ( text.isEmpty() || color.red() == 0 ) {
+        qWarning() << "empty for" << mode << state << options;
     }
 
-  public:
-    virtual void paint( QtAwesome *awesome, QPainter *painter, const QRect &rect, QIcon::Mode mode, QIcon::State state,
-                        const QVariantMap &options ) {
-        Q_UNUSED( mode );
-        Q_UNUSED( state );
-        Q_UNUSED( options );
+    painter->setPen( color );
 
-        painter->save();
+    // add some 'padding' around the icon
+    int drawSize = qRound( rect.height() * options.value( "scale-factor" ).toFloat() );
 
-        // set the default options
-        QColor color = optionValueForModeAndState( "color", mode, state, options ).value< QColor >();
-        QString text = optionValueForModeAndState( "text", mode, state, options ).toString();
+    painter->setFont( awesome->font( drawSize ) );
+    painter->drawText( rect, text, QTextOption( Qt::AlignCenter | Qt::AlignVCenter ) );
 
-        if ( text.isEmpty() || color.red() == 0 ) {
-            qWarning() << "empty for" << mode << state << options;
-        }
+    painter->restore();
 
-        painter->setPen( color );
-
-        // add some 'padding' around the icon
-        int drawSize = qRound( rect.height() * options.value( "scale-factor" ).toFloat() );
-
-        painter->setFont( awesome->font( drawSize ) );
-        painter->drawText( rect, text, QTextOption( Qt::AlignCenter | Qt::AlignVCenter ) );
-
-        painter->restore();
-
-        QVariant var = options.value( "anim" );
-        QtAwesomeAnimation *anim = var.value< QtAwesomeAnimation * >();
-        if ( anim ) {
-            anim->setup( *painter, rect );
-        }
+    QVariant var = options.value( "anim" );
+    QtAwesomeAnimation *anim = var.value< QtAwesomeAnimation * >();
+    if ( anim ) {
+        anim->setup( *painter, rect );
     }
-};
+}
 
 //---------------------------------------------------------------------------------------
 
 /// The painter icon engine.
-class QtAwesomeIconPainterIconEngine : public QIconEngine {
-  public:
-    QtAwesomeIconPainterIconEngine( QtAwesome *awesome, QtAwesomeIconPainter *painter, const QVariantMap &options )
-        : awesomeRef_( awesome ), iconPainterRef_( painter ), options_( options ) {}
+QtAwesomeIconPainterIconEngine::QtAwesomeIconPainterIconEngine( QtAwesome *awesome, QtAwesomeIconPainter *painter,
+                                                                const QVariantMap &options )
+    : awesomeRef_( awesome ), iconPainterRef_( painter ), options_( options ) {}
 
-    ~QtAwesomeIconPainterIconEngine() override {}
+QtAwesomeIconPainterIconEngine::~QtAwesomeIconPainterIconEngine() {}
 
-    QtAwesomeIconPainterIconEngine *clone() const override {
-        return new QtAwesomeIconPainterIconEngine( awesomeRef_, iconPainterRef_, options_ );
+QtAwesomeIconPainterIconEngine *QtAwesomeIconPainterIconEngine::clone() const {
+    return new QtAwesomeIconPainterIconEngine( awesomeRef_, iconPainterRef_, options_ );
+}
+
+void QtAwesomeIconPainterIconEngine::paint( QPainter *painter, const QRect &rect, QIcon::Mode mode, QIcon::State state ) {
+    Q_UNUSED( mode );
+    Q_UNUSED( state );
+    iconPainterRef_->paint( awesomeRef_, painter, rect, mode, state, options_ );
+}
+
+QPixmap QtAwesomeIconPainterIconEngine::pixmap( const QSize &size, QIcon::Mode mode, QIcon::State state ) {
+    QPixmap pm( size );
+    pm.fill( Qt::transparent ); // we need transparency
+    {
+        QPainter p( &pm );
+        paint( &p, QRect( QPoint( 0, 0 ), size ), mode, state );
     }
-
-    void paint( QPainter *painter, const QRect &rect, QIcon::Mode mode, QIcon::State state ) override {
-        Q_UNUSED( mode );
-        Q_UNUSED( state );
-        iconPainterRef_->paint( awesomeRef_, painter, rect, mode, state, options_ );
-    }
-
-    QPixmap pixmap( const QSize &size, QIcon::Mode mode, QIcon::State state ) override {
-        QPixmap pm( size );
-        pm.fill( Qt::transparent ); // we need transparency
-        {
-            QPainter p( &pm );
-            paint( &p, QRect( QPoint( 0, 0 ), size ), mode, state );
-        }
-        return pm;
-    }
-    //#if (QT_VERSION >= QT_VERSION_CHECK(5, 6, 0))
-    //    QList<QSize> availableSizes(QIcon::Mode mode, QIcon::State state) const override {
-    //        Q_UNUSED(mode);
-    //        Q_UNUSED(state);
-    //        QList<QSize> sizes = {QSize(16, 16),   QSize(32, 32),   QSize(64, 64),
-    //                              QSize(128, 128), QSize(256, 256), QSize(512, 512)};
-    //        return sizes;
-    //    }
-    //#endif
-  private:
-    QtAwesome *awesomeRef_;                ///< a reference to the QtAwesome instance
-    QtAwesomeIconPainter *iconPainterRef_; ///< a reference to the icon painter
-    QVariantMap options_;                  ///< the options for this icon painter
-};
+    return pm;
+}
 
 //---------------------------------------------------------------------------------------
 

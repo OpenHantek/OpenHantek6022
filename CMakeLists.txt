@@ -18,35 +18,39 @@ INCLUDE_DIRECTORIES(".")
 # Use CPack to make deb/rpm/zip/exe installer packages
 include(cmake/CPackInfos.cmake)
 
-# Enable C++ standard library hardening -> cheap range checks for C++ arrays, vectors, and strings.
-add_compile_options( -D_GLIBCXX_ASSERTIONS )
-
 if(MSVC)
-  add_compile_options(/W4)
+  add_compile_options(/W4 -D_CRT_SECURE_NO_WARNINGS)
 else()
   add_compile_options(-Wall -Wextra -pedantic)
 endif()
 
 # enable extra feature(s)
-if ( DEFINED HANTEK_AC )
-    if( ${CMAKE_VERSION} VERSION_LESS "3.12.0" )
-	   add_definitions( -DHANTEK_AC ) # deprecated
-    else()
-	   add_compile_definitions( HANTEK_AC ) # introduced with 3.12
+if( ${CMAKE_VERSION} VERSION_LESS "3.12.0" ) # deprecated, but still used in older Ubuntu releases
+    # Enable C++ standard library hardening -> cheap range checks for C++ arrays, vectors, and strings.
+    add_definitions( -D_GLIBCXX_ASSERTIONS )
+    add_definitions( -D_USE_MATH_DEFINES )
+    if ( DEFINED HANTEK_AC )
+        add_definitions( -DHANTEK_AC )
+    endif()
+else() # 'add_compile_definitions()' was introduced with CMake 3.12
+    add_compile_definitions( _GLIBCXX_ASSERTIONS )
+    add_compile_definitions( _USE_MATH_DEFINES )
+    if ( DEFINED HANTEK_AC )
+        add_compile_definitions( HANTEK_AC )
     endif()
 endif()
 
-# show all compile definitions
-#get_directory_property( DirDefs COMPILE_DEFINITIONS )
-#message( "COMPILE_DEFINITIONS = ${DirDefs}" )
+# show all compile options and definitions
+get_directory_property( CompOpts COMPILE_OPTIONS )
+message( "-- COMPILE_OPTIONS: ${CompOpts}" )
+get_directory_property( CompDefs COMPILE_DEFINITIONS )
+message( "-- COMPILE_DEFINITIONS: ${CompDefs}" )
 
 # Qt Widgets based Gui with OpenGL canvas
 add_subdirectory(openhantek)
 
 if (WIN32)
     install(FILES COPYING readme.md DESTINATION ".")
-#else()
-#    add_subdirectory(firmware EXCLUDE_FROM_ALL)
 endif()
 
 if("${CMAKE_SYSTEM}" MATCHES "Linux")
@@ -87,9 +91,6 @@ endif()
 # Add auxiliary files to the project, so that these files appear in VisualStudio/QtCreator
 file(GLOB_RECURSE MDFILES "docs/*.md" "openhantek/*.md")
 add_custom_target(readme SOURCES readme.md ${MDFILES})
-
-# Add "cppcheck" command
-add_custom_target(cppcheck COMMAND "cppcheck --enable=all -I \"${CMAKE_CURRENT_LIST_DIR}/openhantek/src\" -q ${SRC} --template=\"{file}:{line}: {severity}: {message}\"")
 
 # Add "doc" target to build the documentation.
 find_package(Doxygen QUIET)

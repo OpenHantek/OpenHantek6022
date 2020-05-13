@@ -10,7 +10,6 @@
 #include "dsosamples.h"
 #include "errorcodes.h"
 #include "scopesettings.h"
-#include "states.h"
 #include "utils/printutils.h"
 #include "viewconstants.h"
 

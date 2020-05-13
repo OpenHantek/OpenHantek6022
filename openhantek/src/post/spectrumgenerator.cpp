@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: GPL-2.0+
 
-#define _USE_MATH_DEFINES
 #include <cmath>
 
 #include <QColor>
@@ -67,10 +66,18 @@ void SpectrumGenerator::process( PPresult *result ) {
             case Dso::WindowFunction::LANCZOS:
                 for ( unsigned int windowPosition = 0; windowPosition < lastRecordLength; ++windowPosition ) {
                     double sincParameter = ( 2.0 * windowPosition / windowEnd - 1.0 ) * M_PI;
+#ifdef __GNUC__
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wfloat-equal"
+#endif
+
                     if ( sincParameter == 0 )
                         weight += *( lastWindowBuffer + windowPosition ) = 1;
                     else
                         weight += *( lastWindowBuffer + windowPosition ) = sin( sincParameter ) / sincParameter;
+#ifdef __GNUC__
+#pragma GCC diagnostic pop
+#endif
                 }
                 break;
             case Dso::WindowFunction::BARTLETT:

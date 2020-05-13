@@ -158,9 +158,9 @@ void DsoSettings::load() {
 
         if ( defaultConfig ) { // useful default: show both voltage channels
             scope.voltage[ 0 ].used = true;
-            scope.voltage[ 0 ].offset = DIVS_VOLTAGE / 4; // mid of upper screen half
+            scope.voltage[ 0 ].offset = MARGIN_TOP / 2; // mid of upper screen half
             scope.voltage[ 1 ].used = true;
-            scope.voltage[ 1 ].offset = -DIVS_VOLTAGE / 4; // mid of lower screen half
+            scope.voltage[ 1 ].offset = MARGIN_BOTTOM / 2; // mid of lower screen half
         }
 
         store->beginGroup( "cursor" );

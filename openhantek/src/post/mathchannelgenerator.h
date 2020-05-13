@@ -10,7 +10,7 @@ class PPresult;
 class MathChannelGenerator : public Processor {
   public:
     MathChannelGenerator( const DsoSettingsScope *scope, unsigned physicalChannels );
-    virtual ~MathChannelGenerator();
+    virtual ~MathChannelGenerator() override;
     void process( PPresult * ) override;
 
   private:

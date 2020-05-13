@@ -19,6 +19,112 @@
 #include <QVariantMap>
 
 
+//---------------------------------------------------------------------------------------
+
+class QtAwesomeIconPainter;
+
+/// The main class for managing icons
+/// This class requires a 2-phase construction. You must first create the class and then initialize it via an init* method
+class QtAwesome : public QObject {
+    Q_OBJECT
+
+  public:
+    explicit QtAwesome( QObject *parent = nullptr );
+    virtual ~QtAwesome();
+
+    void init( const QString &fontname );
+    bool initFontAwesome();
+
+    void addNamedCodepoint( const QString &name, int codePoint );
+    QHash< QString, int > namedCodePoints() { return namedCodepoints_; }
+
+    void setDefaultOption( const QString &name, const QVariant &value );
+    QVariant defaultOption( const QString &name );
+
+    QIcon icon( int character, const QVariantMap &options = QVariantMap() );
+    QIcon icon( const QString &name, const QVariantMap &options = QVariantMap() );
+    QIcon icon( QtAwesomeIconPainter *painter, const QVariantMap &optionMap = QVariantMap() );
+
+    void give( const QString &name, QtAwesomeIconPainter *painter );
+
+    QFont font( int size );
+
+    /// Returns the font-name that is used as icon-map
+    QString fontName() { return fontName_; }
+
+  private:
+    QString fontName_;                      ///< The font name used for this map
+    QHash< QString, int > namedCodepoints_; ///< A map with names mapped to code-points
+
+    QHash< QString, QtAwesomeIconPainter * > painterMap_; ///< A map of custom painters
+    QVariantMap defaultOptions_;                          ///< The default icon options
+    QtAwesomeIconPainter *fontIconPainter_;               ///< A special painter fo painting codepoints
+};
+
+
+//---------------------------------------------------------------------------------------
+
+
+/// The QtAwesomeIconPainter is a specialized painter for painting icons
+/// your can implement an iconpainter to create custom font-icon code
+class QtAwesomeIconPainter {
+  public:
+    virtual ~QtAwesomeIconPainter();
+    virtual void paint( QtAwesome *awesome, QPainter *painter, const QRect &rect, QIcon::Mode mode, QIcon::State state,
+                        const QVariantMap &options ) = 0;
+};
+
+
+/// The font-awesome icon painter
+class QtAwesomeCharIconPainter : public QtAwesomeIconPainter {
+  protected:
+    QStringList optionKeysForModeAndState( const QString &key, QIcon::Mode mode, QIcon::State state );
+
+    QVariant optionValueForModeAndState( const QString &baseKey, QIcon::Mode mode, QIcon::State state, const QVariantMap &options );
+
+  public:
+    virtual void paint( QtAwesome *awesome, QPainter *painter, const QRect &rect, QIcon::Mode mode, QIcon::State state,
+                        const QVariantMap &options );
+};
+
+
+/// The painter icon engine.
+class QtAwesomeIconPainterIconEngine : public QIconEngine {
+  public:
+    QtAwesomeIconPainterIconEngine( QtAwesome *awesome, QtAwesomeIconPainter *painter, const QVariantMap &options );
+    //        : awesomeRef_( awesome ), iconPainterRef_( painter ), options_( options )
+
+    ~QtAwesomeIconPainterIconEngine() override;
+
+    QtAwesomeIconPainterIconEngine *clone() const override;
+
+    void paint( QPainter *painter, const QRect &rect, QIcon::Mode mode, QIcon::State state ) override;
+
+    QPixmap pixmap( const QSize &size, QIcon::Mode mode, QIcon::State state ) override;
+
+#if ( QT_VERSION >= QT_VERSION_CHECK( 5, 6, 0 ) )
+    QList< QSize > availableSizes( QIcon::Mode mode, QIcon::State state ) const override {
+        Q_UNUSED( mode );
+        Q_UNUSED( state );
+        QList< QSize > sizes = {QSize( 16, 16 ),   QSize( 32, 32 ),   QSize( 64, 64 ),
+                                QSize( 128, 128 ), QSize( 256, 256 ), QSize( 512, 512 )};
+        return sizes;
+    }
+#endif
+
+  private:
+    QtAwesome *awesomeRef_;                ///< a reference to the QtAwesome instance
+    QtAwesomeIconPainter *iconPainterRef_; ///< a reference to the icon painter
+    QVariantMap options_;                  ///< the options for this icon painter
+};
+
+
+Q_DECLARE_METATYPE( QtAwesomeAnimation * )
+
+extern QtAwesome *iconFont;
+
+//---------------------------------------------------------------------------------------
+
 /// A list of all icon-names with the codepoint (unicode-value) on the right
 /// You can use the names on the page  http://fortawesome.github.io/Font-Awesome/design.html
 namespace fa {
@@ -812,64 +918,5 @@ enum icon {
 };
 }
 
-
-//---------------------------------------------------------------------------------------
-
-class QtAwesomeIconPainter;
-
-/// The main class for managing icons
-/// This class requires a 2-phase construction. You must first create the class and then initialize it via an init* method
-class QtAwesome : public QObject {
-    Q_OBJECT
-
-  public:
-    explicit QtAwesome( QObject *parent = nullptr );
-    virtual ~QtAwesome();
-
-    void init( const QString &fontname );
-    bool initFontAwesome();
-
-    void addNamedCodepoint( const QString &name, int codePoint );
-    QHash< QString, int > namedCodePoints() { return namedCodepoints_; }
-
-    void setDefaultOption( const QString &name, const QVariant &value );
-    QVariant defaultOption( const QString &name );
-
-    QIcon icon( int character, const QVariantMap &options = QVariantMap() );
-    QIcon icon( const QString &name, const QVariantMap &options = QVariantMap() );
-    QIcon icon( QtAwesomeIconPainter *painter, const QVariantMap &optionMap = QVariantMap() );
-
-    void give( const QString &name, QtAwesomeIconPainter *painter );
-
-    QFont font( int size );
-
-    /// Returns the font-name that is used as icon-map
-    QString fontName() { return fontName_; }
-
-  private:
-    QString fontName_;                      ///< The font name used for this map
-    QHash< QString, int > namedCodepoints_; ///< A map with names mapped to code-points
-
-    QHash< QString, QtAwesomeIconPainter * > painterMap_; ///< A map of custom painters
-    QVariantMap defaultOptions_;                          ///< The default icon options
-    QtAwesomeIconPainter *fontIconPainter_;               ///< A special painter fo painting codepoints
-};
-
-
-//---------------------------------------------------------------------------------------
-
-
-/// The QtAwesomeIconPainter is a specialized painter for painting icons
-/// your can implement an iconpainter to create custom font-icon code
-class QtAwesomeIconPainter {
-  public:
-    virtual ~QtAwesomeIconPainter() {}
-    virtual void paint( QtAwesome *awesome, QPainter *painter, const QRect &rect, QIcon::Mode mode, QIcon::State state,
-                        const QVariantMap &options ) = 0;
-};
-
-Q_DECLARE_METATYPE( QtAwesomeAnimation * )
-
-extern QtAwesome *iconFont;
 
 #endif // QTAWESOME_H

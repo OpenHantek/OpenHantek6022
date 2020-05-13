@@ -782,7 +782,10 @@ void DsoWidget::updateOffset( ChannelID channel, double value ) {
         }
     } else if ( channel < scope->voltage.size() * 2 )
         scope->spectrum[ channel - scope->voltage.size() ].offset = value;
-
+#ifdef __GNUC__
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wfloat-equal"
+#endif
     if ( channel < scope->voltage.size() * 2 ) {
         if ( mainSliders.voltageOffsetSlider->value( int( channel ) ) != value ) { // double != comparison is safe in this case
             const QSignalBlocker blocker( mainSliders.voltageOffsetSlider );
@@ -793,7 +796,9 @@ void DsoWidget::updateOffset( ChannelID channel, double value ) {
             zoomSliders.voltageOffsetSlider->setValue( int( channel ), value );
         }
     }
-
+#ifdef __GNUC__
+#pragma GCC diagnostic pop
+#endif
     emit voltageOffsetChanged( channel, value );
 }
 
@@ -863,7 +868,10 @@ void DsoWidget::updateTriggerOffset( int index, double value, bool mainView ) {
 void DsoWidget::updateTriggerLevel( ChannelID channel, double value ) {
     // printf("DW::updateTriggerLevel( %d, %g )\n", channel, value);
     scope->voltage[ channel ].trigger = value;
-
+#ifdef __GNUC__
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wfloat-equal"
+#endif
     if ( mainSliders.triggerLevelSlider->value( int( channel ) ) != value ) { // double != comparison is safe in this case
         const QSignalBlocker blocker( mainSliders.triggerLevelSlider );
         mainSliders.triggerLevelSlider->setValue( int( channel ), value );
@@ -872,7 +880,9 @@ void DsoWidget::updateTriggerLevel( ChannelID channel, double value ) {
         const QSignalBlocker blocker( zoomSliders.triggerLevelSlider );
         zoomSliders.triggerLevelSlider->setValue( int( channel ), value );
     }
-
+#ifdef __GNUC__
+#pragma GCC diagnostic pop
+#endif
     updateTriggerDetails();
 
     emit triggerLevelChanged( channel, value );

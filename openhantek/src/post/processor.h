@@ -6,5 +6,6 @@
 
 class Processor {
   public:
+    virtual ~Processor();
     virtual void process( PPresult * ) = 0;
 };

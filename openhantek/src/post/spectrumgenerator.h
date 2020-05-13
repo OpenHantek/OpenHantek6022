@@ -24,7 +24,7 @@ struct DsoSettingsScope;
 class SpectrumGenerator : public Processor {
   public:
     SpectrumGenerator( const DsoSettingsScope *scope, const DsoSettingsPostProcessing *postprocessing );
-    virtual ~SpectrumGenerator();
+    virtual ~SpectrumGenerator() override;
 
   private:
     const DsoSettingsScope *scope;

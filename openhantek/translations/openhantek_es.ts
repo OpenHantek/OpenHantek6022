@@ -495,7 +495,7 @@
     <message>
         <location filename="../src/exporting/legacyexportdrawer.cpp" line="74"/>
         <source>/s</source>
-        <translation type="unfinished">/s</translation>
+        <translation>/s</translation>
     </message>
     <message>
         <location filename="../src/exporting/legacyexportdrawer.cpp" line="78"/>
@@ -1183,64 +1183,56 @@
         <translation>Usar OpenGL ES en vez de OpenGL</translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/enums.cpp" line="18"/>
         <source>Voltage</source>
-        <translation>Voltaje</translation>
+        <translation type="vanished">Voltaje</translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/enums.cpp" line="20"/>
         <source>Spectrum</source>
-        <translation>Espectro</translation>
+        <translation type="vanished">Espectro</translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/enums.cpp" line="32"/>
+        <location filename="../src/hantekdso/enums.cpp" line="17"/>
         <source>T - Y</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/enums.cpp" line="34"/>
+        <location filename="../src/hantekdso/enums.cpp" line="19"/>
         <source>X - Y</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/enums.cpp" line="45"/>
+        <location filename="../src/hantekdso/enums.cpp" line="30"/>
         <source>AC</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/enums.cpp" line="47"/>
+        <location filename="../src/hantekdso/enums.cpp" line="32"/>
         <source>DC</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/enums.cpp" line="49"/>
+        <location filename="../src/hantekdso/enums.cpp" line="34"/>
         <source>GND</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/enums.cpp" line="61"/>
+        <location filename="../src/hantekdso/enums.cpp" line="46"/>
         <source>Auto</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/enums.cpp" line="63"/>
+        <location filename="../src/hantekdso/enums.cpp" line="48"/>
         <source>Normal</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/enums.cpp" line="65"/>
+        <location filename="../src/hantekdso/enums.cpp" line="50"/>
         <source>Single</source>
         <translation>Simple</translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/enums.cpp" line="102"/>
-        <source>Off</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../src/hantekdso/enums.cpp" line="104"/>
         <source>Linear</source>
-        <translation>Lineal</translation>
+        <translation type="vanished">Lineal</translation>
     </message>
     <message>
         <source>Print ..</source>

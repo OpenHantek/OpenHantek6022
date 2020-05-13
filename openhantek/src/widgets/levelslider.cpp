@@ -36,8 +36,8 @@
 /// \param parent The parent widget.
 LevelSlider::LevelSlider( Qt::ArrowType direction, QWidget *parent ) : QWidget( parent ) {
     // Set pixel values based on the current dpi scaling
-    this->needleWidth = ( (int)( 0.55 * this->fontMetrics().height() ) ) + 1; // always an odd number
-    this->sliderWidth = (int)( 1.2 * this->fontMetrics().height() );
+    this->needleWidth = ( int( 0.55 * this->fontMetrics().height() ) ) + 1; // always an odd number
+    this->sliderWidth = ( int( 1.2 * this->fontMetrics().height() ) );
 
     this->pressedSlider = -1;
 

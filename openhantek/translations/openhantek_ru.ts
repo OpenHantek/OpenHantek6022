@@ -1001,64 +1001,60 @@
         <translation>Печать осциллограммы</translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/enums.cpp" line="18"/>
         <source>Voltage</source>
-        <translation>Напряжение</translation>
+        <translation type="vanished">Напряжение</translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/enums.cpp" line="20"/>
         <source>Spectrum</source>
-        <translation>Спектр</translation>
+        <translation type="vanished">Спектр</translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/enums.cpp" line="32"/>
+        <location filename="../src/hantekdso/enums.cpp" line="17"/>
         <source>T - Y</source>
         <translation>T - Y</translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/enums.cpp" line="34"/>
+        <location filename="../src/hantekdso/enums.cpp" line="19"/>
         <source>X - Y</source>
         <translation>X - Y</translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/enums.cpp" line="45"/>
+        <location filename="../src/hantekdso/enums.cpp" line="30"/>
         <source>AC</source>
         <translation>AC</translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/enums.cpp" line="47"/>
+        <location filename="../src/hantekdso/enums.cpp" line="32"/>
         <source>DC</source>
         <translation>DC</translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/enums.cpp" line="49"/>
+        <location filename="../src/hantekdso/enums.cpp" line="34"/>
         <source>GND</source>
         <translation>GND</translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/enums.cpp" line="61"/>
+        <location filename="../src/hantekdso/enums.cpp" line="46"/>
         <source>Auto</source>
         <translation>Авто</translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/enums.cpp" line="63"/>
+        <location filename="../src/hantekdso/enums.cpp" line="48"/>
         <source>Normal</source>
         <translation>Нормальный</translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/enums.cpp" line="65"/>
+        <location filename="../src/hantekdso/enums.cpp" line="50"/>
         <source>Single</source>
         <translation>Однократный</translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/enums.cpp" line="102"/>
         <source>Off</source>
-        <translation>Выкл</translation>
+        <translation type="vanished">Выкл</translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/enums.cpp" line="104"/>
         <source>Linear</source>
-        <translation>Линейный</translation>
+        <translation type="vanished">Линейный</translation>
     </message>
     <message>
         <location filename="../src/main.cpp" line="81"/>
