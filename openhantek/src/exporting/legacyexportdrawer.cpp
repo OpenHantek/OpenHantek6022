@@ -17,7 +17,7 @@
 #include "utils/printutils.h"
 #include "viewconstants.h"
 
-#define tr( msg ) QCoreApplication::translate( "Exporter", msg )
+LegacyExportDrawer::~LegacyExportDrawer() {}
 
 bool LegacyExportDrawer::exportSamples( const PPresult *result, QPaintDevice *paintDevice,
                                         const Dso::ControlSpecification *deviceSpecification, const DsoSettings *settings,

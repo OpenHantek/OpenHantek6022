@@ -398,29 +398,29 @@
 <context>
     <name>GlScope</name>
     <message>
-        <location filename="../src/glscope.cpp" line="233"/>
+        <location filename="../src/glscope.cpp" line="231"/>
         <source>System does not support OpenGL Shading Language (GLSL)</source>
         <translation>Система не поддерживает язык шейдеров OpenGL (GLSL)</translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="237"/>
+        <location filename="../src/glscope.cpp" line="235"/>
         <source>OpenGL init called twice!</source>
         <translation>OpenGL инициализация вызывается дважды!</translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="300"/>
+        <location filename="../src/glscope.cpp" line="298"/>
         <source>Failed to compile OpenGL shader programs.
 </source>
         <translation>Не удалось скомпилировать шейдерные программы OpenGL.\n</translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="306"/>
+        <location filename="../src/glscope.cpp" line="304"/>
         <source>Failed to link/bind OpenGL shader programs.
 </source>
         <translation>Не удалось связать/привязать шейдерные программы OpenGL.\n</translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="315"/>
+        <location filename="../src/glscope.cpp" line="313"/>
         <source>Failed to locate shader variable.</source>
         <translation>Не удалось найти переменную шейдера.</translation>
     </message>
@@ -1051,12 +1051,12 @@
         <translation>Однократный</translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/enums.cpp" line="103"/>
+        <location filename="../src/hantekdso/enums.cpp" line="102"/>
         <source>Off</source>
         <translation>Выкл</translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/enums.cpp" line="105"/>
+        <location filename="../src/hantekdso/enums.cpp" line="104"/>
         <source>Linear</source>
         <translation>Линейный</translation>
     </message>
@@ -1332,7 +1332,7 @@
         <translation>&lt;hr/&gt;&lt;p&gt;Вы можете изучить функции программы без устройства, просто нажмите кнопку &lt;b&gt;Демо Режима&lt;/b&gt;.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="122"/>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="121"/>
         <source>Can&apos;t initalize USB: %1</source>
         <translation>Не удалось инициализировать USB: %1</translation>
     </message>
