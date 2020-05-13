@@ -16,6 +16,7 @@ class PPresult;
  */
 class ExporterInterface {
   public:
+    virtual ~ExporterInterface();
     /**
      * Starts up this exporter. Aquires resources etc. Do not call this directly, it
      * will be called by the exporter registry at some point. Release your resources in the

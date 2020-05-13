@@ -88,6 +88,7 @@ QString slopeString( Slope slope ) {
         return QString::fromUtf8( "\u2928" ); // "⤨"
 #endif
     }
+    return QString();
 }
 
 #if 0
