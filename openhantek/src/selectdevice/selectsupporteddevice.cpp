@@ -37,7 +37,7 @@ SelectSupportedDevice::SelectSupportedDevice( QWidget *parent ) : QDialog( paren
     connect( ui->btnDemoMode, &QPushButton::clicked, [this]() { demoModeClicked = true; } );
 }
 
-std::unique_ptr< ScopeDevice > SelectSupportedDevice::showSelectDeviceModal( libusb_context *context, bool &demoMode ) {
+std::unique_ptr< ScopeDevice > SelectSupportedDevice::showSelectDeviceModal( libusb_context *context ) {
     //     newDeviceFromExistingDialog->setUSBcontext(context);
     std::unique_ptr< FindDevices > findDevices = std::unique_ptr< FindDevices >( new FindDevices( context ) );
     std::unique_ptr< DevicesListModel > model = std::unique_ptr< DevicesListModel >( new DevicesListModel( findDevices.get() ) );
@@ -111,7 +111,6 @@ std::unique_ptr< ScopeDevice > SelectSupportedDevice::showSelectDeviceModal( lib
     QCoreApplication::instance()->exec();
     timer.stop();
     close();
-    demoMode = demoModeClicked;
     if ( demoModeClicked )
         return std::unique_ptr< ScopeDevice >( new ScopeDevice() );
     return findDevices->takeDevice( selectedDevice );

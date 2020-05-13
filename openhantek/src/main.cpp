@@ -144,14 +144,16 @@ int main( int argc, char *argv[] ) {
             return -1;
         }
         // SelectSupportedDevive returns a real device unless demoMode is true
-        scopeDevice = SelectSupportedDevice().showSelectDeviceModal( context, demoMode );
-        if ( demoMode ) {
+        scopeDevice = SelectSupportedDevice().showSelectDeviceModal( context );
+        if ( scopeDevice && scopeDevice->isDemoDevice() ) {
+            demoMode = true;
             libusb_exit( context ); // stop all USB activities
             context = nullptr;
         } else {
             QString errorMessage;
             if ( scopeDevice == nullptr || !scopeDevice->connectDevice( errorMessage ) ) {
                 libusb_exit( context ); // clean USB
+                qCritical() << errorMessage;
                 return -1;
             }
         }
