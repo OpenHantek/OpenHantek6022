@@ -87,8 +87,6 @@ QString slopeString( Slope slope ) {
     case Slope::Both:
         return QString::fromUtf8( "\u2928" ); // "⤨"
 #endif
-    default:
-        return QString();
     }
 }
 
@@ -103,8 +101,6 @@ QString slopeString( Slope slope ) {
             return QCoreApplication::tr("Off");
         case INTERPOLATION_LINEAR:
             return QCoreApplication::tr("Linear");
-        default:
-            return QString();
         }
     }
 #endif

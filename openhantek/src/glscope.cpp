@@ -140,8 +140,6 @@ void GlScope::mousePressEvent( QMouseEvent *event ) {
             break;
         case DsoSettingsScopeCursor::NONE:
             break;
-        default:
-            break;
         }
         if ( selectedMarker != NO_MARKER ) {
             cursorInfo[ selectedCursor ]->pos[ selectedMarker ] = position;
@@ -403,8 +401,6 @@ void GlScope::generateVertices( unsigned marker, const DsoSettingsScopeCursor &c
                                   QVector3D( GLfloat( cursor.pos[ 1 ].x() ), GLfloat( cursor.pos[ 1 ].y() ), Z_ORDER ),
                                   QVector3D( GLfloat( cursor.pos[ 1 ].x() ), GLfloat( cursor.pos[ 0 ].y() ), Z_ORDER )};
         }
-        break;
-    default:
         break;
     }
 }

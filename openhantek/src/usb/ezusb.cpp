@@ -399,7 +399,6 @@ static int ram_poke( void *context, uint32_t addr, bool external, const unsigned
         }
         break;
     case _undef:
-    default:
         logerror( "bug\n" );
         return -EDOM;
     }
