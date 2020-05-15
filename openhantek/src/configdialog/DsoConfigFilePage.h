@@ -44,4 +44,5 @@ class DsoConfigFilePage : public QWidget {
     QSpinBox *imageWidthSpinBox;
     QLabel *imageHeightLabel;
     QSpinBox *imageHeightSpinBox;
+    QCheckBox *screenshotScaledCheckBox;
 };

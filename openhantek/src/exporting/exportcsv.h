@@ -4,6 +4,8 @@
 #include "exporterinterface.h"
 
 class ExporterCSV : public ExporterInterface {
+    Q_DECLARE_TR_FUNCTIONS( LegacyExportDrawer )
+
   public:
     ExporterCSV();
     void create( ExporterRegistry *registry ) override;

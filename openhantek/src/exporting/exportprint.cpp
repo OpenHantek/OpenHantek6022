@@ -21,7 +21,7 @@ void ExporterPrint::create( ExporterRegistry *newRegistry ) {
 
 int ExporterPrint::faIcon() { return fa::print; }
 
-QString ExporterPrint::name() { return QCoreApplication::tr( "&Print .." ); }
+QString ExporterPrint::name() { return tr( "&Print .." ); }
 
 ExporterInterface::Type ExporterPrint::type() { return Type::SnapshotExport; }
 
@@ -38,7 +38,7 @@ bool ExporterPrint::save() {
 
     // Show the printing dialog
     QPrintDialog dialog( printer.get() );
-    dialog.setWindowTitle( QCoreApplication::tr( "Print oscillograph" ) );
+    dialog.setWindowTitle( tr( "Print oscillograph" ) );
     if ( dialog.exec() != QDialog::Accepted ) {
         return false;
     }

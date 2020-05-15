@@ -21,7 +21,7 @@ void ExporterImage::create( ExporterRegistry *newRegistry ) {
 
 int ExporterImage::faIcon() { return fa::image; }
 
-QString ExporterImage::name() { return QCoreApplication::tr( "Export &Image/PDF .." ); }
+QString ExporterImage::name() { return tr( "Export &Image/PDF .." ); }
 
 ExporterInterface::Type ExporterImage::type() { return Type::SnapshotExport; }
 
@@ -32,9 +32,9 @@ bool ExporterImage::samples( const std::shared_ptr< PPresult > newData ) {
 
 bool ExporterImage::save() {
     QStringList filters;
-    filters << QCoreApplication::tr( "Portable Document Format (*.pdf)" ) << QCoreApplication::tr( "Image (*.png *.xpm *.jpg)" );
+    filters << tr( "Portable Document Format (*.pdf)" ) << tr( "Image (*.png *.jpg)" );
 
-    QFileDialog fileDialog( nullptr, QCoreApplication::tr( "Export file .." ), QString(), filters.join( ";;" ) );
+    QFileDialog fileDialog( nullptr, tr( "Save image" ), QString(), filters.join( ";;" ) );
     fileDialog.setFileMode( QFileDialog::AnyFile );
     fileDialog.setAcceptMode( QFileDialog::AcceptSave );
     if ( fileDialog.exec() != QDialog::Accepted )
@@ -48,7 +48,7 @@ bool ExporterImage::save() {
     QString fileName = fileDialog.selectedFiles().first();
 
     if ( !isPdf ) {
-        if ( !fileName.endsWith( ".png" ) && !fileName.endsWith( ".xpm" ) && !fileName.endsWith( ".jpg" ) ) {
+        if ( !fileName.endsWith( ".png" ) && !fileName.endsWith( ".jpg" ) ) {
             fileName += ".png";
         }
         // We need a QPixmap for image-export

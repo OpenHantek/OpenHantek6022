@@ -112,26 +112,21 @@
     <name>DsoConfigColorsPage</name>
     <message>
         <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="11"/>
-        <source>&lt;hr width=&quot;100%&quot;/&gt;</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="15"/>
         <source>Screen</source>
         <translation>Pantalla</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="17"/>
+        <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="13"/>
         <source>Print</source>
         <translation>Impresión</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="20"/>
+        <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="24"/>
         <source>Axes</source>
         <translation>Ejes</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="24"/>
+        <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="16"/>
         <source>Background</source>
         <translation>Fondo</translation>
     </message>
@@ -141,17 +136,17 @@
         <translation>Borde</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="32"/>
+        <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="20"/>
         <source>Grid</source>
         <translation>Rejilla</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="36"/>
+        <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="32"/>
         <source>Markers</source>
         <translation>Marcadores</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="40"/>
+        <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="36"/>
         <source>Text</source>
         <translation>Texto</translation>
     </message>
@@ -219,9 +214,8 @@
 <context>
     <name>DsoConfigFilePage</name>
     <message>
-        <location filename="../src/configdialog/DsoConfigFilePage.cpp" line="7"/>
         <source>Export Images with Screen Colors</source>
-        <translation>Exportar imágenes con los colores de la pantalla</translation>
+        <translation type="vanished">Exportar imágenes con los colores de la pantalla</translation>
     </message>
     <message>
         <location filename="../src/configdialog/DsoConfigFilePage.cpp" line="10"/>
@@ -234,22 +228,32 @@
         <translation>Altura de la imagen</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigFilePage.cpp" line="28"/>
+        <location filename="../src/configdialog/DsoConfigFilePage.cpp" line="7"/>
+        <source>Export images with screen colors</source>
+        <translation>Exportar imágenes con los colores de la pantalla</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigFilePage.cpp" line="21"/>
+        <source>Take a screenshot of the display area only</source>
+        <translation>Haga una captura de pantalla de la zona de visualización solamente</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigFilePage.cpp" line="32"/>
         <source>Export</source>
         <translation>Exportar</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigFilePage.cpp" line="32"/>
+        <location filename="../src/configdialog/DsoConfigFilePage.cpp" line="36"/>
         <source>Save default settings on exit</source>
         <translation>Guardar configuración predeterminada al salir</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigFilePage.cpp" line="34"/>
+        <location filename="../src/configdialog/DsoConfigFilePage.cpp" line="38"/>
         <source>Save default settings now</source>
         <translation>Guardar configuración predeterminada ahora</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigFilePage.cpp" line="40"/>
+        <location filename="../src/configdialog/DsoConfigFilePage.cpp" line="44"/>
         <source>Configuration</source>
         <translation>Configuración</translation>
     </message>
@@ -517,6 +521,51 @@
         <source>Marker 1/2</source>
         <translation>Marcador 1/2</translation>
     </message>
+    <message>
+        <location filename="../src/exporting/exportprint.cpp" line="24"/>
+        <source>&amp;Print ..</source>
+        <translation>Im&amp;primir ..</translation>
+    </message>
+    <message>
+        <location filename="../src/exporting/exportprint.cpp" line="41"/>
+        <source>Print oscillograph</source>
+        <translation>Imprimir oscilógrafo</translation>
+    </message>
+    <message>
+        <location filename="../src/exporting/exportimage.cpp" line="24"/>
+        <source>Export &amp;Image/PDF ..</source>
+        <translation>Exportar &amp;imagen/PDF ..</translation>
+    </message>
+    <message>
+        <location filename="../src/exporting/exportimage.cpp" line="35"/>
+        <source>Portable Document Format (*.pdf)</source>
+        <translation>Formato de documento portable (*.pdf)</translation>
+    </message>
+    <message>
+        <location filename="../src/exporting/exportimage.cpp" line="35"/>
+        <source>Image (*.png *.jpg)</source>
+        <translation>Imagen (*.png *.jpg)</translation>
+    </message>
+    <message>
+        <location filename="../src/exporting/exportimage.cpp" line="37"/>
+        <source>Save image</source>
+        <translation>Guardar imagen</translation>
+    </message>
+    <message>
+        <location filename="../src/exporting/exportcsv.cpp" line="24"/>
+        <source>Export &amp;CSV ..</source>
+        <translation>Exportar &amp;CSV ..</translation>
+    </message>
+    <message>
+        <location filename="../src/exporting/exportcsv.cpp" line="34"/>
+        <source>Comma-Separated Values (*.csv)</source>
+        <translation>Valores separados por coma (*.csv)</translation>
+    </message>
+    <message>
+        <location filename="../src/exporting/exportcsv.cpp" line="34"/>
+        <source>Save CSV</source>
+        <translation>Guardar CSV</translation>
+    </message>
 </context>
 <context>
     <name>MainWindow</name>
@@ -548,37 +597,37 @@
     <message>
         <location filename="../src/mainwindow.ui" line="94"/>
         <source>&amp;Open settings ..</source>
-        <translation>Abrir configuración ..</translation>
+        <translation>&amp;Abrir configuración ..</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="102"/>
         <source>&amp;Save settings</source>
-        <translation>Guardar configuración</translation>
+        <translation>&amp;Guardar configuración</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="110"/>
         <source>Save settings &amp;as ..</source>
-        <translation>Guardar configuración como ..</translation>
+        <translation>Guardar configuración &amp;como ..</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="115"/>
         <source>&amp;Exit</source>
-        <translation>Salir</translation>
+        <translation>&amp;Salir</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="137"/>
         <source>&amp;Phosphor</source>
-        <translation>Fósforo</translation>
+        <translation>&amp;Fósforo</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="145"/>
         <source>&amp;Histogram</source>
-        <translation>Histograma</translation>
+        <translation>&amp;Histograma</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="153"/>
         <source>&amp;Zoom</source>
-        <translation></translation>
+        <translation>&amp;Zoom</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="161"/>
@@ -588,7 +637,7 @@
     <message>
         <location filename="../src/mainwindow.ui" line="176"/>
         <source>&amp;User Manual</source>
-        <translation>Manual del usuario</translation>
+        <translation>&amp;Manual del usuario</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="181"/>
@@ -598,12 +647,12 @@
     <message>
         <location filename="../src/mainwindow.ui" line="186"/>
         <source>&amp;Settings ..</source>
-        <translation>Configuración ..</translation>
+        <translation>&amp;Configuración ..</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="194"/>
         <source>Manual &amp;command</source>
-        <translation>Orden manual</translation>
+        <translation>Orden &amp;manual</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="57"/>
@@ -629,7 +678,7 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="272"/>
+        <location filename="../src/mainwindow.cpp" line="277"/>
         <source>Save settings</source>
         <translation>Guardar configuración</translation>
     </message>
@@ -700,7 +749,7 @@
         <translation type="vanished">Orden manual</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="77"/>
+        <location filename="../src/mainwindow.cpp" line="79"/>
         <source>OpenHantek6022 (%1) - Device %2 (FW%3)</source>
         <translation>OpenHantek6022 (%1) - Dispositivo %2 (FW%3)</translation>
     </message>
@@ -709,110 +758,135 @@
         <translation type="vanished">OpenHantek6022 (%1) - Dispositivo %2</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="80"/>
+        <location filename="../src/mainwindow.cpp" line="82"/>
         <source>Demo Mode</source>
         <translation>Modo de demostración</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="80"/>
+        <location filename="../src/mainwindow.cpp" line="82"/>
         <source>OpenHantek6022 (%1) - </source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="138"/>
+        <location filename="../src/mainwindow.cpp" line="97"/>
+        <source>Screenshot ..</source>
+        <translation>Captura de pantalla ..</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="143"/>
         <source>Invalid command</source>
         <translation>Orden no válida</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="225"/>
+        <location filename="../src/mainwindow.cpp" line="230"/>
         <source>Stop</source>
         <translation>Parar</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="226"/>
+        <location filename="../src/mainwindow.cpp" line="231"/>
         <source>Stop the oscilloscope</source>
         <translation>Parar el osciloscopio</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="229"/>
+        <location filename="../src/mainwindow.cpp" line="234"/>
         <source>Start</source>
         <translation>Iniciar</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="230"/>
+        <location filename="../src/mainwindow.cpp" line="235"/>
         <source>Start the oscilloscope</source>
         <translation>Iniciar el osciloscopio</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="249"/>
+        <location filename="../src/mainwindow.cpp" line="254"/>
         <source>Open file</source>
         <translation>Abrir archivo</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="249"/>
-        <location filename="../src/mainwindow.cpp" line="272"/>
+        <location filename="../src/mainwindow.cpp" line="254"/>
+        <location filename="../src/mainwindow.cpp" line="277"/>
         <source>Settings (*.ini)</source>
         <translation>Configuración (*.ini)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="298"/>
+        <location filename="../src/mainwindow.cpp" line="303"/>
         <source>Disable fading of previous graphs</source>
         <translation>Desactivar desvanecimiento de los gráficos anteriores</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="300"/>
+        <location filename="../src/mainwindow.cpp" line="305"/>
         <source>Enable fading of previous graphs</source>
         <translation>Activar desvanecimiento de los gráficos anteriores</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="308"/>
+        <location filename="../src/mainwindow.cpp" line="313"/>
         <source>Hide histogram</source>
         <translation>Ocultar histograma</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="310"/>
+        <location filename="../src/mainwindow.cpp" line="315"/>
         <source>Show histogram</source>
         <translation>Mostrar histograma</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="319"/>
+        <location filename="../src/mainwindow.cpp" line="324"/>
         <source>Hide magnified scope</source>
         <translation>Ocultar osciloscopio aumentado</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="321"/>
+        <location filename="../src/mainwindow.cpp" line="326"/>
         <source>Show magnified scope</source>
         <translation>Mostrar osciloscopio aumentado</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="331"/>
+        <location filename="../src/mainwindow.cpp" line="336"/>
         <source>Hide measurements</source>
         <translation>Ocultar medidas</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="333"/>
+        <location filename="../src/mainwindow.cpp" line="338"/>
         <source>Show measurements</source>
         <translation>Mostrar medidas</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="351"/>
+        <location filename="../src/mainwindow.cpp" line="356"/>
         <source>About OpenHantek6022 (%1)</source>
         <translation>Acerca de OpenHantek6022 (%1)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="352"/>
+        <location filename="../src/mainwindow.cpp" line="357"/>
         <source>&lt;p&gt;Open source software for Hantek6022 USB oscilloscopes&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2010, 2011 Oliver Haag&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2012-2020 OpenHantek community&lt;br/&gt;&lt;a href=&apos;https://github.com/OpenHantek&apos;&gt;https://github.com/OpenHantek&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Open source firmware copyright &amp;copy; 2019-2020 Ho-Ro&lt;br/&gt;&lt;a href=&apos;https://github.com/Ho-Ro/Hantek6022API&apos;&gt;https://github.com/Ho-Ro/Hantek6022API&lt;/a&gt;&lt;/p&gt;</source>
         <translation>&lt;p&gt;Software de código abierto para osciloscopios USB Hantek6022&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2010, 2011 Oliver Haag&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2012-2020 OpenHantek community&lt;br/&gt;&lt;a href=&apos;https://github.com/OpenHantek&apos;&gt;https://github.com/OpenHantek&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Firmware de código abierto copyright &amp;copy; 2019-2020 Ho-Ro&lt;br/&gt;&lt;a href=&apos;https://github.com/Ho-Ro/Hantek6022API&apos;&gt;https://github.com/Ho-Ro/Hantek6022API&lt;/a&gt;&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="358"/>
+        <location filename="../src/mainwindow.cpp" line="363"/>
         <source>&lt;p&gt;Running since %1 seconds.&lt;/p&gt;</source>
         <translation>&lt;p&gt;El programa ha estado funcionando durante %1 segundos.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="376"/>
+        <location filename="../src/mainwindow.cpp" line="381"/>
         <source>%1: %2</source>
         <translation></translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="390"/>
+        <source>yyyy-MM-dd hh:mm:ss</source>
+        <translation>yyyy-MM-dd hh:mm:ss</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="396"/>
+        <source>yyyyMMdd_hhmmss</source>
+        <translation>yyyy-MM-dd hh:mm:ss</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="397"/>
+        <source>Image (*.png *.jpg)</source>
+        <translation>Imagen (*.png *.jpg)</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="397"/>
+        <source>Save screenshot</source>
+        <translation>Guardar captura de pantalla</translation>
     </message>
 </context>
 <context>
@@ -1239,53 +1313,44 @@
         <translation type="vanished">Imprimir...</translation>
     </message>
     <message>
-        <location filename="../src/exporting/exportprint.cpp" line="24"/>
         <source>&amp;Print ..</source>
-        <translation>Im&amp;primir ..</translation>
+        <translation type="vanished">Im&amp;primir ..</translation>
     </message>
     <message>
-        <location filename="../src/exporting/exportprint.cpp" line="41"/>
         <source>Print oscillograph</source>
-        <translation>Imprimir oscilógrafo</translation>
+        <translation type="vanished">Imprimir oscilógrafo</translation>
     </message>
     <message>
         <source>Export Image/PDF ..</source>
         <translation type="vanished">Exportar imagen/PDF...</translation>
     </message>
     <message>
-        <location filename="../src/exporting/exportimage.cpp" line="24"/>
         <source>Export &amp;Image/PDF ..</source>
-        <translation>Exportar &amp;imagen/PDF ..</translation>
+        <translation type="vanished">Exportar &amp;imagen/PDF ..</translation>
     </message>
     <message>
-        <location filename="../src/exporting/exportimage.cpp" line="35"/>
         <source>Portable Document Format (*.pdf)</source>
-        <translation>Formato de documento portable (*.pdf)</translation>
+        <translation type="vanished">Formato de documento portable (*.pdf)</translation>
     </message>
     <message>
-        <location filename="../src/exporting/exportimage.cpp" line="35"/>
-        <source>Image (*.png *.xpm *.jpg)</source>
-        <translation>Imagen (*.png *.xpm *.jpg)</translation>
+        <source>Image (*.png *.jpg)</source>
+        <translation type="vanished">Imagen (*.png *.jpg)</translation>
     </message>
     <message>
-        <location filename="../src/exporting/exportimage.cpp" line="37"/>
-        <location filename="../src/exporting/exportcsv.cpp" line="37"/>
         <source>Export file ..</source>
-        <translation>Exportar archivo ..</translation>
+        <translation type="vanished">Exportar archivo ..</translation>
     </message>
     <message>
         <source>Export CSV ..</source>
         <translation type="vanished">Exportar CSV...</translation>
     </message>
     <message>
-        <location filename="../src/exporting/exportcsv.cpp" line="24"/>
         <source>Export &amp;CSV ..</source>
-        <translation>Exportar &amp;CSV ..</translation>
+        <translation type="vanished">Exportar &amp;CSV ..</translation>
     </message>
     <message>
-        <location filename="../src/exporting/exportcsv.cpp" line="35"/>
         <source>Comma-Separated Values (*.csv)</source>
-        <translation>Valores separados por coma (*.csv)</translation>
+        <translation type="vanished">Valores separados por coma (*.csv)</translation>
     </message>
 </context>
 <context>

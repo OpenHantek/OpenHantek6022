@@ -112,26 +112,21 @@
     <name>DsoConfigColorsPage</name>
     <message>
         <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="11"/>
-        <source>&lt;hr width=&quot;100%&quot;/&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="15"/>
         <source>Screen</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="17"/>
+        <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="13"/>
         <source>Print</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="20"/>
+        <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="24"/>
         <source>Axes</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="24"/>
+        <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="16"/>
         <source>Background</source>
         <translation type="unfinished"></translation>
     </message>
@@ -141,17 +136,17 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="32"/>
+        <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="20"/>
         <source>Grid</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="36"/>
+        <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="32"/>
         <source>Markers</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="40"/>
+        <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="36"/>
         <source>Text</source>
         <translation type="unfinished"></translation>
     </message>
@@ -219,11 +214,6 @@
 <context>
     <name>DsoConfigFilePage</name>
     <message>
-        <location filename="../src/configdialog/DsoConfigFilePage.cpp" line="7"/>
-        <source>Export Images with Screen Colors</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../src/configdialog/DsoConfigFilePage.cpp" line="10"/>
         <source>Image width</source>
         <translation type="unfinished"></translation>
@@ -234,22 +224,32 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigFilePage.cpp" line="28"/>
-        <source>Export</source>
+        <location filename="../src/configdialog/DsoConfigFilePage.cpp" line="7"/>
+        <source>Export images with screen colors</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigFilePage.cpp" line="21"/>
+        <source>Take a screenshot of the display area only</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/configdialog/DsoConfigFilePage.cpp" line="32"/>
+        <source>Export</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigFilePage.cpp" line="36"/>
         <source>Save default settings on exit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigFilePage.cpp" line="34"/>
+        <location filename="../src/configdialog/DsoConfigFilePage.cpp" line="38"/>
         <source>Save default settings now</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigFilePage.cpp" line="40"/>
+        <location filename="../src/configdialog/DsoConfigFilePage.cpp" line="44"/>
         <source>Configuration</source>
         <translation type="unfinished"></translation>
     </message>
@@ -513,6 +513,51 @@
         <source>Marker 1/2</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <location filename="../src/exporting/exportprint.cpp" line="24"/>
+        <source>&amp;Print ..</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/exporting/exportprint.cpp" line="41"/>
+        <source>Print oscillograph</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/exporting/exportimage.cpp" line="24"/>
+        <source>Export &amp;Image/PDF ..</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/exporting/exportimage.cpp" line="35"/>
+        <source>Portable Document Format (*.pdf)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/exporting/exportimage.cpp" line="35"/>
+        <source>Image (*.png *.jpg)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/exporting/exportimage.cpp" line="37"/>
+        <source>Save image</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/exporting/exportcsv.cpp" line="24"/>
+        <source>Export &amp;CSV ..</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/exporting/exportcsv.cpp" line="34"/>
+        <source>Comma-Separated Values (*.csv)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/exporting/exportcsv.cpp" line="34"/>
+        <source>Save CSV</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>MainWindow</name>
@@ -647,119 +692,144 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="77"/>
+        <location filename="../src/mainwindow.cpp" line="79"/>
         <source>OpenHantek6022 (%1) - Device %2 (FW%3)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="80"/>
+        <location filename="../src/mainwindow.cpp" line="82"/>
         <source>Demo Mode</source>
         <translation>modalità demo</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="80"/>
+        <location filename="../src/mainwindow.cpp" line="82"/>
         <source>OpenHantek6022 (%1) - </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="138"/>
+        <location filename="../src/mainwindow.cpp" line="97"/>
+        <source>Screenshot ..</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="143"/>
         <source>Invalid command</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="225"/>
+        <location filename="../src/mainwindow.cpp" line="230"/>
         <source>Stop</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="226"/>
+        <location filename="../src/mainwindow.cpp" line="231"/>
         <source>Stop the oscilloscope</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="229"/>
+        <location filename="../src/mainwindow.cpp" line="234"/>
         <source>Start</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="230"/>
+        <location filename="../src/mainwindow.cpp" line="235"/>
         <source>Start the oscilloscope</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="249"/>
+        <location filename="../src/mainwindow.cpp" line="254"/>
         <source>Open file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="249"/>
-        <location filename="../src/mainwindow.cpp" line="272"/>
+        <location filename="../src/mainwindow.cpp" line="254"/>
+        <location filename="../src/mainwindow.cpp" line="277"/>
         <source>Settings (*.ini)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="272"/>
+        <location filename="../src/mainwindow.cpp" line="277"/>
         <source>Save settings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="298"/>
+        <location filename="../src/mainwindow.cpp" line="303"/>
         <source>Disable fading of previous graphs</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="300"/>
+        <location filename="../src/mainwindow.cpp" line="305"/>
         <source>Enable fading of previous graphs</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="308"/>
+        <location filename="../src/mainwindow.cpp" line="313"/>
         <source>Hide histogram</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="310"/>
+        <location filename="../src/mainwindow.cpp" line="315"/>
         <source>Show histogram</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="319"/>
+        <location filename="../src/mainwindow.cpp" line="324"/>
         <source>Hide magnified scope</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="321"/>
+        <location filename="../src/mainwindow.cpp" line="326"/>
         <source>Show magnified scope</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="331"/>
+        <location filename="../src/mainwindow.cpp" line="336"/>
         <source>Hide measurements</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="333"/>
+        <location filename="../src/mainwindow.cpp" line="338"/>
         <source>Show measurements</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="351"/>
+        <location filename="../src/mainwindow.cpp" line="356"/>
         <source>About OpenHantek6022 (%1)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="352"/>
+        <location filename="../src/mainwindow.cpp" line="357"/>
         <source>&lt;p&gt;Open source software for Hantek6022 USB oscilloscopes&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2010, 2011 Oliver Haag&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2012-2020 OpenHantek community&lt;br/&gt;&lt;a href=&apos;https://github.com/OpenHantek&apos;&gt;https://github.com/OpenHantek&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Open source firmware copyright &amp;copy; 2019-2020 Ho-Ro&lt;br/&gt;&lt;a href=&apos;https://github.com/Ho-Ro/Hantek6022API&apos;&gt;https://github.com/Ho-Ro/Hantek6022API&lt;/a&gt;&lt;/p&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="358"/>
+        <location filename="../src/mainwindow.cpp" line="363"/>
         <source>&lt;p&gt;Running since %1 seconds.&lt;/p&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="376"/>
+        <location filename="../src/mainwindow.cpp" line="381"/>
         <source>%1: %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="390"/>
+        <source>yyyy-MM-dd hh:mm:ss</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="396"/>
+        <source>yyyyMMdd_hhmmss</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="397"/>
+        <source>Save screenshot</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="397"/>
+        <source>Image (*.png *.jpg)</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1108,47 +1178,6 @@
     <message>
         <location filename="../src/hantekdso/enums.cpp" line="50"/>
         <source>Single</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/exporting/exportprint.cpp" line="24"/>
-        <source>&amp;Print ..</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/exporting/exportprint.cpp" line="41"/>
-        <source>Print oscillograph</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/exporting/exportimage.cpp" line="24"/>
-        <source>Export &amp;Image/PDF ..</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/exporting/exportimage.cpp" line="35"/>
-        <source>Portable Document Format (*.pdf)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/exporting/exportimage.cpp" line="35"/>
-        <source>Image (*.png *.xpm *.jpg)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/exporting/exportimage.cpp" line="37"/>
-        <location filename="../src/exporting/exportcsv.cpp" line="37"/>
-        <source>Export file ..</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/exporting/exportcsv.cpp" line="24"/>
-        <source>Export &amp;CSV ..</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/exporting/exportcsv.cpp" line="35"/>
-        <source>Comma-Separated Values (*.csv)</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

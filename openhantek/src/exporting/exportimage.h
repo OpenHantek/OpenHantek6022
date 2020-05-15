@@ -4,6 +4,8 @@
 #include "exporterinterface.h"
 
 class ExporterImage : public ExporterInterface {
+    Q_DECLARE_TR_FUNCTIONS( LegacyExportDrawer )
+
   public:
     ExporterImage();
     void create( ExporterRegistry *newRegistry ) override;

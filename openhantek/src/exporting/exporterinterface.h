@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include <QCoreApplication>
 #include <QIcon>
 #include <QString>
 

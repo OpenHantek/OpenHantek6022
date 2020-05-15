@@ -111,12 +111,12 @@
 <context>
     <name>DsoConfigColorsPage</name>
     <message>
-        <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="20"/>
+        <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="24"/>
         <source>Axes</source>
         <translation>Оси</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="24"/>
+        <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="16"/>
         <source>Background</source>
         <translation>Фон</translation>
     </message>
@@ -126,17 +126,17 @@
         <translation>Рамка</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="32"/>
+        <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="20"/>
         <source>Grid</source>
         <translation>Сетка</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="36"/>
+        <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="32"/>
         <source>Markers</source>
         <translation>Маркеры</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="40"/>
+        <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="36"/>
         <source>Text</source>
         <translation>Текст</translation>
     </message>
@@ -146,17 +146,16 @@
         <translation>Цвета Экрана и Печати</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="15"/>
+        <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="11"/>
         <source>Screen</source>
         <translation>Экран</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="11"/>
         <source>&lt;hr width=&quot;100%&quot;/&gt;</source>
-        <translation>&lt;hr width=&quot;100%&quot;/&gt;</translation>
+        <translation type="vanished">&lt;hr width=&quot;100%&quot;/&gt;</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="17"/>
+        <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="13"/>
         <source>Print</source>
         <translation>Печать</translation>
     </message>
@@ -219,9 +218,8 @@
 <context>
     <name>DsoConfigFilePage</name>
     <message>
-        <location filename="../src/configdialog/DsoConfigFilePage.cpp" line="7"/>
         <source>Export Images with Screen Colors</source>
-        <translation>Экспорт Изображений с Цветами Экрана</translation>
+        <translation type="vanished">Экспорт Изображений с Цветами Экрана</translation>
     </message>
     <message>
         <location filename="../src/configdialog/DsoConfigFilePage.cpp" line="10"/>
@@ -234,22 +232,36 @@
         <translation>Высота изображения</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigFilePage.cpp" line="28"/>
+        <location filename="../src/configdialog/DsoConfigFilePage.cpp" line="7"/>
+        <source>Export images with screen colors</source>
+        <translation>Экспорт Изображений с Цветами Экрана</translation>
+    </message>
+    <message>
+        <source>Scale screenshots too</source>
+        <translation type="vanished">Настройка размера скриншота</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigFilePage.cpp" line="21"/>
+        <source>Take a screenshot of the display area only</source>
+        <translation>Сделайте снимок экрана только в области отображения</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigFilePage.cpp" line="32"/>
         <source>Export</source>
         <translation>Экспорт</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigFilePage.cpp" line="32"/>
+        <location filename="../src/configdialog/DsoConfigFilePage.cpp" line="36"/>
         <source>Save default settings on exit</source>
         <translation>Сохранить настройки по умолчанию при выходе</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigFilePage.cpp" line="34"/>
+        <location filename="../src/configdialog/DsoConfigFilePage.cpp" line="38"/>
         <source>Save default settings now</source>
         <translation>Сохранить настройки по умолчанию</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigFilePage.cpp" line="40"/>
+        <location filename="../src/configdialog/DsoConfigFilePage.cpp" line="44"/>
         <source>Configuration</source>
         <translation>Конфигурация</translation>
     </message>
@@ -513,6 +525,51 @@
         <source>Marker 1/2</source>
         <translation>Маркер 1/2</translation>
     </message>
+    <message>
+        <location filename="../src/exporting/exportprint.cpp" line="24"/>
+        <source>&amp;Print ..</source>
+        <translation>&amp;Печать ..</translation>
+    </message>
+    <message>
+        <location filename="../src/exporting/exportprint.cpp" line="41"/>
+        <source>Print oscillograph</source>
+        <translation>Печать осциллограммы</translation>
+    </message>
+    <message>
+        <location filename="../src/exporting/exportimage.cpp" line="24"/>
+        <source>Export &amp;Image/PDF ..</source>
+        <translation>Экспорт &amp;Изображения/PDF ..</translation>
+    </message>
+    <message>
+        <location filename="../src/exporting/exportimage.cpp" line="35"/>
+        <source>Portable Document Format (*.pdf)</source>
+        <translation>Portable Document Format (*.pdf)</translation>
+    </message>
+    <message>
+        <location filename="../src/exporting/exportimage.cpp" line="35"/>
+        <source>Image (*.png *.jpg)</source>
+        <translation>Изображение (*.png *.jpg)</translation>
+    </message>
+    <message>
+        <location filename="../src/exporting/exportimage.cpp" line="37"/>
+        <source>Save image</source>
+        <translation>Сохранить Изображение</translation>
+    </message>
+    <message>
+        <location filename="../src/exporting/exportcsv.cpp" line="24"/>
+        <source>Export &amp;CSV ..</source>
+        <translation>Экспорт &amp;CSV ..</translation>
+    </message>
+    <message>
+        <location filename="../src/exporting/exportcsv.cpp" line="34"/>
+        <source>Comma-Separated Values (*.csv)</source>
+        <translation>Значения, разделённые запятыми (*.csv)</translation>
+    </message>
+    <message>
+        <location filename="../src/exporting/exportcsv.cpp" line="34"/>
+        <source>Save CSV</source>
+        <translation>Сохранить CSV</translation>
+    </message>
 </context>
 <context>
     <name>MainWindow</name>
@@ -647,22 +704,27 @@
         <translation>Панели инструментов</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="77"/>
+        <location filename="../src/mainwindow.cpp" line="79"/>
         <source>OpenHantek6022 (%1) - Device %2 (FW%3)</source>
         <translation>OpenHantek6022 (%1) - Устройство %2 (Прошивка %3)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="138"/>
+        <location filename="../src/mainwindow.cpp" line="97"/>
+        <source>Screenshot ..</source>
+        <translation>Снимок экрана ..</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="143"/>
         <source>Invalid command</source>
         <translation>Неправильная команда</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="226"/>
+        <location filename="../src/mainwindow.cpp" line="231"/>
         <source>Stop the oscilloscope</source>
         <translation>Стоп осциллографа</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="225"/>
+        <location filename="../src/mainwindow.cpp" line="230"/>
         <source>Stop</source>
         <translation>Стоп</translation>
     </message>
@@ -671,100 +733,120 @@
         <translation type="vanished">OpenHantek6022 (%1) - Устройство %2</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="80"/>
+        <location filename="../src/mainwindow.cpp" line="82"/>
         <source>Demo Mode</source>
         <translation>Демо Режим</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="80"/>
+        <location filename="../src/mainwindow.cpp" line="82"/>
         <source>OpenHantek6022 (%1) - </source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="229"/>
+        <location filename="../src/mainwindow.cpp" line="234"/>
         <source>Start</source>
         <translation>Пуск</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="230"/>
+        <location filename="../src/mainwindow.cpp" line="235"/>
         <source>Start the oscilloscope</source>
         <translation>Пуск осциллографа</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="249"/>
+        <location filename="../src/mainwindow.cpp" line="254"/>
         <source>Open file</source>
         <translation>Открыть файл</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="249"/>
-        <location filename="../src/mainwindow.cpp" line="272"/>
+        <location filename="../src/mainwindow.cpp" line="254"/>
+        <location filename="../src/mainwindow.cpp" line="277"/>
         <source>Settings (*.ini)</source>
         <translation>Настройки (*.ini)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="272"/>
+        <location filename="../src/mainwindow.cpp" line="277"/>
         <source>Save settings</source>
         <translation>Сохранить настройки</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="298"/>
+        <location filename="../src/mainwindow.cpp" line="303"/>
         <source>Disable fading of previous graphs</source>
         <translation>Отключить угасание предыдущих графиков</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="300"/>
+        <location filename="../src/mainwindow.cpp" line="305"/>
         <source>Enable fading of previous graphs</source>
         <translation>Включить угасание предыдущих графиков</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="308"/>
+        <location filename="../src/mainwindow.cpp" line="313"/>
         <source>Hide histogram</source>
         <translation>Спрятать гистограмму</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="310"/>
+        <location filename="../src/mainwindow.cpp" line="315"/>
         <source>Show histogram</source>
         <translation>Показать гистограмму</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="319"/>
+        <location filename="../src/mainwindow.cpp" line="324"/>
         <source>Hide magnified scope</source>
         <translation>Спрятать область увеличения</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="321"/>
+        <location filename="../src/mainwindow.cpp" line="326"/>
         <source>Show magnified scope</source>
         <translation>Показать область увеличения</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="331"/>
+        <location filename="../src/mainwindow.cpp" line="336"/>
         <source>Hide measurements</source>
         <translation>Спрятать измерения</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="333"/>
+        <location filename="../src/mainwindow.cpp" line="338"/>
         <source>Show measurements</source>
         <translation>Показать измерения</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="351"/>
+        <location filename="../src/mainwindow.cpp" line="356"/>
         <source>About OpenHantek6022 (%1)</source>
         <translation>Об OpenHantek6022 (%1)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="352"/>
+        <location filename="../src/mainwindow.cpp" line="357"/>
         <source>&lt;p&gt;Open source software for Hantek6022 USB oscilloscopes&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2010, 2011 Oliver Haag&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2012-2020 OpenHantek community&lt;br/&gt;&lt;a href=&apos;https://github.com/OpenHantek&apos;&gt;https://github.com/OpenHantek&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Open source firmware copyright &amp;copy; 2019-2020 Ho-Ro&lt;br/&gt;&lt;a href=&apos;https://github.com/Ho-Ro/Hantek6022API&apos;&gt;https://github.com/Ho-Ro/Hantek6022API&lt;/a&gt;&lt;/p&gt;</source>
         <translation>&lt;p&gt;Открытое программное обеспечение для USB осциллографов Hantek6022&lt;/p&gt;&lt;p&gt;Авторские права &amp;copy; 2010, 2011 Оливер Хааг&lt;/p&gt;&lt;p&gt;Авторские права &amp;copy; 2012-2020 Сообщество OpenHantek &lt;br/&gt;&lt;a href=&apos;https://github.com/OpenHantek&apos;&gt;https://github.com/OpenHantek&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Авторские права на открытую микропрограмму &amp;copy; 2019-2020 Ho-Ro&lt;br/&gt;&lt;a href=&apos;https://github.com/Ho-Ro/Hantek6022API&apos;&gt;https://github.com/Ho-Ro/Hantek6022API&lt;/a&gt;&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="358"/>
+        <location filename="../src/mainwindow.cpp" line="363"/>
         <source>&lt;p&gt;Running since %1 seconds.&lt;/p&gt;</source>
         <translation>&lt;p&gt;Работает в течение %1 секунд.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="376"/>
+        <location filename="../src/mainwindow.cpp" line="381"/>
         <source>%1: %2</source>
         <translation>%1: %2</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="390"/>
+        <source>yyyy-MM-dd hh:mm:ss</source>
+        <translation>yyyy-MM-dd hh:mm:ss</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="396"/>
+        <source>yyyyMMdd_hhmmss</source>
+        <translation>yyyyMMdd_hhmmss</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="397"/>
+        <source>Image (*.png *.jpg)</source>
+        <translation>Изображение (*.png *.jpg)</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="397"/>
+        <source>Save screenshot</source>
+        <translation>Сохранить снимок экрана</translation>
     </message>
 </context>
 <context>
@@ -960,45 +1042,36 @@
 <context>
     <name>QCoreApplication</name>
     <message>
-        <location filename="../src/exporting/exportcsv.cpp" line="24"/>
         <source>Export &amp;CSV ..</source>
-        <translation>Экспорт &amp;CSV ..</translation>
+        <translation type="vanished">Экспорт &amp;CSV ..</translation>
     </message>
     <message>
-        <location filename="../src/exporting/exportcsv.cpp" line="35"/>
         <source>Comma-Separated Values (*.csv)</source>
-        <translation>Значения, разделённые запятыми (*.csv)</translation>
+        <translation type="vanished">Значения, разделённые запятыми (*.csv)</translation>
     </message>
     <message>
-        <location filename="../src/exporting/exportimage.cpp" line="24"/>
         <source>Export &amp;Image/PDF ..</source>
-        <translation>Экспорт &amp;Изображения/PDF ..</translation>
+        <translation type="vanished">Экспорт &amp;Изображения/PDF ..</translation>
     </message>
     <message>
-        <location filename="../src/exporting/exportimage.cpp" line="35"/>
         <source>Portable Document Format (*.pdf)</source>
-        <translation>Portable Document Format (*.pdf)</translation>
+        <translation type="vanished">Portable Document Format (*.pdf)</translation>
     </message>
     <message>
-        <location filename="../src/exporting/exportimage.cpp" line="35"/>
-        <source>Image (*.png *.xpm *.jpg)</source>
-        <translation>Изображение (*.png *.xpm *.jpg)</translation>
+        <source>Image (*.png *.jpg)</source>
+        <translation type="vanished">Изображение (*.png *.jpg)</translation>
     </message>
     <message>
-        <location filename="../src/exporting/exportimage.cpp" line="37"/>
-        <location filename="../src/exporting/exportcsv.cpp" line="37"/>
         <source>Export file ..</source>
-        <translation>Экспорт файла ..</translation>
+        <translation type="vanished">Экспорт файла ..</translation>
     </message>
     <message>
-        <location filename="../src/exporting/exportprint.cpp" line="24"/>
         <source>&amp;Print ..</source>
-        <translation>&amp;Печать ..</translation>
+        <translation type="vanished">&amp;Печать ..</translation>
     </message>
     <message>
-        <location filename="../src/exporting/exportprint.cpp" line="41"/>
         <source>Print oscillograph</source>
-        <translation>Печать осциллограммы</translation>
+        <translation type="vanished">Печать осциллограммы</translation>
     </message>
     <message>
         <source>Voltage</source>

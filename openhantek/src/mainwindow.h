@@ -3,6 +3,7 @@
 #pragma once
 #include "post/ppresult.h"
 #include <QElapsedTimer>
+#include <QLineEdit>
 #include <QMainWindow>
 #include <memory>
 
@@ -38,6 +39,7 @@ class MainWindow : public QMainWindow {
     void showNewData( std::shared_ptr< PPresult > newData );
     void exporterStatusChanged( const QString &exporterName, const QString &status );
     void exporterProgressChanged();
+    void screenShot();
 
   protected:
     void closeEvent( QCloseEvent *event ) override;
@@ -46,6 +48,7 @@ class MainWindow : public QMainWindow {
     Ui::MainWindow *ui;
     QIcon iconPause;
     QIcon iconPlay;
+    QLineEdit *commandEdit;
 
     // Central widgets
     DsoWidget *dsoWidget;

@@ -24,7 +24,7 @@
 
 #include <QDesktopServices>
 #include <QFileDialog>
-#include <QLineEdit>
+#include <QLoggingCategory>
 #include <QMessageBox>
 #include <QPalette>
 
@@ -32,7 +32,9 @@
 
 MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, ExporterRegistry *exporterRegistry, QWidget *parent )
     : QMainWindow( parent ), ui( new Ui::MainWindow ), dsoSettings( settings ), exporterRegistry( exporterRegistry ) {
-
+    // suppress nasty warnings, e.g. "kf5.kio.core: Invalid URL ..." or "qt.qpa.xcb: QXcbConnection: XCB error: 3 (BadWindow) ..."
+    QLoggingCategory::setFilterRules( "kf5.kio.core=false\n"
+                                      "qt.qpa.xcb=false" );
     QVariantMap colorMap;
     QString iconPath = QString( ":/images/" );
     if ( QPalette().color( QPalette::Window ).lightness() < 128 ) { // automatic light/dark icon switch
@@ -82,9 +84,9 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
 #if ( QT_VERSION >= QT_VERSION_CHECK( 5, 6, 0 ) )
     setDockOptions( dockOptions() | QMainWindow::GroupedDragging );
 #endif
-
+    QAction *action;
     for ( auto *exporter : *exporterRegistry ) {
-        QAction *action = new QAction( iconFont->icon( exporter->faIcon(), colorMap ), exporter->name(), this );
+        action = new QAction( iconFont->icon( exporter->faIcon(), colorMap ), exporter->name(), this );
         action->setCheckable( exporter->type() == ExporterInterface::Type::ContinousExport );
         connect( action, &QAction::triggered, [exporter, exporterRegistry]( bool checked ) {
             exporterRegistry->setExporterEnabled( exporter,
@@ -92,6 +94,9 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
         } );
         ui->menuExport->addAction( action );
     }
+    action = new QAction( iconFont->icon( fa::camera, colorMap ), tr( "Screenshot .." ), this );
+    connect( action, &QAction::triggered, [this]() { this->screenShot(); } );
+    ui->menuExport->addAction( action );
 
     DsoSettingsScope *scope = &( dsoSettings->scope );
     const Dso::ControlSpecification *spec = dsoControl->getModel()->spec();
@@ -119,18 +124,18 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
     setCentralWidget( dsoWidget );
 
     // Command field inside the status bar
-    QLineEdit *commandEdit = new QLineEdit( this );
+    commandEdit = new QLineEdit( this );
     commandEdit->hide();
 
     statusBar()->addPermanentWidget( commandEdit, 1 );
 
-    connect( ui->actionManualCommand, &QAction::toggled, [commandEdit]( bool checked ) {
+    connect( ui->actionManualCommand, &QAction::toggled, [this]( bool checked ) {
         commandEdit->setVisible( checked );
         if ( checked )
             commandEdit->setFocus();
     } );
 
-    connect( commandEdit, &QLineEdit::returnPressed, [this, commandEdit, dsoControl]() {
+    connect( commandEdit, &QLineEdit::returnPressed, [this, dsoControl]() {
         Dso::ErrorCode errorCode = dsoControl->stringCommand( commandEdit->text() );
         commandEdit->clear();
         this->ui->actionManualCommand->setChecked( false );
@@ -377,6 +382,27 @@ void MainWindow::exporterStatusChanged( const QString &exporterName, const QStri
 }
 
 void MainWindow::exporterProgressChanged() { exporterRegistry->checkForWaitingExporters(); }
+
+void MainWindow::screenShot() {
+    auto activeWindow = dsoSettings->exporting.screenshotDisplayOnly ? dsoWidget : qApp->activeWindow();
+    if ( activeWindow ) { // could be null if your app doesn't have focus
+        QDateTime now = QDateTime::currentDateTime();
+        commandEdit->setText( now.toString( tr( "yyyy-MM-dd hh:mm:ss" ) ) );
+        commandEdit->setVisible( true );
+        QPixmap pixmap( activeWindow->size() );
+        activeWindow->render( &pixmap ); // take the screenshot
+        commandEdit->clear();
+        commandEdit->setVisible( false );
+        QString fileName = now.toString( tr( "yyyyMMdd_hhmmss" ) ) + ".png";
+        QFileDialog fileDialog( this, tr( "Save screenshot" ), fileName, tr( "Image (*.png *.jpg)" ) );
+        fileDialog.setAcceptMode( QFileDialog::AcceptSave );
+        if ( fileDialog.exec() != QDialog::Accepted )
+            return;
+        fileName = fileDialog.selectedFiles().first();
+        // qDebug() << "screenShot save" << fileName;
+        pixmap.save( fileName );
+    }
+}
 
 /// \brief Save the settings before exiting.
 /// \param event The close event that should be handled.

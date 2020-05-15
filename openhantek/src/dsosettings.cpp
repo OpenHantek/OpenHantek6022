@@ -71,6 +71,8 @@ void DsoSettings::load() {
     store->beginGroup( "exporting" );
     if ( store->contains( "imageSize" ) )
         exporting.imageSize = store->value( "imageSize" ).toSize();
+    if ( store->contains( "screenshotDisplayOnly" ) )
+        exporting.screenshotDisplayOnly = store->value( "screenshotDisplayOnly" ).toBool();
     store->endGroup();
 
     // Oscilloscope settings
@@ -258,6 +260,7 @@ void DsoSettings::save() {
 
     store->beginGroup( "exporting" );
     store->setValue( "imageSize", exporting.imageSize );
+    store->setValue( "screenshotDisplayOnly", exporting.screenshotDisplayOnly );
     store->endGroup();
 
     // Oszilloskope settings

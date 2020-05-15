@@ -8,30 +8,26 @@ DsoConfigColorsPage::DsoConfigColorsPage( DsoSettings *settings, QWidget *parent
     enum { COL_LABEL = 0, COL_SCR_CHANNEL, COL_SCR_SPECTRUM, COL_PRT_CHANNEL, COL_PRT_SPECTRUM };
 
     // Plot Area
-    graphLabel = new QLabel( tr( "<hr width=\"100%\"/>" ) ); // 4*80
-    graphLabel->setAlignment( Qt::AlignRight );
-    graphLabel->setTextFormat( Qt::RichText );
-
     screenColorsLabel = new QLabel( tr( "Screen" ) );
     screenColorsLabel->setAlignment( Qt::AlignHCenter );
     printColorsLabel = new QLabel( tr( "Print" ) );
     printColorsLabel->setAlignment( Qt::AlignHCenter );
 
-    axesLabel = new QLabel( tr( "Axes" ) );
-    axesColorBox = new ColorBox( colorSettings.screen.axes );
-    printAxesColorBox = new ColorBox( colorSettings.print.axes );
-
     backgroundLabel = new QLabel( tr( "Background" ) );
     backgroundColorBox = new ColorBox( colorSettings.screen.background );
     printBackgroundColorBox = new ColorBox( colorSettings.print.background );
 
-    borderLabel = new QLabel( tr( "Border" ) );
-    borderColorBox = new ColorBox( colorSettings.screen.border );
-    printBorderColorBox = new ColorBox( colorSettings.print.border );
-
     gridLabel = new QLabel( tr( "Grid" ) );
     gridColorBox = new ColorBox( colorSettings.screen.grid );
     printGridColorBox = new ColorBox( colorSettings.print.grid );
+
+    axesLabel = new QLabel( tr( "Axes" ) );
+    axesColorBox = new ColorBox( colorSettings.screen.axes );
+    printAxesColorBox = new ColorBox( colorSettings.print.axes );
+
+    borderLabel = new QLabel( tr( "Border" ) );
+    borderColorBox = new ColorBox( colorSettings.screen.border );
+    printBorderColorBox = new ColorBox( colorSettings.print.border );
 
     markersLabel = new QLabel( tr( "Markers" ) );
     markersColorBox = new ColorBox( colorSettings.screen.markers );
@@ -40,6 +36,10 @@ DsoConfigColorsPage::DsoConfigColorsPage( DsoSettings *settings, QWidget *parent
     textLabel = new QLabel( tr( "Text" ) );
     textColorBox = new ColorBox( colorSettings.screen.text );
     printTextColorBox = new ColorBox( colorSettings.print.text );
+
+    graphLabel = new QLabel( "<hr width=\"100%\"/>" );
+    graphLabel->setAlignment( Qt::AlignRight );
+    graphLabel->setTextFormat( Qt::RichText );
 
     // Graph category
     screenChannelLabel = new QLabel( tr( "Channel" ) );

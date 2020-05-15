@@ -4,7 +4,7 @@
 
 DsoConfigFilePage::DsoConfigFilePage( DsoSettings *settings, QWidget *parent ) : QWidget( parent ), settings( settings ) {
     // Export group
-    screenColorCheckBox = new QCheckBox( tr( "Export Images with Screen Colors" ) );
+    screenColorCheckBox = new QCheckBox( tr( "Export images with screen colors" ) );
     screenColorCheckBox->setChecked( settings->view.screenColorImages );
 
     imageWidthLabel = new QLabel( tr( "Image width" ) );
@@ -18,12 +18,16 @@ DsoConfigFilePage::DsoConfigFilePage( DsoSettings *settings, QWidget *parent ) :
     imageHeightSpinBox->setMaximum( 9999 );
     imageHeightSpinBox->setValue( settings->exporting.imageSize.height() );
 
+    screenshotScaledCheckBox = new QCheckBox( tr( "Take a screenshot of the display area only" ) );
+    screenshotScaledCheckBox->setChecked( settings->exporting.screenshotDisplayOnly );
+
     exportLayout = new QGridLayout();
     exportLayout->addWidget( screenColorCheckBox, 0, 0, 1, 2 );
     exportLayout->addWidget( imageWidthLabel, 1, 0 );
     exportLayout->addWidget( imageWidthSpinBox, 1, 1 );
     exportLayout->addWidget( imageHeightLabel, 2, 0 );
     exportLayout->addWidget( imageHeightSpinBox, 2, 1 );
+    exportLayout->addWidget( screenshotScaledCheckBox, 3, 0, 1, 2 );
 
     exportGroup = new QGroupBox( tr( "Export" ) );
     exportGroup->setLayout( exportLayout );
@@ -57,4 +61,5 @@ void DsoConfigFilePage::saveSettings() {
     settings->view.screenColorImages = screenColorCheckBox->isChecked();
     settings->exporting.imageSize.setWidth( imageWidthSpinBox->value() );
     settings->exporting.imageSize.setHeight( imageHeightSpinBox->value() );
+    settings->exporting.screenshotDisplayOnly = screenshotScaledCheckBox->isChecked();
 }

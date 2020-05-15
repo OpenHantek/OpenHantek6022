@@ -3,6 +3,7 @@
 #pragma once
 
 #include "exportsettings.h"
+#include <QCoreApplication>
 #include <QPainter>
 #include <QPrinter>
 #include <QSize>
@@ -20,12 +21,13 @@ struct ControlSpecification;
 /// Rewrite image exporter with OpenGL drawn grid and graphs
 ///
 /// Sources:
-/// http://doc.qt.io/qt-5/qoffscreensurface.html
-/// http://doc.qt.io/qt-5/qopenglframebufferobject.html
+/// https://doc.qt.io/qt-5/qoffscreensurface.html
+/// https://doc.qt.io/qt-5/qopenglframebufferobject.html
 ///
 /// https://dangelog.wordpress.com/2013/02/10/using-fbos-instead-of-pbuffers-in-qt-5-2/
-class LegacyExportDrawer : protected QObject {
-    Q_OBJECT
+class LegacyExportDrawer {
+    Q_DECLARE_TR_FUNCTIONS( LegacyExportDrawer )
+
   public:
     virtual ~LegacyExportDrawer();
     /// Draw the graphs coming from source and labels to the destination paintdevice.
