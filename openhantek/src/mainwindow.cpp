@@ -389,8 +389,8 @@ void MainWindow::screenShot() {
         QDateTime now = QDateTime::currentDateTime();
         commandEdit->setText( now.toString( tr( "yyyy-MM-dd hh:mm:ss" ) ) );
         commandEdit->setVisible( true );
-        QPixmap pixmap( activeWindow->size() );
-        activeWindow->render( &pixmap ); // take the screenshot
+        QPixmap screenshot( activeWindow->size() );
+        activeWindow->render( &screenshot ); // take the screenshot
         commandEdit->clear();
         commandEdit->setVisible( false );
         QString fileName = now.toString( tr( "yyyyMMdd_hhmmss" ) ) + ".png";
@@ -400,7 +400,7 @@ void MainWindow::screenShot() {
             return;
         fileName = fileDialog.selectedFiles().first();
         // qDebug() << "screenShot save" << fileName;
-        pixmap.save( fileName );
+        screenshot.save( fileName );
     }
 }
 

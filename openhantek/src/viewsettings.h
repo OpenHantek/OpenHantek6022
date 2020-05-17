@@ -28,13 +28,13 @@ struct DsoSettingsColorValues {
 /// \struct DsoSettingsView
 /// \brief Holds all view settings.
 struct DsoSettingsView {
-    DsoSettingsColorValues screen = {QColor( 0xff, 0xff, 0xff, 0x7f ), QColor( 0x00, 0x00, 0x00, 0xff ), // axes, background
-                                     QColor( 0xff, 0xff, 0xff, 0xff ), QColor( 0xff, 0xff, 0xff, 0xbf ), // border, grid
-                                     QColor( 0xff, 0xff, 0xff, 0xbf ), QColor( 0xff, 0xff, 0xff, 0xff ), // markers, text
+    DsoSettingsColorValues screen = {QColor( 0x7f, 0x7f, 0x7f, 0xff ), QColor( 0x00, 0x00, 0x00, 0xff ), // axes, background
+                                     QColor( 0xff, 0xff, 0xff, 0xff ), QColor( 0xc0, 0xc0, 0xc0, 0xff ), // border, grid
+                                     QColor( 0xc0, 0xc0, 0xc0, 0xff ), QColor( 0xff, 0xff, 0xff, 0xff ), // markers, text
                                      std::vector< QColor >(),          std::vector< QColor >()};         // spectrum, voltage
-    DsoSettingsColorValues print = {QColor( 0x00, 0x00, 0x00, 0xbf ), QColor( 0x00, 0x00, 0x00, 0x00 ),  // axes, background
-                                    QColor( 0x00, 0x00, 0x00, 0xff ), QColor( 0x00, 0x00, 0x00, 0xbf ),  // border, grid
-                                    QColor( 0x00, 0x00, 0x00, 0xbf ), QColor( 0x00, 0x00, 0x00, 0xff ),  // markers, text
+    DsoSettingsColorValues print = {QColor( 0x40, 0x40, 0x40, 0xff ), QColor( 0xff, 0xff, 0xff, 0xff ),  // axes, background
+                                    QColor( 0x00, 0x00, 0x00, 0xff ), QColor( 0x40, 0x40, 0x40, 0xff ),  // border, grid
+                                    QColor( 0x40, 0x40, 0x40, 0xff ), QColor( 0x00, 0x00, 0x00, 0xff ),  // markers, text
                                     std::vector< QColor >(),          std::vector< QColor >()};          // spectrum, voltage
     bool antialiasing = true;                                         ///< Antialiasing for the graphs
     bool digitalPhosphor = false;                                     ///< true slowly fades out the previous graphs

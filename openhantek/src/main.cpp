@@ -153,7 +153,8 @@ int main( int argc, char *argv[] ) {
             QString errorMessage;
             if ( scopeDevice == nullptr || !scopeDevice->connectDevice( errorMessage ) ) {
                 libusb_exit( context ); // clean USB
-                qCritical() << errorMessage;
+                if ( !errorMessage.isEmpty() )
+                    qCritical() << errorMessage;
                 return -1;
             }
         }
