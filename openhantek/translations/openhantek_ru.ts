@@ -243,7 +243,7 @@
     <message>
         <location filename="../src/configdialog/DsoConfigFilePage.cpp" line="21"/>
         <source>Take a screenshot of the display area only</source>
-        <translation>Сделайте снимок экрана только в области отображения</translation>
+        <translation>Делать снимок экрана только в области отображения</translation>
     </message>
     <message>
         <location filename="../src/configdialog/DsoConfigFilePage.cpp" line="32"/>
@@ -1132,7 +1132,7 @@
     <message>
         <location filename="../src/main.cpp" line="81"/>
         <source>Demo mode without scope HW</source>
-        <translation>Демонстрационный режим без аппаратного обеспечения</translation>
+        <translation>Демо режим без аппаратуры осциллографа</translation>
     </message>
     <message>
         <location filename="../src/main.cpp" line="83"/>
@@ -1330,7 +1330,7 @@
     <message>
         <location filename="../src/selectdevice/deviceslistmodel.cpp" line="24"/>
         <source>Status</source>
-        <translation>Status</translation>
+        <translation>Статус</translation>
     </message>
 </context>
 <context>
@@ -1358,7 +1358,7 @@
     <message>
         <location filename="../src/selectdevice/selectsupporteddevice.ui" line="75"/>
         <source>Demo Mode</source>
-        <translation>демонстрационного режима</translation>
+        <translation>Демо Режим</translation>
     </message>
     <message>
         <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="53"/>
