@@ -27,14 +27,14 @@
 #include <QLoggingCategory>
 #include <QMessageBox>
 #include <QPalette>
+#include <QPrinter>
 
 #include "OH_VERSION.h"
 
 MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, ExporterRegistry *exporterRegistry, QWidget *parent )
     : QMainWindow( parent ), ui( new Ui::MainWindow ), dsoSettings( settings ), exporterRegistry( exporterRegistry ) {
     // suppress nasty warnings, e.g. "kf5.kio.core: Invalid URL ..." or "qt.qpa.xcb: QXcbConnection: XCB error: 3 (BadWindow) ..."
-    QLoggingCategory::setFilterRules( "kf5.kio.core=false\n"
-                                      "qt.qpa.xcb=false" );
+    QLoggingCategory::setFilterRules( "kf5.kio.core=false\nqt.qpa.xcb=false" );
     QVariantMap colorMap;
     QString iconPath = QString( ":/images/" );
     if ( QPalette().color( QPalette::Window ).lightness() < 128 ) { // automatic light/dark icon switch
@@ -385,22 +385,57 @@ void MainWindow::exporterProgressChanged() { exporterRegistry->checkForWaitingEx
 
 void MainWindow::screenShot() {
     auto activeWindow = dsoSettings->exporting.screenshotDisplayOnly ? dsoWidget : qApp->activeWindow();
-    if ( activeWindow ) { // could be null if your app doesn't have focus
-        QDateTime now = QDateTime::currentDateTime();
-        commandEdit->setText( now.toString( tr( "yyyy-MM-dd hh:mm:ss" ) ) );
-        commandEdit->setVisible( true );
-        QPixmap screenshot( activeWindow->size() );
-        activeWindow->render( &screenshot ); // take the screenshot
-        commandEdit->clear();
-        commandEdit->setVisible( false );
-        QString fileName = now.toString( tr( "yyyyMMdd_hhmmss" ) ) + ".png";
-        QFileDialog fileDialog( this, tr( "Save screenshot" ), fileName, tr( "Image (*.png *.jpg)" ) );
-        fileDialog.setAcceptMode( QFileDialog::AcceptSave );
-        if ( fileDialog.exec() != QDialog::Accepted )
-            return;
-        fileName = fileDialog.selectedFiles().first();
-        // qDebug() << "screenShot save" << fileName;
+    QPixmap screenshot( activeWindow->size() );
+    QDateTime now = QDateTime::currentDateTime();
+    QString docName = now.toString( tr( "yyyy-MM-dd hh:mm:ss" ) );
+    commandEdit->setText( docName );
+    commandEdit->setVisible( true );
+    activeWindow->render( &screenshot ); // take the screenshot
+    commandEdit->clear();
+    commandEdit->setVisible( false );
+    QString fileName = now.toString( tr( "yyyyMMdd_hhmmss" ) ) + ".png";
+    QFileDialog fileDialog( this, tr( "Save screenshot" ), fileName, tr( "Image (*.png *.jpg)" ) );
+    fileDialog.setAcceptMode( QFileDialog::AcceptSave );
+    if ( fileDialog.exec() != QDialog::Accepted )
+        return;
+    fileName = fileDialog.selectedFiles().first();
+    if ( !fileName.endsWith( ".pdf" ) ) { // save as image
         screenshot.save( fileName );
+    } else { // quick hack to make a pdf with a scaled and centered image
+        int sw = screenshot.width();
+        int sh = screenshot.height();
+        QPrinter printer;
+        printer.setOutputFormat( QPrinter::PdfFormat );
+#if ( QT_VERSION >= QT_VERSION_CHECK( 5, 10, 0 ) )
+        printer.setPdfVersion( QPrinter::PdfVersion_A1b );
+#endif
+        printer.setPaperSize( QPrinter::A4 );
+        printer.setOrientation( QPrinter::Landscape );
+        printer.setCreator( QCoreApplication::applicationName() );
+        printer.setDocName( docName );
+        printer.setOutputFileName( fileName );
+        // supports screen resolution up to about 13600 x 9600 pixel
+        if ( sw < 3400 && sh < 2400 )
+            printer.setResolution( 300 );
+        else if ( sw < 6800 && sh < 4800 )
+            printer.setResolution( 600 );
+        else
+            printer.setResolution( 1200 );
+        int pw = printer.pageRect().width();
+        int ph = printer.pageRect().height();
+        int scale = qMin( pw / sw, ph / sh );
+        // qDebug() << sw << sh << pw << ph << scale;
+        if ( !scale )
+            qDebug() << "Screenshot size too big, will be clipped";
+        else if ( scale > 1 ) {
+            sw *= scale;
+            sh *= scale;
+            screenshot = screenshot.scaled( sw, sh );
+        }
+        printer.newPage();
+        QPainter p( &printer );
+        p.drawPixmap( ( pw - sw ) / 2, ( ph - sh ) / 2, screenshot ); // center the picture
+        p.end();
     }
 }
 
