@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include <QCoreApplication>
 #include <QSettings>
 #include <QSize>
 #include <QString>
@@ -14,6 +15,7 @@
 
 /// \brief Holds the settings of the program.
 class DsoSettings {
+    Q_DECLARE_TR_FUNCTIONS( DsoSettings )
   public:
     explicit DsoSettings( const Dso::ControlSpecification *deviceSpecification );
     bool setFilename( const QString &filename );

@@ -41,9 +41,11 @@ struct DsoSettingsView {
     unsigned digitalPhosphorDepth = 8;                                ///< Number of channels shown at one time
     Dso::InterpolationMode interpolation = Dso::INTERPOLATION_LINEAR; ///< Interpolation mode for the graph
     bool screenColorImages = false;                                   ///< true exports images with screen colors
+    bool zoomImage = true;                                            ///< true export zoomed images with double height
     bool zoom = false;                                                ///< true if the magnified scope is enabled
     Qt::ToolBarArea cursorGridPosition = Qt::RightToolBarArea;
     bool cursorsVisible = false;
+    DsoSettingsColorValues *colors = &screen;
 
     unsigned digitalPhosphorDraws() const { return digitalPhosphor ? digitalPhosphorDepth : 1; }
 };

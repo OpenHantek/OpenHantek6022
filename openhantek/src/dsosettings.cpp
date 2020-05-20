@@ -18,35 +18,35 @@ DsoSettings::DsoSettings( const Dso::ControlSpecification *deviceSpecification )
     while ( scope.spectrum.size() < deviceSpecification->channels ) {
         // Spectrum
         DsoSettingsScopeSpectrum newSpectrum;
-        newSpectrum.name = QApplication::tr( "SP%1" ).arg( index + 1 );
+        newSpectrum.name = tr( "SP%1" ).arg( index + 1 );
         scope.spectrum.push_back( newSpectrum );
 
         // Voltage
         DsoSettingsScopeVoltage newVoltage;
-        newVoltage.name = QApplication::tr( "CH%1" ).arg( index + 1 );
+        newVoltage.name = tr( "CH%1" ).arg( index + 1 );
         scope.voltage.push_back( newVoltage );
 
         view.screen.voltage.push_back( QColor::fromHsv( trace_hue[ index ], 0xff, 0xff ) );
-        view.screen.spectrum.push_back( view.screen.voltage.back().lighter() );
-        view.print.voltage.push_back( view.screen.voltage.back().darker( 120 ) );
-        view.print.spectrum.push_back( view.screen.voltage.back().darker() );
+        view.screen.spectrum.push_back( QColor::fromHsv( trace_hue[ index ] - 30, 0xff, 0xff ) );
+        view.print.voltage.push_back( view.screen.voltage.back().darker() );
+        view.print.spectrum.push_back( view.screen.spectrum.back().darker() );
         if ( ++index >= sizeof trace_hue )
             index = 0;
     }
 
     DsoSettingsScopeSpectrum newSpectrum;
-    newSpectrum.name = QApplication::tr( "SPM" );
+    newSpectrum.name = tr( "SPM" );
     scope.spectrum.push_back( newSpectrum );
 
     DsoSettingsScopeVoltage newVoltage;
     newVoltage.couplingOrMathIndex = unsigned( Dso::MathMode::ADD_CH1_CH2 );
-    newVoltage.name = QApplication::tr( "MATH" );
+    newVoltage.name = tr( "MATH" );
     scope.voltage.push_back( newVoltage );
 
-    view.screen.voltage.push_back( QColor( 0xff, 0x00, 0xff, 0xff ) ); // purple
-    view.screen.spectrum.push_back( view.screen.voltage.back().lighter() );
-    view.print.voltage.push_back( view.screen.voltage.back() );
-    view.print.spectrum.push_back( view.print.voltage.back().darker() );
+    view.screen.voltage.push_back( QColor::fromHsv( 300, 0xff, 0xff ) ); // purple
+    view.screen.spectrum.push_back( QColor::fromHsv( 320, 0xff, 0xff ) );
+    view.print.voltage.push_back( QColor::fromHsv( 300, 0xff, 0xff ) );
+    view.print.spectrum.push_back( QColor::fromHsv( 320, 0xff, 0xff ) );
 
     load();
 }
@@ -71,8 +71,6 @@ void DsoSettings::load() {
     store->beginGroup( "exporting" );
     if ( store->contains( "imageSize" ) )
         exporting.imageSize = store->value( "imageSize" ).toSize();
-    if ( store->contains( "screenshotDisplayOnly" ) )
-        exporting.screenshotDisplayOnly = store->value( "screenshotDisplayOnly" ).toBool();
     store->endGroup();
 
     // Oscilloscope settings
@@ -260,7 +258,6 @@ void DsoSettings::save() {
 
     store->beginGroup( "exporting" );
     store->setValue( "imageSize", exporting.imageSize );
-    store->setValue( "screenshotDisplayOnly", exporting.screenshotDisplayOnly );
     store->endGroup();
 
     // Oszilloskope settings

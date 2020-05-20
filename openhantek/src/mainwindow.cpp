@@ -27,6 +27,7 @@
 #include <QLoggingCategory>
 #include <QMessageBox>
 #include <QPalette>
+#include <QPrintDialog>
 #include <QPrinter>
 
 #include "OH_VERSION.h"
@@ -50,7 +51,7 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
     QList< QKeySequence > shortcuts; // provide multiple shortcuts for ui->actionSampling.
     // 1st entry in list is shown as shortcut in menu
 #ifdef Q_OS_WIN
-    shortcuts << QKeySequence( Qt::Key::Key_S ); // WIN: <space> is grabbed by buttons, e.g. CH1
+    shortcuts << QKeySequence( Qt::Key::Key_S ); // WIN: <space> can be grabbed by buttons, e.g. CH1
 #endif
     shortcuts << QKeySequence( Qt::Key::Key_Space );
     shortcuts << QKeySequence( Qt::Key::Key_Pause );
@@ -94,8 +95,33 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
         } );
         ui->menuExport->addAction( action );
     }
+
     action = new QAction( iconFont->icon( fa::camera, colorMap ), tr( "Screenshot .." ), this );
-    connect( action, &QAction::triggered, [this]() { this->screenShot(); } );
+    action->setToolTip( "Make a screenshot of the program window" );
+    connect( action, &QAction::triggered, [this]() {
+        screenshotType = SCREENSHOT;
+        screenShot();
+    } );
+    ui->menuExport->addAction( action );
+
+    action = new QAction( iconFont->icon( fa::camera, colorMap ), tr( "Hardcopy .." ), this );
+    action->setToolTip( "Make a (printable) hardcopy of the display" );
+    connect( action, &QAction::triggered, [this]() {
+        screenshotType = HARDCOPY;
+        if ( !dsoSettings->view.screenColorImages )
+            dsoWidget->usePrintColors();
+        QTimer::singleShot( 20, this, SLOT( screenShot() ) );
+    } );
+    ui->menuExport->addAction( action );
+
+    action = new QAction( iconFont->icon( fa::print, colorMap ), tr( "Print screen .." ), this );
+    action->setToolTip( "Send the hardcopy to the printer" );
+    connect( action, &QAction::triggered, [this]() {
+        screenshotType = PRINTER;
+        if ( !dsoSettings->view.screenColorImages )
+            dsoWidget->usePrintColors();
+        QTimer::singleShot( 20, this, SLOT( screenShot() ) );
+    } );
     ui->menuExport->addAction( action );
 
     DsoSettingsScope *scope = &( dsoSettings->scope );
@@ -383,60 +409,99 @@ void MainWindow::exporterStatusChanged( const QString &exporterName, const QStri
 
 void MainWindow::exporterProgressChanged() { exporterRegistry->checkForWaitingExporters(); }
 
+// make screenshot (type == SCREENSHOT) from the complete program window with screen colors ...
+// ... or a printable hardcopy (type == HARDCOPY) from the scope widget only ...
+// ... with printer colors and scaled to double height for zoomed screens ...
+// ... or send this hardcopy directly to the printer (type == PRINTER).
 void MainWindow::screenShot() {
-    auto activeWindow = dsoSettings->exporting.screenshotDisplayOnly ? dsoWidget : qApp->activeWindow();
+    auto activeWindow = screenshotType == SCREENSHOT ? qApp->activeWindow() : dsoWidget;
+    //    if ( screenshotType != SCREENSHOT && !dsoSettings->view.screenColorImages ) { // switch to print colors
+    //        dsoSettings->view.setPrintColors();
+    //        dsoWidget->setColors();
+    //    }
     QPixmap screenshot( activeWindow->size() );
     QDateTime now = QDateTime::currentDateTime();
     QString docName = now.toString( tr( "yyyy-MM-dd hh:mm:ss" ) );
-    commandEdit->setText( docName );
+    QString fileName = now.toString( tr( "yyyyMMdd_hhmmss" ) );
+    commandEdit->setText( docName ); // show date in bottom line
     commandEdit->setVisible( true );
     activeWindow->render( &screenshot ); // take the screenshot
     commandEdit->clear();
     commandEdit->setVisible( false );
-    QString fileName = now.toString( tr( "yyyyMMdd_hhmmss" ) ) + ".png";
-    QFileDialog fileDialog( this, tr( "Save screenshot" ), fileName, tr( "Image (*.png *.jpg)" ) );
-    fileDialog.setAcceptMode( QFileDialog::AcceptSave );
-    if ( fileDialog.exec() != QDialog::Accepted )
-        return;
-    fileName = fileDialog.selectedFiles().first();
-    if ( !fileName.endsWith( ".pdf" ) ) { // save as image
-        screenshot.save( fileName );
-    } else { // quick hack to make a pdf with a scaled and centered image
-        int sw = screenshot.width();
-        int sh = screenshot.height();
-        QPrinter printer;
-        printer.setOutputFormat( QPrinter::PdfFormat );
+    if ( screenshotType != SCREENSHOT && !dsoSettings->view.screenColorImages ) { // restore screen colors
+        dsoWidget->useScreenColors();
+    }
+
+    int sw = screenshot.width();
+    int sh = screenshot.height();
+    if ( screenshotType != SCREENSHOT && dsoSettings->view.zoom && dsoSettings->view.zoomImage ) {
+        screenshot = screenshot.scaled( sw, sh *= 2 ); // make double height
+    }
+
+    // here we have a screeshot, now handle the different destinations.
+    QPrinter printer( QPrinter::HighResolution );
 #if ( QT_VERSION >= QT_VERSION_CHECK( 5, 10, 0 ) )
-        printer.setPdfVersion( QPrinter::PdfVersion_A1b );
+    printer.setPdfVersion( QPrinter::PdfVersion_A1b );
 #endif
-        printer.setPaperSize( QPrinter::A4 );
-        printer.setOrientation( QPrinter::Landscape );
-        printer.setCreator( QCoreApplication::applicationName() );
-        printer.setDocName( docName );
+    printer.setPaperSize( QPrinter::A4 );
+    printer.setPageMargins( 20, 20, 20, 20, QPrinter::Millimeter );
+    printer.setOrientation( sw > sh ? QPrinter::Landscape : QPrinter::Portrait );
+    printer.setCreator( QCoreApplication::applicationName() );
+    printer.setDocName( docName );
+
+    if ( screenshotType != PRINTER ) { // ask for a filename
+        QStringList filters;
+        fileName += ".png";
+        filters << tr( "Image (*.png *.jpg)" ) << tr( "Portable Document Format (*.pdf)" );
+        QFileDialog fileDialog( this, tr( "Save screenshot" ), fileName, filters.join( ";;" ) );
+        fileDialog.setAcceptMode( QFileDialog::AcceptSave );
+        if ( fileDialog.exec() != QDialog::Accepted )
+            return;
+
+        fileName = fileDialog.selectedFiles().first();
+        if ( filters.indexOf( fileDialog.selectedNameFilter() ) == 0 ) { // save as image
+            screenshot.save( fileName );
+            return;
+        }
+
+        // else create a *.pdf with a scaled and centered image
+        printer.setOutputFormat( QPrinter::PdfFormat );
         printer.setOutputFileName( fileName );
-        // supports screen resolution up to about 13600 x 9600 pixel
-        if ( sw < 3400 && sh < 2400 )
-            printer.setResolution( 300 );
-        else if ( sw < 6800 && sh < 4800 )
-            printer.setResolution( 600 );
-        else
-            printer.setResolution( 1200 );
+        // supports screen resolution up to about 9600 x 9600 pixel
+        int resolution = 75;
+        printer.setResolution( resolution );
         int pw = printer.pageRect().width();
         int ph = printer.pageRect().height();
         int scale = qMin( pw / sw, ph / sh );
-        // qDebug() << sw << sh << pw << ph << scale;
-        if ( !scale )
-            qDebug() << "Screenshot size too big, will be clipped";
-        else if ( scale > 1 ) {
-            sw *= scale;
-            sh *= scale;
-            screenshot = screenshot.scaled( sw, sh );
+        while ( scale < 2 && resolution < 1200 ) {
+            resolution *= 2;
+            printer.setResolution( resolution );
+            pw = printer.pageRect().width();
+            ph = printer.pageRect().height();
+            scale = qMin( pw / sw, ph / sh );
         }
-        printer.newPage();
-        QPainter p( &printer );
-        p.drawPixmap( ( pw - sw ) / 2, ( ph - sh ) / 2, screenshot ); // center the picture
-        p.end();
+    } else { // Show the printing dialog
+        printer.setDocName( fileName + ".pdf" );
+        QPrintDialog dialog( &printer );
+        dialog.setWindowTitle( tr( "Print oscillograph" ) );
+        if ( dialog.exec() != QDialog::Accepted ) {
+            return;
+        }
     }
+    // send the pixmap to *.pdf or printer
+    int pw = printer.pageRect().width();
+    int ph = printer.pageRect().height();
+    int scale = qMin( pw / sw, ph / sh );
+
+    // qDebug() << sw << sh << pw << ph << scale << resolution;
+    if ( scale < 1 )
+        qDebug() << "Screenshot size too big, page will be cropped";
+    else if ( scale > 1 ) // upscale accordingly
+        screenshot = screenshot.scaled( sw *= scale, sh *= scale );
+    printer.newPage();
+    QPainter p( &printer );
+    p.drawPixmap( ( pw - sw ) / 2, ( ph - sh ) / 2, screenshot ); // center the picture
+    p.end();
 }
 
 /// \brief Save the settings before exiting.

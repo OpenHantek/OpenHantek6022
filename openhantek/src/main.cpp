@@ -73,18 +73,22 @@ int main( int argc, char *argv[] ) {
 #endif
     bool demoMode = false;
     bool useGLES = false;
+    bool useLocale = true;
     {
         QCoreApplication parserApp( argc, argv );
         QCommandLineParser p;
         p.addHelpOption();
         p.addVersionOption();
-        QCommandLineOption demoModeOption( {"d", "demoMode"}, QCoreApplication::tr( "Demo mode without scope HW" ) );
+        QCommandLineOption demoModeOption( {"d", "demoMode"}, "Demo mode without scope HW" );
         p.addOption( demoModeOption );
-        QCommandLineOption useGlesOption( {"e", "useGLES"}, QCoreApplication::tr( "Use OpenGL ES instead of OpenGL" ) );
+        QCommandLineOption useGlesOption( {"e", "useGLES"}, "Use OpenGL ES instead of OpenGL" );
         p.addOption( useGlesOption );
+        QCommandLineOption intOption( {"i", "international"}, "Show the international interface, do not translate" );
+        p.addOption( intOption );
         p.process( parserApp );
         demoMode = p.isSet( demoModeOption );
         useGLES = p.isSet( useGlesOption );
+        useLocale = !p.isSet( intOption );
     }
 
 #ifdef __arm__
@@ -122,7 +126,7 @@ int main( int argc, char *argv[] ) {
     //////// Load translations ////////
     QTranslator qtTranslator;
     QTranslator openHantekTranslator;
-    if ( QLocale::system().name() != "en_US" ) { // somehow Qt on MacOS uses the german translation for en_US?!
+    if ( useLocale && QLocale::system().name() != "en_US" ) { // somehow Qt on MacOS uses the german translation for en_US?!
         if ( qtTranslator.load( "qt_" + QLocale::system().name(), QLibraryInfo::location( QLibraryInfo::TranslationsPath ) ) ) {
             openHantekApplication.installTranslator( &qtTranslator );
         }
@@ -184,14 +188,14 @@ int main( int argc, char *argv[] ) {
     ExporterRegistry exportRegistry( spec, &settings );
 
     ExporterCSV exporterCSV;
-    ExporterImage exportImage;
-    ExporterPrint exportPrint;
+    // ExporterImage exportImage;
+    // ExporterPrint exportPrint;
 
     ExporterProcessor samplesToExportRaw( &exportRegistry );
 
     exportRegistry.registerExporter( &exporterCSV );
-    exportRegistry.registerExporter( &exportImage );
-    exportRegistry.registerExporter( &exportPrint );
+    // exportRegistry.registerExporter( &exportImage );
+    // exportRegistry.registerExporter( &exportPrint );
 
     //////// Create post processing objects ////////
     QThread postProcessingThread;

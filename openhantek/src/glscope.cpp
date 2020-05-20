@@ -326,7 +326,7 @@ void GlScope::initializeGL() {
     gl->glEnable( GL_CULL_FACE );
     gl->glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
 
-    QColor bg = view->screen.background;
+    QColor bg = view->colors->background;
     gl->glClearColor( GLfloat( bg.redF() ), GLfloat( bg.greenF() ), GLfloat( bg.blueF() ), GLfloat( bg.alphaF() ) );
 
     generateGrid( program.get() );
@@ -423,6 +423,9 @@ void GlScope::paintGL() {
         return;
 
     auto *gl = context()->functions();
+
+    QColor bg = view->colors->background;
+    gl->glClearColor( GLfloat( bg.redF() ), GLfloat( bg.greenF() ), GLfloat( bg.blueF() ), GLfloat( bg.alphaF() ) );
 
     // Clear OpenGL buffer and configure settings
     // TODO Don't clear if view->digitalPhosphorDraws()>1
@@ -619,19 +622,19 @@ void GlScope::drawGrid() {
 
     // Grid
     m_vaoGrid[ 0 ].bind();
-    m_program->setUniformValue( colorLocation, view->screen.grid );
+    m_program->setUniformValue( colorLocation, view->colors->grid );
     gl->glDrawArrays( GL_POINTS, 0, gridDrawCounts[ 0 ] );
     m_vaoGrid[ 0 ].release();
 
     // Axes and div crosses
     m_vaoGrid[ 1 ].bind();
-    m_program->setUniformValue( colorLocation, view->screen.axes );
+    m_program->setUniformValue( colorLocation, view->colors->axes );
     gl->glDrawArrays( GL_LINES, 0, gridDrawCounts[ 1 ] );
     m_vaoGrid[ 1 ].release();
 
     // Border
     m_vaoGrid[ 2 ].bind();
-    m_program->setUniformValue( colorLocation, view->screen.border );
+    m_program->setUniformValue( colorLocation, view->colors->border );
     gl->glDrawArrays( GL_LINE_LOOP, 0, gridDrawCounts[ 2 ] );
     m_vaoGrid[ 2 ].release();
 }
@@ -652,19 +655,19 @@ void GlScope::drawMarkers() {
     m_vaoMarker.bind();
 
     unsigned marker = 0;
-    drawVertices( gl, marker, view->screen.markers );
+    drawVertices( gl, marker, view->colors->markers );
     ++marker;
 
     if ( view->cursorsVisible ) {
         gl->glDepthMask( GL_FALSE );
         for ( ChannelID channel = 0; channel < scope->voltage.size(); ++channel, ++marker ) {
             if ( scope->voltage[ channel ].used ) {
-                drawVertices( gl, marker, view->screen.voltage[ channel ] );
+                drawVertices( gl, marker, view->colors->voltage[ channel ] );
             }
         }
         for ( ChannelID channel = 0; channel < scope->spectrum.size(); ++channel, ++marker ) {
             if ( scope->spectrum[ channel ].used ) {
-                drawVertices( gl, marker, view->screen.spectrum[ channel ] );
+                drawVertices( gl, marker, view->colors->spectrum[ channel ] );
             }
         }
         gl->glDepthMask( GL_TRUE );
@@ -677,7 +680,7 @@ void GlScope::drawVoltageChannelGraph( ChannelID channel, Graph &graph, int hist
     if ( !scope->voltage[ channel ].used )
         return;
 
-    m_program->setUniformValue( colorLocation, view->screen.voltage[ channel ].darker( 100 + 10 * historyIndex ) );
+    m_program->setUniformValue( colorLocation, view->colors->voltage[ channel ].darker( 100 + 10 * historyIndex ) );
     Graph::VaoCount &v = graph.vaoVoltage[ channel ];
 
     QOpenGLVertexArrayObject::Binder b( v.first );
@@ -689,7 +692,7 @@ void GlScope::drawHistogramChannelGraph( ChannelID channel, Graph &graph, int hi
     if ( !scope->voltage[ channel ].used )
         return;
 
-    m_program->setUniformValue( colorLocation, view->screen.voltage[ channel ].darker( 100 + 10 * historyIndex ) );
+    m_program->setUniformValue( colorLocation, view->colors->voltage[ channel ].darker( 100 + 10 * historyIndex ) );
     Graph::VaoCount &h = graph.vaoHistogram[ channel ];
 
     QOpenGLVertexArrayObject::Binder b( h.first );
@@ -701,7 +704,7 @@ void GlScope::drawSpectrumChannelGraph( ChannelID channel, Graph &graph, int his
     if ( !scope->spectrum[ channel ].used )
         return;
 
-    m_program->setUniformValue( colorLocation, view->screen.spectrum[ channel ].darker( 100 + 10 * historyIndex ) );
+    m_program->setUniformValue( colorLocation, view->colors->spectrum[ channel ].darker( 100 + 10 * historyIndex ) );
     Graph::VaoCount &v = graph.vaoSpectrum[ channel ];
 
     QOpenGLVertexArrayObject::Binder b( v.first );

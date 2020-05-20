@@ -35,6 +35,10 @@ class MainWindow : public QMainWindow {
     ~MainWindow() override;
     QElapsedTimer elapsedTime;
 
+  private:
+    enum screenshotType_t { SCREENSHOT, HARDCOPY, PRINTER };
+    screenshotType_t screenshotType;
+
   public slots:
     void showNewData( std::shared_ptr< PPresult > newData );
     void exporterStatusChanged( const QString &exporterName, const QString &status );

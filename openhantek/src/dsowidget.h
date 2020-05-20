@@ -11,6 +11,7 @@
 #include "glscope.h"
 #include "hantekdso/controlspecification.h"
 #include "levelslider.h"
+#include "viewsettings.h"
 
 class SpectrumGenerator;
 struct DsoSettingsScope;
@@ -40,6 +41,9 @@ class DsoWidget : public QWidget {
 
     // Data arrived
     void showNew( std::shared_ptr< PPresult > analysedData );
+
+    void usePrintColors();
+    void useScreenColors();
 
   protected:
     virtual void showEvent( QShowEvent *event );
@@ -103,6 +107,7 @@ class DsoWidget : public QWidget {
     unsigned int dotsOnScreen;
     double pulseWidth1 = 0.0;
     double pulseWidth2 = 0.0;
+    void setColors();
 
   public slots:
     // Horizontal axis

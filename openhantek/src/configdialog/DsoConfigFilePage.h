@@ -39,10 +39,9 @@ class DsoConfigFilePage : public QWidget {
 
     QGroupBox *exportGroup;
     QGridLayout *exportLayout;
-    QCheckBox *screenColorCheckBox;
+    QCheckBox *zoomImageCheckBox;
     QLabel *imageWidthLabel;
     QSpinBox *imageWidthSpinBox;
     QLabel *imageHeightLabel;
     QSpinBox *imageHeightSpinBox;
-    QCheckBox *screenshotScaledCheckBox;
 };

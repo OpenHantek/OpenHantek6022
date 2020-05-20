@@ -37,10 +37,6 @@ DsoConfigColorsPage::DsoConfigColorsPage( DsoSettings *settings, QWidget *parent
     textColorBox = new ColorBox( colorSettings.screen.text );
     printTextColorBox = new ColorBox( colorSettings.print.text );
 
-    graphLabel = new QLabel( "<hr width=\"100%\"/>" );
-    graphLabel->setAlignment( Qt::AlignRight );
-    graphLabel->setTextFormat( Qt::RichText );
-
     // Graph category
     screenChannelLabel = new QLabel( tr( "Channel" ) );
     screenChannelLabel->setAlignment( Qt::AlignHCenter );
@@ -96,8 +92,11 @@ DsoConfigColorsPage::DsoConfigColorsPage( DsoSettings *settings, QWidget *parent
     colorsLayout->addWidget( printTextColorBox, row, COL_PRT_CHANNEL, 1, 2 );
     ++row;
 
-    // Graph
-    colorsLayout->addWidget( graphLabel, row, COL_LABEL, 1, COL_PRT_SPECTRUM - COL_LABEL + 1 );
+    // horizontal line
+    horizontalLine = new QLabel( "<hr width=\"100%\"/>" );
+    horizontalLine->setAlignment( Qt::AlignRight );
+    horizontalLine->setTextFormat( Qt::RichText );
+    colorsLayout->addWidget( horizontalLine, row, COL_LABEL, 1, COL_PRT_SPECTRUM - COL_LABEL + 1 );
     ++row;
 
     colorsLayout->addWidget( screenChannelLabel, row, COL_SCR_CHANNEL );
@@ -113,6 +112,17 @@ DsoConfigColorsPage::DsoConfigColorsPage( DsoSettings *settings, QWidget *parent
         colorsLayout->addWidget( printChannelColorBox[ channel ], row, COL_PRT_CHANNEL );
         colorsLayout->addWidget( printSpectrumColorBox[ channel ], row, COL_PRT_SPECTRUM );
     }
+
+    // horizontal line
+    horizontalLine = new QLabel( "<hr width=\"100%\"/>" );
+    horizontalLine->setAlignment( Qt::AlignRight );
+    horizontalLine->setTextFormat( Qt::RichText );
+
+    colorsLayout->addWidget( horizontalLine, ++row, COL_LABEL, 1, COL_PRT_SPECTRUM - COL_LABEL + 1 );
+
+    screenColorCheckBox = new QCheckBox( tr( "Export images with screen colors" ) );
+    screenColorCheckBox->setChecked( settings->view.screenColorImages );
+    colorsLayout->addWidget( screenColorCheckBox, ++row, COL_LABEL );
 
     colorsGroup = new QGroupBox( tr( "Screen and Print Colors" ) );
     colorsGroup->setLayout( colorsLayout );
@@ -152,4 +162,5 @@ void DsoConfigColorsPage::saveSettings() {
         colorSettings.print.voltage[ channel ] = printChannelColorBox[ channel ]->getColor();
         colorSettings.print.spectrum[ channel ] = printSpectrumColorBox[ channel ]->getColor();
     }
+    settings->view.screenColorImages = screenColorCheckBox->isChecked();
 }

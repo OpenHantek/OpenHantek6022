@@ -128,14 +128,14 @@ bool LegacyExportDrawer::exportSamples( const PPresult *result, QPaintDevice *pa
                 tWidth = 3;
                 painter.setPen( colorValues->text );
                 painter.drawText( QRectF( stretchBase * tPos, top, stretchBase * tWidth, lineHeight ),
-                                  valueToString( result->data( unsigned( channel ) )->vpp, UNIT_VOLTS, 3 ) + "pp",
+                                  valueToString( result->data( unsigned( channel ) )->vpp, UNIT_VOLTS, 3 ) + tr( "pp" ),
                                   QTextOption( Qt::AlignRight ) );
                 // RMS Amplitude string representation (3 significant digits)
                 tPos += tWidth;
                 tWidth = 3.5;
                 painter.setPen( colorValues->text );
                 painter.drawText( QRectF( stretchBase * tPos, top, stretchBase * tWidth, lineHeight ),
-                                  valueToString( result->data( unsigned( channel ) )->rms, UNIT_VOLTS, 3 ) + "rms",
+                                  valueToString( result->data( unsigned( channel ) )->rms, UNIT_VOLTS, 3 ) + tr( "rms" ),
                                   QTextOption( Qt::AlignRight ) );
                 // DC Amplitude string representation (3 significant digits)
                 tPos += tWidth;

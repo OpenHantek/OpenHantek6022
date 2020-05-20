@@ -20,7 +20,6 @@
 #include "glscope.h"
 #include "scopesettings.h"
 #include "viewconstants.h"
-#include "viewsettings.h"
 #include "widgets/datagrid.h"
 #include "widgets/levelslider.h"
 
@@ -33,8 +32,8 @@ DsoWidget::DsoWidget( DsoSettingsScope *scope, DsoSettingsView *view, const Dso:
 
     // Palette for this widget
     QPalette palette;
-    palette.setColor( QPalette::Background, view->screen.background );
-    palette.setColor( QPalette::WindowText, view->screen.text );
+    palette.setColor( QPalette::Background, view->colors->background );
+    palette.setColor( QPalette::WindowText, view->colors->text );
 
     setupSliders( mainSliders );
     setupSliders( zoomSliders );
@@ -117,7 +116,7 @@ DsoWidget::DsoWidget( DsoSettingsScope *scope, DsoSettingsView *view, const Dso:
     measurementLayout->setColumnStretch( iii++, 3 );
     measurementLayout->setColumnStretch( iii++, 3 );
     for ( ChannelID channel = 0; channel < scope->voltage.size(); ++channel ) {
-        tablePalette.setColor( QPalette::WindowText, view->screen.voltage[ channel ] );
+        tablePalette.setColor( QPalette::WindowText, view->colors->voltage[ channel ] );
         measurementNameLabel.push_back( new QLabel( scope->voltage[ channel ].name ) );
         measurementNameLabel[ channel ]->setAlignment( Qt::AlignCenter );
         measurementNameLabel[ channel ]->setPalette( tablePalette );
@@ -128,7 +127,7 @@ DsoWidget::DsoWidget( DsoSettingsScope *scope, DsoSettingsView *view, const Dso:
         measurementGainLabel.push_back( new QLabel() );
         measurementGainLabel[ channel ]->setAlignment( Qt::AlignRight );
         measurementGainLabel[ channel ]->setPalette( tablePalette );
-        tablePalette.setColor( QPalette::WindowText, view->screen.spectrum[ channel ] );
+        tablePalette.setColor( QPalette::WindowText, view->colors->spectrum[ channel ] );
         measurementMagnitudeLabel.push_back( new QLabel() );
         measurementMagnitudeLabel[ channel ]->setAlignment( Qt::AlignRight );
         measurementMagnitudeLabel[ channel ]->setPalette( tablePalette );
@@ -172,13 +171,13 @@ DsoWidget::DsoWidget( DsoSettingsScope *scope, DsoSettingsView *view, const Dso:
 
     // Cursors
     cursorDataGrid = new DataGrid( this );
-    cursorDataGrid->setBackgroundColor( view->screen.background );
-    cursorDataGrid->addItem( tr( "Markers" ), view->screen.text );
+    cursorDataGrid->setBackgroundColor( view->colors->background );
+    cursorDataGrid->addItem( tr( "Markers" ), view->colors->text );
     for ( ChannelID channel = 0; channel < scope->voltage.size(); ++channel ) {
-        cursorDataGrid->addItem( scope->voltage[ channel ].name, view->screen.voltage[ channel ] );
+        cursorDataGrid->addItem( scope->voltage[ channel ].name, view->colors->voltage[ channel ] );
     }
     for ( ChannelID channel = 0; channel < scope->spectrum.size(); ++channel ) {
-        cursorDataGrid->addItem( scope->spectrum[ channel ].name, view->screen.spectrum[ channel ] );
+        cursorDataGrid->addItem( scope->spectrum[ channel ].name, view->colors->spectrum[ channel ] );
     }
     cursorDataGrid->selectItem( 0 );
 
@@ -289,6 +288,59 @@ DsoWidget::DsoWidget( DsoSettingsScope *scope, DsoSettingsView *view, const Dso:
     zoomSliders.markerSlider->setEnabled( false );
 }
 
+void DsoWidget::usePrintColors() {
+    view->colors = &view->print;
+    setColors();
+}
+
+void DsoWidget::useScreenColors() {
+    view->colors = &view->screen;
+    setColors();
+}
+
+void DsoWidget::setColors() {
+    // Palette for this widget
+    QPalette paletteNow;
+    paletteNow.setColor( QPalette::Background, view->colors->background );
+    paletteNow.setColor( QPalette::WindowText, view->colors->text );
+    settingsSamplesOnScreen->setPalette( paletteNow );
+    settingsSamplerateLabel->setPalette( paletteNow );
+    settingsTimebaseLabel->setPalette( paletteNow );
+    settingsFrequencybaseLabel->setPalette( paletteNow );
+    markerInfoLabel->setPalette( paletteNow );
+    markerTimeLabel->setPalette( paletteNow );
+    markerFrequencyLabel->setPalette( paletteNow );
+    markerTimebaseLabel->setPalette( paletteNow );
+    markerFrequencybaseLabel->setPalette( paletteNow );
+    QPalette tablePalette = paletteNow;
+    for ( ChannelID channel = 0; channel < scope->voltage.size(); ++channel ) {
+        tablePalette.setColor( QPalette::WindowText, view->colors->voltage[ channel ] );
+        measurementNameLabel[ channel ]->setPalette( tablePalette );
+        measurementMiscLabel[ channel ]->setPalette( tablePalette );
+        measurementGainLabel[ channel ]->setPalette( tablePalette );
+        mainSliders.voltageOffsetSlider->setColor( ( channel ), view->colors->voltage[ channel ] );
+        zoomSliders.voltageOffsetSlider->setColor( ( channel ), view->colors->voltage[ channel ] );
+        mainSliders.voltageOffsetSlider->setColor( unsigned( scope->voltage.size() ) + channel, view->colors->spectrum[ channel ] );
+        zoomSliders.voltageOffsetSlider->setColor( unsigned( scope->voltage.size() ) + channel, view->colors->spectrum[ channel ] );
+        tablePalette.setColor( QPalette::WindowText, view->colors->spectrum[ channel ] );
+        measurementMagnitudeLabel[ channel ]->setPalette( tablePalette );
+        measurementVppLabel[ channel ]->setPalette( paletteNow );
+        measurementRMSLabel[ channel ]->setPalette( paletteNow );
+        measurementDCLabel[ channel ]->setPalette( paletteNow );
+        measurementACLabel[ channel ]->setPalette( paletteNow );
+        measurementdBLabel[ channel ]->setPalette( paletteNow );
+        measurementFrequencyLabel[ channel ]->setPalette( paletteNow );
+    }
+
+    tablePalette = palette();
+    tablePalette.setColor( QPalette::WindowText, view->colors->voltage[ scope->trigger.source ] );
+    settingsTriggerLabel->setPalette( tablePalette );
+    updateTriggerSource();
+    setPalette( paletteNow );
+    setBackgroundRole( QPalette::Background );
+}
+
+
 void DsoWidget::updateCursorGrid( bool enabled ) {
     if ( !enabled ) {
         cursorDataGrid->selectItem( 0 );
@@ -324,7 +376,7 @@ void DsoWidget::setupSliders( DsoWidget::Sliders &sliders ) {
     sliders.voltageOffsetSlider = new LevelSlider( Qt::RightArrow );
     for ( ChannelID channel = 0; channel < scope->voltage.size(); ++channel ) {
         sliders.voltageOffsetSlider->addSlider( scope->voltage[ channel ].name, int( channel ) );
-        sliders.voltageOffsetSlider->setColor( ( channel ), view->screen.voltage[ channel ] );
+        sliders.voltageOffsetSlider->setColor( ( channel ), view->colors->voltage[ channel ] );
         sliders.voltageOffsetSlider->setLimits( int( channel ), -DIVS_VOLTAGE / 2, DIVS_VOLTAGE / 2 );
         sliders.voltageOffsetSlider->setStep( int( channel ), 0.2 );
         sliders.voltageOffsetSlider->setValue( int( channel ), scope->voltage[ channel ].offset );
@@ -332,7 +384,7 @@ void DsoWidget::setupSliders( DsoWidget::Sliders &sliders ) {
     }
     for ( ChannelID channel = 0; channel < scope->voltage.size(); ++channel ) {
         sliders.voltageOffsetSlider->addSlider( scope->spectrum[ channel ].name, int( scope->voltage.size() + channel ) );
-        sliders.voltageOffsetSlider->setColor( unsigned( scope->voltage.size() ) + channel, view->screen.spectrum[ channel ] );
+        sliders.voltageOffsetSlider->setColor( unsigned( scope->voltage.size() ) + channel, view->colors->spectrum[ channel ] );
         sliders.voltageOffsetSlider->setLimits( int( scope->voltage.size() + channel ), -DIVS_VOLTAGE / 2, DIVS_VOLTAGE / 2 );
         sliders.voltageOffsetSlider->setStep( int( scope->voltage.size() + channel ), 0.2 );
         sliders.voltageOffsetSlider->setValue( int( scope->voltage.size() + channel ), scope->spectrum[ channel ].offset );
@@ -353,8 +405,8 @@ void DsoWidget::setupSliders( DsoWidget::Sliders &sliders ) {
     for ( ChannelID channel = 0; channel < spec->channels; ++channel ) {
         sliders.triggerLevelSlider->addSlider( int( channel ) );
         sliders.triggerLevelSlider->setColor( channel, ( channel == scope->trigger.source )
-                                                           ? view->screen.voltage[ channel ]
-                                                           : view->screen.voltage[ channel ].darker() );
+                                                           ? view->colors->voltage[ channel ]
+                                                           : view->colors->voltage[ channel ].darker() );
         adaptTriggerLevelSlider( sliders, channel );
         sliders.triggerLevelSlider->setValue( int( channel ), scope->voltage[ channel ].trigger );
         sliders.triggerLevelSlider->setIndexVisible( channel, scope->voltage[ channel ].used );
@@ -535,7 +587,7 @@ void DsoWidget::updateSpectrumDetails( ChannelID channel ) {
 void DsoWidget::updateTriggerDetails() {
     // Update the trigger details
     QPalette tablePalette = palette();
-    tablePalette.setColor( QPalette::WindowText, view->screen.voltage[ scope->trigger.source ] );
+    tablePalette.setColor( QPalette::WindowText, view->colors->voltage[ scope->trigger.source ] );
     settingsTriggerLabel->setPalette( tablePalette );
     QString levelString = valueToString( scope->voltage[ scope->trigger.source ].trigger, UNIT_VOLTS, 3 );
     QString pretriggerString = tr( "%L1%" ).arg( int( round( scope->trigger.offset * 100 ) ) );
@@ -622,12 +674,12 @@ void DsoWidget::updateTriggerSlope() { updateTriggerDetails(); }
 /// \brief Handles sourceChanged signal from the trigger dock.
 void DsoWidget::updateTriggerSource() {
     // Change the colors of the trigger sliders
-    mainSliders.triggerOffsetSlider->setColor( 0, view->screen.voltage[ scope->trigger.source ] );
-    zoomSliders.triggerOffsetSlider->setColor( 0, view->screen.voltage[ scope->trigger.source ] );
+    mainSliders.triggerOffsetSlider->setColor( 0, view->colors->voltage[ scope->trigger.source ] );
+    zoomSliders.triggerOffsetSlider->setColor( 0, view->colors->voltage[ scope->trigger.source ] );
 
     for ( ChannelID channel = 0; channel < spec->channels; ++channel ) {
         QColor color =
-            ( channel == scope->trigger.source ) ? view->screen.voltage[ channel ] : view->screen.voltage[ channel ].darker();
+            ( channel == scope->trigger.source ) ? view->colors->voltage[ channel ] : view->colors->voltage[ channel ].darker();
         mainSliders.triggerLevelSlider->setColor( channel, color );
         zoomSliders.triggerLevelSlider->setColor( channel, color );
     }
@@ -728,10 +780,10 @@ void DsoWidget::showNew( std::shared_ptr< PPresult > analysedData ) {
         if ( scope->voltage[ channel ].used && analysedData.get()->data( channel ) ) {
             // Vpp Amplitude string representation (3 significant digits)
             measurementVppLabel[ channel ]->setText( valueToString( analysedData.get()->data( channel )->vpp, UNIT_VOLTS, 3 ) +
-                                                     "pp" );
+                                                     tr( "pp" ) );
             // RMS Amplitude string representation (3 significant digits)
             measurementRMSLabel[ channel ]->setText( valueToString( analysedData.get()->data( channel )->rms, UNIT_VOLTS, 3 ) +
-                                                     "rms" );
+                                                     tr( "rms" ) );
             // DC Amplitude string representation (3 significant digits)
             measurementDCLabel[ channel ]->setText( valueToString( analysedData.get()->data( channel )->dc, UNIT_VOLTS, 3 ) + "=" );
             // AC Amplitude string representation (3 significant digits)
@@ -744,8 +796,8 @@ void DsoWidget::showNew( std::shared_ptr< PPresult > analysedData ) {
             // Highlight clipped channel
             QPalette validPalette;
             if ( analysedData.get()->data( channel )->valid ) { // normal display
-                validPalette.setColor( QPalette::WindowText, view->screen.voltage[ channel ] );
-                validPalette.setColor( QPalette::Background, view->screen.background );
+                validPalette.setColor( QPalette::WindowText, view->colors->voltage[ channel ] );
+                validPalette.setColor( QPalette::Background, view->colors->background );
             } else { // warning
                 validPalette.setColor( QPalette::WindowText, Qt::black );
                 validPalette.setColor( QPalette::Background, Qt::red );
@@ -902,19 +954,19 @@ void DsoWidget::updateSlidersSettings() {
     // The offset sliders for all possible channels
     for ( ChannelID channel = 0; channel < scope->voltage.size(); ++channel ) {
         updateOffset( channel, scope->voltage[ channel ].offset );
-        mainSliders.voltageOffsetSlider->setColor( ( channel ), view->screen.voltage[ channel ] );
+        mainSliders.voltageOffsetSlider->setColor( ( channel ), view->colors->voltage[ channel ] );
         mainSliders.voltageOffsetSlider->setValue( int( channel ), scope->voltage[ channel ].offset );
         mainSliders.voltageOffsetSlider->setIndexVisible( channel, scope->voltage[ channel ].used );
-        zoomSliders.voltageOffsetSlider->setColor( ( channel ), view->screen.voltage[ channel ] );
+        zoomSliders.voltageOffsetSlider->setColor( ( channel ), view->colors->voltage[ channel ] );
         zoomSliders.voltageOffsetSlider->setValue( int( channel ), scope->voltage[ channel ].offset );
         zoomSliders.voltageOffsetSlider->setIndexVisible( channel, scope->voltage[ channel ].used );
 
         updateOffset( unsigned( scope->voltage.size() + channel ), scope->spectrum[ channel ].offset );
-        mainSliders.voltageOffsetSlider->setColor( unsigned( scope->voltage.size() ) + channel, view->screen.spectrum[ channel ] );
+        mainSliders.voltageOffsetSlider->setColor( unsigned( scope->voltage.size() ) + channel, view->colors->spectrum[ channel ] );
         mainSliders.voltageOffsetSlider->setValue( int( scope->voltage.size() + channel ), scope->spectrum[ channel ].offset );
         mainSliders.voltageOffsetSlider->setIndexVisible( unsigned( scope->voltage.size() ) + channel,
                                                           scope->spectrum[ channel ].used );
-        zoomSliders.voltageOffsetSlider->setColor( unsigned( scope->voltage.size() ) + channel, view->screen.spectrum[ channel ] );
+        zoomSliders.voltageOffsetSlider->setColor( unsigned( scope->voltage.size() ) + channel, view->colors->spectrum[ channel ] );
         zoomSliders.voltageOffsetSlider->setValue( int( scope->voltage.size() + channel ), scope->spectrum[ channel ].offset );
         zoomSliders.voltageOffsetSlider->setIndexVisible( unsigned( scope->voltage.size() ) + channel,
                                                           scope->spectrum[ channel ].used );
@@ -930,14 +982,14 @@ void DsoWidget::updateSlidersSettings() {
         mainSliders.triggerLevelSlider->setValue( int( channel ), scope->voltage[ channel ].trigger );
         adaptTriggerLevelSlider( mainSliders, channel );
         mainSliders.triggerLevelSlider->setColor( channel, ( channel == scope->trigger.source )
-                                                               ? view->screen.voltage[ channel ]
-                                                               : view->screen.voltage[ channel ].darker() );
+                                                               ? view->colors->voltage[ channel ]
+                                                               : view->colors->voltage[ channel ].darker() );
         mainSliders.triggerLevelSlider->setIndexVisible( channel, scope->voltage[ channel ].used );
         zoomSliders.triggerLevelSlider->setValue( int( channel ), scope->voltage[ channel ].trigger );
         adaptTriggerLevelSlider( zoomSliders, channel );
         zoomSliders.triggerLevelSlider->setColor( channel, ( channel == scope->trigger.source )
-                                                               ? view->screen.voltage[ channel ]
-                                                               : view->screen.voltage[ channel ].darker() );
+                                                               ? view->colors->voltage[ channel ]
+                                                               : view->colors->voltage[ channel ].darker() );
         zoomSliders.triggerLevelSlider->setIndexVisible( channel, scope->voltage[ channel ].used );
     }
     updateTriggerDetails();
