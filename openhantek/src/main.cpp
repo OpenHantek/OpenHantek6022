@@ -39,8 +39,11 @@
 #include "exporting/exportcsv.h"
 #include "exporting/exporterprocessor.h"
 #include "exporting/exporterregistry.h"
+// legacy img and pdf export is replaced by MainWindow::screenshot()
+#ifdef LEGACYEXPORT
 #include "exporting/exportimage.h"
 #include "exporting/exportprint.h"
+#endif
 
 // GUI
 #include "iconfont/QtAwesome.h"
@@ -194,9 +197,10 @@ int main( int argc, char *argv[] ) {
     ExporterProcessor samplesToExportRaw( &exportRegistry );
 
     exportRegistry.registerExporter( &exporterCSV );
-    // exportRegistry.registerExporter( &exportImage );
-    // exportRegistry.registerExporter( &exportPrint );
-
+#ifdef LEGACYEXPORT
+    exportRegistry.registerExporter( &exportImage );
+    exportRegistry.registerExporter( &exportPrint );
+#endif
     //////// Create post processing objects ////////
     QThread postProcessingThread;
     postProcessingThread.setObjectName( "postProcessingThread" );

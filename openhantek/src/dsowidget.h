@@ -42,8 +42,8 @@ class DsoWidget : public QWidget {
     // Data arrived
     void showNew( std::shared_ptr< PPresult > analysedData );
 
-    void usePrintColors();
-    void useScreenColors();
+    void switchToPrintColors();
+    void restoreScreenColors();
 
   protected:
     virtual void showEvent( QShowEvent *event );

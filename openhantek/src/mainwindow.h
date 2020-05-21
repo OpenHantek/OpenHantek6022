@@ -35,15 +35,10 @@ class MainWindow : public QMainWindow {
     ~MainWindow() override;
     QElapsedTimer elapsedTime;
 
-  private:
-    enum screenshotType_t { SCREENSHOT, HARDCOPY, PRINTER };
-    screenshotType_t screenshotType;
-
   public slots:
     void showNewData( std::shared_ptr< PPresult > newData );
     void exporterStatusChanged( const QString &exporterName, const QString &status );
     void exporterProgressChanged();
-    void screenShot();
 
   protected:
     void closeEvent( QCloseEvent *event ) override;
@@ -60,6 +55,11 @@ class MainWindow : public QMainWindow {
     // Settings used for the whole program
     DsoSettings *dsoSettings;
     ExporterRegistry *exporterRegistry;
+
+    // Taking screenshots
+    enum screenshotType_t { SCREENSHOT, HARDCOPY, PRINTER };
+    screenshotType_t screenshotType;
+    void screenShot( screenshotType_t screenshotType = SCREENSHOT );
 
   signals:
     void settingsLoaded( DsoSettingsScope *scope, const Dso::ControlSpecification *spec );

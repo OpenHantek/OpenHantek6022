@@ -98,29 +98,22 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
 
     action = new QAction( iconFont->icon( fa::camera, colorMap ), tr( "Screenshot .." ), this );
     action->setToolTip( "Make a screenshot of the program window" );
-    connect( action, &QAction::triggered, [this]() {
-        screenshotType = SCREENSHOT;
-        screenShot();
-    } );
+    connect( action, &QAction::triggered, [this]() { screenShot( SCREENSHOT ); } );
     ui->menuExport->addAction( action );
 
     action = new QAction( iconFont->icon( fa::camera, colorMap ), tr( "Hardcopy .." ), this );
     action->setToolTip( "Make a (printable) hardcopy of the display" );
     connect( action, &QAction::triggered, [this]() {
-        screenshotType = HARDCOPY;
-        if ( !dsoSettings->view.screenColorImages )
-            dsoWidget->usePrintColors();
-        QTimer::singleShot( 20, this, SLOT( screenShot() ) );
+        dsoWidget->switchToPrintColors();
+        QTimer::singleShot( 20, [this]() { screenShot( HARDCOPY ); } );
     } );
     ui->menuExport->addAction( action );
 
     action = new QAction( iconFont->icon( fa::print, colorMap ), tr( "Print screen .." ), this );
     action->setToolTip( "Send the hardcopy to the printer" );
     connect( action, &QAction::triggered, [this]() {
-        screenshotType = PRINTER;
-        if ( !dsoSettings->view.screenColorImages )
-            dsoWidget->usePrintColors();
-        QTimer::singleShot( 20, this, SLOT( screenShot() ) );
+        dsoWidget->switchToPrintColors();
+        QTimer::singleShot( 20, [this]() { screenShot( PRINTER ); } );
     } );
     ui->menuExport->addAction( action );
 
@@ -413,12 +406,8 @@ void MainWindow::exporterProgressChanged() { exporterRegistry->checkForWaitingEx
 // ... or a printable hardcopy (type == HARDCOPY) from the scope widget only ...
 // ... with printer colors and scaled to double height for zoomed screens ...
 // ... or send this hardcopy directly to the printer (type == PRINTER).
-void MainWindow::screenShot() {
+void MainWindow::screenShot( screenshotType_t screenshotType ) {
     auto activeWindow = screenshotType == SCREENSHOT ? qApp->activeWindow() : dsoWidget;
-    //    if ( screenshotType != SCREENSHOT && !dsoSettings->view.screenColorImages ) { // switch to print colors
-    //        dsoSettings->view.setPrintColors();
-    //        dsoWidget->setColors();
-    //    }
     QPixmap screenshot( activeWindow->size() );
     QDateTime now = QDateTime::currentDateTime();
     QString docName = now.toString( tr( "yyyy-MM-dd hh:mm:ss" ) );
@@ -428,9 +417,7 @@ void MainWindow::screenShot() {
     activeWindow->render( &screenshot ); // take the screenshot
     commandEdit->clear();
     commandEdit->setVisible( false );
-    if ( screenshotType != SCREENSHOT && !dsoSettings->view.screenColorImages ) { // restore screen colors
-        dsoWidget->useScreenColors();
-    }
+    dsoWidget->restoreScreenColors();
 
     int sw = screenshot.width();
     int sh = screenshot.height();

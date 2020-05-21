@@ -288,14 +288,18 @@ DsoWidget::DsoWidget( DsoSettingsScope *scope, DsoSettingsView *view, const Dso:
     zoomSliders.markerSlider->setEnabled( false );
 }
 
-void DsoWidget::usePrintColors() {
-    view->colors = &view->print;
-    setColors();
+void DsoWidget::switchToPrintColors() {
+    if ( !view->screenColorImages ) {
+        view->colors = &view->print;
+        setColors();
+    }
 }
 
-void DsoWidget::useScreenColors() {
-    view->colors = &view->screen;
-    setColors();
+void DsoWidget::restoreScreenColors() {
+    if ( view->colors != &view->screen ) {
+        view->colors = &view->screen;
+        setColors();
+    }
 }
 
 void DsoWidget::setColors() {
