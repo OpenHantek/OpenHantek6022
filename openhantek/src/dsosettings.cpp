@@ -89,6 +89,8 @@ void DsoSettings::load() {
     }
     if ( store->contains( "timebase" ) )
         scope.horizontal.timebase = store->value( "timebase" ).toDouble();
+    if ( store->contains( "maxTimebase" ) )
+        scope.horizontal.maxTimebase = store->value( "maxTimebase" ).toDouble();
     if ( store->contains( "recordLength" ) )
         scope.horizontal.recordLength = store->value( "recordLength" ).toUInt();
     if ( store->contains( "samplerate" ) )
@@ -269,6 +271,7 @@ void DsoSettings::save() {
     for ( int marker = 0; marker < MARKER_COUNT; ++marker )
         store->setValue( QString( "marker%1" ).arg( marker ), scope.getMarker( unsigned( marker ) ) );
     store->setValue( "timebase", scope.horizontal.timebase );
+    store->setValue( "maxTimebase", scope.horizontal.maxTimebase );
     store->setValue( "recordLength", scope.horizontal.recordLength );
     store->setValue( "samplerate", scope.horizontal.samplerate );
     store->setValue( "calfreq", scope.horizontal.calfreq );

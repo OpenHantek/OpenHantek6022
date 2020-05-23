@@ -4,6 +4,7 @@
 
 #include "dsosettings.h"
 
+#include "sispinbox.h"
 #include <QCheckBox>
 #include <QComboBox>
 #include <QDoubleSpinBox>
@@ -30,6 +31,11 @@ class DsoConfigScopePage : public QWidget {
     DsoSettings *settings;
 
     QVBoxLayout *mainLayout;
+
+    QGroupBox *timebaseGroup;
+    QGridLayout *timebaseLayout;
+    QLabel *maxTimebaseLabel;
+    SiSpinBox *maxTimebaseSiSpinBox;
 
     QGroupBox *graphGroup;
     QGridLayout *graphLayout;

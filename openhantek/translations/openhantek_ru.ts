@@ -287,37 +287,52 @@
         <translation>Линейная</translation>
     </message>
     <message>
+        <source>Timebase</source>
+        <translation type="obsolete">Время/Деление</translation>
+    </message>
+    <message>
         <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="11"/>
+        <source>Set slowest possible timebase
+(GUI may become very unresponsible!)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="22"/>
+        <source>Horizontal</source>
+        <translation type="unfinished">Развёртка</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="25"/>
         <source>Interpolation</source>
         <translation>Интерполяция</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="15"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="29"/>
         <source>Digital phosphor depth</source>
         <translation>Глубина цифрового люминофора</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="27"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="41"/>
         <source>Graph</source>
         <translation>График</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="30"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="44"/>
         <source>Position</source>
         <translation>Положение</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="32"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="46"/>
         <source>Left</source>
         <translation>Слева</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="33"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="47"/>
         <source>Right</source>
         <translation>Справа</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="40"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="54"/>
         <source>Cursors</source>
         <translation>Курсоры</translation>
     </message>

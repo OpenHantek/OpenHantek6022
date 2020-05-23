@@ -56,7 +56,6 @@ class HorizontalDock : public QDockWidget {
     /// \param maximum The minimum value the spin box should accept.
     void setSamplerateLimits( double minimum, double maximum );
     /// \brief Updates the mode and steps of the samplerate spin box.
-    /// \param mode The mode value the spin box should accept.
     /// \param steps The steps value the spin box should accept.
     void setSamplerateSteps( int mode, QList< double > sampleSteps );
     void calculateSamplerateSteps( double timebase );

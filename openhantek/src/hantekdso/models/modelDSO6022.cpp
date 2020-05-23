@@ -91,16 +91,12 @@ static void initSpecifications( Dso::ControlSpecification &specification ) {
     specification.samplerate.multi.max = 15e6;
     specification.samplerate.multi.recordLengths = {UINT_MAX};
 
-    // define VERY_SLOW_SAMPLES to get timebase up to 1s/div at the expense of very slow reaction time (up to 20 s)
-    //#define VERY_SLOW_SAMPLES
     specification.fixedSampleRates = {
-    // samplerate, sampleId, downsampling
-#ifdef VERY_SLOW_SAMPLES
-        {1e3, 110, 100}, // 100x downsampling from 100, 200, 500 kS/s!
-        {2e3, 120, 100}, //
-        {5e3, 150, 100}, //
-#endif
-        {10e3, 1, 100},   // 100x downsampling from 1, 2, 5, 10 MS/s!
+        // samplerate, sampleId, downsampling
+        {1e3, 110, 100},  // slow! 100x downsampling from 100, 200, 500 kS/s!
+        {2e3, 120, 100},  // slow!
+        {5e3, 150, 100},  // slow!
+        {10e3, 1, 100},   // 100x downsampling from 1, 2, 5, 10 MS/s
         {20e3, 2, 100},   //
         {50e3, 5, 100},   //
         {100e3, 10, 100}, //
