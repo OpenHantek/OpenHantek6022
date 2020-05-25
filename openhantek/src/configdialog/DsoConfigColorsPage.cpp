@@ -120,8 +120,8 @@ DsoConfigColorsPage::DsoConfigColorsPage( DsoSettings *settings, QWidget *parent
 
     colorsLayout->addWidget( horizontalLine, ++row, COL_LABEL, 1, COL_PRT_SPECTRUM - COL_LABEL + 1 );
 
-    screenColorCheckBox = new QCheckBox( tr( "Export images with screen colors" ) );
-    screenColorCheckBox->setChecked( settings->view.screenColorImages );
+    screenColorCheckBox = new QCheckBox( tr( "Export hardcopy images or pdf files with printer colors" ) );
+    screenColorCheckBox->setChecked( settings->view.printerColorImages );
     colorsLayout->addWidget( screenColorCheckBox, ++row, COL_LABEL );
 
     colorsGroup = new QGroupBox( tr( "Screen and Print Colors" ) );
@@ -162,5 +162,5 @@ void DsoConfigColorsPage::saveSettings() {
         colorSettings.print.voltage[ channel ] = printChannelColorBox[ channel ]->getColor();
         colorSettings.print.spectrum[ channel ] = printSpectrumColorBox[ channel ]->getColor();
     }
-    settings->view.screenColorImages = screenColorCheckBox->isChecked();
+    settings->view.printerColorImages = screenColorCheckBox->isChecked();
 }

@@ -51,6 +51,7 @@ DsoSettings::DsoSettings( const Dso::ControlSpecification *deviceSpecification )
     load();
 }
 
+
 bool DsoSettings::setFilename( const QString &filename ) {
     std::unique_ptr< QSettings > local = std::unique_ptr< QSettings >( new QSettings( filename, QSettings::IniFormat ) );
     if ( local->status() != QSettings::NoError ) {
@@ -60,6 +61,7 @@ bool DsoSettings::setFilename( const QString &filename ) {
     store.swap( local );
     return true;
 }
+
 
 void DsoSettings::load() {
     // General options
@@ -91,6 +93,8 @@ void DsoSettings::load() {
         scope.horizontal.timebase = store->value( "timebase" ).toDouble();
     if ( store->contains( "maxTimebase" ) )
         scope.horizontal.maxTimebase = store->value( "maxTimebase" ).toDouble();
+    if ( store->contains( "acquireInterval" ) )
+        scope.horizontal.acquireInterval = store->value( "acquireInterval" ).toDouble();
     if ( store->contains( "recordLength" ) )
         scope.horizontal.recordLength = store->value( "recordLength" ).toUInt();
     if ( store->contains( "samplerate" ) )
@@ -236,8 +240,8 @@ void DsoSettings::load() {
         view.digitalPhosphor = store->value( "digitalPhosphor" ).toBool();
     if ( store->contains( "interpolation" ) )
         view.interpolation = Dso::InterpolationMode( store->value( "interpolation" ).toInt() );
-    if ( store->contains( "screenColorImages" ) )
-        view.screenColorImages = store->value( "screenColorImages" ).toBool();
+    if ( store->contains( "printerColorImages" ) )
+        view.printerColorImages = store->value( "printerColorImages" ).toBool();
     if ( store->contains( "zoom" ) )
         view.zoom = store->value( "zoom" ).toBool();
     if ( store->contains( "cursorGridPosition" ) )
@@ -251,6 +255,7 @@ void DsoSettings::load() {
     mainWindowState = store->value( "state" ).toByteArray();
     store->endGroup();
 }
+
 
 void DsoSettings::save() {
     // Main window layout and other general options
@@ -272,6 +277,7 @@ void DsoSettings::save() {
         store->setValue( QString( "marker%1" ).arg( marker ), scope.getMarker( unsigned( marker ) ) );
     store->setValue( "timebase", scope.horizontal.timebase );
     store->setValue( "maxTimebase", scope.horizontal.maxTimebase );
+    store->setValue( "acquireInterval", scope.horizontal.acquireInterval );
     store->setValue( "recordLength", scope.horizontal.recordLength );
     store->setValue( "samplerate", scope.horizontal.samplerate );
     store->setValue( "calfreq", scope.horizontal.calfreq );
@@ -363,7 +369,7 @@ void DsoSettings::save() {
     store->setValue( "histogram", scope.histogram );
     store->setValue( "digitalPhosphor", view.digitalPhosphor );
     store->setValue( "interpolation", view.interpolation );
-    store->setValue( "screenColorImages", view.screenColorImages );
+    store->setValue( "printerColorImages", view.printerColorImages );
     store->setValue( "zoom", view.zoom );
     store->setValue( "cursorGridPosition", view.cursorGridPosition );
     store->setValue( "cursorsVisible", view.cursorsVisible );

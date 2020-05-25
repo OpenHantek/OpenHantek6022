@@ -6,21 +6,31 @@ DsoConfigScopePage::DsoConfigScopePage( DsoSettings *settings, QWidget *parent )
     // Initialize lists for comboboxes
     QStringList interpolationStrings;
     interpolationStrings << tr( "Off" ) << tr( "Linear" );
-    QList< double > slowTimebaseSteps = {1.0, 2.0, 5.0, 10.0};
+    QList< double > timebaseSteps = {1.0, 2.0, 5.0, 10.0};
 
-    maxTimebaseLabel = new QLabel( tr( "Set slowest possible timebase\n(GUI may become very unresponsible!)" ) );
+    maxTimebaseLabel = new QLabel( tr( "Set slowest possible timebase<br/>(<b>GUI may become very unresponsible!</b>)" ) );
     maxTimebaseSiSpinBox = new SiSpinBox();
     maxTimebaseSiSpinBox = new SiSpinBox( UNIT_SECONDS );
-    maxTimebaseSiSpinBox->setSteps( slowTimebaseSteps );
+    maxTimebaseSiSpinBox->setSteps( timebaseSteps );
     maxTimebaseSiSpinBox->setMinimum( 0.1 ); // default 100 ms/div
     maxTimebaseSiSpinBox->setMaximum( 1.0 );
-
     maxTimebaseSiSpinBox->setValue( settings->scope.horizontal.maxTimebase );
-    timebaseLayout = new QGridLayout();
-    timebaseLayout->addWidget( maxTimebaseLabel, 0, 0 );
-    timebaseLayout->addWidget( maxTimebaseSiSpinBox, 0, 1 );
-    timebaseGroup = new QGroupBox( tr( "Horizontal" ) );
-    timebaseGroup->setLayout( timebaseLayout );
+
+    acquireIntervalLabel = new QLabel( tr( "Minimal time between captured frames<br/>(Longer times reduce the CPU load)" ) );
+    acquireIntervalSiSpinBox = new SiSpinBox();
+    acquireIntervalSiSpinBox = new SiSpinBox( UNIT_SECONDS );
+    acquireIntervalSiSpinBox->setSteps( timebaseSteps );
+    acquireIntervalSiSpinBox->setMinimum( 500e-6 );
+    acquireIntervalSiSpinBox->setMaximum( 50e-3 );
+    acquireIntervalSiSpinBox->setValue( settings->scope.horizontal.acquireInterval );
+
+    horizontalLayout = new QGridLayout();
+    horizontalLayout->addWidget( maxTimebaseLabel, 0, 0 );
+    horizontalLayout->addWidget( maxTimebaseSiSpinBox, 0, 1 );
+    horizontalLayout->addWidget( acquireIntervalLabel, 1, 0 );
+    horizontalLayout->addWidget( acquireIntervalSiSpinBox, 1, 1 );
+    horizontalGroup = new QGroupBox( tr( "Horizontal" ) );
+    horizontalGroup->setLayout( horizontalLayout );
 
     interpolationLabel = new QLabel( tr( "Interpolation" ) );
     interpolationComboBox = new QComboBox();
@@ -54,19 +64,47 @@ DsoConfigScopePage::DsoConfigScopePage( DsoSettings *settings, QWidget *parent )
     cursorsGroup = new QGroupBox( tr( "Cursors" ) );
     cursorsGroup->setLayout( cursorsLayout );
 
+    // Export group
+    zoomImageCheckBox = new QCheckBox( tr( "Export zoomed screen in double height" ) );
+    zoomImageCheckBox->setChecked( settings->view.zoomImage );
+    exportLayout = new QGridLayout();
+    exportLayout->addWidget( zoomImageCheckBox, 2, 0, 1, 2 );
+
+    exportGroup = new QGroupBox( tr( "Export" ) );
+    exportGroup->setLayout( exportLayout );
+
+    // Configuration group
+    saveOnExitCheckBox = new QCheckBox( tr( "Save default settings on exit" ) );
+    saveOnExitCheckBox->setChecked( settings->alwaysSave );
+    saveNowButton = new QPushButton( tr( "Save default settings now" ) );
+
+    configurationLayout = new QVBoxLayout();
+    configurationLayout->addWidget( saveOnExitCheckBox, 0 );
+    configurationLayout->addWidget( saveNowButton, 1 );
+
+    configurationGroup = new QGroupBox( tr( "Configuration" ) );
+    configurationGroup->setLayout( configurationLayout );
+
+
     mainLayout = new QVBoxLayout();
-    mainLayout->addWidget( timebaseGroup );
+    mainLayout->addWidget( configurationGroup );
+    mainLayout->addWidget( horizontalGroup );
     mainLayout->addWidget( graphGroup );
+    mainLayout->addWidget( exportGroup );
     mainLayout->addWidget( cursorsGroup );
     mainLayout->addStretch( 1 );
 
     setLayout( mainLayout );
+    connect( saveNowButton, &QAbstractButton::clicked, [settings]() { settings->save(); } );
 }
 
 /// \brief Saves the new settings.
 void DsoConfigScopePage::saveSettings() {
     settings->scope.horizontal.maxTimebase = maxTimebaseSiSpinBox->value();
+    settings->scope.horizontal.acquireInterval = acquireIntervalSiSpinBox->value();
     settings->view.interpolation = Dso::InterpolationMode( interpolationComboBox->currentIndex() );
     settings->view.digitalPhosphorDepth = unsigned( digitalPhosphorDepthSpinBox->value() );
     settings->view.cursorGridPosition = Qt::ToolBarArea( cursorsComboBox->currentData().toUInt() );
+    settings->alwaysSave = saveOnExitCheckBox->isChecked();
+    settings->view.zoomImage = zoomImageCheckBox->isChecked();
 }

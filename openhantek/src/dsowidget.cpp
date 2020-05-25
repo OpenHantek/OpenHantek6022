@@ -289,7 +289,7 @@ DsoWidget::DsoWidget( DsoSettingsScope *scope, DsoSettingsView *view, const Dso:
 }
 
 void DsoWidget::switchToPrintColors() {
-    if ( !view->screenColorImages ) {
+    if ( view->printerColorImages ) {
         view->colors = &view->print;
         setColors();
     }

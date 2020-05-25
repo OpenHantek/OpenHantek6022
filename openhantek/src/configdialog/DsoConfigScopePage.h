@@ -12,6 +12,7 @@
 #include <QGroupBox>
 #include <QHBoxLayout>
 #include <QLabel>
+#include <QPushButton>
 #include <QSpinBox>
 #include <QVBoxLayout>
 
@@ -32,10 +33,12 @@ class DsoConfigScopePage : public QWidget {
 
     QVBoxLayout *mainLayout;
 
-    QGroupBox *timebaseGroup;
-    QGridLayout *timebaseLayout;
+    QGroupBox *horizontalGroup;
+    QGridLayout *horizontalLayout;
     QLabel *maxTimebaseLabel;
     SiSpinBox *maxTimebaseSiSpinBox;
+    QLabel *acquireIntervalLabel;
+    SiSpinBox *acquireIntervalSiSpinBox;
 
     QGroupBox *graphGroup;
     QGridLayout *graphLayout;
@@ -48,4 +51,13 @@ class DsoConfigScopePage : public QWidget {
     QGridLayout *cursorsLayout;
     QLabel *cursorsLabel;
     QComboBox *cursorsComboBox;
+
+    QGroupBox *configurationGroup;
+    QVBoxLayout *configurationLayout;
+    QCheckBox *saveOnExitCheckBox;
+    QPushButton *saveNowButton;
+
+    QGroupBox *exportGroup;
+    QGridLayout *exportLayout;
+    QCheckBox *zoomImageCheckBox;
 };

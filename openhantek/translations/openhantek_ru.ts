@@ -12,100 +12,80 @@
 <context>
     <name>DsoConfigAnalysisPage</name>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="8"/>
         <source>Rectangular</source>
-        <translation>Прямоугольное</translation>
+        <translation type="vanished">Прямоугольное</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="8"/>
         <source>Hamming</source>
-        <translation>Хэмминга</translation>
+        <translation type="vanished">Хэмминга</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="8"/>
         <source>Hann</source>
-        <translation>Ханна</translation>
+        <translation type="vanished">Ханна</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="8"/>
         <source>Cosine</source>
-        <translation>Косинус</translation>
+        <translation type="vanished">Косинус</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="8"/>
         <source>Lanczos</source>
-        <translation>Ланцоша</translation>
+        <translation type="vanished">Ланцоша</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="9"/>
         <source>Bartlett</source>
-        <translation>Барлетта</translation>
+        <translation type="vanished">Барлетта</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="9"/>
         <source>Triangular</source>
-        <translation>Треугольное</translation>
+        <translation type="vanished">Треугольное</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="9"/>
         <source>Gauss</source>
-        <translation>Гаусса</translation>
+        <translation type="vanished">Гаусса</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="9"/>
         <source>Bartlett-Hann</source>
-        <translation>Барлетта-Ханна</translation>
+        <translation type="vanished">Барлетта-Ханна</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="10"/>
         <source>Blackman</source>
-        <translation>Блэкмана</translation>
+        <translation type="vanished">Блэкмана</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="12"/>
         <source>Nuttall</source>
-        <translation>Наталла</translation>
+        <translation type="vanished">Наталла</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="12"/>
         <source>Blackman-Harris</source>
-        <translation>Блэкмана-Харриса</translation>
+        <translation type="vanished">Блэкмана-Харриса</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="12"/>
         <source>Blackman-Nuttall</source>
-        <translation>Блэкмана-Наталла</translation>
+        <translation type="vanished">Блэкмана-Наталла</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="12"/>
         <source>Flat top</source>
-        <translation>С плоской вершиной</translation>
+        <translation type="vanished">С плоской вершиной</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="15"/>
         <source>&lt;b&gt;Window function&lt;/b&gt;</source>
-        <translation>&lt;b&gt;Окно функции&lt;/b&gt;</translation>
+        <translation type="vanished">&lt;b&gt;Окно функции&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="21"/>
         <source>&lt;b&gt;Reference level&lt;/b&gt;&lt;br/&gt;0 dBu = -2.2 dBV&lt;br/&gt;0 dBm (@600 &amp;Omega;) = -2.2 dBV&lt;br/&gt;0 dBm (@50 &amp;Omega;) = -13 dBV</source>
-        <translation>&lt;b&gt;Опорный уровень&lt;/b&gt;&lt;br/&gt;0 дБн = -2.2 дБВ&lt;br/&gt;0 дБм (@600 &amp;Omega;) = -2.2 дБВ&lt;br/&gt;0 дБм (@50 &amp;Omega;) = -13 дБВ</translation>
+        <translation type="vanished">&lt;b&gt;Опорный уровень&lt;/b&gt;&lt;br/&gt;0 дБн = -2.2 дБВ&lt;br/&gt;0 дБм (@600 &amp;Omega;) = -2.2 дБВ&lt;br/&gt;0 дБм (@50 &amp;Omega;) = -13 дБВ</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="27"/>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="38"/>
         <source>dBV</source>
-        <translation>дБВ</translation>
+        <translation type="vanished">дБВ</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="32"/>
         <source>&lt;b&gt;Minimum magnitude&lt;/b&gt;</source>
-        <translation>&lt;b&gt;Минимальная величина&lt;/b&gt;</translation>
+        <translation type="vanished">&lt;b&gt;Минимальная величина&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="51"/>
         <source>Spectrum</source>
-        <translation>Спектр</translation>
+        <translation type="vanished">Спектр</translation>
     </message>
 </context>
 <context>
@@ -142,8 +122,12 @@
     </message>
     <message>
         <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="123"/>
+        <source>Export hardcopy images or pdf files with printer colors</source>
+        <translation>Экспорт Изображений с Цветами принтера</translation>
+    </message>
+    <message>
         <source>Export images with screen colors</source>
-        <translation>Экспорт Изображений с Цветами Экрана</translation>
+        <translation type="vanished">Экспорт Изображений с Цветами Экрана</translation>
     </message>
     <message>
         <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="127"/>
@@ -180,42 +164,41 @@
 <context>
     <name>DsoConfigDialog</name>
     <message>
-        <location filename="../src/configdialog/configdialog.cpp" line="46"/>
+        <location filename="../src/configdialog/configdialog.cpp" line="34"/>
         <source>Settings</source>
         <translation>Настройки</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/configdialog.cpp" line="68"/>
+        <location filename="../src/configdialog/configdialog.cpp" line="54"/>
         <source>&amp;Ok</source>
         <translation>&amp;Ok</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/configdialog.cpp" line="70"/>
+        <location filename="../src/configdialog/configdialog.cpp" line="56"/>
         <source>&amp;Apply</source>
         <translation>&amp;Применить</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/configdialog.cpp" line="71"/>
+        <location filename="../src/configdialog/configdialog.cpp" line="57"/>
         <source>&amp;Cancel</source>
         <translation>&amp;Отмена</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/configdialog.cpp" line="106"/>
+        <location filename="../src/configdialog/configdialog.cpp" line="99"/>
         <source>Spectrum</source>
         <translation>Спектр</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/configdialog.cpp" line="118"/>
         <source>File</source>
-        <translation>Файл</translation>
+        <translation type="vanished">Файл</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/configdialog.cpp" line="114"/>
+        <location filename="../src/configdialog/configdialog.cpp" line="103"/>
         <source>Colors</source>
         <translation>Цвета</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/configdialog.cpp" line="110"/>
+        <location filename="../src/configdialog/configdialog.cpp" line="95"/>
         <source>Scope</source>
         <translation>Осциллограф</translation>
     </message>
@@ -227,14 +210,12 @@
         <translation type="vanished">Экспорт Изображений с Цветами Экрана</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigFilePage.cpp" line="10"/>
         <source>Image width</source>
-        <translation>Ширина изображения</translation>
+        <translation type="vanished">Ширина изображения</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigFilePage.cpp" line="15"/>
         <source>Image height</source>
-        <translation>Высота изображения</translation>
+        <translation type="vanished">Высота изображения</translation>
     </message>
     <message>
         <source>Export images with screen colors</source>
@@ -249,29 +230,24 @@
         <translation type="vanished">Делать снимок экрана только в области отображения</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigFilePage.cpp" line="7"/>
         <source>Export zoomed screen in double height</source>
-        <translation>Экспорт увеличенного экрана с двойной высотой</translation>
+        <translation type="vanished">Экспорт увеличенного экрана с двойной высотой</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigFilePage.cpp" line="28"/>
         <source>Export</source>
-        <translation>Экспорт</translation>
+        <translation type="vanished">Экспорт</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigFilePage.cpp" line="32"/>
         <source>Save default settings on exit</source>
-        <translation>Сохранить настройки по умолчанию при выходе</translation>
+        <translation type="vanished">Сохранить настройки по умолчанию при выходе</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigFilePage.cpp" line="34"/>
         <source>Save default settings now</source>
-        <translation>Сохранить настройки по умолчанию</translation>
+        <translation type="vanished">Сохранить настройки по умолчанию</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigFilePage.cpp" line="40"/>
         <source>Configuration</source>
-        <translation>Конфигурация</translation>
+        <translation type="vanished">Конфигурация</translation>
     </message>
 </context>
 <context>
@@ -291,50 +267,190 @@
         <translation type="obsolete">Время/Деление</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="11"/>
         <source>Set slowest possible timebase
 (GUI may become very unresponsible!)</source>
-        <translation type="unfinished"></translation>
+        <translation type="vanished">Установите самую медленную временную базу
+(GUI может стать очень медленным!)</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="22"/>
+        <source>Minimal time between captured frames
+(Longer times reduce the CPU load)</source>
+        <translation type="vanished">Минимальное время между захваченными кадрами
+(Дольше времени снижает нагрузку на процессор)</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="11"/>
+        <source>Set slowest possible timebase&lt;br/&gt;(&lt;b&gt;GUI may become very unresponsible!&lt;/b&gt;)</source>
+        <translation>Установите самую медленную временную базу&lt;br/&gt;(&lt;b&gt;GUI может стать очень медленным!&lt;/b&gt;)</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="19"/>
+        <source>Minimal time between captured frames&lt;br/&gt;(Longer times reduce the CPU load)</source>
+        <translation>Минимальное время между захваченными кадрами&lt;br/&gt;(Дольше времени снижает нагрузку на процессор)</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="32"/>
         <source>Horizontal</source>
-        <translation type="unfinished">Развёртка</translation>
+        <translation>Развёртка</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="25"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="35"/>
         <source>Interpolation</source>
         <translation>Интерполяция</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="29"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="39"/>
         <source>Digital phosphor depth</source>
         <translation>Глубина цифрового люминофора</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="41"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="51"/>
         <source>Graph</source>
         <translation>График</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="44"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="54"/>
         <source>Position</source>
         <translation>Положение</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="46"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="56"/>
         <source>Left</source>
         <translation>Слева</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="47"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="57"/>
         <source>Right</source>
         <translation>Справа</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="54"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="64"/>
         <source>Cursors</source>
         <translation>Курсоры</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="68"/>
+        <source>Export zoomed screen in double height</source>
+        <translation>Экспорт увеличенного экрана с двойной высотой</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="73"/>
+        <source>Export</source>
+        <translation>Экспорт</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="77"/>
+        <source>Save default settings on exit</source>
+        <translation>Сохранить настройки по умолчанию при выходе</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="79"/>
+        <source>Save default settings now</source>
+        <translation>Сохранить настройки по умолчанию</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="85"/>
+        <source>Configuration</source>
+        <translation>Конфигурация</translation>
+    </message>
+</context>
+<context>
+    <name>DsoConfigSpectrumPage</name>
+    <message>
+        <location filename="../src/configdialog/DsoConfigSpectrumPage.cpp" line="8"/>
+        <source>Rectangular</source>
+        <translation>Прямоугольное</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigSpectrumPage.cpp" line="8"/>
+        <source>Hamming</source>
+        <translation>Хэмминга</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigSpectrumPage.cpp" line="8"/>
+        <source>Hann</source>
+        <translation>Ханна</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigSpectrumPage.cpp" line="8"/>
+        <source>Cosine</source>
+        <translation>Косинус</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigSpectrumPage.cpp" line="8"/>
+        <source>Lanczos</source>
+        <translation>Ланцоша</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigSpectrumPage.cpp" line="9"/>
+        <source>Bartlett</source>
+        <translation>Барлетта</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigSpectrumPage.cpp" line="9"/>
+        <source>Triangular</source>
+        <translation>Треугольное</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigSpectrumPage.cpp" line="9"/>
+        <source>Gauss</source>
+        <translation>Гаусса</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigSpectrumPage.cpp" line="9"/>
+        <source>Bartlett-Hann</source>
+        <translation>Барлетта-Ханна</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigSpectrumPage.cpp" line="10"/>
+        <source>Blackman</source>
+        <translation>Блэкмана</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigSpectrumPage.cpp" line="12"/>
+        <source>Nuttall</source>
+        <translation>Наталла</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigSpectrumPage.cpp" line="12"/>
+        <source>Blackman-Harris</source>
+        <translation>Блэкмана-Харриса</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigSpectrumPage.cpp" line="12"/>
+        <source>Blackman-Nuttall</source>
+        <translation>Блэкмана-Наталла</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigSpectrumPage.cpp" line="12"/>
+        <source>Flat top</source>
+        <translation>С плоской вершиной</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigSpectrumPage.cpp" line="15"/>
+        <source>&lt;b&gt;Window function&lt;/b&gt;</source>
+        <translation>&lt;b&gt;Окно функции&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigSpectrumPage.cpp" line="21"/>
+        <source>&lt;b&gt;Reference level&lt;/b&gt;&lt;br/&gt;0 dBu = -2.2 dBV&lt;br/&gt;0 dBm (@600 &amp;Omega;) = -2.2 dBV&lt;br/&gt;0 dBm (@50 &amp;Omega;) = -13 dBV</source>
+        <translation>&lt;b&gt;Опорный уровень&lt;/b&gt;&lt;br/&gt;0 дБн = -2.2 дБВ&lt;br/&gt;0 дБм (@600 &amp;Omega;) = -2.2 дБВ&lt;br/&gt;0 дБм (@50 &amp;Omega;) = -13 дБВ</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigSpectrumPage.cpp" line="27"/>
+        <location filename="../src/configdialog/DsoConfigSpectrumPage.cpp" line="38"/>
+        <source>dBV</source>
+        <translation>дБВ</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigSpectrumPage.cpp" line="32"/>
+        <source>&lt;b&gt;Minimum magnitude&lt;/b&gt;</source>
+        <translation>&lt;b&gt;Минимальная величина&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigSpectrumPage.cpp" line="51"/>
+        <source>Spectrum</source>
+        <translation>Спектр</translation>
     </message>
 </context>
 <context>
@@ -479,13 +595,15 @@
         <location filename="../src/glscope.cpp" line="298"/>
         <source>Failed to compile OpenGL shader programs.
 </source>
-        <translation>Не удалось скомпилировать шейдерные программы OpenGL.\n</translation>
+        <translation>Не удалось скомпилировать шейдерные программы OpenGL.
+</translation>
     </message>
     <message>
         <location filename="../src/glscope.cpp" line="304"/>
         <source>Failed to link/bind OpenGL shader programs.
 </source>
-        <translation>Не удалось связать/привязать шейдерные программы OpenGL.\n</translation>
+        <translation>Не удалось связать/привязать шейдерные программы OpenGL.
+</translation>
     </message>
     <message>
         <location filename="../src/glscope.cpp" line="313"/>
@@ -496,7 +614,7 @@
 <context>
     <name>HantekDsoControl</name>
     <message>
-        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="358"/>
+        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="359"/>
         <source>Couldn&apos;t get calibration data from oscilloscope&apos;s EEPROM. Use a config file for calibration!</source>
         <translation>Не удалось получить данные калибровки из EEPROM осциллографа. Используйте файл конфигурации для калибровки!</translation>
     </message>

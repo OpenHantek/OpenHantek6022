@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: GPL-2.0+
 
-#include "DsoConfigAnalysisPage.h"
+#include "DsoConfigSpectrumPage.h"
 
-DsoConfigAnalysisPage::DsoConfigAnalysisPage( DsoSettings *settings, QWidget *parent ) : QWidget( parent ), settings( settings ) {
+DsoConfigSpectrumPage::DsoConfigSpectrumPage( DsoSettings *settings, QWidget *parent ) : QWidget( parent ), settings( settings ) {
     // Initialize lists for comboboxes
     QStringList windowFunctionStrings;
     windowFunctionStrings << tr( "Rectangular" ) << tr( "Hamming" ) << tr( "Hann" ) << tr( "Cosine" ) << tr( "Lanczos" )
@@ -59,7 +59,7 @@ DsoConfigAnalysisPage::DsoConfigAnalysisPage( DsoSettings *settings, QWidget *pa
 }
 
 /// \brief Saves the new settings.
-void DsoConfigAnalysisPage::saveSettings() {
+void DsoConfigSpectrumPage::saveSettings() {
     settings->post.spectrumWindow = Dso::WindowFunction( windowFunctionComboBox->currentIndex() );
     settings->post.spectrumReference = referenceLevelSpinBox->value();
     settings->post.spectrumLimit = minimumMagnitudeSpinBox->value();

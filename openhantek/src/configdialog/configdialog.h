@@ -2,10 +2,9 @@
 
 #include <QDialog>
 
-class DsoConfigAnalysisPage;
+class DsoConfigSpectrumPage;
 class DsoConfigScopePage;
 class DsoConfigColorsPage;
-class DsoConfigFilePage;
 class DsoSettings;
 
 class QHBoxLayout;
@@ -37,16 +36,15 @@ class DsoConfigDialog : public QDialog {
     DsoSettings *settings;
 
     QVBoxLayout *mainLayout;
-    QHBoxLayout *horizontalLayout;
+    QHBoxLayout *sectionsLayout;
     QHBoxLayout *buttonsLayout;
 
     QListWidget *contentsWidget;
     QStackedWidget *pagesWidget;
 
-    DsoConfigAnalysisPage *analysisPage;
-    DsoConfigColorsPage *colorsPage;
-    DsoConfigFilePage *filePage;
     DsoConfigScopePage *scopePage;
+    DsoConfigSpectrumPage *spectrumPage;
+    DsoConfigColorsPage *colorsPage;
 
     QPushButton *acceptButton, *applyButton, *rejectButton;
 };

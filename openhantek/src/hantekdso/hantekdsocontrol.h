@@ -89,69 +89,6 @@ class HantekDsoControl : public QObject {
     /// \brief Stops the device.
     void stopSampling();
 
-// Attic for no more used public procedures
-#if 0
-    /// \brief Gets the physical channel count for this oscilloscope.
-    /// \return The number of physical channels.
-    unsigned getChannelCount() const { return specification->channels; }
-
-    /// Return the read-only device control settings. Use the set- Methods to change
-    /// device settings.
-    const Dso::ControlSettings *getDeviceSettings() const { return &controlsettings; }
-
-    /// \brief Get available record lengths for this oscilloscope.
-    /// \return The number of physical channels, empty list for continuous.
-    const std::vector<unsigned> &getAvailableRecordLengths() const {
-        return controlsettings.samplerate.limits->recordLengths;
-    }
-
-    /// \brief Get minimum samplerate for this oscilloscope.
-    /// \return The minimum samplerate for the current configuration in S/s.
-    double getMinSamplerate() const {
-        //printf( "getMinSamplerate\n" );
-        return (double)specification->samplerate.single.base / specification->samplerate.single.maxDownsampler;
-    }
-
-    /// \brief Get maximum samplerate for this oscilloscope.
-    /// \return The maximum samplerate for the current configuration in S/s.
-    double getMaxSamplerate() const {
-        //printf( "channelCount %d\n", controlsettings.channelCount );
-        if (controlsettings.channelCount <= 1) {
-            return specification->samplerate.multi.max;
-        } else {
-            return specification->samplerate.single.max;
-        }
-    }
-
-    /// \brief Gets the speed of the connection.
-    /// \return The ::ConnectionSpeed of the USB connection.
-    int getConnectionSpeed() const {
-        ControlGetSpeed response;
-        int errorCode = device->controlRead(&response);
-        if (errorCode < 0) return errorCode;
-        return response.getSpeed();
-    }
-
-    /// \brief Gets the maximum size of one packet transmitted via bulk transfer.
-    /// \return The maximum packet size in bytes, negative libusb error code on error.
-    int getPacketSize() const {
-        const int s = getConnectionSpeed();
-        if (s == CONNECTION_FULLSPEED)
-            return 64;
-        else if (s == CONNECTION_HIGHSPEED)
-            return 512;
-        else if (s > CONNECTION_HIGHSPEED) {
-            qWarning() << "Unknown USB speed. Please correct source code in USBDevice::getPacketSize()";
-            throw new std::runtime_error("Unknown USB speed");
-        } else if (s < 0)
-            return s;
-        return 0;
-    }
-
-    /// Return the last sample set
-    const DSOsamples &getLastSamples() { return result; }
-#endif
-
   private:
     bool fastRate = true;
 
@@ -215,6 +152,7 @@ class HantekDsoControl : public QObject {
     const DSOModel *model;                          ///< The attached scope model
     const Dso::ControlSpecification *specification; ///< The specifications of the device
     Dso::ControlSettings controlsettings;           ///< The current settings of the device
+    const DsoSettingsScope *scope;                  ///< Global scope parameters and configuations
 
     // Results
     unsigned downsamplingNumber = 1; ///< Number of downsamples to reduce sample rate

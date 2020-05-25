@@ -308,23 +308,24 @@ Dso::ErrorCode HantekDsoControl::setTriggerOffset( double position ) {
 
 
 // Initialize the device with the current settings.
-void HantekDsoControl::applySettings( DsoSettingsScope *scope ) {
-    bool mathUsed = scope->anyUsed( specification->channels );
+void HantekDsoControl::applySettings( DsoSettingsScope *dsoSettingsScope ) {
+    scope = dsoSettingsScope;
+    bool mathUsed = dsoSettingsScope->anyUsed( specification->channels );
     for ( ChannelID channel = 0; channel < specification->channels; ++channel ) {
-        setProbe( channel, scope->voltage[ channel ].probeAttn );
-        setGain( channel, scope->gain( channel ) * DIVS_VOLTAGE );
-        setTriggerLevel( channel, scope->voltage[ channel ].trigger );
-        setChannelUsed( channel, mathUsed | scope->anyUsed( channel ) );
-        setChannelInverted( channel, scope->voltage[ channel ].inverted );
-        setCoupling( channel, Dso::Coupling( scope->voltage[ channel ].couplingOrMathIndex ) );
+        setProbe( channel, dsoSettingsScope->voltage[ channel ].probeAttn );
+        setGain( channel, dsoSettingsScope->gain( channel ) * DIVS_VOLTAGE );
+        setTriggerLevel( channel, dsoSettingsScope->voltage[ channel ].trigger );
+        setChannelUsed( channel, mathUsed | dsoSettingsScope->anyUsed( channel ) );
+        setChannelInverted( channel, dsoSettingsScope->voltage[ channel ].inverted );
+        setCoupling( channel, Dso::Coupling( dsoSettingsScope->voltage[ channel ].couplingOrMathIndex ) );
     }
 
-    setRecordTime( scope->horizontal.timebase * DIVS_TIME );
-    setCalFreq( scope->horizontal.calfreq );
-    setTriggerMode( scope->trigger.mode );
-    setTriggerOffset( scope->trigger.offset );
-    setTriggerSlope( scope->trigger.slope );
-    setTriggerSource( scope->trigger.source, scope->trigger.smooth );
+    setRecordTime( dsoSettingsScope->horizontal.timebase * DIVS_TIME );
+    setCalFreq( dsoSettingsScope->horizontal.calfreq );
+    setTriggerMode( dsoSettingsScope->trigger.mode );
+    setTriggerOffset( dsoSettingsScope->trigger.offset );
+    setTriggerSlope( dsoSettingsScope->trigger.slope );
+    setTriggerSource( dsoSettingsScope->trigger.source, dsoSettingsScope->trigger.smooth );
 }
 
 
@@ -726,13 +727,10 @@ void HantekDsoControl::updateInterval() {
     int sampleInterval = int( SAMPLESIZE_USED * 1000.0 / controlsettings.samplerate.current );
     // Slower update reduces CPU load but it worsens the triggering of rare events
     // Display can be filled at slower rate (not faster than displayInterval)
+    acquireInterval = int( 1000 * scope->horizontal.acquireInterval );
 #ifdef __arm__
-    // RPi: Not more often than every 10 ms
-    acquireInterval = 10;
     displayInterval = 20; // update display at least every 20 ms
 #else
-    // Not more often than every 1 ms
-    acquireInterval = 1;
     displayInterval = 10; // update display at least every 10 ms
 #endif
     if ( scopeDevice->isRealHW() )
@@ -793,7 +791,7 @@ void HantekDsoControl::stateMachine() {
         searchTriggerPosition();                            // detect trigger point
         triggered = provideTriggeredData();                 // present either free running or last triggered trace
     }
-    delayDisplay += acquireInterval;
+    delayDisplay += qMax( acquireInterval, 1 );
     // always run the display (slowly at t=displayInterval) to allow user interaction
     // ... but update immediately if new triggered data is available after untriggered
     // skip an even number of frames when slope == Dso::Slope::Both

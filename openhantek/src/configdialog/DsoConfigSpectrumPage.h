@@ -15,13 +15,13 @@
 #include <QVBoxLayout>
 
 ////////////////////////////////////////////////////////////////////////////////
-/// \class DsoConfigAnalysisPage                                   configpages.h
-/// \brief Config page for the data analysis.
-class DsoConfigAnalysisPage : public QWidget {
+/// \class DsoConfigSpectrumPage                                   configpages.h
+/// \brief Config page for the data spectral analysis.
+class DsoConfigSpectrumPage : public QWidget {
     Q_OBJECT
 
   public:
-    DsoConfigAnalysisPage( DsoSettings *settings, QWidget *parent = nullptr );
+    DsoConfigSpectrumPage( DsoSettings *settings, QWidget *parent = nullptr );
 
   public slots:
     void saveSettings();
