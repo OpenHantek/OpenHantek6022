@@ -723,18 +723,25 @@ void HantekDsoControl::updateInterval() {
     // Check the current oscilloscope state everytime 25% of the time
     //  the buffer should be refilled (-> acquireInterval in ms)
     // Use real 100% rate for demo device
-    acquireInterval = int( SAMPLESIZE_USED * ( scopeDevice->isRealHW() ? 250.0 : 1000.0 ) / controlsettings.samplerate.current );
+    int sampleInterval = int( SAMPLESIZE_USED * 1000.0 / controlsettings.samplerate.current );
     // Slower update reduces CPU load but it worsens the triggering of rare events
     // Display can be filled at slower rate (not faster than displayInterval)
 #ifdef __arm__
-    // RPi: Not more often than every 10 ms but at least once every 100 ms
-    acquireInterval = qBound( 10, acquireInterval, 100 );
+    // RPi: Not more often than every 10 ms
+    acquireInterval = 10;
     displayInterval = 20; // update display at least every 20 ms
 #else
-    // Not more often than every 1 ms but at least once every 100 ms
-    acquireInterval = qBound( 1, acquireInterval, 100 );
+    // Not more often than every 1 ms
+    acquireInterval = 1;
     displayInterval = 10; // update display at least every 10 ms
 #endif
+    if ( scopeDevice->isRealHW() )
+        acquireDelay = qMax( 0, acquireInterval - sampleInterval );
+    else {
+        acquireDelay = qMax( sampleInterval, acquireInterval );
+    }
+    // qDebug() << sampleInterval << acquireInterval << acquireDelay;
+    acquireInterval = qMax( sampleInterval, acquireInterval );
 }
 
 
@@ -820,9 +827,9 @@ void HantekDsoControl::stateMachine() {
     }
     updateInterval(); // calculate new acquire timing
 #if ( QT_VERSION >= QT_VERSION_CHECK( 5, 4, 0 ) )
-    QTimer::singleShot( acquireInterval, this, &HantekDsoControl::stateMachine );
+    QTimer::singleShot( acquireDelay, this, &HantekDsoControl::stateMachine );
 #else
-    QTimer::singleShot( acquireInterval, this, SLOT( stateMachine() ) );
+    QTimer::singleShot( acquireDelay, this, SLOT( stateMachine() ) );
 #endif
 }
 

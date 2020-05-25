@@ -222,6 +222,7 @@ class HantekDsoControl : public QObject {
     unsigned expectedSampleCount = 0; ///< The expected total number of samples at
                                       /// the last check before sampling started
     bool samplingStarted = false;
+    int acquireDelay = 0;
     int acquireInterval = 0;
     int displayInterval = 0;
     bool channelSetupChanged = false;
