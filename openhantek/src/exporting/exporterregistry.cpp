@@ -22,14 +22,14 @@ bool ExporterRegistry::processData( std::shared_ptr< PPresult > &data, ExporterI
 }
 
 void ExporterRegistry::addRawSamples( PPresult *d ) {
-    if ( settings->exporting.useProcessedSamples )
+    if ( settings->exportProcessedSamples )
         return;
     std::shared_ptr< PPresult > data( d );
     enabledExporters.remove_if( [&data, this]( ExporterInterface *const &i ) { return processData( data, i ); } );
 }
 
 void ExporterRegistry::input( std::shared_ptr< PPresult > data ) {
-    if ( !settings->exporting.useProcessedSamples )
+    if ( !settings->exportProcessedSamples )
         return;
     enabledExporters.remove_if( [&data, this]( ExporterInterface *const &i ) { return processData( data, i ); } );
 }

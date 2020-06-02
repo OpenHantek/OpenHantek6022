@@ -74,13 +74,16 @@ DsoConfigScopePage::DsoConfigScopePage( DsoSettings *settings, QWidget *parent )
     exportGroup->setLayout( exportLayout );
 
     // Configuration group
-    saveOnExitCheckBox = new QCheckBox( tr( "Save default settings on exit" ) );
+    saveOnExitCheckBox = new QCheckBox( tr( "Save settings on exit" ) );
     saveOnExitCheckBox->setChecked( settings->alwaysSave );
-    saveNowButton = new QPushButton( tr( "Save default settings now" ) );
+    defaultSettingsCheckBox = new QCheckBox( tr( "Apply default settings after next restart" ) );
+    defaultSettingsCheckBox->setChecked( 0 == settings->configVersion );
+    saveNowButton = new QPushButton( tr( "Save settings now" ) );
 
     configurationLayout = new QVBoxLayout();
     configurationLayout->addWidget( saveOnExitCheckBox, 0 );
-    configurationLayout->addWidget( saveNowButton, 1 );
+    configurationLayout->addWidget( defaultSettingsCheckBox, 1 );
+    configurationLayout->addWidget( saveNowButton, 2 );
 
     configurationGroup = new QGroupBox( tr( "Configuration" ) );
     configurationGroup->setLayout( configurationLayout );
@@ -106,5 +109,7 @@ void DsoConfigScopePage::saveSettings() {
     settings->view.digitalPhosphorDepth = unsigned( digitalPhosphorDepthSpinBox->value() );
     settings->view.cursorGridPosition = Qt::ToolBarArea( cursorsComboBox->currentData().toUInt() );
     settings->alwaysSave = saveOnExitCheckBox->isChecked();
+    if ( defaultSettingsCheckBox->isChecked() )
+        settings->configVersion = 0;
     settings->view.zoomImage = zoomImageCheckBox->isChecked();
 }

@@ -46,6 +46,8 @@ QString triggerModeString( TriggerMode mode ) {
         return QCoreApplication::tr( "Auto" );
     case TriggerMode::NORMAL:
         return QCoreApplication::tr( "Normal" );
+    case TriggerMode::NONE:
+        return QCoreApplication::tr( "None" );
     case TriggerMode::SINGLE:
         return QCoreApplication::tr( "Single" );
     }

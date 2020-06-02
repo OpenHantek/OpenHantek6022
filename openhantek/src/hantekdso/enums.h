@@ -35,6 +35,7 @@ enum class Coupling {
 enum class TriggerMode {
     AUTO,   ///< Automatic without trigger event
     NORMAL, ///< Normal hardware trigger (or software trigger) mode
+    NONE,   ///< Free running without any trigger
     SINGLE  ///< Stop after the first trigger event
 };          // <class T, T first, T last>
 extern Enum< Dso::TriggerMode, Dso::TriggerMode::AUTO, Dso::TriggerMode::SINGLE > TriggerModeEnum;

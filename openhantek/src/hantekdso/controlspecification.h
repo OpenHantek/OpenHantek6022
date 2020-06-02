@@ -63,7 +63,7 @@ struct ControlSpecification {
 
     // Features
     std::vector< Coupling > couplings = {Dso::Coupling::DC, Dso::Coupling::AC};
-    std::vector< TriggerMode > triggerModes = {TriggerMode::AUTO, TriggerMode::NORMAL, TriggerMode::SINGLE};
+    std::vector< TriggerMode > triggerModes = {TriggerMode::NONE, TriggerMode::AUTO, TriggerMode::NORMAL, TriggerMode::SINGLE};
     int fixedUSBinLength = 0;
 
     QList< double > calfreqSteps;

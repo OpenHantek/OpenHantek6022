@@ -61,7 +61,6 @@ struct ControlSettings {
     ControlSettingsTrigger trigger;                ///< The trigger settings
     RecordLengthID recordLengthId = 1;             ///< The id in the record length array
     unsigned channelCount = 0;                     ///< Number of activated channels
-    unsigned swSampleMargin = 2000;                ///< Software trigger, sample margin
     Hantek::CalibrationValues *calibrationValues;  ///< Calibration data for the channel offsets & gains
     Hantek::ControlGetLimits cmdGetLimits;
 };

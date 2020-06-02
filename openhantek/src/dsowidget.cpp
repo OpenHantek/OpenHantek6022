@@ -607,9 +607,15 @@ void DsoWidget::updateTriggerDetails() {
         int dutyCyle = int( 0.5 + ( 100.0 * pulseWidth1 ) / ( pulseWidth1 + pulseWidth2 ) );
         pulseWidthString += " (" + QString::number( dutyCyle ) + "%)";
     }
-    settingsTriggerLabel->setText( tr( "%1  %2  %3  %4  %5" )
-                                       .arg( scope->voltage[ scope->trigger.source ].name, Dso::slopeString( scope->trigger.slope ),
-                                             levelString, pretriggerString, pulseWidthString ) );
+    if ( scope->trigger.mode != Dso::TriggerMode::NONE )
+        settingsTriggerLabel->setText( tr( "%1  %2  %3  %4  %5" )
+                                           .arg( scope->voltage[ scope->trigger.source ].name,
+                                                 Dso::slopeString( scope->trigger.slope ), levelString, pretriggerString,
+                                                 pulseWidthString ) );
+    else {
+        // printf( "NONE %u\n", tag );
+        settingsTriggerLabel->setText( QString( "" ) );
+    }
 }
 
 /// \brief Update the label about the trigger settings

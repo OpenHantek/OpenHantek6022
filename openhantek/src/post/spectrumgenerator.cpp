@@ -29,7 +29,7 @@ void SpectrumGenerator::process( PPresult *result ) {
     // Calculate frequencies and spectrums
 
     for ( ChannelID channel = 0; channel < result->channelCount(); ++channel ) {
-        DataChannel *const channelData = result->modifyData( channel );
+        DataChannel *const channelData = result->modifiableData( channel );
 
         if ( channelData->voltage.sample.empty() ) {
             // Clear unused channels

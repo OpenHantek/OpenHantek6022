@@ -37,12 +37,12 @@ class PPresult {
   public:
     explicit PPresult( unsigned int channelCount );
 
-    /// \brief Returns the analyzed data.
+    /// \brief Returns the analyzed data (RO).
     /// \param channel Channel, whose data should be returned.
     const DataChannel *data( ChannelID channel ) const;
-    /// \brief Returns the analyzed data. The data structure can be modifed.
+    /// \brief Returns the analyzed data (RW). The data structure can be modifed.
     /// \param channel Channel, whose data should be returned.
-    DataChannel *modifyData( ChannelID channel );
+    DataChannel *modifiableData( ChannelID channel );
     /// \return The maximum sample count of the last analyzed data. This assumes there is at least one channel.
     unsigned int sampleCount() const;
     unsigned int channelCount() const;
@@ -53,6 +53,7 @@ class PPresult {
     unsigned triggeredPosition = 0; ///< Not triggered
     double pulseWidth1 = 0.0;       ///< The width of the triggered pulse
     double pulseWidth2 = 0.0;       ///< The width of the following pulse
+    unsigned tag;                   ///< track individual sample blocks (debug support)
 
     ChannelsGraphs vaChannelSpectrum;
     ChannelsGraphs vaChannelVoltage;

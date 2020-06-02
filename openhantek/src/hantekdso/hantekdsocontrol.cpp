@@ -98,10 +98,7 @@ Dso::ErrorCode HantekDsoControl::setSamplerate( double samplerate ) {
     controlsettings.samplerate.current = samplerate;
     setDownsampling( specification->fixedSampleRates[ sampleId ].downsampling );
     channelSetupChanged = true; // skip next raw samples block to avoid artefacts
-    // Check for Roll mode
-    emit recordTimeChanged( double( getRecordLength() - controlsettings.swSampleMargin ) / controlsettings.samplerate.current );
     emit samplerateChanged( controlsettings.samplerate.current );
-
     return Dso::ErrorCode::NONE;
 }
 
@@ -124,7 +121,7 @@ Dso::ErrorCode HantekDsoControl::setRecordTime( double duration ) {
         srLimit = ( specification->samplerate.single ).max;
     else
         srLimit = ( specification->samplerate.multi ).max;
-    // For now - we go for the SAMPLESIZE_USED (= 20000) size sampling, defined in model6022.h
+    // For now - we go for the SAMPLESIZE_USED (= 20000) size sampling, defined in hantekdsocontrol.h
     // Find highest samplerate using less equal half of these samples to obtain our duration.
     unsigned sampleId = 0;
     for ( unsigned id = 0; id < specification->fixedSampleRates.size(); ++id ) {
@@ -338,7 +335,7 @@ void HantekDsoControl::enableSampling( bool enabled ) {
 
 
 unsigned HantekDsoControl::getRecordLength() const {
-    unsigned rawsize = SAMPLESIZE_USED;
+    unsigned rawsize = getSamplesize();
     rawsize *= this->downsamplingNumber;                // take more samples
     rawsize = ( ( rawsize + 1024 ) / 1024 + 2 ) * 1024; // adjust for skipping of minimal 2048 leading samples
     // printf( "getRecordLength: %d\n", rawsize );
@@ -488,12 +485,14 @@ void HantekDsoControl::convertRawDataToSamples( const std::vector< unsigned char
 
     const unsigned rawSampleCount = unsigned( rawData.size() ) / activeChannels;
     // TODO: is this needed? rawSampleCount should always be > SAMPLESIZE_USED (=20000)
-    const unsigned sampleCount = ( rawSampleCount > 1024 ) ? ( ( rawSampleCount - 1024 ) / 1000 - 1 ) * 1000 : rawSampleCount;
-    const unsigned rawDownsampling = sampleCount / SAMPLESIZE_USED;
+    // const unsigned sampleCount = ( rawSampleCount > 1024 ) ? ( ( rawSampleCount - 1024 ) / 1000 - 1 ) * 1000 : rawSampleCount;
+    const unsigned sampleCount = ( ( rawSampleCount - 1024 ) / 1000 - 1 ) * 1000;
+    const unsigned rawDownsampling = sampleCount / getSamplesize();
     // qDebug() << "HDC::cRDTS rawSampleCount sampleCount:" << rawSampleCount << sampleCount;
     const unsigned skipSamples = rawSampleCount - sampleCount;
 
     QWriteLocker locker( &result.lock );
+    result.tag++;
     result.samplerate = controlsettings.samplerate.current;
     // Prepare result buffers
     result.data.resize( specification->channels );
@@ -724,7 +723,7 @@ void HantekDsoControl::updateInterval() {
     // Check the current oscilloscope state everytime 25% of the time
     //  the buffer should be refilled (-> acquireInterval in ms)
     // Use real 100% rate for demo device
-    int sampleInterval = int( SAMPLESIZE_USED * 1000.0 / controlsettings.samplerate.current );
+    int sampleInterval = int( getSamplesize() * 1000.0 / controlsettings.samplerate.current );
     // Slower update reduces CPU load but it worsens the triggering of rare events
     // Display can be filled at slower rate (not faster than displayInterval)
     acquireInterval = int( 1000 * scope->horizontal.acquireInterval );
@@ -733,11 +732,7 @@ void HantekDsoControl::updateInterval() {
 #else
     displayInterval = 10; // update display at least every 10 ms
 #endif
-    if ( scopeDevice->isRealHW() )
-        acquireDelay = qMax( 0, acquireInterval - sampleInterval );
-    else {
-        acquireDelay = qMax( sampleInterval, acquireInterval );
-    }
+    acquireDelay = qMax( 0, acquireInterval - sampleInterval );
     // qDebug() << sampleInterval << acquireInterval << acquireDelay;
     acquireInterval = qMax( sampleInterval, acquireInterval );
 }
@@ -782,14 +777,22 @@ void HantekDsoControl::stateMachine() {
 
     bool triggered = false;
     std::vector< unsigned char > rawData;
-    if ( scopeDevice->isRealHW() )
+    if ( scopeDevice->isRealHW() ) {
         rawData = this->getSamples( expectedSampleCount );
-    else
+    } else {
+        // QThread::msleep( unsigned( sampleDelay ) );
         rawData = this->getDemoSamples( expectedSampleCount );
+        QThread::msleep( unsigned( getSamplesize() * 1000.0 / controlsettings.samplerate.current ) );
+    }
     if ( samplingStarted ) {
-        convertRawDataToSamples( rawData, activeChannels ); // process new samples
-        searchTriggerPosition();                            // detect trigger point
-        triggered = provideTriggeredData();                 // present either free running or last triggered trace
+        convertRawDataToSamples( rawData, activeChannels );             // process new samples
+        if ( controlsettings.trigger.mode != Dso::TriggerMode::NONE ) { // search trigger
+            searchTriggerPosition();                                    // detect trigger point
+            triggered = provideTriggeredData();                         // present either free running or last triggered trace
+        } else { // free running display (uses half sample size -> double display speed for slow sample rates)
+            triggered = false;
+            result.triggerPosition = 0;
+        }
     }
     delayDisplay += qMax( acquireInterval, 1 );
     // always run the display (slowly at t=displayInterval) to allow user interaction
@@ -801,8 +804,8 @@ void HantekDsoControl::stateMachine() {
                    || skipEven ) ) )                                     // and drop even no. of frames
     {
         delayDisplay = 0;
-        skipEven = true; // zero frames -> even
-        emit samplesAvailable( &result );
+        skipEven = true;                  // zero frames -> even
+        emit samplesAvailable( &result ); // via signal/slot -> PostProcessing::input()
     } else {
         skipEven = !skipEven;
     }

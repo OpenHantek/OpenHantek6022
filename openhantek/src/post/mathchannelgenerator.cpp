@@ -18,7 +18,7 @@ void MathChannelGenerator::process( PPresult *result ) {
     if ( !scope->voltage[ physicalChannels ].used && !scope->spectrum[ physicalChannels ].used )
         return;
 
-    DataChannel *const channelData = result->modifyData( physicalChannels );
+    DataChannel *const channelData = result->modifiableData( physicalChannels );
     std::vector< double > &resultData = channelData->voltage.sample;
 
     const double sign = scope->voltage[ physicalChannels ].inverted ? -1.0 : 1.0;

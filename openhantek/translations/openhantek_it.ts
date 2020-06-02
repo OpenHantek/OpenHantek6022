@@ -198,16 +198,33 @@
     </message>
     <message>
         <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="77"/>
-        <source>Save default settings on exit</source>
-        <translation>Salvare le impostazioni predefinite all&apos;uscita</translation>
+        <source>Save settings on exit</source>
+        <translation>Salvare le impostazioni all&apos;uscita</translation>
     </message>
     <message>
         <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="79"/>
-        <source>Save default settings now</source>
-        <translation>Salvare ora le impostazioni predefinite</translation>
+        <source>Apply default settings after next restart</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="85"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="81"/>
+        <source>Save settings now</source>
+        <translation>Salvare ora le impostazioni</translation>
+    </message>
+    <message>
+        <source>Save default settings on exit</source>
+        <translation type="vanished">Salvare le impostazioni predefinite all&apos;uscita</translation>
+    </message>
+    <message>
+        <source>Apply default settings after restart</source>
+        <translation type="vanished">Applicare le impostazioni predefinite dopo il riavvio</translation>
+    </message>
+    <message>
+        <source>Save default settings now</source>
+        <translation type="vanished">Salvare ora le impostazioni predefinite</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="88"/>
         <source>Configuration</source>
         <translation>Configurazione</translation>
     </message>
@@ -350,9 +367,9 @@
         <location filename="../src/dsowidget.cpp" line="552"/>
         <location filename="../src/dsowidget.cpp" line="554"/>
         <location filename="../src/dsowidget.cpp" line="585"/>
-        <location filename="../src/dsowidget.cpp" line="623"/>
-        <location filename="../src/dsowidget.cpp" line="631"/>
-        <location filename="../src/dsowidget.cpp" line="650"/>
+        <location filename="../src/dsowidget.cpp" line="629"/>
+        <location filename="../src/dsowidget.cpp" line="637"/>
+        <location filename="../src/dsowidget.cpp" line="656"/>
         <source>/div</source>
         <translation type="unfinished"></translation>
     </message>
@@ -399,27 +416,27 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="610"/>
+        <location filename="../src/dsowidget.cpp" line="611"/>
         <source>%1  %2  %3  %4  %5</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="641"/>
+        <location filename="../src/dsowidget.cpp" line="647"/>
         <source>/s</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="741"/>
+        <location filename="../src/dsowidget.cpp" line="747"/>
         <source> on screen</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="787"/>
+        <location filename="../src/dsowidget.cpp" line="793"/>
         <source>pp</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="790"/>
+        <location filename="../src/dsowidget.cpp" line="796"/>
         <source>rms</source>
         <translation type="unfinished"></translation>
     </message>
@@ -470,7 +487,7 @@
 <context>
     <name>HantekDsoControl</name>
     <message>
-        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="359"/>
+        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="356"/>
         <source>Couldn&apos;t get calibration data from oscilloscope&apos;s EEPROM. Use a config file for calibration!</source>
         <translation>Impossibile ottenere i dati di calibrazione dall&apos;EEPROM dell&apos;oscilloscopio. Utilizzare un file di configurazione per la calibrazione!</translation>
     </message>
@@ -1129,6 +1146,11 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../src/hantekdso/enums.cpp" line="50"/>
+        <source>None</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../src/hantekdso/enums.cpp" line="46"/>
         <source>Auto</source>
         <translation type="unfinished"></translation>
@@ -1139,7 +1161,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/enums.cpp" line="50"/>
+        <location filename="../src/hantekdso/enums.cpp" line="52"/>
         <source>Single</source>
         <translation type="unfinished"></translation>
     </message>

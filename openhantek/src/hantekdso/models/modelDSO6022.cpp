@@ -20,7 +20,7 @@ static void initSpecifications( Dso::ControlSpecification &specification ) {
     // we drop 2K + 480 sample values due to unreliable start of stream
     // 20000 samples at 100kS/s = 200 ms gives enough to fill
     // the screen two times (for pre/post trigger) at 10ms/div = 100ms/screen
-    // SAMPLESIZE defined in modelDSO6022.h
+    // SAMPLESIZE defined in hantekdsocontrol.h
     // adapt accordingly in HantekDsoControl::convertRawDataToSamples()
 
     // Define the scaling between ADC sample values and real input voltage
@@ -45,7 +45,18 @@ static void initSpecifications( Dso::ControlSpecification &specification ) {
     const char *channels[] = {"ch0", "ch1"};
     // printf( "read config file\n" );
     const unsigned RANGES = 8;
-    QSettings settings( QDir::homePath() + "/.config/OpenHantek/modelDSO6022.conf", QSettings::IniFormat );
+
+    // rename the previous *.conf to *.ini to use the ini file search also for Windows
+    QString calFileName = QDir::homePath() + "/.config/OpenHantek/modelDSO6022";
+    QFile calFile( calFileName + ".conf" );
+    if ( calFile.exists() ) {
+        calFileName += ".ini";
+        calFile.rename( calFileName );
+    }
+    QSettings::setDefaultFormat( QSettings::IniFormat );
+    QSettings settings( "OpenHantek", "modelDSO6022" );
+    // Linux, Unix, macOS: "$HOME/.config/OpenHantek/modelDSO6022.ini"
+    // Windows: "%APPDATA%\OpenHantek\modelDSO6022.ini"
 
     settings.beginGroup( "gain" );
     for ( unsigned ch = 0; ch < 2; ch++ ) {
@@ -73,6 +84,7 @@ static void initSpecifications( Dso::ControlSpecification &specification ) {
         settings.endGroup(); // channels
     }
     settings.endGroup(); // offset
+    QSettings::setDefaultFormat( QSettings::NativeFormat );
 
     // HW gain, voltage steps in V/screenheight (ranges 20,50,100,200,500,1000,2000,5000 mV)
     specification.gain = {{10, 0.16}, {10, 0.40}, {10, 0.80}, {5, 1.60}, {2, 4.00}, {1, 8.00}, {1, 16.00}, {1, 40.00}};
@@ -119,7 +131,12 @@ static void initSpecifications( Dso::ControlSpecification &specification ) {
 #else
     specification.couplings = {Dso::Coupling::DC};
 #endif
-    specification.triggerModes = {Dso::TriggerMode::AUTO, Dso::TriggerMode::NORMAL, Dso::TriggerMode::SINGLE};
+    specification.triggerModes = {
+        Dso::TriggerMode::AUTO,
+        Dso::TriggerMode::NORMAL,
+        Dso::TriggerMode::NONE,
+        Dso::TriggerMode::SINGLE,
+    };
     specification.fixedUSBinLength = 0;
 
     // calibration frequency (requires >FW0206)

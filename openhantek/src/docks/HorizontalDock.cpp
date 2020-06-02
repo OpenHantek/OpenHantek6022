@@ -238,17 +238,18 @@ void HorizontalDock::calculateSamplerateSteps( double timebase ) {
             // printf( "sRate %g, sRate*timebase %g\n", sRate, sRate * timebase );
             // min must be < maxRate
             // find minimal samplerate to get at least this number of samples per div
-            if ( id < size - 1 && sRate * timebase <= 10 ) {
+            if ( id < size - 1 && sRate * timebase <= 10 ) { // 10 samples/div
                 min = sRate;
             }
             // max must be > minRate
             // find max samplesrate to get not more then this number of samples per div
             // number should be <= 1000 to get enough samples for two full screens (to ensure triggering)
-            if ( id && sRate * timebase <= 1000 ) {
+            if ( id && sRate * timebase <= 1000 ) { // 1000 samples/div
                 max = sRate;
             }
         }
-        // printf( "cSS limits: %g, %g\n", min, max );
+        min = qMax( min, qMin( 10e3, max ) ); // not less than 10kS unless max is smaller
+        // printf( "HD::cSS( %g )  -> %g, %g\n", timebase, min, max );
         setSamplerateLimits( min, max );
     }
 }

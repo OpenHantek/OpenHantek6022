@@ -29,19 +29,20 @@ void PostProcessing::convertData( const DSOsamples *source, PPresult *destinatio
         if ( rawChannelData.empty() ) {
             continue;
         }
-        DataChannel *const channelData = destination->modifyData( channel );
+        DataChannel *const channelData = destination->modifiableData( channel );
         channelData->voltage.interval = 1.0 / source->samplerate;
         channelData->voltage.sample = rawChannelData;
         // printf( "PP CH%d: %d\n", channel+1, source->clipped );
         channelData->valid = !( source->clipped & ( 0x01 << channel ) );
     }
+    destination->tag = source->tag;
 }
 
 void PostProcessing::input( const DSOsamples *data ) {
     // printf( "PostProcessing::input()\n" );
-    currentData.reset( new PPresult( channelCount ) );
-    convertData( data, currentData.get() );
-    for ( Processor *p : processors )
+    currentData.reset( new PPresult( channelCount ) ); // start with a fresh data structure
+    convertData( data, currentData.get() );            // copy all relevant data over
+    for ( Processor *p : processors )                  // feed it into the PP chain
         p->process( currentData.get() );
     std::shared_ptr< PPresult > res = std::move( currentData );
     emit processingFinished( res );

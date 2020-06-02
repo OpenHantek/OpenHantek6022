@@ -58,325 +58,331 @@ bool DsoSettings::setFilename( const QString &filename ) {
         qWarning() << "Could not change the settings file to " << filename;
         return false;
     }
-    store.swap( local );
+    storeSettings.swap( local );
     return true;
 }
 
 
 void DsoSettings::load() {
-    // General options
-    store->beginGroup( "options" );
-    if ( store->contains( "alwaysSave" ) )
-        alwaysSave = store->value( "alwaysSave" ).toBool();
-    store->endGroup();
+    // Start with default configuration?
+    if ( storeSettings->value( "configuration/version", 0 ).toUInt() < CONFIG_VERSION ) {
+        // incompatible change or config reset by user
+        storeSettings->clear(); // start with a clean config storage
+        setDefaultConfig();
+        return;
+    }
 
-    store->beginGroup( "exporting" );
-    if ( store->contains( "imageSize" ) )
-        exporting.imageSize = store->value( "imageSize" ).toSize();
-    store->endGroup();
+    alwaysSave = storeSettings->value( "configuration/alwaysSave", alwaysSave ).toBool();
 
     // Oscilloscope settings
-    store->beginGroup( "scope" );
+    storeSettings->beginGroup( "scope" );
     // Horizontal axis
-    store->beginGroup( "horizontal" );
-    if ( store->contains( "format" ) )
-        scope.horizontal.format = Dso::GraphFormat( store->value( "format" ).toInt() );
-    if ( store->contains( "frequencybase" ) )
-        scope.horizontal.frequencybase = store->value( "frequencybase" ).toDouble();
+    storeSettings->beginGroup( "horizontal" );
+    if ( storeSettings->contains( "format" ) )
+        scope.horizontal.format = Dso::GraphFormat( storeSettings->value( "format" ).toInt() );
+    if ( storeSettings->contains( "frequencybase" ) )
+        scope.horizontal.frequencybase = storeSettings->value( "frequencybase" ).toDouble();
     for ( int marker = 0; marker < MARKER_COUNT; ++marker ) {
         QString name;
         name = QString( "marker%1" ).arg( marker );
-        if ( store->contains( name ) )
-            scope.setMarker( unsigned( marker ), store->value( name ).toDouble() );
+        if ( storeSettings->contains( name ) )
+            scope.setMarker( unsigned( marker ), storeSettings->value( name ).toDouble() );
     }
-    if ( store->contains( "timebase" ) )
-        scope.horizontal.timebase = store->value( "timebase" ).toDouble();
-    if ( store->contains( "maxTimebase" ) )
-        scope.horizontal.maxTimebase = store->value( "maxTimebase" ).toDouble();
-    if ( store->contains( "acquireInterval" ) )
-        scope.horizontal.acquireInterval = store->value( "acquireInterval" ).toDouble();
-    if ( store->contains( "recordLength" ) )
-        scope.horizontal.recordLength = store->value( "recordLength" ).toUInt();
-    if ( store->contains( "samplerate" ) )
-        scope.horizontal.samplerate = store->value( "samplerate" ).toDouble();
-    if ( store->contains( "calfreq" ) )
-        scope.horizontal.calfreq = store->value( "calfreq" ).toDouble();
-    store->endGroup();
+    if ( storeSettings->contains( "timebase" ) )
+        scope.horizontal.timebase = storeSettings->value( "timebase" ).toDouble();
+    if ( storeSettings->contains( "maxTimebase" ) )
+        scope.horizontal.maxTimebase = storeSettings->value( "maxTimebase" ).toDouble();
+    if ( storeSettings->contains( "acquireInterval" ) )
+        scope.horizontal.acquireInterval = storeSettings->value( "acquireInterval" ).toDouble();
+    if ( storeSettings->contains( "recordLength" ) )
+        scope.horizontal.recordLength = storeSettings->value( "recordLength" ).toUInt();
+    if ( storeSettings->contains( "samplerate" ) )
+        scope.horizontal.samplerate = storeSettings->value( "samplerate" ).toDouble();
+    if ( storeSettings->contains( "calfreq" ) )
+        scope.horizontal.calfreq = storeSettings->value( "calfreq" ).toDouble();
+    storeSettings->endGroup(); // horizontal
     // Trigger
-    store->beginGroup( "trigger" );
-    if ( store->contains( "mode" ) )
-        scope.trigger.mode = Dso::TriggerMode( store->value( "mode" ).toUInt() );
-    if ( store->contains( "position" ) )
-        scope.trigger.offset = store->value( "position" ).toDouble();
-    if ( store->contains( "slope" ) )
-        scope.trigger.slope = Dso::Slope( store->value( "slope" ).toUInt() );
-    if ( store->contains( "source" ) )
-        scope.trigger.source = store->value( "source" ).toUInt();
-    store->endGroup();
+    storeSettings->beginGroup( "trigger" );
+    if ( storeSettings->contains( "mode" ) )
+        scope.trigger.mode = Dso::TriggerMode( storeSettings->value( "mode" ).toUInt() );
+    if ( storeSettings->contains( "position" ) )
+        scope.trigger.offset = storeSettings->value( "position" ).toDouble();
+    if ( storeSettings->contains( "slope" ) )
+        scope.trigger.slope = Dso::Slope( storeSettings->value( "slope" ).toUInt() );
+    if ( storeSettings->contains( "source" ) )
+        scope.trigger.source = storeSettings->value( "source" ).toUInt();
+    storeSettings->endGroup(); // trigger
     // Spectrum
     for ( ChannelID channel = 0; channel < scope.spectrum.size(); ++channel ) {
-        store->beginGroup( QString( "spectrum%1" ).arg( channel ) );
-        if ( store->contains( "magnitude" ) )
-            scope.spectrum[ channel ].magnitude = store->value( "magnitude" ).toDouble();
-        if ( store->contains( "offset" ) )
-            scope.spectrum[ channel ].offset = store->value( "offset" ).toDouble();
-        if ( store->contains( "used" ) )
-            scope.spectrum[ channel ].used = store->value( "used" ).toBool();
-        store->beginGroup( "cursor" );
-        if ( store->contains( "shape" ) )
-            scope.spectrum[ channel ].cursor.shape = DsoSettingsScopeCursor::CursorShape( store->value( "shape" ).toUInt() );
+        storeSettings->beginGroup( QString( "spectrum%1" ).arg( channel ) );
+        if ( storeSettings->contains( "magnitude" ) )
+            scope.spectrum[ channel ].magnitude = storeSettings->value( "magnitude" ).toDouble();
+        if ( storeSettings->contains( "offset" ) )
+            scope.spectrum[ channel ].offset = storeSettings->value( "offset" ).toDouble();
+        if ( storeSettings->contains( "used" ) )
+            scope.spectrum[ channel ].used = storeSettings->value( "used" ).toBool();
+        storeSettings->beginGroup( "cursor" );
+        if ( storeSettings->contains( "shape" ) )
+            scope.spectrum[ channel ].cursor.shape =
+                DsoSettingsScopeCursor::CursorShape( storeSettings->value( "shape" ).toUInt() );
         for ( int marker = 0; marker < MARKER_COUNT; ++marker ) {
             QString name;
             name = QString( "x%1" ).arg( marker );
-            if ( store->contains( name ) )
-                scope.spectrum[ channel ].cursor.pos[ marker ].setX( store->value( name ).toDouble() );
+            if ( storeSettings->contains( name ) )
+                scope.spectrum[ channel ].cursor.pos[ marker ].setX( storeSettings->value( name ).toDouble() );
             name = QString( "y%1" ).arg( marker );
-            if ( store->contains( name ) )
-                scope.spectrum[ channel ].cursor.pos[ marker ].setY( store->value( name ).toDouble() );
+            if ( storeSettings->contains( name ) )
+                scope.spectrum[ channel ].cursor.pos[ marker ].setY( storeSettings->value( name ).toDouble() );
         }
-        store->endGroup();
-        store->endGroup();
+        storeSettings->endGroup(); // cursor
+        storeSettings->endGroup(); // spectrum%1
     }
     // Voltage
     bool defaultConfig = deviceSpecification->isDemoDevice; // use default channel setting in demo mode
     for ( ChannelID channel = 0; channel < scope.voltage.size(); ++channel ) {
-        store->beginGroup( QString( "vertical%1" ).arg( channel ) );
-        if ( store->contains( "gainStepIndex" ) )
-            scope.voltage[ channel ].gainStepIndex = store->value( "gainStepIndex" ).toUInt();
-        if ( store->contains( "couplingOrMathIndex" ) ) {
-            scope.voltage[ channel ].couplingOrMathIndex = store->value( "couplingOrMathIndex" ).toUInt();
+        storeSettings->beginGroup( QString( "voltage%1" ).arg( channel ) );
+        if ( storeSettings->contains( "gainStepIndex" ) )
+            scope.voltage[ channel ].gainStepIndex = storeSettings->value( "gainStepIndex" ).toUInt();
+        if ( storeSettings->contains( "couplingOrMathIndex" ) ) {
+            scope.voltage[ channel ].couplingOrMathIndex = storeSettings->value( "couplingOrMathIndex" ).toUInt();
             if ( channel < deviceSpecification->channels )
                 if ( scope.voltage[ channel ].couplingOrMathIndex >= deviceSpecification->couplings.size() )
                     scope.voltage[ channel ].couplingOrMathIndex = 0; // set to default if out of range
         }
-        if ( store->contains( "inverted" ) )
-            scope.voltage[ channel ].inverted = store->value( "inverted" ).toBool();
-        if ( store->contains( "offset" ) )
-            scope.voltage[ channel ].offset = store->value( "offset" ).toDouble();
-        if ( store->contains( "trigger" ) )
-            scope.voltage[ channel ].trigger = store->value( "trigger" ).toDouble();
-        if ( store->contains( "probeAttn" ) )
-            scope.voltage[ channel ].probeAttn = store->value( "probeAttn" ).toDouble();
-        if ( store->contains( "used" ) )
-            scope.voltage[ channel ].used = store->value( "used" ).toBool();
+        if ( storeSettings->contains( "inverted" ) )
+            scope.voltage[ channel ].inverted = storeSettings->value( "inverted" ).toBool();
+        if ( storeSettings->contains( "offset" ) )
+            scope.voltage[ channel ].offset = storeSettings->value( "offset" ).toDouble();
+        if ( storeSettings->contains( "trigger" ) )
+            scope.voltage[ channel ].trigger = storeSettings->value( "trigger" ).toDouble();
+        if ( storeSettings->contains( "probeAttn" ) )
+            scope.voltage[ channel ].probeAttn = storeSettings->value( "probeAttn" ).toDouble();
+        if ( storeSettings->contains( "used" ) )
+            scope.voltage[ channel ].used = storeSettings->value( "used" ).toBool();
         else                      // no config file found, e.g. 1st run
             defaultConfig = true; // start with default config
 
         if ( defaultConfig ) { // useful default: show both voltage channels
-            scope.voltage[ 0 ].used = true;
-            scope.voltage[ 0 ].offset = MARGIN_TOP / 2; // mid of upper screen half
-            scope.voltage[ 1 ].used = true;
-            scope.voltage[ 1 ].offset = MARGIN_BOTTOM / 2; // mid of lower screen half
+            setDefaultConfig();
         }
 
-        store->beginGroup( "cursor" );
-        if ( store->contains( "shape" ) )
-            scope.voltage[ channel ].cursor.shape = DsoSettingsScopeCursor::CursorShape( store->value( "shape" ).toUInt() );
+        storeSettings->beginGroup( "cursor" );
+        if ( storeSettings->contains( "shape" ) )
+            scope.voltage[ channel ].cursor.shape = DsoSettingsScopeCursor::CursorShape( storeSettings->value( "shape" ).toUInt() );
         for ( int marker = 0; marker < MARKER_COUNT; ++marker ) {
             QString name;
             name = QString( "x%1" ).arg( marker );
-            if ( store->contains( name ) )
-                scope.voltage[ channel ].cursor.pos[ marker ].setX( store->value( name ).toDouble() );
+            if ( storeSettings->contains( name ) )
+                scope.voltage[ channel ].cursor.pos[ marker ].setX( storeSettings->value( name ).toDouble() );
             name = QString( "y%1" ).arg( marker );
-            if ( store->contains( name ) )
-                scope.voltage[ channel ].cursor.pos[ marker ].setY( store->value( name ).toDouble() );
+            if ( storeSettings->contains( name ) )
+                scope.voltage[ channel ].cursor.pos[ marker ].setY( storeSettings->value( name ).toDouble() );
         }
-        store->endGroup();
-        store->endGroup();
+        storeSettings->endGroup(); // cursor
+        storeSettings->endGroup(); // voltage%1
     }
 
     // Post processing
-    if ( store->contains( "spectrumLimit" ) )
-        post.spectrumLimit = store->value( "spectrumLimit" ).toDouble();
-    if ( store->contains( "spectrumReference" ) )
-        post.spectrumReference = store->value( "spectrumReference" ).toDouble();
-    if ( store->contains( "spectrumWindow" ) )
-        post.spectrumWindow = Dso::WindowFunction( store->value( "spectrumWindow" ).toInt() );
-    store->endGroup();
+    if ( storeSettings->contains( "spectrumLimit" ) )
+        post.spectrumLimit = storeSettings->value( "spectrumLimit" ).toDouble();
+    if ( storeSettings->contains( "spectrumReference" ) )
+        post.spectrumReference = storeSettings->value( "spectrumReference" ).toDouble();
+    if ( storeSettings->contains( "spectrumWindow" ) )
+        post.spectrumWindow = Dso::WindowFunction( storeSettings->value( "spectrumWindow" ).toInt() );
+    storeSettings->endGroup(); // scope
 
     // View
-    store->beginGroup( "view" );
+    storeSettings->beginGroup( "view" );
     // Colors
-    store->beginGroup( "color" );
+    storeSettings->beginGroup( "color" );
     DsoSettingsColorValues *colors;
     for ( int mode = 0; mode < 2; ++mode ) {
         if ( mode == 0 ) {
             colors = &view.screen;
-            store->beginGroup( "screen" );
+            storeSettings->beginGroup( "screen" );
         } else {
             colors = &view.print;
-            store->beginGroup( "print" );
+            storeSettings->beginGroup( "print" );
         }
 
-        if ( store->contains( "axes" ) )
-            colors->axes = store->value( "axes" ).value< QColor >();
-        if ( store->contains( "background" ) )
-            colors->background = store->value( "background" ).value< QColor >();
-        if ( store->contains( "border" ) )
-            colors->border = store->value( "border" ).value< QColor >();
-        if ( store->contains( "grid" ) )
-            colors->grid = store->value( "grid" ).value< QColor >();
-        if ( store->contains( "markers" ) )
-            colors->markers = store->value( "markers" ).value< QColor >();
+        if ( storeSettings->contains( "axes" ) )
+            colors->axes = storeSettings->value( "axes" ).value< QColor >();
+        if ( storeSettings->contains( "background" ) )
+            colors->background = storeSettings->value( "background" ).value< QColor >();
+        if ( storeSettings->contains( "border" ) )
+            colors->border = storeSettings->value( "border" ).value< QColor >();
+        if ( storeSettings->contains( "grid" ) )
+            colors->grid = storeSettings->value( "grid" ).value< QColor >();
+        if ( storeSettings->contains( "markers" ) )
+            colors->markers = storeSettings->value( "markers" ).value< QColor >();
         for ( ChannelID channel = 0; channel < scope.spectrum.size(); ++channel ) {
             QString key = QString( "spectrum%1" ).arg( channel );
-            if ( store->contains( key ) )
-                colors->spectrum[ channel ] = store->value( key ).value< QColor >();
+            if ( storeSettings->contains( key ) )
+                colors->spectrum[ channel ] = storeSettings->value( key ).value< QColor >();
         }
-        if ( store->contains( "text" ) )
-            colors->text = store->value( "text" ).value< QColor >();
+        if ( storeSettings->contains( "text" ) )
+            colors->text = storeSettings->value( "text" ).value< QColor >();
         for ( ChannelID channel = 0; channel < scope.voltage.size(); ++channel ) {
             QString key = QString( "voltage%1" ).arg( channel );
-            if ( store->contains( key ) )
-                colors->voltage[ channel ] = store->value( key ).value< QColor >();
+            if ( storeSettings->contains( key ) )
+                colors->voltage[ channel ] = storeSettings->value( key ).value< QColor >();
         }
-        store->endGroup();
+        storeSettings->endGroup(); // screen / print
     }
-    store->endGroup();
+    storeSettings->endGroup(); // color
     // Other view settings
-    if ( store->contains( "histogram" ) )
-        scope.histogram = store->value( "histogram" ).toBool();
-    if ( store->contains( "digitalPhosphor" ) )
-        view.digitalPhosphor = store->value( "digitalPhosphor" ).toBool();
-    if ( store->contains( "interpolation" ) )
-        view.interpolation = Dso::InterpolationMode( store->value( "interpolation" ).toInt() );
-    if ( store->contains( "printerColorImages" ) )
-        view.printerColorImages = store->value( "printerColorImages" ).toBool();
-    if ( store->contains( "zoom" ) )
-        view.zoom = store->value( "zoom" ).toBool();
-    if ( store->contains( "cursorGridPosition" ) )
-        view.cursorGridPosition = Qt::ToolBarArea( store->value( "cursorGridPosition" ).toUInt() );
-    if ( store->contains( "cursorsVisible" ) )
-        view.cursorsVisible = store->value( "cursorsVisible" ).toBool();
-    store->endGroup();
+    if ( storeSettings->contains( "histogram" ) )
+        scope.histogram = storeSettings->value( "histogram" ).toBool();
+    if ( storeSettings->contains( "digitalPhosphor" ) )
+        view.digitalPhosphor = storeSettings->value( "digitalPhosphor" ).toBool();
+    if ( storeSettings->contains( "interpolation" ) )
+        view.interpolation = Dso::InterpolationMode( storeSettings->value( "interpolation" ).toInt() );
+    if ( storeSettings->contains( "printerColorImages" ) )
+        view.printerColorImages = storeSettings->value( "printerColorImages" ).toBool();
+    if ( storeSettings->contains( "zoom" ) )
+        view.zoom = storeSettings->value( "zoom" ).toBool();
+    if ( storeSettings->contains( "cursorGridPosition" ) )
+        view.cursorGridPosition = Qt::ToolBarArea( storeSettings->value( "cursorGridPosition" ).toUInt() );
+    if ( storeSettings->contains( "cursorsVisible" ) )
+        view.cursorsVisible = storeSettings->value( "cursorsVisible" ).toBool();
+    storeSettings->endGroup(); // view
 
-    store->beginGroup( "window" );
-    mainWindowGeometry = store->value( "geometry" ).toByteArray();
-    mainWindowState = store->value( "state" ).toByteArray();
-    store->endGroup();
+    storeSettings->beginGroup( "window" );
+    mainWindowGeometry = storeSettings->value( "geometry" ).toByteArray();
+    mainWindowState = storeSettings->value( "state" ).toByteArray();
+    storeSettings->endGroup(); // window
 }
 
 
 void DsoSettings::save() {
-    // Main window layout and other general options
-    store->beginGroup( "options" );
-    store->setValue( "alwaysSave", alwaysSave );
-    store->endGroup();
-
-    store->beginGroup( "exporting" );
-    store->setValue( "imageSize", exporting.imageSize );
-    store->endGroup();
+    // Use default configuration after restart?
+    if ( 0 == configVersion ) {
+        storeSettings->clear();
+        return;
+    }
+    storeSettings->beginGroup( "configuration" );
+    storeSettings->setValue( "version", configVersion );
+    storeSettings->setValue( "alwaysSave", alwaysSave );
+    storeSettings->endGroup(); // configuration
 
     // Oszilloskope settings
-    store->beginGroup( "scope" );
+    storeSettings->beginGroup( "scope" );
     // Horizontal axis
-    store->beginGroup( "horizontal" );
-    store->setValue( "format", scope.horizontal.format );
-    store->setValue( "frequencybase", scope.horizontal.frequencybase );
+    storeSettings->beginGroup( "horizontal" );
+    storeSettings->setValue( "format", scope.horizontal.format );
+    storeSettings->setValue( "frequencybase", scope.horizontal.frequencybase );
     for ( int marker = 0; marker < MARKER_COUNT; ++marker )
-        store->setValue( QString( "marker%1" ).arg( marker ), scope.getMarker( unsigned( marker ) ) );
-    store->setValue( "timebase", scope.horizontal.timebase );
-    store->setValue( "maxTimebase", scope.horizontal.maxTimebase );
-    store->setValue( "acquireInterval", scope.horizontal.acquireInterval );
-    store->setValue( "recordLength", scope.horizontal.recordLength );
-    store->setValue( "samplerate", scope.horizontal.samplerate );
-    store->setValue( "calfreq", scope.horizontal.calfreq );
-    store->endGroup(); // horizontal
+        storeSettings->setValue( QString( "marker%1" ).arg( marker ), scope.getMarker( unsigned( marker ) ) );
+    storeSettings->setValue( "timebase", scope.horizontal.timebase );
+    storeSettings->setValue( "maxTimebase", scope.horizontal.maxTimebase );
+    storeSettings->setValue( "acquireInterval", scope.horizontal.acquireInterval );
+    storeSettings->setValue( "recordLength", scope.horizontal.recordLength );
+    storeSettings->setValue( "samplerate", scope.horizontal.samplerate );
+    storeSettings->setValue( "calfreq", scope.horizontal.calfreq );
+    storeSettings->endGroup(); // horizontal
     // Trigger
-    store->beginGroup( "trigger" );
-    store->setValue( "mode", unsigned( scope.trigger.mode ) );
-    store->setValue( "position", scope.trigger.offset );
-    store->setValue( "slope", unsigned( scope.trigger.slope ) );
-    store->setValue( "source", scope.trigger.source );
-    store->endGroup(); // trigger
+    storeSettings->beginGroup( "trigger" );
+    storeSettings->setValue( "mode", unsigned( scope.trigger.mode ) );
+    storeSettings->setValue( "position", scope.trigger.offset );
+    storeSettings->setValue( "slope", unsigned( scope.trigger.slope ) );
+    storeSettings->setValue( "source", scope.trigger.source );
+    storeSettings->endGroup(); // trigger
     // Spectrum
     for ( ChannelID channel = 0; channel < scope.spectrum.size(); ++channel ) {
-        store->beginGroup( QString( "spectrum%1" ).arg( channel ) );
-        store->setValue( "magnitude", scope.spectrum[ channel ].magnitude );
-        store->setValue( "offset", scope.spectrum[ channel ].offset );
-        store->setValue( "used", scope.spectrum[ channel ].used );
-        store->beginGroup( "cursor" );
-        store->setValue( "shape", scope.spectrum[ channel ].cursor.shape );
+        storeSettings->beginGroup( QString( "spectrum%1" ).arg( channel ) );
+        storeSettings->setValue( "magnitude", scope.spectrum[ channel ].magnitude );
+        storeSettings->setValue( "offset", scope.spectrum[ channel ].offset );
+        storeSettings->setValue( "used", scope.spectrum[ channel ].used );
+        storeSettings->beginGroup( "cursor" );
+        storeSettings->setValue( "shape", scope.spectrum[ channel ].cursor.shape );
         for ( int marker = 0; marker < MARKER_COUNT; ++marker ) {
             QString name;
             name = QString( "x%1" ).arg( marker );
-            store->setValue( name, scope.spectrum[ channel ].cursor.pos[ marker ].x() );
+            storeSettings->setValue( name, scope.spectrum[ channel ].cursor.pos[ marker ].x() );
             name = QString( "y%1" ).arg( marker );
-            store->setValue( name, scope.spectrum[ channel ].cursor.pos[ marker ].y() );
+            storeSettings->setValue( name, scope.spectrum[ channel ].cursor.pos[ marker ].y() );
         }
-        store->endGroup(); // cursor
-        store->endGroup(); // spectrum%1
+        storeSettings->endGroup(); // cursor
+        storeSettings->endGroup(); // spectrum%1
     }
     // Voltage
     for ( ChannelID channel = 0; channel < scope.voltage.size(); ++channel ) {
-        store->beginGroup( QString( "vertical%1" ).arg( channel ) );
-        store->setValue( "gainStepIndex", scope.voltage[ channel ].gainStepIndex );
-        store->setValue( "couplingOrMathIndex", scope.voltage[ channel ].couplingOrMathIndex );
-        store->setValue( "inverted", scope.voltage[ channel ].inverted );
-        store->setValue( "offset", scope.voltage[ channel ].offset );
-        store->setValue( "trigger", scope.voltage[ channel ].trigger );
-        store->setValue( "used", scope.voltage[ channel ].used );
-        store->setValue( "probeAttn", scope.voltage[ channel ].probeAttn );
-        store->beginGroup( "cursor" );
-        store->setValue( "shape", scope.voltage[ channel ].cursor.shape );
+        storeSettings->beginGroup( QString( "voltage%1" ).arg( channel ) );
+        storeSettings->setValue( "gainStepIndex", scope.voltage[ channel ].gainStepIndex );
+        storeSettings->setValue( "couplingOrMathIndex", scope.voltage[ channel ].couplingOrMathIndex );
+        storeSettings->setValue( "inverted", scope.voltage[ channel ].inverted );
+        storeSettings->setValue( "offset", scope.voltage[ channel ].offset );
+        storeSettings->setValue( "trigger", scope.voltage[ channel ].trigger );
+        storeSettings->setValue( "used", scope.voltage[ channel ].used );
+        storeSettings->setValue( "probeAttn", scope.voltage[ channel ].probeAttn );
+        storeSettings->beginGroup( "cursor" );
+        storeSettings->setValue( "shape", scope.voltage[ channel ].cursor.shape );
         for ( int marker = 0; marker < MARKER_COUNT; ++marker ) {
             QString name;
             name = QString( "x%1" ).arg( marker );
-            store->setValue( name, scope.voltage[ channel ].cursor.pos[ marker ].x() );
+            storeSettings->setValue( name, scope.voltage[ channel ].cursor.pos[ marker ].x() );
             name = QString( "y%1" ).arg( marker );
-            store->setValue( name, scope.voltage[ channel ].cursor.pos[ marker ].y() );
+            storeSettings->setValue( name, scope.voltage[ channel ].cursor.pos[ marker ].y() );
         }
-        store->endGroup(); // cursor
-        store->endGroup(); // vertical%1
+        storeSettings->endGroup(); // cursor
+        storeSettings->endGroup(); // voltage%1
     }
 
     // Post processing
-    store->setValue( "spectrumLimit", post.spectrumLimit );
-    store->setValue( "spectrumReference", post.spectrumReference );
-    store->setValue( "spectrumWindow", unsigned( post.spectrumWindow ) );
-    store->endGroup(); // scope
+    storeSettings->setValue( "spectrumLimit", post.spectrumLimit );
+    storeSettings->setValue( "spectrumReference", post.spectrumReference );
+    storeSettings->setValue( "spectrumWindow", unsigned( post.spectrumWindow ) );
+    storeSettings->endGroup(); // scope
 
     // View
-    store->beginGroup( "view" );
+    storeSettings->beginGroup( "view" );
     // Colors
 
-    store->beginGroup( "color" );
+    storeSettings->beginGroup( "color" );
     DsoSettingsColorValues *colors;
     for ( int mode = 0; mode < 2; ++mode ) {
         if ( mode == 0 ) {
             colors = &view.screen;
-            store->beginGroup( "screen" );
+            storeSettings->beginGroup( "screen" );
         } else {
             colors = &view.print;
-            store->beginGroup( "print" );
+            storeSettings->beginGroup( "print" );
         }
 
-        store->setValue( "axes", colors->axes.name( QColor::HexArgb ) );
-        store->setValue( "background", colors->background.name( QColor::HexArgb ) );
-        store->setValue( "border", colors->border.name( QColor::HexArgb ) );
-        store->setValue( "grid", colors->grid.name( QColor::HexArgb ) );
-        store->setValue( "markers", colors->markers.name( QColor::HexArgb ) );
+        storeSettings->setValue( "axes", colors->axes.name( QColor::HexArgb ) );
+        storeSettings->setValue( "background", colors->background.name( QColor::HexArgb ) );
+        storeSettings->setValue( "border", colors->border.name( QColor::HexArgb ) );
+        storeSettings->setValue( "grid", colors->grid.name( QColor::HexArgb ) );
+        storeSettings->setValue( "markers", colors->markers.name( QColor::HexArgb ) );
         for ( ChannelID channel = 0; channel < scope.spectrum.size(); ++channel )
-            store->setValue( QString( "spectrum%1" ).arg( channel ), colors->spectrum[ channel ].name( QColor::HexArgb ) );
-        store->setValue( "text", colors->text.name( QColor::HexArgb ) );
+            storeSettings->setValue( QString( "spectrum%1" ).arg( channel ), colors->spectrum[ channel ].name( QColor::HexArgb ) );
+        storeSettings->setValue( "text", colors->text.name( QColor::HexArgb ) );
         for ( ChannelID channel = 0; channel < scope.voltage.size(); ++channel )
-            store->setValue( QString( "voltage%1" ).arg( channel ), colors->voltage[ channel ].name( QColor::HexArgb ) );
-        store->endGroup(); // screen / print
+            storeSettings->setValue( QString( "voltage%1" ).arg( channel ), colors->voltage[ channel ].name( QColor::HexArgb ) );
+        storeSettings->endGroup(); // screen / print
     }
-    store->endGroup(); // color
+    storeSettings->endGroup(); // color
 
     // Other view settings
-    store->setValue( "histogram", scope.histogram );
-    store->setValue( "digitalPhosphor", view.digitalPhosphor );
-    store->setValue( "interpolation", view.interpolation );
-    store->setValue( "printerColorImages", view.printerColorImages );
-    store->setValue( "zoom", view.zoom );
-    store->setValue( "cursorGridPosition", view.cursorGridPosition );
-    store->setValue( "cursorsVisible", view.cursorsVisible );
-    store->endGroup(); // view
+    storeSettings->setValue( "histogram", scope.histogram );
+    storeSettings->setValue( "digitalPhosphor", view.digitalPhosphor );
+    storeSettings->setValue( "interpolation", view.interpolation );
+    storeSettings->setValue( "printerColorImages", view.printerColorImages );
+    storeSettings->setValue( "zoom", view.zoom );
+    storeSettings->setValue( "cursorGridPosition", view.cursorGridPosition );
+    storeSettings->setValue( "cursorsVisible", view.cursorsVisible );
+    storeSettings->endGroup(); // view
 
-    store->beginGroup( "window" );
-    store->setValue( "geometry", mainWindowGeometry );
-    store->setValue( "state", mainWindowState );
-    store->endGroup(); // window
+    storeSettings->beginGroup( "window" );
+    storeSettings->setValue( "geometry", mainWindowGeometry );
+    storeSettings->setValue( "state", mainWindowState );
+    storeSettings->endGroup(); // window
+}
+
+
+void DsoSettings::setDefaultConfig() {
+    scope.voltage[ 0 ].used = true;
+    scope.voltage[ 0 ].offset = MARGIN_TOP / 2; // mid of upper screen half
+    scope.voltage[ 1 ].used = true;
+    scope.voltage[ 1 ].offset = MARGIN_BOTTOM / 2; // mid of lower screen half
 }

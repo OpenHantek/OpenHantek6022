@@ -9,6 +9,7 @@
 #include <vector>
 
 #include <QObject>
+#include <QThread>
 
 struct DsoSettingsScope;
 

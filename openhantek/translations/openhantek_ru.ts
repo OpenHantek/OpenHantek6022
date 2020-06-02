@@ -281,12 +281,12 @@
     <message>
         <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="11"/>
         <source>Set slowest possible timebase&lt;br/&gt;(&lt;b&gt;GUI may become very unresponsible!&lt;/b&gt;)</source>
-        <translation>Установите самую медленную временную базу&lt;br/&gt;(&lt;b&gt;GUI может стать очень медленным!&lt;/b&gt;)</translation>
+        <translation>Установите максимальное Время/Деление&lt;br/&gt;(&lt;b&gt;GUI может начать подвисать!&lt;/b&gt;)</translation>
     </message>
     <message>
         <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="19"/>
         <source>Minimal time between captured frames&lt;br/&gt;(Longer times reduce the CPU load)</source>
-        <translation>Минимальное время между захваченными кадрами&lt;br/&gt;(Дольше времени снижает нагрузку на процессор)</translation>
+        <translation>Минимальное время между захватами кадров&lt;br/&gt;(Больше времени - ниже нагрузка на процессор)</translation>
     </message>
     <message>
         <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="32"/>
@@ -340,16 +340,33 @@
     </message>
     <message>
         <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="77"/>
-        <source>Save default settings on exit</source>
+        <source>Save settings on exit</source>
         <translation>Сохранить настройки по умолчанию при выходе</translation>
     </message>
     <message>
         <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="79"/>
-        <source>Save default settings now</source>
+        <source>Apply default settings after next restart</source>
+        <translation>Применить настройки по умолчанию после перезапуска</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="81"/>
+        <source>Save settings now</source>
         <translation>Сохранить настройки по умолчанию</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="85"/>
+        <source>Save default settings on exit</source>
+        <translation type="vanished">Сохранить настройки по умолчанию при выходе</translation>
+    </message>
+    <message>
+        <source>Apply default settings after restart</source>
+        <translation type="vanished">Применить настройки по умолчанию после перезапуска</translation>
+    </message>
+    <message>
+        <source>Save default settings now</source>
+        <translation type="vanished">Сохранить настройки по умолчанию</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="88"/>
         <source>Configuration</source>
         <translation>Конфигурация</translation>
     </message>
@@ -482,9 +499,9 @@
         <location filename="../src/dsowidget.cpp" line="552"/>
         <location filename="../src/dsowidget.cpp" line="554"/>
         <location filename="../src/dsowidget.cpp" line="585"/>
-        <location filename="../src/dsowidget.cpp" line="623"/>
-        <location filename="../src/dsowidget.cpp" line="631"/>
-        <location filename="../src/dsowidget.cpp" line="650"/>
+        <location filename="../src/dsowidget.cpp" line="629"/>
+        <location filename="../src/dsowidget.cpp" line="637"/>
+        <location filename="../src/dsowidget.cpp" line="656"/>
         <source>/div</source>
         <translation>/дел</translation>
     </message>
@@ -541,27 +558,27 @@
         <translation>%L1%</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="610"/>
+        <location filename="../src/dsowidget.cpp" line="611"/>
         <source>%1  %2  %3  %4  %5</source>
         <translation>%1  %2  %3  %4  %5</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="641"/>
+        <location filename="../src/dsowidget.cpp" line="647"/>
         <source>/s</source>
         <translation>/с</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="741"/>
+        <location filename="../src/dsowidget.cpp" line="747"/>
         <source> on screen</source>
         <translation> на экране</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="787"/>
+        <location filename="../src/dsowidget.cpp" line="793"/>
         <source>pp</source>
         <translation>пп</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="790"/>
+        <location filename="../src/dsowidget.cpp" line="796"/>
         <source>rms</source>
         <translation>скз</translation>
     </message>
@@ -614,7 +631,7 @@
 <context>
     <name>HantekDsoControl</name>
     <message>
-        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="359"/>
+        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="356"/>
         <source>Couldn&apos;t get calibration data from oscilloscope&apos;s EEPROM. Use a config file for calibration!</source>
         <translation>Не удалось получить данные калибровки из EEPROM осциллографа. Используйте файл конфигурации для калибровки!</translation>
     </message>
@@ -1303,6 +1320,11 @@
         <translation>GND</translation>
     </message>
     <message>
+        <location filename="../src/hantekdso/enums.cpp" line="50"/>
+        <source>None</source>
+        <translation>Ничего</translation>
+    </message>
+    <message>
         <location filename="../src/hantekdso/enums.cpp" line="46"/>
         <source>Auto</source>
         <translation>Авто</translation>
@@ -1313,7 +1335,7 @@
         <translation>Нормальный</translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/enums.cpp" line="50"/>
+        <location filename="../src/hantekdso/enums.cpp" line="52"/>
         <source>Single</source>
         <translation>Однократный</translation>
     </message>

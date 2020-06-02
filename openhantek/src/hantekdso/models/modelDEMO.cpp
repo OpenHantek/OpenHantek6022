@@ -17,7 +17,7 @@ static void initSpecifications( Dso::ControlSpecification &specification ) {
     // we drop 2K + 480 sample values due to unreliable start of stream
     // 20000 samples at 100kS/s = 200 ms gives enough to fill
     // the screen two times (for pre/post trigger) at 10ms/div = 100ms/screen
-    // SAMPLESIZE defined in modelDSO6022.h
+    // SAMPLESIZE defined in hantekdsocontrol.h
     // adapt accordingly in HantekDsoControl::convertRawDataToSamples()
 
     // Define the scaling between ADC sample values and real input voltage
@@ -107,7 +107,12 @@ static void initSpecifications( Dso::ControlSpecification &specification ) {
     };
 
     specification.couplings = {Dso::Coupling::DC};
-    specification.triggerModes = {Dso::TriggerMode::AUTO, Dso::TriggerMode::NORMAL, Dso::TriggerMode::SINGLE};
+    specification.triggerModes = {
+        Dso::TriggerMode::AUTO,
+        Dso::TriggerMode::NORMAL,
+        Dso::TriggerMode::NONE,
+        Dso::TriggerMode::SINGLE,
+    };
     specification.fixedUSBinLength = 0;
 
     // calibration frequency (requires >FW0206)

@@ -25,6 +25,8 @@
 #include <QThread>
 #include <QTimer>
 
+#define SAMPLESIZE_USED 20000
+
 class ScopeDevice;
 
 /// \brief The DsoControl abstraction layer for %Hantek USB DSOs.
@@ -53,7 +55,12 @@ class HantekDsoControl : public QObject {
 
     double getSamplerate() const { return controlsettings.samplerate.current; }
 
-    unsigned getSamplesize() const { return SAMPLESIZE_USED; }
+    unsigned getSamplesize() const {
+        if ( controlsettings.trigger.mode == Dso::TriggerMode::NONE )
+            return SAMPLESIZE_USED / 2;
+        else
+            return SAMPLESIZE_USED;
+    }
 
     bool isSampling() const { return sampling; }
 
@@ -91,15 +98,10 @@ class HantekDsoControl : public QObject {
 
   private:
     bool fastRate = true;
-
     void setFastRate( bool fast ) { fastRate = fast; }
-
     bool isFastRate() const { return fastRate; }
-
     unsigned getRecordLength() const;
-
     void setDownsampling( unsigned downsampling ) { downsamplingNumber = downsampling; }
-
     Dso::ErrorCode retrieveChannelLevelData();
 
     /// Get the number of samples that are expected returned by the scope.
@@ -259,7 +261,6 @@ class HantekDsoControl : public QObject {
     /// The available samplerate for fixed samplerate devices has changed
     void samplerateSet( int mode, QList< double > sampleSteps );
 
-    void recordTimeChanged( double duration );   ///< The record time duration has changed
     void samplerateChanged( double samplerate ); ///< The samplerate has changed
 
     void communicationError() const;

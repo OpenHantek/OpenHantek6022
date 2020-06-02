@@ -15,5 +15,6 @@ struct DSOsamples {
     unsigned triggerPosition = 0;              ///< position for a triggered trace, 0 = not triggered
     double pulseWidth1 = 0.0;                  ///< width from trigger point to next opposite slope
     double pulseWidth2 = 0.0;                  ///< width from next opposite slope to third slope
+    unsigned tag = 0;                          ///< track individual sample blocks (debug support)
     mutable QReadWriteLock lock;
 };

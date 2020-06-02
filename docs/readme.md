@@ -166,17 +166,32 @@ The firmware command parser:
 
 ## Data flow
 
-* Raw 8-bit ADC values are collected in `HantekDsoControl::run()` and converted in `HantekDsoControl::convertRawDataToSamples()` to real-world double samples (scaled with voltage and sample rate). 
+* Raw 8-bit ADC values are collected via call to `HantekDsoControl::getSamples(..)` (or ...getDemoSamples(..) for the demo device) in `HantekDsoControl::stateMachine()` and converted in `HantekDsoControl::convertRawDataToSamples()` to real-world double samples (scaled with voltage and sample rate). 
 The 10X..100X oversampling for slower sample rates is done here. Also overdriving of the inputs is detected. 
 The conversion uses either the factory calibration values from EEPROM or from a user supplied config file. 
 Read more about [calibration](https://github.com/Ho-Ro/Hantek6022API/blob/master/README.md#create-calibration-values-for-openhantek).
-  * `swTrigger()`
+  * `searchTriggerPosition()`
     * which checks if the signal is triggered and calculates the starting point for a stable display. 
     The time distance to the following opposite slope is measured and displayed as pulse width in the top row.
-  * `triggering()` handles the trigger mode:
+  * `provideTriggeredData()` handles the trigger mode:
     * If the **trigger condition is false** and the **trigger mode is Normal** then we reuse the last triggered samples so that voltage and spectrum traces as well as the measurement at the scope's bottom lines are frozen until the trigger condition becomes true again.
     * If the **trigger condition is false** and the **trigger mode is not Normal** then we display a free running trace and discard the last saved samples.
-* The converted samples are emitted to PostProcessing::input() via signal/slot.
+* The converted samples are emitted to PostProcessing::input() via signal/slot:
+`QObject::connect( &dsoControl, &HantekDsoControl::samplesAvailable, &postProcessing, &PostProcessing::input );`
+
+
+    struct DSOsamples {
+        std::vector< std::vector< double > > data; ///< Pointer to input data from device
+        double samplerate = 0.0;                   ///< The samplerate of the input data
+        unsigned char clipped = 0;                 ///< Bitmask of clipped channels
+        bool liveTrigger = false;                  ///< live samples are triggered
+        unsigned triggerPosition = 0;              ///< position for a triggered trace, 0 = not triggered
+        double pulseWidth1 = 0.0;                  ///< width from trigger point to next opposite slope
+        double pulseWidth2 = 0.0;                  ///< width from next opposite slope to third slope
+        mutable QReadWriteLock lock;
+    };
+
+
 * PostProzessing calls all processors that were registered in `main.cpp`.
   * `MathchannelGenerator::process()`
     * which creates a third MATH channel as one of these data sample combinations: 
@@ -193,10 +208,65 @@ Read more about [calibration](https://github.com/Ho-Ro/Hantek6022API/blob/master
       * spectrum over frequency `GraphGenerator::generateGraphsTYspectrum()`
     * or in XY mode and creates a voltage over voltage trace `GraphGenerator::generateGraphsXY()`.
     * `GraphGenerator::generateGraphsTYvoltage()` creates up to three (CH1, CH2, MATH) voltage traces.
-    * `GraphGenerator::generateGraphsTYspectrum()` creates up to three (CH1, CH2, MATH) spectral traces.
+    * `GraphGenerator::generateGraphsTYspectrum()` creates up to three (SP1, SP2, SPM) spectral traces.
   * Finally `PostProcessing` emits the signal `processingFinished()` that is connected to:
-    * `ExporterRegistry::input()` that takes care of exporting to CSV data or PDF/PNG image as well as printing the PDF.
+    * `ExporterRegistry::input()` that takes care of exporting to CSV data.
     * `MainWindow::showNewData()`.
  * `MainWindow::showNewData()` calls `DsoWidget::showNew()` that calls `GlScope::showData()` that calls `Graph::writeData()`.
 
 t.b.c.
+
+## Data structures and configuration
+
+* Two main structures/classes hold most of the current status of the oscilloscope:
+
+* The struct `ControlSettings` and its substructures (-> `hantekdso/controlsettings.h`) are the main storage for all scope (HW) parameters that are handled by the class `HantekDsoControl`.
+
+
+    struct ControlSettings {
+        ControlSettings( const ControlSamplerateLimits *limits, size_t channelCount );
+        ~ControlSettings();
+        ControlSettings( const ControlSettings & ) = delete;
+        ControlSettings operator=( const ControlSettings & ) = delete;
+        ControlSettingsSamplerate samplerate;          ///< The samplerate settings
+        std::vector< ControlSettingsVoltage > voltage; ///< The amplification settings
+        ControlSettingsTrigger trigger;                ///< The trigger settings
+        RecordLengthID recordLengthId = 1;             ///< The id in the record length array
+        unsigned channelCount = 0;                     ///< Number of activated channels
+        Hantek::CalibrationValues *calibrationValues;  ///< Calibration data for the channel offsets & gains
+        Hantek::ControlGetLimits cmdGetLimits;
+    };
+
+* The class `DsoSettings` (-> `dsosettings.h`) and its substructures `DsoSettingsScope` (`scopesettings.h`) and `DsoSettingsView` (`viewsettings.h`)
+are the main storage for all persistent scope (program) parameters, see `DsoSettings::save()` and `DsoSettings::load()`.
+
+
+    class DsoSettings {
+        Q_DECLARE_TR_FUNCTIONS( DsoSettings )
+      public:
+        explicit DsoSettings( const Dso::ControlSpecification *deviceSpecification );
+        bool setFilename( const QString &filename );
+
+        DsoSettingsExport exporting;    ///< General options of the program
+        DsoSettingsScope scope;         ///< All oscilloscope related settings
+        DsoSettingsView view;           ///< All view related settings
+        DsoSettingsPostProcessing post; ///< All post processing related settings
+        bool alwaysSave = true;         ///< Always save the settings on exit
+
+        QByteArray mainWindowGeometry; ///< Geometry of the main window
+        QByteArray mainWindowState;    ///< State of docking windows and toolbars
+
+        /// \brief Read the settings from the last session or another file.
+        void load();
+
+        /// \brief Save the settings to the harddisk.
+        void save();
+
+      private:
+        std::unique_ptr< QSettings > store = std::unique_ptr< QSettings >( new QSettings );
+        const Dso::ControlSpecification *deviceSpecification;
+    };
+
+GUI input either in the docks of by moving sliders changes the `DsoSettings` parameters directly
+and the `ControlSettings` parameters (that live in another thread `dsoControlThread` ) via signal/slot mechanism.
+The (big) class `HantekDsoControl` has a member `const DsoSettingsScope *scope` that gives direct read acces to the (persistent) scope settings.
