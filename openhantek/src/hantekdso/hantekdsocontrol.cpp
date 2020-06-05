@@ -36,6 +36,7 @@ HantekDsoControl::HantekDsoControl( ScopeDevice *device, const DSOModel *model )
     // Apply special requirements by the devices model
     model->applyRequirements( this );
     retrieveChannelLevelData();
+    stateMachineRunning = true;
 }
 
 
@@ -88,17 +89,19 @@ Dso::ErrorCode HantekDsoControl::setSamplerate( double samplerate ) {
         controlsettings.samplerate.target.samplerate = samplerate;
         controlsettings.samplerate.target.samplerateSet = ControlSettingsSamplerateTarget::Samplerrate;
     }
-    unsigned sampleId;
-    for ( sampleId = 0; sampleId < specification->fixedSampleRates.size() - 1; ++sampleId ) {
-        if ( long( round( specification->fixedSampleRates[ sampleId ].samplerate ) ) ==
+    uint8_t sampleIndex;
+    for ( sampleIndex = 0; sampleIndex < specification->fixedSampleRates.size() - 1; ++sampleIndex ) {
+        if ( long( round( specification->fixedSampleRates[ sampleIndex ].samplerate ) ) ==
              long( round( samplerate ) ) ) // dont compare double == double
             break;
     }
-    modifyCommand< ControlSetTimeDIV >( ControlCode::CONTROL_SETTIMEDIV )->setDiv( specification->fixedSampleRates[ sampleId ].id );
+    uint8_t id = specification->fixedSampleRates[ sampleIndex ].id;
+    uint8_t oversampling = uint8_t( specification->fixedSampleRates[ sampleIndex ].oversampling );
+    modifyCommand< ControlSetSamplerate >( ControlCode::CONTROL_SETSAMPLERATE )->setSamplerate( id, oversampling );
     controlsettings.samplerate.current = samplerate;
-    setDownsampling( specification->fixedSampleRates[ sampleId ].downsampling );
+    setDownsampling( oversampling );
     channelSetupChanged = true; // skip next raw samples block to avoid artefacts
-    emit samplerateChanged( controlsettings.samplerate.current );
+    emit samplerateChanged( samplerate );
     return Dso::ErrorCode::NONE;
 }
 
@@ -123,22 +126,24 @@ Dso::ErrorCode HantekDsoControl::setRecordTime( double duration ) {
         srLimit = ( specification->samplerate.multi ).max;
     // For now - we go for the SAMPLESIZE_USED (= 20000) size sampling, defined in hantekdsocontrol.h
     // Find highest samplerate using less equal half of these samples to obtain our duration.
-    unsigned sampleId = 0;
-    for ( unsigned id = 0; id < specification->fixedSampleRates.size(); ++id ) {
-        double sRate = specification->fixedSampleRates[ id ].samplerate;
-        // qDebug() << "id:" << id << "sRate:" << sRate << "sRate*duration:" << sRate * duration;
+    uint8_t sampleIndex = 0;
+    for ( uint8_t iii = 0; iii < specification->fixedSampleRates.size(); ++iii ) {
+        double sRate = specification->fixedSampleRates[ iii ].samplerate;
+        // qDebug() << "sampleIndex:" << sampleIndex << "sRate:" << sRate << "sRate*duration:" << sRate * duration;
         // Ensure that at least 1/2 of remaining samples are available for SW trigger algorithm
         // for stability reason avoid the highest sample rate as default
         if ( sRate < srLimit && sRate * duration <= SAMPLESIZE_USED / 2 ) {
-            sampleId = id;
+            sampleIndex = iii;
         }
     }
-    double samplerate = specification->fixedSampleRates[ sampleId ].samplerate;
+    double samplerate = specification->fixedSampleRates[ sampleIndex ].samplerate;
+    uint8_t id = specification->fixedSampleRates[ sampleIndex ].id;
+    uint8_t oversampling = uint8_t( specification->fixedSampleRates[ sampleIndex ].oversampling );
     // qDebug() << "HDC::sRT: sampleId:" << sampleId << srLimit << samplerate;
     // Usable sample value
-    modifyCommand< ControlSetTimeDIV >( ControlCode::CONTROL_SETTIMEDIV )->setDiv( specification->fixedSampleRates[ sampleId ].id );
+    modifyCommand< ControlSetSamplerate >( ControlCode::CONTROL_SETSAMPLERATE )->setSamplerate( id, oversampling );
     controlsettings.samplerate.current = samplerate;
-    setDownsampling( specification->fixedSampleRates[ sampleId ].downsampling );
+    setDownsampling( specification->fixedSampleRates[ sampleIndex ].oversampling );
     channelSetupChanged = true; // skip next raw samples block to avoid artefacts
     emit samplerateChanged( samplerate );
     return Dso::ErrorCode::NONE;
@@ -182,7 +187,7 @@ Dso::ErrorCode HantekDsoControl::setChannelUsed( ChannelID channel, bool used ) 
     }
     setFastRate( usedChannels == UsedChannels::USED_CH1 );
     // qDebug() << "usedChannels" << int( usedChannels );
-    modifyCommand< ControlSetNumChannels >( ControlCode::CONTROL_SETNUMCHANNELS )->setDiv( isFastRate() ? 1 : 2 );
+    modifyCommand< ControlSetNumChannels >( ControlCode::CONTROL_SETNUMCHANNELS )->setNumChannels( isFastRate() ? 1 : 2 );
     // Check if fast rate mode availability changed
     this->updateSamplerateLimits();
     this->restoreTargets();
@@ -212,17 +217,20 @@ Dso::ErrorCode HantekDsoControl::setGain( ChannelID channel, double gain ) {
 
     gain /= controlsettings.voltage[ channel ].probeAttn; // gain needs to be scaled by probe attenuation
     // Find lowest gain voltage thats at least as high as the requested
-    unsigned gainID;
+    uint8_t gainID;
     for ( gainID = 0; gainID < specification->gain.size() - 1; ++gainID )
-        if ( specification->gain[ gainID ].gainSteps >= gain )
+        if ( specification->gain[ gainID ].Vdiv >= gain )
             break;
-
     if ( channel == 0 ) {
-        modifyCommand< ControlSetVoltDIV_CH1 >( ControlCode::CONTROL_SETVOLTDIV_CH1 )
-            ->setDiv( specification->gain[ gainID ].gainIndex );
+        modifyCommand< ControlSetGain_CH1 >( ControlCode::CONTROL_SETGAIN_CH1 )
+            ->setGainCH1( specification->gain[ gainID ].gainValue, gainID );
+        // modifyCommand< ControlSetGain_CH1 >( ControlCode::CONTROL_SETGAIN_CH1 )
+        //    ->setGainCH1( specification->gain[ gainID ].gainValue );
     } else if ( channel == 1 ) {
-        modifyCommand< ControlSetVoltDIV_CH2 >( ControlCode::CONTROL_SETVOLTDIV_CH2 )
-            ->setDiv( specification->gain[ gainID ].gainIndex );
+        modifyCommand< ControlSetGain_CH2 >( ControlCode::CONTROL_SETGAIN_CH2 )
+            ->setGainCH2( specification->gain[ gainID ].gainValue, gainID );
+        // modifyCommand< ControlSetGain_CH2 >( ControlCode::CONTROL_SETGAIN_CH2 )
+        //     ->setGainCH2( specification->gain[ gainID ].gainValue );
     } else
         qDebug( "%s: Unsupported channel: %i\n", __func__, channel );
     controlsettings.voltage[ channel ].gain = gainID;
@@ -310,7 +318,7 @@ void HantekDsoControl::applySettings( DsoSettingsScope *dsoSettingsScope ) {
     bool mathUsed = dsoSettingsScope->anyUsed( specification->channels );
     for ( ChannelID channel = 0; channel < specification->channels; ++channel ) {
         setProbe( channel, dsoSettingsScope->voltage[ channel ].probeAttn );
-        setGain( channel, dsoSettingsScope->gain( channel ) * DIVS_VOLTAGE );
+        setGain( channel, dsoSettingsScope->gain( channel ) );
         setTriggerLevel( channel, dsoSettingsScope->voltage[ channel ].trigger );
         setChannelUsed( channel, mathUsed | dsoSettingsScope->anyUsed( channel ) );
         setChannelInverted( channel, dsoSettingsScope->voltage[ channel ].inverted );
@@ -336,8 +344,8 @@ void HantekDsoControl::enableSampling( bool enabled ) {
 
 unsigned HantekDsoControl::getRecordLength() const {
     unsigned rawsize = getSamplesize();
-    rawsize *= this->downsamplingNumber;                // take more samples
-    rawsize = ( ( rawsize + 1024 ) / 1024 + 2 ) * 1024; // adjust for skipping of minimal 2048 leading samples
+    rawsize *= this->downsamplingNumber;   // take multiple samples for oversampling
+    rawsize = grossSampleCount( rawsize ); // adjust for skipping of minimal 2048 leading samples
     // printf( "getRecordLength: %d\n", rawsize );
     return rawsize;
 }
@@ -400,10 +408,40 @@ std::vector< unsigned char > HantekDsoControl::getSamples( unsigned &previousSam
     // To make sure no samples will remain in the scope buffer, also check the
     // sample count before the last sampling started
     if ( rawSampleCount < previousSampleCount ) {
+        printf( "HDC::getSamples swap %u %d\n", rawSampleCount, previousSampleCount );
         std::swap( rawSampleCount, previousSampleCount );
     } else {
+        printf( "HDC::getSamples %u\n", rawSampleCount );
         previousSampleCount = rawSampleCount;
     }
+    // Save raw data to temporary buffer
+    std::vector< unsigned char > data( rawSampleCount );
+    int retval = scopeDevice->bulkReadMulti( data.data(), rawSampleCount );
+    if ( retval < 0 ) {
+        qWarning() << "bulkReadMulti: Getting sample data failed: " << libUsbErrorString( retval );
+        return std::vector< unsigned char >();
+    }
+    data.resize( size_t( retval ) );
+    // printf( "bulkReadMulti( %d ) -> %d\n", rawSampleCount, retval );
+
+    static unsigned id = 0;
+    ++id;
+    timestampDebug( QString( "Received packet %1" ).arg( id ) );
+
+    return data;
+}
+
+
+std::vector< unsigned char > HantekDsoControl::getSamples() const {
+    int errorCode;
+    errorCode = scopeDevice->controlWrite( getCommand( ControlCode::CONTROL_STARTSAMPLING ) );
+    if ( errorCode < 0 ) {
+        qWarning() << "controlWrite: Getting sample data failed: " << libUsbErrorString( errorCode );
+        emit communicationError();
+        return std::vector< unsigned char >();
+    }
+
+    unsigned rawSampleCount = this->getSampleCount();
     // Save raw data to temporary buffer
     std::vector< unsigned char > data( rawSampleCount );
     int retval = scopeDevice->bulkReadMulti( data.data(), rawSampleCount );
@@ -469,13 +507,58 @@ std::vector< unsigned char > HantekDsoControl::getDemoSamples( unsigned &previou
 }
 
 
-void HantekDsoControl::convertRawDataToSamples( const std::vector< unsigned char > &rawData, unsigned activeChannels ) {
+std::vector< unsigned char > HantekDsoControl::getDemoSamples() const {
+    const uint8_t V_zero = 128;   // ADC = 0V
+    const uint8_t V_plus_1 = 153; // ADC = 1V
+    const uint8_t V_plus_2 = 178; // ADC = 2V
+    const uint8_t V_minus_2 = 78; // ADC = -2V
+    static uint8_t ch1 = V_zero;
+    static uint8_t ch2 = V_zero;
+    static int counter = 0;
+    unsigned rawSampleCount = this->getSampleCount();
+    std::vector< unsigned char > data( rawSampleCount );
+    auto end = data.end();
+    int deltaT = 99;
+    double samplerate = getSamplerate();
+    if ( samplerate < 100e3 )
+        deltaT = int( round( deltaT * samplerate / 100e3 ) );
+    else if ( samplerate > 10e6 ) {
+        deltaT = int( round( deltaT * samplerate / 10e6 ) );
+    }
+    for ( auto it = data.begin(); it != end; ++it ) {
+        // deltaT (=99) defines the frequency of the dummy signals:
+        // ch1 = 1 kHz and ch2 = 500 Hz
+        if ( ++counter >= deltaT ) {
+            counter = 0;
+            if ( --ch1 < V_minus_2 ) {
+                ch1 = V_plus_2;
+                ch2 = ch2 <= V_plus_1 ? V_plus_2 : V_zero;
+            }
+        }
+        *it = ch1;
+        if ( !isFastRate() ) {
+            *++it = ch2;
+        }
+    }
+
+    static unsigned id = 0;
+    ++id;
+    timestampDebug( QString( "Received dummy packet %1" ).arg( id ) );
+
+    return data;
+}
+
+
+void HantekDsoControl::convertRawDataToSamples() {
     if ( channelSetupChanged ) { // skip the next conversion to avoid artefacts due to channel switch
         channelSetupChanged = false;
-        return;
+        // return;
     }
-    if ( isFastRate() != ( 1 == activeChannels ) ) // avoid possible race condition
-        return;
+    QReadLocker rawLocker( &raw.lock );
+    activeChannels = raw.channels;
+
+    // if ( isFastRate() != ( 1 == activeChannels ) ) // avoid possible race condition
+    //    return;
 
     // The 1st two or three frames (512 byte) of the raw sample stream are unreliable
     // (Maybe because the common mode input voltage of ADC is handled far out of spec and has to settle)
@@ -483,59 +566,55 @@ void HantekDsoControl::convertRawDataToSamples( const std::vector< unsigned char
     //           rawSampleSize = ( ( n*20000 + 1024 ) / 1024 + 2) * 1024;
     // and skip over these additional samples to get 20000 samples (or n*20000 if oversampled)
 
-    const unsigned rawSampleCount = unsigned( rawData.size() ) / activeChannels;
-    // TODO: is this needed? rawSampleCount should always be > SAMPLESIZE_USED (=20000)
-    // const unsigned sampleCount = ( rawSampleCount > 1024 ) ? ( ( rawSampleCount - 1024 ) / 1000 - 1 ) * 1000 : rawSampleCount;
-    const unsigned sampleCount = ( ( rawSampleCount - 1024 ) / 1000 - 1 ) * 1000;
-    const unsigned rawDownsampling = sampleCount / getSamplesize();
-    // qDebug() << "HDC::cRDTS rawSampleCount sampleCount:" << rawSampleCount << sampleCount;
+    const unsigned rawSampleCount = unsigned( raw.data.size() ) / activeChannels;
+    const unsigned sampleCount = netSampleCount( rawSampleCount );
+    const unsigned rawDownsampling = raw.oversampling; //  sampleCount / getSamplesize();
+    const unsigned resultSamples = sampleCount / rawDownsampling;
+    // qDebug() << "HDC::cRDTS rawSampleCount sampleCount rawDownsampling resultSamples:" << rawSampleCount << sampleCount
+    //          << rawDownsampling << resultSamples;
     const unsigned skipSamples = rawSampleCount - sampleCount;
-
-    QWriteLocker locker( &result.lock );
-    result.tag++;
-    result.samplerate = controlsettings.samplerate.current;
+    QWriteLocker resultLocker( &result.lock );
+    result.freeRuning = resultSamples < SAMPLESIZE_USED; // 20000 samples needed for sw trigger detection
+    result.tag = raw.tag;
+    result.samplerate = raw.samplerate / raw.oversampling;
+    // printf( "cRDTS sr: %g %g %g\n", controlsettings.samplerate.current, raw.samplerate, result.samplerate );
     // Prepare result buffers
     result.data.resize( specification->channels );
     for ( ChannelID channelCounter = 0; channelCounter < specification->channels; ++channelCounter )
         result.data[ channelCounter ].clear();
 
-    // The 1st two or three frames (512 byte) of the raw sample stream are unreliable
-    // (Maybe because the common mode input voltage of ADC is handled far out of spec and has to settle)
-    // Solution: sample at least 2048 more values -> rawSampleSize (must be multiple of 1024)
-    //           rawSampleSize = ( ( n*20000 + 1024 ) / 1024 + 2) * 1024;
-    // and skip over these samples to get 20000 samples (or n*20000)
-
-    // printf("sampleCount %u, downsampling %u\n", sampleCount, downsampling );
+    // printf( "sampleCount %u, rawDownsampling %u\n", sampleCount, rawDownsampling );
 
     // Convert channel data
     // Channels are using their separate buffers
     for ( ChannelID channel = 0; channel < activeChannels; ++channel ) {
-        const unsigned gainID = controlsettings.voltage[ channel ].gain;
-        const int voltageScale = specification->voltageScale[ channel ][ gainID ];
-        const double gainStep = specification->gain[ gainID ].gainSteps;
+        const unsigned gainIndex = raw.gainIndex[ channel ];
+        const double voltageScale = specification->voltageScale[ channel ][ gainIndex ];
         const double probeAttn = controlsettings.voltage[ channel ].probeAttn;
         const double sign = controlsettings.voltage[ channel ].inverted ? -1.0 : 1.0;
+        // const double gainValue = raw.gainValue[ channel ];
+        // qDebug() << "gain" << channel << gainIndex << gainValue << voltageScale;
 
         // shift + individual offset for each channel and gain
         double gainCalibration = 1.0;
-        double voltageOffset = specification->voltageOffset[ channel ][ gainID ];
+        double voltageOffset = specification->voltageOffset[ channel ][ gainIndex ];
         if ( !bool( voltageOffset ) ) { // no config file value
             // get offset value from eeprom[ 8 .. 39 and (if available) 56 .. 87]
             int offsetRaw;
             int offsetFine;
             if ( result.samplerate < 30e6 ) {
-                offsetRaw = controlsettings.calibrationValues->off.ls.step[ gainID ][ channel ];
-                offsetFine = controlsettings.calibrationValues->fine.ls.step[ gainID ][ channel ];
+                offsetRaw = controlsettings.calibrationValues->off.ls.step[ gainIndex ][ channel ];
+                offsetFine = controlsettings.calibrationValues->fine.ls.step[ gainIndex ][ channel ];
             } else {
-                offsetRaw = controlsettings.calibrationValues->off.hs.step[ gainID ][ channel ];
-                offsetFine = controlsettings.calibrationValues->fine.hs.step[ gainID ][ channel ];
+                offsetRaw = controlsettings.calibrationValues->off.hs.step[ gainIndex ][ channel ];
+                offsetFine = controlsettings.calibrationValues->fine.hs.step[ gainIndex ][ channel ];
             }
             if ( offsetRaw && offsetRaw != 255 && offsetFine && offsetFine != 255 ) { // data valid
                 voltageOffset = offsetRaw + ( offsetFine - 0x80 ) / 250.0;
             } else {                  // no offset correction
                 voltageOffset = 0x80; // ADC has "binary offset" format (0x80 = 0V)
             }
-            int gain = controlsettings.calibrationValues->gain.step[ gainID ][ channel ];
+            int gain = controlsettings.calibrationValues->gain.step[ gainIndex ][ channel ];
             if ( gain && gain != 255 ) { // data valid
                 gainCalibration = 1.0 + ( gain - 0x80 ) / 500.0;
             }
@@ -553,13 +632,13 @@ void HantekDsoControl::convertRawDataToSamples( const std::vector< unsigned char
               ++index, rawBufferPosition += activeChannels * rawDownsampling ) { // advance either by one or two blocks
             double sample = 0.0;
             for ( unsigned iii = 0; iii < rawDownsampling * activeChannels; iii += activeChannels ) {
-                int rawSample = rawData[ rawBufferPosition + iii ]; // range 0...255
-                if ( rawSample == 0x00 || rawSample == 0xFF )       // min or max -> clipped
+                int rawSample = raw.data[ rawBufferPosition + iii ]; // range 0...255
+                if ( rawSample == 0x00 || rawSample == 0xFF )        // min or max -> clipped
                     result.clipped |= 0x01 << channel;
                 sample += double( rawSample ) - voltageOffset;
             }
             sample /= rawDownsampling;
-            result.data[ channel ][ index ] = sign * sample / voltageScale * gainCalibration * gainStep * probeAttn;
+            result.data[ channel ][ index ] = sign * sample / voltageScale * gainCalibration * probeAttn;
         }
     }
 }
@@ -647,13 +726,13 @@ unsigned HantekDsoControl::searchTriggerPosition() {
 
     size_t sampleCount = result.data[ channel ].size();              // number of available samples
     double timeDisplay = controlsettings.samplerate.target.duration; // time for full screen width
-    double sampleRate = controlsettings.samplerate.current;
-    double samplesDisplay = timeDisplay * sampleRate;
+    double sampleRate = result.samplerate;                           //
+    double samplesDisplay = timeDisplay * controlsettings.samplerate.current;
     // unsigned preTrigSamples = (unsigned)(controlsettings.trigger.position * samplesDisplay);
-    // printf( "sC %lu, tD %g, sR %g, sD %g\n", sampleCount, timeDisplay, sampleRate, samplesDisplay );
-    if ( samplesDisplay >= sampleCount ) {
+    if ( sampleCount < samplesDisplay ) {
         // For sure not enough samples to adjust for jitter.
         qDebug() << "Too few samples to make a steady picture. Decrease sample rate";
+        printf( "sC %lu, tD %g, sR %g, sD %g\n", sampleCount, timeDisplay, sampleRate, samplesDisplay );
         return result.triggerPosition = 0;
     }
 
@@ -723,18 +802,17 @@ void HantekDsoControl::updateInterval() {
     // Check the current oscilloscope state everytime 25% of the time
     //  the buffer should be refilled (-> acquireInterval in ms)
     // Use real 100% rate for demo device
-    int sampleInterval = int( getSamplesize() * 1000.0 / controlsettings.samplerate.current );
+    int sampleInterval = int( getSamplesize() * 250.0 / controlsettings.samplerate.current );
     // Slower update reduces CPU load but it worsens the triggering of rare events
     // Display can be filled at slower rate (not faster than displayInterval)
-    acquireInterval = int( 1000 * scope->horizontal.acquireInterval );
+    acquireInterval = 1; // = int( 1000 * scope->horizontal.acquireInterval );
+    // acquireInterval = int( 1000 * scope->horizontal.acquireInterval );
 #ifdef __arm__
     displayInterval = 20; // update display at least every 20 ms
 #else
     displayInterval = 10; // update display at least every 10 ms
 #endif
-    acquireDelay = qMax( 0, acquireInterval - sampleInterval );
-    // qDebug() << sampleInterval << acquireInterval << acquireDelay;
-    acquireInterval = qMax( sampleInterval, acquireInterval );
+    acquireInterval = qMin( qMax( sampleInterval, acquireInterval ), 100 );
 }
 
 
@@ -743,52 +821,16 @@ void HantekDsoControl::stateMachine() {
     static int delayDisplay = 0;       // timer for display
     static bool lastTriggered = false; // state of last frame
     static bool skipEven = true;       // even or odd frames were skipped
-    static uint8_t activeChannels = 2; // detect 1 <-> 2 channel change
-    int errorCode = 0;
-    // Send all pending control commands
-    ControlCommand *controlCommand = firstControlCommand;
-    while ( controlCommand ) {
-        if ( controlCommand->pending ) {
-            timestampDebug( QString( "Sending control command %1:%2" )
-                                .arg( QString::number( controlCommand->code, 16 ),
-                                      hexDump( controlCommand->data(), unsigned( controlCommand->size() ) ) ) );
-            if ( controlCommand->code == uint8_t( ControlCode::CONTROL_SETNUMCHANNELS ) )
-                activeChannels = *controlCommand->data();
-
-            if ( scopeDevice->isRealHW() ) { // do the USB communication with scope HW
-                errorCode = scopeDevice->controlWrite( controlCommand );
-                if ( errorCode < 0 ) {
-                    qWarning( "Sending control command %2x failed: %s", uint8_t( controlCommand->code ),
-                              libUsbErrorString( errorCode ).toLocal8Bit().data() );
-
-                    if ( errorCode == LIBUSB_ERROR_NO_DEVICE ) {
-                        emit communicationError();
-                        return;
-                    }
-                } else {
-                    controlCommand->pending = false;
-                }
-            } else {
-                controlCommand->pending = false;
-            }
-        }
-        controlCommand = controlCommand->next;
-    }
+    static unsigned lastTag = 0;
 
     bool triggered = false;
-    std::vector< unsigned char > rawData;
-    if ( scopeDevice->isRealHW() ) {
-        rawData = this->getSamples( expectedSampleCount );
-    } else {
-        // QThread::msleep( unsigned( sampleDelay ) );
-        rawData = this->getDemoSamples( expectedSampleCount );
-        QThread::msleep( unsigned( getSamplesize() * 1000.0 / controlsettings.samplerate.current ) );
-    }
-    if ( samplingStarted ) {
-        convertRawDataToSamples( rawData, activeChannels );             // process new samples
-        if ( controlsettings.trigger.mode != Dso::TriggerMode::NONE ) { // search trigger
-            searchTriggerPosition();                                    // detect trigger point
-            triggered = provideTriggeredData();                         // present either free running or last triggered trace
+
+    if ( samplingStarted && raw.tag != lastTag ) {
+        lastTag = raw.tag;
+        convertRawDataToSamples();              // process new samples
+        if ( !result.freeRuning ) {             // search trigger
+            searchTriggerPosition();            // detect trigger point
+            triggered = provideTriggeredData(); // present either free running or last triggered trace
         } else { // free running display (uses half sample size -> double display speed for slow sample rates)
             triggered = false;
             result.triggerPosition = 0;
@@ -820,18 +862,20 @@ void HantekDsoControl::stateMachine() {
     // Sampling completed, restart it when necessary
     samplingStarted = false;
 
-    if ( sampling ) {
+    if ( isSampling() ) {
         // Sampling hasn't started, update the expected sample count
         expectedSampleCount = this->getSampleCount();
         timestampDebug( "Starting to capture" );
         samplingStarted = true;
     }
     updateInterval(); // calculate new acquire timing
+    if ( stateMachineRunning ) {
 #if ( QT_VERSION >= QT_VERSION_CHECK( 5, 4, 0 ) )
-    QTimer::singleShot( acquireDelay, this, &HantekDsoControl::stateMachine );
+        QTimer::singleShot( acquireInterval, this, &HantekDsoControl::stateMachine );
 #else
-    QTimer::singleShot( acquireDelay, this, SLOT( stateMachine() ) );
+        QTimer::singleShot( acquireInterval, this, SLOT( stateMachine() ) );
 #endif
+    }
 }
 
 

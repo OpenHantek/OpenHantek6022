@@ -211,8 +211,25 @@ QString hexDump( unsigned char *data, unsigned int length ) {
     QString dumpString, byteString;
 
     for ( unsigned int index = 0; index < length; ++index )
-        dumpString.append( byteString.sprintf( " %02x", data[ index ] ) );
+        dumpString.append( byteString.sprintf( " 0x%02x", data[ index ] ) );
 
+    return dumpString;
+}
+
+QString decDump( unsigned char *data, unsigned int length ) {
+    QString dumpString, byteString;
+
+    for ( unsigned int index = 0; index < length; ++index )
+        dumpString.append( byteString.sprintf( " %3u", data[ index ] ) );
+
+    return dumpString;
+}
+
+QString hexdecDump( unsigned char *data, unsigned int length ) {
+    QString dumpString, byteString;
+
+    for ( unsigned int index = 0; index < length; ++index )
+        dumpString.append( byteString.sprintf( " 0x%02x (%u)", data[ index ], data[ index ] ) );
     return dumpString;
 }
 

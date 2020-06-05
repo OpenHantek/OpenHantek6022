@@ -21,18 +21,35 @@
 #include <vector>
 
 #include <QMutex>
+#include <QReadLocker>
+#include <QReadWriteLock>
 #include <QStringList>
 #include <QThread>
 #include <QTimer>
+#include <QWriteLocker>
 
 #define SAMPLESIZE_USED 20000
 
+class Capturing;
 class ScopeDevice;
+
+struct Raw {
+    unsigned channels = 0;
+    double samplerate = 0;
+    unsigned oversampling = 0;
+    unsigned gainValue[ 2 ] = {1, 1}; // 1,2,5,10,..
+    unsigned gainIndex[ 2 ] = {7, 7}; // index 0..7
+    bool freeRuning = false;
+    unsigned tag = 0;
+    std::vector< unsigned char > data;
+    mutable QReadWriteLock lock;
+};
 
 /// \brief The DsoControl abstraction layer for %Hantek USB DSOs.
 /// TODO Please anyone, refactor this class into smaller pieces (Separation of Concerns!).
 class HantekDsoControl : public QObject {
     Q_OBJECT
+    friend Capturing;
 
   public:
     /**
@@ -52,6 +69,8 @@ class HantekDsoControl : public QObject {
     /// This method will call itself periodically from there on.
     /// Move this class object to an own thread and call run from there.
     void stateMachine();
+
+    void stopStateMachine() { stateMachineRunning = false; }
 
     double getSamplerate() const { return controlsettings.samplerate.current; }
 
@@ -96,7 +115,7 @@ class HantekDsoControl : public QObject {
     /// \brief Stops the device.
     void stopSampling();
 
-  private:
+    // private:
     bool fastRate = true;
     void setFastRate( bool fast ) { fastRate = fast; }
     bool isFastRate() const { return fastRate; }
@@ -109,6 +128,12 @@ class HantekDsoControl : public QObject {
     /// \return The total number of samples the scope should return.
     unsigned getSampleCount() const { return isFastRate() ? getRecordLength() : getRecordLength() * specification->channels; }
 
+    /// adjust for skipping of minimal 2048 leading samples
+    unsigned grossSampleCount( unsigned net ) const { return ( ( net + 1024 ) / 1024 + 2 ) * 1024; }
+
+    /// calculate backwards to get multiples of 1000 (typical 20000 or 10000)
+    unsigned netSampleCount( unsigned gross ) const { return ( ( gross - 1024 ) / 1000 - 1 ) * 1000; }
+
     void updateInterval();
 
     /// \brief Calculates the trigger point from the CommandGetCaptureState data.
@@ -116,14 +141,23 @@ class HantekDsoControl : public QObject {
     /// \return The calculated trigger point for the given data.
     static unsigned calculateTriggerPoint( unsigned value );
 
+    // void capture( HantekDsoControl *hdc );
+
     /// \brief Gets sample data from the oscilloscope
     std::vector< unsigned char > getSamples( unsigned &expectedSampleCount ) const;
+
+    /// \brief Gets sample data from the oscilloscope
+    std::vector< unsigned char > getSamples() const;
 
     /// \brief Gets dummy data from the demo device
     std::vector< unsigned char > getDemoSamples( unsigned &expectedSampleCount ) const;
 
+    /// \brief Gets dummy data from the demo device
+    std::vector< unsigned char > getDemoSamples() const;
+
     /// \brief Converts raw oscilloscope data to sample data
-    void convertRawDataToSamples( const std::vector< unsigned char > &rawData, unsigned numChannels );
+    // void convertRawDataToSamples( const std::vector< unsigned char > &rawData );
+    void convertRawDataToSamples();
 
     /// \brief Restore the samplerate/timebase targets after divider updates.
     void restoreTargets();
@@ -162,11 +196,14 @@ class HantekDsoControl : public QObject {
     unsigned expectedSampleCount = 0; ///< The expected total number of samples at
                                       /// the last check before sampling started
     bool samplingStarted = false;
-    int acquireDelay = 0;
+    bool stateMachineRunning = false;
     int acquireInterval = 0;
     int displayInterval = 0;
     bool channelSetupChanged = false;
     unsigned triggeredPositionRaw = 0; // not triggered
+    unsigned activeChannels = 2;
+    Raw raw;
+
 
   public slots:
     /// \brief If sampling is disabled, no samplesAvailable() signals are send anymore, no samples

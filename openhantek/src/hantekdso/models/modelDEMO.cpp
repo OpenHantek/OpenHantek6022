@@ -20,6 +20,9 @@ static void initSpecifications( Dso::ControlSpecification &specification ) {
     // SAMPLESIZE defined in hantekdsocontrol.h
     // adapt accordingly in HantekDsoControl::convertRawDataToSamples()
 
+    // HW gain, voltage steps in V/div (ranges 20,50,100,200,500,1000,2000,5000 mV)
+    specification.gain = {{10, 20e-3}, {10, 50e-3}, {10, 100e-3}, {5, 200e-3}, {2, 500e-3}, {1, 1.00}, {1, 2.00}, {1, 5.00}};
+
     // Define the scaling between ADC sample values and real input voltage
     // Everything is scaled on the full screen height (8 divs)
     // The voltage/div setting:      20m   50m  100m  200m  500m    1V    2V    5V
@@ -27,8 +30,8 @@ static void initSpecifications( Dso::ControlSpecification &specification ) {
     // Theoretical gain setting:     x10   x10   x10   x5    x2     x1    x1    x1
     // mV / digit:                     4     4     4     8    20    40    40    40
     // The sample value for full screen (8 divs) with theoretical gain setting
-    specification.voltageScale[ 0 ] = {40, 100, 200, 200, 200, 200, 400, 1000};
-    specification.voltageScale[ 1 ] = {40, 100, 200, 200, 200, 200, 400, 1000};
+    specification.voltageScale[ 0 ] = {250, 250, 250, 125, 50, 25, 25, 25};
+    specification.voltageScale[ 1 ] = {250, 250, 250, 125, 50, 25, 25, 25};
     specification.voltageOffset[ 0 ] = {0, 0, 0, 0, 0, 0, 0, 0};
     specification.voltageOffset[ 1 ] = {0, 0, 0, 0, 0, 0, 0, 0};
     // Gain and offset can be corrected by individual config values from file
@@ -66,9 +69,6 @@ static void initSpecifications( Dso::ControlSpecification &specification ) {
         settings.endGroup(); // channels
     }
     settings.endGroup(); // offset
-
-    // HW gain, voltage steps in V/screenheight (ranges 20,50,100,200,500,1000,2000,5000 mV)
-    specification.gain = {{10, 0.16}, {10, 0.40}, {10, 0.80}, {5, 1.60}, {2, 4.00}, {1, 8.00}, {1, 16.00}, {1, 40.00}};
 
     // Possible raw sample rates with custom fw from https://github.com/Ho-Ro/Hantek6022API
     // 20k, 50k, 64k, 100k, 200k, 500k, 1M, 2M, 3M, 4M, 5M, 6M, 8M, 10M, 12M, 15M, 16M, 24M, 30M (, 48M)
@@ -108,9 +108,9 @@ static void initSpecifications( Dso::ControlSpecification &specification ) {
 
     specification.couplings = {Dso::Coupling::DC};
     specification.triggerModes = {
+        Dso::TriggerMode::NONE,
         Dso::TriggerMode::AUTO,
         Dso::TriggerMode::NORMAL,
-        Dso::TriggerMode::NONE,
         Dso::TriggerMode::SINGLE,
     };
     specification.fixedUSBinLength = 0;
@@ -122,9 +122,9 @@ static void initSpecifications( Dso::ControlSpecification &specification ) {
 }
 
 static void applyRequirements_( HantekDsoControl *dsoControl ) {
-    dsoControl->addCommand( new ControlSetVoltDIV_CH1() ); // 0xE0
-    dsoControl->addCommand( new ControlSetVoltDIV_CH2() ); // 0xE1
-    dsoControl->addCommand( new ControlSetTimeDIV() );     // 0xE2
+    dsoControl->addCommand( new ControlSetGain_CH1() );    // 0xE0
+    dsoControl->addCommand( new ControlSetGain_CH2() );    // 0xE1
+    dsoControl->addCommand( new ControlSetSamplerate() );  // 0xE2
     dsoControl->addCommand( new ControlStartSampling() );  // 0xE3
     dsoControl->addCommand( new ControlSetNumChannels() ); // 0xE4
     dsoControl->addCommand( new ControlSetCoupling() );    // 0xE5 (no effect w/o AC/DC HW mod)

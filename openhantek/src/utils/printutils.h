@@ -27,11 +27,13 @@ QString valueToString( double value, Unit unit, int precision = -1 );
 /// \return Decoded value.
 double stringToValue( const QString &text, Unit unit, bool *ok = nullptr );
 
-/// \brief Returns the hex dump for the given data.
+/// \brief Returns the hex or decimal dump for the given data.
 /// \param data Pointer to the data bytes that should be dumped.
 /// \param length The length of the data array in bytes.
-/// \return String with the hex dump of the data.
+/// \return String with the dump of the data.
 QString hexDump( unsigned char *data, unsigned int length );
+QString decDump( unsigned char *data, unsigned int length );
+QString hexdecDump( unsigned char *data, unsigned int length );
 
 /// \brief Returns the hex dump for the given data.
 /// \param dump The string with the hex dump of the data.

@@ -13,24 +13,25 @@
 namespace Hantek {
 struct CalibrationValues;
 
-struct ControlSetVoltDIV_CH1 : public ControlCommand {
-    ControlSetVoltDIV_CH1();
-    void setDiv( uint8_t val );
+
+struct ControlSetGain_CH1 : public ControlCommand {
+    ControlSetGain_CH1();
+    void setGainCH1( uint8_t gain, uint8_t index );
 };
 
-struct ControlSetVoltDIV_CH2 : public ControlCommand {
-    ControlSetVoltDIV_CH2();
-    void setDiv( uint8_t val );
+struct ControlSetGain_CH2 : public ControlCommand {
+    ControlSetGain_CH2();
+    void setGainCH2( uint8_t gain, uint8_t index );
 };
 
-struct ControlSetTimeDIV : public ControlCommand {
-    ControlSetTimeDIV();
-    void setDiv( uint8_t val );
+struct ControlSetSamplerate : public ControlCommand {
+    ControlSetSamplerate();
+    void setSamplerate( uint8_t sampleId, uint8_t oversampling );
 };
 
 struct ControlSetNumChannels : public ControlCommand {
     ControlSetNumChannels();
-    void setDiv( uint8_t val );
+    void setNumChannels( uint8_t val );
 };
 
 struct ControlStartSampling : public ControlCommand {

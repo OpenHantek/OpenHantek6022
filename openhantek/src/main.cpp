@@ -25,6 +25,7 @@
 #include "viewsettings.h"
 
 // DSO core logic
+#include "capturing.h"
 #include "dsomodel.h"
 #include "hantekdsocontrol.h"
 #include "usb/scopedevice.h"
@@ -62,6 +63,29 @@
 
 
 using namespace Hantek;
+
+
+#if 0
+class OHApplication Q_DECL_FINAL : public QApplication {
+    // Q_OBJECT
+  public:
+    OHApplication( int &argc, char **argv ) : QApplication( argc, argv ) {}
+
+    bool notify( QObject *receiver, QEvent *event ) Q_DECL_OVERRIDE {
+        try {
+            return QApplication::notify( receiver, event );
+            //} catch (Tango::DevFailed &e) {
+            // Handle the desired exception type
+        } catch ( ... ) {
+            qDebug() << "notify:" << event;
+            exit( 0 );
+            // Handle the rest
+        }
+
+        return false;
+    }
+};
+#endif
 
 /// \brief Initialize resources and translations and show the main window.
 int main( int argc, char *argv[] ) {
@@ -179,11 +203,13 @@ int main( int argc, char *argv[] ) {
     dsoControl.moveToThread( &dsoControlThread );
     QObject::connect( &dsoControlThread, &QThread::started, &dsoControl, &HantekDsoControl::stateMachine );
     QObject::connect( &dsoControl, &HantekDsoControl::communicationError, QCoreApplication::instance(), &QCoreApplication::quit );
+
     if ( scopeDevice )
         QObject::connect( scopeDevice.get(), &ScopeDevice::deviceDisconnected, QCoreApplication::instance(),
                           &QCoreApplication::quit );
 
     const Dso::ControlSpecification *spec = model->spec();
+
     //////// Create settings object ////////
     DsoSettings settings( spec );
 
@@ -234,11 +260,24 @@ int main( int argc, char *argv[] ) {
     dsoControl.enableSampling( true );
     postProcessingThread.start();
     dsoControlThread.start();
+    Capturing capturing( &dsoControl );
+    capturing.start();
+
     int appStatus = openHantekApplication.exec();
 
     //////// Application closed, clean up step by step ////////
 
     std::cout << std::unitbuf; // enable automatic flushing
+
+    dsoControl.stopSampling(); // send USB control command
+    dsoControl.enableSampling( false );
+
+    unsigned waitForCapturing = unsigned( 2000 * dsoControl.getSamplesize() / dsoControl.getSamplerate() );
+    if ( waitForCapturing < 10000 ) // minimum 10 s
+        waitForCapturing = 10000;
+    capturing.requestInterruption();
+    capturing.wait( waitForCapturing );
+    // capturing.terminate();
     std::cout << "OpenHantek6022 ";
 
     // first stop the data acquisition
@@ -246,11 +285,13 @@ int main( int argc, char *argv[] ) {
     unsigned waitForDso = unsigned( 2000 * dsoControl.getSamplesize() / dsoControl.getSamplerate() );
     if ( waitForDso < 10000 ) // minimum 10 s
         waitForDso = 10000;
+    // dsoControlThread.terminate();
     dsoControlThread.quit();
     dsoControlThread.wait( waitForDso );
     std::cout << "stopped ";
 
     // next stop the data processing
+    // postProcessingThread.terminate();
     postProcessingThread.quit();
     postProcessingThread.wait( 10000 );
     std::cout << "after ";

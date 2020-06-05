@@ -26,7 +26,7 @@ struct ControlSettingsSamplerate {
     ControlSettingsSamplerateTarget target; ///< The target samplerate values
     const ControlSamplerateLimits *limits;  ///< The samplerate limits
     unsigned int downsampler = 1;           ///< The variable downsampling factor
-    double current = 1e8;                   ///< The current samplerate
+    double current = 1e6;                   ///< The current samplerate
 };
 
 /// \brief Stores the current trigger settings of the device.

@@ -7,24 +7,38 @@
 
 namespace Hantek {
 
-ControlSetVoltDIV_CH1::ControlSetVoltDIV_CH1() : ControlCommand( ControlCode::CONTROL_SETVOLTDIV_CH1, 1 ) { this->setDiv( 5 ); }
 
-void ControlSetVoltDIV_CH1::setDiv( uint8_t val ) { data()[ 0 ] = val; }
+ControlSetGain_CH1::ControlSetGain_CH1() : ControlCommand( ControlCode::CONTROL_SETGAIN_CH1, 2 ) { this->setGainCH1( 1, 7 ); }
 
-
-ControlSetVoltDIV_CH2::ControlSetVoltDIV_CH2() : ControlCommand( ControlCode::CONTROL_SETVOLTDIV_CH2, 1 ) { this->setDiv( 5 ); }
-
-void ControlSetVoltDIV_CH2::setDiv( uint8_t val ) { data()[ 0 ] = val; }
-
-
-ControlSetTimeDIV::ControlSetTimeDIV() : ControlCommand( ControlCode::CONTROL_SETTIMEDIV, 1 ) { this->setDiv( 1 ); }
-
-void ControlSetTimeDIV::setDiv( uint8_t val ) { data()[ 0 ] = val; }
+void ControlSetGain_CH1::setGainCH1( uint8_t gain, uint8_t index ) {
+    data()[ 0 ] = gain;
+    data()[ 1 ] = index;
+}
 
 
-ControlSetNumChannels::ControlSetNumChannels() : ControlCommand( ControlCode::CONTROL_SETNUMCHANNELS, 1 ) { this->setDiv( 2 ); }
+ControlSetGain_CH2::ControlSetGain_CH2() : ControlCommand( ControlCode::CONTROL_SETGAIN_CH2, 2 ) { this->setGainCH2( 1, 7 ); }
 
-void ControlSetNumChannels::setDiv( uint8_t val ) { data()[ 0 ] = val; }
+void ControlSetGain_CH2::setGainCH2( uint8_t gain, uint8_t index ) {
+    data()[ 0 ] = gain;
+    data()[ 1 ] = index;
+}
+
+
+ControlSetSamplerate::ControlSetSamplerate() : ControlCommand( ControlCode::CONTROL_SETSAMPLERATE, 2 ) {
+    this->setSamplerate( 1, 1 );
+}
+
+void ControlSetSamplerate::setSamplerate( uint8_t id, uint8_t oversampling ) {
+    data()[ 0 ] = id;
+    data()[ 1 ] = oversampling;
+}
+
+
+ControlSetNumChannels::ControlSetNumChannels() : ControlCommand( ControlCode::CONTROL_SETNUMCHANNELS, 1 ) {
+    this->setNumChannels( 2 );
+}
+
+void ControlSetNumChannels::setNumChannels( uint8_t val ) { data()[ 0 ] = val; }
 
 
 ControlStartSampling::ControlStartSampling() : ControlCommand( ControlCode::CONTROL_STARTSAMPLING, 1 ) { data()[ 0 ] = 0x01; }

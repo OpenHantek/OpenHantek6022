@@ -20,12 +20,31 @@ static void initSpecifications( Dso::ControlSpecification &specification ) {
     // SAMPLESIZE defined in hantekdsocontrol.h
     // adapt accordingly in HantekDsoControl::convertRawDataToSamples()
 
+    // HW gain, voltage steps in V/screenheight (ranges 20,50,100,200,500,1000,2000,5000 mV)
+    // DDS120 has gainsteps 20x, 10x, 5x, 2x and 1x (as well as also 4x)
+    // Hantek has only 10x, 5x, 2x, 1x
+    specification.gain = {
+        //              ID, HW gain, voltage/div
+        {20, 20e-3},  // 0     20       20mV/div
+        {20, 50e-3},  // 1     20       50mV/div
+        {10, 100e-3}, // 2     10      100mV/div
+        {5, 200e-3},  // 3      5      200mV/div
+        {2, 500e-3},  // 4      2      500mV/div
+        {1, 1.00},    // 5      1         1V/div
+        {1, 2.00},    // 6      1         2V/div
+        {1, 5.00}     // 7      1         5V/div
+    };
+
     // This data was based on testing and depends on divider.
     // The sample value at the top of the screen with gain error correction
     // TODO: check if 20x is possible for 1st and 2nd value
     // double the values accordingly 32 -> 64 & 80 -> 160 and change 10 -> 20 in specification.gain below
-    specification.voltageScale[ 0 ] = {64, 160, 160, 155, 170, 165, 330, 820};
-    specification.voltageScale[ 1 ] = {64, 160, 160, 155, 170, 165, 330, 820};
+    // DDS120 correction factors x20: 0.80, x10: 0.80, x5: 0.77, x2: 0.86, x1: 0.83
+    // theoretical voltageScales x20: 500,  x10: 250,  x5: 125,  x2: 50,   x1: 25
+    specification.voltageScale[ 0 ] = {400, 400, 200, 96, 43, 21, 21, 21};
+    specification.voltageScale[ 1 ] = {400, 400, 200, 96, 43, 21, 21, 21};
+    // specification.voltageScale[ 0 ] = {64, 160, 160, 155, 170, 165, 330, 820};
+    // specification.voltageScale[ 1 ] = {64, 160, 160, 155, 170, 165, 330, 820};
     // theoretical offset, will be corrected by individual config file
     specification.voltageOffset[ 0 ] = {0, 0, 0, 0, 0, 0, 0, 0};
     specification.voltageOffset[ 1 ] = {0, 0, 0, 0, 0, 0, 0, 0};
@@ -76,23 +95,6 @@ static void initSpecifications( Dso::ControlSpecification &specification ) {
     settings.endGroup(); // offset
     QSettings::setDefaultFormat( QSettings::NativeFormat );
 
-    // HW gain, voltage steps in V/screenheight (ranges 20,50,100,200,500,1000,2000,5000 mV)
-    // DDS120 has gainsteps 20x, 10x, 5x, 2x and 1x (as well as also 4x)
-    // Hantek has only 10x, 5x, 2x, 1x
-    // TODO: check if 20x is possible for ID 0 and ID 1
-    // change 10 to 20 and double the values of specification.voltageLimit[] above
-    specification.gain = {
-        // ID, HW gain, full scale voltage
-        {20, 0.16}, // 0     20         160mV =  20mV/div
-        {20, 0.40}, // 1     20         400mV =  50mV/div
-        {10, 0.80}, // 2     10         800mV = 100mV/div
-        {5, 1.60},  // 3      5          1.6V = 200mV/div
-        {2, 4.00},  // 4      2          4.0V = 500mV/div
-        {1, 8.00},  // 5      1          8.0V =    1V/div
-        {1, 16.00}, // 6      1         16.0V =    2V/div
-        {1, 40.00}  // 7      1         40.0V =    5V/div
-    };
-
 
     specification.samplerate.single.base = 1e6;
     specification.samplerate.single.max = 30e6;
@@ -128,9 +130,9 @@ static void initSpecifications( Dso::ControlSpecification &specification ) {
 
     specification.couplings = {Dso::Coupling::DC, Dso::Coupling::AC};
     specification.triggerModes = {
+        Dso::TriggerMode::NONE,
         Dso::TriggerMode::AUTO,
         Dso::TriggerMode::NORMAL,
-        Dso::TriggerMode::NONE,
         Dso::TriggerMode::SINGLE,
     };
     specification.fixedUSBinLength = 0;
@@ -140,9 +142,9 @@ static void initSpecifications( Dso::ControlSpecification &specification ) {
 }
 
 static void applyRequirements_( HantekDsoControl *dsoControl ) {
-    dsoControl->addCommand( new ControlSetVoltDIV_CH1() ); // 0xE0
-    dsoControl->addCommand( new ControlSetVoltDIV_CH2() ); // 0xE1
-    dsoControl->addCommand( new ControlSetTimeDIV() );     // 0xE2
+    dsoControl->addCommand( new ControlSetGain_CH1() );    // 0xE0
+    dsoControl->addCommand( new ControlSetGain_CH2() );    // 0xE1
+    dsoControl->addCommand( new ControlSetSamplerate() );  // 0xE2
     dsoControl->addCommand( new ControlStartSampling() );  // 0xE3
     dsoControl->addCommand( new ControlSetNumChannels() ); // 0xE4
     dsoControl->addCommand( new ControlSetCoupling() );    // 0xE5

@@ -43,9 +43,9 @@ namespace Hantek {
 
 enum class ControlCode : uint8_t {
     CONTROL_GETEEPROM = 0xa2,
-    CONTROL_SETVOLTDIV_CH1 = 0xe0,
-    CONTROL_SETVOLTDIV_CH2 = 0xe1,
-    CONTROL_SETTIMEDIV = 0xe2,
+    CONTROL_SETGAIN_CH1 = 0xe0,
+    CONTROL_SETGAIN_CH2 = 0xe1,
+    CONTROL_SETSAMPLERATE = 0xe2,
     CONTROL_STARTSAMPLING = 0xe3,
     CONTROL_SETNUMCHANNELS = 0xe4,
     CONTROL_SETCOUPLING = 0xe5, // DC/AC not possible without hw modification on Hantek 6022, but implemented on Sainsmart DS120

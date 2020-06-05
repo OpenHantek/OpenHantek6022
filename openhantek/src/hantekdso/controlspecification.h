@@ -26,15 +26,16 @@ struct ControlSpecificationSamplerate {
 
 struct ControlSpecificationGainLevel {
     /// The index of the selected gain on the hardware
-    unsigned char gainIndex;
-    /// Available voltage steps in V/screenheight
-    double gainSteps;
+    unsigned char gainValue; // 1, 2, 5, 10, ..
+    /// Available voltage steps in V/div
+    double Vdiv;
+    // double gainError;
 };
 
 struct FixedSampleRate {
     double samplerate;
     unsigned char id;
-    unsigned downsampling;
+    unsigned oversampling;
 };
 
 /// \brief Stores the specifications of the currently connected device.
@@ -52,10 +53,10 @@ struct ControlSpecification {
     /// DSO6022 has calibration in small EEPROM, DDS120 has big fw EEPROM
     bool hasCalibrationEEPROM = true;
     bool isDemoDevice = false;
-    /// The sample values at the top of the screen
-    typedef std::vector< int > VoltageScale;
+    /// The sample values for one div
+    typedef std::vector< double > VoltageScale;
     std::vector< VoltageScale > voltageScale; // Per channel
-    typedef std::vector< int > VoltageOffset;
+    typedef std::vector< double > VoltageOffset;
     std::vector< VoltageOffset > voltageOffset; // Per channel
 
     /// Gain levels
