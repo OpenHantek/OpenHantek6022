@@ -8,20 +8,20 @@ DsoConfigScopePage::DsoConfigScopePage( DsoSettings *settings, QWidget *parent )
     interpolationStrings << tr( "Off" ) << tr( "Linear" );
     QList< double > timebaseSteps = {1.0, 2.0, 5.0, 10.0};
 
-    maxTimebaseLabel = new QLabel( tr( "Set slowest possible timebase<br/>(<b>GUI may become very unresponsible!</b>)" ) );
+    maxTimebaseLabel = new QLabel( tr( "Set slowest possible timebase" ) );
     maxTimebaseSiSpinBox = new SiSpinBox();
     maxTimebaseSiSpinBox = new SiSpinBox( UNIT_SECONDS );
     maxTimebaseSiSpinBox->setSteps( timebaseSteps );
     maxTimebaseSiSpinBox->setMinimum( 0.1 ); // default 100 ms/div
-    maxTimebaseSiSpinBox->setMaximum( 1.0 );
+    maxTimebaseSiSpinBox->setMaximum( 1.0 ); // possible steps: 200, 500, 1000 ms
     maxTimebaseSiSpinBox->setValue( settings->scope.horizontal.maxTimebase );
 
     acquireIntervalLabel = new QLabel( tr( "Minimal time between captured frames<br/>(Longer times reduce the CPU load)" ) );
     acquireIntervalSiSpinBox = new SiSpinBox();
     acquireIntervalSiSpinBox = new SiSpinBox( UNIT_SECONDS );
     acquireIntervalSiSpinBox->setSteps( timebaseSteps );
-    acquireIntervalSiSpinBox->setMinimum( 500e-6 );
-    acquireIntervalSiSpinBox->setMaximum( 50e-3 );
+    acquireIntervalSiSpinBox->setMinimum( 500e-6 ); // double 500 µs -> unsigned 0 ms delay
+    acquireIntervalSiSpinBox->setMaximum( 50e-3 );  // 50 ms delay
     acquireIntervalSiSpinBox->setValue( settings->scope.horizontal.acquireInterval );
 
     horizontalLayout = new QGridLayout();

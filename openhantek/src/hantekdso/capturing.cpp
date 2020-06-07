@@ -21,7 +21,10 @@ void Capturing::run() {
             hdc->stopStateMachine(); // stop the state machine
             return;                  // stop this thread
         }
-        capture();
+        if ( hdc->scope ) { // device is initialized
+            capture();
+            QThread::msleep( unsigned( 1000 * hdc->scope->horizontal.acquireInterval ) );
+        }
     }
 }
 
@@ -60,8 +63,9 @@ void Capturing::capture() {
                 channels = *controlCommand->data();
                 break;
             case uint8_t( ControlCode::CONTROL_SETSAMPLERATE ):
+                uint8_t sampleIndex = controlCommand->data()[ 1 ];
+                oversampling = uint8_t( hdc->specification->fixedSampleRates[ sampleIndex ].oversampling );
                 samplerate = id2sr( controlCommand->data()[ 0 ] );
-                oversampling = controlCommand->data()[ 1 ];
                 break;
             }
             if ( hdc->scopeDevice->isRealHW() ) { // do the USB communication with scope HW
@@ -83,13 +87,15 @@ void Capturing::capture() {
         }
         controlCommand = controlCommand->next;
     }
-    ++tag;
+    freeRunning = hdc->controlsettings.trigger.mode == Dso::TriggerMode::NONE;
+    if ( rawSamplesize >= hdc->grossSampleCount( hdc->getSamplesize() * oversampling ) * channels )
+        ++tag;
+    rawSamplesize = hdc->grossSampleCount( hdc->getSamplesize() * oversampling ) * channels;
     if ( hdc->scopeDevice->isRealHW() ) {
         getRealSamples();
     } else {
         getDemoSamples();
     }
-
     QWriteLocker locker( &hdc->raw.lock );
     swap( data, hdc->raw.data );
     hdc->raw.channels = channels;
@@ -99,7 +105,7 @@ void Capturing::capture() {
     hdc->raw.gainValue[ 1 ] = gainValue[ 1 ];
     hdc->raw.gainIndex[ 0 ] = gainIndex[ 0 ];
     hdc->raw.gainIndex[ 1 ] = gainIndex[ 1 ];
-    hdc->raw.freeRuning = freeRun;
+    hdc->raw.freeRunning = freeRunning;
     hdc->raw.tag = tag;
 }
 
@@ -113,11 +119,9 @@ void Capturing::getRealSamples() {
         hdc->raw.data = std::vector< unsigned char >();
         return;
     }
-    unsigned rawSampleCount = hdc->getSampleCount();
     // Save raw data to temporary buffer
-    data.reserve( rawSampleCount );
-    freeRun = hdc->controlsettings.trigger.mode == Dso::TriggerMode::NONE;
-    int retval = hdc->scopeDevice->bulkReadMulti( data.data(), rawSampleCount );
+    data.reserve( rawSamplesize );
+    int retval = hdc->scopeDevice->bulkReadMulti( data.data(), rawSamplesize );
     if ( retval < 0 ) {
         qWarning() << "bulkReadMulti: Getting sample data failed: " << libUsbErrorString( retval );
         hdc->raw.data = std::vector< unsigned char >();
@@ -136,7 +140,7 @@ void Capturing::getDemoSamples() {
     static uint8_t ch1 = V_zero;
     static uint8_t ch2 = V_zero;
     static int counter = 0;
-    data.resize( hdc->getRecordLength() * channels );
+    data.resize( rawSamplesize );
     auto end = data.end();
     int deltaT = 99;
     double samplerate = hdc->getSamplerate();

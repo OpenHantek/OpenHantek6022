@@ -18,9 +18,10 @@ class Capturing : public QThread {
     unsigned channels = 0;
     double samplerate = 0;
     unsigned oversampling = 0;
+    unsigned rawSamplesize = 0;
+    bool freeRunning = false;
     unsigned gainValue[ 2 ] = {0, 0}; // 1,2,5,10,..
     unsigned gainIndex[ 2 ] = {0, 0}; // index 0..7
-    bool freeRun = false;
     unsigned tag = 0;
     std::vector< unsigned char > data;
 };

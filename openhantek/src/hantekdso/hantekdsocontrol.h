@@ -39,7 +39,7 @@ struct Raw {
     unsigned oversampling = 0;
     unsigned gainValue[ 2 ] = {1, 1}; // 1,2,5,10,..
     unsigned gainIndex[ 2 ] = {7, 7}; // index 0..7
-    bool freeRuning = false;
+    bool freeRunning = false;
     unsigned tag = 0;
     std::vector< unsigned char > data;
     mutable QReadWriteLock lock;
@@ -143,18 +143,6 @@ class HantekDsoControl : public QObject {
 
     // void capture( HantekDsoControl *hdc );
 
-    /// \brief Gets sample data from the oscilloscope
-    std::vector< unsigned char > getSamples( unsigned &expectedSampleCount ) const;
-
-    /// \brief Gets sample data from the oscilloscope
-    std::vector< unsigned char > getSamples() const;
-
-    /// \brief Gets dummy data from the demo device
-    std::vector< unsigned char > getDemoSamples( unsigned &expectedSampleCount ) const;
-
-    /// \brief Gets dummy data from the demo device
-    std::vector< unsigned char > getDemoSamples() const;
-
     /// \brief Converts raw oscilloscope data to sample data
     // void convertRawDataToSamples( const std::vector< unsigned char > &rawData );
     void convertRawDataToSamples();
@@ -188,7 +176,7 @@ class HantekDsoControl : public QObject {
     const DSOModel *model;                          ///< The attached scope model
     const Dso::ControlSpecification *specification; ///< The specifications of the device
     Dso::ControlSettings controlsettings;           ///< The current settings of the device
-    const DsoSettingsScope *scope;                  ///< Global scope parameters and configuations
+    const DsoSettingsScope *scope = nullptr;        ///< Global scope parameters and configuations
 
     // Results
     unsigned downsamplingNumber = 1; ///< Number of downsamples to reduce sample rate

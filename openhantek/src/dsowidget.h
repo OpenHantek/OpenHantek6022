@@ -108,6 +108,7 @@ class DsoWidget : public QWidget {
     double pulseWidth1 = 0.0;
     double pulseWidth2 = 0.0;
     void setColors();
+    void showTriggerSlider( bool visible );
 
   public slots:
     // Horizontal axis

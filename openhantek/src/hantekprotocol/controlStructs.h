@@ -26,7 +26,7 @@ struct ControlSetGain_CH2 : public ControlCommand {
 
 struct ControlSetSamplerate : public ControlCommand {
     ControlSetSamplerate();
-    void setSamplerate( uint8_t sampleId, uint8_t oversampling );
+    void setSamplerate( uint8_t sampleId, uint8_t index );
 };
 
 struct ControlSetNumChannels : public ControlCommand {

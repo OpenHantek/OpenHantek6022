@@ -267,9 +267,13 @@
 (Des durées plus longues réduisent la charge du CPU)</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="11"/>
         <source>Set slowest possible timebase&lt;br/&gt;(&lt;b&gt;GUI may become very unresponsible!&lt;/b&gt;)</source>
-        <translation>Fixer la base de temps la plus lente possible&lt;br/&gt;(&lt;b&gt;L&apos;interface graphique peut devenir très irresponsable !&lt;/b&gt;)</translation>
+        <translation type="vanished">Fixer la base de temps la plus lente possible&lt;br/&gt;(&lt;b&gt;L&apos;interface graphique peut devenir très irresponsable !&lt;/b&gt;)</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="11"/>
+        <source>Set slowest possible timebase</source>
+        <translation>Fixer la base de temps la plus lente possible</translation>
     </message>
     <message>
         <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="19"/>
@@ -484,89 +488,89 @@
 <context>
     <name>DsoWidget</name>
     <message>
-        <location filename="../src/dsowidget.cpp" line="69"/>
+        <location filename="../src/dsowidget.cpp" line="70"/>
         <source>TR</source>
         <translation>D</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="175"/>
+        <location filename="../src/dsowidget.cpp" line="176"/>
         <source>Markers</source>
         <translation>Repères</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="552"/>
-        <location filename="../src/dsowidget.cpp" line="554"/>
-        <location filename="../src/dsowidget.cpp" line="585"/>
-        <location filename="../src/dsowidget.cpp" line="629"/>
-        <location filename="../src/dsowidget.cpp" line="637"/>
-        <location filename="../src/dsowidget.cpp" line="656"/>
+        <location filename="../src/dsowidget.cpp" line="560"/>
+        <location filename="../src/dsowidget.cpp" line="562"/>
+        <location filename="../src/dsowidget.cpp" line="593"/>
+        <location filename="../src/dsowidget.cpp" line="648"/>
+        <location filename="../src/dsowidget.cpp" line="657"/>
+        <location filename="../src/dsowidget.cpp" line="678"/>
         <source>/div</source>
         <translation>/div</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="504"/>
-        <location filename="../src/dsowidget.cpp" line="520"/>
+        <location filename="../src/dsowidget.cpp" line="512"/>
+        <location filename="../src/dsowidget.cpp" line="528"/>
         <source>ON</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="505"/>
-        <location filename="../src/dsowidget.cpp" line="520"/>
+        <location filename="../src/dsowidget.cpp" line="513"/>
+        <location filename="../src/dsowidget.cpp" line="528"/>
         <source>OFF</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="542"/>
+        <location filename="../src/dsowidget.cpp" line="550"/>
         <source>Markers  </source>
         <translation>Repères  </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="543"/>
+        <location filename="../src/dsowidget.cpp" line="551"/>
         <source>Time: </source>
         <translation>Temps : </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="544"/>
+        <location filename="../src/dsowidget.cpp" line="552"/>
         <source>Frequency: </source>
         <translation>Fréquence : </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="547"/>
+        <location filename="../src/dsowidget.cpp" line="555"/>
         <source>Zoom x%L1  </source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="549"/>
+        <location filename="../src/dsowidget.cpp" line="557"/>
         <source>Zoom ---  </source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="597"/>
+        <location filename="../src/dsowidget.cpp" line="606"/>
         <source>%L1%</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="611"/>
+        <location filename="../src/dsowidget.cpp" line="621"/>
         <source>%1  %2  %3  %4  %5</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="647"/>
+        <location filename="../src/dsowidget.cpp" line="668"/>
         <source>/s</source>
         <translation>/s</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="747"/>
+        <location filename="../src/dsowidget.cpp" line="778"/>
         <source> on screen</source>
         <translation> à l&apos;écran</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="793"/>
+        <location filename="../src/dsowidget.cpp" line="829"/>
         <source>pp</source>
         <translation>pp</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="796"/>
+        <location filename="../src/dsowidget.cpp" line="832"/>
         <source>rms</source>
         <translation>rms</translation>
     </message>

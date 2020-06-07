@@ -25,12 +25,12 @@ void ControlSetGain_CH2::setGainCH2( uint8_t gain, uint8_t index ) {
 
 
 ControlSetSamplerate::ControlSetSamplerate() : ControlCommand( ControlCode::CONTROL_SETSAMPLERATE, 2 ) {
-    this->setSamplerate( 1, 1 );
+    this->setSamplerate( 1, 7 );
 }
 
-void ControlSetSamplerate::setSamplerate( uint8_t id, uint8_t oversampling ) {
+void ControlSetSamplerate::setSamplerate( uint8_t id, uint8_t index ) {
     data()[ 0 ] = id;
-    data()[ 1 ] = oversampling;
+    data()[ 1 ] = index;
 }
 
 
