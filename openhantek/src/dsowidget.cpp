@@ -617,23 +617,13 @@ void DsoWidget::updateTriggerDetails() {
         pulseWidthString += " (" + QString::number( dutyCyle ) + "%)";
     }
     if ( scope->trigger.mode != Dso::TriggerMode::NONE ) {
-        showTriggerSlider( true );
         settingsTriggerLabel->setText( tr( "%1  %2  %3  %4  %5" )
                                            .arg( scope->voltage[ scope->trigger.source ].name,
                                                  Dso::slopeString( scope->trigger.slope ), levelString, pretriggerString,
                                                  pulseWidthString ) );
     } else {
-        showTriggerSlider( false );
         settingsTriggerLabel->setText( "" );
     }
-}
-
-
-void DsoWidget::showTriggerSlider( bool visible ) {
-    mainSliders.triggerLevelSlider->setVisible( visible );
-    mainSliders.triggerOffsetSlider->setVisible( visible );
-    zoomSliders.triggerLevelSlider->setVisible( view->zoom && visible );
-    zoomSliders.triggerOffsetSlider->setVisible( view->zoom && visible );
 }
 
 
@@ -811,11 +801,13 @@ void DsoWidget::showNew( std::shared_ptr< PPresult > analysedData ) {
     zoomScope->showData( analysedData );
 
     QPalette triggerLabelPalette = palette();
-    triggerLabelPalette.setColor( QPalette::WindowText, Qt::black );
-    if ( scope->trigger.mode == Dso::TriggerMode::NONE )
-        triggerLabelPalette.setColor( QPalette::Background, Qt::black );
-    else
+    if ( scope->trigger.mode == Dso::TriggerMode::NONE ) {
+        triggerLabelPalette.setColor( QPalette::WindowText, view->colors->background );
+        triggerLabelPalette.setColor( QPalette::Background, view->colors->background );
+    } else {
+        triggerLabelPalette.setColor( QPalette::WindowText, Qt::black );
         triggerLabelPalette.setColor( QPalette::Background, analysedData->softwareTriggerTriggered ? Qt::green : Qt::red );
+    }
     swTriggerStatus->setPalette( triggerLabelPalette );
     swTriggerStatus->setVisible( true );
     updateRecordLength( dotsOnScreen );

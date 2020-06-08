@@ -40,16 +40,11 @@ void Capturing::capture() {
     if ( !hdc->samplingStarted )
         return;
     int errorCode;
+    valid = true;
     // Send all pending control commands
     ControlCommand *controlCommand = hdc->firstControlCommand;
     while ( controlCommand ) {
         if ( controlCommand->pending ) {
-            QString name = "";
-            if ( controlCommand->code >= 0xe0 && controlCommand->code <= 0xe6 )
-                name = controlNames[ controlCommand->code - 0xe0 ];
-            timestampDebug( QString( "Sending control command 0x%1 (%2):%3" )
-                                .arg( QString::number( controlCommand->code, 16 ), name,
-                                      hexdecDump( controlCommand->data(), unsigned( controlCommand->size() ) ) ) );
             switch ( int( controlCommand->code ) ) {
             case uint8_t( ControlCode::CONTROL_SETGAIN_CH1 ):
                 gainValue[ 0 ] = controlCommand->data()[ 0 ];
@@ -60,14 +55,28 @@ void Capturing::capture() {
                 gainIndex[ 1 ] = controlCommand->data()[ 1 ];
                 break;
             case uint8_t( ControlCode::CONTROL_SETNUMCHANNELS ):
+                if ( samplerate < 1e6 )
+                    *controlCommand->data() = 2;
+                else if ( hdc->isFastRate() ) {
+                    *controlCommand->data() = 1;
+                }
                 channels = *controlCommand->data();
+                // valid = false;
                 break;
             case uint8_t( ControlCode::CONTROL_SETSAMPLERATE ):
+                samplerate = id2sr( controlCommand->data()[ 0 ] );
                 uint8_t sampleIndex = controlCommand->data()[ 1 ];
                 oversampling = uint8_t( hdc->specification->fixedSampleRates[ sampleIndex ].oversampling );
-                samplerate = id2sr( controlCommand->data()[ 0 ] );
+                if ( samplerate < 1e6 )
+                    hdc->modifyCommand< ControlSetNumChannels >( ControlCode::CONTROL_SETNUMCHANNELS )->setNumChannels( 2 );
                 break;
             }
+            QString name = "";
+            if ( controlCommand->code >= 0xe0 && controlCommand->code <= 0xe6 )
+                name = controlNames[ controlCommand->code - 0xe0 ];
+            timestampDebug( QString( "Sending control command 0x%1 (%2):%3" )
+                                .arg( QString::number( controlCommand->code, 16 ), name,
+                                      hexdecDump( controlCommand->data(), unsigned( controlCommand->size() ) ) ) );
             if ( hdc->scopeDevice->isRealHW() ) { // do the USB communication with scope HW
                 errorCode = hdc->scopeDevice->controlWrite( controlCommand );
                 if ( errorCode < 0 ) {
@@ -75,7 +84,6 @@ void Capturing::capture() {
                               libUsbErrorString( errorCode ).toLocal8Bit().data() );
 
                     if ( errorCode == LIBUSB_ERROR_NO_DEVICE ) {
-                        // emit communicationError();
                         return;
                     }
                 } else {
@@ -87,9 +95,9 @@ void Capturing::capture() {
         }
         controlCommand = controlCommand->next;
     }
-    freeRunning = hdc->controlsettings.trigger.mode == Dso::TriggerMode::NONE;
-    if ( rawSamplesize >= hdc->grossSampleCount( hdc->getSamplesize() * oversampling ) * channels )
-        ++tag;
+    rollMode = hdc->scope->trigger.mode == Dso::TriggerMode::NONE && samplerate < 1e6;
+    dp = rollMode ? &hdc->raw.data : &data;
+    ++tag;
     rawSamplesize = hdc->grossSampleCount( hdc->getSamplesize() * oversampling ) * channels;
     if ( hdc->scopeDevice->isRealHW() ) {
         getRealSamples();
@@ -97,7 +105,8 @@ void Capturing::capture() {
         getDemoSamples();
     }
     QWriteLocker locker( &hdc->raw.lock );
-    swap( data, hdc->raw.data );
+    if ( !rollMode )
+        swap( data, hdc->raw.data );
     hdc->raw.channels = channels;
     hdc->raw.samplerate = samplerate;
     hdc->raw.oversampling = oversampling;
@@ -105,7 +114,8 @@ void Capturing::capture() {
     hdc->raw.gainValue[ 1 ] = gainValue[ 1 ];
     hdc->raw.gainIndex[ 0 ] = gainIndex[ 0 ];
     hdc->raw.gainIndex[ 1 ] = gainIndex[ 1 ];
-    hdc->raw.freeRunning = freeRunning;
+    hdc->raw.rollMode = rollMode;
+    hdc->raw.valid = valid;
     hdc->raw.tag = tag;
 }
 
@@ -115,20 +125,23 @@ void Capturing::getRealSamples() {
     errorCode = hdc->scopeDevice->controlWrite( hdc->getCommand( ControlCode::CONTROL_STARTSAMPLING ) );
     if ( errorCode < 0 ) {
         qWarning() << "controlWrite: Getting sample data failed: " << libUsbErrorString( errorCode );
-        // emit communicationError();
-        hdc->raw.data = std::vector< unsigned char >();
+        dp->clear();
         return;
     }
     // Save raw data to temporary buffer
-    data.reserve( rawSamplesize );
-    int retval = hdc->scopeDevice->bulkReadMulti( data.data(), rawSamplesize );
+    dp->resize( rawSamplesize );
+    timestampDebug( QString( "Request packet %1: %2" ).arg( tag ).arg( rawSamplesize ) );
+    int retval = hdc->scopeDevice->bulkReadMulti( dp->data(), rawSamplesize, rollMode );
     if ( retval < 0 ) {
         qWarning() << "bulkReadMulti: Getting sample data failed: " << libUsbErrorString( retval );
-        hdc->raw.data = std::vector< unsigned char >();
+        dp->clear();
         return;
     }
-    // timestampDebug( QString( "Received packet %1: %2" ).arg( tag ).arg( retval ) );
-    data.resize( size_t( retval ) );
+    if ( retval != int( rawSamplesize ) ) {
+        // qDebug() << "retval != rawSamplesize" << retval << rawSamplesize;
+        dp->resize( size_t( retval ) );
+    }
+    timestampDebug( QString( "Received packet %1: %2" ).arg( tag ).arg( retval ) );
 }
 
 
@@ -140,18 +153,18 @@ void Capturing::getDemoSamples() {
     static uint8_t ch1 = V_zero;
     static uint8_t ch2 = V_zero;
     static int counter = 0;
-    data.resize( rawSamplesize );
-    auto end = data.end();
+    timestampDebug( QString( "Request dummy packet %1: %2" ).arg( tag ).arg( rawSamplesize ) );
+    dp->resize( rawSamplesize );
+    auto end = dp->end();
     int deltaT = 99;
-    double samplerate = hdc->getSamplerate();
+    // deltaT (=99) defines the frequency of the dummy signals:
+    // ch1 = 1 kHz and ch2 = 500 Hz
     if ( samplerate < 100e3 )
         deltaT = int( round( deltaT * samplerate / 100e3 ) );
     else if ( samplerate > 10e6 ) {
         deltaT = int( round( deltaT * samplerate / 10e6 ) );
     }
-    for ( auto it = data.begin(); it != end; ++it ) {
-        // deltaT (=99) defines the frequency of the dummy signals:
-        // ch1 = 1 kHz and ch2 = 500 Hz
+    for ( auto it = dp->begin(); it != end; ++it ) {
         if ( ++counter >= deltaT ) {
             counter = 0;
             if ( --ch1 < V_minus_2 ) {
@@ -164,6 +177,7 @@ void Capturing::getDemoSamples() {
             *++it = ch2;
         }
     }
-    QThread::msleep( unsigned( hdc->getSamplesize() * 1000.0 / samplerate ) );
-    timestampDebug( QString( "Received dummy packet %1" ).arg( tag ) );
+    // qDebug() << unsigned( rawSamplesize * 1000.0 / samplerate / channels );
+    QThread::msleep( unsigned( rawSamplesize * 1000.0 / samplerate / channels ) );
+    timestampDebug( QString( "Received dummy packet %1: %2" ).arg( tag ).arg( rawSamplesize ) );
 }

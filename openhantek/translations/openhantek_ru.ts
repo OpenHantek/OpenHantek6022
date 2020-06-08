@@ -503,9 +503,9 @@
         <location filename="../src/dsowidget.cpp" line="560"/>
         <location filename="../src/dsowidget.cpp" line="562"/>
         <location filename="../src/dsowidget.cpp" line="593"/>
-        <location filename="../src/dsowidget.cpp" line="648"/>
-        <location filename="../src/dsowidget.cpp" line="657"/>
-        <location filename="../src/dsowidget.cpp" line="678"/>
+        <location filename="../src/dsowidget.cpp" line="638"/>
+        <location filename="../src/dsowidget.cpp" line="647"/>
+        <location filename="../src/dsowidget.cpp" line="668"/>
         <source>/div</source>
         <translation>/дел</translation>
     </message>
@@ -562,27 +562,27 @@
         <translation>%L1%</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="621"/>
+        <location filename="../src/dsowidget.cpp" line="620"/>
         <source>%1  %2  %3  %4  %5</source>
         <translation>%1  %2  %3  %4  %5</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="668"/>
+        <location filename="../src/dsowidget.cpp" line="658"/>
         <source>/s</source>
         <translation>/с</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="778"/>
+        <location filename="../src/dsowidget.cpp" line="768"/>
         <source> on screen</source>
         <translation> на экране</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="829"/>
+        <location filename="../src/dsowidget.cpp" line="821"/>
         <source>pp</source>
         <translation>пп</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="832"/>
+        <location filename="../src/dsowidget.cpp" line="824"/>
         <source>rms</source>
         <translation>скз</translation>
     </message>

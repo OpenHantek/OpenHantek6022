@@ -217,31 +217,32 @@ int ScopeDevice::bulkTransfer( unsigned char endpoint, const unsigned char *data
 }
 
 
-#define BIG_BLOCK
-int ScopeDevice::bulkReadMulti( unsigned char *data, unsigned length, int attempts ) {
-    if ( !this->handle )
+// #define BIG_BLOCK
+
+int ScopeDevice::bulkReadMulti( unsigned char *data, unsigned length, bool rollMode, int attempts ) {
+    const int packetLength = 1024;
+    if ( !handle )
         return LIBUSB_ERROR_NO_DEVICE;
-        // printf("USBDevice::bulkReadMulti( %d )\n", length );
-#ifdef BIG_BLOCK
-    // more stable if read as one big block
-    return this->bulkTransfer( HANTEK_EP_IN, data, length, attempts, HANTEK_TIMEOUT_MULTI * length / this->inPacketLength );
-#else
-    // unstable transfer if read in smaller chunks
-    int errorCode = this->inPacketLength;
-    unsigned int packet, received = 0;
-    for ( packet = 0; received < length && errorCode == this->inPacketLength; ++packet ) {
-        errorCode =
-            this->bulkTransfer( HANTEK_EP_IN, data + packet * this->inPacketLength,
-                                qMin( length - received, (unsigned int)this->inPacketLength ), attempts, HANTEK_TIMEOUT_MULTI );
-        if ( errorCode > 0 )
-            received += (unsigned)errorCode;
+    // printf("USBDevice::bulkReadMulti( %d )\n", length );
+    if ( !rollMode ) {
+        // more stable if fast data is read as one big block
+        return bulkTransfer( HANTEK_EP_IN, data, length, attempts, HANTEK_TIMEOUT_MULTI * length / packetLength );
+    } else {
+        // slow data is read in smaller chunks -> quick screen update
+        int retCode = packetLength;
+        unsigned int packet, received = 0;
+        for ( packet = 0; received < length && retCode == packetLength; ++packet ) {
+            retCode = bulkTransfer( HANTEK_EP_IN, data + packet * packetLength, qMin( length - received, unsigned( packetLength ) ),
+                                    attempts, HANTEK_TIMEOUT_MULTI );
+            if ( retCode > 0 )
+                received += unsigned( retCode );
+        }
+        // printf( "total packets: %d, received: %d\n", packet, received );
+        if ( received > 0 )
+            return int( received );
+        else
+            return retCode;
     }
-    // printf( "total packets: %d, received: %d\n", packet, received );
-    if ( received > 0 )
-        return (int)received;
-    else
-        return errorCode;
-#endif
 }
 
 

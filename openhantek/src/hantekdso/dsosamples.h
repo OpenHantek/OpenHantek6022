@@ -17,6 +17,5 @@ struct DSOsamples {
     double pulseWidth2 = 0.0;                  ///< width from next opposite slope to third slope
     bool freeRunning = false;                  ///< trigger: NONE, half sample count
     unsigned tag = 0;                          ///< track individual sample blocks (debug support)
-    bool valid = true;
     mutable QReadWriteLock lock;
 };

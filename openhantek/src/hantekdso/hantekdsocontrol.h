@@ -39,8 +39,9 @@ struct Raw {
     unsigned oversampling = 0;
     unsigned gainValue[ 2 ] = {1, 1}; // 1,2,5,10,..
     unsigned gainIndex[ 2 ] = {7, 7}; // index 0..7
-    bool freeRunning = false;
     unsigned tag = 0;
+    bool valid = true;
+    bool rollMode = false;
     std::vector< unsigned char > data;
     mutable QReadWriteLock lock;
 };

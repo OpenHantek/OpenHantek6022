@@ -139,7 +139,7 @@ Dso::ErrorCode HantekDsoControl::setRecordTime( double duration ) {
     double samplerate = specification->fixedSampleRates[ sampleIndex ].samplerate;
     uint8_t id = specification->fixedSampleRates[ sampleIndex ].id;
     // uint8_t oversampling = uint8_t( specification->fixedSampleRates[ sampleIndex ].oversampling );
-    // qDebug() << "HDC::sRT: sampleId:" << sampleId << srLimit << samplerate;
+    // qDebug() << "HDC::sRT: sampleId:" << sampleIndex << srLimit << samplerate;
     // Usable sample value
     modifyCommand< ControlSetSamplerate >( ControlCode::CONTROL_SETSAMPLERATE )->setSamplerate( id, sampleIndex );
     controlsettings.samplerate.current = samplerate;
@@ -408,6 +408,7 @@ void HantekDsoControl::convertRawDataToSamples() {
     const unsigned sampleCount = netSampleCount( rawSampleCount );
     const unsigned rawOversampling = raw.oversampling; //  sampleCount / getSamplesize();
     const unsigned resultSamples = sampleCount / rawOversampling;
+    timestampDebug( QString( "HantekDsoControl::convertRawDataToSamples() %1: %2" ).arg( raw.tag ).arg( rawSampleCount ) );
     // qDebug() << "HDC::cRDTS rawSampleCount sampleCount rawOversampling resultSamples:" << rawSampleCount << sampleCount
     //          << rawOversampling << resultSamples;
     const unsigned skipSamples = rawSampleCount - sampleCount;
@@ -663,7 +664,8 @@ void HantekDsoControl::stateMachine() {
 
     bool triggered = false;
 
-    if ( samplingStarted && raw.tag != lastTag ) {
+    if ( samplingStarted && raw.valid &&
+         ( raw.tag != lastTag || ( raw.rollMode && controlsettings.trigger.mode == Dso::TriggerMode::NONE ) ) ) {
         lastTag = raw.tag;
         convertRawDataToSamples();              // process new samples
         if ( !result.freeRunning ) {            // search trigger
@@ -683,11 +685,10 @@ void HantekDsoControl::stateMachine() {
               && ( ( controlsettings.trigger.slope != Dso::Slope::Both ) // ... for ↗ or ↘ slope
                    || skipEven ) ) )                                     // and drop even no. of frames
     {
-        skipEven = true;      // zero frames -> even
-        if ( result.valid ) { // skip invalid samples (valid status not yet used)
-            delayDisplay = 0;
-            emit samplesAvailable( &result ); // via signal/slot -> PostProcessing::input()
-        }
+        skipEven = true; // zero frames -> even
+        delayDisplay = 0;
+        timestampDebug( "samplesAvailable" );
+        emit samplesAvailable( &result ); // via signal/slot -> PostProcessing::input()
     } else {
         skipEven = !skipEven;
     }
@@ -705,7 +706,7 @@ void HantekDsoControl::stateMachine() {
     if ( isSampling() ) {
         // Sampling hasn't started, update the expected sample count
         expectedSampleCount = this->getSampleCount();
-        timestampDebug( "Starting to capture" );
+        // timestampDebug( "Starting to capture" );
         samplingStarted = true;
     }
     updateInterval(); // calculate new acquire timing
