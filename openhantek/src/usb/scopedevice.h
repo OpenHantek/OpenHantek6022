@@ -95,7 +95,7 @@ class ScopeDevice : public QObject {
     /// \param length The length of data contained in the packets.
     /// \param attempts The number of attempts, that are done on timeouts.
     /// \return Number of received bytes on success, libusb error code on error.
-    int bulkReadMulti( unsigned char *data, unsigned length, bool rollMode, int attempts = HANTEK_ATTEMPTS_MULTI );
+    int bulkReadMulti( unsigned char *data, unsigned length, bool bigBlock, int attempts = HANTEK_ATTEMPTS_MULTI );
 
     /// \brief Control transfer to the oscilloscope.
     /// \param type The request type, also sets the direction of the transfer.

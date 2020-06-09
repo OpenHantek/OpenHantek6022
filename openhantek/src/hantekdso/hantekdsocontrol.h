@@ -117,9 +117,10 @@ class HantekDsoControl : public QObject {
     void stopSampling();
 
     // private:
-    bool fastRate = true;
-    void setFastRate( bool fast ) { fastRate = fast; }
-    bool isFastRate() const { return fastRate; }
+    bool singleChannel = true;
+    void setSingleChannel( bool single ) { singleChannel = single; }
+    bool isSingleChannel() const { return singleChannel; }
+    bool triggerModeNONE() { return controlsettings.trigger.mode == Dso::TriggerMode::NONE; }
     unsigned getRecordLength() const;
     void setDownsampling( unsigned downsampling ) { downsamplingNumber = downsampling; }
     Dso::ErrorCode retrieveChannelLevelData();
@@ -127,7 +128,7 @@ class HantekDsoControl : public QObject {
     /// Get the number of samples that are expected returned by the scope.
     /// In rolling mode this is depends on the usb speed and packet size.
     /// \return The total number of samples the scope should return.
-    unsigned getSampleCount() const { return isFastRate() ? getRecordLength() : getRecordLength() * specification->channels; }
+    unsigned getSampleCount() const { return isSingleChannel() ? getRecordLength() : getRecordLength() * specification->channels; }
 
     /// adjust for skipping of minimal 2048 leading samples
     unsigned grossSampleCount( unsigned net ) const { return ( ( net + 1024 ) / 1024 + 2 ) * 1024; }

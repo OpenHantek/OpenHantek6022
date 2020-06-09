@@ -63,7 +63,7 @@ void HantekDsoControl::restoreTargets() {
 
 void HantekDsoControl::updateSamplerateLimits() {
     QList< double > sampleSteps;
-    double limit = isFastRate() ? specification->samplerate.single.max : specification->samplerate.multi.max;
+    double limit = isSingleChannel() ? specification->samplerate.single.max : specification->samplerate.multi.max;
 
     if ( controlsettings.samplerate.current > limit ) {
         setSamplerate( limit );
@@ -120,7 +120,7 @@ Dso::ErrorCode HantekDsoControl::setRecordTime( double duration ) {
     // printf( "duration = %g\n", duration );
 
     double srLimit;
-    if ( isFastRate() )
+    if ( isSingleChannel() )
         srLimit = ( specification->samplerate.single ).max;
     else
         srLimit = ( specification->samplerate.multi ).max;
@@ -185,9 +185,9 @@ Dso::ErrorCode HantekDsoControl::setChannelUsed( ChannelID channel, bool used ) 
             usedChannels = UsedChannels::USED_CH2;
         }
     }
-    setFastRate( usedChannels == UsedChannels::USED_CH1 );
+    setSingleChannel( usedChannels == UsedChannels::USED_CH1 );
     // qDebug() << "usedChannels" << int( usedChannels );
-    modifyCommand< ControlSetNumChannels >( ControlCode::CONTROL_SETNUMCHANNELS )->setNumChannels( isFastRate() ? 1 : 2 );
+    modifyCommand< ControlSetNumChannels >( ControlCode::CONTROL_SETNUMCHANNELS )->setNumChannels( isSingleChannel() ? 1 : 2 );
     // Check if fast rate mode availability changed
     this->updateSamplerateLimits();
     this->restoreTargets();
@@ -664,8 +664,7 @@ void HantekDsoControl::stateMachine() {
 
     bool triggered = false;
 
-    if ( samplingStarted && raw.valid &&
-         ( raw.tag != lastTag || ( raw.rollMode && controlsettings.trigger.mode == Dso::TriggerMode::NONE ) ) ) {
+    if ( samplingStarted && raw.valid && ( raw.tag != lastTag || ( raw.rollMode /* && triggerModeNONE() */ ) ) ) {
         lastTag = raw.tag;
         convertRawDataToSamples();              // process new samples
         if ( !result.freeRunning ) {            // search trigger

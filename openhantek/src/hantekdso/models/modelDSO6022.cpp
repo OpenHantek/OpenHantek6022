@@ -107,9 +107,9 @@ static void initSpecifications( Dso::ControlSpecification &specification ) {
 
     specification.fixedSampleRates = {
         // samplerate, sampleId, downsampling
-        {200, 102, 100},  // very slow! 100x downsampling from 20, 50 kS/s!
+        {200, 102, 100},  // very slow! 100x downsampling from 20, 50 kS/s
         {500, 105, 100},  // very slow!
-        {1e3, 110, 100},  // slow! 100x downsampling from 100, 200, 500 kS/s!
+        {1e3, 110, 100},  // slow! 100x downsampling from 100, 200, 500 kS/s
         {2e3, 120, 100},  // slow!
         {5e3, 150, 100},  // slow!
         {10e3, 1, 100},   // 100x downsampling from 1, 2, 5, 10 MS/s
@@ -141,7 +141,7 @@ static void initSpecifications( Dso::ControlSpecification &specification ) {
         Dso::TriggerMode::NORMAL,
         Dso::TriggerMode::SINGLE,
     };
-    specification.fixedUSBinLength = 0;
+    specification.fixedUSBinLength = 512;
 
     // calibration frequency (requires >FW0206)
     specification.calfreqSteps = {50, 60, 100, 200, 500, 1e3, 2e3, 5e3, 10e3, 20e3, 50e3, 100e3};

@@ -14,8 +14,11 @@ class Capturing : public QThread {
     void capture();
     void getRealSamples();
     void getDemoSamples();
+    void xferSamples();
     HantekDsoControl *hdc;
     unsigned channels = 0;
+    double effectiveSamplerate = 0;
+    bool realSlow = false;
     double samplerate = 0;
     unsigned oversampling = 0;
     unsigned rawSamplesize = 0;

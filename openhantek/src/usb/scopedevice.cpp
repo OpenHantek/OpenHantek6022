@@ -217,23 +217,21 @@ int ScopeDevice::bulkTransfer( unsigned char endpoint, const unsigned char *data
 }
 
 
-// #define BIG_BLOCK
-
-int ScopeDevice::bulkReadMulti( unsigned char *data, unsigned length, bool rollMode, int attempts ) {
-    const int packetLength = 1024;
+int ScopeDevice::bulkReadMulti( unsigned char *data, unsigned length, bool bigBlock, int attempts ) {
     if ( !handle )
         return LIBUSB_ERROR_NO_DEVICE;
+    const unsigned packetLength = 512 * 128;
     // printf("USBDevice::bulkReadMulti( %d )\n", length );
-    if ( !rollMode ) {
-        // more stable if fast data is read as one big block
-        return bulkTransfer( HANTEK_EP_IN, data, length, attempts, HANTEK_TIMEOUT_MULTI * length / packetLength );
+    if ( bigBlock ) {
+        // more stable if fast data is read as one big block (up to 4 MB)
+        return bulkTransfer( HANTEK_EP_IN, data, length, attempts, HANTEK_TIMEOUT_MULTI * length / inPacketLength );
     } else {
         // slow data is read in smaller chunks -> quick screen update
-        int retCode = packetLength;
+        int retCode = int( packetLength );
         unsigned int packet, received = 0;
-        for ( packet = 0; received < length && retCode == packetLength; ++packet ) {
-            retCode = bulkTransfer( HANTEK_EP_IN, data + packet * packetLength, qMin( length - received, unsigned( packetLength ) ),
-                                    attempts, HANTEK_TIMEOUT_MULTI );
+        for ( packet = 0; received < length && retCode == int( packetLength ); ++packet ) {
+            retCode = bulkTransfer( HANTEK_EP_IN, data + packet * packetLength, qMin( length - received, packetLength ), attempts,
+                                    HANTEK_TIMEOUT_MULTI * 10 );
             if ( retCode > 0 )
                 received += unsigned( retCode );
         }
