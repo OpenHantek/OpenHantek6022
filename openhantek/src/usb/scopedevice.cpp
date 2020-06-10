@@ -221,25 +221,43 @@ int ScopeDevice::bulkReadMulti( unsigned char *data, unsigned length, bool bigBl
     if ( !handle )
         return LIBUSB_ERROR_NO_DEVICE;
     const unsigned packetLength = 512 * 128;
+    int retCode = 0;
     // printf("USBDevice::bulkReadMulti( %d )\n", length );
     if ( bigBlock ) {
+
         // more stable if fast data is read as one big block (up to 4 MB)
-        return bulkTransfer( HANTEK_EP_IN, data, length, attempts, HANTEK_TIMEOUT_MULTI * length / inPacketLength );
+        retCode = bulkTransfer( HANTEK_EP_IN, data, length, attempts, HANTEK_TIMEOUT_MULTI * length / inPacketLength );
+        QWriteLocker locker( &lock );
+        if ( retCode < 0 )
+            received = 0;
+        else
+            received = unsigned( retCode );
+        stopTransfer = false;
+        return retCode;
     } else {
         // slow data is read in smaller chunks -> quick screen update
-        int retCode = int( packetLength );
-        unsigned int packet, received = 0;
-        for ( packet = 0; received < length && retCode == int( packetLength ); ++packet ) {
-            retCode = bulkTransfer( HANTEK_EP_IN, data + packet * packetLength, qMin( length - received, packetLength ), attempts,
-                                    HANTEK_TIMEOUT_MULTI * 10 );
-            if ( retCode > 0 )
-                received += unsigned( retCode );
+        retCode = int( packetLength );
+        unsigned int packet;
+        {
+            QWriteLocker locker( &lock );
+            received = 0;
         }
-        // printf( "total packets: %d, received: %d\n", packet, received );
+        for ( packet = 0; unsigned( received ) < length && retCode == int( packetLength ); ++packet ) {
+            if ( stopTransfer ) {
+                stopTransfer = false;
+                break;
+            }
+            retCode = bulkTransfer( HANTEK_EP_IN, data + packet * packetLength, qMin( length - unsigned( received ), packetLength ),
+                                    attempts, HANTEK_TIMEOUT_MULTI * 10 );
+            if ( retCode > 0 ) {
+                QWriteLocker locker( &lock );
+                received += unsigned( retCode );
+            }
+        }
+        // printf( "total packets: %d, received: %d\n", packet + 1, received );
         if ( received > 0 )
-            return int( received );
-        else
-            return retCode;
+            retCode = int( received );
+        return retCode;
     }
 }
 

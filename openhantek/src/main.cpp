@@ -267,37 +267,33 @@ int main( int argc, char *argv[] ) {
 
     //////// Application closed, clean up step by step ////////
 
-    std::cout << std::unitbuf; // enable automatic flushing
+    dsoControl.quitSampling(); // send USB control command, stop bulk transfer
 
-    dsoControl.stopSampling(); // send USB control command
-    dsoControl.enableSampling( false );
-
+    // stop the capturing thread
     unsigned waitForCapturing = unsigned( 2000 * dsoControl.getSamplesize() / dsoControl.getSamplerate() );
     if ( waitForCapturing < 10000 ) // minimum 10 s
         waitForCapturing = 10000;
     capturing.requestInterruption();
     capturing.wait( waitForCapturing );
-    // capturing.terminate();
+
+    std::cout << std::unitbuf; // enable automatic flushing
     std::cout << "OpenHantek6022 ";
 
-    // first stop the data acquisition
+    // now quit the data acquisition thread
     // wait 2 * record time (delay is ms) for dso to finish
     unsigned waitForDso = unsigned( 2000 * dsoControl.getSamplesize() / dsoControl.getSamplerate() );
     if ( waitForDso < 10000 ) // minimum 10 s
         waitForDso = 10000;
-    // dsoControlThread.terminate();
     dsoControlThread.quit();
     dsoControlThread.wait( waitForDso );
     std::cout << "stopped ";
 
     // next stop the data processing
-    // postProcessingThread.terminate();
     postProcessingThread.quit();
     postProcessingThread.wait( 10000 );
     std::cout << "after ";
 
-    // finally stop the USB communication
-    dsoControl.stopSampling(); // send USB control command
+    // finally shut down the libUSB communication
     if ( scopeDevice )
         scopeDevice.reset(); // destroys unique_pointer, causes libusb_close(), must be called before libusb_exit()
     if ( context )

@@ -77,6 +77,15 @@ void HantekDsoControl::updateSamplerateLimits() {
     emit samplerateSet( 1, sampleSteps );
 }
 
+void HantekDsoControl::controlSetSamplerate( uint8_t sampleIndex ) {
+    static uint8_t lastIndex = 0xFF;
+    uint8_t id = specification->fixedSampleRates[ sampleIndex ].id;
+    modifyCommand< ControlSetSamplerate >( ControlCode::CONTROL_SETSAMPLERATE )->setSamplerate( id, sampleIndex );
+    if ( sampleIndex != lastIndex )
+        scopeDevice->stopSampling(); // invalidate old samples
+    lastIndex = sampleIndex;
+}
+
 
 Dso::ErrorCode HantekDsoControl::setSamplerate( double samplerate ) {
     // printf( "HDC::setSamplerate( %g )\n", samplerate );
@@ -95,12 +104,9 @@ Dso::ErrorCode HantekDsoControl::setSamplerate( double samplerate ) {
              long( round( samplerate ) ) ) // dont compare double == double
             break;
     }
-    uint8_t id = specification->fixedSampleRates[ sampleIndex ].id;
-    uint8_t oversampling = uint8_t( specification->fixedSampleRates[ sampleIndex ].oversampling );
-    modifyCommand< ControlSetSamplerate >( ControlCode::CONTROL_SETSAMPLERATE )->setSamplerate( id, sampleIndex );
+    controlSetSamplerate( sampleIndex );
+    setDownsampling( specification->fixedSampleRates[ sampleIndex ].oversampling );
     controlsettings.samplerate.current = samplerate;
-    setDownsampling( oversampling );
-    channelSetupChanged = true; // skip next raw samples block to avoid artefacts
     emit samplerateChanged( samplerate );
     return Dso::ErrorCode::NONE;
 }
@@ -136,15 +142,10 @@ Dso::ErrorCode HantekDsoControl::setRecordTime( double duration ) {
             sampleIndex = iii;
         }
     }
-    double samplerate = specification->fixedSampleRates[ sampleIndex ].samplerate;
-    uint8_t id = specification->fixedSampleRates[ sampleIndex ].id;
-    // uint8_t oversampling = uint8_t( specification->fixedSampleRates[ sampleIndex ].oversampling );
-    // qDebug() << "HDC::sRT: sampleId:" << sampleIndex << srLimit << samplerate;
-    // Usable sample value
-    modifyCommand< ControlSetSamplerate >( ControlCode::CONTROL_SETSAMPLERATE )->setSamplerate( id, sampleIndex );
-    controlsettings.samplerate.current = samplerate;
+    controlSetSamplerate( sampleIndex );
     setDownsampling( specification->fixedSampleRates[ sampleIndex ].oversampling );
-    channelSetupChanged = true; // skip next raw samples block to avoid artefacts
+    double samplerate = specification->fixedSampleRates[ sampleIndex ].samplerate;
+    controlsettings.samplerate.current = samplerate;
     emit samplerateChanged( samplerate );
     return Dso::ErrorCode::NONE;
 }
@@ -191,7 +192,7 @@ Dso::ErrorCode HantekDsoControl::setChannelUsed( ChannelID channel, bool used ) 
     // Check if fast rate mode availability changed
     this->updateSamplerateLimits();
     this->restoreTargets();
-    channelSetupChanged = true; // skip next raw samples block to avoid artefacts
+    // sampleSetupChanged = true; // skip next raw samples block to avoid artefacts
     return Dso::ErrorCode::NONE;
 }
 
@@ -379,9 +380,12 @@ Dso::ErrorCode HantekDsoControl::retrieveChannelLevelData() {
 }
 
 
-void HantekDsoControl::stopSampling() {
+void HantekDsoControl::quitSampling() {
+    enableSampling( false );
+    capturing = false;
     if ( scopeDevice->isDemoDevice() )
         return;
+    scopeDevice->stopSampling();
     auto controlCommand = ControlStopSampling();
     timestampDebug( QString( "Sending control command %1:%2" )
                         .arg( QString::number( controlCommand.code, 16 ),
@@ -397,14 +401,9 @@ void HantekDsoControl::stopSampling() {
 void HantekDsoControl::convertRawDataToSamples() {
     QReadLocker rawLocker( &raw.lock );
     activeChannels = raw.channels;
-
-    // The 1st two or three frames (512 byte) of the raw sample stream are unreliable
-    // (Maybe because the common mode input voltage of ADC is handled far out of spec and has to settle)
-    // Solution: sample at least 2048 more values -> rawSampleSize (must be multiple of 1024)
-    //           rawSampleSize = ( ( n*20000 + 1024 ) / 1024 + 2) * 1024;
-    // and skip over these additional samples to get 20000 samples (or n*20000 if oversampled)
-
     const unsigned rawSampleCount = unsigned( raw.data.size() ) / activeChannels;
+    // qDebug() << "HDC::cRDTS rawSampleCount" << rawSampleCount;
+    // const unsigned rawSampleCount = raw.rollMode ? scopeDevice->hasReceived() / activeChannels : raw.size / activeChannels;
     const unsigned sampleCount = netSampleCount( rawSampleCount );
     const unsigned rawOversampling = raw.oversampling; //  sampleCount / getSamplesize();
     const unsigned resultSamples = sampleCount / rawOversampling;
@@ -412,6 +411,8 @@ void HantekDsoControl::convertRawDataToSamples() {
     // qDebug() << "HDC::cRDTS rawSampleCount sampleCount rawOversampling resultSamples:" << rawSampleCount << sampleCount
     //          << rawOversampling << resultSamples;
     const unsigned skipSamples = rawSampleCount - sampleCount;
+    if ( !rawSampleCount )
+        return;
     QWriteLocker resultLocker( &result.lock );
     result.freeRunning = resultSamples < SAMPLESIZE_USED; // 20000 samples needed for sw trigger detection
     result.tag = raw.tag;
@@ -641,11 +642,13 @@ void HantekDsoControl::updateInterval() {
     // Check the current oscilloscope state everytime 25% of the time
     //  the buffer should be refilled (-> acquireInterval in ms)
     // Use real 100% rate for demo device
-    int sampleInterval = int( getSamplesize() * 250.0 / controlsettings.samplerate.current );
+    int sampleInterval = int( getSamplesize() * 1000.0 / controlsettings.samplerate.current );
     // Slower update reduces CPU load but it worsens the triggering of rare events
     // Display can be filled at slower rate (not faster than displayInterval)
-    acquireInterval = 1; // = int( 1000 * scope->horizontal.acquireInterval );
-    // acquireInterval = int( 1000 * scope->horizontal.acquireInterval );
+    if ( scope )
+        acquireInterval = int( 1000 * scope->horizontal.acquireInterval );
+    else
+        acquireInterval = 1; // = int( 1000 * scope->horizontal.acquireInterval );
 #ifdef __arm__
     displayInterval = 20; // update display at least every 20 ms
 #else

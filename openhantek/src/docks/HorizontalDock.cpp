@@ -48,7 +48,7 @@ HorizontalDock::HorizontalDock( DsoSettingsScope *scope, const Dso::ControlSpeci
 
     this->frequencybaseLabel = new QLabel( tr( "Frequencybase" ) );
     this->frequencybaseSiSpinBox = new SiSpinBox( UNIT_HERTZ );
-    this->frequencybaseSiSpinBox->setMinimum( 1.0 );
+    this->frequencybaseSiSpinBox->setMinimum( 0.1 );
     this->frequencybaseSiSpinBox->setMaximum( 100e6 );
 
     this->formatLabel = new QLabel( tr( "Format" ) );

@@ -42,6 +42,7 @@ struct Raw {
     unsigned tag = 0;
     bool valid = true;
     bool rollMode = false;
+    unsigned size = 0;
     std::vector< unsigned char > data;
     mutable QReadWriteLock lock;
 };
@@ -114,7 +115,7 @@ class HantekDsoControl : public QObject {
     const ControlCommand *getCommand( Hantek::ControlCode code ) const { return control[ uint8_t( code ) ]; }
 
     /// \brief Stops the device.
-    void stopSampling();
+    void quitSampling();
 
     // private:
     bool singleChannel = true;
@@ -165,6 +166,8 @@ class HantekDsoControl : public QObject {
 
     bool provideTriggeredData();
 
+    void controlSetSamplerate( uint8_t sampleIndex );
+
     /// Pointers to control commands
     ControlCommand *control[ 255 ] = {nullptr};
     ControlCommand *firstControlCommand = nullptr;
@@ -185,11 +188,11 @@ class HantekDsoControl : public QObject {
     DSOsamples result;
     unsigned expectedSampleCount = 0; ///< The expected total number of samples at
                                       /// the last check before sampling started
+    bool capturing = false;
     bool samplingStarted = false;
     bool stateMachineRunning = false;
     int acquireInterval = 0;
     int displayInterval = 0;
-    bool channelSetupChanged = false;
     unsigned triggeredPositionRaw = 0; // not triggered
     unsigned activeChannels = 2;
     Raw raw;

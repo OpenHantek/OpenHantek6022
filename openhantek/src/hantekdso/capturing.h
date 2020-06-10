@@ -8,13 +8,15 @@ class Capturing : public QThread {
     Q_OBJECT
   public:
     Capturing( HantekDsoControl *hdc );
+    void quitCapturing() { hdc->capturing = false; }
 
   private:
     void run() override;
     void capture();
-    void getRealSamples();
-    void getDemoSamples();
+    unsigned getRealSamples();
+    unsigned getDemoSamples();
     void xferSamples();
+    // bool active = true;
     HantekDsoControl *hdc;
     unsigned channels = 0;
     double effectiveSamplerate = 0;
@@ -22,6 +24,7 @@ class Capturing : public QThread {
     double samplerate = 0;
     unsigned oversampling = 0;
     unsigned rawSamplesize = 0;
+    unsigned received = 0;
     unsigned gainValue[ 2 ] = {0, 0}; // 1,2,5,10,..
     unsigned gainIndex[ 2 ] = {0, 0}; // index 0..7
     unsigned tag = 0;

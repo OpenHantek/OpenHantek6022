@@ -1,2 +1,2 @@
 // Do not edit, will be re-created at each commit!
-#define OH_BUILD "20200609 build 701"
+#define OH_BUILD "20200610 build 702"
