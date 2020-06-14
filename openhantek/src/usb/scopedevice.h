@@ -58,6 +58,12 @@ class ScopeDevice : public QObject {
     /// \brief Stop a long running (interruptable) bulk transfer
     void stopSampling() { stopTransfer = true; }
 
+    bool hasStopped() {
+        bool stopped = stopTransfer;
+        stopTransfer = false;
+        return stopped;
+    }
+
     /**
      * @return Return true if this device needs a firmware first
      */

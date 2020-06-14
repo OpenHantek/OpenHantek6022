@@ -270,7 +270,7 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
     connect( this, &MainWindow::settingsLoaded, dsoWidget, &DsoWidget::updateSlidersSettings );
 
     connect( ui->actionOpen, &QAction::triggered, [this, spec]() {
-        QString fileName = QFileDialog::getOpenFileName( this, tr( "Open file" ), "", tr( "Settings (*.ini)" ) );
+        QString fileName = QFileDialog::getOpenFileName( this, tr( "Open file" ), "", tr( "Settings (*.conf)" ) );
         if ( !fileName.isEmpty() ) {
             if ( dsoSettings->setFilename( fileName ) ) {
                 dsoSettings->load();
@@ -293,11 +293,11 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
     } );
 
     connect( ui->actionSave_as, &QAction::triggered, [this]() {
-        QString fileName = QFileDialog::getSaveFileName( this, tr( "Save settings" ), "", tr( "Settings (*.ini)" ) );
+        QString fileName = QFileDialog::getSaveFileName( this, tr( "Save settings" ), "", tr( "Settings (*.conf)" ) );
         if ( fileName.isEmpty() )
             return;
-        if ( !fileName.endsWith( ".ini" ) )
-            fileName.append( ".ini" );
+        if ( !fileName.endsWith( ".conf" ) )
+            fileName.append( ".conf" );
         dsoSettings->mainWindowGeometry = saveGeometry();
         dsoSettings->mainWindowState = saveState();
         dsoSettings->setFilename( fileName );
@@ -374,6 +374,7 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
         QMessageBox::about(
             this, tr( "About OpenHantek6022 (%1)" ).arg( VERSION ),
             tr( "<p>Open source software for Hantek6022 USB oscilloscopes</p>"
+                "<p>Maintainer: Martin Homuth-Rosemann</p>"
                 "<p>Copyright &copy; 2010, 2011 Oliver Haag</p>"
                 "<p>Copyright &copy; 2012-2020 OpenHantek community<br/>"
                 "<a href='https://github.com/OpenHantek'>https://github.com/OpenHantek</a></p>"

@@ -157,12 +157,12 @@ void GlScope::mouseMoveEvent( QMouseEvent *event ) {
             // qDebug() << "mouseMoveEvent";
             // User started draging outside the snap area of any marker:
             // move all markers to current position and select last marker in the array.
-            for ( unsigned marker = 0; marker < MARKER_COUNT; ++marker ) {
+            for ( unsigned marker = 0; marker < 2; ++marker ) {
                 cursorInfo[ selectedCursor ]->pos[ marker ] = position;
                 emit markerMoved( selectedCursor, marker );
                 selectedMarker = marker;
             }
-        } else if ( selectedMarker < MARKER_COUNT ) {
+        } else if ( selectedMarker < 2 ) {
             cursorInfo[ selectedCursor ]->pos[ selectedMarker ] = position;
             emit markerMoved( selectedCursor, selectedMarker );
         }
@@ -173,7 +173,7 @@ void GlScope::mouseMoveEvent( QMouseEvent *event ) {
 void GlScope::mouseReleaseEvent( QMouseEvent *event ) {
     if ( !( zoomed && selectedCursor == 0 ) && event->button() == Qt::LeftButton ) {
         QPointF position = eventToPosition( event );
-        if ( selectedMarker < MARKER_COUNT ) {
+        if ( selectedMarker < 2 ) {
             // qDebug() << "mouseReleaseEvent";
             cursorInfo[ selectedCursor ]->pos[ selectedMarker ] = position;
             emit markerMoved( selectedCursor, selectedMarker );
@@ -188,17 +188,18 @@ void GlScope::mouseDoubleClickEvent( QMouseEvent *event ) {
         // left double click positions two markers left and right of clicked pos with zoom=100
         QPointF position = eventToPosition( event );
         if ( selectedMarker == NO_MARKER ) {
-            // qDebug() << "mouseDoubleClickEvent";
-            // User double clicked outside the snap area of any marker:
-            // move all markers but the last left of current position.
-            unsigned marker;
-            for ( marker = 0; marker < MARKER_COUNT - 1; ++marker ) {
-                cursorInfo[ selectedCursor ]->pos[ marker ] = position - QPointF( 0.05, 0 );
-                emit markerMoved( selectedCursor, marker );
-            }
-            // move last marker right of current position to make zoom=100.
-            cursorInfo[ selectedCursor ]->pos[ marker ] = position + QPointF( 0.05, 0 );
-            emit markerMoved( selectedCursor, marker );
+            // User double clicked outside the snap area of any marker
+            QPointF p = QPointF( 0.5, 0 );        // 10x zoom
+            if ( event->modifiers() & Qt::SHIFT ) // 100x zoom
+                p /= 10;
+            if ( event->modifiers() & Qt::CTRL ) // center at trigger position
+                position = QPointF( 10 * scope->trigger.offset - 5, 0 );
+            // move 1st marker left of current position.
+            cursorInfo[ selectedCursor ]->pos[ 0 ] = position - p;
+            emit markerMoved( selectedCursor, 0 );
+            // move 2nd marker right of current position to make zoom=10 or 100.
+            cursorInfo[ selectedCursor ]->pos[ 1 ] = position + p;
+            emit markerMoved( selectedCursor, 1 );
             //  select no marker
             selectedMarker = NO_MARKER;
         }

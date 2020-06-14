@@ -58,7 +58,6 @@ void Capturing::capture() {
     if ( !hdc->samplingStarted )
         return;
     int errorCode;
-    valid = true;
     // Send all pending control commands
     ControlCommand *controlCommand = hdc->firstControlCommand;
     while ( controlCommand ) {
@@ -111,11 +110,12 @@ void Capturing::capture() {
         }
         controlCommand = controlCommand->next;
     }
+    valid = true;
     rollMode = hdc->triggerModeNONE() && realSlow;
     // sample step by step into the target if rollMode, else buffer and switch one big block
     dp = rollMode ? &hdc->raw.data : &data;
     rawSamplesize = hdc->grossSampleCount( hdc->getSamplesize() * oversampling ) * channels;
-    dp->resize( rawSamplesize );
+    dp->resize( rawSamplesize, 0x80 );
     if ( tag && rollMode ) // in roll mode transfer settings immediately
         xferSamples();
     ++tag;
@@ -129,6 +129,7 @@ void Capturing::capture() {
         auto end = dp->end();
         for ( auto it = dp->begin(); it != end; ++it )
             *it = 0x80; // fill with "zeros"
+        valid = false;
     }
     if ( !rollMode ) // in normal capturing mode transfer after capturing one block
         xferSamples();
@@ -166,7 +167,7 @@ unsigned Capturing::getDemoSamples() {
     static int counter = 0;
     unsigned received = 0;
     timestampDebug( QString( "Request dummy packet %1: %2" ).arg( tag ).arg( rawSamplesize ) );
-    // dp->resize( rawSamplesize );
+    dp->resize( rawSamplesize, 0x80 );
     auto end = dp->end();
     int deltaT = 99;
     // deltaT (=99) defines the frequency of the dummy signals:
@@ -195,7 +196,7 @@ unsigned Capturing::getDemoSamples() {
         if ( ++block >= 1024 ) {
             block = 0;
             QThread::usleep( unsigned( 1024 * 1e6 / samplerate ) );
-            if ( !hdc->capturing )
+            if ( !hdc->capturing || hdc->scopeDevice->hasStopped() )
                 break;
         }
     }

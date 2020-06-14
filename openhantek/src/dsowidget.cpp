@@ -423,7 +423,7 @@ void DsoWidget::setupSliders( DsoWidget::Sliders &sliders ) {
 
     // The marker slider
     sliders.markerSlider = new LevelSlider( Qt::UpArrow );
-    for ( int marker = 0; marker < MARKER_COUNT; ++marker ) {
+    for ( int marker = 0; marker < 2; ++marker ) {
         sliders.markerSlider->addSlider( QString::number( marker + 1 ), marker );
         sliders.markerSlider->setLimits( marker, MARGIN_LEFT, MARGIN_RIGHT );
         sliders.markerSlider->setStep( marker, MARKER_STEP );
@@ -680,7 +680,11 @@ void DsoWidget::updateSpectrumMagnitude( ChannelID channel ) { updateSpectrumDet
 void DsoWidget::updateSpectrumUsed( ChannelID channel, bool used ) {
     if ( channel >= unsigned( scope->voltage.size() ) )
         return;
-
+    bool spectrumUsed = false;
+    for ( size_t channel = 0; channel < scope->voltage.size(); ++channel )
+        if ( scope->spectrum[ channel ].used )
+            spectrumUsed = true;
+    settingsFrequencybaseLabel->setVisible( spectrumUsed ); // hide text if no spectrum channel used
     mainSliders.voltageOffsetSlider->setIndexVisible( unsigned( scope->voltage.size() ) + channel, used );
     zoomSliders.voltageOffsetSlider->setIndexVisible( unsigned( scope->voltage.size() ) + channel, used );
 
@@ -773,17 +777,9 @@ void DsoWidget::updateRecordLength( unsigned long size ) {
 void DsoWidget::updateZoom( bool enabled ) {
     mainLayout->setRowStretch( zoomScopeRow, enabled ? 1 : 0 );
     zoomScope->setVisible( enabled );
-
-    if ( enabled ) {
-        zoomSliders.voltageOffsetSlider->show();
-        zoomSliders.triggerOffsetSlider->show();
-        zoomSliders.triggerLevelSlider->show();
-    } else {
-        zoomSliders.voltageOffsetSlider->hide();
-        zoomSliders.triggerOffsetSlider->hide();
-        zoomSliders.triggerLevelSlider->hide();
-    }
-
+    zoomSliders.voltageOffsetSlider->setVisible( enabled );
+    zoomSliders.triggerOffsetSlider->setVisible( enabled );
+    zoomSliders.triggerLevelSlider->setVisible( enabled );
     // Show time-/frequencybase and zoom factor if the magnified scope is shown
     markerLayout->setStretch( 3, enabled ? 1 : 0 );
     markerTimebaseLabel->setVisible( enabled );
@@ -1021,8 +1017,8 @@ void DsoWidget::updateSlidersSettings() {
 
     // The trigger position slider
     mainSliders.triggerOffsetSlider->setValue( 0, scope->trigger.offset );
-    updateTriggerOffset( 0, scope->trigger.offset, true );
-    updateTriggerOffset( 0, scope->trigger.offset, false );
+    updateTriggerOffset( 0, scope->trigger.offset, true );                // main slider
+    updateTriggerOffset( 0, mainToZoom( scope->trigger.offset ), false ); // zoom slider
 
     // The sliders for the trigger levels
     for ( ChannelID channel = 0; channel < spec->channels; ++channel ) {
@@ -1042,7 +1038,7 @@ void DsoWidget::updateSlidersSettings() {
     updateTriggerDetails();
 
     // The marker slider
-    for ( int marker = 0; marker < MARKER_COUNT; ++marker ) {
+    for ( int marker = 0; marker < 2; ++marker ) {
         mainSliders.markerSlider->setValue( marker, scope->horizontal.cursor.pos[ marker ].x() );
     }
     updateMarkerDetails();

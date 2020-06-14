@@ -2,7 +2,7 @@
 
 #include <QApplication>
 #include <QColor>
-#include <QDebug>
+// #include <QDebug>
 #include <QSettings>
 
 #include "dsosettings.h"
@@ -82,7 +82,7 @@ void DsoSettings::load() {
         scope.horizontal.format = Dso::GraphFormat( storeSettings->value( "format" ).toInt() );
     if ( storeSettings->contains( "frequencybase" ) )
         scope.horizontal.frequencybase = storeSettings->value( "frequencybase" ).toDouble();
-    for ( int marker = 0; marker < MARKER_COUNT; ++marker ) {
+    for ( int marker = 0; marker < 2; ++marker ) {
         QString name;
         name = QString( "marker%1" ).arg( marker );
         if ( storeSettings->contains( name ) )
@@ -125,7 +125,7 @@ void DsoSettings::load() {
         if ( storeSettings->contains( "shape" ) )
             scope.spectrum[ channel ].cursor.shape =
                 DsoSettingsScopeCursor::CursorShape( storeSettings->value( "shape" ).toUInt() );
-        for ( int marker = 0; marker < MARKER_COUNT; ++marker ) {
+        for ( int marker = 0; marker < 2; ++marker ) {
             QString name;
             name = QString( "x%1" ).arg( marker );
             if ( storeSettings->contains( name ) )
@@ -169,7 +169,7 @@ void DsoSettings::load() {
         storeSettings->beginGroup( "cursor" );
         if ( storeSettings->contains( "shape" ) )
             scope.voltage[ channel ].cursor.shape = DsoSettingsScopeCursor::CursorShape( storeSettings->value( "shape" ).toUInt() );
-        for ( int marker = 0; marker < MARKER_COUNT; ++marker ) {
+        for ( int marker = 0; marker < 2; ++marker ) {
             QString name;
             name = QString( "x%1" ).arg( marker );
             if ( storeSettings->contains( name ) )
@@ -271,7 +271,7 @@ void DsoSettings::save() {
     storeSettings->beginGroup( "horizontal" );
     storeSettings->setValue( "format", scope.horizontal.format );
     storeSettings->setValue( "frequencybase", scope.horizontal.frequencybase );
-    for ( int marker = 0; marker < MARKER_COUNT; ++marker )
+    for ( int marker = 0; marker < 2; ++marker )
         storeSettings->setValue( QString( "marker%1" ).arg( marker ), scope.getMarker( unsigned( marker ) ) );
     storeSettings->setValue( "timebase", qMin( scope.horizontal.timebase, 0.1 ) );
     storeSettings->setValue( "maxTimebase", scope.horizontal.maxTimebase );
@@ -295,7 +295,7 @@ void DsoSettings::save() {
         storeSettings->setValue( "used", scope.spectrum[ channel ].used );
         storeSettings->beginGroup( "cursor" );
         storeSettings->setValue( "shape", scope.spectrum[ channel ].cursor.shape );
-        for ( int marker = 0; marker < MARKER_COUNT; ++marker ) {
+        for ( int marker = 0; marker < 2; ++marker ) {
             QString name;
             name = QString( "x%1" ).arg( marker );
             storeSettings->setValue( name, scope.spectrum[ channel ].cursor.pos[ marker ].x() );
@@ -317,7 +317,7 @@ void DsoSettings::save() {
         storeSettings->setValue( "probeAttn", scope.voltage[ channel ].probeAttn );
         storeSettings->beginGroup( "cursor" );
         storeSettings->setValue( "shape", scope.voltage[ channel ].cursor.shape );
-        for ( int marker = 0; marker < MARKER_COUNT; ++marker ) {
+        for ( int marker = 0; marker < 2; ++marker ) {
             QString name;
             name = QString( "x%1" ).arg( marker );
             storeSettings->setValue( name, scope.voltage[ channel ].cursor.pos[ marker ].x() );

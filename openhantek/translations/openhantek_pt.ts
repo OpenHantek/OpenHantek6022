@@ -527,22 +527,22 @@
     <message>
         <location filename="../src/dsowidget.cpp" line="551"/>
         <source>Time: </source>
-        <translation type="unfinished"></translation>
+        <translation>Tempo: </translation>
     </message>
     <message>
         <location filename="../src/dsowidget.cpp" line="552"/>
         <source>Frequency: </source>
-        <translation type="unfinished"></translation>
+        <translation>Frequência: </translation>
     </message>
     <message>
         <location filename="../src/dsowidget.cpp" line="555"/>
         <source>Zoom x%L1  </source>
-        <translation type="unfinished"></translation>
+        <translation>Zoom x%L1  </translation>
     </message>
     <message>
         <location filename="../src/dsowidget.cpp" line="557"/>
         <source>Zoom ---  </source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/dsowidget.cpp" line="606"/>
@@ -552,22 +552,22 @@
     <message>
         <location filename="../src/dsowidget.cpp" line="620"/>
         <source>%1  %2  %3  %4  %5</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="768"/>
+        <location filename="../src/dsowidget.cpp" line="772"/>
         <source> on screen</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="821"/>
+        <location filename="../src/dsowidget.cpp" line="817"/>
         <source>pp</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="824"/>
+        <location filename="../src/dsowidget.cpp" line="820"/>
         <source>rms</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>%L1</source>
@@ -607,29 +607,29 @@
 <context>
     <name>GlScope</name>
     <message>
-        <location filename="../src/glscope.cpp" line="231"/>
+        <location filename="../src/glscope.cpp" line="232"/>
         <source>System does not support OpenGL Shading Language (GLSL)</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="235"/>
+        <location filename="../src/glscope.cpp" line="236"/>
         <source>OpenGL init called twice!</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="298"/>
+        <location filename="../src/glscope.cpp" line="299"/>
         <source>Failed to compile OpenGL shader programs.
 </source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="304"/>
+        <location filename="../src/glscope.cpp" line="305"/>
         <source>Failed to link/bind OpenGL shader programs.
 </source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="313"/>
+        <location filename="../src/glscope.cpp" line="314"/>
         <source>Failed to locate shader variable.</source>
         <translation></translation>
     </message>
@@ -641,7 +641,7 @@
         <translation type="vanished">Não foi possível obter dados do canal do osciloscópio</translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="365"/>
+        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="366"/>
         <source>Couldn&apos;t get calibration data from oscilloscope&apos;s EEPROM. Use a config file for calibration!</source>
         <translation>Não foi possível obter dados de calibração a partir da EEPROM do osciloscópio. Use um arquivo de configuração para a calibração!</translation>
     </message>
@@ -973,8 +973,12 @@
     <message>
         <location filename="../src/mainwindow.cpp" line="273"/>
         <location filename="../src/mainwindow.cpp" line="296"/>
+        <source>Settings (*.conf)</source>
+        <translation>Configurações (*.conf)</translation>
+    </message>
+    <message>
         <source>Settings (*.ini)</source>
-        <translation>Configurações (*.ini)</translation>
+        <translation type="vanished">Configurações (*.ini)</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="296"/>
@@ -1028,46 +1032,46 @@
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="376"/>
-        <source>&lt;p&gt;Open source software for Hantek6022 USB oscilloscopes&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2010, 2011 Oliver Haag&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2012-2020 OpenHantek community&lt;br/&gt;&lt;a href=&apos;https://github.com/OpenHantek&apos;&gt;https://github.com/OpenHantek&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Open source firmware copyright &amp;copy; 2019-2020 Ho-Ro&lt;br/&gt;&lt;a href=&apos;https://github.com/Ho-Ro/Hantek6022API&apos;&gt;https://github.com/Ho-Ro/Hantek6022API&lt;/a&gt;&lt;/p&gt;</source>
+        <source>&lt;p&gt;Open source software for Hantek6022 USB oscilloscopes&lt;/p&gt;&lt;p&gt;Maintainer: Martin Homuth-Rosemann&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2010, 2011 Oliver Haag&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2012-2020 OpenHantek community&lt;br/&gt;&lt;a href=&apos;https://github.com/OpenHantek&apos;&gt;https://github.com/OpenHantek&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Open source firmware copyright &amp;copy; 2019-2020 Ho-Ro&lt;br/&gt;&lt;a href=&apos;https://github.com/Ho-Ro/Hantek6022API&apos;&gt;https://github.com/Ho-Ro/Hantek6022API&lt;/a&gt;&lt;/p&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="382"/>
+        <location filename="../src/mainwindow.cpp" line="383"/>
         <source>&lt;p&gt;Running since %1 seconds.&lt;/p&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="400"/>
+        <location filename="../src/mainwindow.cpp" line="401"/>
         <source>%1: %2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="413"/>
+        <location filename="../src/mainwindow.cpp" line="414"/>
         <source>yyyy-MM-dd hh:mm:ss</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="414"/>
+        <location filename="../src/mainwindow.cpp" line="415"/>
         <source>yyyyMMdd_hhmmss</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="442"/>
+        <location filename="../src/mainwindow.cpp" line="443"/>
         <source>Image (*.png *.jpg)</source>
         <translation>Imagem (*.png *.jpg)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="442"/>
+        <location filename="../src/mainwindow.cpp" line="443"/>
         <source>Portable Document Format (*.pdf)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="443"/>
+        <location filename="../src/mainwindow.cpp" line="444"/>
         <source>Save screenshot</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="473"/>
+        <location filename="../src/mainwindow.cpp" line="474"/>
         <source>Print oscillograph</source>
         <translation>Impressão</translation>
     </message>

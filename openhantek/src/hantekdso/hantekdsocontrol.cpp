@@ -77,6 +77,7 @@ void HantekDsoControl::updateSamplerateLimits() {
     emit samplerateSet( 1, sampleSteps );
 }
 
+
 void HantekDsoControl::controlSetSamplerate( uint8_t sampleIndex ) {
     static uint8_t lastIndex = 0xFF;
     uint8_t id = specification->fixedSampleRates[ sampleIndex ].id;
@@ -383,9 +384,9 @@ Dso::ErrorCode HantekDsoControl::retrieveChannelLevelData() {
 void HantekDsoControl::quitSampling() {
     enableSampling( false );
     capturing = false;
+    scopeDevice->stopSampling();
     if ( scopeDevice->isDemoDevice() )
         return;
-    scopeDevice->stopSampling();
     auto controlCommand = ControlStopSampling();
     timestampDebug( QString( "Sending control command %1:%2" )
                         .arg( QString::number( controlCommand.code, 16 ),
@@ -402,6 +403,8 @@ void HantekDsoControl::convertRawDataToSamples() {
     QReadLocker rawLocker( &raw.lock );
     activeChannels = raw.channels;
     const unsigned rawSampleCount = unsigned( raw.data.size() ) / activeChannels;
+    if ( !rawSampleCount )
+        return;
     // qDebug() << "HDC::cRDTS rawSampleCount" << rawSampleCount;
     // const unsigned rawSampleCount = raw.rollMode ? scopeDevice->hasReceived() / activeChannels : raw.size / activeChannels;
     const unsigned sampleCount = netSampleCount( rawSampleCount );
@@ -411,8 +414,6 @@ void HantekDsoControl::convertRawDataToSamples() {
     // qDebug() << "HDC::cRDTS rawSampleCount sampleCount rawOversampling resultSamples:" << rawSampleCount << sampleCount
     //          << rawOversampling << resultSamples;
     const unsigned skipSamples = rawSampleCount - sampleCount;
-    if ( !rawSampleCount )
-        return;
     QWriteLocker resultLocker( &result.lock );
     result.freeRunning = resultSamples < SAMPLESIZE_USED; // 20000 samples needed for sw trigger detection
     result.tag = raw.tag;
@@ -667,7 +668,7 @@ void HantekDsoControl::stateMachine() {
 
     bool triggered = false;
 
-    if ( samplingStarted && raw.valid && ( raw.tag != lastTag || ( raw.rollMode /* && triggerModeNONE() */ ) ) ) {
+    if ( samplingStarted && raw.valid && ( raw.tag != lastTag || raw.rollMode ) ) {
         lastTag = raw.tag;
         convertRawDataToSamples();              // process new samples
         if ( !result.freeRunning ) {            // search trigger

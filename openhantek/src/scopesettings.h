@@ -15,7 +15,7 @@
 /// \brief Holds the cursor parameters
 struct DsoSettingsScopeCursor {
     enum CursorShape { NONE, HORIZONTAL, VERTICAL, RECTANGULAR } shape = NONE;
-    QPointF pos[ MARKER_COUNT ] = {{-1.0, -1.0}, {1.0, 1.0}}; ///< Position in div
+    QPointF pos[ 2 ] = {{-1.0, -1.0}, {1.0, 1.0}}; ///< Position in div
 };
 
 /// \brief Holds the settings for the horizontal axis.
@@ -93,12 +93,12 @@ struct DsoSettingsScope {
     unsigned countChannels() const { return unsigned( voltage.size() ); }
 
     double getMarker( unsigned int marker ) const {
-        double x = qBound( MARGIN_LEFT, marker < MARKER_COUNT ? horizontal.cursor.pos[ marker ].x() : 0.0, MARGIN_RIGHT );
+        double x = qBound( MARGIN_LEFT, marker < 2 ? horizontal.cursor.pos[ marker ].x() : 0.0, MARGIN_RIGHT );
         return x;
     }
 
     void setMarker( unsigned int marker, double value ) {
-        if ( marker < MARKER_COUNT )
+        if ( marker < 2 )
             horizontal.cursor.pos[ marker ].setX( value );
     }
 };

@@ -224,7 +224,6 @@ int ScopeDevice::bulkReadMulti( unsigned char *data, unsigned length, bool bigBl
     int retCode = 0;
     // printf("USBDevice::bulkReadMulti( %d )\n", length );
     if ( bigBlock ) {
-
         // more stable if fast data is read as one big block (up to 4 MB)
         retCode = bulkTransfer( HANTEK_EP_IN, data, length, attempts, HANTEK_TIMEOUT_MULTI * length / inPacketLength );
         QWriteLocker locker( &lock );
@@ -243,12 +242,15 @@ int ScopeDevice::bulkReadMulti( unsigned char *data, unsigned length, bool bigBl
             received = 0;
         }
         for ( packet = 0; unsigned( received ) < length && retCode == int( packetLength ); ++packet ) {
-            if ( stopTransfer ) {
-                stopTransfer = false;
+            if ( hasStopped() )
                 break;
-            }
             retCode = bulkTransfer( HANTEK_EP_IN, data + packet * packetLength, qMin( length - unsigned( received ), packetLength ),
                                     attempts, HANTEK_TIMEOUT_MULTI * 10 );
+            if ( ( packet + 1 ) * packetLength < length ) { // clear the next+1 packet
+                unsigned char *dp = data + ( packet + 1 ) * packetLength;
+                for ( unsigned iii = ( packet + 1 ) * packetLength; iii < qMin( ( packet + 2 ) * packetLength, length ); ++iii )
+                    *dp++ = 0x80;
+            }
             if ( retCode > 0 ) {
                 QWriteLocker locker( &lock );
                 received += unsigned( retCode );
