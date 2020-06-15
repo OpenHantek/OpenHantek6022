@@ -48,13 +48,6 @@ class ScopeDevice : public QObject {
     bool isRealHW() const { return realHW; }
     bool isDemoDevice() const { return !realHW; }
 
-    /// \brief the number of samples in the buffer
-    unsigned hasReceived() const {
-        QReadLocker locker( &lock );
-        printf( "hasReceived: %u\n", received );
-        return received;
-    }
-
     /// \brief Stop a long running (interruptable) bulk transfer
     void stopSampling() { stopTransfer = true; }
 
@@ -193,8 +186,6 @@ class ScopeDevice : public QObject {
     bool realHW = true;
     bool stopTransfer = false;
     unsigned received = 0;
-    mutable QReadWriteLock lock;
-
 
   signals:
     void deviceDisconnected(); ///< The device has been disconnected

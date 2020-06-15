@@ -167,8 +167,6 @@ unsigned Capturing::getDemoSamples() {
     static int counter = 0;
     unsigned received = 0;
     timestampDebug( QString( "Request dummy packet %1: %2" ).arg( tag ).arg( rawSamplesize ) );
-    dp->resize( rawSamplesize, 0x80 );
-    auto end = dp->end();
     int deltaT = 99;
     // deltaT (=99) defines the frequency of the dummy signals:
     // ch1 = 1 kHz and ch2 = 500 Hz
@@ -178,7 +176,11 @@ unsigned Capturing::getDemoSamples() {
     // adapt demo samples for high sample rates >10 MS/s
     if ( samplerate > 10e6 )
         deltaT = int( round( deltaT * samplerate / 10e6 ) );
-    int block = 0;
+    const unsigned packetLength = 512 * 78; // 50 blocks for one screen width of 20000
+    unsigned block = 0;
+    dp->resize( rawSamplesize, 0x80 );
+    auto end = dp->end();
+    unsigned packet = 0;
     for ( auto it = dp->begin(); it != end; ++it ) {
         if ( ++counter >= deltaT ) {
             counter = 0;
@@ -193,15 +195,16 @@ unsigned Capturing::getDemoSamples() {
             *++it = ch2;
             ++received;
         }
-        if ( ++block >= 1024 ) {
+        if ( ( block += channels ) >= packetLength ) {
+            ++packet;
             block = 0;
-            QThread::usleep( unsigned( 1024 * 1e6 / samplerate ) );
+            if ( realSlow ) // clear next block as visible hint where we are
+                std::for_each( it, qMin( it + packetLength, end ), []( uint8_t &d ) { d = 0x80; } );
+            QThread::usleep( unsigned( 1e6 * packetLength / channels / samplerate ) );
             if ( !hdc->capturing || hdc->scopeDevice->hasStopped() )
                 break;
         }
     }
-    // qDebug() << unsigned( rawSamplesize * 1000.0 / samplerate / channels );
-    // QThread::msleep( unsigned( rawSamplesize * 1000.0 / samplerate / channels ) );
-    timestampDebug( QString( "Received dummy packet %1: %2" ).arg( tag ).arg( rawSamplesize ) );
+    timestampDebug( QString( "Received dummy packet %1: %2" ).arg( packet ).arg( rawSamplesize ) );
     return received;
 }

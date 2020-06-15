@@ -220,13 +220,11 @@ int ScopeDevice::bulkTransfer( unsigned char endpoint, const unsigned char *data
 int ScopeDevice::bulkReadMulti( unsigned char *data, unsigned length, bool bigBlock, int attempts ) {
     if ( !handle )
         return LIBUSB_ERROR_NO_DEVICE;
-    const unsigned packetLength = 512 * 128;
     int retCode = 0;
     // printf("USBDevice::bulkReadMulti( %d )\n", length );
     if ( bigBlock ) {
         // more stable if fast data is read as one big block (up to 4 MB)
         retCode = bulkTransfer( HANTEK_EP_IN, data, length, attempts, HANTEK_TIMEOUT_MULTI * length / inPacketLength );
-        QWriteLocker locker( &lock );
         if ( retCode < 0 )
             received = 0;
         else
@@ -235,28 +233,26 @@ int ScopeDevice::bulkReadMulti( unsigned char *data, unsigned length, bool bigBl
         return retCode;
     } else {
         // slow data is read in smaller chunks -> quick screen update
+        const unsigned packetLength = 512 * 78; // 50 blocks for one screen width of 20000
         retCode = int( packetLength );
         unsigned int packet;
-        {
-            QWriteLocker locker( &lock );
-            received = 0;
-        }
+        received = 0;
         for ( packet = 0; unsigned( received ) < length && retCode == int( packetLength ); ++packet ) {
             if ( hasStopped() )
                 break;
             retCode = bulkTransfer( HANTEK_EP_IN, data + packet * packetLength, qMin( length - unsigned( received ), packetLength ),
                                     attempts, HANTEK_TIMEOUT_MULTI * 10 );
-            if ( ( packet + 1 ) * packetLength < length ) { // clear the next+1 packet
-                unsigned char *dp = data + ( packet + 1 ) * packetLength;
-                for ( unsigned iii = ( packet + 1 ) * packetLength; iii < qMin( ( packet + 2 ) * packetLength, length ); ++iii )
-                    *dp++ = 0x80;
-            }
-            if ( retCode > 0 ) {
-                QWriteLocker locker( &lock );
+            unsigned next = ( packet + 1 ) * packetLength;
+            if ( next > length )
+                next = 0;
+            unsigned char *dp = data + next;
+            unsigned end = qMin( next + packetLength, length );
+            for ( unsigned iii = next; iii < end; ++iii )
+                *dp++ = 0x80;
+            if ( retCode > 0 )
                 received += unsigned( retCode );
-            }
         }
-        // printf( "total packets: %d, received: %d\n", packet + 1, received );
+        // printf( "total packets: %d, received: %d\n", packet, received );
         if ( received > 0 )
             retCode = int( received );
         return retCode;
