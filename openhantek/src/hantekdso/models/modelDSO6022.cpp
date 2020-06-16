@@ -107,11 +107,12 @@ static void initSpecifications( Dso::ControlSpecification &specification ) {
 
     specification.fixedSampleRates = {
         // samplerate, sampleId, downsampling
-        {200, 102, 100},  // very slow! 100x downsampling from 20 kS/s
-        {500, 105, 100},  // very slow! 100x downsampling from 50 kS/s
-        {1e3, 110, 100},  // slow! 100x downsampling from 100, 200, 500 kS/s
-        {2e3, 120, 100},  // slow!
-        {5e3, 150, 100},  // slow!
+        {100, 102, 200},  // very slow! 200x downsampling from 20 kS/s
+        {200, 104, 200},  // very slow! 200x downsampling from 40 kS/s
+        {500, 110, 200},  // very slow! 200x downsampling from 100 kS/s
+        {1e3, 120, 200},  // slow! 200x downsampling from 200 kS/s
+        {2e3, 140, 200},  // slow! 200x downsampling from 400 kS/s
+        {5e3, 1, 200},    // slow! 200x downsampling from 1 MS/s
         {10e3, 1, 100},   // 100x downsampling from 1, 2, 5, 10 MS/s
         {20e3, 2, 100},   //
         {50e3, 5, 100},   //
@@ -164,7 +165,7 @@ static void applyRequirements_( HantekDsoControl *dsoControl ) {
 //                                              VID/PID active  VID/PID no FW   FW ver    FW name     Scope name
 //                                              |------------|  |------------|  |----|  |---------|  |----------|
 ModelDSO6022BE::ModelDSO6022BE()
-    : DSOModel( ID, 0x04b5, 0x6022, 0x04b4, 0x6022, 0x0206, "dso6022be", "DSO-6022BE", Dso::ControlSpecification( 2 ) ) {
+    : DSOModel( ID, 0x04b5, 0x6022, 0x04b4, 0x6022, 0x0207, "dso6022be", "DSO-6022BE", Dso::ControlSpecification( 2 ) ) {
     initSpecifications( specification );
 }
 
@@ -173,7 +174,7 @@ void ModelDSO6022BE::applyRequirements( HantekDsoControl *dsoControl ) const { a
 
 // Hantek DSO-6022BL (scope or logic analyzer)
 ModelDSO6022BL::ModelDSO6022BL()
-    : DSOModel( ID, 0x04b5, 0x602a, 0x04b4, 0x602a, 0x0206, "dso6022bl", "DSO-6022BL", Dso::ControlSpecification( 2 ) ) {
+    : DSOModel( ID, 0x04b5, 0x602a, 0x04b4, 0x602a, 0x0207, "dso6022bl", "DSO-6022BL", Dso::ControlSpecification( 2 ) ) {
     initSpecifications( specification );
 }
 
@@ -183,7 +184,7 @@ void ModelDSO6022BL::applyRequirements( HantekDsoControl *dsoControl ) const { a
 // Voltcraft DSO-2020 USB Oscilloscope (HW is identical to 6022)
 // Scope starts up as model DS-2020 (VID/PID = 04b4/2020) but loads 6022BE firmware and looks like a 6022BE
 ModelDSO2020::ModelDSO2020()
-    : DSOModel( ID, 0x04b5, 0x6022, 0x04b4, 0x2020, 0x0206, "dso6022be", "DSO-2020", Dso::ControlSpecification( 2 ) ) {
+    : DSOModel( ID, 0x04b5, 0x6022, 0x04b4, 0x2020, 0x0207, "dso6022be", "DSO-2020", Dso::ControlSpecification( 2 ) ) {
     initSpecifications( specification );
 }
 
@@ -202,7 +203,7 @@ static ModelSaleae modelInstance_Saleae;
 
 // LCSOFT without EEPROM reports EzUSB VID/PID
 ModelEzUSB::ModelEzUSB()
-    : DSOModel( ID, 0x04b5, 0x6022, 0x04b4, 0x8613, 0x0206, "dso6022be", "LCsoft-EzUSB", Dso::ControlSpecification( 2 ) ) {
+    : DSOModel( ID, 0x04b5, 0x6022, 0x04b4, 0x8613, 0x0207, "dso6022be", "LCsoft-EzUSB", Dso::ControlSpecification( 2 ) ) {
     initSpecifications( specification );
     specification.hasCalibrationEEPROM = false; // (big) EEPROM, disabled by address jumper
 }
@@ -212,7 +213,7 @@ void ModelEzUSB::applyRequirements( HantekDsoControl *dsoControl ) const { apply
 
 // Saleae VID/PID in EEPROM
 ModelSaleae::ModelSaleae()
-    : DSOModel( ID, 0x04b5, 0x6022, 0x0925, 0x3881, 0x0206, "dso6022be", "LCsoft-Saleae", Dso::ControlSpecification( 2 ) ) {
+    : DSOModel( ID, 0x04b5, 0x6022, 0x0925, 0x3881, 0x0207, "dso6022be", "LCsoft-Saleae", Dso::ControlSpecification( 2 ) ) {
     initSpecifications( specification );
     specification.hasCalibrationEEPROM = false; // we have a big EEPROM
 }

@@ -86,11 +86,12 @@ static void initSpecifications( Dso::ControlSpecification &specification ) {
 
     specification.fixedSampleRates = {
         // samplerate, sampleId, downsampling
-        {200, 102, 100},  // very slow! 100x downsampling from 20, 50 kS/s
-        {500, 105, 100},  // very slow!
-        {1e3, 110, 100},  // slow! 100x downsampling from 100, 200, 500 kS/s!
-        {2e3, 120, 100},  // slow!
-        {5e3, 150, 100},  // slow!
+        {100, 102, 200},  // very slow! 200x downsampling from 20 kS/s
+        {200, 104, 200},  // very slow! 200x downsampling from 40 kS/s
+        {500, 110, 200},  // very slow! 200x downsampling from 100 kS/s
+        {1e3, 120, 200},  // slow! 200x downsampling from 200 kS/s
+        {2e3, 140, 200},  // slow! 200x downsampling from 400 kS/s
+        {5e3, 1, 200},    // slow! 200x downsampling from 1 MS/s
         {10e3, 1, 100},   // 100x downsampling from 1, 2, 5, 10 MS/s
         {20e3, 2, 100},   //
         {50e3, 5, 100},   //
