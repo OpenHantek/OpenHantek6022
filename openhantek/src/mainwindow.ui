@@ -42,15 +42,15 @@
     <addaction name="actionZoom"/>
     <addaction name="actionMeasure"/>
     <addaction name="separator"/>
-    <addaction name="actionManualCommand"/>
    </widget>
    <widget class="QMenu" name="menuOscilloscope">
     <property name="title">
      <string>&amp;Oscilloscope</string>
     </property>
     <addaction name="actionSettings"/>
-    <addaction name="separator"/>
     <addaction name="actionSampling"/>
+    <addaction name="separator"/>
+    <addaction name="actionManualCommand"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -123,7 +123,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Sampling</string>
+    <string>S&amp;ampling</string>
    </property>
    <property name="shortcut">
     <string>Space</string>

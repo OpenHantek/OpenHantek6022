@@ -273,7 +273,7 @@ void DsoSettings::save() {
     storeSettings->setValue( "frequencybase", scope.horizontal.frequencybase );
     for ( int marker = 0; marker < 2; ++marker )
         storeSettings->setValue( QString( "marker%1" ).arg( marker ), scope.getMarker( unsigned( marker ) ) );
-    storeSettings->setValue( "timebase", qMin( scope.horizontal.timebase, 0.1 ) );
+    storeSettings->setValue( "timebase", scope.horizontal.timebase );
     storeSettings->setValue( "maxTimebase", scope.horizontal.maxTimebase );
     storeSettings->setValue( "acquireInterval", scope.horizontal.acquireInterval );
     storeSettings->setValue( "recordLength", scope.horizontal.recordLength );

@@ -201,20 +201,28 @@ double LevelSlider::maximum( int index ) const {
     return this->slider[ index ]->maximum;
 }
 
-/// \brief Set the maximal value of the sliders.
+/// \brief Set the min-max values of the sliders, correct the value if changed.
 /// \param index The index of the slider whose limits should be set.
 /// \param minimum The value a slider has at the bottommost/leftmost position.
 /// \param maximum The value a slider has at the topmost/rightmost position.
-/// \return -1 on error, fixValue result on success.
 void LevelSlider::setLimits( int index, double minimum, double maximum ) {
     if ( index < 0 || index >= this->slider.count() )
         return;
-
+    double lastValue = this->slider[ index ]->value;
     this->slider[ index ]->minimum = minimum;
     this->slider[ index ]->maximum = maximum;
     this->fixValue( index );
     this->calculateRect( index );
     this->repaint();
+#ifdef __GNUC__
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wfloat-equal"
+#endif
+    if ( lastValue != this->slider[ index ]->value )
+        emit valueChanged( index, this->slider[ index ]->value );
+#ifdef __GNUC__
+#pragma GCC diagnostic pop
+#endif
 }
 
 /// \brief Return the step width of the sliders.
@@ -572,7 +580,6 @@ int LevelSlider::calculateWidth() {
 
 /// \brief Fix the value if it's outside the limits.
 /// \param index The index of the slider who should be fixed.
-/// \return 0 when ok, -1 on error, 1 when increased and 2 when decreased.
 void LevelSlider::fixValue( int index ) {
     if ( index < 0 || index >= this->slider.count() )
         return;

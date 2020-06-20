@@ -100,6 +100,8 @@ int main( int argc, char *argv[] ) {
 #endif
     bool demoMode = false;
     bool useGLES = false;
+    bool useGLSL120 = false;
+    bool useGLSL150 = false;
     bool useLocale = true;
     {
         QCoreApplication parserApp( argc, argv );
@@ -110,11 +112,17 @@ int main( int argc, char *argv[] ) {
         p.addOption( demoModeOption );
         QCommandLineOption useGlesOption( {"e", "useGLES"}, "Use OpenGL ES instead of OpenGL" );
         p.addOption( useGlesOption );
+        QCommandLineOption useGLSL120Option( "useGLSL120", "Force OpenGL SL version 1.20" );
+        p.addOption( useGLSL120Option );
+        QCommandLineOption useGLSL150Option( "useGLSL150", "Force OpenGL SL version 1.50" );
+        p.addOption( useGLSL150Option );
         QCommandLineOption intOption( {"i", "international"}, "Show the international interface, do not translate" );
         p.addOption( intOption );
         p.process( parserApp );
         demoMode = p.isSet( demoModeOption );
         useGLES = p.isSet( useGlesOption );
+        useGLSL120 = p.isSet( useGLSL120Option );
+        useGLSL150 = p.isSet( useGLSL150Option );
         useLocale = !p.isSet( intOption );
     }
 
@@ -123,8 +131,11 @@ int main( int argc, char *argv[] ) {
     useGLES = true;
 #endif
 
-    GlScope::fixOpenGLversion( useGLES ? QSurfaceFormat::OpenGLES : QSurfaceFormat::OpenGL );
-
+    GlScope::useQSurfaceFormat( useGLES ? QSurfaceFormat::OpenGLES : QSurfaceFormat::OpenGL );
+    if ( useGLSL120 )
+        GlScope::useOpenGLSLversion( 120 );
+    else if ( useGLSL150 )
+        GlScope::useOpenGLSLversion( 150 );
     QApplication openHantekApplication( argc, argv );
 
 #ifdef __linux__

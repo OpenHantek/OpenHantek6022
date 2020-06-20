@@ -25,7 +25,6 @@
 using namespace Hantek;
 using namespace Dso;
 
-
 HantekDsoControl::HantekDsoControl( ScopeDevice *device, const DSOModel *model )
     : scopeDevice( device ), model( model ), specification( model->spec() ),
       controlsettings( &( specification->samplerate.single ), specification->channels ) {
@@ -267,9 +266,20 @@ Dso::ErrorCode HantekDsoControl::setCoupling( ChannelID channel, Dso::Coupling c
 Dso::ErrorCode HantekDsoControl::setTriggerMode( Dso::TriggerMode mode ) {
     if ( deviceNotConnected() )
         return Dso::ErrorCode::CONNECTION;
+    static Dso::TriggerMode lastMode;
     controlsettings.trigger.mode = mode;
     if ( Dso::TriggerMode::SINGLE != mode )
         enableSampling( true );
+    // trigger mode changed NONE <-> !NONE
+    if ( ( Dso::TriggerMode::NONE == mode && Dso::TriggerMode::NONE != lastMode ) ||
+         ( Dso::TriggerMode::NONE != mode && Dso::TriggerMode::NONE == lastMode ) ) {
+        scopeDevice->stopSampling(); // invalidate old samples;
+        raw.rollMode = Dso::TriggerMode::NONE == mode;
+        QWriteLocker resultLocker( &result.lock );
+        result.freeRunPosition = 0; // no moving sample position marker
+    }
+    lastMode = mode;
+    newTriggerParam = true;
     return Dso::ErrorCode::NONE;
 }
 
@@ -280,6 +290,7 @@ Dso::ErrorCode HantekDsoControl::setTriggerSource( ChannelID channel, bool smoot
     // printf("setTriggerSource( %d, %d )\n", channel, smooth);
     controlsettings.trigger.source = channel;
     controlsettings.trigger.smooth = smooth;
+    newTriggerParam = true;
     return Dso::ErrorCode::NONE;
 }
 
@@ -291,6 +302,7 @@ Dso::ErrorCode HantekDsoControl::setTriggerLevel( ChannelID channel, double leve
         return Dso::ErrorCode::PARAMETER;
     // printf("setTriggerLevel( %d, %g )\n", channel, level);
     controlsettings.trigger.level[ channel ] = level;
+    newTriggerParam = true;
     return Dso::ErrorCode::NONE;
 }
 
@@ -300,6 +312,7 @@ Dso::ErrorCode HantekDsoControl::setTriggerSlope( Dso::Slope slope ) {
         return Dso::ErrorCode::CONNECTION;
     // printf("setTriggerSlope( %d )\n", (int)slope);
     controlsettings.trigger.slope = slope;
+    newTriggerParam = true;
     return Dso::ErrorCode::NONE;
 }
 
@@ -310,6 +323,7 @@ Dso::ErrorCode HantekDsoControl::setTriggerOffset( double position ) {
         return Dso::ErrorCode::CONNECTION;
     // printf("setTriggerPosition( %g )\n", position);
     controlsettings.trigger.position = position;
+    newTriggerParam = true;
     return Dso::ErrorCode::NONE;
 }
 
@@ -405,26 +419,30 @@ void HantekDsoControl::convertRawDataToSamples() {
     const unsigned rawSampleCount = unsigned( raw.data.size() ) / activeChannels;
     if ( !rawSampleCount )
         return;
-    // qDebug() << "HDC::cRDTS rawSampleCount" << rawSampleCount;
     // const unsigned rawSampleCount = raw.rollMode ? scopeDevice->hasReceived() / activeChannels : raw.size / activeChannels;
     const unsigned sampleCount = netSampleCount( rawSampleCount );
     const unsigned rawOversampling = raw.oversampling; //  sampleCount / getSamplesize();
     const unsigned resultSamples = sampleCount / rawOversampling;
     timestampDebug( QString( "HantekDsoControl::convertRawDataToSamples() %1: %2" ).arg( raw.tag ).arg( rawSampleCount ) );
-    // qDebug() << "HDC::cRDTS rawSampleCount sampleCount rawOversampling resultSamples:" << rawSampleCount << sampleCount
-    //          << rawOversampling << resultSamples;
     const unsigned skipSamples = rawSampleCount - sampleCount;
+    unsigned received = raw.received / activeChannels;
+    if ( received > skipSamples )
+        received = ( received - skipSamples ) / rawOversampling;
+    else
+        received = 0;
     QWriteLocker resultLocker( &result.lock );
     result.freeRunning = resultSamples < SAMPLESIZE_USED; // 20000 samples needed for sw trigger detection
+    if ( result.freeRunning && raw.rollMode )
+        result.freeRunPosition = received;
+    else
+        result.freeRunPosition = 0;
     result.tag = raw.tag;
     result.samplerate = raw.samplerate / raw.oversampling;
-    // printf( "cRDTS sr: %g %g %g\n", controlsettings.samplerate.current, raw.samplerate, result.samplerate );
     // Prepare result buffers
     result.data.resize( specification->channels );
     for ( ChannelID channelCounter = 0; channelCounter < specification->channels; ++channelCounter )
         result.data[ channelCounter ].clear();
 
-    // printf( "sampleCount %u, rawDownsampling %u\n", sampleCount, rawDownsampling );
     // Convert channel data
     // Channels are using their separate buffers
     for ( ChannelID channel = 0; channel < activeChannels; ++channel ) {
@@ -432,8 +450,6 @@ void HantekDsoControl::convertRawDataToSamples() {
         const double voltageScale = specification->voltageScale[ channel ][ gainIndex ];
         const double probeAttn = controlsettings.voltage[ channel ].probeAttn;
         const double sign = controlsettings.voltage[ channel ].inverted ? -1.0 : 1.0;
-        // const double gainValue = raw.gainValue[ channel ];
-        // qDebug() << "gain" << channel << gainIndex << gainValue << voltageScale;
 
         // shift + individual offset for each channel and gain
         double gainCalibration = 1.0;
@@ -551,16 +567,16 @@ unsigned HantekDsoControl::searchTriggerPoint( Dso::Slope dsoSlope, unsigned int
 }
 
 
-unsigned HantekDsoControl::searchTriggerPosition() {
+unsigned HantekDsoControl::searchTriggeredPosition() {
     static Dso::Slope nextSlope = Dso::Slope::Positive; // for alternating slope mode X
     ChannelID channel = controlsettings.trigger.source;
     // Trigger channel not in use
     if ( !controlsettings.voltage[ channel ].used || result.data.empty() ) {
-        return result.triggerPosition = 0;
+        return result.triggeredPosition = 0;
     }
-    // printf( "HDC::searchTriggerPosition()\n" );
+    // printf( "HDC::searchTriggeredPosition()\n" );
     triggeredPositionRaw = 0;
-    result.triggerPosition = 0; // not triggered
+    result.triggeredPosition = 0; // not triggered
     result.pulseWidth1 = 0.0;
     result.pulseWidth2 = 0.0;
 
@@ -574,7 +590,7 @@ unsigned HantekDsoControl::searchTriggerPosition() {
         qDebug() << "Too few samples to make a steady picture. Decrease sample rate";
         printf( "sampleCount %lu, timeDisplay %g, sampleRate %g, samplesDisplay %g\n", sampleCount, timeDisplay, sampleRate,
                 samplesDisplay );
-        return result.triggerPosition = 0;
+        return result.triggeredPosition = 0;
     }
 
     // search for trigger point in a range that leaves enough samples left and right of trigger for display
@@ -603,36 +619,36 @@ unsigned HantekDsoControl::searchTriggerPosition() {
         }
     }
 
-    if ( triggeredPositionRaw ) {                      // triggered
-        result.triggerPosition = triggeredPositionRaw; // align trace to trigger position
+    if ( triggeredPositionRaw ) {                        // triggered
+        result.triggeredPosition = triggeredPositionRaw; // align trace to trigger position
     }
-    // printf( "nextSlope %c, triggerPositionRaw %d\n", "/\\"[ int( nextSlope ) ], triggeredPositionRaw );
-    return result.triggerPosition;
+    // printf( "nextSlope %c, triggeredPositionRaw %d\n", "/\\"[ int( nextSlope ) ], triggeredPositionRaw );
+    return result.triggeredPosition;
 }
 
 
 bool HantekDsoControl::provideTriggeredData() {
     // printf( "HDC::provideTriggeredData()\n" );
     static DSOsamples triggeredResult; // storage for last triggered trace samples
-    if ( result.triggerPosition ) {    // live trace has triggered
+    if ( result.triggeredPosition ) {  // live trace has triggered
         // Use this trace and save it also
         triggeredResult.data = result.data;
         triggeredResult.samplerate = result.samplerate;
         triggeredResult.clipped = result.clipped;
-        triggeredResult.triggerPosition = result.triggerPosition;
+        triggeredResult.triggeredPosition = result.triggeredPosition;
         result.liveTrigger = true;                                           // show green "TR" top left
     } else if ( controlsettings.trigger.mode == Dso::TriggerMode::NORMAL ) { // Not triggered in NORMAL mode
         // Use saved trace (even if it is empty)
         result.data = triggeredResult.data;
         result.samplerate = triggeredResult.samplerate;
         result.clipped = triggeredResult.clipped;
-        result.triggerPosition = triggeredResult.triggerPosition;
+        result.triggeredPosition = triggeredResult.triggeredPosition;
         result.liveTrigger = false; // show red "TR" top left
     } else {                        // Not triggered and not NORMAL mode
         // Use the free running trace, discard history
-        triggeredResult.data.clear();        // discard trace
-        triggeredResult.triggerPosition = 0; // not triggered
-        result.liveTrigger = false;          // show red "TR" top left
+        triggeredResult.data.clear();          // discard trace
+        triggeredResult.triggeredPosition = 0; // not triggered
+        result.liveTrigger = false;            // show red "TR" top left
     }
     return result.liveTrigger;
 }
@@ -667,16 +683,17 @@ void HantekDsoControl::stateMachine() {
     static unsigned lastTag = 0;
 
     bool triggered = false;
-
-    if ( samplingStarted && raw.valid && ( raw.tag != lastTag || raw.rollMode ) ) {
+    // we have a sample available ...
+    // ... that is either a new sample or we are in roll mode or a new trigger search is needed
+    if ( samplingStarted && raw.valid && ( raw.tag != lastTag || raw.rollMode || triggerChanged() ) ) {
         lastTag = raw.tag;
-        convertRawDataToSamples();              // process new samples
-        if ( !result.freeRunning ) {            // search trigger
-            searchTriggerPosition();            // detect trigger point
+        convertRawDataToSamples();              // process samples, apply gain settings etc.
+        if ( !result.freeRunning ) {            // trigger mode != NONE
+            searchTriggeredPosition();          // detect trigger point
             triggered = provideTriggeredData(); // present either free running or last triggered trace
         } else { // free running display (uses half sample size -> double display speed for slow sample rates)
             triggered = false;
-            result.triggerPosition = 0;
+            result.triggeredPosition = 0;
         }
     }
     delayDisplay += qMax( acquireInterval, 1 );
@@ -731,30 +748,48 @@ void HantekDsoControl::addCommand( ControlCommand *newCommand, bool pending ) {
 }
 
 
+// sending control commands to the scope:
+// format: "send CC DD DD ..."
+// CC = control code, e.g. E6 (SETCALFREQ)
+// DD = data, e.g. 01 = 1kHz or 69 (= 105 dec) = 50 Hz
+// all CC and DD uint8_t values must consist of 2 hex encoded digits
 Dso::ErrorCode HantekDsoControl::stringCommand( const QString &commandString ) {
     if ( deviceNotConnected() )
         return Dso::ErrorCode::CONNECTION;
-
     QStringList commandParts = commandString.split( ' ', QString::SkipEmptyParts );
-
     if ( commandParts.count() < 1 )
         return Dso::ErrorCode::PARAMETER;
-    if ( commandParts[ 0 ] != "send" )
-        return Dso::ErrorCode::UNSUPPORTED;
-    if ( commandParts.count() < 2 )
-        return Dso::ErrorCode::PARAMETER;
+    if ( commandParts[ 0 ] == "send" ) {
+        if ( commandParts.count() < 2 )
+            return Dso::ErrorCode::PARAMETER;
 
-    uint8_t codeIndex = 0;
-    hexParse( commandParts[ 2 ], &codeIndex, 1 );
-    QString data = commandString.section( ' ', 2, -1, QString::SectionSkipEmpty );
+        uint8_t codeIndex = 0;
+        hexParse( commandParts[ 1 ], &codeIndex, 1 );
+        QString data = commandString.section( ' ', 2, -1, QString::SectionSkipEmpty );
 
-    if ( commandParts[ 1 ] == "control" ) {
         if ( !control[ codeIndex ] )
             return Dso::ErrorCode::UNSUPPORTED;
 
+        QString name = "";
+        if ( codeIndex >= 0xe0 && codeIndex <= 0xe6 )
+            name = controlNames[ codeIndex - 0xe0 ];
+
         ControlCommand *c = modifyCommand< ControlCommand >( ControlCode( codeIndex ) );
         hexParse( data, c->data(), unsigned( c->size() ) );
+        // qDebug() << QString( "Control command 0x%1 (%2):%3" )
+        //                 .arg( QString::number( codeIndex, 16 ), name, decDump( c->data(), unsigned( c->size() ) ) );
+        if ( int( c->size() ) != commandParts.count() - 2 )
+            return Dso::ErrorCode::PARAMETER;
         return Dso::ErrorCode::NONE;
-    } else
-        return Dso::ErrorCode::UNSUPPORTED;
+#if 0
+    } else if ( commandParts[ 0 ] == "test" ) { // simple example for another command
+        if ( commandParts.count() < 2 )
+            return Dso::ErrorCode::PARAMETER;
+        uint8_t test;
+        hexParse( commandParts[ 1 ], &test, 1 );
+        printf( "test: 0x%02x\n", test );
+        return Dso::ErrorCode::NONE;
+#endif
+    }
+    return Dso::ErrorCode::UNSUPPORTED;
 }

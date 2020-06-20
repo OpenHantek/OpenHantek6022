@@ -217,12 +217,30 @@ int ScopeDevice::bulkTransfer( unsigned char endpoint, const unsigned char *data
 }
 
 
-int ScopeDevice::bulkReadMulti( unsigned char *data, unsigned length, bool bigBlock, int attempts ) {
+int ScopeDevice::bulkReadMulti( unsigned char *data, unsigned length, bool captureSmallBlocks, unsigned &received, int attempts ) {
     if ( !handle )
         return LIBUSB_ERROR_NO_DEVICE;
     int retCode = 0;
     // printf("USBDevice::bulkReadMulti( %d )\n", length );
-    if ( bigBlock ) {
+    if ( captureSmallBlocks ) {
+        // slow data is read in smaller chunks to enable quick screen update
+        const unsigned packetLength = 512 * 78; // 100 blocks for one screen width of 40000
+        retCode = int( packetLength );
+        unsigned int packet;
+        received = 0;
+        for ( packet = 0; received < length && retCode == int( packetLength ); ++packet ) {
+            if ( hasStopped() )
+                break;
+            retCode = bulkTransfer( HANTEK_EP_IN, data + packet * packetLength, qMin( length - unsigned( received ), packetLength ),
+                                    attempts, HANTEK_TIMEOUT_MULTI * 10 );
+            if ( retCode > 0 )
+                received += unsigned( retCode );
+        }
+        // printf( "total packets: %d, received: %d\n", packet, received );
+        if ( received > 0 )
+            retCode = int( received );
+        return retCode;
+    } else {
         // more stable if fast data is read as one big block (up to 4 MB)
         retCode = bulkTransfer( HANTEK_EP_IN, data, length, attempts, HANTEK_TIMEOUT_MULTI * length / inPacketLength );
         if ( retCode < 0 )
@@ -230,31 +248,6 @@ int ScopeDevice::bulkReadMulti( unsigned char *data, unsigned length, bool bigBl
         else
             received = unsigned( retCode );
         stopTransfer = false;
-        return retCode;
-    } else {
-        // slow data is read in smaller chunks -> quick screen update
-        const unsigned packetLength = 512 * 78; // 50 blocks for one screen width of 20000
-        retCode = int( packetLength );
-        unsigned int packet;
-        received = 0;
-        for ( packet = 0; unsigned( received ) < length && retCode == int( packetLength ); ++packet ) {
-            if ( hasStopped() )
-                break;
-            retCode = bulkTransfer( HANTEK_EP_IN, data + packet * packetLength, qMin( length - unsigned( received ), packetLength ),
-                                    attempts, HANTEK_TIMEOUT_MULTI * 10 );
-            unsigned next = ( packet + 1 ) * packetLength;
-            if ( next > length )
-                next = 0;
-            unsigned char *dp = data + next;
-            unsigned end = qMin( next + packetLength, length );
-            for ( unsigned iii = next; iii < end; ++iii )
-                *dp++ = 0x80;
-            if ( retCode > 0 )
-                received += unsigned( retCode );
-        }
-        // printf( "total packets: %d, received: %d\n", packet, received );
-        if ( received > 0 )
-            retCode = int( received );
         return retCode;
     }
 }

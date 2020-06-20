@@ -44,7 +44,7 @@ HorizontalDock::HorizontalDock( DsoSettingsScope *scope, const Dso::ControlSpeci
     this->timebaseSiSpinBox = new SiSpinBox( UNIT_SECONDS );
     this->timebaseSiSpinBox->setSteps( timebaseSteps );
     this->timebaseSiSpinBox->setMinimum( 1e-9 );
-    this->timebaseSiSpinBox->setMaximum( 3.6e3 );
+    this->timebaseSiSpinBox->setMaximum( 1e3 );
 
     this->frequencybaseLabel = new QLabel( tr( "Frequencybase" ) );
     this->frequencybaseSiSpinBox = new SiSpinBox( UNIT_HERTZ );

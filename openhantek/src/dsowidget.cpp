@@ -221,15 +221,15 @@ DsoWidget::DsoWidget( DsoSettingsScope *scope, DsoSettingsView *view, const Dso:
     mainLayout->setColumnStretch( 3, 1 ); // Scopes increase their size
     // Bars around the scope, needed because the slider-drawing-area is outside
     // the scope at min/max
-    mainLayout->setColumnMinimumWidth( 2, mainSliders.triggerOffsetSlider->preMargin() );
-    mainLayout->setColumnMinimumWidth( 4, mainSliders.triggerOffsetSlider->postMargin() );
+    mainLayout->setColumnMinimumWidth( 2, mainSliders.triggerPositionSlider->preMargin() );
+    mainLayout->setColumnMinimumWidth( 4, mainSliders.triggerPositionSlider->postMargin() );
     mainLayout->setSpacing( 0 );
     int row = 0;
     // display settings on top of scope
     mainLayout->addLayout( settingsLayout, row, 1, 1, 5 );
     ++row;
     // 5x5 box for mainScope & mainSliders & markerSlider
-    mainLayout->addWidget( mainSliders.triggerOffsetSlider, row, 2, 2, 3, Qt::AlignBottom );
+    mainLayout->addWidget( mainSliders.triggerPositionSlider, row, 2, 2, 3, Qt::AlignBottom );
     ++row;
     mainLayout->setRowMinimumHeight( row, mainSliders.voltageOffsetSlider->preMargin() );
     mainLayout->addWidget( mainSliders.voltageOffsetSlider, row, 1, 3, 2, Qt::AlignRight );
@@ -247,7 +247,7 @@ DsoWidget::DsoWidget( DsoSettingsScope *scope, DsoSettingsView *view, const Dso:
     ++row;
     ++row;
     // 5x4 box for zoomScope & zoomSliders
-    mainLayout->addWidget( zoomSliders.triggerOffsetSlider, row, 2, 2, 3, Qt::AlignBottom );
+    mainLayout->addWidget( zoomSliders.triggerPositionSlider, row, 2, 2, 3, Qt::AlignBottom );
     ++row;
     mainLayout->setRowMinimumHeight( row, zoomSliders.voltageOffsetSlider->preMargin() );
     mainLayout->addWidget( zoomSliders.voltageOffsetSlider, row, 1, 3, 2, Qt::AlignRight );
@@ -273,9 +273,9 @@ DsoWidget::DsoWidget( DsoSettingsScope *scope, DsoSettingsView *view, const Dso:
     connect( mainSliders.voltageOffsetSlider, &LevelSlider::valueChanged, this, &DsoWidget::updateOffset );
     connect( zoomSliders.voltageOffsetSlider, &LevelSlider::valueChanged, this, &DsoWidget::updateOffset );
 
-    connect( mainSliders.triggerOffsetSlider, &LevelSlider::valueChanged,
+    connect( mainSliders.triggerPositionSlider, &LevelSlider::valueChanged,
              [this]( int index, double value ) { updateTriggerOffset( index, value, true ); } );
-    connect( zoomSliders.triggerOffsetSlider, &LevelSlider::valueChanged,
+    connect( zoomSliders.triggerPositionSlider, &LevelSlider::valueChanged,
              [this]( int index, double value ) { updateTriggerOffset( index, value, false ); } );
 
     connect( mainSliders.triggerLevelSlider, &LevelSlider::valueChanged, this, &DsoWidget::updateTriggerLevel );
@@ -402,12 +402,12 @@ void DsoWidget::setupSliders( DsoWidget::Sliders &sliders ) {
     }
 
     // The triggerPosition slider
-    sliders.triggerOffsetSlider = new LevelSlider( Qt::DownArrow );
-    sliders.triggerOffsetSlider->addSlider();
-    sliders.triggerOffsetSlider->setLimits( 0, 0.0, 1.0 );
-    sliders.triggerOffsetSlider->setStep( 0, 0.2 / double( DIVS_TIME ) );
-    sliders.triggerOffsetSlider->setValue( 0, scope->trigger.offset );
-    sliders.triggerOffsetSlider->setIndexVisible( 0, true );
+    sliders.triggerPositionSlider = new LevelSlider( Qt::DownArrow );
+    sliders.triggerPositionSlider->addSlider();
+    sliders.triggerPositionSlider->setLimits( 0, 0.0, 1.0 );
+    sliders.triggerPositionSlider->setStep( 0, 0.2 / double( DIVS_TIME ) );
+    sliders.triggerPositionSlider->setValue( 0, scope->trigger.offset );
+    sliders.triggerPositionSlider->setIndexVisible( 0, true );
 
     // The sliders for the trigger levels
     sliders.triggerLevelSlider = new LevelSlider( Qt::LeftArrow );
@@ -704,8 +704,8 @@ void DsoWidget::updateTriggerSlope() { updateTriggerDetails(); }
 /// \brief Handles sourceChanged signal from the trigger dock.
 void DsoWidget::updateTriggerSource() {
     // Change the colors of the trigger sliders
-    mainSliders.triggerOffsetSlider->setColor( 0, view->colors->voltage[ scope->trigger.source ] );
-    zoomSliders.triggerOffsetSlider->setColor( 0, view->colors->voltage[ scope->trigger.source ] );
+    mainSliders.triggerPositionSlider->setColor( 0, view->colors->voltage[ scope->trigger.source ] );
+    zoomSliders.triggerPositionSlider->setColor( 0, view->colors->voltage[ scope->trigger.source ] );
 
     for ( ChannelID channel = 0; channel < spec->channels; ++channel ) {
         QColor color =
@@ -778,7 +778,7 @@ void DsoWidget::updateZoom( bool enabled ) {
     mainLayout->setRowStretch( zoomScopeRow, enabled ? 1 : 0 );
     zoomScope->setVisible( enabled );
     zoomSliders.voltageOffsetSlider->setVisible( enabled );
-    zoomSliders.triggerOffsetSlider->setVisible( enabled );
+    zoomSliders.triggerPositionSlider->setVisible( enabled );
     zoomSliders.triggerLevelSlider->setVisible( enabled );
     // Show time-/frequencybase and zoom factor if the magnified scope is shown
     markerLayout->setStretch( 3, enabled ? 1 : 0 );
@@ -915,7 +915,7 @@ double DsoWidget::zoomToMain( double position ) const {
 void DsoWidget::adaptTriggerOffsetSlider() {
     double value = mainToZoom( scope->trigger.offset );
 
-    LevelSlider &slider = *zoomSliders.triggerOffsetSlider;
+    LevelSlider &slider = *zoomSliders.triggerPositionSlider;
     const QSignalBlocker blocker( slider );
     if ( slider.minimum( 0 ) <= value && value <= slider.maximum( 0 ) ) {
         slider.setEnabled( true );
@@ -944,8 +944,8 @@ void DsoWidget::updateTriggerOffset( int index, double value, bool mainView ) {
         adaptTriggerOffsetSlider();
     } else {
         scope->trigger.offset = zoomToMain( value );
-        const QSignalBlocker blocker( mainSliders.triggerOffsetSlider );
-        mainSliders.triggerOffsetSlider->setValue( index, scope->trigger.offset );
+        const QSignalBlocker blocker( mainSliders.triggerPositionSlider );
+        mainSliders.triggerPositionSlider->setValue( index, scope->trigger.offset );
     }
 
     updateTriggerDetails();
@@ -1016,7 +1016,7 @@ void DsoWidget::updateSlidersSettings() {
     }
 
     // The trigger position slider
-    mainSliders.triggerOffsetSlider->setValue( 0, scope->trigger.offset );
+    mainSliders.triggerPositionSlider->setValue( 0, scope->trigger.offset );
     updateTriggerOffset( 0, scope->trigger.offset, true );                // main slider
     updateTriggerOffset( 0, mainToZoom( scope->trigger.offset ), false ); // zoom slider
 

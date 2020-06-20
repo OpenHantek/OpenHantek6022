@@ -105,9 +105,12 @@ class ScopeDevice : public QObject {
     /// \brief Multi packet bulk read from the oscilloscope.
     /// \param data Buffer for the sent/received data.
     /// \param length The length of data contained in the packets.
+    /// \param captureSmallBlocks Capture many small blocks instread of one big block (faster gui update)
+    /// \param received The amount of already captured samples
     /// \param attempts The number of attempts, that are done on timeouts.
     /// \return Number of received bytes on success, libusb error code on error.
-    int bulkReadMulti( unsigned char *data, unsigned length, bool bigBlock, int attempts = HANTEK_ATTEMPTS_MULTI );
+    int bulkReadMulti( unsigned char *data, unsigned length, bool captureSmallBlocks, unsigned &received,
+                       int attempts = HANTEK_ATTEMPTS_MULTI );
 
     /// \brief Control transfer to the oscilloscope.
     /// \param type The request type, also sets the direction of the transfer.
@@ -185,7 +188,6 @@ class ScopeDevice : public QObject {
   private:
     bool realHW = true;
     bool stopTransfer = false;
-    unsigned received = 0;
 
   signals:
     void deviceDisconnected(); ///< The device has been disconnected

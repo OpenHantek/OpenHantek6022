@@ -8,8 +8,8 @@
 #include <cmath>
 
 
-static std::vector< QString > controlNames = {"SETGAIN_CH1",    "SETGAIN_CH2", "SETSAMPLERATE", "STARTSAMPLING",
-                                              "SETNUMCHANNELS", "SETCOUPLING", "SETCALFREQ"};
+// static std::vector< QString > controlNames = {"SETGAIN_CH1",    "SETGAIN_CH2", "SETSAMPLERATE", "STARTSAMPLING",
+//                                               "SETNUMCHANNELS", "SETCOUPLING", "SETCALFREQ"};
 
 Capturing::Capturing( HantekDsoControl *hdc ) : hdc( hdc ) { hdc->capturing = true; }
 
@@ -88,7 +88,7 @@ void Capturing::capture() {
             }
             QString name = "";
             if ( controlCommand->code >= 0xe0 && controlCommand->code <= 0xe6 )
-                name = controlNames[ controlCommand->code - 0xe0 ];
+                name = hdc->controlNames[ controlCommand->code - 0xe0 ];
             timestampDebug( QString( "Sending control command 0x%1 (%2):%3" )
                                 .arg( QString::number( controlCommand->code, 16 ), name,
                                       hexdecDump( controlCommand->data(), unsigned( controlCommand->size() ) ) ) );
@@ -146,7 +146,8 @@ unsigned Capturing::getRealSamples() {
     }
     // Save raw data to temporary buffer
     timestampDebug( QString( "Request packet %1: %2" ).arg( tag ).arg( rawSamplesize ) );
-    int retval = hdc->scopeDevice->bulkReadMulti( dp->data(), rawSamplesize, !realSlow );
+    hdc->raw.received = 0;
+    int retval = hdc->scopeDevice->bulkReadMulti( dp->data(), rawSamplesize, realSlow, hdc->raw.received );
     if ( retval < 0 ) {
         qWarning() << "bulkReadMulti: Getting sample data failed: " << libUsbErrorString( retval );
         dp->clear();
@@ -158,14 +159,17 @@ unsigned Capturing::getRealSamples() {
 
 
 unsigned Capturing::getDemoSamples() {
-    const uint8_t V_zero = 128;   // ADC = 0V
-    const uint8_t V_plus_1 = 153; // ADC = 1V
-    const uint8_t V_plus_2 = 178; // ADC = 2V
-    const uint8_t V_minus_2 = 78; // ADC = -2V
-    static uint8_t ch1 = V_zero;
-    static uint8_t ch2 = V_zero;
+    const uint8_t V_zero = 0x80;  // ADC = 0V
+    const int8_t V_plus_1 = 25;   // ADC = 1V
+    const int8_t V_plus_2 = 50;   // ADC = 2V
+    const int8_t V_minus_2 = -50; // ADC = -2V
+    const int gain1 = int( gainValue[ 0 ] );
+    const int gain2 = int( gainValue[ 1 ] );
+    static int ch1 = 0;
+    static int ch2 = 0;
     static int counter = 0;
     unsigned received = 0;
+    hdc->raw.received = 0;
     timestampDebug( QString( "Request dummy packet %1: %2" ).arg( tag ).arg( rawSamplesize ) );
     int deltaT = 99;
     // deltaT (=99) defines the frequency of the dummy signals:
@@ -178,7 +182,7 @@ unsigned Capturing::getDemoSamples() {
         deltaT = int( round( deltaT * samplerate / 10e6 ) );
     const unsigned packetLength = 512 * 78; // 50 blocks for one screen width of 20000
     unsigned block = 0;
-    dp->resize( rawSamplesize, 0x80 );
+    dp->resize( rawSamplesize, V_zero );
     auto end = dp->end();
     unsigned packet = 0;
     for ( auto it = dp->begin(); it != end; ++it ) {
@@ -186,20 +190,19 @@ unsigned Capturing::getDemoSamples() {
             counter = 0;
             if ( --ch1 < V_minus_2 ) {
                 ch1 = V_plus_2;
-                ch2 = ch2 <= V_plus_1 ? V_plus_2 : V_zero;
+                ch2 = ch2 <= V_plus_1 ? V_plus_2 : 0;
             }
         }
-        *it = ch1;
+        *it = uint8_t( qBound( 0, ch1 * gain1 + V_zero, 0xFF ) ); // simulate clipping
         ++received;
         if ( 2 == channels ) {
-            *++it = ch2;
+            *++it = uint8_t( qBound( 0, ch2 * gain2 + V_zero, 0xFF ) ); // simulate clipping
             ++received;
         }
         if ( ( block += channels ) >= packetLength ) {
             ++packet;
             block = 0;
-            if ( realSlow ) // clear next block as visible hint where we are
-                std::for_each( it, qMin( it + packetLength, end ), []( uint8_t &d ) { d = 0x80; } );
+            hdc->raw.received = received;
             QThread::usleep( unsigned( 1e6 * packetLength / channels / samplerate ) );
             if ( !hdc->capturing || hdc->scopeDevice->hasStopped() )
                 break;

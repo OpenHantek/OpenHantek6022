@@ -40,12 +40,14 @@ struct Raw {
     unsigned gainValue[ 2 ] = {1, 1}; // 1,2,5,10,..
     unsigned gainIndex[ 2 ] = {7, 7}; // index 0..7
     unsigned tag = 0;
-    bool valid = true;
+    bool valid = false;
     bool rollMode = false;
     unsigned size = 0;
+    unsigned received = 0;
     std::vector< unsigned char > data;
     mutable QReadWriteLock lock;
 };
+
 
 /// \brief The DsoControl abstraction layer for %Hantek USB DSOs.
 /// TODO Please anyone, refactor this class into smaller pieces (Separation of Concerns!).
@@ -162,7 +164,7 @@ class HantekDsoControl : public QObject {
         return ( slope == Dso::Slope::Positive ? Dso::Slope::Negative : Dso::Slope::Positive );
     }
 
-    unsigned searchTriggerPosition();
+    unsigned searchTriggeredPosition();
 
     bool provideTriggeredData();
 
@@ -195,8 +197,25 @@ class HantekDsoControl : public QObject {
     int displayInterval = 0;
     unsigned triggeredPositionRaw = 0; // not triggered
     unsigned activeChannels = 2;
+    bool newTriggerParam = false; // parameter changed -> new trigger search needed
+    bool triggerChanged() {
+        bool changed = newTriggerParam;
+        newTriggerParam = false;
+        return changed;
+    }
+
     Raw raw;
 
+    std::vector< QString > controlNames = {"SETGAIN_CH1",    "SETGAIN_CH2", "SETSAMPLERATE", "STARTSAMPLING",
+                                           "SETNUMCHANNELS", "SETCOUPLING", "SETCALFREQ"};
+
+    unsigned debugLevel = 0;
+
+#define dprintf( level, fmt, ... )               \
+    do {                                         \
+        if ( debugLevel & level )                \
+            fprintf( stderr, fmt, __VA_ARGS__ ); \
+    } while ( 0 )
 
   public slots:
     /// \brief If sampling is disabled, no samplesAvailable() signals are send anymore, no samples

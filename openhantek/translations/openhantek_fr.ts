@@ -591,31 +591,31 @@
 <context>
     <name>GlScope</name>
     <message>
-        <location filename="../src/glscope.cpp" line="232"/>
+        <location filename="../src/glscope.cpp" line="233"/>
         <source>System does not support OpenGL Shading Language (GLSL)</source>
         <translation>Le système ne supporte pas OpenGL Shading Language (GLSL)</translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="236"/>
+        <location filename="../src/glscope.cpp" line="237"/>
         <source>OpenGL init called twice!</source>
         <translation>Double initialisation d&apos;OpenGL !</translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="299"/>
+        <location filename="../src/glscope.cpp" line="303"/>
         <source>Failed to compile OpenGL shader programs.
 </source>
         <translation>Echec de compilation des programmes d&apos;ombrage OpenGL.
 </translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="305"/>
+        <location filename="../src/glscope.cpp" line="309"/>
         <source>Failed to link/bind OpenGL shader programs.
 </source>
         <translation>Echec de création des liens des programmes d&apos;ombrage OpenGL.
 </translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="314"/>
+        <location filename="../src/glscope.cpp" line="318"/>
         <source>Failed to locate shader variable.</source>
         <translation>Echec de localisation des variables d&apos;ombrage.</translation>
     </message>
@@ -627,7 +627,7 @@
         <translation type="vanished">Impossible d&apos;obtenir les données de niveau du canal depuis l&apos;oscilloscope</translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="366"/>
+        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="380"/>
         <source>Couldn&apos;t get calibration data from oscilloscope&apos;s EEPROM. Use a config file for calibration!</source>
         <translation>Impossible d&apos;obtenir les données de niveau du canal depuis l&apos;oscilloscope. Utilisez un fichier de configuration pour la calibration !</translation>
     </message>
@@ -754,7 +754,7 @@
         <translation>&amp;Affichage</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="49"/>
+        <location filename="../src/mainwindow.ui" line="48"/>
         <source>&amp;Oscilloscope</source>
         <translation>&amp;Oscilloscope</translation>
     </message>
@@ -782,6 +782,11 @@
         <location filename="../src/mainwindow.ui" line="115"/>
         <source>&amp;Exit</source>
         <translation>&amp;Quitter</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.ui" line="126"/>
+        <source>S&amp;ampling</source>
+        <translation>E&amp;chantillonnage</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="137"/>
@@ -877,9 +882,8 @@
         <translation>Ctrl+Q</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="126"/>
         <source>Sampling</source>
-        <translation>Echantillonnage</translation>
+        <translation type="vanished">Echantillonnage</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="129"/>

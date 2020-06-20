@@ -35,7 +35,7 @@ GlScope *GlScope::createZoomed( DsoSettingsScope *scope, DsoSettingsView *view, 
     return s;
 }
 
-void GlScope::fixOpenGLversion( QSurfaceFormat::RenderableType t ) {
+void GlScope::useQSurfaceFormat( QSurfaceFormat::RenderableType t ) {
     QCoreApplication::setAttribute( Qt::AA_ShareOpenGLContexts, true );
 
     // Prefer full desktop OpenGL without fixed pipeline
@@ -67,8 +67,7 @@ GlScope::GlScope( DsoSettingsScope *scope, DsoSettingsView *view, QWidget *paren
     context.makeCurrent( &surface );
     QString glVersion = reinterpret_cast< const char * >( context.functions()->glGetString( GL_VERSION ) );
     GLSLversion = glVersion >= "3.2" ? 150 : 120; // version string "3.2 xxxx" > "3.2" is true
-    // qDebug() << glVersion;
-    // qDebug() << GLSLversion;
+    // qDebug() << "OpenGL version" << glVersion << GLSLversion;
     surface.destroy();
 
     cursorInfo.clear();
@@ -227,6 +226,8 @@ void GlScope::paintEvent( QPaintEvent *event ) {
     event->accept(); // consume the event
 }
 
+unsigned GlScope::forceGLSLversion = 0;
+
 void GlScope::initializeGL() {
     if ( !QOpenGLShaderProgram::hasOpenGLShaderPrograms( context() ) ) {
         errorMessage = tr( "System does not support OpenGL Shading Language (GLSL)" );
@@ -287,11 +288,14 @@ void GlScope::initializeGL() {
           out vec4 flatColor;
           void main() { flatColor = colour; }
     )";
-    // GLSLversion = 150;
+
+    if ( GlScope::forceGLSLversion )
+        GLSLversion = GlScope::forceGLSLversion;
+    // qDebug() << "compile shaders" << GlScope::forceGLSLversion << GLSLversion;
+
     const char *vshaderDesktop = GLSLversion == 120 ? vshaderDesktop120 : vshaderDesktop150;
     const char *fshaderDesktop = GLSLversion == 120 ? fshaderDesktop120 : fshaderDesktop150;
 
-    // qDebug() << "compile shaders";
     // Compile vertex shader
     bool usesOpenGL = QSurfaceFormat::defaultFormat().renderableType() == QSurfaceFormat::OpenGL;
     if ( !program->addShaderFromSourceCode( QOpenGLShader::Vertex, usesOpenGL ? vshaderDesktop : vshaderES ) ||

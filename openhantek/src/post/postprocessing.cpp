@@ -11,9 +11,9 @@ void PostProcessing::registerProcessor( Processor *processor ) { processors.push
 void PostProcessing::convertData( const DSOsamples *source, PPresult *destination ) {
     // printf( "PostProcessing::convertData()\n" );
     QReadLocker locker( &source->lock );
-    if ( source->triggerPosition ) {
+    if ( source->triggeredPosition ) {
         destination->softwareTriggerTriggered = source->liveTrigger;
-        destination->triggeredPosition = source->triggerPosition;
+        destination->triggeredPosition = source->triggeredPosition;
         destination->pulseWidth1 = source->pulseWidth1;
         destination->pulseWidth2 = source->pulseWidth2;
     } else {
@@ -36,6 +36,7 @@ void PostProcessing::convertData( const DSOsamples *source, PPresult *destinatio
         channelData->valid = !( source->clipped & ( 0x01 << channel ) );
     }
     destination->tag = source->tag;
+    destination->freeRunPosition = source->freeRunPosition;
 }
 
 void PostProcessing::input( const DSOsamples *data ) {

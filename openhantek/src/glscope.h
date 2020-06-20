@@ -30,10 +30,12 @@ class GlScope : public QOpenGLWidget {
     static GlScope *createZoomed( DsoSettingsScope *scope, DsoSettingsView *view, QWidget *parent = nullptr );
 
     /**
-     * We need at least OpenGL 3.2 with shader version 150 or
+     * We need at least OpenGL 3.2 with shader version 150 (else version 120) or
      * OpenGL ES 2.0 with shader version 100.
      */
-    static void fixOpenGLversion( QSurfaceFormat::RenderableType t = QSurfaceFormat::DefaultRenderableType );
+    static void useQSurfaceFormat( QSurfaceFormat::RenderableType t = QSurfaceFormat::DefaultRenderableType );
+    // force either GLSL version 1.20 or 1.50
+    static void useOpenGLSLversion( unsigned version ) { forceGLSLversion = version; }
     /**
      * Show new post processed data
      * @param data
@@ -121,6 +123,7 @@ class GlScope : public QOpenGLWidget {
 
     // OpenGL shader, matrix, var-locations
     unsigned int GLSLversion = 150;
+    static unsigned forceGLSLversion;
     bool shaderCompileSuccess = false;
     QString errorMessage;
     std::unique_ptr< QOpenGLShaderProgram > m_program;

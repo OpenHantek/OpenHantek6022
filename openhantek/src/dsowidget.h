@@ -26,7 +26,7 @@ class DsoWidget : public QWidget {
   public:
     struct Sliders {
         LevelSlider *voltageOffsetSlider; ///< The sliders for the graph offsets
-        LevelSlider *triggerOffsetSlider; ///< The slider for the pretrigger
+        LevelSlider *triggerPositionSlider; ///< The slider for the pretrigger
         LevelSlider *triggerLevelSlider;  ///< The sliders for the trigger level
         LevelSlider *markerSlider;        ///< The sliders for the markers
     };

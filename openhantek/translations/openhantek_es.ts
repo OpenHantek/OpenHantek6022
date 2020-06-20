@@ -539,31 +539,31 @@
 <context>
     <name>GlScope</name>
     <message>
-        <location filename="../src/glscope.cpp" line="232"/>
+        <location filename="../src/glscope.cpp" line="233"/>
         <source>System does not support OpenGL Shading Language (GLSL)</source>
         <translation>El sistema no tiene OpenGL Shading Language (GLSL)</translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="236"/>
+        <location filename="../src/glscope.cpp" line="237"/>
         <source>OpenGL init called twice!</source>
         <translation>¡OpenGL init se ha llamado dos veces!</translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="299"/>
+        <location filename="../src/glscope.cpp" line="303"/>
         <source>Failed to compile OpenGL shader programs.
 </source>
         <translation>Ha fallado al compilar programas OpenGL shader.
 </translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="305"/>
+        <location filename="../src/glscope.cpp" line="309"/>
         <source>Failed to link/bind OpenGL shader programs.
 </source>
         <translation>Ha fallado al enlazar programas OpenGL shader.
 </translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="314"/>
+        <location filename="../src/glscope.cpp" line="318"/>
         <source>Failed to locate shader variable.</source>
         <translation>Ha fallado al localizar la variable shader.</translation>
     </message>
@@ -575,7 +575,7 @@
         <translation type="vanished">No se pudieron obtener los datos de calibración del osciloscopio</translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="366"/>
+        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="380"/>
         <source>Couldn&apos;t get calibration data from oscilloscope&apos;s EEPROM. Use a config file for calibration!</source>
         <translation>No se pudieron obtener los datos de calibración del osciloscopio. ¡Usa un archivo de configuración para la calibración!</translation>
     </message>
@@ -698,7 +698,7 @@
         <translation>&amp;Ver</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="49"/>
+        <location filename="../src/mainwindow.ui" line="48"/>
         <source>&amp;Oscilloscope</source>
         <translation>&amp;Osciloscopio</translation>
     </message>
@@ -726,6 +726,11 @@
         <location filename="../src/mainwindow.ui" line="115"/>
         <source>&amp;Exit</source>
         <translation>&amp;Salir</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.ui" line="126"/>
+        <source>S&amp;ampling</source>
+        <translation>M&amp;uestreo</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="137"/>
@@ -814,9 +819,8 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="126"/>
         <source>Sampling</source>
-        <translation>Muestreo</translation>
+        <translation type="vanished">Muestreo</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="129"/>
