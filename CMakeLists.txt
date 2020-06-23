@@ -21,7 +21,12 @@ include(cmake/CPackInfos.cmake)
 if(MSVC)
   add_compile_options(/W4 -D_CRT_SECURE_NO_WARNINGS)
 else()
-  add_compile_options(-Wall -Wextra -pedantic -Wno-psabi)
+  add_compile_options(-Wall -Wextra -pedantic)
+endif()
+
+# Silence nasty warnings "parameter passing for argument of type ... changed in GCC 7.1"
+if(CMAKE_COMPILER_IS_GNUCXX)
+  add_compile_options(-Wno-psabi)
 endif()
 
 # enable extra feature(s)

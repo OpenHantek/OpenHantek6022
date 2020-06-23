@@ -109,7 +109,13 @@ static void initSpecifications( Dso::ControlSpecification &specification ) {
         {48e6, 48, 1}     //
     };
 
-    specification.couplings = {Dso::Coupling::DC};
+    // AC requires AC/DC HW mod like DDS120, enable with "cmake -D HANTEK_AC=1 .." or config option
+    specification.couplings = {Dso::Coupling::DC, Dso::Coupling::AC};
+#ifdef HANTEK_AC
+    specification.hasACcoupling = true;
+#else
+    specification.hasACcoupling = false;
+#endif
     specification.triggerModes = {
         Dso::TriggerMode::NONE,
         Dso::TriggerMode::AUTO,

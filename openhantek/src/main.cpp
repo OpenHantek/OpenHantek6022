@@ -65,28 +65,6 @@
 using namespace Hantek;
 
 
-#if 0
-class OHApplication Q_DECL_FINAL : public QApplication {
-    // Q_OBJECT
-  public:
-    OHApplication( int &argc, char **argv ) : QApplication( argc, argv ) {}
-
-    bool notify( QObject *receiver, QEvent *event ) Q_DECL_OVERRIDE {
-        try {
-            return QApplication::notify( receiver, event );
-            //} catch (Tango::DevFailed &e) {
-            // Handle the desired exception type
-        } catch ( ... ) {
-            qDebug() << "notify:" << event;
-            exit( 0 );
-            // Handle the rest
-        }
-
-        return false;
-    }
-};
-#endif
-
 /// \brief Initialize resources and translations and show the main window.
 int main( int argc, char *argv[] ) {
     //////// Set application information ////////
@@ -226,18 +204,10 @@ int main( int argc, char *argv[] ) {
 
     //////// Create exporters ////////
     ExporterRegistry exportRegistry( spec, &settings );
-
     ExporterCSV exporterCSV;
-    // ExporterImage exportImage;
-    // ExporterPrint exportPrint;
-
     ExporterProcessor samplesToExportRaw( &exportRegistry );
-
     exportRegistry.registerExporter( &exporterCSV );
-#ifdef LEGACYEXPORT
-    exportRegistry.registerExporter( &exportImage );
-    exportRegistry.registerExporter( &exportPrint );
-#endif
+
     //////// Create post processing objects ////////
     QThread postProcessingThread;
     postProcessingThread.setObjectName( "postProcessingThread" );

@@ -279,6 +279,11 @@
         <translation>Exportar</translation>
     </message>
     <message>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="83"/>
+        <source>Scope has hardware modification for AC coupling (restart needed to apply the change)</source>
+        <translation>Scope tiene una modificación de hardware para el acoplamiento de CA (se necesita reiniciar para aplicar el cambio)</translation>
+    </message>
+    <message>
         <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="77"/>
         <source>Save settings on exit</source>
         <translation>Guardar configuración al salir</translation>
@@ -306,7 +311,7 @@
         <translation type="vanished">Guardar configuración predeterminada ahora</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="88"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="96"/>
         <source>Configuration</source>
         <translation>Configuración</translation>
     </message>
@@ -539,31 +544,31 @@
 <context>
     <name>GlScope</name>
     <message>
-        <location filename="../src/glscope.cpp" line="233"/>
+        <location filename="../src/glscope.cpp" line="270"/>
         <source>System does not support OpenGL Shading Language (GLSL)</source>
         <translation>El sistema no tiene OpenGL Shading Language (GLSL)</translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="237"/>
+        <location filename="../src/glscope.cpp" line="274"/>
         <source>OpenGL init called twice!</source>
         <translation>¡OpenGL init se ha llamado dos veces!</translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="303"/>
+        <location filename="../src/glscope.cpp" line="340"/>
         <source>Failed to compile OpenGL shader programs.
 </source>
         <translation>Ha fallado al compilar programas OpenGL shader.
 </translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="309"/>
+        <location filename="../src/glscope.cpp" line="346"/>
         <source>Failed to link/bind OpenGL shader programs.
 </source>
         <translation>Ha fallado al enlazar programas OpenGL shader.
 </translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="318"/>
+        <location filename="../src/glscope.cpp" line="355"/>
         <source>Failed to locate shader variable.</source>
         <translation>Ha fallado al localizar la variable shader.</translation>
     </message>

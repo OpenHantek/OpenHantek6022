@@ -85,9 +85,9 @@ GlScope::GlScope( DsoSettingsScope *scope, DsoSettingsView *view, QWidget *paren
 GlScope::~GlScope() { /* virtual destructor necessary */
 }
 
-QPointF GlScope::eventToPosition( QMouseEvent *event ) {
-    QPointF position( double( event->x() - width() / 2 ) * DIVS_TIME / double( width() ),
-                      double( height() / 2 - event->y() ) * DIVS_VOLTAGE / double( height() ) );
+QPointF GlScope::posToPosition( QPoint pos ) {
+    QPointF position( double( pos.x() - width() / 2 ) * DIVS_TIME / double( width() ),
+                      double( height() / 2 - pos.y() ) * DIVS_VOLTAGE / double( height() ) );
     if ( zoomed ) {
         double m1 = scope->getMarker( 0 );
         double m2 = scope->getMarker( 1 );
@@ -100,7 +100,7 @@ QPointF GlScope::eventToPosition( QMouseEvent *event ) {
 
 void GlScope::mousePressEvent( QMouseEvent *event ) {
     if ( !( zoomed && selectedCursor == 0 ) && event->button() == Qt::LeftButton ) {
-        QPointF position = eventToPosition( event );
+        QPointF position = posToPosition( event->pos() );
         selectedMarker = NO_MARKER;
         DsoSettingsScopeCursor *cursor = cursorInfo[ selectedCursor ];
         // Capture nearest marker located within snap area (+/- 1% of full scale).
@@ -151,7 +151,7 @@ void GlScope::mousePressEvent( QMouseEvent *event ) {
 
 void GlScope::mouseMoveEvent( QMouseEvent *event ) {
     if ( !( zoomed && selectedCursor == 0 ) && ( event->buttons() & Qt::LeftButton ) != 0 ) {
-        QPointF position = eventToPosition( event );
+        QPointF position = posToPosition( event->pos() );
         if ( selectedMarker == NO_MARKER ) {
             // qDebug() << "mouseMoveEvent";
             // User started draging outside the snap area of any marker:
@@ -171,7 +171,7 @@ void GlScope::mouseMoveEvent( QMouseEvent *event ) {
 
 void GlScope::mouseReleaseEvent( QMouseEvent *event ) {
     if ( !( zoomed && selectedCursor == 0 ) && event->button() == Qt::LeftButton ) {
-        QPointF position = eventToPosition( event );
+        QPointF position = posToPosition( event->pos() );
         if ( selectedMarker < 2 ) {
             // qDebug() << "mouseReleaseEvent";
             cursorInfo[ selectedCursor ]->pos[ selectedMarker ] = position;
@@ -185,13 +185,13 @@ void GlScope::mouseReleaseEvent( QMouseEvent *event ) {
 void GlScope::mouseDoubleClickEvent( QMouseEvent *event ) {
     if ( !( zoomed && selectedCursor == 0 ) && ( event->buttons() & Qt::LeftButton ) != 0 ) {
         // left double click positions two markers left and right of clicked pos with zoom=100
-        QPointF position = eventToPosition( event );
+        QPointF position = posToPosition( event->pos() );
         if ( selectedMarker == NO_MARKER ) {
             // User double clicked outside the snap area of any marker
-            QPointF p = QPointF( 0.5, 0 );        // 10x zoom
-            if ( event->modifiers() & Qt::SHIFT ) // 100x zoom
+            QPointF p = QPointF( 0.5, 0 );       // 10x zoom
+            if ( event->modifiers() & Qt::CTRL ) // 100x zoom
                 p /= 10;
-            if ( event->modifiers() & Qt::CTRL ) // center at trigger position
+            if ( event->modifiers() & Qt::SHIFT ) // center at trigger position
                 position = QPointF( 10 * scope->trigger.offset - 5, 0 );
             // move 1st marker left of current position.
             cursorInfo[ selectedCursor ]->pos[ 0 ] = position - p;
@@ -211,6 +211,43 @@ void GlScope::mouseDoubleClickEvent( QMouseEvent *event ) {
     }
     event->accept();
 }
+
+
+void GlScope::wheelEvent( QWheelEvent *event ) {
+    static std::vector< int > zoomList = {1, 2, 5, 10, 20, 50, 100, 200, 500};
+    if ( !( zoomed && selectedCursor == 0 ) ) {
+        if ( selectedMarker == NO_MARKER ) {
+            double step = event->angleDelta().y() / 1200.0; // one click = 0.1
+            // qDebug() << "wheeelEvent" << selectedCursor << event->globalPos() << step;
+            double &m1 = cursorInfo[ selectedCursor ]->pos[ 0 ].rx();
+            double &m2 = cursorInfo[ selectedCursor ]->pos[ 1 ].rx();
+            if ( m1 > m2 )
+                std::swap( m1, m2 );
+            double dm = m2 - m1;
+            if ( event->modifiers() & Qt::CTRL ) { // zoom in/out
+                if ( ( step > 0 && dm <= 1 ) || ( step < 0 && dm < 1 ) )
+                    step *= 0.1;
+                if ( dm >= 3 * step ) {
+                    m1 += step;
+                    m2 -= step;
+                }
+            } else {
+                if ( step < 0 ) {                           // shift zoom range left ..
+                    step = qMax( step, MARGIN_LEFT - m1 );  // .. until m1 == MARGIN_LEFT
+                } else {                                    // shift zoom range right ..
+                    step = qMin( step, MARGIN_RIGHT - m2 ); // .. until m2 == MARGIN_RIGHT
+                }
+                m1 += step;
+                m2 += step;
+            }
+        }
+        emit markerMoved( selectedCursor, 0 );
+        emit markerMoved( selectedCursor, 1 );
+        selectedMarker = NO_MARKER;
+    }
+    event->accept();
+}
+
 
 void GlScope::paintEvent( QPaintEvent *event ) {
     if ( shaderCompileSuccess ) {

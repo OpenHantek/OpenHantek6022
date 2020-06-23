@@ -6,7 +6,6 @@
 #include <QSettings>
 
 #include "dsosettings.h"
-
 #include "dsowidget.h"
 
 /// \brief Set the number of channels.
@@ -15,6 +14,7 @@ DsoSettings::DsoSettings( const Dso::ControlSpecification *deviceSpecification )
     // Add new channels to the list
     unsigned char trace_hue[] = {60, 240, 0, 120}; // yellow, blue, red, green
     unsigned index = 0;
+    scope.hasACcoupling = deviceSpecification->hasACcoupling;
     while ( scope.spectrum.size() < deviceSpecification->channels ) {
         // Spectrum
         DsoSettingsScopeSpectrum newSpectrum;
@@ -139,6 +139,8 @@ void DsoSettings::load() {
     }
     // Voltage
     bool defaultConfig = deviceSpecification->isDemoDevice; // use default channel setting in demo mode
+    if ( storeSettings->contains( "hasACmodification" ) )
+        scope.hasACmodification = storeSettings->value( "hasACmodification" ).toBool();
     for ( ChannelID channel = 0; channel < scope.voltage.size(); ++channel ) {
         storeSettings->beginGroup( QString( "voltage%1" ).arg( channel ) );
         if ( storeSettings->contains( "gainStepIndex" ) )
@@ -146,7 +148,8 @@ void DsoSettings::load() {
         if ( storeSettings->contains( "couplingOrMathIndex" ) ) {
             scope.voltage[ channel ].couplingOrMathIndex = storeSettings->value( "couplingOrMathIndex" ).toUInt();
             if ( channel < deviceSpecification->channels )
-                if ( scope.voltage[ channel ].couplingOrMathIndex >= deviceSpecification->couplings.size() )
+                if ( scope.voltage[ channel ].couplingOrMathIndex >= deviceSpecification->couplings.size() ||
+                     ( !scope.hasACcoupling && !scope.hasACmodification ) )
                     scope.voltage[ channel ].couplingOrMathIndex = 0; // set to default if out of range
         }
         if ( storeSettings->contains( "inverted" ) )
@@ -306,6 +309,7 @@ void DsoSettings::save() {
         storeSettings->endGroup(); // spectrum%1
     }
     // Voltage
+    storeSettings->setValue( "hasACmodification", scope.hasACmodification );
     for ( ChannelID channel = 0; channel < scope.voltage.size(); ++channel ) {
         storeSettings->beginGroup( QString( "voltage%1" ).arg( channel ) );
         storeSettings->setValue( "gainStepIndex", scope.voltage[ channel ].gainStepIndex );

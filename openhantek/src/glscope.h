@@ -70,6 +70,7 @@ class GlScope : public QOpenGLWidget {
     void mouseMoveEvent( QMouseEvent *event ) override;
     void mouseReleaseEvent( QMouseEvent *event ) override;
     void mouseDoubleClickEvent( QMouseEvent *event ) override;
+    void wheelEvent( QWheelEvent *event ) override;
     void paintEvent( QPaintEvent *event ) override;
 
     /// \brief Draw the grid.
@@ -82,7 +83,7 @@ class GlScope : public QOpenGLWidget {
     void drawVoltageChannelGraph( ChannelID channel, Graph &graph, int historyIndex );
     void drawHistogramChannelGraph( ChannelID channel, Graph &graph, int historyIndex );
     void drawSpectrumChannelGraph( ChannelID channel, Graph &graph, int historyIndex );
-    QPointF eventToPosition( QMouseEvent *event );
+    QPointF posToPosition( QPoint pos );
   signals:
     void markerMoved( unsigned cursorIndex, unsigned marker );
 

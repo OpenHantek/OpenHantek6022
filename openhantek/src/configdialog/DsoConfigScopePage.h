@@ -53,7 +53,8 @@ class DsoConfigScopePage : public QWidget {
     QComboBox *cursorsComboBox;
 
     QGroupBox *configurationGroup;
-    QVBoxLayout *configurationLayout;
+    QGridLayout *configurationLayout;
+    QCheckBox *hasACmodificationCheckBox;
     QCheckBox *saveOnExitCheckBox;
     QCheckBox *defaultSettingsCheckBox;
     QPushButton *saveNowButton;

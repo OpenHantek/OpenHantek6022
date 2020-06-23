@@ -331,6 +331,11 @@
         <translation>Exporter</translation>
     </message>
     <message>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="83"/>
+        <source>Scope has hardware modification for AC coupling (restart needed to apply the change)</source>
+        <translation>L&apos;oscilloscope a subi une modification hardware pour le couplage AC (redémarrage nécessaire pour appliquer la modification)</translation>
+    </message>
+    <message>
         <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="77"/>
         <source>Save settings on exit</source>
         <translation>Enregistrer les réglages en quittant</translation>
@@ -358,7 +363,7 @@
         <translation type="vanished">Enregistrer les réglages maintenant</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="88"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="96"/>
         <source>Configuration</source>
         <translation>Configuration</translation>
     </message>
@@ -591,31 +596,31 @@
 <context>
     <name>GlScope</name>
     <message>
-        <location filename="../src/glscope.cpp" line="233"/>
+        <location filename="../src/glscope.cpp" line="270"/>
         <source>System does not support OpenGL Shading Language (GLSL)</source>
         <translation>Le système ne supporte pas OpenGL Shading Language (GLSL)</translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="237"/>
+        <location filename="../src/glscope.cpp" line="274"/>
         <source>OpenGL init called twice!</source>
         <translation>Double initialisation d&apos;OpenGL !</translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="303"/>
+        <location filename="../src/glscope.cpp" line="340"/>
         <source>Failed to compile OpenGL shader programs.
 </source>
         <translation>Echec de compilation des programmes d&apos;ombrage OpenGL.
 </translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="309"/>
+        <location filename="../src/glscope.cpp" line="346"/>
         <source>Failed to link/bind OpenGL shader programs.
 </source>
         <translation>Echec de création des liens des programmes d&apos;ombrage OpenGL.
 </translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="318"/>
+        <location filename="../src/glscope.cpp" line="355"/>
         <source>Failed to locate shader variable.</source>
         <translation>Echec de localisation des variables d&apos;ombrage.</translation>
     </message>

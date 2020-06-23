@@ -23,10 +23,10 @@ template < typename... Args > struct SELECT {
 
 VoltageDock::VoltageDock( DsoSettingsScope *scope, const Dso::ControlSpecification *spec, QWidget *parent, Qt::WindowFlags flags )
     : QDockWidget( tr( "Voltage" ), parent, flags ), scope( scope ), spec( spec ) {
-
     // Initialize lists for comboboxes
     for ( Dso::Coupling c : spec->couplings )
-        couplingStrings.append( Dso::couplingString( c ) );
+        if ( c == Dso::Coupling::DC || scope->hasACcoupling || scope->hasACmodification )
+            couplingStrings.append( Dso::couplingString( c ) );
 
     for ( auto e : Dso::MathModeEnum ) {
         modeStrings.append( Dso::mathModeString( e ) );

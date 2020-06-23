@@ -159,10 +159,12 @@ unsigned Capturing::getRealSamples() {
 
 
 unsigned Capturing::getDemoSamples() {
-    const uint8_t V_zero = 0x80;  // ADC = 0V
-    const int8_t V_plus_1 = 25;   // ADC = 1V
-    const int8_t V_plus_2 = 50;   // ADC = 2V
-    const int8_t V_minus_2 = -50; // ADC = -2V
+    const uint8_t binaryOffset = 0x80; // ADC format: binary offset
+    const int8_t V_zero = 0;           // ADC = 0V
+    const int8_t V_plus_1 = 25;        // ADC = 1V
+    const int8_t V_plus_2 = 50;        // ADC = 2V
+    const int8_t V_minus_1 = -25;      // ADC = -1V
+    const int8_t V_minus_2 = -50;      // ADC = -2V
     const int gain1 = int( gainValue[ 0 ] );
     const int gain2 = int( gainValue[ 1 ] );
     static int ch1 = 0;
@@ -182,21 +184,26 @@ unsigned Capturing::getDemoSamples() {
         deltaT = int( round( deltaT * samplerate / 10e6 ) );
     const unsigned packetLength = 512 * 78; // 50 blocks for one screen width of 20000
     unsigned block = 0;
-    dp->resize( rawSamplesize, V_zero );
+    dp->resize( rawSamplesize, binaryOffset );
     auto end = dp->end();
     unsigned packet = 0;
+    // bool couplingAC1 = hdc->scope->coupling( 0, hdc->specification ) == Dso::Coupling::AC;
+    bool couplingAC2 = hdc->scope->coupling( 1, hdc->specification ) == Dso::Coupling::AC;
     for ( auto it = dp->begin(); it != end; ++it ) {
         if ( ++counter >= deltaT ) {
             counter = 0;
             if ( --ch1 < V_minus_2 ) {
                 ch1 = V_plus_2;
-                ch2 = ch2 <= V_plus_1 ? V_plus_2 : 0;
+                if ( couplingAC2 )
+                    ch2 = ch2 <= V_zero ? V_plus_1 : V_minus_1; // -1V <-> +1V
+                else
+                    ch2 = ch2 <= V_plus_1 ? V_plus_2 : V_zero; // 0V <-> 2V
             }
         }
-        *it = uint8_t( qBound( 0, ch1 * gain1 + V_zero, 0xFF ) ); // simulate clipping
+        *it = uint8_t( qBound( 0, ch1 * gain1 + binaryOffset, 0xFF ) ); // clip if outside 8bit range
         ++received;
         if ( 2 == channels ) {
-            *++it = uint8_t( qBound( 0, ch2 * gain2 + V_zero, 0xFF ) ); // simulate clipping
+            *++it = uint8_t( qBound( 0, ch2 * gain2 + binaryOffset, 0xFF ) ); // clip ..
             ++received;
         }
         if ( ( block += channels ) >= packetLength ) {

@@ -81,6 +81,8 @@ struct DsoSettingsScope {
     DsoSettingsScopeTrigger trigger;                                                 ///< Settings for the trigger
 
     bool histogram = false;
+    bool hasACcoupling = false;
+    bool hasACmodification = false;
 
     double gain( unsigned channel ) const { return gainSteps[ voltage[ channel ].gainStepIndex ] * voltage[ channel ].probeAttn; }
 

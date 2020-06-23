@@ -79,22 +79,30 @@ DsoConfigScopePage::DsoConfigScopePage( DsoSettings *settings, QWidget *parent )
     defaultSettingsCheckBox = new QCheckBox( tr( "Apply default settings after next restart" ) );
     defaultSettingsCheckBox->setChecked( 0 == settings->configVersion );
     saveNowButton = new QPushButton( tr( "Save settings now" ) );
+    hasACmodificationCheckBox =
+        new QCheckBox( tr( "Scope has hardware modification for AC coupling (restart needed to apply the change)" ) );
+    hasACmodificationCheckBox->setChecked( settings->scope.hasACmodification );
 
-    configurationLayout = new QVBoxLayout();
-    configurationLayout->addWidget( saveOnExitCheckBox, 0 );
-    configurationLayout->addWidget( defaultSettingsCheckBox, 1 );
-    configurationLayout->addWidget( saveNowButton, 2 );
+    configurationLayout = new QGridLayout();
+    configurationLayout->addWidget( saveOnExitCheckBox, 0, 0 );
+    configurationLayout->addWidget( saveNowButton, 0, 1 );
+    configurationLayout->addWidget( defaultSettingsCheckBox, 1, 0, 1, 2 );
+    if ( settings->scope.hasACcoupling ) {
+        hasACmodificationCheckBox->setChecked( true ); // check but do not show the box
+    } else {
+        configurationLayout->addWidget( hasACmodificationCheckBox, 2, 0, 1, 2 ); // show it
+    }
 
     configurationGroup = new QGroupBox( tr( "Configuration" ) );
     configurationGroup->setLayout( configurationLayout );
 
 
     mainLayout = new QVBoxLayout();
-    mainLayout->addWidget( configurationGroup );
     mainLayout->addWidget( horizontalGroup );
     mainLayout->addWidget( graphGroup );
     mainLayout->addWidget( exportGroup );
     mainLayout->addWidget( cursorsGroup );
+    mainLayout->addWidget( configurationGroup );
     mainLayout->addStretch( 1 );
 
     setLayout( mainLayout );
@@ -103,6 +111,7 @@ DsoConfigScopePage::DsoConfigScopePage( DsoSettings *settings, QWidget *parent )
 
 /// \brief Saves the new settings.
 void DsoConfigScopePage::saveSettings() {
+    settings->scope.hasACmodification = hasACmodificationCheckBox->isChecked();
     settings->scope.horizontal.maxTimebase = maxTimebaseSiSpinBox->value();
     settings->scope.horizontal.acquireInterval = acquireIntervalSiSpinBox->value();
     settings->view.interpolation = Dso::InterpolationMode( interpolationComboBox->currentIndex() );
