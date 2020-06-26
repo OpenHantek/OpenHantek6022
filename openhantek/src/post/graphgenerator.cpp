@@ -99,22 +99,15 @@ void GraphGenerator::generateGraphsTYvoltage( PPresult *result ) {
               ++position, ++sampleIterator ) {
             double x = double( MARGIN_LEFT + position * horizontalFactor );
             double y = *sampleIterator / gain + offset;
-            double yg = y;
             // show the sample position in free running mode as a big spike
-            if ( result->freeRunPosition ) {
-                if ( position == result->freeRunPosition )
-                    yg = MARGIN_TOP;
-                else if ( position == result->freeRunPosition + 1 )
-                    yg = MARGIN_BOTTOM;
-            }
             if ( !scope->histogram ) { // show complete trace
-                graphVoltage.push_back( QVector3D( float( x ), float( yg ), 0.0f ) );
+                graphVoltage.push_back( QVector3D( float( x ), float( y ), 0.0f ) );
             } else { // histogram replaces trace in rightmost div
                 int bin = int( round( binsPerDiv * ( y + DIVS_VOLTAGE / 2 ) ) );
                 if ( bin > 0 && bin < binsPerDiv * DIVS_VOLTAGE ) // if trace is on screen
                     ++bins[ bin ];                                // count value
                 if ( x < MARGIN_RIGHT - 1.1 ) {                   // show trace unless in last div + 10% margin
-                    graphVoltage.push_back( QVector3D( float( x ), float( yg ), 0.0f ) );
+                    graphVoltage.push_back( QVector3D( float( x ), float( y ), 0.0f ) );
                 }
             }
         }

@@ -646,7 +646,7 @@
         <translation type="vanished">Não foi possível obter dados do canal do osciloscópio</translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="380"/>
+        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="397"/>
         <source>Couldn&apos;t get calibration data from oscilloscope&apos;s EEPROM. Use a config file for calibration!</source>
         <translation>Não foi possível obter dados de calibração a partir da EEPROM do osciloscópio. Use um arquivo de configuração para a calibração!</translation>
     </message>
@@ -1254,17 +1254,21 @@
         <translation>GND</translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/enums.cpp" line="50"/>
-        <source>None</source>
-        <translation>Nada</translation>
+        <location filename="../src/hantekdso/enums.cpp" line="46"/>
+        <source>Roll</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/enums.cpp" line="46"/>
+        <source>None</source>
+        <translation type="vanished">Nada</translation>
+    </message>
+    <message>
+        <location filename="../src/hantekdso/enums.cpp" line="48"/>
         <source>Auto</source>
         <translation>Auto</translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/enums.cpp" line="48"/>
+        <location filename="../src/hantekdso/enums.cpp" line="50"/>
         <source>Normal</source>
         <translation>Normal</translation>
     </message>

@@ -4,7 +4,7 @@
 #include <QCoreApplication>
 
 namespace Dso {
-Enum< Dso::TriggerMode, Dso::TriggerMode::NONE, Dso::TriggerMode::SINGLE > TriggerModeEnum;
+Enum< Dso::TriggerMode, Dso::TriggerMode::ROLL, Dso::TriggerMode::SINGLE > TriggerModeEnum;
 Enum< Dso::Slope, Dso::Slope::Positive, Dso::Slope::Both > SlopeEnum;
 Enum< Dso::GraphFormat, Dso::GraphFormat::TY, Dso::GraphFormat::XY > GraphFormatEnum;
 
@@ -42,12 +42,12 @@ QString couplingString( Coupling coupling ) {
 /// \return The string that should be used in labels etc.
 QString triggerModeString( TriggerMode mode ) {
     switch ( mode ) {
+    case TriggerMode::ROLL:
+        return QCoreApplication::tr( "Roll" );
     case TriggerMode::AUTO:
         return QCoreApplication::tr( "Auto" );
     case TriggerMode::NORMAL:
         return QCoreApplication::tr( "Normal" );
-    case TriggerMode::NONE:
-        return QCoreApplication::tr( "None" );
     case TriggerMode::SINGLE:
         return QCoreApplication::tr( "Single" );
     }

@@ -54,7 +54,6 @@ class PPresult {
     double pulseWidth1 = 0.0;       ///< The width of the triggered pulse
     double pulseWidth2 = 0.0;       ///< The width of the following pulse
     unsigned tag;                   ///< track individual sample blocks (debug support)
-    unsigned freeRunPosition = 0;   ///< position of free running capturing
 
     ChannelsGraphs vaChannelSpectrum;
     ChannelsGraphs vaChannelVoltage;

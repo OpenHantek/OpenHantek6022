@@ -496,7 +496,7 @@
 <context>
     <name>HantekDsoControl</name>
     <message>
-        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="380"/>
+        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="397"/>
         <source>Couldn&apos;t get calibration data from oscilloscope&apos;s EEPROM. Use a config file for calibration!</source>
         <translation>Impossibile ottenere i dati di calibrazione dall&apos;EEPROM dell&apos;oscilloscopio. Utilizzare un file di configurazione per la calibrazione!</translation>
     </message>
@@ -1155,17 +1155,17 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/enums.cpp" line="50"/>
-        <source>None</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../src/hantekdso/enums.cpp" line="46"/>
-        <source>Auto</source>
+        <source>Roll</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/hantekdso/enums.cpp" line="48"/>
+        <source>Auto</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/hantekdso/enums.cpp" line="50"/>
         <source>Normal</source>
         <translation type="unfinished"></translation>
     </message>

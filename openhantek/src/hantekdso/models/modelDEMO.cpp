@@ -117,7 +117,7 @@ static void initSpecifications( Dso::ControlSpecification &specification ) {
     specification.hasACcoupling = false;
 #endif
     specification.triggerModes = {
-        Dso::TriggerMode::NONE,
+        Dso::TriggerMode::ROLL,
         Dso::TriggerMode::AUTO,
         Dso::TriggerMode::NORMAL,
         Dso::TriggerMode::SINGLE,

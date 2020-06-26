@@ -28,8 +28,6 @@
 #include <QTimer>
 #include <QWriteLocker>
 
-#define SAMPLESIZE_USED 20000
-
 class Capturing;
 class ScopeDevice;
 
@@ -40,8 +38,9 @@ struct Raw {
     unsigned gainValue[ 2 ] = {1, 1}; // 1,2,5,10,..
     unsigned gainIndex[ 2 ] = {7, 7}; // index 0..7
     unsigned tag = 0;
-    bool valid = false;
-    bool rollMode = false;
+    bool freeRun = false;  // small buffer, no trigger
+    bool valid = false;    // samples can be processed
+    bool rollMode = false; // one complete buffer received, start to roll
     unsigned size = 0;
     unsigned received = 0;
     std::vector< unsigned char > data;
@@ -78,11 +77,13 @@ class HantekDsoControl : public QObject {
 
     double getSamplerate() const { return controlsettings.samplerate.current; }
 
+    static const unsigned SAMPLESIZE = 20000;
+    static const unsigned SAMPLESIZE_ROLL = 39 * 256;
     unsigned getSamplesize() const {
-        if ( controlsettings.trigger.mode == Dso::TriggerMode::NONE )
-            return SAMPLESIZE_USED / 2;
+        if ( controlsettings.trigger.mode == Dso::TriggerMode::ROLL )
+            return SAMPLESIZE_ROLL;
         else
-            return SAMPLESIZE_USED;
+            return SAMPLESIZE;
     }
 
     bool isSampling() const { return sampling; }
@@ -123,7 +124,7 @@ class HantekDsoControl : public QObject {
     bool singleChannel = true;
     void setSingleChannel( bool single ) { singleChannel = single; }
     bool isSingleChannel() const { return singleChannel; }
-    bool triggerModeNONE() { return controlsettings.trigger.mode == Dso::TriggerMode::NONE; }
+    bool triggerModeNONE() { return controlsettings.trigger.mode == Dso::TriggerMode::ROLL; }
     unsigned getRecordLength() const;
     void setDownsampling( unsigned downsampling ) { downsamplingNumber = downsampling; }
     Dso::ErrorCode retrieveChannelLevelData();

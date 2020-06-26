@@ -36,7 +36,6 @@ void PostProcessing::convertData( const DSOsamples *source, PPresult *destinatio
         channelData->valid = !( source->clipped & ( 0x01 << channel ) );
     }
     destination->tag = source->tag;
-    destination->freeRunPosition = source->freeRunPosition;
 }
 
 void PostProcessing::input( const DSOsamples *data ) {

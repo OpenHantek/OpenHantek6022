@@ -29,7 +29,7 @@ class Capturing : public QThread {
     unsigned gainIndex[ 2 ] = {0, 0}; // index 0..7
     unsigned tag = 0;
     bool valid = true;
-    bool rollMode = false;
+    bool freeRun = false;
     std::vector< unsigned char > data;
     std::vector< unsigned char > *dp = &data;
 };

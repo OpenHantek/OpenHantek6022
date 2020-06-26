@@ -131,7 +131,7 @@ static void initSpecifications( Dso::ControlSpecification &specification ) {
     specification.couplings = {Dso::Coupling::DC, Dso::Coupling::AC};
     specification.hasACcoupling = true; // DDS120 has AC coupling
     specification.triggerModes = {
-        Dso::TriggerMode::NONE,
+        Dso::TriggerMode::ROLL,
         Dso::TriggerMode::AUTO,
         Dso::TriggerMode::NORMAL,
         Dso::TriggerMode::SINGLE,

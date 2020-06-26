@@ -8,9 +8,6 @@
 #include <cmath>
 
 
-// static std::vector< QString > controlNames = {"SETGAIN_CH1",    "SETGAIN_CH2", "SETSAMPLERATE", "STARTSAMPLING",
-//                                               "SETNUMCHANNELS", "SETCOUPLING", "SETCALFREQ"};
-
 Capturing::Capturing( HantekDsoControl *hdc ) : hdc( hdc ) { hdc->capturing = true; }
 
 
@@ -39,7 +36,7 @@ double id2sr( uint8_t timediv ) {
 
 void Capturing::xferSamples() {
     QWriteLocker locker( &hdc->raw.lock );
-    if ( !rollMode )
+    if ( !freeRun )
         swap( data, hdc->raw.data );
     hdc->raw.channels = channels;
     hdc->raw.samplerate = samplerate;
@@ -48,7 +45,7 @@ void Capturing::xferSamples() {
     hdc->raw.gainValue[ 1 ] = gainValue[ 1 ];
     hdc->raw.gainIndex[ 0 ] = gainIndex[ 0 ];
     hdc->raw.gainIndex[ 1 ] = gainIndex[ 1 ];
-    hdc->raw.rollMode = rollMode;
+    hdc->raw.freeRun = freeRun;
     hdc->raw.valid = valid;
     hdc->raw.tag = tag;
 }
@@ -72,8 +69,12 @@ void Capturing::capture() {
                 gainIndex[ 1 ] = controlCommand->data()[ 1 ];
                 break;
             case uint8_t( ControlCode::CONTROL_SETNUMCHANNELS ):
-                if ( realSlow ) // force 2 channels for slow samplings where roll mode is possible
-                    *controlCommand->data() = 2;
+                if ( realSlow ) { // force 2 channels for slow samplings where roll mode is possible
+                    if ( *controlCommand->data() == channels )
+                        controlCommand->pending = false;
+                    else
+                        *controlCommand->data() = 2;
+                }
                 channels = *controlCommand->data();
                 break;
             case uint8_t( ControlCode::CONTROL_SETSAMPLERATE ):
@@ -82,7 +83,7 @@ void Capturing::capture() {
                 oversampling = uint8_t( hdc->specification->fixedSampleRates[ sampleIndex ].oversampling );
                 effectiveSamplerate = hdc->specification->fixedSampleRates[ sampleIndex ].samplerate;
                 realSlow = effectiveSamplerate < 10e3;
-                if ( realSlow ) // always switch to two channels if roll mode is possible
+                if ( realSlow && channels != 2 ) // always switch to two channels if roll mode is possible
                     hdc->modifyCommand< ControlSetNumChannels >( ControlCode::CONTROL_SETNUMCHANNELS )->setNumChannels( 2 );
                 break;
             }
@@ -111,12 +112,12 @@ void Capturing::capture() {
         controlCommand = controlCommand->next;
     }
     valid = true;
-    rollMode = hdc->triggerModeNONE() && realSlow;
+    freeRun = hdc->triggerModeNONE() && realSlow;
     // sample step by step into the target if rollMode, else buffer and switch one big block
-    dp = rollMode ? &hdc->raw.data : &data;
+    dp = freeRun ? &hdc->raw.data : &data;
     rawSamplesize = hdc->grossSampleCount( hdc->getSamplesize() * oversampling ) * channels;
     dp->resize( rawSamplesize, 0x80 );
-    if ( tag && rollMode ) // in roll mode transfer settings immediately
+    if ( tag && freeRun ) // in free run mode transfer settings immediately
         xferSamples();
     ++tag;
     if ( hdc->scopeDevice->isRealHW() ) {
@@ -130,8 +131,10 @@ void Capturing::capture() {
         for ( auto it = dp->begin(); it != end; ++it )
             *it = 0x80; // fill with "zeros"
         valid = false;
+    } else {
+        hdc->raw.rollMode = true; // one complete buffer available, start to roll
     }
-    if ( !rollMode ) // in normal capturing mode transfer after capturing one block
+    if ( !freeRun ) // in normal capturing mode transfer after capturing one block
         xferSamples();
 }
 

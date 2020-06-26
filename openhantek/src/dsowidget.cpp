@@ -616,7 +616,7 @@ void DsoWidget::updateTriggerDetails() {
         int dutyCyle = int( 0.5 + ( 100.0 * pulseWidth1 ) / ( pulseWidth1 + pulseWidth2 ) );
         pulseWidthString += " (" + QString::number( dutyCyle ) + "%)";
     }
-    if ( scope->trigger.mode != Dso::TriggerMode::NONE ) {
+    if ( scope->trigger.mode != Dso::TriggerMode::ROLL ) {
         settingsTriggerLabel->setText( tr( "%1  %2  %3  %4  %5" )
                                            .arg( scope->voltage[ scope->trigger.source ].name,
                                                  Dso::slopeString( scope->trigger.slope ), levelString, pretriggerString,
@@ -797,7 +797,7 @@ void DsoWidget::showNew( std::shared_ptr< PPresult > analysedData ) {
     zoomScope->showData( analysedData );
 
     QPalette triggerLabelPalette = palette();
-    if ( scope->trigger.mode == Dso::TriggerMode::NONE ) {
+    if ( scope->trigger.mode == Dso::TriggerMode::ROLL ) {
         triggerLabelPalette.setColor( QPalette::WindowText, view->colors->background );
         triggerLabelPalette.setColor( QPalette::Background, view->colors->background );
     } else {

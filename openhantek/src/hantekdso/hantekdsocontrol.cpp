@@ -25,6 +25,7 @@
 using namespace Hantek;
 using namespace Dso;
 
+
 HantekDsoControl::HantekDsoControl( ScopeDevice *device, const DSOModel *model )
     : scopeDevice( device ), model( model ), specification( model->spec() ),
       controlsettings( &( specification->samplerate.single ), specification->channels ) {
@@ -81,8 +82,10 @@ void HantekDsoControl::controlSetSamplerate( uint8_t sampleIndex ) {
     static uint8_t lastIndex = 0xFF;
     uint8_t id = specification->fixedSampleRates[ sampleIndex ].id;
     modifyCommand< ControlSetSamplerate >( ControlCode::CONTROL_SETSAMPLERATE )->setSamplerate( id, sampleIndex );
-    if ( sampleIndex != lastIndex )
+    if ( sampleIndex != lastIndex ) {
         scopeDevice->stopSampling(); // invalidate old samples
+        raw.rollMode = false;
+    }
     lastIndex = sampleIndex;
 }
 
@@ -138,7 +141,7 @@ Dso::ErrorCode HantekDsoControl::setRecordTime( double duration ) {
         // qDebug() << "sampleIndex:" << sampleIndex << "sRate:" << sRate << "sRate*duration:" << sRate * duration;
         // Ensure that at least 1/2 of remaining samples are available for SW trigger algorithm
         // for stability reason avoid the highest sample rate as default
-        if ( sRate < srLimit && sRate * duration <= SAMPLESIZE_USED / 2 ) {
+        if ( sRate < srLimit && sRate * duration <= SAMPLESIZE / 2 ) {
             sampleIndex = iii;
         }
     }
@@ -216,22 +219,28 @@ Dso::ErrorCode HantekDsoControl::setGain( ChannelID channel, double gain ) {
     if ( channel >= specification->channels )
         return Dso::ErrorCode::PARAMETER;
 
+    static uint8_t lastGain[ 2 ] = {0xFF, 0xFF};
     gain /= controlsettings.voltage[ channel ].probeAttn; // gain needs to be scaled by probe attenuation
     // Find lowest gain voltage thats at least as high as the requested
     uint8_t gainID;
     for ( gainID = 0; gainID < specification->gain.size() - 1; ++gainID )
         if ( specification->gain[ gainID ].Vdiv >= gain )
             break;
+    uint8_t gainValue = specification->gain[ gainID ].gainValue;
     if ( channel == 0 ) {
-        modifyCommand< ControlSetGain_CH1 >( ControlCode::CONTROL_SETGAIN_CH1 )
-            ->setGainCH1( specification->gain[ gainID ].gainValue, gainID );
-        // modifyCommand< ControlSetGain_CH1 >( ControlCode::CONTROL_SETGAIN_CH1 )
-        //    ->setGainCH1( specification->gain[ gainID ].gainValue );
+        modifyCommand< ControlSetGain_CH1 >( ControlCode::CONTROL_SETGAIN_CH1 )->setGainCH1( gainValue, gainID );
+        if ( lastGain[ 0 ] != gainValue ) { // HW gain changed, start new samples
+            scopeDevice->stopSampling();
+            raw.rollMode = false;
+        }
+        lastGain[ 0 ] = gainValue;
     } else if ( channel == 1 ) {
-        modifyCommand< ControlSetGain_CH2 >( ControlCode::CONTROL_SETGAIN_CH2 )
-            ->setGainCH2( specification->gain[ gainID ].gainValue, gainID );
-        // modifyCommand< ControlSetGain_CH2 >( ControlCode::CONTROL_SETGAIN_CH2 )
-        //     ->setGainCH2( specification->gain[ gainID ].gainValue );
+        modifyCommand< ControlSetGain_CH2 >( ControlCode::CONTROL_SETGAIN_CH2 )->setGainCH2( gainValue, gainID );
+        if ( lastGain[ 1 ] != gainValue ) { // HW gain changed, start new samples
+            scopeDevice->stopSampling();
+            raw.rollMode = false;
+        }
+        lastGain[ 1 ] = gainValue;
     } else
         qDebug( "%s: Unsupported channel: %i\n", __func__, channel );
     controlsettings.voltage[ channel ].gain = gainID;
@@ -242,6 +251,7 @@ Dso::ErrorCode HantekDsoControl::setGain( ChannelID channel, double gain ) {
 Dso::ErrorCode HantekDsoControl::setProbe( ChannelID channel, double probeAttn ) {
     if ( channel >= specification->channels )
         return Dso::ErrorCode::PARAMETER;
+
     controlsettings.voltage[ channel ].probeAttn = probeAttn;
     // printf( "setProbe %g\n", probeAttn );
     return Dso::ErrorCode::NONE;
@@ -255,10 +265,16 @@ Dso::ErrorCode HantekDsoControl::setCoupling( ChannelID channel, Dso::Coupling c
     if ( channel >= specification->channels )
         return Dso::ErrorCode::PARAMETER;
 
+    static int lastCoupling[ 2 ] = {-1, -1};
     if ( hasCommand( ControlCode::CONTROL_SETCOUPLING ) ) // don't send command if it is not implemented (like on the 6022)
         modifyCommand< ControlSetCoupling >( ControlCode::CONTROL_SETCOUPLING )
             ->setCoupling( channel, coupling == Dso::Coupling::DC );
     controlsettings.voltage[ channel ].coupling = coupling;
+    if ( lastCoupling[ channel ] != int( coupling ) ) { // HW coupling changed, start new samples
+        scopeDevice->stopSampling();
+        raw.rollMode = false;
+    }
+    lastCoupling[ channel ] = int( coupling );
     return Dso::ErrorCode::NONE;
 }
 
@@ -266,17 +282,17 @@ Dso::ErrorCode HantekDsoControl::setCoupling( ChannelID channel, Dso::Coupling c
 Dso::ErrorCode HantekDsoControl::setTriggerMode( Dso::TriggerMode mode ) {
     if ( deviceNotConnected() )
         return Dso::ErrorCode::CONNECTION;
+
     static Dso::TriggerMode lastMode;
     controlsettings.trigger.mode = mode;
     if ( Dso::TriggerMode::SINGLE != mode )
         enableSampling( true );
     // trigger mode changed NONE <-> !NONE
-    if ( ( Dso::TriggerMode::NONE == mode && Dso::TriggerMode::NONE != lastMode ) ||
-         ( Dso::TriggerMode::NONE != mode && Dso::TriggerMode::NONE == lastMode ) ) {
+    if ( ( Dso::TriggerMode::ROLL == mode && Dso::TriggerMode::ROLL != lastMode ) ||
+         ( Dso::TriggerMode::ROLL != mode && Dso::TriggerMode::ROLL == lastMode ) ) {
         scopeDevice->stopSampling(); // invalidate old samples;
-        raw.rollMode = Dso::TriggerMode::NONE == mode;
-        QWriteLocker resultLocker( &result.lock );
-        result.freeRunPosition = 0; // no moving sample position marker
+        raw.rollMode = false;        // draw next screen from left to right
+        raw.freeRun = Dso::TriggerMode::ROLL == mode;
     }
     lastMode = mode;
     newTriggerParam = true;
@@ -293,6 +309,7 @@ Dso::ErrorCode HantekDsoControl::setTriggerSource( ChannelID channel, bool smoot
     newTriggerParam = true;
     return Dso::ErrorCode::NONE;
 }
+
 
 // trigger level in Volt
 Dso::ErrorCode HantekDsoControl::setTriggerLevel( ChannelID channel, double level ) {
@@ -419,23 +436,13 @@ void HantekDsoControl::convertRawDataToSamples() {
     const unsigned rawSampleCount = unsigned( raw.data.size() ) / activeChannels;
     if ( !rawSampleCount )
         return;
-    // const unsigned rawSampleCount = raw.rollMode ? scopeDevice->hasReceived() / activeChannels : raw.size / activeChannels;
-    const unsigned sampleCount = netSampleCount( rawSampleCount );
-    const unsigned rawOversampling = raw.oversampling; //  sampleCount / getSamplesize();
-    const unsigned resultSamples = sampleCount / rawOversampling;
-    timestampDebug( QString( "HantekDsoControl::convertRawDataToSamples() %1: %2" ).arg( raw.tag ).arg( rawSampleCount ) );
+    const unsigned rawOversampling = raw.oversampling;
+    const bool freeRunning = rawSampleCount / rawOversampling < SAMPLESIZE; // amount needed for sw trigger
+    const unsigned sampleCount = freeRunning ? rawSampleCount : netSampleCount( rawSampleCount );
+    const unsigned resultSamples = freeRunning ? sampleCount / rawOversampling - 1 : sampleCount / rawOversampling;
     const unsigned skipSamples = rawSampleCount - sampleCount;
-    unsigned received = raw.received / activeChannels;
-    if ( received > skipSamples )
-        received = ( received - skipSamples ) / rawOversampling;
-    else
-        received = 0;
     QWriteLocker resultLocker( &result.lock );
-    result.freeRunning = resultSamples < SAMPLESIZE_USED; // 20000 samples needed for sw trigger detection
-    if ( result.freeRunning && raw.rollMode )
-        result.freeRunPosition = received;
-    else
-        result.freeRunPosition = 0;
+    result.freeRunning = freeRunning;
     result.tag = raw.tag;
     result.samplerate = raw.samplerate / raw.oversampling;
     // Prepare result buffers
@@ -474,22 +481,22 @@ void HantekDsoControl::convertRawDataToSamples() {
             if ( gain && gain != 255 ) { // data valid
                 gainCalibration = 1.0 + ( gain - 0x80 ) / 500.0;
             }
-            // printf( "sDB %d, gC %f, ch %d, gID %d\n", shiftDataBuf, gainCalibration, channel, gainID );
         }
-
-        // Convert data from the oscilloscope and write it into the sample buffer
-        unsigned rawBufferPosition = 0;
-
-        result.data[ channel ].resize( sampleCount / rawOversampling );
-        rawBufferPosition += skipSamples * activeChannels; // skip first unstable samples
-        rawBufferPosition += channel;
-        result.clipped &= ~( 0x01 << channel ); // clear clipping flag
-        for ( unsigned index = 0; index < result.data[ channel ].size();
-              ++index, rawBufferPosition += activeChannels * rawOversampling ) { // advance either by one or two blocks
+        // Convert data from the oscilloscope and write it into the channel sample buffer
+        unsigned rawBufPos = 0;
+        if ( raw.freeRun && raw.rollMode ) // show the "new" samples on the right screen side
+            rawBufPos = raw.received;      // start with remaining "old" samples in buffer
+        result.data[ channel ].resize( resultSamples );
+        rawBufPos += skipSamples * activeChannels; // skip first unstable samples
+        result.clipped &= ~( 0x01 << channel );    // clear clipping flag
+        for ( unsigned index = 0; index < resultSamples;
+              ++index, rawBufPos += activeChannels * rawOversampling ) { // advance either by one or two blocks
+            if ( rawBufPos + rawOversampling * activeChannels > rawSampleCount * activeChannels )
+                rawBufPos = 0; // (roll mode) show "new" samples after the "old" samples
             double sample = 0.0;
             for ( unsigned iii = 0; iii < rawOversampling * activeChannels; iii += activeChannels ) {
-                int rawSample = raw.data[ rawBufferPosition + iii ]; // range 0...255
-                if ( rawSample == 0x00 || rawSample == 0xFF )        // min or max -> clipped
+                int rawSample = raw.data[ rawBufPos + channel + iii ]; // CH1/CH2/CH1/CH2 ...
+                if ( rawSample == 0x00 || rawSample == 0xFF )          // min or max -> clipped
                     result.clipped |= 0x01 << channel;
                 sample += double( rawSample ) - voltageOffset;
             }
@@ -576,9 +583,8 @@ unsigned HantekDsoControl::searchTriggeredPosition() {
     }
     // printf( "HDC::searchTriggeredPosition()\n" );
     triggeredPositionRaw = 0;
-    result.triggeredPosition = 0; // not triggered
-    result.pulseWidth1 = 0.0;
-    result.pulseWidth2 = 0.0;
+    double pulseWidth1 = 0.0;
+    double pulseWidth2 = 0.0;
 
     size_t sampleCount = result.data[ channel ].size();              // number of available samples
     double timeDisplay = controlsettings.samplerate.target.duration; // time for full screen width
@@ -592,16 +598,15 @@ unsigned HantekDsoControl::searchTriggeredPosition() {
                 samplesDisplay );
         return result.triggeredPosition = 0;
     }
-
     // search for trigger point in a range that leaves enough samples left and right of trigger for display
     // find also the alternate slope after trigger point -> calculate pulse width.
     if ( controlsettings.trigger.slope != Dso::Slope::Both ) {
         triggeredPositionRaw = searchTriggerPoint( nextSlope = controlsettings.trigger.slope );
         if ( triggeredPositionRaw ) { // triggered -> search also following other slope (calculate pulse width)
             if ( unsigned int slopePos2 = searchTriggerPoint( mirrorSlope( nextSlope ), triggeredPositionRaw ) ) {
-                result.pulseWidth1 = ( slopePos2 - triggeredPositionRaw ) / sampleRate;
+                pulseWidth1 = ( slopePos2 - triggeredPositionRaw ) / sampleRate;
                 if ( unsigned int slopePos3 = searchTriggerPoint( nextSlope, slopePos2 ) ) {
-                    result.pulseWidth2 = ( slopePos3 - slopePos2 ) / sampleRate;
+                    pulseWidth2 = ( slopePos3 - slopePos2 ) / sampleRate;
                 }
             }
         }
@@ -611,17 +616,17 @@ unsigned HantekDsoControl::searchTriggeredPosition() {
             Dso::Slope thirdSlope = nextSlope;
             nextSlope = mirrorSlope( nextSlope );
             if ( unsigned int slopePos2 = searchTriggerPoint( nextSlope, triggeredPositionRaw ) ) {
-                result.pulseWidth1 = ( slopePos2 - triggeredPositionRaw ) / sampleRate;
+                pulseWidth1 = ( slopePos2 - triggeredPositionRaw ) / sampleRate;
                 if ( unsigned int slopePos3 = searchTriggerPoint( thirdSlope, slopePos2 ) ) {
-                    result.pulseWidth2 = ( slopePos3 - slopePos2 ) / sampleRate;
+                    pulseWidth2 = ( slopePos3 - slopePos2 ) / sampleRate;
                 }
             }
         }
     }
 
-    if ( triggeredPositionRaw ) {                        // triggered
-        result.triggeredPosition = triggeredPositionRaw; // align trace to trigger position
-    }
+    result.triggeredPosition = triggeredPositionRaw; // align trace to trigger position
+    result.pulseWidth1 = pulseWidth1;
+    result.pulseWidth2 = pulseWidth2;
     // printf( "nextSlope %c, triggeredPositionRaw %d\n", "/\\"[ int( nextSlope ) ], triggeredPositionRaw );
     return result.triggeredPosition;
 }
@@ -636,7 +641,7 @@ bool HantekDsoControl::provideTriggeredData() {
         triggeredResult.samplerate = result.samplerate;
         triggeredResult.clipped = result.clipped;
         triggeredResult.triggeredPosition = result.triggeredPosition;
-        result.liveTrigger = true;                                           // show green "TR" top left
+        result.liveTrigger = true;
     } else if ( controlsettings.trigger.mode == Dso::TriggerMode::NORMAL ) { // Not triggered in NORMAL mode
         // Use saved trace (even if it is empty)
         result.data = triggeredResult.data;
@@ -684,10 +689,11 @@ void HantekDsoControl::stateMachine() {
 
     bool triggered = false;
     // we have a sample available ...
-    // ... that is either a new sample or we are in roll mode or a new trigger search is needed
-    if ( samplingStarted && raw.valid && ( raw.tag != lastTag || raw.rollMode || triggerChanged() ) ) {
+    // ... that is either a new sample or we are in free run mode or a new trigger search is needed
+    if ( samplingStarted && raw.valid && ( raw.tag != lastTag || raw.freeRun || triggerChanged() ) ) {
         lastTag = raw.tag;
-        convertRawDataToSamples();              // process samples, apply gain settings etc.
+        convertRawDataToSamples(); // process samples, apply gain settings etc.
+        QWriteLocker resultLocker( &result.lock );
         if ( !result.freeRunning ) {            // trigger mode != NONE
             searchTriggeredPosition();          // detect trigger point
             triggered = provideTriggeredData(); // present either free running or last triggered trace
