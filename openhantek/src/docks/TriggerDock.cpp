@@ -98,6 +98,7 @@ void TriggerDock::setMode( Dso::TriggerMode mode ) {
     int index = int( std::find( mSpec->triggerModes.begin(), mSpec->triggerModes.end(), mode ) - mSpec->triggerModes.begin() );
     QSignalBlocker blocker( modeComboBox );
     modeComboBox->setCurrentIndex( index );
+    emit modeChanged( this->scope->trigger.mode );
 }
 
 void TriggerDock::setSlope( Dso::Slope slope ) {

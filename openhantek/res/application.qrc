@@ -8,12 +8,14 @@
         <file>images/measure.svg</file>
         <file>images/pause.svg</file>
         <file>images/play.svg</file>
+        <file>images/refresh.svg</file>
         <file>images/zoom.svg</file>
         <file>images/darktheme/phosphor.svg</file>
         <file>images/darktheme/histogram.svg</file>
         <file>images/darktheme/measure.svg</file>
         <file>images/darktheme/pause.svg</file>
         <file>images/darktheme/play.svg</file>
+        <file>images/darktheme/refresh.svg</file>
         <file>images/darktheme/zoom.svg</file>
     </qresource>
     <qresource prefix="/actions"/>

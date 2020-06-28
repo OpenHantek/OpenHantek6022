@@ -83,8 +83,7 @@ void HantekDsoControl::controlSetSamplerate( uint8_t sampleIndex ) {
     uint8_t id = specification->fixedSampleRates[ sampleIndex ].id;
     modifyCommand< ControlSetSamplerate >( ControlCode::CONTROL_SETSAMPLERATE )->setSamplerate( id, sampleIndex );
     if ( sampleIndex != lastIndex ) {
-        scopeDevice->stopSampling(); // invalidate old samples
-        raw.rollMode = false;
+        restartSampling();
     }
     lastIndex = sampleIndex;
 }
@@ -230,15 +229,13 @@ Dso::ErrorCode HantekDsoControl::setGain( ChannelID channel, double gain ) {
     if ( channel == 0 ) {
         modifyCommand< ControlSetGain_CH1 >( ControlCode::CONTROL_SETGAIN_CH1 )->setGainCH1( gainValue, gainID );
         if ( lastGain[ 0 ] != gainValue ) { // HW gain changed, start new samples
-            scopeDevice->stopSampling();
-            raw.rollMode = false;
+            restartSampling();
         }
         lastGain[ 0 ] = gainValue;
     } else if ( channel == 1 ) {
         modifyCommand< ControlSetGain_CH2 >( ControlCode::CONTROL_SETGAIN_CH2 )->setGainCH2( gainValue, gainID );
         if ( lastGain[ 1 ] != gainValue ) { // HW gain changed, start new samples
-            scopeDevice->stopSampling();
-            raw.rollMode = false;
+            restartSampling();
         }
         lastGain[ 1 ] = gainValue;
     } else
@@ -271,8 +268,7 @@ Dso::ErrorCode HantekDsoControl::setCoupling( ChannelID channel, Dso::Coupling c
             ->setCoupling( channel, coupling == Dso::Coupling::DC );
     controlsettings.voltage[ channel ].coupling = coupling;
     if ( lastCoupling[ channel ] != int( coupling ) ) { // HW coupling changed, start new samples
-        scopeDevice->stopSampling();
-        raw.rollMode = false;
+        restartSampling();
     }
     lastCoupling[ channel ] = int( coupling );
     return Dso::ErrorCode::NONE;
@@ -290,8 +286,7 @@ Dso::ErrorCode HantekDsoControl::setTriggerMode( Dso::TriggerMode mode ) {
     // trigger mode changed NONE <-> !NONE
     if ( ( Dso::TriggerMode::ROLL == mode && Dso::TriggerMode::ROLL != lastMode ) ||
          ( Dso::TriggerMode::ROLL != mode && Dso::TriggerMode::ROLL == lastMode ) ) {
-        scopeDevice->stopSampling(); // invalidate old samples;
-        raw.rollMode = false;        // draw next screen from left to right
+        restartSampling(); // invalidate old samples
         raw.freeRun = Dso::TriggerMode::ROLL == mode;
     }
     lastMode = mode;
@@ -364,6 +359,13 @@ void HantekDsoControl::applySettings( DsoSettingsScope *dsoSettingsScope ) {
     setTriggerOffset( dsoSettingsScope->trigger.offset );
     setTriggerSlope( dsoSettingsScope->trigger.slope );
     setTriggerSource( dsoSettingsScope->trigger.source, dsoSettingsScope->trigger.smooth );
+}
+
+
+/// \brief Starts a new sampling block.
+void HantekDsoControl::restartSampling() {
+    scopeDevice->stopSampling();
+    raw.rollMode = false;
 }
 
 

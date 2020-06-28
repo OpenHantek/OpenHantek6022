@@ -37,18 +37,20 @@
     <property name="title">
      <string>&amp;View</string>
     </property>
+    <addaction name="actionSampling"/>
+    <addaction name="separator"/>
+    <addaction name="actionRefresh"/>
+    <addaction name="separator"/>
     <addaction name="actionPhosphor"/>
     <addaction name="actionHistogram"/>
     <addaction name="actionZoom"/>
     <addaction name="actionMeasure"/>
-    <addaction name="separator"/>
    </widget>
    <widget class="QMenu" name="menuOscilloscope">
     <property name="title">
      <string>&amp;Oscilloscope</string>
     </property>
     <addaction name="actionSettings"/>
-    <addaction name="actionSampling"/>
     <addaction name="separator"/>
     <addaction name="actionManualCommand"/>
    </widget>
@@ -83,11 +85,12 @@
    </attribute>
    <addaction name="actionSampling"/>
    <addaction name="separator"/>
+   <addaction name="actionRefresh"/>
+   <addaction name="separator"/>
    <addaction name="actionPhosphor"/>
    <addaction name="actionHistogram"/>
    <addaction name="actionZoom"/>
    <addaction name="actionMeasure"/>
-   <addaction name="separator"/>
   </widget>
   <action name="actionOpen">
    <property name="text">
@@ -127,6 +130,14 @@
    </property>
    <property name="shortcut">
     <string>Space</string>
+   </property>
+  </action>
+  <action name="actionRefresh">
+   <property name="checkable">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Refresh</string>
    </property>
   </action>
   <action name="actionPhosphor">
@@ -191,7 +202,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Manual &amp;command</string>
+    <string>&amp;Manual command</string>
    </property>
   </action>
  </widget>

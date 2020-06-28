@@ -59,6 +59,8 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
     shortcuts << QKeySequence( Qt::Key::Key_S ); // else put this shortcut at the end of the list
 #endif
     ui->actionSampling->setShortcuts( shortcuts );
+    ui->actionRefresh->setIcon( QIcon( iconPath + "refresh.svg" ) );
+    ui->actionRefresh->setShortcut( Qt::Key::Key_R );
     ui->actionPhosphor->setIcon( QIcon( iconPath + "phosphor.svg" ) );
     ui->actionPhosphor->setShortcut( Qt::Key::Key_P );
     ui->actionHistogram->setIcon( QIcon( iconPath + "histogram.svg" ) );
@@ -86,16 +88,6 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
     setDockOptions( dockOptions() | QMainWindow::GroupedDragging );
 #endif
     QAction *action;
-    for ( auto *exporter : *exporterRegistry ) {
-        action = new QAction( iconFont->icon( exporter->faIcon(), colorMap ), exporter->name(), this );
-        action->setCheckable( exporter->type() == ExporterInterface::Type::ContinousExport );
-        connect( action, &QAction::triggered, [exporter, exporterRegistry]( bool checked ) {
-            exporterRegistry->setExporterEnabled( exporter,
-                                                  exporter->type() == ExporterInterface::Type::ContinousExport ? checked : true );
-        } );
-        ui->menuExport->addAction( action );
-    }
-
     action = new QAction( iconFont->icon( fa::camera, colorMap ), tr( "Screenshot .." ), this );
     action->setToolTip( "Make a screenshot of the program window" );
     connect( action, &QAction::triggered, [this]() { screenShot( SCREENSHOT ); } );
@@ -116,6 +108,18 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
         QTimer::singleShot( 20, [this]() { screenShot( PRINTER ); } );
     } );
     ui->menuExport->addAction( action );
+
+    ui->menuExport->addSeparator();
+
+    for ( auto *exporter : *exporterRegistry ) {
+        action = new QAction( iconFont->icon( exporter->faIcon(), colorMap ), exporter->name(), this );
+        action->setCheckable( exporter->type() == ExporterInterface::Type::ContinousExport );
+        connect( action, &QAction::triggered, [exporter, exporterRegistry]( bool checked ) {
+            exporterRegistry->setExporterEnabled( exporter,
+                                                  exporter->type() == ExporterInterface::Type::ContinousExport ? checked : true );
+        } );
+        ui->menuExport->addAction( action );
+    }
 
     DsoSettingsScope *scope = &( dsoSettings->scope );
     const Dso::ControlSpecification *spec = dsoControl->getModel()->spec();
@@ -189,6 +193,8 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
 
     connect( triggerDock, &TriggerDock::modeChanged, dsoControl, &HantekDsoControl::setTriggerMode );
     connect( triggerDock, &TriggerDock::modeChanged, dsoWidget, &DsoWidget::updateTriggerMode );
+    connect( triggerDock, &TriggerDock::modeChanged,
+             [this]( Dso::TriggerMode mode ) { ui->actionRefresh->setEnabled( Dso::TriggerMode::ROLL == mode ); } );
     connect( triggerDock, &TriggerDock::sourceChanged, dsoControl, &HantekDsoControl::setTriggerSource );
     connect( triggerDock, &TriggerDock::sourceChanged, dsoWidget, &DsoWidget::updateTriggerSource );
     connect( triggerDock, &TriggerDock::slopeChanged, dsoControl, &HantekDsoControl::setTriggerSlope );
@@ -257,6 +263,8 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
     } );
     connect( this->ui->actionSampling, &QAction::triggered, dsoControl, &HantekDsoControl::enableSampling );
     this->ui->actionSampling->setChecked( dsoControl->isSampling() );
+
+    connect( this->ui->actionRefresh, &QAction::triggered, dsoControl, &HantekDsoControl::restartSampling );
 
     connect( dsoControl, &HantekDsoControl::samplerateLimitsChanged, horizontalDock, &HorizontalDock::setSamplerateLimits );
     connect( dsoControl, &HantekDsoControl::samplerateSet, horizontalDock, &HorizontalDock::setSamplerateSteps );

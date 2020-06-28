@@ -301,6 +301,9 @@ class HantekDsoControl : public QObject {
     /// \param scope The settings for the oscilloscope.
     void applySettings( DsoSettingsScope *scope );
 
+    /// \brief Starts a new sampling block.
+    void restartSampling();
+
   signals:
     void samplingStatusChanged( bool enabled );                ///< The oscilloscope started/stopped sampling/waiting for trigger
     void statusMessage( const QString &message, int timeout ); ///< Status message about the oscilloscope
