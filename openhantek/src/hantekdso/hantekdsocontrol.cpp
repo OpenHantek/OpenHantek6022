@@ -55,9 +55,9 @@ bool HantekDsoControl::deviceNotConnected() { return !scopeDevice->isConnected()
 void HantekDsoControl::restoreTargets() {
     // qDebug() << "restoreTargets()";
     if ( controlsettings.samplerate.target.samplerateSet == ControlSettingsSamplerateTarget::Samplerrate )
-        this->setSamplerate();
+        setSamplerate();
     else
-        this->setRecordTime();
+        setRecordTime();
 }
 
 
@@ -82,7 +82,7 @@ void HantekDsoControl::controlSetSamplerate( uint8_t sampleIndex ) {
     static uint8_t lastIndex = 0xFF;
     uint8_t id = specification->fixedSampleRates[ sampleIndex ].id;
     modifyCommand< ControlSetSamplerate >( ControlCode::CONTROL_SETSAMPLERATE )->setSamplerate( id, sampleIndex );
-    if ( sampleIndex != lastIndex ) {
+    if ( sampleIndex != lastIndex ) { // samplerate has changed, start new sampling
         restartSampling();
     }
     lastIndex = sampleIndex;
@@ -132,7 +132,7 @@ Dso::ErrorCode HantekDsoControl::setRecordTime( double duration ) {
         srLimit = ( specification->samplerate.single ).max;
     else
         srLimit = ( specification->samplerate.multi ).max;
-    // For now - we go for the SAMPLESIZE_USED (= 20000) size sampling, defined in hantekdsocontrol.h
+    // For now - we go for the SAMPLESIZE (= 20000) size sampling, defined in hantekdsocontrol.h
     // Find highest samplerate using less equal half of these samples to obtain our duration.
     uint8_t sampleIndex = 0;
     for ( uint8_t iii = 0; iii < specification->fixedSampleRates.size(); ++iii ) {
@@ -592,14 +592,8 @@ unsigned HantekDsoControl::searchTriggeredPosition() {
     double timeDisplay = controlsettings.samplerate.target.duration; // time for full screen width
     double sampleRate = result.samplerate;                           //
     double samplesDisplay = timeDisplay * controlsettings.samplerate.current;
-    // unsigned preTrigSamples = (unsigned)(controlsettings.trigger.position * samplesDisplay);
-    if ( sampleCount < samplesDisplay ) {
-        // For sure not enough samples to adjust for jitter.
-        qDebug() << "Too few samples to make a steady picture. Decrease sample rate";
-        printf( "sampleCount %lu, timeDisplay %g, sampleRate %g, samplesDisplay %g\n", sampleCount, timeDisplay, sampleRate,
-                samplesDisplay );
+    if ( sampleCount < samplesDisplay ) // not enough samples to adjust for jitter.
         return result.triggeredPosition = 0;
-    }
     // search for trigger point in a range that leaves enough samples left and right of trigger for display
     // find also the alternate slope after trigger point -> calculate pulse width.
     if ( controlsettings.trigger.slope != Dso::Slope::Both ) {
@@ -702,6 +696,12 @@ void HantekDsoControl::stateMachine() {
         } else { // free running display (uses half sample size -> double display speed for slow sample rates)
             triggered = false;
             result.triggeredPosition = 0;
+        }
+    } else { // start with correct calibration frequency
+        static bool firstTime = true;
+        if ( firstTime && scope ) {
+            setCalFreq( scope->horizontal.calfreq );
+            firstTime = false;
         }
     }
     delayDisplay += qMax( acquireInterval, 1 );

@@ -25,7 +25,8 @@ typedef uint64_t UniqueUSBid;
 /// \brief Returns string representation for libusb errors.
 /// \param error The error code.
 /// \return String explaining the error.
-QString libUsbErrorString( int error );
+const QString libUsbErrorString( int error );
+
 
 /// \brief This class handles the USB communication with an usb device that has
 /// one in and one out endpoint.
@@ -168,8 +169,6 @@ class ScopeDevice : public QObject {
     inline void overwriteInPacketLength( unsigned len ) { inPacketLength = len; }
 
   protected:
-    //     int claimInterface(const libusb_interface_descriptor *interfaceDescriptor, int endpointOut, int endPointIn);
-    //     int claimInterface(const libusb_interface_descriptor *interfaceDescriptor, int endPointIn);
     int claimInterface( const libusb_interface_descriptor *interfaceDescriptor );
 
     // Device model data
@@ -188,6 +187,7 @@ class ScopeDevice : public QObject {
   private:
     bool realHW = true;
     bool stopTransfer = false;
+    bool disconnected = true;
 
   signals:
     void deviceDisconnected(); ///< The device has been disconnected

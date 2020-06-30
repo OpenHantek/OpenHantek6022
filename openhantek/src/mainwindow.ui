@@ -59,6 +59,7 @@
      <string>&amp;Help</string>
     </property>
     <addaction name="actionUserManual"/>
+    <addaction name="actionACmodification"/>
     <addaction name="actionAbout"/>
    </widget>
    <widget class="QMenu" name="menuExport">
@@ -203,6 +204,11 @@
    </property>
    <property name="text">
     <string>&amp;Manual command</string>
+   </property>
+  </action>
+  <action name="actionACmodification">
+   <property name="text">
+    <string>AC &amp;Modification</string>
    </property>
   </action>
  </widget>

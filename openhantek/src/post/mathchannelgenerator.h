@@ -8,9 +8,10 @@ struct DsoSettingsScope;
 class PPresult;
 
 class MathChannelGenerator : public Processor {
+
   public:
     MathChannelGenerator( const DsoSettingsScope *scope, unsigned physicalChannels );
-    virtual ~MathChannelGenerator() override;
+    ~MathChannelGenerator() override;
     void process( PPresult * ) override;
 
   private:

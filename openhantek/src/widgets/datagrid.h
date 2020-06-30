@@ -12,6 +12,7 @@ class QGridLayout;
 
 class DataGrid : public QGroupBox {
     Q_OBJECT
+
   public:
     explicit DataGrid( QWidget *parent = nullptr );
 

@@ -12,38 +12,14 @@
 
 #include <QCoreApplication>
 
-QString libUsbErrorString( int error ) {
-    switch ( error ) {
-    case LIBUSB_SUCCESS:
-        return QCoreApplication::tr( "Success (no error)" );
-    case LIBUSB_ERROR_IO:
-        return QCoreApplication::tr( "Input/output error" );
-    case LIBUSB_ERROR_INVALID_PARAM:
-        return QCoreApplication::tr( "Invalid parameter" );
-    case LIBUSB_ERROR_ACCESS:
-        return QCoreApplication::tr( "Access denied (insufficient permissions)" );
-    case LIBUSB_ERROR_NO_DEVICE:
-        return QCoreApplication::tr( "No such device (it may have been disconnected)" );
-    case LIBUSB_ERROR_NOT_FOUND:
-        return QCoreApplication::tr( "Entity not found" );
-    case LIBUSB_ERROR_BUSY:
-        return QCoreApplication::tr( "Resource busy" );
-    case LIBUSB_ERROR_TIMEOUT:
-        return QCoreApplication::tr( "Operation timed out" );
-    case LIBUSB_ERROR_OVERFLOW:
-        return QCoreApplication::tr( "Overflow" );
-    case LIBUSB_ERROR_PIPE:
-        return QCoreApplication::tr( "Pipe error" );
-    case LIBUSB_ERROR_INTERRUPTED:
-        return QCoreApplication::tr( "System call interrupted (perhaps due to signal)" );
-    case LIBUSB_ERROR_NO_MEM:
-        return QCoreApplication::tr( "Insufficient memory" );
-    case LIBUSB_ERROR_NOT_SUPPORTED:
-        return QCoreApplication::tr( "Operation not supported or unimplemented on this platform" );
-    default:
-        return QCoreApplication::tr( "Other error" );
-    }
-}
+// Returns a constant QString with a short description of the given error code,
+// this description is intended for displaying to the end user and will be
+// in the language set by libusb_setlocale().
+// Supported languages:
+// libusb-1.0.21 (Win):    "en", "nl", "fr", "ru"
+// libusb-1.0.22 (Linux):  "en", "nl", "fr", "ru"
+// libusb-1.0.23 (MacOSX): "en", "nl", "fr", "ru", "de", "hu"
+const QString libUsbErrorString( int error ) { return QString( libusb_strerror( libusb_error( error ) ) ); }
 
 
 UniqueUSBid ScopeDevice::computeUSBdeviceID( libusb_device *device ) {
@@ -127,7 +103,7 @@ bool ScopeDevice::connectDevice( QString &errorMessage ) {
                            .arg( libusb_get_device_address( device ), 3, 10, QLatin1Char( '0' ) );
         return false;
     }
-
+    disconnected = false;
     return true;
 }
 
@@ -166,6 +142,7 @@ int ScopeDevice::claimInterface( const libusb_interface_descriptor *interfaceDes
 
 
 void ScopeDevice::disconnectFromDevice() {
+    disconnected = true;
     if ( !device )
         return;
 
@@ -183,12 +160,11 @@ void ScopeDevice::disconnectFromDevice() {
 #if !defined Q_OS_WIN
     libusb_unref_device( device );
 #endif
-
     emit deviceDisconnected();
 }
 
 
-bool ScopeDevice::isConnected() { return isDemoDevice() || this->handle != nullptr; }
+bool ScopeDevice::isConnected() { return isDemoDevice() || ( !disconnected && this->handle != nullptr ); }
 
 
 bool ScopeDevice::needsFirmware() {
@@ -218,7 +194,7 @@ int ScopeDevice::bulkTransfer( unsigned char endpoint, const unsigned char *data
 
 
 int ScopeDevice::bulkReadMulti( unsigned char *data, unsigned length, bool captureSmallBlocks, unsigned &received, int attempts ) {
-    if ( !handle )
+    if ( !handle || disconnected )
         return LIBUSB_ERROR_NO_DEVICE;
     int retCode = 0;
     // printf("USBDevice::bulkReadMulti( %d )\n", length );
@@ -242,6 +218,8 @@ int ScopeDevice::bulkReadMulti( unsigned char *data, unsigned length, bool captu
         return retCode;
     } else {
         // more stable if fast data is read as one big block (up to 4 MB)
+        if ( hasStopped() )
+            return 0;
         retCode = bulkTransfer( HANTEK_EP_IN, data, length, attempts, HANTEK_TIMEOUT_MULTI * length / inPacketLength );
         if ( retCode < 0 )
             received = 0;
@@ -255,7 +233,7 @@ int ScopeDevice::bulkReadMulti( unsigned char *data, unsigned length, bool captu
 
 int ScopeDevice::controlTransfer( unsigned char type, unsigned char request, unsigned char *data, unsigned int length, int value,
                                   int index, int attempts ) {
-    if ( !this->handle )
+    if ( !handle || disconnected )
         return LIBUSB_ERROR_NO_DEVICE;
 
     int errorCode = LIBUSB_ERROR_TIMEOUT;
@@ -263,8 +241,8 @@ int ScopeDevice::controlTransfer( unsigned char type, unsigned char request, uns
     //    type, request, data[0], length, value, index, attempts );
 
     for ( int attempt = 0; ( attempt < attempts || attempts == -1 ) && errorCode == LIBUSB_ERROR_TIMEOUT; ++attempt )
-        errorCode = libusb_control_transfer( this->handle, type, request, uint16_t( value ), uint16_t( index ), data,
-                                             uint16_t( length ), HANTEK_TIMEOUT );
+        errorCode = libusb_control_transfer( handle, type, request, uint16_t( value ), uint16_t( index ), data, uint16_t( length ),
+                                             HANTEK_TIMEOUT );
 
     if ( errorCode == LIBUSB_ERROR_NO_DEVICE )
         disconnectFromDevice();
