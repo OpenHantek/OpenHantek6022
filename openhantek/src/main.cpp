@@ -163,6 +163,9 @@ int main( int argc, char *argv[] ) {
             SelectSupportedDevice().showLibUSBFailedDialogModel( error );
             return -1;
         }
+        if ( useLocale ) // localize USB error messages, supported: "en", "nl", "fr", "ru"
+            libusb_setlocale( QLocale::system().name().toLocal8Bit().constData() );
+
         // SelectSupportedDevive returns a real device unless demoMode is true
         scopeDevice = SelectSupportedDevice().showSelectDeviceModal( context );
         if ( scopeDevice && scopeDevice->isDemoDevice() ) {
@@ -248,6 +251,9 @@ int main( int argc, char *argv[] ) {
 
     //////// Application closed, clean up step by step ////////
 
+    std::cout << std::unitbuf; // enable automatic flushing
+    std::cout << "OpenHantek6022 ";
+
     dsoControl.quitSampling(); // send USB control command, stop bulk transfer
 
     // stop the capturing thread
@@ -257,8 +263,7 @@ int main( int argc, char *argv[] ) {
     capturing.requestInterruption();
     capturing.wait( waitForCapturing );
 
-    std::cout << std::unitbuf; // enable automatic flushing
-    std::cout << "OpenHantek6022 ";
+    std::cout << "has ";
 
     // now quit the data acquisition thread
     // wait 2 * record time (delay is ms) for dso to finish

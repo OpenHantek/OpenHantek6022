@@ -82,6 +82,14 @@ void Capturing::capture() {
                 uint8_t sampleIndex = controlCommand->data()[ 1 ];
                 oversampling = uint8_t( hdc->specification->fixedSampleRates[ sampleIndex ].oversampling );
                 effectiveSamplerate = hdc->specification->fixedSampleRates[ sampleIndex ].samplerate;
+                if ( !realSlow && effectiveSamplerate < 10e3 &&
+                     hdc->scope->trigger.mode == Dso::TriggerMode::ROLL ) { // switch to real slow rolling
+                    for ( auto it = data.begin(); it != data.end(); ++it )
+                        *it = 0x80; // fill with "zeros"
+                    QWriteLocker locker( &hdc->raw.lock );
+                    hdc->raw.rollMode = false;
+                    swap( data, hdc->raw.data ); // "clear screen"
+                }
                 realSlow = effectiveSamplerate < 10e3;
                 if ( realSlow && channels != 2 ) // always switch to two channels if roll mode is possible
                     hdc->modifyCommand< ControlSetNumChannels >( ControlCode::CONTROL_SETNUMCHANNELS )->setNumChannels( 2 );
@@ -131,6 +139,7 @@ void Capturing::capture() {
         for ( auto it = dp->begin(); it != end; ++it )
             *it = 0x80; // fill with "zeros"
         valid = false;
+        hdc->raw.rollMode = false;
     } else {
         hdc->raw.rollMode = true; // one complete buffer available, start to roll
     }
@@ -148,15 +157,17 @@ unsigned Capturing::getRealSamples() {
         return 0;
     }
     // Save raw data to temporary buffer
-    timestampDebug( QString( "Request packet %1: %2" ).arg( tag ).arg( rawSamplesize ) );
+    timestampDebug( QString( "Request packet %1: %2 bytes" ).arg( tag ).arg( rawSamplesize ) );
     hdc->raw.received = 0;
     int retval = hdc->scopeDevice->bulkReadMulti( dp->data(), rawSamplesize, realSlow, hdc->raw.received );
     if ( retval < 0 ) {
+        if ( retval == LIBUSB_ERROR_NO_DEVICE )
+            hdc->scopeDevice->disconnectFromDevice();
         qWarning() << "bulkReadMulti: Getting sample data failed: " << libUsbErrorString( retval );
         dp->clear();
         return 0;
     }
-    timestampDebug( QString( "Received packet %1: %2" ).arg( tag ).arg( retval ) );
+    timestampDebug( QString( "Received packet %1: %2 bytes" ).arg( tag ).arg( retval ) );
     return unsigned( retval );
 }
 
@@ -175,7 +186,7 @@ unsigned Capturing::getDemoSamples() {
     static int counter = 0;
     unsigned received = 0;
     hdc->raw.received = 0;
-    timestampDebug( QString( "Request dummy packet %1: %2" ).arg( tag ).arg( rawSamplesize ) );
+    timestampDebug( QString( "Request dummy packet %1: %2 bytes" ).arg( tag ).arg( rawSamplesize ) );
     int deltaT = 99;
     // deltaT (=99) defines the frequency of the dummy signals:
     // ch1 = 1 kHz and ch2 = 500 Hz
@@ -190,7 +201,7 @@ unsigned Capturing::getDemoSamples() {
     dp->resize( rawSamplesize, binaryOffset );
     auto end = dp->end();
     unsigned packet = 0;
-    // bool couplingAC1 = hdc->scope->coupling( 0, hdc->specification ) == Dso::Coupling::AC;
+    // bool couplingAC1 = hdc->scope->coupling( 0, hdc->specification ) == Dso::Coupling::AC; // not yet used
     bool couplingAC2 = hdc->scope->coupling( 1, hdc->specification ) == Dso::Coupling::AC;
     for ( auto it = dp->begin(); it != end; ++it ) {
         if ( ++counter >= deltaT ) {
@@ -218,6 +229,6 @@ unsigned Capturing::getDemoSamples() {
                 break;
         }
     }
-    timestampDebug( QString( "Received dummy packet %1: %2" ).arg( packet ).arg( rawSamplesize ) );
+    timestampDebug( QString( "Received dummy packet %1: %2 bytes" ).arg( packet ).arg( rawSamplesize ) );
     return received;
 }

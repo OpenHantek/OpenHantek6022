@@ -16,5 +16,6 @@
 // spacing between the individual entries of the docks
 #define DOCK_LAYOUT_SPACING 4
 
-// where is the (local) manual?
+// where are the (local) documents?
 #define USR_MANUAL_PATH "/usr/share/doc/openhantek/OpenHantek6022_User_Manual.pdf"
+#define AC_MODIFICATION_PATH "/usr/share/doc/openhantek/HANTEK6022_AC_Modification.pdf"

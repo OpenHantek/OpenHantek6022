@@ -127,7 +127,7 @@ The firmware command parser:
 			}
 
      switch (cmd) {
-	     case 0xa2:
+          case 0xa2:
 		     return eeprom();
 
           case 0xe0:
@@ -165,18 +165,43 @@ The firmware command parser:
 
 
 ## Data flow
+* The procedure `void HantekDsoControl::stateMachine()` controls the raw data capturing, conversion to real world physical values, trigger detection and timing of screen refresh. The `struct Raw` holds all important values of one sampled data block:
 
-* Raw 8-bit ADC values are collected via call to `HantekDsoControl::getSamples(..)` (or ...getDemoSamples(..) for the demo device) in `HantekDsoControl::stateMachine()` and converted in `HantekDsoControl::convertRawDataToSamples()` to real-world double samples (scaled with voltage and sample rate). 
-The 10X..100X oversampling for slower sample rates is done here. Also overdriving of the inputs is detected. 
+
+    struct Raw {
+        unsigned channels = 0;
+        double samplerate = 0;
+        unsigned oversampling = 0;
+        unsigned gainValue[ 2 ] = {1, 1}; // 1,2,5,10,..
+        unsigned gainIndex[ 2 ] = {7, 7}; // index 0..7
+        unsigned tag = 0;
+        bool freeRun = false;  // small buffer, no trigger
+        bool valid = false;    // samples can be processed
+        bool rollMode = false; // one complete buffer received, start to roll
+        unsigned size = 0;
+        unsigned received = 0;
+        std::vector< unsigned char > data;
+        mutable QReadWriteLock lock;
+    };
+
+
+* Raw 8-bit ADC values are collected permanently via call to `HantekDsoControl::getSamples(..)` (or `...getDemoSamples(..)` for the demo device) in an own thread `Capturing::Capturing()`.
+At fast sample rates (>= 10 kS/s) one big block is requested via USB command to make the transfer more robust against USB interruptions by other traffic, 
+while at slow sample rates it requests the data in small chunks to allow a permanent screen update in roll mode.
+* Raw values are converted in `HantekDsoControl::convertRawDataToSamples()` to real-world double samples (scaled with voltage and sample rate). 
+The 2X..200X oversampling for slower sample rates is done here. Also overdriving of the inputs is detected.
+In `Roll` mode the latest sample values are always put at the end of the result buffer while older samples move toward the beginning of the buffer,
+this rolls the displayed trace permanently to the left.
 The conversion uses either the factory calibration values from EEPROM or from a user supplied config file. 
 Read more about [calibration](https://github.com/Ho-Ro/Hantek6022API/blob/master/README.md#create-calibration-values-for-openhantek).
-  * `searchTriggerPosition()`
-    * which checks if the signal is triggered and calculates the starting point for a stable display. 
+* `searchTriggerPosition()`
+    * Checks if the signal is triggered and calculates the starting point for a stable display.
     The time distance to the following opposite slope is measured and displayed as pulse width in the top row.
-  * `provideTriggeredData()` handles the trigger mode:
+* `provideTriggeredData()` handles the trigger mode:
     * If the **trigger condition is false** and the **trigger mode is Normal** then we reuse the last triggered samples so that voltage and spectrum traces as well as the measurement at the scope's bottom lines are frozen until the trigger condition becomes true again.
     * If the **trigger condition is false** and the **trigger mode is not Normal** then we display a free running trace and discard the last saved samples.
-* The converted samples are emitted to PostProcessing::input() via signal/slot:
+* The converted `DSOsamples` are emitted to PostProcessing::input() via signal/slot:
+
 `QObject::connect( &dsoControl, &HantekDsoControl::samplesAvailable, &postProcessing, &PostProcessing::input );`
 
 
@@ -185,9 +210,11 @@ Read more about [calibration](https://github.com/Ho-Ro/Hantek6022API/blob/master
         double samplerate = 0.0;                   ///< The samplerate of the input data
         unsigned char clipped = 0;                 ///< Bitmask of clipped channels
         bool liveTrigger = false;                  ///< live samples are triggered
-        unsigned triggerPosition = 0;              ///< position for a triggered trace, 0 = not triggered
+        unsigned triggeredPosition = 0;            ///< position for a triggered trace, 0 = not triggered
         double pulseWidth1 = 0.0;                  ///< width from trigger point to next opposite slope
         double pulseWidth2 = 0.0;                  ///< width from next opposite slope to third slope
+        bool freeRunning = false;                  ///< trigger: NONE, half sample count
+        unsigned tag = 0;                          ///< track individual sample blocks (debug support)
         mutable QReadWriteLock lock;
     };
 

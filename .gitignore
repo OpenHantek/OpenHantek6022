@@ -12,5 +12,6 @@ firmware/hex
 *.json
 *.kate-swp
 .directory
+*.autosave
 ui_*.h
 *.sh

@@ -4,7 +4,7 @@
 <context>
     <name></name>
     <message>
-        <location filename="../src/usb/scopedevice.cpp" line="100"/>
+        <location filename="../src/usb/scopedevice.cpp" line="76"/>
         <source>Couldn&apos;t open device: %1</source>
         <translation></translation>
     </message>
@@ -790,63 +790,68 @@
         <translation>&amp;Osciloscópio</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="66"/>
+        <location filename="../src/mainwindow.ui" line="67"/>
         <source>&amp;Export</source>
         <translation>&amp;Exportar</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="113"/>
+        <location filename="../src/mainwindow.ui" line="114"/>
         <source>Save settings &amp;as ..</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="118"/>
+        <location filename="../src/mainwindow.ui" line="119"/>
         <source>&amp;Exit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="129"/>
+        <location filename="../src/mainwindow.ui" line="130"/>
         <source>S&amp;ampling</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="148"/>
+        <location filename="../src/mainwindow.ui" line="149"/>
         <source>&amp;Phosphor</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="156"/>
+        <location filename="../src/mainwindow.ui" line="157"/>
         <source>&amp;Histogram</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="164"/>
+        <location filename="../src/mainwindow.ui" line="165"/>
         <source>&amp;Zoom</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="172"/>
+        <location filename="../src/mainwindow.ui" line="173"/>
         <source>&amp;Measure</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="187"/>
+        <location filename="../src/mainwindow.ui" line="188"/>
         <source>&amp;User Manual</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="192"/>
+        <location filename="../src/mainwindow.ui" line="193"/>
         <source>&amp;About ..</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="197"/>
+        <location filename="../src/mainwindow.ui" line="198"/>
         <source>&amp;Settings ..</source>
         <translation>&amp;Configurações ..</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="205"/>
+        <location filename="../src/mainwindow.ui" line="206"/>
         <source>&amp;Manual command</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.ui" line="211"/>
+        <source>AC &amp;Modification</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -859,52 +864,52 @@
         <translation type="vanished">Exportar</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="78"/>
+        <location filename="../src/mainwindow.ui" line="79"/>
         <source>toolBar</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="97"/>
+        <location filename="../src/mainwindow.ui" line="98"/>
         <source>&amp;Open settings ..</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="100"/>
+        <location filename="../src/mainwindow.ui" line="101"/>
         <source>Ctrl+O</source>
         <translation>Ctrl+O</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="105"/>
+        <location filename="../src/mainwindow.ui" line="106"/>
         <source>&amp;Save settings</source>
         <translation>&amp;Salvar configurações</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="108"/>
+        <location filename="../src/mainwindow.ui" line="109"/>
         <source>Ctrl+S</source>
         <translation>Ctrl+S</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="121"/>
+        <location filename="../src/mainwindow.ui" line="122"/>
         <source>Ctrl+Q</source>
         <translation>Ctrl+Q</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="132"/>
+        <location filename="../src/mainwindow.ui" line="133"/>
         <source>Space</source>
         <translation>Espaço</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="140"/>
+        <location filename="../src/mainwindow.ui" line="141"/>
         <source>&amp;Refresh</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="177"/>
+        <location filename="../src/mainwindow.ui" line="178"/>
         <source>Docking windows</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="182"/>
+        <location filename="../src/mainwindow.ui" line="183"/>
         <source>Toolbars</source>
         <translation type="unfinished"></translation>
     </message>
@@ -913,22 +918,22 @@
         <translation type="vanished">Configurações</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="82"/>
+        <location filename="../src/mainwindow.cpp" line="83"/>
         <source>OpenHantek6022 (%1) - Device %2 (FW%3)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="85"/>
+        <location filename="../src/mainwindow.cpp" line="86"/>
         <source>Demo Mode</source>
         <translation>Demo Mode</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="85"/>
+        <location filename="../src/mainwindow.cpp" line="86"/>
         <source>OpenHantek6022 (%1) - </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="166"/>
+        <location filename="../src/mainwindow.cpp" line="167"/>
         <source>Invalid command</source>
         <translation>Comando inválido</translation>
     </message>
@@ -937,7 +942,7 @@
         <translation type="obsolete">&amp;Parar</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="256"/>
+        <location filename="../src/mainwindow.cpp" line="261"/>
         <source>Stop the oscilloscope</source>
         <translation>Parar osciloscópio</translation>
     </message>
@@ -946,43 +951,43 @@
         <translation type="obsolete">&amp;Iniciar</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="91"/>
+        <location filename="../src/mainwindow.cpp" line="92"/>
         <source>Screenshot ..</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="96"/>
+        <location filename="../src/mainwindow.cpp" line="97"/>
         <source>Hardcopy ..</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="104"/>
+        <location filename="../src/mainwindow.cpp" line="105"/>
         <source>Print screen ..</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="255"/>
+        <location filename="../src/mainwindow.cpp" line="260"/>
         <source>Stop</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="259"/>
+        <location filename="../src/mainwindow.cpp" line="264"/>
         <source>Start</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="260"/>
+        <location filename="../src/mainwindow.cpp" line="265"/>
         <source>Start the oscilloscope</source>
         <translation>Iniciar osciloscópio</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="281"/>
+        <location filename="../src/mainwindow.cpp" line="286"/>
         <source>Open file</source>
         <translation>Abrir arquivo</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="281"/>
-        <location filename="../src/mainwindow.cpp" line="304"/>
+        <location filename="../src/mainwindow.cpp" line="286"/>
+        <location filename="../src/mainwindow.cpp" line="309"/>
         <source>Settings (*.conf)</source>
         <translation>Configurações (*.conf)</translation>
     </message>
@@ -991,97 +996,97 @@
         <translation type="vanished">Configurações (*.ini)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="304"/>
+        <location filename="../src/mainwindow.cpp" line="309"/>
         <source>Save settings</source>
         <translation>Salvar configurações</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="330"/>
+        <location filename="../src/mainwindow.cpp" line="335"/>
         <source>Disable fading of previous graphs</source>
         <translation>Desabilitar desaparecimento de gráficos anteriores</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="332"/>
+        <location filename="../src/mainwindow.cpp" line="337"/>
         <source>Enable fading of previous graphs</source>
         <translation>Habilitar desaparecimento de gráficos anteriores</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="340"/>
+        <location filename="../src/mainwindow.cpp" line="345"/>
         <source>Hide histogram</source>
         <translation>Esconder histogram</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="342"/>
+        <location filename="../src/mainwindow.cpp" line="347"/>
         <source>Show histogram</source>
         <translation>Mostrar histogram</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="351"/>
+        <location filename="../src/mainwindow.cpp" line="356"/>
         <source>Hide magnified scope</source>
         <translation>Esconder/Ampliar osciloscópio</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="353"/>
+        <location filename="../src/mainwindow.cpp" line="358"/>
         <source>Show magnified scope</source>
         <translation>Mostrar osciloscópio ampliado</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="363"/>
+        <location filename="../src/mainwindow.cpp" line="368"/>
         <source>Hide measurements</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="365"/>
+        <location filename="../src/mainwindow.cpp" line="370"/>
         <source>Show measurements</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="383"/>
+        <location filename="../src/mainwindow.cpp" line="398"/>
         <source>About OpenHantek6022 (%1)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="384"/>
+        <location filename="../src/mainwindow.cpp" line="399"/>
         <source>&lt;p&gt;Open source software for Hantek6022 USB oscilloscopes&lt;/p&gt;&lt;p&gt;Maintainer: Martin Homuth-Rosemann&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2010, 2011 Oliver Haag&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2012-2020 OpenHantek community&lt;br/&gt;&lt;a href=&apos;https://github.com/OpenHantek&apos;&gt;https://github.com/OpenHantek&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Open source firmware copyright &amp;copy; 2019-2020 Ho-Ro&lt;br/&gt;&lt;a href=&apos;https://github.com/Ho-Ro/Hantek6022API&apos;&gt;https://github.com/Ho-Ro/Hantek6022API&lt;/a&gt;&lt;/p&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="391"/>
+        <location filename="../src/mainwindow.cpp" line="406"/>
         <source>&lt;p&gt;Running since %1 seconds.&lt;/p&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="409"/>
+        <location filename="../src/mainwindow.cpp" line="424"/>
         <source>%1: %2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="422"/>
+        <location filename="../src/mainwindow.cpp" line="437"/>
         <source>yyyy-MM-dd hh:mm:ss</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="423"/>
+        <location filename="../src/mainwindow.cpp" line="438"/>
         <source>yyyyMMdd_hhmmss</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="451"/>
+        <location filename="../src/mainwindow.cpp" line="466"/>
         <source>Image (*.png *.jpg)</source>
         <translation>Imagem (*.png *.jpg)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="451"/>
+        <location filename="../src/mainwindow.cpp" line="466"/>
         <source>Portable Document Format (*.pdf)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="452"/>
+        <location filename="../src/mainwindow.cpp" line="467"/>
         <source>Save screenshot</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="482"/>
+        <location filename="../src/mainwindow.cpp" line="497"/>
         <source>Print oscillograph</source>
         <translation>Impressão</translation>
     </message>
@@ -1399,74 +1404,60 @@
         <translation>Flat Top</translation>
     </message>
     <message>
-        <location filename="../src/usb/scopedevice.cpp" line="18"/>
         <source>Success (no error)</source>
-        <translation>Sucesso (sem erro)</translation>
+        <translation type="vanished">Sucesso (sem erro)</translation>
     </message>
     <message>
-        <location filename="../src/usb/scopedevice.cpp" line="20"/>
         <source>Input/output error</source>
-        <translation>Erro na entrada/saida</translation>
+        <translation type="vanished">Erro na entrada/saida</translation>
     </message>
     <message>
-        <location filename="../src/usb/scopedevice.cpp" line="22"/>
         <source>Invalid parameter</source>
-        <translation>Parametro inválido</translation>
+        <translation type="vanished">Parametro inválido</translation>
     </message>
     <message>
-        <location filename="../src/usb/scopedevice.cpp" line="24"/>
         <source>Access denied (insufficient permissions)</source>
-        <translation>Acesso negado (permissões insuficientes)</translation>
+        <translation type="vanished">Acesso negado (permissões insuficientes)</translation>
     </message>
     <message>
-        <location filename="../src/usb/scopedevice.cpp" line="26"/>
         <source>No such device (it may have been disconnected)</source>
-        <translation>Não encontrado o dispositivo (pode estar desconectado)</translation>
+        <translation type="vanished">Não encontrado o dispositivo (pode estar desconectado)</translation>
     </message>
     <message>
-        <location filename="../src/usb/scopedevice.cpp" line="28"/>
         <source>Entity not found</source>
-        <translation>Entidade não encontrada</translation>
+        <translation type="vanished">Entidade não encontrada</translation>
     </message>
     <message>
-        <location filename="../src/usb/scopedevice.cpp" line="30"/>
         <source>Resource busy</source>
-        <translation>Recurso ocupado</translation>
+        <translation type="vanished">Recurso ocupado</translation>
     </message>
     <message>
-        <location filename="../src/usb/scopedevice.cpp" line="32"/>
         <source>Operation timed out</source>
-        <translation>Operação expirou</translation>
+        <translation type="vanished">Operação expirou</translation>
     </message>
     <message>
-        <location filename="../src/usb/scopedevice.cpp" line="34"/>
         <source>Overflow</source>
-        <translation>Transbordamento</translation>
+        <translation type="vanished">Transbordamento</translation>
     </message>
     <message>
-        <location filename="../src/usb/scopedevice.cpp" line="36"/>
         <source>Pipe error</source>
-        <translation>Erro de redirecionamento</translation>
+        <translation type="vanished">Erro de redirecionamento</translation>
     </message>
     <message>
-        <location filename="../src/usb/scopedevice.cpp" line="38"/>
         <source>System call interrupted (perhaps due to signal)</source>
-        <translation>Chamada de sistema interrompida(talvez, devido ao sinal)</translation>
+        <translation type="vanished">Chamada de sistema interrompida(talvez, devido ao sinal)</translation>
     </message>
     <message>
-        <location filename="../src/usb/scopedevice.cpp" line="40"/>
         <source>Insufficient memory</source>
-        <translation>Memória insuficiente</translation>
+        <translation type="vanished">Memória insuficiente</translation>
     </message>
     <message>
-        <location filename="../src/usb/scopedevice.cpp" line="42"/>
         <source>Operation not supported or unimplemented on this platform</source>
-        <translation>Operação não suportada ou não implementada nesta plataforma</translation>
+        <translation type="vanished">Operação não suportada ou não implementada nesta plataforma</translation>
     </message>
     <message>
-        <location filename="../src/usb/scopedevice.cpp" line="44"/>
         <source>Other error</source>
-        <translation>Outro erro</translation>
+        <translation type="vanished">Outro erro</translation>
     </message>
 </context>
 <context>

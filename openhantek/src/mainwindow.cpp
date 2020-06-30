@@ -73,8 +73,9 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
     ui->actionSave->setIcon( iconFont->icon( fa::save, colorMap ) );
     ui->actionSettings->setIcon( iconFont->icon( fa::gear, colorMap ) );
     ui->actionManualCommand->setIcon( iconFont->icon( fa::edit, colorMap ) );
-    ui->actionAbout->setIcon( iconFont->icon( fa::questioncircle, colorMap ) );
     ui->actionUserManual->setIcon( iconFont->icon( fa::filepdfo, colorMap ) );
+    ui->actionACmodification->setIcon( iconFont->icon( fa::filepdfo, colorMap ) );
+    ui->actionAbout->setIcon( iconFont->icon( fa::questioncircle, colorMap ) );
 
     // Window title
     setWindowIcon( QIcon( ":/images/OpenHantek.svg" ) );
@@ -193,8 +194,12 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
 
     connect( triggerDock, &TriggerDock::modeChanged, dsoControl, &HantekDsoControl::setTriggerMode );
     connect( triggerDock, &TriggerDock::modeChanged, dsoWidget, &DsoWidget::updateTriggerMode );
-    connect( triggerDock, &TriggerDock::modeChanged,
-             [this]( Dso::TriggerMode mode ) { ui->actionRefresh->setEnabled( Dso::TriggerMode::ROLL == mode ); } );
+    connect( triggerDock, &TriggerDock::modeChanged, [this]( Dso::TriggerMode mode ) {
+        ui->actionRefresh->setEnabled( Dso::TriggerMode::ROLL == mode && dsoSettings->scope.horizontal.samplerate < 10e3 );
+    } );
+    connect( dsoControl, &HantekDsoControl::samplerateChanged, [this]( double samplerate ) {
+        ui->actionRefresh->setEnabled( Dso::TriggerMode::ROLL == dsoSettings->scope.trigger.mode && samplerate < 10e3 );
+    } );
     connect( triggerDock, &TriggerDock::sourceChanged, dsoControl, &HantekDsoControl::setTriggerSource );
     connect( triggerDock, &TriggerDock::sourceChanged, dsoWidget, &DsoWidget::updateTriggerSource );
     connect( triggerDock, &TriggerDock::slopeChanged, dsoControl, &HantekDsoControl::setTriggerSlope );
@@ -376,6 +381,16 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
         else
             QDesktopServices::openUrl(
                 QUrl( "https://github.com/OpenHantek/OpenHantek6022/blob/master/docs/OpenHantek6022_User_Manual.pdf" ) );
+    } );
+
+    connect( ui->actionACmodification, &QAction::triggered, []() {
+        QString ACmodPath( AC_MODIFICATION_PATH );
+        QFile ACmod( ACmodPath );
+        if ( ACmod.exists() )
+            QDesktopServices::openUrl( QUrl( "file://" + ACmodPath ) );
+        else
+            QDesktopServices::openUrl(
+                QUrl( "https://github.com/OpenHantek/OpenHantek6022/blob/master/docs/HANTEK6022_AC_Modification.pdf" ) );
     } );
 
     connect( ui->actionAbout, &QAction::triggered, [this]() {

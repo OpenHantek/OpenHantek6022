@@ -87,6 +87,7 @@ if("${CMAKE_SYSTEM}" MATCHES "Linux")
     install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/CHANGELOG"
                   "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE"
                   "${CMAKE_CURRENT_SOURCE_DIR}/docs/OpenHantek6022_User_Manual.pdf"
+                  "${CMAKE_CURRENT_SOURCE_DIR}/docs/HANTEK6022_AC_Modification.pdf"
             DESTINATION "/usr/share/doc/openhantek" COMPONENT Runtime)
   else()
     message(WARNING "Could not find doc directory (/usr/share/doc/), skipping installation of user documentation.")

@@ -22,9 +22,10 @@ struct DsoSettingsScope;
 /// Calculates the spectrum and various data about the signal and saves the
 /// time-/frequencysteps between two values.
 class SpectrumGenerator : public Processor {
+
   public:
     SpectrumGenerator( const DsoSettingsScope *scope, const DsoSettingsPostProcessing *postprocessing );
-    virtual ~SpectrumGenerator() override;
+    ~SpectrumGenerator() override;
 
   private:
     const DsoSettingsScope *scope;

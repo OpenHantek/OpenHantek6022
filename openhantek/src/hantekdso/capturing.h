@@ -6,6 +6,7 @@
 
 class Capturing : public QThread {
     Q_OBJECT
+
   public:
     Capturing( HantekDsoControl *hdc );
     void quitCapturing() { hdc->capturing = false; }

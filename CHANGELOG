@@ -1,3 +1,18 @@
+3.1.1
+2020-06-30
+Refresh button to restart roll mode trace
+Help menu link to AC modification howto
+Minor robustness improvements
+
+3.1.1-rc3
+2020-06-26
+Real roll mode for slow sample rates
+
+3.1.1-rc2
+2020-06-23
+Scroll wheel moves the markers
+Configuration menu parameter to use AC coupling HW modification
+
 3.1.1-rc1
 2020-06-20
 Slow timebases up to 10s/div
