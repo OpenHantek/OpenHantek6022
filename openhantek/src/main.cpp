@@ -14,6 +14,8 @@
 #include <iostream>
 #ifdef __FreeBSD__
 #include <libusb.h>
+// FreeBSD doesn't have libusb_setlocale()
+#define libusb_setlocale( x ) (void)0
 #else
 #include <libusb-1.0/libusb.h>
 #endif
