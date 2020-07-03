@@ -80,7 +80,7 @@ You need the following software, to build OpenHantek from source:
 * [libusb-1.0](https://libusb.info/), version >= 1.0.16 (prebuild files will be used on windows)
 * A compiler that supports C++11 - tested with gcc, clang and msvc
 
-We have build instructions available for [Linux](docs/build.md#linux), [Raspberry Pi](docs/build.md#raspberrypi), [Apple MacOSX](docs/build.md#macosx) and [Microsoft Windows](docs/build.md#windows).
+We have build instructions available for [Linux](docs/build.md#linux), [Raspberry Pi](docs/build.md#raspberrypi), [FreeBSD](docs/build.md#freebsd), [Apple MacOSX](docs/build.md#macosx) and [Microsoft Windows](docs/build.md#windows).
 
 ## Run OpenHantek6022
 On a Linux system start the program via the menu entry *OpenHantek (Digital Storage Oscilloscope)* or from a terminal window as `OpenHantek`.
@@ -101,7 +101,7 @@ The original Hantek driver doesn't work.
 ## Important!
 The scope doesn't store the firmware permanently in flash or eeprom, it must be uploaded after each power-up and is kept in ram 'til power-down.
 If the scope was used with a different software (old openhantek, sigrok or the windows software) the scope must be unplugged and replugged one-time before using it with OpenHantek6022 to enable the automatic loading of the correct firmware.
-The top line of the program must display the correct firmware version (FW0206).
+The top line of the program must display the correct firmware version (FW0207).
 
 ## Specifications, features, limitations and developer documentation
 I use this project mainly to explore how DSP software can improve and extend the [limitations](docs/limitations.md) of this kind of low level hardware. It would have been easy to spend a few bucks more to buy a powerful scope - but it would be much less fun :)

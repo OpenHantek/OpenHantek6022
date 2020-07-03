@@ -16,7 +16,7 @@ After you've installed the requirements run the following commands inside the di
     mkdir build
     cd build
     cmake ..
-    make -j2
+    make -j4
 
 After success you can test the newly built program `openhantek/OpenHantek`.
 Due to the included debug information this file is quite big (~20 MB), but the size can be reduced with `strip openhantek/OpenHantek` if you want to put it into a user directory. 
@@ -54,6 +54,49 @@ Only the 1st setting `G1 Legacy        Original non-GL desktop driver` worked fo
 
 Setting `Original non-GL desktop driver` was reported to work also on *RPi4B+*.
 
+### [FreeBSD](#freebsd)
+Install the build requirements
+> pkg install cmake qt5 fftw3 linux_libusb
+
+After you've installed the requirements run the following commands inside the directory of this package:
+
+    mkdir build
+    cd build
+    cmake ..
+    make -j4
+
+After success you can test the newly built program `openhantek/OpenHantek`.
+Due to the included debug information this file is quite big (~20 MB), but the size can be reduced with `strip openhantek/OpenHantek` if you want to put it into a user directory. 
+
+In order for OpenHantek to work, make sure that your USB device has permissions for your user.
+   You can achieve this by adding records like this (for a Hantek DSO6022BE device) to your `/etc/devd.conf`:
+
+    notify 100 {
+	match "system"      "USB";
+	match "subsystem"   "DEVICE";
+	match "type"        "ATTACH";
+	match "vendor"      "0x04b4";
+	match "product"     "0x6022";
+	action "/usr/sbin/chown {your-user} /dev/usb/`echo $cdev | sed s/ugen//`.*";
+    };
+    notify 100 {
+	match "system"      "USB";
+	match "subsystem"   "DEVICE";
+	match "type"        "ATTACH";
+	match "vendor"      "0x04b5";
+	match "product"     "0x6022";
+	action "/usr/sbin/chown {your-user} /dev/usb/`echo $cdev | sed s/ugen//`.*";
+    };
+
+
+- For a Hantek DSO6022**BL** change the lines `match "product"     "0x6022";` to `match "product"     "0x602a";`
+- The "action" above doesn't use $device-name due to:
+https://bugs.freebsd.org/bugzilla/show_bug.cgi?id=242111
+
+Also please note that devices like this have two vendor/product id
+combinations, before and after loading the firmware, hence two
+commands above.
+
 ### [MacOSX](#macosx)
 We recommend homebrew to install the required libraries.
 
@@ -70,7 +113,7 @@ After you've installed the requirements run the following commands inside the to
     cd build
     cmake ..
     #
-    make -j2
+    make -j4
     #
     # now the target was created in subdir openhantek
     # .. either as single binary OpenHantek, then you're done
