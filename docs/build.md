@@ -34,6 +34,8 @@ If you detect that icons are not displayed correctly, please check if the Qt SVG
 The Linux systems mentioned above include this lib when you install according to the provided lists.
 However, an [alpine linux](https://alpinelinux.org/) user [reported](https://github.com/OpenHantek/OpenHantek6022/issues/42#issuecomment-564329632) that he had to install `qt5-qtsvg` separately.
 
+----
+
 ### [RaspberryPi](#raspberrypi)
 The general Linux requirements from above also apply to the RPi; precompiled packages are available as [release](https://github.com/OpenHantek/OpenHantek6022/releases) assets.
 Please note, it is important that the correct graphics driver is selected,
@@ -54,9 +56,12 @@ Only the 1st setting `G1 Legacy        Original non-GL desktop driver` worked fo
 
 Setting `Original non-GL desktop driver` was reported to work also on *RPi4B+*.
 
+----
+
 ### [FreeBSD](#freebsd)
 Install the build requirements
-> pkg install cmake qt5 fftw3 linux_libusb
+
+    pkg install cmake qt5 fftw3 linux_libusb
 
 After you've installed the requirements run the following commands inside the directory of this package:
 
@@ -69,33 +74,48 @@ After success you can test the newly built program `openhantek/OpenHantek`.
 Due to the included debug information this file is quite big (~20 MB), but the size can be reduced with `strip openhantek/OpenHantek` if you want to put it into a user directory. 
 
 In order for OpenHantek to work, make sure that your USB device has permissions for your user.
-   You can achieve this by adding records like this (for a Hantek DSO6022BE device) to your `/etc/devd.conf`:
+You can achieve this by copying [`utils/devd_rules_freebsd/openhantek.conf`](../utils/devd_rules_freebsd/openhantek.conf)
+to `/usr/local/etc/devd/`, or create a file with similar content for your device:
+
+    ...
+
+    # Hantek DSO-6022BE
 
     notify 100 {
-	match "system"      "USB";
-	match "subsystem"   "DEVICE";
-	match "type"        "ATTACH";
-	match "vendor"      "0x04b4";
-	match "product"     "0x6022";
-	action "/usr/sbin/chown {your-user} /dev/usb/`echo $cdev | sed s/ugen//`.*";
+        match  "system"     "USB";
+        match  "subsystem"  "DEVICE";
+        match  "type"       "ATTACH";
+        match  "vendor"     "0x04b4";
+        match  "product"    "0x6022";
+        action "chgrp openhantek /dev/$ugen; chmod g+rw /dev/$ugen; chgrp -h openhantek /dev/$ugen; chmod -h g+rw /dev/$ugen";
     };
+
     notify 100 {
-	match "system"      "USB";
-	match "subsystem"   "DEVICE";
-	match "type"        "ATTACH";
-	match "vendor"      "0x04b5";
-	match "product"     "0x6022";
-	action "/usr/sbin/chown {your-user} /dev/usb/`echo $cdev | sed s/ugen//`.*";
+        match  "system"     "USB";
+        match  "subsystem"  "DEVICE";
+        match  "type"       "ATTACH";
+        match  "vendor"     "0x04b5";
+        match  "product"    "0x6022";
+        action "chgrp openhantek /dev/$ugen; chmod g+rw /dev/$ugen; chgrp -h openhantek /dev/$ugen; chmod -h g+rw /dev/$ugen";
     };
 
+    ...
 
-- For a Hantek DSO6022**BL** change the lines `match "product"     "0x6022";` to `match "product"     "0x602a";`
 - The "action" above doesn't use $device-name due to:
 https://bugs.freebsd.org/bugzilla/show_bug.cgi?id=242111
 
-Also please note that devices like this have two vendor/product id
-combinations, before and after loading the firmware, hence two
-commands above.
+Also please note that devices like this have two vendor/product id combinations,
+before and after loading the firmware, hence two commands above.
+The action changes the device permissions for supported scope devices:
+
+`rw------- root operator` becomes `rw-rw---- root openhantek`
+
+Make sure to be member of the group `openhantek`, e.g.:
+
+    pw groupadd openhantek -g 6022
+    pw groupmod openhantek -M <YOUR_USER>
+
+----
 
 ### [MacOSX](#macosx)
 We recommend homebrew to install the required libraries.
@@ -175,6 +195,8 @@ Some win user reports:
 * black2279's wiki entry 
 [USB Drivers Installation with Zadig for Hantek 6022 (Windows)](https://github.com/black2279/OpenHantek6022/wiki/USB-Drivers-Installation-with-Zadig-for-Hantek-6022-%28Windows%29)
 * raxis13's [success report](https://www.eevblog.com/forum/testgear/hantek-6022be-20mhz-usb-dso/msg2563869/#msg2563869)
+
+----
 
 #### This is the old and more complex procedure (no positive feedback known)
   - Make sure your original Hantek driver is uninstalled.
