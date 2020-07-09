@@ -4,6 +4,7 @@
 #include "hantekdsocontrol.h"
 #include "hantekprotocol/controlStructs.h"
 #include "usb/scopedevice.h"
+#include <QDebug>
 #include <QDir>
 #include <QSettings>
 
@@ -41,7 +42,23 @@ static void initSpecifications( Dso::ControlSpecification &specification ) {
     const char *channels[] = {"ch0", "ch1"};
     // printf( "read config file\n" );
     const unsigned RANGES = 8;
-    QSettings settings( QDir::homePath() + "/.config/OpenHantek/modelDEMO.conf", QSettings::IniFormat );
+
+    QString Model = "modelDEMO";
+    QString Organisation = "OpenHantek";
+    // rename the previous *.conf to *.ini to use the ini file search also for Windows
+    QString calFileName = QDir::homePath() + "/.config/" + Organisation + "/" + Model;
+    QFile calFile( calFileName + ".conf" );
+    if ( calFile.exists() ) {
+        qDebug() << "Renamed old mode calibration file:";
+        qDebug() << calFileName + ".conf"
+                 << "->" << calFileName + ".ini";
+        calFileName += ".ini";
+        calFile.rename( calFileName );
+    }
+
+    QSettings settings( QSettings::IniFormat, QSettings::UserScope, Organisation, Model );
+    // Linux, Unix, macOS: "$HOME/.config/OpenHantek/modelDEMO.ini"
+    // Windows: "%APPDATA%\OpenHantek\modelDEMO.ini"
 
     settings.beginGroup( "gain" );
     for ( unsigned ch = 0; ch < 2; ch++ ) {
