@@ -104,37 +104,37 @@
 <context>
     <name>DsoConfigDialog</name>
     <message>
-        <location filename="../src/configdialog/configdialog.cpp" line="34"/>
+        <location filename="../src/configdialog/configdialog.cpp" line="33"/>
         <source>Settings</source>
         <translation>Configuración</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/configdialog.cpp" line="54"/>
+        <location filename="../src/configdialog/configdialog.cpp" line="53"/>
         <source>&amp;Ok</source>
         <translation>&amp;Aceptar</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/configdialog.cpp" line="56"/>
+        <location filename="../src/configdialog/configdialog.cpp" line="55"/>
         <source>&amp;Apply</source>
         <translation>&amp;Aplicar</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/configdialog.cpp" line="57"/>
+        <location filename="../src/configdialog/configdialog.cpp" line="56"/>
         <source>&amp;Cancel</source>
         <translation>&amp;Cancelar</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/configdialog.cpp" line="99"/>
+        <location filename="../src/configdialog/configdialog.cpp" line="98"/>
         <source>Spectrum</source>
         <translation>Espectro</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/configdialog.cpp" line="95"/>
+        <location filename="../src/configdialog/configdialog.cpp" line="94"/>
         <source>Scope</source>
         <translation>Osciloscopio</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/configdialog.cpp" line="103"/>
+        <location filename="../src/configdialog/configdialog.cpp" line="102"/>
         <source>Colors</source>
         <translation>Colores</translation>
     </message>
@@ -441,89 +441,89 @@
 <context>
     <name>DsoWidget</name>
     <message>
-        <location filename="../src/dsowidget.cpp" line="70"/>
+        <location filename="../src/dsowidget.cpp" line="69"/>
         <source>TR</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="176"/>
+        <location filename="../src/dsowidget.cpp" line="175"/>
         <source>Markers</source>
         <translation>Marcadores</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="512"/>
-        <location filename="../src/dsowidget.cpp" line="528"/>
+        <location filename="../src/dsowidget.cpp" line="511"/>
+        <location filename="../src/dsowidget.cpp" line="527"/>
         <source>ON</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="513"/>
-        <location filename="../src/dsowidget.cpp" line="528"/>
+        <location filename="../src/dsowidget.cpp" line="512"/>
+        <location filename="../src/dsowidget.cpp" line="527"/>
         <source>OFF</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="550"/>
+        <location filename="../src/dsowidget.cpp" line="549"/>
         <source>Markers  </source>
         <translation>Marcadores  </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="551"/>
+        <location filename="../src/dsowidget.cpp" line="550"/>
         <source>Time: </source>
         <translation>Tiempo: </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="552"/>
+        <location filename="../src/dsowidget.cpp" line="551"/>
         <source>Frequency: </source>
         <translation>Frecuencia: </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="555"/>
+        <location filename="../src/dsowidget.cpp" line="554"/>
         <source>Zoom x%L1  </source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="557"/>
+        <location filename="../src/dsowidget.cpp" line="556"/>
         <source>Zoom ---  </source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="560"/>
-        <location filename="../src/dsowidget.cpp" line="562"/>
-        <location filename="../src/dsowidget.cpp" line="593"/>
-        <location filename="../src/dsowidget.cpp" line="638"/>
-        <location filename="../src/dsowidget.cpp" line="647"/>
-        <location filename="../src/dsowidget.cpp" line="668"/>
+        <location filename="../src/dsowidget.cpp" line="559"/>
+        <location filename="../src/dsowidget.cpp" line="561"/>
+        <location filename="../src/dsowidget.cpp" line="592"/>
+        <location filename="../src/dsowidget.cpp" line="637"/>
+        <location filename="../src/dsowidget.cpp" line="646"/>
+        <location filename="../src/dsowidget.cpp" line="667"/>
         <source>/div</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="606"/>
+        <location filename="../src/dsowidget.cpp" line="605"/>
         <source>%L1%</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="620"/>
+        <location filename="../src/dsowidget.cpp" line="619"/>
         <source>%1  %2  %3  %4  %5</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="658"/>
+        <location filename="../src/dsowidget.cpp" line="657"/>
         <source>/s</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="772"/>
+        <location filename="../src/dsowidget.cpp" line="771"/>
         <source> on screen</source>
         <translation> en pantalla</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="817"/>
+        <location filename="../src/dsowidget.cpp" line="816"/>
         <source>pp</source>
         <translation>pp</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="820"/>
+        <location filename="../src/dsowidget.cpp" line="819"/>
         <source>rms</source>
         <translation>rms</translation>
     </message>
@@ -588,37 +588,37 @@
 <context>
     <name>HorizontalDock</name>
     <message>
-        <location filename="../src/docks/HorizontalDock.cpp" line="32"/>
+        <location filename="../src/docks/HorizontalDock.cpp" line="31"/>
         <source>Horizontal</source>
         <translation>Horizontal</translation>
     </message>
     <message>
-        <location filename="../src/docks/HorizontalDock.cpp" line="35"/>
+        <location filename="../src/docks/HorizontalDock.cpp" line="34"/>
         <source>Samplerate</source>
         <translation>Muestreo</translation>
     </message>
     <message>
-        <location filename="../src/docks/HorizontalDock.cpp" line="39"/>
+        <location filename="../src/docks/HorizontalDock.cpp" line="38"/>
         <source>/s</source>
         <translation>/s</translation>
     </message>
     <message>
-        <location filename="../src/docks/HorizontalDock.cpp" line="43"/>
+        <location filename="../src/docks/HorizontalDock.cpp" line="42"/>
         <source>Timebase</source>
         <translation>Base de tiempos</translation>
     </message>
     <message>
-        <location filename="../src/docks/HorizontalDock.cpp" line="49"/>
+        <location filename="../src/docks/HorizontalDock.cpp" line="48"/>
         <source>Frequencybase</source>
         <translation>Frecuencia base</translation>
     </message>
     <message>
-        <location filename="../src/docks/HorizontalDock.cpp" line="54"/>
+        <location filename="../src/docks/HorizontalDock.cpp" line="53"/>
         <source>Format</source>
         <translation>Formato</translation>
     </message>
     <message>
-        <location filename="../src/docks/HorizontalDock.cpp" line="60"/>
+        <location filename="../src/docks/HorizontalDock.cpp" line="59"/>
         <source>Calibration out</source>
         <translation>Salida calibración</translation>
     </message>
@@ -1577,7 +1577,7 @@
 <context>
     <name>SpectrumDock</name>
     <message>
-        <location filename="../src/docks/SpectrumDock.cpp" line="28"/>
+        <location filename="../src/docks/SpectrumDock.cpp" line="27"/>
         <source>Spectrum</source>
         <translation>Espectro</translation>
     </message>
