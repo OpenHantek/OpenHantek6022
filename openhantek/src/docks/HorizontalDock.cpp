@@ -27,9 +27,8 @@ template < typename... Args > struct SELECT {
     }
 };
 
-HorizontalDock::HorizontalDock( DsoSettingsScope *scope, const Dso::ControlSpecification *spec, QWidget *parent,
-                                Qt::WindowFlags flags )
-    : QDockWidget( tr( "Horizontal" ), parent, flags ), scope( scope ) {
+HorizontalDock::HorizontalDock( DsoSettingsScope *scope, const Dso::ControlSpecification *spec, QWidget *parent )
+    : QDockWidget( tr( "Horizontal" ), parent ), scope( scope ) {
 
     // Initialize elements
     this->samplerateLabel = new QLabel( tr( "Samplerate" ) );

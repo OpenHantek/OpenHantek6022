@@ -29,7 +29,7 @@ class VoltageDock : public QDockWidget {
     /// \param settings The target settings object.
     /// \param parent The parent widget.
     /// \param flags Flags for the window manager.
-    VoltageDock( DsoSettingsScope *scope, const Dso::ControlSpecification *spec, QWidget *parent, Qt::WindowFlags flags = nullptr );
+    VoltageDock( DsoSettingsScope *scope, const Dso::ControlSpecification *spec, QWidget *parent );
 
     /// \brief Sets the coupling for a channel.
     /// \param channel The channel, whose coupling should be set.

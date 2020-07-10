@@ -18,8 +18,8 @@
 #include "utils/printutils.h"
 #include "viewconstants.h"
 
-TriggerDock::TriggerDock( DsoSettingsScope *scope, const Dso::ControlSpecification *spec, QWidget *parent, Qt::WindowFlags flags )
-    : QDockWidget( tr( "Trigger" ), parent, flags ), scope( scope ), mSpec( spec ) {
+TriggerDock::TriggerDock( DsoSettingsScope *scope, const Dso::ControlSpecification *spec, QWidget *parent )
+    : QDockWidget( tr( "Trigger" ), parent ), scope( scope ), mSpec( spec ) {
 
     // Initialize lists for comboboxes
     for ( ChannelID channel = 0; channel < mSpec->channels; ++channel )

@@ -28,8 +28,7 @@
 /// \param settings The target settings object.
 /// \param parent The parent widget.
 /// \param flags Flags for the window manager.
-DsoConfigDialog::DsoConfigDialog( DsoSettings *settings, QWidget *parent, Qt::WindowFlags flags )
-    : QDialog( parent, flags ), settings( settings ) {
+DsoConfigDialog::DsoConfigDialog( DsoSettings *settings, QWidget *parent ) : QDialog( parent ), settings( settings ) {
 
     this->setWindowTitle( tr( "Settings" ) );
 

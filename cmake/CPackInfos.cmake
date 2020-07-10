@@ -130,7 +130,7 @@ elseif(WIN32)
     endif()
 endif()
 
-message(STATUS "Packege: ${CPACK_GENERATOR}")
+message(STATUS "Package: ${CPACK_GENERATOR}")
 message(STATUS "Architecture: ${CPACK_ARCH}")
 
 set(CPACK_PACKAGE_NAME "openhantek")

@@ -21,7 +21,7 @@ class DsoConfigDialog : public QDialog {
     Q_OBJECT
 
   public:
-    DsoConfigDialog( DsoSettings *settings, QWidget *parent = nullptr, Qt::WindowFlags flags = nullptr );
+    DsoConfigDialog( DsoSettings *settings, QWidget *parent = nullptr );
     ~DsoConfigDialog();
 
   public slots:

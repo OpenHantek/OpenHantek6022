@@ -25,10 +25,10 @@ class DsoWidget : public QWidget {
 
   public:
     struct Sliders {
-        LevelSlider *voltageOffsetSlider; ///< The sliders for the graph offsets
+        LevelSlider *voltageOffsetSlider;   ///< The sliders for the graph offsets
         LevelSlider *triggerPositionSlider; ///< The slider for the pretrigger
-        LevelSlider *triggerLevelSlider;  ///< The sliders for the trigger level
-        LevelSlider *markerSlider;        ///< The sliders for the markers
+        LevelSlider *triggerLevelSlider;    ///< The sliders for the trigger level
+        LevelSlider *markerSlider;          ///< The sliders for the markers
     };
 
     /// \brief Initializes the components of the oszilloscope-screen.
@@ -36,8 +36,7 @@ class DsoWidget : public QWidget {
     /// \param dataAnalyzer The data analyzer that should be used as data source.
     /// \param parent The parent widget.
     /// \param flags Flags for the window manager.
-    DsoWidget( DsoSettingsScope *scope, DsoSettingsView *view, const Dso::ControlSpecification *spec, QWidget *parent = nullptr,
-               Qt::WindowFlags flags = nullptr );
+    DsoWidget( DsoSettingsScope *scope, DsoSettingsView *view, const Dso::ControlSpecification *spec, QWidget *parent = nullptr, );
 
     // Data arrived
     void showNew( std::shared_ptr< PPresult > analysedData );

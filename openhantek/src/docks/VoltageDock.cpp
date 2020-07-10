@@ -21,8 +21,8 @@ template < typename... Args > struct SELECT {
     }
 };
 
-VoltageDock::VoltageDock( DsoSettingsScope *scope, const Dso::ControlSpecification *spec, QWidget *parent, Qt::WindowFlags flags )
-    : QDockWidget( tr( "Voltage" ), parent, flags ), scope( scope ), spec( spec ) {
+VoltageDock::VoltageDock( DsoSettingsScope *scope, const Dso::ControlSpecification *spec, QWidget *parent )
+    : QDockWidget( tr( "Voltage" ), parent ), scope( scope ), spec( spec ) {
     // Initialize lists for comboboxes
     for ( Dso::Coupling c : spec->couplings )
         if ( c == Dso::Coupling::DC || scope->hasACcoupling || scope->hasACmodification )

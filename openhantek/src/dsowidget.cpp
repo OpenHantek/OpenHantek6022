@@ -26,9 +26,8 @@
 static int zoomScopeRow = 0;
 
 
-DsoWidget::DsoWidget( DsoSettingsScope *scope, DsoSettingsView *view, const Dso::ControlSpecification *spec, QWidget *parent,
-                      Qt::WindowFlags flags )
-    : QWidget( parent, flags ), scope( scope ), view( view ), spec( spec ), mainScope( GlScope::createNormal( scope, view ) ),
+DsoWidget::DsoWidget( DsoSettingsScope *scope, DsoSettingsView *view, const Dso::ControlSpecification *spec, QWidget *parent )
+    : QWidget( parent ), scope( scope ), view( view ), spec( spec ), mainScope( GlScope::createNormal( scope, view ) ),
       zoomScope( GlScope::createZoomed( scope, view ) ) {
 
     // Palette for this widget
