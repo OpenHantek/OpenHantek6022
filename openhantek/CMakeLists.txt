@@ -97,16 +97,7 @@ if(NOT WIN32)
 endif()
 
 # install commands
-if (APPLE AND BUILD_MACOSX_BUNDLE)
-    #set_target_properties(${PROJECT_NAME} PROPERTIES
-    #    MACOSX_BUNDLE_NAME "${PROJECT_NAME}"
-    #    MACOSX_BUNDLE_GUI_IDENTIFIER "${PROJECT_NAME}"
-    #)
-    # no install, it's already in openhantek/OpenHantek.app/...
-    # install(TARGETS ${PROJECT_NAME} BUNDLE DESTINATION ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app/Contents/MacOS/${PROJECT_NAME})
-    # install(TARGETS ${PROJECT_NAME} BUNDLE DESTINATION ${CMAKE_BINARY_DIR}) # -> build
-else()
+if ( NOT (APPLE AND BUILD_MACOSX_BUNDLE) )
     install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION "bin")
 endif()
 include(../cmake/copy_qt5_dlls_to_bin_dir.cmake)
-

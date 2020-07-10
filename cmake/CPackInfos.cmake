@@ -51,7 +51,7 @@ else()
         RESULT_VARIABLE CMD_RESULT
         OUTPUT_VARIABLE VCS_URL
         OUTPUT_STRIP_TRAILING_WHITESPACE
-        )
+    )
     # message( STATUS "VCS_URL: ${VCS_URL}")
 
     set(ENV{LANG} "en_US")
@@ -64,14 +64,13 @@ else()
             RESULT_VARIABLE CMD_RESULT
             OUTPUT_VARIABLE CHANGELOG
             OUTPUT_STRIP_TRAILING_WHITESPACE
-            )
+        )
     endif()
     file(WRITE "${CMAKE_BINARY_DIR}/changelog" "${CHANGELOG}")
 endif()
 
 string(TIMESTAMP DATE_VERSION "%Y%m%d")
 string(TIMESTAMP CURRENT_TIME "%Y%m%d_%H:%M")
-
 
 if (UNIX)
     execute_process(
@@ -82,12 +81,45 @@ if (UNIX)
     )
     set(CPACK_PACKAGING_INSTALL_PREFIX "/usr")
     set(CPACK_GENERATOR TGZ)
-    if (NOT APPLE)
+
+    if (CMAKE_SYSTEM_NAME MATCHES "Linux")
         set(CPACK_TARGET "")
         set(CPACK_GENERATOR ${CPACK_GENERATOR} DEB RPM)
-    else()
+	install(
+	    FILES utils/udev_rules/60-hantek.rules
+	    DESTINATION lib/udev/rules.d
+	)
+    elseif(CMAKE_SYSTEM_NAME MATCHES "FreeBSD")
+        set(CPACK_TARGET "freebsd_")
+        set(CPACK_PACKAGING_INSTALL_PREFIX "/usr/local")
+	install(
+	    FILES utils/devd_rules_freebsd/openhantek.conf
+	    DESTINATION etc/devd
+	)
+    elseif(APPLE)
         set(CPACK_TARGET "osx_")
     endif()
+
+    # install documentation
+    FILE(GLOB PDF "docs/*.pdf")
+    install(
+	FILES CHANGELOG LICENSE README ${PDF}
+	DESTINATION share/doc/openhantek
+    )
+    # install application starter and icons
+    install(
+	FILES utils/applications/OpenHantek.desktop
+	DESTINATION share/applications
+        )
+    install(
+	FILES openhantek/res/images/OpenHantek.png
+	DESTINATION share/icons/hicolor/48x48/apps
+    )
+    install(
+	FILES openhantek/res/images/OpenHantek.svg
+	DESTINATION share/icons/hicolor/scalable/apps
+    )
+
 elseif(WIN32)
     set(CPACK_TARGET "win_")
     set(CPACK_GENERATOR ${CPACK_GENERATOR} ZIP NSIS)
@@ -98,19 +130,19 @@ elseif(WIN32)
     endif()
 endif()
 
+message(STATUS "Packege: ${CPACK_GENERATOR}")
 message(STATUS "Architecture: ${CPACK_ARCH}")
 
 set(CPACK_PACKAGE_NAME "openhantek")
 string(TOLOWER ${CPACK_PACKAGE_NAME} CPACK_PACKAGE_NAME)
-#set(CPACK_PACKAGE_VERSION "${DATE_VERSION}-${GIT_COMMIT_HASH}")
 set(CPACK_PACKAGE_VERSION "${DATE_VERSION}-${VCS_REVISION}")
 set(CPACK_PACKAGE_CONTACT "contact@openhantek.org")
 set(CPACK_PACKAGE_VENDOR "OpenHantek Community")
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Digital oscilloscope software for Hantek DSO6022 USB hardware")
 set(CPACK_PACKAGE_DESCRIPTION "OpenHantek is an oscilloscope software for\nVoltcraft/Darkwire/Protek/Acetech/Hantek USB devices")
 set(CPACK_RESOURCE_FILE_README "${CMAKE_SOURCE_DIR}/readme.md")
-if (EXISTS "${CMAKE_SOURCE_DIR}/COPYING")
-    set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/COPYING")
+if (EXISTS "${CMAKE_SOURCE_DIR}/LICENSE")
+    set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/LICENSE")
 endif()
 
 set(CPACK_STRIP_FILES 1)

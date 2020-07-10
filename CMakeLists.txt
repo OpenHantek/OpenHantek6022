@@ -15,7 +15,7 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake/")
 
 INCLUDE_DIRECTORIES(".")
 
-# Use CPack to make deb/rpm/zip/exe installer packages
+# Use CPack to make tgz/deb/rpm/zip installer packages
 include(cmake/CPackInfos.cmake)
 
 if(MSVC)
@@ -55,53 +55,25 @@ message( "-- COMPILE_DEFINITIONS: ${CompDefs}" )
 add_subdirectory(openhantek)
 
 if (WIN32)
-    install(FILES COPYING readme.md DESTINATION ".")
-endif()
-
-if("${CMAKE_SYSTEM}" MATCHES "Linux")
-  if(EXISTS "/lib/udev/rules.d/")
-    install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/utils/udev_rules/60-hantek.rules"
-      DESTINATION "/lib/udev/rules.d/" COMPONENT Runtime)
-  else()
-    message(WARNING "Could not find udev rules directory (/lib/udev/rules.d/), skipping installation of udev rules.")
-  endif()
-  if(EXISTS "/usr/share/applications/")
-    install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/utils/applications/OpenHantek.desktop"
-      DESTINATION "/usr/share/applications/" COMPONENT Runtime)
-  else()
-    message(WARNING "Could not find applications directory (/usr/share/applications/), skipping installation of desktop file.")
-  endif()
-  if(EXISTS "/usr/share/icons/hicolor/48x48/apps/")
-    install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/openhantek/res/images/OpenHantek.png"
-      DESTINATION /usr/share/icons/hicolor/48x48/apps/ COMPONENT Runtime)
-  else()
-    message(WARNING "Could not find icons directory (/usr/share/icons/hicolor/48x48/apps/), skipping installation of icon.")
-  endif()
-  if(EXISTS "/usr/share/icons/hicolor/scalable/apps/")
-    install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/openhantek/res/images/OpenHantek.svg"
-      DESTINATION "/usr/share/icons/hicolor/scalable/apps/" COMPONENT Runtime)
-  else()
-    message(WARNING "Could not find icons directory (/usr/share/icons/hicolor/scalable/apps/), skipping installation of icon.")
-  endif()
-  if(EXISTS "/usr/share/doc/")
-    install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/CHANGELOG"
-                  "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE"
-                  "${CMAKE_CURRENT_SOURCE_DIR}/docs/OpenHantek6022_User_Manual.pdf"
-                  "${CMAKE_CURRENT_SOURCE_DIR}/docs/HANTEK6022_AC_Modification.pdf"
-            DESTINATION "/usr/share/doc/openhantek" COMPONENT Runtime)
-  else()
-    message(WARNING "Could not find doc directory (/usr/share/doc/), skipping installation of user documentation.")
-  endif()
+    install(
+	FILES CHANGELOG LICENSE README
+	DESTINATION "."
+    )
 endif()
 
 # Add auxiliary files to the project, so that these files appear in VisualStudio/QtCreator
 file(GLOB_RECURSE MDFILES "docs/*.md" "openhantek/*.md")
-add_custom_target(readme SOURCES readme.md ${MDFILES})
+add_custom_target(
+    readme
+    SOURCES CHANGELOG LICENSE README readme.md ${MDFILES}
+)
 
 # Add "doc" target to build the documentation.
 find_package(Doxygen QUIET)
 if (DOXYGEN_FOUND)
-    add_custom_target(doc
+    add_custom_target(
+	doc
         COMMAND "${CMAKE_COMMAND} -E remove_directory html"
-        COMMAND "${DOXYGEN_EXECUTABLE} Doxyfile" WORKING_DIRECTORY "${CMAKE_CURRENT_LIST_DIR}")
+        COMMAND "${DOXYGEN_EXECUTABLE} Doxyfile" WORKING_DIRECTORY "${CMAKE_CURRENT_LIST_DIR}"
+    )
 endif()
