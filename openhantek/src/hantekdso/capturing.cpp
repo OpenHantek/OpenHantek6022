@@ -98,7 +98,7 @@ void Capturing::capture() {
             QString name = "";
             if ( controlCommand->code >= 0xe0 && controlCommand->code <= 0xe6 )
                 name = hdc->controlNames[ controlCommand->code - 0xe0 ];
-            timestampDebug( QString( "Sending control command 0x%1 (%2):%3" )
+            timestampDebug( QString( "Sending control command 0x%1 (%2): %3" )
                                 .arg( QString::number( controlCommand->code, 16 ), name,
                                       hexdecDump( controlCommand->data(), unsigned( controlCommand->size() ) ) ) );
             if ( hdc->scopeDevice->isRealHW() ) { // do the USB communication with scope HW
@@ -157,7 +157,7 @@ unsigned Capturing::getRealSamples() {
         return 0;
     }
     // Save raw data to temporary buffer
-    timestampDebug( QString( "Request packet %1: %2 bytes" ).arg( tag ).arg( rawSamplesize ) );
+    // timestampDebug( QString( "Request packet %1: %2 bytes" ).arg( tag ).arg( rawSamplesize ) );
     hdc->raw.received = 0;
     int retval = hdc->scopeDevice->bulkReadMulti( dp->data(), rawSamplesize, realSlow, hdc->raw.received );
     if ( retval < 0 ) {
@@ -167,7 +167,7 @@ unsigned Capturing::getRealSamples() {
         dp->clear();
         return 0;
     }
-    timestampDebug( QString( "Received packet %1: %2 bytes" ).arg( tag ).arg( retval ) );
+    // timestampDebug( QString( "Received packet %1: %2 bytes" ).arg( tag ).arg( retval ) );
     return unsigned( retval );
 }
 
@@ -186,7 +186,7 @@ unsigned Capturing::getDemoSamples() {
     static int counter = 0;
     unsigned received = 0;
     hdc->raw.received = 0;
-    timestampDebug( QString( "Request dummy packet %1: %2 bytes" ).arg( tag ).arg( rawSamplesize ) );
+    // timestampDebug( QString( "Request dummy packet %1: %2 bytes" ).arg( tag ).arg( rawSamplesize ) );
     int deltaT = 99;
     // deltaT (=99) defines the frequency of the dummy signals:
     // ch1 = 1 kHz and ch2 = 500 Hz
@@ -229,6 +229,6 @@ unsigned Capturing::getDemoSamples() {
                 break;
         }
     }
-    timestampDebug( QString( "Received dummy packet %1: %2 bytes" ).arg( packet ).arg( rawSamplesize ) );
+    // timestampDebug( QString( "Received dummy packet %1: %2 bytes" ).arg( packet ).arg( rawSamplesize ) );
     return received;
 }

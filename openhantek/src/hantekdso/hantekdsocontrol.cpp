@@ -421,9 +421,9 @@ void HantekDsoControl::quitSampling() {
     if ( scopeDevice->isDemoDevice() )
         return;
     auto controlCommand = ControlStopSampling();
-    timestampDebug( QString( "Sending control command %1:%2" )
+    timestampDebug( QString( "Sending control command 0x%1 (Stop Sampling): %2" )
                         .arg( QString::number( controlCommand.code, 16 ),
-                              hexDump( controlCommand.data(), unsigned( controlCommand.size() ) ) ) );
+                              hexdecDump( controlCommand.data(), unsigned( controlCommand.size() ) ) ) );
     int errorCode = scopeDevice->controlWrite( &controlCommand );
     if ( errorCode < 0 ) {
         qWarning() << "controlWrite: stop sampling failed: " << libUsbErrorString( errorCode );
@@ -734,7 +734,7 @@ void HantekDsoControl::stateMachine() {
     if ( isSampling() ) {
         // Sampling hasn't started, update the expected sample count
         expectedSampleCount = this->getSampleCount();
-        // timestampDebug( "Starting to capture" );
+        timestampDebug( "Starting to capture" );
         samplingStarted = true;
     }
     updateInterval(); // calculate new acquire timing
