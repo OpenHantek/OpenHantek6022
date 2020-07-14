@@ -4,7 +4,7 @@
 #include <QDebug>
 #include <QString>
 #include <QTemporaryFile>
-#ifdef __FreeBSD__
+#ifdef Q_OS_FREEBSD
 #include <libusb.h>
 #else
 #include <libusb-1.0/libusb.h>
@@ -40,7 +40,7 @@ bool UploadFirmware::startUpload( ScopeDevice *scopeDevice ) {
         return false;
     temp_firmware_path->open();
 
-#ifdef __linux__
+#ifdef Q_OS_LINUX
     // Detach kernel driver, reported to lead to an error on FreeBSD, MacOSX and Windows
     status = libusb_set_auto_detach_kernel_driver( handle, 1 );
     if ( status != LIBUSB_SUCCESS && status != LIBUSB_ERROR_NOT_SUPPORTED ) {

@@ -6,12 +6,6 @@
 #include <QLocale>
 #include <QStringList>
 
-#ifdef __FreeBSD__
-#include <libusb.h>
-#else
-#include <libusb-1.0/libusb.h>
-#endif
-
 #include "utils/printutils.h"
 
 QString valueToString( double value, Unit unit, int precision ) {

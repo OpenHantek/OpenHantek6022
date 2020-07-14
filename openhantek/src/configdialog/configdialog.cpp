@@ -29,7 +29,6 @@
 /// \param parent The parent widget.
 /// \param flags Flags for the window manager.
 DsoConfigDialog::DsoConfigDialog( DsoSettings *settings, QWidget *parent ) : QDialog( parent ), settings( settings ) {
-
     this->setWindowTitle( tr( "Settings" ) );
 
     this->contentsWidget = new QListWidget;

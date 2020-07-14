@@ -7,17 +7,20 @@
 #include <QLocale>
 #include <QSurfaceFormat>
 #include <QTranslator>
-#ifdef __linux__
+#ifdef Q_OS_LINUX
 #include <QStyleFactory>
 #include <sched.h>
 #endif
 #include <iostream>
-#ifdef __FreeBSD__
+#ifdef Q_OS_FREEBSD
 #include <libusb.h>
 // FreeBSD doesn't have libusb_setlocale()
 #define libusb_setlocale( x ) (void)0
 #else
 #include <libusb-1.0/libusb.h>
+#endif
+#ifdef Q_OS_WIN
+#include <windows.h>
 #endif
 #include <memory>
 
@@ -106,7 +109,7 @@ int main( int argc, char *argv[] ) {
         useLocale = !p.isSet( intOption );
     }
 
-#ifdef __arm__
+#ifdef Q_PROCESSOR_ARM
     // HACK: Raspberry Pi crashes with OpenGL, use always OpenGLES
     useGLES = true;
 #endif
@@ -118,7 +121,7 @@ int main( int argc, char *argv[] ) {
         GlScope::useOpenGLSLversion( 150 );
     QApplication openHantekApplication( argc, argv );
 
-#ifdef __linux__
+#ifdef Q_OS_LINUX
     // Qt5 linux default
     // ("Breeze", "Windows", "Fusion")
     // with package qt5-style-plugins

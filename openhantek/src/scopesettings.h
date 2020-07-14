@@ -27,7 +27,7 @@ struct DsoSettingsScopeHorizontal {
     unsigned int recordLength = 0; ///< Sample count
     double timebase = 1e-3;        ///< Timebase in s/div
     double maxTimebase = 1;        ///< Allow very slow timebases 0.1 ... 10.0 s/div
-#ifdef __arm__
+#ifdef Q_PROCESSOR_ARM
     // RPi: Not more often than every 10 ms
     double acquireInterval = 0.010; ///< Minimal time between captured frames
 #else

@@ -164,27 +164,27 @@
 <context>
     <name>DsoConfigDialog</name>
     <message>
-        <location filename="../src/configdialog/configdialog.cpp" line="33"/>
+        <location filename="../src/configdialog/configdialog.cpp" line="32"/>
         <source>Settings</source>
         <translation>Einstellungen</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/configdialog.cpp" line="53"/>
+        <location filename="../src/configdialog/configdialog.cpp" line="52"/>
         <source>&amp;Ok</source>
         <translation>&amp;Ok</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/configdialog.cpp" line="55"/>
+        <location filename="../src/configdialog/configdialog.cpp" line="54"/>
         <source>&amp;Apply</source>
         <translation>&amp;Anwenden</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/configdialog.cpp" line="56"/>
+        <location filename="../src/configdialog/configdialog.cpp" line="55"/>
         <source>&amp;Cancel</source>
         <translation>&amp;Abbrechen</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/configdialog.cpp" line="98"/>
+        <location filename="../src/configdialog/configdialog.cpp" line="97"/>
         <source>Spectrum</source>
         <translation>Spektrum</translation>
     </message>
@@ -193,12 +193,12 @@
         <translation type="vanished">Datei</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/configdialog.cpp" line="102"/>
+        <location filename="../src/configdialog/configdialog.cpp" line="101"/>
         <source>Colors</source>
         <translation>Farben</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/configdialog.cpp" line="94"/>
+        <location filename="../src/configdialog/configdialog.cpp" line="93"/>
         <source>Scope</source>
         <translation>Oszilloskop</translation>
     </message>
@@ -1236,97 +1236,97 @@
 <context>
     <name>QApplication</name>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="28"/>
+        <location filename="../src/utils/printutils.cpp" line="22"/>
         <source>%L1 mV</source>
         <translation>%L1 mV</translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="31"/>
+        <location filename="../src/utils/printutils.cpp" line="25"/>
         <source>%L1 V</source>
         <translation>%L1 V</translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="36"/>
+        <location filename="../src/utils/printutils.cpp" line="30"/>
         <source>%L1 dB</source>
         <translation>%L1 dB</translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="43"/>
+        <location filename="../src/utils/printutils.cpp" line="37"/>
         <source>%L1 ps</source>
         <translation>%L1 ps</translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="48"/>
+        <location filename="../src/utils/printutils.cpp" line="42"/>
         <source>%L1 ns</source>
         <translation>%L1 ns</translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="56"/>
+        <location filename="../src/utils/printutils.cpp" line="50"/>
         <source>%L1 ms</source>
         <translation>%L1 ms</translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="60"/>
+        <location filename="../src/utils/printutils.cpp" line="54"/>
         <source>%L1 s</source>
         <translation>%L1 s</translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="25"/>
+        <location filename="../src/utils/printutils.cpp" line="19"/>
         <source>%L1 µV</source>
         <translation>%L1 µV</translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="52"/>
+        <location filename="../src/utils/printutils.cpp" line="46"/>
         <source>%L1 µs</source>
         <translation>%L1 µs</translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="63"/>
+        <location filename="../src/utils/printutils.cpp" line="57"/>
         <source>%L1 min</source>
         <translation>%L1 min</translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="67"/>
+        <location filename="../src/utils/printutils.cpp" line="61"/>
         <source>%L1 h</source>
         <translation>%L1 h</translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="75"/>
+        <location filename="../src/utils/printutils.cpp" line="69"/>
         <source>%L1 Hz</source>
         <translation>%L1 Hz</translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="78"/>
+        <location filename="../src/utils/printutils.cpp" line="72"/>
         <source>%L1 kHz</source>
         <translation>%L1 kHz</translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="81"/>
+        <location filename="../src/utils/printutils.cpp" line="75"/>
         <source>%L1 MHz</source>
         <translation>%L1 MHz</translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="84"/>
+        <location filename="../src/utils/printutils.cpp" line="78"/>
         <source>%L1 GHz</source>
         <translation>%L1 GHz</translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="91"/>
+        <location filename="../src/utils/printutils.cpp" line="85"/>
         <source>%L1 S</source>
         <translation>%L1 S</translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="94"/>
+        <location filename="../src/utils/printutils.cpp" line="88"/>
         <source>%L1 kS</source>
         <translation>%L1 kS</translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="97"/>
+        <location filename="../src/utils/printutils.cpp" line="91"/>
         <source>%L1 MS</source>
         <translation>%L1 MS</translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="100"/>
+        <location filename="../src/utils/printutils.cpp" line="94"/>
         <source>%L1 GS</source>
         <translation>%L1 GS</translation>
     </message>

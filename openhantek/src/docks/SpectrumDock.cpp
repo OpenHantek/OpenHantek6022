@@ -25,7 +25,6 @@ template < typename... Args > struct SELECT {
 };
 
 SpectrumDock::SpectrumDock( DsoSettingsScope *scope, QWidget *parent ) : QDockWidget( tr( "Spectrum" ), parent ), scope( scope ) {
-
     // Initialize lists for comboboxes
     this->magnitudeSteps = {1, 2, 3, 6, 10, 20, 40, 60, 80, 100};
     for ( const auto &magnitude : magnitudeSteps )

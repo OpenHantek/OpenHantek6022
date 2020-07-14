@@ -10,7 +10,7 @@
 #include "ezusb.h"
 #include "utils/printutils.h"
 #include <algorithm>
-#ifdef __FreeBSD__
+#ifdef Q_OS_FREEBSD
 #include <libusb.h>
 #else
 #include <libusb-1.0/libusb.h>
@@ -74,7 +74,7 @@ int FindDevices::updateDeviceList() {
             ++it;
         }
     }
-#if defined __FreeBSD__
+#if defined Q_OS_FREEBSD
     libusb_free_device_list( deviceList, false ); // free the list but don't unref the devices
 #else
     // TODO check if this crashes on MacOSX, Windows

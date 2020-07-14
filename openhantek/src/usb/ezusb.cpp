@@ -27,7 +27,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#ifdef __FreeBSD__
+#ifdef Q_OS_FREEBSD
 #include <libusb.h>
 #else
 #include <libusb-1.0/libusb.h>
