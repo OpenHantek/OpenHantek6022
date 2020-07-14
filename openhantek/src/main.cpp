@@ -83,11 +83,8 @@ int main( int argc, char *argv[] ) {
 #endif
 
 #ifdef Q_OS_WIN
-    // do not open an "extra" console window
-    if ( AttachConsole( ATTACH_PARENT_PROCESS ) ) {
-        freopen( "CONOUT$", "w", stdout );
-        freopen( "CONOUT$", "w", stderr );
-    }
+    // close "extra" console window
+    FreeConsole();
 #endif
 
     bool demoMode = false;
