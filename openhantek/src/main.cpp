@@ -81,6 +81,15 @@ int main( int argc, char *argv[] ) {
 #if ( QT_VERSION >= QT_VERSION_CHECK( 5, 6, 0 ) )
     QCoreApplication::setAttribute( Qt::AA_EnableHighDpiScaling, true );
 #endif
+
+#ifdef Q_OS_WIN
+    // do not open an "extra" console window
+    if ( AttachConsole( ATTACH_PARENT_PROCESS ) ) {
+        freopen( "CONOUT$", "w", stdout );
+        freopen( "CONOUT$", "w", stderr );
+    }
+#endif
+
     bool demoMode = false;
     bool useGLES = false;
     bool useGLSL120 = false;
