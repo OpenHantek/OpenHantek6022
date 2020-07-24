@@ -91,8 +91,13 @@ void Capturing::capture() {
                     swap( data, hdc->raw.data ); // "clear screen"
                 }
                 realSlow = effectiveSamplerate < 10e3;
-                if ( realSlow && channels != 2 ) // always switch to two channels if roll mode is possible
-                    hdc->modifyCommand< ControlSetNumChannels >( ControlCode::CONTROL_SETNUMCHANNELS )->setNumChannels( 2 );
+                if ( realSlow ) {        // roll mode possible?
+                    if ( channels != 2 ) // always switch to two channels
+                        hdc->modifyCommand< ControlSetNumChannels >( ControlCode::CONTROL_SETNUMCHANNELS )->setNumChannels( 2 );
+                } else {
+                    if ( channels == 2 && hdc->isSingleChannel() ) // switch back to real user setting
+                        hdc->modifyCommand< ControlSetNumChannels >( ControlCode::CONTROL_SETNUMCHANNELS )->setNumChannels( 1 );
+                }
                 break;
             }
             QString name = "";
