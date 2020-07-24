@@ -27,7 +27,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#ifdef Q_OS_FREEBSD
+// No Qt header loaded -> do not use Q_OS_FREEBSD, use __FreeBSD__
+#ifdef __FreeBSD__
 #include <libusb.h>
 #else
 #include <libusb-1.0/libusb.h>
