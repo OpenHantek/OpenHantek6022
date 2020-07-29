@@ -17,5 +17,10 @@
 #define DOCK_LAYOUT_SPACING 4
 
 // where are the (local) documents?
+#ifdef __FreeBSD__
+#define USR_MANUAL_PATH "/usr/local/share/doc/openhantek/OpenHantek6022_User_Manual.pdf"
+#define AC_MODIFICATION_PATH "/usr/local/share/doc/openhantek/HANTEK6022_AC_Modification.pdf"
+#else
 #define USR_MANUAL_PATH "/usr/share/doc/openhantek/OpenHantek6022_User_Manual.pdf"
 #define AC_MODIFICATION_PATH "/usr/share/doc/openhantek/HANTEK6022_AC_Modification.pdf"
+#endif
