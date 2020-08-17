@@ -59,19 +59,6 @@ After David [stopped maintaining](https://github.com/OpenHantek/openhantek/issue
 ## AC coupling
 * A [little HW modification](docs/HANTEK6022_AC_Modification.pdf) adds AC coupling. OpenHantek6022 supports this feature since v2.17-rc5 / FW0204.
 
-## Install prebuilt binary
-* Download Linux, Raspberry Pi, Win and MacOSX packages from the [Releases](https://github.com/OpenHantek/OpenHantek6022/releases) page.
-(The RPi, Win and MacOSX packages are not tested, neither is the installation of the `*.rpm` packages. For RPi4 see also [issue #28](https://github.com/OpenHantek/OpenHantek6022/issues/28).)
-* If you want to follow ongoing development, packages built from the last commit are available in the [unstable release](https://github.com/OpenHantek/OpenHantek6022/releases/tag/unstable).
-* As I develop on a *Debian stable* system the preferred (native) package format is `*.deb`.
-* To install the downloaded `*.deb` package, open a terminal window, go to the download directory and enter the command (as root) `apt install ./openhantek_..._amd64.deb`.
-This command will automatically install all dependencies of the program as well.
-* For installation of `*.rpm` packages follow similar rules, e.g. `dnf install ./openhantek-...-1.x86_64.rpm`.
-* The `*.tar.gz` achives contain only the binary for quick testing, they do not work without an recently installed complete package. Do not report any issues about the `*.tar.gz`!
-* Get MacOSX packages from [macports](https://www.macports.org/ports.php?by=name&substr=openhantek) - thx [ra1nb0w](https://github.com/ra1nb0w).
-* Get [Fedora rpm packages](https://pkgs.org/download/openhantek) - thx [Vascom](https://github.com/Vascom).
-* [Download (untested) Windows build from last commit](https://ci.appveyor.com/project/Ho-Ro/openhantek6022/build/artifacts).
-
 ## Building OpenHantek from source
 You need the following software, to build OpenHantek from source:
 * [CMake 3.5+](https://cmake.org/download/)
@@ -81,6 +68,19 @@ You need the following software, to build OpenHantek from source:
 * A compiler that supports C++11 - tested with gcc, clang and msvc
 
 We have build instructions available for [Linux](docs/build.md#linux), [Raspberry Pi](docs/build.md#raspberrypi), [FreeBSD](docs/build.md#freebsd), [Apple MacOSX](docs/build.md#macosx) and [Microsoft Windows](docs/build.md#windows).
+
+## Install prebuilt binary
+* Download Linux, Raspberry Pi, Windows and MacOSX packages from the [Releases](https://github.com/OpenHantek/OpenHantek6022/releases) page.
+(The RPi, Windows and MacOSX packages are not tested, neither is the installation of the `*.rpm` packages. For RPi4 see also [issue #28](https://github.com/OpenHantek/OpenHantek6022/issues/28).)
+* If you want to follow ongoing development, packages built from the last commit are available in the [unstable release](https://github.com/OpenHantek/OpenHantek6022/releases/tag/unstable).
+* As I develop on a *Debian stable* system the preferred (native) package format is `*.deb`.
+* To install the downloaded `*.deb` package, open a terminal window, go to the download directory and enter the command (as root) `apt install ./openhantek_..._amd64.deb`.
+This command will automatically install all dependencies of the program as well.
+* For installation of `*.rpm` packages follow similar rules, e.g. `dnf install ./openhantek-...-1.x86_64.rpm`.
+* The `*.tar.gz` achives contain the same files as the `*.deb` and `*.rpm` packages for quick testing - do not use for a permanent intallation. Do not report any issues about the `*.tar.gz`!
+* Get MacOSX packages from [macports](https://www.macports.org/ports.php?by=name&substr=openhantek) - thx [ra1nb0w](https://github.com/ra1nb0w).
+* Get [Fedora rpm packages](https://pkgs.org/download/openhantek) - thx [Vascom](https://github.com/Vascom).
+* Download [(untested) Windows build from last commit](https://ci.appveyor.com/project/Ho-Ro/openhantek6022/build/artifacts).
 
 ## Run OpenHantek6022
 On a Linux system start the program via the menu entry *OpenHantek (Digital Storage Oscilloscope)* or from a terminal window as `OpenHantek`.
@@ -94,9 +94,11 @@ from the command line like this: `OpenHantek --useGLES`.
 Raspberry Pi uses OpenGL ES automatically, check also the [graphics driver setup](docs/build.md#raspberrypi).
 
 USB access for the device is required (unless using demo mode):
-* As seen on the [Microsoft Windows build instructions](docs/build.md#windows) page, you have to assign an usb driver to the device.
-The original Hantek driver doesn't work.
 * On Linux, you need to copy the file `utils/udev_rules/60-hantek.rules` to `/etc/udev/rules.d/` or `/lib/udev/rules.d/` and replug your device. If OpenHantek is installed from a *.deb or *.rpm package this file is installed automatically into `/lib/udev/rules.d/`.
+
+### Windows USB access
+* **The original Hantek driver for Windows doesn't work!** You have to assign the correct WinUSB driver with the tool [Zadig](https://zadig.akeo.ie/). 
+Check the [Microsoft Windows build instructions](docs/build.md#microsoft-windows-usb-driver-install-with-zadig) and follow the good [step-by-step tutorial](docs/OpenHantek6022_zadig_Win10.pdf) provided by [DaPa](https://github.com/DaPa).
 
 ## Important!
 The scope doesn't store the firmware permanently in flash or eeprom, it must be uploaded after each power-up and is kept in ram 'til power-down.

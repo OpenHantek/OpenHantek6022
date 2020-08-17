@@ -182,10 +182,16 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
     connect( horizontalDock, &HorizontalDock::frequencybaseChanged, dsoWidget, &DsoWidget::updateFrequencybase );
     connect( dsoControl, &HantekDsoControl::samplerateChanged, [this, horizontalDock]( double samplerate ) {
         // The timebase was set, let's adapt the samplerate accordingly
-        // printf( "mainwindow::samplerateChanged( %g )\n", samplerate );
-        dsoSettings->scope.horizontal.samplerate = samplerate;
-        horizontalDock->setSamplerate( samplerate );
-        dsoWidget->updateSamplerate( samplerate );
+        static bool skipFirstChange = true; // HACK: try to avoid a strange crash on Windows (issue #111)
+        if ( skipFirstChange ) {            // just ignore the 1st change
+            skipFirstChange = false;
+            printf( "skip mainwindow::samplerateChanged( %g )\n", samplerate );
+        } else { // go on as usual
+            printf( "mainwindow::samplerateChanged( %g )\n", samplerate );
+            dsoSettings->scope.horizontal.samplerate = samplerate;
+            horizontalDock->setSamplerate( samplerate );
+            dsoWidget->updateSamplerate( samplerate );
+        }
     } );
     connect( horizontalDock, &HorizontalDock::calfreqChanged,
              [dsoControl, this]() { dsoControl->setCalFreq( dsoSettings->scope.horizontal.calfreq ); } );
