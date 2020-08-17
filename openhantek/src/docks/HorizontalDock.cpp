@@ -122,7 +122,7 @@ void HorizontalDock::setFrequencybase( double frequencybase ) {
 
 
 double HorizontalDock::setSamplerate( double samplerate ) {
-    printf( "HD::setSamplerate( %g )\n", samplerate );
+    // printf( "HD::setSamplerate( %g )\n", samplerate );
     QSignalBlocker blocker( timebaseSiSpinBox );
     timebaseSiSpinBox->setMaximum( scope->horizontal.maxTimebase );
     blocker = QSignalBlocker( samplerateSiSpinBox );

@@ -109,6 +109,7 @@ Dso::ErrorCode HantekDsoControl::setSamplerate( double samplerate ) {
     controlSetSamplerate( sampleIndex );
     setDownsampling( specification->fixedSampleRates[ sampleIndex ].oversampling );
     controlsettings.samplerate.current = samplerate;
+    // printf( "HDC::sSr: emit samplerateChanged(%g)\n", samplerate );
     emit samplerateChanged( samplerate );
     return Dso::ErrorCode::NONE;
 }
@@ -121,6 +122,7 @@ Dso::ErrorCode HantekDsoControl::setRecordTime( double duration ) {
 
     if ( duration == 0.0 ) {
         duration = controlsettings.samplerate.target.duration;
+        return Dso::ErrorCode::NONE;
     } else {
         controlsettings.samplerate.target.duration = duration;
         controlsettings.samplerate.target.samplerateSet = ControlSettingsSamplerateTarget::Duration;
@@ -148,6 +150,7 @@ Dso::ErrorCode HantekDsoControl::setRecordTime( double duration ) {
     setDownsampling( specification->fixedSampleRates[ sampleIndex ].oversampling );
     double samplerate = specification->fixedSampleRates[ sampleIndex ].samplerate;
     controlsettings.samplerate.current = samplerate;
+    // printf( "HDC::sRT: emit samplerateChanged(%g)\n", samplerate );
     emit samplerateChanged( samplerate );
     return Dso::ErrorCode::NONE;
 }
