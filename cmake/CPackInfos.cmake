@@ -85,17 +85,17 @@ if (UNIX)
     if (CMAKE_SYSTEM_NAME MATCHES "Linux")
         set(CPACK_TARGET "")
         set(CPACK_GENERATOR ${CPACK_GENERATOR} DEB RPM)
-	install(
-	    FILES utils/udev_rules/60-hantek.rules
-	    DESTINATION lib/udev/rules.d
-	)
+        install(
+            FILES utils/udev_rules/60-hantek.rules
+            DESTINATION lib/udev/rules.d
+        )
     elseif(CMAKE_SYSTEM_NAME MATCHES "FreeBSD")
         set(CPACK_TARGET "freebsd_")
         set(CPACK_PACKAGING_INSTALL_PREFIX "/usr/local")
-	install(
-	    FILES utils/devd_rules_freebsd/openhantek.conf
-	    DESTINATION etc/devd
-	)
+        install(
+            FILES utils/devd_rules_freebsd/openhantek.conf
+            DESTINATION etc/devd
+        )
     elseif(APPLE)
         set(CPACK_TARGET "osx_")
     endif()
@@ -103,21 +103,21 @@ if (UNIX)
     # install documentation
     FILE(GLOB PDF "docs/*.pdf")
     install(
-	FILES CHANGELOG LICENSE README ${PDF}
-	DESTINATION share/doc/openhantek
+        FILES CHANGELOG LICENSE README ${PDF}
+        DESTINATION share/doc/openhantek
     )
     # install application starter and icons
     install(
-	FILES utils/applications/OpenHantek.desktop
-	DESTINATION share/applications
+        FILES utils/applications/OpenHantek.desktop
+        DESTINATION share/applications
         )
     install(
-	FILES openhantek/res/images/OpenHantek.png
-	DESTINATION share/icons/hicolor/48x48/apps
+        FILES openhantek/res/images/OpenHantek.png
+        DESTINATION share/icons/hicolor/48x48/apps
     )
     install(
-	FILES openhantek/res/images/OpenHantek.svg
-	DESTINATION share/icons/hicolor/scalable/apps
+        FILES openhantek/res/images/OpenHantek.svg
+        DESTINATION share/icons/hicolor/scalable/apps
     )
 
 elseif(WIN32)
@@ -160,10 +160,8 @@ set(CPACK_DEBIAN_FILE_NAME "DEB-DEFAULT")
 set(CPACK_RPM_PACKAGE_RELOCATABLE NO)
 set(CPACK_RPM_PACKAGE_LICENSE "GPLv2+")
 set(CPACK_RPM_PACKAGE_DESCRIPTION ${CPACK_PACKAGE_DESCRIPTION})
-set(CPACK_RPM_PACKAGE_REQUIRES "qt5-qtbase-gui%{?_isa} >= 5.4, qt5-qttranslations%{?_isa}")
 set(CPACK_RPM_CHANGELOG_FILE "${CMAKE_BINARY_DIR}/changelog")
 set(CPACK_RPM_FILE_NAME "RPM-DEFAULT")
-set(CPACK_NSIS_EXECUTABLES_DIRECTORY ".")
 
 set(CPACK_INCLUDE_TOPLEVEL_DIRECTORY 0)
 set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}_${CPACK_PACKAGE_VERSION}-1_${CPACK_TARGET}${CPACK_ARCH}")
