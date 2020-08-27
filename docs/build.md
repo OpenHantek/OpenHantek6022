@@ -3,13 +3,13 @@ layout: default
 ---
 ### [Linux](#linux)
 For Debian (stretch and newer), Ubuntu 17.04+ and Mint 17+ and other deb based distributions install named requirements like this:
-> apt install g++ make cmake qttools5-dev qttools5-dev libfftw3-dev binutils-dev libusb-1.0-0-dev libqt5opengl5-dev mesa-common-dev libgl1-mesa-dev libgles2-mesa-dev
+> apt install g++ make cmake qttools5-dev libfftw3-dev binutils-dev libusb-1.0-0-dev libqt5opengl5-dev mesa-common-dev libgl1-mesa-dev libgles2-mesa-dev
 
 For distributions using dnf package manager (Fedora 21+) use this command:
 > dnf install make cmake gcc-c++ qt5-qtbase-gui qt5-qttools-devel qt5-qttranslations fftw-devel binutils-devel libusb-devel mesa-libGL-devel mesa-libGLES-devel
 
 For OpenSUSE and related distributions use this command
-> zypper install make cmake gcc-c++ qt5-qtbase-devel qt5-qttools-devel qt5-qttranslations  binutils-devel libusb-devel Mesa-libGL-devel Mesa-libGLESv2-devel fftw3-devel 
+> zypper install make cmake gcc-c++ libqt5-qtbase libqt5-qttools libqt5-qttranslations libusb-1_0 Mesa-libGL1 Mesa-libGLESv2 fftw3 
 
 After you've installed the requirements run the following commands inside the directory of this package:
 

@@ -95,6 +95,7 @@ int main( int argc, char *argv[] ) {
     bool useGLSL120 = false;
     bool useGLSL150 = false;
     bool useLocale = true;
+    int fontSize = 0;
     {
         QCoreApplication parserApp( argc, argv );
         QCommandLineParser p;
@@ -110,9 +111,12 @@ int main( int argc, char *argv[] ) {
         p.addOption( useGLSL150Option );
         QCommandLineOption intOption( {"i", "international"}, "Show the international interface, do not translate" );
         p.addOption( intOption );
+        QCommandLineOption fontsizeOption( {"f", "fontsize"}, "Set a different font size", "fontsize" );
+        p.addOption( fontsizeOption );
         p.process( parserApp );
         demoMode = p.isSet( demoModeOption );
         useGLES = p.isSet( useGlesOption );
+        fontSize = p.value( "fontsize" ).toInt();
         useGLSL120 = p.isSet( useGLSL120Option );
         useGLSL150 = p.isSet( useGLSL150Option );
         useLocale = !p.isSet( intOption );
@@ -164,6 +168,12 @@ int main( int argc, char *argv[] ) {
                                         QLatin1String( ":/translations" ) ) ) {
             openHantekApplication.installTranslator( &openHantekTranslator );
         }
+    }
+
+    if ( fontSize ) {
+        QFont f = openHantekApplication.font();
+        f.setPointSize( fontSize );
+        openHantekApplication.setFont( f );
     }
 
     //////// Find matching usb devices ////////
