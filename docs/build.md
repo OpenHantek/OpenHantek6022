@@ -26,8 +26,8 @@ and replug your device, otherwise you will not have the correct USB permissions 
 You can install the program with `sudo make install`, but it is highly recommended to create a debian package,
 which allows a clear installation and removal of the package:
 
-    sudo rm -f packages/*
-    sudo make package
+    rm -f packages/*
+    fakeroot make package
     sudo apt install packages/openhantek_*_amd64.deb
 
 If you detect that icons are not displayed correctly, please check if the Qt SVG library is installed on your system.

@@ -174,6 +174,7 @@ int main( int argc, char *argv[] ) {
         QFont f = openHantekApplication.font();
         f.setPointSize( fontSize );
         openHantekApplication.setFont( f );
+        openHantekApplication.setFont( f, "QWidget" ); // on some systems the 2nd argument is required
     }
 
     //////// Find matching usb devices ////////
