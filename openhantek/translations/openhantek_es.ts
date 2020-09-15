@@ -451,79 +451,79 @@
         <translation>Marcadores</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="511"/>
-        <location filename="../src/dsowidget.cpp" line="527"/>
+        <location filename="../src/dsowidget.cpp" line="521"/>
+        <location filename="../src/dsowidget.cpp" line="537"/>
         <source>ON</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="512"/>
-        <location filename="../src/dsowidget.cpp" line="527"/>
+        <location filename="../src/dsowidget.cpp" line="522"/>
+        <location filename="../src/dsowidget.cpp" line="537"/>
         <source>OFF</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="549"/>
+        <location filename="../src/dsowidget.cpp" line="559"/>
         <source>Markers  </source>
         <translation>Marcadores  </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="550"/>
+        <location filename="../src/dsowidget.cpp" line="560"/>
         <source>Time: </source>
         <translation>Tiempo: </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="551"/>
+        <location filename="../src/dsowidget.cpp" line="561"/>
         <source>Frequency: </source>
         <translation>Frecuencia: </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="554"/>
+        <location filename="../src/dsowidget.cpp" line="564"/>
         <source>Zoom x%L1  </source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="556"/>
+        <location filename="../src/dsowidget.cpp" line="566"/>
         <source>Zoom ---  </source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="559"/>
-        <location filename="../src/dsowidget.cpp" line="561"/>
-        <location filename="../src/dsowidget.cpp" line="592"/>
-        <location filename="../src/dsowidget.cpp" line="637"/>
-        <location filename="../src/dsowidget.cpp" line="646"/>
-        <location filename="../src/dsowidget.cpp" line="667"/>
+        <location filename="../src/dsowidget.cpp" line="569"/>
+        <location filename="../src/dsowidget.cpp" line="571"/>
+        <location filename="../src/dsowidget.cpp" line="602"/>
+        <location filename="../src/dsowidget.cpp" line="647"/>
+        <location filename="../src/dsowidget.cpp" line="656"/>
+        <location filename="../src/dsowidget.cpp" line="677"/>
         <source>/div</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="605"/>
+        <location filename="../src/dsowidget.cpp" line="615"/>
         <source>%L1%</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="619"/>
+        <location filename="../src/dsowidget.cpp" line="629"/>
         <source>%1  %2  %3  %4  %5</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="657"/>
+        <location filename="../src/dsowidget.cpp" line="667"/>
         <source>/s</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="771"/>
+        <location filename="../src/dsowidget.cpp" line="781"/>
         <source> on screen</source>
         <translation> en pantalla</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="816"/>
+        <location filename="../src/dsowidget.cpp" line="826"/>
         <source>pp</source>
         <translation>pp</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="819"/>
+        <location filename="../src/dsowidget.cpp" line="829"/>
         <source>rms</source>
         <translation>rms</translation>
     </message>
@@ -544,31 +544,31 @@
 <context>
     <name>GlScope</name>
     <message>
-        <location filename="../src/glscope.cpp" line="270"/>
+        <location filename="../src/glscope.cpp" line="281"/>
         <source>System does not support OpenGL Shading Language (GLSL)</source>
         <translation>El sistema no tiene OpenGL Shading Language (GLSL)</translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="274"/>
+        <location filename="../src/glscope.cpp" line="285"/>
         <source>OpenGL init called twice!</source>
         <translation>¡OpenGL init se ha llamado dos veces!</translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="340"/>
+        <location filename="../src/glscope.cpp" line="351"/>
         <source>Failed to compile OpenGL shader programs.
 </source>
         <translation>Ha fallado al compilar programas OpenGL shader.
 </translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="346"/>
+        <location filename="../src/glscope.cpp" line="357"/>
         <source>Failed to link/bind OpenGL shader programs.
 </source>
         <translation>Ha fallado al enlazar programas OpenGL shader.
 </translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="355"/>
+        <location filename="../src/glscope.cpp" line="366"/>
         <source>Failed to locate shader variable.</source>
         <translation>Ha fallado al localizar la variable shader.</translation>
     </message>

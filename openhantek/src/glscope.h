@@ -46,6 +46,7 @@ class GlScope : public QOpenGLWidget {
         selectedCursor = index;
         updateCursor( index );
     }
+    void generateGrid( int index = -1, double value = 0.0, bool pressed = false );
 
   protected:
     /// \brief Initializes the scope widget.
@@ -83,7 +84,7 @@ class GlScope : public QOpenGLWidget {
     void drawVoltageChannelGraph( ChannelID channel, Graph &graph, int historyIndex );
     void drawHistogramChannelGraph( ChannelID channel, Graph &graph, int historyIndex );
     void drawSpectrumChannelGraph( ChannelID channel, Graph &graph, int historyIndex );
-    QPointF posToPosition( QPoint pos );
+    QPointF posToPosition( QPointF pos );
   signals:
     void markerMoved( unsigned cursorIndex, unsigned marker );
 
@@ -112,11 +113,11 @@ class GlScope : public QOpenGLWidget {
 
     // Grid
     QOpenGLBuffer m_grid;
-    QOpenGLVertexArrayObject m_vaoGrid[ 3 ];
-    GLsizei gridDrawCounts[ 3 ];
-    void generateGrid( QOpenGLShaderProgram *program );
+    static const int gridItems = 4;
+    QOpenGLVertexArrayObject m_vaoGrid[ gridItems ];
+    GLsizei gridDrawCounts[ gridItems ];
     void draw4Cross( std::vector< QVector3D > &va, int section, float x, float y );
-
+    QColor triggerLineColor = QColor( "black" );
 
     // Graphs
     std::list< Graph > m_GraphHistory;

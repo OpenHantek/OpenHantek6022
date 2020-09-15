@@ -23,17 +23,20 @@
 #include "viewconstants.h"
 #include "viewsettings.h"
 
+
 GlScope *GlScope::createNormal( DsoSettingsScope *scope, DsoSettingsView *view, QWidget *parent ) {
     GlScope *s = new GlScope( scope, view, parent );
     s->zoomed = false;
     return s;
 }
 
+
 GlScope *GlScope::createZoomed( DsoSettingsScope *scope, DsoSettingsView *view, QWidget *parent ) {
     GlScope *s = new GlScope( scope, view, parent );
     s->zoomed = true;
     return s;
 }
+
 
 void GlScope::useQSurfaceFormat( QSurfaceFormat::RenderableType t ) {
     QCoreApplication::setAttribute( Qt::AA_ShareOpenGLContexts, true );
@@ -53,6 +56,7 @@ void GlScope::useQSurfaceFormat( QSurfaceFormat::RenderableType t ) {
     }
     QSurfaceFormat::setDefaultFormat( format );
 }
+
 
 GlScope::GlScope( DsoSettingsScope *scope, DsoSettingsView *view, QWidget *parent )
     : QOpenGLWidget( parent ), scope( scope ), view( view ) {
@@ -82,10 +86,12 @@ GlScope::GlScope( DsoSettingsScope *scope, DsoSettingsView *view, QWidget *paren
     vaMarker.resize( cursorInfo.size() );
 }
 
+
 GlScope::~GlScope() { /* virtual destructor necessary */
 }
 
-QPointF GlScope::posToPosition( QPoint pos ) {
+
+QPointF GlScope::posToPosition( QPointF pos ) {
     QPointF position( double( pos.x() - width() / 2 ) * DIVS_TIME / double( width() ),
                       double( height() / 2 - pos.y() ) * DIVS_VOLTAGE / double( height() ) );
     if ( zoomed ) {
@@ -97,6 +103,7 @@ QPointF GlScope::posToPosition( QPoint pos ) {
     }
     return position;
 }
+
 
 void GlScope::mousePressEvent( QMouseEvent *event ) {
     if ( !( zoomed && selectedCursor == 0 ) && event->button() == Qt::LeftButton ) {
@@ -149,6 +156,7 @@ void GlScope::mousePressEvent( QMouseEvent *event ) {
     event->accept();
 }
 
+
 void GlScope::mouseMoveEvent( QMouseEvent *event ) {
     if ( !( zoomed && selectedCursor == 0 ) && ( event->buttons() & Qt::LeftButton ) != 0 ) {
         QPointF position = posToPosition( event->pos() );
@@ -169,6 +177,7 @@ void GlScope::mouseMoveEvent( QMouseEvent *event ) {
     event->accept();
 }
 
+
 void GlScope::mouseReleaseEvent( QMouseEvent *event ) {
     if ( !( zoomed && selectedCursor == 0 ) && event->button() == Qt::LeftButton ) {
         QPointF position = posToPosition( event->pos() );
@@ -181,6 +190,7 @@ void GlScope::mouseReleaseEvent( QMouseEvent *event ) {
     }
     event->accept();
 }
+
 
 void GlScope::mouseDoubleClickEvent( QMouseEvent *event ) {
     if ( !( zoomed && selectedCursor == 0 ) && ( event->buttons() & Qt::LeftButton ) != 0 ) {
@@ -262,6 +272,7 @@ void GlScope::paintEvent( QPaintEvent *event ) {
     }
     event->accept(); // consume the event
 }
+
 
 unsigned GlScope::forceGLSLversion = 0;
 
@@ -371,7 +382,6 @@ void GlScope::initializeGL() {
     QColor bg = view->colors->background;
     gl->glClearColor( GLfloat( bg.redF() ), GLfloat( bg.greenF() ), GLfloat( bg.blueF() ), GLfloat( bg.alphaF() ) );
 
-    generateGrid( program.get() );
 
     {
         m_vaoMarker.create();
@@ -386,8 +396,12 @@ void GlScope::initializeGL() {
     updateCursor();
 
     m_program = std::move( program );
+
+    generateGrid(); // initialize the grid draw structures
+
     shaderCompileSuccess = true;
 }
+
 
 void GlScope::showData( std::shared_ptr< PPresult > newData ) {
     if ( !shaderCompileSuccess )
@@ -411,6 +425,7 @@ void GlScope::showData( std::shared_ptr< PPresult > newData ) {
 
     update();
 }
+
 
 void GlScope::generateVertices( unsigned marker, const DsoSettingsScopeCursor &cursor ) {
     const float Z_ORDER = 1.0f;
@@ -447,6 +462,7 @@ void GlScope::generateVertices( unsigned marker, const DsoSettingsScopeCursor &c
     }
 }
 
+
 void GlScope::updateCursor( unsigned index ) {
     if ( index > 0 ) {
         generateVertices( index, *cursorInfo[ index ] );
@@ -459,6 +475,7 @@ void GlScope::updateCursor( unsigned index ) {
     m_marker.bind();
     m_marker.write( 0, vaMarker.data(), int( vaMarker.size() * sizeof( Vertices ) ) );
 }
+
 
 void GlScope::paintGL() {
     if ( !shaderCompileSuccess )
@@ -508,6 +525,7 @@ void GlScope::paintGL() {
     m_program->release();
 }
 
+
 void GlScope::resizeGL( int width, int height ) {
     if ( !shaderCompileSuccess )
         return;
@@ -529,6 +547,7 @@ void GlScope::resizeGL( int width, int height ) {
     m_program->release();
 }
 
+
 // draw 4 small crosses @ (x,y), (-x,y), (x,-y) and (-x,-y)
 // section 0:grid, 1:axes, 2:border
 void GlScope::draw4Cross( std::vector< QVector3D > &va, int section, float x, float y ) {
@@ -544,20 +563,32 @@ void GlScope::draw4Cross( std::vector< QVector3D > &va, int section, float x, fl
     }
 }
 
-void GlScope::generateGrid( QOpenGLShaderProgram *program ) {
-    gridDrawCounts[ 0 ] = 0;
-    gridDrawCounts[ 1 ] = 0;
-    gridDrawCounts[ 2 ] = 0;
+// prepare the static grid structure that is shown by 'drawGrid()'
+// show a line as long as the trigger level marker is clicked or moved
+// index: channel, value: trigger level, pressed: marker is activated
+void GlScope::generateGrid( int index, double value, bool pressed ) {
+    // printf( "prepareGrid( %d, %g, %d )\n", index, value, pressed );
 
-    m_grid.create();
+    QOpenGLShaderProgram *program = m_program.get();
+    if ( program == nullptr )
+        return;
+
+    for ( int iii = 0; iii < gridItems; ++iii )
+        gridDrawCounts[ iii ] = 0;
+
+    if ( !m_grid.isCreated() )
+        m_grid.create();
     m_grid.bind();
     m_grid.setUsagePattern( QOpenGLBuffer::StaticDraw );
 
     std::vector< QVector3D > vaGrid;
 
+    int item = 0;
+
     { // Bind draw vertical lines
-        m_vaoGrid[ 0 ].create();
-        QOpenGLVertexArrayObject::Binder b( &m_vaoGrid[ 0 ] );
+        if ( !m_vaoGrid[ item ].isCreated() )
+            m_vaoGrid[ item ].create();
+        QOpenGLVertexArrayObject::Binder b( &m_vaoGrid[ item ] );
         m_grid.bind();
         program->enableAttributeArray( vertexLocation );
         program->setAttributeBuffer( vertexLocation, GL_FLOAT, 0, 3, 0 );
@@ -567,7 +598,7 @@ void GlScope::generateGrid( QOpenGLShaderProgram *program ) {
     for ( int vDiv = 1; vDiv < DIVS_TIME / 2; ++vDiv ) {
         for ( int dot = 1; dot < DIVS_VOLTAGE / 2 * DIVS_SUB; ++dot ) {
             float dotPosition = float( dot ) / DIVS_SUB;
-            gridDrawCounts[ 0 ] += 4;
+            gridDrawCounts[ item ] += 4;
             vaGrid.push_back( QVector3D( -vDiv, -dotPosition, 0 ) );
             vaGrid.push_back( QVector3D( -vDiv, dotPosition, 0 ) );
             vaGrid.push_back( QVector3D( vDiv, -dotPosition, 0 ) );
@@ -580,7 +611,7 @@ void GlScope::generateGrid( QOpenGLShaderProgram *program ) {
             if ( dot % DIVS_SUB == 0 )
                 continue; // Already done by vertical lines
             float dotPosition = float( dot ) / DIVS_SUB;
-            gridDrawCounts[ 0 ] += 4;
+            gridDrawCounts[ item ] += 4;
             vaGrid.push_back( QVector3D( -dotPosition, -hDiv, 0 ) );
             vaGrid.push_back( QVector3D( dotPosition, -hDiv, 0 ) );
             vaGrid.push_back( QVector3D( -dotPosition, hDiv, 0 ) );
@@ -588,9 +619,12 @@ void GlScope::generateGrid( QOpenGLShaderProgram *program ) {
         }
     }
 
+    ++item;
+
     { // Bind draw axes
-        m_vaoGrid[ 1 ].create();
-        QOpenGLVertexArrayObject::Binder b( &m_vaoGrid[ 1 ] );
+        if ( !m_vaoGrid[ item ].isCreated() )
+            m_vaoGrid[ item ].create();
+        QOpenGLVertexArrayObject::Binder b( &m_vaoGrid[ item ] );
         m_grid.bind();
         program->enableAttributeArray( vertexLocation );
         program->setAttributeBuffer( vertexLocation, GL_FLOAT, int( vaGrid.size() * sizeof( QVector3D ) ), 3 );
@@ -598,17 +632,17 @@ void GlScope::generateGrid( QOpenGLShaderProgram *program ) {
 
     // Axes
     // Horizontal axis
-    gridDrawCounts[ 1 ] += 2;
+    gridDrawCounts[ item ] += 2;
     vaGrid.push_back( QVector3D( -DIVS_TIME / 2, 0, 0 ) );
     vaGrid.push_back( QVector3D( DIVS_TIME / 2, 0, 0 ) );
     // Vertical axis
-    gridDrawCounts[ 1 ] += 2;
+    gridDrawCounts[ item ] += 2;
     vaGrid.push_back( QVector3D( 0, -DIVS_VOLTAGE / 2, 0 ) );
     vaGrid.push_back( QVector3D( 0, DIVS_VOLTAGE / 2, 0 ) );
     // Subdiv lines on horizontal axis
     for ( int line = 1; line < DIVS_TIME / 2 * DIVS_SUB; ++line ) {
         float linePosition = float( line ) / DIVS_SUB;
-        gridDrawCounts[ 1 ] += 4;
+        gridDrawCounts[ item ] += 4;
         vaGrid.push_back( QVector3D( linePosition, -0.05f, 0 ) );
         vaGrid.push_back( QVector3D( linePosition, 0.05f, 0 ) );
         vaGrid.push_back( QVector3D( -linePosition, -0.05f, 0 ) );
@@ -617,7 +651,7 @@ void GlScope::generateGrid( QOpenGLShaderProgram *program ) {
     // Subdiv lines on vertical axis
     for ( int line = 1; line < DIVS_VOLTAGE / 2 * DIVS_SUB; ++line ) {
         float linePosition = float( line ) / DIVS_SUB;
-        gridDrawCounts[ 1 ] += 4;
+        gridDrawCounts[ item ] += 4;
         vaGrid.push_back( QVector3D( -0.05f, linePosition, 0 ) );
         vaGrid.push_back( QVector3D( 0.05f, linePosition, 0 ) );
         vaGrid.push_back( QVector3D( -0.05f, -linePosition, 0 ) );
@@ -639,47 +673,83 @@ void GlScope::generateGrid( QOpenGLShaderProgram *program ) {
         }
     }
 
-    {
-        m_vaoGrid[ 2 ].create();
-        QOpenGLVertexArrayObject::Binder b( &m_vaoGrid[ 2 ] );
+    ++item;
+
+    { // Border
+        if ( !m_vaoGrid[ item ].isCreated() )
+            m_vaoGrid[ item ].create();
+        QOpenGLVertexArrayObject::Binder b( &m_vaoGrid[ item ] );
         m_grid.bind();
         program->enableAttributeArray( vertexLocation );
         program->setAttributeBuffer( vertexLocation, GL_FLOAT, int( vaGrid.size() * sizeof( QVector3D ) ), 3 );
     }
-
-    // Border
-    gridDrawCounts[ 2 ] += 4;
+    gridDrawCounts[ item ] += 4;
     vaGrid.push_back( QVector3D( -DIVS_TIME / 2, -DIVS_VOLTAGE / 2, 0 ) );
     vaGrid.push_back( QVector3D( DIVS_TIME / 2, -DIVS_VOLTAGE / 2, 0 ) );
     vaGrid.push_back( QVector3D( DIVS_TIME / 2, DIVS_VOLTAGE / 2, 0 ) );
     vaGrid.push_back( QVector3D( -DIVS_TIME / 2, DIVS_VOLTAGE / 2, 0 ) );
 
+    ++item;
+
+
+    { // prepare (dynamic) trigger level marker line
+        if ( !m_vaoGrid[ item ].isCreated() )
+            m_vaoGrid[ item ].create();
+        QOpenGLVertexArrayObject::Binder b( &m_vaoGrid[ item ] );
+        m_grid.bind();
+        program->enableAttributeArray( vertexLocation );
+        program->setAttributeBuffer( vertexLocation, GL_FLOAT, int( vaGrid.size() * sizeof( QVector3D ) ), 3 );
+    }
+    if ( pressed && index >= 0 ) {
+        triggerLineColor = view->colors->voltage[ unsigned( index ) ];
+        if ( index != int( scope->trigger.source ) )
+            triggerLineColor = triggerLineColor.darker();
+        gridDrawCounts[ item ] += 2;
+        float yPos = float( ( value / scope->gain( unsigned( index ) ) + scope->voltage[ unsigned( index ) ].offset ) );
+        vaGrid.push_back( QVector3D( -DIVS_TIME / 2, yPos, 0 ) );
+        vaGrid.push_back( QVector3D( DIVS_TIME / 2, yPos, 0 ) );
+    }
+
     m_grid.allocate( &vaGrid[ 0 ], int( vaGrid.size() * sizeof( QVector3D ) ) );
     m_grid.release();
 }
 
+
 void GlScope::drawGrid() {
     auto *gl = context()->functions();
+
     gl->glLineWidth( 1 );
 
+    int item = 3;
+    // Trigger level (draw this on top of the other items)
+    m_vaoGrid[ item ].bind();
+    m_program->setUniformValue( colorLocation, triggerLineColor );
+    gl->glDrawArrays( GL_LINES, 0, gridDrawCounts[ item ] );
+    m_vaoGrid[ item ].release();
+
     // Grid
-    m_vaoGrid[ 0 ].bind();
+    item = 0;
+    m_vaoGrid[ item ].bind();
     m_program->setUniformValue( colorLocation, view->colors->grid );
-    gl->glDrawArrays( GL_POINTS, 0, gridDrawCounts[ 0 ] );
-    m_vaoGrid[ 0 ].release();
+    gl->glDrawArrays( GL_POINTS, 0, gridDrawCounts[ item ] );
+    m_vaoGrid[ item ].release();
+
 
     // Axes and div crosses
-    m_vaoGrid[ 1 ].bind();
+    ++item;
+    m_vaoGrid[ item ].bind();
     m_program->setUniformValue( colorLocation, view->colors->axes );
-    gl->glDrawArrays( GL_LINES, 0, gridDrawCounts[ 1 ] );
-    m_vaoGrid[ 1 ].release();
+    gl->glDrawArrays( GL_LINES, 0, gridDrawCounts[ item ] );
+    m_vaoGrid[ item ].release();
 
     // Border
-    m_vaoGrid[ 2 ].bind();
+    ++item;
+    m_vaoGrid[ item ].bind();
     m_program->setUniformValue( colorLocation, view->colors->border );
-    gl->glDrawArrays( GL_LINE_LOOP, 0, gridDrawCounts[ 2 ] );
-    m_vaoGrid[ 2 ].release();
+    gl->glDrawArrays( GL_LINE_LOOP, 0, gridDrawCounts[ item ] );
+    m_vaoGrid[ item ].release();
 }
+
 
 void GlScope::drawVertices( QOpenGLFunctions *gl, unsigned marker, QColor color ) {
     m_program->setUniformValue( colorLocation, ( marker == selectedCursor ) ? color : color.darker() );
@@ -690,6 +760,7 @@ void GlScope::drawVertices( QOpenGLFunctions *gl, unsigned marker, QColor color 
         gl->glDrawArrays( GL_TRIANGLE_FAN, GLint( marker * VERTICES_ARRAY_SIZE ), GLint( VERTICES_ARRAY_SIZE ) );
     }
 }
+
 
 void GlScope::drawMarkers() {
     auto *gl = context()->functions();
@@ -718,6 +789,7 @@ void GlScope::drawMarkers() {
     m_vaoMarker.release();
 }
 
+
 void GlScope::drawVoltageChannelGraph( ChannelID channel, Graph &graph, int historyIndex ) {
     if ( !scope->voltage[ channel ].used )
         return;
@@ -730,6 +802,7 @@ void GlScope::drawVoltageChannelGraph( ChannelID channel, Graph &graph, int hist
     context()->functions()->glDrawArrays( dMode, 0, v.second );
 }
 
+
 void GlScope::drawHistogramChannelGraph( ChannelID channel, Graph &graph, int historyIndex ) {
     if ( !scope->voltage[ channel ].used )
         return;
@@ -741,6 +814,7 @@ void GlScope::drawHistogramChannelGraph( ChannelID channel, Graph &graph, int hi
     const GLenum dMode = ( view->interpolation == Dso::INTERPOLATION_OFF ) ? GL_POINTS : GL_LINES;
     context()->functions()->glDrawArrays( dMode, 0, h.second );
 }
+
 
 void GlScope::drawSpectrumChannelGraph( ChannelID channel, Graph &graph, int historyIndex ) {
     if ( !scope->spectrum[ channel ].used )

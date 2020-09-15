@@ -84,5 +84,5 @@ class LevelSlider : public QWidget {
     int _postMargin;          ///< The margin after the maximum slider position
 
   signals:
-    void valueChanged( int index, double value ); ///< The value of a slider has changed
+    void valueChanged( int index, double value, bool pressed = false ); ///< The value of a slider has changed
 };

@@ -99,7 +99,6 @@ void GraphGenerator::generateGraphsTYvoltage( PPresult *result ) {
               ++position, ++sampleIterator ) {
             double x = double( MARGIN_LEFT + position * horizontalFactor );
             double y = *sampleIterator / gain + offset;
-            // show the sample position in free running mode as a big spike
             if ( !scope->histogram ) { // show complete trace
                 graphVoltage.push_back( QVector3D( float( x ), float( y ), 0.0f ) );
             } else { // histogram replaces trace in rightmost div

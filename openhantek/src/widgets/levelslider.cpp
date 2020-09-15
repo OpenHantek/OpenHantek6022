@@ -36,10 +36,10 @@
 /// \param parent The parent widget.
 LevelSlider::LevelSlider( Qt::ArrowType direction, QWidget *parent ) : QWidget( parent ) {
     // Set pixel values based on the current dpi scaling
-    this->needleWidth = ( int( 0.55 * this->fontMetrics().height() ) ) + 1; // always an odd number
-    this->sliderWidth = ( int( 1.2 * this->fontMetrics().height() ) );
+    needleWidth = ( int( 0.55 * fontMetrics().height() ) ) + 1; // always an odd number
+    sliderWidth = ( int( 1.2 * fontMetrics().height() ) );
 
-    this->pressedSlider = -1;
+    pressedSlider = -1;
 
     calculateWidth();
     setDirection( direction );
@@ -50,16 +50,16 @@ LevelSlider::~LevelSlider() {}
 
 /// \brief Return the margin before the slider.
 /// \return The margin the Slider has at the top/left.
-int LevelSlider::preMargin() const { return this->_preMargin; }
+int LevelSlider::preMargin() const { return _preMargin; }
 
 /// \brief Return the margin after the slider.
 /// \return The margin the Slider has at the bottom/right.
-int LevelSlider::postMargin() const { return this->_postMargin; }
+int LevelSlider::postMargin() const { return _postMargin; }
 
 /// \brief Add a new slider to the slider container.
 /// \param index The index where the slider should be inserted, 0 to append.
 /// \return The index of the slider, -1 on error.
-int LevelSlider::addSlider( int index ) { return this->addSlider( "", index ); }
+int LevelSlider::addSlider( int index ) { return addSlider( "", index ); }
 
 /// \brief Add a new slider to the slider container.
 /// \param text The text that will be shown next to the slider.
@@ -77,12 +77,12 @@ int LevelSlider::addSlider( const QString &text, int index ) {
     parameters->visible = false;
 
     if ( index == -1 ) {
-        this->slider.append( parameters );
-        index = this->slider.count() - 1;
+        slider.append( parameters );
+        index = slider.count() - 1;
     } else
-        this->slider.insert( index, parameters );
+        slider.insert( index, parameters );
 
-    this->setText( index, text );
+    setText( index, text );
 
     return index;
 }
@@ -95,13 +95,13 @@ int LevelSlider::removeSlider( int index ) {
         return -1;
 
     if ( index == -1 ) {
-        this->slider.removeLast();
-        index = this->slider.count();
+        slider.removeLast();
+        index = slider.count();
     } else {
-        this->slider.removeAt( index );
+        slider.removeAt( index );
     }
 
-    this->calculateWidth();
+    calculateWidth();
 
     return index;
 }
@@ -109,20 +109,20 @@ int LevelSlider::removeSlider( int index ) {
 /// \brief Size hint for the widget.
 /// \return The recommended size for the widget.
 QSize LevelSlider::sizeHint() const {
-    if ( this->_direction == Qt::RightArrow || this->_direction == Qt::LeftArrow )
-        return QSize( this->sliderWidth, 16 );
+    if ( _direction == Qt::RightArrow || _direction == Qt::LeftArrow )
+        return QSize( sliderWidth, 16 );
     else
-        return QSize( 16, this->sliderWidth );
+        return QSize( 16, sliderWidth );
 }
 
 /// \brief Return the color of a slider.
 /// \param index The index of the slider whose color should be returned.
 /// \return The current color of the slider.
 const QColor LevelSlider::color( int index ) const {
-    if ( index < 0 || index >= this->slider.count() )
+    if ( index < 0 || index >= slider.count() )
         return Qt::black;
 
-    return this->slider[ index ]->color;
+    return slider[ index ]->color;
 }
 
 /// \brief Set the color of the slider.
@@ -130,21 +130,21 @@ const QColor LevelSlider::color( int index ) const {
 /// \param color The new color for the slider.
 /// \return The index of the slider, -1 on error.
 void LevelSlider::setColor( unsigned index, QColor color ) {
-    if ( int( index ) >= this->slider.count() )
+    if ( int( index ) >= slider.count() )
         return;
 
-    this->slider[ int( index ) ]->color = color;
-    this->repaint();
+    slider[ int( index ) ]->color = color;
+    repaint();
 }
 
 /// \brief Return the text shown beside a slider.
 /// \param index The index of the slider whose text should be returned.
 /// \return The current text of the slider.
 const QString LevelSlider::text( int index ) const {
-    if ( index < 0 || index >= this->slider.count() )
+    if ( index < 0 || index >= slider.count() )
         return QString();
 
-    return this->slider[ index ]->text;
+    return slider[ index ]->text;
 }
 
 /// \brief Set the text for a slider.
@@ -152,11 +152,11 @@ const QString LevelSlider::text( int index ) const {
 /// \param text The text shown next to the slider.
 /// \return The index of the slider, -1 on error.
 int LevelSlider::setText( int index, const QString &text ) {
-    if ( index < 0 || index >= this->slider.count() )
+    if ( index < 0 || index >= slider.count() )
         return -1;
 
-    this->slider[ index ]->text = text;
-    this->calculateWidth();
+    slider[ index ]->text = text;
+    calculateWidth();
 
     return index;
 }
@@ -165,10 +165,10 @@ int LevelSlider::setText( int index, const QString &text ) {
 /// \param index The index of the slider whose visibility should be returned.
 /// \return true if the slider is visible, false if it's hidden.
 bool LevelSlider::visible( int index ) const {
-    if ( index < 0 || index >= this->slider.count() )
+    if ( index < 0 || index >= slider.count() )
         return false;
 
-    return this->slider[ index ]->visible;
+    return slider[ index ]->visible;
 }
 
 /// \brief Set the visibility of a slider.
@@ -176,29 +176,29 @@ bool LevelSlider::visible( int index ) const {
 /// \param visible true to show the slider, false to hide it.
 /// \return The index of the slider, -1 on error.
 void LevelSlider::setIndexVisible( unsigned index, bool visible ) {
-    if ( int( index ) >= this->slider.count() )
+    if ( int( index ) >= slider.count() )
         return;
 
-    this->slider[ int( index ) ]->visible = visible;
-    this->repaint();
+    slider[ int( index ) ]->visible = visible;
+    repaint();
 }
 
 /// \brief Return the minimal value of the sliders.
 /// \return The value a slider has at the bottommost/leftmost position.
 double LevelSlider::minimum( int index ) const {
-    if ( index < 0 || index >= this->slider.count() )
+    if ( index < 0 || index >= slider.count() )
         return -1;
 
-    return this->slider[ index ]->minimum;
+    return slider[ index ]->minimum;
 }
 
 /// \brief Return the maximal value of the sliders.
 /// \return The value a slider has at the topmost/rightmost position.
 double LevelSlider::maximum( int index ) const {
-    if ( index < 0 || index >= this->slider.count() )
+    if ( index < 0 || index >= slider.count() )
         return -1;
 
-    return this->slider[ index ]->maximum;
+    return slider[ index ]->maximum;
 }
 
 /// \brief Set the min-max values of the sliders, correct the value if changed.
@@ -206,20 +206,20 @@ double LevelSlider::maximum( int index ) const {
 /// \param minimum The value a slider has at the bottommost/leftmost position.
 /// \param maximum The value a slider has at the topmost/rightmost position.
 void LevelSlider::setLimits( int index, double minimum, double maximum ) {
-    if ( index < 0 || index >= this->slider.count() )
+    if ( index < 0 || index >= slider.count() )
         return;
-    double lastValue = this->slider[ index ]->value;
-    this->slider[ index ]->minimum = minimum;
-    this->slider[ index ]->maximum = maximum;
-    this->fixValue( index );
-    this->calculateRect( index );
-    this->repaint();
+    double lastValue = slider[ index ]->value;
+    slider[ index ]->minimum = minimum;
+    slider[ index ]->maximum = maximum;
+    fixValue( index );
+    calculateRect( index );
+    repaint();
 #ifdef __GNUC__
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wfloat-equal"
 #endif
-    if ( lastValue != this->slider[ index ]->value )
-        emit valueChanged( index, this->slider[ index ]->value );
+    if ( lastValue != slider[ index ]->value )
+        emit valueChanged( index, slider[ index ]->value );
 #ifdef __GNUC__
 #pragma GCC diagnostic pop
 #endif
@@ -229,10 +229,10 @@ void LevelSlider::setLimits( int index, double minimum, double maximum ) {
 /// \param index The index of the slider whose step width should be returned.
 /// \return The distance between the selectable slider positions.
 double LevelSlider::step( int index ) const {
-    if ( index < 0 || index >= this->slider.count() )
+    if ( index < 0 || index >= slider.count() )
         return -1;
 
-    return this->slider[ index ]->step;
+    return slider[ index ]->step;
 }
 
 /// \brief Set the step width of the sliders.
@@ -240,23 +240,23 @@ double LevelSlider::step( int index ) const {
 /// \param step The distance between the selectable slider positions.
 /// \return The new step width.
 double LevelSlider::setStep( int index, double step ) {
-    if ( index < 0 || index >= this->slider.count() )
+    if ( index < 0 || index >= slider.count() )
         return -1;
 
     if ( step > 0 )
-        this->slider[ index ]->step = step;
+        slider[ index ]->step = step;
 
-    return this->slider[ index ]->step;
+    return slider[ index ]->step;
 }
 
 /// \brief Return the current position of a slider.
 /// \param index The index of the slider whose value should be returned.
 /// \return The value of the slider.
 double LevelSlider::value( int index ) const {
-    if ( index < 0 || index >= this->slider.count() )
+    if ( index < 0 || index >= slider.count() )
         return -1;
 
-    return this->slider[ index ]->value;
+    return slider[ index ]->value;
 }
 
 /// \brief Set the current position of a slider.
@@ -264,23 +264,23 @@ double LevelSlider::value( int index ) const {
 /// \param value The new value of the slider.
 /// \return The new value of the slider.
 void LevelSlider::setValue( int index, double value ) {
-    if ( index < 0 || index >= this->slider.count() )
+    if ( index < 0 || index >= slider.count() )
         return;
 
     // Apply new value
-    this->slider[ index ]->value = value;
-    this->fixValue( index );
+    slider[ index ]->value = value;
+    fixValue( index );
 
-    this->calculateRect( index );
-    this->repaint();
+    calculateRect( index );
+    repaint();
 
-    if ( this->pressedSlider < 0 )
+    if ( pressedSlider < 0 )
         emit valueChanged( index, value );
 }
 
 /// \brief Return the direction of the sliders.
 /// \return The side on which the sliders are shown.
-Qt::ArrowType LevelSlider::direction() const { return this->_direction; }
+Qt::ArrowType LevelSlider::direction() const { return _direction; }
 
 /// \brief Set the direction of the sliders.
 /// \param direction The side on which the sliders are shown.
@@ -289,50 +289,47 @@ int LevelSlider::setDirection( Qt::ArrowType direction ) {
     if ( direction < Qt::UpArrow || direction > Qt::RightArrow )
         return -1;
 
-    this->_direction = direction;
+    _direction = direction;
 
-    if ( this->_direction == Qt::RightArrow || this->_direction == Qt::LeftArrow ) {
-        this->_preMargin = this->fontMetrics().lineSpacing();
-        this->_postMargin = ( this->needleWidth );
+    if ( _direction == Qt::RightArrow || _direction == Qt::LeftArrow ) {
+        _preMargin = fontMetrics().lineSpacing();
+        _postMargin = ( needleWidth );
     } else {
-        this->_preMargin = this->fontMetrics().averageCharWidth() * 5;
-        this->_postMargin = ( this->needleWidth ) * 2;
+        _preMargin = fontMetrics().averageCharWidth() * 5;
+        _postMargin = (needleWidth)*2;
     }
 
-    return this->_direction;
+    return _direction;
 }
 
 /// \brief Move the slider if it's pressed.
 /// \param event The mouse event that should be handled.
 void LevelSlider::mouseMoveEvent( QMouseEvent *event ) {
-    if ( this->pressedSlider < 0 ) {
+    if ( pressedSlider < 0 ) {
         event->ignore();
         return;
     }
 
     // Get new value
     double value;
-    if ( this->_direction == Qt::RightArrow || this->_direction == Qt::LeftArrow )
-        value = this->slider[ pressedSlider ]->maximum -
-                ( this->slider[ pressedSlider ]->maximum - this->slider[ pressedSlider ]->minimum ) *
-                    ( double( event->y() ) - this->_preMargin + 0.5 ) /
-                    ( this->height() - this->_preMargin - this->_postMargin - 1 );
+    if ( _direction == Qt::RightArrow || _direction == Qt::LeftArrow )
+        value = slider[ pressedSlider ]->maximum - ( slider[ pressedSlider ]->maximum - slider[ pressedSlider ]->minimum ) *
+                                                       ( double( event->y() ) - _preMargin + 0.5 ) /
+                                                       ( height() - _preMargin - _postMargin - 1 );
     else
-        value = this->slider[ pressedSlider ]->minimum +
-                ( this->slider[ pressedSlider ]->maximum - this->slider[ pressedSlider ]->minimum ) *
-                    ( double( event->x() ) - this->_preMargin + 0.5 ) /
-                    ( this->width() - this->_preMargin - this->_postMargin - 1 );
+        value = slider[ pressedSlider ]->minimum + ( slider[ pressedSlider ]->maximum - slider[ pressedSlider ]->minimum ) *
+                                                       ( double( event->x() ) - _preMargin + 0.5 ) /
+                                                       ( width() - _preMargin - _postMargin - 1 );
 
     // Move the slider
     if ( event->modifiers() & Qt::AltModifier )
         // Alt allows every position
-        this->setValue( this->pressedSlider, value );
+        setValue( pressedSlider, value );
     else
         // Set to nearest possible position
-        this->setValue( this->pressedSlider,
-                        floor( value / this->slider[ pressedSlider ]->step + 0.5 ) * this->slider[ pressedSlider ]->step );
+        setValue( pressedSlider, floor( value / slider[ pressedSlider ]->step + 0.5 ) * slider[ pressedSlider ]->step );
 
-    emit valueChanged( pressedSlider, slider[ pressedSlider ]->value );
+    emit valueChanged( pressedSlider, slider[ pressedSlider ]->value, true );
     event->accept();
 }
 
@@ -344,28 +341,30 @@ void LevelSlider::mousePressEvent( QMouseEvent *event ) {
         return;
     }
 
-    this->pressedSlider = -1;
-    for ( int sliderId = 0; sliderId < this->slider.count(); ++sliderId ) {
-        if ( this->slider[ sliderId ]->visible && this->slider[ sliderId ]->rect.contains( event->pos() ) ) {
-            this->pressedSlider = sliderId;
+    pressedSlider = -1;
+    for ( int sliderId = 0; sliderId < slider.count(); ++sliderId ) {
+        if ( slider[ sliderId ]->visible && slider[ sliderId ]->rect.contains( event->pos() ) ) {
+            pressedSlider = sliderId;
             break;
         }
     }
+    if ( pressedSlider >= 0 )
+        emit valueChanged( pressedSlider, slider[ pressedSlider ]->value, true );
 
     // Accept event if a slider was pressed
-    event->setAccepted( this->pressedSlider >= 0 );
+    event->setAccepted( pressedSlider >= 0 );
 }
 
 /// \brief Movement is done if the left mouse button is released.
 /// \param event The mouse event that should be handled.
 void LevelSlider::mouseReleaseEvent( QMouseEvent *event ) {
-    if ( !( event->button() & Qt::LeftButton ) || this->pressedSlider == -1 ) {
+
+    if ( !( event->button() & Qt::LeftButton ) || pressedSlider == -1 ) {
         event->ignore();
         return;
     }
-
-    emit valueChanged( this->pressedSlider, this->slider[ this->pressedSlider ]->value );
-    this->pressedSlider = -1;
+    emit valueChanged( pressedSlider, slider[ pressedSlider ]->value, false );
+    pressedSlider = -1;
 
     event->accept();
 }
@@ -376,7 +375,7 @@ void LevelSlider::paintEvent( QPaintEvent *event ) {
     QPainter painter( this );
 
     Qt::Alignment alignment;
-    switch ( this->_direction ) {
+    switch ( _direction ) {
     case Qt::LeftArrow:
         alignment = Qt::AlignLeft | Qt::AlignBottom;
         break;
@@ -390,8 +389,8 @@ void LevelSlider::paintEvent( QPaintEvent *event ) {
         alignment = Qt::AlignRight | Qt::AlignBottom;
     }
 
-    QList< LevelSliderParameters * >::iterator sliderIt = this->slider.end();
-    while ( sliderIt != this->slider.begin() ) {
+    QList< LevelSliderParameters * >::iterator sliderIt = slider.end();
+    while ( sliderIt != slider.begin() ) {
         --sliderIt;
 
         if ( !( *sliderIt )->visible )
@@ -402,32 +401,32 @@ void LevelSlider::paintEvent( QPaintEvent *event ) {
         if ( ( *sliderIt )->text.isEmpty() ) {
             QVector< QPoint > needlePoints;
             QRect &needleRect = ( *sliderIt )->rect;
-            const int peak = 1;                                // distance from slider to the tip of the needle
-            const int shoulder = peak + this->needleWidth / 2; // distance from slider to the straight part of the needle
+            const int peak = 1;                          // distance from slider to the tip of the needle
+            const int shoulder = peak + needleWidth / 2; // distance from slider to the straight part of the needle
 
-            switch ( this->_direction ) {
+            switch ( _direction ) {
             case Qt::LeftArrow:
                 needlePoints << QPoint( needleRect.left() + shoulder, needleRect.top() )
-                             << QPoint( needleRect.left() + peak, needleRect.top() + this->needleWidth / 2 )
+                             << QPoint( needleRect.left() + peak, needleRect.top() + needleWidth / 2 )
                              << QPoint( needleRect.left() + shoulder, needleRect.bottom() )
                              << QPoint( needleRect.right(), needleRect.bottom() ) << QPoint( needleRect.right(), needleRect.top() );
                 break;
             case Qt::UpArrow:
                 needlePoints << QPoint( needleRect.left(), needleRect.top() + shoulder )
-                             << QPoint( needleRect.left() + this->needleWidth / 2, needleRect.top() + peak )
+                             << QPoint( needleRect.left() + needleWidth / 2, needleRect.top() + peak )
                              << QPoint( needleRect.right(), needleRect.top() + shoulder )
                              << QPoint( needleRect.right(), needleRect.bottom() )
                              << QPoint( needleRect.left(), needleRect.bottom() );
                 break;
             case Qt::DownArrow:
                 needlePoints << QPoint( needleRect.left(), needleRect.bottom() - shoulder )
-                             << QPoint( needleRect.left() + this->needleWidth / 2, needleRect.bottom() - peak )
+                             << QPoint( needleRect.left() + needleWidth / 2, needleRect.bottom() - peak )
                              << QPoint( needleRect.right(), needleRect.bottom() - shoulder )
                              << QPoint( needleRect.right(), needleRect.top() ) << QPoint( needleRect.left(), needleRect.top() );
                 break;
             case Qt::RightArrow:
                 needlePoints << QPoint( needleRect.right() - shoulder, needleRect.top() )
-                             << QPoint( needleRect.right() - peak, needleRect.top() + this->needleWidth / 2 )
+                             << QPoint( needleRect.right() - peak, needleRect.top() + needleWidth / 2 )
                              << QPoint( needleRect.right() - shoulder, needleRect.bottom() )
                              << QPoint( needleRect.left(), needleRect.bottom() ) << QPoint( needleRect.left(), needleRect.top() );
                 break;
@@ -441,24 +440,23 @@ void LevelSlider::paintEvent( QPaintEvent *event ) {
         } else {
             // Get rect for text and draw needle
             QRect textRect = ( *sliderIt )->rect;
-            if ( this->_direction == Qt::UpArrow || this->_direction == Qt::DownArrow ) {
+            if ( _direction == Qt::UpArrow || _direction == Qt::DownArrow ) {
                 textRect.setRight( textRect.right() - 1 );
-                if ( this->_direction == Qt::UpArrow ) {
+                if ( _direction == Qt::UpArrow ) {
                     textRect.setTop( textRect.top() + 1 );
                     painter.drawLine( ( *sliderIt )->rect.right(), 0, ( *sliderIt )->rect.right(), 7 );
                 } else {
                     textRect.setBottom( textRect.bottom() - 1 );
-                    painter.drawLine( ( *sliderIt )->rect.right(), this->sliderWidth - 8, ( *sliderIt )->rect.right(),
-                                      this->sliderWidth - 1 );
+                    painter.drawLine( ( *sliderIt )->rect.right(), sliderWidth - 8, ( *sliderIt )->rect.right(), sliderWidth - 1 );
                 }
             } else {
                 textRect.setBottom( textRect.bottom() - 1 );
-                if ( this->_direction == Qt::LeftArrow ) {
+                if ( _direction == Qt::LeftArrow ) {
                     textRect.setLeft( textRect.left() + 1 );
                     painter.drawLine( 0, ( *sliderIt )->rect.bottom(), 7, ( *sliderIt )->rect.bottom() );
                 } else {
                     textRect.setRight( textRect.right() - 1 );
-                    painter.drawLine( this->sliderWidth - 8, ( *sliderIt )->rect.bottom(), this->sliderWidth - 1,
+                    painter.drawLine( sliderWidth - 8, ( *sliderIt )->rect.bottom(), sliderWidth - 1,
                                       ( *sliderIt )->rect.bottom() );
                 }
             }
@@ -475,10 +473,10 @@ void LevelSlider::paintEvent( QPaintEvent *event ) {
 void LevelSlider::resizeEvent( QResizeEvent *event ) {
     Q_UNUSED( event );
 
-    for ( int sliderId = 0; sliderId < this->slider.count(); ++sliderId )
-        this->calculateRect( sliderId );
+    for ( int sliderId = 0; sliderId < slider.count(); ++sliderId )
+        calculateRect( sliderId );
 
-    this->repaint();
+    repaint();
 }
 
 /// \brief Calculate the drawing area for the slider for it's current value.
@@ -486,82 +484,78 @@ void LevelSlider::resizeEvent( QResizeEvent *event ) {
 /// \return The calculated rect.
 QRect LevelSlider::calculateRect( int sliderId ) {
     // Is it a vertical slider?
-    if ( this->_direction == Qt::RightArrow || this->_direction == Qt::LeftArrow ) {
+    if ( _direction == Qt::RightArrow || _direction == Qt::LeftArrow ) {
         // Is it a triangular needle?
-        if ( this->slider[ sliderId ]->text.isEmpty() ) {
-            this->slider[ sliderId ]->rect =
-                QRect( 0, // Start at the left side
-                          // The needle should be center-aligned, 0.5 pixel offset for
-                          // exact pixelization
-                       int( ( this->height() - this->_preMargin - this->_postMargin - 1 ) *
-                                ( this->slider[ sliderId ]->maximum - this->slider[ sliderId ]->value ) /
-                                ( this->slider[ sliderId ]->maximum - this->slider[ sliderId ]->minimum ) +
-                            0.5 ) +
-                           this->_preMargin - ( this->needleWidth / 2 ),
-                       this->sliderWidth, // Fill the whole width
-                       this->needleWidth  // one needle width high
-                );
+        if ( slider[ sliderId ]->text.isEmpty() ) {
+            slider[ sliderId ]->rect = QRect(
+                0, // Start at the left side
+                   // The needle should be center-aligned, 0.5 pixel offset for
+                   // exact pixelization
+                int( ( height() - _preMargin - _postMargin - 1 ) * ( slider[ sliderId ]->maximum - slider[ sliderId ]->value ) /
+                         ( slider[ sliderId ]->maximum - slider[ sliderId ]->minimum ) +
+                     0.5 ) +
+                    _preMargin - ( needleWidth / 2 ),
+                sliderWidth, // Fill the whole width
+                needleWidth  // one needle width high
+            );
         }
         // Or a thin needle with text?
         else {
-            this->slider[ sliderId ]->rect =
-                QRect( 0, // Start at the left side
-                          // The needle is at the bottom, the text above it, 0.5 pixel
-                          // offset for exact pixelization
-                       int( ( this->height() - this->_preMargin - this->_postMargin - 1 ) *
-                                ( this->slider[ sliderId ]->maximum - this->slider[ sliderId ]->value ) /
-                                ( this->slider[ sliderId ]->maximum - this->slider[ sliderId ]->minimum ) +
-                            0.5 ),
-                       this->sliderWidth,    // Fill the whole width
-                       this->preMargin() + 1 // Use the full margin
-                );
+            slider[ sliderId ]->rect = QRect(
+                0, // Start at the left side
+                   // The needle is at the bottom, the text above it, 0.5 pixel
+                   // offset for exact pixelization
+                int( ( height() - _preMargin - _postMargin - 1 ) * ( slider[ sliderId ]->maximum - slider[ sliderId ]->value ) /
+                         ( slider[ sliderId ]->maximum - slider[ sliderId ]->minimum ) +
+                     0.5 ),
+                sliderWidth,    // Fill the whole width
+                preMargin() + 1 // Use the full margin
+            );
         }
     }
     // Or a horizontal slider?
     else {
         // Is it a triangular needle?
-        if ( this->slider[ sliderId ]->text.isEmpty() ) {
-            this->slider[ sliderId ]->rect = QRect(
+        if ( slider[ sliderId ]->text.isEmpty() ) {
+            slider[ sliderId ]->rect = QRect(
                 // The needle should be center-aligned, 0.5 pixel offset for exact
                 // pixelization
-                int( ( this->width() - this->_preMargin - this->_postMargin - 1 ) *
-                         ( this->slider[ sliderId ]->value - this->slider[ sliderId ]->minimum ) /
-                         ( this->slider[ sliderId ]->maximum - this->slider[ sliderId ]->minimum ) +
+                int( ( width() - _preMargin - _postMargin - 1 ) * ( slider[ sliderId ]->value - slider[ sliderId ]->minimum ) /
+                         ( slider[ sliderId ]->maximum - slider[ sliderId ]->minimum ) +
                      0.5 ) +
-                    this->_preMargin - ( this->needleWidth / 2 ),
+                    _preMargin - ( needleWidth / 2 ),
                 0, // Start at the top
-                this->needleWidth,
-                this->sliderWidth // As high as the slider
+                needleWidth,
+                sliderWidth // As high as the slider
             );
         }
         // Or a thin needle with text?
         else {
-            int sliderLength = this->fontMetrics().size( 0, this->slider[ sliderId ]->text ).width() + 2;
-            this->slider[ sliderId ]->rect = QRect(
+            int sliderLength = fontMetrics().size( 0, slider[ sliderId ]->text ).width() + 2;
+            slider[ sliderId ]->rect = QRect(
                 // The needle is at the right side, the text before it, 0.5 pixel
                 // offset for exact pixelization
-                int( ( this->width() - this->_preMargin - this->_postMargin - 1 ) *
-                         ( this->slider[ sliderId ]->value - this->slider[ sliderId ]->minimum ) /
-                         ( this->slider[ sliderId ]->maximum - this->slider[ sliderId ]->minimum ) +
+                int( ( width() - _preMargin - _postMargin - 1 ) * ( slider[ sliderId ]->value - slider[ sliderId ]->minimum ) /
+                         ( slider[ sliderId ]->maximum - slider[ sliderId ]->minimum ) +
                      0.5 ) +
-                    this->_preMargin - sliderLength + 1,
-                0,                // Start at the top
-                sliderLength,     // The width depends on the text
-                this->sliderWidth // Fill the whole height
+                    _preMargin - sliderLength + 1,
+                0,            // Start at the top
+                sliderLength, // The width depends on the text
+                sliderWidth   // Fill the whole height
             );
         }
     }
 
-    return this->slider[ sliderId ]->rect;
+    return slider[ sliderId ]->rect;
 }
 
 /// \brief Search for the widest slider element.
 /// \return The calculated width of the slider.
 int LevelSlider::calculateWidth() {
     // Is it a vertical slider?
-    if ( this->_direction == Qt::RightArrow || this->_direction == Qt::LeftArrow ) {
+    if ( _direction == Qt::RightArrow || _direction == Qt::LeftArrow ) {
         for ( QList< LevelSliderParameters * >::iterator sliderIt = slider.begin(); sliderIt != slider.end(); ++sliderIt ) {
-            int newSliderWidth = this->fontMetrics().size( 0, ( *sliderIt )->text ).width();
+            int newSliderWidth = fontMetrics().size( 0, ( *sliderIt )->text ).width();
             if ( newSliderWidth > sliderWidth )
                 sliderWidth = newSliderWidth;
         }
@@ -569,7 +563,7 @@ int LevelSlider::calculateWidth() {
     // Or a horizontal slider?
     else {
         for ( QList< LevelSliderParameters * >::iterator sliderIt = slider.begin(); sliderIt != slider.end(); ++sliderIt ) {
-            int newSliderWidth = this->fontMetrics().size( 0, ( *sliderIt )->text ).height();
+            int newSliderWidth = fontMetrics().size( 0, ( *sliderIt )->text ).height();
             if ( newSliderWidth > sliderWidth )
                 sliderWidth = newSliderWidth;
         }
@@ -581,14 +575,14 @@ int LevelSlider::calculateWidth() {
 /// \brief Fix the value if it's outside the limits.
 /// \param index The index of the slider who should be fixed.
 void LevelSlider::fixValue( int index ) {
-    if ( index < 0 || index >= this->slider.count() )
+    if ( index < 0 || index >= slider.count() )
         return;
 
-    double lowest = qMin( this->slider[ index ]->minimum, this->slider[ index ]->maximum );
-    double highest = qMax( this->slider[ index ]->minimum, this->slider[ index ]->maximum );
-    if ( this->slider[ index ]->value < lowest ) {
-        this->slider[ index ]->value = lowest;
-    } else if ( this->slider[ index ]->value > highest ) {
-        this->slider[ index ]->value = highest;
+    double lowest = qMin( slider[ index ]->minimum, slider[ index ]->maximum );
+    double highest = qMax( slider[ index ]->minimum, slider[ index ]->maximum );
+    if ( slider[ index ]->value < lowest ) {
+        slider[ index ]->value = lowest;
+    } else if ( slider[ index ]->value > highest ) {
+        slider[ index ]->value = highest;
     }
 }

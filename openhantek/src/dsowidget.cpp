@@ -280,6 +280,16 @@ DsoWidget::DsoWidget( DsoSettingsScope *scope, DsoSettingsView *view, const Dso:
     connect( mainSliders.triggerLevelSlider, &LevelSlider::valueChanged, this, &DsoWidget::updateTriggerLevel );
     connect( zoomSliders.triggerLevelSlider, &LevelSlider::valueChanged, this, &DsoWidget::updateTriggerLevel );
 
+    // show a horizontal level line as long as the trigger level slider is active
+    connect( mainSliders.triggerLevelSlider, &LevelSlider::valueChanged, [this]( int index, double value, bool pressed ) {
+        mainScope->generateGrid( index, value, pressed );
+        zoomScope->generateGrid( index, value, pressed );
+    } );
+    connect( zoomSliders.triggerLevelSlider, &LevelSlider::valueChanged, [this]( int index, double value, bool pressed ) {
+        mainScope->generateGrid( index, value, pressed );
+        zoomScope->generateGrid( index, value, pressed );
+    } );
+
     connect( mainSliders.markerSlider, &LevelSlider::valueChanged, [this]( int index, double value ) {
         updateMarker( unsigned( index ), value );
         mainScope->updateCursor();
