@@ -35,7 +35,8 @@ class TriggerDock : public QDockWidget {
 
     /// \brief Changes the trigger source if the new source is supported.
     /// \param id The number of the channel, that should be used as trigger.
-    void setSource( int id );
+    /// \param smooth Don't trigger on glitches
+    void setSource( int id, bool smooth );
 
     /// \brief Changes the trigger slope if the new slope is supported.
     /// \param slope The trigger slope.
