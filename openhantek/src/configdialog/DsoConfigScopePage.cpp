@@ -20,8 +20,8 @@ DsoConfigScopePage::DsoConfigScopePage( DsoSettings *settings, QWidget *parent )
     acquireIntervalSiSpinBox = new SiSpinBox();
     acquireIntervalSiSpinBox = new SiSpinBox( UNIT_SECONDS );
     acquireIntervalSiSpinBox->setSteps( timebaseSteps );
-    acquireIntervalSiSpinBox->setMinimum( 500e-6 ); // double 500 µs -> unsigned 0 ms delay
-    acquireIntervalSiSpinBox->setMaximum( 50e-3 );  // 50 ms delay
+    acquireIntervalSiSpinBox->setMinimum( 1e-3 );   // minimal 1 ms holdOff
+    acquireIntervalSiSpinBox->setMaximum( 100e-3 ); // up to 100 ms holdOff
     acquireIntervalSiSpinBox->setValue( settings->scope.horizontal.acquireInterval );
 
     horizontalLayout = new QGridLayout();
