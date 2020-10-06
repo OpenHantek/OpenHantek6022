@@ -12,8 +12,8 @@ DsoConfigScopePage::DsoConfigScopePage( DsoSettings *settings, QWidget *parent )
     maxTimebaseSiSpinBox = new SiSpinBox();
     maxTimebaseSiSpinBox = new SiSpinBox( UNIT_SECONDS );
     maxTimebaseSiSpinBox->setSteps( timebaseSteps );
-    maxTimebaseSiSpinBox->setMinimum( 0.1 );  // default 100 ms/div
-    maxTimebaseSiSpinBox->setMaximum( 10.0 ); // possible steps: 200, 500, 1000, 2000, 5000, 10000 ms
+    maxTimebaseSiSpinBox->setMinimum( 0.1 );  // default 1000 ms/div (scopesettings.h)
+    maxTimebaseSiSpinBox->setMaximum( 10.0 ); // possible steps: 100, 200, 500, 1000, 2000, 5000, 10000 ms
     maxTimebaseSiSpinBox->setValue( settings->scope.horizontal.maxTimebase );
 
     acquireIntervalLabel = new QLabel( tr( "Minimal time between captured frames<br/>(Longer times reduce the CPU load)" ) );

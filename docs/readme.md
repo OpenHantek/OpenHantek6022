@@ -198,7 +198,10 @@ Read more about [calibration](https://github.com/Ho-Ro/Hantek6022API/blob/master
     * Checks if the signal is triggered and calculates the starting point for a stable display.
     The time distance to the following opposite slope is measured and displayed as pulse width in the top row.
 * `provideTriggeredData()` handles the trigger mode:
-    * If the **trigger condition is false** and the **trigger mode is Normal** then we reuse the last triggered samples so that voltage and spectrum traces as well as the measurement at the scope's bottom lines are frozen until the trigger condition becomes true again.
+    * If the **trigger condition is false** and the **trigger mode is Normal** or the display is paused
+then we reuse the last triggered samples so that voltage and spectrum traces
+as well as the measurement at the scope's bottom lines are frozen until the trigger condition
+becomes true again. The reused samples are emitted at lower speed (every 20 ms) to reduce CPU load but be responsive to user actions.
     * If the **trigger condition is false** and the **trigger mode is not Normal** then we display a free running trace and discard the last saved samples.
 * The converted `DSOsamples` are emitted to PostProcessing::input() via signal/slot:
 
@@ -227,8 +230,10 @@ Read more about [calibration](https://github.com/Ho-Ro/Hantek6022API/blob/master
     * For each active channel:
       * Calculate the peak-to-peak, DC (average), AC (rms) and effective value ( sqrt( DC² + AC² ) ).
       * Apply a user selected window function and scale the result accordingly.
-      * Calculate the autocorrelation to get the frequency of the signal. This is quite inaccurate at high frequencies. In these cases the first peak value of the spectrum is used.
-      * Calculate the spectrum of the AC part of the signal scaled as dBV.
+      * Calculate the spectrum of the AC part of the signal scaled as dBV. fft: f(t) ⊶ F(ω)
+      * Calculate the autocorrelation to get the frequency of the signal:
+        * Calculate power spectrum |F(ω)|² and do an ifft: F(ω) ∙ F(ω) ⊷ f(t) ⊗ f(t) (convolution of f(t) with f(t))
+      * This is quite inaccurate at high frequencies. In these cases the first peak value of the spectrum is used.
   * `GraphGenerator::process()`
     * which works either in TY mode and creates two types of traces:
       * voltage over time `GraphGenerator::generateGraphsTYvoltage()`
@@ -239,7 +244,7 @@ Read more about [calibration](https://github.com/Ho-Ro/Hantek6022API/blob/master
   * Finally `PostProcessing` emits the signal `processingFinished()` that is connected to:
     * `ExporterRegistry::input()` that takes care of exporting to CSV data.
     * `MainWindow::showNewData()`.
- * `MainWindow::showNewData()` calls `DsoWidget::showNew()` that calls `GlScope::showData()` that calls `Graph::writeData()`.
+      * `MainWindow::showNewData()` calls `DsoWidget::showNew()` that calls `GlScope::showData()` that calls `Graph::writeData()`.
 
 t.b.c.
 

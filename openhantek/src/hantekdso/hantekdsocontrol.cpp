@@ -666,16 +666,16 @@ void HantekDsoControl::updateInterval() {
     int sampleInterval = int( getSamplesize() * 1000.0 / controlsettings.samplerate.current );
     // Slower update reduces CPU load but it worsens the triggering of rare events
     // Display can be filled at slower rate (not faster than displayInterval)
-    if ( scope )
+    if ( scope ) // init is done
         acquireInterval = int( 1000 * scope->horizontal.acquireInterval );
     else
-        acquireInterval = 1; // = int( 1000 * scope->horizontal.acquireInterval );
+        acquireInterval = 1;
 #ifdef Q_PROCESSOR_ARM
-    displayInterval = 20; // update display at least every 20 ms
+    displayInterval = 50; // update display at least every 50 ms
 #else
-    displayInterval = 10; // update display at least every 10 ms
+    displayInterval = 20; // update display at least every 20 ms
 #endif
-    acquireInterval = qMin( qMax( sampleInterval, acquireInterval ), 100 );
+    acquireInterval = qMin( qMax( sampleInterval, acquireInterval ), 100 ); // at least every 100 ms
 }
 
 
