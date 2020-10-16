@@ -16,13 +16,14 @@
 #include "dsosettings.h"
 #include "sispinbox.h"
 #include "utils/printutils.h"
-#include "viewconstants.h"
+
 
 template < typename... Args > struct SELECT {
     template < typename C, typename R > static constexpr auto OVERLOAD_OF( R ( C::*pmf )( Args... ) ) -> decltype( pmf ) {
         return pmf;
     }
 };
+
 
 SpectrumDock::SpectrumDock( DsoSettingsScope *scope, QWidget *parent ) : QDockWidget( tr( "Spectrum" ), parent ), scope( scope ) {
     // Initialize lists for comboboxes
@@ -36,7 +37,8 @@ SpectrumDock::SpectrumDock( DsoSettingsScope *scope, QWidget *parent ) : QDockWi
     this->dockLayout->setSpacing( DOCK_LAYOUT_SPACING );
 
     // Initialize elements
-    for ( ChannelID channel = 0; channel < scope->voltage.size(); ++channel ) {
+    unsigned channel;
+    for ( channel = 0; channel < scope->voltage.size(); ++channel ) {
         ChannelBlock b;
         b.magnitudeComboBox = ( new QComboBox() );
         QString name = scope->spectrum[ channel ].name;
@@ -68,6 +70,14 @@ SpectrumDock::SpectrumDock( DsoSettingsScope *scope, QWidget *parent ) : QDockWi
                      }
                  } );
     }
+    frequencybaseLabel = new QLabel( tr( "Frequencybase" ) );
+    frequencybaseSiSpinBox = new SiSpinBox( UNIT_HERTZ );
+    frequencybaseSiSpinBox->setMinimum( 0.1 );
+    frequencybaseSiSpinBox->setMaximum( 100e6 );
+    dockLayout->addWidget( this->frequencybaseLabel, int( channel ), 0 );
+    dockLayout->addWidget( this->frequencybaseSiSpinBox, int( channel ), 1 );
+    connect( frequencybaseSiSpinBox, SELECT< double >::OVERLOAD_OF( &QDoubleSpinBox::valueChanged ), this,
+             &SpectrumDock::frequencybaseSelected );
 
     // Load settings into GUI
     this->loadSettings( scope );
@@ -76,21 +86,24 @@ SpectrumDock::SpectrumDock( DsoSettingsScope *scope, QWidget *parent ) : QDockWi
     SetupDockWidget( this, dockWidget, dockLayout );
 }
 
+
 void SpectrumDock::loadSettings( DsoSettingsScope *scope ) {
     // Initialize elements
     for ( ChannelID channel = 0; channel < scope->voltage.size(); ++channel ) {
         this->setMagnitude( channel, scope->spectrum[ channel ].magnitude );
         this->setUsed( channel, scope->spectrum[ channel ].used );
     }
+    setFrequencybase( scope->horizontal.frequencybase );
 }
+
 
 /// \brief Don't close the dock, just hide it
 /// \param event The close event that should be handled.
 void SpectrumDock::closeEvent( QCloseEvent *event ) {
     this->hide();
-
     event->accept();
 }
+
 
 int SpectrumDock::setMagnitude( ChannelID channel, double magnitude ) {
     if ( channel >= scope->voltage.size() )
@@ -105,6 +118,7 @@ int SpectrumDock::setMagnitude( ChannelID channel, double magnitude ) {
     return index;
 }
 
+
 unsigned SpectrumDock::setUsed( ChannelID channel, bool used ) {
     if ( channel >= scope->voltage.size() )
         return INT_MAX;
@@ -112,4 +126,31 @@ unsigned SpectrumDock::setUsed( ChannelID channel, bool used ) {
 
     channelBlocks[ channel ].usedCheckBox->setChecked( used );
     return channel;
+}
+
+
+/// \brief Called when the samplerate from horizontal dock changes its value.
+/// \param samplerare The samplerate in hertz.
+void SpectrumDock::setSamplerate( double samplerate ) {
+    // printf( "SD::setSamplerate( %g )\n", samplerate );
+    double maxFreqBase = samplerate / DIVS_TIME / 2; // Nyquist frequency
+    frequencybaseSiSpinBox->setMaximum( maxFreqBase );
+    if ( frequencybaseSiSpinBox->value() > maxFreqBase )
+        setFrequencybase( maxFreqBase );
+}
+
+
+void SpectrumDock::setFrequencybase( double frequencybase ) {
+    // printf( "SD::setFrequencybase( %g )\n", frequencybase );
+    QSignalBlocker blocker( frequencybaseSiSpinBox );
+    frequencybaseSiSpinBox->setValue( frequencybase );
+}
+
+
+/// \brief Called when the frequencybase spinbox changes its value.
+/// \param frequencybase The frequencybase in hertz.
+void SpectrumDock::frequencybaseSelected( double frequencybase ) {
+    // printf( "SD::frequencybaseSelected( %g )\n", frequencybase );
+    scope->horizontal.frequencybase = frequencybase;
+    emit frequencybaseChanged( frequencybase );
 }

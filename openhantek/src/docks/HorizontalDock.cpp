@@ -17,7 +17,6 @@
 #include "scopesettings.h"
 #include "sispinbox.h"
 #include "utils/printutils.h"
-#include "viewconstants.h"
 
 static int row = 0;
 
@@ -45,16 +44,10 @@ HorizontalDock::HorizontalDock( DsoSettingsScope *scope, const Dso::ControlSpeci
     this->timebaseSiSpinBox->setMinimum( 1e-9 );
     this->timebaseSiSpinBox->setMaximum( 1e3 );
 
-    this->frequencybaseLabel = new QLabel( tr( "Frequencybase" ) );
-    this->frequencybaseSiSpinBox = new SiSpinBox( UNIT_HERTZ );
-    this->frequencybaseSiSpinBox->setMinimum( 0.1 );
-    this->frequencybaseSiSpinBox->setMaximum( 100e6 );
-
     this->formatLabel = new QLabel( tr( "Format" ) );
     this->formatComboBox = new QComboBox();
     for ( Dso::GraphFormat format : Dso::GraphFormatEnum )
         this->formatComboBox->addItem( Dso::graphFormatString( format ) );
-
 
     this->calfreqLabel = new QLabel( tr( "Calibration out" ) );
     this->calfreqSiSpinBox = new SiSpinBox( UNIT_HERTZ );
@@ -72,8 +65,6 @@ HorizontalDock::HorizontalDock( DsoSettingsScope *scope, const Dso::ControlSpeci
     this->dockLayout->addWidget( this->timebaseSiSpinBox, row++, 1 );
     this->dockLayout->addWidget( this->samplerateLabel, row, 0 );
     this->dockLayout->addWidget( this->samplerateSiSpinBox, row++, 1 );
-    this->dockLayout->addWidget( this->frequencybaseLabel, row, 0 );
-    this->dockLayout->addWidget( this->frequencybaseSiSpinBox, row++, 1 );
     this->dockLayout->addWidget( this->formatLabel, row, 0 );
     this->dockLayout->addWidget( this->formatComboBox, row++, 1 );
     this->dockLayout->addWidget( this->calfreqLabel, row, 0 );
@@ -90,8 +81,6 @@ HorizontalDock::HorizontalDock( DsoSettingsScope *scope, const Dso::ControlSpeci
              &HorizontalDock::samplerateSelected );
     connect( this->timebaseSiSpinBox, SELECT< double >::OVERLOAD_OF( &QDoubleSpinBox::valueChanged ), this,
              &HorizontalDock::timebaseSelected );
-    connect( this->frequencybaseSiSpinBox, SELECT< double >::OVERLOAD_OF( &QDoubleSpinBox::valueChanged ), this,
-             &HorizontalDock::frequencybaseSelected );
     connect( this->formatComboBox, SELECT< int >::OVERLOAD_OF( &QComboBox::currentIndexChanged ), this,
              &HorizontalDock::formatSelected );
     connect( this->calfreqSiSpinBox, SELECT< double >::OVERLOAD_OF( &QDoubleSpinBox::valueChanged ), this,
@@ -102,7 +91,6 @@ void HorizontalDock::loadSettings( DsoSettingsScope *scope ) {
     // Set values
     this->setSamplerate( scope->horizontal.samplerate );
     this->setTimebase( scope->horizontal.timebase );
-    this->setFrequencybase( scope->horizontal.frequencybase );
     this->setFormat( scope->horizontal.format );
     this->setCalfreq( scope->horizontal.calfreq );
 }
@@ -115,22 +103,12 @@ void HorizontalDock::closeEvent( QCloseEvent *event ) {
 }
 
 
-void HorizontalDock::setFrequencybase( double frequencybase ) {
-    QSignalBlocker blocker( frequencybaseSiSpinBox );
-    frequencybaseSiSpinBox->setValue( frequencybase );
-}
-
-
 double HorizontalDock::setSamplerate( double samplerate ) {
     // printf( "HD::setSamplerate( %g )\n", samplerate );
     QSignalBlocker blocker( timebaseSiSpinBox );
     timebaseSiSpinBox->setMaximum( scope->horizontal.maxTimebase );
     blocker = QSignalBlocker( samplerateSiSpinBox );
     samplerateSiSpinBox->setValue( samplerate );
-    double maxFreqBase = samplerate / DIVS_TIME / 2;
-    frequencybaseSiSpinBox->setMaximum( maxFreqBase );
-    if ( frequencybaseSiSpinBox->value() > maxFreqBase )
-        setFrequencybase( maxFreqBase );
     return samplerateSiSpinBox->value();
 }
 
@@ -194,14 +172,6 @@ void HorizontalDock::setSamplerateSteps( int mode, const QList< double > steps )
     QSignalBlocker timebaseBlocker( timebaseSiSpinBox );
     timebaseSiSpinBox->setMinimum( pow( 10, floor( log10( 1.0 / steps.last() ) ) ) );
     calculateSamplerateSteps( timebaseSiSpinBox->value() );
-}
-
-
-/// \brief Called when the frequencybase spinbox changes its value.
-/// \param frequencybase The frequencybase in hertz.
-void HorizontalDock::frequencybaseSelected( double frequencybase ) {
-    scope->horizontal.frequencybase = frequencybase;
-    emit frequencybaseChanged( frequencybase );
 }
 
 

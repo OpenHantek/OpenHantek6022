@@ -179,12 +179,14 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
         dsoControl->setRecordTime( dsoSettings->scope.horizontal.timebase * DIVS_TIME );
         this->dsoWidget->updateTimebase( dsoSettings->scope.horizontal.timebase );
     } );
-    connect( horizontalDock, &HorizontalDock::frequencybaseChanged, dsoWidget, &DsoWidget::updateFrequencybase );
-    connect( dsoControl, &HantekDsoControl::samplerateChanged, [this, horizontalDock]( double samplerate ) {
+    connect( spectrumDock, &SpectrumDock::frequencybaseChanged,
+             [this]( double frequencybase ) { this->dsoWidget->updateFrequencybase( frequencybase ); } );
+    connect( dsoControl, &HantekDsoControl::samplerateChanged, [this, horizontalDock, spectrumDock]( double samplerate ) {
         // The timebase was set, let's adapt the samplerate accordingly
         // printf( "mainwindow::samplerateChanged( %g )\n", samplerate );
         dsoSettings->scope.horizontal.samplerate = samplerate;
         horizontalDock->setSamplerate( samplerate );
+        spectrumDock->setSamplerate( samplerate ); // mind the Nyquest frequency
         dsoWidget->updateSamplerate( samplerate );
     } );
     connect( horizontalDock, &HorizontalDock::calfreqChanged,

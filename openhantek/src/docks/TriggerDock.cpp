@@ -16,7 +16,7 @@
 #include "hantekdso/controlspecification.h"
 #include "sispinbox.h"
 #include "utils/printutils.h"
-#include "viewconstants.h"
+
 
 TriggerDock::TriggerDock( DsoSettingsScope *scope, const Dso::ControlSpecification *spec, QWidget *parent )
     : QDockWidget( tr( "Trigger" ), parent ), scope( scope ), mSpec( spec ) {

@@ -34,9 +34,6 @@ class HorizontalDock : public QDockWidget {
     /// \param flags Flags for the window manager.
     HorizontalDock( DsoSettingsScope *scope, const Dso::ControlSpecification *spec, QWidget *parent );
 
-    /// \brief Changes the frequencybase.
-    /// \param frequencybase The frequencybase in hertz.
-    void setFrequencybase( double timebase );
     /// \brief Changes the samplerate.
     /// \param samplerate The samplerate in seconds.
     double setSamplerate( double samplerate );
@@ -69,19 +66,17 @@ class HorizontalDock : public QDockWidget {
 
   protected:
     void closeEvent( QCloseEvent *event );
-    QGridLayout *dockLayout;           ///< The main layout for the dock window
-    QWidget *dockWidget;               ///< The main widget for the dock window
-    QLabel *samplerateLabel;           ///< The label for the samplerate spinbox
-    QLabel *timebaseLabel;             ///< The label for the timebase spinbox
-    QLabel *frequencybaseLabel;        ///< The label for the frequencybase spinbox
-    QLabel *formatLabel;               ///< The label for the format combobox
-    QLabel *calfreqLabel;              ///< The label for the calibration frequency spinbox
-    SiSpinBox *samplerateSiSpinBox;    ///< Selects the samplerate for aquisitions
-    SiSpinBox *timebaseSiSpinBox;      ///< Selects the timebase for voltage graphs
-    SiSpinBox *frequencybaseSiSpinBox; ///< Selects the frequencybase for spectrum graphs
-    QComboBox *formatComboBox;         ///< Selects the way the sampled data is
-                                       ///  interpreted and shown
-    SiSpinBox *calfreqSiSpinBox;       ///< Selects the calibration frequency
+    QGridLayout *dockLayout;        ///< The main layout for the dock window
+    QWidget *dockWidget;            ///< The main widget for the dock window
+    QLabel *samplerateLabel;        ///< The label for the samplerate spinbox
+    QLabel *timebaseLabel;          ///< The label for the timebase spinbox
+    QLabel *formatLabel;            ///< The label for the format combobox
+    QLabel *calfreqLabel;           ///< The label for the calibration frequency spinbox
+    SiSpinBox *samplerateSiSpinBox; ///< Selects the samplerate for aquisitions
+    SiSpinBox *timebaseSiSpinBox;   ///< Selects the timebase for voltage graphs
+    QComboBox *formatComboBox;      ///< Selects the way the sampled data is
+                                    ///  interpreted and shown
+    SiSpinBox *calfreqSiSpinBox;    ///< Selects the calibration frequency
 
     DsoSettingsScope *scope;         ///< The settings provided by the parent class
     QList< double > timebaseSteps;   ///< Steps for the timebase spinbox
@@ -91,14 +86,12 @@ class HorizontalDock : public QDockWidget {
     QStringList formatStrings; ///< Strings for the formats
 
   protected slots:
-    void frequencybaseSelected( double frequencybase );
     void samplerateSelected( double samplerate );
     void timebaseSelected( double timebase );
     void formatSelected( int index );
     void calfreqSelected( double calfreq );
 
   signals:
-    void frequencybaseChanged( double frequencybase );      ///< The frequencybase has been changed
     void samplerateChanged( double samplerate );            ///< The samplerate has been changed
     void timebaseChanged( double timebase );                ///< The timebase has been changed
     void recordLengthChanged( unsigned long recordLength ); ///< The recordd length has been changed

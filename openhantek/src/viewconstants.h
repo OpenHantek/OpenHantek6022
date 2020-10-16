@@ -13,9 +13,6 @@
 
 #define MARKER_STEP ( DIVS_TIME / 100.0 )
 
-// spacing between the individual entries of the docks
-#define DOCK_LAYOUT_SPACING 4
-
 // where are the (local) documents?
 #ifdef __FreeBSD__
 #define USR_MANUAL_PATH "/usr/local/share/doc/openhantek/OpenHantek6022_User_Manual.pdf"

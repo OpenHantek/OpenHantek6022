@@ -38,10 +38,21 @@ class SpectrumDock : public QDockWidget {
     /// \return Index of channel, INT_MAX on error.
     unsigned setUsed( ChannelID channel, bool used );
 
+    /// \brief Changes the frequencybase.
+    /// \param frequencybase The frequencybase in hertz.
+    void setFrequencybase( double timebase );
+
   public slots:
     /// \brief Loads settings into GUI
     /// \param scope Settings to load
     void loadSettings( DsoSettingsScope *scope );
+
+    /// \brief Called when the samplerate from horizontal dock changes its value.
+    /// \param samplerare The samplerate in hertz.
+    void setSamplerate( double samplerate );
+
+  private slots:
+    void frequencybaseSelected( double frequencybase );
 
   protected:
     void closeEvent( QCloseEvent *event );
@@ -60,8 +71,11 @@ class SpectrumDock : public QDockWidget {
 
     std::vector< double > magnitudeSteps; ///< The selectable magnitude steps in dB/div
     QStringList magnitudeStrings;         ///< String representations for the magnitude steps
+    QLabel *frequencybaseLabel;           ///< The label for the frequencybase spinbox
+    SiSpinBox *frequencybaseSiSpinBox;    ///< Selects the frequencybase for spectrum graphs
 
   signals:
     void magnitudeChanged( ChannelID channel, double magnitude ); ///< A magnitude has been selected
     void usedChanged( ChannelID channel, bool used );             ///< A spectrum has been enabled/disabled
+    void frequencybaseChanged( double frequencybase );            ///< The frequencybase has been changed
 };
