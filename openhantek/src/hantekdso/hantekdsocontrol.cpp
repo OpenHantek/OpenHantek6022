@@ -18,7 +18,6 @@
 
 #include "hantekdsocontrol.h"
 #include "hantekprotocol/controlStructs.h"
-#include "models/modelDSO6022.h"
 #include "scopesettings.h"
 #include "usb/scopedevice.h"
 
@@ -318,6 +317,7 @@ Dso::ErrorCode HantekDsoControl::setTriggerLevel( ChannelID channel, double leve
     // printf("setTriggerLevel( %d, %g )\n", channel, level);
     controlsettings.trigger.level[ channel ] = level;
     newTriggerParam = true;
+    displayInterval = 0; // update screen immediately
     return Dso::ErrorCode::NONE;
 }
 
@@ -671,9 +671,9 @@ void HantekDsoControl::updateInterval() {
     else
         acquireInterval = 1;
 #ifdef Q_PROCESSOR_ARM
-    displayInterval = 50; // update display at least every 50 ms
+    displayInterval = 200; // update display at least every 200 ms
 #else
-    displayInterval = 20; // update display at least every 20 ms
+    displayInterval = 100; // update display at least every 100 ms
 #endif
     acquireInterval = qMin( qMax( sampleInterval, acquireInterval ), 100 ); // at least every 100 ms
 }
@@ -714,11 +714,10 @@ void HantekDsoControl::stateMachine() {
     if ( ( triggered && !lastTriggered )                                 // show new data immediately
          || ( ( delayDisplay >= displayInterval )                        // or wait some time ...
               && ( ( controlsettings.trigger.slope != Dso::Slope::Both ) // ... for ↗ or ↘ slope
-                   || skipEven ) ) )                                     // and drop even no. of frames
-    {
-        skipEven = true; // zero frames -> even
+                   || skipEven ) ) ) {                                   // and drop even no. of frames
+        skipEven = true;                                                 // zero frames -> even
         delayDisplay = 0;
-        timestampDebug( "samplesAvailable" );
+        timestampDebug( QString( "samplesAvailable %1" ).arg( result.tag ) );
         emit samplesAvailable( &result ); // via signal/slot -> PostProcessing::input()
     } else {
         skipEven = !skipEven;

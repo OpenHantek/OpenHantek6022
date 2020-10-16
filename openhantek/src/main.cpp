@@ -300,6 +300,7 @@ int main( int argc, char *argv[] ) {
     std::cout << "stopped ";
 
     // next stop the data processing
+    postProcessing.stop();
     postProcessingThread.quit();
     postProcessingThread.wait( 10000 );
     std::cout << "after ";

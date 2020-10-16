@@ -19,9 +19,13 @@ void Capturing::run() {
             return;                  // stop this thread
         }
         if ( hdc->scope ) { // device is initialized
-            capture();
-            // add user defined hold-off time to lower CPU load
-            QThread::msleep( unsigned( 1000 * hdc->scope->horizontal.acquireInterval ) );
+            if ( hdc->sampling ) {
+                capture();
+                // add user defined hold-off time to lower CPU load
+                QThread::msleep( unsigned( 1000 * hdc->scope->horizontal.acquireInterval ) );
+            } else {
+                QThread::msleep( unsigned( hdc->displayInterval ) );
+            }
         }
     }
 }

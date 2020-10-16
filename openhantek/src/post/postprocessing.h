@@ -30,6 +30,7 @@ class PostProcessing : public QObject {
      * @param processor
      */
     void registerProcessor( Processor *processor );
+    void stop() { processing = false; }
 
 
   private:
@@ -40,6 +41,7 @@ class PostProcessing : public QObject {
     ///
     std::unique_ptr< PPresult > currentData;
     static void convertData( const DSOsamples *source, PPresult *destination );
+    bool processing = true;
 
   public slots:
     /**

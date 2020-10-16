@@ -6,7 +6,9 @@ PostProcessing::PostProcessing( unsigned channelCount ) : channelCount( channelC
     qRegisterMetaType< std::shared_ptr< PPresult > >();
 }
 
+
 void PostProcessing::registerProcessor( Processor *processor ) { processors.push_back( processor ); }
+
 
 void PostProcessing::convertData( const DSOsamples *source, PPresult *destination ) {
     // printf( "PostProcessing::convertData()\n" );
@@ -38,12 +40,15 @@ void PostProcessing::convertData( const DSOsamples *source, PPresult *destinatio
     destination->tag = source->tag;
 }
 
+
 void PostProcessing::input( const DSOsamples *data ) {
-    // printf( "PostProcessing::input()\n" );
-    currentData.reset( new PPresult( channelCount ) ); // start with a fresh data structure
-    convertData( data, currentData.get() );            // copy all relevant data over
-    for ( Processor *p : processors )                  // feed it into the PP chain
-        p->process( currentData.get() );
-    std::shared_ptr< PPresult > res = std::move( currentData );
-    emit processingFinished( res );
+    if ( data && processing ) {
+        // printf( "PostProcessing::input( %d )\n", data->tag );
+        currentData.reset( new PPresult( channelCount ) ); // start with a fresh data structure
+        convertData( data, currentData.get() );            // copy all relevant data over
+        for ( Processor *p : processors )                  // feed it into the PP chain
+            p->process( currentData.get() );
+        std::shared_ptr< PPresult > res = std::move( currentData );
+        emit processingFinished( res );
+    }
 }

@@ -120,7 +120,7 @@ class HantekDsoControl : public QObject {
     /// \brief Stops the device.
     void quitSampling();
 
-    // private:
+  private:
     bool singleChannel = true;
     void setSingleChannel( bool single ) { singleChannel = single; }
     bool isSingleChannel() const { return singleChannel; }
