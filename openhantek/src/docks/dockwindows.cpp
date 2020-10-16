@@ -13,13 +13,16 @@
 #include "hantekprotocol/types.h"
 #include "post/postprocessingsettings.h"
 
+
 void SetupDockWidget( QDockWidget *dockWindow, QWidget *dockWidget, QLayout *layout ) {
     dockWindow->setObjectName( dockWindow->windowTitle() );
     dockWindow->setAllowedAreas( Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea );
+    dockWindow->setFeatures( QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable ); // do not close
     dockWidget->setLayout( layout );
     dockWidget->setSizePolicy( QSizePolicy( QSizePolicy::Minimum, QSizePolicy::Fixed, QSizePolicy::DefaultType ) );
     dockWindow->setWidget( dockWidget );
 }
+
 
 void registerDockMetaTypes() {
     qRegisterMetaType< Dso::TriggerMode >();
