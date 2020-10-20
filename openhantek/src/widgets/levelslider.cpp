@@ -358,7 +358,6 @@ void LevelSlider::mousePressEvent( QMouseEvent *event ) {
 /// \brief Movement is done if the left mouse button is released.
 /// \param event The mouse event that should be handled.
 void LevelSlider::mouseReleaseEvent( QMouseEvent *event ) {
-
     if ( !( event->button() & Qt::LeftButton ) || pressedSlider == -1 ) {
         event->ignore();
         return;
