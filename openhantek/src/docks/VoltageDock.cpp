@@ -70,12 +70,8 @@ VoltageDock::VoltageDock( DsoSettingsScope *scope, const Dso::ControlSpecificati
         dockLayout->addWidget( b.usedCheckBox, row, 0 );
         dockLayout->addWidget( b.gainComboBox, row++, 1, 1, 2 );
         dockLayout->addWidget( b.invertCheckBox, row, 0 );
-        if ( channel < spec->channels ) {
-            dockLayout->addWidget( b.attnSpinBox, row, 1, 1, 1 );
-            dockLayout->addWidget( b.miscComboBox, row++, 2, 1, 1 );
-        } else {
-            dockLayout->addWidget( b.miscComboBox, row++, 1, 1, 2 );
-        }
+        dockLayout->addWidget( b.attnSpinBox, row, 1, 1, 1 );
+        dockLayout->addWidget( b.miscComboBox, row++, 2, 1, 1 );
 
         // draw divider line
         if ( channel < spec->channels ) {
