@@ -966,33 +966,33 @@
     <name>QCoreApplication</name>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="19"/>
-        <source>CH1 + CH2</source>
-        <translation type="unfinished"></translation>
+        <source>CH1+CH2</source>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="21"/>
-        <source>CH1 - CH2</source>
-        <translation type="unfinished"></translation>
+        <source>CH1-CH2</source>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="23"/>
-        <source>CH2 - CH1</source>
-        <translation type="unfinished"></translation>
+        <source>CH2-CH1</source>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="25"/>
-        <source>CH1 * CH2</source>
-        <translation type="unfinished"></translation>
+        <source>CH1*CH2</source>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="27"/>
         <source>CH1 AC</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="29"/>
         <source>CH2 AC</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="41"/>

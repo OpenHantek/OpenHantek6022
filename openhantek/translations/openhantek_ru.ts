@@ -1012,34 +1012,50 @@
         <translation>Однократный</translation>
     </message>
     <message>
-        <location filename="../src/post/postprocessingsettings.cpp" line="19"/>
         <source>CH1 + CH2</source>
-        <translation>Канал 1 + Канал 2</translation>
+        <translation type="vanished">К1 + К2</translation>
+    </message>
+    <message>
+        <source>CH1 - CH2</source>
+        <translation type="vanished">К1 - К2</translation>
+    </message>
+    <message>
+        <source>CH2 - CH1</source>
+        <translation type="vanished">К2 - К1</translation>
+    </message>
+    <message>
+        <source>CH1 * CH2</source>
+        <translation type="vanished">К1 * К2</translation>
+    </message>
+    <message>
+        <location filename="../src/post/postprocessingsettings.cpp" line="19"/>
+        <source>CH1+CH2</source>
+        <translation>К1+К2</translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="21"/>
-        <source>CH1 - CH2</source>
-        <translation>Канал 1 - Канал 2</translation>
+        <source>CH1-CH2</source>
+        <translation>К1-К2</translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="23"/>
-        <source>CH2 - CH1</source>
-        <translation>Канал 2 - Канал 1</translation>
+        <source>CH2-CH1</source>
+        <translation>К2-К1</translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="25"/>
-        <source>CH1 * CH2</source>
-        <translation>Канал 1 * Канал 2</translation>
+        <source>CH1*CH2</source>
+        <translation>К1*К2</translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="27"/>
         <source>CH1 AC</source>
-        <translation>Канал 1  AC</translation>
+        <translation>К1  AC</translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="29"/>
         <source>CH2 AC</source>
-        <translation>Канал 2  AC</translation>
+        <translation>К2  AC</translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="41"/>

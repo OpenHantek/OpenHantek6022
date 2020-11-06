@@ -16,13 +16,13 @@ Enum< Dso::WindowFunction, Dso::WindowFunction::RECTANGULAR, Dso::WindowFunction
 QString mathModeString( MathMode mode ) {
     switch ( mode ) {
     case MathMode::ADD_CH1_CH2:
-        return QCoreApplication::tr( "CH1 + CH2" );
+        return QCoreApplication::tr( "CH1+CH2" );
     case MathMode::SUB_CH2_FROM_CH1:
-        return QCoreApplication::tr( "CH1 - CH2" );
+        return QCoreApplication::tr( "CH1-CH2" );
     case MathMode::SUB_CH1_FROM_CH2:
-        return QCoreApplication::tr( "CH2 - CH1" );
+        return QCoreApplication::tr( "CH2-CH1" );
     case MathMode::MUL_CH1_CH2:
-        return QCoreApplication::tr( "CH1 * CH2" );
+        return QCoreApplication::tr( "CH1*CH2" );
     case MathMode::AC_CH1:
         return QCoreApplication::tr( "CH1 AC" );
     case MathMode::AC_CH2:

@@ -1466,24 +1466,40 @@
         <translation type="vanished">Benutze OpenGL ES anstelle von OpenGL</translation>
     </message>
     <message>
-        <location filename="../src/post/postprocessingsettings.cpp" line="19"/>
         <source>CH1 + CH2</source>
-        <translation>CH1 + CH2</translation>
+        <translation type="vanished">CH1 + CH2</translation>
+    </message>
+    <message>
+        <source>CH1 - CH2</source>
+        <translation type="vanished">CH1 - CH2</translation>
+    </message>
+    <message>
+        <source>CH2 - CH1</source>
+        <translation type="vanished">CH2 - CH1</translation>
+    </message>
+    <message>
+        <source>CH1 * CH2</source>
+        <translation type="vanished">CH1 * CH2</translation>
+    </message>
+    <message>
+        <location filename="../src/post/postprocessingsettings.cpp" line="19"/>
+        <source>CH1+CH2</source>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="21"/>
-        <source>CH1 - CH2</source>
-        <translation>CH1 - CH2</translation>
+        <source>CH1-CH2</source>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="23"/>
-        <source>CH2 - CH1</source>
-        <translation>CH2 - CH1</translation>
+        <source>CH2-CH1</source>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="25"/>
-        <source>CH1 * CH2</source>
-        <translation>CH1 * CH2</translation>
+        <source>CH1*CH2</source>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="27"/>
