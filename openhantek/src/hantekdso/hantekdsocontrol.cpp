@@ -297,11 +297,20 @@ Dso::ErrorCode HantekDsoControl::setTriggerMode( Dso::TriggerMode mode ) {
 }
 
 
-Dso::ErrorCode HantekDsoControl::setTriggerSource( ChannelID channel, bool smooth ) {
+Dso::ErrorCode HantekDsoControl::setTriggerSource( int channel ) {
     if ( deviceNotConnected() )
         return Dso::ErrorCode::CONNECTION;
-    // printf("setTriggerSource( %d, %d )\n", channel, smooth);
+    // printf( "setTriggerSource( %d )\n", channel );
     controlsettings.trigger.source = channel;
+    newTriggerParam = true;
+    return Dso::ErrorCode::NONE;
+}
+
+
+Dso::ErrorCode HantekDsoControl::setTriggerSmooth( int smooth ) {
+    if ( deviceNotConnected() )
+        return Dso::ErrorCode::CONNECTION;
+    // printf( "setTriggerSmooth( %d )\n", smooth );
     controlsettings.trigger.smooth = smooth;
     newTriggerParam = true;
     return Dso::ErrorCode::NONE;
@@ -361,7 +370,8 @@ void HantekDsoControl::applySettings( DsoSettingsScope *dsoSettingsScope ) {
     setTriggerMode( dsoSettingsScope->trigger.mode );
     setTriggerOffset( dsoSettingsScope->trigger.offset );
     setTriggerSlope( dsoSettingsScope->trigger.slope );
-    setTriggerSource( dsoSettingsScope->trigger.source, dsoSettingsScope->trigger.smooth );
+    setTriggerSource( dsoSettingsScope->trigger.source );
+    setTriggerSmooth( dsoSettingsScope->trigger.smooth );
 }
 
 
@@ -522,7 +532,7 @@ unsigned HantekDsoControl::searchTriggerPoint( Dso::Slope dsoSlope, unsigned int
     else
         return 0;
 
-    ChannelID channel = controlsettings.trigger.source;
+    unsigned channel = unsigned( controlsettings.trigger.source );
     const std::vector< double > &samples = result.data[ channel ];
     unsigned sampleCount = unsigned( samples.size() ); ///< number of available samples
     // printf("searchTriggerPoint( %d, %d )\n", (int)dsoSlope, startPos );
@@ -544,31 +554,41 @@ unsigned HantekDsoControl::searchTriggerPoint( Dso::Slope dsoSlope, unsigned int
     // |--(samp-(disp-pre))-------|>>|
     // |<<<<<|????????????????????|>>| // ?? = search for trigger in this range [left,right]
 
-    const unsigned swTriggerSampleSet =
-        controlsettings.trigger.smooth ? 10 : 1; // check this number of samples before/after trigger point ...
-    const unsigned swTriggerThreshold =
-        controlsettings.trigger.smooth ? 5 : 0; // ... and get at least this number below or above trigger
+    const unsigned swTriggerSampleSet = unsigned( pow( 20, controlsettings.trigger.smooth ) );
     if ( postTrigSamples > sampleCount - 2 * ( swTriggerSampleSet + 1 ) )
         postTrigSamples = sampleCount - 2 * ( swTriggerSampleSet + 1 );
     // printf( "pre: %d, post %d\n", preTrigSamples, postTrigSamples );
 
-    double prev = INT_MAX * slope;
+    double prev = INT_MAX;
     unsigned swTriggerStart = 0;
     for ( unsigned int i = preTrigSamples; i < postTrigSamples; i++ ) {
         if ( slope * samples[ i ] >= slope * level && slope * prev < slope * level ) { // trigger condition met
-            // check for the next few SampleSet samples, if they are also above/below the trigger value
-            unsigned int before = 0;
+            // check for the previous few SampleSet samples, if they are also above/below the trigger value
+            bool triggerBefore = false;
+            double mean = 0;
+            unsigned iii = 0;
             for ( unsigned int k = i - 1; k >= i - swTriggerSampleSet && k > 0; k-- ) {
-                if ( slope * samples[ k ] < slope * level )
-                    before++;
+                mean += samples[ k ];
+                iii++;
             }
-            unsigned int after = 0;
+            if ( iii ) {
+                mean /= iii;
+                triggerBefore = slope * mean < slope * level;
+            }
+            // check for the next few SampleSet samples, if they are also above/below the trigger value
+            bool triggerAfter = false;
+            mean = 0;
+            iii = 0;
             for ( unsigned int k = i + 1; k <= i + swTriggerSampleSet && k < sampleCount; k++ ) {
-                if ( slope * samples[ k ] >= slope * level )
-                    after++;
+                mean += samples[ k ];
+                iii++;
             }
-            // if at least >Threshold (=5) samples before and after trig meet the condition, set trigger
-            if ( before > swTriggerThreshold && after > swTriggerThreshold ) {
+            if ( iii ) {
+                mean /= iii;
+                triggerAfter = slope * mean > slope * level;
+            }
+            // if at least >Threshold samples before and after trig meet the condition, set trigger
+            if ( triggerBefore && triggerAfter ) {
                 swTriggerStart = i;
                 break;
             }
@@ -581,7 +601,7 @@ unsigned HantekDsoControl::searchTriggerPoint( Dso::Slope dsoSlope, unsigned int
 
 unsigned HantekDsoControl::searchTriggeredPosition() {
     static Dso::Slope nextSlope = Dso::Slope::Positive; // for alternating slope mode X
-    ChannelID channel = controlsettings.trigger.source;
+    ChannelID channel = ChannelID( controlsettings.trigger.source );
     // Trigger channel not in use
     if ( !controlsettings.voltage[ channel ].used || result.data.empty() ) {
         return result.triggeredPosition = 0;

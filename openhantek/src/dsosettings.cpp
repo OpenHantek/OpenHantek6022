@@ -110,9 +110,9 @@ void DsoSettings::load() {
     if ( storeSettings->contains( "slope" ) )
         scope.trigger.slope = Dso::Slope( storeSettings->value( "slope" ).toUInt() );
     if ( storeSettings->contains( "source" ) )
-        scope.trigger.source = storeSettings->value( "source" ).toUInt();
+        scope.trigger.source = storeSettings->value( "source" ).toInt();
     if ( storeSettings->contains( "smooth" ) )
-        scope.trigger.smooth = storeSettings->value( "smooth" ).toBool();
+        scope.trigger.smooth = storeSettings->value( "smooth" ).toInt();
     storeSettings->endGroup(); // trigger
     // Spectrum
     for ( ChannelID channel = 0; channel < scope.spectrum.size(); ++channel ) {

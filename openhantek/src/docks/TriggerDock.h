@@ -35,8 +35,11 @@ class TriggerDock : public QDockWidget {
 
     /// \brief Changes the trigger source if the new source is supported.
     /// \param id The number of the channel, that should be used as trigger.
+    void setSource( int id );
+
+    /// \brief Changes the trigger smoothing
     /// \param smooth Don't trigger on glitches
-    void setSource( int id, bool smooth );
+    void setSmooth( int smooth );
 
     /// \brief Changes the trigger slope if the new slope is supported.
     /// \param slope The trigger slope.
@@ -57,15 +60,18 @@ class TriggerDock : public QDockWidget {
     QLabel *slopeLabel;        ///< The label for the trigger slope combobox
     QComboBox *modeComboBox;   ///< Select the triggering mode
     QComboBox *sourceComboBox; ///< Select the source for triggering
+    QComboBox *smoothComboBox; ///< Select the filter for triggering
     QComboBox *slopeComboBox;  ///< Select the slope that causes triggering
 
     DsoSettingsScope *scope; ///< The settings provided by the parent class
     const Dso::ControlSpecification *mSpec;
 
     QStringList sourceStandardStrings; ///< Strings for the standard trigger sources
+    QStringList smoothStandardStrings; ///< Strings for the standard trigger filtering
 
   signals:
-    void modeChanged( Dso::TriggerMode );               ///< The trigger mode has been changed
-    void sourceChanged( unsigned int id, bool smooth ); ///< The trigger source has been changed
-    void slopeChanged( Dso::Slope );                    ///< The trigger slope has been changed
+    void modeChanged( Dso::TriggerMode ); ///< The trigger mode has been changed
+    void sourceChanged( int id );         ///< The trigger source has been changed
+    void smoothChanged( int smooth );     ///< The trigger smoothing has been changed
+    void slopeChanged( Dso::Slope );      ///< The trigger slope has been changed
 };

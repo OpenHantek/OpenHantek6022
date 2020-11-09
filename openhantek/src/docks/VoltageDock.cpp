@@ -37,7 +37,7 @@ VoltageDock::VoltageDock( DsoSettingsScope *scope, const Dso::ControlSpecificati
     }
 
     dockLayout = new QGridLayout();
-    dockLayout->setColumnMinimumWidth( 0, 64 );
+    dockLayout->setColumnMinimumWidth( 0, 50 );
     dockLayout->setColumnStretch( 1, 1 ); // stretch ComboBox in 2nd (middle) column
     dockLayout->setColumnStretch( 2, 1 ); // stretch ComboBox in 3rd (last) column
     dockLayout->setSpacing( DOCK_LAYOUT_SPACING );
@@ -67,11 +67,13 @@ VoltageDock::VoltageDock( DsoSettingsScope *scope, const Dso::ControlSpecificati
 
         b.gainComboBox->addItems( gainStrings );
 
+        dockLayout->setColumnStretch( 1, 1 ); // stretch ComboBox in 2nd (middle) column 1x
+        dockLayout->setColumnStretch( 2, 2 ); // stretch ComboBox in 3rd (last) column 2x
         dockLayout->addWidget( b.usedCheckBox, row, 0 );
-        dockLayout->addWidget( b.gainComboBox, row++, 1, 1, 2 );
+        dockLayout->addWidget( b.gainComboBox, row++, 1, 1, 2 ); // fill 1 row, 2 col
         dockLayout->addWidget( b.invertCheckBox, row, 0 );
-        dockLayout->addWidget( b.attnSpinBox, row, 1, 1, 1 );
-        dockLayout->addWidget( b.miscComboBox, row++, 2, 1, 1 );
+        dockLayout->addWidget( b.attnSpinBox, row, 1, 1, 1 );    // fill 1 row, 2 col
+        dockLayout->addWidget( b.miscComboBox, row++, 2, 1, 1 ); // fill 1 row, 2 col
 
         // draw divider line
         if ( channel < spec->channels ) {

@@ -350,7 +350,7 @@ void DsoWidget::setColors() {
     }
 
     tablePalette = palette();
-    tablePalette.setColor( QPalette::WindowText, view->colors->voltage[ scope->trigger.source ] );
+    tablePalette.setColor( QPalette::WindowText, view->colors->voltage[ unsigned( scope->trigger.source ) ] );
     settingsTriggerLabel->setPalette( tablePalette );
     updateTriggerSource();
     setPalette( paletteNow );
@@ -422,7 +422,7 @@ void DsoWidget::setupSliders( DsoWidget::Sliders &sliders ) {
     sliders.triggerLevelSlider = new LevelSlider( Qt::LeftArrow );
     for ( ChannelID channel = 0; channel < spec->channels; ++channel ) {
         sliders.triggerLevelSlider->addSlider( int( channel ) );
-        sliders.triggerLevelSlider->setColor( channel, ( channel == scope->trigger.source )
+        sliders.triggerLevelSlider->setColor( channel, ( channel == ChannelID( scope->trigger.source ) )
                                                            ? view->colors->voltage[ channel ]
                                                            : view->colors->voltage[ channel ].darker() );
         adaptTriggerLevelSlider( sliders, channel );
@@ -609,9 +609,9 @@ void DsoWidget::updateSpectrumDetails( ChannelID channel ) {
 void DsoWidget::updateTriggerDetails() {
     // Update the trigger details
     QPalette tablePalette = palette();
-    tablePalette.setColor( QPalette::WindowText, view->colors->voltage[ scope->trigger.source ] );
+    tablePalette.setColor( QPalette::WindowText, view->colors->voltage[ unsigned( scope->trigger.source ) ] );
     settingsTriggerLabel->setPalette( tablePalette );
-    QString levelString = valueToString( scope->voltage[ scope->trigger.source ].trigger, UNIT_VOLTS, 3 );
+    QString levelString = valueToString( scope->voltage[ unsigned( scope->trigger.source ) ].trigger, UNIT_VOLTS, 3 );
     QString pretriggerString = tr( "%L1%" ).arg( int( round( scope->trigger.offset * 100 ) ) );
     QString pre = Dso::slopeString( scope->trigger.slope ); // trigger slope
     QString post = pre;                                     // opposite trigger slope
@@ -627,7 +627,7 @@ void DsoWidget::updateTriggerDetails() {
     }
     if ( scope->trigger.mode != Dso::TriggerMode::ROLL ) {
         settingsTriggerLabel->setText( tr( "%1  %2  %3  %4  %5" )
-                                           .arg( scope->voltage[ scope->trigger.source ].name,
+                                           .arg( scope->voltage[ unsigned( scope->trigger.source ) ].name,
                                                  Dso::slopeString( scope->trigger.slope ), levelString, pretriggerString,
                                                  pulseWidthString ) );
     } else {
@@ -713,12 +713,12 @@ void DsoWidget::updateTriggerSlope() { updateTriggerDetails(); }
 /// \brief Handles sourceChanged signal from the trigger dock.
 void DsoWidget::updateTriggerSource() {
     // Change the colors of the trigger sliders
-    mainSliders.triggerPositionSlider->setColor( 0, view->colors->voltage[ scope->trigger.source ] );
-    zoomSliders.triggerPositionSlider->setColor( 0, view->colors->voltage[ scope->trigger.source ] );
+    mainSliders.triggerPositionSlider->setColor( 0, view->colors->voltage[ unsigned( scope->trigger.source ) ] );
+    zoomSliders.triggerPositionSlider->setColor( 0, view->colors->voltage[ unsigned( scope->trigger.source ) ] );
 
     for ( ChannelID channel = 0; channel < spec->channels; ++channel ) {
-        QColor color =
-            ( channel == scope->trigger.source ) ? view->colors->voltage[ channel ] : view->colors->voltage[ channel ].darker();
+        QColor color = ( channel == unsigned( scope->trigger.source ) ) ? view->colors->voltage[ channel ]
+                                                                        : view->colors->voltage[ channel ].darker();
         mainSliders.triggerLevelSlider->setColor( channel, color );
         zoomSliders.triggerLevelSlider->setColor( channel, color );
     }
@@ -1033,13 +1033,13 @@ void DsoWidget::updateSlidersSettings() {
     for ( ChannelID channel = 0; channel < spec->channels; ++channel ) {
         mainSliders.triggerLevelSlider->setValue( int( channel ), scope->voltage[ channel ].trigger );
         adaptTriggerLevelSlider( mainSliders, channel );
-        mainSliders.triggerLevelSlider->setColor( channel, ( channel == scope->trigger.source )
+        mainSliders.triggerLevelSlider->setColor( channel, ( channel == unsigned( scope->trigger.source ) )
                                                                ? view->colors->voltage[ channel ]
                                                                : view->colors->voltage[ channel ].darker() );
         mainSliders.triggerLevelSlider->setIndexVisible( channel, scope->voltage[ channel ].used );
         zoomSliders.triggerLevelSlider->setValue( int( channel ), scope->voltage[ channel ].trigger );
         adaptTriggerLevelSlider( zoomSliders, channel );
-        zoomSliders.triggerLevelSlider->setColor( channel, ( channel == scope->trigger.source )
+        zoomSliders.triggerLevelSlider->setColor( channel, ( channel == unsigned( scope->trigger.source ) )
                                                                ? view->colors->voltage[ channel ]
                                                                : view->colors->voltage[ channel ].darker() );
         zoomSliders.triggerLevelSlider->setIndexVisible( channel, scope->voltage[ channel ].used );

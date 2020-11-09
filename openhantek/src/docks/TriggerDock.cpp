@@ -25,8 +25,7 @@ TriggerDock::TriggerDock( DsoSettingsScope *scope, const Dso::ControlSpecificati
     for ( ChannelID channel = 0; channel < mSpec->channels; ++channel )
         this->sourceStandardStrings << tr( "CH%1" ).arg( channel + 1 );
     // add "smooth" source
-    for ( ChannelID channel = 0; channel < mSpec->channels; ++channel )
-        this->sourceStandardStrings << tr( "CH%1 smooth" ).arg( channel + 1 );
+    this->smoothStandardStrings << tr( "HF" ) << tr( "Normal" ) << tr( "LF" );
 
     // Initialize elements
     modeLabel = new QLabel( tr( "Mode" ) );
@@ -42,17 +41,21 @@ TriggerDock::TriggerDock( DsoSettingsScope *scope, const Dso::ControlSpecificati
     sourceLabel = new QLabel( tr( "Source" ) );
     sourceComboBox = new QComboBox();
     sourceComboBox->addItems( sourceStandardStrings );
+    smoothComboBox = new QComboBox();
+    smoothComboBox->addItems( smoothStandardStrings );
 
     dockLayout = new QGridLayout();
-    dockLayout->setColumnMinimumWidth( 0, 64 );
-    dockLayout->setColumnStretch( 1, 1 );
+    dockLayout->setColumnMinimumWidth( 0, 50 );
+    dockLayout->setColumnStretch( 1, 1 ); // stretch 2nd (middle) column 1x
+    dockLayout->setColumnStretch( 2, 2 ); // stretch 3rd (last) column 2x
     dockLayout->setSpacing( DOCK_LAYOUT_SPACING );
     dockLayout->addWidget( modeLabel, 0, 0 );
-    dockLayout->addWidget( modeComboBox, 0, 1 );
+    dockLayout->addWidget( modeComboBox, 0, 1, 1, 2 ); // fill 1 row, 2 col
     dockLayout->addWidget( sourceLabel, 1, 0 );
-    dockLayout->addWidget( sourceComboBox, 1, 1 );
+    dockLayout->addWidget( sourceComboBox, 1, 1, 1, 2 ); // fill 1 row, 2 col
     dockLayout->addWidget( slopeLabel, 2, 0 );
     dockLayout->addWidget( slopeComboBox, 2, 1 );
+    dockLayout->addWidget( smoothComboBox, 2, 2 );
 
     dockWidget = new QWidget();
     SetupDockWidget( this, dockWidget, dockLayout );
@@ -69,20 +72,22 @@ TriggerDock::TriggerDock( DsoSettingsScope *scope, const Dso::ControlSpecificati
         this->scope->trigger.slope = Dso::Slope( index );
         emit slopeChanged( this->scope->trigger.slope );
     } );
-    connect( sourceComboBox, static_cast< void ( QComboBox::* )( int ) >( &QComboBox::currentIndexChanged ),
-             [this]( unsigned index ) {
-                 bool smooth = index >= mSpec->channels;
-                 this->scope->trigger.smooth = smooth;
-                 this->scope->trigger.source = index & ( mSpec->channels - 1 );
-                 emit sourceChanged( index & ( mSpec->channels - 1 ), smooth );
-             } );
+    connect( sourceComboBox, static_cast< void ( QComboBox::* )( int ) >( &QComboBox::currentIndexChanged ), [this]( int index ) {
+        this->scope->trigger.source = index;
+        emit sourceChanged( index );
+    } );
+    connect( smoothComboBox, static_cast< void ( QComboBox::* )( int ) >( &QComboBox::currentIndexChanged ), [this]( int index ) {
+        this->scope->trigger.smooth = index;
+        emit smoothChanged( index );
+    } );
 }
 
 void TriggerDock::loadSettings( DsoSettingsScope *scope ) {
     // Set values
     setMode( scope->trigger.mode );
     setSlope( scope->trigger.slope );
-    setSource( int( scope->trigger.source ), scope->trigger.smooth );
+    setSource( scope->trigger.source );
+    setSmooth( scope->trigger.smooth );
 }
 
 /// \brief Don't close the dock, just hide it
@@ -105,11 +110,16 @@ void TriggerDock::setSlope( Dso::Slope slope ) {
     slopeComboBox->setCurrentIndex( int( slope ) );
 }
 
-void TriggerDock::setSource( int id, bool smooth ) {
-    if ( smooth )
-        id += mSpec->channels;
+void TriggerDock::setSource( int id ) {
     if ( id >= this->sourceStandardStrings.count() )
         return;
     QSignalBlocker blocker( sourceComboBox );
     sourceComboBox->setCurrentIndex( id );
+}
+
+void TriggerDock::setSmooth( int smooth ) {
+    if ( int( smooth ) >= this->smoothStandardStrings.count() )
+        return;
+    QSignalBlocker blocker( smoothComboBox );
+    smoothComboBox->setCurrentIndex( int( smooth ) );
 }
