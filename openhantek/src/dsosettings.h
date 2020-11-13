@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0+
 
 // increment this value after incompatible config changes
-#define CONFIG_VERSION 1
+const unsigned CONFIG_VERSION = 2;
 
 #pragma once
 
