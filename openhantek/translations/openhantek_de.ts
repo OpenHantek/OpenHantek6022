@@ -304,57 +304,62 @@
         <translation>Stufen für digitalen Phosphor</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="51"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="45"/>
+        <source>Dummy load Ohms</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="59"/>
         <source>Graph</source>
         <translation>Graph</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="54"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="62"/>
         <source>Position</source>
         <translation>Position</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="56"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="64"/>
         <source>Left</source>
         <translation>Links</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="57"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="65"/>
         <source>Right</source>
         <translation>Rechts</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="64"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="72"/>
         <source>Cursors</source>
         <translation>Cursor</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="68"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="76"/>
         <source>Export zoomed screen in double height</source>
         <translation>Exportiere gezoomtes Display in doppelter Höhe</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="73"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="81"/>
         <source>Export</source>
         <translation>Export</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="83"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="91"/>
         <source>Scope has hardware modification for AC coupling (restart needed to apply the change)</source>
         <translation>Das Gerät hat Hardware-Modifikation für AC-Kopplung (Neustart erforderlich)</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="77"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="85"/>
         <source>Save settings on exit</source>
         <translation>Einstellungen beim Beenden speichern</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="79"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="87"/>
         <source>Apply default settings after next restart</source>
         <translation>Standardeinstellungen beim nächsten Start anwenden</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="81"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="89"/>
         <source>Save settings now</source>
         <translation>Einstellungen jetzt speichern</translation>
     </message>
@@ -371,7 +376,7 @@
         <translation type="vanished">Standardeinstellungen jetzt speichern</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="96"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="104"/>
         <source>Configuration</source>
         <translation>Konfiguration</translation>
     </message>
@@ -501,12 +506,12 @@
 <context>
     <name>DsoWidget</name>
     <message>
-        <location filename="../src/dsowidget.cpp" line="569"/>
-        <location filename="../src/dsowidget.cpp" line="571"/>
-        <location filename="../src/dsowidget.cpp" line="602"/>
-        <location filename="../src/dsowidget.cpp" line="647"/>
-        <location filename="../src/dsowidget.cpp" line="656"/>
-        <location filename="../src/dsowidget.cpp" line="677"/>
+        <location filename="../src/dsowidget.cpp" line="577"/>
+        <location filename="../src/dsowidget.cpp" line="579"/>
+        <location filename="../src/dsowidget.cpp" line="610"/>
+        <location filename="../src/dsowidget.cpp" line="655"/>
+        <location filename="../src/dsowidget.cpp" line="664"/>
+        <location filename="../src/dsowidget.cpp" line="685"/>
         <source>/div</source>
         <translation>/div</translation>
     </message>
@@ -516,74 +521,74 @@
         <translation>TR</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="175"/>
+        <location filename="../src/dsowidget.cpp" line="180"/>
         <source>Markers</source>
         <translation>Marker</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="521"/>
-        <location filename="../src/dsowidget.cpp" line="537"/>
+        <location filename="../src/dsowidget.cpp" line="529"/>
+        <location filename="../src/dsowidget.cpp" line="545"/>
         <source>ON</source>
         <translation>EIN</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="522"/>
-        <location filename="../src/dsowidget.cpp" line="537"/>
+        <location filename="../src/dsowidget.cpp" line="530"/>
+        <location filename="../src/dsowidget.cpp" line="545"/>
         <source>OFF</source>
         <translation>AUS</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="559"/>
+        <location filename="../src/dsowidget.cpp" line="567"/>
         <source>Markers  </source>
         <translation>Merker  </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="560"/>
+        <location filename="../src/dsowidget.cpp" line="568"/>
         <source>Time: </source>
         <translation>Zeit: </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="561"/>
+        <location filename="../src/dsowidget.cpp" line="569"/>
         <source>Frequency: </source>
         <translation>Frequenz: </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="564"/>
+        <location filename="../src/dsowidget.cpp" line="572"/>
         <source>Zoom x%L1  </source>
         <translation>Zoom x%L1  </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="566"/>
+        <location filename="../src/dsowidget.cpp" line="574"/>
         <source>Zoom ---  </source>
         <translation>Zoom ---  </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="615"/>
+        <location filename="../src/dsowidget.cpp" line="623"/>
         <source>%L1%</source>
         <translation>%L1%</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="629"/>
+        <location filename="../src/dsowidget.cpp" line="637"/>
         <source>%1  %2  %3  %4  %5</source>
         <translation>%1  %2  %3  %4 %5</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="667"/>
+        <location filename="../src/dsowidget.cpp" line="675"/>
         <source>/s</source>
         <translation>/s</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="781"/>
+        <location filename="../src/dsowidget.cpp" line="789"/>
         <source> on screen</source>
         <translation> angezeigt</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="826"/>
+        <location filename="../src/dsowidget.cpp" line="834"/>
         <source>pp</source>
         <translation>pp</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="829"/>
+        <location filename="../src/dsowidget.cpp" line="837"/>
         <source>rms</source>
         <translation>rms</translation>
     </message>
@@ -1245,27 +1250,27 @@
         <translation>%L1 V</translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="30"/>
+        <location filename="../src/utils/printutils.cpp" line="43"/>
         <source>%L1 dB</source>
         <translation>%L1 dB</translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="37"/>
+        <location filename="../src/utils/printutils.cpp" line="50"/>
         <source>%L1 ps</source>
         <translation>%L1 ps</translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="42"/>
+        <location filename="../src/utils/printutils.cpp" line="55"/>
         <source>%L1 ns</source>
         <translation>%L1 ns</translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="50"/>
+        <location filename="../src/utils/printutils.cpp" line="63"/>
         <source>%L1 ms</source>
         <translation>%L1 ms</translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="54"/>
+        <location filename="../src/utils/printutils.cpp" line="67"/>
         <source>%L1 s</source>
         <translation>%L1 s</translation>
     </message>
@@ -1275,57 +1280,72 @@
         <translation>%L1 µV</translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="46"/>
+        <location filename="../src/utils/printutils.cpp" line="32"/>
+        <source>%L1 µW</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/utils/printutils.cpp" line="35"/>
+        <source>%L1 mW</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/utils/printutils.cpp" line="38"/>
+        <source>%L1 W</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/utils/printutils.cpp" line="59"/>
         <source>%L1 µs</source>
         <translation>%L1 µs</translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="57"/>
+        <location filename="../src/utils/printutils.cpp" line="70"/>
         <source>%L1 min</source>
         <translation>%L1 min</translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="61"/>
+        <location filename="../src/utils/printutils.cpp" line="74"/>
         <source>%L1 h</source>
         <translation>%L1 h</translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="69"/>
+        <location filename="../src/utils/printutils.cpp" line="82"/>
         <source>%L1 Hz</source>
         <translation>%L1 Hz</translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="72"/>
+        <location filename="../src/utils/printutils.cpp" line="85"/>
         <source>%L1 kHz</source>
         <translation>%L1 kHz</translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="75"/>
+        <location filename="../src/utils/printutils.cpp" line="88"/>
         <source>%L1 MHz</source>
         <translation>%L1 MHz</translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="78"/>
+        <location filename="../src/utils/printutils.cpp" line="91"/>
         <source>%L1 GHz</source>
         <translation>%L1 GHz</translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="85"/>
+        <location filename="../src/utils/printutils.cpp" line="98"/>
         <source>%L1 S</source>
         <translation>%L1 S</translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="88"/>
+        <location filename="../src/utils/printutils.cpp" line="101"/>
         <source>%L1 kS</source>
         <translation>%L1 kS</translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="91"/>
+        <location filename="../src/utils/printutils.cpp" line="104"/>
         <source>%L1 MS</source>
         <translation>%L1 MS</translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="94"/>
+        <location filename="../src/utils/printutils.cpp" line="107"/>
         <source>%L1 GS</source>
         <translation>%L1 GS</translation>
     </message>
