@@ -16,9 +16,9 @@
 
 #include "configdialog.h"
 
+#include "DsoConfigAnalysisPage.h"
 #include "DsoConfigColorsPage.h"
 #include "DsoConfigScopePage.h"
-#include "DsoConfigSpectrumPage.h"
 
 #include "dsosettings.h"
 
@@ -41,12 +41,12 @@ DsoConfigDialog::DsoConfigDialog( DsoSettings *settings, QWidget *parent ) : QDi
     this->contentsWidget->setMinimumWidth( CONFIG_LIST_WIDTH );
     this->contentsWidget->setMinimumHeight( CONFIG_LIST_ITEMHEIGHT * 3 + 2 * ( this->contentsWidget->frameWidth() ) );
 
-    this->spectrumPage = new DsoConfigSpectrumPage( settings );
+    this->analysisPage = new DsoConfigAnalysisPage( settings );
     this->colorsPage = new DsoConfigColorsPage( settings );
     this->scopePage = new DsoConfigScopePage( settings );
     this->pagesWidget = new QStackedWidget;
     this->pagesWidget->addWidget( this->scopePage );
-    this->pagesWidget->addWidget( this->spectrumPage );
+    this->pagesWidget->addWidget( this->analysisPage );
     this->pagesWidget->addWidget( this->colorsPage );
 
     this->acceptButton = new QPushButton( tr( "&Ok" ) );
@@ -94,7 +94,7 @@ void DsoConfigDialog::createIcons() {
 
     QListWidgetItem *spectrumButton = new QListWidgetItem( contentsWidget );
     spectrumButton->setIcon( QIcon( ":config/spectrum.png" ) );
-    spectrumButton->setText( tr( "Spectrum" ) );
+    spectrumButton->setText( tr( "Analysis" ) );
 
     QListWidgetItem *colorsButton = new QListWidgetItem( contentsWidget );
     colorsButton->setIcon( QIcon( ":config/colors.png" ) );
@@ -114,7 +114,7 @@ void DsoConfigDialog::accept() {
 /// \brief Saves the settings.
 void DsoConfigDialog::apply() {
     this->scopePage->saveSettings();
-    this->spectrumPage->saveSettings();
+    this->analysisPage->saveSettings();
     this->colorsPage->saveSettings();
 }
 

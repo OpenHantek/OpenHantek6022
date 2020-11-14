@@ -194,6 +194,12 @@ void DsoSettings::load() {
         post.spectrumReference = storeSettings->value( "spectrumReference" ).toDouble();
     if ( storeSettings->contains( "spectrumWindow" ) )
         post.spectrumWindow = Dso::WindowFunction( storeSettings->value( "spectrumWindow" ).toInt() );
+
+    // Analysis
+    storeSettings->beginGroup( "analysis" );
+    if ( storeSettings->contains( "dummyLoad" ) )
+        scope.analysis.dummyLoad = storeSettings->value( "dummyLoad" ).toUInt();
+    storeSettings->endGroup(); // analysis
     storeSettings->endGroup(); // scope
 
     // View
@@ -339,6 +345,11 @@ void DsoSettings::save() {
     storeSettings->setValue( "spectrumLimit", post.spectrumLimit );
     storeSettings->setValue( "spectrumReference", post.spectrumReference );
     storeSettings->setValue( "spectrumWindow", unsigned( post.spectrumWindow ) );
+
+    // Analysis
+    storeSettings->beginGroup( "analysis" );
+    storeSettings->setValue( "dummyLoad", scope.analysis.dummyLoad );
+    storeSettings->endGroup(); // analysis
     storeSettings->endGroup(); // scope
 
     // View

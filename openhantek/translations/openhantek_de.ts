@@ -12,80 +12,115 @@
 <context>
     <name>DsoConfigAnalysisPage</name>
     <message>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="8"/>
         <source>Rectangular</source>
-        <translation type="vanished">Rechteck</translation>
+        <translation>Rechteck</translation>
     </message>
     <message>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="8"/>
         <source>Hamming</source>
-        <translation type="vanished">Hamming</translation>
+        <translation>Hamming</translation>
     </message>
     <message>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="8"/>
         <source>Hann</source>
-        <translation type="vanished">Hann</translation>
+        <translation>Hann</translation>
     </message>
     <message>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="8"/>
         <source>Cosine</source>
-        <translation type="vanished">Cosinus</translation>
+        <translation>Cosinus</translation>
     </message>
     <message>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="8"/>
         <source>Lanczos</source>
-        <translation type="vanished">Lanczos</translation>
+        <translation>Lanczos</translation>
     </message>
     <message>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="9"/>
         <source>Bartlett</source>
-        <translation type="vanished">Bartlett</translation>
+        <translation>Bartlett</translation>
     </message>
     <message>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="9"/>
         <source>Triangular</source>
-        <translation type="vanished">Dreieck</translation>
+        <translation>Dreieck</translation>
     </message>
     <message>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="9"/>
         <source>Gauss</source>
-        <translation type="vanished">Gauss</translation>
+        <translation>Gauss</translation>
     </message>
     <message>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="9"/>
         <source>Bartlett-Hann</source>
-        <translation type="vanished">Bartlett-Hann</translation>
+        <translation>Bartlett-Hann</translation>
     </message>
     <message>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="10"/>
         <source>Blackman</source>
-        <translation type="vanished">Blackman</translation>
+        <translation>Blackman</translation>
     </message>
     <message>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="12"/>
         <source>Nuttall</source>
-        <translation type="vanished">Nuttall</translation>
+        <translation>Nuttall</translation>
     </message>
     <message>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="12"/>
         <source>Blackman-Harris</source>
-        <translation type="vanished">Blackman-Harris</translation>
+        <translation>Blackman-Harris</translation>
     </message>
     <message>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="12"/>
         <source>Blackman-Nuttall</source>
-        <translation type="vanished">Blackman-Nuttall</translation>
+        <translation>Blackman-Nuttall</translation>
     </message>
     <message>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="12"/>
         <source>Flat top</source>
-        <translation type="vanished">Flat Top</translation>
+        <translation>Flat Top</translation>
     </message>
     <message>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="15"/>
         <source>&lt;b&gt;Window function&lt;/b&gt;</source>
-        <translation type="vanished">Fensterfunktion</translation>
+        <translation>Fensterfunktion</translation>
     </message>
     <message>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="21"/>
         <source>&lt;b&gt;Reference level&lt;/b&gt;&lt;br/&gt;0 dBu = -2.2 dBV&lt;br/&gt;0 dBm (@600 &amp;Omega;) = -2.2 dBV&lt;br/&gt;0 dBm (@50 &amp;Omega;) = -13 dBV</source>
-        <translation type="vanished">&lt;b&gt;Referenzpegel&lt;/b&gt;&lt;br/&gt;0 dBu = -2.2 dBV&lt;br/&gt;0 dBm (@600 &amp;Omega;) = -2.2 dBV&lt;br/&gt;0 dBm (@50 &amp;Omega;) = -13 dBV</translation>
+        <translation>&lt;b&gt;Referenzpegel&lt;/b&gt;&lt;br/&gt;0 dBu = -2.2 dBV&lt;br/&gt;0 dBm (@600 &amp;Omega;) = -2.2 dBV&lt;br/&gt;0 dBm (@50 &amp;Omega;) = -13 dBV</translation>
     </message>
     <message>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="27"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="38"/>
         <source>dBV</source>
-        <translation type="vanished">dBV</translation>
+        <translation>dBV</translation>
     </message>
     <message>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="32"/>
         <source>&lt;b&gt;Minimum magnitude&lt;/b&gt;</source>
-        <translation type="vanished">Minimaler Pegel</translation>
+        <translation>Minimaler Pegel</translation>
     </message>
     <message>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="51"/>
         <source>Spectrum</source>
-        <translation type="vanished">Spektrum</translation>
+        <translation>Spektrum</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="54"/>
+        <source>Calculate power dissipation for load resistance</source>
+        <translation>Berechne Leistung für Lastwiderstand</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="59"/>
+        <source>&lt;p&gt;&amp;Omega;&lt;/p&gt;</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="68"/>
+        <source>Power</source>
+        <translation>Leistung</translation>
     </message>
 </context>
 <context>
@@ -185,8 +220,12 @@
     </message>
     <message>
         <location filename="../src/configdialog/configdialog.cpp" line="97"/>
+        <source>Analysis</source>
+        <translation>Analyse</translation>
+    </message>
+    <message>
         <source>Spectrum</source>
-        <translation>Spektrum</translation>
+        <translation type="vanished">Spektrum</translation>
     </message>
     <message>
         <source>File</source>
@@ -379,100 +418,80 @@
 <context>
     <name>DsoConfigSpectrumPage</name>
     <message>
-        <location filename="../src/configdialog/DsoConfigSpectrumPage.cpp" line="8"/>
         <source>Rectangular</source>
-        <translation>Rechteck</translation>
+        <translation type="vanished">Rechteck</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigSpectrumPage.cpp" line="8"/>
         <source>Hamming</source>
-        <translation>Hamming</translation>
+        <translation type="vanished">Hamming</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigSpectrumPage.cpp" line="8"/>
         <source>Hann</source>
-        <translation>Hann</translation>
+        <translation type="vanished">Hann</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigSpectrumPage.cpp" line="8"/>
         <source>Cosine</source>
-        <translation>Cosinus</translation>
+        <translation type="vanished">Cosinus</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigSpectrumPage.cpp" line="8"/>
         <source>Lanczos</source>
-        <translation>Lanczos</translation>
+        <translation type="vanished">Lanczos</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigSpectrumPage.cpp" line="9"/>
         <source>Bartlett</source>
-        <translation>Bartlett</translation>
+        <translation type="vanished">Bartlett</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigSpectrumPage.cpp" line="9"/>
         <source>Triangular</source>
-        <translation>Dreieck</translation>
+        <translation type="vanished">Dreieck</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigSpectrumPage.cpp" line="9"/>
         <source>Gauss</source>
-        <translation>Gauss</translation>
+        <translation type="vanished">Gauss</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigSpectrumPage.cpp" line="9"/>
         <source>Bartlett-Hann</source>
-        <translation>Bartlett-Hann</translation>
+        <translation type="vanished">Bartlett-Hann</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigSpectrumPage.cpp" line="10"/>
         <source>Blackman</source>
-        <translation>Blackman</translation>
+        <translation type="vanished">Blackman</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigSpectrumPage.cpp" line="12"/>
         <source>Nuttall</source>
-        <translation>Nuttall</translation>
+        <translation type="vanished">Nuttall</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigSpectrumPage.cpp" line="12"/>
         <source>Blackman-Harris</source>
-        <translation>Blackman-Harris</translation>
+        <translation type="vanished">Blackman-Harris</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigSpectrumPage.cpp" line="12"/>
         <source>Blackman-Nuttall</source>
-        <translation>Blackman-Nuttall</translation>
+        <translation type="vanished">Blackman-Nuttall</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigSpectrumPage.cpp" line="12"/>
         <source>Flat top</source>
-        <translation>Flat Top</translation>
+        <translation type="vanished">Flat Top</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigSpectrumPage.cpp" line="15"/>
         <source>&lt;b&gt;Window function&lt;/b&gt;</source>
-        <translation>&lt;b&gt;Fensterfunktion&lt;b&gt;</translation>
+        <translation type="vanished">&lt;b&gt;Fensterfunktion&lt;b&gt;</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigSpectrumPage.cpp" line="21"/>
         <source>&lt;b&gt;Reference level&lt;/b&gt;&lt;br/&gt;0 dBu = -2.2 dBV&lt;br/&gt;0 dBm (@600 &amp;Omega;) = -2.2 dBV&lt;br/&gt;0 dBm (@50 &amp;Omega;) = -13 dBV</source>
-        <translation>&lt;b&gt;Referenzpegel&lt;/b&gt;&lt;br/&gt;0 dBu = -2.2 dBV&lt;br/&gt;0 dBm (@600 &amp;Omega;) = -2.2 dBV&lt;br/&gt;0 dBm (@50 &amp;Omega;) = -13 dBV</translation>
+        <translation type="vanished">&lt;b&gt;Referenzpegel&lt;/b&gt;&lt;br/&gt;0 dBu = -2.2 dBV&lt;br/&gt;0 dBm (@600 &amp;Omega;) = -2.2 dBV&lt;br/&gt;0 dBm (@50 &amp;Omega;) = -13 dBV</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigSpectrumPage.cpp" line="27"/>
-        <location filename="../src/configdialog/DsoConfigSpectrumPage.cpp" line="38"/>
         <source>dBV</source>
-        <translation>dBV</translation>
+        <translation type="vanished">dBV</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigSpectrumPage.cpp" line="32"/>
         <source>&lt;b&gt;Minimum magnitude&lt;/b&gt;</source>
-        <translation>&lt;b&gt;Minimaler Pegel&lt;/b&gt;</translation>
+        <translation type="vanished">&lt;b&gt;Minimaler Pegel&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigSpectrumPage.cpp" line="51"/>
         <source>Spectrum</source>
-        <translation>Spektrum</translation>
+        <translation type="vanished">Spektrum</translation>
     </message>
 </context>
 <context>
@@ -501,12 +520,12 @@
 <context>
     <name>DsoWidget</name>
     <message>
-        <location filename="../src/dsowidget.cpp" line="569"/>
-        <location filename="../src/dsowidget.cpp" line="571"/>
-        <location filename="../src/dsowidget.cpp" line="602"/>
-        <location filename="../src/dsowidget.cpp" line="647"/>
-        <location filename="../src/dsowidget.cpp" line="656"/>
-        <location filename="../src/dsowidget.cpp" line="677"/>
+        <location filename="../src/dsowidget.cpp" line="577"/>
+        <location filename="../src/dsowidget.cpp" line="579"/>
+        <location filename="../src/dsowidget.cpp" line="610"/>
+        <location filename="../src/dsowidget.cpp" line="655"/>
+        <location filename="../src/dsowidget.cpp" line="664"/>
+        <location filename="../src/dsowidget.cpp" line="685"/>
         <source>/div</source>
         <translation>/div</translation>
     </message>
@@ -516,74 +535,74 @@
         <translation>TR</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="175"/>
+        <location filename="../src/dsowidget.cpp" line="180"/>
         <source>Markers</source>
         <translation>Marker</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="521"/>
-        <location filename="../src/dsowidget.cpp" line="537"/>
+        <location filename="../src/dsowidget.cpp" line="529"/>
+        <location filename="../src/dsowidget.cpp" line="545"/>
         <source>ON</source>
         <translation>EIN</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="522"/>
-        <location filename="../src/dsowidget.cpp" line="537"/>
+        <location filename="../src/dsowidget.cpp" line="530"/>
+        <location filename="../src/dsowidget.cpp" line="545"/>
         <source>OFF</source>
         <translation>AUS</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="559"/>
+        <location filename="../src/dsowidget.cpp" line="567"/>
         <source>Markers  </source>
         <translation>Merker  </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="560"/>
+        <location filename="../src/dsowidget.cpp" line="568"/>
         <source>Time: </source>
         <translation>Zeit: </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="561"/>
+        <location filename="../src/dsowidget.cpp" line="569"/>
         <source>Frequency: </source>
         <translation>Frequenz: </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="564"/>
+        <location filename="../src/dsowidget.cpp" line="572"/>
         <source>Zoom x%L1  </source>
         <translation>Zoom x%L1  </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="566"/>
+        <location filename="../src/dsowidget.cpp" line="574"/>
         <source>Zoom ---  </source>
         <translation>Zoom ---  </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="615"/>
+        <location filename="../src/dsowidget.cpp" line="623"/>
         <source>%L1%</source>
         <translation>%L1%</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="629"/>
+        <location filename="../src/dsowidget.cpp" line="637"/>
         <source>%1  %2  %3  %4  %5</source>
         <translation>%1  %2  %3  %4 %5</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="667"/>
+        <location filename="../src/dsowidget.cpp" line="675"/>
         <source>/s</source>
         <translation>/s</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="781"/>
+        <location filename="../src/dsowidget.cpp" line="789"/>
         <source> on screen</source>
         <translation> angezeigt</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="826"/>
+        <location filename="../src/dsowidget.cpp" line="834"/>
         <source>pp</source>
         <translation>pp</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="829"/>
+        <location filename="../src/dsowidget.cpp" line="837"/>
         <source>rms</source>
         <translation>rms</translation>
     </message>
@@ -1245,27 +1264,27 @@
         <translation>%L1 V</translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="30"/>
+        <location filename="../src/utils/printutils.cpp" line="43"/>
         <source>%L1 dB</source>
         <translation>%L1 dB</translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="37"/>
+        <location filename="../src/utils/printutils.cpp" line="50"/>
         <source>%L1 ps</source>
         <translation>%L1 ps</translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="42"/>
+        <location filename="../src/utils/printutils.cpp" line="55"/>
         <source>%L1 ns</source>
         <translation>%L1 ns</translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="50"/>
+        <location filename="../src/utils/printutils.cpp" line="63"/>
         <source>%L1 ms</source>
         <translation>%L1 ms</translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="54"/>
+        <location filename="../src/utils/printutils.cpp" line="67"/>
         <source>%L1 s</source>
         <translation>%L1 s</translation>
     </message>
@@ -1275,57 +1294,72 @@
         <translation>%L1 µV</translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="46"/>
+        <location filename="../src/utils/printutils.cpp" line="32"/>
+        <source>%L1 µW</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../src/utils/printutils.cpp" line="35"/>
+        <source>%L1 mW</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../src/utils/printutils.cpp" line="38"/>
+        <source>%L1 W</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../src/utils/printutils.cpp" line="59"/>
         <source>%L1 µs</source>
         <translation>%L1 µs</translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="57"/>
+        <location filename="../src/utils/printutils.cpp" line="70"/>
         <source>%L1 min</source>
         <translation>%L1 min</translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="61"/>
+        <location filename="../src/utils/printutils.cpp" line="74"/>
         <source>%L1 h</source>
         <translation>%L1 h</translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="69"/>
+        <location filename="../src/utils/printutils.cpp" line="82"/>
         <source>%L1 Hz</source>
         <translation>%L1 Hz</translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="72"/>
+        <location filename="../src/utils/printutils.cpp" line="85"/>
         <source>%L1 kHz</source>
         <translation>%L1 kHz</translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="75"/>
+        <location filename="../src/utils/printutils.cpp" line="88"/>
         <source>%L1 MHz</source>
         <translation>%L1 MHz</translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="78"/>
+        <location filename="../src/utils/printutils.cpp" line="91"/>
         <source>%L1 GHz</source>
         <translation>%L1 GHz</translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="85"/>
+        <location filename="../src/utils/printutils.cpp" line="98"/>
         <source>%L1 S</source>
         <translation>%L1 S</translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="88"/>
+        <location filename="../src/utils/printutils.cpp" line="101"/>
         <source>%L1 kS</source>
         <translation>%L1 kS</translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="91"/>
+        <location filename="../src/utils/printutils.cpp" line="104"/>
         <source>%L1 MS</source>
         <translation>%L1 MS</translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="94"/>
+        <location filename="../src/utils/printutils.cpp" line="107"/>
         <source>%L1 GS</source>
         <translation>%L1 GS</translation>
     </message>

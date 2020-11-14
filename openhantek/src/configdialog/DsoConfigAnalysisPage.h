@@ -15,13 +15,13 @@
 #include <QVBoxLayout>
 
 ////////////////////////////////////////////////////////////////////////////////
-/// \class DsoConfigSpectrumPage                                   configpages.h
+/// \class DsoConfigAnalysisPage                                   configpages.h
 /// \brief Config page for the data spectral analysis.
-class DsoConfigSpectrumPage : public QWidget {
+class DsoConfigAnalysisPage : public QWidget {
     Q_OBJECT
 
   public:
-    DsoConfigSpectrumPage( DsoSettings *settings, QWidget *parent = nullptr );
+    DsoConfigAnalysisPage( DsoSettings *settings, QWidget *parent = nullptr );
 
   public slots:
     void saveSettings();
@@ -45,4 +45,11 @@ class DsoConfigSpectrumPage : public QWidget {
     QDoubleSpinBox *minimumMagnitudeSpinBox;
     QLabel *minimumMagnitudeUnitLabel;
     QHBoxLayout *minimumMagnitudeLayout;
+
+    QGroupBox *powerGroup;
+    QGridLayout *powerLayout;
+    QLabel *dummyLoadLabel;
+    QSpinBox *dummyLoadSpinBox;
+    QLabel *dummyLoadUnitLabel;
+    QHBoxLayout *dummyLoadLayout;
 };
