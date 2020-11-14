@@ -12,64 +12,115 @@
 <context>
     <name>DsoConfigAnalysisPage</name>
     <message>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="8"/>
         <source>Rectangular</source>
-        <translation type="vanished">Retangular</translation>
+        <translation>Retangular</translation>
     </message>
     <message>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="8"/>
         <source>Hamming</source>
-        <translation type="vanished">Hamming</translation>
+        <translation>Hamming</translation>
     </message>
     <message>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="8"/>
         <source>Hann</source>
-        <translation type="vanished">Hann</translation>
+        <translation>Hann</translation>
     </message>
     <message>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="8"/>
         <source>Cosine</source>
-        <translation type="vanished">Cosseno</translation>
+        <translation>Cosseno</translation>
     </message>
     <message>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="8"/>
         <source>Lanczos</source>
-        <translation type="vanished">Lanczos</translation>
+        <translation>Lanczos</translation>
     </message>
     <message>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="9"/>
         <source>Bartlett</source>
-        <translation type="vanished">Bartlett</translation>
+        <translation>Bartlett</translation>
     </message>
     <message>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="9"/>
         <source>Triangular</source>
-        <translation type="vanished">Triangular</translation>
+        <translation>Triangular</translation>
     </message>
     <message>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="9"/>
         <source>Gauss</source>
-        <translation type="vanished">Gauss</translation>
+        <translation>Gauss</translation>
     </message>
     <message>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="9"/>
         <source>Bartlett-Hann</source>
-        <translation type="vanished">Bartlett-Hann</translation>
+        <translation>Bartlett-Hann</translation>
     </message>
     <message>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="10"/>
         <source>Blackman</source>
-        <translation type="vanished">Blackman</translation>
+        <translation>Blackman</translation>
     </message>
     <message>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="12"/>
         <source>Nuttall</source>
-        <translation type="vanished">Nuttall</translation>
+        <translation>Nuttall</translation>
     </message>
     <message>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="12"/>
         <source>Blackman-Harris</source>
-        <translation type="vanished">Blackman-Harris</translation>
+        <translation>Blackman-Harris</translation>
     </message>
     <message>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="12"/>
         <source>Blackman-Nuttall</source>
-        <translation type="vanished">Blackman-Nuttall</translation>
+        <translation>Blackman-Nuttall</translation>
     </message>
     <message>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="12"/>
         <source>Flat top</source>
-        <translation type="vanished">Flat Top</translation>
+        <translation>Flat Top</translation>
     </message>
     <message>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="15"/>
+        <source>&lt;b&gt;Window function&lt;/b&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="21"/>
+        <source>&lt;b&gt;Reference level&lt;/b&gt;&lt;br/&gt;0 dBu = -2.2 dBV&lt;br/&gt;0 dBm (@600 &amp;Omega;) = -2.2 dBV&lt;br/&gt;0 dBm (@50 &amp;Omega;) = -13 dBV</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="27"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="38"/>
+        <source>dBV</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="32"/>
+        <source>&lt;b&gt;Minimum magnitude&lt;/b&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="51"/>
         <source>Spectrum</source>
-        <translation type="vanished">Espectro</translation>
+        <translation>Espectro</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="54"/>
+        <source>Calculate power dissipation for load resistance</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="59"/>
+        <source>&lt;p&gt;&amp;Omega;&lt;/p&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="68"/>
+        <source>Power</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -165,8 +216,12 @@
     </message>
     <message>
         <location filename="../src/configdialog/configdialog.cpp" line="97"/>
+        <source>Analysis</source>
+        <translation>Análise</translation>
+    </message>
+    <message>
         <source>Spectrum</source>
-        <translation>Espectro</translation>
+        <translation type="vanished">Espectro</translation>
     </message>
     <message>
         <source>File</source>
@@ -292,62 +347,57 @@
         <translation>Profundidade digital</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="45"/>
-        <source>Dummy load Ohms</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="59"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="51"/>
         <source>Graph</source>
         <translation>Gráfico</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="62"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="54"/>
         <source>Position</source>
         <translation>Posição</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="64"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="56"/>
         <source>Left</source>
         <translation>Esquerda</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="65"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="57"/>
         <source>Right</source>
         <translation>Direita</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="72"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="64"/>
         <source>Cursors</source>
         <translation>Cursores</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="76"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="68"/>
         <source>Export zoomed screen in double height</source>
         <translation>Exportar uma tela com zoom em altura dupla</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="81"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="73"/>
         <source>Export</source>
         <translation>Exportar</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="91"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="83"/>
         <source>Scope has hardware modification for AC coupling (restart needed to apply the change)</source>
         <translation>O osciloscópio tem modificação de hardware para acoplamento AC (reinício necessário para aplicar a mudança)</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="85"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="77"/>
         <source>Save settings on exit</source>
         <translation>Salvar configuração ao sair</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="87"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="79"/>
         <source>Apply default settings after next restart</source>
         <translation>Aplicar as configurações padrão após o reinício</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="89"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="81"/>
         <source>Save settings now</source>
         <translation>Salvar configuração agora</translation>
     </message>
@@ -364,7 +414,7 @@
         <translation type="vanished">Salvar configuração padrão agora</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="104"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="96"/>
         <source>Configuration</source>
         <translation>Configuração</translation>
     </message>
@@ -372,100 +422,64 @@
 <context>
     <name>DsoConfigSpectrumPage</name>
     <message>
-        <location filename="../src/configdialog/DsoConfigSpectrumPage.cpp" line="8"/>
         <source>Rectangular</source>
-        <translation>Retangular</translation>
+        <translation type="vanished">Retangular</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigSpectrumPage.cpp" line="8"/>
         <source>Hamming</source>
-        <translation>Hamming</translation>
+        <translation type="vanished">Hamming</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigSpectrumPage.cpp" line="8"/>
         <source>Hann</source>
-        <translation>Hann</translation>
+        <translation type="vanished">Hann</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigSpectrumPage.cpp" line="8"/>
         <source>Cosine</source>
-        <translation>Cosseno</translation>
+        <translation type="vanished">Cosseno</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigSpectrumPage.cpp" line="8"/>
         <source>Lanczos</source>
-        <translation>Lanczos</translation>
+        <translation type="vanished">Lanczos</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigSpectrumPage.cpp" line="9"/>
         <source>Bartlett</source>
-        <translation>Bartlett</translation>
+        <translation type="vanished">Bartlett</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigSpectrumPage.cpp" line="9"/>
         <source>Triangular</source>
-        <translation>Triangular</translation>
+        <translation type="vanished">Triangular</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigSpectrumPage.cpp" line="9"/>
         <source>Gauss</source>
-        <translation>Gauss</translation>
+        <translation type="vanished">Gauss</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigSpectrumPage.cpp" line="9"/>
         <source>Bartlett-Hann</source>
-        <translation>Bartlett-Hann</translation>
+        <translation type="vanished">Bartlett-Hann</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigSpectrumPage.cpp" line="10"/>
         <source>Blackman</source>
-        <translation>Blackman</translation>
+        <translation type="vanished">Blackman</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigSpectrumPage.cpp" line="12"/>
         <source>Nuttall</source>
-        <translation>Nuttall</translation>
+        <translation type="vanished">Nuttall</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigSpectrumPage.cpp" line="12"/>
         <source>Blackman-Harris</source>
-        <translation>Blackman-Harris</translation>
+        <translation type="vanished">Blackman-Harris</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigSpectrumPage.cpp" line="12"/>
         <source>Blackman-Nuttall</source>
-        <translation>Blackman-Nuttall</translation>
+        <translation type="vanished">Blackman-Nuttall</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigSpectrumPage.cpp" line="12"/>
         <source>Flat top</source>
-        <translation>Flat Top</translation>
+        <translation type="vanished">Flat Top</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigSpectrumPage.cpp" line="15"/>
-        <source>&lt;b&gt;Window function&lt;/b&gt;</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../src/configdialog/DsoConfigSpectrumPage.cpp" line="21"/>
-        <source>&lt;b&gt;Reference level&lt;/b&gt;&lt;br/&gt;0 dBu = -2.2 dBV&lt;br/&gt;0 dBm (@600 &amp;Omega;) = -2.2 dBV&lt;br/&gt;0 dBm (@50 &amp;Omega;) = -13 dBV</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../src/configdialog/DsoConfigSpectrumPage.cpp" line="27"/>
-        <location filename="../src/configdialog/DsoConfigSpectrumPage.cpp" line="38"/>
-        <source>dBV</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../src/configdialog/DsoConfigSpectrumPage.cpp" line="32"/>
-        <source>&lt;b&gt;Minimum magnitude&lt;/b&gt;</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../src/configdialog/DsoConfigSpectrumPage.cpp" line="51"/>
         <source>Spectrum</source>
-        <translation>Espectro</translation>
+        <translation type="vanished">Espectro</translation>
     </message>
 </context>
 <context>
@@ -1142,22 +1156,22 @@
     <message>
         <location filename="../src/utils/printutils.cpp" line="19"/>
         <source>%L1 µV</source>
-        <translation></translation>
+        <translation>%L1 µV</translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="32"/>
         <source>%L1 µW</source>
-        <translation type="unfinished"></translation>
+        <translation>%L1 µW</translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="35"/>
         <source>%L1 mW</source>
-        <translation type="unfinished"></translation>
+        <translation>%L1 mW</translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="38"/>
         <source>%L1 W</source>
-        <translation type="unfinished"></translation>
+        <translation>%L1 W</translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="59"/>

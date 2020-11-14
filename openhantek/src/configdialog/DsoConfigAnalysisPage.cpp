@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: GPL-2.0+
 
-#include "DsoConfigSpectrumPage.h"
+#include "DsoConfigAnalysisPage.h"
 
-DsoConfigSpectrumPage::DsoConfigSpectrumPage( DsoSettings *settings, QWidget *parent ) : QWidget( parent ), settings( settings ) {
+DsoConfigAnalysisPage::DsoConfigAnalysisPage( DsoSettings *settings, QWidget *parent ) : QWidget( parent ), settings( settings ) {
     // Initialize lists for comboboxes
     QStringList windowFunctionStrings;
     windowFunctionStrings << tr( "Rectangular" ) << tr( "Hamming" ) << tr( "Hann" ) << tr( "Cosine" ) << tr( "Lanczos" )
@@ -51,16 +51,35 @@ DsoConfigSpectrumPage::DsoConfigSpectrumPage( DsoSettings *settings, QWidget *pa
     spectrumGroup = new QGroupBox( tr( "Spectrum" ) );
     spectrumGroup->setLayout( spectrumLayout );
 
+    dummyLoadLabel = new QLabel( tr( "Calculate power dissipation for load resistance" ) );
+    dummyLoadSpinBox = new QSpinBox();
+    dummyLoadSpinBox->setMinimum( 1 );
+    dummyLoadSpinBox->setMaximum( 1000 );
+    dummyLoadSpinBox->setValue( int( settings->scope.analysis.dummyLoad ) );
+    dummyLoadUnitLabel = new QLabel( tr( "<p>&Omega;</p>" ) );
+    dummyLoadLayout = new QHBoxLayout();
+    dummyLoadLayout->addWidget( dummyLoadSpinBox );
+    dummyLoadLayout->addWidget( dummyLoadUnitLabel );
+
+    powerLayout = new QGridLayout();
+    powerLayout->addWidget( dummyLoadLabel, 0, 0 );
+    powerLayout->addLayout( dummyLoadLayout, 0, 1 );
+
+    powerGroup = new QGroupBox( tr( "Power" ) );
+    powerGroup->setLayout( powerLayout );
+
     mainLayout = new QVBoxLayout();
     mainLayout->addWidget( spectrumGroup );
+    mainLayout->addWidget( powerGroup );
     mainLayout->addStretch( 1 );
 
     setLayout( mainLayout );
 }
 
 /// \brief Saves the new settings.
-void DsoConfigSpectrumPage::saveSettings() {
+void DsoConfigAnalysisPage::saveSettings() {
     settings->post.spectrumWindow = Dso::WindowFunction( windowFunctionComboBox->currentIndex() );
     settings->post.spectrumReference = referenceLevelSpinBox->value();
     settings->post.spectrumLimit = minimumMagnitudeSpinBox->value();
+    settings->scope.analysis.dummyLoad = unsigned( dummyLoadSpinBox->value() );
 }

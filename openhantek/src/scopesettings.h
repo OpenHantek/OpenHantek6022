@@ -61,6 +61,11 @@ struct DsoSettingsScopeSpectrum : public DsoSettingsScopeChannel {
     double magnitude = 20.0; ///< The vertical resolution in dB/div
 };
 
+/// \brief Holds the settings for the power analysis.
+struct DsoSettingsScopeAnalysis {
+    unsigned dummyLoad = 50; ///< Dummy load in  Ohms
+};
+
 /// \brief Holds the settings for the normal voltage graphs.
 /// TODO Use ControlSettingsVoltage
 struct DsoSettingsScopeVoltage : public DsoSettingsScopeChannel {
@@ -79,6 +84,7 @@ struct DsoSettingsScope {
     std::vector< DsoSettingsScopeVoltage > voltage;                                  ///< Settings for the normal graphs
     DsoSettingsScopeHorizontal horizontal;                                           ///< Settings for the horizontal axis
     DsoSettingsScopeTrigger trigger;                                                 ///< Settings for the trigger
+    DsoSettingsScopeAnalysis analysis;                                               ///< Settings for the analysis
 
     bool histogram = false;
     bool hasACcoupling = false;

@@ -194,6 +194,12 @@ void DsoSettings::load() {
         post.spectrumReference = storeSettings->value( "spectrumReference" ).toDouble();
     if ( storeSettings->contains( "spectrumWindow" ) )
         post.spectrumWindow = Dso::WindowFunction( storeSettings->value( "spectrumWindow" ).toInt() );
+
+    // Analysis
+    storeSettings->beginGroup( "analysis" );
+    if ( storeSettings->contains( "dummyLoad" ) )
+        scope.analysis.dummyLoad = storeSettings->value( "dummyLoad" ).toUInt();
+    storeSettings->endGroup(); // analysis
     storeSettings->endGroup(); // scope
 
     // View
@@ -240,8 +246,6 @@ void DsoSettings::load() {
         scope.histogram = storeSettings->value( "histogram" ).toBool();
     if ( storeSettings->contains( "digitalPhosphor" ) )
         view.digitalPhosphor = storeSettings->value( "digitalPhosphor" ).toBool();
-    if ( storeSettings->contains( "dummyLoad" ) )
-        view.dummyLoad = storeSettings->value( "dummyLoad" ).toInt();
     if ( storeSettings->contains( "interpolation" ) )
         view.interpolation = Dso::InterpolationMode( storeSettings->value( "interpolation" ).toInt() );
     if ( storeSettings->contains( "printerColorImages" ) )
@@ -341,6 +345,11 @@ void DsoSettings::save() {
     storeSettings->setValue( "spectrumLimit", post.spectrumLimit );
     storeSettings->setValue( "spectrumReference", post.spectrumReference );
     storeSettings->setValue( "spectrumWindow", unsigned( post.spectrumWindow ) );
+
+    // Analysis
+    storeSettings->beginGroup( "analysis" );
+    storeSettings->setValue( "dummyLoad", scope.analysis.dummyLoad );
+    storeSettings->endGroup(); // analysis
     storeSettings->endGroup(); // scope
 
     // View
@@ -375,7 +384,6 @@ void DsoSettings::save() {
     // Other view settings
     storeSettings->setValue( "histogram", scope.histogram );
     storeSettings->setValue( "digitalPhosphor", view.digitalPhosphor );
-    storeSettings->setValue( "dummyLoad", view.dummyLoad );
     storeSettings->setValue( "interpolation", view.interpolation );
     storeSettings->setValue( "printerColorImages", view.printerColorImages );
     storeSettings->setValue( "zoom", view.zoom );

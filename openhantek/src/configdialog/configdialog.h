@@ -2,7 +2,7 @@
 
 #include <QDialog>
 
-class DsoConfigSpectrumPage;
+class DsoConfigAnalysisPage;
 class DsoConfigScopePage;
 class DsoConfigColorsPage;
 class DsoSettings;
@@ -43,7 +43,7 @@ class DsoConfigDialog : public QDialog {
     QStackedWidget *pagesWidget;
 
     DsoConfigScopePage *scopePage;
-    DsoConfigSpectrumPage *spectrumPage;
+    DsoConfigAnalysisPage *analysisPage;
     DsoConfigColorsPage *colorsPage;
 
     QPushButton *acceptButton, *applyButton, *rejectButton;

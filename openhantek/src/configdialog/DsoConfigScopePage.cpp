@@ -42,19 +42,11 @@ DsoConfigScopePage::DsoConfigScopePage( DsoSettings *settings, QWidget *parent )
     digitalPhosphorDepthSpinBox->setMaximum( 99 );
     digitalPhosphorDepthSpinBox->setValue( int( settings->view.digitalPhosphorDepth ) );
 
-    dummyLoadLabel = new QLabel( tr( "Dummy load Ohms" ) );
-    dummyLoadSpinBox = new QSpinBox();
-    dummyLoadSpinBox->setMinimum( 1 );
-    dummyLoadSpinBox->setMaximum( 99 );
-    dummyLoadSpinBox->setValue( int( settings->view.dummyLoad ) );
-
     graphLayout = new QGridLayout();
     graphLayout->addWidget( interpolationLabel, 1, 0 );
     graphLayout->addWidget( interpolationComboBox, 1, 1 );
     graphLayout->addWidget( digitalPhosphorDepthLabel, 2, 0 );
     graphLayout->addWidget( digitalPhosphorDepthSpinBox, 2, 1 );
-    graphLayout->addWidget( dummyLoadLabel, 3, 0 );
-    graphLayout->addWidget( dummyLoadSpinBox, 3, 1 );
 
     graphGroup = new QGroupBox( tr( "Graph" ) );
     graphGroup->setLayout( graphLayout );
@@ -125,7 +117,6 @@ void DsoConfigScopePage::saveSettings() {
     settings->view.interpolation = Dso::InterpolationMode( interpolationComboBox->currentIndex() );
     settings->view.digitalPhosphorDepth = unsigned( digitalPhosphorDepthSpinBox->value() );
     settings->view.cursorGridPosition = Qt::ToolBarArea( cursorsComboBox->currentData().toUInt() );
-    settings->view.dummyLoad = unsigned( dummyLoadSpinBox->value() );
     settings->alwaysSave = saveOnExitCheckBox->isChecked();
     if ( defaultSettingsCheckBox->isChecked() )
         settings->configVersion = 0;

@@ -39,7 +39,6 @@ struct DsoSettingsView {
     bool antialiasing = true;                                         ///< Antialiasing for the graphs
     bool digitalPhosphor = false;                                     ///< true slowly fades out the previous graphs
     unsigned digitalPhosphorDepth = 8;                                ///< Number of channels shown at one time
-    unsigned dummyLoad = 8;                                           ///< Dummy load in  Ohms
     Dso::InterpolationMode interpolation = Dso::INTERPOLATION_LINEAR; ///< Interpolation mode for the graph
     bool printerColorImages = true;                                   ///< Exports images with screen colors
     bool zoomImage = true;                                            ///< Export zoomed images with double height

@@ -10,6 +10,120 @@
     </message>
 </context>
 <context>
+    <name>DsoConfigAnalysisPage</name>
+    <message>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="8"/>
+        <source>Rectangular</source>
+        <translation>Прямоугольное</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="8"/>
+        <source>Hamming</source>
+        <translation>Хэмминга</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="8"/>
+        <source>Hann</source>
+        <translation>Ханна</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="8"/>
+        <source>Cosine</source>
+        <translation>Косинус</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="8"/>
+        <source>Lanczos</source>
+        <translation>Ланцоша</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="9"/>
+        <source>Bartlett</source>
+        <translation>Барлетта</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="9"/>
+        <source>Triangular</source>
+        <translation>Треугольное</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="9"/>
+        <source>Gauss</source>
+        <translation>Гаусса</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="9"/>
+        <source>Bartlett-Hann</source>
+        <translation>Барлетта-Ханна</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="10"/>
+        <source>Blackman</source>
+        <translation>Блэкмана</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="12"/>
+        <source>Nuttall</source>
+        <translation>Наталла</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="12"/>
+        <source>Blackman-Harris</source>
+        <translation>Блэкмана-Харриса</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="12"/>
+        <source>Blackman-Nuttall</source>
+        <translation>Блэкмана-Наталла</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="12"/>
+        <source>Flat top</source>
+        <translation>С плоской вершиной</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="15"/>
+        <source>&lt;b&gt;Window function&lt;/b&gt;</source>
+        <translation>&lt;b&gt;Окно функции&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="21"/>
+        <source>&lt;b&gt;Reference level&lt;/b&gt;&lt;br/&gt;0 dBu = -2.2 dBV&lt;br/&gt;0 dBm (@600 &amp;Omega;) = -2.2 dBV&lt;br/&gt;0 dBm (@50 &amp;Omega;) = -13 dBV</source>
+        <translation>&lt;b&gt;Опорный уровень&lt;/b&gt;&lt;br/&gt;0 дБн = -2.2 дБВ&lt;br/&gt;0 дБм (@600 &amp;Omega;) = -2.2 дБВ&lt;br/&gt;0 дБм (@50 &amp;Omega;) = -13 дБВ</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="27"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="38"/>
+        <source>dBV</source>
+        <translation>дБВ</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="32"/>
+        <source>&lt;b&gt;Minimum magnitude&lt;/b&gt;</source>
+        <translation>&lt;b&gt;Минимальная величина&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="51"/>
+        <source>Spectrum</source>
+        <translation>Спектр</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="54"/>
+        <source>Calculate power dissipation for load resistance</source>
+        <translation>Рассчитать рассеиваемую мощность для сопротивления нагрузки</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="59"/>
+        <source>&lt;p&gt;&amp;Omega;&lt;/p&gt;</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="68"/>
+        <source>Power</source>
+        <translation>Мощность</translation>
+    </message>
+</context>
+<context>
     <name>DsoConfigColorsPage</name>
     <message>
         <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="24"/>
@@ -102,8 +216,12 @@
     </message>
     <message>
         <location filename="../src/configdialog/configdialog.cpp" line="97"/>
+        <source>Analysis</source>
+        <translation>Анализировать</translation>
+    </message>
+    <message>
         <source>Spectrum</source>
-        <translation>Спектр</translation>
+        <translation type="vanished">Спектр</translation>
     </message>
     <message>
         <source>File</source>
@@ -162,67 +280,62 @@
         <translation>Глубина цифрового люминофора</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="45"/>
-        <source>Dummy load Ohms</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="59"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="51"/>
         <source>Graph</source>
         <translation>График</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="62"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="54"/>
         <source>Position</source>
         <translation>Положение</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="64"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="56"/>
         <source>Left</source>
         <translation>Слева</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="65"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="57"/>
         <source>Right</source>
         <translation>Справа</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="72"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="64"/>
         <source>Cursors</source>
         <translation>Курсоры</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="76"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="68"/>
         <source>Export zoomed screen in double height</source>
         <translation>Экспорт увеличенного экрана с двойной высотой</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="81"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="73"/>
         <source>Export</source>
         <translation>Экспорт</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="91"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="83"/>
         <source>Scope has hardware modification for AC coupling (restart needed to apply the change)</source>
         <translation>Осциллограф аппаратно модифицирован под переменный ток (для активации требуется перезапуск)</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="85"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="77"/>
         <source>Save settings on exit</source>
         <translation>Сохранять настройки при выходе</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="87"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="79"/>
         <source>Apply default settings after next restart</source>
         <translation>Применить настройки по умолчанию после перезапуска</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="89"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="81"/>
         <source>Save settings now</source>
         <translation>Сохранить текущие настройки</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="104"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="96"/>
         <source>Configuration</source>
         <translation>Конфигурация</translation>
     </message>
@@ -230,100 +343,80 @@
 <context>
     <name>DsoConfigSpectrumPage</name>
     <message>
-        <location filename="../src/configdialog/DsoConfigSpectrumPage.cpp" line="8"/>
         <source>Rectangular</source>
-        <translation>Прямоугольное</translation>
+        <translation type="vanished">Прямоугольное</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigSpectrumPage.cpp" line="8"/>
         <source>Hamming</source>
-        <translation>Хэмминга</translation>
+        <translation type="vanished">Хэмминга</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigSpectrumPage.cpp" line="8"/>
         <source>Hann</source>
-        <translation>Ханна</translation>
+        <translation type="vanished">Ханна</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigSpectrumPage.cpp" line="8"/>
         <source>Cosine</source>
-        <translation>Косинус</translation>
+        <translation type="vanished">Косинус</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigSpectrumPage.cpp" line="8"/>
         <source>Lanczos</source>
-        <translation>Ланцоша</translation>
+        <translation type="vanished">Ланцоша</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigSpectrumPage.cpp" line="9"/>
         <source>Bartlett</source>
-        <translation>Барлетта</translation>
+        <translation type="vanished">Барлетта</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigSpectrumPage.cpp" line="9"/>
         <source>Triangular</source>
-        <translation>Треугольное</translation>
+        <translation type="vanished">Треугольное</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigSpectrumPage.cpp" line="9"/>
         <source>Gauss</source>
-        <translation>Гаусса</translation>
+        <translation type="vanished">Гаусса</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigSpectrumPage.cpp" line="9"/>
         <source>Bartlett-Hann</source>
-        <translation>Барлетта-Ханна</translation>
+        <translation type="vanished">Барлетта-Ханна</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigSpectrumPage.cpp" line="10"/>
         <source>Blackman</source>
-        <translation>Блэкмана</translation>
+        <translation type="vanished">Блэкмана</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigSpectrumPage.cpp" line="12"/>
         <source>Nuttall</source>
-        <translation>Наталла</translation>
+        <translation type="vanished">Наталла</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigSpectrumPage.cpp" line="12"/>
         <source>Blackman-Harris</source>
-        <translation>Блэкмана-Харриса</translation>
+        <translation type="vanished">Блэкмана-Харриса</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigSpectrumPage.cpp" line="12"/>
         <source>Blackman-Nuttall</source>
-        <translation>Блэкмана-Наталла</translation>
+        <translation type="vanished">Блэкмана-Наталла</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigSpectrumPage.cpp" line="12"/>
         <source>Flat top</source>
-        <translation>С плоской вершиной</translation>
+        <translation type="vanished">С плоской вершиной</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigSpectrumPage.cpp" line="15"/>
         <source>&lt;b&gt;Window function&lt;/b&gt;</source>
-        <translation>&lt;b&gt;Окно функции&lt;/b&gt;</translation>
+        <translation type="vanished">&lt;b&gt;Окно функции&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigSpectrumPage.cpp" line="21"/>
         <source>&lt;b&gt;Reference level&lt;/b&gt;&lt;br/&gt;0 dBu = -2.2 dBV&lt;br/&gt;0 dBm (@600 &amp;Omega;) = -2.2 dBV&lt;br/&gt;0 dBm (@50 &amp;Omega;) = -13 dBV</source>
-        <translation>&lt;b&gt;Опорный уровень&lt;/b&gt;&lt;br/&gt;0 дБн = -2.2 дБВ&lt;br/&gt;0 дБм (@600 &amp;Omega;) = -2.2 дБВ&lt;br/&gt;0 дБм (@50 &amp;Omega;) = -13 дБВ</translation>
+        <translation type="vanished">&lt;b&gt;Опорный уровень&lt;/b&gt;&lt;br/&gt;0 дБн = -2.2 дБВ&lt;br/&gt;0 дБм (@600 &amp;Omega;) = -2.2 дБВ&lt;br/&gt;0 дБм (@50 &amp;Omega;) = -13 дБВ</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigSpectrumPage.cpp" line="27"/>
-        <location filename="../src/configdialog/DsoConfigSpectrumPage.cpp" line="38"/>
         <source>dBV</source>
-        <translation>дБВ</translation>
+        <translation type="vanished">дБВ</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigSpectrumPage.cpp" line="32"/>
         <source>&lt;b&gt;Minimum magnitude&lt;/b&gt;</source>
-        <translation>&lt;b&gt;Минимальная величина&lt;/b&gt;</translation>
+        <translation type="vanished">&lt;b&gt;Минимальная величина&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigSpectrumPage.cpp" line="51"/>
         <source>Spectrum</source>
-        <translation>Спектр</translation>
+        <translation type="vanished">Спектр</translation>
     </message>
 </context>
 <context>
@@ -912,17 +1005,17 @@
     <message>
         <location filename="../src/utils/printutils.cpp" line="32"/>
         <source>%L1 µW</source>
-        <translation type="unfinished"></translation>
+        <translation>%L1 мкВт</translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="35"/>
         <source>%L1 mW</source>
-        <translation type="unfinished"></translation>
+        <translation>%L1 мВт</translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="38"/>
         <source>%L1 W</source>
-        <translation type="unfinished"></translation>
+        <translation>%L1 Вт</translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="59"/>

@@ -46,8 +46,6 @@ class DsoConfigScopePage : public QWidget {
     QSpinBox *digitalPhosphorDepthSpinBox;
     QLabel *interpolationLabel;
     QComboBox *interpolationComboBox;
-    QLabel *dummyLoadLabel;
-    QSpinBox *dummyLoadSpinBox;
 
     QGroupBox *cursorsGroup;
     QGridLayout *cursorsLayout;
