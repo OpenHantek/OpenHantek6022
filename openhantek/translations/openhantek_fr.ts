@@ -89,7 +89,7 @@
     <message>
         <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="21"/>
         <source>&lt;b&gt;Reference level&lt;/b&gt;&lt;br/&gt;0 dBu = -2.2 dBV&lt;br/&gt;0 dBm (@600 &amp;Omega;) = -2.2 dBV&lt;br/&gt;0 dBm (@50 &amp;Omega;) = -13 dBV</source>
-        <translation>&lt;b&gt;Niveau de réference&lt;/b&gt;&lt;br/&gt;0 dBu = -2.2 dBV&lt;br/&gt;0 dBm (@600 &amp;Omega;) = -2.2 dBV&lt;br/&gt;0 dBm (@50 &amp;Omega;) = -13 dBV</translation>
+        <translation>&lt;b&gt;Niveau de réference&lt;/b&gt;&lt;br/&gt;0 dBu = -2,2 dBV&lt;br/&gt;0 dBm (@600 &amp;Omega;) = -2,2 dBV&lt;br/&gt;0 dBm (@50 &amp;Omega;) = -13 dBV</translation>
     </message>
     <message>
         <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="27"/>
@@ -109,8 +109,12 @@
     </message>
     <message>
         <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="54"/>
+        <source>Calculate power dissipation for load resistance&lt;br/&gt;0 = off</source>
+        <translation>Calculer la puissance dissipée pour la résistance à la charge&lt;br/&gt;0 = off</translation>
+    </message>
+    <message>
         <source>Calculate power dissipation for load resistance</source>
-        <translation>Calculer la puissance dissipée pour la résistance à la charge</translation>
+        <translation type="vanished">Calculer la puissance dissipée pour la résistance à la charge</translation>
     </message>
     <message>
         <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="59"/>
@@ -594,7 +598,7 @@
         <translation>pp</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="837"/>
+        <location filename="../src/dsowidget.cpp" line="841"/>
         <source>rms</source>
         <translation>rms</translation>
     </message>
