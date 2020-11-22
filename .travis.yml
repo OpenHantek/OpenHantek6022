@@ -20,7 +20,7 @@ matrix:
     - compiler: clang
       env: CMAKE_CXX_COMPILER=/usr/bin/clang++
       os: osx
-      osx_image: xcode12.2
+      osx_image: xcode11.3
 
 before_install:
     - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
