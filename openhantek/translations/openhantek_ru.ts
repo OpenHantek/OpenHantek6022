@@ -89,7 +89,7 @@
     <message>
         <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="21"/>
         <source>&lt;b&gt;Reference level&lt;/b&gt;&lt;br/&gt;0 dBu = -2.2 dBV&lt;br/&gt;0 dBm (@600 &amp;Omega;) = -2.2 dBV&lt;br/&gt;0 dBm (@50 &amp;Omega;) = -13 dBV</source>
-        <translation>&lt;b&gt;Опорный уровень&lt;/b&gt;&lt;br/&gt;0 дБн = -2.2 дБВ&lt;br/&gt;0 дБм (@600 &amp;Omega;) = -2.2 дБВ&lt;br/&gt;0 дБм (@50 &amp;Omega;) = -13 дБВ</translation>
+        <translation>&lt;b&gt;Опорный уровень&lt;/b&gt;&lt;br/&gt;0 дБн = -2,2 дБВ&lt;br/&gt;0 дБм (@600 &amp;Omega;) = -2,2 дБВ&lt;br/&gt;0 дБм (@50 &amp;Omega;) = -13 дБВ</translation>
     </message>
     <message>
         <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="27"/>
@@ -109,8 +109,12 @@
     </message>
     <message>
         <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="54"/>
+        <source>Calculate power dissipation for load resistance&lt;br/&gt;0 = off</source>
+        <translation>Рассчитать рассеиваемую мощность для сопротивления нагрузки&lt;br/&gt;0 = выкл</translation>
+    </message>
+    <message>
         <source>Calculate power dissipation for load resistance</source>
-        <translation>Рассчитать рассеиваемую мощность для сопротивления нагрузки</translation>
+        <translation type="vanished">Рассчитать рассеиваемую мощность для сопротивления нагрузки</translation>
     </message>
     <message>
         <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="59"/>
@@ -527,7 +531,7 @@
         <translation>пп</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="837"/>
+        <location filename="../src/dsowidget.cpp" line="841"/>
         <source>rms</source>
         <translation>скз</translation>
     </message>

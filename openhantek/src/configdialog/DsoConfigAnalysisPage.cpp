@@ -51,10 +51,10 @@ DsoConfigAnalysisPage::DsoConfigAnalysisPage( DsoSettings *settings, QWidget *pa
     spectrumGroup = new QGroupBox( tr( "Spectrum" ) );
     spectrumGroup->setLayout( spectrumLayout );
 
-    dummyLoadLabel = new QLabel( tr( "Calculate power dissipation for load resistance" ) );
+    dummyLoadLabel = new QLabel( tr( "Calculate power dissipation for load resistance<br/>0 = off" ) );
     dummyLoadSpinBox = new QSpinBox();
-    dummyLoadSpinBox->setMinimum( 1 );
-    dummyLoadSpinBox->setMaximum( 1000 );
+    dummyLoadSpinBox->setMinimum( 0 );    // 0 = off
+    dummyLoadSpinBox->setMaximum( 1000 ); // range: audio (4/8 Ω), RF (50 Ω) and telco (600 Ω)
     dummyLoadSpinBox->setValue( int( settings->scope.analysis.dummyLoad ) );
     dummyLoadUnitLabel = new QLabel( tr( "<p>&Omega;</p>" ) );
     dummyLoadLayout = new QHBoxLayout();

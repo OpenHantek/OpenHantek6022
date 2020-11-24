@@ -70,8 +70,9 @@ You need the following software, to build OpenHantek from source:
 We have build instructions available for [Linux](docs/build.md#linux), [Raspberry Pi](docs/build.md#raspberrypi), [FreeBSD](docs/build.md#freebsd), [Apple MacOSX](docs/build.md#macosx) and [Microsoft Windows](docs/build.md#windows).
 
 ## Install prebuilt binary
-* Download Linux, Raspberry Pi, Windows and MacOSX packages from the [Releases](https://github.com/OpenHantek/OpenHantek6022/releases) page.
-(The RPi, Windows and MacOSX packages are not tested, neither is the installation of the `*.rpm` packages. For RPi4 see also [issue #28](https://github.com/OpenHantek/OpenHantek6022/issues/28).)
+* **There are currently no unstable MacOS packages available due to issues with the CI provider travis**
+* Download Linux, Raspberry Pi and Windows packages from the [Releases](https://github.com/OpenHantek/OpenHantek6022/releases) page.
+(The RPi and Windows packages are not tested, neither is the installation of the `*.rpm` packages. For RPi4 see also [issue #28](https://github.com/OpenHantek/OpenHantek6022/issues/28).)
 * If you want to follow ongoing development, packages built from the last commit are available in the [unstable release](https://github.com/OpenHantek/OpenHantek6022/releases/tag/unstable).
 * As I develop on a *Debian stable* system the preferred (native) package format is `*.deb`.
 * To install the downloaded `*.deb` package, open a terminal window, go to the download directory and enter the command (as root) `apt install ./openhantek_..._amd64.deb`.
