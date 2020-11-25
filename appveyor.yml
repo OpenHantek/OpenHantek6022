@@ -2,7 +2,7 @@ version: 1.0.{build}
 
 image:
   - Ubuntu2004
-  - Visual Studio 2015
+  - Visual Studio 2019
 
 configuration: Release
 
@@ -27,7 +27,7 @@ for:
     - path: build/packages/openhantek.*
 - matrix:
     only:
-      - image: Visual Studio 2017
+      - image: Visual Studio 2019
   before_build:
     - set qtpath64="C:\Qt\5.11\msvc2015_64"
     - set arch64=x64
