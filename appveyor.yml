@@ -1,47 +1,64 @@
-configuration:
-  - Release
+version: 1.0.{build}
 
-image:
-  - Visual Studio 2015
+matrix:
+  allow_failures:
+  - image: Ubuntu2004
+  - image: Visual Studio 2015
+    configuration: Release
 
 shallow_clone: true
 
+install:
+  - sh: sudo apt update
+  - sh: sudo apt install --quiet --yes cmake make fakeroot rpm qttools5-dev libfftw3-dev binutils-dev libusb-1.0-0-dev libqt5opengl5-dev mesa-common-dev libgl1-mesa-dev libgles2-mesa-dev
+
+
 before_build:
-  - set qtpath64="C:\Qt\5.11\msvc2015_64"
-  - set arch64=x64
-  - set dir64=build_x64
+  - cmd: set qtpath64="C:\Qt\5.11\msvc2015_64"
+  - cmd: set arch64=x64
+  - cmd: set dir64=build_x64
 
-  - md %dir64%
-  - call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" %arch64%
-  - cmake -G "Visual Studio 14 2015 Win64" -DCMAKE_PREFIX_PATH=%qtpath64% -DCMAKE_BUILD_TYPE=%configuration% -B%dir64% -H.
+  - cmd: md %dir64%
+  - cmd: call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" %arch64%
+  - cmd: cmake -G "Visual Studio 14 2015 Win64" -DCMAKE_PREFIX_PATH=%qtpath64% -DCMAKE_BUILD_TYPE=%configuration% -B%dir64% -H.
 
-  - set qtpath32="C:\Qt\5.11\msvc2015"
-  - set arch32=x86
-  - set dir32=build_x86
+  - cmd: set qtpath32="C:\Qt\5.11\msvc2015"
+  - cmd: set arch32=x86
+  - cmd: set dir32=build_x86
 
-  - md %dir32%
-  - call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" %arch32%
-  - cmake -G "Visual Studio 14 2015" -DCMAKE_PREFIX_PATH=%qtpath32% -DCMAKE_BUILD_TYPE=%configuration% -B%dir32% -H.
+  - cmd: md %dir32%
+  - cmd: call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" %arch32%
+  - cmd: cmake -G "Visual Studio 14 2015" -DCMAKE_PREFIX_PATH=%qtpath32% -DCMAKE_BUILD_TYPE=%configuration% -B%dir32% -H.
+
+  - sh: mkdir build
+  - sh: cd build
+  - sh: git log --oneline > changelog
+
+  - sh: cmake ..
+
 
 build_script:
-  - cmake --build %dir64% --config %configuration% --target package
-  - cmake --build %dir32% --config %configuration% --target package
+    - cmd: cmake --build %dir64% --config %configuration% --target package
+    - cmd: cmake --build %dir32% --config %configuration% --target package
+    - sh: make -j4
+    - sh: fakeroot make -j4 package
+
 
 artifacts:
-  - path: $(dir64)\openhantek\$(configuration)
-    name: OpenHantek-Win-$(arch64)-$(configuration)-b$(APPVEYOR_BUILD_NUMBER)
-  - path: $(dir32)\openhantek\$(configuration)
-    name: OpenHantek-Win-$(arch32)-$(configuration)-b$(APPVEYOR_BUILD_NUMBER)
+- path: $(dir64)\openhantek\$(configuration)
+  name: OpenHantek-Win-$(arch64)-$(configuration)-b$(APPVEYOR_BUILD_NUMBER)
+- path: $(dir32)\openhantek\$(configuration)
+  name: OpenHantek-Win-$(arch32)-$(configuration)-b$(APPVEYOR_BUILD_NUMBER)
+- path: build/packages/openhantek.*
 
 deploy:
-  - tag: $(APPVEYOR_REPO_TAG_NAME)
-    provider: GitHub
-    auth_token:
-        secure: 4TSFa7zTbxPVDkS9pGWO0BIPD9r2NnnHGe03pg5rjEuvSH5pntkmMdLM7MePJLma
-    artifact: /.*\.zip/
-    draft: true
-    prerelease: true
-    force_update: true
-    on:
-      #branch: master                 # release from master branch only
-      APPVEYOR_REPO_TAG: true        # deploy on tag push only
+- provider: GitHub
+  tag: $(APPVEYOR_REPO_TAG_NAME)
+  auth_token:
+    secure: vZ1O2YMCZNVkDrd3HozydbnysjZI3ZQ5jnINL0OLhZRFkOsa/7yRua3t1O6P1cpHJK6uVjaEV/mUhHauBUc5Isn+SVcD8+DJWGy9/Ce9kKY=
+  artifact: openhantek*
+  draft: true
+  prerelease: true
+  force_update: true
+  on:
+    $(APPVEYOR_REPO_TAG): true
