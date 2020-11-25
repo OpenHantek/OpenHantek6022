@@ -4,7 +4,6 @@
 [![GitHub Release Date](https://img.shields.io/github/release-date/OpenHantek/OpenHantek6022?color=blue)][release]
 
 [![GitHub commits since latest release](https://img.shields.io/github/commits-since/OpenHantek/OpenHantek6022/latest?color=brightgreen)][commits]
-[![Build Status](https://travis-ci.com/OpenHantek/OpenHantek6022.svg)](https://travis-ci.com/OpenHantek/OpenHantek6022)
 [![Build status](https://ci.appveyor.com/api/projects/status/github/OpenHantek/openhantek6022?svg=true)](https://ci.appveyor.com/project/Ho-Ro/openhantek6022)
 [![CodeFactor](https://www.codefactor.io/repository/github/openhantek/openhantek6022/badge)](https://www.codefactor.io/repository/github/openhantek/openhantek6022)
 
@@ -70,9 +69,8 @@ You need the following software, to build OpenHantek from source:
 We have build instructions available for [Linux](docs/build.md#linux), [Raspberry Pi](docs/build.md#raspberrypi), [FreeBSD](docs/build.md#freebsd), [Apple MacOSX](docs/build.md#macosx) and [Microsoft Windows](docs/build.md#windows).
 
 ## Install prebuilt binary
-* **There are currently no unstable MacOS packages available due to issues with the CI provider travis**
-* Download Linux, Raspberry Pi and Windows packages from the [Releases](https://github.com/OpenHantek/OpenHantek6022/releases) page.
-(The RPi and Windows packages are not tested, neither is the installation of the `*.rpm` packages. For RPi4 see also [issue #28](https://github.com/OpenHantek/OpenHantek6022/issues/28).)
+* Download Linux, Raspberry Pi, MacOS and Windows packages from the [Releases](https://github.com/OpenHantek/OpenHantek6022/releases) page.
+(The RPi, MacOS and Windows packages are not tested, neither is the installation of the `*.rpm` packages. For RPi4 see also [issue #28](https://github.com/OpenHantek/OpenHantek6022/issues/28).)
 * If you want to follow ongoing development, packages built from the last commit are available in the [unstable release](https://github.com/OpenHantek/OpenHantek6022/releases/tag/unstable).
 * As I develop on a *Debian stable* system the preferred (native) package format is `*.deb`.
 * To install the downloaded `*.deb` package, open a terminal window, go to the download directory and enter the command (as root) `apt install ./openhantek_..._amd64.deb`.
@@ -81,7 +79,7 @@ This command will automatically install all dependencies of the program as well.
 * The `*.tar.gz` achives contain the same files as the `*.deb` and `*.rpm` packages for quick testing - do not use for a permanent intallation. Do not report any issues about the `*.tar.gz`!
 * Get MacOSX packages from [macports](https://www.macports.org/ports.php?by=name&substr=openhantek) - thx [ra1nb0w](https://github.com/ra1nb0w).
 * Get [Fedora rpm packages](https://pkgs.org/download/openhantek) - thx [Vascom](https://github.com/Vascom).
-* Download [(untested) Windows build from last commit](https://ci.appveyor.com/project/Ho-Ro/openhantek6022/build/artifacts).
+* Download [(untested) builds from last commit](https://ci.appveyor.com/project/Ho-Ro/openhantek6022). Select the right `Image` and go to `Artifacts`.
 
 ## Run OpenHantek6022
 On a Linux system start the program via the menu entry *OpenHantek (Digital Storage Oscilloscope)* or from a terminal window as `OpenHantek`.
