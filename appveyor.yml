@@ -91,7 +91,7 @@ deploy:
 - provider: GitHub
   tag: $(APPVEYOR_REPO_TAG_NAME)
   auth_token:
-    secure: vZ1O2YMCZNVkDrd3HozydbnysjZI3ZQ5jnINL0OLhZRFkOsa/7yRua3t1O6P1cpHJK6uVjaEV/mUhHauBUc5Isn+SVcD8+DJWGy9/Ce9kKY=
+    secure: 4TSFa7zTbxPVDkS9pGWO0BIPD9r2NnnHGe03pg5rjEuvSH5pntkmMdLM7MePJLma
   artifact: /.*\.deb/, /.*\.rpm/, /.*\.tar.gz/, /.*\.zip/, /.*\.dmg/
   prerelease: true
   force_update: true
