@@ -1,54 +1,50 @@
 version: 1.0.{build}
 
 image:
-  - Ubuntu2004
   - Visual Studio 2019
+  - Ubuntu2004
 
 configuration: Release
 
 shallow_clone: true
 
-for:
-- matrix:
-    only:
-      - image: Ubuntu2004
-  install:
-    - sudo apt update
-    - sudo apt install --quiet --yes cmake make fakeroot rpm qttools5-dev libfftw3-dev binutils-dev libusb-1.0-0-dev libqt5opengl5-dev mesa-common-dev libgl1-mesa-dev libgles2-mesa-dev
-  before_build:
-    - mkdir build
-    - cd build
-    - git log --oneline > changelog
-    - cmake ..
-  build_script:
-    - sh: make -j4
-    - sh: fakeroot make -j4 package
-  artifacts:
-    - path: build/packages/openhantek.*
-- matrix:
-    only:
-      - image: Visual Studio 2019
-  before_build:
-    - set qtpath64="C:\Qt\5.11\msvc2015_64"
-    - set arch64=x64
-    - set dir64=build_x64
-    - md %dir64%
-    - call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" %arch64%
-    - cmake -G "Visual Studio 14 2015 Win64" -DCMAKE_PREFIX_PATH=%qtpath64% -DCMAKE_BUILD_TYPE=%configuration% -B%dir64% -H.
-    - set qtpath32="C:\Qt\5.11\msvc2015"
-    - set arch32=x86
-    - set dir32=build_x86
-    - md %dir32%
-    - call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" %arch32%
-    - cmake -G "Visual Studio 14 2015" -DCMAKE_PREFIX_PATH=%qtpath32% -DCMAKE_BUILD_TYPE=%configuration% -B%dir32% -H.
-  build_script:
-    - cmake --build %dir64% --config %configuration% --target package
-    - cmake --build %dir32% --config %configuration% --target package
-  artifacts:
-    - path: $(dir64)\openhantek\$(configuration)
-      name: OpenHantek-Win-$(arch64)-$(configuration)-b$(APPVEYOR_BUILD_NUMBER)
-    - path: $(dir32)\openhantek\$(configuration)
-      name: OpenHantek-Win-$(arch32)-$(configuration)-b$(APPVEYOR_BUILD_NUMBER)
+environment:
+  APPVEYOR_YML_DISABLE_PS_LINUX: true
+
+install:
+  - sh: sudo apt update
+  - sh: sudo apt install --quiet --yes cmake make fakeroot rpm qttools5-dev libfftw3-dev binutils-dev libusb-1.0-0-dev libqt5opengl5-dev mesa-common-dev libgl1-mesa-dev libgles2-mesa-dev
+
+before_build:
+  - ps: set qtpath64="C:\Qt\5.11\msvc2015_64"
+  - ps: set arch64=x64
+  - ps: set dir64=build_x64
+  - ps: md %dir64%
+  - ps: call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" %arch64%
+  - ps: cmake -G "Visual Studio 14 2015 Win64" -DCMAKE_PREFIX_PATH=%qtpath64% -DCMAKE_BUILD_TYPE=%configuration% -B%dir64% -H.
+  - ps: set qtpath32="C:\Qt\5.11\msvc2015"
+  - ps: set arch32=x86
+  - ps: set dir32=build_x86
+  - ps: md %dir32%
+  - ps: call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" %arch32%
+  - ps: cmake -G "Visual Studio 14 2015" -DCMAKE_PREFIX_PATH=%qtpath32% -DCMAKE_BUILD_TYPE=%configuration% -B%dir32% -H.
+  - sh: mkdir build
+  - sh: cd build
+  - sh: git log --oneline > changelog
+  - sh: cmake ..
+
+build_script:
+  - ps: cmake --build %dir64% --config %configuration% --target package
+  - ps: cmake --build %dir32% --config %configuration% --target package
+  - sh: make -j4
+  - sh: fakeroot make -j4 package
+
+artifacts:
+  - path: build/packages/openhantek.*
+  - path: $(dir64)\openhantek\$(configuration)
+    name: OpenHantek-Win-$(arch64)-$(configuration)-b$(APPVEYOR_BUILD_NUMBER)
+  - path: $(dir32)\openhantek\$(configuration)
+    name: OpenHantek-Win-$(arch32)-$(configuration)-b$(APPVEYOR_BUILD_NUMBER)
 
 
 deploy:
