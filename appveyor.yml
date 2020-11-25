@@ -3,6 +3,7 @@ version: 1.0.{build}
 image:
   - Ubuntu2004
   - Visual Studio 2015
+  - macOS
 
 for:
 - matrix:
@@ -47,14 +48,51 @@ for:
       name: OpenHantek-Win-x64-Release-b$(APPVEYOR_BUILD_NUMBER)
     - path: build_x86\openhantek\Release
       name: OpenHantek-Win-x86-Release-b$(APPVEYOR_BUILD_NUMBER)
-
+- matrix:
+    only:
+      - image: macOS
+  install:
+    - sh: git submodule update --init --recursive
+    - sh: brew update
+    - sh: brew install qt5 fftw binutils create-dmg
+    - sh: export CMAKE_PREFIX_PATH=$(brew --prefix qt5)
+  build_script:
+    - mkdir build
+    - cd build
+    - cmake -DCMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH} ../
+    - make -j4
+    - sudo make -j4 package
+    - if test -d openhantek/OpenHantek.app; then
+          export PATH=${CMAKE_PREFIX_PATH}/bin:${PATH} ;
+          cd openhantek ;
+          macdeployqt OpenHantek.app -always-overwrite -verbose=1 ;
+          python ../../utils/macdeployqtfix/macdeployqtfix.py --quiet OpenHantek.app/Contents/MacOS/OpenHantek ${CMAKE_PREFIX_PATH} ; create-dmg --volname OpenHantek --volicon ../../openhantek/res/images/openhantek.icns --window-pos 200 120 --window-size 800 400 --icon-size 100 --icon "OpenHantek.app" 200 190 --skip-jenkins --hide-extension "OpenHantek.app" --app-drop-link 600 185 --eula ../../LICENSE OpenHantek.dmg OpenHantek.app ;
+          cd .. ;
+      else
+          true ;
+      fi
+    #- ls -l openhantek || true
+    - if test -d openhantek/OpenHantek.app; then
+          cd openhantek ;
+          sudo tar -czf ../packages/openhantek_*_osx_*.tar.gz OpenHantek.app ;
+          if test -f OpenHantek.dmg; then
+              sudo mv OpenHantek.dmg ../packages/$(basename ../packages/openhantek_*_osx_*.tar.gz .tar.gz).dmg ;
+          fi ;
+          cd .. ;
+      else
+          true ;
+      fi
+    #- ls -l packages || true
+  artifacts:
+    - path: build/packages/*.dmg
+    - path: build/packages/*.tar.gz
 
 deploy:
 - provider: GitHub
   tag: $(APPVEYOR_REPO_TAG_NAME)
   auth_token:
     secure: vZ1O2YMCZNVkDrd3HozydbnysjZI3ZQ5jnINL0OLhZRFkOsa/7yRua3t1O6P1cpHJK6uVjaEV/mUhHauBUc5Isn+SVcD8+DJWGy9/Ce9kKY=
-  artifact: /.*\.deb/, /.*\.rpm/, /.*\.tar.gz/, /.*\.zip/
+  artifact: /.*\.deb/, /.*\.rpm/, /.*\.tar.gz/, /.*\.zip/, /.*\.dmg/
   prerelease: true
   force_update: true
   on:
