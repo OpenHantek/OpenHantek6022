@@ -96,4 +96,4 @@ deploy:
   prerelease: true
   force_update: true
   on:
-    $(APPVEYOR_REPO_TAG): true
+    APPVEYOR_REPO_TAG: true
