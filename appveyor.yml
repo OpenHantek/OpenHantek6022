@@ -4,10 +4,6 @@ image:
   - Ubuntu2004
   - Visual Studio 2015
 
-# configuration: Release
-
-# shallow_clone: true
-
 for:
 - matrix:
     only:
@@ -24,7 +20,9 @@ for:
     - sh: make -j4
     - sh: fakeroot make -j4 package
   artifacts:
-    - path: build/packages/openhantek.*
+    - path: build/packages/*.deb
+    - path: build/packages/*.rpm
+    - path: build/packages/*.tar.gz
 - matrix:
     only:
       - image: Visual Studio 2015
@@ -32,23 +30,23 @@ for:
     - cmd: set qtpath64="C:\Qt\5.11\msvc2015_64"
     - cmd: set arch64=x64
     - cmd: set dir64=build_x64
-    - cmd: md %dir64%
-    - cmd: call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" %arch64%
-    - cmd: cmake -G "Visual Studio 14 2015 Win64" -DCMAKE_PREFIX_PATH=%qtpath64% -DCMAKE_BUILD_TYPE=Release -B%dir64% -H.
+    - cmd: md build_x64
+    - cmd: call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x64
+    - cmd: cmake -G "Visual Studio 14 2015 Win64" -DCMAKE_PREFIX_PATH=%qtpath64% -DCMAKE_BUILD_TYPE=Release -Bbuild_x64 -H.
     - cmd: set qtpath32="C:\Qt\5.11\msvc2015"
     - cmd: set arch32=x86
     - cmd: set dir32=build_x86
-    - cmd: md %dir32%
-    - cmd: call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" %arch32%
-    - cmd: cmake -G "Visual Studio 14 2015" -DCMAKE_PREFIX_PATH=%qtpath32% -DCMAKE_BUILD_TYPE=Release -B%dir32% -H.
+    - cmd: md build_x86
+    - cmd: call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86
+    - cmd: cmake -G "Visual Studio 14 2015" -DCMAKE_PREFIX_PATH=%qtpath32% -DCMAKE_BUILD_TYPE=Release -Bbuild_x86 -H.
   build_script:
-    - cmd: cmake --build %dir64% --config Release --target package
-    - cmd: cmake --build %dir32% --config Release --target package
+    - cmd: cmake --build build_x64 --config Release --target package
+    - cmd: cmake --build build_x86 --config Release --target package
   artifacts:
-    - path: $(dir64)\openhantek\Release
-      name: OpenHantek-Win-$(arch64)-Release-b$(APPVEYOR_BUILD_NUMBER)
-    - path: $(dir32)\openhantek\Release
-      name: OpenHantek-Win-$(arch32)-Release-b$(APPVEYOR_BUILD_NUMBER)
+    - path: build_x64\openhantek\Release
+      name: OpenHantek-Win-x64-Release-b$(APPVEYOR_BUILD_NUMBER)
+    - path: build_x86\openhantek\Release
+      name: OpenHantek-Win-x86-Release-b$(APPVEYOR_BUILD_NUMBER)
 
 
 deploy:
@@ -56,8 +54,7 @@ deploy:
   tag: $(APPVEYOR_REPO_TAG_NAME)
   auth_token:
     secure: vZ1O2YMCZNVkDrd3HozydbnysjZI3ZQ5jnINL0OLhZRFkOsa/7yRua3t1O6P1cpHJK6uVjaEV/mUhHauBUc5Isn+SVcD8+DJWGy9/Ce9kKY=
-  artifact: openhantek*
-  draft: true
+  artifact: /.*\.deb/, /.*\.rpm/, /.*\.tar.gz/, /.*\.zip/
   prerelease: true
   force_update: true
   on:
