@@ -1,10 +1,10 @@
 version: 1.0.{build}
 
-matrix:
-  allow_failures:
-  - image: Ubuntu2004
-  - image: Visual Studio 2015
-    configuration: Release
+image:
+  - Ubuntu2004
+  - Visual Studio 2015
+
+configuration: Release
 
 shallow_clone: true
 
