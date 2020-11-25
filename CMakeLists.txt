@@ -69,11 +69,11 @@ add_custom_target(
 )
 
 # Add "doc" target to build the documentation.
-find_package(Doxygen QUIET)
-if (DOXYGEN_FOUND)
-    add_custom_target(
-	doc
-        COMMAND "${CMAKE_COMMAND} -E remove_directory html"
-        COMMAND "${DOXYGEN_EXECUTABLE} Doxyfile" WORKING_DIRECTORY "${CMAKE_CURRENT_LIST_DIR}"
-    )
-endif()
+#find_package(Doxygen QUIET)
+#if (DOXYGEN_FOUND)
+#    add_custom_target(
+#	doc
+#        COMMAND "${CMAKE_COMMAND} -E remove_directory html"
+#        COMMAND "${DOXYGEN_EXECUTABLE} Doxyfile" WORKING_DIRECTORY "${CMAKE_CURRENT_LIST_DIR}"
+#    )
+#endif()
