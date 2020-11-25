@@ -1,45 +1,64 @@
-environment:
-  matrix:
+version: 1.0.{build}
 
-  - job_name: Windows build
-    appveyor_build_worker_image: Visual Studio 2019
+image:
+  - Ubuntu2004
+  - Visual Studio 2015
 
-  - job_name: Linux build
-    appveyor_build_worker_image: Ubuntu
+# configuration: Release
 
-matrix:
-  fast_finish: true
+shallow_clone: true
 
-init:
-  - appveyor version
-
-# job-specific configurations
 for:
+- matrix:
+    only:
+      - image: Ubuntu2004
+  install:
+    - sh: sudo apt update
+    - sh: sudo apt install --quiet --yes cmake make fakeroot rpm qttools5-dev libfftw3-dev binutils-dev libusb-1.0-0-dev libqt5opengl5-dev mesa-common-dev libgl1-mesa-dev libgles2-mesa-dev
+  before_build:
+    - sh: mkdir build
+    - sh: cd build
+    - sh: git log --oneline > changelog
+    - sh: cmake ..
+  build_script:
+    - sh: make -j4
+    - sh: fakeroot make -j4 package
+  artifacts:
+    - path: build/packages/openhantek.*
+- matrix:
+    only:
+      - image: Visual Studio 2015
+  before_build:
+    - cmd: set qtpath64="C:\Qt\5.11\msvc2015_64"
+    - cmd: set arch64=x64
+    - cmd: set dir64=build_x64
+    - cmd: md %dir64%
+    - cmd: call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" %arch64%
+    - cmd: cmake -G "Visual Studio 14 2015 Win64" -DCMAKE_PREFIX_PATH=%qtpath64% -DCMAKE_BUILD_TYPE=Release -B%dir64% -H.
+    - cmd: set qtpath32="C:\Qt\5.11\msvc2015"
+    - cmd: set arch32=x86
+    - cmd: set dir32=build_x86
+    - cmd: md %dir32%
+    - cmd: call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" %arch32%
+    - cmd: cmake -G "Visual Studio 14 2015" -DCMAKE_PREFIX_PATH=%qtpath32% -DCMAKE_BUILD_TYPE=Release -B%dir32% -H.
+  build_script:
+    - cmd: cmake --build %dir64% --config Release --target package
+    - cmd: cmake --build %dir32% --config Release --target package
+  artifacts:
+    - path: $(dir64)\openhantek\Release
+      name: OpenHantek-Win-$(arch64)-Release-b$(APPVEYOR_BUILD_NUMBER)
+    - path: $(dir32)\openhantek\Release
+      name: OpenHantek-Win-$(arch32)-Release-b$(APPVEYOR_BUILD_NUMBER)
 
-  -
-    matrix:
-      only:
-        - job_name: Windows build
 
-    install:
-    - cmd: echo This is Windows-specific install
-
-    before_build:
-    - cmd: echo This is Windows-specific before_build
-
-    build_script:
-    - cmd: echo This is Windows-specific build_script
-
-  -
-    matrix:
-      only:
-        - job_name: Linux build
-
-    install:
-    - sh: echo This is Linux-specific install
-
-    before_build:
-    - sh: echo This is Linux-specific before_build
-
-    build_script:
-    - sh: echo This is Linux-specific build_script
+deploy:
+- provider: GitHub
+  tag: $(APPVEYOR_REPO_TAG_NAME)
+  auth_token:
+    secure: vZ1O2YMCZNVkDrd3HozydbnysjZI3ZQ5jnINL0OLhZRFkOsa/7yRua3t1O6P1cpHJK6uVjaEV/mUhHauBUc5Isn+SVcD8+DJWGy9/Ce9kKY=
+  artifact: openhantek*
+  draft: true
+  prerelease: true
+  force_update: true
+  on:
+    $(APPVEYOR_REPO_TAG): true
