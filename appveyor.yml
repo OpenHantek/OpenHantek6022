@@ -1,77 +1,94 @@
 version: 1.0.{build}
 
+# This file defines all the magic to test the build on every push to GitHub with the help of appveyor.com
+# We use different (virtual) build environments that work sequentially and provide their artifacts.
+# The artifacts of every push/build are available in appveyor for 6 months from build.
+# Artifacts of tagged pushes ("unstable" or release number) are deployed into the GitHub release.
+
+#define the build environments
 image:
   - Ubuntu2004
   - Visual Studio 2015
   - macOS
 
+
+# Process the build for each build environment
 for:
+
+# Build Linux packages
 - matrix:
     only:
       - image: Ubuntu2004
   install:
-    - sh: sudo apt update
-    - sh: sudo apt install --quiet --yes cmake make fakeroot rpm qttools5-dev libfftw3-dev binutils-dev libusb-1.0-0-dev libqt5opengl5-dev mesa-common-dev libgl1-mesa-dev libgles2-mesa-dev
+    - sudo apt update
+    - sudo apt install --quiet --yes cmake make fakeroot rpm qttools5-dev libfftw3-dev binutils-dev libusb-1.0-0-dev libqt5opengl5-dev mesa-common-dev libgl1-mesa-dev libgles2-mesa-dev
   before_build:
-    - sh: mkdir build
-    - sh: cd build
-    - sh: git log --oneline > changelog
-    - sh: cmake ..
+    - mkdir build
+    - cd build
+    - cp ../CHANGELOG changelog
+    - cmake ..
   build_script:
-    - sh: make -j4
-    - sh: fakeroot make -j4 package
+    - make -j4
+    - fakeroot make -j4 package
   artifacts:
     - path: build/packages/*.deb
     - path: build/packages/*.rpm
     - path: build/packages/*.tar.gz
+
+# Build Windows packages
 - matrix:
     only:
       - image: Visual Studio 2015
   before_build:
-    - cmd: set qtpath64="C:\Qt\5.11\msvc2015_64"
-    - cmd: set arch64=x64
-    - cmd: set dir64=build_x64
-    - cmd: md build_x64
-    - cmd: call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x64
-    - cmd: cmake -G "Visual Studio 14 2015 Win64" -DCMAKE_PREFIX_PATH=%qtpath64% -DCMAKE_BUILD_TYPE=Release -Bbuild_x64 -H.
-    - cmd: set qtpath32="C:\Qt\5.11\msvc2015"
-    - cmd: set arch32=x86
-    - cmd: set dir32=build_x86
-    - cmd: md build_x86
-    - cmd: call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86
-    - cmd: cmake -G "Visual Studio 14 2015" -DCMAKE_PREFIX_PATH=%qtpath32% -DCMAKE_BUILD_TYPE=Release -Bbuild_x86 -H.
+    - set qtpath64="C:\Qt\5.11\msvc2015_64"
+    - set arch64=x64
+    - set dir64=build_x64
+    - md build_x64
+    - call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x64
+    - cmake -G "Visual Studio 14 2015 Win64" -DCMAKE_PREFIX_PATH=%qtpath64% -DCMAKE_BUILD_TYPE=Release -Bbuild_x64 -H.
+    - set qtpath32="C:\Qt\5.11\msvc2015"
+    - set arch32=x86
+    - set dir32=build_x86
+    - md build_x86
+    - call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86
+    - cmake -G "Visual Studio 14 2015" -DCMAKE_PREFIX_PATH=%qtpath32% -DCMAKE_BUILD_TYPE=Release -Bbuild_x86 -H.
   build_script:
-    - cmd: cmake --build build_x64 --config Release --target package
-    - cmd: cmake --build build_x86 --config Release --target package
+    - cmake --build build_x64 --config Release --target package
+    - cmake --build build_x86 --config Release --target package
   artifacts:
     - path: build_x64\openhantek\Release
       name: OpenHantek-Win-x64-Release-b$(APPVEYOR_BUILD_NUMBER)
     - path: build_x86\openhantek\Release
       name: OpenHantek-Win-x86-Release-b$(APPVEYOR_BUILD_NUMBER)
+
+# Build MacOS packages
 - matrix:
     only:
       - image: macOS
   install:
-    - sh: git submodule update --init --recursive
-    - sh: brew update
-    - sh: brew install qt5 fftw binutils create-dmg
-    - sh: export CMAKE_PREFIX_PATH=$(brew --prefix qt5)
+    - git submodule update --init --recursive
+    - brew update
+    - brew install qt5 fftw binutils create-dmg
+    - export CMAKE_PREFIX_PATH=$(brew --prefix qt5)
   build_script:
     - mkdir build
     - cd build
     - cmake -DCMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH} ../
     - make -j4
     - sudo make -j4 package
+    # add all dependencies to *.app, create a *.dmg file
     - if test -d openhantek/OpenHantek.app; then
           export PATH=${CMAKE_PREFIX_PATH}/bin:${PATH} ;
           cd openhantek ;
           macdeployqt OpenHantek.app -always-overwrite -verbose=1 ;
-          python ../../utils/macdeployqtfix/macdeployqtfix.py --quiet OpenHantek.app/Contents/MacOS/OpenHantek ${CMAKE_PREFIX_PATH} ; create-dmg --volname OpenHantek --volicon ../../openhantek/res/images/openhantek.icns --window-pos 200 120 --window-size 800 400 --icon-size 100 --icon "OpenHantek.app" 200 190 --skip-jenkins --hide-extension "OpenHantek.app" --app-drop-link 600 185 --eula ../../LICENSE OpenHantek.dmg OpenHantek.app ;
+          python ../../utils/macdeployqtfix/macdeployqtfix.py --quiet OpenHantek.app/Contents/MacOS/OpenHantek ${CMAKE_PREFIX_PATH} ;
+          create-dmg --volname OpenHantek --volicon ../../openhantek/res/images/openhantek.icns --window-pos 200 120 --window-size 800 400 --icon-size 100 --icon "OpenHantek.app" 200 190 --skip-jenkins --hide-extension "OpenHantek.app" --app-drop-link 600 185 --eula ../../LICENSE OpenHantek.dmg OpenHantek.app ;
           cd .. ;
       else
           true ;
       fi
     #- ls -l openhantek || true
+    # zip *.app, move *.dmg to packages directory, (re)name both accordingly
     - if test -d openhantek/OpenHantek.app; then
           cd openhantek ;
           sudo tar -czf ../packages/openhantek_*_osx_*.tar.gz OpenHantek.app ;
@@ -87,6 +104,8 @@ for:
     - path: build/packages/*.dmg
     - path: build/packages/*.tar.gz
 
+
+# Upload all packages to GitHub, but only if the push was tagged
 deploy:
 - provider: GitHub
   tag: $(APPVEYOR_REPO_TAG_NAME)

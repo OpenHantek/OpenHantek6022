@@ -120,8 +120,9 @@ Make sure to be member of the group `openhantek`, e.g.:
 ### [MacOSX](#macosx)
 We recommend homebrew to install the required libraries.
 
+    git submodule update --init --recursive
     brew update
-    brew install libusb fftw qt5 cmake
+    brew install libusb fftw qt5 cmake binutils create-dmg
 
 If you want to build an OSX bundle make sure the option in `openhantek/CMakeLists.txt` is set accordingly:
 
@@ -150,7 +151,9 @@ After you've installed the requirements run the following commands inside the to
     python ../../macdeployqtfix/macdeployqtfix.py OpenHantek.app/Contents/MacOS/OpenHantek $(brew --prefix qt5)
     #
     # finally create OpenHantek.dmg from OpenHantek.app
-    macdeployqt OpenHantek.app -dmg -no-plugins -verbose=2
+    create-dmg --volname OpenHantek --volicon ../../openhantek/res/images/openhantek.icns --window-pos 200 120 \
+      --window-size 800 400 --icon-size 100 --icon "OpenHantek.app" 200 190 --skip-jenkins \
+      --hide-extension "OpenHantek.app" --app-drop-link 600 185 --eula ../../LICENSE OpenHantek.dmg OpenHantek.app
     #
 
 ----

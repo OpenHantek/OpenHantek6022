@@ -33,14 +33,17 @@ After David [stopped maintaining](https://github.com/OpenHantek/openhantek/issue
 * Voltage and Spectrum view for all device supported chanels.
 * CH1 and CH2 name becomes red when input is clipped (bottom left).
 * Settable probe attenuation factor 1..1000 to accommodate a variety of different probes.
-* Measure and display Vpp, RMS, DC (average), AC (rms) and AC as dB values as well as frequency of active channels.
+* Measure and display Vpp, DC (average), AC, RMS and dB (of RMS) values as well as frequency of active channels.
+* Display the power dissipation for a load resistance of 1..1000 Ω (optional, can be set in Oscilloscope/Settings/Analysis).
 * Math channel modes: CH1+CH2, CH1-CH2, CH2-CH1, CH1*CH2 and AC part of CH1 or CH2.
-* Time base 100 ms/div .. 10 ns/div.
+* Time base 10 ns/div .. 10 s/div.
 * Sample rates 10, 20, 50, 100, 200, 500 kS/s, 1, 2, 5, 10, 12, 15, 24, 30 MS/s (24 & 30 MS/s in CH1-only mode).
 * 48 MS/s not supported due to unstable USB data streaming.
-* Downsampling (up to 100x) increases solution and SNR.
+* Downsampling (up to 200x) increases resolution and SNR.
 * Calibration output square wave signal frequency can be selected between 50 Hz .. 100 kHz in 1/2/5 steps.
-* Trigger modes: Normal, Auto and Single with green/red status display (top left).
+* Trigger modes: *Normal*, *Auto* and *Single* with green/red status display (top left).
+* Untriggered *Roll* mode can be selected for slow time bases of 200 ms/div .. 10 s/div.
+* Trigger filter *HF* (trigger also on glitches), *Normal* and *LF* (for noisy signals).
 * Calibration values loaded from eeprom or a model configuration file.
 * [Calibration program](https://github.com/Ho-Ro/Hantek6022API/blob/master/README.md#create-calibration-values-for-openhantek) to create these values automatically.
 * Digital phosphor effect to notice even short spikes; simple eye-diagram display with alternating trigger slope.
@@ -79,7 +82,7 @@ This command will automatically install all dependencies of the program as well.
 * The `*.tar.gz` achives contain the same files as the `*.deb` and `*.rpm` packages for quick testing - do not use for a permanent intallation. Do not report any issues about the `*.tar.gz`!
 * Get MacOSX packages from [macports](https://www.macports.org/ports.php?by=name&substr=openhantek) - thx [ra1nb0w](https://github.com/ra1nb0w).
 * Get [Fedora rpm packages](https://pkgs.org/download/openhantek) - thx [Vascom](https://github.com/Vascom).
-* Download [(untested) builds from last commit](https://ci.appveyor.com/project/Ho-Ro/openhantek6022). Select the right `Image` and go to `Artifacts`.
+* Download [(untested) builds from last commit](https://ci.appveyor.com/project/Ho-Ro/openhantek6022). Select the preferred `Image` and go to `Artifacts`.
 
 ## Run OpenHantek6022
 On a Linux system start the program via the menu entry *OpenHantek (Digital Storage Oscilloscope)* or from a terminal window as `OpenHantek`.
