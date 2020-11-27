@@ -25,7 +25,7 @@ After David [stopped maintaining](https://github.com/OpenHantek/openhantek/issue
 * Fully supported operating system: Linux; developed under debian stable for amd64 architecture.
 * Raspberry Pi packages (raspbian stable) are available on the [Releases](https://github.com/OpenHantek/OpenHantek6022/releases) page, check this [setup requirement](docs/build.md#raspberrypi).
 * Compiles under FreeBSD (packaging / installation: work in progress, thx [tspspi](https://github.com/tspspi)).
-* Other operating systems builds: [Windows](docs/images/screenshot_mainwindow_win.png) (partly tested) & MacOSX (untested).
+* Other operating systems builds: [Windows](docs/images/screenshot_mainwindow_win.png) (partly tested) & macOS (untested).
 * Uses [free open source firmware](https://github.com/Ho-Ro/Hantek6022API), no longer dependent on nonfree Hantek firmware.
 * Extensive [User Manual](docs/OpenHantek6022_User_Manual.pdf) with technical specs and schematics.
 
@@ -69,18 +69,18 @@ You need the following software, to build OpenHantek from source:
 * [libusb-1.0](https://libusb.info/), version >= 1.0.16 (prebuild files will be used on windows)
 * A compiler that supports C++11 - tested with gcc, clang and msvc
 
-We have build instructions available for [Linux](docs/build.md#linux), [Raspberry Pi](docs/build.md#raspberrypi), [FreeBSD](docs/build.md#freebsd), [Apple MacOSX](docs/build.md#macosx) and [Microsoft Windows](docs/build.md#windows).
+We have build instructions available for [Linux](docs/build.md#linux), [Raspberry Pi](docs/build.md#raspberrypi), [FreeBSD](docs/build.md#freebsd), [Apple macOS](docs/build.md#macos) and [Microsoft Windows](docs/build.md#windows).
 
 ## Install prebuilt binary
-* Download Linux, Raspberry Pi, MacOS and Windows packages from the [Releases](https://github.com/OpenHantek/OpenHantek6022/releases) page.
-(The RPi, MacOS and Windows packages are not tested, neither is the installation of the `*.rpm` packages. For RPi4 see also [issue #28](https://github.com/OpenHantek/OpenHantek6022/issues/28).)
+* Download Linux, Raspberry Pi, macOS and Windows packages from the [Releases](https://github.com/OpenHantek/OpenHantek6022/releases) page.
+(The RPi, macOS and Windows packages are not tested, neither is the installation of the `*.rpm` packages. For RPi4 see also [issue #28](https://github.com/OpenHantek/OpenHantek6022/issues/28).)
 * If you want to follow ongoing development, packages built from the last commit are available in the [unstable release](https://github.com/OpenHantek/OpenHantek6022/releases/tag/unstable).
 * As I develop on a *Debian stable* system the preferred (native) package format is `*.deb`.
 * To install the downloaded `*.deb` package, open a terminal window, go to the download directory and enter the command (as root) `apt install ./openhantek_..._amd64.deb`.
 This command will automatically install all dependencies of the program as well.
 * For installation of `*.rpm` packages follow similar rules, e.g. `dnf install ./openhantek-...-1.x86_64.rpm`.
 * The `*.tar.gz` achives contain the same files as the `*.deb` and `*.rpm` packages for quick testing - do not use for a permanent intallation. Do not report any issues about the `*.tar.gz`!
-* Get MacOSX packages from [macports](https://www.macports.org/ports.php?by=name&substr=openhantek) - thx [ra1nb0w](https://github.com/ra1nb0w).
+* Get macOS packages from [macports](https://www.macports.org/ports.php?by=name&substr=openhantek) - thx [ra1nb0w](https://github.com/ra1nb0w).
 * Get [Fedora rpm packages](https://pkgs.org/download/openhantek) - thx [Vascom](https://github.com/Vascom).
 * Download [(untested) builds from last commit](https://ci.appveyor.com/project/Ho-Ro/openhantek6022). Select the preferred `Image` and go to `Artifacts`.
 

@@ -1,6 +1,3 @@
----
-layout: default
----
 ### [Linux](#linux)
 For Debian (stretch and newer), Ubuntu 17.04+ and Mint 17+ and other deb based distributions install named requirements like this:
 > apt install g++ make cmake fakeroot qttools5-dev libfftw3-dev binutils-dev libusb-1.0-0-dev libqt5opengl5-dev mesa-common-dev libgl1-mesa-dev libgles2-mesa-dev
@@ -117,7 +114,7 @@ Make sure to be member of the group `openhantek`, e.g.:
 
 ----
 
-### [MacOSX](#macosx)
+### [macOS](#macos)
 We recommend homebrew to install the required libraries.
 
     git submodule update --init --recursive
