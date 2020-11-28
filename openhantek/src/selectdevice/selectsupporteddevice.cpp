@@ -72,12 +72,14 @@ std::unique_ptr< ScopeDevice > SelectSupportedDevice::showSelectDeviceModal( lib
 #if defined( Q_OS_WIN )
     messageNoDevices += tr( "<p>Please make sure you have installed the windows usb driver correctly</p>" );
 #elif defined( Q_OS_LINUX )
-    QFile libRules( "/lib/udev/rules.d/60-hantek.rules" );
+    QFile libRules( "/usr/lib/udev/rules.d/60-hantek.rules" );
     QFile etcRules( "/etc/udev/rules.d/60-hantek.rules" );
     if ( !libRules.exists() && !etcRules.exists() ) {
         messageNoDevices +=
-            tr( "<p>Please make sure you have copied the udev rules file to <b>%1</b> for correct USB access permissions.</p>" )
-                .arg( libRules.fileName() );
+            tr( "<p>Please make sure you have copied the udev rules file to<br/><b>%1</b> or<br/><b>%2</b> for correct USB "
+                "access permissions.</p>" )
+                .arg( libRules.fileName() )
+                .arg( etcRules.fileName() );
     }
 #endif
     messageNoDevices +=
