@@ -104,18 +104,18 @@ DsoWidget::DsoWidget( DsoSettingsScope *scope, DsoSettingsView *view, const Dso:
     // The table for the measurements at screen bottom
     QPalette tablePalette = palette;
     measurementLayout = new QGridLayout();
-    int iii = 0;
-    measurementLayout->setColumnMinimumWidth( iii++, 80 );
-    measurementLayout->setColumnMinimumWidth( iii++, 30 );
-    measurementLayout->setColumnStretch( iii++, 3 );
-    measurementLayout->setColumnStretch( iii++, 3 );
-    measurementLayout->setColumnStretch( iii++, 3 );
-    measurementLayout->setColumnStretch( iii++, 3 );
-    measurementLayout->setColumnStretch( iii++, 3 );
-    measurementLayout->setColumnStretch( iii++, 3 );
-    measurementLayout->setColumnStretch( iii++, 3 );
-    measurementLayout->setColumnStretch( iii++, 3 );
-    measurementLayout->setColumnStretch( iii++, 3 );
+    measurementLayout->setColumnMinimumWidth( 0, 80 ); // Channel
+    measurementLayout->setColumnMinimumWidth( 1, 30 ); // Coupling or Mode
+    measurementLayout->setColumnStretch( 2, 3 );       // Voltage amplitude
+    measurementLayout->setColumnStretch( 3, 3 );       // Spectrum magnitude
+    measurementLayout->setColumnStretch( 4, 3 );       // Vpp
+    measurementLayout->setColumnStretch( 5, 3 );       // VDC
+    measurementLayout->setColumnStretch( 6, 3 );       // Vac
+    measurementLayout->setColumnStretch( 7, 3 );       // Vrms
+    measurementLayout->setColumnStretch( 8, 3 );       // dB
+    measurementLayout->setColumnStretch( 9, 3 );       // Power
+    measurementLayout->setColumnStretch( 10, 2 );      // THD
+    measurementLayout->setColumnStretch( 11, 3 );      // f
     for ( ChannelID channel = 0; channel < scope->voltage.size(); ++channel ) {
         tablePalette.setColor( QPalette::WindowText, view->colors->voltage[ channel ] );
         measurementNameLabel.push_back( new QLabel( scope->voltage[ channel ].name ) );
@@ -150,11 +150,14 @@ DsoWidget::DsoWidget( DsoSettingsScope *scope, DsoSettingsView *view, const Dso:
         measurementRMSPowerLabel.push_back( new QLabel() );
         measurementRMSPowerLabel[ channel ]->setAlignment( Qt::AlignRight );
         measurementRMSPowerLabel[ channel ]->setPalette( palette );
+        measurementTHDLabel.push_back( new QLabel() );
+        measurementTHDLabel[ channel ]->setAlignment( Qt::AlignRight );
+        measurementTHDLabel[ channel ]->setPalette( palette );
         measurementFrequencyLabel.push_back( new QLabel() );
         measurementFrequencyLabel[ channel ]->setAlignment( Qt::AlignRight );
         measurementFrequencyLabel[ channel ]->setPalette( palette );
         setMeasurementVisible( channel );
-        iii = 0;
+        int iii = 0;
         measurementLayout->addWidget( measurementNameLabel[ channel ], int( channel ), iii++ );
         measurementLayout->addWidget( measurementMiscLabel[ channel ], int( channel ), iii++ );
         measurementLayout->addWidget( measurementGainLabel[ channel ], int( channel ), iii++ );
@@ -165,6 +168,7 @@ DsoWidget::DsoWidget( DsoSettingsScope *scope, DsoSettingsView *view, const Dso:
         measurementLayout->addWidget( measurementRMSLabel[ channel ], int( channel ), iii++ );
         measurementLayout->addWidget( measurementdBLabel[ channel ], int( channel ), iii++ );
         measurementLayout->addWidget( measurementRMSPowerLabel[ channel ], int( channel ), iii++ );
+        measurementLayout->addWidget( measurementTHDLabel[ channel ], int( channel ), iii++ );
         measurementLayout->addWidget( measurementFrequencyLabel[ channel ], int( channel ), iii++ );
         if ( channel < spec->channels )
             updateVoltageCoupling( channel );
@@ -352,6 +356,7 @@ void DsoWidget::setColors() {
         measurementRMSLabel[ channel ]->setPalette( paletteNow );
         measurementdBLabel[ channel ]->setPalette( paletteNow );
         measurementRMSPowerLabel[ channel ]->setPalette( paletteNow );
+        measurementTHDLabel[ channel ]->setPalette( paletteNow );
         measurementFrequencyLabel[ channel ]->setPalette( paletteNow );
     }
 
@@ -479,12 +484,13 @@ void DsoWidget::setMeasurementVisible( ChannelID channel ) {
     if ( !visible ) {
         measurementGainLabel[ channel ]->setText( QString() );
         measurementVppLabel[ channel ]->setText( QString() );
-        measurementRMSLabel[ channel ]->setText( QString() );
         measurementDCLabel[ channel ]->setText( QString() );
         measurementACLabel[ channel ]->setText( QString() );
+        measurementRMSLabel[ channel ]->setText( QString() );
         measurementdBLabel[ channel ]->setText( QString() );
-        measurementFrequencyLabel[ channel ]->setText( QString() );
         measurementRMSPowerLabel[ channel ]->setText( QString() );
+        measurementTHDLabel[ channel ]->setText( QString() );
+        measurementFrequencyLabel[ channel ]->setText( QString() );
     }
 
     measurementGainLabel[ channel ]->setVisible( scope->voltage[ channel ].used );
@@ -828,7 +834,7 @@ void DsoWidget::showNew( std::shared_ptr< PPresult > analysedData ) {
     pulseWidth2 = analysedData.get()->data( 0 )->pulseWidth2;
     updateTriggerDetails();
     for ( ChannelID channel = 0; channel < scope->voltage.size(); ++channel ) {
-        if ( scope->voltage[ channel ].used && analysedData.get()->data( channel ) ) {
+        if ( ( scope->voltage[ channel ].used || scope->spectrum[ channel ].used ) && analysedData.get()->data( channel ) ) {
             // Vpp Amplitude string representation (3 significant digits)
             measurementVppLabel[ channel ]->setText( valueToString( analysedData.get()->data( channel )->vpp, UNIT_VOLTS, 3 ) +
                                                      tr( "pp" ) );
@@ -846,13 +852,27 @@ void DsoWidget::showNew( std::shared_ptr< PPresult > analysedData ) {
                 valueToString( analysedData.get()->data( channel )->frequency, UNIT_HERTZ, 4 ) );
             // RMS Amplitude string representation (3 significant digits)
             if ( scope->analysis.dummyLoad ) {
+                measurementLayout->setColumnStretch( 9, 3 ); // Power
                 measurementRMSPowerLabel[ channel ]->setText(
                     valueToString( ( analysedData.get()->data( channel )->rms * analysedData.get()->data( channel )->rms ) /
                                        scope->analysis.dummyLoad,
                                    UNIT_WATTS, 3 ) );
             } else {
+                measurementLayout->setColumnStretch( 9, 0 ); // Power
                 measurementRMSPowerLabel[ channel ]->setText( "" );
             }
+            if ( scope->analysis.calculateTHD ) {
+                measurementLayout->setColumnStretch( 10, 2 ); // THD
+                if ( analysedData.get()->data( channel )->thd > 0 )
+                    measurementTHDLabel[ channel ]->setText(
+                        QString( "%1%" ).arg( analysedData.get()->data( channel )->thd * 100, 4, 'f', 1 ) );
+                else
+                    measurementTHDLabel[ channel ]->setText( "" );
+            } else {
+                measurementTHDLabel[ channel ]->setText( "" );
+                measurementLayout->setColumnStretch( 10, 0 ); // THD
+            }
+
             // Highlight clipped channel
             QPalette validPalette;
             if ( analysedData.get()->data( channel )->valid ) { // normal display

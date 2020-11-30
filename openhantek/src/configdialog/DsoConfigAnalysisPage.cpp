@@ -60,10 +60,16 @@ DsoConfigAnalysisPage::DsoConfigAnalysisPage( DsoSettings *settings, QWidget *pa
     dummyLoadLayout = new QHBoxLayout();
     dummyLoadLayout->addWidget( dummyLoadSpinBox );
     dummyLoadLayout->addWidget( dummyLoadUnitLabel );
-
+    thdLabel = new QLabel( tr( "Calculate total harmonic distortion (THD)" ) );
+    thdCheckBox = new QCheckBox();
+    thdCheckBox->setChecked( settings->scope.analysis.calculateTHD );
+    thdLayout = new QHBoxLayout();
+    thdLayout->addWidget( thdCheckBox );
     powerLayout = new QGridLayout();
     powerLayout->addWidget( dummyLoadLabel, 0, 0 );
     powerLayout->addLayout( dummyLoadLayout, 0, 1 );
+    powerLayout->addWidget( thdLabel, 1, 0 );
+    powerLayout->addLayout( thdLayout, 1, 1 );
 
     powerGroup = new QGroupBox( tr( "Power" ) );
     powerGroup->setLayout( powerLayout );
@@ -76,10 +82,12 @@ DsoConfigAnalysisPage::DsoConfigAnalysisPage( DsoSettings *settings, QWidget *pa
     setLayout( mainLayout );
 }
 
+
 /// \brief Saves the new settings.
 void DsoConfigAnalysisPage::saveSettings() {
     settings->post.spectrumWindow = Dso::WindowFunction( windowFunctionComboBox->currentIndex() );
     settings->post.spectrumReference = referenceLevelSpinBox->value();
     settings->post.spectrumLimit = minimumMagnitudeSpinBox->value();
     settings->scope.analysis.dummyLoad = unsigned( dummyLoadSpinBox->value() );
+    settings->scope.analysis.calculateTHD = thdCheckBox->isChecked();
 }

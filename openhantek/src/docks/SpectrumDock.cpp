@@ -92,6 +92,7 @@ void SpectrumDock::loadSettings( DsoSettingsScope *scope ) {
     for ( ChannelID channel = 0; channel < scope->voltage.size(); ++channel ) {
         this->setMagnitude( channel, scope->spectrum[ channel ].magnitude );
         this->setUsed( channel, scope->spectrum[ channel ].used );
+        channelBlocks[ channel ].usedCheckBox->setEnabled( scope->horizontal.format == Dso::GraphFormat::TY );
     }
     setFrequencybase( scope->horizontal.frequencybase );
 }
@@ -123,9 +124,19 @@ unsigned SpectrumDock::setUsed( ChannelID channel, bool used ) {
     if ( channel >= scope->voltage.size() )
         return INT_MAX;
     QSignalBlocker blocker( channelBlocks[ channel ].usedCheckBox );
-
     channelBlocks[ channel ].usedCheckBox->setChecked( used );
     return channel;
+}
+
+
+void SpectrumDock::enableSpectrum( bool enabled ) {
+    for ( unsigned channel = 0; channel < scope->voltage.size(); ++channel ) {
+        QSignalBlocker blocker( channelBlocks[ channel ].usedCheckBox );
+        channelBlocks[ channel ].usedCheckBox->setEnabled( enabled );
+        channelBlocks[ channel ].usedCheckBox->setChecked( false );
+        scope->spectrum[ channel ].used = false;
+        emit usedChanged( channel, false );
+    }
 }
 
 

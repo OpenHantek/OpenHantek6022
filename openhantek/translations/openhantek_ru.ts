@@ -113,6 +113,11 @@
         <translation>Рассчитать рассеиваемую мощность для сопротивления нагрузки&lt;br/&gt;0 = выкл</translation>
     </message>
     <message>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="63"/>
+        <source>Calculate total harmonic distortion (THD)</source>
+        <translation>Рассчитать суммарное гармоническое искажение (THD)</translation>
+    </message>
+    <message>
         <source>Calculate power dissipation for load resistance</source>
         <translation type="vanished">Рассчитать рассеиваемую мощность для сопротивления нагрузки</translation>
     </message>
@@ -122,7 +127,7 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="68"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="74"/>
         <source>Power</source>
         <translation>Мощность</translation>
     </message>
@@ -449,12 +454,12 @@
 <context>
     <name>DsoWidget</name>
     <message>
-        <location filename="../src/dsowidget.cpp" line="577"/>
-        <location filename="../src/dsowidget.cpp" line="579"/>
-        <location filename="../src/dsowidget.cpp" line="610"/>
-        <location filename="../src/dsowidget.cpp" line="655"/>
-        <location filename="../src/dsowidget.cpp" line="664"/>
-        <location filename="../src/dsowidget.cpp" line="685"/>
+        <location filename="../src/dsowidget.cpp" line="583"/>
+        <location filename="../src/dsowidget.cpp" line="585"/>
+        <location filename="../src/dsowidget.cpp" line="616"/>
+        <location filename="../src/dsowidget.cpp" line="661"/>
+        <location filename="../src/dsowidget.cpp" line="670"/>
+        <location filename="../src/dsowidget.cpp" line="691"/>
         <source>/div</source>
         <translation>/дел</translation>
     </message>
@@ -464,74 +469,74 @@
         <translation> </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="180"/>
+        <location filename="../src/dsowidget.cpp" line="184"/>
         <source>Markers</source>
         <translation>Маркеры</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="529"/>
-        <location filename="../src/dsowidget.cpp" line="545"/>
+        <location filename="../src/dsowidget.cpp" line="535"/>
+        <location filename="../src/dsowidget.cpp" line="551"/>
         <source>ON</source>
         <translation>ВКЛ</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="530"/>
-        <location filename="../src/dsowidget.cpp" line="545"/>
+        <location filename="../src/dsowidget.cpp" line="536"/>
+        <location filename="../src/dsowidget.cpp" line="551"/>
         <source>OFF</source>
         <translation>ВЫКЛ</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="567"/>
+        <location filename="../src/dsowidget.cpp" line="573"/>
         <source>Markers  </source>
         <translation>Маркеры  </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="568"/>
+        <location filename="../src/dsowidget.cpp" line="574"/>
         <source>Time: </source>
         <translation>t: </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="569"/>
+        <location filename="../src/dsowidget.cpp" line="575"/>
         <source>Frequency: </source>
         <translation>f: </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="572"/>
+        <location filename="../src/dsowidget.cpp" line="578"/>
         <source>Zoom x%L1  </source>
         <translation>Увел.x%L1</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="574"/>
+        <location filename="../src/dsowidget.cpp" line="580"/>
         <source>Zoom ---  </source>
         <translation>Увел.---</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="623"/>
+        <location filename="../src/dsowidget.cpp" line="629"/>
         <source>%L1%</source>
         <translation>%L1%</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="637"/>
+        <location filename="../src/dsowidget.cpp" line="643"/>
         <source>%1  %2  %3  %4  %5</source>
         <translation>%1  %2  %3  %4  %5</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="675"/>
+        <location filename="../src/dsowidget.cpp" line="681"/>
         <source>/s</source>
         <translation>/с</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="789"/>
+        <location filename="../src/dsowidget.cpp" line="795"/>
         <source> on screen</source>
         <translation> на экране</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="834"/>
+        <location filename="../src/dsowidget.cpp" line="840"/>
         <source>pp</source>
         <translation>пп</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="841"/>
+        <location filename="../src/dsowidget.cpp" line="847"/>
         <source>rms</source>
         <translation>скз</translation>
     </message>
@@ -810,12 +815,12 @@
         <translation>Неправильная команда</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="265"/>
+        <location filename="../src/mainwindow.cpp" line="267"/>
         <source>Stop the oscilloscope</source>
         <translation>Стоп осциллографа</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="264"/>
+        <location filename="../src/mainwindow.cpp" line="266"/>
         <source>Stop</source>
         <translation>Стоп</translation>
     </message>
@@ -844,23 +849,23 @@
         <translation>Печать осциллограммы ..</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="268"/>
+        <location filename="../src/mainwindow.cpp" line="270"/>
         <source>Start</source>
         <translation>Пуск</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="269"/>
+        <location filename="../src/mainwindow.cpp" line="271"/>
         <source>Start the oscilloscope</source>
         <translation>Пуск осциллографа</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="290"/>
+        <location filename="../src/mainwindow.cpp" line="292"/>
         <source>Open file</source>
         <translation>Открыть файл</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="290"/>
-        <location filename="../src/mainwindow.cpp" line="313"/>
+        <location filename="../src/mainwindow.cpp" line="292"/>
+        <location filename="../src/mainwindow.cpp" line="315"/>
         <source>Settings (*.conf)</source>
         <translation>Настройки (*.conf)</translation>
     </message>
@@ -869,97 +874,97 @@
         <translation type="vanished">Настройки (*.ini)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="313"/>
+        <location filename="../src/mainwindow.cpp" line="315"/>
         <source>Save settings</source>
         <translation>Сохранить настройки</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="339"/>
+        <location filename="../src/mainwindow.cpp" line="341"/>
         <source>Disable fading of previous graphs</source>
         <translation>Отключить угасание предыдущих графиков</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="341"/>
+        <location filename="../src/mainwindow.cpp" line="343"/>
         <source>Enable fading of previous graphs</source>
         <translation>Включить угасание предыдущих графиков</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="349"/>
+        <location filename="../src/mainwindow.cpp" line="351"/>
         <source>Hide histogram</source>
         <translation>Спрятать гистограмму</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="351"/>
+        <location filename="../src/mainwindow.cpp" line="353"/>
         <source>Show histogram</source>
         <translation>Показать гистограмму</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="360"/>
+        <location filename="../src/mainwindow.cpp" line="362"/>
         <source>Hide magnified scope</source>
         <translation>Спрятать область увеличения</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="362"/>
+        <location filename="../src/mainwindow.cpp" line="364"/>
         <source>Show magnified scope</source>
         <translation>Показать область увеличения</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="372"/>
+        <location filename="../src/mainwindow.cpp" line="374"/>
         <source>Hide measurements</source>
         <translation>Спрятать измерения</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="374"/>
+        <location filename="../src/mainwindow.cpp" line="376"/>
         <source>Show measurements</source>
         <translation>Показать измерения</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="402"/>
+        <location filename="../src/mainwindow.cpp" line="404"/>
         <source>About OpenHantek6022 (%1)</source>
         <translation>О программе OpenHantek6022 (%1)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="403"/>
+        <location filename="../src/mainwindow.cpp" line="405"/>
         <source>&lt;p&gt;Open source software for Hantek6022 USB oscilloscopes&lt;/p&gt;&lt;p&gt;Maintainer: Martin Homuth-Rosemann&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2010, 2011 Oliver Haag&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2012-2020 OpenHantek community&lt;br/&gt;&lt;a href=&apos;https://github.com/OpenHantek&apos;&gt;https://github.com/OpenHantek&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Open source firmware copyright &amp;copy; 2019-2020 Ho-Ro&lt;br/&gt;&lt;a href=&apos;https://github.com/Ho-Ro/Hantek6022API&apos;&gt;https://github.com/Ho-Ro/Hantek6022API&lt;/a&gt;&lt;/p&gt;</source>
         <translation>&lt;p&gt;Открытое программное обеспечение для USB осциллографов Hantek6022&lt;/p&gt;&lt;p&gt;Мейнтейнер: Мартин Хомут-Розманн&lt;/p&gt;&lt;p&gt;Авторские права &amp;copy; 2010, 2011 Оливер Хааг&lt;/p&gt;&lt;p&gt;Авторские права &amp;copy; 2012-2020 Сообщество OpenHantek &lt;br/&gt;&lt;a href=&apos;https://github.com/OpenHantek&apos;&gt;https://github.com/OpenHantek&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Авторские права на открытую микропрограмму &amp;copy; 2019-2020 Ho-Ro&lt;br/&gt;&lt;a href=&apos;https://github.com/Ho-Ro/Hantek6022API&apos;&gt;https://github.com/Ho-Ro/Hantek6022API&lt;/a&gt;&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="410"/>
+        <location filename="../src/mainwindow.cpp" line="412"/>
         <source>&lt;p&gt;Running since %1 seconds.&lt;/p&gt;</source>
         <translation>&lt;p&gt;Работает в течение %1 секунд.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="428"/>
+        <location filename="../src/mainwindow.cpp" line="430"/>
         <source>%1: %2</source>
         <translation>%1: %2</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="441"/>
+        <location filename="../src/mainwindow.cpp" line="443"/>
         <source>yyyy-MM-dd hh:mm:ss</source>
         <translation>yyyy-MM-dd hh:mm:ss</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="442"/>
+        <location filename="../src/mainwindow.cpp" line="444"/>
         <source>yyyyMMdd_hhmmss</source>
         <translation>yyyyMMdd_hhmmss</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="470"/>
+        <location filename="../src/mainwindow.cpp" line="472"/>
         <source>Image (*.png *.jpg)</source>
         <translation>Изображение (*.png *.jpg)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="470"/>
+        <location filename="../src/mainwindow.cpp" line="472"/>
         <source>Portable Document Format (*.pdf)</source>
         <translation>Portable Document Format (*.pdf)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="471"/>
+        <location filename="../src/mainwindow.cpp" line="473"/>
         <source>Save screenshot</source>
         <translation>Сохранить снимок экрана</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="501"/>
+        <location filename="../src/mainwindow.cpp" line="503"/>
         <source>Print oscillograph</source>
         <translation>Печать осциллограммы</translation>
     </message>

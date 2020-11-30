@@ -38,6 +38,10 @@ class SpectrumDock : public QDockWidget {
     /// \return Index of channel, INT_MAX on error.
     unsigned setUsed( ChannelID channel, bool used );
 
+    /// \brief Enables/disables all channels.
+    /// \param enabled True if the channel should be enabled, false otherwise.
+    void enableSpectrum( bool enabled );
+
     /// \brief Changes the frequencybase.
     /// \param frequencybase The frequencybase in hertz.
     void setFrequencybase( double timebase );

@@ -199,6 +199,8 @@ void DsoSettings::load() {
     storeSettings->beginGroup( "analysis" );
     if ( storeSettings->contains( "dummyLoad" ) )
         scope.analysis.dummyLoad = storeSettings->value( "dummyLoad" ).toUInt();
+    if ( storeSettings->contains( "calculateTHD" ) )
+        scope.analysis.calculateTHD = storeSettings->value( "calculateTHD" ).toBool();
     storeSettings->endGroup(); // analysis
     storeSettings->endGroup(); // scope
 
@@ -349,6 +351,7 @@ void DsoSettings::save() {
     // Analysis
     storeSettings->beginGroup( "analysis" );
     storeSettings->setValue( "dummyLoad", scope.analysis.dummyLoad );
+    storeSettings->setValue( "calculateTHD", scope.analysis.calculateTHD );
     storeSettings->endGroup(); // analysis
     storeSettings->endGroup(); // scope
 

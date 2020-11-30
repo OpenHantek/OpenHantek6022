@@ -63,7 +63,8 @@ struct DsoSettingsScopeSpectrum : public DsoSettingsScopeChannel {
 
 /// \brief Holds the settings for the power analysis.
 struct DsoSettingsScopeAnalysis {
-    unsigned dummyLoad = 50; ///< Dummy load in  Ohms
+    unsigned dummyLoad = 0; ///< Dummy load in  Ohms
+    bool calculateTHD = false;
 };
 
 /// \brief Holds the settings for the normal voltage graphs.

@@ -91,6 +91,7 @@ class DsoWidget : public QWidget {
     std::vector< QLabel * > measurementdBLabel;        ///< AC Amplitude in dB
     std::vector< QLabel * > measurementFrequencyLabel; ///< Frequency of the signal (Hz)
     std::vector< QLabel * > measurementRMSPowerLabel;  ///< RMS Power in Watts
+    std::vector< QLabel * > measurementTHDLabel;       ///< THD of the signal in Watts
 
     DataGrid *cursorDataGrid;
 

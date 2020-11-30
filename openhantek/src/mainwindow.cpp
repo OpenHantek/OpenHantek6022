@@ -191,8 +191,10 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
     } );
     connect( horizontalDock, &HorizontalDock::calfreqChanged,
              [dsoControl, this]() { dsoControl->setCalFreq( dsoSettings->scope.horizontal.calfreq ); } );
-    connect( horizontalDock, &HorizontalDock::formatChanged,
-             [this]( Dso::GraphFormat format ) { ui->actionHistogram->setEnabled( format == Dso::GraphFormat::TY ); } );
+    connect( horizontalDock, &HorizontalDock::formatChanged, [=]( Dso::GraphFormat format ) {
+        ui->actionHistogram->setEnabled( format == Dso::GraphFormat::TY );
+        spectrumDock->enableSpectrum( format == Dso::GraphFormat::TY );
+    } );
 
     connect( triggerDock, &TriggerDock::modeChanged, dsoControl, &HantekDsoControl::setTriggerMode );
     connect( triggerDock, &TriggerDock::modeChanged, dsoWidget, &DsoWidget::updateTriggerMode );

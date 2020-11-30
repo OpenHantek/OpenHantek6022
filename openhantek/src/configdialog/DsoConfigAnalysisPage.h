@@ -52,4 +52,7 @@ class DsoConfigAnalysisPage : public QWidget {
     QSpinBox *dummyLoadSpinBox;
     QLabel *dummyLoadUnitLabel;
     QHBoxLayout *dummyLoadLayout;
+    QLabel *thdLabel;
+    QCheckBox *thdCheckBox;
+    QHBoxLayout *thdLayout;
 };

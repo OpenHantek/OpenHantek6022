@@ -333,5 +333,22 @@ void SpectrumGenerator::process( PPresult *result ) {
         } else { // otherwise fall back to correlation
             channelData->frequency = pC;
         }
+        // calculate the total harmonic distortion of the signal (optional)
+        // THD = sqrt( power_of_harmonics / power_of_fundamental )
+        if ( scope->analysis.calculateTHD ) { // set in menu Oscilloscope/Settings/Analysis
+            channelData->thd = -1;            // invalid unless calculation is ok
+            double f1 = channelData->frequency / channelData->spectrum.interval;
+            if ( f1 >= 1 ) { // position of fundamental frequency is usable
+                // get power of fundamental frequency
+                double p1 = pow( 10, channelData->spectrum.sample[ unsigned( round( f1 ) ) ] / 10 );
+                if ( p1 > 0 ) {
+                    double pn = 0.0;                                     // sum of power of harmonics
+                    for ( double fn = 2 * f1; fn < dftLength; fn += f1 ) // iterate over all harmonics
+                        pn += pow( 10, channelData->spectrum.sample[ unsigned( round( fn ) ) ] / 10 );
+                    channelData->thd = sqrt( pn / p1 );
+                    // printf( "%g %g %g %% THD\n", p1, pn, channelData->thd );
+                }
+            }
+        }
     }
 }
