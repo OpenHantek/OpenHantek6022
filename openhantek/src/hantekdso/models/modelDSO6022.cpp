@@ -99,17 +99,17 @@ static void initSpecifications( Dso::ControlSpecification &specification ) {
     QSettings::setDefaultFormat( QSettings::NativeFormat );
 
     // Possible raw sample rates with custom fw from https://github.com/Ho-Ro/Hantek6022API
-    // 20k, 50k, 64k, 100k, 200k, 500k, 1M, 2M, 3M, 4M, 5M, 6M, 8M, 10M, 12M, 15M, 16M, 24M, 30M (, 48M)
+    // 20k, 40k, 50k, 64k, 100k, 200k, 400k, 500k, 1M, 2M, 3M, 4M, 5M, 6M, 8M, 10M, 12M, 15M, 16M, 24M, 30M (, 48M)
     // 48M is unusable in 1 channel mode due to massive USB overrun
     // 24M, 30M and 48M are unusable in 2 channel mode
     // these unstable settings are disabled
     // Lower effective sample rates < 10 MS/s use oversampling to increase the SNR
 
     specification.samplerate.single.base = 1e6;
-    specification.samplerate.single.max = 30e6;
+    specification.samplerate.single.max = 48e6; // HACK for user github.com/zen67
     specification.samplerate.single.recordLengths = {UINT_MAX};
     specification.samplerate.multi.base = 1e6;
-    specification.samplerate.multi.max = 15e6;
+    specification.samplerate.multi.max = 24e6; // HACK for user github.com/zen67
     specification.samplerate.multi.recordLengths = {UINT_MAX};
 
     specification.fixedSampleRates = {

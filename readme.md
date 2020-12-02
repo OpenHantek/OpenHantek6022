@@ -37,7 +37,7 @@ After David [stopped maintaining](https://github.com/OpenHantek/openhantek/issue
 * Display the power dissipation for a load resistance of 1..1000 Ω (optional, can be set in Oscilloscope/Settings/Analysis).
 * Math channel modes: CH1+CH2, CH1-CH2, CH2-CH1, CH1*CH2 and AC part of CH1 or CH2.
 * Time base 10 ns/div .. 10 s/div.
-* Sample rates 10, 20, 50, 100, 200, 500 kS/s, 1, 2, 5, 10, 12, 15, 24, 30 MS/s (24 & 30 MS/s in CH1-only mode).
+* Sample rates 100, 200, 500 S/s, 1, 2, 5, 10, 20, 50, 100, 200, 500 kS/s, 1, 2, 5, 10, 12, 15, 24, 30 MS/s (24 & 30 MS/s in CH1-only mode).
 * 48 MS/s not supported due to unstable USB data streaming.
 * Downsampling (up to 200x) increases resolution and SNR.
 * Calibration output square wave signal frequency can be selected between 50 Hz .. 100 kHz in 1/2/5 steps.

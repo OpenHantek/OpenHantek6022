@@ -88,7 +88,7 @@ static void initSpecifications( Dso::ControlSpecification &specification ) {
     settings.endGroup(); // offset
 
     // Possible raw sample rates with custom fw from https://github.com/Ho-Ro/Hantek6022API
-    // 20k, 50k, 64k, 100k, 200k, 500k, 1M, 2M, 3M, 4M, 5M, 6M, 8M, 10M, 12M, 15M, 16M, 24M, 30M (, 48M)
+    // 20k, 40k, 50k, 64k, 100k, 200k, 400k, 500k, 1M, 2M, 3M, 4M, 5M, 6M, 8M, 10M, 12M, 15M, 16M, 24M, 30M (, 48M)
     // 48M is unusable in 1 channel mode due to massive USB overrun
     // 24M, 30M and 48M are unusable in 2 channel mode
     // these unstable settings are disabled
