@@ -106,10 +106,10 @@ static void initSpecifications( Dso::ControlSpecification &specification ) {
     // Lower effective sample rates < 10 MS/s use oversampling to increase the SNR
 
     specification.samplerate.single.base = 1e6;
-    specification.samplerate.single.max = 48e6; // HACK for user github.com/zen67
+    specification.samplerate.single.max = 30e6;
     specification.samplerate.single.recordLengths = {UINT_MAX};
     specification.samplerate.multi.base = 1e6;
-    specification.samplerate.multi.max = 24e6; // HACK for user github.com/zen67
+    specification.samplerate.multi.max = 15e6;
     specification.samplerate.multi.recordLengths = {UINT_MAX};
 
     specification.fixedSampleRates = {
