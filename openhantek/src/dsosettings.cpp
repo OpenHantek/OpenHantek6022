@@ -12,7 +12,8 @@
 /// \param channels The new channel count, that will be applied to lists.
 DsoSettings::DsoSettings( const Dso::ControlSpecification *deviceSpecification ) : deviceSpecification( deviceSpecification ) {
     // Add new channels to the list
-    unsigned char trace_hue[] = {60, 240, 0, 120}; // yellow, blue, red, green
+    int voltage_hue[] = {60, 210, 0, 120};   // yellow, lightblue, red, green
+    int spectrum_hue[] = {30, 240, 330, 90}; // orange, blue, purple, green
     unsigned index = 0;
     scope.hasACcoupling = deviceSpecification->hasACcoupling;
     while ( scope.spectrum.size() < deviceSpecification->channels ) {
@@ -25,12 +26,11 @@ DsoSettings::DsoSettings( const Dso::ControlSpecification *deviceSpecification )
         DsoSettingsScopeVoltage newVoltage;
         newVoltage.name = tr( "CH%1" ).arg( index + 1 );
         scope.voltage.push_back( newVoltage );
-
-        view.screen.voltage.push_back( QColor::fromHsv( trace_hue[ index ], 0xff, 0xff ) );
-        view.screen.spectrum.push_back( QColor::fromHsv( trace_hue[ index ] - 30, 0xff, 0xff ) );
+        view.screen.voltage.push_back( QColor::fromHsv( voltage_hue[ index ], 0xff, 0xff ) );
+        view.screen.spectrum.push_back( QColor::fromHsv( spectrum_hue[ index ], 0xff, 0xff ) );
         view.print.voltage.push_back( view.screen.voltage.back().darker() );
         view.print.spectrum.push_back( view.screen.spectrum.back().darker() );
-        if ( ++index >= sizeof trace_hue )
+        if ( ++index >= sizeof voltage_hue )
             index = 0;
     }
 

@@ -102,60 +102,61 @@ DsoWidget::DsoWidget( DsoSettingsScope *scope, DsoSettingsView *view, const Dso:
     markerLayout->addWidget( markerFrequencybaseLabel, 1 );
 
     // The table for the measurements at screen bottom
-    QPalette tablePalette = palette;
     measurementLayout = new QGridLayout();
-    measurementLayout->setColumnMinimumWidth( 0, 80 ); // Channel
+    measurementLayout->setColumnMinimumWidth( 0, 50 ); // Channel
     measurementLayout->setColumnMinimumWidth( 1, 30 ); // Coupling or Mode
     measurementLayout->setColumnStretch( 2, 3 );       // Voltage amplitude
     measurementLayout->setColumnStretch( 3, 3 );       // Spectrum magnitude
     measurementLayout->setColumnStretch( 4, 3 );       // Vpp
     measurementLayout->setColumnStretch( 5, 3 );       // VDC
     measurementLayout->setColumnStretch( 6, 3 );       // Vac
-    measurementLayout->setColumnStretch( 7, 3 );       // Vrms
+    measurementLayout->setColumnStretch( 7, 4 );       // Vrms
     measurementLayout->setColumnStretch( 8, 3 );       // dB
     measurementLayout->setColumnStretch( 9, 3 );       // Power
     measurementLayout->setColumnStretch( 10, 2 );      // THD
     measurementLayout->setColumnStretch( 11, 3 );      // f
     for ( ChannelID channel = 0; channel < scope->voltage.size(); ++channel ) {
-        tablePalette.setColor( QPalette::WindowText, view->colors->voltage[ channel ] );
+        QPalette voltagePalette = palette;
+        QPalette spectrumPalette = palette;
+        voltagePalette.setColor( QPalette::WindowText, view->colors->voltage[ channel ] );
+        spectrumPalette.setColor( QPalette::WindowText, view->colors->spectrum[ channel ] );
         measurementNameLabel.push_back( new QLabel( scope->voltage[ channel ].name ) );
-        measurementNameLabel[ channel ]->setAlignment( Qt::AlignCenter );
-        measurementNameLabel[ channel ]->setPalette( tablePalette );
+        measurementNameLabel[ channel ]->setAlignment( Qt::AlignLeft );
+        measurementNameLabel[ channel ]->setPalette( voltagePalette );
         measurementNameLabel[ channel ]->setAutoFillBackground( true );
         measurementMiscLabel.push_back( new QLabel() );
-        measurementMiscLabel[ channel ]->setAlignment( Qt::AlignLeft );
-        measurementMiscLabel[ channel ]->setPalette( tablePalette );
+        measurementMiscLabel[ channel ]->setAlignment( Qt::AlignCenter );
+        measurementMiscLabel[ channel ]->setPalette( voltagePalette );
         measurementGainLabel.push_back( new QLabel() );
         measurementGainLabel[ channel ]->setAlignment( Qt::AlignRight );
-        measurementGainLabel[ channel ]->setPalette( tablePalette );
-        tablePalette.setColor( QPalette::WindowText, view->colors->spectrum[ channel ] );
+        measurementGainLabel[ channel ]->setPalette( voltagePalette );
         measurementMagnitudeLabel.push_back( new QLabel() );
         measurementMagnitudeLabel[ channel ]->setAlignment( Qt::AlignRight );
-        measurementMagnitudeLabel[ channel ]->setPalette( tablePalette );
+        measurementMagnitudeLabel[ channel ]->setPalette( spectrumPalette );
         measurementVppLabel.push_back( new QLabel() );
         measurementVppLabel[ channel ]->setAlignment( Qt::AlignRight );
-        measurementVppLabel[ channel ]->setPalette( palette );
+        measurementVppLabel[ channel ]->setPalette( voltagePalette );
         measurementDCLabel.push_back( new QLabel() );
         measurementDCLabel[ channel ]->setAlignment( Qt::AlignRight );
-        measurementDCLabel[ channel ]->setPalette( palette );
+        measurementDCLabel[ channel ]->setPalette( voltagePalette );
         measurementACLabel.push_back( new QLabel() );
         measurementACLabel[ channel ]->setAlignment( Qt::AlignRight );
-        measurementACLabel[ channel ]->setPalette( palette );
+        measurementACLabel[ channel ]->setPalette( voltagePalette );
         measurementRMSLabel.push_back( new QLabel() );
         measurementRMSLabel[ channel ]->setAlignment( Qt::AlignRight );
-        measurementRMSLabel[ channel ]->setPalette( palette );
+        measurementRMSLabel[ channel ]->setPalette( voltagePalette );
         measurementdBLabel.push_back( new QLabel() );
         measurementdBLabel[ channel ]->setAlignment( Qt::AlignRight );
-        measurementdBLabel[ channel ]->setPalette( palette );
+        measurementdBLabel[ channel ]->setPalette( voltagePalette );
         measurementRMSPowerLabel.push_back( new QLabel() );
         measurementRMSPowerLabel[ channel ]->setAlignment( Qt::AlignRight );
-        measurementRMSPowerLabel[ channel ]->setPalette( palette );
+        measurementRMSPowerLabel[ channel ]->setPalette( voltagePalette );
         measurementTHDLabel.push_back( new QLabel() );
         measurementTHDLabel[ channel ]->setAlignment( Qt::AlignRight );
-        measurementTHDLabel[ channel ]->setPalette( palette );
+        measurementTHDLabel[ channel ]->setPalette( voltagePalette );
         measurementFrequencyLabel.push_back( new QLabel() );
         measurementFrequencyLabel[ channel ]->setAlignment( Qt::AlignRight );
-        measurementFrequencyLabel[ channel ]->setPalette( palette );
+        measurementFrequencyLabel[ channel ]->setPalette( voltagePalette );
         setMeasurementVisible( channel );
         int iii = 0;
         measurementLayout->addWidget( measurementNameLabel[ channel ], int( channel ), iii++ );
@@ -340,6 +341,8 @@ void DsoWidget::setColors() {
     markerFrequencybaseLabel->setPalette( paletteNow );
     QPalette tablePalette = paletteNow;
     for ( ChannelID channel = 0; channel < scope->voltage.size(); ++channel ) {
+        tablePalette.setColor( QPalette::WindowText, view->colors->spectrum[ channel ] );
+        measurementMagnitudeLabel[ channel ]->setPalette( tablePalette );
         tablePalette.setColor( QPalette::WindowText, view->colors->voltage[ channel ] );
         measurementNameLabel[ channel ]->setPalette( tablePalette );
         measurementMiscLabel[ channel ]->setPalette( tablePalette );
@@ -348,16 +351,14 @@ void DsoWidget::setColors() {
         zoomSliders.voltageOffsetSlider->setColor( ( channel ), view->colors->voltage[ channel ] );
         mainSliders.voltageOffsetSlider->setColor( unsigned( scope->voltage.size() ) + channel, view->colors->spectrum[ channel ] );
         zoomSliders.voltageOffsetSlider->setColor( unsigned( scope->voltage.size() ) + channel, view->colors->spectrum[ channel ] );
-        tablePalette.setColor( QPalette::WindowText, view->colors->spectrum[ channel ] );
-        measurementMagnitudeLabel[ channel ]->setPalette( tablePalette );
-        measurementVppLabel[ channel ]->setPalette( paletteNow );
-        measurementDCLabel[ channel ]->setPalette( paletteNow );
-        measurementACLabel[ channel ]->setPalette( paletteNow );
-        measurementRMSLabel[ channel ]->setPalette( paletteNow );
-        measurementdBLabel[ channel ]->setPalette( paletteNow );
-        measurementRMSPowerLabel[ channel ]->setPalette( paletteNow );
-        measurementTHDLabel[ channel ]->setPalette( paletteNow );
-        measurementFrequencyLabel[ channel ]->setPalette( paletteNow );
+        measurementVppLabel[ channel ]->setPalette( tablePalette );
+        measurementDCLabel[ channel ]->setPalette( tablePalette );
+        measurementACLabel[ channel ]->setPalette( tablePalette );
+        measurementRMSLabel[ channel ]->setPalette( tablePalette );
+        measurementdBLabel[ channel ]->setPalette( tablePalette );
+        measurementRMSPowerLabel[ channel ]->setPalette( tablePalette );
+        measurementTHDLabel[ channel ]->setPalette( tablePalette );
+        measurementFrequencyLabel[ channel ]->setPalette( tablePalette );
     }
 
     tablePalette = palette();
@@ -851,24 +852,24 @@ void DsoWidget::showNew( std::shared_ptr< PPresult > analysedData ) {
             measurementFrequencyLabel[ channel ]->setText(
                 valueToString( analysedData.get()->data( channel )->frequency, UNIT_HERTZ, 4 ) );
             // RMS Amplitude string representation (3 significant digits)
-            if ( scope->analysis.dummyLoad ) {
-                measurementLayout->setColumnStretch( 9, 3 ); // Power
+            if ( scope->analysis.dummyLoad ) { // != 0 -> show
+                measurementLayout->setColumnStretch( 9, 3 );
                 measurementRMSPowerLabel[ channel ]->setText(
                     valueToString( ( analysedData.get()->data( channel )->rms * analysedData.get()->data( channel )->rms ) /
                                        scope->analysis.dummyLoad,
                                    UNIT_WATTS, 3 ) );
-            } else {
-                measurementLayout->setColumnStretch( 9, 0 ); // Power
+            } else { // do not show this label
                 measurementRMSPowerLabel[ channel ]->setText( "" );
+                measurementLayout->setColumnStretch( 9, 0 ); // Power
             }
             if ( scope->analysis.calculateTHD ) {
-                measurementLayout->setColumnStretch( 10, 2 ); // THD
-                if ( analysedData.get()->data( channel )->thd > 0 )
-                    measurementTHDLabel[ channel ]->setText(
-                        QString( "%1%" ).arg( analysedData.get()->data( channel )->thd * 100, 4, 'f', 1 ) );
-                else
+                double thd = analysedData.get()->data( channel )->thd;
+                measurementLayout->setColumnStretch( 10, 2 );
+                if ( thd > 0 ) // display either xx.x% or xxx%
+                    measurementTHDLabel[ channel ]->setText( QString( "%L1%" ).arg( thd * 100, 4, 'f', thd < 1 ? 1 : 0 ) );
+                else // invalid, blank label
                     measurementTHDLabel[ channel ]->setText( "" );
-            } else {
+            } else { // do not show this label
                 measurementTHDLabel[ channel ]->setText( "" );
                 measurementLayout->setColumnStretch( 10, 0 ); // THD
             }
