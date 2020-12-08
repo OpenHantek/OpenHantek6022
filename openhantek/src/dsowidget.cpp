@@ -268,6 +268,7 @@ DsoWidget::DsoWidget( DsoSettingsScope *scope, DsoSettingsView *view, const Dso:
     ++row; // end 5x4 box
     // Separator and embedded measurementLayout
     ++row;
+    // display channel measurements on bottom of scope
     mainLayout->addLayout( measurementLayout, row, 1, 1, 5 );
 
     updateCursorGrid( view->cursorsVisible );

@@ -8,12 +8,17 @@ For distributions using dnf package manager (Fedora 21+) use this command:
 For OpenSUSE and related distributions use this command
 > zypper install make cmake fakeroot gcc-c++ libqt5-qtbase libqt5-qttools libqt5-qttranslations libusb-1_0 Mesa-libGL1 Mesa-libGLESv2 fftw3 
 
+The script [`LinuxSetup_AsRoot`](../LinuxSetup_AsRoot) installs all build requirements automatically.
+
 After you've installed the requirements run the following commands inside the directory of this package:
 
     mkdir build
     cd build
     cmake ..
     make -j4
+
+or execute the script [`LinuxBuild`](../LinuxBuild) that configures the build, builds the binary and finally creates the packages (deb, rpm and tgz) that can be installed as described in the next paragraphs.
+If you make small changes to the local source code, it is sufficient to call `make -j4` or `make -j4 package` in the `build` directory.
 
 After success you can test the newly built program `openhantek/OpenHantek`.
 Due to the included debug information this file is quite big (~20 MB), but the size can be reduced with `strip openhantek/OpenHantek` if you want to put it into a user directory. 
@@ -24,7 +29,7 @@ You can install the program with `sudo make install`, but it is highly recommend
 which allows a clear installation and removal of the package:
 
     rm -f packages/*
-    fakeroot make package
+    fakeroot make -j4 package
     sudo apt install packages/openhantek_*_amd64.deb
 
 If you detect that icons are not displayed correctly, please check if the Qt SVG library is installed on your system.

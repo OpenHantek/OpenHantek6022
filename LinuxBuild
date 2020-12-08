@@ -1,0 +1,17 @@
+#!/bin/sh
+
+# execute this script (as user) after cloning the project or pulling changes from github.com
+
+if [ $(id -u) == 0 ]; then
+	echo "This script must not be executed as root"
+fi
+
+# prepare the build environment ..
+#   && build the binary ..
+#   && build packages (deb, rpm, tgz) ..
+#   && show the results
+#
+mkdir -p build && cd build && cmake .. \
+  && make -j4 \
+  && rm -f packages/* && fakeroot make -j4 package && cd .. \
+  && echo && echo "Packages are available in build/packages:" && ls build/packages/openhantek*

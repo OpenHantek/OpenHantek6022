@@ -10,9 +10,12 @@
 [release]: https://github.com/OpenHantek/OpenHantek6022/releases
 [commits]: https://github.com/OpenHantek/OpenHantek6022/commits/master
 
-OpenHantek6022 is a free software for Hantek and compatible (Voltcraft/Darkwire/Protek/Acetech) USB digital signal oscilloscopes. 
-It was initially developed by [David Gräff and others](https://github.com/OpenHantek/openhantek/graphs/contributors) on [github.com/OpenHantek/openhantek](https://github.com/OpenHantek/openhantek). 
-After David [stopped maintaining](https://github.com/OpenHantek/openhantek/issues/277) the programm I cloned the repo to provide updates - **but only for Hantek 6022BE/BL**.
+OpenHantek6022 is a free software for **Hantek DSO6022** USB digital signal oscilloscopes that is actively developed on
+[github.com/OpenHantek/OpenHantek6022](https://github.com/OpenHantek/OpenHantek6022) - but only for Hantek 6022BE/BL and compatible scopes (Voltcraft, Darkwire, Protek, Acetech, etc.).
+
+The program was initially developed by [David Gräff and others](https://github.com/OpenHantek/openhantek/graphs/contributors)
+on [github.com/OpenHantek/openhantek](https://github.com/OpenHantek/openhantek),
+but David [stopped maintaining](https://github.com/OpenHantek/openhantek/issues/277) the programm in December 2018. 
 
 <p><img alt="Image of main window on linux" width="100%" src="docs/images/screenshot_mainwindow.png"></p>
 
@@ -71,13 +74,17 @@ You need the following software, to build OpenHantek from source:
 * A compiler that supports C++11 - tested with gcc, clang and msvc
 
 We have build instructions available for [Linux](docs/build.md#linux), [Raspberry Pi](docs/build.md#raspberrypi), [FreeBSD](docs/build.md#freebsd), [Apple macOS](docs/build.md#macos) and [Microsoft Windows](docs/build.md#windows).
+To make building for Linux even easier, I provide two shell scripts:
+* [`LinuxSetup_AsRoot`](LinuxSetup_AsRoot), which installs all build requirements. You only need to call this script once (as root) if you have cloned the project.
+* [`LinuxBuild`](LinuxBuild) configures the build, builds the binary and finally creates the packages (deb, rpm and tgz) that can be installed as described in the next paragraph.
+If you make small changes to the local source code, it is sufficient to call `make -j4` or `fakeroot make -j4 package` in the `build` directory.
 
-## Install prebuilt binary
+## Install prebuilt binary packages
 * Download Linux, Raspberry Pi, macOS and Windows packages from the [Releases](https://github.com/OpenHantek/OpenHantek6022/releases) page.
 (The RPi, macOS and Windows packages are not tested, neither is the installation of the `*.rpm` packages. For RPi4 see also [issue #28](https://github.com/OpenHantek/OpenHantek6022/issues/28).)
 * If you want to follow ongoing development, packages built from the last commit are available in the [unstable release](https://github.com/OpenHantek/OpenHantek6022/releases/tag/unstable).
 * As I develop on a *Debian stable* system the preferred (native) package format is `*.deb`.
-* To install the downloaded `*.deb` package, open a terminal window, go to the download directory and enter the command (as root) `apt install ./openhantek_..._amd64.deb`.
+* To install the downloaded `*.deb` package, open a terminal window, go to the package directory and enter the command (as root) `apt install ./openhantek_..._amd64.deb`.
 This command will automatically install all dependencies of the program as well.
 * For installation of `*.rpm` packages follow similar rules, e.g. `dnf install ./openhantek-...-1.x86_64.rpm`.
 * The `*.tar.gz` achives contain the same files as the `*.deb` and `*.rpm` packages for quick testing - do not use for a permanent intallation. Do not report any issues about the `*.tar.gz`!
@@ -94,7 +101,7 @@ OpenHantek6022 runs also on legacy HW/SW that supports at least *OpenGL* 2.1+ or
 OpenGL is preferred, select *OpenGL ES* by starting OpenHantek
 from the command line like this: `OpenHantek --useGLES`.
 
-Raspberry Pi uses OpenGL ES automatically, check also the [graphics driver setup](docs/build.md#raspberrypi).
+The Raspberry Pi build uses OpenGL ES automatically, check also the [graphics driver setup](docs/build.md#raspberrypi).
 
 USB access for the device is required (unless using demo mode):
 * On Linux, you need to copy the file `utils/udev_rules/60-hantek.rules` to `/etc/udev/rules.d/` or `/lib/udev/rules.d/` and replug your device. If OpenHantek is installed from a *.deb or *.rpm package this file is installed automatically into `/lib/udev/rules.d/`.
