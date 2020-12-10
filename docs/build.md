@@ -175,7 +175,7 @@ Hints for Visual Studio 2015/2017 users:
 
 #### Microsoft Windows USB driver install (with Zadig)
 
-The device specific USB driver shipped with the vendor software is not going to work in almost all cases. 
+The device specific USB driver shipped with the vendor software is not going to work.
 You will need to install the WinUSB driver.
 
 For installing the WinUSB driver you can use the [Zadig](http://zadig.akeo.ie/) executable. 
@@ -200,6 +200,11 @@ Some win user reports:
 * black2279's wiki entry 
 [USB Drivers Installation with Zadig for Hantek 6022 (Windows)](https://github.com/black2279/OpenHantek6022/wiki/USB-Drivers-Installation-with-Zadig-for-Hantek-6022-%28Windows%29)
 * raxis13's [success report](https://www.eevblog.com/forum/testgear/hantek-6022be-20mhz-usb-dso/msg2563869/#msg2563869)
+
+#### Signed WinUSB driver for Hantek 6022BE/BL
+
+User ViktorEEV provided a [signed WinUSB driver](https://www.eevblog.com/forum/testgear/hantek-6022be-20mhz-usb-dso/?action=dlattach;attach=1059770) on [EEVblog](https://www.eevblog.com/forum/testgear/hantek-6022be-20mhz-usb-dso/msg3218116/#msg3218116).
+Feedback (positive as well as negative) would be highly appreciated.
 
 ----
 

@@ -12,6 +12,7 @@ A clear and concise description of what the bug is.
 
 **To Reproduce**
 **IMPORTANT:** Always unplug and replug the scope if used before with a different application, e.g. sigrok or the original Hantek software.
+**No support for non-Linux related issues unless a volunteer steps in!**
 
 Steps to reproduce the behavior:
 1. Go to '...'

@@ -28,7 +28,9 @@ but David [stopped maintaining](https://github.com/OpenHantek/openhantek/issues/
 * Fully supported operating system: Linux; developed under debian stable for amd64 architecture.
 * Raspberry Pi packages (raspbian stable) are available on the [Releases](https://github.com/OpenHantek/OpenHantek6022/releases) page, check this [setup requirement](docs/build.md#raspberrypi).
 * Compiles under FreeBSD (packaging / installation: work in progress, thx [tspspi](https://github.com/tspspi)).
-* Other operating systems builds: [Windows](docs/images/screenshot_mainwindow_win.png) (partly tested) & macOS (untested).
+* Other operating systems builds: [Windows](docs/images/screenshot_mainwindow_win.png) (mostly untested) & macOS (completely untested).
+
+ **No support for non-Linux related issues unless a volunteer steps in!**
 * Uses [free open source firmware](https://github.com/Ho-Ro/Hantek6022API), no longer dependent on nonfree Hantek firmware.
 * Extensive [User Manual](docs/OpenHantek6022_User_Manual.pdf) with technical specs and schematics.
 
