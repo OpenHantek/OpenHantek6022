@@ -1,1 +1,1 @@
-*.inf	text eol=crlf
+*.inf	-text
