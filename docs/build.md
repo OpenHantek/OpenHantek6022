@@ -204,6 +204,8 @@ Some win user reports:
 #### Signed WinUSB driver for Hantek 6022BE/BL
 
 User ViktorEEV provided a [signed WinUSB driver](https://www.eevblog.com/forum/testgear/hantek-6022be-20mhz-usb-dso/?action=dlattach;attach=1059770) on [EEVblog](https://www.eevblog.com/forum/testgear/hantek-6022be-20mhz-usb-dso/msg3218116/#msg3218116).
+The files `Hantek_6022B.cat` and `Hantek_6022B.inf` are included in the Windows package `OpenHantek-Win-*.zip`.
+Right-click on `Hantek_6022B.inf` and select `install`.
 Feedback (positive as well as negative) would be highly appreciated.
 
 ----
