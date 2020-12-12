@@ -134,15 +134,15 @@ int main( int argc, char *argv[] ) {
         GlScope::useOpenGLSLversion( 150 );
     QApplication openHantekApplication( argc, argv );
 
-#ifdef Q_OS_LINUX
     // Qt5 linux default
     // ("Breeze", "Windows", "Fusion")
     // with package qt5-style-plugins
     // ("Breeze", "bb10dark", "bb10bright", "cleanlooks", "gtk2", "cde", "motif", "plastique", "Windows", "Fusion")
+#ifndef Q_OS_MACOS
     openHantekApplication.setStyle( QStyleFactory::create( "Fusion" ) ); // smaller widgets allow stacking of all docks
 #endif
 
-#ifdef __linux_rt__
+#ifdef Q_OS_LINUX
     // try to set realtime priority to improve USB allocation
     // this works if the user is member of a realtime group, e.g. audio:
     // 1. set limits in /etc/security/limits.d:
@@ -152,7 +152,7 @@ int main( int argc, char *argv[] ) {
     // or set the limits only for your user in /etc/security/limits.d:
     //    <your_user_name> - rtprio 99
     struct sched_param schedParam;
-    schedParam.sched_priority = 49;                   // set RT priority level 50
+    schedParam.sched_priority = 9;                    // set RT priority level 10
     sched_setscheduler( 0, SCHED_FIFO, &schedParam ); // and RT FIFO scheduler
     // but ignore any error if user has no realtime rights
 #endif
