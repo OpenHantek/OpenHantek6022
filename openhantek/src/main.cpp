@@ -5,10 +5,10 @@
 #include <QDebug>
 #include <QLibraryInfo>
 #include <QLocale>
+#include <QStyleFactory>
 #include <QSurfaceFormat>
 #include <QTranslator>
 #ifdef Q_OS_LINUX
-#include <QStyleFactory>
 #include <sched.h>
 #endif
 #include <iostream>
@@ -138,7 +138,7 @@ int main( int argc, char *argv[] ) {
     // ("Breeze", "Windows", "Fusion")
     // with package qt5-style-plugins
     // ("Breeze", "bb10dark", "bb10bright", "cleanlooks", "gtk2", "cde", "motif", "plastique", "Windows", "Fusion")
-#ifdef Q_OS_LINUX
+#ifndef Q_OS_MACOS
     openHantekApplication.setStyle( QStyleFactory::create( "Fusion" ) ); // smaller widgets allow stacking of all docks
 #endif
 
