@@ -32,21 +32,28 @@ DsoConfigScopePage::DsoConfigScopePage( DsoSettings *settings, QWidget *parent )
     horizontalGroup = new QGroupBox( tr( "Horizontal" ) );
     horizontalGroup->setLayout( horizontalLayout );
 
-    interpolationLabel = new QLabel( tr( "Interpolation" ) );
-    interpolationComboBox = new QComboBox();
-    interpolationComboBox->addItems( interpolationStrings );
-    interpolationComboBox->setCurrentIndex( settings->view.interpolation );
+    fontSizeLabel = new QLabel( tr( "Font size (restart needed to apply the change)" ) );
+    fontSizeSpinBox = new QSpinBox();
+    fontSizeSpinBox->setMinimum( 6 );
+    fontSizeSpinBox->setMaximum( 24 );
+    fontSizeSpinBox->setValue( settings->view.fontSize );
     digitalPhosphorDepthLabel = new QLabel( tr( "Digital phosphor depth" ) );
     digitalPhosphorDepthSpinBox = new QSpinBox();
     digitalPhosphorDepthSpinBox->setMinimum( 2 );
     digitalPhosphorDepthSpinBox->setMaximum( 99 );
     digitalPhosphorDepthSpinBox->setValue( int( settings->view.digitalPhosphorDepth ) );
+    interpolationLabel = new QLabel( tr( "Interpolation" ) );
+    interpolationComboBox = new QComboBox();
+    interpolationComboBox->addItems( interpolationStrings );
+    interpolationComboBox->setCurrentIndex( settings->view.interpolation );
 
     graphLayout = new QGridLayout();
-    graphLayout->addWidget( interpolationLabel, 1, 0 );
-    graphLayout->addWidget( interpolationComboBox, 1, 1 );
+    graphLayout->addWidget( fontSizeLabel, 1, 0 );
+    graphLayout->addWidget( fontSizeSpinBox, 1, 1 );
     graphLayout->addWidget( digitalPhosphorDepthLabel, 2, 0 );
     graphLayout->addWidget( digitalPhosphorDepthSpinBox, 2, 1 );
+    graphLayout->addWidget( interpolationLabel, 3, 0 );
+    graphLayout->addWidget( interpolationComboBox, 3, 1 );
 
     graphGroup = new QGroupBox( tr( "Graph" ) );
     graphGroup->setLayout( graphLayout );
@@ -116,6 +123,7 @@ void DsoConfigScopePage::saveSettings() {
     settings->scope.horizontal.acquireInterval = acquireIntervalSiSpinBox->value();
     settings->view.interpolation = Dso::InterpolationMode( interpolationComboBox->currentIndex() );
     settings->view.digitalPhosphorDepth = unsigned( digitalPhosphorDepthSpinBox->value() );
+    settings->view.fontSize = fontSizeSpinBox->value();
     settings->view.cursorGridPosition = Qt::ToolBarArea( cursorsComboBox->currentData().toUInt() );
     settings->alwaysSave = saveOnExitCheckBox->isChecked();
     if ( defaultSettingsCheckBox->isChecked() )

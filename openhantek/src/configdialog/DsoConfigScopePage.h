@@ -42,6 +42,8 @@ class DsoConfigScopePage : public QWidget {
 
     QGroupBox *graphGroup;
     QGridLayout *graphLayout;
+    QLabel *fontSizeLabel;
+    QSpinBox *fontSizeSpinBox;
     QLabel *digitalPhosphorDepthLabel;
     QSpinBox *digitalPhosphorDepthSpinBox;
     QLabel *interpolationLabel;

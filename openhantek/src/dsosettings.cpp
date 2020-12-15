@@ -250,6 +250,8 @@ void DsoSettings::load() {
         view.digitalPhosphor = storeSettings->value( "digitalPhosphor" ).toBool();
     if ( storeSettings->contains( "interpolation" ) )
         view.interpolation = Dso::InterpolationMode( storeSettings->value( "interpolation" ).toInt() );
+    if ( storeSettings->contains( "fontSize" ) )
+        view.fontSize = storeSettings->value( "fontSize" ).toInt();
     if ( storeSettings->contains( "printerColorImages" ) )
         view.printerColorImages = storeSettings->value( "printerColorImages" ).toBool();
     if ( storeSettings->contains( "zoom" ) )
@@ -388,6 +390,7 @@ void DsoSettings::save() {
     storeSettings->setValue( "histogram", scope.histogram );
     storeSettings->setValue( "digitalPhosphor", view.digitalPhosphor );
     storeSettings->setValue( "interpolation", view.interpolation );
+    storeSettings->setValue( "fontSize", view.fontSize );
     storeSettings->setValue( "printerColorImages", view.printerColorImages );
     storeSettings->setValue( "zoom", view.zoom );
     storeSettings->setValue( "cursorGridPosition", view.cursorGridPosition );

@@ -97,8 +97,13 @@ int main( int argc, char *argv[] ) {
     bool useGLSL120 = false;
     bool useGLSL150 = false;
     bool useLocale = true;
-    const int defaultFontSize = 10;
-    int fontSize = defaultFontSize;
+
+    int fontSize = defaultFontSize;           // defined in viewsettings.h
+    QSettings *storeSettings = new QSettings; // delete later!
+    storeSettings->beginGroup( "view" );
+    if ( storeSettings->contains( "fontSize" ) )
+        fontSize = Dso::InterpolationMode( storeSettings->value( "fontSize" ).toInt() );
+    storeSettings->endGroup(); // view
     {
         QCoreApplication parserApp( argc, argv );
         QCommandLineParser p;
@@ -115,12 +120,13 @@ int main( int argc, char *argv[] ) {
         QCommandLineOption intOption( {"i", "international"}, "Show the international interface, do not translate" );
         p.addOption( intOption );
         QCommandLineOption fontsizeOption(
-            {"f", "fontsize"}, QString( "Font size (default = %1, 0: automatic from dpi)" ).arg( defaultFontSize ), "fontsize" );
+            {"f", "fontsize"}, QString( "Font size (default = %1, 0: automatic from dpi)" ).arg( fontSize ), "fontsize" );
         p.addOption( fontsizeOption );
         p.process( parserApp );
         demoMode = p.isSet( demoModeOption );
         useGLES = p.isSet( useGlesOption );
-        fontSize = p.value( "fontsize" ).toInt();
+        if ( p.isSet( fontsizeOption ) )
+            fontSize = p.value( "fontsize" ).toInt();
         useGLSL120 = p.isSet( useGLSL120Option );
         useGLSL150 = p.isSet( useGLSL150Option );
         useLocale = !p.isSet( intOption );
@@ -145,6 +151,22 @@ int main( int argc, char *argv[] ) {
 #ifndef Q_OS_MACOS
     openHantekApplication.setStyle( QStyleFactory::create( "Fusion" ) ); // smaller widgets allow stacking of all docks
 #endif
+
+    if ( 0 == fontSize ) { // calculate fontsize from screen dpi (96 dpi -> 10 point)
+        fontSize = int( round( openHantekApplication.desktop()->logicalDpiY() / 9.6 ) );
+        fontSize = qBound( 6, fontSize, 24 ); // values < 6 do not scale correctly
+        // printf( "automatic fontSize: %d\n", fontSize );
+    }
+    QFont f = openHantekApplication.font();
+    f.setFamily( "Arial" ); // Fusion style + Arial -> fit on small screen (Y >= 720 pixel)
+    f.setStretch( QFont::SemiCondensed );
+    f.setPointSize( fontSize ); // scales the widgets accordingly
+    openHantekApplication.setFont( f );
+    openHantekApplication.setFont( f, "QWidget" ); // on some systems the 2nd argument is required
+    storeSettings->beginGroup( "view" );
+    storeSettings->setValue( "fontSize", fontSize );
+    storeSettings->endGroup(); // view
+    delete storeSettings;      // not needed anymore
 
 #ifdef Q_OS_LINUX
     // try to set realtime priority to improve USB allocation
@@ -173,18 +195,6 @@ int main( int argc, char *argv[] ) {
             openHantekApplication.installTranslator( &openHantekTranslator );
         }
     }
-
-    if ( 0 == fontSize ) { // calculate fontsize from screen dpi (96 dpi -> 10 point)
-        fontSize = int( round( openHantekApplication.desktop()->logicalDpiY() / 9.6 ) );
-        fontSize = qMax( 6, fontSize ); // values < 6 do not scale correctly
-        // printf( "fontSize: %d\n", fontSize );
-    }
-    QFont f = openHantekApplication.font();
-    f.setFamily( "Arial" ); // Fusion style + Arial -> fit on small screen (Y >= 720 pixel)
-    f.setStretch( QFont::SemiCondensed );
-    f.setPointSize( fontSize );
-    openHantekApplication.setFont( f );
-    openHantekApplication.setFont( f, "QWidget" ); // on some systems the 2nd argument is required
 
     //////// Find matching usb devices ////////
     libusb_context *context = nullptr;

@@ -10,6 +10,8 @@
 
 #include "hantekdso/enums.h"
 
+const int defaultFontSize = 10;
+
 ////////////////////////////////////////////////////////////////////////////////
 /// \struct DsoSettingsColorValues
 /// \brief Holds the color values for the oscilloscope screen.
@@ -46,6 +48,7 @@ struct DsoSettingsView {
     Qt::ToolBarArea cursorGridPosition = Qt::RightToolBarArea;
     bool cursorsVisible = false;
     DsoSettingsColorValues *colors = &screen;
+    int fontSize = defaultFontSize;
 
     unsigned digitalPhosphorDraws() const { return digitalPhosphor ? digitalPhosphorDepth : 1; }
 };

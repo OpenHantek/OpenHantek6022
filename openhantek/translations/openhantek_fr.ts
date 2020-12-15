@@ -338,67 +338,72 @@
         <translation>Horizontal</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="35"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="45"/>
         <source>Interpolation</source>
         <translation>Interpolation</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="39"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="40"/>
         <source>Digital phosphor depth</source>
         <translation>Profondeur de phosphore numérique</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="51"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="58"/>
         <source>Graph</source>
         <translation>Graphe</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="54"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="61"/>
         <source>Position</source>
         <translation>Position</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="56"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="63"/>
         <source>Left</source>
         <translation>Gauche</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="57"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="64"/>
         <source>Right</source>
         <translation>Droite</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="64"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="71"/>
         <source>Cursors</source>
         <translation>Curseurs</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="68"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="75"/>
         <source>Export zoomed screen in double height</source>
         <translation>Exporter l&apos;écran zoomé en double hauteur</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="73"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="80"/>
         <source>Export</source>
         <translation>Exporter</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="83"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="90"/>
         <source>Scope has hardware modification for AC coupling (restart needed to apply the change)</source>
         <translation>L&apos;oscilloscope a subi une modification hardware pour le couplage AC (redémarrage nécessaire pour appliquer la modification)</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="77"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="84"/>
         <source>Save settings on exit</source>
         <translation>Enregistrer les réglages en quittant</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="79"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="35"/>
+        <source>Font size (restart needed to apply the change)</source>
+        <translation>Taille de la police (redémarrage nécessaire pour appliquer la modification)</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="86"/>
         <source>Apply default settings after next restart</source>
         <translation>Appliquer les paramètres par défaut après le redémarrage</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="81"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="88"/>
         <source>Save settings now</source>
         <translation>Enregistrer les réglages maintenant</translation>
     </message>
@@ -415,7 +420,7 @@
         <translation type="vanished">Enregistrer les réglages maintenant</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="96"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="103"/>
         <source>Configuration</source>
         <translation>Configuration</translation>
     </message>
