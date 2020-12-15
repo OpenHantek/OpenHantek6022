@@ -3,6 +3,7 @@
 #include <QApplication>
 #include <QCommandLineParser>
 #include <QDebug>
+#include <QDesktopWidget>
 #include <QLibraryInfo>
 #include <QLocale>
 #include <QStyleFactory>
@@ -22,6 +23,7 @@
 #ifdef Q_OS_WIN
 #include <windows.h>
 #endif
+#include <math.h>
 #include <memory>
 
 // Settings
@@ -95,7 +97,8 @@ int main( int argc, char *argv[] ) {
     bool useGLSL120 = false;
     bool useGLSL150 = false;
     bool useLocale = true;
-    int fontSize = 0;
+    const int defaultFontSize = 10;
+    int fontSize = defaultFontSize;
     {
         QCoreApplication parserApp( argc, argv );
         QCommandLineParser p;
@@ -111,7 +114,8 @@ int main( int argc, char *argv[] ) {
         p.addOption( useGLSL150Option );
         QCommandLineOption intOption( {"i", "international"}, "Show the international interface, do not translate" );
         p.addOption( intOption );
-        QCommandLineOption fontsizeOption( {"f", "fontsize"}, "Set a different font size", "fontsize" );
+        QCommandLineOption fontsizeOption(
+            {"f", "fontsize"}, QString( "Font size (default = %1, 0: automatic from dpi)" ).arg( defaultFontSize ), "fontsize" );
         p.addOption( fontsizeOption );
         p.process( parserApp );
         demoMode = p.isSet( demoModeOption );
@@ -170,12 +174,17 @@ int main( int argc, char *argv[] ) {
         }
     }
 
-    if ( fontSize ) {
-        QFont f = openHantekApplication.font();
-        f.setPointSize( fontSize );
-        openHantekApplication.setFont( f );
-        openHantekApplication.setFont( f, "QWidget" ); // on some systems the 2nd argument is required
+    if ( 0 == fontSize ) { // calculate fontsize from screen dpi (96 dpi -> 10 point)
+        fontSize = int( round( openHantekApplication.desktop()->logicalDpiY() / 9.6 ) );
+        fontSize = qMax( 6, fontSize ); // values < 6 do not scale correctly
+        // printf( "fontSize: %d\n", fontSize );
     }
+    QFont f = openHantekApplication.font();
+    f.setFamily( "Arial" ); // Fusion style + Arial -> fit on small screen (Y >= 720 pixel)
+    f.setStretch( QFont::SemiCondensed );
+    f.setPointSize( fontSize );
+    openHantekApplication.setFont( f );
+    openHantekApplication.setFont( f, "QWidget" ); // on some systems the 2nd argument is required
 
     //////// Find matching usb devices ////////
     libusb_context *context = nullptr;
