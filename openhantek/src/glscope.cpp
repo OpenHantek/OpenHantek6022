@@ -269,6 +269,7 @@ void GlScope::paintEvent( QPaintEvent *event ) {
         font.setPointSize( 18 );
         painter.setFont( font );
         painter.drawText( rect(), Qt::AlignCenter | Qt::TextWordWrap, errorMessage );
+        fprintf( stderr, "%s", errorMessage.toUtf8().data() );
     }
     event->accept(); // consume the event
 }

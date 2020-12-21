@@ -641,29 +641,29 @@
 <context>
     <name>GlScope</name>
     <message>
-        <location filename="../src/glscope.cpp" line="281"/>
+        <location filename="../src/glscope.cpp" line="282"/>
         <source>System does not support OpenGL Shading Language (GLSL)</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="285"/>
+        <location filename="../src/glscope.cpp" line="286"/>
         <source>OpenGL init called twice!</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="351"/>
+        <location filename="../src/glscope.cpp" line="352"/>
         <source>Failed to compile OpenGL shader programs.
 </source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="357"/>
+        <location filename="../src/glscope.cpp" line="358"/>
         <source>Failed to link/bind OpenGL shader programs.
 </source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="366"/>
+        <location filename="../src/glscope.cpp" line="367"/>
         <source>Failed to locate shader variable.</source>
         <translation></translation>
     </message>
