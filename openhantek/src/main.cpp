@@ -97,7 +97,7 @@ int main( int argc, char *argv[] ) {
     bool useGLSL120 = false;
     bool useGLSL150 = false;
     bool useLocale = true;
-
+    QString font = "Arial";
     int fontSize = defaultFontSize;           // defined in viewsettings.h
     QSettings *storeSettings = new QSettings; // delete later!
     storeSettings->beginGroup( "view" );
@@ -119,14 +119,18 @@ int main( int argc, char *argv[] ) {
         p.addOption( useGLSL150Option );
         QCommandLineOption intOption( {"i", "international"}, "Show the international interface, do not translate" );
         p.addOption( intOption );
-        QCommandLineOption fontsizeOption(
-            {"f", "fontsize"}, QString( "Font size (default = %1, 0: automatic from dpi)" ).arg( fontSize ), "fontsize" );
-        p.addOption( fontsizeOption );
+        QCommandLineOption fontOption( {"f", "font"}, "Define the system font", "Font" );
+        p.addOption( fontOption );
+        QCommandLineOption sizeOption(
+            {"s", "size"}, QString( "Set the font size (default = %1, 0: automatic from dpi)" ).arg( fontSize ), "Size" );
+        p.addOption( sizeOption );
         p.process( parserApp );
         demoMode = p.isSet( demoModeOption );
         useGLES = p.isSet( useGlesOption );
-        if ( p.isSet( fontsizeOption ) )
-            fontSize = p.value( "fontsize" ).toInt();
+        if ( p.isSet( fontOption ) )
+            font = p.value( "font" );
+        if ( p.isSet( sizeOption ) )
+            fontSize = p.value( "size" ).toInt();
         useGLSL120 = p.isSet( useGLSL120Option );
         useGLSL150 = p.isSet( useGLSL150Option );
         useLocale = !p.isSet( intOption );
@@ -158,7 +162,7 @@ int main( int argc, char *argv[] ) {
         // printf( "automatic fontSize: %d\n", fontSize );
     }
     QFont f = openHantekApplication.font();
-    f.setFamily( "Arial" ); // Fusion style + Arial -> fit on small screen (Y >= 720 pixel)
+    f.setFamily( font ); // Fusion style + Arial (default) -> fit on small screen (Y >= 720 pixel)
     f.setStretch( QFont::SemiCondensed );
     f.setPointSize( fontSize ); // scales the widgets accordingly
     openHantekApplication.setFont( f );
