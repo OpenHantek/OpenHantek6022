@@ -1,3 +1,13 @@
+3.1.5
+2020-12-24
+Improvements for small displays (scope fits on screen height >= 720)
+Improvements for high-dpi displays (2K/4K)
+Command line options --font and --size
+Font size in menu Oscilloscope/Settings/Scope
+Hantek_6022B.inf/.cat files support "native" Windows install
+Better trace colors (apply default settings to use them)
+Minor stability improvements
+
 3.1.4
 2020-11-30
 Display THD (optional)
