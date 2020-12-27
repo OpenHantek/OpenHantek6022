@@ -39,6 +39,9 @@ int FindDevices::updateDeviceList() {
         struct libusb_device_descriptor descriptor;
         libusb_get_device_descriptor( device, &descriptor );
 
+        if ( 0x0000 == descriptor.idVendor ) // windows sometimes reports bogus value vid=0x0000
+            continue;
+
         if ( 0x1d6b == descriptor.idVendor ) // skip linux foundation devices, e.g. usb root hubs
             continue;
 
