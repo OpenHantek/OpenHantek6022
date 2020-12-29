@@ -160,8 +160,8 @@ static void applyRequirements_( HantekDsoControl *dsoControl ) {
 
 // DEMO similar to Hantek DSO-6022BE
 //
-//                                              VID/PID active  VID/PID no FW   FW ver    FW name     Scope name
-//                                              |------------|  |------------|  |----|  |---------|  |----------|
+//                                     VID/PID active  VID/PID no FW   FW ver  FW name Scope name
+//                                     |------------|  |------------|  |----|  |----|  |----|
 ModelDEMO::ModelDEMO() : DSOModel( ID, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, "demo", "DEMO", Dso::ControlSpecification( 2 ) ) {
     initSpecifications( specification );
 }

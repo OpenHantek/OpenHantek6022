@@ -54,6 +54,8 @@ int FindDevices::updateDeviceList() {
         }
         // else check against all supported models for match
         for ( DSOModel *model : ModelRegistry::get()->models() ) {
+            if ( DemoDeviceID == model->ID ) // skip the DEMO device
+                continue;
             // Check VID and PID for firmware flashed devices
             bool supported = descriptor.idVendor == model->vendorID && descriptor.idProduct == model->productID;
             // Devices without firmware have different VID/PIDs

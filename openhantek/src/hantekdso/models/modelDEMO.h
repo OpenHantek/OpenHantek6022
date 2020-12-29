@@ -7,9 +7,10 @@
 class HantekDsoControl;
 using namespace Hantek;
 
+const int DemoDeviceID = 0xDEDE;
 
 struct ModelDEMO : public DSOModel {
-    static const int ID = 0xDEDE;
+    static const int ID = DemoDeviceID;
     ModelDEMO();
     void applyRequirements( HantekDsoControl *dsoControl ) const override;
 };
