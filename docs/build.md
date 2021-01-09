@@ -150,7 +150,7 @@ After you've installed the requirements run the following commands inside the to
     macdeployqt OpenHantek.app -always-overwrite -verbose=2
     #
     # find all other dependencies, and their dependencies, and their... (you got it!)
-    python ../../macdeployqtfix/macdeployqtfix.py OpenHantek.app/Contents/MacOS/OpenHantek $(brew --prefix qt5)
+    python ../../utils/macdeployqtfix/macdeployqtfix.py OpenHantek.app/Contents/MacOS/OpenHantek $(brew --prefix qt5)
     #
     # finally create OpenHantek.dmg from OpenHantek.app
     create-dmg --volname OpenHantek --volicon ../../openhantek/res/images/openhantek.icns --window-pos 200 120 \
