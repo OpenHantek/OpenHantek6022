@@ -10,7 +10,10 @@
 
 #include "hantekdso/enums.h"
 
+// These values allow a quite narrow but readable display
+const QString defaultFont = "Arial";
 const int defaultFontSize = 10;
+const int defaultCondensed = 87; // SemiCondensed = 87%
 
 ////////////////////////////////////////////////////////////////////////////////
 /// \struct DsoSettingsColorValues

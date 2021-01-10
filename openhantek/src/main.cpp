@@ -97,8 +97,9 @@ int main( int argc, char *argv[] ) {
     bool useGLSL120 = false;
     bool useGLSL150 = false;
     bool useLocale = true;
-    QString font = "Arial";
+    QString font = defaultFont;               // defined in viewsettings.h
     int fontSize = defaultFontSize;           // defined in viewsettings.h
+    int condensed = defaultCondensed;         // defined in viewsettings.h
     QSettings *storeSettings = new QSettings; // delete later!
     storeSettings->beginGroup( "view" );
     if ( storeSettings->contains( "fontSize" ) )
@@ -124,6 +125,9 @@ int main( int argc, char *argv[] ) {
         QCommandLineOption sizeOption(
             {"s", "size"}, QString( "Set the font size (default = %1, 0: automatic from dpi)" ).arg( fontSize ), "Size" );
         p.addOption( sizeOption );
+        QCommandLineOption condensedOption(
+            {"c", "condensed"}, QString( "Set the font condensed value (default = %1)" ).arg( condensed ), "Condensed" );
+        p.addOption( condensedOption );
         p.process( parserApp );
         demoMode = p.isSet( demoModeOption );
         useGLES = p.isSet( useGlesOption );
@@ -131,6 +135,8 @@ int main( int argc, char *argv[] ) {
             font = p.value( "font" );
         if ( p.isSet( sizeOption ) )
             fontSize = p.value( "size" ).toInt();
+        if ( p.isSet( condensedOption ) ) // allow range from UltraCondensed (50) to UltraExpanded (200)
+            condensed = qMin( qMax( p.value( "condensed" ).toInt(), 50 ), 200 );
         useGLSL120 = p.isSet( useGLSL120Option );
         useGLSL150 = p.isSet( useGLSL150Option );
         useLocale = !p.isSet( intOption );
@@ -163,7 +169,7 @@ int main( int argc, char *argv[] ) {
     }
     QFont f = openHantekApplication.font();
     f.setFamily( font ); // Fusion style + Arial (default) -> fit on small screen (Y >= 720 pixel)
-    f.setStretch( QFont::SemiCondensed );
+    f.setStretch( condensed );
     f.setPointSize( fontSize ); // scales the widgets accordingly
     openHantekApplication.setFont( f );
     openHantekApplication.setFont( f, "QWidget" ); // on some systems the 2nd argument is required
