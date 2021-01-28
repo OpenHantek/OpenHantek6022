@@ -32,8 +32,11 @@ void Capturing::run() {
 
 
 double id2sr( uint8_t timediv ) {
-    if ( timediv < 100 )
+    if ( timediv < 100 ) {   // 1, 2, ..., 48 MS/s
+        if ( 11 == timediv ) // fix brain dead coding of sigrok DDS120 FW
+            timediv = 10;    // 11 means 10 MS/s (see modelDDS120.cpp)
         return timediv * 1e6;
+    } // 1NN -> NN0 kS/s (102 -> 20 kS/s, ..., 150 -> 500 kS/S)
     return ( timediv - 100 ) * 1e4;
 }
 
