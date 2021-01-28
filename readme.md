@@ -145,4 +145,4 @@ We welcome any reported GitHub issue if you have a problem with this software. S
 * [Software for the Hantek 6022BE/BL (win only)](http://pididu.com/wordpress/basicscope/)
 
 ## Other related software
-* [HScope for Android](https://hscope.martinloren.com/) A one-channel basic version is available free of charge (with in-app purchases).
+* [HScope for Android](https://www.martinloren.com/hscope/) A one-channel basic version is available free of charge (with in-app purchases).
