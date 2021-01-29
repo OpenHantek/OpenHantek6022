@@ -167,14 +167,10 @@ int main( int argc, char *argv[] ) {
         fontSize = qBound( 6, fontSize, 24 ); // values < 6 do not scale correctly
         // printf( "automatic fontSize: %d\n", fontSize );
     }
-    QFont f = openHantekApplication.font();
-    f.setFamily( font ); // Fusion style + Arial (default) -> fit on small screen (Y >= 720 pixel)
-    f.setStretch( condensed );
-    f.setPointSize( fontSize ); // scales the widgets accordingly
-    openHantekApplication.setFont( f );
-    openHantekApplication.setFont( f, "QWidget" ); // on some systems the 2nd argument is required
     storeSettings->beginGroup( "view" );
     storeSettings->setValue( "fontSize", fontSize );
+    storeSettings->setValue( "condensed", condensed );
+    storeSettings->setValue( "font", font );
     storeSettings->endGroup(); // view
     delete storeSettings;      // not needed anymore
 

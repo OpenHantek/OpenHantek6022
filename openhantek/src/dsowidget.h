@@ -46,6 +46,7 @@ class DsoWidget : public QWidget {
 
   protected:
     virtual void showEvent( QShowEvent *event );
+    void initialiseFonts();
     void setupSliders( Sliders &sliders );
     void adaptTriggerLevelSlider( DsoWidget::Sliders &sliders, ChannelID channel );
     void adaptTriggerOffsetSlider();

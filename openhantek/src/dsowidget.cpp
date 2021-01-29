@@ -8,6 +8,7 @@
 #include <QLabel>
 #include <QSignalBlocker>
 #include <QTimer>
+#include <QSettings>
 
 #include "dsowidget.h"
 
@@ -20,6 +21,7 @@
 #include "glscope.h"
 #include "scopesettings.h"
 #include "viewconstants.h"
+#include "viewsettings.h"
 #include "widgets/datagrid.h"
 #include "widgets/levelslider.h"
 
@@ -307,6 +309,24 @@ DsoWidget::DsoWidget( DsoSettingsScope *scope, DsoSettingsView *view, const Dso:
         zoomScope->updateCursor();
     } );
     zoomSliders.markerSlider->setEnabled( false );
+
+    initialiseFonts();
+}
+
+void DsoWidget::initialiseFonts() {
+    QSettings storeSettings;
+
+    storeSettings.beginGroup( "view" );
+    int fontSize = Dso::InterpolationMode( storeSettings.value( "fontSize" ).toInt() );
+    QString font = storeSettings.value( "font" ).toString();
+    int condensed = storeSettings.value( "condensed" ).toInt();
+    storeSettings.endGroup(); // view
+
+    QFont f = this->font();
+    f.setFamily( font );
+    f.setStretch( condensed );
+    f.setPointSize( fontSize );
+    this->setFont( f );
 }
 
 
