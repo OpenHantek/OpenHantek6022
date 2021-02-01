@@ -125,7 +125,7 @@ DsoWidget::DsoWidget( DsoSettingsScope *scope, DsoSettingsView *view, const Dso:
         measurementNameLabel[ channel ]->setPalette( voltagePalette );
         measurementNameLabel[ channel ]->setAutoFillBackground( true );
         measurementMiscLabel.push_back( new QLabel() );
-        measurementMiscLabel[ channel ]->setAlignment( Qt::AlignCenter );
+        measurementMiscLabel[ channel ]->setAlignment( Qt::AlignHCenter );
         measurementMiscLabel[ channel ]->setPalette( voltagePalette );
         measurementGainLabel.push_back( new QLabel() );
         measurementGainLabel[ channel ]->setAlignment( Qt::AlignRight );
