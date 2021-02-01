@@ -136,7 +136,7 @@ int main( int argc, char *argv[] ) {
         if ( p.isSet( sizeOption ) )
             fontSize = p.value( "size" ).toInt();
         if ( p.isSet( condensedOption ) ) // allow range from UltraCondensed (50) to UltraExpanded (200)
-            condensed = qMin( qMax( p.value( "condensed" ).toInt(), 50 ), 200 );
+            condensed = qBound( 50, p.value( "condensed" ).toInt(), 200 );
         useGLSL120 = p.isSet( useGLSL120Option );
         useGLSL150 = p.isSet( useGLSL150Option );
         useLocale = !p.isSet( intOption );
@@ -167,12 +167,9 @@ int main( int argc, char *argv[] ) {
         fontSize = qBound( 6, fontSize, 24 ); // values < 6 do not scale correctly
         // printf( "automatic fontSize: %d\n", fontSize );
     }
-    QFont f = openHantekApplication.font();
-    f.setFamily( font ); // Fusion style + Arial (default) -> fit on small screen (Y >= 720 pixel)
-    f.setStretch( condensed );
-    f.setPointSize( fontSize ); // scales the widgets accordingly
-    openHantekApplication.setFont( f );
-    openHantekApplication.setFont( f, "QWidget" ); // on some systems the 2nd argument is required
+    // save the fontsize setting, either default value or from config file or from command line argument
+    // the splash screen uses the system font settings unchanged
+    // use new font settings later for the scope application
     storeSettings->beginGroup( "view" );
     storeSettings->setValue( "fontSize", fontSize );
     storeSettings->endGroup(); // view
@@ -206,7 +203,7 @@ int main( int argc, char *argv[] ) {
         }
     }
 
-    //////// Find matching usb devices ////////
+    //////// Find matching usb devices - show splash screen ////////
     libusb_context *context = nullptr;
 
     std::unique_ptr< ScopeDevice > scopeDevice = nullptr;
@@ -285,6 +282,15 @@ int main( int argc, char *argv[] ) {
                       Qt::DirectConnection );
 
     //////// Create main window ////////
+
+    // Apply the font size and style settings for the scope application
+    QFont f = openHantekApplication.font();
+    f.setFamily( font ); // Fusion style + Arial (default) -> fit on small screen (Y >= 720 pixel)
+    f.setStretch( condensed );
+    f.setPointSize( fontSize ); // scales the widgets accordingly
+    openHantekApplication.setFont( f );
+    openHantekApplication.setFont( f, "QWidget" ); // on some systems the 2nd argument is required
+
     iconFont->initFontAwesome();
     MainWindow openHantekMainWindow( &dsoControl, &settings, &exportRegistry );
     QObject::connect( &postProcessing, &PostProcessing::processingFinished, &openHantekMainWindow, &MainWindow::showNewData );

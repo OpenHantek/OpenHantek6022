@@ -401,14 +401,14 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
 
     connect( ui->actionAbout, &QAction::triggered, [this]() {
         QMessageBox::about(
-            this, tr( "About OpenHantek6022 (%1)" ).arg( VERSION ),
-            tr( "<p>Open source software for Hantek6022 USB oscilloscopes</p>"
-                "<p>Maintainer: Martin Homuth-Rosemann</p>"
-                "<p>Copyright &copy; 2010, 2011 Oliver Haag</p>"
-                "<p>Copyright &copy; 2012-2020 OpenHantek community<br/>"
-                "<a href='https://github.com/OpenHantek'>https://github.com/OpenHantek</a></p>"
-                "<p>Open source firmware copyright &copy; 2019-2020 Ho-Ro<br/>"
-                "<a href='https://github.com/Ho-Ro/Hantek6022API'>https://github.com/Ho-Ro/Hantek6022API</a></p>" ) +
+            this, QString( "OpenHantek6022 (%1)" ).arg( VERSION ),
+            QString( "<p>Open source software for Hantek6022 USB oscilloscopes</p>"
+                     "<p>Maintainer: Martin Homuth-Rosemann</p>"
+                     "<p>Copyright &copy; 2010, 2011 Oliver Haag</p>"
+                     "<p>Copyright &copy; 2012-2021 OpenHantek community<br/>"
+                     "<a href='https://github.com/OpenHantek'>https://github.com/OpenHantek</a></p>"
+                     "<p>Open source firmware copyright &copy; 2019-2021 Ho-Ro<br/>"
+                     "<a href='https://github.com/Ho-Ro/Hantek6022API'>https://github.com/Ho-Ro/Hantek6022API</a></p>" ) +
                 tr( "<p>Running since %1 seconds.</p>" ).arg( elapsedTime.elapsed() / 1000 ) );
     } );
 
