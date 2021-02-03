@@ -97,15 +97,18 @@ int main( int argc, char *argv[] ) {
     bool useGLSL120 = false;
     bool useGLSL150 = false;
     bool useLocale = true;
-    QString font = defaultFont;               // defined in viewsettings.h
-    int fontSize = defaultFontSize;           // defined in viewsettings.h
-    int condensed = defaultCondensed;         // defined in viewsettings.h
-    QSettings *storeSettings = new QSettings; // delete later!
-    storeSettings->beginGroup( "view" );
-    if ( storeSettings->contains( "fontSize" ) )
-        fontSize = Dso::InterpolationMode( storeSettings->value( "fontSize" ).toInt() );
-    storeSettings->endGroup(); // view
-    {
+    QString font = defaultFont;       // defined in viewsettings.h
+    int fontSize = defaultFontSize;   // defined in viewsettings.h
+    int condensed = defaultCondensed; // defined in viewsettings.h
+
+    { // do this once at program start ...
+        QSettings storeSettings;
+        storeSettings.beginGroup( "view" );
+        if ( storeSettings.contains( "fontSize" ) )
+            fontSize = Dso::InterpolationMode( storeSettings.value( "fontSize" ).toInt() );
+        storeSettings.endGroup();
+    } // ... and forget the no more needed variables
+    { // also here ...
         QCoreApplication parserApp( argc, argv );
         QCommandLineParser p;
         p.addHelpOption();
@@ -140,7 +143,7 @@ int main( int argc, char *argv[] ) {
         useGLSL120 = p.isSet( useGLSL120Option );
         useGLSL150 = p.isSet( useGLSL150Option );
         useLocale = !p.isSet( intOption );
-    }
+    } // ... and forget the no more needed variables
 
 #ifdef Q_PROCESSOR_ARM
     // HACK: Raspberry Pi crashes with OpenGL, use always OpenGLES
@@ -154,26 +157,10 @@ int main( int argc, char *argv[] ) {
         GlScope::useOpenGLSLversion( 150 );
     QApplication openHantekApplication( argc, argv );
 
-    // Qt5 linux default
-    // ("Breeze", "Windows", "Fusion")
-    // with package qt5-style-plugins
-    // ("Breeze", "bb10dark", "bb10bright", "cleanlooks", "gtk2", "cde", "motif", "plastique", "Windows", "Fusion")
+// Qt5 linux default ("Breeze", "Windows" or "Fusion")
 #ifndef Q_OS_MACOS
     openHantekApplication.setStyle( QStyleFactory::create( "Fusion" ) ); // smaller widgets allow stacking of all docks
 #endif
-
-    if ( 0 == fontSize ) { // calculate fontsize from screen dpi (96 dpi -> 10 point)
-        fontSize = int( round( openHantekApplication.desktop()->logicalDpiY() / 9.6 ) );
-        fontSize = qBound( 6, fontSize, 24 ); // values < 6 do not scale correctly
-        // printf( "automatic fontSize: %d\n", fontSize );
-    }
-    // save the fontsize setting, either default value or from config file or from command line argument
-    // the splash screen uses the system font settings unchanged
-    // use new font settings later for the scope application
-    storeSettings->beginGroup( "view" );
-    storeSettings->setValue( "fontSize", fontSize );
-    storeSettings->endGroup(); // view
-    delete storeSettings;      // not needed anymore
 
 #ifdef Q_OS_LINUX
     // try to set realtime priority to improve USB allocation
@@ -187,7 +174,7 @@ int main( int argc, char *argv[] ) {
     struct sched_param schedParam;
     schedParam.sched_priority = 9;                    // set RT priority level 10
     sched_setscheduler( 0, SCHED_FIFO, &schedParam ); // and RT FIFO scheduler
-    // but ignore any error if user has no realtime rights
+// but ignore any error if user has no realtime rights
 #endif
 
     //////// Load translations ////////
@@ -284,12 +271,18 @@ int main( int argc, char *argv[] ) {
     //////// Create main window ////////
 
     // Apply the font size and style settings for the scope application
-    QFont f = openHantekApplication.font();
-    f.setFamily( font ); // Fusion style + Arial (default) -> fit on small screen (Y >= 720 pixel)
-    f.setStretch( condensed );
-    f.setPointSize( fontSize ); // scales the widgets accordingly
-    openHantekApplication.setFont( f );
-    openHantekApplication.setFont( f, "QWidget" ); // on some systems the 2nd argument is required
+    QFont appFont = openHantekApplication.font();
+    if ( 0 == fontSize ) {                               // option -s0 -> use system font size
+        fontSize = qBound( 6, appFont.pointSize(), 24 ); // values < 6 do not scale correctly
+    }
+    // remember the actual fontsize setting
+    settings.view.fontSize = fontSize;
+    appFont.setFamily( font ); // Fusion style + Arial (default) -> fit on small screen (Y >= 720 pixel)
+    appFont.setStretch( condensed );
+    appFont.setPointSize( fontSize ); // scales the widgets accordingly
+    // apply new font settings for the scope application
+    openHantekApplication.setFont( appFont );
+    openHantekApplication.setFont( appFont, "QWidget" ); // on some systems the 2nd argument is required
 
     iconFont->initFontAwesome();
     MainWindow openHantekMainWindow( &dsoControl, &settings, &exportRegistry );
@@ -317,19 +310,15 @@ int main( int argc, char *argv[] ) {
     dsoControl.quitSampling(); // send USB control command, stop bulk transfer
 
     // stop the capturing thread
-    unsigned waitForCapturing = unsigned( 2000 * dsoControl.getSamplesize() / dsoControl.getSamplerate() );
-    if ( waitForCapturing < 10000 ) // minimum 10 s
-        waitForCapturing = 10000;
+    // wait 2 * record time (delay is ms) for dso to finish
+    unsigned waitForDso = unsigned( 2000 * dsoControl.getSamplesize() / dsoControl.getSamplerate() );
+    waitForDso = qMax( waitForDso, 10000U ); // wait for at least 10 s
     capturing.requestInterruption();
-    capturing.wait( waitForCapturing );
-
+    capturing.wait( waitForDso );
     std::cout << "has ";
 
     // now quit the data acquisition thread
     // wait 2 * record time (delay is ms) for dso to finish
-    unsigned waitForDso = unsigned( 2000 * dsoControl.getSamplesize() / dsoControl.getSamplerate() );
-    if ( waitForDso < 10000 ) // minimum 10 s
-        waitForDso = 10000;
     dsoControlThread.quit();
     dsoControlThread.wait( waitForDso );
     std::cout << "stopped ";

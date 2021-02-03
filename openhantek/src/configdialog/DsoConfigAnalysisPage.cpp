@@ -12,13 +12,15 @@ DsoConfigAnalysisPage::DsoConfigAnalysisPage( DsoSettings *settings, QWidget *pa
                           << tr( "Nuttall" ) << tr( "Blackman-Harris" ) << tr( "Blackman-Nuttall" ) << tr( "Flat top" );
 
     // Initialize elements
-    windowFunctionLabel = new QLabel( tr( "<b>Window function</b>" ) );
+    windowFunctionLabel = new QLabel( tr( "Window function" ) );
     windowFunctionComboBox = new QComboBox();
     windowFunctionComboBox->addItems( windowFunctionStrings );
     windowFunctionComboBox->setCurrentIndex( int( settings->post.spectrumWindow ) );
 
-    referenceLevelLabel = new QLabel(
-        tr( "<b>Reference level</b><br/>0 dBu = -2.2 dBV<br/>0 dBm (@600 &Omega;) = -2.2 dBV<br/>0 dBm (@50 &Omega;) = -13 dBV" ) );
+    referenceLevelLabel = new QLabel( tr( "Reference level<br/>"
+                                          "&bull; 0 dBu = -2.2 dBV<br/>"
+                                          "&bull; 0 dBm (@600 &Omega;) = -2.2 dBV<br/>"
+                                          "&bull; 0 dBm (@50 &Omega;) = -13 dBV" ) );
     referenceLevelSpinBox = new QDoubleSpinBox();
     referenceLevelSpinBox->setDecimals( 1 );
     referenceLevelSpinBox->setMinimum( -100.0 );
@@ -29,7 +31,7 @@ DsoConfigAnalysisPage::DsoConfigAnalysisPage( DsoSettings *settings, QWidget *pa
     referenceLevelLayout->addWidget( referenceLevelSpinBox );
     referenceLevelLayout->addWidget( referenceLevelUnitLabel );
 
-    minimumMagnitudeLabel = new QLabel( tr( "<b>Minimum magnitude</b>" ) );
+    minimumMagnitudeLabel = new QLabel( tr( "Minimum magnitude" ) );
     minimumMagnitudeSpinBox = new QDoubleSpinBox();
     minimumMagnitudeSpinBox->setDecimals( 1 );
     minimumMagnitudeSpinBox->setMinimum( -100.0 );
@@ -51,7 +53,7 @@ DsoConfigAnalysisPage::DsoConfigAnalysisPage( DsoSettings *settings, QWidget *pa
     spectrumGroup = new QGroupBox( tr( "Spectrum" ) );
     spectrumGroup->setLayout( spectrumLayout );
 
-    dummyLoadLabel = new QLabel( tr( "Calculate power dissipation for load resistance<br/>0 = off" ) );
+    dummyLoadLabel = new QLabel( tr( "Calculate power dissipation for load resistance<br/>(0 = off)" ) );
     dummyLoadSpinBox = new QSpinBox();
     dummyLoadSpinBox->setMinimum( 0 );    // 0 = off
     dummyLoadSpinBox->setMaximum( 1000 ); // range: audio (4/8 Ω), RF (50 Ω) and telco (600 Ω)

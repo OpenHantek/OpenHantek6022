@@ -83,37 +83,53 @@
     </message>
     <message>
         <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="15"/>
-        <source>&lt;b&gt;Window function&lt;/b&gt;</source>
+        <source>Window function</source>
         <translation>Fensterfunktion</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="21"/>
-        <source>&lt;b&gt;Reference level&lt;/b&gt;&lt;br/&gt;0 dBu = -2.2 dBV&lt;br/&gt;0 dBm (@600 &amp;Omega;) = -2.2 dBV&lt;br/&gt;0 dBm (@50 &amp;Omega;) = -13 dBV</source>
-        <translation>&lt;b&gt;Referenzpegel&lt;/b&gt;&lt;br/&gt;0 dBu = -2,2 dBV&lt;br/&gt;0 dBm (@600 &amp;Omega;) = -2,2 dBV&lt;br/&gt;0 dBm (@50 &amp;Omega;) = -13 dBV</translation>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="20"/>
+        <source>Reference level&lt;br/&gt;&amp;bull; 0 dBu = -2.2 dBV&lt;br/&gt;&amp;bull; 0 dBm (@600 &amp;Omega;) = -2.2 dBV&lt;br/&gt;&amp;bull; 0 dBm (@50 &amp;Omega;) = -13 dBV</source>
+        <translation>Referenzpegel&lt;br/&gt;&amp;bull; 0 dBu = -2.2 dBV&lt;br/&gt;&amp;bull; 0 dBm (@600 &amp;Omega;) = -2.2 dBV&lt;br/&gt;&amp;bull; 0 dBm (@50 &amp;Omega;) = -13 dBV</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="27"/>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="38"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="56"/>
+        <source>Calculate power dissipation for load resistance&lt;br/&gt;(0 = off)</source>
+        <translation>Berechne Leistung für Lastwiderstand&lt;br/&gt;(0 = aus)</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="34"/>
+        <source>Minimum magnitude</source>
+        <translation>Minimaler Pegel</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Window function&lt;/b&gt;</source>
+        <translation type="vanished">Fensterfunktion</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;Reference level&lt;/b&gt;&lt;br/&gt;0 dBu = -2.2 dBV&lt;br/&gt;0 dBm (@600 &amp;Omega;) = -2.2 dBV&lt;br/&gt;0 dBm (@50 &amp;Omega;) = -13 dBV</source>
+        <translation type="vanished">&lt;b&gt;Referenzpegel&lt;/b&gt;&lt;br/&gt;0 dBu = -2,2 dBV&lt;br/&gt;0 dBm (@600 &amp;Omega;) = -2,2 dBV&lt;br/&gt;0 dBm (@50 &amp;Omega;) = -13 dBV</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="29"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="40"/>
         <source>dBV</source>
         <translation>dBV</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="32"/>
         <source>&lt;b&gt;Minimum magnitude&lt;/b&gt;</source>
-        <translation>Minimaler Pegel</translation>
+        <translation type="vanished">Minimaler Pegel</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="51"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="53"/>
         <source>Spectrum</source>
         <translation>Spektrum</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="54"/>
         <source>Calculate power dissipation for load resistance&lt;br/&gt;0 = off</source>
-        <translation>Berechne Leistung für Lastwiderstand&lt;br/&gt;0 = aus</translation>
+        <translation type="vanished">Berechne Leistung für Lastwiderstand&lt;br/&gt;0 = aus</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="63"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="65"/>
         <source>Calculate total harmonic distortion (THD)</source>
         <translation>Berechne die harmonische Gesamtverzerrung (THD)</translation>
     </message>
@@ -122,12 +138,12 @@
         <translation type="vanished">Berechne Leistung für Lastwiderstand</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="59"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="61"/>
         <source>&lt;p&gt;&amp;Omega;&lt;/p&gt;</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="74"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="76"/>
         <source>Power</source>
         <translation>Leistung</translation>
     </message>
@@ -332,82 +348,82 @@
         <translation>Langsamste mögliche Zeitbasis</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="19"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="18"/>
         <source>Minimal time between captured frames&lt;br/&gt;(Longer times reduce the CPU load)</source>
         <translation>Minimale Zeit zwischen Datenblöcken&lt;br/&gt;(Längere Zeiten reduzieren die CPU-Last)</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="32"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="30"/>
         <source>Horizontal</source>
         <translation>Horizontal</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="45"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="43"/>
         <source>Interpolation</source>
         <translation>Interpolation</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="40"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="38"/>
         <source>Digital phosphor depth</source>
         <translation>Stufen für digitalen Phosphor</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="58"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="56"/>
         <source>Graph</source>
         <translation>Graph</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="61"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="59"/>
         <source>Position</source>
         <translation>Position</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="63"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="61"/>
         <source>Left</source>
         <translation>Links</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="64"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="62"/>
         <source>Right</source>
         <translation>Rechts</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="71"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="69"/>
         <source>Cursors</source>
         <translation>Cursor</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="75"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="73"/>
         <source>Export zoomed screen in double height</source>
         <translation>Exportiere gezoomtes Display in doppelter Höhe</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="80"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="78"/>
         <source>Export</source>
         <translation>Export</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="90"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="88"/>
         <source>Scope has hardware modification for AC coupling (restart needed to apply the change)</source>
         <translation>Das Gerät hat Hardware-Modifikation für AC-Kopplung (Neustart erforderlich für Änderung)</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="84"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="82"/>
         <source>Save settings on exit</source>
         <translation>Einstellungen beim Beenden speichern</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="35"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="33"/>
         <source>Font size (restart needed to apply the change)</source>
         <translation>Schriftgröße (Neustart erforderlich für Änderung)</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="86"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="84"/>
         <source>Apply default settings after next restart</source>
         <translation>Standardeinstellungen beim nächsten Start anwenden</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="88"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="86"/>
         <source>Save settings now</source>
         <translation>Einstellungen jetzt speichern</translation>
     </message>
@@ -424,7 +440,7 @@
         <translation type="vanished">Standardeinstellungen jetzt speichern</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="103"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="101"/>
         <source>Configuration</source>
         <translation>Konfiguration</translation>
     </message>

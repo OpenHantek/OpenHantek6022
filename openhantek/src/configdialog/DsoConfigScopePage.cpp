@@ -9,7 +9,6 @@ DsoConfigScopePage::DsoConfigScopePage( DsoSettings *settings, QWidget *parent )
     QList< double > timebaseSteps = {1.0, 2.0, 5.0, 10.0};
 
     maxTimebaseLabel = new QLabel( tr( "Set slowest possible timebase" ) );
-    maxTimebaseSiSpinBox = new SiSpinBox();
     maxTimebaseSiSpinBox = new SiSpinBox( UNIT_SECONDS );
     maxTimebaseSiSpinBox->setSteps( timebaseSteps );
     maxTimebaseSiSpinBox->setMinimum( 0.1 );  // default 1000 ms/div (scopesettings.h)
@@ -17,7 +16,6 @@ DsoConfigScopePage::DsoConfigScopePage( DsoSettings *settings, QWidget *parent )
     maxTimebaseSiSpinBox->setValue( settings->scope.horizontal.maxTimebase );
 
     acquireIntervalLabel = new QLabel( tr( "Minimal time between captured frames<br/>(Longer times reduce the CPU load)" ) );
-    acquireIntervalSiSpinBox = new SiSpinBox();
     acquireIntervalSiSpinBox = new SiSpinBox( UNIT_SECONDS );
     acquireIntervalSiSpinBox->setSteps( timebaseSteps );
     acquireIntervalSiSpinBox->setMinimum( 1e-3 );   // minimal 1 ms holdOff
