@@ -22,7 +22,7 @@ If you make small changes to the local source code, it is sufficient to call `ma
 
 After success you can test the newly built program `openhantek/OpenHantek`.
 Due to the included debug information this file is quite big (~20 MB), but the size can be reduced with `strip openhantek/OpenHantek` if you want to put it into a user directory. 
-If you do not install the program, you need to copy the file `utils/udev_rules/60-hantek.rules` to `/lib/udev/rules.d/` yourself,
+If you do not install the program, you need to copy the file `utils/udev_rules/60-openhantek.rules` to `/etc/udev/rules.d/` yourself,
 and replug your device, otherwise you will not have the correct USB permissions to access the device.
 
 You can install the program with `sudo make install`, but it is highly recommended to create a debian package,

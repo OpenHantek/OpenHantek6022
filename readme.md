@@ -106,7 +106,8 @@ from the command line like this: `OpenHantek --useGLES`.
 The Raspberry Pi build uses OpenGL ES automatically, check also the [graphics driver setup](docs/build.md#raspberrypi).
 
 USB access for the device is required (unless using demo mode):
-* On Linux, you need to copy the file `utils/udev_rules/60-hantek.rules` to `/etc/udev/rules.d/` or `/lib/udev/rules.d/` and replug your device. If OpenHantek is installed from a *.deb or *.rpm package this file is installed automatically into `/lib/udev/rules.d/`.
+* On Linux, you need to copy the file `utils/udev_rules/60-openhantek.rules` to `/etc/udev/rules.d/` or `/usr/lib/udev/rules.d/` and replug your device.
+If OpenHantek is installed from a *.deb or *.rpm package this file is installed automatically into `/usr/lib/udev/rules.d/`.
 
 ### Windows USB access
 * **The original Hantek driver for Windows doesn't work!** You have to assign the correct WinUSB driver with the tool [Zadig](https://zadig.akeo.ie/). 

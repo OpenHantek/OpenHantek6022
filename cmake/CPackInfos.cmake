@@ -86,7 +86,7 @@ if (UNIX)
         set(CPACK_TARGET "")
         set(CPACK_GENERATOR ${CPACK_GENERATOR} DEB RPM)
         install(
-            FILES utils/udev_rules/60-hantek.rules
+            FILES utils/udev_rules/60-openhantek.rules
             DESTINATION lib/udev/rules.d
         )
     elseif(CMAKE_SYSTEM_NAME MATCHES "FreeBSD")

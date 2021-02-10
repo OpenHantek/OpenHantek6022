@@ -9,7 +9,7 @@ Codewise you will only need to touch files within `openhantek/src/hantekdso`.
 The firmware goes to `openhantek/res/firmware` in the hex format. Please keep to the filename
 convention devicename-firmware.hex and devicename-loader.hex.
 The `openhantek/res/firmwares.qrc` should list the new files.
-The firmware/60-hantek.rules file needs the usb vendor/device id to add access permissions.
+The `utils/udev_rules/60-openhantek.rules` file needs the usb vendor/device id to add access permissions.
 
 ## The hantek protocol
 The hantek protocol itself is encoded in the `src/hantekprotocol` files.

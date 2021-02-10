@@ -1406,9 +1406,13 @@
         <translation>&lt;p&gt;Убедитесь в корректно установленных USB драйверах для Windows.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="79"/>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="78"/>
+        <source>&lt;p&gt;Please make sure you have copied the udev rules file to&lt;br/&gt;&lt;b&gt;%1&lt;/b&gt; or&lt;br/&gt;&lt;b&gt;%2&lt;/b&gt;&lt;br/&gt;for correct USB access permissions.&lt;/p&gt;</source>
+        <translation>&lt;p&gt;Пожалуйста, убедитесь, что вы скопировали файл правил udev&lt;br/&gt;&lt;b&gt;%1&lt;/b&gt; или&lt;br/&gt;&lt;b&gt;%2&lt;/b&gt;&lt;br/&gt;для корректных прав доступа к USB.&lt;/p&gt;</translation>
+    </message>
+    <message>
         <source>&lt;p&gt;Please make sure you have copied the udev rules file to&lt;br/&gt;&lt;b&gt;%1&lt;/b&gt; or&lt;br/&gt;&lt;b&gt;%2&lt;/b&gt; for correct USB access permissions.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;Пожалуйста, убедитесь, что вы скопировали файл правил udev&lt;br/&gt;&lt;b&gt;%1&lt;/b&gt; или&lt;br/&gt;&lt;b&gt;%2&lt;/b&gt; для корректных прав доступа к USB.&lt;/p&gt;</translation>
+        <translation type="vanished">&lt;p&gt;Пожалуйста, убедитесь, что вы скопировали файл правил udev&lt;br/&gt;&lt;b&gt;%1&lt;/b&gt; или&lt;br/&gt;&lt;b&gt;%2&lt;/b&gt; для корректных прав доступа к USB.&lt;/p&gt;</translation>
     </message>
     <message>
         <source>&lt;p&gt;Please make sure you have copied the udev rules file to &lt;b&gt;%1&lt;/b&gt; for correct USB access permissions.&lt;/p&gt;</source>

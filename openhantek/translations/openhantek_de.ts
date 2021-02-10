@@ -1772,9 +1772,13 @@
         <translation>&lt;p&gt;Bitte sicherstellen, dass der korrekte Windows-Treiber installiert ist.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="79"/>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="78"/>
+        <source>&lt;p&gt;Please make sure you have copied the udev rules file to&lt;br/&gt;&lt;b&gt;%1&lt;/b&gt; or&lt;br/&gt;&lt;b&gt;%2&lt;/b&gt;&lt;br/&gt;for correct USB access permissions.&lt;/p&gt;</source>
+        <translation>&lt;p&gt;Bitte sicherstellen, dass eine udev-Regel nach&lt;br/&gt;&lt;b&gt;%1&lt;/b&gt; oder&lt;br/&gt;&lt;b&gt;%2&lt;/b&gt;&lt;br/&gt;kopiert wurde um den USB-Zugriff zu ermöglichen.&lt;/p&gt;</translation>
+    </message>
+    <message>
         <source>&lt;p&gt;Please make sure you have copied the udev rules file to&lt;br/&gt;&lt;b&gt;%1&lt;/b&gt; or&lt;br/&gt;&lt;b&gt;%2&lt;/b&gt; for correct USB access permissions.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;Bitte sicherstellen, dass eine udev-Regel nach&lt;br/&gt;&lt;b&gt;%1&lt;/b&gt; oder&lt;br/&gt;&lt;b&gt;%2&lt;/b&gt; kopiert wurde um den USB-Zugriff zu ermöglichen.&lt;/p&gt;</translation>
+        <translation type="vanished">&lt;p&gt;Bitte sicherstellen, dass eine udev-Regel nach&lt;br/&gt;&lt;b&gt;%1&lt;/b&gt; oder&lt;br/&gt;&lt;b&gt;%2&lt;/b&gt; kopiert wurde um den USB-Zugriff zu ermöglichen.&lt;/p&gt;</translation>
     </message>
     <message>
         <source>&lt;p&gt;Please make sure you have copied the udev rules file to &lt;b&gt;%1&lt;/b&gt; for correct USB access permissions.&lt;/p&gt;</source>

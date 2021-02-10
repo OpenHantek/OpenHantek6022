@@ -1633,9 +1633,13 @@
         <translation>&lt;Por favor, certifique-se de que instalou o driver usb do Windows corretamente&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="79"/>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="78"/>
+        <source>&lt;p&gt;Please make sure you have copied the udev rules file to&lt;br/&gt;&lt;b&gt;%1&lt;/b&gt; or&lt;br/&gt;&lt;b&gt;%2&lt;/b&gt;&lt;br/&gt;for correct USB access permissions.&lt;/p&gt;</source>
+        <translation>&lt;p&gt;Por favor, tenha certeza de que você copiou o arquivo de regras do udev para&lt;br/&gt;&lt;b&gt;%1&lt;/b&gt; ou&lt;br/&gt;&lt;b&gt;%2&lt;/b&gt;&lt;br/&gt;obter as permissões de acesso USB corretas.&lt;/p&gt;</translation>
+    </message>
+    <message>
         <source>&lt;p&gt;Please make sure you have copied the udev rules file to&lt;br/&gt;&lt;b&gt;%1&lt;/b&gt; or&lt;br/&gt;&lt;b&gt;%2&lt;/b&gt; for correct USB access permissions.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;Por favor, tenha certeza de que você copiou o arquivo de regras do udev para&lt;br/&gt;&lt;b&gt;%1&lt;/b&gt; ou&lt;br/&gt;&lt;b&gt;%2&lt;/b&gt; obter as permissões de acesso USB corretas.&lt;/p&gt;</translation>
+        <translation type="vanished">&lt;p&gt;Por favor, tenha certeza de que você copiou o arquivo de regras do udev para&lt;br/&gt;&lt;b&gt;%1&lt;/b&gt; ou&lt;br/&gt;&lt;b&gt;%2&lt;/b&gt; obter as permissões de acesso USB corretas.&lt;/p&gt;</translation>
     </message>
     <message>
         <source>&lt;p&gt;Please make sure you have copied the udev rules file to &lt;b&gt;%1&lt;/b&gt; for correct USB access permissions.&lt;/p&gt;</source>
