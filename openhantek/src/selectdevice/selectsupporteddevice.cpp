@@ -96,9 +96,9 @@ std::unique_ptr< ScopeDevice > SelectSupportedDevice::showSelectDeviceModal( lib
         if ( findDevices->updateDeviceList() ) { // searching...
             model->updateDeviceList();
         }
-        if ( model->rowCount( QModelIndex() ) ) { // device ready
+        if ( 1 == model->rowCount( QModelIndex() ) ) { // 1st device ready
             ui->cmbDevices->setCurrentIndex( 0 );
-            // HACK: "click()" the "OK" button (if enabled) to start the scope automatically
+            // HACK: "click()" the "OK" button (if enabled) to start the 1st detected scope automatically
             if ( ui->buttonBox->button( QDialogButtonBox::Ok )->isEnabled() ) { // if scope is ready to run
                 ui->buttonBox->button( QDialogButtonBox::Ok )->click();         // start it without user activity
             }

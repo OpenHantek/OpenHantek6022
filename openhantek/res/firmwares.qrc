@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/">
+        <file>firmware/dso6021-firmware.hex</file>
         <file>firmware/dso6022be-firmware.hex</file>
         <file>firmware/dso6022bl-firmware.hex</file>
         <file>firmware/dds120-firmware.hex</file>
