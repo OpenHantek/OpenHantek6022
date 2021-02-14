@@ -1283,7 +1283,7 @@
         <translation>&lt;hr/&gt;&lt;p&gt;Anche senza un device è possibile esplorare la funzione del programma, basta premere il pulsante &lt;b&gt;modalità demo&lt;/b&gt;.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="123"/>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="127"/>
         <source>Can&apos;t initalize USB: %1</source>
         <translation>Non può initalizzare USB: %1</translation>
     </message>

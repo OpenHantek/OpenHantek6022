@@ -136,13 +136,11 @@ static void initSpecifications( Dso::ControlSpecification &specification ) {
         {48e6, 48, 1}     //
     };
 
-    // AC requires AC/DC HW mod like DDS120, enabled with option
+
     specification.couplings = {Dso::Coupling::DC, Dso::Coupling::AC};
-#ifdef HANTEK_AC
+
     specification.hasACcoupling = true;
-#else
-    specification.hasACcoupling = false;
-#endif
+
     specification.triggerModes = {
         Dso::TriggerMode::ROLL,
         Dso::TriggerMode::AUTO,
@@ -167,14 +165,13 @@ static void applyRequirements_( HantekDsoControl *dsoControl ) {
 }
 
 
-// Hantek DSO-6021 (this is the base model)
+// Hantek DSO-6021 (DIY redesign)
 //
 //                  VID/PID active  VID/PID no FW   FW ver   FW name   Scope name
 //                  |------------|  |------------|  |----|  |-------|  |--------|
 ModelDSO6021::ModelDSO6021()
-    : DSOModel( ID, 0x04b5, 0x6021, 0x04b4, 0x6021, 0x0207, "dso6021", "DSO-6021", Dso::ControlSpecification( 2 ) ) {
+    : DSOModel( ID, 0x04b5, 0x6021, 0x04b4, 0x6021, 0x0208, "dso6021", "DSO-6021", Dso::ControlSpecification( 2 ) ) {
     initSpecifications( specification );
 }
 
 void ModelDSO6021::applyRequirements( HantekDsoControl *dsoControl ) const { applyRequirements_( dsoControl ); }
-
