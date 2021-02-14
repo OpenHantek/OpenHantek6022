@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0+
 
-#include "modelDSO6022.h"
+#include "modelDSO6021.h"
 #include "hantekdsocontrol.h"
 #include "hantekprotocol/controlStructs.h"
 #include "usb/scopedevice.h"
@@ -12,10 +12,9 @@
 
 using namespace Hantek;
 
-static ModelDSO6022BE modelInstance_6022be;
-static ModelDSO6022BL modelInstance_6022bl;
+// The model 6021 supports an upcoming DIY redesign of DSO6022BE with better analog front end
 
-static ModelDSO2020 modelInstance_2020;
+static ModelDSO6021 modelInstance_6021;
 
 static void initSpecifications( Dso::ControlSpecification &specification ) {
     // we drop 2K + 480 sample values due to unreliable start of stream
@@ -52,7 +51,7 @@ static void initSpecifications( Dso::ControlSpecification &specification ) {
     // printf( "read config file\n" );
     const unsigned RANGES = 8;
 
-    QString Model = "modelDSO6022";
+    QString Model = "modelDSO6021";
     QString Organisation = "OpenHantek";
     // rename the previous *.conf to *.ini to use the ini file search also for Windows
     QString calFileName = QDir::homePath() + "/.config/" + Organisation + "/" + Model;
@@ -66,8 +65,8 @@ static void initSpecifications( Dso::ControlSpecification &specification ) {
     }
 
     QSettings settings( QSettings::IniFormat, QSettings::UserScope, Organisation, Model );
-    // Linux, Unix, macOS: "$HOME/.config/OpenHantek/modelDSO6022.ini"
-    // Windows: "%APPDATA%\OpenHantek\modelDSO6022.ini"
+    // Linux, Unix, macOS: "$HOME/.config/OpenHantek/modelDSO6021.ini"
+    // Windows: "%APPDATA%\OpenHantek\modelDSO6021.ini"
     // qDebug() << settings.fileName();
 
     settings.beginGroup( "gain" );
@@ -137,13 +136,11 @@ static void initSpecifications( Dso::ControlSpecification &specification ) {
         {48e6, 48, 1}     //
     };
 
-    // AC requires AC/DC HW mod like DDS120, enable with "cmake -D HANTEK_AC=1 .." or config option
+
     specification.couplings = {Dso::Coupling::DC, Dso::Coupling::AC};
-#ifdef HANTEK_AC
+
     specification.hasACcoupling = true;
-#else
-    specification.hasACcoupling = false;
-#endif
+
     specification.triggerModes = {
         Dso::TriggerMode::ROLL,
         Dso::TriggerMode::AUTO,
@@ -168,65 +165,13 @@ static void applyRequirements_( HantekDsoControl *dsoControl ) {
 }
 
 
-// Hantek DSO-6022BE (this is the base model)
+// Hantek DSO-6021 (DIY redesign)
 //
-//                  VID/PID active  VID/PID no FW   FW ver    FW name     Scope name
-//                  |------------|  |------------|  |----|  |---------|  |----------|
-ModelDSO6022BE::ModelDSO6022BE()
-    : DSOModel( ID, 0x04b5, 0x6022, 0x04b4, 0x6022, 0x0208, "dso6022be", "DSO-6022BE", Dso::ControlSpecification( 2 ) ) {
+//                  VID/PID active  VID/PID no FW   FW ver   FW name   Scope name
+//                  |------------|  |------------|  |----|  |-------|  |--------|
+ModelDSO6021::ModelDSO6021()
+    : DSOModel( ID, 0x04b5, 0x6021, 0x04b4, 0x6021, 0x0208, "dso6021", "DSO-6021", Dso::ControlSpecification( 2 ) ) {
     initSpecifications( specification );
 }
 
-void ModelDSO6022BE::applyRequirements( HantekDsoControl *dsoControl ) const { applyRequirements_( dsoControl ); }
-
-
-// Hantek DSO-6022BL (scope or logic analyzer)
-ModelDSO6022BL::ModelDSO6022BL()
-    : DSOModel( ID, 0x04b5, 0x602a, 0x04b4, 0x602a, 0x0208, "dso6022bl", "DSO-6022BL", Dso::ControlSpecification( 2 ) ) {
-    initSpecifications( specification );
-}
-
-void ModelDSO6022BL::applyRequirements( HantekDsoControl *dsoControl ) const { applyRequirements_( dsoControl ); }
-
-
-// Voltcraft DSO-2020 USB Oscilloscope (HW is identical to 6022)
-// Scope starts up as model DS-2020 (VID/PID = 04b4/2020) but loads 6022BE firmware and looks like a 6022BE
-ModelDSO2020::ModelDSO2020()
-    : DSOModel( ID, 0x04b5, 0x6022, 0x04b4, 0x2020, 0x0208, "dso6022be", "DSO-2020", Dso::ControlSpecification( 2 ) ) {
-    initSpecifications( specification );
-}
-
-void ModelDSO2020::applyRequirements( HantekDsoControl *dsoControl ) const { applyRequirements_( dsoControl ); }
-
-
-// two test cases with simple EZUSB board (LCsoft) without EEPROM or with Saleae VID/PID in EEPROM
-// after loading the FW they look like a 6022BE (without useful sample values as Port B and D are left open)
-// LCSOFT_TEST_BOARD is #defined/#undefined in modelDSO6022.h
-
-#ifdef LCSOFT_TEST_BOARD
-
-static ModelEzUSB modelInstance_EzUSB;
-static ModelSaleae modelInstance_Saleae;
-
-
-// LCSOFT without EEPROM reports EzUSB VID/PID
-ModelEzUSB::ModelEzUSB()
-    : DSOModel( ID, 0x04b5, 0x6022, 0x04b4, 0x8613, 0x0208, "dso6022be", "LCsoft-EzUSB", Dso::ControlSpecification( 2 ) ) {
-    initSpecifications( specification );
-    specification.hasCalibrationEEPROM = false; // (big) EEPROM, disabled by address jumper
-}
-
-void ModelEzUSB::applyRequirements( HantekDsoControl *dsoControl ) const { applyRequirements_( dsoControl ); }
-
-
-// Saleae VID/PID in EEPROM
-ModelSaleae::ModelSaleae()
-    : DSOModel( ID, 0x04b5, 0x6022, 0x0925, 0x3881, 0x0208, "dso6022be", "LCsoft-Saleae", Dso::ControlSpecification( 2 ) ) {
-    initSpecifications( specification );
-    specification.hasCalibrationEEPROM = false; // we have a big EEPROM
-}
-
-
-void ModelSaleae::applyRequirements( HantekDsoControl *dsoControl ) const { applyRequirements_( dsoControl ); }
-
-#endif
+void ModelDSO6021::applyRequirements( HantekDsoControl *dsoControl ) const { applyRequirements_( dsoControl ); }

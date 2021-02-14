@@ -96,13 +96,17 @@ std::unique_ptr< ScopeDevice > SelectSupportedDevice::showSelectDeviceModal( lib
         if ( findDevices->updateDeviceList() ) { // searching...
             model->updateDeviceList();
         }
-        if ( 1 == model->rowCount( QModelIndex() ) ) { // 1st device ready
+        if ( 1 == model->rowCount( QModelIndex() ) ) {
+            // only one device ready, start it without user action
             ui->cmbDevices->setCurrentIndex( 0 );
             // HACK: "click()" the "OK" button (if enabled) to start the 1st detected scope automatically
             if ( ui->buttonBox->button( QDialogButtonBox::Ok )->isEnabled() ) { // if scope is ready to run
                 ui->buttonBox->button( QDialogButtonBox::Ok )->click();         // start it without user activity
             }
-        } else {
+        } else if ( model->rowCount( QModelIndex() ) ) {
+            // more than 1 devices ready, display last one (in most cases the 2nd device) and et the user chose
+            ui->cmbDevices->setCurrentIndex( model->rowCount( QModelIndex() ) - 1 );
+        } else { // no devices found (not yet)
             ui->labelReadyState->setText( messageNoDevices );
         }
     } );

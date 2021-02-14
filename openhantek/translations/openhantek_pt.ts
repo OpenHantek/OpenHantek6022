@@ -1656,7 +1656,7 @@
         <translation>&lt;hr/&gt;&gt;p&gt;Even sem um dispositivo você pode explorar a função do programa, basta pressionar o botão &lt;b&gt;Demo Mode&lt;/b&gt; button.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="123"/>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="127"/>
         <source>Can&apos;t initalize USB: %1</source>
         <translation>Não é possível initalizar o USB: %1</translation>
     </message>

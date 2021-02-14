@@ -1429,7 +1429,7 @@
         <translation>&lt;hr/&gt;&lt;p&gt;Вы можете изучать программу и без осциллографа. Для этого нажмите кнопку &lt;b&gt;Демо Режима&lt;/b&gt;.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="123"/>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="127"/>
         <source>Can&apos;t initalize USB: %1</source>
         <translation>Не удалось инициализировать USB: %1</translation>
     </message>
