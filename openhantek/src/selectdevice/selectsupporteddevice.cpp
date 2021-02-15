@@ -38,33 +38,14 @@ SelectSupportedDevice::SelectSupportedDevice( QWidget *parent ) : QDialog( paren
 }
 
 std::unique_ptr< ScopeDevice > SelectSupportedDevice::showSelectDeviceModal( libusb_context *context ) {
-    //     newDeviceFromExistingDialog->setUSBcontext(context);
     std::unique_ptr< FindDevices > findDevices = std::unique_ptr< FindDevices >( new FindDevices( context ) );
     std::unique_ptr< DevicesListModel > model = std::unique_ptr< DevicesListModel >( new DevicesListModel( findDevices.get() ) );
     ui->cmbDevices->setModel( model.get() );
-    connect( ui->cmbDevices, static_cast< void ( QComboBox::* )( int ) >( &QComboBox::currentIndexChanged ), [this]( int index ) {
-        if ( index == -1 ) {
-            ui->buttonBox->button( QDialogButtonBox::Ok )->setEnabled( false );
-            return;
-        }
-        if ( ui->cmbDevices->currentData( Qt::UserRole + 1 ).toBool() ) { // canConnect
-            ui->buttonBox->button( QDialogButtonBox::Ok )->setEnabled( true );
-            ui->labelReadyState->setText(
-                tr( "<p><br/><b>The device is ready for use.</b></p><p>Please observe the "
-                    "<a href='https://github.com/OpenHantek/OpenHantek6022/blob/master/docs/OpenHantek6022_User_Manual.pdf'>"
-                    "user manual</a> for safe operation.</p>" ) );
-        } else {
-            ui->buttonBox->button( QDialogButtonBox::Ok )->setEnabled( false );
-            if ( ui->cmbDevices->currentData( Qt::UserRole + 2 ).toBool() ) { // needFirmware
-                ui->labelReadyState->setText( tr(
-                    "<p>Upload in progress ...</p>"
-                    "<p><b>If the upload takes more than 30 s, please close this window <br/>and restart the program!</b></p>" ) );
-            } else { // something went wrong, inform user
-                ui->labelReadyState->setText( tr( "<p><br/><b>Connection failed!</b></p>" ) +
-                                              ui->cmbDevices->currentData( Qt::UserRole + 3 ).toString() );
-            }
-        }
-    } );
+
+    QString messageDeviceReady =
+        tr( "<p><br/><b>The device is ready for use.</b></p><p>Please observe the "
+            "<a href='https://github.com/OpenHantek/OpenHantek6022/blob/master/docs/OpenHantek6022_User_Manual.pdf'>"
+            "user manual</a> for safe operation.</p>" );
 
     QString messageNoDevices = tr( "<p>OpenHantek6022 is searching for compatible devices ...</p>"
                                    "<p><img align='right' height='200' src='qrc:///switch_6022BL.png'>"
@@ -88,24 +69,68 @@ std::unique_ptr< ScopeDevice > SelectSupportedDevice::showSelectDeviceModal( lib
     messageNoDevices += tr( "<hr/><p>Even without a device you can explore the program's function. "
                             "Just press the <b>Demo Mode</b> button below.</p>" );
 
+    connect( ui->cmbDevices, static_cast< void ( QComboBox::* )( int ) >( &QComboBox::currentIndexChanged ),
+             [this, &messageDeviceReady]( int index ) {
+                 if ( index == -1 ) {
+                     ui->buttonBox->button( QDialogButtonBox::Ok )->setEnabled( false );
+                     return;
+                 }
+                 if ( ui->cmbDevices->currentData( Qt::UserRole + 1 ).toBool() ) { // canConnect
+                     ui->buttonBox->button( QDialogButtonBox::Ok )->setEnabled( true );
+                     ui->labelReadyState->setText( messageDeviceReady );
+                 } else {
+                     ui->buttonBox->button( QDialogButtonBox::Ok )->setEnabled( false );
+                     if ( ui->cmbDevices->currentData( Qt::UserRole + 2 ).toBool() ) { // needFirmware
+                         ui->labelReadyState->setText( tr( "<p>Upload in progress ...</p>"
+                                                           "<p><b>If the upload takes more than 30 s, please close this window "
+                                                           "<br/>and restart the program!</b></p>" ) );
+                     } else { // something went wrong, inform user
+                         ui->labelReadyState->setText( tr( "<p><br/><b>Connection failed!</b></p>" ) +
+                                                       ui->cmbDevices->currentData( Qt::UserRole + 3 ).toString() );
+                     }
+                 }
+             } );
+
     updateSupportedDevices();
 
     QTimer timer;
     timer.setInterval( 1000 );
-    connect( &timer, &QTimer::timeout, [this, &model, &findDevices, &messageNoDevices]() {
+    connect( &timer, &QTimer::timeout, [this, &model, &findDevices, &messageDeviceReady, &messageNoDevices]() {
+        static int supportedDevices = -1; // max number of devices that can connect or need firmware
+        static int readyDevices = -1;
         if ( findDevices->updateDeviceList() ) { // searching...
             model->updateDeviceList();
         }
-        if ( 1 == model->rowCount( QModelIndex() ) ) {
-            // only one device ready, start it without user action
-            ui->cmbDevices->setCurrentIndex( 0 );
-            // HACK: "click()" the "OK" button (if enabled) to start the 1st detected scope automatically
+        supportedDevices = qMax( supportedDevices, model->rowCount( QModelIndex() ) );
+        int index = 0;
+        int devices = 0;
+        for ( index = 0; index < model->rowCount( QModelIndex() ); ++index ) {
+            if ( ui->cmbDevices->itemData( index, Qt::UserRole + 1 ).toBool() )
+                ++devices; // count devices that can connect
+        }
+        // printf( "%d, %d, %d devices\n", model->rowCount( QModelIndex() ), supportedDevices, devices );
+        if ( 1 == devices && 1 == supportedDevices ) { // only one device ready, start it without user action
+            int index = 0;
+            for ( index = 0; index < model->rowCount( QModelIndex() ); ++index ) {
+                if ( ui->cmbDevices->itemData( index, Qt::UserRole + 1 ).toBool() ) // can connect
+                    break;
+            }
+            ui->cmbDevices->setCurrentIndex( index );
             if ( ui->buttonBox->button( QDialogButtonBox::Ok )->isEnabled() ) { // if scope is ready to run
                 ui->buttonBox->button( QDialogButtonBox::Ok )->click();         // start it without user activity
             }
-        } else if ( model->rowCount( QModelIndex() ) ) {
-            // more than 1 devices ready, display last one (in most cases the 2nd device) and et the user chose
-            ui->cmbDevices->setCurrentIndex( model->rowCount( QModelIndex() ) - 1 );
+        } else if ( devices && model->rowCount( QModelIndex() ) ) {
+            // more than 1 devices ready
+            if ( devices != readyDevices ) { // find 1st ready device
+                int index = 0;
+                for ( index = 0; index < model->rowCount( QModelIndex() ); ++index ) {
+                    if ( ui->cmbDevices->itemData( index, Qt::UserRole + 1 ).toBool() ) // can connect
+                        break;
+                }
+                readyDevices = devices;
+                ui->labelReadyState->setText( messageDeviceReady );
+                ui->cmbDevices->setCurrentIndex( index );
+            }
         } else { // no devices found (not yet)
             ui->labelReadyState->setText( messageNoDevices );
         }
@@ -122,6 +147,7 @@ std::unique_ptr< ScopeDevice > SelectSupportedDevice::showSelectDeviceModal( lib
     return findDevices->takeDevice( selectedDevice );
 }
 
+
 void SelectSupportedDevice::showLibUSBFailedDialogModel( int error ) {
     ui->buttonBox->button( QDialogButtonBox::Ok )->setEnabled( false );
     ui->labelReadyState->setText( tr( "Can't initalize USB: %1" ).arg( libUsbErrorString( error ) ) );
@@ -129,6 +155,7 @@ void SelectSupportedDevice::showLibUSBFailedDialogModel( int error ) {
     QCoreApplication::instance()->exec();
     close();
 }
+
 
 void SelectSupportedDevice::updateSupportedDevices() {
     QString devices;

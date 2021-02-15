@@ -299,6 +299,6 @@ are the main storage for all persistent scope (program) parameters, see `DsoSett
         const Dso::ControlSpecification *deviceSpecification;
     };
 
-GUI input either in the docks of by moving sliders changes the `DsoSettings` parameters directly
+GUI input either in the docks or by moving sliders changes the `DsoSettings` parameters directly
 and the `ControlSettings` parameters (that live in another thread `dsoControlThread` ) via signal/slot mechanism.
 The (big) class `HantekDsoControl` has a member `const DsoSettingsScope *scope` that gives direct read acces to the (persistent) scope settings.

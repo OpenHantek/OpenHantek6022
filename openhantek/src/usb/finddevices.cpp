@@ -60,7 +60,7 @@ int FindDevices::updateDeviceList() {
             bool supported = descriptor.idVendor == model->vendorID && descriptor.idProduct == model->productID;
             // Devices without firmware have different VID/PIDs
             supported |= descriptor.idVendor == model->vendorIDnoFirmware && descriptor.idProduct == model->productIDnoFirmware;
-            if ( supported ) { // put matching device into list
+            if ( supported ) { // put matching device into list if not already in use
                 ++changes;
                 // printf( "+ %016lX %s\n", USBid, model->name.c_str() );
                 devices[ USBid ] = std::unique_ptr< ScopeDevice >( new ScopeDevice( model, device, findIteration ) );
@@ -79,14 +79,7 @@ int FindDevices::updateDeviceList() {
             ++it;
         }
     }
-#if defined Q_OS_FREEBSD
-    libusb_free_device_list( deviceList, false ); // free the list but don't unref the devices
-#else
-    // TODO check if this crashes on MacOSX, Windows
-    // TODO check if change true -> false solves it
-    // move it up by appending " || defined __YOUR_OS__" to the line "#if defined ..."
-    libusb_free_device_list( deviceList, true ); // linux and some other systems unref also the USB devices
-#endif
+    libusb_free_device_list( deviceList, false );
     return changes; // report number of all detected bus changes (added + removed devices)
 }
 

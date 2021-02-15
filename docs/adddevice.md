@@ -75,3 +75,8 @@ DSOModel(int ID, long vendorID, long productID, long vendorIDnoFirmware, long pr
 ```
 static ModelDSO2090 modelInstance;
 ```
+
+## Example: New Device Model DSO-6021
+As an example for adding a new device you can check commit 77ba4ad and read about
+[adding the new model DSO-6021](https://github.com/Ho-Ro/Hantek6022API/blob/master/docs/DIY_6021/DIY_6021.md)
+at my [firmware project](https://github.com/Ho-Ro/Hantek6022API).
