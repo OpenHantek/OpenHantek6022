@@ -76,7 +76,7 @@ bool ScopeDevice::connectDevice( QString &errorMessage ) {
         errorMessage = QCoreApplication::translate( "", "Couldn't open device: %1" ).arg( libUsbErrorString( errorCode ) );
         return false;
     }
-
+    serialNumber = readUSBdescriptor( handle, descriptor.iSerialNumber );
     // Find and claim interface
     errorCode = LIBUSB_ERROR_NOT_FOUND;
     libusb_config_descriptor *configDescriptor;
@@ -247,4 +247,14 @@ int ScopeDevice::controlTransfer( unsigned char type, unsigned char request, uns
     if ( errorCode == LIBUSB_ERROR_NO_DEVICE )
         disconnectFromDevice();
     return errorCode;
+}
+
+
+QString ScopeDevice::readUSBdescriptor( libusb_device_handle *handle, uint8_t index ) {
+    unsigned char string[ 255 ];
+    int ret = libusb_get_string_descriptor_ascii( handle, index, string, sizeof( string ) );
+    if ( ret > 0 )
+        return QString::fromLatin1( reinterpret_cast< char * >( string ), ret ).trimmed();
+    else
+        return QString();
 }

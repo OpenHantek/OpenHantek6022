@@ -229,7 +229,7 @@ int main( int argc, char *argv[] ) {
     //////// Create DSO control object and move it to a separate thread ////////
     QThread dsoControlThread;
     dsoControlThread.setObjectName( "dsoControlThread" );
-    HantekDsoControl dsoControl( scopeDevice ? scopeDevice.get() : nullptr, model );
+    HantekDsoControl dsoControl( scopeDevice.get(), model );
     dsoControl.moveToThread( &dsoControlThread );
     QObject::connect( &dsoControlThread, &QThread::started, &dsoControl, &HantekDsoControl::stateMachine );
     QObject::connect( &dsoControl, &HantekDsoControl::communicationError, QCoreApplication::instance(), &QCoreApplication::quit );
@@ -240,8 +240,8 @@ int main( int argc, char *argv[] ) {
 
     const Dso::ControlSpecification *spec = model->spec();
 
-    //////// Create settings object ////////
-    DsoSettings settings( spec );
+    //////// Create settings object specific to this scope, use unique serial number ////////
+    DsoSettings settings( scopeDevice.get() );
 
     //////// Create exporters ////////
     ExporterRegistry exportRegistry( spec, &settings );

@@ -453,22 +453,22 @@
 <context>
     <name>DsoSettings</name>
     <message>
-        <location filename="../src/dsosettings.cpp" line="22"/>
+        <location filename="../src/dsosettings.cpp" line="24"/>
         <source>SP%1</source>
         <translation>Спектр %1</translation>
     </message>
     <message>
-        <location filename="../src/dsosettings.cpp" line="27"/>
+        <location filename="../src/dsosettings.cpp" line="29"/>
         <source>CH%1</source>
         <translation>Канал %1</translation>
     </message>
     <message>
-        <location filename="../src/dsosettings.cpp" line="38"/>
+        <location filename="../src/dsosettings.cpp" line="40"/>
         <source>SPM</source>
         <translation>Сп.Мат.</translation>
     </message>
     <message>
-        <location filename="../src/dsosettings.cpp" line="43"/>
+        <location filename="../src/dsosettings.cpp" line="45"/>
         <source>MATH</source>
         <translation>Матем.</translation>
     </message>
@@ -953,42 +953,42 @@
         <translation type="vanished">&lt;p&gt;Открытое программное обеспечение для USB осциллографов Hantek6022&lt;/p&gt;&lt;p&gt;Мейнтейнер: Мартин Хомут-Розманн&lt;/p&gt;&lt;p&gt;Авторские права &amp;copy; 2010, 2011 Оливер Хааг&lt;/p&gt;&lt;p&gt;Авторские права &amp;copy; 2012-2020 Сообщество OpenHantek &lt;br/&gt;&lt;a href=&apos;https://github.com/OpenHantek&apos;&gt;https://github.com/OpenHantek&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Авторские права на открытую микропрограмму &amp;copy; 2019-2020 Ho-Ro&lt;br/&gt;&lt;a href=&apos;https://github.com/Ho-Ro/Hantek6022API&apos;&gt;https://github.com/Ho-Ro/Hantek6022API&lt;/a&gt;&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="412"/>
+        <location filename="../src/mainwindow.cpp" line="415"/>
         <source>&lt;p&gt;Running since %1 seconds.&lt;/p&gt;</source>
         <translation>&lt;p&gt;Работает в течение %1 секунд.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="430"/>
+        <location filename="../src/mainwindow.cpp" line="433"/>
         <source>%1: %2</source>
         <translation>%1: %2</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="443"/>
+        <location filename="../src/mainwindow.cpp" line="446"/>
         <source>yyyy-MM-dd hh:mm:ss</source>
         <translation>yyyy-MM-dd hh:mm:ss</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="444"/>
+        <location filename="../src/mainwindow.cpp" line="447"/>
         <source>yyyyMMdd_hhmmss</source>
         <translation>yyyyMMdd_hhmmss</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="472"/>
+        <location filename="../src/mainwindow.cpp" line="475"/>
         <source>Image (*.png *.jpg)</source>
         <translation>Изображение (*.png *.jpg)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="472"/>
+        <location filename="../src/mainwindow.cpp" line="475"/>
         <source>Portable Document Format (*.pdf)</source>
         <translation>Portable Document Format (*.pdf)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="473"/>
+        <location filename="../src/mainwindow.cpp" line="476"/>
         <source>Save screenshot</source>
         <translation>Сохранить снимок экрана</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="503"/>
+        <location filename="../src/mainwindow.cpp" line="506"/>
         <source>Print oscillograph</source>
         <translation>Печать осциллограммы</translation>
     </message>
@@ -1333,14 +1333,12 @@
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../src/selectdevice/rawdeviceslistmodel.cpp" line="67"/>
         <source>%1:%2 - No access</source>
-        <translation>%1:%2 - Нет доступа</translation>
+        <translation type="vanished">%1:%2 - Нет доступа</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/rawdeviceslistmodel.cpp" line="71"/>
         <source>%1:%2 (%3 - %4)</source>
-        <translation>%1:%2 (%3 - %4)</translation>
+        <translation type="vanished">%1:%2 (%3 - %4)</translation>
     </message>
     <message>
         <location filename="../src/selectdevice/deviceslistmodel.cpp" line="22"/>

@@ -81,7 +81,7 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
     setWindowIcon( QIcon( ":/images/OpenHantek.svg" ) );
     setWindowTitle( dsoControl->getDevice()->isRealHW()
                         ? tr( "OpenHantek6022 (%1) - Device %2 (FW%3)" )
-                              .arg( QString::fromStdString( VERSION ), QString::fromStdString( dsoControl->getModel()->name ) )
+                              .arg( QString::fromStdString( VERSION ), dsoControl->getModel()->name )
                               .arg( dsoControl->getDevice()->getFwVersion(), 4, 16, QChar( '0' ) )
                         : tr( "OpenHantek6022 (%1) - " ).arg( QString::fromStdString( VERSION ) ) + tr( "Demo Mode" ) );
 
@@ -408,7 +408,10 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
                      "<p>Copyright &copy; 2012-2021 OpenHantek community<br/>"
                      "<a href='https://github.com/OpenHantek'>https://github.com/OpenHantek</a></p>"
                      "<p>Open source firmware copyright &copy; 2019-2021 Ho-Ro<br/>"
-                     "<a href='https://github.com/Ho-Ro/Hantek6022API'>https://github.com/Ho-Ro/Hantek6022API</a></p>" ) +
+                     "<a href='https://github.com/Ho-Ro/Hantek6022API'>https://github.com/Ho-Ro/Hantek6022API</a></p>"
+                     "<p>Device: %1 (%2)</p>" )
+                    .arg( this->dsoSettings->deviceName )
+                    .arg( this->dsoSettings->deviceID ) +
                 tr( "<p>Running since %1 seconds.</p>" ).arg( elapsedTime.elapsed() / 1000 ) );
     } );
 

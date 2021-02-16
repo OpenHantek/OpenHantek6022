@@ -33,8 +33,7 @@ bool UploadFirmware::startUpload( ScopeDevice *scopeDevice ) {
     }
 
     // Write firmware from resources to temp files
-    QFile firmwareRes(
-        QString( ":/firmware/%1-firmware.hex" ).arg( QString::fromStdString( scopeDevice->getModel()->firmwareToken ) ) );
+    QFile firmwareRes( QString( ":/firmware/%1-firmware.hex" ).arg( scopeDevice->getModel()->firmwareToken ) );
     auto temp_firmware_path = std::unique_ptr< QTemporaryFile >( QTemporaryFile::createNativeFile( firmwareRes ) );
     if ( !temp_firmware_path )
         return false;

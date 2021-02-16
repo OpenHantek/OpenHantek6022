@@ -69,6 +69,21 @@ class ScopeDevice : public QObject {
     inline unsigned int getFwVersion() const { return this->descriptor.bcdDevice; }
 
     /**
+     * @brief getSerialNumber
+     * @return Return serial number string of the device
+     */
+    inline const QString getSerialNumber() const { return serialNumber; }
+
+
+    /**
+     * @brief readUSBdescriptor
+     * @param handle The device handle
+     * @param index of requested string
+     * @return serial number string
+     */
+    QString readUSBdescriptor( libusb_device_handle *handle, uint8_t index );
+
+    /**
      * Keep track of the find iteration on which this device was found
      * @param iteration The new iteration value
      */
@@ -188,6 +203,7 @@ class ScopeDevice : public QObject {
     bool realHW = true;
     bool stopTransfer = false;
     bool disconnected = true;
+    QString serialNumber = "NONE";
 
   signals:
     void deviceDisconnected(); ///< The device has been disconnected

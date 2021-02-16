@@ -3,6 +3,7 @@
 #pragma once
 
 #include "controlspecification.h"
+#include <QString>
 #include <list>
 #include <string>
 
@@ -24,8 +25,8 @@ class DSOModel {
     /// Firmwares are compiled into the executable with a filename pattern of devicename-firmware.hex and
     /// devicename-loader.hex.
     /// The firmwareToken is the "devicename" of the pattern above.
-    std::string firmwareToken;
-    std::string name; ///< User visible name. Does not need internationalisation/translation.
+    const QString firmwareToken;
+    const QString name; ///< User visible name. Does not need internationalisation/translation.
 
   protected:
     Dso::ControlSpecification specification;
@@ -34,7 +35,7 @@ class DSOModel {
     /// This model may need to modify the HantekDsoControl class to work correctly
     virtual void applyRequirements( HantekDsoControl * ) const = 0;
     DSOModel( int id, unsigned vendorID, unsigned productID, unsigned vendorIDnoFirmware, unsigned productIDnoFirmware,
-              unsigned firmwareVersion, const std::string &firmwareToken, const std::string &name,
+              unsigned firmwareVersion, const QString &firmwareToken, const QString &name,
               const Dso::ControlSpecification &&specification );
     virtual ~DSOModel() = default;
     /// Return the device specifications

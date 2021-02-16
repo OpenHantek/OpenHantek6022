@@ -2,7 +2,6 @@
 
 #include <QApplication>
 #include <QColor>
-// #include <QDebug>
 #include <QSettings>
 
 #include "dsosettings.h"
@@ -10,7 +9,10 @@
 
 /// \brief Set the number of channels.
 /// \param channels The new channel count, that will be applied to lists.
-DsoSettings::DsoSettings( const Dso::ControlSpecification *deviceSpecification ) : deviceSpecification( deviceSpecification ) {
+DsoSettings::DsoSettings( const ScopeDevice *scopeDevice )
+    : deviceName( scopeDevice->getModel()->name ), deviceID( scopeDevice->getSerialNumber() ),
+      deviceSpecification( scopeDevice->getModel()->spec() ) {
+
     // Add new channels to the list
     int voltage_hue[] = {60, 210, 0, 120};   // yellow, lightblue, red, green
     int spectrum_hue[] = {30, 240, 330, 90}; // orange, blue, purple, green
@@ -48,6 +50,10 @@ DsoSettings::DsoSettings( const Dso::ControlSpecification *deviceSpecification )
     view.print.voltage.push_back( QColor::fromHsv( 300, 0xff, 0xff ) );
     view.print.spectrum.push_back( QColor::fromHsv( 320, 0xff, 0xff ) );
 
+    // create an unique storage for this device based on device name and serial number
+    storeSettings =
+        std::unique_ptr< QSettings >( new QSettings( QCoreApplication::organizationName(), deviceName + "_" + deviceID ) );
+    // and get the persistent settings
     load();
 }
 
@@ -63,11 +69,14 @@ bool DsoSettings::setFilename( const QString &filename ) {
 }
 
 
+// load the persistent scope settings
+// called by "DsoSettings::DsoSettings" and explicitely by "ui->actionOpen"
 void DsoSettings::load() {
     // Start with default configuration?
     if ( storeSettings->value( "configuration/version", 0 ).toUInt() < CONFIG_VERSION ) {
         // incompatible change or config reset by user
         storeSettings->clear(); // start with a clean config storage
+        QSettings().clear();    // and a clean global storage
         setDefaultConfig();
         return;
     }
@@ -250,8 +259,6 @@ void DsoSettings::load() {
         view.digitalPhosphor = storeSettings->value( "digitalPhosphor" ).toBool();
     if ( storeSettings->contains( "interpolation" ) )
         view.interpolation = Dso::InterpolationMode( storeSettings->value( "interpolation" ).toInt() );
-    if ( storeSettings->contains( "fontSize" ) )
-        view.fontSize = storeSettings->value( "fontSize" ).toInt();
     if ( storeSettings->contains( "printerColorImages" ) )
         view.printerColorImages = storeSettings->value( "printerColorImages" ).toBool();
     if ( storeSettings->contains( "zoom" ) )
@@ -269,12 +276,18 @@ void DsoSettings::load() {
 }
 
 
+// save the persistent scope settings
+// called by "MainWindow::closeEvent" and explicitely by "ui->actionSave" and "ui->actionSave_as"
 void DsoSettings::save() {
     // Use default configuration after restart?
     if ( 0 == configVersion ) {
         storeSettings->clear();
         return;
+    } else { // save fontSize as global setting
+        QSettings().setValue( "view/fontSize", view.fontSize );
     }
+    // now store individual device values
+    // Configuration settings
     storeSettings->beginGroup( "configuration" );
     storeSettings->setValue( "version", configVersion );
     storeSettings->setValue( "alwaysSave", alwaysSave );
@@ -360,7 +373,6 @@ void DsoSettings::save() {
     // View
     storeSettings->beginGroup( "view" );
     // Colors
-
     storeSettings->beginGroup( "color" );
     DsoSettingsColorValues *colors;
     for ( int mode = 0; mode < 2; ++mode ) {
@@ -390,13 +402,14 @@ void DsoSettings::save() {
     storeSettings->setValue( "histogram", scope.histogram );
     storeSettings->setValue( "digitalPhosphor", view.digitalPhosphor );
     storeSettings->setValue( "interpolation", view.interpolation );
-    storeSettings->setValue( "fontSize", view.fontSize );
+    // storeSettings->setValue( "fontSize", view.fontSize );
     storeSettings->setValue( "printerColorImages", view.printerColorImages );
     storeSettings->setValue( "zoom", view.zoom );
     storeSettings->setValue( "cursorGridPosition", view.cursorGridPosition );
     storeSettings->setValue( "cursorsVisible", view.cursorsVisible );
     storeSettings->endGroup(); // view
 
+    // Program window geometry and state
     storeSettings->beginGroup( "window" );
     storeSettings->setValue( "geometry", mainWindowGeometry );
     storeSettings->setValue( "state", mainWindowState );

@@ -160,7 +160,7 @@ void SelectSupportedDevice::showLibUSBFailedDialogModel( int error ) {
 void SelectSupportedDevice::updateSupportedDevices() {
     QString devices;
     for ( const DSOModel *model : ModelRegistry::get()->models() ) {
-        devices.append( QString::fromStdString( model->name ) ).append( " " );
+        devices.append( model->name ).append( " " );
     }
     ui->labelSupportedDevices->setText( devices );
 }

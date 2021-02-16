@@ -68,7 +68,7 @@ void DevicesListModel::updateDeviceList() {
     beginInsertRows( QModelIndex(), 0, int( devices->size() ) );
     for ( auto &i : *devices ) {
         DeviceListEntry entry;
-        entry.name = QString::fromStdString( i.second->getModel()->name );
+        entry.name = i.second->getModel()->name;
         entry.id = i.first;
         if ( i.second->needsFirmware() ) {
             UploadFirmware uf;

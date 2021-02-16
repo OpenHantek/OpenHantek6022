@@ -4,7 +4,7 @@
 #include "modelregistry.h"
 
 DSOModel::DSOModel( int id, unsigned vendorID, unsigned productID, unsigned vendorIDnoFirmware, unsigned productIDnoFirmware,
-                    unsigned firmwareVersion, const std::string &firmwareToken, const std::string &name,
+                    unsigned firmwareVersion, const QString &firmwareToken, const QString &name,
                     const Dso::ControlSpecification &&specification )
     : ID( id ), vendorID( vendorID ), productID( productID ), vendorIDnoFirmware( vendorIDnoFirmware ),
       productIDnoFirmware( productIDnoFirmware ), firmwareVersion( firmwareVersion ), firmwareToken( firmwareToken ), name( name ),
