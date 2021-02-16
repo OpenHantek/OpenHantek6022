@@ -60,12 +60,12 @@ bool ExporterCSV::save() {
         if ( data->data( channel ) ) {
             if ( registry->settings->scope.voltage[ channel ].used ) {
                 voltageData[ channel ] = &( data->data( channel )->voltage );
-                maxRow = std::max( maxRow, voltageData[ channel ]->sample.size() );
+                maxRow = qMax( maxRow, voltageData[ channel ]->sample.size() );
                 timeInterval = data->data( channel )->voltage.interval;
             }
             if ( registry->settings->scope.spectrum[ channel ].used ) {
                 spectrumData[ channel ] = &( data->data( channel )->spectrum );
-                maxRow = std::max( maxRow, spectrumData[ channel ]->sample.size() );
+                maxRow = qMax( maxRow, spectrumData[ channel ]->sample.size() );
                 freqInterval = data->data( channel )->spectrum.interval;
                 isSpectrumUsed = true;
             }
