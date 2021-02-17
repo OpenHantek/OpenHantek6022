@@ -4,7 +4,7 @@
 <context>
     <name></name>
     <message>
-        <location filename="../src/usb/scopedevice.cpp" line="76"/>
+        <location filename="../src/usb/scopedevice.cpp" line="75"/>
         <source>Couldn&apos;t open device: %1</source>
         <translation></translation>
     </message>
@@ -687,7 +687,7 @@
         <translation type="vanished">Não foi possível obter dados do canal do osciloscópio</translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="412"/>
+        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="411"/>
         <source>Couldn&apos;t get calibration data from oscilloscope&apos;s EEPROM. Use a config file for calibration!</source>
         <translation>Não foi possível obter dados de calibração a partir da EEPROM do osciloscópio. Use um arquivo de configuração para a calibração!</translation>
     </message>

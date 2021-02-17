@@ -463,9 +463,9 @@ void MainWindow::screenShot( screenshotType_t screenshotType ) {
 #if ( QT_VERSION >= QT_VERSION_CHECK( 5, 10, 0 ) )
     printer.setPdfVersion( QPrinter::PdfVersion_A1b );
 #endif
-    printer.setPaperSize( QPrinter::A4 );
-    printer.setPageMargins( 20, 20, 20, 20, QPrinter::Millimeter );
-    printer.setOrientation( sw > sh ? QPrinter::Landscape : QPrinter::Portrait );
+    printer.setPageSize( QPrinter::A4 );
+    printer.setPageMargins( QMarginsF( 20, 20, 20, 20 ), QPageLayout::Millimeter );
+    printer.setPageOrientation( sw > sh ? QPageLayout::Landscape : QPageLayout::Portrait );
     printer.setCreator( QCoreApplication::applicationName() );
     printer.setDocName( docName );
 
@@ -490,14 +490,14 @@ void MainWindow::screenShot( screenshotType_t screenshotType ) {
         // supports screen resolution up to about 9600 x 9600 pixel
         int resolution = 75;
         printer.setResolution( resolution );
-        int pw = printer.pageRect().width();
-        int ph = printer.pageRect().height();
+        int pw = printer.pageLayout().paintRectPixels( resolution ).width();
+        int ph = printer.pageLayout().paintRectPixels( resolution ).height();
         int scale = qMin( pw / sw, ph / sh );
         while ( scale < 2 && resolution < 1200 ) {
             resolution *= 2;
             printer.setResolution( resolution );
-            pw = printer.pageRect().width();
-            ph = printer.pageRect().height();
+            pw = printer.pageLayout().paintRectPixels( resolution ).width();
+            ph = printer.pageLayout().paintRectPixels( resolution ).height();
             scale = qMin( pw / sw, ph / sh );
         }
     } else { // Show the printing dialog
@@ -509,8 +509,9 @@ void MainWindow::screenShot( screenshotType_t screenshotType ) {
         }
     }
     // send the pixmap to *.pdf or printer
-    int pw = printer.pageRect().width();
-    int ph = printer.pageRect().height();
+    int pw = printer.pageLayout().paintRectPixels( printer.resolution() ).width();
+    int ph = printer.pageLayout().paintRectPixels( printer.resolution() ).height();
+
     int scale = qMin( pw / sw, ph / sh );
 
     // qDebug() << sw << sh << pw << ph << scale << resolution;

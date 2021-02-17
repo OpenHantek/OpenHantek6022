@@ -110,26 +110,26 @@ std::unique_ptr< ScopeDevice > SelectSupportedDevice::showSelectDeviceModal( lib
         }
         // printf( "%d, %d, %d devices\n", model->rowCount( QModelIndex() ), supportedDevices, devices );
         if ( 1 == devices && 1 == supportedDevices ) { // only one device ready, start it without user action
-            int index = 0;
-            for ( index = 0; index < model->rowCount( QModelIndex() ); ++index ) {
-                if ( ui->cmbDevices->itemData( index, Qt::UserRole + 1 ).toBool() ) // can connect
+            int mIndex = 0;
+            for ( mIndex = 0; mIndex < model->rowCount( QModelIndex() ); ++mIndex ) {
+                if ( ui->cmbDevices->itemData( mIndex, Qt::UserRole + 1 ).toBool() ) // can connect
                     break;
             }
-            ui->cmbDevices->setCurrentIndex( index );
+            ui->cmbDevices->setCurrentIndex( mIndex );
             if ( ui->buttonBox->button( QDialogButtonBox::Ok )->isEnabled() ) { // if scope is ready to run
                 ui->buttonBox->button( QDialogButtonBox::Ok )->click();         // start it without user activity
             }
         } else if ( devices && model->rowCount( QModelIndex() ) ) {
             // more than 1 devices ready
             if ( devices != readyDevices ) { // find 1st ready device
-                int index = 0;
-                for ( index = 0; index < model->rowCount( QModelIndex() ); ++index ) {
-                    if ( ui->cmbDevices->itemData( index, Qt::UserRole + 1 ).toBool() ) // can connect
+                int mIndex = 0;
+                for ( mIndex = 0; mIndex < model->rowCount( QModelIndex() ); ++mIndex ) {
+                    if ( ui->cmbDevices->itemData( mIndex, Qt::UserRole + 1 ).toBool() ) // can connect
                         break;
                 }
                 readyDevices = devices;
                 ui->labelReadyState->setText( messageDeviceReady );
-                ui->cmbDevices->setCurrentIndex( index );
+                ui->cmbDevices->setCurrentIndex( mIndex );
             }
         } else { // no devices found (not yet)
             ui->labelReadyState->setText( messageNoDevices );

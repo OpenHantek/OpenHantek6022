@@ -32,7 +32,7 @@ DsoWidget::DsoWidget( DsoSettingsScope *scope, DsoSettingsView *view, const Dso:
 
     // Palette for this widget
     QPalette palette;
-    palette.setColor( QPalette::Background, view->colors->background );
+    palette.setColor( QPalette::Window, view->colors->background );
     palette.setColor( QPalette::WindowText, view->colors->text );
 
     setupSliders( mainSliders );
@@ -275,7 +275,7 @@ DsoWidget::DsoWidget( DsoSettingsScope *scope, DsoSettingsView *view, const Dso:
 
     // The widget itself
     setPalette( palette );
-    setBackgroundRole( QPalette::Background );
+    setBackgroundRole( QPalette::Window );
     setAutoFillBackground( true );
     setLayout( mainLayout );
 
@@ -329,7 +329,7 @@ void DsoWidget::restoreScreenColors() {
 void DsoWidget::setColors() {
     // Palette for this widget
     QPalette paletteNow;
-    paletteNow.setColor( QPalette::Background, view->colors->background );
+    paletteNow.setColor( QPalette::Window, view->colors->background );
     paletteNow.setColor( QPalette::WindowText, view->colors->text );
     settingsSamplesOnScreen->setPalette( paletteNow );
     settingsSamplerateLabel->setPalette( paletteNow );
@@ -367,7 +367,7 @@ void DsoWidget::setColors() {
     settingsTriggerLabel->setPalette( tablePalette );
     updateTriggerSource();
     setPalette( paletteNow );
-    setBackgroundRole( QPalette::Background );
+    setBackgroundRole( QPalette::Window );
 }
 
 
@@ -706,8 +706,8 @@ void DsoWidget::updateSpectrumUsed( ChannelID channel, bool used ) {
     if ( channel >= unsigned( scope->voltage.size() ) )
         return;
     bool spectrumUsed = false;
-    for ( size_t channel = 0; channel < scope->voltage.size(); ++channel )
-        if ( scope->spectrum[ channel ].used )
+    for ( size_t ch = 0; ch < scope->voltage.size(); ++ch )
+        if ( scope->spectrum[ ch ].used )
             spectrumUsed = true;
     settingsFrequencybaseLabel->setVisible( spectrumUsed ); // hide text if no spectrum channel used
     mainSliders.voltageOffsetSlider->setIndexVisible( unsigned( scope->voltage.size() ) + channel, used );
@@ -824,10 +824,10 @@ void DsoWidget::showNew( std::shared_ptr< PPresult > analysedData ) {
     QPalette triggerLabelPalette = palette();
     if ( scope->trigger.mode == Dso::TriggerMode::ROLL ) {
         triggerLabelPalette.setColor( QPalette::WindowText, view->colors->background );
-        triggerLabelPalette.setColor( QPalette::Background, view->colors->background );
+        triggerLabelPalette.setColor( QPalette::Window, view->colors->background );
     } else {
         triggerLabelPalette.setColor( QPalette::WindowText, Qt::black );
-        triggerLabelPalette.setColor( QPalette::Background, analysedData->softwareTriggerTriggered ? Qt::green : Qt::red );
+        triggerLabelPalette.setColor( QPalette::Window, analysedData->softwareTriggerTriggered ? Qt::green : Qt::red );
     }
     swTriggerStatus->setPalette( triggerLabelPalette );
     swTriggerStatus->setVisible( true );
@@ -879,10 +879,10 @@ void DsoWidget::showNew( std::shared_ptr< PPresult > analysedData ) {
             QPalette validPalette;
             if ( analysedData.get()->data( channel )->valid ) { // normal display
                 validPalette.setColor( QPalette::WindowText, view->colors->voltage[ channel ] );
-                validPalette.setColor( QPalette::Background, view->colors->background );
+                validPalette.setColor( QPalette::Window, view->colors->background );
             } else { // warning
                 validPalette.setColor( QPalette::WindowText, Qt::black );
-                validPalette.setColor( QPalette::Background, Qt::red );
+                validPalette.setColor( QPalette::Window, Qt::red );
             }
             measurementNameLabel[ channel ]->setPalette( validPalette );
         }

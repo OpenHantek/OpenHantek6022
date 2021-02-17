@@ -4,7 +4,7 @@
 <context>
     <name></name>
     <message>
-        <location filename="../src/usb/scopedevice.cpp" line="76"/>
+        <location filename="../src/usb/scopedevice.cpp" line="75"/>
         <source>Couldn&apos;t open device: %1</source>
         <translation>Невозможно открыть устройство: %1</translation>
     </message>
@@ -611,7 +611,7 @@
 <context>
     <name>HantekDsoControl</name>
     <message>
-        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="412"/>
+        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="411"/>
         <source>Couldn&apos;t get calibration data from oscilloscope&apos;s EEPROM. Use a config file for calibration!</source>
         <translation>Не удалось получить данные калибровки из EEPROM осциллографа. Используйте файл конфигурации для калибровки!</translation>
     </message>

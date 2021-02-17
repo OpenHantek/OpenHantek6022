@@ -31,7 +31,7 @@ DataGrid::CursorInfo::CursorInfo() {
 }
 
 void DataGrid::CursorInfo::configure( const QString &text, const QColor &bgColor, const QColor &fgColor ) {
-    palette.setColor( QPalette::Background, bgColor );
+    palette.setColor( QPalette::Window, bgColor );
     palette.setColor( QPalette::WindowText, fgColor );
 
     selector->setText( text );
