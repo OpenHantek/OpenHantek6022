@@ -168,10 +168,16 @@ will be closed as invalid!
 * Open the project in QtCreator
 * Compile the software
 
-Hints for Visual Studio 2015/2017 users:
+Hints for Visual Studio 2015/2017/2019 users:
 * Install the right Qt package that matches your Visual Studio installation.
 * Build for 64bit. 32bit builds theoretically work, but you are on your own then.
 * Use the **CMake GUI** to setup all required Qt include and library paths.
+
+#### CI Build on appveyor
+
+As I do not use Windows for development the building is done externally at the CI provider [appveyor.com](https://www.appveyor.com)
+who provides [these Windows environments](https://www.appveyor.com/docs/windows-images-software/).
+Please check also the file [appveyor.yml](https://github.com/OpenHantek/OpenHantek6022/blob/master/appveyor.yml) for info about the building process.
 
 #### Microsoft Windows USB driver install (with Zadig)
 
@@ -208,26 +214,3 @@ The files `Hantek_6022B.cat` and `Hantek_6022B.inf` are included in the Windows 
 Right-click on `Hantek_6022B.inf` and select `install`.
 Feedback (positive as well as negative) would be highly appreciated.
 
-----
-
-#### This is the old and more complex procedure (no positive feedback known)
-  - Make sure your original Hantek driver is uninstalled.
-  - Extract `cmake/winusb driver.zip` and customize the `libusb_device.inf` file for your device. The Vendor ID and Device ID as well as a unique GUID need to be entered like in the following example for a Hantek 6022BE.
-  - Physically plug (or replug) oscilloscope into PC's. From the Windows device manager update driver for your device and point to your modified libusb_device.inf.
-
-````
-; =====================================================
-; ========= START USER CONFIGURABLE SECTION ===========
-; =====================================================
-
-DeviceName = "HantekDSO6022BE"
-VendorID = "VID_04B5"
-ProductID = "PID_6022"
-DeviceClassGUID = "{78a1c341-4539-11d3-b88d-00c04fad5171}"
-; Date MUST be in MM/DD/YYYY format
-Date = "08/12/2017"
-
-; =====================================================
-; ========== END USER CONFIGURABLE SECTION ============
-; =====================================================
-````
