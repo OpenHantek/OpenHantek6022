@@ -7,7 +7,6 @@
 #include "scopedevice.h"
 
 #include "hantekdso/dsomodel.h"
-// #include "hantekprotocol/bulkStructs.h"
 #include "hantekprotocol/controlStructs.h"
 
 #include <QCoreApplication>

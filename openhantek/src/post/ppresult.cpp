@@ -2,7 +2,6 @@
 
 #include "ppresult.h"
 #include <QDebug>
-// #include <stdexcept>
 
 PPresult::PPresult( unsigned int channelCount ) { analyzedData.resize( channelCount ); }
 

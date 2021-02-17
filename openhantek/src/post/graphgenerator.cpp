@@ -2,7 +2,6 @@
 
 #include <QDebug>
 #include <QMutex>
-// #include <exception>
 #include <math.h>
 
 #include "graphgenerator.h"
