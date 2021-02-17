@@ -178,6 +178,7 @@ Hints for Visual Studio 2015/2017/2019 users:
 As I do not use Windows for development the building is done externally at the CI provider [appveyor.com](https://www.appveyor.com)
 who provides [these Windows environments](https://www.appveyor.com/docs/windows-images-software/).
 Please check also the file [appveyor.yml](https://github.com/OpenHantek/OpenHantek6022/blob/master/appveyor.yml) for info about the building process.
+Starting with the update to Visual Studio 2019 for the upcoming OpenHantek6022 version 3.2 only 64bit builds are provided.
 
 #### Microsoft Windows USB driver install (with Zadig)
 

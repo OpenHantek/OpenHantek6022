@@ -20,8 +20,8 @@ for:
     only:
       - image: Ubuntu2004
   install:
-    - sudo apt update
-    - sudo apt install --quiet --yes cmake make fakeroot rpm qttools5-dev libfftw3-dev binutils-dev libusb-1.0-0-dev libqt5opengl5-dev mesa-common-dev libgl1-mesa-dev libgles2-mesa-dev
+    - sudo apt-get update
+    - sudo apt-get install --quiet=2 cmake make fakeroot rpm qttools5-dev libfftw3-dev binutils-dev libusb-1.0-0-dev libqt5opengl5-dev mesa-common-dev libgl1-mesa-dev libgles2-mesa-dev
   before_build:
     - mkdir build
     - cd build
@@ -46,20 +46,11 @@ for:
     - md build_x64
     - call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars64.bat"
     - cmake -G "Visual Studio 16 2019" -A x64 -DCMAKE_PREFIX_PATH=%qtpath64% -DCMAKE_BUILD_TYPE=Release -Bbuild_x64 -H.
-    - set qtpath32="C:\Qt\5.15\msvc2019"
-    - set arch32=x86
-    - set dir32=build_x86
-    - md build_x86
-    - call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars32.bat"
-    - cmake -G "Visual Studio 16 2019" -A Win32 -DCMAKE_PREFIX_PATH=%qtpath32% -DCMAKE_BUILD_TYPE=Release -Bbuild_x86 -H.
   build_script:
     - cmake --build build_x64 --config Release --target package
-    - cmake --build build_x86 --config Release --target package
   artifacts:
     - path: build_x64\openhantek\Release
       name: OpenHantek-Win-x64-Release-b$(APPVEYOR_BUILD_NUMBER)
-    - path: build_x86\openhantek\Release
-      name: OpenHantek-Win-x86-Release-b$(APPVEYOR_BUILD_NUMBER)
 
 # Build MacOS packages
 - matrix:
