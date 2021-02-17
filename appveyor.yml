@@ -8,7 +8,7 @@ version: 1.0.{build}
 #define the build environments
 image:
   - Ubuntu2004
-  - Visual Studio 2015
+  - Visual Studio 2019
   - macOS
 
 
@@ -38,20 +38,20 @@ for:
 # Build Windows packages
 - matrix:
     only:
-      - image: Visual Studio 2015
+      - image: Visual Studio 2019
   before_build:
-    - set qtpath64="C:\Qt\5.11\msvc2015_64"
+    - set qtpath64="C:\Qt\5.15\msvc2019_64"
     - set arch64=x64
     - set dir64=build_x64
     - md build_x64
-    - call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x64
-    - cmake -G "Visual Studio 14 2015 Win64" -DCMAKE_PREFIX_PATH=%qtpath64% -DCMAKE_BUILD_TYPE=Release -Bbuild_x64 -H.
-    - set qtpath32="C:\Qt\5.11\msvc2015"
+    - call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars64.bat" x64
+    - cmake -G "Visual Studio 16 2019" -A x64 -DCMAKE_PREFIX_PATH=%qtpath64% -DCMAKE_BUILD_TYPE=Release -Bbuild_x64 -H.
+    - set qtpath32="C:\Qt\5.15\msvc2019"
     - set arch32=x86
     - set dir32=build_x86
     - md build_x86
-    - call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86
-    - cmake -G "Visual Studio 14 2015" -DCMAKE_PREFIX_PATH=%qtpath32% -DCMAKE_BUILD_TYPE=Release -Bbuild_x86 -H.
+    - call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars64.bat" x86
+    - cmake -G "Visual Studio 16 2019" -A Win32 -DCMAKE_PREFIX_PATH=%qtpath32% -DCMAKE_BUILD_TYPE=Release -Bbuild_x86 -H.
   build_script:
     - cmake --build build_x64 --config Release --target package
     - cmake --build build_x86 --config Release --target package
