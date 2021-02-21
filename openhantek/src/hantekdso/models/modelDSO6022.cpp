@@ -152,8 +152,9 @@ static void initSpecifications( Dso::ControlSpecification &specification ) {
     };
     specification.fixedUSBinLength = 512;
 
-    // calibration frequency (requires >FW0206)
-    specification.calfreqSteps = {50, 60, 100, 200, 500, 1e3, 2e3, 5e3, 10e3, 20e3, 50e3, 100e3};
+    // calibration frequency (requires >= FW0209)
+    specification.calfreqSteps = {40,  50,  60,  80,  100, 200,  300,  400,  500,  600,  800,  1e3,  2e3,
+                                  3e3, 4e3, 5e3, 6e3, 8e3, 10e3, 20e3, 30e3, 40e3, 50e3, 60e3, 80e3, 100e3};
     specification.hasCalibrationEEPROM = true;
 }
 
