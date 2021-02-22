@@ -203,7 +203,7 @@ class ScopeDevice : public QObject {
     bool realHW = true;
     bool stopTransfer = false;
     bool disconnected = true;
-    QString serialNumber = "NONE";
+    QString serialNumber = "0000";
 
   signals:
     void deviceDisconnected(); ///< The device has been disconnected

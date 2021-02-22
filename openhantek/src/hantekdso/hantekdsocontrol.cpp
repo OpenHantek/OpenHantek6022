@@ -160,6 +160,8 @@ Dso::ErrorCode HantekDsoControl::setCalFreq( double calfreq ) {
         cf = 100 + unsigned( calfreq ) / 10;
         if ( 110 == cf ) // special case for sigrok FW (e.g. DDS120) 100Hz -> 0
             cf = 0;
+    } else if ( calfreq <= 5500 && unsigned( calfreq ) % 1000 ) { // non integer multiples of 1 kHz
+        cf = 200 + unsigned( calfreq ) / 100;                     // in the range 1000 .. 5500 Hz
     }
     // printf( "HDC::setCalFreq( %g ) -> %d\n", calfreq, cf );
     if ( deviceNotConnected() )
