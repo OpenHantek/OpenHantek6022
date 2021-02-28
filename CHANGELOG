@@ -1,3 +1,12 @@
+3.2
+2021-02-28
+Simultaneous use of more than one device is possible
+Scope settings are saved individually based on serial number
+More calibration frequencies (poor man's function generator)
+CI appveyor Linux build system upgraded to Ubuntu 2004, Qt 5.12.8
+CI appveyor Windows build system upgraded to VS 16 2019, Qt 5.15
+No more 32bit binaries
+
 3.1.5
 2020-12-24
 Improvements for small displays (scope fits on screen height >= 720)

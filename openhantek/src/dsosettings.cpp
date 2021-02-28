@@ -287,6 +287,13 @@ void DsoSettings::save() {
         QSettings().setValue( "view/fontSize", view.fontSize );
     }
     // now store individual device values
+
+    //  Device ID (helps to identify the connection of a "Save as" file with a specific device)
+    storeSettings->beginGroup( "DeviceID" );
+    storeSettings->setValue( "Model", deviceName );
+    storeSettings->setValue( "SerialNumber", deviceID );
+    storeSettings->endGroup(); // DeviceID
+
     // Configuration settings
     storeSettings->beginGroup( "configuration" );
     storeSettings->setValue( "version", configVersion );
