@@ -289,7 +289,8 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
     connect( this, &MainWindow::settingsLoaded, dsoWidget, &DsoWidget::updateSlidersSettings );
 
     connect( ui->actionOpen, &QAction::triggered, [this, spec]() {
-        QString fileName = QFileDialog::getOpenFileName( this, tr( "Open file" ), "", tr( "Settings (*.conf)" ) );
+        QString fileName = QFileDialog::getOpenFileName( this, tr( "Open file" ), "", tr( "Settings (*.conf)" ), nullptr,
+                                                         QFileDialog::DontUseNativeDialog );
         if ( !fileName.isEmpty() ) {
             if ( dsoSettings->setFilename( fileName ) ) {
                 dsoSettings->load();
@@ -312,7 +313,8 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
     } );
 
     connect( ui->actionSave_as, &QAction::triggered, [this]() {
-        QString fileName = QFileDialog::getSaveFileName( this, tr( "Save settings" ), "", tr( "Settings (*.conf)" ) );
+        QString fileName = QFileDialog::getSaveFileName( this, tr( "Save settings" ), "", tr( "Settings (*.conf)" ), nullptr,
+                                                         QFileDialog::DontUseNativeDialog );
         if ( fileName.isEmpty() )
             return;
         if ( !fileName.endsWith( ".conf" ) )
@@ -474,6 +476,7 @@ void MainWindow::screenShot( screenshotType_t screenshotType ) {
         fileName += ".png";
         filters << tr( "Image (*.png *.jpg)" ) << tr( "Portable Document Format (*.pdf)" );
         QFileDialog fileDialog( this, tr( "Save screenshot" ), fileName, filters.join( ";;" ) );
+        fileDialog.setOption( QFileDialog::DontUseNativeDialog );
         fileDialog.setAcceptMode( QFileDialog::AcceptSave );
         if ( fileDialog.exec() != QDialog::Accepted )
             return;
