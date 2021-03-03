@@ -34,6 +34,7 @@ bool ExporterCSV::save() {
     QFileDialog fileDialog( nullptr, tr( "Save CSV" ), QString(), tr( "Comma-Separated Values (*.csv)" ) );
     fileDialog.setFileMode( QFileDialog::AnyFile );
     fileDialog.setAcceptMode( QFileDialog::AcceptSave );
+    fileDialog.setOption( QFileDialog::DontUseNativeDialog );
     if ( fileDialog.exec() != QDialog::Accepted )
         return false;
 
