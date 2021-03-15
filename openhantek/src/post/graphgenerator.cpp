@@ -29,8 +29,7 @@ static const SampleValues &useVoltSamplesOf( ChannelID channel, const PPresult *
 }
 
 
-GraphGenerator::GraphGenerator( const DsoSettingsScope *scope /*, const DsoSettingsView *view */ )
-    : scope( scope ) /*, view(view) */ {
+GraphGenerator::GraphGenerator( const DsoSettingsScope *scope, const DsoSettingsView *view ) : scope( scope ), view( view ) {
     // printf( "GraphGenerator::GraphGenerator()\n" );
 }
 
@@ -48,6 +47,7 @@ void GraphGenerator::process( PPresult *data ) {
 
 void GraphGenerator::generateGraphsTYvoltage( PPresult *result ) {
     // printf( "GraphGenerator::generateGraphsTYvoltage()\n" );
+    bool interpolationStep = view->interpolation == Dso::INTERPOLATION_STEP;
     result->vaChannelVoltage.resize( scope->voltage.size() );
     result->vaChannelHistogram.resize( scope->voltage.size() );
     for ( ChannelID channel = 0; channel < scope->voltage.size(); ++channel ) {
@@ -82,7 +82,7 @@ void GraphGenerator::generateGraphsTYvoltage( PPresult *result ) {
         const unsigned binsPerDiv = 50;
 
         // Set size directly to avoid reallocations (n+1 dots to display n lines)
-        graphVoltage.reserve( ++dotsOnScreen );
+        graphVoltage.reserve( ++dotsOnScreen * ( interpolationStep ? 2 : 1 ) ); // double size for "Step"
         graphHistogram.reserve( int( 2 * ( binsPerDiv * DIVS_VOLTAGE ) ) );
 
         const double gain = scope->gain( channel );
@@ -96,19 +96,28 @@ void GraphGenerator::generateGraphsTYvoltage( PPresult *result ) {
         unsigned bins[ int( binsPerDiv * DIVS_VOLTAGE ) ] = {0};
         for ( unsigned int position = unsigned( leftmostPosition ); position < dotsOnScreen && sampleIterator < sampleEnd;
               ++position, ++sampleIterator ) {
+            static double y_1 = 0;
             double x = double( MARGIN_LEFT + position * horizontalFactor );
             double y = *sampleIterator / gain + offset;
             if ( !scope->histogram ) { // show complete trace
+                if ( interpolationStep )
+                    graphVoltage.push_back( QVector3D( float( x ), float( y_1 ), 0.0f ) ); // insert horizontal step
                 graphVoltage.push_back( QVector3D( float( x ), float( y ), 0.0f ) );
             } else { // histogram replaces trace in rightmost div
                 int bin = int( round( binsPerDiv * ( y + DIVS_VOLTAGE / 2 ) ) );
                 if ( bin > 0 && bin < binsPerDiv * DIVS_VOLTAGE ) // if trace is on screen
                     ++bins[ bin ];                                // count value
                 if ( x < MARGIN_RIGHT - 1.1 ) {                   // show trace unless in last div + 10% margin
+                    if ( interpolationStep )
+                        graphVoltage.push_back( QVector3D( float( x ), float( y_1 ), 0.0f ) ); // horizontal step
                     graphVoltage.push_back( QVector3D( float( x ), float( y ), 0.0f ) );
                 }
             }
+            y_1 = y;
         }
+        if ( interpolationStep )
+            graphVoltage[ 0 ] = graphVoltage[ 1 ]; // 1st = 2nd to avoid artifact
+
         if ( ( scope->horizontal.format == Dso::GraphFormat::TY ) && scope->histogram ) { // scale and display the histogram
             double max = 0;                                                               // find max histo count
             for ( int bin = 0; bin < binsPerDiv * DIVS_VOLTAGE; ++bin ) {

@@ -364,6 +364,11 @@
         <translation>Profondeur de phosphore numérique</translation>
     </message>
     <message>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="8"/>
+        <source>Step</source>
+        <translation>Escalier</translation>
+    </message>
+    <message>
         <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="56"/>
         <source>Graph</source>
         <translation>Graphe</translation>

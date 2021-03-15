@@ -364,6 +364,11 @@
         <translation>Profundidad del fósforo digital</translation>
     </message>
     <message>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="8"/>
+        <source>Step</source>
+        <translation>Escaleras</translation>
+    </message>
+    <message>
         <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="56"/>
         <source>Graph</source>
         <translation>Gráfico</translation>

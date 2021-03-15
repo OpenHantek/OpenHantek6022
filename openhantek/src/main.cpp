@@ -256,7 +256,7 @@ int main( int argc, char *argv[] ) {
 
     SpectrumGenerator spectrumGenerator( &settings.scope, &settings.post );
     MathChannelGenerator mathchannelGenerator( &settings.scope, spec->channels );
-    GraphGenerator graphGenerator( &settings.scope );
+    GraphGenerator graphGenerator( &settings.scope, &settings.view );
 
     postProcessing.registerProcessor( &samplesToExportRaw );
     postProcessing.registerProcessor( &mathchannelGenerator );

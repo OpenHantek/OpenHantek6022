@@ -46,7 +46,7 @@ but David [stopped maintaining](https://github.com/OpenHantek/openhantek/issues/
 * Sample rates 100, 200, 500 S/s, 1, 2, 5, 10, 20, 50, 100, 200, 500 kS/s, 1, 2, 5, 10, 12, 15, 24, 30 MS/s (24 & 30 MS/s in CH1-only mode).
 * 48 MS/s not supported due to unstable USB data streaming.
 * Downsampling (up to 200x) increases resolution and SNR.
-* Calibration output square wave signal frequency can be selected between 50 Hz .. 100 kHz in 1/2/5 steps.
+* Calibration output square wave signal frequency can be selected between 32 Hz .. 100 kHz in small steps (poor man's signal generator).
 * Trigger modes: *Normal*, *Auto* and *Single* with green/red status display (top left).
 * Untriggered *Roll* mode can be selected for slow time bases of 200 ms/div .. 10 s/div.
 * Trigger filter *HF* (trigger also on glitches), *Normal* and *LF* (for noisy signals).
@@ -59,8 +59,8 @@ but David [stopped maintaining](https://github.com/OpenHantek/openhantek/issues/
 * Export of the graphs to CSV, JPG, PNG file or to the printer.
 * Freely configurable colors.
 * Automatic adaption of iconset for light and [dark themes](docs/images/screenshot_mainwindow_dark.png).
-* The dock views on the main window can be customized by dragging them around and stacking them.
-  This allows a minimum window size of 640*480 for old workstation computers.
+* The dock views on the main window can be [customized](https://github.com/OpenHantek/OpenHantek6022/issues/161#issuecomment-799597664) by dragging them around and stacking them.
+  This allows a minimum window size of 800*300 for old laptops or workstation computers.
 * All settings can be saved to a configuration file and loaded again.
 * French, German, Russian and Spanish localisation complete, Italian and Portuguese translation ongoing.
 
