@@ -31,6 +31,21 @@ static const SampleValues &useVoltSamplesOf( ChannelID channel, const PPresult *
 
 GraphGenerator::GraphGenerator( const DsoSettingsScope *scope, const DsoSettingsView *view ) : scope( scope ), view( view ) {
     // printf( "GraphGenerator::GraphGenerator()\n" );
+    prepareSinc();
+}
+
+
+void GraphGenerator::prepareSinc( void ) {
+    // prepare a sinc table (without sinc(0))
+    sinc.clear();
+    sinc.resize( sincSize );
+    auto sincIt = sinc.begin();
+    for ( unsigned int pos = 1; pos <= sincSize; ++pos, ++sincIt ) {
+        double t = pos * M_PI / oversample;
+        // Hann window: 0.5 + 0.5 cos, Hamming: 0.54 + 0.46 cos
+        double w = 0.54 + 0.46 * cos( pos * M_PI / sincSize );
+        *sincIt = w * sin( t ) / t;
+    }
 }
 
 
@@ -47,9 +62,10 @@ void GraphGenerator::process( PPresult *data ) {
 
 void GraphGenerator::generateGraphsTYvoltage( PPresult *result ) {
     // printf( "GraphGenerator::generateGraphsTYvoltage()\n" );
-    bool interpolationStep = view->interpolation == Dso::INTERPOLATION_STEP;
     result->vaChannelVoltage.resize( scope->voltage.size() );
     result->vaChannelHistogram.resize( scope->voltage.size() );
+    bool interpolationStep = view->interpolation == Dso::INTERPOLATION_STEP;
+    bool interpolationSinc = view->interpolation == Dso::INTERPOLATION_SINC;
     for ( ChannelID channel = 0; channel < scope->voltage.size(); ++channel ) {
         ChannelGraph &graphVoltage = result->vaChannelVoltage[ channel ];
         ChannelGraph &graphHistogram = result->vaChannelHistogram[ channel ];
@@ -71,18 +87,18 @@ void GraphGenerator::generateGraphsTYvoltage( PPresult *result ) {
         // align displayed trace with trigger mark on screen ...
         // ... also if trig pos or time/div was changed on a "frozen" or single trace
         int leftmostSample = int( result->triggeredPosition );
-        if ( leftmostSample )                   // adjust position if triggered, else start from sample[0]
-            leftmostSample -= preTrigSamples;   // shift samples to show a stable trace
-        int leftmostPosition = 0;               // start position on display
-        if ( leftmostSample < 0 ) {             // trig pos or time/div was increased
-            leftmostPosition = -leftmostSample; // trace can't start on left margin
-            leftmostSample = 0;                 // show as much as we have on left side
+        if ( leftmostSample )                     // adjust position if triggered, else start from sample[0]
+            leftmostSample -= preTrigSamples + 1; // shift samples to show a stable trace
+        int leftmostPosition = 0;                 // start position on display
+        if ( leftmostSample < 0 ) {               // trig pos or time/div was increased
+            leftmostPosition = -leftmostSample;   // trace can't start on left margin
+            leftmostSample = 0;                   // show as much as we have on left side
         }
 
-        const unsigned binsPerDiv = 50;
+        const unsigned binsPerDiv = 50; // resolution of histogram
 
         // Set size directly to avoid reallocations (n+1 dots to display n lines)
-        graphVoltage.reserve( ++dotsOnScreen * ( interpolationStep ? 2 : 1 ) ); // double size for "Step"
+        graphVoltage.reserve( ++dotsOnScreen * ( interpolationStep ? 2 : 1 ) ); // two dots per "Step"
         graphHistogram.reserve( int( 2 * ( binsPerDiv * DIVS_VOLTAGE ) ) );
 
         const double gain = scope->gain( channel );
@@ -90,14 +106,44 @@ void GraphGenerator::generateGraphsTYvoltage( PPresult *result ) {
 
         auto sampleIterator = samples.sample.cbegin() + leftmostSample; // -> visible samples
         auto sampleEnd = samples.sample.cend();
-        // printf("samples: %lu, dotsOnScreen: %d\n", samples.sample.size(), dotsOnScreen);
+
+        // sinc interpolation if there are too less samples on screen
+        // https://ccrma.stanford.edu/~jos/resample/resample.pdf
+        if ( interpolationSinc && dotsOnScreen < 200 && result->triggeredPosition ) { // < 1 µs/div
+            // we would need sincWidth, but we take what we get
+            const unsigned int left = std::min( sincWidth, unsigned( leftmostSample ) );
+            horizontalFactor /= oversample;                                     // distance between (resampled) dots
+            dotsOnScreen = unsigned( DIVS_TIME / horizontalFactor + 0.99 + 1 ); // dot count after resample
+            const unsigned int resampleSize = ( left + dotsOnScreen + sincWidth ) * oversample;
+            resample.clear();                // invalidate old content
+            resample.resize( resampleSize ); //  ... and init with zero
+            auto sampleIt = samples.sample.cbegin() + leftmostSample;
+            for ( unsigned int resamplePos = 0; resamplePos < resampleSize; resamplePos += oversample ) {
+                resample[ resamplePos ] += *sampleIt; // sinc( 0 )
+                auto sincIt = sinc.cbegin();          // -> one half of sinc pulse without sinc(0)
+                for ( unsigned int sincPos = 1; sincPos <= sincSize; ++sincPos ) {
+                    const double convolute = *sampleIt * *sincIt;
+                    if ( resamplePos >= sincPos ) // left half of sinc in visible range
+                        resample[ resamplePos - sincPos ] += convolute;
+                    if ( resamplePos + sincPos < resampleSize ) // right half of sinc visible
+                        resample[ resamplePos + sincPos ] += convolute;
+                    ++sincIt;
+                }
+                ++sampleIt;
+            }
+            leftmostPosition *= oversample;            // scale the position accordingly
+            graphVoltage.reserve( resampleSize );      // provide enough space for resampled dots
+            sampleIterator = resample.cbegin() + left; // now switch from samples -> resamples
+            sampleEnd = resample.cend();
+        }
+
         graphVoltage.clear();   // remove all previous dots and fill in new trace
-        graphHistogram.clear(); // remove all previous dots and fill in new trace
+        graphHistogram.clear(); // remove all previous line and fill in new histo
         unsigned bins[ int( binsPerDiv * DIVS_VOLTAGE ) ] = {0};
         for ( unsigned int position = unsigned( leftmostPosition ); position < dotsOnScreen && sampleIterator < sampleEnd;
-              ++position, ++sampleIterator ) {
-            static double y_1 = 0;
+              ++position ) {
             double x = double( MARGIN_LEFT + position * horizontalFactor );
+            double y_1 = *sampleIterator++ / gain + offset;
             double y = *sampleIterator / gain + offset;
             if ( !scope->histogram ) { // show complete trace
                 if ( interpolationStep )
@@ -105,18 +151,15 @@ void GraphGenerator::generateGraphsTYvoltage( PPresult *result ) {
                 graphVoltage.push_back( QVector3D( float( x ), float( y ), 0.0f ) );
             } else { // histogram replaces trace in rightmost div
                 int bin = int( round( binsPerDiv * ( y + DIVS_VOLTAGE / 2 ) ) );
-                if ( bin > 0 && bin < binsPerDiv * DIVS_VOLTAGE ) // if trace is on screen
-                    ++bins[ bin ];                                // count value
-                if ( x < MARGIN_RIGHT - 1.1 ) {                   // show trace unless in last div + 10% margin
+                if ( bin > 0 && bin < binsPerDiv * DIVS_VOLTAGE ) // count value if trace is on screen
+                    ++bins[ bin ];
+                if ( x < MARGIN_RIGHT - 1.1 ) { // show trace unless in last div + 10% margin
                     if ( interpolationStep )
                         graphVoltage.push_back( QVector3D( float( x ), float( y_1 ), 0.0f ) ); // horizontal step
                     graphVoltage.push_back( QVector3D( float( x ), float( y ), 0.0f ) );
                 }
             }
-            y_1 = y;
         }
-        if ( interpolationStep )
-            graphVoltage[ 0 ] = graphVoltage[ 1 ]; // 1st = 2nd to avoid artifact
 
         if ( ( scope->horizontal.format == Dso::GraphFormat::TY ) && scope->histogram ) { // scale and display the histogram
             double max = 0;                                                               // find max histo count

@@ -34,6 +34,13 @@ class GraphGenerator : public QObject, public Processor {
     const DsoSettingsScope *scope;
     const DsoSettingsView *view;
 
+    void prepareSinc( void );                             // setup the sinc table used for upsampling
+    std::vector< double > sinc;                           // sinc function table for convolution
+    const unsigned int sincWidth = 2;                     // two periods
+    const unsigned int oversample = 5;                    // 5 time oversample
+    const unsigned int sincSize = sincWidth * oversample; // size of the table
+    std::vector< double > resample;                       // destination for overampled data
+
     // Processor interface
     void process( PPresult *data ) override;
 };

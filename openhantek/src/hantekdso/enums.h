@@ -55,6 +55,7 @@ enum InterpolationMode {
     INTERPOLATION_OFF = 0, ///< Just dots for each sample
     INTERPOLATION_LINEAR,  ///< Sample dots connected by straight lines
     INTERPOLATION_STEP,    ///< Sample dots connected by one step
+    INTERPOLATION_SINC,    ///< Sample dots upsampled by bandlimited sinc
     INTERPOLATION_COUNT    ///< Total number of interpolation modes
 };
 

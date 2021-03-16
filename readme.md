@@ -50,6 +50,7 @@ but David [stopped maintaining](https://github.com/OpenHantek/openhantek/issues/
 * Trigger modes: *Normal*, *Auto* and *Single* with green/red status display (top left).
 * Untriggered *Roll* mode can be selected for slow time bases of 200 ms/div .. 10 s/div.
 * Trigger filter *HF* (trigger also on glitches), *Normal* and *LF* (for noisy signals).
+* Display interpolation modes *Off*, *Linear*, *Step* and *Sinc*.
 * Calibration values loaded from eeprom or a model configuration file.
 * [Calibration program](https://github.com/Ho-Ro/Hantek6022API/blob/master/README.md#create-calibration-values-for-openhantek) to create these values automatically.
 * Digital phosphor effect to notice even short spikes; simple eye-diagram display with alternating trigger slope.

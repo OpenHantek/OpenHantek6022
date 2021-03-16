@@ -315,8 +315,9 @@
         <translation>Linear</translation>
     </message>
     <message>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="8"/>
         <source>Sinc</source>
-        <translation type="vanished">Sinc</translation>
+        <translation>Sinc</translation>
     </message>
     <message>
         <source>Timebase</source>
