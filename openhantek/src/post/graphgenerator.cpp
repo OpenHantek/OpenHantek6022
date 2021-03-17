@@ -116,10 +116,10 @@ void GraphGenerator::generateGraphsTYvoltage( PPresult *result ) {
             dotsOnScreen = unsigned( DIVS_TIME / horizontalFactor + 0.99 + 1 ); // dot count after resample
             const unsigned int resampleSize = ( left + dotsOnScreen + sincWidth ) * oversample;
             resample.clear();                // invalidate old content
-            resample.resize( resampleSize ); //  ... and init with zero
+            resample.resize( resampleSize ); //  ... and init with zero because we accumulate the convolution
             auto sampleIt = samples.sample.cbegin() + leftmostSample;
             for ( unsigned int resamplePos = 0; resamplePos < resampleSize; resamplePos += oversample ) {
-                resample[ resamplePos ] += *sampleIt; // sinc( 0 )
+                resample[ resamplePos ] += *sampleIt; // sinc( 0 ) sum up, do NOT assign
                 auto sincIt = sinc.cbegin();          // -> one half of sinc pulse without sinc(0)
                 for ( unsigned int sincPos = 1; sincPos <= sincSize; ++sincPos ) {
                     const double convolute = *sampleIt * *sincIt;
@@ -134,7 +134,7 @@ void GraphGenerator::generateGraphsTYvoltage( PPresult *result ) {
             leftmostPosition *= oversample;            // scale the position accordingly
             graphVoltage.reserve( resampleSize );      // provide enough space for resampled dots
             sampleIterator = resample.cbegin() + left; // now switch from samples -> resamples
-            sampleEnd = resample.cend();
+            sampleEnd = resample.cend();               // ... same for end of samples
         }
 
         graphVoltage.clear();   // remove all previous dots and fill in new trace

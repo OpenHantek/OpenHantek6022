@@ -117,11 +117,12 @@ Check the [Microsoft Windows build instructions](docs/build.md#microsoft-windows
 ## Important!
 The scope doesn't store the firmware permanently in flash or eeprom, it must be uploaded after each power-up and is kept in ram 'til power-down.
 If the scope was used with a different software (old openhantek, sigrok or the windows software) the scope must be unplugged and replugged one-time before using it with OpenHantek6022 to enable the automatic loading of the correct firmware.
-The top line of the program must display the correct firmware version (FW0207).
+The top line of the program must display the correct firmware version (FW0209).
 
 ## Specifications, features, limitations and developer documentation
-I use this project mainly to explore how DSP software can improve and extend the [limitations](docs/limitations.md) of this kind of low level hardware. It would have been easy to spend a few bucks more to buy a powerful scope - but it would be much less fun :)
-Please refer also to the [developer documentation](openhantek/readme.md) pages.
+I use this project mainly to explore how DSP software can improve and extend the [limitations](docs/limitations.md)
+of this kind of low level hardware. It would have been easy to spend a few bucks more to buy a powerful scope - but it would be much less fun :)
+Please refer also to the [developer info](openhantek/developer_info.md).
 
 ## Contribute
 We welcome any reported GitHub issue if you have a problem with this software. Send us a pull request for enhancements and fixes. Some random notes:

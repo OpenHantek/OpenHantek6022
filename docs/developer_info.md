@@ -10,7 +10,7 @@ The *res* folder contains mostly binary resource data that are bundled with the 
 like icons, images, firmwares and translations.
 
 The *res/translations* folder contains translations in the Qt format. Use Qt linguist
-as a handy graphical interface to translate OpenHantek. A [Translation HowTo](res/translations/Translation_HowTo.md) is available.
+as a handy graphical interface to translate OpenHantek. A [Translation HowTo](../openhantek/translations/Translation_HowTo.md) is available.
 
 The source code within *src* can be divided into a **core**, that is responsible for device communication,
 data acquisition and post processing and the **graphical interface** with several custom widgets,
@@ -61,22 +61,18 @@ All export related funtionality is within *src/exporting*.
 The following exporters are implemented:
 
 * Export to comma separated value file (CSV): Write to a user selected file,
-* Export to an image/pdf: Writes an image/pdf to a user selected file,
-* Print exporter: Creates a printable document and opens the print dialog.
 
-All export classes (exportcsv, exportimage, exportprint) implement the
+All export classes (at the moment only exportcsv) implement the
 ExporterInterface and are registered to the ExporterRegistry in the main.cpp.
 
-Some export classes are still using the legacyExportDrawer class to
-draw the grid and paint all the labels, values and graphs.
-
-The plan is to retire this legacy class and replace the paint code with
-a `GlScope` class shared OpenGL drawing code for at least the grid and the
-scope graphs.
+Screen shot / hard copy is realised by converting the screen content to PNG or PDF format.
+So you will get exactly the content of the screen.
+For hard copy the screen colors are adapted shortly to have dark traces on white background output.
 
 ## Persistent settings
 
-Persisent settings are stored in the file `~/.config/OpenHantek/OpenHantek6022.conf`.
+Persisent settings for individual devices are stored in files like  `~/.config/OpenHantek/DSO-6022BE_123456789ABC.conf`,
+where the filename is combined from device type and unique serial number. This allows to work with more than one scope at the same time.
 Settings are written at program shutdown or with menu entry `File/Save settings` (`Ctrl-S`).
 The save/load happens in `src/dsosettings.cpp` in the functions `DsoSettings::save()` and `DsoSettings::load()`.
 After loading of the settings the values will be applied to the internal status as well as to the GUI.
@@ -232,19 +228,21 @@ becomes true again. The reused samples are emitted at lower speed (every 20 ms) 
       * Apply a user selected window function and scale the result accordingly.
       * Calculate the spectrum of the AC part of the signal scaled as dBV. fft: f(t) ⊶ F(ω)
       * Calculate the autocorrelation to get the frequency of the signal:
-        * Calculate power spectrum |F(ω)|² and do an ifft: F(ω) ∙ F(ω) ⊷ f(t) ⊗ f(t) (convolution of f(t) with f(t))
-      * This is quite inaccurate at high frequencies. In these cases the first peak value of the spectrum is used.
+        * Calculate power spectrum |F(ω)|² and do an ifft: F(ω) ∙ F(ω) ⊷ f(t) ⊗ f(t) (autocorrelation, i.e. convolution of f(t) with f(t))
+        * This is quite inaccurate at high frequencies. In these cases the first peak value of the spectrum is used.
+      * Calculate the THD (optional): `THD = sqrt( power_of_harmonics / power_of_fundamental )`
   * `GraphGenerator::process()`
     * which works either in TY mode and creates two types of traces:
       * voltage over time `GraphGenerator::generateGraphsTYvoltage()`
       * spectrum over frequency `GraphGenerator::generateGraphsTYspectrum()`
     * or in XY mode and creates a voltage over voltage trace `GraphGenerator::generateGraphsXY()`.
     * `GraphGenerator::generateGraphsTYvoltage()` creates up to three (CH1, CH2, MATH) voltage traces.
+    The procedure takes care of interpolating in *Step* or *Sinc* mode and it will also create the histogram if enabled.
     * `GraphGenerator::generateGraphsTYspectrum()` creates up to three (SP1, SP2, SPM) spectral traces.
   * Finally `PostProcessing` emits the signal `processingFinished()` that is connected to:
     * `ExporterRegistry::input()` that takes care of exporting to CSV data.
     * `MainWindow::showNewData()`.
-      * `MainWindow::showNewData()` calls `DsoWidget::showNew()` that calls `GlScope::showData()` that calls `Graph::writeData()`.
+      * which calls `DsoWidget::showNew()` that calls `GlScope::showData()` that calls `Graph::writeData()`.
 
 t.b.c.
 
