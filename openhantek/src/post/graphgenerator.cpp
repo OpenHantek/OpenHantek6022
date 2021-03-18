@@ -109,7 +109,7 @@ void GraphGenerator::generateGraphsTYvoltage( PPresult *result ) {
 
         // sinc interpolation if there are too less samples on screen
         // https://ccrma.stanford.edu/~jos/resample/resample.pdf
-        if ( interpolationSinc && dotsOnScreen < 200 && result->triggeredPosition ) { // < 1 µs/div
+        if ( interpolationSinc && dotsOnScreen < 200 ) { // < 1 µs/div
             // we would need sincWidth, but we take what we get
             const unsigned int left = std::min( sincWidth, unsigned( leftmostSample ) );
             horizontalFactor /= oversample;                                     // distance between (resampled) dots
@@ -137,8 +137,8 @@ void GraphGenerator::generateGraphsTYvoltage( PPresult *result ) {
             sampleEnd = resample.cend();               // ... same for end of samples
         }
 
-        graphVoltage.clear();   // remove all previous dots and fill in new trace
-        graphHistogram.clear(); // remove all previous line and fill in new histo
+        graphVoltage.clear();   // remove all previous dots and fill in new trace as GL_LINE_STRIP
+        graphHistogram.clear(); // remove all previous line and fill in new histo as GL_LINES
         unsigned bins[ int( binsPerDiv * DIVS_VOLTAGE ) ] = {0};
         for ( unsigned int position = unsigned( leftmostPosition ); position < dotsOnScreen && sampleIterator < sampleEnd;
               ++position ) {
@@ -171,6 +171,7 @@ void GraphGenerator::generateGraphsTYvoltage( PPresult *result ) {
             for ( int bin = 0; bin < binsPerDiv * DIVS_VOLTAGE; ++bin ) {
                 if ( bins[ bin ] ) { // show bar (= start and end point) if value exists
                     double y = double( bin ) / binsPerDiv - DIVS_VOLTAGE / 2 - double( channel ) / binsPerDiv / 2;
+                    // draw a line (as GL_LINES) with from MARGIN_RIGHT to the normalised histo size of this bin
                     graphHistogram.push_back( QVector3D( float( MARGIN_RIGHT ), float( y ), 0 ) );
                     graphHistogram.push_back( QVector3D( float( MARGIN_RIGHT - bins[ bin ] / max ), float( y ), 0 ) );
                 }
@@ -211,7 +212,7 @@ void GraphGenerator::generateGraphsTYspectrum( PPresult *result ) {
 
         for ( unsigned int position = 0; position < sampleCount; ++position ) {
             graphSpectrum.push_back( QVector3D( float( position * horizontalFactor - DIVS_TIME / 2 ),
-                                                float( *( dataIterator++ ) / magnitude + offset ), 0.0f ) );
+                                                float( *dataIterator++ / magnitude + offset ), 0.0f ) );
         }
     }
 }
@@ -260,8 +261,7 @@ void GraphGenerator::generateGraphsXY( PPresult *result ) {
         const double yOffset = scope->voltage[ yChannel ].offset;
 
         for ( unsigned int position = 0; position < sampleCount; ++position ) {
-            graphXY.push_back(
-                QVector3D( float( *( xIterator++ ) / xGain + xOffset ), float( *( yIterator++ ) / yGain + yOffset ), 0.0 ) );
+            graphXY.push_back( QVector3D( float( *xIterator++ / xGain + xOffset ), float( *yIterator++ / yGain + yOffset ), 0.0 ) );
         }
     }
 }
