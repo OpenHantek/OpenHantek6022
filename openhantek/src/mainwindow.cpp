@@ -259,7 +259,7 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
     connect( spectrumDock, &SpectrumDock::magnitudeChanged, dsoWidget, &DsoWidget::updateSpectrumMagnitude );
 
     // Started/stopped signals from oscilloscope
-    connect( dsoControl, &HantekDsoControl::samplingStatusChanged, [this]( bool enabled ) {
+    connect( dsoControl, &HantekDsoControl::samplingStatusChanged, this, [this]( bool enabled ) {
         QSignalBlocker blocker( this->ui->actionSampling );
         if ( enabled ) {
             this->ui->actionSampling->setIcon( this->iconPause );
