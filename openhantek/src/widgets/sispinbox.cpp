@@ -133,7 +133,7 @@ void SiSpinBox::stepBy( int doStep ) {
         this->steppedTo = true;
     } else { // irregular spinbox, e.g. sample rate ..10/12/15/24/30.., check always
         stepId = 0;
-        for ( auto it = steps.cbegin(); it != steps.end(); ++it, ++stepId )
+        for ( auto it = steps.cbegin(); it != steps.cend(); ++it, ++stepId )
             if ( abs( this->value() - *it ) < 1e-12 ) // found
                 break;
         // apply the requested up or down step(s) with bound check
