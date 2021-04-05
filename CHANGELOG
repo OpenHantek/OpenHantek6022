@@ -1,3 +1,8 @@
+3.2.1
+2021-04-05
+Two new interpolation modes: step and sinc
+Fix Windows issue with cyrillic user names
+
 3.2
 2021-02-28
 Simultaneous use of more than one device is possible

@@ -58,8 +58,7 @@ bool UploadFirmware::startUpload( ScopeDevice *scopeDevice ) {
     }
 
     // Write firmware into internal RAM using first stage loader built into EZ-USB hardware
-    // HACK: check if #175 (cyrillic username) can be solved by 'toLocal8Bit()' instead of 'toUtf8()'
-    // status = ezusb_load_ram( handle, temp_firmware_path->fileName().toUtf8().constData(), FX_TYPE_FX2LP, 0 );
+    // use local 8bit encoding (utf8 for Linux, iso-8859-x for Windows)
     status = ezusb_load_ram( handle, temp_firmware_path->fileName().toLocal8Bit().constData(), FX_TYPE_FX2LP, 0 );
     if ( status != LIBUSB_SUCCESS ) {
         errorMessage = TR( "Writing the main firmware failed: %1" ).arg( libusb_error_name( status ) );
