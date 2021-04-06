@@ -52,15 +52,6 @@ jobs:
 
     - uses: actions/upload-artifact@v2
       with:
-        name: openhantek.deb
-        path: ${{github.workspace}}/build/packages/*.deb
+        name: openhantek_${{github.run_id}}_packages
+        path: ${{github.workspace}}/build/packages/
 
-    - uses: actions/upload-artifact@v2
-      with:
-        name: openhantek.rpm
-        path: ${{github.workspace}}/build/packages/*.rpm
-
-    - uses: actions/upload-artifact@v2
-      with:
-        name: openhantek.tar.gz
-        path: ${{github.workspace}}/build/packages/*.tar.gz
