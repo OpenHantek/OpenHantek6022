@@ -56,8 +56,8 @@ jobs:
 
     - uses: actions/upload-artifact@v2
       with:
-	path: ${{github.workspace}}/build/packages/*.rpm
+        path: ${{github.workspace}}/build/packages/*.rpm
 
     - uses: actions/upload-artifact@v2
       with:
-	path: ${{github.workspace}}/build/packages/*.tgz
+        path: ${{github.workspace}}/build/packages/*.tgz
