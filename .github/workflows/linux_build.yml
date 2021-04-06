@@ -52,5 +52,6 @@ jobs:
 
     - uses: actions/upload-artifact@v2
       with:
-        name: packages
-        path: ${{github.workspace}}/build/packages
+        path: ${{github.workspace}}/build/packages/*.deb
+	path: ${{github.workspace}}/build/packages/*.rpm
+	path: ${{github.workspace}}/build/packages/*.tgz
