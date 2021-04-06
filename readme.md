@@ -5,7 +5,7 @@
 
 [![GitHub commits since latest release](https://img.shields.io/github/commits-since/OpenHantek/OpenHantek6022/latest?color=brightgreen)][commits]
 [![Appveyor CI](https://ci.appveyor.com/api/projects/status/github/OpenHantek/openhantek6022?svg=true)](https://ci.appveyor.com/project/Ho-Ro/openhantek6022)
-[![GitHub CI](https://github.com/OpenHantek/OpenHantek6022/actions/workflows/cmake.yml/badge.svg)](https://github.com/OpenHantek/OpenHantek6022/actions/workflows/cmake.yml)
+[![GitHub CI](https://github.com/OpenHantek/OpenHantek6022/actions/workflows/linux_build.yml/badge.svg)](https://github.com/OpenHantek/OpenHantek6022/actions/workflows/linux_build.yml)
 [![CodeFactor](https://www.codefactor.io/repository/github/openhantek/openhantek6022/badge)](https://www.codefactor.io/repository/github/openhantek/openhantek6022)
 
 [release]: https://github.com/OpenHantek/OpenHantek6022/releases
