@@ -12,8 +12,8 @@ jobs:
     # well on Windows or Mac.  You can convert this to a matrix build if you need
     # cross-platform coverage.
     # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
-    # Use 18.04 to support older installations
-    runs-on: ubuntu-18.04
+    # Use 16.04 to support older installations
+    runs-on: ubuntu-16.04
 
     steps:
     - uses: actions/checkout@v2
