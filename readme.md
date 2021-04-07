@@ -4,7 +4,7 @@
 [![GitHub Release Date](https://img.shields.io/github/release-date/OpenHantek/OpenHantek6022?color=blue)][release]
 [![GitHub commits since latest release](https://img.shields.io/github/commits-since/OpenHantek/OpenHantek6022/latest?color=brightgreen)][commits]
 
-[![GitHub CI](https://github.com/OpenHantek/OpenHantek6022/actions/workflows/linux_build.yml/badge.svg)](https://github.com/OpenHantek/OpenHantek6022/actions/workflows/linux_build.yml)
+[![GitHub CI](https://github.com/OpenHantek/OpenHantek6022/actions/workflows/ubuntu_check.yml/badge.svg)](https://github.com/OpenHantek/OpenHantek6022/actions/workflows/ubuntu_check.yml)
 [![Appveyor CI](https://ci.appveyor.com/api/projects/status/github/OpenHantek/openhantek6022?svg=true)](https://ci.appveyor.com/project/Ho-Ro/openhantek6022)
 [![CodeFactor](https://www.codefactor.io/repository/github/openhantek/openhantek6022/badge)](https://www.codefactor.io/repository/github/openhantek/openhantek6022)
 
@@ -68,6 +68,14 @@ but David [stopped maintaining](https://github.com/OpenHantek/openhantek/issues/
 
 ## AC coupling
 * A [little HW modification](docs/HANTEK6022_AC_Modification.pdf) adds AC coupling. OpenHantek6022 supports this feature since v2.17-rc5 / FW0204.
+
+## Continous Integration
+Every commit triggers a workflow on
+[GitHub Actions](https://github.com/OpenHantek/OpenHantek6022/actions/workflows/ubuntu_check.yml)
+that checks the build on different Ubuntu LTS versions (curently 20.04 and 18.04)
+and a workflow on [appveyor](https://ci.appveyor.com/project/Ho-Ro/openhantek6022)
+that builds and packages OpenHantek6022 for Linux (Ubuntu), macOS and Windows.
+Status badges on top of this page show the build status.
 
 ## Building OpenHantek6022 from source
 The preferred way to run OpenHantek is to build it from source on your system,
