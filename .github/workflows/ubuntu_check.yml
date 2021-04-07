@@ -1,17 +1,21 @@
-name: Linux_Build
+name: Ubuntu_Check
+# check if OH6022 builds on some recent Ubuntu LTS versions
 
 on: [push]
 
 env:
-  # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
+  # CMake build type (Release, Debug, RelWithDebInfo, etc.)
   BUILD_TYPE: Release
 
 jobs:
-  linux_build:
+  ubuntu_check:
     strategy:
+      # do not stop on 1st fail
       fail-fast: false
       matrix:
-        os: [ubuntu-20.04, ubuntu-18.04, ubuntu-16.04]
+        # ubuntu-16.04 is too old for our CMake
+        os: [ubuntu-20.04, ubuntu-18.04]
+
     runs-on: ${{ matrix.os }}
 
     steps:
@@ -29,19 +33,14 @@ jobs:
       run: cmake -E make_directory ${{github.workspace}}/build
 
     - name: Configure CMake
-      # Use a bash shell so we can use the same syntax for environment variable
-      # access regardless of the host operating system
       shell: bash
       working-directory: ${{github.workspace}}/build
-      # Note the current convention is to use the -S and -B options here to specify source
-      # and build directories, but this is only available with CMake 3.13 and higher.
-      # The CMake binaries on the Github Actions machines are (as of this writing) 3.12
       run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE
 
     - name: Build
       working-directory: ${{github.workspace}}/build
       shell: bash
-      # Execute the build.
+      # Now build the binary
       run: make -j4
 
     - name: Package
@@ -52,6 +51,7 @@ jobs:
 
     - uses: actions/upload-artifact@v2
       with:
-        name: openhantek_${{matrix.os}}_${{github.run_id}}
+        # create a zip file openhantek_ubuntu-xx.xx_nn.zip
+        name: openhantek_${{matrix.os}}_${{github.run_number}}.zip
         path: ${{github.workspace}}/build/packages/
 
