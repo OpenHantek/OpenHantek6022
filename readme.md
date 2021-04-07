@@ -69,8 +69,9 @@ but David [stopped maintaining](https://github.com/OpenHantek/openhantek/issues/
 ## AC coupling
 * A [little HW modification](docs/HANTEK6022_AC_Modification.pdf) adds AC coupling. OpenHantek6022 supports this feature since v2.17-rc5 / FW0204.
 
-## Building OpenHantek from source
-You need the following software, to build OpenHantek from source:
+## Building OpenHantek6022 from source
+The preferred way to run OpenHantek is to build it from source on your system,
+for this you will need the following software:
 * [CMake 3.5+](https://cmake.org/download/)
 * [Qt 5.4+](https://www1.qt.io/download-open-source/)
 * [FFTW 3+](http://www.fftw.org/) (prebuild files will be downloaded on windows)
@@ -84,10 +85,13 @@ To make building for Linux even easier, I provide two shell scripts:
 If you make small changes to the local source code, it is sufficient to call `make -j4` or `fakeroot make -j4 package` in the `build` directory.
 
 ## Install prebuilt binary packages
-* Download Linux, Raspberry Pi, macOS and Windows packages from the [Releases](https://github.com/OpenHantek/OpenHantek6022/releases) page.
-(The RPi, macOS and Windows packages are not tested, neither is the installation of the `*.rpm` packages. For RPi4 see also [issue #28](https://github.com/OpenHantek/OpenHantek6022/issues/28).)
+* Download Linux (built on Ubuntu 1804 LTS), Raspberry Pi (Debian stable), FreeBSD (12.1), macOS (Catalina) and Windows (Visual Studio 2019) packages for your convenience from the [Releases](https://github.com/OpenHantek/OpenHantek6022/releases) page.
 * If you want to follow ongoing development, packages built from the last commit are available in the [unstable release](https://github.com/OpenHantek/OpenHantek6022/releases/tag/unstable).
-* As I develop on a *Debian stable* system the preferred (native) package format is `*.deb`.
+* For RPi4 see also [issue #28](https://github.com/OpenHantek/OpenHantek6022/issues/28).
+* These binary packages are built on stable operating system versions and require an up-to-date system.
+* As I develop on a *Debian stable* system my preferred (native) package format is `*.deb`.
+The program itself and the `*.deb` package is tested on my local system for completeness and correctness.
+The prebuilt packages are not tested, neither is the installation of the `*.rpm` packages.
 * To install the downloaded `*.deb` package, open a terminal window, go to the package directory and enter the command (as root) `apt install ./openhantek_..._amd64.deb`.
 This command will automatically install all dependencies of the program as well.
 * For installation of `*.rpm` packages follow similar rules, e.g. `dnf install ./openhantek-...-1.x86_64.rpm`.
@@ -112,8 +116,11 @@ USB access for the device is required (unless using demo mode):
 If OpenHantek is installed from a *.deb or *.rpm package this file is installed automatically into `/usr/lib/udev/rules.d/`.
 
 ### Windows USB access
-* **The original Hantek driver for Windows doesn't work!** You have to assign the correct WinUSB driver with the tool [Zadig](https://zadig.akeo.ie/). 
-Check the [Microsoft Windows build instructions](docs/build.md#microsoft-windows-usb-driver-install-with-zadig) and follow the good [step-by-step tutorial](docs/OpenHantek6022_zadig_Win10.pdf) provided by [DaPa](https://github.com/DaPa).
+* **The original Hantek driver for Windows doesn't work!**
+You have to assign the correct WinUSB driver with one of these two solutions:
+1. [Use the tool *Zadig*](docs/build.md#microsoft-windows-usb-driver-install-with-zadig) and follow the good
+[step-by-step tutorial](docs/OpenHantek6022_zadig_Win10.pdf) provided by [DaPa](https://github.com/DaPa).
+2. [Install the signed WinUSB driver](file:///home/horo/projects/Measure/Hantek6022/OpenHantek6022/docs/build.md#signed-winusb-driver-for-hantek-6022bebl) provided by VictorEEV.
 
 ## Important!
 The scope doesn't store the firmware permanently in flash or eeprom, it must be uploaded after each power-up and is kept in ram 'til power-down.

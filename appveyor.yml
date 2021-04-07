@@ -5,9 +5,9 @@ version: 1.0.{build}
 # The artifacts of every push/build are available in appveyor for 6 months from build.
 # Artifacts of tagged pushes ("unstable" or release number) are deployed into the GitHub release.
 
-#define the build environments
+#define the build environments (use Ubuntu1804 until Debian "bullseye" becomes "stable")
 image:
-  - Ubuntu2004
+  - Ubuntu1804
   - Visual Studio 2019
   - macOS
 
@@ -18,7 +18,7 @@ for:
 # Build Linux packages
 - matrix:
     only:
-      - image: Ubuntu2004
+      - image: Ubuntu1804
   install:
     - sudo apt-get update
     - sudo apt-get install --quiet=2 cmake make fakeroot rpm qttools5-dev libfftw3-dev binutils-dev libusb-1.0-0-dev libqt5opengl5-dev mesa-common-dev libgl1-mesa-dev libgles2-mesa-dev
