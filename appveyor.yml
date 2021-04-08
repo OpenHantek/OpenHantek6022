@@ -7,96 +7,26 @@ version: 1.0.{build}
 
 # define the build environments
 # move Ubuntu / macOS from appveyor to the faster GitHub hosted runners
+
 image:
   - Visual Studio 2019
 
-# use Ubuntu1804 until Debian "bullseye" becomes "stable"
-#  - Ubuntu1804
-#  - macOS
-
-
-# Process the build for each build environment
-for:
-
-# Build Linux packages
-- matrix:
-    only:
-      - image: Ubuntu1804
-  install:
-    - sudo apt-get update
-    - sudo apt-get install --quiet=2 cmake make fakeroot rpm qttools5-dev libfftw3-dev binutils-dev libusb-1.0-0-dev libqt5opengl5-dev mesa-common-dev libgl1-mesa-dev libgles2-mesa-dev
-  before_build:
-    - mkdir build
-    - cd build
-    - cp ../CHANGELOG changelog
-    - cmake ..
-  build_script:
-    - make -j4
-    - fakeroot make -j4 package
-  artifacts:
-    - path: build/packages/*.deb
-    - path: build/packages/*.rpm
-    - path: build/packages/*.tar.gz
 
 # Build Windows packages
-- matrix:
-    only:
-      - image: Visual Studio 2019
-  before_build:
-    - set qtpath64="C:\Qt\5.15\msvc2019_64"
-    - set arch64=x64
-    - set dir64=build_x64
-    - md build_x64
-    - call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars64.bat"
-    - cmake -G "Visual Studio 16 2019" -A x64 -DCMAKE_PREFIX_PATH=%qtpath64% -DCMAKE_BUILD_TYPE=Release -Bbuild_x64 -H.
-  build_script:
-    - cmake --build build_x64 --config Release --target package
-  artifacts:
-    - path: build_x64\openhantek\Release
-      name: OpenHantek-Win-x64-Release-b$(APPVEYOR_BUILD_NUMBER)
+before_build:
+  - set qtpath64="C:\Qt\5.15\msvc2019_64"
+  - set arch64=x64
+  - set dir64=build_x64
+  - md build_x64
+  - call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars64.bat"
+  - cmake -G "Visual Studio 16 2019" -A x64 -DCMAKE_PREFIX_PATH=%qtpath64% -DCMAKE_BUILD_TYPE=Release -Bbuild_x64 -H.
 
-# Build MacOS packages
-- matrix:
-    only:
-      - image: macOS
-  install:
-    - git submodule update --init --recursive
-    - brew update
-    - brew install qt5 fftw binutils create-dmg
-    - export CMAKE_PREFIX_PATH=$(brew --prefix qt5)
-  build_script:
-    - mkdir build
-    - cd build
-    - cmake -DCMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH} ../
-    - make -j4
-    - sudo make -j4 package
-    # add all dependencies to *.app, create a *.dmg file
-    - if test -d openhantek/OpenHantek.app; then
-          export PATH=${CMAKE_PREFIX_PATH}/bin:${PATH} ;
-          cd openhantek ;
-          macdeployqt OpenHantek.app -always-overwrite -verbose=1 ;
-          python ../../utils/macdeployqtfix/macdeployqtfix.py --quiet OpenHantek.app/Contents/MacOS/OpenHantek ${CMAKE_PREFIX_PATH} ;
-          create-dmg --volname OpenHantek --volicon ../../openhantek/res/images/openhantek.icns --window-pos 200 120 --window-size 800 400 --icon-size 100 --icon "OpenHantek.app" 200 190 --skip-jenkins --hide-extension "OpenHantek.app" --app-drop-link 600 185 --eula ../../LICENSE OpenHantek.dmg OpenHantek.app ;
-          cd .. ;
-      else
-          true ;
-      fi
-    #- ls -l openhantek || true
-    # zip *.app, move *.dmg to packages directory, (re)name both accordingly
-    - if test -d openhantek/OpenHantek.app; then
-          cd openhantek ;
-          sudo tar -czf ../packages/openhantek_*_osx_*.tar.gz OpenHantek.app ;
-          if test -f OpenHantek.dmg; then
-              sudo mv OpenHantek.dmg ../packages/$(basename ../packages/openhantek_*_osx_*.tar.gz .tar.gz).dmg ;
-          fi ;
-          cd .. ;
-      else
-          true ;
-      fi
-    #- ls -l packages || true
-  artifacts:
-    - path: build/packages/*.dmg
-    - path: build/packages/*.tar.gz
+build_script:
+  - cmake --build build_x64 --config Release --target package
+
+artifacts:
+  - path: build_x64\openhantek\Release
+    name: OpenHantek-Win-x64-Release-b$(APPVEYOR_BUILD_NUMBER)
 
 
 # Upload all packages to GitHub, but only if the push was tagged
