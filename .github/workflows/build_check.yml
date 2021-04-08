@@ -19,7 +19,8 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-    - uses: actions/checkout@v2
+    - name: Checkout
+      uses: actions/checkout@v2
 
     - name: Install Ubuntu Build Requirements
       if: startsWith(matrix.os, 'ubuntu')
@@ -50,26 +51,29 @@ jobs:
         call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars64.bat" &
         cmake -G "Visual Studio 16 2019" -A x64 -DCMAKE_PREFIX_PATH=%qtpath64% -DCMAKE_BUILD_TYPE=Release -Bbuild -H.
 
-    - name: Build
-      working-directory: ${{github.workspace}}/build
 
-      # Now build the binary
+    - name: Ubuntu Build
+      working-directory: ${{github.workspace}}/build
       if: startsWith(matrix.os, 'ubuntu')
       run:
         make -j4;
         fakeroot make -j4 package
 
+    - name: macOS Build
+      working-directory: ${{github.workspace}}/build
       if: startsWith(matrix.os, 'macos')
       run:
         make -j4;
         fakeroot make -j4 package
 
+    - name: Windows Build
+      working-directory: ${{github.workspace}}/build
       if: startsWith(matrix.os, 'windows')
       run:
         cmake --build build --config Release --target package
 
 
-    - name: Upload Artifacts
+    - name: Upload Ubuntu Artifacts
       if: startsWith(matrix.os, 'ubuntu')
       uses: actions/upload-artifact@v2
       with:
@@ -77,6 +81,7 @@ jobs:
         name: openhantek_ubuntu_${{github.run_number}}.zip
         path: ${{github.workspace}}/build/packages/
 
+    - name: Upload macOS Artifacts
       if: startsWith(matrix.os, 'macos')
       uses: actions/upload-artifact@v2
       with:
@@ -84,6 +89,7 @@ jobs:
         name: openhantek_osx_x86_64_${{github.run_number}}
         path: ${{github.workspace}}/build/packages/
 
+    - name: Upload Windows Artifacts
       if: startsWith(matrix.os, 'windows')
       uses: actions/upload-artifact@v2
       with:
