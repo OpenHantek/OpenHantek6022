@@ -4,7 +4,7 @@
 [![GitHub Release Date](https://img.shields.io/github/release-date/OpenHantek/OpenHantek6022?color=blue)][release]
 [![GitHub commits since latest release](https://img.shields.io/github/commits-since/OpenHantek/OpenHantek6022/latest?color=brightgreen)][commits]
 
-[![GitHub CI](https://github.com/OpenHantek/OpenHantek6022/actions/workflows/ubuntu_check.yml/badge.svg)](https://github.com/OpenHantek/OpenHantek6022/actions/workflows/ubuntu_check.yml)
+[![GitHub CI](https://github.com/OpenHantek/OpenHantek6022/actions/workflows/build_check.yml/badge.svg)](https://github.com/OpenHantek/OpenHantek6022/actions/workflows/build_check.yml)
 [![Appveyor CI](https://ci.appveyor.com/api/projects/status/github/OpenHantek/openhantek6022?svg=true)](https://ci.appveyor.com/project/Ho-Ro/openhantek6022)
 [![CodeFactor](https://www.codefactor.io/repository/github/openhantek/openhantek6022/badge)](https://www.codefactor.io/repository/github/openhantek/openhantek6022)
 
