@@ -21,7 +21,8 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: Install Build Requirements
+    - name: Install Ubuntu Build Requirements
+      if: startsWith(matrix.os, 'ubuntu')
       run:
         git submodule update --init --recursive;
         mkdir build;
@@ -29,9 +30,10 @@ jobs:
         cd build;
         cp ../CHANGELOG changelog;
         cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE
-      if: startsWith(matrix.os, 'ubuntu')
 
-      run: 
+    - name: Install macOS Build Requirements
+      if: startsWith(matrix.os, 'macos')
+      run:
         git submodule update --init --recursive;
         mkdir build;brew update;
         brew install qt5 fftw binutils create-dmg;
@@ -39,50 +41,52 @@ jobs:
         cd build;
         cp ../CHANGELOG changelog;
         cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}
-      if: startsWith(matrix.os, 'macos')
 
+    - name: Install Windows Build Requirements
+      if: startsWith(matrix.os, 'windows')
       run: 
         set qtpath64="C:\Qt\5.15\msvc2019_64" &
         md build &
         call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars64.bat" &
         cmake -G "Visual Studio 16 2019" -A x64 -DCMAKE_PREFIX_PATH=%qtpath64% -DCMAKE_BUILD_TYPE=Release -Bbuild -H.
-      if: startsWith(matrix.os, 'windows')
 
     - name: Build
       working-directory: ${{github.workspace}}/build
 
       # Now build the binary
-      run:
-        make -j4;
-        fakeroot make -j4 package
       if: startsWith(matrix.os, 'ubuntu')
-
       run:
         make -j4;
         fakeroot make -j4 package
-      if: startsWith(matrix.os, 'macos')
 
+      if: startsWith(matrix.os, 'macos')
+      run:
+        make -j4;
+        fakeroot make -j4 package
+
+      if: startsWith(matrix.os, 'windows')
       run:
         cmake --build build --config Release --target package
-      if: startsWith(matrix.os, 'windows')
 
 
     - name: Upload Artifacts
+      if: startsWith(matrix.os, 'ubuntu')
       uses: actions/upload-artifact@v2
       with:
         # create a zip file openhantek_ubuntu-xx.xx_nn.zip
         name: openhantek_ubuntu_${{github.run_number}}.zip
         path: ${{github.workspace}}/build/packages/
-      if: startsWith(matrix.os, 'ubuntu')
 
+      if: startsWith(matrix.os, 'macos')
+      uses: actions/upload-artifact@v2
       with:
         # create a zip file openhantek_ubuntu-xx.xx_nn.zip
         name: openhantek_osx_x86_64_${{github.run_number}}
         path: ${{github.workspace}}/build/packages/
-      if: startsWith(matrix.os, 'macos')
 
+      if: startsWith(matrix.os, 'windows')
+      uses: actions/upload-artifact@v2
       with:
         # create a zip file openhantek_ubuntu-xx.xx_nn.zip
         name: OpenHantek_Win_x64_Release_${{github.run_number}}
         path: ${{github.workspace}}/build/openhantek/Release
-      if: startsWith(matrix.os, 'windows')
