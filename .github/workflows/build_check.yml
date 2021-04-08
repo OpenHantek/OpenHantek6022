@@ -14,7 +14,7 @@ jobs:
       fail-fast: false
       matrix:
         # ubuntu-16.04 is too old for our CMake
-        os: [ubuntu-20.04, ubuntu-18.04, macos-10.15]
+        os: [ubuntu-20.04, ubuntu-18.04, macos-10.15, windows-2019]
 
     runs-on: ${{ matrix.os }}
 
@@ -27,7 +27,7 @@ jobs:
       run:
         git submodule update --init --recursive;
         mkdir build;
-        sudo apt install g++ make cmake fakeroot rpm qttools5-dev libfftw3-dev binutils-dev libusb-1.0-0-dev libqt5opengl5-dev mesa-common-dev libgl1-mesa-dev libgles2-mesa-dev
+        sudo apt install g++ make cmake fakeroot rpm qttools5-dev libfftw3-dev binutils-dev libusb-1.0-0-dev libqt5opengl5-dev mesa-common-dev libgl1-mesa-dev libgles2-mesa-dev;
         cd build;
         cp ../CHANGELOG changelog;
         cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE
@@ -64,7 +64,7 @@ jobs:
       if: startsWith(matrix.os, 'macos')
       run:
         make -j4;
-        fakeroot make -j4 package
+        sudo make -j4 package
 
     - name: Windows Build
       working-directory: ${{github.workspace}}/build
