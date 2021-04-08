@@ -5,11 +5,12 @@ version: 1.0.{build}
 # The artifacts of every push/build are available in appveyor for 6 months from build.
 # Artifacts of tagged pushes ("unstable" or release number) are deployed into the GitHub release.
 
-#define the build environments (use Ubuntu1804 until Debian "bullseye" becomes "stable")
+# define the build environments (use Ubuntu1804 until Debian "bullseye" becomes "stable")
+# move Ubuntu / macOS from appveyor to the faster GitHub hosted runners
 image:
-  - Ubuntu1804
+#  - Ubuntu1804
   - Visual Studio 2019
-  - macOS
+#  - macOS
 
 
 # Process the build for each build environment

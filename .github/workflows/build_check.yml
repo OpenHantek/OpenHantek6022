@@ -1,5 +1,6 @@
 name: Build_Check
 # check if OH6022 builds on some recent operating systems
+# deploy Ubuntu / macOS binaries (instead of appveyor)
 
 on: [push]
 
@@ -13,7 +14,8 @@ jobs:
       # do not stop on 1st fail
       fail-fast: false
       matrix:
-        # GitHub actions does not support Qt on Windows
+        # GitHub hosted runners do not support Qt on Windows
+        # use Ubuntu1804 until Debian "bullseye" becomes "stable"
         os: [ubuntu-18.04, macos-10.15]
 
     runs-on: ${{ matrix.os }}
@@ -53,18 +55,22 @@ jobs:
 
 
     - name: Ubuntu Build
+      # GitHub hosts Linux runners on Standard_DS2_v2 virtual machines in Microsoft Azure:
+      # 2-core CPU, 7 GB of RAM memory, 14 GB of SSD disk space
       working-directory: ${{github.workspace}}/build
       if: startsWith(matrix.os, 'ubuntu')
       run:
-        make -j4;
-        fakeroot make -j4 package
+        make -j8;
+        fakeroot make -j8 package
 
     - name: macOS Build
+      # GitHub hosts macOS runners in GitHub's own macOS Cloud:
+      # 3-core CPU, 14 GB of RAM memory, 14 GB of SSD disk space
       working-directory: ${{github.workspace}}/build
       if: startsWith(matrix.os, 'macos')
       run:
-        make -j6;
-        sudo make -j6 package;
+        make -j12;
+        sudo make -j12 package;
         if test -d openhantek/OpenHantek.app; then
         export CMAKE_PREFIX_PATH=$(brew --prefix qt5);
         export PATH=${CMAKE_PREFIX_PATH}/bin:${PATH};
@@ -88,6 +94,8 @@ jobs:
         fi
 
     - name: Windows Build
+      # GitHub hosts Windows runners on Standard_DS2_v2 virtual machines in Microsoft Azure:
+      # 2-core CPU, 7 GB of RAM memory, 14 GB of SSD disk space
       working-directory: ${{github.workspace}}/build
       if: startsWith(matrix.os, 'windows')
       run:
