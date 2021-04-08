@@ -13,8 +13,8 @@ jobs:
       # do not stop on 1st fail
       fail-fast: false
       matrix:
-        # ubuntu-16.04 is too old for our CMake
-        os: [ubuntu-20.04, ubuntu-18.04, macos-10.15]
+        # GitHub actions does not support Qt on Windows
+        os: [ubuntu-18.04, macos-10.15]
 
     runs-on: ${{ matrix.os }}
 
@@ -98,15 +98,13 @@ jobs:
       if: startsWith(matrix.os, 'ubuntu')
       uses: actions/upload-artifact@v2
       with:
-        # create a zip file openhantek_ubuntu-xx.xx_nn.zip
-        name: openhantek_${{matrix.os}}_${{github.run_number}}
+        name: openhantek_linux_amd64_${{github.run_number}}
         path: ${{github.workspace}}/build/packages/
 
     - name: Upload macOS Artifacts
       if: startsWith(matrix.os, 'macos')
       uses: actions/upload-artifact@v2
       with:
-        # create a zip file openhantek_ubuntu-xx.xx_nn.zip
         name: openhantek_osx_x86_64_${{github.run_number}}
         path: ${{github.workspace}}/build/packages/*.dmg
 
@@ -114,6 +112,13 @@ jobs:
       if: startsWith(matrix.os, 'windows')
       uses: actions/upload-artifact@v2
       with:
-        # create a zip file openhantek_ubuntu-xx.xx_nn.zip
         name: OpenHantek_Win_x64_Release_${{github.run_number}}
         path: ${{github.workspace}}/build/openhantek/Release
+
+    - name: Upload Release Assets
+      uses: softprops/action-gh-release@v1
+      if: startsWith(github.ref, 'refs/tags/')
+      with:
+        files: ${{github.workspace}}/packages/*
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
