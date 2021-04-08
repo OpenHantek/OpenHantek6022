@@ -115,10 +115,11 @@ jobs:
         name: OpenHantek_Win_x64_Release_${{github.run_number}}
         path: ${{github.workspace}}/build/openhantek/Release
 
+
     - name: Upload Release Assets
       uses: softprops/action-gh-release@v1
       if: startsWith(github.ref, 'refs/tags/')
       with:
-        files: ${{github.workspace}}/packages/*
+        files: ${{github.workspace}}/build/packages/*
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
