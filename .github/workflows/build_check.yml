@@ -49,7 +49,7 @@ jobs:
         set qtpath64="C:\Qt\5.15\msvc2019_64" &
         md build &
         call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars64.bat" &
-        cmake -G "Visual Studio 16 2019" -A x64 -DCMAKE_PREFIX_PATH=%qtpath64% -DCMAKE_BUILD_TYPE=Release -Bbuild -H.
+        cmake -G "Visual Studio 16 2019" -A x64 -DCMAKE_PREFIX_PATH=%qtpath64% -DCMAKE_BUILD_TYPE=Release -Bbuild
 
 
     - name: Ubuntu Build
@@ -64,7 +64,27 @@ jobs:
       if: startsWith(matrix.os, 'macos')
       run:
         make -j4;
-        sudo make -j4 package
+        sudo make -j4 package;
+	if test -d openhantek/OpenHantek.app; then
+	export PATH=${CMAKE_PREFIX_PATH}/bin:${PATH};
+	cd openhantek ; macdeployqt OpenHantek.app -always-overwrite -verbose=1;
+	python ../../utils/macdeployqtfix/macdeployqtfix.py 
+	--quiet OpenHantek.app/Contents/MacOS/OpenHantek ${CMAKE_PREFIX_PATH};
+	create-dmg --volname OpenHantek --volicon ../../openhantek/res/images/openhantek.icns 
+	--window-pos 200 120 --window-size 800 400 --icon-size 100 --icon "OpenHantek.app" 200 190 
+	--skip-jenkins --hide-extension "OpenHantek.app" --app-drop-link 600 185 
+	--eula ../../LICENSE OpenHantek.dmg OpenHantek.app;
+	cd ..;
+	else true;
+	fi;
+	if test -d openhantek/OpenHantek.app; then 
+	cd openhantek ; sudo tar -czf ../packages/openhantek_*_osx_*.tar.gz OpenHantek.app;
+	if test -f OpenHantek.dmg; then
+	sudo mv OpenHantek.dmg ../packages/$(basename ../packages/openhantek_*_osx_*.tar.gz .tar.gz).dmg;
+	fi;
+	cd ..; 
+	else true; 
+	fi
 
     - name: Windows Build
       working-directory: ${{github.workspace}}/build
@@ -78,7 +98,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         # create a zip file openhantek_ubuntu-xx.xx_nn.zip
-        name: openhantek_ubuntu_${{github.run_number}}.zip
+        name: openhantek_${{matrix.os}}_${{github.run_number}}
         path: ${{github.workspace}}/build/packages/
 
     - name: Upload macOS Artifacts
@@ -87,7 +107,7 @@ jobs:
       with:
         # create a zip file openhantek_ubuntu-xx.xx_nn.zip
         name: openhantek_osx_x86_64_${{github.run_number}}
-        path: ${{github.workspace}}/build/packages/
+        path: ${{github.workspace}}/build/packages/*.dmg
 
     - name: Upload Windows Artifacts
       if: startsWith(matrix.os, 'windows')
