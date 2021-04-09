@@ -104,7 +104,7 @@ jobs:
       working-directory: ${{github.workspace}}/build
       if: startsWith(matrix.os, 'windows')
       run:
-        cmake --build build --config Release --target package
+        cmake --build . --config Release --target package
 
 
     - name: Upload Ubuntu Artifacts
