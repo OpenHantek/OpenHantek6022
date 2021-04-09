@@ -14,9 +14,9 @@ jobs:
       # do not stop on 1st fail
       fail-fast: false
       matrix:
-        # GitHub hosted runners do not support Qt on Windows
+        # GitHub hosted runners do not support Qt on Windows (use jurplel/install-qt-action@v2)
         # use Ubuntu1804 until Debian "bullseye" becomes "stable"
-        os: [ubuntu-18.04, macos-10.15]
+        os: [ubuntu-18.04, macos-10.15, windows-2019]
 
     runs-on: ${{ matrix.os }}
 
@@ -40,18 +40,23 @@ jobs:
         git submodule update --init --recursive;
         mkdir build;brew update;
         brew install qt5 fftw binutils create-dmg;
-        export CMAKE_PREFIX_PATH=$(brew --prefix qt5);
+        export Qt5_DIR=$(brew --prefix qt5);
         cd build;
         cp ../CHANGELOG changelog;
-        cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}
+        cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_PREFIX_PATH=${Qt5_DIR}
+
+
+    - name: Install Qt for Windows
+      if: startsWith(matrix.os, 'windows')
+      uses: jurplel/install-qt-action@v2
+
 
     - name: Install Windows Build Requirements
       if: startsWith(matrix.os, 'windows')
       run: 
-        set qtpath64="C:\Qt\5.15\msvc2019_64" &
         md build &
         call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars64.bat" &
-        cmake -G "Visual Studio 16 2019" -A x64 -DCMAKE_PREFIX_PATH=%qtpath64% -DCMAKE_BUILD_TYPE=Release -Bbuild
+        cmake -G "Visual Studio 16 2019" -A x64 -DCMAKE_PREFIX_PATH=%Qt5_DIR% -DCMAKE_BUILD_TYPE=Release -Bbuild
 
 
     - name: Ubuntu Build
@@ -72,11 +77,11 @@ jobs:
         make -j12;
         sudo make -j12 package;
         if test -d openhantek/OpenHantek.app; then
-        export CMAKE_PREFIX_PATH=$(brew --prefix qt5);
-        export PATH=${CMAKE_PREFIX_PATH}/bin:${PATH};
+        export Qt5_DIR=$(brew --prefix qt5);
+        export PATH=${Qt5_DIR}/bin:${PATH};
         cd openhantek ; macdeployqt OpenHantek.app -always-overwrite -verbose=1;
         python ../../utils/macdeployqtfix/macdeployqtfix.py 
-        --quiet OpenHantek.app/Contents/MacOS/OpenHantek ${CMAKE_PREFIX_PATH};
+        --quiet OpenHantek.app/Contents/MacOS/OpenHantek ${Qt5_DIR};
         create-dmg --volname OpenHantek --volicon ../../openhantek/res/images/openhantek.icns 
         --window-pos 200 120 --window-size 800 400 --icon-size 100 --icon "OpenHantek.app" 200 190 
         --skip-jenkins --hide-extension "OpenHantek.app" --app-drop-link 600 185 
