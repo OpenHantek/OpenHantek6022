@@ -134,10 +134,19 @@ jobs:
 
 
 
-    - name: Upload Release Assets
+    - name: Upload Linux / macOS Release Assets
       uses: softprops/action-gh-release@v1
-      if: startsWith(github.ref, 'refs/tags/')
+      if: ${{ startsWith(github.ref, 'refs/tags/') && ( startsWith(matrix.os, 'macos') || startsWith(matrix.os, 'ubuntu') ) }}
       with:
         files: ${{github.workspace}}/build/packages/*
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+
+    - name: Upload Windows Release Assets
+      uses: softprops/action-gh-release@v1
+      if: ${{ startsWith(github.ref, 'refs/tags/') && startsWith(matrix.os, 'windows') }}
+      with:
+        files: ${{github.workspace}}/build/openhantek/Release/*
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
