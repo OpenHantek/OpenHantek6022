@@ -8,9 +8,9 @@ endif()
 if (MSVC)
     add_custom_command(TARGET ${PROJECT_NAME}
         POST_BUILD
-        if (EXISTS "${QT5_BIN_DIR}/qtenv2.bat")
-            COMMAND "${QT5_BIN_DIR}/qtenv2.bat"
-        endif()
+        #if (EXISTS "${QT5_BIN_DIR}/qtenv2.bat")
+        #  COMMAND "${QT5_BIN_DIR}/qtenv2.bat"
+        #endif()
         COMMAND "${QT5_BIN_DIR}/windeployqt" --no-translations "${CMAKE_CURRENT_BINARY_DIR}/$<CONFIGURATION>/${PROJECT_NAME}.exe"
         WORKING_DIRECTORY "${QT5_BIN_DIR}"
         COMMENT "Copy Qt5 dlls for ${PROJECT_NAME}"
@@ -21,9 +21,9 @@ else()
     endif()
     add_custom_command(TARGET ${PROJECT_NAME}
         POST_BUILD
-        if (EXISTS "${QT5_BIN_DIR}/qtenv2.bat")
-            COMMAND "${QT5_BIN_DIR}/qtenv2.bat"
-        endif()
+        #if (EXISTS "${QT5_BIN_DIR}/qtenv2.bat")
+        #    COMMAND "${QT5_BIN_DIR}/qtenv2.bat"
+        #endif()
         COMMAND "${QT5_BIN_DIR}/windeployqt" --no-translations ${ADD_OPT} "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.exe"
         WORKING_DIRECTORY "${QT5_BIN_DIR}"
         COMMENT "Copy Qt5 dlls for ${PROJECT_NAME}"
