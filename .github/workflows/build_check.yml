@@ -16,13 +16,15 @@ jobs:
       matrix:
         # GitHub hosted runners do not support Qt on Windows
         # use Ubuntu1804 until Debian "bullseye" becomes "stable"
-        os: [ubuntu-18.04, macos-10.15]
+        os: [ubuntu-18.04, macos-10.15, windows-2019]
 
     runs-on: ${{ matrix.os }}
 
     steps:
+
     - name: Checkout
       uses: actions/checkout@v2
+
 
     - name: Install Ubuntu Build Requirements
       if: startsWith(matrix.os, 'ubuntu')
@@ -34,6 +36,24 @@ jobs:
         cp ../CHANGELOG changelog;
         cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE
 
+    - name: Ubuntu Build
+      # GitHub hosts Linux runners on Standard_DS2_v2 virtual machines in Microsoft Azure:
+      # 2-core CPU, 7 GB of RAM memory, 14 GB of SSD disk space
+      working-directory: ${{github.workspace}}/build
+      if: startsWith(matrix.os, 'ubuntu')
+      run:
+        make -j8;
+        fakeroot make -j8 package
+
+    - name: Upload Ubuntu Artifacts
+      if: startsWith(matrix.os, 'ubuntu')
+      uses: actions/upload-artifact@v2
+      with:
+        name: openhantek_linux_amd64_${{github.run_number}}
+        path: ${{github.workspace}}/build/packages/
+
+
+
     - name: Install macOS Build Requirements
       if: startsWith(matrix.os, 'macos')
       run:
@@ -44,29 +64,6 @@ jobs:
         cd build;
         cp ../CHANGELOG changelog;
         cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_PREFIX_PATH=${Qt5_DIR}
-
-
-    - name: Install Qt for Windows
-      if: startsWith(matrix.os, 'windows')
-      uses: jurplel/install-qt-action@v2
-
-
-    - name: Install Windows Build Requirements
-      if: startsWith(matrix.os, 'windows')
-      run: 
-        md build &
-        call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars64.bat" &
-        cmake -G "Visual Studio 16 2019" -A x64 -DCMAKE_PREFIX_PATH=%Qt5_DIR% -DCMAKE_BUILD_TYPE=Release -Bbuild
-
-
-    - name: Ubuntu Build
-      # GitHub hosts Linux runners on Standard_DS2_v2 virtual machines in Microsoft Azure:
-      # 2-core CPU, 7 GB of RAM memory, 14 GB of SSD disk space
-      working-directory: ${{github.workspace}}/build
-      if: startsWith(matrix.os, 'ubuntu')
-      run:
-        make -j8;
-        fakeroot make -j8 package
 
     - name: macOS Build
       # GitHub hosts macOS runners in GitHub's own macOS Cloud:
@@ -98,6 +95,27 @@ jobs:
         else true; 
         fi
 
+
+    - name: Upload macOS Artifacts
+      if: startsWith(matrix.os, 'macos')
+      uses: actions/upload-artifact@v2
+      with:
+        name: openhantek_osx_x86_64_${{github.run_number}}
+        path: ${{github.workspace}}/build/packages/*.dmg
+
+
+
+    - name: Install Qt for Windows
+      if: startsWith(matrix.os, 'windows')
+      uses: jurplel/install-qt-action@v2
+
+    - name: Install Windows Build Requirements
+      if: startsWith(matrix.os, 'windows')
+      run:
+        md build &
+        call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars64.bat" &
+        cmake -G "Visual Studio 16 2019" -A x64 -DCMAKE_PREFIX_PATH=%Qt5_DIR% -DCMAKE_BUILD_TYPE=Release -Bbuild
+
     - name: Windows Build
       # GitHub hosts Windows runners on Standard_DS2_v2 virtual machines in Microsoft Azure:
       # 2-core CPU, 7 GB of RAM memory, 14 GB of SSD disk space
@@ -107,26 +125,13 @@ jobs:
         cmake --build . --config Release --target package
 
 
-    - name: Upload Ubuntu Artifacts
-      if: startsWith(matrix.os, 'ubuntu')
-      uses: actions/upload-artifact@v2
-      with:
-        name: openhantek_linux_amd64_${{github.run_number}}
-        path: ${{github.workspace}}/build/packages/
-
-    - name: Upload macOS Artifacts
-      if: startsWith(matrix.os, 'macos')
-      uses: actions/upload-artifact@v2
-      with:
-        name: openhantek_osx_x86_64_${{github.run_number}}
-        path: ${{github.workspace}}/build/packages/*.dmg
-
     - name: Upload Windows Artifacts
       if: startsWith(matrix.os, 'windows')
       uses: actions/upload-artifact@v2
       with:
-        name: OpenHantek_Win_x64_Release_${{github.run_number}}
+        name: OpenHantek_Win_x64_${{github.run_number}}
         path: ${{github.workspace}}/build/openhantek/Release
+
 
 
     - name: Upload Release Assets
