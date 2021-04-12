@@ -56,8 +56,8 @@ add_subdirectory(openhantek)
 
 if (WIN32)
     install(
-	FILES CHANGELOG LICENSE README
-	DESTINATION "."
+        FILES CHANGELOG LICENSE README
+        DESTINATION "."
     )
 endif()
 
@@ -65,15 +65,6 @@ endif()
 file(GLOB_RECURSE MDFILES "docs/*.md" "openhantek/*.md")
 add_custom_target(
     readme
-    SOURCES CHANGELOG LICENSE README readme.md ${MDFILES}
+    SOURCES CHANGELOG LICENSE README README.md ${MDFILES}
 )
 
-# Add "doc" target to build the documentation.
-#find_package(Doxygen QUIET)
-#if (DOXYGEN_FOUND)
-#    add_custom_target(
-#	doc
-#        COMMAND "${CMAKE_COMMAND} -E remove_directory html"
-#        COMMAND "${DOXYGEN_EXECUTABLE} Doxyfile" WORKING_DIRECTORY "${CMAKE_CURRENT_LIST_DIR}"
-#    )
-#endif()

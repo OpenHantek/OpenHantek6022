@@ -1,15 +1,11 @@
 # OpenHantek6022
 [![Stability: Active](https://masterminds.github.io/stability/active.svg)](https://masterminds.github.io/stability/active.html)
-[![GitHub release (latest by date)](https://img.shields.io/github/v/release/OpenHantek/OpenHantek6022)][release]
-[![GitHub Release Date](https://img.shields.io/github/release-date/OpenHantek/OpenHantek6022?color=blue)][release]
-[![GitHub commits since latest release](https://img.shields.io/github/commits-since/OpenHantek/OpenHantek6022/latest?color=brightgreen)][commits]
+[![GitHub release (latest by date)](https://img.shields.io/github/v/release/OpenHantek/OpenHantek6022)](https://github.com/OpenHantek/OpenHantek6022/releases)
+[![GitHub Release Date](https://img.shields.io/github/release-date/OpenHantek/OpenHantek6022?color=blue)](https://github.com/OpenHantek/OpenHantek6022/releases)
+[![GitHub commits since latest release](https://img.shields.io/github/commits-since/OpenHantek/OpenHantek6022/latest?color=blue)](https://github.com/OpenHantek/OpenHantek6022/commits/master)
 
 [![GitHub CI](https://github.com/OpenHantek/OpenHantek6022/actions/workflows/build_check.yml/badge.svg)](https://github.com/OpenHantek/OpenHantek6022/actions/workflows/build_check.yml)
-[![Appveyor CI](https://ci.appveyor.com/api/projects/status/github/OpenHantek/openhantek6022?svg=true)](https://ci.appveyor.com/project/Ho-Ro/openhantek6022)
 [![CodeFactor](https://www.codefactor.io/repository/github/openhantek/openhantek6022/badge)](https://www.codefactor.io/repository/github/openhantek/openhantek6022)
-
-[release]: https://github.com/OpenHantek/OpenHantek6022/releases
-[commits]: https://github.com/OpenHantek/OpenHantek6022/commits/master
 
 OpenHantek6022 is a free software for **Hantek DSO6022** USB digital signal oscilloscopes that is actively developed on
 [github.com/OpenHantek/OpenHantek6022](https://github.com/OpenHantek/OpenHantek6022) - but only for Hantek 6022BE/BL and compatible scopes (Voltcraft, Darkwire, Protek, Acetech, etc.).
@@ -20,18 +16,34 @@ but David [stopped maintaining](https://github.com/OpenHantek/openhantek/issues/
 
 <p><img alt="Image of main window on linux" width="100%" src="docs/images/screenshot_mainwindow.png"></p>
 
+#### Content
+* [About OpenHantek6022](#about-openhantek6022)
+* [Features](#features)
+* [AC coupling](#ac-coupling)
+* [Continous Integration](#continous-integration)
+* [Building OpenHantek6022 from source](#building-openhantek6022-from-source)
+* [Install prebuilt binary packages](#install-prebuilt-binary-packages)
+* [Run OpenHantek6022](#run-openhantek6022)
+  + [Windows USB access](#windows-usb-access)
+* [Important!](#important-)
+* [Specifications, features, limitations and developer documentation](#specifications--features--limitations-and-developer-documentation)
+* [Contribute](#contribute)
+* [Other DSO open source software](#other-dso-open-source-software)
+* [Other related software](#other-related-software)
+
+## About OpenHantek6022
 * Supported devices:
- * Hantek 6022BE and 6022BL as well as compatible scopes (e.g. Voltcraft DSO-2020).
- * SainSmart DDS120 (thx [msiegert](https://github.com/msiegert)) - this device has a different analog front end
+  - Hantek 6022BE and 6022BL as well as compatible scopes (e.g. Voltcraft DSO-2020).
+  - SainSmart DDS120 (thx [msiegert](https://github.com/msiegert)) - this device has a different analog front end
  and uses the [slightly improved sigrok firmware](https://github.com/Ho-Ro/sigrok-firmware-fx2lafw), which has [some limitations](https://sigrok.org/wiki/SainSmart_DDS120/Info#Open-source_firmware_details)
  compared to the Hantek scopes (see [#69](https://github.com/OpenHantek/OpenHantek6022/issues/69#issuecomment-607341694)).
+
 * Demo mode is provided by the `-d` or `--demoMode` command line option.
 * Fully supported operating system: Linux; developed under debian stable for amd64 architecture.
 * Raspberry Pi packages (raspbian stable) are available on the [Releases](https://github.com/OpenHantek/OpenHantek6022/releases) page, check this [setup requirement](docs/build.md#raspberrypi).
 * Compiles under FreeBSD (packaging / installation: work in progress, thx [tspspi](https://github.com/tspspi)).
 * Other operating systems builds: [Windows](docs/images/screenshot_mainwindow_win.png) (mostly untested) & macOS (completely untested).
-
- **No support for non-Linux related issues unless a volunteer steps in!**
+  **No support for non-Linux related issues unless a volunteer steps in!**
 * Uses [free open source firmware](https://github.com/Ho-Ro/Hantek6022API), no longer dependent on nonfree Hantek firmware.
 * Extensive [User Manual](docs/OpenHantek6022_User_Manual.pdf) with technical specs and schematics.
 
@@ -67,15 +79,18 @@ but David [stopped maintaining](https://github.com/OpenHantek/openhantek/issues/
 * French, German, Russian and Spanish localisation complete, Italian and Portuguese translation ongoing.
 
 ## AC coupling
-* A [little HW modification](docs/HANTEK6022_AC_Modification.pdf) adds AC coupling. OpenHantek6022 supports this feature since v2.17-rc5 / FW0204.
+A [little HW modification](docs/HANTEK6022_AC_Modification.pdf) adds AC coupling. OpenHantek6022 supports this feature since v2.17-rc5 / FW0204.
 
 ## Continous Integration
 Every commit triggers a workflow on
-[GitHub Actions](https://github.com/OpenHantek/OpenHantek6022/actions/workflows/ubuntu_check.yml)
-that checks the build on different Ubuntu LTS versions (curently 20.04 and 18.04)
-and a workflow on [appveyor](https://ci.appveyor.com/project/Ho-Ro/openhantek6022)
-that builds and packages OpenHantek6022 for Linux (Ubuntu), macOS and Windows.
-Status badges on top of this page show the build status.
+[GitHub Actions](https://github.com/OpenHantek/OpenHantek6022/actions/workflows/build_check.yml)
+that builds and packages OpenHantek6022 for:
+* Linux (Ubuntu-18.04)
+* macOS (Catalina 10.15)
+* Windows (MSVS-2019)
+
+[![GitHub CI](https://github.com/OpenHantek/OpenHantek6022/actions/workflows/build_check.yml/badge.svg)](https://github.com/OpenHantek/OpenHantek6022/actions/workflows/build_check.yml)
+This status badge here (and on top of this page) show the build status.
 
 ## Building OpenHantek6022 from source
 The preferred way to run OpenHantek is to build it from source on your system,

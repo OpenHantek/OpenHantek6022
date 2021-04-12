@@ -1,7 +1,7 @@
-# This file configures CPack. 
-# A tgz, deb and rpm file is created for linux (tgz and deb tested on debian stretch and buster).
-# A tgz file is created for osx (not tested).
-# A zip file and an NSIS Installer exe is created on windows (not tested).
+# This file configures CPack.
+# A tgz, deb and rpm file is created for Linux (tgz and deb tested on debian stretch and buster).
+# A tar.gz and dmg file is created for macOS (not tested).
+# A zip file is created on Windows (not tested).
 
 find_package(Git QUIET)
 
@@ -140,7 +140,7 @@ set(CPACK_PACKAGE_CONTACT "contact@openhantek.org")
 set(CPACK_PACKAGE_VENDOR "OpenHantek Community")
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Digital oscilloscope software for Hantek DSO6022 USB hardware")
 set(CPACK_PACKAGE_DESCRIPTION "OpenHantek is an oscilloscope software for\nVoltcraft/Darkwire/Protek/Acetech/Hantek USB devices")
-set(CPACK_RESOURCE_FILE_README "${CMAKE_SOURCE_DIR}/readme.md")
+set(CPACK_RESOURCE_FILE_README "${CMAKE_SOURCE_DIR}/README.md")
 if (EXISTS "${CMAKE_SOURCE_DIR}/LICENSE")
     set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/LICENSE")
 endif()
