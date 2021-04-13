@@ -388,7 +388,7 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
             QDesktopServices::openUrl( QUrl( "file://" + usrManualPath ) );
         else
             QDesktopServices::openUrl(
-                QUrl( "https://github.com/OpenHantek/OpenHantek6022/blob/master/docs/OpenHantek6022_User_Manual.pdf" ) );
+                QUrl( "https://github.com/OpenHantek/OpenHantek6022/blob/main/docs/OpenHantek6022_User_Manual.pdf" ) );
     } );
 
     connect( ui->actionACmodification, &QAction::triggered, []() {
@@ -398,7 +398,7 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
             QDesktopServices::openUrl( QUrl( "file://" + ACmodPath ) );
         else
             QDesktopServices::openUrl(
-                QUrl( "https://github.com/OpenHantek/OpenHantek6022/blob/master/docs/HANTEK6022_AC_Modification.pdf" ) );
+                QUrl( "https://github.com/OpenHantek/OpenHantek6022/blob/main/docs/HANTEK6022_AC_Modification.pdf" ) );
     } );
 
     connect( ui->actionAbout, &QAction::triggered, [this]() {

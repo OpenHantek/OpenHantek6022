@@ -1590,9 +1590,8 @@
         <translation>Modo de demostración</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="46"/>
         <source>&lt;p&gt;&lt;br/&gt;&lt;b&gt;The device is ready for use.&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Please observe the &lt;a href=&apos;https://github.com/OpenHantek/OpenHantek6022/blob/master/docs/OpenHantek6022_User_Manual.pdf&apos;&gt;user manual&lt;/a&gt; for safe operation.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;&lt;br/&gt;&lt;b&gt;El dispositivo está listo para su uso.&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Lea con detenimiento el &lt;a href=&apos;https://github.com/OpenHantek/OpenHantek6022/blob/master/docs/OpenHantek6022_User_Manual.pdf&apos;&gt;manual del usuario&lt;/a&gt; para una operacion segura.&lt;/p&gt;</translation>
+        <translation type="vanished">&lt;p&gt;&lt;br/&gt;&lt;b&gt;El dispositivo está listo para su uso.&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Lea con detenimiento el &lt;a href=&apos;https://github.com/OpenHantek/OpenHantek6022/blob/master/docs/OpenHantek6022_User_Manual.pdf&apos;&gt;manual del usuario&lt;/a&gt; para una operacion segura.&lt;/p&gt;</translation>
     </message>
     <message>
         <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="84"/>
@@ -1610,6 +1609,11 @@
         <translation>&lt;p&gt;OpenHantek6022 está buscando dispositivos compatibles...&lt;/p&gt;&lt;p&gt;&lt;img align=&apos;right&apos; height=&apos;200&apos; src=&apos;qrc:///switch_6022BL.png&apos;&gt;No olvide cambiar su dispositivo al modo osciloscopio si tiene múltiples modos.&lt;/p&gt;</translation>
     </message>
     <message>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="46"/>
+        <source>&lt;p&gt;&lt;br/&gt;&lt;b&gt;The device is ready for use.&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Please observe the &lt;a href=&apos;https://github.com/OpenHantek/OpenHantek6022/blob/main/docs/OpenHantek6022_User_Manual.pdf&apos;&gt;user manual&lt;/a&gt; for safe operation.&lt;/p&gt;</source>
+        <translation>&lt;p&gt;&lt;br/&gt;&lt;b&gt;El dispositivo está listo para su uso.&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Lea con detenimiento el &lt;a href=&apos;https://github.com/OpenHantek/OpenHantek6022/blob/main/docs/OpenHantek6022_User_Manual.pdf&apos;&gt;manual del usuario&lt;/a&gt; para una operacion segura.&lt;/p&gt;</translation>
+    </message>
+    <message>
         <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="54"/>
         <source>&lt;p&gt;Please make sure you have installed the windows usb driver correctly&lt;/p&gt;</source>
         <translation>&lt;p&gt;Asegúrese de que ha instalado el controlador USB de Windows correctamente&lt;/p&gt;</translation>
@@ -1620,6 +1624,11 @@
         <translation>&lt;p&gt;Asegúrese de que ha copiado las reglas udev en&lt;br/&gt;&lt;b&gt;%1&lt;/b&gt; o&lt;br/&gt;&lt;b&gt;%2&lt;/b&gt;&lt;br/&gt;para permisos de acceso USB correctos.&lt;/p&gt;</translation>
     </message>
     <message>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="67"/>
+        <source>&lt;p&gt;Visit the build and run instruction &lt;a href=&apos;https://github.com/OpenHantek/OpenHantek6022/blob/main/docs/build.md&apos;&gt;website&lt;/a&gt; for help.&lt;/p&gt;</source>
+        <translation>&lt;p&gt;Visite las instrucciones de compilación y ejecución en el &lt;a href=&apos;https://github.com/OpenHantek/OpenHantek6022/blob/main/docs/build.md&apos;&gt;sitio web&lt;/a&gt; para más ayuda.&lt;/p&gt;</translation>
+    </message>
+    <message>
         <source>&lt;p&gt;Please make sure you have copied the udev rules file to&lt;br/&gt;&lt;b&gt;%1&lt;/b&gt; or&lt;br/&gt;&lt;b&gt;%2&lt;/b&gt; for correct USB access permissions.&lt;/p&gt;</source>
         <translation type="vanished">&lt;p&gt;Asegúrese de que ha copiado las reglas udev en&lt;br/&gt;&lt;b&gt;%1&lt;/b&gt; o&lt;br/&gt;&lt;b&gt;%2&lt;/b&gt; para permisos de acceso USB correctos.&lt;/p&gt;</translation>
     </message>
@@ -1628,9 +1637,8 @@
         <translation type="vanished">&lt;p&gt;Asegúrese de que ha copiado las reglas udev en &lt;b&gt;%1&lt;/b&gt; para permisos de acceso USB correctos.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="67"/>
         <source>&lt;p&gt;Visit the build and run instruction &lt;a href=&apos;https://github.com/OpenHantek/OpenHantek6022/blob/master/docs/build.md&apos;&gt;website&lt;/a&gt; for help.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;Visite las instrucciones de compilación y ejecución en el &lt;a href=&apos;https://github.com/OpenHantek/OpenHantek6022/blob/master/docs/build.md&apos;&gt;sitio web&lt;/a&gt; para más ayuda.&lt;/p&gt;</translation>
+        <translation type="vanished">&lt;p&gt;Visite las instrucciones de compilación y ejecución en el &lt;a href=&apos;https://github.com/OpenHantek/OpenHantek6022/blob/master/docs/build.md&apos;&gt;sitio web&lt;/a&gt; para más ayuda.&lt;/p&gt;</translation>
     </message>
     <message>
         <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="69"/>

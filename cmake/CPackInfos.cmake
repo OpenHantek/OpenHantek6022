@@ -17,7 +17,7 @@ endif()
 # message( STATUS "VCS_REVISION: ${VCS_REVISION}" )
 
 if(NOT DEFINED CMD_RESULT)
-    set(VCS_BRANCH "master")
+    set(VCS_BRANCH "main")
     set(GIT_COMMIT_HASH "1")
     set(VCS_REVISION "na")
 else()

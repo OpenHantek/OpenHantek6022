@@ -65,7 +65,7 @@ but David [stopped maintaining](https://github.com/OpenHantek/openhantek/issues/
 * Trigger filter *HF* (trigger also on glitches), *Normal* and *LF* (for noisy signals).
 * Display interpolation modes *Off*, *Linear*, *Step* and *Sinc*.
 * Calibration values loaded from eeprom or a model configuration file.
-* [Calibration program](https://github.com/Ho-Ro/Hantek6022API/blob/master/README.md#create-calibration-values-for-openhantek) to create these values automatically.
+* [Calibration program](https://github.com/Ho-Ro/Hantek6022API/blob/main/README.md#create-calibration-values-for-openhantek) to create these values automatically.
 * Digital phosphor effect to notice even short spikes; simple eye-diagram display with alternating trigger slope.
 * Histogram function for voltage channels on right screen margin.
 * A [zoom view](docs/images/screenshot_mainwindow_with_zoom.png) with a freely selectable range.
@@ -158,7 +158,7 @@ Please refer also to the [developer info](openhantek/developer_info.md).
 ## Contribute
 We welcome any reported GitHub issue if you have a problem with this software. Send us a pull request for enhancements and fixes. Some random notes:
    - Read [how to properly contribute to open source projects on GitHub][10].
-   - Create a separate branch other than *master* for your changes. It is not possible to directly commit to master on this repository.
+   - Create a separate branch other than *main* for your changes. It is not possible to directly commit to main on this repository.
    - Write [good commit messages][11].
    - Use the same [coding style and spacing][13] -> install clang-format and use make target: `make format` or execute directly: `clang-format -style=file -i *.cpp *.h`.
    - It is mandatory that your commits are [Signed-off-by:][12], e.g. use git's command line option `-s` to append it automatically to your commit message:

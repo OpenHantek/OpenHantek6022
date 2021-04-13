@@ -189,7 +189,7 @@ The 2X..200X oversampling for slower sample rates is done here. Also overdriving
 In `Roll` mode the latest sample values are always put at the end of the result buffer while older samples move toward the beginning of the buffer,
 this rolls the displayed trace permanently to the left.
 The conversion uses either the factory calibration values from EEPROM or from a user supplied config file. 
-Read more about [calibration](https://github.com/Ho-Ro/Hantek6022API/blob/master/README.md#create-calibration-values-for-openhantek).
+Read more about [calibration](https://github.com/Ho-Ro/Hantek6022API/blob/main/README.md#create-calibration-values-for-openhantek).
 * `searchTriggerPosition()`
     * Checks if the signal is triggered and calculates the starting point for a stable display.
     The time distance to the following opposite slope is measured and displayed as pulse width in the top row.

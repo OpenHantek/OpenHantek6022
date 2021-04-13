@@ -173,12 +173,16 @@ Hints for Visual Studio 2015/2017/2019 users:
 * Build for 64bit. 32bit builds theoretically work, but you are on your own then.
 * Use the **CMake GUI** to setup all required Qt include and library paths.
 
-#### CI Build on appveyor
+#### CI Build on GitHub Actions
 
-As I do not use Windows for development the building is done externally at the CI provider [appveyor.com](https://www.appveyor.com)
-who provides [these Windows environments](https://www.appveyor.com/docs/windows-images-software/).
-Please check also the file [appveyor.yml](https://github.com/OpenHantek/OpenHantek6022/blob/master/appveyor.yml) for info about the building process.
+As I do not use Windows for development the building is done externally by [GitHub Actions](https://github.com/OpenHantek/OpenHantek6022/actions)
+who provides [these Windows environments](https://github.com/actions/virtual-environments/blob/main/images/win/Windows2019-Readme.md).
+Please check also the file [build_check.yml](https://github.com/OpenHantek/OpenHantek6022/actions/workflows/build_check.yml) for info about the building process.
 Starting with the update to Visual Studio 2019 for the upcoming OpenHantek6022 version 3.2 only 64bit builds are provided.
+
+Previously the building was done externally at the CI provider [appveyor.com](https://www.appveyor.com)
+who provided [these Windows environments](https://www.appveyor.com/docs/windows-images-software/).
+Please check also the file [appveyor.yml](https://github.com/OpenHantek/OpenHantek6022/blob/main/appveyor.yml) for info about the building process.
 
 #### Microsoft Windows USB driver install (with Zadig)
 

@@ -32,7 +32,7 @@ SelectSupportedDevice::SelectSupportedDevice( QWidget *parent ) : QDialog( paren
             QDesktopServices::openUrl( QUrl( "file://" + usrManualPath ) );
         else
             QDesktopServices::openUrl(
-                QUrl( "https://github.com/OpenHantek/OpenHantek6022/blob/master/docs/OpenHantek6022_User_Manual.pdf" ) );
+                QUrl( "https://github.com/OpenHantek/OpenHantek6022/blob/main/docs/OpenHantek6022_User_Manual.pdf" ) );
     } );
     connect( ui->btnDemoMode, &QPushButton::clicked, [this]() { demoModeClicked = true; } );
 }
@@ -44,7 +44,7 @@ std::unique_ptr< ScopeDevice > SelectSupportedDevice::showSelectDeviceModal( lib
 
     QString messageDeviceReady =
         tr( "<p><br/><b>The device is ready for use.</b></p><p>Please observe the "
-            "<a href='https://github.com/OpenHantek/OpenHantek6022/blob/master/docs/OpenHantek6022_User_Manual.pdf'>"
+            "<a href='https://github.com/OpenHantek/OpenHantek6022/blob/main/docs/OpenHantek6022_User_Manual.pdf'>"
             "user manual</a> for safe operation.</p>" );
 
     QString messageNoDevices = tr( "<p>OpenHantek6022 is searching for compatible devices ...</p>"
@@ -65,7 +65,7 @@ std::unique_ptr< ScopeDevice > SelectSupportedDevice::showSelectDeviceModal( lib
 #endif
     messageNoDevices +=
         tr( "<p>Visit the build and run instruction "
-            "<a href='https://github.com/OpenHantek/OpenHantek6022/blob/master/docs/build.md'>website</a> for help.</p>" );
+            "<a href='https://github.com/OpenHantek/OpenHantek6022/blob/main/docs/build.md'>website</a> for help.</p>" );
     messageNoDevices += tr( "<hr/><p>Even without a device you can explore the program's function. "
                             "Just press the <b>Demo Mode</b> button below.</p>" );
 
