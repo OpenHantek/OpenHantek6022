@@ -798,6 +798,21 @@
         <source>SPM</source>
         <translation type="vanished">SPM</translation>
     </message>
+    <message>
+        <location filename="../src/exporting/exportjson.cpp" line="25"/>
+        <source>Export &amp;JSON ..</source>
+        <translation>Exporter &amp;JSON ..</translation>
+    </message>
+    <message>
+        <location filename="../src/exporting/exportjson.cpp" line="35"/>
+        <source>Save JSON</source>
+        <translation>Enregistrer JSON</translation>
+    </message>
+    <message>
+        <location filename="../src/exporting/exportjson.cpp" line="35"/>
+        <source>Java Script Object Notation (*.json)</source>
+        <translation>Java Script Object Notation (*.json)</translation>
+    </message>
 </context>
 <context>
     <name>MainWindow</name>
