@@ -11,7 +11,7 @@ Text without translation is displayed in the (English) original.
 
 If a translation exists for your language, it will be used automatically.
 
-To use OpenHantek6022 with the original English text, call it with `LANG=C OpenHantek`.
+To use OpenHantek6022 with the original English text, call it with `LANGUAGE=C OpenHantek`, friends of Italian ~~Opera~~ language use `LANGUAGE=it OpenHantek`.
 
 ## Quick HowTo
 
@@ -19,7 +19,7 @@ To use OpenHantek6022 with the original English text, call it with `LANG=C OpenH
 
 Go to the translation directory `openhantek/translations`.
 
-Add your new language to the `set(TS_FILES ...` line of `Translations.cmake`, e.g. `openhantek_fr.ts` for French.
+Add your new language to the `set(TS_FILES ...` line near the top of [`Translations.cmake`](https://github.com/OpenHantek/OpenHantek6022/blob/main/openhantek/translations/Translations.cmake), e.g. `openhantek_fr.ts` for French.
 ```
 ###################################
 #
