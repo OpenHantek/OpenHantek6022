@@ -45,9 +45,9 @@
 
 // Exporter
 #include "exporting/exportcsv.h"
-#include "exporting/exportjson.h"
 #include "exporting/exporterprocessor.h"
 #include "exporting/exporterregistry.h"
+#include "exporting/exportjson.h"
 // legacy img and pdf export is replaced by MainWindow::screenshot()
 #ifdef LEGACYEXPORT
 #include "exporting/exportimage.h"
@@ -75,6 +75,7 @@ using namespace Hantek;
 
 /// \brief Initialize resources and translations and show the main window.
 int main( int argc, char *argv[] ) {
+    unsetenv( "LANGUAGE" ); // this ENV variable hides the LANG=xx setting
     //////// Set application information ////////
     QCoreApplication::setOrganizationName( "OpenHantek" );
     QCoreApplication::setOrganizationDomain( "openhantek.org" );
@@ -181,8 +182,8 @@ int main( int argc, char *argv[] ) {
     //////// Load translations ////////
     QTranslator qtTranslator;
     QTranslator openHantekTranslator;
-    if ( useLocale && QLocale::system().name() != "en_US" ) { // somehow Qt on MacOS uses the german translation for en_US?!
-        if ( qtTranslator.load( "qt_" + QLocale::system().name(), QLibraryInfo::location( QLibraryInfo::TranslationsPath ) ) ) {
+    if ( useLocale && QLocale().name() != "en_US" ) { // somehow Qt on MacOS uses the german translation for en_US?!
+        if ( qtTranslator.load( "qt_" + QLocale().name(), QLibraryInfo::location( QLibraryInfo::TranslationsPath ) ) ) {
             openHantekApplication.installTranslator( &qtTranslator );
         }
         if ( openHantekTranslator.load( QLocale(), QLatin1String( "openhantek" ), QLatin1String( "_" ),
@@ -203,7 +204,7 @@ int main( int argc, char *argv[] ) {
             return -1;
         }
         if ( useLocale ) // localize USB error messages, supported: "en", "nl", "fr", "ru"
-            libusb_setlocale( QLocale::system().name().toLocal8Bit().constData() );
+            libusb_setlocale( QLocale().name().toLocal8Bit().constData() );
 
         // SelectSupportedDevive returns a real device unless demoMode is true
         scopeDevice = SelectSupportedDevice().showSelectDeviceModal( context );

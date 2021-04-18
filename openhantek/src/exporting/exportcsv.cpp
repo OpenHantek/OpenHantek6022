@@ -77,22 +77,22 @@ void ExporterCSV::fillData( QTextStream &csvStream, const ExporterData &dto, con
 
     for ( unsigned int row = 0; row < dto.getMaxRow(); ++row ) {
 
-        csvStream << QLocale::system().toString( dto.getTimeInterval() * row );
+        csvStream << QLocale().toString( dto.getTimeInterval() * row );
         for ( ChannelID channel = 0; channel < dto.getChannelsCount(); ++channel ) {
             if ( voltageData[ channel ] != nullptr ) {
                 csvStream << sep;
                 if ( row < voltageData[ channel ]->sample.size() ) {
-                    csvStream << QLocale::system().toString( voltageData[ channel ]->sample[ row ] );
+                    csvStream << QLocale().toString( voltageData[ channel ]->sample[ row ] );
                 }
             }
         }
         if ( dto.isSpectrumUsed() ) {
-            csvStream << sep << QLocale::system().toString( dto.getFreqInterval() * row );
+            csvStream << sep << QLocale().toString( dto.getFreqInterval() * row );
             for ( ChannelID channel = 0; channel < dto.getChannelsCount(); ++channel ) {
                 if ( spectrumData[ channel ] != nullptr ) {
                     csvStream << sep;
                     if ( row < spectrumData[ channel ]->sample.size() ) {
-                        csvStream << QLocale::system().toString( spectrumData[ channel ]->sample[ row ] );
+                        csvStream << QLocale().toString( spectrumData[ channel ]->sample[ row ] );
                     }
                 }
             }
@@ -113,7 +113,7 @@ bool ExporterCSV::save() {
     ExporterData dto = ExporterData( data, registry->settings->scope );
 
     // use semicolon as data separator if comma is already used as decimal separator - e.g. with german locale
-    const char *sep = QLocale::system().decimalPoint() == ',' ? ";" : ",";
+    const char *sep = QLocale().decimalPoint() == ',' ? ";" : ",";
 
     fillHeaders( csvStream, dto, sep );
     fillData( csvStream, dto, sep );

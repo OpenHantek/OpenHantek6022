@@ -1,3 +1,10 @@
+3.2.2
+2021-04-18
+New JSON exporter
+New complete Polish localisation
+CI switched from appveyor to GitHub Actions
+Minor localisation fixes
+
 3.2.1
 2021-04-05
 Two new interpolation modes: step and sinc

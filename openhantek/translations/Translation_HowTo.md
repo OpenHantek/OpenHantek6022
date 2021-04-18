@@ -2,7 +2,7 @@
 
 The build system simplifies the localization process by automatic preparation of translations. 
 All strings in the source code that should be translated must marked with the function `tr()`, instead of 
-`QLabel("Some text")` use `QLabel(tr("Some text"))`. 
+`QLabel( "Some text" )` use `QLabel( tr( "Some text" ) )`.
 All texts marked in this way will be collected automatically during a build into a /translation source/ file.
 This file can be translated manually afterwards. The translated texts will be automatically integrated 
 into the program during the next build and are available to the user depending on his locale. 
@@ -11,7 +11,9 @@ Text without translation is displayed in the (English) original.
 
 If a translation exists for your language, it will be used automatically.
 
-To use OpenHantek6022 with the original English text, call it with `LANGUAGE=C OpenHantek`, friends of Italian ~~Opera~~ language use `LANGUAGE=it OpenHantek`.
+To use OpenHantek6022 with the original English text, call it with `LANGUAGE= LANG=C OpenHantek`,
+friends of Italian ~~Opera~~ language use `LANGUAGE= LANG=it OpenHantek`.
+On some systems (e.g. KDE) unsetting `LANGUAGE` with `LANGUAGE=` is necessary because this variable hides the effect of `LANG=xx`.
 
 ## Quick HowTo
 
@@ -30,7 +32,7 @@ set(TS_FILES translations/openhantek_de.ts translations/openhantek_fr.ts)
 ###################################
 
 ```
-Go to the `build` directory and call `make -j2`
+Go to the `build` directory and call `make -j4`
 During the build process all translatable text will be added/updated in all TS_FILES from above.
 
 ### Translate into your language
@@ -43,6 +45,5 @@ Start translating the original (English) text using linguist, unprocessed string
 
 ### Create a binary with new localization
 
-Go to the `build` directory and call `make -j2`
-
+Go to the `build` directory and call `make -j4`
 

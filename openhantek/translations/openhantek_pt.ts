@@ -1672,7 +1672,7 @@
     <message>
         <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="69"/>
         <source>&lt;hr/&gt;&lt;p&gt;Even without a device you can explore the program&apos;s function. Just press the &lt;b&gt;Demo Mode&lt;/b&gt; button below.&lt;/p&gt;</source>
-        <translation>&lt;hr/&gt;&gt;p&gt;Even sem um dispositivo você pode explorar a função do programa, basta pressionar o botão &lt;b&gt;Demo Mode&lt;/b&gt; button.&lt;/p&gt;</translation>
+        <translation>&lt;hr/&gt;&lt;p&gt;Even sem um dispositivo você pode explorar a função do programa, basta pressionar o botão &lt;b&gt;Demo Mode&lt;/b&gt; button.&lt;/p&gt;</translation>
     </message>
     <message>
         <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="153"/>
