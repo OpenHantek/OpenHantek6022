@@ -680,6 +680,21 @@
         <source>Save CSV</source>
         <translation>Сохранить CSV</translation>
     </message>
+    <message>
+        <location filename="../src/exporting/exportjson.cpp" line="25"/>
+        <source>Export &amp;JSON ..</source>
+        <translation>Экспорт &amp;JSON ..</translation>
+    </message>
+    <message>
+        <location filename="../src/exporting/exportjson.cpp" line="35"/>
+        <source>Save JSON</source>
+        <translation>Сохранить JSON</translation>
+    </message>
+    <message>
+        <location filename="../src/exporting/exportjson.cpp" line="35"/>
+        <source>Java Script Object Notation (*.json)</source>
+        <translation>Java Script Object Notation (*.json)</translation>
+    </message>
 </context>
 <context>
     <name>MainWindow</name>

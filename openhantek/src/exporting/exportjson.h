@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: GPL-2.0+
+// Sandro Sobczyński <sandro.sobczynski@gmail.com>
 
 #pragma once
 #include "exporterdata.h"
@@ -7,11 +8,11 @@
 #include <QFile>
 #include <QTextStream>
 
-class ExporterCSV : public ExporterInterface {
+class ExporterJSON : public ExporterInterface {
     Q_DECLARE_TR_FUNCTIONS( LegacyExportDrawer )
 
   public:
-    ExporterCSV();
+    ExporterJSON();
     void create( ExporterRegistry *registry ) override;
     int faIcon() override;
     QString name() override;
@@ -22,7 +23,6 @@ class ExporterCSV : public ExporterInterface {
 
   private:
     QFile *getFile();
-    void fillHeaders( QTextStream &jsonStream, const ExporterData &dto, const char *sep );
-    void fillData( QTextStream &jsonStream, const ExporterData &dto, const char *sep );
+    void fillData( QTextStream &jsonStream, const ExporterData &dto );
     std::shared_ptr< PPresult > data;
 };
