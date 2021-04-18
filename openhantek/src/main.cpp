@@ -45,6 +45,7 @@
 
 // Exporter
 #include "exporting/exportcsv.h"
+#include "exporting/exportjson.h"
 #include "exporting/exporterprocessor.h"
 #include "exporting/exporterregistry.h"
 // legacy img and pdf export is replaced by MainWindow::screenshot()
@@ -246,8 +247,10 @@ int main( int argc, char *argv[] ) {
     //////// Create exporters ////////
     ExporterRegistry exportRegistry( spec, &settings );
     ExporterCSV exporterCSV;
+    ExporterJSON exporterJSON;
     ExporterProcessor samplesToExportRaw( &exportRegistry );
     exportRegistry.registerExporter( &exporterCSV );
+    exportRegistry.registerExporter( &exporterJSON );
 
     //////// Create post processing objects ////////
     QThread postProcessingThread;

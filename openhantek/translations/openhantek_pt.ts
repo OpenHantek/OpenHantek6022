@@ -812,6 +812,21 @@
         <source>MATH</source>
         <translation type="vanished">MATH</translation>
     </message>
+    <message>
+        <location filename="../src/exporting/exportjson.cpp" line="25"/>
+        <source>Export &amp;JSON ..</source>
+        <translation>Exportar &amp;JSON ..</translation>
+    </message>
+    <message>
+        <location filename="../src/exporting/exportjson.cpp" line="35"/>
+        <source>Save JSON</source>
+        <translation>Salvar JSON</translation>
+    </message>
+    <message>
+        <location filename="../src/exporting/exportjson.cpp" line="35"/>
+        <source>Java Script Object Notation (*.json)</source>
+        <translation>Java Script Object Notation (*.json)</translation>
+    </message>
 </context>
 <context>
     <name>MainWindow</name>
