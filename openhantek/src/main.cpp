@@ -75,7 +75,9 @@ using namespace Hantek;
 
 /// \brief Initialize resources and translations and show the main window.
 int main( int argc, char *argv[] ) {
-    unsetenv( "LANGUAGE" ); // this ENV variable hides the LANG=xx setting
+#ifndef Q_OS_WIN
+    unsetenv( "LANGUAGE" ); // this ENV variable hides the LANG=xx setting, not available under Windows
+#endif
     //////// Set application information ////////
     QCoreApplication::setOrganizationName( "OpenHantek" );
     QCoreApplication::setOrganizationDomain( "openhantek.org" );
