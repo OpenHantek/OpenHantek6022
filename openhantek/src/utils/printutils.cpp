@@ -224,21 +224,21 @@ double stringToValue( const QString &text, Unit unit, bool *ok ) {
 }
 
 QString hexDump( unsigned char *data, unsigned int length ) {
-    QString dumpString, byteString;
+    QString dumpString;
     for ( unsigned int index = 0; index < length; ++index )
         dumpString.append( QString( "0x%1 " ).arg( data[ index ], 2, 16, QChar( '0' ) ) );
     return dumpString;
 }
 
 QString decDump( unsigned char *data, unsigned int length ) {
-    QString dumpString, byteString;
+    QString dumpString;
     for ( unsigned int index = 0; index < length; ++index )
         dumpString.append( QString( "%1 " ).arg( data[ index ] ) );
     return dumpString;
 }
 
 QString hexdecDump( unsigned char *data, unsigned int length ) {
-    QString dumpString, byteString;
+    QString dumpString;
     for ( unsigned int index = 0; index < length; ++index )
         dumpString.append( QString( "0x%1 (%2) " ).arg( data[ index ], 2, 16, QChar( '0' ) ).arg( data[ index ] ) );
     return dumpString;

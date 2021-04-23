@@ -59,7 +59,7 @@ class MainWindow : public QMainWindow {
     // Taking screenshots
     enum screenshotType_t { SCREENSHOT, HARDCOPY, PRINTER };
     screenshotType_t screenshotType;
-    void screenShot( screenshotType_t screenshotType = SCREENSHOT );
+    void screenShot( screenshotType_t screenshotType = SCREENSHOT, bool autoSave = false );
 
   signals:
     void settingsLoaded( DsoSettingsScope *scope, const Dso::ControlSpecification *spec );

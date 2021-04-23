@@ -59,8 +59,7 @@ std::unique_ptr< ScopeDevice > SelectSupportedDevice::showSelectDeviceModal( lib
         messageNoDevices += tr( "<p>Please make sure you have copied the udev rules file to<br/>"
                                 "<b>%1</b> or<br/><b>%2</b><br/>"
                                 "for correct USB access permissions.</p>" )
-                                .arg( etcRules.fileName() )
-                                .arg( libRules.fileName() );
+                                .arg( etcRules.fileName(), libRules.fileName() );
     }
 #endif
     messageNoDevices +=

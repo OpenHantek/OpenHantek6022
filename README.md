@@ -5,7 +5,6 @@
 [![GitHub commits since latest release](https://img.shields.io/github/commits-since/OpenHantek/OpenHantek6022/latest?color=blue)](https://github.com/OpenHantek/OpenHantek6022/commits/master)
 
 [![GitHub CI](https://github.com/OpenHantek/OpenHantek6022/actions/workflows/build_check.yml/badge.svg)](https://github.com/OpenHantek/OpenHantek6022/actions/workflows/build_check.yml)
-[![CodeFactor](https://www.codefactor.io/repository/github/openhantek/openhantek6022/badge)](https://www.codefactor.io/repository/github/openhantek/openhantek6022)
 
 OpenHantek6022 is a free software for **Hantek DSO6022** USB digital signal oscilloscopes that is actively developed on
 [github.com/OpenHantek/OpenHantek6022](https://github.com/OpenHantek/OpenHantek6022) - but only for Hantek 6022BE/BL and compatible scopes (Voltcraft, Darkwire, Protek, Acetech, etc.).
@@ -90,7 +89,7 @@ that builds and packages OpenHantek6022 for:
 * Windows (MSVS-2019)
 
 [![GitHub CI](https://github.com/OpenHantek/OpenHantek6022/actions/workflows/build_check.yml/badge.svg)](https://github.com/OpenHantek/OpenHantek6022/actions/workflows/build_check.yml)
-This status badge here (and on top of this page) show the build status.
+This status badge here (and on top) show the build status.
 
 ## Building OpenHantek6022 from source
 The preferred way to run OpenHantek is to build it from source on your system,
@@ -108,20 +107,20 @@ To make building for Linux even easier, I provide two shell scripts:
 If you make small changes to the local source code, it is sufficient to call `make -j4` or `fakeroot make -j4 package` in the `build` directory.
 
 ## Install prebuilt binary packages
-* Download Linux (built on Ubuntu 1804 LTS), Raspberry Pi (Debian stable), FreeBSD (12.1), macOS (Catalina) and Windows (Visual Studio 2019) packages for your convenience from the [Releases](https://github.com/OpenHantek/OpenHantek6022/releases) page.
-* If you want to follow ongoing development, packages built from the last commit are available in the [unstable release](https://github.com/OpenHantek/OpenHantek6022/releases/tag/unstable).
+* Download Linux (built on Ubuntu 1804 LTS), Raspberry Pi (Debian stable), FreeBSD (12.1), macOS (Catalina 10.15) and Windows (Visual Studio 2019) packages for your convenience from the [Releases](https://github.com/OpenHantek/OpenHantek6022/releases) page.
+* If you want to follow ongoing development, packages built from a fairly recent commit are available in the [unstable release](https://github.com/OpenHantek/OpenHantek6022/releases/tag/unstable).
 * For RPi4 see also [issue #28](https://github.com/OpenHantek/OpenHantek6022/issues/28).
 * These binary packages are built on stable operating system versions and require an up-to-date system.
 * As I develop on a *Debian stable* system my preferred (native) package format is `*.deb`.
-The program itself and the `*.deb` package is tested on my local system for completeness and correctness.
-The prebuilt packages are not tested, neither is the installation of the `*.rpm` packages.
+The program itself and the `*.deb` package built on my local system is tested for completeness and correctness.
+The precompiled packages are only randomly tested - if at all - and the installation of the `*.rpm` packages is untested.
 * To install the downloaded `*.deb` package, open a terminal window, go to the package directory and enter the command (as root) `apt install ./openhantek_..._amd64.deb`.
 This command will automatically install all dependencies of the program as well.
 * For installation of `*.rpm` packages follow similar rules, e.g. `dnf install ./openhantek-...-1.x86_64.rpm`.
 * The `*.tar.gz` achives contain the same files as the `*.deb` and `*.rpm` packages for quick testing - do not use for a permanent intallation. Do not report any issues about the `*.tar.gz`!
 * Get macOS packages from [macports](https://www.macports.org/ports.php?by=name&substr=openhantek) - thx [ra1nb0w](https://github.com/ra1nb0w).
 * Get [Fedora rpm packages](https://pkgs.org/download/openhantek) - thx [Vascom](https://github.com/Vascom).
-* Download [(untested) builds from last commit](https://ci.appveyor.com/project/Ho-Ro/openhantek6022). Select the preferred `Image` and go to `Artifacts`.
+* Download [(untested) builds from last commit(s)](https://github.com/OpenHantek/OpenHantek6022/actions/workflows/build_check.yml). Select the preferred `workflow run` and go to `Artifacts`.
 
 ## Run OpenHantek6022
 On a Linux system start the program via the menu entry *OpenHantek (Digital Storage Oscilloscope)* or from a terminal window as `OpenHantek`.

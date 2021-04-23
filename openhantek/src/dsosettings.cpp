@@ -9,9 +9,9 @@
 
 /// \brief Set the number of channels.
 /// \param channels The new channel count, that will be applied to lists.
-DsoSettings::DsoSettings( const ScopeDevice *scopeDevice )
+DsoSettings::DsoSettings( const ScopeDevice *scopeDevice, bool resetSettings )
     : deviceName( scopeDevice->getModel()->name ), deviceID( scopeDevice->getSerialNumber() ),
-      deviceSpecification( scopeDevice->getModel()->spec() ) {
+      deviceSpecification( scopeDevice->getModel()->spec() ), resetSettings( resetSettings ) {
 
     // Add new channels to the list
     int voltage_hue[] = {60, 210, 0, 120};   // yellow, lightblue, red, green
@@ -51,6 +51,11 @@ DsoSettings::DsoSettings( const ScopeDevice *scopeDevice )
     view.print.spectrum.push_back( QColor::fromHsv( 320, 0xff, 0xff ) );
 
     // create an unique storage for this device based on device name and serial number
+    // individual device settings location:
+    // Linux, Unix: $HOME/.config/OpenHantek/<deviceName>_<deviceID>.conf
+    // macOS:       $HOME/Library/Preferences/org.openhantek.<deviceName>_<deviceID>.plist
+    // Windows:     HKEY_CURRENT_USER\Software\OpenHantek\<deviceName>_<deviceID>
+    // more info:   https://doc.qt.io/qt-5/qsettings.html#platform-specific-notes
     storeSettings =
         std::unique_ptr< QSettings >( new QSettings( QCoreApplication::organizationName(), deviceName + "_" + deviceID ) );
     // and get the persistent settings
@@ -73,7 +78,7 @@ bool DsoSettings::setFilename( const QString &filename ) {
 // called by "DsoSettings::DsoSettings" and explicitely by "ui->actionOpen"
 void DsoSettings::load() {
     // Start with default configuration?
-    if ( storeSettings->value( "configuration/version", 0 ).toUInt() < CONFIG_VERSION ) {
+    if ( resetSettings || storeSettings->value( "configuration/version", 0 ).toUInt() < CONFIG_VERSION ) {
         // incompatible change or config reset by user
         storeSettings->clear(); // start with a clean config storage
         QSettings().clear();    // and a clean global storage

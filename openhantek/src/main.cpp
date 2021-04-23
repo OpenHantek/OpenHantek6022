@@ -4,6 +4,7 @@
 #include <QCommandLineParser>
 #include <QDebug>
 #include <QDesktopWidget>
+#include <QElapsedTimer>
 #include <QLibraryInfo>
 #include <QLocale>
 #include <QStyleFactory>
@@ -48,11 +49,6 @@
 #include "exporting/exporterprocessor.h"
 #include "exporting/exporterregistry.h"
 #include "exporting/exportjson.h"
-// legacy img and pdf export is replaced by MainWindow::screenshot()
-#ifdef LEGACYEXPORT
-#include "exporting/exportimage.h"
-#include "exporting/exportprint.h"
-#endif
 
 // GUI
 #include "iconfont/QtAwesome.h"
@@ -75,9 +71,21 @@ using namespace Hantek;
 
 /// \brief Initialize resources and translations and show the main window.
 int main( int argc, char *argv[] ) {
-#ifndef Q_OS_WIN
-    unsetenv( "LANGUAGE" ); // this ENV variable hides the LANG=xx setting, not available under Windows
+
+#ifdef Q_OS_WIN
+    // Win: close "extra" console window but if started from cmd.exe use this console
+    if ( FreeConsole() && AttachConsole( ATTACH_PARENT_PROCESS ) ) {
+        freopen( "CONOUT$", "w", stdout );
+        freopen( "CONOUT$", "w", stderr );
+    }
+#else
+    // this ENV variable hides the LANG=xx setting, fkt. not available under Windows
+    unsetenv( "LANGUAGE" );
 #endif
+
+    QElapsedTimer startupTime;
+    startupTime.start(); // time tracking for verbose startup
+
     //////// Set application information ////////
     QCoreApplication::setOrganizationName( "OpenHantek" );
     QCoreApplication::setOrganizationDomain( "openhantek.org" );
@@ -88,24 +96,23 @@ int main( int argc, char *argv[] ) {
     QCoreApplication::setAttribute( Qt::AA_EnableHighDpiScaling, true );
 #endif
 
-#ifdef Q_OS_WIN
-    // close "extra" console window but if started from cmd.exe use this console
-    if ( FreeConsole() && AttachConsole( ATTACH_PARENT_PROCESS ) ) {
-        freopen( "CONOUT$", "w", stdout );
-        freopen( "CONOUT$", "w", stderr );
-    }
-#endif
-
     bool demoMode = false;
     bool useGLES = false;
     bool useGLSL120 = false;
     bool useGLSL150 = false;
     bool useLocale = true;
+    bool verboseStartup = false;
+    bool resetSettings = false;
     QString font = defaultFont;       // defined in viewsettings.h
     int fontSize = defaultFontSize;   // defined in viewsettings.h
     int condensed = defaultCondensed; // defined in viewsettings.h
 
-    { // do this once at program start ...
+    { // do this early at program start ...
+        // get font size settings:
+        // Linux, Unix: $HOME/.config/OpenHantek/OpenHantek6022.conf
+        // macOS:       $HOME/Library/Preferences/org.openhantek.OpenHantek6022.plist
+        // Windows:     HKEY_CURRENT_USER\Software\OpenHantek\OpenHantek6022"
+        // more info:   https://doc.qt.io/qt-5/qsettings.html#platform-specific-notes
         QSettings storeSettings;
         storeSettings.beginGroup( "view" );
         if ( storeSettings.contains( "fontSize" ) )
@@ -135,6 +142,10 @@ int main( int argc, char *argv[] ) {
         QCommandLineOption condensedOption(
             {"c", "condensed"}, QString( "Set the font condensed value (default = %1)" ).arg( condensed ), "Condensed" );
         p.addOption( condensedOption );
+        QCommandLineOption resetSettingsOption( "resetSettings", "Reset persistent settings, start with default" );
+        p.addOption( resetSettingsOption );
+        QCommandLineOption verboseOption( "verbose", "Verbose tracing of the program startup steps" );
+        p.addOption( verboseOption );
         p.process( parserApp );
         demoMode = p.isSet( demoModeOption );
         useGLES = p.isSet( useGlesOption );
@@ -147,6 +158,8 @@ int main( int argc, char *argv[] ) {
         useGLSL120 = p.isSet( useGLSL120Option );
         useGLSL150 = p.isSet( useGLSL150Option );
         useLocale = !p.isSet( intOption );
+        verboseStartup = p.isSet( verboseOption );
+        resetSettings = p.isSet( resetSettingsOption );
     } // ... and forget the no more needed variables
 
 #ifdef Q_PROCESSOR_ARM
@@ -154,15 +167,19 @@ int main( int argc, char *argv[] ) {
     useGLES = true;
 #endif
 
-    GlScope::useQSurfaceFormat( useGLES ? QSurfaceFormat::OpenGLES : QSurfaceFormat::OpenGL );
-    if ( useGLSL120 )
-        GlScope::useOpenGLSLversion( 120 );
-    else if ( useGLSL150 )
-        GlScope::useOpenGLSLversion( 150 );
+    if ( verboseStartup ) {
+        qDebug() << startupTime.elapsed() << "ms:"
+                 << "OpenHantek6022 - version" << VERSION;
+        qDebug() << startupTime.elapsed() << "ms:"
+                 << "create openHantekApplication";
+    }
     QApplication openHantekApplication( argc, argv );
 
 // Qt5 linux default ("Breeze", "Windows" or "Fusion")
 #ifndef Q_OS_MACOS
+    if ( verboseStartup )
+        qDebug() << startupTime.elapsed() << "ms:"
+                 << "set \"Fusion\" style";
     openHantekApplication.setStyle( QStyleFactory::create( "Fusion" ) ); // smaller widgets allow stacking of all docks
 #endif
 
@@ -175,13 +192,19 @@ int main( int argc, char *argv[] ) {
     //    usermod -a -G audio <your_user_name>
     // or set the limits only for your user in /etc/security/limits.d:
     //    <your_user_name> - rtprio 99
+    if ( verboseStartup )
+        qDebug() << startupTime.elapsed() << "ms:"
+                 << "set RT FIFO scheduler";
     struct sched_param schedParam;
     schedParam.sched_priority = 9;                    // set RT priority level 10
     sched_setscheduler( 0, SCHED_FIFO, &schedParam ); // and RT FIFO scheduler
-// but ignore any error if user has no realtime rights
+    // but ignore any error if user has no realtime rights
 #endif
 
     //////// Load translations ////////
+    if ( verboseStartup )
+        qDebug() << startupTime.elapsed() << "ms:"
+                 << "load translations for locale" << QLocale().name();
     QTranslator qtTranslator;
     QTranslator openHantekTranslator;
     if ( useLocale && QLocale().name() != "en_US" ) { // somehow Qt on MacOS uses the german translation for en_US?!
@@ -200,6 +223,9 @@ int main( int argc, char *argv[] ) {
     std::unique_ptr< ScopeDevice > scopeDevice = nullptr;
 
     if ( !demoMode ) {
+        if ( verboseStartup )
+            qDebug() << startupTime.elapsed() << "ms:"
+                     << "init libusb";
         int error = libusb_init( &context );
         if ( error ) {
             SelectSupportedDevice().showLibUSBFailedDialogModel( error );
@@ -209,6 +235,9 @@ int main( int argc, char *argv[] ) {
             libusb_setlocale( QLocale().name().toLocal8Bit().constData() );
 
         // SelectSupportedDevive returns a real device unless demoMode is true
+        if ( verboseStartup )
+            qDebug() << startupTime.elapsed() << "ms:"
+                     << "show splash screen";
         scopeDevice = SelectSupportedDevice().showSelectDeviceModal( context );
         if ( scopeDevice && scopeDevice->isDemoDevice() ) {
             demoMode = true;
@@ -229,8 +258,14 @@ int main( int argc, char *argv[] ) {
 
     // Here we have either a connected scope device or a demo device w/o hardware
     const DSOModel *model = scopeDevice->getModel();
+    if ( verboseStartup )
+        qDebug() << startupTime.elapsed() << "ms:"
+                 << "use device" << scopeDevice->getModel()->name << "serial number" << scopeDevice->getSerialNumber();
 
     //////// Create DSO control object and move it to a separate thread ////////
+    if ( verboseStartup )
+        qDebug() << startupTime.elapsed() << "ms:"
+                 << "create DSO control thread";
     QThread dsoControlThread;
     dsoControlThread.setObjectName( "dsoControlThread" );
     HantekDsoControl dsoControl( scopeDevice.get(), model );
@@ -245,9 +280,15 @@ int main( int argc, char *argv[] ) {
     const Dso::ControlSpecification *spec = model->spec();
 
     //////// Create settings object specific to this scope, use unique serial number ////////
-    DsoSettings settings( scopeDevice.get() );
+    if ( verboseStartup )
+        qDebug() << startupTime.elapsed() << "ms:"
+                 << "create settings object";
+    DsoSettings settings( scopeDevice.get(), resetSettings );
 
     //////// Create exporters ////////
+    if ( verboseStartup )
+        qDebug() << startupTime.elapsed() << "ms:"
+                 << "create exporters";
     ExporterRegistry exportRegistry( spec, &settings );
     ExporterCSV exporterCSV;
     ExporterJSON exporterJSON;
@@ -256,6 +297,9 @@ int main( int argc, char *argv[] ) {
     exportRegistry.registerExporter( &exporterJSON );
 
     //////// Create post processing objects ////////
+    if ( verboseStartup )
+        qDebug() << startupTime.elapsed() << "ms:"
+                 << "create post processing objects";
     QThread postProcessingThread;
     postProcessingThread.setObjectName( "postProcessingThread" );
     PostProcessing postProcessing( settings.scope.countChannels() );
@@ -274,9 +318,17 @@ int main( int argc, char *argv[] ) {
     QObject::connect( &postProcessing, &PostProcessing::processingFinished, &exportRegistry, &ExporterRegistry::input,
                       Qt::DirectConnection );
 
-    //////// Create main window ////////
+    if ( verboseStartup )
+        qDebug() << startupTime.elapsed() << "ms:"
+                 << "setup OpenGL";
+    GlScope::useQSurfaceFormat( useGLES ? QSurfaceFormat::OpenGLES : QSurfaceFormat::OpenGL );
+    if ( useGLSL120 )
+        GlScope::useOpenGLSLversion( 120 );
+    else if ( useGLSL150 )
+        GlScope::useOpenGLSLversion( 150 );
 
-    // Apply the font size and style settings for the scope application
+    //////// Prepare visual appearance ////////
+    // prepare the font size and style settings for the scope application
     QFont appFont = openHantekApplication.font();
     if ( 0 == fontSize ) {                               // option -s0 -> use system font size
         fontSize = qBound( 6, appFont.pointSize(), 24 ); // values < 6 do not scale correctly
@@ -287,10 +339,18 @@ int main( int argc, char *argv[] ) {
     appFont.setStretch( condensed );
     appFont.setPointSize( fontSize ); // scales the widgets accordingly
     // apply new font settings for the scope application
+    if ( verboseStartup )
+        qDebug() << startupTime.elapsed() << "ms:"
+                 << "set" << appFont;
     openHantekApplication.setFont( appFont );
     openHantekApplication.setFont( appFont, "QWidget" ); // on some systems the 2nd argument is required
 
     iconFont->initFontAwesome();
+
+    //////// Create main window ////////
+    if ( verboseStartup )
+        qDebug() << startupTime.elapsed() << "ms:"
+                 << "create main window";
     MainWindow openHantekMainWindow( &dsoControl, &settings, &exportRegistry );
     QObject::connect( &postProcessing, &PostProcessing::processingFinished, &openHantekMainWindow, &MainWindow::showNewData );
     QObject::connect( &exportRegistry, &ExporterRegistry::exporterProgressChanged, &openHantekMainWindow,
@@ -300,15 +360,24 @@ int main( int argc, char *argv[] ) {
     openHantekMainWindow.show();
 
     //////// Start DSO thread and go into GUI main loop
+    if ( verboseStartup )
+        qDebug() << startupTime.elapsed() << "ms:"
+                 << "start DSO control thread";
     dsoControl.enableSampling( true );
     postProcessingThread.start();
     dsoControlThread.start();
     Capturing capturing( &dsoControl );
     capturing.start();
 
+    if ( verboseStartup )
+        qDebug() << startupTime.elapsed() << "ms:"
+                 << "execute GUI main loop";
     int appStatus = openHantekApplication.exec();
 
     //////// Application closed, clean up step by step ////////
+    if ( verboseStartup )
+        qDebug() << startupTime.elapsed() << "ms:"
+                 << "application closed, clean up";
 
     std::cout << std::unitbuf; // enable automatic flushing
     std::cout << "OpenHantek6022 ";

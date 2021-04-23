@@ -22,7 +22,7 @@ class DsoSettings {
     Q_DECLARE_TR_FUNCTIONS( DsoSettings )
 
   public:
-    explicit DsoSettings( const ScopeDevice *scopeDevice );
+    explicit DsoSettings( const ScopeDevice *scopeDevice, bool resetSettings = false );
     bool setFilename( const QString &filename );
 
     DsoSettingsScope scope;                  ///< All oscilloscope related settings
@@ -47,4 +47,5 @@ class DsoSettings {
     std::unique_ptr< QSettings > storeSettings;
     const Dso::ControlSpecification *deviceSpecification;
     void setDefaultConfig();
+    bool resetSettings = false;
 };

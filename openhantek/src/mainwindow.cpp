@@ -89,12 +89,27 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
     setDockOptions( dockOptions() | QMainWindow::GroupedDragging );
 #endif
     QAction *action;
+    action = new QAction( iconFont->icon( fa::camera, colorMap ), tr( "Screenshot" ), this );
+    action->setToolTip( "Make an immediate screenshot of the program window" );
+    connect( action, &QAction::triggered, [this]() { screenShot( SCREENSHOT, true ); } );
+    ui->menuExport->addAction( action );
+
+    action = new QAction( iconFont->icon( fa::clone, colorMap ), tr( "Hardcopy" ), this );
+    action->setToolTip( "Make an immediate (printable) hardcopy of the display" );
+    connect( action, &QAction::triggered, [this]() {
+        dsoWidget->switchToPrintColors();
+        QTimer::singleShot( 20, [this]() { screenShot( HARDCOPY, true ); } );
+    } );
+    ui->menuExport->addAction( action );
+
+    ui->menuExport->addSeparator();
+
     action = new QAction( iconFont->icon( fa::camera, colorMap ), tr( "Screenshot .." ), this );
     action->setToolTip( "Make a screenshot of the program window" );
     connect( action, &QAction::triggered, [this]() { screenShot( SCREENSHOT ); } );
     ui->menuExport->addAction( action );
 
-    action = new QAction( iconFont->icon( fa::camera, colorMap ), tr( "Hardcopy .." ), this );
+    action = new QAction( iconFont->icon( fa::clone, colorMap ), tr( "Hardcopy .." ), this );
     action->setToolTip( "Make a (printable) hardcopy of the display" );
     connect( action, &QAction::triggered, [this]() {
         dsoWidget->switchToPrintColors();
@@ -412,12 +427,11 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
                      "<p>Open source firmware copyright &copy; 2019-2021 Ho-Ro<br/>"
                      "<a href='https://github.com/Ho-Ro/Hantek6022API'>https://github.com/Ho-Ro/Hantek6022API</a></p>"
                      "<p>Device: %1 (%2)</p>" )
-                    .arg( this->dsoSettings->deviceName )
-                    .arg( this->dsoSettings->deviceID ) +
+                    .arg( this->dsoSettings->deviceName, this->dsoSettings->deviceID ) +
                 tr( "<p>Running since %1 seconds.</p>" ).arg( elapsedTime.elapsed() / 1000 ) );
     } );
 
-    emit settingsLoaded( &dsoSettings->scope, spec );
+    emit settingsLoaded( &dsoSettings->scope, spec ); // trigger the previously connected docks, widgets, etc.
 
     dsoWidget->updateTimebase( dsoSettings->scope.horizontal.timebase );
 
@@ -427,13 +441,17 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
     }
 }
 
+
 MainWindow::~MainWindow() { delete ui; }
 
+
 void MainWindow::showNewData( std::shared_ptr< PPresult > newData ) { dsoWidget->showNew( newData ); }
+
 
 void MainWindow::exporterStatusChanged( const QString &exporterName, const QString &status ) {
     ui->statusbar->showMessage( tr( "%1: %2" ).arg( exporterName, status ) );
 }
+
 
 void MainWindow::exporterProgressChanged() { exporterRegistry->checkForWaitingExporters(); }
 
@@ -441,7 +459,8 @@ void MainWindow::exporterProgressChanged() { exporterRegistry->checkForWaitingEx
 // ... or a printable hardcopy (type == HARDCOPY) from the scope widget only ...
 // ... with printer colors and scaled to double height for zoomed screens ...
 // ... or send this hardcopy directly to the printer (type == PRINTER).
-void MainWindow::screenShot( screenshotType_t screenshotType ) {
+// autoSafe == true -> do not ask for filename, save as PNG with default name into active directory
+void MainWindow::screenShot( screenshotType_t screenshotType, bool autoSafe ) {
     auto activeWindow = screenshotType == SCREENSHOT ? qApp->activeWindow() : dsoWidget;
     QPixmap screenshot( activeWindow->size() );
     QDateTime now = QDateTime::currentDateTime();
@@ -471,9 +490,13 @@ void MainWindow::screenShot( screenshotType_t screenshotType ) {
     printer.setCreator( QCoreApplication::applicationName() );
     printer.setDocName( docName );
 
-    if ( screenshotType != PRINTER ) { // ask for a filename
+    if ( screenshotType != PRINTER ) { // save under filename
         QStringList filters;
         fileName += ".png";
+        if ( autoSafe ) { // save under default name as PNG without asking
+            screenshot.save( fileName );
+            return;
+        }
         filters << tr( "Image (*.png *.jpg)" ) << tr( "Portable Document Format (*.pdf)" );
         QFileDialog fileDialog( this, tr( "Save screenshot" ), fileName, filters.join( ";;" ) );
         fileDialog.setOption( QFileDialog::DontUseNativeDialog );
@@ -527,6 +550,7 @@ void MainWindow::screenShot( screenshotType_t screenshotType ) {
     p.drawPixmap( ( pw - sw ) / 2, ( ph - sh ) / 2, screenshot ); // center the picture
     p.end();
 }
+
 
 /// \brief Save the settings before exiting.
 /// \param event The close event that should be handled.
