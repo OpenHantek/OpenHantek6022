@@ -39,19 +39,19 @@ GlScope *GlScope::createZoomed( DsoSettingsScope *scope, DsoSettingsView *view, 
 
 
 void GlScope::useQSurfaceFormat( QSurfaceFormat::RenderableType t ) {
-    QCoreApplication::setAttribute( Qt::AA_ShareOpenGLContexts, true );
+    // QCoreApplication::setAttribute( Qt::AA_ShareOpenGLContexts, true ); // too late here, set early in main()
 
     // Prefer full desktop OpenGL without fixed pipeline
     QSurfaceFormat format;
-    // TODO: check from time to time if warning has gone, comment next line for now
+    // from time to time the next line can give a warning
     format.setSamples( 4 ); // antialiasing gives warning with some HW, Qt & OpenGL versions.
     format.setProfile( QSurfaceFormat::CoreProfile );
     if ( t == QSurfaceFormat::OpenGLES ) {
-        format.setVersion( 2, 0 );
+        // format.setVersion( 2, 0 );
         format.setRenderableType( QSurfaceFormat::OpenGLES );
         QCoreApplication::setAttribute( Qt::AA_UseOpenGLES, true );
     } else {
-        format.setVersion( 3, 2 );
+        // format.setVersion( 3, 2 );
         format.setRenderableType( QSurfaceFormat::OpenGL );
     }
     QSurfaceFormat::setDefaultFormat( format );
