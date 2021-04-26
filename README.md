@@ -9,10 +9,6 @@
 OpenHantek6022 is a free software for **Hantek DSO6022** USB digital signal oscilloscopes that is actively developed on
 [github.com/OpenHantek/OpenHantek6022](https://github.com/OpenHantek/OpenHantek6022) - but only for Hantek 6022BE/BL and compatible scopes (Voltcraft, Darkwire, Protek, Acetech, etc.).
 
-The program was initially developed by [David Gräff and others](https://github.com/OpenHantek/openhantek/graphs/contributors)
-on [github.com/OpenHantek/openhantek](https://github.com/OpenHantek/openhantek),
-but David [stopped maintaining](https://github.com/OpenHantek/openhantek/issues/277) the programm in December 2018. 
-
 <p><img alt="Image of main window on linux" width="100%" src="docs/images/screenshot_mainwindow.png"></p>
 
 #### Content
@@ -29,6 +25,7 @@ but David [stopped maintaining](https://github.com/OpenHantek/openhantek/issues/
 * [Contribute](#contribute)
 * [Other DSO open source software](#other-dso-open-source-software)
 * [Other related software](#other-related-software)
+* [History](#history)
 
 ## About OpenHantek6022
 * Supported devices:
@@ -69,7 +66,7 @@ but David [stopped maintaining](https://github.com/OpenHantek/openhantek/issues/
 * Histogram function for voltage channels on right screen margin.
 * A [zoom view](docs/images/screenshot_mainwindow_with_zoom.png) with a freely selectable range.
 * Cursor measurement function for voltage, time, amplitude and frequency.
-* Export of the graphs to CSV, JPG, PNG file or to the printer.
+* Export of the graphs to JPG, PNG or PDF file or to the printer; data export as CSV or JSON. 
 * Freely configurable colors.
 * Automatic adaption of iconset for light and [dark themes](docs/images/screenshot_mainwindow_dark.png).
 * The dock views on the main window can be [customized](https://github.com/OpenHantek/OpenHantek6022/issues/161#issuecomment-799597664) by dragging them around and stacking them.
@@ -127,15 +124,21 @@ On a Linux system start the program via the menu entry *OpenHantek (Digital Stor
 
 You can explore the look and feel of OpenHantek6022 without the need for real scope hardware by running it from the command line as: `OpenHantek --demoMode`.
 
-OpenHantek6022 runs also on legacy HW/SW that supports at least *OpenGL* 2.1+ or *OpenGL ES* 1.2+.
-OpenGL is preferred, select *OpenGL ES* by starting OpenHantek
-from the command line like this: `OpenHantek --useGLES`.
+### OpenGL support
+OpenHantek6022 uses the *OpenGL* graphics library to display the data. It requires a graphics card that supports
+3D rendering and runs on legacy HW/SW that supports at least *OpenGL* 2.1+ or *OpenGL ES* 1.2+.
+*OpenGL* is selected by default, but if this does not work (i.e. the black scope window shows an error message
+or closes immediately after startup), you can choose the less resource-hungry *OpenGL ES* variant as a fallback
+by starting OpenHantek from the command line as follows: `OpenHantek -e` or `OpenHantek --useGLES`.
+
+Especially on Windows, this option may be necessary to use the program.
 
 The Raspberry Pi build uses OpenGL ES automatically, check also the [graphics driver setup](docs/build.md#raspberrypi).
 
+### USB access
 USB access for the device is required (unless using demo mode):
 * On Linux, you need to copy the file `utils/udev_rules/60-openhantek.rules` to `/etc/udev/rules.d/` or `/usr/lib/udev/rules.d/` and replug your device.
-If OpenHantek is installed from a *.deb or *.rpm package this file is installed automatically into `/usr/lib/udev/rules.d/`.
+If OpenHantek is installed from a `*.deb` or `*.rpm` package this file is installed automatically into `/usr/lib/udev/rules.d/`.
 
 ### Windows USB access
 * **The original Hantek driver for Windows doesn't work!**
@@ -179,3 +182,8 @@ We welcome any reported GitHub issue if you have a problem with this software. S
 
 ## Other related software
 * [HScope for Android](https://www.martinloren.com/hscope/) A one-channel basic version is available free of charge (with in-app purchases).
+
+## History
+The program was initially developed by [David Gräff and others](https://github.com/OpenHantek/openhantek/graphs/contributors)
+on [github.com/OpenHantek/openhantek](https://github.com/OpenHantek/openhantek),
+but David [stopped maintaining](https://github.com/OpenHantek/openhantek/issues/277) the programm in December 2018. 

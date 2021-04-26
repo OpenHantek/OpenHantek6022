@@ -589,31 +589,45 @@
 <context>
     <name>GlScope</name>
     <message>
-        <location filename="../src/glscope.cpp" line="282"/>
+        <location filename="../src/glscope.cpp" line="276"/>
         <source>System does not support OpenGL Shading Language (GLSL)</source>
         <translation>Система не поддерживает язык шейдеров OpenGL (GLSL)</translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="286"/>
+        <location filename="../src/glscope.cpp" line="280"/>
         <source>OpenGL init called twice!</source>
         <translation>OpenGL инициализация вызывается дважды!</translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="352"/>
+        <source>Try command line option &apos;--useGLSL120&apos; or &apos;--useGLES&apos;
+</source>
+        <translation type="vanished">Попробуйте опцию командной строки &apos;--useGLSL120&apos; или &apos;--useGLES&apos;
+</translation>
+    </message>
+    <message>
+        <location filename="../src/glscope.cpp" line="346"/>
+        <source>Try command line option &apos;--useGLES&apos;
+</source>
+        <translation>Попробуйте опцию командной строки &apos;--useGLES&apos;
+</translation>
+    </message>
+    <message>
+        <location filename="../src/glscope.cpp" line="359"/>
+        <location filename="../src/glscope.cpp" line="366"/>
         <source>Failed to compile OpenGL shader programs.
 </source>
         <translation>Не удалось скомпилировать шейдерные программы OpenGL.
 </translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="358"/>
+        <location filename="../src/glscope.cpp" line="373"/>
         <source>Failed to link/bind OpenGL shader programs.
 </source>
         <translation>Не удалось связать/привязать шейдерные программы OpenGL.
 </translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="367"/>
+        <location filename="../src/glscope.cpp" line="382"/>
         <source>Failed to locate shader variable.</source>
         <translation>Не удалось найти переменную шейдера.</translation>
     </message>

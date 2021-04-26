@@ -84,22 +84,22 @@
     <message>
         <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="15"/>
         <source>Window function</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="20"/>
         <source>Reference level&lt;br/&gt;&amp;bull; 0 dBu = -2.2 dBV&lt;br/&gt;&amp;bull; 0 dBm (@600 &amp;Omega;) = -2.2 dBV&lt;br/&gt;&amp;bull; 0 dBm (@50 &amp;Omega;) = -13 dBV</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="56"/>
         <source>Calculate power dissipation for load resistance&lt;br/&gt;(0 = off)</source>
-        <translation type="unfinished"></translation>
+        <translation>Calcular a dissipação de energia para resistência de carga&lt;br/&gt;(0 = off)</translation>
     </message>
     <message>
         <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="34"/>
         <source>Minimum magnitude</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>&lt;b&gt;Window function&lt;/b&gt;</source>
@@ -659,29 +659,43 @@
 <context>
     <name>GlScope</name>
     <message>
-        <location filename="../src/glscope.cpp" line="282"/>
+        <location filename="../src/glscope.cpp" line="276"/>
         <source>System does not support OpenGL Shading Language (GLSL)</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="286"/>
+        <location filename="../src/glscope.cpp" line="280"/>
         <source>OpenGL init called twice!</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="352"/>
+        <source>Try command line option &apos;--useGLSL120&apos; or &apos;--useGLES&apos;
+</source>
+        <translation type="vanished">Tente a opção de linha de comando &apos;--useGLSL120&apos; ou &apos;--useGLES&apos;
+</translation>
+    </message>
+    <message>
+        <location filename="../src/glscope.cpp" line="346"/>
+        <source>Try command line option &apos;--useGLES&apos;
+</source>
+        <translation>Tente a opção de linha de comando &apos;--useGLES&apos;
+</translation>
+    </message>
+    <message>
+        <location filename="../src/glscope.cpp" line="359"/>
+        <location filename="../src/glscope.cpp" line="366"/>
         <source>Failed to compile OpenGL shader programs.
 </source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="358"/>
+        <location filename="../src/glscope.cpp" line="373"/>
         <source>Failed to link/bind OpenGL shader programs.
 </source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="367"/>
+        <location filename="../src/glscope.cpp" line="382"/>
         <source>Failed to locate shader variable.</source>
         <translation></translation>
     </message>
@@ -1342,7 +1356,7 @@
     <message>
         <location filename="../src/hantekdso/enums.cpp" line="46"/>
         <source>Roll</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>None</source>
@@ -1727,12 +1741,12 @@
     <message>
         <location filename="../src/docks/TriggerDock.cpp" line="28"/>
         <source>HF</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/docks/TriggerDock.cpp" line="28"/>
         <source>LF</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/docks/TriggerDock.cpp" line="31"/>

@@ -24,36 +24,18 @@
 #include "viewsettings.h"
 
 
-GlScope *GlScope::createNormal( DsoSettingsScope *scope, DsoSettingsView *view, QWidget *parent ) {
-    GlScope *s = new GlScope( scope, view, parent );
-    s->zoomed = false;
-    return s;
-}
+unsigned GlScope::forceGLSLversion = 0; // static, can be set to 120 or 150 by GlScope::useOpenGLSLversion()
 
 
-GlScope *GlScope::createZoomed( DsoSettingsScope *scope, DsoSettingsView *view, QWidget *parent ) {
-    GlScope *s = new GlScope( scope, view, parent );
-    s->zoomed = true;
-    return s;
-}
-
-
-void GlScope::useQSurfaceFormat( QSurfaceFormat::RenderableType t ) {
-    // QCoreApplication::setAttribute( Qt::AA_ShareOpenGLContexts, true ); // too late here, set early in main()
-
+// this static function will be called early from main to set up OpenGL
+void GlScope::useQSurfaceFormat( QSurfaceFormat::RenderableType rendering ) {
+    QCoreApplication::setAttribute( Qt::AA_ShareOpenGLContexts, true );
     // Prefer full desktop OpenGL without fixed pipeline
     QSurfaceFormat format;
-    // from time to time the next line can give a warning
-    format.setSamples( 4 ); // antialiasing gives warning with some HW, Qt & OpenGL versions.
+    format.setSamples( 4 ); // ignore antialiasing warning with some HW, Qt & OpenGL versions.
     format.setProfile( QSurfaceFormat::CoreProfile );
-    if ( t == QSurfaceFormat::OpenGLES ) {
-        // format.setVersion( 2, 0 );
-        format.setRenderableType( QSurfaceFormat::OpenGLES );
-        QCoreApplication::setAttribute( Qt::AA_UseOpenGLES, true );
-    } else {
-        // format.setVersion( 3, 2 );
-        format.setRenderableType( QSurfaceFormat::OpenGL );
-    }
+    format.setRenderableType( rendering );
+    QCoreApplication::setAttribute( Qt::AA_UseOpenGLES, rendering == QSurfaceFormat::OpenGLES );
     QSurfaceFormat::setDefaultFormat( format );
 }
 
@@ -61,16 +43,16 @@ void GlScope::useQSurfaceFormat( QSurfaceFormat::RenderableType t ) {
 GlScope::GlScope( DsoSettingsScope *scope, DsoSettingsView *view, QWidget *parent )
     : QOpenGLWidget( parent ), scope( scope ), view( view ) {
     // get OpenGL version to define appropriate OpenGLSL version
-    // reason:
-    // some not so new intel graphic driver report a very conservative version
-    // e.g. debian buster -> "2.1 Mesa 18.3.4"
+    // reason: some not so new intel graphic driver report a very conservative version
+    // even if they deliver OpenGL 4.x functions
+    // e.g. debian buster -> "2.1 Mesa 18.3.6"
     QOffscreenSurface surface;
     surface.create();
     QOpenGLContext context;
     context.create();
     context.makeCurrent( &surface );
-    QString glVersion = reinterpret_cast< const char * >( context.functions()->glGetString( GL_VERSION ) );
-    GLSLversion = glVersion >= "3.2" ? 150 : 120; // version string "3.2 xxxx" > "3.2" is true
+    OpenGLversion = reinterpret_cast< const char * >( context.functions()->glGetString( GL_VERSION ) );
+    GLSLversion = OpenGLversion >= "3.2" ? 150 : 120; // version string "3.2 xxxx" > "3.2" is true
     // qDebug() << "OpenGL version" << glVersion << GLSLversion;
     surface.destroy();
 
@@ -88,6 +70,20 @@ GlScope::GlScope( DsoSettingsScope *scope, DsoSettingsView *view, QWidget *paren
 
 
 GlScope::~GlScope() { /* virtual destructor necessary */
+}
+
+
+GlScope *GlScope::createNormal( DsoSettingsScope *scope, DsoSettingsView *view, QWidget *parent ) {
+    GlScope *s = new GlScope( scope, view, parent );
+    s->zoomed = false;
+    return s;
+}
+
+
+GlScope *GlScope::createZoomed( DsoSettingsScope *scope, DsoSettingsView *view, QWidget *parent ) {
+    GlScope *s = new GlScope( scope, view, parent );
+    s->zoomed = true;
+    return s;
 }
 
 
@@ -275,8 +271,6 @@ void GlScope::paintEvent( QPaintEvent *event ) {
 }
 
 
-unsigned GlScope::forceGLSLversion = 0;
-
 void GlScope::initializeGL() {
     if ( !QOpenGLShaderProgram::hasOpenGLShaderPrograms( context() ) ) {
         errorMessage = tr( "System does not support OpenGL Shading Language (GLSL)" );
@@ -289,7 +283,7 @@ void GlScope::initializeGL() {
 
     auto program = std::unique_ptr< QOpenGLShaderProgram >( new QOpenGLShaderProgram( context() ) );
 
-    const char *vshaderES = R"(
+    const char *vertexShaderGLES = R"(
           #version 100
           attribute highp vec3 vertex;
           uniform mat4 matrix;
@@ -299,13 +293,8 @@ void GlScope::initializeGL() {
               gl_PointSize = 1.0;
           }
     )";
-    const char *fshaderES = R"(
-          #version 100
-          uniform highp vec4 colour;
-          void main() { gl_FragColor = colour; }
-    )";
 
-    const char *vshaderDesktop120 = R"(
+    const char *vertexShaderGLSL120 = R"(
           #version 120
           attribute highp vec3 vertex;
           uniform mat4 matrix;
@@ -315,13 +304,8 @@ void GlScope::initializeGL() {
               gl_PointSize = 1.0;
           }
     )";
-    const char *fshaderDesktop120 = R"(
-          #version 120
-          uniform highp vec4 colour;
-          void main() { gl_FragColor = colour; }
-    )";
 
-    const char *vshaderDesktop150 = R"(
+    const char *vertexShaderGLSL150 = R"(
           #version 150
           in highp vec3 vertex;
           uniform mat4 matrix;
@@ -331,37 +315,68 @@ void GlScope::initializeGL() {
               gl_PointSize = 1.0;
           }
     )";
-    const char *fshaderDesktop150 = R"(
+
+    const char *fragmentShaderGLES = R"(
+          #version 100
+          uniform highp vec4 color;
+          void main() { gl_FragColor = color; }
+    )";
+
+    const char *fragmentShaderGLSL120 = R"(
+          #version 120
+          uniform highp vec4 color;
+          void main() { gl_FragColor = color; }
+    )";
+
+    const char *fragmentShaderGLSL150 = R"(
           #version 150
-          uniform highp vec4 colour;
+          uniform highp vec4 color;
           out vec4 flatColor;
-          void main() { flatColor = colour; }
+          void main() { flatColor = color; }
     )";
 
     if ( GlScope::forceGLSLversion )
         GLSLversion = GlScope::forceGLSLversion;
     // qDebug() << "compile shaders" << GlScope::forceGLSLversion << GLSLversion;
 
-    const char *vshaderDesktop = GLSLversion == 120 ? vshaderDesktop120 : vshaderDesktop150;
-    const char *fshaderDesktop = GLSLversion == 120 ? fshaderDesktop120 : fshaderDesktop150;
-
-    // Compile vertex shader
+    // Compile vertex and fragment shader
+    QString hint;
     bool usesOpenGL = QSurfaceFormat::defaultFormat().renderableType() == QSurfaceFormat::OpenGL;
-    if ( !program->addShaderFromSourceCode( QOpenGLShader::Vertex, usesOpenGL ? vshaderDesktop : vshaderES ) ||
-         !program->addShaderFromSourceCode( QOpenGLShader::Fragment, usesOpenGL ? fshaderDesktop : fshaderES ) ) {
-        errorMessage = tr( "Failed to compile OpenGL shader programs.\n" ) + program->log();
-        return;
+    if ( usesOpenGL ) // in case of error offer a possible solution
+        hint = tr( "Try command line option '--useGLES'\n" );
+
+    if ( 150 == GLSLversion ) { // use version 150 if supported by OpenGL version >= 3.2
+        if ( !program->addShaderFromSourceCode( QOpenGLShader::Vertex, vertexShaderGLSL150 ) ||
+             !program->addShaderFromSourceCode( QOpenGLShader::Fragment, fragmentShaderGLSL150 ) ) {
+            qWarning() << "\nOpenGL version" << OpenGLversion;
+            qWarning() << "To get rid of this error message, try the command line option '--useGLSL120' or '--useGLES'";
+            GLSLversion = 120; // in case of error try version 120 as fall back
+        }
+    }
+    if ( 120 == GLSLversion ) { // this version is supported by OpenGL version >= 2.1 (very old)
+        if ( !program->addShaderFromSourceCode( QOpenGLShader::Vertex, vertexShaderGLSL120 ) ||
+             !program->addShaderFromSourceCode( QOpenGLShader::Fragment, fragmentShaderGLSL120 ) ) {
+            errorMessage = tr( "Failed to compile OpenGL shader programs.\n" ) + hint + program->log();
+            return; // in case of error propose the use of OpenGLES (OpenGL for embedded systems) and stop
+        }
+    }
+    if ( !usesOpenGL ) { // use OpenGLES
+        if ( !program->addShaderFromSourceCode( QOpenGLShader::Vertex, vertexShaderGLES ) ||
+             !program->addShaderFromSourceCode( QOpenGLShader::Fragment, fragmentShaderGLES ) ) {
+            errorMessage = tr( "Failed to compile OpenGL shader programs.\n" ) + program->log();
+            return;
+        }
     }
 
     // Link shader pipeline
     if ( !program->link() || !program->bind() ) {
-        errorMessage = tr( "Failed to link/bind OpenGL shader programs.\n" ) + program->log();
+        errorMessage = tr( "Failed to link/bind OpenGL shader programs.\n" ) + hint + program->log();
         return;
     }
 
     vertexLocation = program->attributeLocation( "vertex" );
     matrixLocation = program->uniformLocation( "matrix" );
-    colorLocation = program->uniformLocation( "colour" );
+    colorLocation = program->uniformLocation( "color" );
 
     if ( vertexLocation == -1 || colorLocation == -1 || matrixLocation == -1 ) {
         qWarning() << tr( "Failed to locate shader variable." );
@@ -383,17 +398,15 @@ void GlScope::initializeGL() {
     QColor bg = view->colors->background;
     gl->glClearColor( GLfloat( bg.redF() ), GLfloat( bg.greenF() ), GLfloat( bg.blueF() ), GLfloat( bg.alphaF() ) );
 
+    m_vaoMarker.create();
+    QOpenGLVertexArrayObject::Binder b( &m_vaoMarker );
+    m_marker.create();
+    m_marker.bind();
+    m_marker.setUsagePattern( QOpenGLBuffer::StaticDraw );
+    m_marker.allocate( int( vaMarker.size() * sizeof( Vertices ) ) );
+    program->enableAttributeArray( vertexLocation );
+    program->setAttributeBuffer( vertexLocation, GL_FLOAT, 0, 3, 0 );
 
-    {
-        m_vaoMarker.create();
-        QOpenGLVertexArrayObject::Binder b( &m_vaoMarker );
-        m_marker.create();
-        m_marker.bind();
-        m_marker.setUsagePattern( QOpenGLBuffer::StaticDraw );
-        m_marker.allocate( int( vaMarker.size() * sizeof( Vertices ) ) );
-        program->enableAttributeArray( vertexLocation );
-        program->setAttributeBuffer( vertexLocation, GL_FLOAT, 0, 3, 0 );
-    }
     updateCursor();
 
     m_program = std::move( program );
@@ -564,6 +577,7 @@ void GlScope::draw4Cross( std::vector< QVector3D > &va, int section, float x, fl
     }
 }
 
+
 // prepare the static grid structure that is shown by 'drawGrid()'
 // show a line as long as the trigger level marker is clicked or moved
 // index: channel, value: trigger level, pressed: marker is activated
@@ -692,7 +706,6 @@ void GlScope::generateGrid( int index, double value, bool pressed ) {
 
     ++item;
 
-
     { // prepare (dynamic) trigger level marker line
         if ( !m_vaoGrid[ item ].isCreated() )
             m_vaoGrid[ item ].create();
@@ -734,7 +747,6 @@ void GlScope::drawGrid() {
     m_program->setUniformValue( colorLocation, view->colors->grid );
     gl->glDrawArrays( GL_POINTS, 0, gridDrawCounts[ item ] );
     m_vaoGrid[ item ].release();
-
 
     // Axes and div crosses
     ++item;

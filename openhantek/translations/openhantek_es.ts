@@ -603,31 +603,45 @@
 <context>
     <name>GlScope</name>
     <message>
-        <location filename="../src/glscope.cpp" line="282"/>
+        <location filename="../src/glscope.cpp" line="276"/>
         <source>System does not support OpenGL Shading Language (GLSL)</source>
         <translation>El sistema no tiene OpenGL Shading Language (GLSL)</translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="286"/>
+        <location filename="../src/glscope.cpp" line="280"/>
         <source>OpenGL init called twice!</source>
         <translation>¡OpenGL init se ha llamado dos veces!</translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="352"/>
+        <source>Try command line option &apos;--useGLSL120&apos; or &apos;--useGLES&apos;
+</source>
+        <translation type="vanished">Pruebe la opción de línea de comandos &apos;--useGLSL120&apos; o &apos;--useGLES&apos;
+</translation>
+    </message>
+    <message>
+        <location filename="../src/glscope.cpp" line="346"/>
+        <source>Try command line option &apos;--useGLES&apos;
+</source>
+        <translation>Pruebe la opción de línea de comandos &apos;--useGLES&apos;
+</translation>
+    </message>
+    <message>
+        <location filename="../src/glscope.cpp" line="359"/>
+        <location filename="../src/glscope.cpp" line="366"/>
         <source>Failed to compile OpenGL shader programs.
 </source>
         <translation>Ha fallado al compilar programas OpenGL shader.
 </translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="358"/>
+        <location filename="../src/glscope.cpp" line="373"/>
         <source>Failed to link/bind OpenGL shader programs.
 </source>
         <translation>Ha fallado al enlazar programas OpenGL shader.
 </translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="367"/>
+        <location filename="../src/glscope.cpp" line="382"/>
         <source>Failed to locate shader variable.</source>
         <translation>Ha fallado al localizar la variable shader.</translation>
     </message>

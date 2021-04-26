@@ -124,6 +124,7 @@ class GlScope : public QOpenGLWidget {
     unsigned currentGraphInHistory = 0;
 
     // OpenGL shader, matrix, var-locations
+    QString OpenGLversion;
     unsigned int GLSLversion = 150;
     static unsigned forceGLSLversion;
     bool shaderCompileSuccess = false;
