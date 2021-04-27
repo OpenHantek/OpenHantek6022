@@ -96,6 +96,10 @@ int main( int argc, char *argv[] ) {
     QCoreApplication::setAttribute( Qt::AA_EnableHighDpiScaling, true );
 #endif
 
+    qDebug() << ( QString( "%1 (%2)" ).arg( QCoreApplication::applicationName(), QCoreApplication::applicationVersion() ) )
+                    .toLocal8Bit()
+                    .data();
+
     bool demoMode = false;
     bool useGLES = false;
     bool useGLSL120 = false;
@@ -148,13 +152,13 @@ int main( int argc, char *argv[] ) {
         p.addOption( verboseOption );
         p.process( parserApp );
         demoMode = p.isSet( demoModeOption );
-        useGLES = p.isSet( useGlesOption );
         if ( p.isSet( fontOption ) )
             font = p.value( "font" );
         if ( p.isSet( sizeOption ) )
             fontSize = p.value( "size" ).toInt();
         if ( p.isSet( condensedOption ) ) // allow range from UltraCondensed (50) to UltraExpanded (200)
             condensed = qBound( 50, p.value( "condensed" ).toInt(), 200 );
+        useGLES = p.isSet( useGlesOption );
         useGLSL120 = p.isSet( useGLSL120Option );
         useGLSL150 = p.isSet( useGLSL150Option );
         useLocale = !p.isSet( intOption );
@@ -162,10 +166,6 @@ int main( int argc, char *argv[] ) {
         resetSettings = p.isSet( resetSettingsOption );
     } // ... and forget the no more needed variables
 
-#ifdef Q_PROCESSOR_ARM
-    // HACK: Raspberry Pi crashes with OpenGL, use always OpenGLES
-    useGLES = true;
-#endif
 
     if ( verboseStartup ) {
         qDebug() << startupTime.elapsed() << "ms:"
@@ -321,11 +321,35 @@ int main( int argc, char *argv[] ) {
     if ( verboseStartup )
         qDebug() << startupTime.elapsed() << "ms:"
                  << "setup OpenGL";
-    GlScope::useQSurfaceFormat( useGLES ? QSurfaceFormat::OpenGLES : QSurfaceFormat::OpenGL );
-    if ( useGLSL120 )
-        GlScope::useOpenGLSLversion( 120 );
-    else if ( useGLSL150 )
-        GlScope::useOpenGLSLversion( 150 );
+
+    // set appropriate OpenGLSL version
+    // some not so new intel graphic driver report a very conservative version
+    // even if they deliver OpenGL 4.x functions
+    // e.g. debian buster -> "2.1 Mesa 18.3.6"
+    // Standard W10 installation -> "OpenGL ES 2.0 (ANGLE 2.1.0.57ea533f79a7)"
+    // MacOS supports OpenGL 4.4 since 2011, 3.3 before
+
+    // This is the default setting for Mesa (Linux, FreeBSD)
+    QString GLSLversion = GLSL120;
+
+#if defined( Q_OS_MAC )
+    // recent MacOS uses OpenGL 4.4
+    GLSLversion = GLSL150;
+#elsif defined( Q_PROCESSOR_ARM ) || defined( Q_OS_WIN )
+    // Raspberry Pi crashes with OpenGL, use OpenGLES
+    // std Win installation provides OpenGLES
+    GLSLversion = GLES100;
+#endif
+
+    // override default with command line option
+    if ( useGLES ) // 1st priority
+        GLSLversion = GLES100;
+    else if ( useGLSL120 ) // next
+        GLSLversion = GLSL120;
+    else if ( useGLSL150 ) // least prio
+        GLSLversion = GLSL150;
+
+    GlScope::useOpenGLSLversion( GLSLversion ); // prepare the OpenGL renderer
 
     //////// Prepare visual appearance ////////
     // prepare the font size and style settings for the scope application

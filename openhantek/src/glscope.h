@@ -21,6 +21,10 @@ struct DsoSettingsScope;
 struct DsoSettingsScopeCursor;
 class PPresult;
 
+#define GLES100 "1.00 ES"
+#define GLSL120 "1.20"
+#define GLSL150 "1.50"
+
 /// \brief OpenGL accelerated widget that displays the oscilloscope screen.
 class GlScope : public QOpenGLWidget {
     Q_OBJECT
@@ -29,13 +33,9 @@ class GlScope : public QOpenGLWidget {
     static GlScope *createNormal( DsoSettingsScope *scope, DsoSettingsView *view, QWidget *parent = nullptr );
     static GlScope *createZoomed( DsoSettingsScope *scope, DsoSettingsView *view, QWidget *parent = nullptr );
 
-    /**
-     * We need at least OpenGL 3.2 with shader version 150 (else version 120) or
-     * OpenGL ES 2.0 with shader version 100.
-     */
-    static void useQSurfaceFormat( QSurfaceFormat::RenderableType t = QSurfaceFormat::DefaultRenderableType );
-    // force either GLSL version 1.20 or 1.50
-    static void useOpenGLSLversion( unsigned version ) { forceGLSLversion = version; }
+    static void useOpenGLSLversion( QString version = GLSL120 );
+    static QString getOpenGLversion() { return OpenGLversion; }
+    static QString getGLSLversion() { return GLSLversion; }
     /**
      * Show new post processed data
      * @param data
@@ -124,9 +124,9 @@ class GlScope : public QOpenGLWidget {
     unsigned currentGraphInHistory = 0;
 
     // OpenGL shader, matrix, var-locations
-    QString OpenGLversion;
-    unsigned int GLSLversion = 150;
-    static unsigned forceGLSLversion;
+    static QString OpenGLversion;
+    static QString GLSLversion;
+    QString renderInfo;
     bool shaderCompileSuccess = false;
     QString errorMessage;
     std::unique_ptr< QOpenGLShaderProgram > m_program;

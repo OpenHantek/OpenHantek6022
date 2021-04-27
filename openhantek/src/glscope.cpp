@@ -24,38 +24,38 @@
 #include "viewsettings.h"
 
 
-unsigned GlScope::forceGLSLversion = 0; // static, can be set to 120 or 150 by GlScope::useOpenGLSLversion()
+// static info strings
+QString GlScope::OpenGLversion;
+QString GlScope::GLSLversion;
 
 
 // this static function will be called early from main to set up OpenGL
-void GlScope::useQSurfaceFormat( QSurfaceFormat::RenderableType rendering ) {
-    QCoreApplication::setAttribute( Qt::AA_ShareOpenGLContexts, true );
-    // Prefer full desktop OpenGL without fixed pipeline
-    QSurfaceFormat format;
-    format.setSamples( 4 ); // ignore antialiasing warning with some HW, Qt & OpenGL versions.
-    format.setProfile( QSurfaceFormat::CoreProfile );
-    format.setRenderableType( rendering );
-    QCoreApplication::setAttribute( Qt::AA_UseOpenGLES, rendering == QSurfaceFormat::OpenGLES );
-    QSurfaceFormat::setDefaultFormat( format );
-}
-
-
-GlScope::GlScope( DsoSettingsScope *scope, DsoSettingsView *view, QWidget *parent )
-    : QOpenGLWidget( parent ), scope( scope ), view( view ) {
-    // get OpenGL version to define appropriate OpenGLSL version
-    // reason: some not so new intel graphic driver report a very conservative version
-    // even if they deliver OpenGL 4.x functions
-    // e.g. debian buster -> "2.1 Mesa 18.3.6"
+void GlScope::useOpenGLSLversion( QString renderer ) {
+    // QCoreApplication::setAttribute( Qt::AA_ShareOpenGLContexts, true );
     QOffscreenSurface surface;
     surface.create();
     QOpenGLContext context;
     context.create();
     context.makeCurrent( &surface );
     OpenGLversion = reinterpret_cast< const char * >( context.functions()->glGetString( GL_VERSION ) );
-    GLSLversion = OpenGLversion >= "3.2" ? 150 : 120; // version string "3.2 xxxx" > "3.2" is true
-    // qDebug() << "OpenGL version" << glVersion << GLSLversion;
+    GLSLversion = renderer;
     surface.destroy();
+    QSurfaceFormat format;
+    format.setSamples( 4 ); // ignore antialiasing warning with some HW, Qt & OpenGL versions.
+    format.setProfile( QSurfaceFormat::CoreProfile );
+    if ( renderer == GLES100 ) {
+        format.setRenderableType( QSurfaceFormat::OpenGLES );
+        // QCoreApplication::setAttribute( Qt::AA_UseOpenGLES, true );
+    } else {
+        format.setRenderableType( QSurfaceFormat::OpenGL );
+        // QCoreApplication::setAttribute( Qt::AA_UseOpenGLES, false );
+    }
+    QSurfaceFormat::setDefaultFormat( format );
+}
 
+
+GlScope::GlScope( DsoSettingsScope *scope, DsoSettingsView *view, QWidget *parent )
+    : QOpenGLWidget( parent ), scope( scope ), view( view ) {
     cursorInfo.clear();
     cursorInfo.push_back( &scope->horizontal.cursor );
     selectedCursor = 0;
@@ -283,7 +283,7 @@ void GlScope::initializeGL() {
 
     auto program = std::unique_ptr< QOpenGLShaderProgram >( new QOpenGLShaderProgram( context() ) );
 
-    const char *vertexShaderGLES = R"(
+    const char *vertexShaderGL100ES = R"(
           #version 100
           attribute highp vec3 vertex;
           uniform mat4 matrix;
@@ -316,7 +316,7 @@ void GlScope::initializeGL() {
           }
     )";
 
-    const char *fragmentShaderGLES = R"(
+    const char *fragmentShaderGL100ES = R"(
           #version 100
           uniform highp vec4 color;
           void main() { gl_FragColor = color; }
@@ -335,42 +335,40 @@ void GlScope::initializeGL() {
           void main() { flatColor = color; }
     )";
 
-    if ( GlScope::forceGLSLversion )
-        GLSLversion = GlScope::forceGLSLversion;
-    // qDebug() << "compile shaders" << GlScope::forceGLSLversion << GLSLversion;
-
     // Compile vertex and fragment shader
-    QString hint;
-    bool usesOpenGL = QSurfaceFormat::defaultFormat().renderableType() == QSurfaceFormat::OpenGL;
-    if ( usesOpenGL ) // in case of error offer a possible solution
-        hint = tr( "Try command line option '--useGLES'\n" );
-
-    if ( 150 == GLSLversion ) { // use version 150 if supported by OpenGL version >= 3.2
+    QString GLEShint;
+    if ( GLES100 != GLSLversion )                                 // regular OpenGL
+        GLEShint = tr( "Try command line option '--useGLES'\n" ); // offer OpenGL ES as fall back solution
+    QString OpenGLinfo = "Graphic: " + OpenGLversion;
+    renderInfo = OpenGLinfo + " - GLSL version " + GLSLversion;
+    qDebug() << renderInfo.toLocal8Bit().data();
+    if ( GLSL150 == GLSLversion ) { // use version 150 if supported by OpenGL version >= 3.2
         if ( !program->addShaderFromSourceCode( QOpenGLShader::Vertex, vertexShaderGLSL150 ) ||
              !program->addShaderFromSourceCode( QOpenGLShader::Fragment, fragmentShaderGLSL150 ) ) {
-            qWarning() << "\nOpenGL version" << OpenGLversion;
-            qWarning() << "To get rid of this error message, try the command line option '--useGLSL120' or '--useGLES'";
-            GLSLversion = 120; // in case of error try version 120 as fall back
+            qWarning() << "Switching to GLSL version 1.20, use the command line option '--useGLSL120' or '--useGLES'";
+            GLSLversion = GLSL120; // in case of error try version 120 as fall back
         }
     }
-    if ( 120 == GLSLversion ) { // this version is supported by OpenGL version >= 2.1 (very old)
+    if ( GLSL120 == GLSLversion ) { // this version is supported by OpenGL version >= 2.1 (older HW/SW)
         if ( !program->addShaderFromSourceCode( QOpenGLShader::Vertex, vertexShaderGLSL120 ) ||
              !program->addShaderFromSourceCode( QOpenGLShader::Fragment, fragmentShaderGLSL120 ) ) {
-            errorMessage = tr( "Failed to compile OpenGL shader programs.\n" ) + hint + program->log();
+            errorMessage =
+                tr( "Failed to compile OpenGL shader programs.\n" ) + GLEShint + OpenGLinfo + QString( "\n" ) + program->log();
             return; // in case of error propose the use of OpenGLES (OpenGL for embedded systems) and stop
         }
     }
-    if ( !usesOpenGL ) { // use OpenGLES
-        if ( !program->addShaderFromSourceCode( QOpenGLShader::Vertex, vertexShaderGLES ) ||
-             !program->addShaderFromSourceCode( QOpenGLShader::Fragment, fragmentShaderGLES ) ) {
-            errorMessage = tr( "Failed to compile OpenGL shader programs.\n" ) + program->log();
+    if ( GLES100 == GLSLversion ) { // use OpenGLES
+        if ( !program->addShaderFromSourceCode( QOpenGLShader::Vertex, vertexShaderGL100ES ) ||
+             !program->addShaderFromSourceCode( QOpenGLShader::Fragment, fragmentShaderGL100ES ) ) {
+            errorMessage = tr( "Failed to compile OpenGL shader programs.\n" ) + OpenGLinfo + QString( "\n" ) + program->log();
             return;
         }
     }
 
     // Link shader pipeline
     if ( !program->link() || !program->bind() ) {
-        errorMessage = tr( "Failed to link/bind OpenGL shader programs.\n" ) + hint + program->log();
+        errorMessage =
+            tr( "Failed to link/bind OpenGL shader programs.\n" ) + GLEShint + renderInfo + QString( "\n" ) + program->log();
         return;
     }
 

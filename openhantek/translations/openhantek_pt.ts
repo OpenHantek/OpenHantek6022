@@ -675,27 +675,27 @@
 </translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="346"/>
+        <location filename="../src/glscope.cpp" line="341"/>
         <source>Try command line option &apos;--useGLES&apos;
 </source>
         <translation>Tente a opção de linha de comando &apos;--useGLES&apos;
 </translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="359"/>
-        <location filename="../src/glscope.cpp" line="366"/>
+        <location filename="../src/glscope.cpp" line="356"/>
+        <location filename="../src/glscope.cpp" line="363"/>
         <source>Failed to compile OpenGL shader programs.
 </source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="373"/>
+        <location filename="../src/glscope.cpp" line="371"/>
         <source>Failed to link/bind OpenGL shader programs.
 </source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="382"/>
+        <location filename="../src/glscope.cpp" line="380"/>
         <source>Failed to locate shader variable.</source>
         <translation></translation>
     </message>
@@ -1126,42 +1126,42 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="431"/>
+        <location filename="../src/mainwindow.cpp" line="433"/>
         <source>&lt;p&gt;Running since %1 seconds.&lt;/p&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="452"/>
+        <location filename="../src/mainwindow.cpp" line="454"/>
         <source>%1: %2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="467"/>
+        <location filename="../src/mainwindow.cpp" line="469"/>
         <source>yyyy-MM-dd hh:mm:ss</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="468"/>
+        <location filename="../src/mainwindow.cpp" line="470"/>
         <source>yyyyMMdd_hhmmss</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="500"/>
+        <location filename="../src/mainwindow.cpp" line="502"/>
         <source>Image (*.png *.jpg)</source>
         <translation>Imagem (*.png *.jpg)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="500"/>
+        <location filename="../src/mainwindow.cpp" line="502"/>
         <source>Portable Document Format (*.pdf)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="501"/>
+        <location filename="../src/mainwindow.cpp" line="503"/>
         <source>Save screenshot</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="532"/>
+        <location filename="../src/mainwindow.cpp" line="534"/>
         <source>Print oscillograph</source>
         <translation>Impressão</translation>
     </message>
