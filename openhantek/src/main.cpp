@@ -335,7 +335,7 @@ int main( int argc, char *argv[] ) {
 #if defined( Q_OS_MAC )
     // recent MacOS uses OpenGL 4.4
     GLSLversion = GLSL150;
-#elsif defined( Q_PROCESSOR_ARM ) || defined( Q_OS_WIN )
+#elif defined( Q_PROCESSOR_ARM ) || defined( Q_OS_WIN )
     // Raspberry Pi crashes with OpenGL, use OpenGLES
     // std Win installation provides OpenGLES
     GLSLversion = GLES100;
