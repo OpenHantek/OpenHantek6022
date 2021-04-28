@@ -45,10 +45,10 @@ void GlScope::useOpenGLSLversion( QString renderer ) {
     format.setProfile( QSurfaceFormat::CoreProfile );
     if ( renderer == GLES100 ) {
         format.setRenderableType( QSurfaceFormat::OpenGLES );
-        // QCoreApplication::setAttribute( Qt::AA_UseOpenGLES, true );
+        QCoreApplication::setAttribute( Qt::AA_UseOpenGLES, true );
     } else {
         format.setRenderableType( QSurfaceFormat::OpenGL );
-        // QCoreApplication::setAttribute( Qt::AA_UseOpenGLES, false );
+        QCoreApplication::setAttribute( Qt::AA_UseOpenGLES, false );
     }
     QSurfaceFormat::setDefaultFormat( format );
 }
