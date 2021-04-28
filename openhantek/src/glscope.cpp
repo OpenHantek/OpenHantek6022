@@ -46,7 +46,7 @@ QString GlScope::getOpenGLversion() {
 
 // this static function will be called early from main to set up OpenGL
 void GlScope::useOpenGLSLversion( QString renderer ) {
-    // QCoreApplication::setAttribute( Qt::AA_ShareOpenGLContexts, true );
+    QCoreApplication::setAttribute( Qt::AA_ShareOpenGLContexts, true );
     QSurfaceFormat format;
     GLSLversion = renderer;
     format.setSamples( 4 ); // ignore antialiasing warning with some HW, Qt & OpenGL versions.
