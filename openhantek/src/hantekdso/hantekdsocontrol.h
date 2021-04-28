@@ -121,7 +121,7 @@ class HantekDsoControl : public QObject {
     void quitSampling();
 
   private:
-    bool singleChannel = true;
+    bool singleChannel = false;
     void setSingleChannel( bool single ) { singleChannel = single; }
     bool isSingleChannel() const { return singleChannel; }
     bool triggerModeNONE() { return controlsettings.trigger.mode == Dso::TriggerMode::ROLL; }
