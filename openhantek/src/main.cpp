@@ -333,13 +333,17 @@ int main( int argc, char *argv[] ) {
     QString GLSLversion = GLSL120;
 
 #if defined( Q_OS_MAC )
-    // recent MacOS uses OpenGL 4.4
+    // recent MacOS uses OpenGL 4.4, but at least 3.3 for very old systems (<2011)
     GLSLversion = GLSL150;
-#elif defined( Q_PROCESSOR_ARM ) || defined( Q_OS_WIN )
+#elif defined( Q_PROCESSOR_ARM )
     // Raspberry Pi crashes with OpenGL, use OpenGLES
-    // std Win installation provides OpenGLES
     GLSLversion = GLES100;
 #endif
+
+    // some fresh W10 installations announce this
+    // "OpenGL ES 2.0 (ANGLE ...)"
+    if ( QRegularExpression( "OpenGL ES " ).match( GlScope::getOpenGLversion() ).hasMatch() )
+        GLSLversion = GLES100; // set as default
 
     // override default with command line option
     if ( useGLES ) // 1st priority

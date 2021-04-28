@@ -603,12 +603,12 @@
 <context>
     <name>GlScope</name>
     <message>
-        <location filename="../src/glscope.cpp" line="276"/>
+        <location filename="../src/glscope.cpp" line="284"/>
         <source>System does not support OpenGL Shading Language (GLSL)</source>
         <translation>El sistema no tiene OpenGL Shading Language (GLSL)</translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="280"/>
+        <location filename="../src/glscope.cpp" line="288"/>
         <source>OpenGL init called twice!</source>
         <translation>¡OpenGL init se ha llamado dos veces!</translation>
     </message>
@@ -619,29 +619,29 @@
 </translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="341"/>
+        <location filename="../src/glscope.cpp" line="349"/>
         <source>Try command line option &apos;--useGLES&apos;
 </source>
         <translation>Pruebe la opción de línea de comandos &apos;--useGLES&apos;
 </translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="356"/>
-        <location filename="../src/glscope.cpp" line="363"/>
+        <location filename="../src/glscope.cpp" line="364"/>
+        <location filename="../src/glscope.cpp" line="371"/>
         <source>Failed to compile OpenGL shader programs.
 </source>
         <translation>Ha fallado al compilar programas OpenGL shader.
 </translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="371"/>
+        <location filename="../src/glscope.cpp" line="379"/>
         <source>Failed to link/bind OpenGL shader programs.
 </source>
         <translation>Ha fallado al enlazar programas OpenGL shader.
 </translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="380"/>
+        <location filename="../src/glscope.cpp" line="388"/>
         <source>Failed to locate shader variable.</source>
         <translation>Ha fallado al localizar la variable shader.</translation>
     </message>

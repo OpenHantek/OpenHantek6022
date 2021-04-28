@@ -589,12 +589,12 @@
 <context>
     <name>GlScope</name>
     <message>
-        <location filename="../src/glscope.cpp" line="276"/>
+        <location filename="../src/glscope.cpp" line="284"/>
         <source>System does not support OpenGL Shading Language (GLSL)</source>
         <translation>Система не поддерживает язык шейдеров OpenGL (GLSL)</translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="280"/>
+        <location filename="../src/glscope.cpp" line="288"/>
         <source>OpenGL init called twice!</source>
         <translation>OpenGL инициализация вызывается дважды!</translation>
     </message>
@@ -605,29 +605,29 @@
 </translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="341"/>
+        <location filename="../src/glscope.cpp" line="349"/>
         <source>Try command line option &apos;--useGLES&apos;
 </source>
         <translation>Попробуйте опцию командной строки &apos;--useGLES&apos;
 </translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="356"/>
-        <location filename="../src/glscope.cpp" line="363"/>
+        <location filename="../src/glscope.cpp" line="364"/>
+        <location filename="../src/glscope.cpp" line="371"/>
         <source>Failed to compile OpenGL shader programs.
 </source>
         <translation>Не удалось скомпилировать шейдерные программы OpenGL.
 </translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="371"/>
+        <location filename="../src/glscope.cpp" line="379"/>
         <source>Failed to link/bind OpenGL shader programs.
 </source>
         <translation>Не удалось связать/привязать шейдерные программы OpenGL.
 </translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="380"/>
+        <location filename="../src/glscope.cpp" line="388"/>
         <source>Failed to locate shader variable.</source>
         <translation>Не удалось найти переменную шейдера.</translation>
     </message>

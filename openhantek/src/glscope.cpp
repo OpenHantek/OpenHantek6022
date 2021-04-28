@@ -29,18 +29,26 @@ QString GlScope::OpenGLversion;
 QString GlScope::GLSLversion;
 
 
+QString GlScope::getOpenGLversion() {
+    if ( OpenGLversion.isNull() ) {
+        QOffscreenSurface surface;
+        surface.create();
+        QOpenGLContext context;
+        context.create();
+        context.makeCurrent( &surface );
+        OpenGLversion = reinterpret_cast< const char * >( context.functions()->glGetString( GL_VERSION ) );
+        qDebug() << OpenGLversion;
+        surface.destroy();
+    }
+    return OpenGLversion;
+}
+
+
 // this static function will be called early from main to set up OpenGL
 void GlScope::useOpenGLSLversion( QString renderer ) {
     // QCoreApplication::setAttribute( Qt::AA_ShareOpenGLContexts, true );
-    QOffscreenSurface surface;
-    surface.create();
-    QOpenGLContext context;
-    context.create();
-    context.makeCurrent( &surface );
-    OpenGLversion = reinterpret_cast< const char * >( context.functions()->glGetString( GL_VERSION ) );
-    GLSLversion = renderer;
-    surface.destroy();
     QSurfaceFormat format;
+    GLSLversion = renderer;
     format.setSamples( 4 ); // ignore antialiasing warning with some HW, Qt & OpenGL versions.
     format.setProfile( QSurfaceFormat::CoreProfile );
     if ( renderer == GLES100 ) {

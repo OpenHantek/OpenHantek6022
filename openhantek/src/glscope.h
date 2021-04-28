@@ -34,7 +34,7 @@ class GlScope : public QOpenGLWidget {
     static GlScope *createZoomed( DsoSettingsScope *scope, DsoSettingsView *view, QWidget *parent = nullptr );
 
     static void useOpenGLSLversion( QString version = GLSL120 );
-    static QString getOpenGLversion() { return OpenGLversion; }
+    static QString getOpenGLversion();
     static QString getGLSLversion() { return GLSLversion; }
     /**
      * Show new post processed data

@@ -655,12 +655,12 @@
 <context>
     <name>GlScope</name>
     <message>
-        <location filename="../src/glscope.cpp" line="276"/>
+        <location filename="../src/glscope.cpp" line="284"/>
         <source>System does not support OpenGL Shading Language (GLSL)</source>
         <translation>Le système ne supporte pas OpenGL Shading Language (GLSL)</translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="280"/>
+        <location filename="../src/glscope.cpp" line="288"/>
         <source>OpenGL init called twice!</source>
         <translation>Double initialisation d&apos;OpenGL !</translation>
     </message>
@@ -671,29 +671,29 @@
 </translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="341"/>
+        <location filename="../src/glscope.cpp" line="349"/>
         <source>Try command line option &apos;--useGLES&apos;
 </source>
         <translation>Essayez l&apos;option de ligne de commande &apos;--useGLES&apos;
 </translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="356"/>
-        <location filename="../src/glscope.cpp" line="363"/>
+        <location filename="../src/glscope.cpp" line="364"/>
+        <location filename="../src/glscope.cpp" line="371"/>
         <source>Failed to compile OpenGL shader programs.
 </source>
         <translation>Echec de compilation des programmes d&apos;ombrage OpenGL.
 </translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="371"/>
+        <location filename="../src/glscope.cpp" line="379"/>
         <source>Failed to link/bind OpenGL shader programs.
 </source>
         <translation>Echec de création des liens des programmes d&apos;ombrage OpenGL.
 </translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="380"/>
+        <location filename="../src/glscope.cpp" line="388"/>
         <source>Failed to locate shader variable.</source>
         <translation>Echec de localisation des variables d&apos;ombrage.</translation>
     </message>
