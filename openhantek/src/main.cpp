@@ -105,7 +105,7 @@ int main( int argc, char *argv[] ) {
     bool useGLSL120 = false;
     bool useGLSL150 = false;
     bool useLocale = true;
-    bool verboseStartup = false;
+    unsigned verboseLevel = 0;
     bool resetSettings = false;
     QString font = defaultFont;       // defined in viewsettings.h
     int fontSize = defaultFontSize;   // defined in viewsettings.h
@@ -148,7 +148,7 @@ int main( int argc, char *argv[] ) {
         p.addOption( condensedOption );
         QCommandLineOption resetSettingsOption( "resetSettings", "Reset persistent settings, start with default" );
         p.addOption( resetSettingsOption );
-        QCommandLineOption verboseOption( "verbose", "Verbose tracing of the program startup steps" );
+        QCommandLineOption verboseOption( "verbose", "Verbose tracing of the program startup steps", "Level" );
         p.addOption( verboseOption );
         p.process( parserApp );
         demoMode = p.isSet( demoModeOption );
@@ -162,12 +162,13 @@ int main( int argc, char *argv[] ) {
         useGLSL120 = p.isSet( useGLSL120Option );
         useGLSL150 = p.isSet( useGLSL150Option );
         useLocale = !p.isSet( intOption );
-        verboseStartup = p.isSet( verboseOption );
+        if ( p.isSet( verboseOption ) )
+            verboseLevel = p.value( "verbose" ).toInt();
         resetSettings = p.isSet( resetSettingsOption );
     } // ... and forget the no more needed variables
 
 
-    if ( verboseStartup ) {
+    if ( verboseLevel ) {
         qDebug() << startupTime.elapsed() << "ms:"
                  << "OpenHantek6022 - version" << VERSION;
         qDebug() << startupTime.elapsed() << "ms:"
@@ -177,7 +178,7 @@ int main( int argc, char *argv[] ) {
 
 // Qt5 linux default ("Breeze", "Windows" or "Fusion")
 #ifndef Q_OS_MACOS
-    if ( verboseStartup )
+    if ( verboseLevel )
         qDebug() << startupTime.elapsed() << "ms:"
                  << "set \"Fusion\" style";
     openHantekApplication.setStyle( QStyleFactory::create( "Fusion" ) ); // smaller widgets allow stacking of all docks
@@ -192,7 +193,7 @@ int main( int argc, char *argv[] ) {
     //    usermod -a -G audio <your_user_name>
     // or set the limits only for your user in /etc/security/limits.d:
     //    <your_user_name> - rtprio 99
-    if ( verboseStartup )
+    if ( verboseLevel )
         qDebug() << startupTime.elapsed() << "ms:"
                  << "set RT FIFO scheduler";
     struct sched_param schedParam;
@@ -202,7 +203,7 @@ int main( int argc, char *argv[] ) {
 #endif
 
     //////// Load translations ////////
-    if ( verboseStartup )
+    if ( verboseLevel )
         qDebug() << startupTime.elapsed() << "ms:"
                  << "load translations for locale" << QLocale().name();
     QTranslator qtTranslator;
@@ -223,7 +224,7 @@ int main( int argc, char *argv[] ) {
     std::unique_ptr< ScopeDevice > scopeDevice = nullptr;
 
     if ( !demoMode ) {
-        if ( verboseStartup )
+        if ( verboseLevel )
             qDebug() << startupTime.elapsed() << "ms:"
                      << "init libusb";
         int error = libusb_init( &context );
@@ -235,7 +236,7 @@ int main( int argc, char *argv[] ) {
             libusb_setlocale( QLocale().name().toLocal8Bit().constData() );
 
         // SelectSupportedDevive returns a real device unless demoMode is true
-        if ( verboseStartup )
+        if ( verboseLevel )
             qDebug() << startupTime.elapsed() << "ms:"
                      << "show splash screen";
         scopeDevice = SelectSupportedDevice().showSelectDeviceModal( context );
@@ -258,12 +259,12 @@ int main( int argc, char *argv[] ) {
 
     // Here we have either a connected scope device or a demo device w/o hardware
     const DSOModel *model = scopeDevice->getModel();
-    if ( verboseStartup )
+    if ( verboseLevel )
         qDebug() << startupTime.elapsed() << "ms:"
                  << "use device" << scopeDevice->getModel()->name << "serial number" << scopeDevice->getSerialNumber();
 
     //////// Create DSO control object and move it to a separate thread ////////
-    if ( verboseStartup )
+    if ( verboseLevel )
         qDebug() << startupTime.elapsed() << "ms:"
                  << "create DSO control thread";
     QThread dsoControlThread;
@@ -280,13 +281,14 @@ int main( int argc, char *argv[] ) {
     const Dso::ControlSpecification *spec = model->spec();
 
     //////// Create settings object specific to this scope, use unique serial number ////////
-    if ( verboseStartup )
+    if ( verboseLevel )
         qDebug() << startupTime.elapsed() << "ms:"
                  << "create settings object";
     DsoSettings settings( scopeDevice.get(), resetSettings );
+    settings.scope.verboseLevel = verboseLevel;
 
     //////// Create exporters ////////
-    if ( verboseStartup )
+    if ( verboseLevel )
         qDebug() << startupTime.elapsed() << "ms:"
                  << "create exporters";
     ExporterRegistry exportRegistry( spec, &settings );
@@ -297,7 +299,7 @@ int main( int argc, char *argv[] ) {
     exportRegistry.registerExporter( &exporterJSON );
 
     //////// Create post processing objects ////////
-    if ( verboseStartup )
+    if ( verboseLevel )
         qDebug() << startupTime.elapsed() << "ms:"
                  << "create post processing objects";
     QThread postProcessingThread;
@@ -318,7 +320,7 @@ int main( int argc, char *argv[] ) {
     QObject::connect( &postProcessing, &PostProcessing::processingFinished, &exportRegistry, &ExporterRegistry::input,
                       Qt::DirectConnection );
 
-    if ( verboseStartup )
+    if ( verboseLevel )
         qDebug() << startupTime.elapsed() << "ms:"
                  << "setup OpenGL";
 
@@ -367,7 +369,7 @@ int main( int argc, char *argv[] ) {
     appFont.setStretch( condensed );
     appFont.setPointSize( fontSize ); // scales the widgets accordingly
     // apply new font settings for the scope application
-    if ( verboseStartup )
+    if ( verboseLevel )
         qDebug() << startupTime.elapsed() << "ms:"
                  << "set" << appFont;
     openHantekApplication.setFont( appFont );
@@ -376,7 +378,7 @@ int main( int argc, char *argv[] ) {
     iconFont->initFontAwesome();
 
     //////// Create main window ////////
-    if ( verboseStartup )
+    if ( verboseLevel )
         qDebug() << startupTime.elapsed() << "ms:"
                  << "create main window";
     MainWindow openHantekMainWindow( &dsoControl, &settings, &exportRegistry );
@@ -388,7 +390,7 @@ int main( int argc, char *argv[] ) {
     openHantekMainWindow.show();
 
     //////// Start DSO thread and go into GUI main loop
-    if ( verboseStartup )
+    if ( verboseLevel )
         qDebug() << startupTime.elapsed() << "ms:"
                  << "start DSO control thread";
     dsoControl.enableSampling( true );
@@ -397,13 +399,13 @@ int main( int argc, char *argv[] ) {
     Capturing capturing( &dsoControl );
     capturing.start();
 
-    if ( verboseStartup )
+    if ( verboseLevel )
         qDebug() << startupTime.elapsed() << "ms:"
                  << "execute GUI main loop";
     int appStatus = openHantekApplication.exec();
 
     //////// Application closed, clean up step by step ////////
-    if ( verboseStartup )
+    if ( verboseLevel )
         qDebug() << startupTime.elapsed() << "ms:"
                  << "application closed, clean up";
 

@@ -87,6 +87,7 @@ struct DsoSettingsScope {
     DsoSettingsScopeTrigger trigger;                                                 ///< Settings for the trigger
     DsoSettingsScopeAnalysis analysis;                                               ///< Settings for the analysis
 
+    unsigned verboseLevel = 0;
     bool histogram = false;
     bool hasACcoupling = false;
     bool hasACmodification = false;

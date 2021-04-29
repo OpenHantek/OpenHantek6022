@@ -154,7 +154,8 @@ void DsoSettings::load() {
         storeSettings->endGroup(); // spectrum%1
     }
     // Voltage
-    bool defaultConfig = deviceSpecification->isDemoDevice; // use default channel setting in demo mode
+    bool defaultConfig = false;
+    // defaultConfig = deviceSpecification->isDemoDevice; // use default channel setting in demo mode
     if ( storeSettings->contains( "hasACmodification" ) )
         scope.hasACmodification = storeSettings->value( "hasACmodification" ).toBool();
     for ( ChannelID channel = 0; channel < scope.voltage.size(); ++channel ) {
