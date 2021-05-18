@@ -91,6 +91,9 @@ class HorizontalDock : public QDockWidget {
     void formatSelected( int index );
     void calfreqSelected( double calfreq );
 
+  private:
+    double samplerateRequest = 0;
+
   signals:
     void samplerateChanged( double samplerate );            ///< The samplerate has been changed
     void timebaseChanged( double timebase );                ///< The timebase has been changed
