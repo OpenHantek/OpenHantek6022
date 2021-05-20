@@ -7,7 +7,8 @@
 #include <QColor>
 #include <QDebug>
 
-DevicesListModel::DevicesListModel( FindDevices *findDevices ) : findDevices( findDevices ) {}
+DevicesListModel::DevicesListModel( FindDevices *findDevices, unsigned verboseLevel )
+    : findDevices( findDevices ), verboseLevel( verboseLevel ) {}
 
 int DevicesListModel::rowCount( const QModelIndex & ) const { return int( entries.size() ); }
 
@@ -71,6 +72,8 @@ void DevicesListModel::updateDeviceList() {
         entry.name = i.second->getModel()->name;
         entry.id = i.first;
         if ( i.second->needsFirmware() ) {
+            if ( verboseLevel > 2 )
+                qDebug() << "  DevicesListModel::updateDeviceList()" << entry.name << "upload firmware";
             UploadFirmware uf;
             if ( !uf.startUpload( i.second.get() ) ) {
                 entry.errorMessage = uf.getErrorMessage();
@@ -78,9 +81,13 @@ void DevicesListModel::updateDeviceList() {
             } else
                 entry.needFirmware = true;
         } else if ( i.second->connectDevice( entry.errorMessage ) ) {
+            if ( verboseLevel > 2 )
+                qDebug() << "  DevicesListModel::updateDeviceList()" << entry.name << "can connect";
             entry.canConnect = true;
             i.second->disconnectFromDevice();
         } else {
+            if ( verboseLevel > 2 )
+                qDebug() << "  DevicesListModel::updateDeviceList()" << entry.name << "cannot connect";
             entry.canConnect = false;
         }
         entries.push_back( entry );

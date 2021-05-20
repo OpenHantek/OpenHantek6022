@@ -19,11 +19,16 @@
 #include "modelregistry.h"
 
 
-FindDevices::FindDevices( libusb_context *context ) : context( context ) {}
+FindDevices::FindDevices( libusb_context *context, unsigned verboseLevel ) : context( context ), verboseLevel( verboseLevel ) {
+    if ( verboseLevel > 1 )
+        qDebug() << " FindDevices::FindDevices()";
+}
 
 
 // Iterate all devices on USB and keep track of all supported scopes
 int FindDevices::updateDeviceList() {
+    if ( verboseLevel > 2 )
+        qDebug() << "  FindDevices::updateDeviceList()";
     libusb_device **deviceList;
     ssize_t deviceCount = libusb_get_device_list( context, &deviceList );
     if ( deviceCount < 0 ) {
@@ -62,7 +67,8 @@ int FindDevices::updateDeviceList() {
             supported |= descriptor.idVendor == model->vendorIDnoFirmware && descriptor.idProduct == model->productIDnoFirmware;
             if ( supported ) { // put matching device into list if not already in use
                 ++changes;
-                // printf( "+ %016lX %s\n", USBid, model->name.c_str() );
+                if ( verboseLevel > 2 )
+                    qDebug() << "  +++" << QString( "0x%1" ).arg( USBid, 8, 16, QChar( '0' ) ) << model->name;
                 devices[ USBid ] = std::unique_ptr< ScopeDevice >( new ScopeDevice( model, device, findIteration ) );
                 break; // stop after 1st supported model (there can be more models with identical VID/PID)
             }
@@ -73,6 +79,8 @@ int FindDevices::updateDeviceList() {
     for ( DeviceList::iterator it = devices.begin(); it != devices.end(); ) {
         if ( it->second->getFindIteration() != findIteration ) { // heartbeat not up to date, no more on the bus
             ++changes;
+            if ( verboseLevel > 2 )
+                qDebug() << "  ---" << QString( "0x%1" ).arg( it->first, 8, 16, QChar( '0' ) ) << it->second->getModel()->name;
             // printf( "- %016lX\n", it->first );
             it = devices.erase( it ); // it points to next entry
         } else {

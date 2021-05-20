@@ -26,6 +26,10 @@ template < typename... Args > struct SELECT {
 
 
 SpectrumDock::SpectrumDock( DsoSettingsScope *scope, QWidget *parent ) : QDockWidget( tr( "Spectrum" ), parent ), scope( scope ) {
+
+    if ( scope->verboseLevel > 1 )
+        qDebug() << " SpectrumDock::SpectrumDock()";
+
     // Initialize lists for comboboxes
     this->magnitudeSteps = {1, 2, 3, 6, 10, 20, 40, 60, 80, 100};
     for ( const auto &magnitude : magnitudeSteps )
@@ -88,6 +92,8 @@ SpectrumDock::SpectrumDock( DsoSettingsScope *scope, QWidget *parent ) : QDockWi
 
 
 void SpectrumDock::loadSettings( DsoSettingsScope *scope ) {
+    if ( scope->verboseLevel > 2 )
+        qDebug() << "  SDock::loadSettings()";
     // Initialize elements
     for ( ChannelID channel = 0; channel < scope->voltage.size(); ++channel ) {
         this->setMagnitude( channel, scope->spectrum[ channel ].magnitude );
@@ -107,6 +113,8 @@ void SpectrumDock::closeEvent( QCloseEvent *event ) {
 
 
 int SpectrumDock::setMagnitude( ChannelID channel, double magnitude ) {
+    if ( scope->verboseLevel > 2 )
+        qDebug() << "  SDock::setMagnitude()" << channel << magnitude;
     if ( channel >= scope->voltage.size() )
         return -1;
     QSignalBlocker blocker( channelBlocks[ channel ].magnitudeComboBox );
@@ -121,6 +129,8 @@ int SpectrumDock::setMagnitude( ChannelID channel, double magnitude ) {
 
 
 unsigned SpectrumDock::setUsed( ChannelID channel, bool used ) {
+    if ( scope->verboseLevel > 2 )
+        qDebug() << "  SDock::setUsed()" << channel << used;
     if ( channel >= scope->voltage.size() )
         return INT_MAX;
     QSignalBlocker blocker( channelBlocks[ channel ].usedCheckBox );
@@ -130,6 +140,8 @@ unsigned SpectrumDock::setUsed( ChannelID channel, bool used ) {
 
 
 void SpectrumDock::enableSpectrum( bool enabled ) {
+    if ( scope->verboseLevel > 2 )
+        qDebug() << "  SDock::enableSpectrum()" << enabled;
     for ( unsigned channel = 0; channel < scope->voltage.size(); ++channel ) {
         QSignalBlocker blocker( channelBlocks[ channel ].usedCheckBox );
         channelBlocks[ channel ].usedCheckBox->setEnabled( enabled );
@@ -143,7 +155,8 @@ void SpectrumDock::enableSpectrum( bool enabled ) {
 /// \brief Called when the samplerate from horizontal dock changes its value.
 /// \param samplerare The samplerate in hertz.
 void SpectrumDock::setSamplerate( double samplerate ) {
-    // printf( "SD::setSamplerate( %g )\n", samplerate );
+    if ( scope->verboseLevel > 2 )
+        qDebug() << "  SDock::setSamplerate()" << samplerate;
     double maxFreqBase = samplerate / DIVS_TIME / 2; // Nyquist frequency
     frequencybaseSiSpinBox->setMaximum( maxFreqBase );
     if ( frequencybaseSiSpinBox->value() > maxFreqBase )
@@ -152,7 +165,8 @@ void SpectrumDock::setSamplerate( double samplerate ) {
 
 
 void SpectrumDock::setFrequencybase( double frequencybase ) {
-    // printf( "SD::setFrequencybase( %g )\n", frequencybase );
+    if ( scope->verboseLevel > 2 )
+        qDebug() << "  SDock::setFrequencybase()" << frequencybase;
     QSignalBlocker blocker( frequencybaseSiSpinBox );
     frequencybaseSiSpinBox->setValue( frequencybase );
 }
@@ -161,6 +175,8 @@ void SpectrumDock::setFrequencybase( double frequencybase ) {
 /// \brief Called when the frequencybase spinbox changes its value.
 /// \param frequencybase The frequencybase in hertz.
 void SpectrumDock::frequencybaseSelected( double frequencybase ) {
+    if ( scope->verboseLevel > 2 )
+        qDebug() << "  SDock::frequencybaseSelected()" << frequencybase;
     // printf( "SD::frequencybaseSelected( %g )\n", frequencybase );
     scope->horizontal.frequencybase = frequencybase;
     emit frequencybaseChanged( frequencybase );

@@ -2,7 +2,8 @@
 
 #include "postprocessing.h"
 
-PostProcessing::PostProcessing( unsigned channelCount ) : channelCount( channelCount ) {
+PostProcessing::PostProcessing( unsigned channelCount, unsigned verboseLevel )
+    : channelCount( channelCount ), verboseLevel( verboseLevel ) {
     qRegisterMetaType< std::shared_ptr< PPresult > >();
 }
 
@@ -10,6 +11,7 @@ PostProcessing::PostProcessing( unsigned channelCount ) : channelCount( channelC
 void PostProcessing::registerProcessor( Processor *processor ) { processors.push_back( processor ); }
 
 
+// static
 void PostProcessing::convertData( const DSOsamples *source, PPresult *destination ) {
     // printf( "PostProcessing::convertData()\n" );
     QReadLocker locker( &source->lock );
@@ -43,7 +45,8 @@ void PostProcessing::convertData( const DSOsamples *source, PPresult *destinatio
 
 void PostProcessing::input( const DSOsamples *data ) {
     if ( data && processing ) {
-        // printf( "PostProcessing::input( %d )\n", data->tag );
+        if ( verboseLevel > 3 )
+            qDebug() << "   PostProcessing::input()" << data->tag;
         currentData.reset( new PPresult( channelCount ) ); // start with a fresh data structure
         convertData( data, currentData.get() );            // copy all relevant data over
         for ( Processor *p : processors )                  // feed it into the PP chain

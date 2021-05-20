@@ -3,6 +3,7 @@
 #include <cmath>
 
 #include <QColor>
+#include <QDebug>
 #include <QMutex>
 #include <QTimer>
 
@@ -16,10 +17,15 @@
 
 /// \brief Analyzes the data from the dso.
 SpectrumGenerator::SpectrumGenerator( const DsoSettingsScope *scope, const DsoSettingsPostProcessing *postprocessing )
-    : scope( scope ), postprocessing( postprocessing ) {}
+    : scope( scope ), postprocessing( postprocessing ) {
+    if ( scope->verboseLevel > 1 )
+        qDebug() << " SpectrumGenerator::SpectrumGenerator()";
+}
 
 
 SpectrumGenerator::~SpectrumGenerator() {
+    if ( scope->verboseLevel > 1 )
+        qDebug() << " SpectrumGenerator::~SpectrumGenerator()";
     if ( lastWindowBuffer )
         fftw_free( lastWindowBuffer );
 }
@@ -27,6 +33,9 @@ SpectrumGenerator::~SpectrumGenerator() {
 
 void SpectrumGenerator::process( PPresult *result ) {
     // Calculate frequencies and spectrums
+
+    if ( scope->verboseLevel > 3 )
+        qDebug() << "   SpectrumGenerator::process()" << result->tag;
 
     for ( ChannelID channel = 0; channel < result->channelCount(); ++channel ) {
         DataChannel *const channelData = result->modifiableData( channel );

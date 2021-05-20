@@ -30,7 +30,8 @@ static const SampleValues &useVoltSamplesOf( ChannelID channel, const PPresult *
 
 
 GraphGenerator::GraphGenerator( const DsoSettingsScope *scope, const DsoSettingsView *view ) : scope( scope ), view( view ) {
-    // printf( "GraphGenerator::GraphGenerator()\n" );
+    if ( scope->verboseLevel > 1 )
+        qDebug() << " GraphGenerator::GraphGenerator()";
     prepareSinc();
 }
 
@@ -49,19 +50,21 @@ void GraphGenerator::prepareSinc( void ) {
 }
 
 
-void GraphGenerator::process( PPresult *data ) {
-    // printf( "GraphGenerator::process()\n" );
+void GraphGenerator::process( PPresult *result ) {
+    if ( scope->verboseLevel > 3 )
+        qDebug() << "   GraphGenerator::process()" << result->tag;
     if ( scope->horizontal.format == Dso::GraphFormat::TY ) {
         ready = true;
-        generateGraphsTYvoltage( data );
-        generateGraphsTYspectrum( data );
+        generateGraphsTYvoltage( result );
+        generateGraphsTYspectrum( result );
     } else
-        generateGraphsXY( data );
+        generateGraphsXY( result );
 }
 
 
 void GraphGenerator::generateGraphsTYvoltage( PPresult *result ) {
-    // printf( "GraphGenerator::generateGraphsTYvoltage()\n" );
+    if ( scope->verboseLevel > 4 )
+        qDebug() << "    GraphGenerator::generateGraphsTYvoltage()" << result->tag;
     result->vaChannelVoltage.resize( scope->voltage.size() );
     result->vaChannelHistogram.resize( scope->voltage.size() );
     bool interpolationStep = view->interpolation == Dso::INTERPOLATION_STEP;
@@ -182,7 +185,8 @@ void GraphGenerator::generateGraphsTYvoltage( PPresult *result ) {
 
 
 void GraphGenerator::generateGraphsTYspectrum( PPresult *result ) {
-    // printf( "GraphGenerator::generateGraphsTYspectrum()\n" );
+    if ( scope->verboseLevel > 4 )
+        qDebug() << "    GraphGenerator::generateGraphsTYspectrum()" << result->tag;
     ready = true;
     result->vaChannelSpectrum.resize( scope->spectrum.size() );
     for ( ChannelID channel = 0; channel < scope->voltage.size(); ++channel ) {
@@ -219,7 +223,8 @@ void GraphGenerator::generateGraphsTYspectrum( PPresult *result ) {
 
 
 void GraphGenerator::generateGraphsXY( PPresult *result ) {
-    // puts("generateGraphXY()");
+    if ( scope->verboseLevel > 4 )
+        qDebug() << "    GraphGenerator::generateGraphsXY()" << result->tag;
     result->vaChannelVoltage.resize( scope->voltage.size() );
 
     // Delete all spectrum graphs

@@ -509,36 +509,36 @@
 <context>
     <name>GlScope</name>
     <message>
-        <location filename="../src/glscope.cpp" line="284"/>
+        <location filename="../src/glscope.cpp" line="302"/>
         <source>System does not support OpenGL Shading Language (GLSL)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="288"/>
+        <location filename="../src/glscope.cpp" line="306"/>
         <source>OpenGL init called twice!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="349"/>
+        <location filename="../src/glscope.cpp" line="367"/>
         <source>Try command line option &apos;--useGLES&apos;
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="364"/>
-        <location filename="../src/glscope.cpp" line="371"/>
+        <location filename="../src/glscope.cpp" line="382"/>
+        <location filename="../src/glscope.cpp" line="389"/>
         <source>Failed to compile OpenGL shader programs.
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="379"/>
+        <location filename="../src/glscope.cpp" line="397"/>
         <source>Failed to link/bind OpenGL shader programs.
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="388"/>
+        <location filename="../src/glscope.cpp" line="406"/>
         <source>Failed to locate shader variable.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -546,7 +546,7 @@
 <context>
     <name>HantekDsoControl</name>
     <message>
-        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="433"/>
+        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="452"/>
         <source>Couldn&apos;t get calibration data from oscilloscope&apos;s EEPROM. Use a config file for calibration!</source>
         <translation>Impossibile ottenere i dati di calibrazione dall&apos;EEPROM dell&apos;oscilloscopio. Utilizzare un file di configurazione per la calibrazione!</translation>
     </message>
@@ -559,27 +559,27 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/docks/HorizontalDock.cpp" line="33"/>
+        <location filename="../src/docks/HorizontalDock.cpp" line="36"/>
         <source>Samplerate</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/docks/HorizontalDock.cpp" line="37"/>
+        <location filename="../src/docks/HorizontalDock.cpp" line="40"/>
         <source>/s</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/docks/HorizontalDock.cpp" line="41"/>
+        <location filename="../src/docks/HorizontalDock.cpp" line="44"/>
         <source>Timebase</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/docks/HorizontalDock.cpp" line="47"/>
+        <location filename="../src/docks/HorizontalDock.cpp" line="50"/>
         <source>Format</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/docks/HorizontalDock.cpp" line="52"/>
+        <location filename="../src/docks/HorizontalDock.cpp" line="55"/>
         <source>Calibration out</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1193,12 +1193,12 @@
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../src/selectdevice/deviceslistmodel.cpp" line="22"/>
+        <location filename="../src/selectdevice/deviceslistmodel.cpp" line="23"/>
         <source>Devicename</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/deviceslistmodel.cpp" line="24"/>
+        <location filename="../src/selectdevice/deviceslistmodel.cpp" line="25"/>
         <source>Status</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1271,37 +1271,37 @@
         <translation type="vanished">&lt;p&gt;&lt;br/&gt;&lt;b&gt;Il dispositivo è pronto all&apos;uso.&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Per un funzionamento sicuro, osservare il &lt;a href=&apos;https://github.com/OpenHantek/OpenHantek6022/blob/master/docs/OpenHantek6022_User_Manual.pdf&apos;&gt;manuale d&apos;uso.&lt;/a&gt;</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="83"/>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="85"/>
         <source>&lt;p&gt;Upload in progress ...&lt;/p&gt;&lt;p&gt;&lt;b&gt;If the upload takes more than 30 s, please close this window &lt;br/&gt;and restart the program!&lt;/b&gt;&lt;/p&gt;</source>
         <translation>&lt;p&gt;Upload in corso ...&lt;/p&gt;&lt;p&gt;&lt;b&gt;Se il caricamento richiede più di 30 s, si prega di chiudere questa finestra &lt;br/&gt;e riavviare il programma!&lt;/b&gt;&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="87"/>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="89"/>
         <source>&lt;p&gt;&lt;br/&gt;&lt;b&gt;Connection failed!&lt;/b&gt;&lt;/p&gt;</source>
         <translation>&lt;p&gt;&lt;br/&gt;&lt;b&gt;Il collegamento è fallito!&lt;/b&gt;&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="50"/>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="52"/>
         <source>&lt;p&gt;OpenHantek6022 is searching for compatible devices ...&lt;/p&gt;&lt;p&gt;&lt;img align=&apos;right&apos; height=&apos;200&apos; src=&apos;qrc:///switch_6022BL.png&apos;&gt;Don&apos;t forget to switch your device into oscilloscope mode if it has multiple modes.&lt;/p&gt;</source>
         <translation>&lt;p&gt;ApertoHantek6022 è alla ricerca di dispositivi compatibili...&lt;/p&gt;&lt;p&gt;&lt;img align=&apos;right&apos; height=&apos;200&apos; src=&apos;qrc:////switch_6022BL.png&apos;&gt;Non dimenticare di passare il dispositivo in modalità oscilloscopio se ha più modalità.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="46"/>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="48"/>
         <source>&lt;p&gt;&lt;br/&gt;&lt;b&gt;The device is ready for use.&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Please observe the &lt;a href=&apos;https://github.com/OpenHantek/OpenHantek6022/blob/main/docs/OpenHantek6022_User_Manual.pdf&apos;&gt;user manual&lt;/a&gt; for safe operation.&lt;/p&gt;</source>
         <translation>&lt;p&gt;&lt;br/&gt;&lt;b&gt;Il dispositivo è pronto all&apos;uso.&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Per un funzionamento sicuro, osservare il &lt;a href=&apos;https://github.com/OpenHantek/OpenHantek6022/blob/main/docs/OpenHantek6022_User_Manual.pdf&apos;&gt;manuale d&apos;uso.&lt;/a&gt;</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="54"/>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="56"/>
         <source>&lt;p&gt;Please make sure you have installed the windows usb driver correctly&lt;/p&gt;</source>
         <translation>&lt;p&gt;Assicurati di aver installato correttamente il driver usb di Windows.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="59"/>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="61"/>
         <source>&lt;p&gt;Please make sure you have copied the udev rules file to&lt;br/&gt;&lt;b&gt;%1&lt;/b&gt; or&lt;br/&gt;&lt;b&gt;%2&lt;/b&gt;&lt;br/&gt;for correct USB access permissions.&lt;/p&gt;</source>
         <translation>&lt;p&gt;Assicurati di aver copiato il file delle regole udev in&lt;br/&gt;&lt;b&gt;%1&lt;/b&gt; o&lt;br/&gt;&lt;b&gt;%2&lt;/b&gt;&lt;br/&gt;per ottenere le corrette autorizzazioni di accesso USB.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="66"/>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="68"/>
         <source>&lt;p&gt;Visit the build and run instruction &lt;a href=&apos;https://github.com/OpenHantek/OpenHantek6022/blob/main/docs/build.md&apos;&gt;website&lt;/a&gt; for help.&lt;/p&gt;</source>
         <translation>&lt;p&gt;Visitare l&apos;istruzione di compilazione ed esecuzione &lt;a href=&apos;https://github.com/OpenHantek/OpenHantek6022/blob/main/docs/build.md&apos;&gt;sito web site&lt;/a&gt; per help.&lt;/p&gt;</translation>
     </message>
@@ -1318,12 +1318,12 @@
         <translation type="vanished">&lt;p&gt;Visitare l&apos;istruzione di compilazione ed esecuzione &lt;a href=&apos;https://github.com/OpenHantek/OpenHantek6022/blob/master/docs/build.md&apos;&gt;sito web site&lt;/a&gt; per help.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="68"/>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="70"/>
         <source>&lt;hr/&gt;&lt;p&gt;Even without a device you can explore the program&apos;s function. Just press the &lt;b&gt;Demo Mode&lt;/b&gt; button below.&lt;/p&gt;</source>
         <translation>&lt;hr/&gt;&lt;p&gt;Anche senza un device è possibile esplorare la funzione del programma, basta premere il pulsante &lt;b&gt;modalità demo&lt;/b&gt;.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="152"/>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="154"/>
         <source>Can&apos;t initalize USB: %1</source>
         <translation>Non può initalizzare USB: %1</translation>
     </message>
@@ -1336,7 +1336,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/docks/SpectrumDock.cpp" line="73"/>
+        <location filename="../src/docks/SpectrumDock.cpp" line="77"/>
         <source>Frequencybase</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1344,42 +1344,42 @@
 <context>
     <name>TriggerDock</name>
     <message>
-        <location filename="../src/docks/TriggerDock.cpp" line="22"/>
+        <location filename="../src/docks/TriggerDock.cpp" line="23"/>
         <source>Trigger</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/docks/TriggerDock.cpp" line="26"/>
+        <location filename="../src/docks/TriggerDock.cpp" line="30"/>
         <source>CH%1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/docks/TriggerDock.cpp" line="28"/>
+        <location filename="../src/docks/TriggerDock.cpp" line="32"/>
         <source>Normal</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/docks/TriggerDock.cpp" line="28"/>
+        <location filename="../src/docks/TriggerDock.cpp" line="32"/>
         <source>HF</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/docks/TriggerDock.cpp" line="28"/>
+        <location filename="../src/docks/TriggerDock.cpp" line="32"/>
         <source>LF</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/docks/TriggerDock.cpp" line="31"/>
+        <location filename="../src/docks/TriggerDock.cpp" line="35"/>
         <source>Mode</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/docks/TriggerDock.cpp" line="36"/>
+        <location filename="../src/docks/TriggerDock.cpp" line="40"/>
         <source>Slope</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/docks/TriggerDock.cpp" line="41"/>
+        <location filename="../src/docks/TriggerDock.cpp" line="45"/>
         <source>Source</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1387,27 +1387,27 @@
 <context>
     <name>VoltageDock</name>
     <message>
-        <location filename="../src/docks/VoltageDock.cpp" line="25"/>
+        <location filename="../src/docks/VoltageDock.cpp" line="26"/>
         <source>Voltage</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/docks/VoltageDock.cpp" line="50"/>
+        <location filename="../src/docks/VoltageDock.cpp" line="55"/>
         <source>CH&amp;%1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/docks/VoltageDock.cpp" line="52"/>
+        <location filename="../src/docks/VoltageDock.cpp" line="57"/>
         <source>MA&amp;TH</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/docks/VoltageDock.cpp" line="55"/>
+        <location filename="../src/docks/VoltageDock.cpp" line="60"/>
         <source>Invert</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/docks/VoltageDock.cpp" line="59"/>
+        <location filename="../src/docks/VoltageDock.cpp" line="64"/>
         <source>x</source>
         <translation type="unfinished"></translation>
     </message>

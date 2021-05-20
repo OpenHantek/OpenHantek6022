@@ -29,6 +29,9 @@ template < typename... Args > struct SELECT {
 HorizontalDock::HorizontalDock( DsoSettingsScope *scope, const Dso::ControlSpecification *spec, QWidget *parent )
     : QDockWidget( tr( "Horizontal" ), parent ), scope( scope ) {
 
+    if ( scope->verboseLevel > 1 )
+        qDebug() << " HorizontalDock::HorizontalDock()";
+
     // Initialize elements
     this->samplerateLabel = new QLabel( tr( "Samplerate" ) );
     this->samplerateSiSpinBox = new SiSpinBox( UNIT_SAMPLES );
@@ -104,8 +107,8 @@ void HorizontalDock::closeEvent( QCloseEvent *event ) {
 
 
 double HorizontalDock::setSamplerate( double samplerate ) {
-    if ( scope->verboseLevel > 1 )
-        qDebug() << "HDock::setSamplerate" << samplerate;
+    if ( scope->verboseLevel > 2 )
+        qDebug() << "  HDock::setSamplerate()" << samplerate;
     samplerateRequest = samplerate;
     QSignalBlocker blocker( timebaseSiSpinBox );
     timebaseSiSpinBox->setMaximum( scope->horizontal.maxTimebase );
@@ -116,8 +119,6 @@ double HorizontalDock::setSamplerate( double samplerate ) {
 
 
 double HorizontalDock::setTimebase( double timebase ) {
-    if ( scope->verboseLevel > 1 )
-        qDebug() << "HDock::setTimebase" << timebase;
     QSignalBlocker blocker( timebaseSiSpinBox );
     // timebaseSteps are repeated in each decade
     double decade = pow( 10, floor( log10( timebase ) ) );
@@ -128,14 +129,16 @@ double HorizontalDock::setTimebase( double timebase ) {
             break;
         }
     }
-    if ( scope->verboseLevel > 1 )
-        qDebug() << "return" << timebaseSiSpinBox->value();
     calculateSamplerateSteps( timebase );
+    if ( scope->verboseLevel > 2 )
+        qDebug() << "  HDock::setTimebase()" << timebase << "return" << timebaseSiSpinBox->value();
     return timebaseSiSpinBox->value();
 }
 
 
 int HorizontalDock::setFormat( Dso::GraphFormat format ) {
+    if ( scope->verboseLevel > 2 )
+        qDebug() << "  HDock::setFormat()" << format;
     QSignalBlocker blocker( formatComboBox );
     if ( format >= Dso::GraphFormat::TY && format <= Dso::GraphFormat::XY ) {
         formatComboBox->setCurrentIndex( format );
@@ -146,6 +149,8 @@ int HorizontalDock::setFormat( Dso::GraphFormat format ) {
 
 
 double HorizontalDock::setCalfreq( double calfreq ) {
+    if ( scope->verboseLevel > 2 )
+        qDebug() << "  HDock::setCalfreq()" << calfreq;
     QSignalBlocker blocker( calfreqSiSpinBox );
     calfreqSiSpinBox->setValue( calfreq );
     return calfreqSiSpinBox->value();
@@ -153,8 +158,8 @@ double HorizontalDock::setCalfreq( double calfreq ) {
 
 
 void HorizontalDock::setSamplerateLimits( double minimum, double maximum ) {
-    if ( scope->verboseLevel > 1 )
-        qDebug() << "HDock::setSamplerateLimits" << minimum << maximum;
+    if ( scope->verboseLevel > 2 )
+        qDebug() << "  HDock::setSamplerateLimits()" << minimum << maximum;
     QSignalBlocker blocker( samplerateSiSpinBox );
     if ( bool( minimum ) )
         samplerateSiSpinBox->setMinimum( minimum );
@@ -164,10 +169,10 @@ void HorizontalDock::setSamplerateLimits( double minimum, double maximum ) {
 
 
 void HorizontalDock::setSamplerateSteps( int mode, const QList< double > steps ) {
-    if ( samplerateSteps == steps ) // no action needed
+    if ( samplerateSteps.size() == steps.size() ) // no action needed
         return;
-    if ( scope->verboseLevel > 1 )
-        qDebug() << "HDock::setSamplerateSteps" << mode << steps;
+    if ( scope->verboseLevel > 2 )
+        qDebug() << "  HDock::setSamplerateSteps()" << mode << steps;
     samplerateSteps = steps;
     // Assume that method is invoked for fixed samplerate devices only
     QSignalBlocker samplerateBlocker( samplerateSiSpinBox );
@@ -185,8 +190,8 @@ void HorizontalDock::setSamplerateSteps( int mode, const QList< double > steps )
 /// \brief Called when the samplerate spinbox changes its value.
 /// \param samplerate The samplerate in samples/second.
 void HorizontalDock::samplerateSelected( double samplerate ) {
-    if ( scope->verboseLevel > 1 )
-        qDebug() << "HDock::samplerateSelected" << samplerate;
+    if ( scope->verboseLevel > 2 )
+        qDebug() << "  HDock::samplerateSelected()" << samplerate;
     scope->horizontal.samplerate = samplerate;
     emit samplerateChanged( samplerate );
 }
@@ -195,8 +200,8 @@ void HorizontalDock::samplerateSelected( double samplerate ) {
 /// \brief Called when the timebase spinbox changes its value.
 /// \param timebase The timebase in seconds.
 void HorizontalDock::timebaseSelected( double timebase ) {
-    if ( scope->verboseLevel > 1 )
-        qDebug() << "HDock::timebaseSelected" << timebase;
+    if ( scope->verboseLevel > 2 )
+        qDebug() << "  HDock::timebaseSelected()" << timebase;
     scope->horizontal.timebase = timebase;
     calculateSamplerateSteps( timebase );
     emit timebaseChanged( timebase );
@@ -211,8 +216,8 @@ void HorizontalDock::calculateSamplerateSteps( double timebase ) {
         double max = samplerateSteps[ 0 ];
         for ( int id = 0; id < size; ++id ) {
             double sRate = samplerateSteps[ id ];
-            if ( scope->verboseLevel > 2 )
-                qDebug() << "sRate, sRate*timebase" << sRate << sRate * timebase;
+            if ( scope->verboseLevel > 3 )
+                qDebug() << "  sRate, sRate*timebase" << sRate << sRate * timebase;
             // min must be < maxRate
             // find minimal samplerate to get at least this number of samples per div
             if ( id < size - 1 && sRate * timebase <= 10 ) { // 10 samples/div
@@ -226,8 +231,8 @@ void HorizontalDock::calculateSamplerateSteps( double timebase ) {
             }
         }
         min = qMax( min, qMin( 10e3, max ) ); // not less than 10kS unless max is smaller
-        if ( scope->verboseLevel > 1 )
-            qDebug() << "HDock::calculateSamplerateSteps" << timebase << min << max;
+        if ( scope->verboseLevel > 2 )
+            qDebug() << "  HDock::calculateSamplerateSteps()" << timebase << min << max;
         setSamplerateLimits( min, max );
         // update samplerate if the requested value was limited
         if ( samplerateRequest > samplerateSiSpinBox->value() )
@@ -239,6 +244,8 @@ void HorizontalDock::calculateSamplerateSteps( double timebase ) {
 /// \brief Called when the format combo box changes its value.
 /// \param index The index of the combo box item.
 void HorizontalDock::formatSelected( int index ) {
+    if ( scope->verboseLevel > 2 )
+        qDebug() << "  HDock::formatSelected()" << index;
     scope->horizontal.format = Dso::GraphFormat( index );
     emit formatChanged( scope->horizontal.format );
 }
@@ -247,8 +254,8 @@ void HorizontalDock::formatSelected( int index ) {
 /// \brief Called when the calfreq spinbox changes its value.
 /// \param calfreq The calibration frequency in hertz.
 void HorizontalDock::calfreqSelected( double calfreq ) {
-    if ( scope->verboseLevel > 1 )
-        qDebug() << "calfreqSelected:" << calfreq;
+    if ( scope->verboseLevel > 2 )
+        qDebug() << "  HDock::calfreqSelected()" << calfreq;
     scope->horizontal.calfreq = calfreq;
     emit calfreqChanged( calfreq );
 }

@@ -2,6 +2,7 @@
 
 #include "selectsupporteddevice.h"
 
+#include <QDebug>
 #include <QDesktopServices>
 #include <QFile>
 #include <QTimer>
@@ -37,9 +38,10 @@ SelectSupportedDevice::SelectSupportedDevice( QWidget *parent ) : QDialog( paren
     connect( ui->btnDemoMode, &QPushButton::clicked, [this]() { demoModeClicked = true; } );
 }
 
-std::unique_ptr< ScopeDevice > SelectSupportedDevice::showSelectDeviceModal( libusb_context *context ) {
-    std::unique_ptr< FindDevices > findDevices = std::unique_ptr< FindDevices >( new FindDevices( context ) );
-    std::unique_ptr< DevicesListModel > model = std::unique_ptr< DevicesListModel >( new DevicesListModel( findDevices.get() ) );
+std::unique_ptr< ScopeDevice > SelectSupportedDevice::showSelectDeviceModal( libusb_context *context, unsigned verboseLevel ) {
+    std::unique_ptr< FindDevices > findDevices = std::unique_ptr< FindDevices >( new FindDevices( context, verboseLevel ) );
+    std::unique_ptr< DevicesListModel > model =
+        std::unique_ptr< DevicesListModel >( new DevicesListModel( findDevices.get(), verboseLevel ) );
     ui->cmbDevices->setModel( model.get() );
 
     QString messageDeviceReady =

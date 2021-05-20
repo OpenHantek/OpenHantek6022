@@ -8,10 +8,9 @@
 #include <memory>
 #include <vector>
 
+#include <QDebug>
 #include <QObject>
 #include <QThread>
-
-struct DsoSettingsScope;
 
 /**
  * Manages all post processing processors. Register another processor with `registerProcessor(p)`.
@@ -22,7 +21,7 @@ class PostProcessing : public QObject {
     Q_OBJECT
 
   public:
-    explicit PostProcessing( unsigned channelCount );
+    explicit PostProcessing( unsigned channelCount, unsigned verboseLevel = 0 );
     /**
      * Adds a new processor that is called when a new input arrived. The order of the processors is
      * imporant. The first added processor will be called first. This class does not take ownership
@@ -42,6 +41,7 @@ class PostProcessing : public QObject {
     std::unique_ptr< PPresult > currentData;
     static void convertData( const DSOsamples *source, PPresult *destination );
     bool processing = true;
+    unsigned verboseLevel = 0;
 
   public slots:
     /**

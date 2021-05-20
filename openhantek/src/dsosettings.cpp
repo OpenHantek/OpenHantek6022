@@ -77,6 +77,8 @@ bool DsoSettings::setFilename( const QString &filename ) {
 // load the persistent scope settings
 // called by "DsoSettings::DsoSettings" and explicitely by "ui->actionOpen"
 void DsoSettings::load() {
+    if ( scope.verboseLevel > 1 )
+        qDebug() << " DsoSettings::load()";
     // Start with default configuration?
     if ( resetSettings || storeSettings->value( "configuration/version", 0 ).toUInt() < CONFIG_VERSION ) {
         // incompatible change or config reset by user
@@ -288,10 +290,14 @@ void DsoSettings::save() {
     // Use default configuration after restart?
     if ( 0 == configVersion ) {
         storeSettings->clear();
+        if ( scope.verboseLevel > 1 )
+            qDebug() << " DsoSettings::save() storeSettings->clear()";
         return;
     } else { // save fontSize as global setting
         QSettings().setValue( "view/fontSize", view.fontSize );
     }
+    if ( scope.verboseLevel > 1 )
+        qDebug() << " DsoSettings::save()" << deviceName << deviceID;
     // now store individual device values
 
     //  Device ID (helps to identify the connection of a "Save as" file with a specific device)

@@ -3,6 +3,7 @@
 #include <QCheckBox>
 #include <QCloseEvent>
 #include <QComboBox>
+#include <QDebug>
 #include <QDockWidget>
 #include <QLabel>
 #include <QSignalBlocker>
@@ -20,6 +21,9 @@
 
 TriggerDock::TriggerDock( DsoSettingsScope *scope, const Dso::ControlSpecification *spec, QWidget *parent )
     : QDockWidget( tr( "Trigger" ), parent ), scope( scope ), mSpec( spec ) {
+
+    if ( scope->verboseLevel > 1 )
+        qDebug() << " TriggerDock::TriggerDock()";
 
     // Initialize lists for comboboxes
     for ( ChannelID channel = 0; channel < mSpec->channels; ++channel )
@@ -83,6 +87,8 @@ TriggerDock::TriggerDock( DsoSettingsScope *scope, const Dso::ControlSpecificati
 }
 
 void TriggerDock::loadSettings( DsoSettingsScope *scope ) {
+    if ( scope->verboseLevel > 2 )
+        qDebug() << "  TDock::loadSettings()";
     // Set values
     setMode( scope->trigger.mode );
     setSlope( scope->trigger.slope );
@@ -99,6 +105,8 @@ void TriggerDock::closeEvent( QCloseEvent *event ) {
 }
 
 void TriggerDock::setMode( Dso::TriggerMode mode ) {
+    if ( scope->verboseLevel > 2 )
+        qDebug() << "  TDock::setMode()" << int( mode );
     int index = int( std::find( mSpec->triggerModes.begin(), mSpec->triggerModes.end(), mode ) - mSpec->triggerModes.begin() );
     QSignalBlocker blocker( modeComboBox );
     modeComboBox->setCurrentIndex( index );
@@ -106,11 +114,15 @@ void TriggerDock::setMode( Dso::TriggerMode mode ) {
 }
 
 void TriggerDock::setSlope( Dso::Slope slope ) {
+    if ( scope->verboseLevel > 2 )
+        qDebug() << "  TDock::setSlope()" << int( slope );
     QSignalBlocker blocker( slopeComboBox );
     slopeComboBox->setCurrentIndex( int( slope ) );
 }
 
 void TriggerDock::setSource( int id ) {
+    if ( scope->verboseLevel > 2 )
+        qDebug() << "  TDock::setSource()" << id;
     if ( id >= this->sourceStandardStrings.count() )
         return;
     QSignalBlocker blocker( sourceComboBox );
@@ -118,6 +130,8 @@ void TriggerDock::setSource( int id ) {
 }
 
 void TriggerDock::setSmooth( int smooth ) {
+    if ( scope->verboseLevel > 2 )
+        qDebug() << "  TDock::setSmooth()" << smooth;
     if ( int( smooth ) >= this->smoothStandardStrings.count() )
         return;
     QSignalBlocker blocker( smoothComboBox );

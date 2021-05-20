@@ -163,7 +163,7 @@ int main( int argc, char *argv[] ) {
         useGLSL150 = p.isSet( useGLSL150Option );
         useLocale = !p.isSet( intOption );
         if ( p.isSet( verboseOption ) )
-            verboseLevel = p.value( "verbose" ).toInt();
+            verboseLevel = p.value( "verbose" ).toUInt();
         resetSettings = p.isSet( resetSettingsOption );
     } // ... and forget the no more needed variables
 
@@ -239,7 +239,7 @@ int main( int argc, char *argv[] ) {
         if ( verboseLevel )
             qDebug() << startupTime.elapsed() << "ms:"
                      << "show splash screen";
-        scopeDevice = SelectSupportedDevice().showSelectDeviceModal( context );
+        scopeDevice = SelectSupportedDevice().showSelectDeviceModal( context, verboseLevel );
         if ( scopeDevice && scopeDevice->isDemoDevice() ) {
             demoMode = true;
             libusb_exit( context ); // stop all USB activities
@@ -269,7 +269,7 @@ int main( int argc, char *argv[] ) {
                  << "create DSO control thread";
     QThread dsoControlThread;
     dsoControlThread.setObjectName( "dsoControlThread" );
-    HantekDsoControl dsoControl( scopeDevice.get(), model );
+    HantekDsoControl dsoControl( scopeDevice.get(), model, verboseLevel );
     dsoControl.moveToThread( &dsoControlThread );
     QObject::connect( &dsoControlThread, &QThread::started, &dsoControl, &HantekDsoControl::stateMachine );
     QObject::connect( &dsoControl, &HantekDsoControl::communicationError, QCoreApplication::instance(), &QCoreApplication::quit );
@@ -304,7 +304,7 @@ int main( int argc, char *argv[] ) {
                  << "create post processing objects";
     QThread postProcessingThread;
     postProcessingThread.setObjectName( "postProcessingThread" );
-    PostProcessing postProcessing( settings.scope.countChannels() );
+    PostProcessing postProcessing( settings.scope.countChannels(), verboseLevel );
 
     SpectrumGenerator spectrumGenerator( &settings.scope, &settings.post );
     MathChannelGenerator mathchannelGenerator( &settings.scope, spec->channels );

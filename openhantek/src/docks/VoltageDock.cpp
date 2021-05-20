@@ -21,8 +21,13 @@ template < typename... Args > struct SELECT {
     }
 };
 
+
 VoltageDock::VoltageDock( DsoSettingsScope *scope, const Dso::ControlSpecification *spec, QWidget *parent )
     : QDockWidget( tr( "Voltage" ), parent ), scope( scope ), spec( spec ) {
+
+    if ( scope->verboseLevel > 1 )
+        qDebug() << " VoltageDock::VoltageDock()";
+
     // Initialize lists for comboboxes
     for ( Dso::Coupling c : spec->couplings )
         if ( c == Dso::Coupling::DC || scope->hasACcoupling || scope->hasACmodification )
@@ -120,7 +125,10 @@ VoltageDock::VoltageDock( DsoSettingsScope *scope, const Dso::ControlSpecificati
     SetupDockWidget( this, dockWidget, dockLayout );
 }
 
+
 void VoltageDock::loadSettings( DsoSettingsScope *scope, const Dso::ControlSpecification *spec ) {
+    if ( scope->verboseLevel > 2 )
+        qDebug() << "  VDock::loadSettings()";
     for ( ChannelID channel = 0; channel < scope->voltage.size(); ++channel ) {
         if ( channel < spec->channels ) {
             if ( int( scope->voltage[ channel ].couplingOrMathIndex ) < couplingStrings.size() )
@@ -136,6 +144,7 @@ void VoltageDock::loadSettings( DsoSettingsScope *scope, const Dso::ControlSpeci
     }
 }
 
+
 /// \brief Don't close the dock, just hide it
 /// \param event The close event that should be handled.
 void VoltageDock::closeEvent( QCloseEvent *event ) {
@@ -143,25 +152,34 @@ void VoltageDock::closeEvent( QCloseEvent *event ) {
     event->accept();
 }
 
+
 void VoltageDock::setCoupling( ChannelID channel, unsigned couplingIndex ) {
     if ( channel >= spec->channels )
         return;
     if ( couplingIndex >= spec->couplings.size() )
         return;
+    if ( scope->verboseLevel > 2 )
+        qDebug() << "  VDock::setCoupling()" << channel << couplingStrings[ int( couplingIndex ) ];
     QSignalBlocker blocker( channelBlocks[ channel ].miscComboBox );
     channelBlocks[ channel ].miscComboBox->setCurrentIndex( int( couplingIndex ) );
 }
+
 
 void VoltageDock::setGain( ChannelID channel, unsigned gainStepIndex ) {
     if ( channel >= scope->voltage.size() )
         return;
     if ( gainStepIndex >= scope->gainSteps.size() )
         return;
+    if ( scope->verboseLevel > 2 )
+        qDebug() << "  VDock::setGain()" << channel << gainStrings[ int( gainStepIndex ) ];
     QSignalBlocker blocker( channelBlocks[ channel ].gainComboBox );
     channelBlocks[ channel ].gainComboBox->setCurrentIndex( int( gainStepIndex ) );
 }
 
+
 void VoltageDock::setAttn( ChannelID channel, double attnValue ) {
+    if ( scope->verboseLevel > 2 )
+        qDebug() << "  VDock::setAttn()" << channel << attnValue;
     if ( channel >= scope->voltage.size() )
         return;
     QSignalBlocker blocker( channelBlocks[ channel ].gainComboBox );
@@ -177,21 +195,30 @@ void VoltageDock::setAttn( ChannelID channel, double attnValue ) {
     channelBlocks[ channel ].attnSpinBox->setValue( int( attnValue ) );
 }
 
+
 void VoltageDock::setMode( unsigned mathModeIndex ) {
+    if ( scope->verboseLevel > 2 )
+        qDebug() << "  VDock::setMode()" << modeStrings[ int( mathModeIndex ) ];
     QSignalBlocker blocker( channelBlocks[ spec->channels ].miscComboBox );
     channelBlocks[ spec->channels ].miscComboBox->setCurrentIndex( int( mathModeIndex ) );
 }
 
+
 void VoltageDock::setUsed( ChannelID channel, bool used ) {
     if ( channel >= scope->voltage.size() )
         return;
+    if ( scope->verboseLevel > 2 )
+        qDebug() << "  VDock::setUsed()" << channel << used;
     QSignalBlocker blocker( channelBlocks[ channel ].usedCheckBox );
     channelBlocks[ channel ].usedCheckBox->setChecked( used );
 }
 
+
 void VoltageDock::setInverted( ChannelID channel, bool inverted ) {
     if ( channel >= scope->voltage.size() )
         return;
+    if ( scope->verboseLevel > 2 )
+        qDebug() << "  VDock::setInverted()" << channel << inverted;
     QSignalBlocker blocker( channelBlocks[ channel ].invertCheckBox );
     channelBlocks[ channel ].invertCheckBox->setChecked( inverted );
 }

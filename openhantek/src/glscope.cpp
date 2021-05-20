@@ -64,6 +64,8 @@ void GlScope::useOpenGLSLversion( QString renderer ) {
 
 GlScope::GlScope( DsoSettingsScope *scope, DsoSettingsView *view, QWidget *parent )
     : QOpenGLWidget( parent ), scope( scope ), view( view ) {
+    if ( scope->verboseLevel > 1 )
+        qDebug() << " GLScope::GLScope()";
     cursorInfo.clear();
     cursorInfo.push_back( &scope->horizontal.cursor );
     selectedCursor = 0;
@@ -78,9 +80,12 @@ GlScope::GlScope( DsoSettingsScope *scope, DsoSettingsView *view, QWidget *paren
 
 
 GlScope::~GlScope() { /* virtual destructor necessary */
+    if ( scope->verboseLevel > 1 )
+        qDebug() << " GLScope::~GLScope()";
 }
 
 
+// static
 GlScope *GlScope::createNormal( DsoSettingsScope *scope, DsoSettingsView *view, QWidget *parent ) {
     GlScope *s = new GlScope( scope, view, parent );
     s->zoomed = false;
@@ -88,6 +93,7 @@ GlScope *GlScope::createNormal( DsoSettingsScope *scope, DsoSettingsView *view, 
 }
 
 
+// static
 GlScope *GlScope::createZoomed( DsoSettingsScope *scope, DsoSettingsView *view, QWidget *parent ) {
     GlScope *s = new GlScope( scope, view, parent );
     s->zoomed = true;
@@ -110,6 +116,8 @@ QPointF GlScope::posToPosition( QPointF pos ) {
 
 
 void GlScope::mousePressEvent( QMouseEvent *event ) {
+    if ( scope->verboseLevel > 2 )
+        qDebug() << "  GLS::mPE()" << event;
     if ( !( zoomed && selectedCursor == 0 ) && event->button() == Qt::LeftButton ) {
         QPointF position = posToPosition( event->pos() );
         selectedMarker = NO_MARKER;
@@ -162,6 +170,8 @@ void GlScope::mousePressEvent( QMouseEvent *event ) {
 
 
 void GlScope::mouseMoveEvent( QMouseEvent *event ) {
+    if ( scope->verboseLevel > 2 )
+        qDebug() << "  GLS::mME()" << event;
     if ( !( zoomed && selectedCursor == 0 ) && ( event->buttons() & Qt::LeftButton ) != 0 ) {
         QPointF position = posToPosition( event->pos() );
         if ( selectedMarker == NO_MARKER ) {
@@ -183,6 +193,8 @@ void GlScope::mouseMoveEvent( QMouseEvent *event ) {
 
 
 void GlScope::mouseReleaseEvent( QMouseEvent *event ) {
+    if ( scope->verboseLevel > 2 )
+        qDebug() << "  GLS::mRE()" << event;
     if ( !( zoomed && selectedCursor == 0 ) && event->button() == Qt::LeftButton ) {
         QPointF position = posToPosition( event->pos() );
         if ( selectedMarker < 2 ) {
@@ -197,6 +209,8 @@ void GlScope::mouseReleaseEvent( QMouseEvent *event ) {
 
 
 void GlScope::mouseDoubleClickEvent( QMouseEvent *event ) {
+    if ( scope->verboseLevel > 2 )
+        qDebug() << "  GLS::mDCE()" << event;
     if ( !( zoomed && selectedCursor == 0 ) && ( event->buttons() & Qt::LeftButton ) != 0 ) {
         // left double click positions two markers left and right of clicked pos with zoom=100
         QPointF position = posToPosition( event->pos() );
@@ -228,6 +242,8 @@ void GlScope::mouseDoubleClickEvent( QMouseEvent *event ) {
 
 
 void GlScope::wheelEvent( QWheelEvent *event ) {
+    if ( scope->verboseLevel > 2 )
+        qDebug() << "  GLS::wE()" << event;
     static std::vector< int > zoomList = {1, 2, 5, 10, 20, 50, 100, 200, 500};
     if ( !( zoomed && selectedCursor == 0 ) ) {
         if ( selectedMarker == NO_MARKER ) {
@@ -280,6 +296,8 @@ void GlScope::paintEvent( QPaintEvent *event ) {
 
 
 void GlScope::initializeGL() {
+    if ( scope->verboseLevel )
+        qDebug() << "GLScope::initializeGL()";
     if ( !QOpenGLShaderProgram::hasOpenGLShaderPrograms( context() ) ) {
         errorMessage = tr( "System does not support OpenGL Shading Language (GLSL)" );
         return;

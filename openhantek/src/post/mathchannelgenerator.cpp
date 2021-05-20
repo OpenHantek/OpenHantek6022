@@ -1,22 +1,32 @@
 // SPDX-License-Identifier: GPL-2.0+
 
-#include "mathchannelgenerator.h"
+#include <QDebug>
+
 #include "enums.h"
+#include "mathchannelgenerator.h"
 #include "post/postprocessingsettings.h"
 #include "scopesettings.h"
 
 MathChannelGenerator::MathChannelGenerator( const DsoSettingsScope *scope, unsigned physicalChannels )
-    : physicalChannels( physicalChannels ), scope( scope ) {}
+    : physicalChannels( physicalChannels ), scope( scope ) {
+    if ( scope->verboseLevel > 1 )
+        qDebug() << " MathChannelGenerator::MathChannelGenerator()";
+}
 
 
-MathChannelGenerator::~MathChannelGenerator() {}
+MathChannelGenerator::~MathChannelGenerator() {
+    if ( scope->verboseLevel > 1 )
+        qDebug() << " MathChannelGenerator::~MathChannelGenerator()";
+}
 
 
 void MathChannelGenerator::process( PPresult *result ) {
-    // printf( "MathChannelGenerator::process\n" );
     // Math channel enabled?
     if ( !scope->voltage[ physicalChannels ].used && !scope->spectrum[ physicalChannels ].used )
         return;
+
+    if ( scope->verboseLevel > 3 )
+        qDebug() << "   MathChannelGenerator::process()" << result->tag;
 
     DataChannel *const channelData = result->modifiableData( physicalChannels );
     std::vector< double > &resultData = channelData->voltage.sample;

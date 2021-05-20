@@ -63,7 +63,7 @@ class HantekDsoControl : public QObject {
      * if run() is called.
      * @param device The usb device. This object does not take ownership.
      */
-    explicit HantekDsoControl( ScopeDevice *scopeDevice, const DSOModel *model );
+    explicit HantekDsoControl( ScopeDevice *scopeDevice, const DSOModel *model, unsigned verboseLevel );
 
     /// \brief Cleans up
     ~HantekDsoControl();
