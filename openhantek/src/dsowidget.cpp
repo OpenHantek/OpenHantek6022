@@ -30,6 +30,9 @@ DsoWidget::DsoWidget( DsoSettingsScope *scope, DsoSettingsView *view, const Dso:
     : QWidget( parent ), scope( scope ), view( view ), spec( spec ), mainScope( GlScope::createNormal( scope, view ) ),
       zoomScope( GlScope::createZoomed( scope, view ) ) {
 
+    if ( scope->verboseLevel > 1 )
+        qDebug() << " DsoWidget::DsoWidget()";
+
     // Palette for this widget
     QPalette palette;
     palette.setColor( QPalette::Window, view->colors->background );
@@ -284,9 +287,9 @@ DsoWidget::DsoWidget( DsoSettingsScope *scope, DsoSettingsView *view, const Dso:
     connect( zoomSliders.voltageOffsetSlider, &LevelSlider::valueChanged, this, &DsoWidget::updateOffset );
 
     connect( mainSliders.triggerPositionSlider, &LevelSlider::valueChanged,
-             [this]( int index, double value ) { updateTriggerOffset( index, value, true ); } );
+             [this]( int index, double value ) { updateTriggerPosition( index, value, true ); } );
     connect( zoomSliders.triggerPositionSlider, &LevelSlider::valueChanged,
-             [this]( int index, double value ) { updateTriggerOffset( index, value, false ); } );
+             [this]( int index, double value ) { updateTriggerPosition( index, value, false ); } );
 
     connect( mainSliders.triggerLevelSlider, &LevelSlider::valueChanged, this, &DsoWidget::updateTriggerLevel );
     connect( zoomSliders.triggerLevelSlider, &LevelSlider::valueChanged, this, &DsoWidget::updateTriggerLevel );
@@ -310,6 +313,12 @@ DsoWidget::DsoWidget( DsoSettingsScope *scope, DsoSettingsView *view, const Dso:
 }
 
 
+DsoWidget::~DsoWidget() {
+    if ( scope->verboseLevel > 1 )
+        qDebug() << " DsoWidget::~DsoWidget()";
+}
+
+
 void DsoWidget::switchToPrintColors() {
     if ( view->printerColorImages ) {
         view->colors = &view->print;
@@ -327,6 +336,8 @@ void DsoWidget::restoreScreenColors() {
 
 
 void DsoWidget::setColors() {
+    if ( scope->verboseLevel > 2 )
+        qDebug() << "  DsoWidget::setColors()";
     // Palette for this widget
     QPalette paletteNow;
     paletteNow.setColor( QPalette::Window, view->colors->background );
@@ -403,6 +414,8 @@ void DsoWidget::updateCursorGrid( bool enabled ) {
 
 
 void DsoWidget::setupSliders( DsoWidget::Sliders &sliders ) {
+    if ( scope->verboseLevel > 2 )
+        qDebug() << "  DsoWidget::setupSliders()";
     // The offset sliders for all possible channels
     sliders.voltageOffsetSlider = new LevelSlider( Qt::RightArrow );
     for ( ChannelID channel = 0; channel < scope->voltage.size(); ++channel ) {
@@ -428,7 +441,7 @@ void DsoWidget::setupSliders( DsoWidget::Sliders &sliders ) {
     sliders.triggerPositionSlider->addSlider();
     sliders.triggerPositionSlider->setLimits( 0, 0.0, 1.0 );
     sliders.triggerPositionSlider->setStep( 0, 0.2 / double( DIVS_TIME ) );
-    sliders.triggerPositionSlider->setValue( 0, scope->trigger.offset );
+    sliders.triggerPositionSlider->setValue( 0, scope->trigger.position );
     sliders.triggerPositionSlider->setIndexVisible( 0, true );
 
     // The sliders for the trigger levels
@@ -509,14 +522,16 @@ void DsoWidget::setMeasurementVisible( ChannelID channel ) {
 
 /// \brief Update the label about the marker measurements
 void DsoWidget::updateMarkerDetails() {
+    if ( scope->verboseLevel > 4 )
+        qDebug() << "    DsoWidget::updateMarkerDetails()";
     double m1 = scope->horizontal.cursor.pos[ 0 ].x() + DIVS_TIME / 2; // zero at center -> zero at left margin
     double m2 = scope->horizontal.cursor.pos[ 1 ].x() + DIVS_TIME / 2; // zero at center -> zero at left margin
     if ( m1 > m2 )
         std::swap( m1, m2 );
     double divs = m2 - m1;
     // t = 0 at trigger position
-    double time0 = ( m1 - DIVS_TIME * scope->trigger.offset ) * scope->horizontal.timebase;
-    double time1 = ( m2 - DIVS_TIME * scope->trigger.offset ) * scope->horizontal.timebase;
+    double time0 = ( m1 - DIVS_TIME * scope->trigger.position ) * scope->horizontal.timebase;
+    double time1 = ( m2 - DIVS_TIME * scope->trigger.position ) * scope->horizontal.timebase;
     double time = divs * scope->horizontal.timebase;
     double freq0 = m1 * scope->horizontal.frequencybase;
     double freq1 = m2 * scope->horizontal.frequencybase;
@@ -628,7 +643,7 @@ void DsoWidget::updateTriggerDetails() {
     tablePalette.setColor( QPalette::WindowText, view->colors->voltage[ unsigned( scope->trigger.source ) ] );
     settingsTriggerLabel->setPalette( tablePalette );
     QString levelString = valueToString( scope->voltage[ unsigned( scope->trigger.source ) ].trigger, UNIT_VOLTS, 3 );
-    QString pretriggerString = tr( "%L1%" ).arg( int( round( scope->trigger.offset * 100 ) ) );
+    QString pretriggerString = tr( "%L1%" ).arg( int( round( scope->trigger.position * 100 ) ) );
     QString pre = Dso::slopeString( scope->trigger.slope ); // trigger slope
     QString post = pre;                                     // opposite trigger slope
     if ( scope->trigger.slope == Dso::Slope::Positive )
@@ -703,6 +718,8 @@ void DsoWidget::updateSpectrumMagnitude( ChannelID channel ) { updateSpectrumDet
 /// \param channel The channel whose used-state was changed.
 /// \param used The new used-state for the channel.
 void DsoWidget::updateSpectrumUsed( ChannelID channel, bool used ) {
+    if ( scope->verboseLevel > 2 )
+        qDebug() << "  DsoWidget::updateSpectrumUsed()" << channel << used;
     if ( channel >= unsigned( scope->voltage.size() ) )
         return;
     bool spectrumUsed = false;
@@ -775,10 +792,10 @@ void DsoWidget::updateVoltageGain( ChannelID channel ) {
 /// \param channel The channel whose used-state was changed.
 /// \param used The new used-state for the channel.
 void DsoWidget::updateVoltageUsed( ChannelID channel, bool used ) {
+    if ( scope->verboseLevel > 2 )
+        qDebug() << "  DsoWidget::updateVoltageUsed()" << channel << used;
     if ( channel >= unsigned( scope->voltage.size() ) )
         return;
-
-    //    if (!used && cursorDataGrid->voltageCursors[channel].selector->isChecked()) cursorDataGrid->selectItem(0);
 
     mainSliders.voltageOffsetSlider->setIndexVisible( channel, used );
     zoomSliders.voltageOffsetSlider->setIndexVisible( channel, used );
@@ -800,6 +817,8 @@ void DsoWidget::updateRecordLength( unsigned long size ) {
 
 /// \brief Show/hide the zoom view.
 void DsoWidget::updateZoom( bool enabled ) {
+    if ( scope->verboseLevel > 2 )
+        qDebug() << "  DsoWidget::updateZoom()" << enabled;
     mainLayout->setRowStretch( zoomScopeRow, enabled ? 1 : 0 );
     zoomScope->setVisible( enabled );
     zoomSliders.voltageOffsetSlider->setVisible( enabled );
@@ -818,6 +837,8 @@ void DsoWidget::updateZoom( bool enabled ) {
 
 /// \brief Prints analyzed data.
 void DsoWidget::showNew( std::shared_ptr< PPresult > analysedData ) {
+    if ( scope->verboseLevel > 4 )
+        qDebug() << "    DsoWidget::showNew()" << analysedData->tag;
     mainScope->showData( analysedData );
     zoomScope->showData( analysedData );
 
@@ -901,7 +922,7 @@ void DsoWidget::showEvent( QShowEvent *event ) {
     updateZoom( view->zoom );
 
     updateTriggerSource();
-    adaptTriggerOffsetSlider();
+    adaptTriggerPositionSlider();
 }
 
 
@@ -935,6 +956,8 @@ void DsoWidget::updateOffset( ChannelID channel, double value ) {
 #ifdef __GNUC__
 #pragma GCC diagnostic pop
 #endif
+    if ( scope->verboseLevel > 2 )
+        qDebug() << "  DsoWidget::updateOffset()" << channel << value;
     emit voltageOffsetChanged( channel, value );
 }
 
@@ -960,8 +983,8 @@ double DsoWidget::zoomToMain( double position ) const {
 
 
 /// \brief Handles signals affecting trigger position in the zoom view.
-void DsoWidget::adaptTriggerOffsetSlider() {
-    double value = mainToZoom( scope->trigger.offset );
+void DsoWidget::adaptTriggerPositionSlider() {
+    double value = mainToZoom( scope->trigger.position );
 
     LevelSlider &slider = *zoomSliders.triggerPositionSlider;
     const QSignalBlocker blocker( slider );
@@ -983,23 +1006,24 @@ void DsoWidget::adaptTriggerOffsetSlider() {
 /// \param index The index of the slider.
 /// \param value The new triggerPosition in seconds relative to the first
 /// sample.
-void DsoWidget::updateTriggerOffset( int index, double value, bool mainView ) {
+void DsoWidget::updateTriggerPosition( int index, double value, bool mainView ) {
     if ( index != 0 )
         return;
 
     if ( mainView ) {
-        scope->trigger.offset = value;
-        adaptTriggerOffsetSlider();
+        scope->trigger.position = value;
+        adaptTriggerPositionSlider();
     } else {
-        scope->trigger.offset = zoomToMain( value );
+        scope->trigger.position = zoomToMain( value );
         const QSignalBlocker blocker( mainSliders.triggerPositionSlider );
-        mainSliders.triggerPositionSlider->setValue( index, scope->trigger.offset );
+        mainSliders.triggerPositionSlider->setValue( index, scope->trigger.position );
     }
 
     updateTriggerDetails();
     updateMarkerDetails();
-
-    emit triggerPositionChanged( scope->trigger.offset );
+    if ( scope->verboseLevel > 2 )
+        qDebug() << "  DsoWidget::updateTriggerPosition()" << scope->trigger.position;
+    emit triggerPositionChanged( scope->trigger.position );
 }
 
 
@@ -1025,7 +1049,8 @@ void DsoWidget::updateTriggerLevel( ChannelID channel, double value ) {
 #pragma GCC diagnostic pop
 #endif
     updateTriggerDetails();
-
+    if ( scope->verboseLevel > 2 )
+        qDebug() << "  DsoWidget::updateTriggerValue()" << channel << value;
     emit triggerLevelChanged( channel, value );
 }
 
@@ -1035,13 +1060,15 @@ void DsoWidget::updateTriggerLevel( ChannelID channel, double value ) {
 /// \param value The new marker position.
 void DsoWidget::updateMarker( unsigned marker, double value ) {
     scope->setMarker( marker, value );
-    adaptTriggerOffsetSlider();
+    adaptTriggerPositionSlider();
     updateMarkerDetails();
 }
 
 
 /// \brief Update the sliders settings.
 void DsoWidget::updateSlidersSettings() {
+    if ( scope->verboseLevel > 2 )
+        qDebug() << "  DsoWidget::updateSlidersSettings()";
     // The offset sliders for all possible channels
     for ( ChannelID channel = 0; channel < scope->voltage.size(); ++channel ) {
         updateOffset( channel, scope->voltage[ channel ].offset );
@@ -1064,9 +1091,9 @@ void DsoWidget::updateSlidersSettings() {
     }
 
     // The trigger position slider
-    mainSliders.triggerPositionSlider->setValue( 0, scope->trigger.offset );
-    updateTriggerOffset( 0, scope->trigger.offset, true );                // main slider
-    updateTriggerOffset( 0, mainToZoom( scope->trigger.offset ), false ); // zoom slider
+    mainSliders.triggerPositionSlider->setValue( 0, scope->trigger.position );
+    updateTriggerPosition( 0, scope->trigger.position, true );                // main slider
+    updateTriggerPosition( 0, mainToZoom( scope->trigger.position ), false ); // zoom slider
 
     // The sliders for the trigger levels
     for ( ChannelID channel = 0; channel < spec->channels; ++channel ) {

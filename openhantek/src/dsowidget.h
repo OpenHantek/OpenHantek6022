@@ -38,6 +38,8 @@ class DsoWidget : public QWidget {
     /// \param flags Flags for the window manager.
     DsoWidget( DsoSettingsScope *scope, DsoSettingsView *view, const Dso::ControlSpecification *spec, QWidget *parent = nullptr );
 
+    ~DsoWidget();
+
     // Data arrived
     void showNew( std::shared_ptr< PPresult > analysedData );
 
@@ -48,7 +50,7 @@ class DsoWidget : public QWidget {
     virtual void showEvent( QShowEvent *event );
     void setupSliders( Sliders &sliders );
     void adaptTriggerLevelSlider( DsoWidget::Sliders &sliders, ChannelID channel );
-    void adaptTriggerOffsetSlider();
+    void adaptTriggerPositionSlider();
     void setMeasurementVisible( ChannelID channel );
     void updateMarkerDetails();
     void updateSpectrumDetails( ChannelID channel );
@@ -145,7 +147,7 @@ class DsoWidget : public QWidget {
   private slots:
     // Sliders
     void updateOffset( ChannelID channel, double value );
-    void updateTriggerOffset( int index, double value, bool mainView = true );
+    void updateTriggerPosition( int index, double value, bool mainView = true );
     void updateTriggerLevel( ChannelID channel, double value );
     void updateMarker( unsigned marker, double value );
 

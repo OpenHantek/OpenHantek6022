@@ -25,8 +25,8 @@ void MathChannelGenerator::process( PPresult *result ) {
     if ( !scope->voltage[ physicalChannels ].used && !scope->spectrum[ physicalChannels ].used )
         return;
 
-    if ( scope->verboseLevel > 3 )
-        qDebug() << "   MathChannelGenerator::process()" << result->tag;
+    if ( scope->verboseLevel > 4 )
+        qDebug() << "    MathChannelGenerator::process()" << result->tag;
 
     DataChannel *const channelData = result->modifiableData( physicalChannels );
     std::vector< double > &resultData = channelData->voltage.sample;

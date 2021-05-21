@@ -34,6 +34,10 @@
 
 MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, ExporterRegistry *exporterRegistry, QWidget *parent )
     : QMainWindow( parent ), ui( new Ui::MainWindow ), dsoSettings( settings ), exporterRegistry( exporterRegistry ) {
+
+    if ( dsoSettings->scope.verboseLevel > 1 )
+        qDebug() << " MainWindow::MainWindow()";
+
     // suppress nasty warnings, e.g. "kf5.kio.core: Invalid URL ..." or "qt.qpa.xcb: QXcbConnection: XCB error: 3 (BadWindow) ..."
     QLoggingCategory::setFilterRules( "kf5.kio.core=false\nqt.qpa.xcb=false" );
     QVariantMap colorMap;
@@ -225,7 +229,7 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
     // should we send the smooth mode also to dsoWidget?
     connect( triggerDock, &TriggerDock::slopeChanged, dsoControl, &HantekDsoControl::setTriggerSlope );
     connect( triggerDock, &TriggerDock::slopeChanged, dsoWidget, &DsoWidget::updateTriggerSlope );
-    connect( dsoWidget, &DsoWidget::triggerPositionChanged, dsoControl, &HantekDsoControl::setTriggerOffset );
+    connect( dsoWidget, &DsoWidget::triggerPositionChanged, dsoControl, &HantekDsoControl::setTriggerPosition );
     connect( dsoWidget, &DsoWidget::triggerLevelChanged, dsoControl, &HantekDsoControl::setTriggerLevel );
 
     auto usedChanged = [this, dsoControl, spec]( ChannelID channel ) {
@@ -444,18 +448,33 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
 }
 
 
-MainWindow::~MainWindow() { delete ui; }
+MainWindow::~MainWindow() {
+    if ( dsoSettings->scope.verboseLevel > 1 )
+        qDebug() << " MainWindow::~MainWindow()";
+    delete ui;
+}
 
 
-void MainWindow::showNewData( std::shared_ptr< PPresult > newData ) { dsoWidget->showNew( newData ); }
+void MainWindow::showNewData( std::shared_ptr< PPresult > newData ) {
+    if ( dsoSettings->scope.verboseLevel > 5 )
+        qDebug() << "     MainWindow::showNewData()" << newData->tag;
+    dsoWidget->showNew( newData );
+}
 
 
 void MainWindow::exporterStatusChanged( const QString &exporterName, const QString &status ) {
+    if ( dsoSettings->scope.verboseLevel > 3 )
+        qDebug() << "   MainWindow::exporterStatusChanged()" << exporterName << status;
     ui->statusbar->showMessage( tr( "%1: %2" ).arg( exporterName, status ) );
 }
 
 
-void MainWindow::exporterProgressChanged() { exporterRegistry->checkForWaitingExporters(); }
+void MainWindow::exporterProgressChanged() {
+    if ( dsoSettings->scope.verboseLevel > 3 )
+        qDebug() << "   MainWindow::exporterProgressChanged()";
+    exporterRegistry->checkForWaitingExporters();
+}
+
 
 // make screenshot (type == SCREENSHOT) from the complete program window with screen colors ...
 // ... or a printable hardcopy (type == HARDCOPY) from the scope widget only ...
@@ -463,6 +482,8 @@ void MainWindow::exporterProgressChanged() { exporterRegistry->checkForWaitingEx
 // ... or send this hardcopy directly to the printer (type == PRINTER).
 // autoSafe == true -> do not ask for filename, save as PNG with default name into active directory
 void MainWindow::screenShot( screenshotType_t screenshotType, bool autoSafe ) {
+    if ( dsoSettings->scope.verboseLevel > 2 )
+        qDebug() << "  MainWindow::screenShot()" << screenshotType << autoSafe;
     auto activeWindow = screenshotType == SCREENSHOT ? qApp->activeWindow() : dsoWidget;
     QPixmap screenshot( activeWindow->size() );
     QDateTime now = QDateTime::currentDateTime();
@@ -557,6 +578,8 @@ void MainWindow::screenShot( screenshotType_t screenshotType, bool autoSafe ) {
 /// \brief Save the settings before exiting.
 /// \param event The close event that should be handled.
 void MainWindow::closeEvent( QCloseEvent *event ) {
+    if ( dsoSettings->scope.verboseLevel > 2 )
+        qDebug() << "  MainWindow::closeEvent()";
     if ( dsoSettings->alwaysSave ) {
         dsoSettings->mainWindowGeometry = saveGeometry();
         dsoSettings->mainWindowState = saveState();

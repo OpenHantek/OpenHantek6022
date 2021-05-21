@@ -76,17 +76,19 @@ void HantekDsoControl::updateSamplerateLimits() {
             sampleSteps << v.samplerate;
         }
     }
-    if ( verboseLevel > 2 )
-        qDebug() << "  HDC::updateSamplerateLimits " << sampleSteps;
+    if ( verboseLevel > 3 )
+        qDebug() << "   HDC::updateSamplerateLimits()" << sampleSteps;
+    else if ( verboseLevel > 2 )
+        qDebug() << "  HDC::updateSamplerateLimits()" << sampleSteps.first() << "..." << sampleSteps.last();
     emit samplerateSet( 1, sampleSteps );
 }
 
 
 void HantekDsoControl::controlSetSamplerate( uint8_t sampleIndex ) {
     static uint8_t lastIndex = 0xFF;
-    if ( verboseLevel > 2 )
-        qDebug() << "  HDC::controlSetSamplerate()" << sampleIndex;
     uint8_t id = specification->fixedSampleRates[ sampleIndex ].id;
+    if ( verboseLevel > 2 )
+        qDebug() << "  HDC::controlSetSamplerate()" << sampleIndex << "id:" << id;
     modifyCommand< ControlSetSamplerate >( ControlCode::CONTROL_SETSAMPLERATE )->setSamplerate( id, sampleIndex );
     if ( sampleIndex != lastIndex ) { // samplerate has changed, start new sampling
         restartSampling();
@@ -97,7 +99,7 @@ void HantekDsoControl::controlSetSamplerate( uint8_t sampleIndex ) {
 
 Dso::ErrorCode HantekDsoControl::setSamplerate( double samplerate ) {
     if ( verboseLevel > 2 )
-        qDebug() << "  HDC::setSamplerate" << samplerate;
+        qDebug() << "  HDC::setSamplerate()" << samplerate;
     if ( deviceNotConnected() )
         return Dso::ErrorCode::CONNECTION;
 
@@ -117,7 +119,7 @@ Dso::ErrorCode HantekDsoControl::setSamplerate( double samplerate ) {
     setDownsampling( specification->fixedSampleRates[ sampleIndex ].oversampling );
     controlsettings.samplerate.current = samplerate;
     if ( verboseLevel > 2 )
-        qDebug() << "  HDC::setSamplerate: emit samplerateChanged" << samplerate;
+        qDebug() << "  HDC::setSamplerate() emit samplerateChanged" << samplerate;
     emit samplerateChanged( samplerate );
     return Dso::ErrorCode::NONE;
 }
@@ -125,7 +127,7 @@ Dso::ErrorCode HantekDsoControl::setSamplerate( double samplerate ) {
 
 Dso::ErrorCode HantekDsoControl::setRecordTime( double duration ) {
     if ( verboseLevel > 2 )
-        qDebug() << "  HDC::setRecordTime" << duration;
+        qDebug() << "  HDC::setRecordTime()" << duration;
     if ( deviceNotConnected() )
         return Dso::ErrorCode::CONNECTION;
 
@@ -137,7 +139,7 @@ Dso::ErrorCode HantekDsoControl::setRecordTime( double duration ) {
         controlsettings.samplerate.target.samplerateSet = ControlSettingsSamplerateTarget::Duration;
     }
     if ( verboseLevel > 2 )
-        qDebug() << "  duration = " << duration;
+        qDebug() << "  duration =" << duration;
 
     double srLimit;
     if ( isSingleChannel() )
@@ -373,11 +375,11 @@ Dso::ErrorCode HantekDsoControl::setTriggerSlope( Dso::Slope slope ) {
 
 
 // set trigger position (0.0 - 1.0)
-Dso::ErrorCode HantekDsoControl::setTriggerOffset( double position ) {
+Dso::ErrorCode HantekDsoControl::setTriggerPosition( double position ) {
     if ( deviceNotConnected() )
         return Dso::ErrorCode::CONNECTION;
     if ( verboseLevel > 2 )
-        qDebug() << "  HDC::setTriggerPosition" << position;
+        qDebug() << "  HDC::setTriggerPosition()" << position;
     controlsettings.trigger.position = position;
     newTriggerParam = true;
     return Dso::ErrorCode::NONE;
@@ -402,7 +404,7 @@ void HantekDsoControl::applySettings( DsoSettingsScope *dsoSettingsScope ) {
     setRecordTime( dsoSettingsScope->horizontal.timebase * DIVS_TIME );
     setCalFreq( dsoSettingsScope->horizontal.calfreq );
     setTriggerMode( dsoSettingsScope->trigger.mode );
-    setTriggerOffset( dsoSettingsScope->trigger.offset );
+    setTriggerPosition( dsoSettingsScope->trigger.position );
     setTriggerSlope( dsoSettingsScope->trigger.slope );
     setTriggerSource( dsoSettingsScope->trigger.source );
     setTriggerSmooth( dsoSettingsScope->trigger.smooth );
@@ -411,8 +413,8 @@ void HantekDsoControl::applySettings( DsoSettingsScope *dsoSettingsScope ) {
 
 /// \brief Starts a new sampling block.
 void HantekDsoControl::restartSampling() {
-    if ( verboseLevel > 3 )
-        qDebug() << "   HDC::restartSampling()";
+    if ( verboseLevel > 4 )
+        qDebug() << "    HDC::restartSampling()";
     scopeDevice->stopSampling();
     raw.rollMode = false;
 }
@@ -420,8 +422,8 @@ void HantekDsoControl::restartSampling() {
 
 /// \brief Start sampling process.
 void HantekDsoControl::enableSampling( bool enabled ) {
-    if ( verboseLevel > 3 )
-        qDebug() << "   HDC::enableSampling()" << enabled;
+    if ( verboseLevel > 4 )
+        qDebug() << "    HDC::enableSampling()" << enabled;
     sampling = enabled;
     updateSamplerateLimits();
     emit samplingStatusChanged( enabled );
@@ -432,8 +434,8 @@ unsigned HantekDsoControl::getRecordLength() const {
     unsigned rawsize = getSamplesize();
     rawsize *= this->downsamplingNumber;   // take multiple samples for oversampling
     rawsize = grossSampleCount( rawsize ); // adjust for skipping of minimal 2048 leading samples
-    if ( verboseLevel > 3 )
-        qDebug() << "   HDC::getRecordLength() ->" << rawsize;
+    if ( verboseLevel > 4 )
+        qDebug() << "    HDC::getRecordLength() ->" << rawsize;
     return rawsize;
 }
 
@@ -498,8 +500,8 @@ void HantekDsoControl::convertRawDataToSamples() {
     const unsigned sampleCount = freeRunning ? rawSampleCount : netSampleCount( rawSampleCount );
     const unsigned resultSamples = freeRunning ? sampleCount / rawOversampling - 1 : sampleCount / rawOversampling;
     const unsigned skipSamples = rawSampleCount - sampleCount;
-    if ( verboseLevel > 3 )
-        qDebug() << "   HDC::convertRawDataToSamples()" << raw.tag;
+    if ( verboseLevel > 4 )
+        qDebug() << "    HDC::convertRawDataToSamples()" << raw.tag;
     QWriteLocker resultLocker( &result.lock );
     result.freeRunning = freeRunning;
     result.tag = raw.tag;
@@ -579,8 +581,8 @@ unsigned HantekDsoControl::searchTriggerPoint( Dso::Slope dsoSlope, unsigned int
     unsigned channel = unsigned( controlsettings.trigger.source );
     const std::vector< double > &samples = result.data[ channel ];
     unsigned sampleCount = unsigned( samples.size() ); ///< number of available samples
-    if ( verboseLevel > 4 )
-        qDebug() << "    HDC::searchTriggerPoint" << int( dsoSlope ) << startPos;
+    if ( verboseLevel > 5 )
+        qDebug() << "     HDC::searchTriggerPoint()" << int( dsoSlope ) << startPos;
     if ( startPos >= sampleCount )
         return 0;
     double level = controlsettings.trigger.level[ channel ];
@@ -602,8 +604,8 @@ unsigned HantekDsoControl::searchTriggerPoint( Dso::Slope dsoSlope, unsigned int
     const unsigned swTriggerSampleSet = unsigned( pow( 20, controlsettings.trigger.smooth ) );
     if ( postTrigSamples > sampleCount - 2 * ( swTriggerSampleSet + 1 ) )
         postTrigSamples = sampleCount - 2 * ( swTriggerSampleSet + 1 );
-    if ( verboseLevel > 4 )
-        qDebug() << "    pre:" << preTrigSamples << "post:" << postTrigSamples;
+    if ( verboseLevel > 5 )
+        qDebug() << "     pre:" << preTrigSamples << "post:" << postTrigSamples;
 
     double prev = INT_MAX;
     unsigned swTriggerStart = 0;
@@ -652,8 +654,8 @@ unsigned HantekDsoControl::searchTriggeredPosition() {
     if ( !controlsettings.voltage[ channel ].used || result.data.empty() ) {
         return result.triggeredPosition = 0;
     }
-    if ( verboseLevel > 3 )
-        qDebug() << "   HDC::searchTriggeredPosition()" << result.tag;
+    if ( verboseLevel > 4 )
+        qDebug() << "    HDC::searchTriggeredPosition()" << result.tag;
     triggeredPositionRaw = 0;
     double pulseWidth1 = 0.0;
     double pulseWidth2 = 0.0;
@@ -693,16 +695,16 @@ unsigned HantekDsoControl::searchTriggeredPosition() {
     result.triggeredPosition = triggeredPositionRaw; // align trace to trigger position
     result.pulseWidth1 = pulseWidth1;
     result.pulseWidth2 = pulseWidth2;
-    if ( verboseLevel > 4 )
-        qDebug() << "    nextSlope:"
+    if ( verboseLevel > 5 )
+        qDebug() << "     nextSlope:"
                  << "/\\"[ int( nextSlope ) ] << "triggeredPositionRaw:" << triggeredPositionRaw;
     return result.triggeredPosition;
 }
 
 
 bool HantekDsoControl::provideTriggeredData() {
-    if ( verboseLevel > 3 )
-        qDebug() << "   HDC::provideTriggeredData()" << result.tag;
+    if ( verboseLevel > 4 )
+        qDebug() << "    HDC::provideTriggeredData()" << result.tag;
     static DSOsamples triggeredResult; // storage for last triggered trace samples
     if ( result.triggeredPosition ) {  // live trace has triggered
         // Use this trace and save it also
@@ -757,8 +759,8 @@ void HantekDsoControl::stateMachine() {
     static unsigned lastTag = 0;
 
     bool triggered = false;
-    if ( verboseLevel > 3 )
-        qDebug() << "   HDC::stateMachine()" << raw.tag;
+    if ( verboseLevel > 4 )
+        qDebug() << "    HDC::stateMachine()" << raw.tag;
 
     // we have a sample available ...
     // ... that is either a new sample or we are in free run mode or a new trigger search is needed

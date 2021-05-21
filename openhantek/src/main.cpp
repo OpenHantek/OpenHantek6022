@@ -105,7 +105,8 @@ int main( int argc, char *argv[] ) {
     bool useGLSL120 = false;
     bool useGLSL150 = false;
     bool useLocale = true;
-    unsigned verboseLevel = 0;
+    // verboseLevel allows the fine granulated tracing of the program for easy testing and debugging
+    unsigned verboseLevel = 0; // 0: quiet; 1,2: startup; 3,4: + user actions; 5,6: + data processing
     bool resetSettings = false;
     QString font = defaultFont;       // defined in viewsettings.h
     int fontSize = defaultFontSize;   // defined in viewsettings.h
@@ -148,7 +149,7 @@ int main( int argc, char *argv[] ) {
         p.addOption( condensedOption );
         QCommandLineOption resetSettingsOption( "resetSettings", "Reset persistent settings, start with default" );
         p.addOption( resetSettingsOption );
-        QCommandLineOption verboseOption( "verbose", "Verbose tracing of the program startup steps", "Level" );
+        QCommandLineOption verboseOption( "verbose", "Verbose tracing of program startup, ui and processing steps", "Level" );
         p.addOption( verboseOption );
         p.process( parserApp );
         demoMode = p.isSet( demoModeOption );
@@ -410,7 +411,11 @@ int main( int argc, char *argv[] ) {
                  << "application closed, clean up";
 
     std::cout << std::unitbuf; // enable automatic flushing
-    std::cout << "OpenHantek6022 ";
+
+    // the stepwise text output gives some hints about the shutdown timing
+    // not needed with appropriate verbose level
+    if ( verboseLevel < 3 )
+        std::cout << "OpenHantek6022 "; // 1st part
 
     dsoControl.quitSampling(); // send USB control command, stop bulk transfer
 
@@ -420,26 +425,33 @@ int main( int argc, char *argv[] ) {
     waitForDso = qMax( waitForDso, 10000U ); // wait for at least 10 s
     capturing.requestInterruption();
     capturing.wait( waitForDso );
-    std::cout << "has ";
+    if ( verboseLevel < 3 )
+        std::cout << "has "; // 2nd part
 
     // now quit the data acquisition thread
     // wait 2 * record time (delay is ms) for dso to finish
     dsoControlThread.quit();
     dsoControlThread.wait( waitForDso );
-    std::cout << "stopped ";
+    if ( verboseLevel < 3 )
+        std::cout << "stopped "; // 3rd part
 
     // next stop the data processing
     postProcessing.stop();
     postProcessingThread.quit();
     postProcessingThread.wait( 10000 );
-    std::cout << "after ";
+    if ( verboseLevel < 3 )
+        std::cout << "after "; // 4th part
 
     // finally shut down the libUSB communication
     if ( scopeDevice )
         scopeDevice.reset(); // destroys unique_pointer, causes libusb_close(), must be called before libusb_exit()
     if ( context )
         libusb_exit( context );
-    std::cout << openHantekMainWindow.elapsedTime.elapsed() / 1000 << " s\n";
+
+    if ( verboseLevel < 3 )
+        std::cout << openHantekMainWindow.elapsedTime.elapsed() / 1000 << " s\n"; // last part
+    else
+        std::cout << "OpenHantek6022 has stopped after " << openHantekMainWindow.elapsedTime.elapsed() / 1000 << " s\n";
 
     return appStatus;
 }

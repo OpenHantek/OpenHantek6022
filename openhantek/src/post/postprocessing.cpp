@@ -45,8 +45,8 @@ void PostProcessing::convertData( const DSOsamples *source, PPresult *destinatio
 
 void PostProcessing::input( const DSOsamples *data ) {
     if ( data && processing ) {
-        if ( verboseLevel > 3 )
-            qDebug() << "   PostProcessing::input()" << data->tag;
+        if ( verboseLevel > 4 )
+            qDebug() << "    PostProcessing::input()" << data->tag;
         currentData.reset( new PPresult( channelCount ) ); // start with a fresh data structure
         convertData( data, currentData.get() );            // copy all relevant data over
         for ( Processor *p : processors )                  // feed it into the PP chain

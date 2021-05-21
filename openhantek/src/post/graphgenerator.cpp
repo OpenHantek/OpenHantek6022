@@ -51,8 +51,8 @@ void GraphGenerator::prepareSinc( void ) {
 
 
 void GraphGenerator::process( PPresult *result ) {
-    if ( scope->verboseLevel > 3 )
-        qDebug() << "   GraphGenerator::process()" << result->tag;
+    if ( scope->verboseLevel > 4 )
+        qDebug() << "    GraphGenerator::process()" << result->tag;
     if ( scope->horizontal.format == Dso::GraphFormat::TY ) {
         ready = true;
         generateGraphsTYvoltage( result );
@@ -63,8 +63,8 @@ void GraphGenerator::process( PPresult *result ) {
 
 
 void GraphGenerator::generateGraphsTYvoltage( PPresult *result ) {
-    if ( scope->verboseLevel > 4 )
-        qDebug() << "    GraphGenerator::generateGraphsTYvoltage()" << result->tag;
+    if ( scope->verboseLevel > 5 )
+        qDebug() << "     GraphGenerator::generateGraphsTYvoltage()" << result->tag;
     result->vaChannelVoltage.resize( scope->voltage.size() );
     result->vaChannelHistogram.resize( scope->voltage.size() );
     bool interpolationStep = view->interpolation == Dso::INTERPOLATION_STEP;
@@ -86,7 +86,7 @@ void GraphGenerator::generateGraphsTYvoltage( PPresult *result ) {
         double horizontalFactor = ( samples.interval / scope->horizontal.timebase );
         // printf( "hF: %g\n", horizontalFactor );
         unsigned dotsOnScreen = unsigned( ceil( DIVS_TIME / horizontalFactor ) );
-        unsigned preTrigSamples = unsigned( scope->trigger.offset * dotsOnScreen );
+        unsigned preTrigSamples = unsigned( scope->trigger.position * dotsOnScreen );
         // align displayed trace with trigger mark on screen ...
         // ... also if trig pos or time/div was changed on a "frozen" or single trace
         int leftmostSample = int( result->triggeredPosition );
@@ -185,8 +185,8 @@ void GraphGenerator::generateGraphsTYvoltage( PPresult *result ) {
 
 
 void GraphGenerator::generateGraphsTYspectrum( PPresult *result ) {
-    if ( scope->verboseLevel > 4 )
-        qDebug() << "    GraphGenerator::generateGraphsTYspectrum()" << result->tag;
+    if ( scope->verboseLevel > 5 )
+        qDebug() << "     GraphGenerator::generateGraphsTYspectrum()" << result->tag;
     ready = true;
     result->vaChannelSpectrum.resize( scope->spectrum.size() );
     for ( ChannelID channel = 0; channel < scope->voltage.size(); ++channel ) {
@@ -223,8 +223,8 @@ void GraphGenerator::generateGraphsTYspectrum( PPresult *result ) {
 
 
 void GraphGenerator::generateGraphsXY( PPresult *result ) {
-    if ( scope->verboseLevel > 4 )
-        qDebug() << "    GraphGenerator::generateGraphsXY()" << result->tag;
+    if ( scope->verboseLevel > 5 )
+        qDebug() << "     GraphGenerator::generateGraphsXY()" << result->tag;
     result->vaChannelVoltage.resize( scope->voltage.size() );
 
     // Delete all spectrum graphs
@@ -262,7 +262,7 @@ void GraphGenerator::generateGraphsXY( PPresult *result ) {
         std::vector< double >::const_iterator yIterator = ySamples.sample.begin();
         const double xGain = scope->gain( xChannel );
         const double yGain = scope->gain( yChannel );
-        const double xOffset = ( scope->trigger.offset - 0.5 ) * DIVS_TIME;
+        const double xOffset = ( scope->trigger.position - 0.5 ) * DIVS_TIME;
         const double yOffset = scope->voltage[ yChannel ].offset;
 
         for ( unsigned int position = 0; position < sampleCount; ++position ) {

@@ -122,7 +122,7 @@ void DsoSettings::load() {
     if ( storeSettings->contains( "mode" ) )
         scope.trigger.mode = Dso::TriggerMode( storeSettings->value( "mode" ).toUInt() );
     if ( storeSettings->contains( "position" ) )
-        scope.trigger.offset = storeSettings->value( "position" ).toDouble();
+        scope.trigger.position = storeSettings->value( "position" ).toDouble();
     if ( storeSettings->contains( "slope" ) )
         scope.trigger.slope = Dso::Slope( storeSettings->value( "slope" ).toUInt() );
     if ( storeSettings->contains( "source" ) )
@@ -330,7 +330,7 @@ void DsoSettings::save() {
     // Trigger
     storeSettings->beginGroup( "trigger" );
     storeSettings->setValue( "mode", unsigned( scope.trigger.mode ) );
-    storeSettings->setValue( "position", scope.trigger.offset );
+    storeSettings->setValue( "position", scope.trigger.position );
     storeSettings->setValue( "slope", unsigned( scope.trigger.slope ) );
     storeSettings->setValue( "source", scope.trigger.source );
     storeSettings->setValue( "smooth", scope.trigger.smooth );

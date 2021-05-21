@@ -220,7 +220,7 @@ void GlScope::mouseDoubleClickEvent( QMouseEvent *event ) {
             if ( event->modifiers() & Qt::CTRL ) // 100x zoom
                 p /= 10;
             if ( event->modifiers() & Qt::SHIFT ) // center at trigger position
-                position = QPointF( 10 * scope->trigger.offset - 5, 0 );
+                position = QPointF( 10 * scope->trigger.position - 5, 0 );
             // move 1st marker left of current position.
             cursorInfo[ selectedCursor ]->pos[ 0 ] = position - p;
             emit markerMoved( selectedCursor, 0 );

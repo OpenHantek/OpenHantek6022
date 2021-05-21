@@ -34,8 +34,8 @@ SpectrumGenerator::~SpectrumGenerator() {
 void SpectrumGenerator::process( PPresult *result ) {
     // Calculate frequencies and spectrums
 
-    if ( scope->verboseLevel > 3 )
-        qDebug() << "   SpectrumGenerator::process()" << result->tag;
+    if ( scope->verboseLevel > 4 )
+        qDebug() << "    SpectrumGenerator::process()" << result->tag;
 
     for ( ChannelID channel = 0; channel < result->channelCount(); ++channel ) {
         DataChannel *const channelData = result->modifiableData( channel );
@@ -190,7 +190,7 @@ void SpectrumGenerator::process( PPresult *result ) {
         // TODO: adapt triggerPosition (left = tP - preTrig; right = left + dotsOnScreen)
         double horizontalFactor = result->data( channel )->voltage.interval / scope->horizontal.timebase;
         unsigned dotsOnScreen = unsigned( DIVS_TIME / horizontalFactor + 0.99 ); // round up
-        unsigned preTrigSamples = unsigned( scope->trigger.offset * dotsOnScreen );
+        unsigned preTrigSamples = unsigned( scope->trigger.position * dotsOnScreen );
         int left = int( result->triggeredPosition ) - int( preTrigSamples ); // 1st sample to show
         int right = left + int( dotsOnScreen );                              // last sample to show
         if ( left < 0 )                                                      // trig pos or time/div was increased
@@ -333,8 +333,9 @@ void SpectrumGenerator::process( PPresult *result ) {
         // Calculate both peak frequencies (correlation and spectrum) in Hz
         double pF = channelData->spectrum.interval * peakFreqPos;
         double pC = 1.0 / ( channelData->voltage.interval * peakCorrPos );
-        // printf( "pF %u: %d  %g\n", channel, peakFreqPos, pF );
-        // printf( "pC %u: %d  %g\n", channel, peakCorrPos, pC );
+        if ( scope->verboseLevel > 5 )
+            qDebug() << "     SpectrumGenerator::process()" << channel << "freq:" << peakFreqPos << pF << "corr:" << peakCorrPos
+                     << pC;
         if ( peakFreqPos > peakCorrPos // use frequency result if it is more granular than correlation
              || peakFreqPos > 100      // or at least if it is granular enough (+- 1% resolution)
              || peakCorrPos < 100 || peakCorrPos > sampleCount / 4 ) { // or if correlation is out of safe range
@@ -355,6 +356,8 @@ void SpectrumGenerator::process( PPresult *result ) {
                     for ( double fn = 2 * f1; fn < dftLength; fn += f1 ) // iterate over all harmonics
                         pn += pow( 10, channelData->spectrum.sample[ unsigned( round( fn ) ) ] / 10 );
                     channelData->thd = sqrt( pn / p1 );
+                    if ( scope->verboseLevel > 5 )
+                        qDebug() << "     SpectrumGenerator::process() THD" << channel << p1 << pn << channelData->thd;
                     // printf( "%g %g %g %% THD\n", p1, pn, channelData->thd );
                 }
             }

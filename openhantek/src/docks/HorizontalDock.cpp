@@ -171,8 +171,10 @@ void HorizontalDock::setSamplerateLimits( double minimum, double maximum ) {
 void HorizontalDock::setSamplerateSteps( int mode, const QList< double > steps ) {
     if ( samplerateSteps.size() == steps.size() ) // no action needed
         return;
-    if ( scope->verboseLevel > 2 )
-        qDebug() << "  HDock::setSamplerateSteps()" << mode << steps;
+    if ( scope->verboseLevel > 3 )
+        qDebug() << "   HDock::setSamplerateSteps()" << steps;
+    else if ( scope->verboseLevel > 2 )
+        qDebug() << "  HDock::setSamplerateSteps()" << steps.first() << "..." << steps.last();
     samplerateSteps = steps;
     // Assume that method is invoked for fixed samplerate devices only
     QSignalBlocker samplerateBlocker( samplerateSiSpinBox );
@@ -217,7 +219,7 @@ void HorizontalDock::calculateSamplerateSteps( double timebase ) {
         for ( int id = 0; id < size; ++id ) {
             double sRate = samplerateSteps[ id ];
             if ( scope->verboseLevel > 3 )
-                qDebug() << "  sRate, sRate*timebase" << sRate << sRate * timebase;
+                qDebug() << "   sRate, sRate*timebase" << sRate << sRate * timebase;
             // min must be < maxRate
             // find minimal samplerate to get at least this number of samples per div
             if ( id < size - 1 && sRate * timebase <= 10 ) { // 10 samples/div

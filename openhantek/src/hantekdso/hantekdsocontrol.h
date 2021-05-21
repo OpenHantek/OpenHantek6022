@@ -296,7 +296,7 @@ class HantekDsoControl : public QObject {
     /// \brief Set the trigger position.
     /// \param position The new trigger position (in s).
     /// \return The trigger position that has been set.
-    Dso::ErrorCode setTriggerOffset( double position );
+    Dso::ErrorCode setTriggerPosition( double position );
 
     /// \brief Sets the calibration frequency of the oscilloscope.
     /// \param calfreq The calibration frequency.

@@ -58,19 +58,15 @@ SpectrumDock::SpectrumDock( DsoSettingsScope *scope, QWidget *parent ) : QDockWi
 
         // Connect signals and slots
         connect( b.usedCheckBox, &QCheckBox::toggled, [this, channel]( bool checked ) {
-            // Send signal if it was one of the checkboxes
             if ( channel < this->scope->voltage.size() ) {
-                this->scope->spectrum[ channel ].used = checked;
-                emit usedChanged( channel, checked );
+                this->setUsed( channel, checked );
             }
         } );
 
         connect( b.magnitudeComboBox, SELECT< int >::OVERLOAD_OF( &QComboBox::currentIndexChanged ),
                  [this, channel]( unsigned index ) {
-                     // Send signal if it was one of the comboboxes
                      if ( channel < this->scope->voltage.size() ) {
-                         this->scope->spectrum[ channel ].magnitude = this->magnitudeSteps.at( index );
-                         emit magnitudeChanged( channel, this->scope->spectrum[ channel ].magnitude );
+                         this->setMagnitude( channel, this->magnitudeSteps.at( index ) );
                      }
                  } );
     }
@@ -80,8 +76,8 @@ SpectrumDock::SpectrumDock( DsoSettingsScope *scope, QWidget *parent ) : QDockWi
     frequencybaseSiSpinBox->setMaximum( 100e6 );
     dockLayout->addWidget( this->frequencybaseLabel, int( channel ), 0 );
     dockLayout->addWidget( this->frequencybaseSiSpinBox, int( channel ), 1 );
-    connect( frequencybaseSiSpinBox, SELECT< double >::OVERLOAD_OF( &QDoubleSpinBox::valueChanged ), this,
-             &SpectrumDock::frequencybaseSelected );
+    connect( frequencybaseSiSpinBox, SELECT< double >::OVERLOAD_OF( &QDoubleSpinBox::valueChanged ),
+             [this]() { this->frequencybaseSelected( this->frequencybaseSiSpinBox->value() ); } );
 
     // Load settings into GUI
     this->loadSettings( scope );
@@ -124,6 +120,8 @@ int SpectrumDock::setMagnitude( ChannelID channel, double magnitude ) {
         return -1;
     int index = int( std::distance( magnitudeSteps.begin(), indexIt ) );
     channelBlocks[ channel ].magnitudeComboBox->setCurrentIndex( index );
+    scope->spectrum[ channel ].magnitude = magnitude;
+    emit magnitudeChanged( channel, scope->spectrum[ channel ].magnitude );
     return index;
 }
 
@@ -133,8 +131,10 @@ unsigned SpectrumDock::setUsed( ChannelID channel, bool used ) {
         qDebug() << "  SDock::setUsed()" << channel << used;
     if ( channel >= scope->voltage.size() )
         return INT_MAX;
+    scope->spectrum[ channel ].used = used;
     QSignalBlocker blocker( channelBlocks[ channel ].usedCheckBox );
     channelBlocks[ channel ].usedCheckBox->setChecked( used );
+    emit usedChanged( channel, used );
     return channel;
 }
 
