@@ -2,7 +2,7 @@
 
 # execute this script (as user) after cloning the project or pulling changes from github.com
 
-if [ $(id -u) == 0 ]; then
+if [ $(id -u) = 0 ]; then
 	echo "This script must not be executed as root"
 fi
 

@@ -9,6 +9,8 @@
 OpenHantek6022 is a free software for **Hantek DSO6022** USB digital signal oscilloscopes that is actively developed on
 [github.com/OpenHantek/OpenHantek6022](https://github.com/OpenHantek/OpenHantek6022) - but only for Hantek 6022BE/BL and compatible scopes (Voltcraft, Darkwire, Protek, Acetech, etc.).
 
+**This project gives no support for its [currently unmaintained](https://github.com/OpenHantek/openhantek/issues/277) predecessor [openhantek](https://github.com/OpenHantek/openhantek).**
+
 <p><img alt="Image of main window on linux" width="100%" src="docs/images/screenshot_mainwindow.png"></p>
 
 #### Content
@@ -81,16 +83,21 @@ A [little HW modification](docs/HANTEK6022_AC_Modification.pdf) adds AC coupling
 Every commit triggers a workflow on
 [GitHub Actions](https://github.com/OpenHantek/OpenHantek6022/actions/workflows/build_check.yml)
 that builds and packages OpenHantek6022 for:
-* Linux (Ubuntu-18.04)
-* macOS (Catalina 10.15)
-* Windows (MSVS-2019)
+* Linux (`*.deb`, `*.rpm`, `*.tar.gz`)
+* macOS (`*.dmg`, `*.tar.gz`)
+* Windows (`*.zip`)
 
 [![GitHub CI](https://github.com/OpenHantek/OpenHantek6022/actions/workflows/build_check.yml/badge.svg)](https://github.com/OpenHantek/OpenHantek6022/actions/workflows/build_check.yml)
 This status badge here (and on top) show the build status.
 
 ## Building OpenHantek6022 from source
-The preferred way to run OpenHantek is to build it from source on your system,
-for this you will need the following software:
+The preferred way to run OpenHantek6022 is to build it from source on your system, especially under Linux.
+
+The easiest way to get an up-to-date working code base is to clone the code from here via
+
+````git clone https://github.com/OpenHantek/OpenHantek6022.git````
+
+and then build it locally, for this you will need the following software:
 * [CMake 3.5+](https://cmake.org/download/)
 * [Qt 5.4+](https://www1.qt.io/download-open-source/)
 * [FFTW 3+](http://www.fftw.org/) (prebuild files will be downloaded on windows)
@@ -98,6 +105,7 @@ for this you will need the following software:
 * A compiler that supports C++11 - tested with gcc, clang and msvc
 
 We have build instructions available for [Linux](docs/build.md#linux), [Raspberry Pi](docs/build.md#raspberrypi), [FreeBSD](docs/build.md#freebsd), [Apple macOS](docs/build.md#macos) and [Microsoft Windows](docs/build.md#windows).
+
 To make building for Linux even easier, I provide two shell scripts:
 * [`LinuxSetup_AsRoot`](LinuxSetup_AsRoot), which installs all build requirements. You only need to call this script once (as root) if you have cloned the project.
 * [`LinuxBuild`](LinuxBuild) configures the build, builds the binary and finally creates the packages (deb, rpm and tgz) that can be installed as described in the next paragraph.
