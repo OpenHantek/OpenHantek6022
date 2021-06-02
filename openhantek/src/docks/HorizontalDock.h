@@ -76,7 +76,7 @@ class HorizontalDock : public QDockWidget {
     SiSpinBox *timebaseSiSpinBox;   ///< Selects the timebase for voltage graphs
     QComboBox *formatComboBox;      ///< Selects the way the sampled data is
                                     ///  interpreted and shown
-    SiSpinBox *calfreqSiSpinBox;    ///< Selects the calibration frequency
+    QComboBox *calfreqComboBox;     ///< Selects the calibration frequency
 
     DsoSettingsScope *scope;         ///< The settings provided by the parent class
     QList< double > timebaseSteps;   ///< Steps for the timebase spinbox
@@ -89,7 +89,7 @@ class HorizontalDock : public QDockWidget {
     void samplerateSelected( double samplerate );
     void timebaseSelected( double timebase );
     void formatSelected( int index );
-    void calfreqSelected( double calfreq );
+    void calfreqIndexSelected( int index );
 
   private:
     double samplerateRequest = 0;

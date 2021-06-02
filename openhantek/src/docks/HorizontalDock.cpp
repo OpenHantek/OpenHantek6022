@@ -53,10 +53,11 @@ HorizontalDock::HorizontalDock( DsoSettingsScope *scope, const Dso::ControlSpeci
         this->formatComboBox->addItem( Dso::graphFormatString( format ) );
 
     this->calfreqLabel = new QLabel( tr( "Calibration out" ) );
-    this->calfreqSiSpinBox = new SiSpinBox( UNIT_HERTZ );
-    this->calfreqSiSpinBox->setSteps( spec->calfreqSteps );
-    this->calfreqSiSpinBox->setMinimum( spec->calfreqSteps.first() );
-    this->calfreqSiSpinBox->setMaximum( spec->calfreqSteps.last() );
+    calfreqSteps = spec->calfreqSteps;
+    std::reverse( calfreqSteps.begin(), calfreqSteps.end() ); // put highest value on top of the list
+    calfreqComboBox = new QComboBox();
+    for ( double calfreqStep : calfreqSteps )
+        calfreqComboBox->addItem( valueToString( calfreqStep, UNIT_HERTZ, calfreqStep < 10e3 ? 2 : 0 ) );
 
     this->dockLayout = new QGridLayout();
     this->dockLayout->setColumnMinimumWidth( 0, 64 );
@@ -71,7 +72,7 @@ HorizontalDock::HorizontalDock( DsoSettingsScope *scope, const Dso::ControlSpeci
     this->dockLayout->addWidget( this->formatLabel, row, 0 );
     this->dockLayout->addWidget( this->formatComboBox, row++, 1 );
     this->dockLayout->addWidget( this->calfreqLabel, row, 0 );
-    this->dockLayout->addWidget( this->calfreqSiSpinBox, row++, 1 );
+    this->dockLayout->addWidget( this->calfreqComboBox, row++, 1 );
 
     this->dockWidget = new QWidget();
     SetupDockWidget( this, dockWidget, dockLayout );
@@ -86,9 +87,10 @@ HorizontalDock::HorizontalDock( DsoSettingsScope *scope, const Dso::ControlSpeci
              &HorizontalDock::timebaseSelected );
     connect( this->formatComboBox, SELECT< int >::OVERLOAD_OF( &QComboBox::currentIndexChanged ), this,
              &HorizontalDock::formatSelected );
-    connect( this->calfreqSiSpinBox, SELECT< double >::OVERLOAD_OF( &QDoubleSpinBox::valueChanged ), this,
-             &HorizontalDock::calfreqSelected );
+    connect( calfreqComboBox, SELECT< int >::OVERLOAD_OF( &QComboBox::currentIndexChanged ),
+             [this]( int index ) { this->calfreqIndexSelected( index ); } );
 }
+
 
 void HorizontalDock::loadSettings( DsoSettingsScope *scope ) {
     // Set values
@@ -97,6 +99,7 @@ void HorizontalDock::loadSettings( DsoSettingsScope *scope ) {
     this->setFormat( scope->horizontal.format );
     this->setCalfreq( scope->horizontal.calfreq );
 }
+
 
 /// \brief Don't close the dock, just hide it.
 /// \param event The close event that should be handled.
@@ -151,9 +154,13 @@ int HorizontalDock::setFormat( Dso::GraphFormat format ) {
 double HorizontalDock::setCalfreq( double calfreq ) {
     if ( scope->verboseLevel > 2 )
         qDebug() << "  HDock::setCalfreq()" << calfreq;
-    QSignalBlocker blocker( calfreqSiSpinBox );
-    calfreqSiSpinBox->setValue( calfreq );
-    return calfreqSiSpinBox->value();
+    auto indexIt = std::find( calfreqSteps.begin(), calfreqSteps.end(), calfreq );
+    if ( indexIt == calfreqSteps.end() )
+        return -1;
+    int index = int( std::distance( calfreqSteps.begin(), indexIt ) );
+    QSignalBlocker blocker( calfreqComboBox );
+    calfreqComboBox->setCurrentIndex( index );
+    return calfreq;
 }
 
 
@@ -253,11 +260,12 @@ void HorizontalDock::formatSelected( int index ) {
 }
 
 
-/// \brief Called when the calfreq spinbox changes its value.
-/// \param calfreq The calibration frequency in hertz.
-void HorizontalDock::calfreqSelected( double calfreq ) {
+/// \brief Called when the calfreq combobox changes its value.
+/// \param index The item index.
+void HorizontalDock::calfreqIndexSelected( int index ) {
+    double calfreq = calfreqSteps[ index ];
     if ( scope->verboseLevel > 2 )
-        qDebug() << "  HDock::calfreqSelected()" << calfreq;
+        qDebug() << "  HDock::calfreqIndex Selected()" << index << calfreq;
     scope->horizontal.calfreq = calfreq;
     emit calfreqChanged( calfreq );
 }
