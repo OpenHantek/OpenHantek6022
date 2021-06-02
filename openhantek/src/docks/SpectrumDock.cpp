@@ -31,14 +31,14 @@ SpectrumDock::SpectrumDock( DsoSettingsScope *scope, QWidget *parent ) : QDockWi
         qDebug() << " SpectrumDock::SpectrumDock()";
 
     // Initialize lists for comboboxes
-    this->magnitudeSteps = {1, 2, 3, 6, 10, 20, 40, 60, 80, 100};
+    magnitudeSteps = {1, 2, 3, 6, 10, 20, 40, 60, 80, 100};
     for ( const auto &magnitude : magnitudeSteps )
-        this->magnitudeStrings << valueToString( magnitude, UNIT_DECIBEL, 0 );
+        magnitudeStrings << valueToString( magnitude, UNIT_DECIBEL, 0 );
 
-    this->dockLayout = new QGridLayout();
-    this->dockLayout->setColumnMinimumWidth( 0, 64 );
-    this->dockLayout->setColumnStretch( 1, 1 );
-    this->dockLayout->setSpacing( DOCK_LAYOUT_SPACING );
+    dockLayout = new QGridLayout();
+    dockLayout->setColumnMinimumWidth( 0, 64 );
+    dockLayout->setColumnStretch( 1, 1 );
+    dockLayout->setSpacing( DOCK_LAYOUT_SPACING );
 
     // Initialize elements
     unsigned channel;
@@ -51,15 +51,15 @@ SpectrumDock::SpectrumDock( DsoSettingsScope *scope, QWidget *parent ) : QDockWi
 
         channelBlocks.push_back( b );
 
-        this->dockLayout->addWidget( b.usedCheckBox, int( channel ), 0 );
-        this->dockLayout->addWidget( b.magnitudeComboBox, int( channel ), 1 );
+        dockLayout->addWidget( b.usedCheckBox, int( channel ), 0 );
+        dockLayout->addWidget( b.magnitudeComboBox, int( channel ), 1 );
 
-        b.magnitudeComboBox->addItems( this->magnitudeStrings );
+        b.magnitudeComboBox->addItems( magnitudeStrings );
 
         // Connect signals and slots
         connect( b.usedCheckBox, &QCheckBox::toggled, [this, channel]( bool checked ) {
             if ( channel < this->scope->voltage.size() ) {
-                this->setUsed( channel, checked );
+                setUsed( channel, checked );
             }
         } );
 
@@ -74,13 +74,13 @@ SpectrumDock::SpectrumDock( DsoSettingsScope *scope, QWidget *parent ) : QDockWi
     frequencybaseSiSpinBox = new SiSpinBox( UNIT_HERTZ );
     frequencybaseSiSpinBox->setMinimum( 0.1 );
     frequencybaseSiSpinBox->setMaximum( 100e6 );
-    dockLayout->addWidget( this->frequencybaseLabel, int( channel ), 0 );
-    dockLayout->addWidget( this->frequencybaseSiSpinBox, int( channel ), 1 );
+    dockLayout->addWidget( frequencybaseLabel, int( channel ), 0 );
+    dockLayout->addWidget( frequencybaseSiSpinBox, int( channel ), 1 );
     connect( frequencybaseSiSpinBox, SELECT< double >::OVERLOAD_OF( &QDoubleSpinBox::valueChanged ),
              [this]() { this->frequencybaseSelected( this->frequencybaseSiSpinBox->value() ); } );
 
     // Load settings into GUI
-    this->loadSettings( scope );
+    loadSettings( scope );
 
     dockWidget = new QWidget();
     SetupDockWidget( this, dockWidget, dockLayout );
@@ -92,8 +92,8 @@ void SpectrumDock::loadSettings( DsoSettingsScope *scope ) {
         qDebug() << "  SDock::loadSettings()";
     // Initialize elements
     for ( ChannelID channel = 0; channel < scope->voltage.size(); ++channel ) {
-        this->setMagnitude( channel, scope->spectrum[ channel ].magnitude );
-        this->setUsed( channel, scope->spectrum[ channel ].used );
+        setMagnitude( channel, scope->spectrum[ channel ].magnitude );
+        setUsed( channel, scope->spectrum[ channel ].used );
         channelBlocks[ channel ].usedCheckBox->setEnabled( scope->horizontal.format == Dso::GraphFormat::TY );
     }
     setFrequencybase( scope->horizontal.frequencybase );
@@ -103,7 +103,7 @@ void SpectrumDock::loadSettings( DsoSettingsScope *scope ) {
 /// \brief Don't close the dock, just hide it
 /// \param event The close event that should be handled.
 void SpectrumDock::closeEvent( QCloseEvent *event ) {
-    this->hide();
+    hide();
     event->accept();
 }
 

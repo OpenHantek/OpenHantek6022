@@ -33,60 +33,59 @@ HorizontalDock::HorizontalDock( DsoSettingsScope *scope, const Dso::ControlSpeci
         qDebug() << " HorizontalDock::HorizontalDock()";
 
     // Initialize elements
-    this->samplerateLabel = new QLabel( tr( "Samplerate" ) );
-    this->samplerateSiSpinBox = new SiSpinBox( UNIT_SAMPLES );
-    this->samplerateSiSpinBox->setMinimum( 1 );
-    this->samplerateSiSpinBox->setMaximum( 1e8 );
-    this->samplerateSiSpinBox->setUnitPostfix( tr( "/s" ) );
+    samplerateLabel = new QLabel( tr( "Samplerate" ) );
+    samplerateSiSpinBox = new SiSpinBox( UNIT_SAMPLES );
+    samplerateSiSpinBox->setMinimum( 1 );
+    samplerateSiSpinBox->setMaximum( 1e8 );
+    samplerateSiSpinBox->setUnitPostfix( tr( "/s" ) );
 
     timebaseSteps << 1.0 << 2.0 << 5.0 << 10.0;
 
-    this->timebaseLabel = new QLabel( tr( "Timebase" ) );
-    this->timebaseSiSpinBox = new SiSpinBox( UNIT_SECONDS );
-    this->timebaseSiSpinBox->setSteps( timebaseSteps );
-    this->timebaseSiSpinBox->setMinimum( 1e-9 );
-    this->timebaseSiSpinBox->setMaximum( 1e3 );
+    timebaseLabel = new QLabel( tr( "Timebase" ) );
+    timebaseSiSpinBox = new SiSpinBox( UNIT_SECONDS );
+    timebaseSiSpinBox->setSteps( timebaseSteps );
+    timebaseSiSpinBox->setMinimum( 1e-9 );
+    timebaseSiSpinBox->setMaximum( 1e3 );
 
-    this->formatLabel = new QLabel( tr( "Format" ) );
-    this->formatComboBox = new QComboBox();
+    formatLabel = new QLabel( tr( "Format" ) );
+    formatComboBox = new QComboBox();
     for ( Dso::GraphFormat format : Dso::GraphFormatEnum )
-        this->formatComboBox->addItem( Dso::graphFormatString( format ) );
+        formatComboBox->addItem( Dso::graphFormatString( format ) );
 
-    this->calfreqLabel = new QLabel( tr( "Calibration out" ) );
+    calfreqLabel = new QLabel( tr( "Calibration out" ) );
     calfreqSteps = spec->calfreqSteps;
     std::reverse( calfreqSteps.begin(), calfreqSteps.end() ); // put highest value on top of the list
     calfreqComboBox = new QComboBox();
     for ( double calfreqStep : calfreqSteps )
         calfreqComboBox->addItem( valueToString( calfreqStep, UNIT_HERTZ, calfreqStep < 10e3 ? 2 : 0 ) );
 
-    this->dockLayout = new QGridLayout();
-    this->dockLayout->setColumnMinimumWidth( 0, 64 );
-    this->dockLayout->setColumnStretch( 1, 1 );
-    this->dockLayout->setSpacing( DOCK_LAYOUT_SPACING );
+    dockLayout = new QGridLayout();
+    dockLayout->setColumnMinimumWidth( 0, 64 );
+    dockLayout->setColumnStretch( 1, 1 );
+    dockLayout->setSpacing( DOCK_LAYOUT_SPACING );
 
     row = 0; // allows flexible shift up/down
-    this->dockLayout->addWidget( this->timebaseLabel, row, 0 );
-    this->dockLayout->addWidget( this->timebaseSiSpinBox, row++, 1 );
-    this->dockLayout->addWidget( this->samplerateLabel, row, 0 );
-    this->dockLayout->addWidget( this->samplerateSiSpinBox, row++, 1 );
-    this->dockLayout->addWidget( this->formatLabel, row, 0 );
-    this->dockLayout->addWidget( this->formatComboBox, row++, 1 );
-    this->dockLayout->addWidget( this->calfreqLabel, row, 0 );
-    this->dockLayout->addWidget( this->calfreqComboBox, row++, 1 );
+    dockLayout->addWidget( timebaseLabel, row, 0 );
+    dockLayout->addWidget( timebaseSiSpinBox, row++, 1 );
+    dockLayout->addWidget( samplerateLabel, row, 0 );
+    dockLayout->addWidget( samplerateSiSpinBox, row++, 1 );
+    dockLayout->addWidget( formatLabel, row, 0 );
+    dockLayout->addWidget( formatComboBox, row++, 1 );
+    dockLayout->addWidget( calfreqLabel, row, 0 );
+    dockLayout->addWidget( calfreqComboBox, row++, 1 );
 
-    this->dockWidget = new QWidget();
+    dockWidget = new QWidget();
     SetupDockWidget( this, dockWidget, dockLayout );
 
     // Load settings into GUI
-    this->loadSettings( scope );
+    loadSettings( scope );
 
     // Connect signals and slots
-    connect( this->samplerateSiSpinBox, SELECT< double >::OVERLOAD_OF( &QDoubleSpinBox::valueChanged ), this,
+    connect( samplerateSiSpinBox, SELECT< double >::OVERLOAD_OF( &QDoubleSpinBox::valueChanged ), this,
              &HorizontalDock::samplerateSelected );
-    connect( this->timebaseSiSpinBox, SELECT< double >::OVERLOAD_OF( &QDoubleSpinBox::valueChanged ), this,
+    connect( timebaseSiSpinBox, SELECT< double >::OVERLOAD_OF( &QDoubleSpinBox::valueChanged ), this,
              &HorizontalDock::timebaseSelected );
-    connect( this->formatComboBox, SELECT< int >::OVERLOAD_OF( &QComboBox::currentIndexChanged ), this,
-             &HorizontalDock::formatSelected );
+    connect( formatComboBox, SELECT< int >::OVERLOAD_OF( &QComboBox::currentIndexChanged ), this, &HorizontalDock::formatSelected );
     connect( calfreqComboBox, SELECT< int >::OVERLOAD_OF( &QComboBox::currentIndexChanged ),
              [this]( int index ) { this->calfreqIndexSelected( index ); } );
 }
@@ -94,17 +93,17 @@ HorizontalDock::HorizontalDock( DsoSettingsScope *scope, const Dso::ControlSpeci
 
 void HorizontalDock::loadSettings( DsoSettingsScope *scope ) {
     // Set values
-    this->setSamplerate( scope->horizontal.samplerate );
-    this->setTimebase( scope->horizontal.timebase );
-    this->setFormat( scope->horizontal.format );
-    this->setCalfreq( scope->horizontal.calfreq );
+    setSamplerate( scope->horizontal.samplerate );
+    setTimebase( scope->horizontal.timebase );
+    setFormat( scope->horizontal.format );
+    setCalfreq( scope->horizontal.calfreq );
 }
 
 
 /// \brief Don't close the dock, just hide it.
 /// \param event The close event that should be handled.
 void HorizontalDock::closeEvent( QCloseEvent *event ) {
-    this->hide();
+    hide();
     event->accept();
 }
 

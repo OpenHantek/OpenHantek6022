@@ -119,7 +119,7 @@ VoltageDock::VoltageDock( DsoSettingsScope *scope, const Dso::ControlSpecificati
     }
 
     // Load settings into GUI
-    this->loadSettings( scope, spec );
+    loadSettings( scope, spec );
 
     dockWidget = new QWidget();
     SetupDockWidget( this, dockWidget, dockLayout );

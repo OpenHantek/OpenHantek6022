@@ -27,9 +27,9 @@ TriggerDock::TriggerDock( DsoSettingsScope *scope, const Dso::ControlSpecificati
 
     // Initialize lists for comboboxes
     for ( ChannelID channel = 0; channel < mSpec->channels; ++channel )
-        this->sourceStandardStrings << tr( "CH%1" ).arg( channel + 1 );
+        sourceStandardStrings << tr( "CH%1" ).arg( channel + 1 );
     // add "smooth" source
-    this->smoothStandardStrings << tr( "HF" ) << tr( "Normal" ) << tr( "LF" );
+    smoothStandardStrings << tr( "HF" ) << tr( "Normal" ) << tr( "LF" );
 
     // Initialize elements
     modeLabel = new QLabel( tr( "Mode" ) );
@@ -99,7 +99,7 @@ void TriggerDock::loadSettings( DsoSettingsScope *scope ) {
 /// \brief Don't close the dock, just hide it
 /// \param event The close event that should be handled.
 void TriggerDock::closeEvent( QCloseEvent *event ) {
-    this->hide();
+    hide();
 
     event->accept();
 }
@@ -110,7 +110,7 @@ void TriggerDock::setMode( Dso::TriggerMode mode ) {
     int index = int( std::find( mSpec->triggerModes.begin(), mSpec->triggerModes.end(), mode ) - mSpec->triggerModes.begin() );
     QSignalBlocker blocker( modeComboBox );
     modeComboBox->setCurrentIndex( index );
-    emit modeChanged( this->scope->trigger.mode );
+    emit modeChanged( scope->trigger.mode );
 }
 
 void TriggerDock::setSlope( Dso::Slope slope ) {
@@ -123,7 +123,7 @@ void TriggerDock::setSlope( Dso::Slope slope ) {
 void TriggerDock::setSource( int id ) {
     if ( scope->verboseLevel > 2 )
         qDebug() << "  TDock::setSource()" << id;
-    if ( id >= this->sourceStandardStrings.count() )
+    if ( id >= sourceStandardStrings.count() )
         return;
     QSignalBlocker blocker( sourceComboBox );
     sourceComboBox->setCurrentIndex( id );
@@ -132,7 +132,7 @@ void TriggerDock::setSource( int id ) {
 void TriggerDock::setSmooth( int smooth ) {
     if ( scope->verboseLevel > 2 )
         qDebug() << "  TDock::setSmooth()" << smooth;
-    if ( int( smooth ) >= this->smoothStandardStrings.count() )
+    if ( int( smooth ) >= smoothStandardStrings.count() )
         return;
     QSignalBlocker blocker( smoothComboBox );
     smoothComboBox->setCurrentIndex( int( smooth ) );
