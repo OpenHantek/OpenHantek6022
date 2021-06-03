@@ -15,7 +15,7 @@
 ExporterCSV::ExporterCSV() {}
 
 void ExporterCSV::create( ExporterRegistry *newRegistry ) {
-    this->registry = newRegistry;
+    registry = newRegistry;
     data.reset();
 }
 

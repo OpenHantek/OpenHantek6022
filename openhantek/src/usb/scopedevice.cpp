@@ -118,7 +118,7 @@ ScopeDevice::~ScopeDevice() {
 
 
 int ScopeDevice::claimInterface( const libusb_interface_descriptor *interfaceDescriptor ) {
-    int errorCode = libusb_claim_interface( this->handle, interfaceDescriptor->bInterfaceNumber );
+    int errorCode = libusb_claim_interface( handle, interfaceDescriptor->bInterfaceNumber );
     if ( errorCode < 0 )
         return errorCode;
 
@@ -126,14 +126,14 @@ int ScopeDevice::claimInterface( const libusb_interface_descriptor *interfaceDes
 
     // Check the maximum endpoint packet size
     const libusb_endpoint_descriptor *endpointDescriptor;
-    this->outPacketLength = 0;
-    this->inPacketLength = 0;
+    outPacketLength = 0;
+    inPacketLength = 0;
     for ( int endpoint = 0; endpoint < interfaceDescriptor->bNumEndpoints; ++endpoint ) {
         endpointDescriptor = &( interfaceDescriptor->endpoint[ endpoint ] );
         if ( endpointDescriptor->bEndpointAddress == HANTEK_EP_OUT ) {
-            this->outPacketLength = endpointDescriptor->wMaxPacketSize;
+            outPacketLength = endpointDescriptor->wMaxPacketSize;
         } else if ( endpointDescriptor->bEndpointAddress == HANTEK_EP_IN ) {
-            this->inPacketLength = endpointDescriptor->wMaxPacketSize;
+            inPacketLength = endpointDescriptor->wMaxPacketSize;
         }
     }
     return LIBUSB_SUCCESS;
@@ -145,16 +145,16 @@ void ScopeDevice::disconnectFromDevice() {
     if ( !device )
         return;
 
-    if ( this->handle ) {
+    if ( handle ) {
         // Release claimed interface
         if ( nInterface != -1 )
-            libusb_release_interface( this->handle, nInterface );
+            libusb_release_interface( handle, nInterface );
         nInterface = -1;
 
         // Close device handle
-        libusb_close( this->handle );
+        libusb_close( handle );
     }
-    this->handle = nullptr;
+    handle = nullptr;
 
 #if !defined Q_OS_WIN
     libusb_unref_device( device );
@@ -163,25 +163,25 @@ void ScopeDevice::disconnectFromDevice() {
 }
 
 
-bool ScopeDevice::isConnected() { return isDemoDevice() || ( !disconnected && this->handle != nullptr ); }
+bool ScopeDevice::isConnected() { return isDemoDevice() || ( !disconnected && handle != nullptr ); }
 
 
 bool ScopeDevice::needsFirmware() {
-    return this->descriptor.idProduct != model->productID || this->descriptor.idVendor != model->vendorID ||
-           this->descriptor.bcdDevice < model->firmwareVersion;
+    return descriptor.idProduct != model->productID || descriptor.idVendor != model->vendorID ||
+           descriptor.bcdDevice < model->firmwareVersion;
 }
 
 
 int ScopeDevice::bulkTransfer( unsigned char endpoint, const unsigned char *data, unsigned int length, int attempts,
                                unsigned int timeout ) {
-    if ( !this->handle )
+    if ( !handle )
         return LIBUSB_ERROR_NO_DEVICE;
 
     int errorCode = LIBUSB_ERROR_TIMEOUT;
     int transferred = 0;
     for ( int attempt = 0; ( attempt < attempts || attempts == -1 ) && errorCode == LIBUSB_ERROR_TIMEOUT; ++attempt )
-        errorCode = libusb_bulk_transfer( this->handle, endpoint, const_cast< unsigned char * >( data ), int( length ),
-                                          &transferred, timeout );
+        errorCode =
+            libusb_bulk_transfer( handle, endpoint, const_cast< unsigned char * >( data ), int( length ), &transferred, timeout );
 
     if ( errorCode == LIBUSB_ERROR_NO_DEVICE )
         disconnectFromDevice();

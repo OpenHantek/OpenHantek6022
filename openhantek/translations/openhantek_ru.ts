@@ -226,22 +226,22 @@
         <translation>Настройки</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/configdialog.cpp" line="52"/>
+        <location filename="../src/configdialog/configdialog.cpp" line="51"/>
         <source>&amp;Ok</source>
         <translation>&amp;Ok</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/configdialog.cpp" line="54"/>
+        <location filename="../src/configdialog/configdialog.cpp" line="53"/>
         <source>&amp;Apply</source>
         <translation>&amp;Применить</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/configdialog.cpp" line="55"/>
+        <location filename="../src/configdialog/configdialog.cpp" line="54"/>
         <source>&amp;Cancel</source>
         <translation>&amp;Отмена</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/configdialog.cpp" line="97"/>
+        <location filename="../src/configdialog/configdialog.cpp" line="96"/>
         <source>Analysis</source>
         <translation>Анализировать</translation>
     </message>
@@ -254,12 +254,12 @@
         <translation type="vanished">Файл</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/configdialog.cpp" line="101"/>
+        <location filename="../src/configdialog/configdialog.cpp" line="100"/>
         <source>Colors</source>
         <translation>Цвета</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/configdialog.cpp" line="93"/>
+        <location filename="../src/configdialog/configdialog.cpp" line="92"/>
         <source>Scope</source>
         <translation>Осциллограф</translation>
     </message>

@@ -432,7 +432,7 @@ void HantekDsoControl::enableSampling( bool enabled ) {
 
 unsigned HantekDsoControl::getRecordLength() const {
     unsigned rawsize = getSamplesize();
-    rawsize *= this->downsamplingNumber;   // take multiple samples for oversampling
+    rawsize *= downsamplingNumber;         // take multiple samples for oversampling
     rawsize = grossSampleCount( rawsize ); // adjust for skipping of minimal 2048 leading samples
     if ( verboseLevel > 4 )
         qDebug() << "    HDC::getRecordLength() ->" << rawsize;
@@ -810,7 +810,7 @@ void HantekDsoControl::stateMachine() {
 
     if ( isSampling() ) {
         // Sampling hasn't started, update the expected sample count
-        expectedSampleCount = this->getSampleCount();
+        expectedSampleCount = getSampleCount();
         timestampDebug( "Starting to capture" );
         samplingStarted = true;
     }

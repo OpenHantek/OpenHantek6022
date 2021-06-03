@@ -442,8 +442,8 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
     dsoWidget->updateTimebase( dsoSettings->scope.horizontal.timebase );
 
     for ( ChannelID channel = 0; channel < spec->channels; ++channel ) {
-        this->dsoWidget->updateVoltageUsed( channel, dsoSettings->scope.voltage[ channel ].used );
-        this->dsoWidget->updateSpectrumUsed( channel, dsoSettings->scope.spectrum[ channel ].used );
+        dsoWidget->updateVoltageUsed( channel, dsoSettings->scope.voltage[ channel ].used );
+        dsoWidget->updateSpectrumUsed( channel, dsoSettings->scope.spectrum[ channel ].used );
     }
 }
 

@@ -8,7 +8,7 @@
 namespace Hantek {
 
 
-ControlSetGain_CH1::ControlSetGain_CH1() : ControlCommand( ControlCode::CONTROL_SETGAIN_CH1, 2 ) { this->setGainCH1( 1, 7 ); }
+ControlSetGain_CH1::ControlSetGain_CH1() : ControlCommand( ControlCode::CONTROL_SETGAIN_CH1, 2 ) { setGainCH1( 1, 7 ); }
 
 void ControlSetGain_CH1::setGainCH1( uint8_t gain, uint8_t index ) {
     data()[ 0 ] = gain;
@@ -16,7 +16,7 @@ void ControlSetGain_CH1::setGainCH1( uint8_t gain, uint8_t index ) {
 }
 
 
-ControlSetGain_CH2::ControlSetGain_CH2() : ControlCommand( ControlCode::CONTROL_SETGAIN_CH2, 2 ) { this->setGainCH2( 1, 7 ); }
+ControlSetGain_CH2::ControlSetGain_CH2() : ControlCommand( ControlCode::CONTROL_SETGAIN_CH2, 2 ) { setGainCH2( 1, 7 ); }
 
 void ControlSetGain_CH2::setGainCH2( uint8_t gain, uint8_t index ) {
     data()[ 0 ] = gain;
@@ -24,9 +24,7 @@ void ControlSetGain_CH2::setGainCH2( uint8_t gain, uint8_t index ) {
 }
 
 
-ControlSetSamplerate::ControlSetSamplerate() : ControlCommand( ControlCode::CONTROL_SETSAMPLERATE, 2 ) {
-    this->setSamplerate( 1, 7 );
-}
+ControlSetSamplerate::ControlSetSamplerate() : ControlCommand( ControlCode::CONTROL_SETSAMPLERATE, 2 ) { setSamplerate( 1, 7 ); }
 
 void ControlSetSamplerate::setSamplerate( uint8_t id, uint8_t index ) {
     data()[ 0 ] = id;
@@ -34,9 +32,7 @@ void ControlSetSamplerate::setSamplerate( uint8_t id, uint8_t index ) {
 }
 
 
-ControlSetNumChannels::ControlSetNumChannels() : ControlCommand( ControlCode::CONTROL_SETNUMCHANNELS, 1 ) {
-    this->setNumChannels( 2 );
-}
+ControlSetNumChannels::ControlSetNumChannels() : ControlCommand( ControlCode::CONTROL_SETNUMCHANNELS, 1 ) { setNumChannels( 2 ); }
 
 void ControlSetNumChannels::setNumChannels( uint8_t val ) { data()[ 0 ] = val; }
 
@@ -54,7 +50,7 @@ ControlGetLimits::ControlGetLimits() : ControlCommand( ControlCode::CONTROL_GETE
 
 
 ControlSetCalFreq::ControlSetCalFreq() : ControlCommand( ControlCode::CONTROL_SETCALFREQ, 1 ) {
-    this->setCalFreq( 1 ); // 1kHz
+    setCalFreq( 1 ); // 1kHz
 }
 
 void ControlSetCalFreq::setCalFreq( uint8_t val ) { data()[ 0 ] = val; }

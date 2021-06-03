@@ -225,17 +225,17 @@
         <translation>Réglages</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/configdialog.cpp" line="52"/>
+        <location filename="../src/configdialog/configdialog.cpp" line="51"/>
         <source>&amp;Ok</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/configdialog/configdialog.cpp" line="54"/>
+        <location filename="../src/configdialog/configdialog.cpp" line="53"/>
         <source>&amp;Apply</source>
         <translation>&amp;Appliquer</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/configdialog.cpp" line="55"/>
+        <location filename="../src/configdialog/configdialog.cpp" line="54"/>
         <source>&amp;Cancel</source>
         <translation>A&amp;nnuler</translation>
     </message>
@@ -244,17 +244,17 @@
         <translation type="vanished">Spectre</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/configdialog.cpp" line="93"/>
+        <location filename="../src/configdialog/configdialog.cpp" line="92"/>
         <source>Scope</source>
         <translation>Oscilloscope</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/configdialog.cpp" line="97"/>
+        <location filename="../src/configdialog/configdialog.cpp" line="96"/>
         <source>Analysis</source>
         <translation>Analyser</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/configdialog.cpp" line="101"/>
+        <location filename="../src/configdialog/configdialog.cpp" line="100"/>
         <source>Colors</source>
         <translation>Couleurs</translation>
     </message>

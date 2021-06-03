@@ -66,7 +66,7 @@ class ScopeDevice : public QObject {
     /**
      * @return Return device version as unsigned int
      */
-    inline unsigned int getFwVersion() const { return this->descriptor.bcdDevice; }
+    inline unsigned int getFwVersion() const { return descriptor.bcdDevice; }
 
     /**
      * @brief getSerialNumber
