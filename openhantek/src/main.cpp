@@ -111,7 +111,9 @@ int main( int argc, char *argv[] ) {
     QString font = defaultFont;       // defined in viewsettings.h
     int fontSize = defaultFontSize;   // defined in viewsettings.h
     int condensed = defaultCondensed; // defined in viewsettings.h
-
+#ifndef Q_OS_MACOS
+    bool useBreeze = false;
+#endif
     { // do this early at program start ...
         // get font size settings:
         // Linux, Unix: $HOME/.config/OpenHantek/OpenHantek6022.conf
@@ -129,6 +131,10 @@ int main( int argc, char *argv[] ) {
         QCommandLineParser p;
         p.addHelpOption();
         p.addVersionOption();
+#ifndef Q_OS_MACOS
+        QCommandLineOption useBreezeOption( {"b", "useBreeze"}, "Use \"Breeze\" style" );
+        p.addOption( useBreezeOption );
+#endif
         QCommandLineOption demoModeOption( {"d", "demoMode"}, "Demo mode without scope HW" );
         p.addOption( demoModeOption );
         QCommandLineOption useGlesOption( {"e", "useGLES"}, "Use OpenGL ES instead of OpenGL" );
@@ -152,6 +158,9 @@ int main( int argc, char *argv[] ) {
         QCommandLineOption verboseOption( "verbose", "Verbose tracing of program startup, ui and processing steps", "Level" );
         p.addOption( verboseOption );
         p.process( parserApp );
+#ifndef Q_OS_MACOS
+        useBreeze = p.isSet( useBreezeOption );
+#endif
         demoMode = p.isSet( demoModeOption );
         if ( p.isSet( fontOption ) )
             font = p.value( "font" );
@@ -179,10 +188,12 @@ int main( int argc, char *argv[] ) {
 
 // Qt5 linux default ("Breeze", "Windows" or "Fusion")
 #ifndef Q_OS_MACOS
-    if ( verboseLevel )
-        qDebug() << startupTime.elapsed() << "ms:"
-                 << "set \"Fusion\" style";
-    openHantekApplication.setStyle( QStyleFactory::create( "Fusion" ) ); // smaller widgets allow stacking of all docks
+    if ( !useBreeze ) {
+        if ( verboseLevel )
+            qDebug() << startupTime.elapsed() << "ms:"
+                     << "set \"Fusion\" style";
+        openHantekApplication.setStyle( QStyleFactory::create( "Fusion" ) ); // smaller widgets allow stacking of all docks
+    }
 #endif
 
 #ifdef Q_OS_LINUX

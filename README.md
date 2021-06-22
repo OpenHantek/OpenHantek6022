@@ -74,7 +74,7 @@ OpenHantek6022 is a free software for **Hantek DSO6022** USB digital signal osci
 * The dock views on the main window can be [customized](https://github.com/OpenHantek/OpenHantek6022/issues/161#issuecomment-799597664) by dragging them around and stacking them.
   This allows a minimum window size of 800*300 for old laptops or workstation computers.
 * All settings can be saved to a configuration file and loaded again.
-* French, German, Polish, Russian and Spanish localisation complete, Italian and Portuguese translation ongoing - [volunteers welcome](openhantek/translations/Translation_HowTo.md)!
+* Chinese, French, German, Polish, Russian and Spanish localisation complete, Italian and Portuguese translation ongoing - [volunteers welcome](openhantek/translations/Translation_HowTo.md)!
 
 ## AC coupling
 A [little HW modification](docs/HANTEK6022_AC_Modification.pdf) adds AC coupling. OpenHantek6022 supports this feature since v2.17-rc5 / FW0204.
