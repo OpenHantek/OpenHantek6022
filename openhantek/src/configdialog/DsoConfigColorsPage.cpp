@@ -124,6 +124,18 @@ DsoConfigColorsPage::DsoConfigColorsPage( DsoSettings *settings, QWidget *parent
     screenColorCheckBox->setChecked( settings->view.printerColorImages );
     colorsLayout->addWidget( screenColorCheckBox, ++row, COL_LABEL );
 
+    styleFusionCheckBox = new QCheckBox( tr( "Fusion style (restart needed to apply the change)" ) );
+    styleFusionCheckBox->setChecked( settings->view.styleFusion );
+    colorsLayout->addWidget( styleFusionCheckBox, ++row, COL_LABEL );
+
+    fontSizeLabel = new QLabel( tr( "Font size (restart needed to apply the change)" ) );
+    fontSizeSpinBox = new QSpinBox();
+    fontSizeSpinBox->setMinimum( 6 );
+    fontSizeSpinBox->setMaximum( 24 );
+    fontSizeSpinBox->setValue( settings->view.fontSize );
+    colorsLayout->addWidget( fontSizeLabel, ++row, COL_LABEL );
+    colorsLayout->addWidget( fontSizeSpinBox, row, COL_LABEL + 1 );
+
     colorsGroup = new QGroupBox( tr( "Screen and Print Colors" ) );
     colorsGroup->setLayout( colorsLayout );
 
@@ -163,4 +175,8 @@ void DsoConfigColorsPage::saveSettings() {
         colorSettings.print.spectrum[ channel ] = printSpectrumColorBox[ channel ]->getColor();
     }
     settings->view.printerColorImages = screenColorCheckBox->isChecked();
+    settings->view.fontSize = fontSizeSpinBox->value();
+
+    settings->view.styleFusion = styleFusionCheckBox->isChecked();
+    QSettings().setValue( "view/styleFusion", settings->view.styleFusion );
 }

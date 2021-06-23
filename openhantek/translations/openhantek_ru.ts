@@ -182,12 +182,22 @@
         <translation>Текст</translation>
     </message>
     <message>
+        <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="127"/>
+        <source>Fusion style (restart needed to apply the change)</source>
+        <translation>&quot;Фьюжн&quot; стиль  (для активации требуется перезапуск)</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="131"/>
+        <source>Font size (restart needed to apply the change)</source>
+        <translation>Размер шрифта  (для активации требуется перезапуск)</translation>
+    </message>
+    <message>
         <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="123"/>
         <source>Export hardcopy images or pdf files with printer colors</source>
         <translation>Экспорт изображений или pdf файлов с цветами принтера</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="127"/>
+        <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="139"/>
         <source>Screen and Print Colors</source>
         <translation>Цвета Экрана и Печати</translation>
     </message>
@@ -296,12 +306,12 @@
         <translation>Развёртка</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="43"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="38"/>
         <source>Interpolation</source>
         <translation>Интерполяция</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="38"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="33"/>
         <source>Digital phosphor depth</source>
         <translation>Глубина цифрового люминофора</translation>
     </message>
@@ -316,67 +326,66 @@
         <translation>Sinc</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="56"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="49"/>
         <source>Graph</source>
         <translation>График</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="59"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="52"/>
         <source>Position</source>
         <translation>Положение</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="61"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="54"/>
         <source>Left</source>
         <translation>Слева</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="62"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="55"/>
         <source>Right</source>
         <translation>Справа</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="69"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="62"/>
         <source>Cursors</source>
         <translation>Курсоры</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="73"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="66"/>
         <source>Export zoomed screen in double height</source>
         <translation>Экспорт увеличенного экрана с двойной высотой</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="78"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="71"/>
         <source>Export</source>
         <translation>Экспорт</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="88"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="81"/>
         <source>Scope has hardware modification for AC coupling (restart needed to apply the change)</source>
         <translation>Осциллограф аппаратно модифицирован под переменный ток (для активации требуется перезапуск)</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="82"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="75"/>
         <source>Save settings on exit</source>
         <translation>Сохранять настройки при выходе</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="33"/>
         <source>Font size (restart needed to apply the change)</source>
-        <translation>Размер шрифта  (для активации требуется перезапуск)</translation>
+        <translation type="vanished">Размер шрифта  (для активации требуется перезапуск)</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="84"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="77"/>
         <source>Apply default settings after next restart</source>
         <translation>Применить настройки по умолчанию после перезапуска</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="86"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="79"/>
         <source>Save settings now</source>
         <translation>Сохранить текущие настройки</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="101"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="94"/>
         <source>Configuration</source>
         <translation>Конфигурация</translation>
     </message>

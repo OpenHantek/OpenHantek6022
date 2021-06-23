@@ -30,11 +30,6 @@ DsoConfigScopePage::DsoConfigScopePage( DsoSettings *settings, QWidget *parent )
     horizontalGroup = new QGroupBox( tr( "Horizontal" ) );
     horizontalGroup->setLayout( horizontalLayout );
 
-    fontSizeLabel = new QLabel( tr( "Font size (restart needed to apply the change)" ) );
-    fontSizeSpinBox = new QSpinBox();
-    fontSizeSpinBox->setMinimum( 6 );
-    fontSizeSpinBox->setMaximum( 24 );
-    fontSizeSpinBox->setValue( settings->view.fontSize );
     digitalPhosphorDepthLabel = new QLabel( tr( "Digital phosphor depth" ) );
     digitalPhosphorDepthSpinBox = new QSpinBox();
     digitalPhosphorDepthSpinBox->setMinimum( 2 );
@@ -46,8 +41,6 @@ DsoConfigScopePage::DsoConfigScopePage( DsoSettings *settings, QWidget *parent )
     interpolationComboBox->setCurrentIndex( settings->view.interpolation );
 
     graphLayout = new QGridLayout();
-    graphLayout->addWidget( fontSizeLabel, 1, 0 );
-    graphLayout->addWidget( fontSizeSpinBox, 1, 1 );
     graphLayout->addWidget( digitalPhosphorDepthLabel, 2, 0 );
     graphLayout->addWidget( digitalPhosphorDepthSpinBox, 2, 1 );
     graphLayout->addWidget( interpolationLabel, 3, 0 );
@@ -121,7 +114,6 @@ void DsoConfigScopePage::saveSettings() {
     settings->scope.horizontal.acquireInterval = acquireIntervalSiSpinBox->value();
     settings->view.interpolation = Dso::InterpolationMode( interpolationComboBox->currentIndex() );
     settings->view.digitalPhosphorDepth = unsigned( digitalPhosphorDepthSpinBox->value() );
-    settings->view.fontSize = fontSizeSpinBox->value();
     settings->view.cursorGridPosition = Qt::ToolBarArea( cursorsComboBox->currentData().toUInt() );
     settings->alwaysSave = saveOnExitCheckBox->isChecked();
     if ( defaultSettingsCheckBox->isChecked() )

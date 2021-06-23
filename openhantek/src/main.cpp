@@ -111,9 +111,7 @@ int main( int argc, char *argv[] ) {
     QString font = defaultFont;       // defined in viewsettings.h
     int fontSize = defaultFontSize;   // defined in viewsettings.h
     int condensed = defaultCondensed; // defined in viewsettings.h
-#ifndef Q_OS_MACOS
-    bool useBreeze = false;
-#endif
+    bool styleFusion = false;
     { // do this early at program start ...
         // get font size settings:
         // Linux, Unix: $HOME/.config/OpenHantek/OpenHantek6022.conf
@@ -124,17 +122,14 @@ int main( int argc, char *argv[] ) {
         storeSettings.beginGroup( "view" );
         if ( storeSettings.contains( "fontSize" ) )
             fontSize = Dso::InterpolationMode( storeSettings.value( "fontSize" ).toInt() );
+        if ( storeSettings.contains( "styleFusion" ) )
+            styleFusion = storeSettings.value( "styleFusion" ).toBool();
         storeSettings.endGroup();
-    } // ... and forget the no more needed variables
-    { // also here ...
+
         QCoreApplication parserApp( argc, argv );
         QCommandLineParser p;
         p.addHelpOption();
         p.addVersionOption();
-#ifndef Q_OS_MACOS
-        QCommandLineOption useBreezeOption( {"b", "useBreeze"}, "Use \"Breeze\" style" );
-        p.addOption( useBreezeOption );
-#endif
         QCommandLineOption demoModeOption( {"d", "demoMode"}, "Demo mode without scope HW" );
         p.addOption( demoModeOption );
         QCommandLineOption useGlesOption( {"e", "useGLES"}, "Use OpenGL ES instead of OpenGL" );
@@ -158,9 +153,6 @@ int main( int argc, char *argv[] ) {
         QCommandLineOption verboseOption( "verbose", "Verbose tracing of program startup, ui and processing steps", "Level" );
         p.addOption( verboseOption );
         p.process( parserApp );
-#ifndef Q_OS_MACOS
-        useBreeze = p.isSet( useBreezeOption );
-#endif
         demoMode = p.isSet( demoModeOption );
         if ( p.isSet( fontOption ) )
             font = p.value( "font" );
@@ -186,15 +178,15 @@ int main( int argc, char *argv[] ) {
     }
     QApplication openHantekApplication( argc, argv );
 
-// Qt5 linux default ("Breeze", "Windows" or "Fusion")
-#ifndef Q_OS_MACOS
-    if ( !useBreeze ) {
+    // Qt5 linux themes ("Breeze", "Windows" or "Fusion")
+    // Linux default:   "Breeze" (screen is taller compared to the other two themes)
+    // Windows default: "Windows"
+    if ( styleFusion ) { // smaller widgets allow stacking of all four docks even on 1280x720 screen
         if ( verboseLevel )
             qDebug() << startupTime.elapsed() << "ms:"
                      << "set \"Fusion\" style";
-        openHantekApplication.setStyle( QStyleFactory::create( "Fusion" ) ); // smaller widgets allow stacking of all docks
+        openHantekApplication.setStyle( QStyleFactory::create( "Fusion" ) );
     }
-#endif
 
 #ifdef Q_OS_LINUX
     // try to set realtime priority to improve USB allocation
@@ -371,13 +363,14 @@ int main( int argc, char *argv[] ) {
 
     //////// Prepare visual appearance ////////
     // prepare the font size and style settings for the scope application
+    settings.view.styleFusion = styleFusion;
     QFont appFont = openHantekApplication.font();
     if ( 0 == fontSize ) {                               // option -s0 -> use system font size
         fontSize = qBound( 6, appFont.pointSize(), 24 ); // values < 6 do not scale correctly
     }
     // remember the actual fontsize setting
     settings.view.fontSize = fontSize;
-    appFont.setFamily( font ); // Fusion style + Arial (default) -> fit on small screen (Y >= 720 pixel)
+    appFont.setFamily( font ); // Fusion (or Windows) style + Arial (default) -> fit on small screen (Y >= 720)
     appFont.setStretch( condensed );
     appFont.setPointSize( fontSize ); // scales the widgets accordingly
     // apply new font settings for the scope application

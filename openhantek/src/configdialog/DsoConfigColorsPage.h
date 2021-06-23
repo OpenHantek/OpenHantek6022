@@ -2,8 +2,6 @@
 
 #include <QWidget>
 
-#include "dsosettings.h"
-
 #include <QCheckBox>
 #include <QComboBox>
 #include <QDoubleSpinBox>
@@ -14,7 +12,11 @@
 #include <QSpinBox>
 #include <QVBoxLayout>
 
+#include <QDebug>
+
 #include "colorbox.h"
+#include "dsosettings.h"
+
 
 ////////////////////////////////////////////////////////////////////////////////
 /// \class DsoConfigColorsPage                                     configpages.h
@@ -52,4 +54,7 @@ class DsoConfigColorsPage : public QWidget {
     std::vector< ColorBox * > printChannelColorBox;
     std::vector< ColorBox * > printSpectrumColorBox;
     QCheckBox *screenColorCheckBox;
+    QLabel *fontSizeLabel;
+    QSpinBox *fontSizeSpinBox;
+    QCheckBox *styleFusionCheckBox;
 };
