@@ -1,3 +1,9 @@
+3.2.4
+2021-07-14
+Possibility to select Fusion style in options menu (fits on 1280x720 screen)
+Select calibration frequency faster from ComboBox
+Chinese translation
+
 3.2.3
 2021-05-24
 Auto detect OpenGL version to better support (especially) Windows installs (fix #184)

@@ -33,6 +33,7 @@ class DsoSettings {
     unsigned configVersion = CONFIG_VERSION; ///< Handle incompatible changes
     const QString deviceName;
     const QString deviceID;
+    const unsigned deviceFW;
 
     QByteArray mainWindowGeometry; ///< Geometry of the main window
     QByteArray mainWindowState;    ///< State of docking windows and toolbars

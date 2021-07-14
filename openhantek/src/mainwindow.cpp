@@ -430,10 +430,10 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
                      "<a href='https://github.com/OpenHantek'>https://github.com/OpenHantek</a></p>"
                      "<p>Open source firmware copyright &copy; 2019-2021 Ho-Ro<br/>"
                      "<a href='https://github.com/Ho-Ro/Hantek6022API'>https://github.com/Ho-Ro/Hantek6022API</a></p>"
-                     "<p>Device: %1 (%2)</p>"
-                     "<p>Graphic: %3 - GLSL version %4</p>" )
-                    .arg( this->dsoSettings->deviceName, this->dsoSettings->deviceID, GlScope::getOpenGLversion(),
-                          GlScope::getGLSLversion() ) +
+                     "<p>Device: %1 (%2), FW%3</p><p>Graphic: %4 - GLSL version %5</p>" )
+                    .arg( this->dsoSettings->deviceName, this->dsoSettings->deviceID ) // device type, ser. num
+                    .arg( this->dsoSettings->deviceFW, 4, 16, QChar( '0' ) )           // FW version
+                    .arg( GlScope::getOpenGLversion(), GlScope::getGLSLversion() ) +   // graphic info
                 tr( "<p>Running since %1 seconds.</p>" ).arg( elapsedTime.elapsed() / 1000 ) );
     } );
 
