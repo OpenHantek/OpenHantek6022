@@ -336,7 +336,7 @@
     <message>
         <source>Set slowest possible timebase
 (GUI may become very unresponsible!)</source>
-        <translation type="vanished">设置最小的时基
+        <translation type="vanished">设置最慢的时基
 (界面可能无响应!)</translation>
     </message>
     <message>
@@ -347,12 +347,12 @@
     </message>
     <message>
         <source>Set slowest possible timebase&lt;br/&gt;(&lt;b&gt;GUI may become very unresponsible!&lt;/b&gt;)</source>
-        <translation type="vanished">设置最小的时基&lt;br/&gt;(&lt;b&gt;界面可能无响应!&lt;/b&gt;)</translation>
+        <translation type="vanished">设置最慢的时基&lt;br/&gt;(&lt;b&gt;界面可能无响应!&lt;/b&gt;)</translation>
     </message>
     <message>
         <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="11"/>
         <source>Set slowest possible timebase</source>
-        <translation>最小允许的时基</translation>
+        <translation>设置最慢的时基</translation>
     </message>
     <message>
         <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="18"/>
@@ -1044,7 +1044,7 @@
     <message>
         <location filename="../src/mainwindow.cpp" line="111"/>
         <source>Screenshot ..</source>
-        <translation>截屏(当前窗口)..</translation>
+        <translation>截屏另存为(当前窗口) ..</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="101"/>
@@ -1054,12 +1054,12 @@
     <message>
         <location filename="../src/mainwindow.cpp" line="116"/>
         <source>Hardcopy ..</source>
-        <translation>截屏(波形区域)..</translation>
+        <translation>截屏另存为(波形区域) ..</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="124"/>
         <source>Print screen ..</source>
-        <translation>打印当前屏幕..</translation>
+        <translation>打印当前屏幕 ..</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="285"/>
@@ -1707,7 +1707,7 @@
     <message>
         <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="70"/>
         <source>&lt;hr/&gt;&lt;p&gt;Even without a device you can explore the program&apos;s function. Just press the &lt;b&gt;Demo Mode&lt;/b&gt; button below.&lt;/p&gt;</source>
-        <translation>&lt;hr/&gt;&lt;p&gt;即使没有真实设备，您仍然可以探索此程序的功能。请点击下方的 &lt;b&gt;演示模式&lt;/b&gt;按钮。&lt;/p&gt;</translation>
+        <translation>&lt;hr/&gt;&lt;p&gt;即使没有真实设备，您仍然可以探索此程序的功能。请点击下方的 &lt;b&gt;演示模式&lt;/b&gt; 按钮。&lt;/p&gt;</translation>
     </message>
     <message>
         <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="154"/>
@@ -1752,12 +1752,12 @@
     <message>
         <location filename="../src/docks/TriggerDock.cpp" line="32"/>
         <source>HF</source>
-        <translation>HF</translation>
+        <translation>高频</translation>
     </message>
     <message>
         <location filename="../src/docks/TriggerDock.cpp" line="32"/>
         <source>LF</source>
-        <translation>LF</translation>
+        <translation>低频</translation>
     </message>
     <message>
         <location filename="../src/docks/TriggerDock.cpp" line="35"/>
