@@ -17,7 +17,7 @@ OpenHantek6022 is a free software for **Hantek DSO6022** USB digital signal osci
 * [About OpenHantek6022](#about-openhantek6022)
 * [Features](#features)
 * [AC coupling](#ac-coupling)
-* [Continous Integration](#continous-integration)
+* [Continuous Integration](#continuous-integration)
 * [Building OpenHantek6022 from source](#building-openhantek6022-from-source)
 * [Install prebuilt binary packages](#install-prebuilt-binary-packages)
 * [Run OpenHantek6022](#run-openhantek6022)
@@ -79,7 +79,7 @@ OpenHantek6022 is a free software for **Hantek DSO6022** USB digital signal osci
 ## AC coupling
 A [little HW modification](docs/HANTEK6022_AC_Modification.pdf) adds AC coupling. OpenHantek6022 supports this feature since v2.17-rc5 / FW0204.
 
-## Continous Integration
+## Continuous Integration
 Every commit triggers a workflow on
 [GitHub Actions](https://github.com/OpenHantek/OpenHantek6022/actions/workflows/build_check.yml)
 that builds and packages OpenHantek6022 for:

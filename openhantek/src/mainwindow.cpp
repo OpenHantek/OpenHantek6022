@@ -133,10 +133,10 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
 
     for ( auto *exporter : *exporterRegistry ) {
         action = new QAction( iconFont->icon( exporter->faIcon(), colorMap ), exporter->name(), this );
-        action->setCheckable( exporter->type() == ExporterInterface::Type::ContinousExport );
+        action->setCheckable( exporter->type() == ExporterInterface::Type::ContinuousExport );
         connect( action, &QAction::triggered, [exporter, exporterRegistry]( bool checked ) {
             exporterRegistry->setExporterEnabled( exporter,
-                                                  exporter->type() == ExporterInterface::Type::ContinousExport ? checked : true );
+                                                  exporter->type() == ExporterInterface::Type::ContinuousExport ? checked : true );
         } );
         ui->menuExport->addAction( action );
     }

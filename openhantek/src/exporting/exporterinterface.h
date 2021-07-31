@@ -40,9 +40,9 @@ class ExporterInterface {
     virtual QString name() = 0;
 
     /**
-     * Exporters can save only a single sample set or save data continously.
+     * Exporters can save only a single sample set or save data continuously.
      */
-    enum class Type { SnapshotExport, ContinousExport };
+    enum class Type { SnapshotExport, ContinuousExport };
 
     /**
      * @return Return the type of this exporter.
@@ -71,7 +71,7 @@ class ExporterInterface {
      *
      * @return A number between 0..1 indicating the used capacity of this exporter. If this is a
      * snapshot exporter, only 0 for "no samples processed yet" or 1 for "finished" will be returned.
-     * A continous exporter may report the used memory / reservered memory ratio here.
+     * A continuous exporter may report the used memory / reservered memory ratio here.
      */
     virtual float progress() = 0;
 
