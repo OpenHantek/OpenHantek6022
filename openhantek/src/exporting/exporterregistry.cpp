@@ -25,13 +25,13 @@ void ExporterRegistry::addRawSamples( PPresult *d ) {
     if ( settings->exportProcessedSamples )
         return;
     std::shared_ptr< PPresult > data( d );
-    enabledExporters.remove_if( [&data, this]( ExporterInterface *const &i ) { return processData( data, i ); } );
+    enabledExporters.remove_if( [ &data, this ]( ExporterInterface *const &i ) { return processData( data, i ); } );
 }
 
 void ExporterRegistry::input( std::shared_ptr< PPresult > data ) {
     if ( !settings->exportProcessedSamples )
         return;
-    enabledExporters.remove_if( [&data, this]( ExporterInterface *const &i ) { return processData( data, i ); } );
+    enabledExporters.remove_if( [ &data, this ]( ExporterInterface *const &i ) { return processData( data, i ); } );
 }
 
 void ExporterRegistry::registerExporter( ExporterInterface *exporter ) {
@@ -41,7 +41,7 @@ void ExporterRegistry::registerExporter( ExporterInterface *exporter ) {
 
 void ExporterRegistry::setExporterEnabled( ExporterInterface *exporter, bool enabled ) {
     bool wasInList = false;
-    enabledExporters.remove_if( [exporter, &wasInList]( ExporterInterface *inlist ) {
+    enabledExporters.remove_if( [ exporter, &wasInList ]( ExporterInterface *inlist ) {
         if ( inlist == exporter ) {
             wasInList = true;
             return true;

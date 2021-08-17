@@ -37,7 +37,7 @@ OpenHantek6022 is a free software for **Hantek DSO6022** USB digital signal osci
  compared to the Hantek scopes (see [#69](https://github.com/OpenHantek/OpenHantek6022/issues/69#issuecomment-607341694)).
 
 * Demo mode is provided by the `-d` or `--demoMode` command line option.
-* Fully supported operating system: Linux; developed under debian stable for amd64 architecture.
+* Fully supported operating system: Linux; developed under debian stable (currently *bullseye*) for amd64 architecture.
 * Raspberry Pi packages (raspbian stable) are available on the [Releases](https://github.com/OpenHantek/OpenHantek6022/releases) page, check this [setup requirement](docs/build.md#raspberrypi).
 * Compiles under FreeBSD (packaging / installation: work in progress, thx [tspspi](https://github.com/tspspi)).
 * Other operating systems builds: [Windows](docs/images/screenshot_mainwindow_win.png) (mostly untested) & macOS (completely untested).
@@ -46,7 +46,7 @@ OpenHantek6022 is a free software for **Hantek DSO6022** USB digital signal osci
 * Extensive [User Manual](docs/OpenHantek6022_User_Manual.pdf) with technical specs and schematics.
 
 ## Features
-* Voltage and Spectrum view for all device supported chanels.
+* Voltage and Spectrum view for all device supported channels.
 * CH1 and CH2 name becomes red when input is clipped (bottom left).
 * Settable probe attenuation factor 1..1000 to accommodate a variety of different probes.
 * Measure and display Vpp, DC (average), AC, RMS and dB (of RMS) values as well as frequency of active channels.
@@ -122,7 +122,7 @@ The precompiled packages are only randomly tested - if at all - and the installa
 * To install the downloaded `*.deb` package, open a terminal window, go to the package directory and enter the command (as root) `apt install ./openhantek_..._amd64.deb`.
 This command will automatically install all dependencies of the program as well.
 * For installation of `*.rpm` packages follow similar rules, e.g. `dnf install ./openhantek-...-1.x86_64.rpm`.
-* The `*.tar.gz` achives contain the same files as the `*.deb` and `*.rpm` packages for quick testing - do not use for a permanent intallation. Do not report any issues about the `*.tar.gz`!
+* The `*.tar.gz` achives contain the same files as the `*.deb` and `*.rpm` packages for quick testing - do not use for a permanent installation. Do not report any issues about the `*.tar.gz`!
 * Get macOS packages from [macports](https://www.macports.org/ports.php?by=name&substr=openhantek) - thx [ra1nb0w](https://github.com/ra1nb0w).
 * Get [Fedora rpm packages](https://pkgs.org/download/openhantek) - thx [Vascom](https://github.com/Vascom).
 * Download [(untested) builds from last commit(s)](https://github.com/OpenHantek/OpenHantek6022/actions/workflows/build_check.yml). Select the preferred `workflow run` and go to `Artifacts`.

@@ -35,8 +35,8 @@ struct Raw {
     unsigned channels = 0;
     double samplerate = 0;
     unsigned oversampling = 0;
-    unsigned gainValue[ 2 ] = {1, 1}; // 1,2,5,10,..
-    unsigned gainIndex[ 2 ] = {7, 7}; // index 0..7
+    unsigned gainValue[ 2 ] = { 1, 1 }; // 1,2,5,10,..
+    unsigned gainIndex[ 2 ] = { 7, 7 }; // index 0..7
     unsigned tag = 0;
     bool freeRun = false;  // small buffer, no trigger
     bool valid = false;    // samples can be processed
@@ -173,7 +173,7 @@ class HantekDsoControl : public QObject {
     void controlSetSamplerate( uint8_t sampleIndex );
 
     /// Pointers to control commands
-    ControlCommand *control[ 255 ] = {nullptr};
+    ControlCommand *control[ 255 ] = { nullptr };
     ControlCommand *firstControlCommand = nullptr;
 
     // Communication with device
@@ -208,8 +208,8 @@ class HantekDsoControl : public QObject {
 
     Raw raw;
 
-    std::vector< QString > controlNames = {"SETGAIN_CH1",    "SETGAIN_CH2", "SETSAMPLERATE", "STARTSAMPLING",
-                                           "SETNUMCHANNELS", "SETCOUPLING", "SETCALFREQ"};
+    std::vector< QString > controlNames = { "SETGAIN_CH1",    "SETGAIN_CH2", "SETSAMPLERATE", "STARTSAMPLING",
+                                            "SETNUMCHANNELS", "SETCOUPLING", "SETCALFREQ" };
 
     unsigned debugLevel = 0;
 

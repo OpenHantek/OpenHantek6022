@@ -6,7 +6,7 @@ DsoConfigScopePage::DsoConfigScopePage( DsoSettings *settings, QWidget *parent )
     // Initialize lists for comboboxes
     QStringList interpolationStrings;
     interpolationStrings << tr( "Off" ) << tr( "Linear" ) << tr( "Step" ) << tr( "Sinc" );
-    QList< double > timebaseSteps = {1.0, 2.0, 5.0, 10.0};
+    QList< double > timebaseSteps = { 1.0, 2.0, 5.0, 10.0 };
 
     maxTimebaseLabel = new QLabel( tr( "Set slowest possible timebase" ) );
     maxTimebaseSiSpinBox = new SiSpinBox( UNIT_SECONDS );
@@ -104,7 +104,7 @@ DsoConfigScopePage::DsoConfigScopePage( DsoSettings *settings, QWidget *parent )
     mainLayout->addStretch( 1 );
 
     setLayout( mainLayout );
-    connect( saveNowButton, &QAbstractButton::clicked, [settings]() { settings->save(); } );
+    connect( saveNowButton, &QAbstractButton::clicked, [ settings ]() { settings->save(); } );
 }
 
 /// \brief Saves the new settings.

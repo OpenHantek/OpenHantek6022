@@ -26,14 +26,14 @@ static void initSpecifications( Dso::ControlSpecification &specification ) {
     // Hantek has only 10x, 5x, 2x, 1x
     specification.gain = {
         //              ID, HW gain, voltage/div
-        {20, 20e-3},  // 0     20       20mV/div
-        {20, 50e-3},  // 1     20       50mV/div
-        {10, 100e-3}, // 2     10      100mV/div
-        {5, 200e-3},  // 3      5      200mV/div
-        {2, 500e-3},  // 4      2      500mV/div
-        {1, 1.00},    // 5      1         1V/div
-        {1, 2.00},    // 6      1         2V/div
-        {1, 5.00}     // 7      1         5V/div
+        { 20, 20e-3 },  // 0     20       20mV/div
+        { 20, 50e-3 },  // 1     20       50mV/div
+        { 10, 100e-3 }, // 2     10      100mV/div
+        { 5, 200e-3 },  // 3      5      200mV/div
+        { 2, 500e-3 },  // 4      2      500mV/div
+        { 1, 1.00 },    // 5      1         1V/div
+        { 1, 2.00 },    // 6      1         2V/div
+        { 1, 5.00 }     // 7      1         5V/div
     };
 
     // This data was based on testing and depends on divider.
@@ -42,17 +42,17 @@ static void initSpecifications( Dso::ControlSpecification &specification ) {
     // double the values accordingly 32 -> 64 & 80 -> 160 and change 10 -> 20 in specification.gain below
     // DDS120 correction factors x20: 0.80, x10: 0.80, x5: 0.77, x2: 0.86, x1: 0.83
     // theoretical voltageScales x20: 500,  x10: 250,  x5: 125,  x2: 50,   x1: 25
-    specification.voltageScale[ 0 ] = {400, 400, 200, 96, 43, 21, 21, 21};
-    specification.voltageScale[ 1 ] = {400, 400, 200, 96, 43, 21, 21, 21};
+    specification.voltageScale[ 0 ] = { 400, 400, 200, 96, 43, 21, 21, 21 };
+    specification.voltageScale[ 1 ] = { 400, 400, 200, 96, 43, 21, 21, 21 };
     // specification.voltageScale[ 0 ] = {64, 160, 160, 155, 170, 165, 330, 820};
     // specification.voltageScale[ 1 ] = {64, 160, 160, 155, 170, 165, 330, 820};
     // theoretical offset, will be corrected by individual config file
-    specification.voltageOffset[ 0 ] = {0, 0, 0, 0, 0, 0, 0, 0};
-    specification.voltageOffset[ 1 ] = {0, 0, 0, 0, 0, 0, 0, 0};
+    specification.voltageOffset[ 0 ] = { 0, 0, 0, 0, 0, 0, 0, 0 };
+    specification.voltageOffset[ 1 ] = { 0, 0, 0, 0, 0, 0, 0, 0 };
 
     // read the real calibration values from file
-    const char *ranges[] = {"20mV", "50mV", "100mV", "200mV", "500mV", "1000mV", "2000mV", "5000mV"};
-    const char *channels[] = {"ch0", "ch1"};
+    const char *ranges[] = { "20mV", "50mV", "100mV", "200mV", "500mV", "1000mV", "2000mV", "5000mV" };
+    const char *channels[] = { "ch0", "ch1" };
     // printf( "read config file\n" );
     const unsigned RANGES = 8;
 
@@ -104,10 +104,10 @@ static void initSpecifications( Dso::ControlSpecification &specification ) {
 
     specification.samplerate.single.base = 1e6;
     specification.samplerate.single.max = 30e6;
-    specification.samplerate.single.recordLengths = {UINT_MAX};
+    specification.samplerate.single.recordLengths = { UINT_MAX };
     specification.samplerate.multi.base = 1e6;
     specification.samplerate.multi.max = 15e6;
-    specification.samplerate.multi.recordLengths = {UINT_MAX};
+    specification.samplerate.multi.recordLengths = { UINT_MAX };
 
     // This model uses the sigrok firmware that has a slightly different coding for the sample rate than my Hantek6022API version.
     // 10=100k, 20=200k, 50=500k, 11=10M (Hantek: 110=100k, 120=200k, 150=500k, 10=10M)
@@ -117,24 +117,24 @@ static void initSpecifications( Dso::ControlSpecification &specification ) {
 
     specification.fixedSampleRates = {
         // samplerate, sampleId, downsampling
-        {10e3, 1, 100}, // 100x downsampling from  1 MS/s!
-        {20e3, 2, 100}, // 100x downsampling from  2 MS/s!
-        {50e3, 5, 100}, // 100x downsampling from  5 MS/s!
-        {100e3, 8, 80}, //  80x downsampling from  8 MS/s
-        {200e3, 8, 40}, //  40x downsampling from  8 MS/s
-        {500e3, 8, 16}, //  16x downsampling from  8 MS/s
-        {1e6, 8, 8},    //   8x downsampling from  8 MS/s
-        {2e6, 8, 4},    //   4x downsampling from  8 MS/s
-        {5e6, 15, 3},   //   3x downsampling from 15 MS/s
-        {10e6, 11, 1},  // no downsampling, 11 means 10 MS/s
-        {15e6, 15, 1},  // no downsampling
-        {24e6, 24, 1},  // no downsampling
-        {30e6, 30, 1},  // no downsampling
-        {48e6, 48, 1}   // no downsampling
+        { 10e3, 1, 100 }, // 100x downsampling from  1 MS/s!
+        { 20e3, 2, 100 }, // 100x downsampling from  2 MS/s!
+        { 50e3, 5, 100 }, // 100x downsampling from  5 MS/s!
+        { 100e3, 8, 80 }, //  80x downsampling from  8 MS/s
+        { 200e3, 8, 40 }, //  40x downsampling from  8 MS/s
+        { 500e3, 8, 16 }, //  16x downsampling from  8 MS/s
+        { 1e6, 8, 8 },    //   8x downsampling from  8 MS/s
+        { 2e6, 8, 4 },    //   4x downsampling from  8 MS/s
+        { 5e6, 15, 3 },   //   3x downsampling from 15 MS/s
+        { 10e6, 11, 1 },  // no downsampling, 11 means 10 MS/s
+        { 15e6, 15, 1 },  // no downsampling
+        { 24e6, 24, 1 },  // no downsampling
+        { 30e6, 30, 1 },  // no downsampling
+        { 48e6, 48, 1 }   // no downsampling
     };
 
 
-    specification.couplings = {Dso::Coupling::DC, Dso::Coupling::AC};
+    specification.couplings = { Dso::Coupling::DC, Dso::Coupling::AC };
     specification.hasACcoupling = true; // DDS120 has AC coupling
     specification.triggerModes = {
         Dso::TriggerMode::ROLL,
@@ -144,7 +144,7 @@ static void initSpecifications( Dso::ControlSpecification &specification ) {
     };
     specification.fixedUSBinLength = 0;
     // use calibration frequency steps of modified sigrok FW (<= 20 kHz)
-    specification.calfreqSteps = {50, 60, 100, 200, 500, 1000, 2000, 5000, 10000, 20000};
+    specification.calfreqSteps = { 50, 60, 100, 200, 500, 1000, 2000, 5000, 10000, 20000 };
     specification.hasCalibrationEEPROM = false;
 }
 

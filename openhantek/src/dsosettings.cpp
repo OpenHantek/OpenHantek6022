@@ -14,8 +14,8 @@ DsoSettings::DsoSettings( const ScopeDevice *scopeDevice, bool resetSettings )
       deviceFW( scopeDevice->getFwVersion() ), deviceSpecification( scopeDevice->getModel()->spec() ),
       resetSettings( resetSettings ) {
     // Add new channels to the list
-    int voltage_hue[] = {60, 210, 0, 120};   // yellow, lightblue, red, green
-    int spectrum_hue[] = {30, 240, 330, 90}; // orange, blue, purple, green
+    int voltage_hue[] = { 60, 210, 0, 120 };   // yellow, lightblue, red, green
+    int spectrum_hue[] = { 30, 240, 330, 90 }; // orange, blue, purple, green
     unsigned index = 0;
     scope.hasACcoupling = deviceSpecification->hasACcoupling;
     while ( scope.spectrum.size() < deviceSpecification->channels ) {

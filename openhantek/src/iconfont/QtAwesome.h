@@ -106,8 +106,8 @@ class QtAwesomeIconPainterIconEngine : public QIconEngine {
     QList< QSize > availableSizes( QIcon::Mode mode, QIcon::State state ) const override {
         Q_UNUSED( mode );
         Q_UNUSED( state );
-        QList< QSize > sizes = {QSize( 16, 16 ),   QSize( 32, 32 ),   QSize( 64, 64 ),
-                                QSize( 128, 128 ), QSize( 256, 256 ), QSize( 512, 512 )};
+        QList< QSize > sizes = { QSize( 16, 16 ),   QSize( 32, 32 ),   QSize( 64, 64 ),
+                                 QSize( 128, 128 ), QSize( 256, 256 ), QSize( 512, 512 ) };
         return sizes;
     }
 #endif

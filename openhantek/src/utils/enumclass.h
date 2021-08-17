@@ -8,7 +8,7 @@ template < typename T, T first, T last > class Enum {
       public:
         Iterator( int value ) : m_value( value ) {}
 
-        T operator*(void)const { return T( m_value ); }
+        T operator*( void ) const { return T( m_value ); }
 
         void operator++( void ) { ++m_value; }
 

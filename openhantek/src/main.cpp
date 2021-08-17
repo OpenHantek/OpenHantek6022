@@ -130,23 +130,23 @@ int main( int argc, char *argv[] ) {
         QCommandLineParser p;
         p.addHelpOption();
         p.addVersionOption();
-        QCommandLineOption demoModeOption( {"d", "demoMode"}, "Demo mode without scope HW" );
+        QCommandLineOption demoModeOption( { "d", "demoMode" }, "Demo mode without scope HW" );
         p.addOption( demoModeOption );
-        QCommandLineOption useGlesOption( {"e", "useGLES"}, "Use OpenGL ES instead of OpenGL" );
+        QCommandLineOption useGlesOption( { "e", "useGLES" }, "Use OpenGL ES instead of OpenGL" );
         p.addOption( useGlesOption );
         QCommandLineOption useGLSL120Option( "useGLSL120", "Force OpenGL SL version 1.20" );
         p.addOption( useGLSL120Option );
         QCommandLineOption useGLSL150Option( "useGLSL150", "Force OpenGL SL version 1.50" );
         p.addOption( useGLSL150Option );
-        QCommandLineOption intOption( {"i", "international"}, "Show the international interface, do not translate" );
+        QCommandLineOption intOption( { "i", "international" }, "Show the international interface, do not translate" );
         p.addOption( intOption );
-        QCommandLineOption fontOption( {"f", "font"}, "Define the system font", "Font" );
+        QCommandLineOption fontOption( { "f", "font" }, "Define the system font", "Font" );
         p.addOption( fontOption );
         QCommandLineOption sizeOption(
-            {"s", "size"}, QString( "Set the font size (default = %1, 0: automatic from dpi)" ).arg( fontSize ), "Size" );
+            { "s", "size" }, QString( "Set the font size (default = %1, 0: automatic from dpi)" ).arg( fontSize ), "Size" );
         p.addOption( sizeOption );
         QCommandLineOption condensedOption(
-            {"c", "condensed"}, QString( "Set the font condensed value (default = %1)" ).arg( condensed ), "Condensed" );
+            { "c", "condensed" }, QString( "Set the font condensed value (default = %1)" ).arg( condensed ), "Condensed" );
         p.addOption( condensedOption );
         QCommandLineOption resetSettingsOption( "resetSettings", "Reset persistent settings, start with default" );
         p.addOption( resetSettingsOption );

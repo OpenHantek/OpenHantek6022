@@ -20,8 +20,8 @@ struct ControlSamplerateLimits {
 
 /// \brief Stores the samplerate limits.
 struct ControlSpecificationSamplerate {
-    ControlSamplerateLimits single = {50e6, 50e6, std::vector< unsigned >()};  ///< The limits for single channel mode
-    ControlSamplerateLimits multi = {100e6, 100e6, std::vector< unsigned >()}; ///< The limits for multi channel mode
+    ControlSamplerateLimits single = { 50e6, 50e6, std::vector< unsigned >() };  ///< The limits for single channel mode
+    ControlSamplerateLimits multi = { 100e6, 100e6, std::vector< unsigned >() }; ///< The limits for multi channel mode
 };
 
 struct ControlSpecificationGainLevel {
@@ -63,8 +63,8 @@ struct ControlSpecification {
     std::vector< ControlSpecificationGainLevel > gain;
 
     // Features
-    std::vector< Coupling > couplings = {Dso::Coupling::DC, Dso::Coupling::AC};
-    std::vector< TriggerMode > triggerModes = {TriggerMode::ROLL, TriggerMode::AUTO, TriggerMode::NORMAL, TriggerMode::SINGLE};
+    std::vector< Coupling > couplings = { Dso::Coupling::DC, Dso::Coupling::AC };
+    std::vector< TriggerMode > triggerModes = { TriggerMode::ROLL, TriggerMode::AUTO, TriggerMode::NORMAL, TriggerMode::SINGLE };
     int fixedUSBinLength = 0;
     bool hasACcoupling = false;
 

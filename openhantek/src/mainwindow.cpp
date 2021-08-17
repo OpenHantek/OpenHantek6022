@@ -95,14 +95,14 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
     QAction *action;
     action = new QAction( iconFont->icon( fa::camera, colorMap ), tr( "Screenshot" ), this );
     action->setToolTip( "Make an immediate screenshot of the program window" );
-    connect( action, &QAction::triggered, [this]() { screenShot( SCREENSHOT, true ); } );
+    connect( action, &QAction::triggered, [ this ]() { screenShot( SCREENSHOT, true ); } );
     ui->menuExport->addAction( action );
 
     action = new QAction( iconFont->icon( fa::clone, colorMap ), tr( "Hardcopy" ), this );
     action->setToolTip( "Make an immediate (printable) hardcopy of the display" );
-    connect( action, &QAction::triggered, [this]() {
+    connect( action, &QAction::triggered, [ this ]() {
         dsoWidget->switchToPrintColors();
-        QTimer::singleShot( 20, [this]() { screenShot( HARDCOPY, true ); } );
+        QTimer::singleShot( 20, [ this ]() { screenShot( HARDCOPY, true ); } );
     } );
     ui->menuExport->addAction( action );
 
@@ -110,22 +110,22 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
 
     action = new QAction( iconFont->icon( fa::camera, colorMap ), tr( "Screenshot .." ), this );
     action->setToolTip( "Make a screenshot of the program window" );
-    connect( action, &QAction::triggered, [this]() { screenShot( SCREENSHOT ); } );
+    connect( action, &QAction::triggered, [ this ]() { screenShot( SCREENSHOT ); } );
     ui->menuExport->addAction( action );
 
     action = new QAction( iconFont->icon( fa::clone, colorMap ), tr( "Hardcopy .." ), this );
     action->setToolTip( "Make a (printable) hardcopy of the display" );
-    connect( action, &QAction::triggered, [this]() {
+    connect( action, &QAction::triggered, [ this ]() {
         dsoWidget->switchToPrintColors();
-        QTimer::singleShot( 20, [this]() { screenShot( HARDCOPY ); } );
+        QTimer::singleShot( 20, [ this ]() { screenShot( HARDCOPY ); } );
     } );
     ui->menuExport->addAction( action );
 
     action = new QAction( iconFont->icon( fa::print, colorMap ), tr( "Print screen .." ), this );
     action->setToolTip( "Send the hardcopy to the printer" );
-    connect( action, &QAction::triggered, [this]() {
+    connect( action, &QAction::triggered, [ this ]() {
         dsoWidget->switchToPrintColors();
-        QTimer::singleShot( 20, [this]() { screenShot( PRINTER ); } );
+        QTimer::singleShot( 20, [ this ]() { screenShot( PRINTER ); } );
     } );
     ui->menuExport->addAction( action );
 
@@ -134,7 +134,7 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
     for ( auto *exporter : *exporterRegistry ) {
         action = new QAction( iconFont->icon( exporter->faIcon(), colorMap ), exporter->name(), this );
         action->setCheckable( exporter->type() == ExporterInterface::Type::ContinuousExport );
-        connect( action, &QAction::triggered, [exporter, exporterRegistry]( bool checked ) {
+        connect( action, &QAction::triggered, [ exporter, exporterRegistry ]( bool checked ) {
             exporterRegistry->setExporterEnabled( exporter,
                                                   exporter->type() == ExporterInterface::Type::ContinuousExport ? checked : true );
         } );
@@ -172,13 +172,13 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
 
     statusBar()->addPermanentWidget( commandEdit, 1 );
 
-    connect( ui->actionManualCommand, &QAction::toggled, [this]( bool checked ) {
+    connect( ui->actionManualCommand, &QAction::toggled, [ this ]( bool checked ) {
         commandEdit->setVisible( checked );
         if ( checked )
             commandEdit->setFocus();
     } );
 
-    connect( commandEdit, &QLineEdit::returnPressed, [this, dsoControl]() {
+    connect( commandEdit, &QLineEdit::returnPressed, [ this, dsoControl ]() {
         Dso::ErrorCode errorCode = dsoControl->stringCommand( commandEdit->text() );
         commandEdit->clear();
         this->ui->actionManualCommand->setChecked( false );
@@ -190,17 +190,17 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
     connect( dsoControl, &HantekDsoControl::statusMessage, statusBar(), &QStatusBar::showMessage );
 
     // Connect signals to DSO controller and widget
-    connect( horizontalDock, &HorizontalDock::samplerateChanged, [dsoControl, this]() {
+    connect( horizontalDock, &HorizontalDock::samplerateChanged, [ dsoControl, this ]() {
         dsoControl->setSamplerate( dsoSettings->scope.horizontal.samplerate );
         this->dsoWidget->updateSamplerate( dsoSettings->scope.horizontal.samplerate );
     } );
-    connect( horizontalDock, &HorizontalDock::timebaseChanged, [dsoControl, this]() {
+    connect( horizontalDock, &HorizontalDock::timebaseChanged, [ dsoControl, this ]() {
         dsoControl->setRecordTime( dsoSettings->scope.horizontal.timebase * DIVS_TIME );
         this->dsoWidget->updateTimebase( dsoSettings->scope.horizontal.timebase );
     } );
     connect( spectrumDock, &SpectrumDock::frequencybaseChanged,
-             [this]( double frequencybase ) { this->dsoWidget->updateFrequencybase( frequencybase ); } );
-    connect( dsoControl, &HantekDsoControl::samplerateChanged, [this, horizontalDock, spectrumDock]( double samplerate ) {
+             [ this ]( double frequencybase ) { this->dsoWidget->updateFrequencybase( frequencybase ); } );
+    connect( dsoControl, &HantekDsoControl::samplerateChanged, [ this, horizontalDock, spectrumDock ]( double samplerate ) {
         // The timebase was set, let's adapt the samplerate accordingly
         // printf( "mainwindow::samplerateChanged( %g )\n", samplerate );
         dsoSettings->scope.horizontal.samplerate = samplerate;
@@ -209,18 +209,18 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
         dsoWidget->updateSamplerate( samplerate );
     } );
     connect( horizontalDock, &HorizontalDock::calfreqChanged,
-             [dsoControl, this]() { dsoControl->setCalFreq( dsoSettings->scope.horizontal.calfreq ); } );
-    connect( horizontalDock, &HorizontalDock::formatChanged, [=]( Dso::GraphFormat format ) {
+             [ dsoControl, this ]() { dsoControl->setCalFreq( dsoSettings->scope.horizontal.calfreq ); } );
+    connect( horizontalDock, &HorizontalDock::formatChanged, [ = ]( Dso::GraphFormat format ) {
         ui->actionHistogram->setEnabled( format == Dso::GraphFormat::TY );
         spectrumDock->enableSpectrum( format == Dso::GraphFormat::TY );
     } );
 
     connect( triggerDock, &TriggerDock::modeChanged, dsoControl, &HantekDsoControl::setTriggerMode );
     connect( triggerDock, &TriggerDock::modeChanged, dsoWidget, &DsoWidget::updateTriggerMode );
-    connect( triggerDock, &TriggerDock::modeChanged, [this]( Dso::TriggerMode mode ) {
+    connect( triggerDock, &TriggerDock::modeChanged, [ this ]( Dso::TriggerMode mode ) {
         ui->actionRefresh->setEnabled( Dso::TriggerMode::ROLL == mode && dsoSettings->scope.horizontal.samplerate < 10e3 );
     } );
-    connect( dsoControl, &HantekDsoControl::samplerateChanged, [this]( double samplerate ) {
+    connect( dsoControl, &HantekDsoControl::samplerateChanged, [ this ]( double samplerate ) {
         ui->actionRefresh->setEnabled( Dso::TriggerMode::ROLL == dsoSettings->scope.trigger.mode && samplerate < 10e3 );
     } );
     connect( triggerDock, &TriggerDock::sourceChanged, dsoControl, &HantekDsoControl::setTriggerSource );
@@ -232,7 +232,7 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
     connect( dsoWidget, &DsoWidget::triggerPositionChanged, dsoControl, &HantekDsoControl::setTriggerPosition );
     connect( dsoWidget, &DsoWidget::triggerLevelChanged, dsoControl, &HantekDsoControl::setTriggerLevel );
 
-    auto usedChanged = [this, dsoControl, spec]( ChannelID channel ) {
+    auto usedChanged = [ this, dsoControl, spec ]( ChannelID channel ) {
         if ( channel >= dsoSettings->scope.voltage.size() )
             return;
 
@@ -251,23 +251,23 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
     connect( spectrumDock, &SpectrumDock::usedChanged, usedChanged );
 
     connect( voltageDock, &VoltageDock::modeChanged, dsoWidget, &DsoWidget::updateMathMode );
-    connect( voltageDock, &VoltageDock::gainChanged, [dsoControl, spec]( ChannelID channel, double gain ) {
+    connect( voltageDock, &VoltageDock::gainChanged, [ dsoControl, spec ]( ChannelID channel, double gain ) {
         if ( channel >= spec->channels )
             return;
         dsoControl->setGain( channel, gain );
     } );
-    connect( voltageDock, &VoltageDock::probeAttnChanged, [dsoControl, spec]( ChannelID channel, double probeAttn ) {
+    connect( voltageDock, &VoltageDock::probeAttnChanged, [ dsoControl, spec ]( ChannelID channel, double probeAttn ) {
         if ( channel >= spec->channels )
             return;
         dsoControl->setProbe( channel, probeAttn );
     } );
-    connect( voltageDock, &VoltageDock::invertedChanged, [dsoControl, spec]( ChannelID channel, bool inverted ) {
+    connect( voltageDock, &VoltageDock::invertedChanged, [ dsoControl, spec ]( ChannelID channel, bool inverted ) {
         if ( channel >= spec->channels )
             return;
         dsoControl->setChannelInverted( channel, inverted );
     } );
     connect( voltageDock, &VoltageDock::couplingChanged, dsoWidget, &DsoWidget::updateVoltageCoupling );
-    connect( voltageDock, &VoltageDock::couplingChanged, [dsoControl, spec]( ChannelID channel, Dso::Coupling coupling ) {
+    connect( voltageDock, &VoltageDock::couplingChanged, [ dsoControl, spec ]( ChannelID channel, Dso::Coupling coupling ) {
         if ( channel >= spec->channels )
             return;
         dsoControl->setCoupling( channel, coupling );
@@ -278,7 +278,7 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
     connect( spectrumDock, &SpectrumDock::magnitudeChanged, dsoWidget, &DsoWidget::updateSpectrumMagnitude );
 
     // Started/stopped signals from oscilloscope
-    connect( dsoControl, &HantekDsoControl::samplingStatusChanged, this, [this]( bool enabled ) {
+    connect( dsoControl, &HantekDsoControl::samplingStatusChanged, this, [ this ]( bool enabled ) {
         QSignalBlocker blocker( this->ui->actionSampling );
         if ( enabled ) {
             this->ui->actionSampling->setIcon( this->iconPause );
@@ -307,7 +307,7 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
     connect( this, &MainWindow::settingsLoaded, dsoControl, &HantekDsoControl::applySettings );
     connect( this, &MainWindow::settingsLoaded, dsoWidget, &DsoWidget::updateSlidersSettings );
 
-    connect( ui->actionOpen, &QAction::triggered, [this, spec]() {
+    connect( ui->actionOpen, &QAction::triggered, [ this, spec ]() {
         QString fileName = QFileDialog::getOpenFileName( this, tr( "Open file" ), "", tr( "Settings (*.conf)" ), nullptr,
                                                          QFileDialog::DontUseNativeDialog );
         if ( !fileName.isEmpty() ) {
@@ -325,13 +325,13 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
         }
     } );
 
-    connect( ui->actionSave, &QAction::triggered, [this]() {
+    connect( ui->actionSave, &QAction::triggered, [ this ]() {
         dsoSettings->mainWindowGeometry = saveGeometry();
         dsoSettings->mainWindowState = saveState();
         dsoSettings->save();
     } );
 
-    connect( ui->actionSave_as, &QAction::triggered, [this]() {
+    connect( ui->actionSave_as, &QAction::triggered, [ this ]() {
         QString fileName = QFileDialog::getSaveFileName( this, tr( "Save settings" ), "", tr( "Settings (*.conf)" ), nullptr,
                                                          QFileDialog::DontUseNativeDialog );
         if ( fileName.isEmpty() )
@@ -346,7 +346,7 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
 
     connect( ui->actionExit, &QAction::triggered, this, &QWidget::close );
 
-    connect( ui->actionSettings, &QAction::triggered, [this]() {
+    connect( ui->actionSettings, &QAction::triggered, [ this ]() {
         dsoSettings->mainWindowGeometry = saveGeometry();
         dsoSettings->mainWindowState = saveState();
 
@@ -355,7 +355,7 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
         configDialog->show();
     } );
 
-    connect( this->ui->actionPhosphor, &QAction::toggled, [this]( bool enabled ) {
+    connect( this->ui->actionPhosphor, &QAction::toggled, [ this ]( bool enabled ) {
         dsoSettings->view.digitalPhosphor = enabled;
 
         if ( dsoSettings->view.digitalPhosphor )
@@ -365,7 +365,7 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
     } );
     this->ui->actionPhosphor->setChecked( dsoSettings->view.digitalPhosphor );
 
-    connect( ui->actionHistogram, &QAction::toggled, [this]( bool enabled ) {
+    connect( ui->actionHistogram, &QAction::toggled, [ this ]( bool enabled ) {
         dsoSettings->scope.histogram = enabled;
 
         if ( dsoSettings->scope.histogram )
@@ -376,7 +376,7 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
     ui->actionHistogram->setChecked( dsoSettings->scope.histogram );
     ui->actionHistogram->setEnabled( scope->horizontal.format == Dso::GraphFormat::TY );
 
-    connect( ui->actionZoom, &QAction::toggled, [this]( bool enabled ) {
+    connect( ui->actionZoom, &QAction::toggled, [ this ]( bool enabled ) {
         dsoSettings->view.zoom = enabled;
 
         if ( dsoSettings->view.zoom )
@@ -388,7 +388,7 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
     } );
     ui->actionZoom->setChecked( dsoSettings->view.zoom );
 
-    connect( ui->actionMeasure, &QAction::toggled, [this]( bool enabled ) {
+    connect( ui->actionMeasure, &QAction::toggled, [ this ]( bool enabled ) {
         dsoSettings->view.cursorsVisible = enabled;
 
         if ( dsoSettings->view.cursorsVisible )
@@ -420,7 +420,7 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
                 QUrl( "https://github.com/OpenHantek/OpenHantek6022/blob/main/docs/HANTEK6022_AC_Modification.pdf" ) );
     } );
 
-    connect( ui->actionAbout, &QAction::triggered, [this]() {
+    connect( ui->actionAbout, &QAction::triggered, [ this ]() {
         QMessageBox::about(
             this, QString( "OpenHantek6022 (%1)" ).arg( VERSION ),
             QString( "<p>Open source software for Hantek6022 USB oscilloscopes</p>"
@@ -430,10 +430,12 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
                      "<a href='https://github.com/OpenHantek'>https://github.com/OpenHantek</a></p>"
                      "<p>Open source firmware copyright &copy; 2019-2021 Ho-Ro<br/>"
                      "<a href='https://github.com/Ho-Ro/Hantek6022API'>https://github.com/Ho-Ro/Hantek6022API</a></p>"
-                     "<p>Device: %1 (%2), FW%3</p><p>Graphic: %4 - GLSL version %5</p>" )
+                     "<p>Device: %1 (%2), FW%3</p><p>Graphic: %4 - GLSL version %5</p>"
+                     "<p>Qt version: %6</p>" )
                     .arg( this->dsoSettings->deviceName, this->dsoSettings->deviceID ) // device type, ser. num
                     .arg( this->dsoSettings->deviceFW, 4, 16, QChar( '0' ) )           // FW version
-                    .arg( GlScope::getOpenGLversion(), GlScope::getGLSLversion() ) +   // graphic info
+                    .arg( GlScope::getOpenGLversion(), GlScope::getGLSLversion() )     // graphic info
+                    .arg( QT_VERSION_STR ) +                                           // Qt version info
                 tr( "<p>Running since %1 seconds.</p>" ).arg( elapsedTime.elapsed() / 1000 ) );
     } );
 
@@ -507,7 +509,11 @@ void MainWindow::screenShot( screenshotType_t screenshotType, bool autoSafe ) {
 #if ( QT_VERSION >= QT_VERSION_CHECK( 5, 10, 0 ) )
     printer.setPdfVersion( QPrinter::PdfVersion_A1b );
 #endif
+#if ( QT_VERSION >= QT_VERSION_CHECK( 5, 15, 0 ) )
+    printer.setPageSize( QPageSize( QPageSize::A4 ) );
+#else
     printer.setPageSize( QPrinter::A4 );
+#endif
     printer.setPageMargins( QMarginsF( 20, 20, 20, 20 ), QPageLayout::Millimeter );
     printer.setPageOrientation( sw > sh ? QPageLayout::Landscape : QPageLayout::Portrait );
     printer.setCreator( QCoreApplication::applicationName() );

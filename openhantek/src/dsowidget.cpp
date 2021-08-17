@@ -41,12 +41,12 @@ DsoWidget::DsoWidget( DsoSettingsScope *scope, DsoSettingsView *view, const Dso:
     setupSliders( mainSliders );
     setupSliders( zoomSliders );
 
-    connect( mainScope, &GlScope::markerMoved, [this]( unsigned cursorIndex, unsigned marker ) {
+    connect( mainScope, &GlScope::markerMoved, [ this ]( unsigned cursorIndex, unsigned marker ) {
         mainSliders.markerSlider->setValue( int( marker ), this->scope->getMarker( marker ) );
         mainScope->updateCursor( cursorIndex );
         zoomScope->updateCursor( cursorIndex );
     } );
-    connect( zoomScope, &GlScope::markerMoved, [this]( unsigned cursorIndex ) {
+    connect( zoomScope, &GlScope::markerMoved, [ this ]( unsigned cursorIndex ) {
         mainScope->updateCursor( cursorIndex );
         zoomScope->updateCursor( cursorIndex );
     } );
@@ -194,11 +194,11 @@ DsoWidget::DsoWidget( DsoSettingsScope *scope, DsoSettingsView *view, const Dso:
     }
     cursorDataGrid->selectItem( 0 );
 
-    connect( cursorDataGrid, &DataGrid::itemSelected, [this]( unsigned index ) {
+    connect( cursorDataGrid, &DataGrid::itemSelected, [ this ]( unsigned index ) {
         mainScope->cursorSelected( index );
         zoomScope->cursorSelected( index );
     } );
-    connect( cursorDataGrid, &DataGrid::itemUpdated, [this, scope]( unsigned index ) {
+    connect( cursorDataGrid, &DataGrid::itemUpdated, [ this, scope ]( unsigned index ) {
         unsigned channelCount = scope->countChannels();
         if ( 0 < index && index < channelCount + 1 ) {
             ChannelID channel = index - 1;
@@ -287,24 +287,24 @@ DsoWidget::DsoWidget( DsoSettingsScope *scope, DsoSettingsView *view, const Dso:
     connect( zoomSliders.voltageOffsetSlider, &LevelSlider::valueChanged, this, &DsoWidget::updateOffset );
 
     connect( mainSliders.triggerPositionSlider, &LevelSlider::valueChanged,
-             [this]( int index, double value ) { updateTriggerPosition( index, value, true ); } );
+             [ this ]( int index, double value ) { updateTriggerPosition( index, value, true ); } );
     connect( zoomSliders.triggerPositionSlider, &LevelSlider::valueChanged,
-             [this]( int index, double value ) { updateTriggerPosition( index, value, false ); } );
+             [ this ]( int index, double value ) { updateTriggerPosition( index, value, false ); } );
 
     connect( mainSliders.triggerLevelSlider, &LevelSlider::valueChanged, this, &DsoWidget::updateTriggerLevel );
     connect( zoomSliders.triggerLevelSlider, &LevelSlider::valueChanged, this, &DsoWidget::updateTriggerLevel );
 
     // show a horizontal level line as long as the trigger level slider is active
-    connect( mainSliders.triggerLevelSlider, &LevelSlider::valueChanged, [this]( int index, double value, bool pressed ) {
+    connect( mainSliders.triggerLevelSlider, &LevelSlider::valueChanged, [ this ]( int index, double value, bool pressed ) {
         mainScope->generateGrid( index, value, pressed );
         zoomScope->generateGrid( index, value, pressed );
     } );
-    connect( zoomSliders.triggerLevelSlider, &LevelSlider::valueChanged, [this]( int index, double value, bool pressed ) {
+    connect( zoomSliders.triggerLevelSlider, &LevelSlider::valueChanged, [ this ]( int index, double value, bool pressed ) {
         mainScope->generateGrid( index, value, pressed );
         zoomScope->generateGrid( index, value, pressed );
     } );
 
-    connect( mainSliders.markerSlider, &LevelSlider::valueChanged, [this]( int index, double value ) {
+    connect( mainSliders.markerSlider, &LevelSlider::valueChanged, [ this ]( int index, double value ) {
         updateMarker( unsigned( index ), value );
         mainScope->updateCursor();
         zoomScope->updateCursor();

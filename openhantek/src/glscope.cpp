@@ -244,7 +244,7 @@ void GlScope::mouseDoubleClickEvent( QMouseEvent *event ) {
 void GlScope::wheelEvent( QWheelEvent *event ) {
     if ( scope->verboseLevel > 2 )
         qDebug() << "  GLS::wE()" << event;
-    static std::vector< int > zoomList = {1, 2, 5, 10, 20, 50, 100, 200, 500};
+    static std::vector< int > zoomList = { 1, 2, 5, 10, 20, 50, 100, 200, 500 };
     if ( !( zoomed && selectedCursor == 0 ) ) {
         if ( selectedMarker == NO_MARKER ) {
             double step = event->angleDelta().y() / 1200.0; // one click = 0.1
@@ -469,32 +469,32 @@ void GlScope::generateVertices( unsigned marker, const DsoSettingsScopeCursor &c
     const float Z_ORDER = 1.0f;
     switch ( cursor.shape ) {
     case DsoSettingsScopeCursor::NONE:
-        vaMarker[ marker ] = {QVector3D( -DIVS_TIME, -DIVS_VOLTAGE, Z_ORDER ), QVector3D( -DIVS_TIME, DIVS_VOLTAGE, Z_ORDER ),
-                              QVector3D( DIVS_TIME, DIVS_VOLTAGE, Z_ORDER ), QVector3D( DIVS_TIME, -DIVS_VOLTAGE, Z_ORDER )};
+        vaMarker[ marker ] = { QVector3D( -DIVS_TIME, -DIVS_VOLTAGE, Z_ORDER ), QVector3D( -DIVS_TIME, DIVS_VOLTAGE, Z_ORDER ),
+                               QVector3D( DIVS_TIME, DIVS_VOLTAGE, Z_ORDER ), QVector3D( DIVS_TIME, -DIVS_VOLTAGE, Z_ORDER ) };
         break;
     case DsoSettingsScopeCursor::VERTICAL:
-        vaMarker[ marker ] = {QVector3D( GLfloat( cursor.pos[ 0 ].x() ), -GLfloat( DIVS_VOLTAGE ), Z_ORDER ),
-                              QVector3D( GLfloat( cursor.pos[ 0 ].x() ), GLfloat( DIVS_VOLTAGE ), Z_ORDER ),
-                              QVector3D( GLfloat( cursor.pos[ 1 ].x() ), GLfloat( DIVS_VOLTAGE ), Z_ORDER ),
-                              QVector3D( GLfloat( cursor.pos[ 1 ].x() ), -GLfloat( DIVS_VOLTAGE ), Z_ORDER )};
+        vaMarker[ marker ] = { QVector3D( GLfloat( cursor.pos[ 0 ].x() ), -GLfloat( DIVS_VOLTAGE ), Z_ORDER ),
+                               QVector3D( GLfloat( cursor.pos[ 0 ].x() ), GLfloat( DIVS_VOLTAGE ), Z_ORDER ),
+                               QVector3D( GLfloat( cursor.pos[ 1 ].x() ), GLfloat( DIVS_VOLTAGE ), Z_ORDER ),
+                               QVector3D( GLfloat( cursor.pos[ 1 ].x() ), -GLfloat( DIVS_VOLTAGE ), Z_ORDER ) };
         break;
     case DsoSettingsScopeCursor::HORIZONTAL:
-        vaMarker[ marker ] = {QVector3D( -GLfloat( DIVS_TIME ), GLfloat( cursor.pos[ 0 ].y() ), Z_ORDER ),
-                              QVector3D( GLfloat( DIVS_TIME ), GLfloat( cursor.pos[ 0 ].y() ), Z_ORDER ),
-                              QVector3D( GLfloat( DIVS_TIME ), GLfloat( cursor.pos[ 1 ].y() ), Z_ORDER ),
-                              QVector3D( -GLfloat( DIVS_TIME ), GLfloat( cursor.pos[ 1 ].y() ), Z_ORDER )};
+        vaMarker[ marker ] = { QVector3D( -GLfloat( DIVS_TIME ), GLfloat( cursor.pos[ 0 ].y() ), Z_ORDER ),
+                               QVector3D( GLfloat( DIVS_TIME ), GLfloat( cursor.pos[ 0 ].y() ), Z_ORDER ),
+                               QVector3D( GLfloat( DIVS_TIME ), GLfloat( cursor.pos[ 1 ].y() ), Z_ORDER ),
+                               QVector3D( -GLfloat( DIVS_TIME ), GLfloat( cursor.pos[ 1 ].y() ), Z_ORDER ) };
         break;
     case DsoSettingsScopeCursor::RECTANGULAR:
         if ( ( cursor.pos[ 1 ].x() - cursor.pos[ 0 ].x() ) * ( cursor.pos[ 1 ].y() - cursor.pos[ 0 ].y() ) > 0.0 ) {
-            vaMarker[ marker ] = {QVector3D( GLfloat( cursor.pos[ 0 ].x() ), GLfloat( cursor.pos[ 0 ].y() ), Z_ORDER ),
-                                  QVector3D( GLfloat( cursor.pos[ 1 ].x() ), GLfloat( cursor.pos[ 0 ].y() ), Z_ORDER ),
-                                  QVector3D( GLfloat( cursor.pos[ 1 ].x() ), GLfloat( cursor.pos[ 1 ].y() ), Z_ORDER ),
-                                  QVector3D( GLfloat( cursor.pos[ 0 ].x() ), GLfloat( cursor.pos[ 1 ].y() ), Z_ORDER )};
+            vaMarker[ marker ] = { QVector3D( GLfloat( cursor.pos[ 0 ].x() ), GLfloat( cursor.pos[ 0 ].y() ), Z_ORDER ),
+                                   QVector3D( GLfloat( cursor.pos[ 1 ].x() ), GLfloat( cursor.pos[ 0 ].y() ), Z_ORDER ),
+                                   QVector3D( GLfloat( cursor.pos[ 1 ].x() ), GLfloat( cursor.pos[ 1 ].y() ), Z_ORDER ),
+                                   QVector3D( GLfloat( cursor.pos[ 0 ].x() ), GLfloat( cursor.pos[ 1 ].y() ), Z_ORDER ) };
         } else {
-            vaMarker[ marker ] = {QVector3D( GLfloat( cursor.pos[ 0 ].x() ), GLfloat( cursor.pos[ 0 ].y() ), Z_ORDER ),
-                                  QVector3D( GLfloat( cursor.pos[ 0 ].x() ), GLfloat( cursor.pos[ 1 ].y() ), Z_ORDER ),
-                                  QVector3D( GLfloat( cursor.pos[ 1 ].x() ), GLfloat( cursor.pos[ 1 ].y() ), Z_ORDER ),
-                                  QVector3D( GLfloat( cursor.pos[ 1 ].x() ), GLfloat( cursor.pos[ 0 ].y() ), Z_ORDER )};
+            vaMarker[ marker ] = { QVector3D( GLfloat( cursor.pos[ 0 ].x() ), GLfloat( cursor.pos[ 0 ].y() ), Z_ORDER ),
+                                   QVector3D( GLfloat( cursor.pos[ 0 ].x() ), GLfloat( cursor.pos[ 1 ].y() ), Z_ORDER ),
+                                   QVector3D( GLfloat( cursor.pos[ 1 ].x() ), GLfloat( cursor.pos[ 1 ].y() ), Z_ORDER ),
+                                   QVector3D( GLfloat( cursor.pos[ 1 ].x() ), GLfloat( cursor.pos[ 0 ].y() ), Z_ORDER ) };
         }
         break;
     }
@@ -590,8 +590,8 @@ void GlScope::resizeGL( int width, int height ) {
 // section 0:grid, 1:axes, 2:border
 void GlScope::draw4Cross( std::vector< QVector3D > &va, int section, float x, float y ) {
     const float d = 0.05f; // cross size
-    for ( int xSign : {-1, 1} ) {
-        for ( int ySign : {-1, 1} ) {
+    for ( int xSign : { -1, 1 } ) {
+        for ( int ySign : { -1, 1 } ) {
             gridDrawCounts[ section ] += 4;
             va.push_back( QVector3D( xSign * ( x - d ), ySign * y, 0 ) );
             va.push_back( QVector3D( xSign * ( x + d ), ySign * y, 0 ) );

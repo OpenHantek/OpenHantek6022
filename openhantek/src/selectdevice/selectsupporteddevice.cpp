@@ -20,7 +20,7 @@ SelectSupportedDevice::SelectSupportedDevice( QWidget *parent ) : QDialog( paren
     ui->setupUi( this );
     ui->buttonBox->button( QDialogButtonBox::Ok )->setEnabled( false );
     qRegisterMetaType< UniqueUSBid >( "UniqueUSBid" );
-    connect( ui->buttonBox, &QDialogButtonBox::accepted, [this]() {
+    connect( ui->buttonBox, &QDialogButtonBox::accepted, [ this ]() {
         if ( ui->cmbDevices->currentIndex() != -1 ) {
             selectedDevice = ui->cmbDevices->currentData( Qt::UserRole ).value< UniqueUSBid >();
         }
@@ -35,7 +35,7 @@ SelectSupportedDevice::SelectSupportedDevice( QWidget *parent ) : QDialog( paren
             QDesktopServices::openUrl(
                 QUrl( "https://github.com/OpenHantek/OpenHantek6022/blob/main/docs/OpenHantek6022_User_Manual.pdf" ) );
     } );
-    connect( ui->btnDemoMode, &QPushButton::clicked, [this]() { demoModeClicked = true; } );
+    connect( ui->btnDemoMode, &QPushButton::clicked, [ this ]() { demoModeClicked = true; } );
 }
 
 std::unique_ptr< ScopeDevice > SelectSupportedDevice::showSelectDeviceModal( libusb_context *context, unsigned verboseLevel ) {
@@ -71,7 +71,7 @@ std::unique_ptr< ScopeDevice > SelectSupportedDevice::showSelectDeviceModal( lib
                             "Just press the <b>Demo Mode</b> button below.</p>" );
 
     connect( ui->cmbDevices, static_cast< void ( QComboBox::* )( int ) >( &QComboBox::currentIndexChanged ),
-             [this, &messageDeviceReady]( int index ) {
+             [ this, &messageDeviceReady ]( int index ) {
                  if ( index == -1 ) {
                      ui->buttonBox->button( QDialogButtonBox::Ok )->setEnabled( false );
                      return;
@@ -96,7 +96,7 @@ std::unique_ptr< ScopeDevice > SelectSupportedDevice::showSelectDeviceModal( lib
 
     QTimer timer;
     timer.setInterval( 1000 );
-    connect( &timer, &QTimer::timeout, [this, &model, &findDevices, &messageDeviceReady, &messageNoDevices]() {
+    connect( &timer, &QTimer::timeout, [ this, &model, &findDevices, &messageDeviceReady, &messageNoDevices ]() {
         static int supportedDevices = -1; // max number of devices that can connect or need firmware
         static int readyDevices = -1;
         if ( findDevices->updateDeviceList() ) { // searching...

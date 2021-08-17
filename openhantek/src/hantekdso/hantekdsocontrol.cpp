@@ -244,7 +244,7 @@ Dso::ErrorCode HantekDsoControl::setGain( ChannelID channel, double gain ) {
 
     if ( verboseLevel > 2 )
         qDebug() << "  HDC::setGain()" << channel << gain;
-    static uint8_t lastGain[ 2 ] = {0xFF, 0xFF};
+    static uint8_t lastGain[ 2 ] = { 0xFF, 0xFF };
     gain /= controlsettings.voltage[ channel ].probeAttn; // gain needs to be scaled by probe attenuation
     // Find lowest gain voltage thats at least as high as the requested
     uint8_t gainID;
@@ -289,7 +289,7 @@ Dso::ErrorCode HantekDsoControl::setCoupling( ChannelID channel, Dso::Coupling c
     if ( channel >= specification->channels )
         return Dso::ErrorCode::PARAMETER;
 
-    static int lastCoupling[ 2 ] = {-1, -1};
+    static int lastCoupling[ 2 ] = { -1, -1 };
     if ( verboseLevel > 2 )
         qDebug() << "  HDC::setCoupling()" << channel << int( coupling );
     if ( hasCommand( ControlCode::CONTROL_SETCOUPLING ) ) // don't send command if it is not implemented (like on the 6022)
@@ -663,7 +663,7 @@ unsigned HantekDsoControl::searchTriggeredPosition() {
     size_t sampleCount = result.data[ channel ].size();              // number of available samples
     double timeDisplay = controlsettings.samplerate.target.duration; // time for full screen width
     double sampleRate = result.samplerate;                           //
-    double samplesDisplay = timeDisplay * controlsettings.samplerate.current;
+    unsigned samplesDisplay = unsigned( round( timeDisplay * controlsettings.samplerate.current ) );
     if ( sampleCount < samplesDisplay ) // not enough samples to adjust for jitter.
         return result.triggeredPosition = 0;
     // search for trigger point in a range that leaves enough samples left and right of trigger for display
@@ -841,7 +841,11 @@ void HantekDsoControl::addCommand( ControlCommand *newCommand, bool pending ) {
 Dso::ErrorCode HantekDsoControl::stringCommand( const QString &commandString ) {
     if ( deviceNotConnected() )
         return Dso::ErrorCode::CONNECTION;
+#if ( QT_VERSION >= QT_VERSION_CHECK( 5, 15, 0 ) )
+    QStringList commandParts = commandString.split( ' ', Qt::SkipEmptyParts );
+#else
     QStringList commandParts = commandString.split( ' ', QString::SkipEmptyParts );
+#endif
     if ( commandParts.count() < 1 )
         return Dso::ErrorCode::PARAMETER;
     if ( commandParts[ 0 ] == "send" ) {
@@ -869,14 +873,16 @@ Dso::ErrorCode HantekDsoControl::stringCommand( const QString &commandString ) {
             return Dso::ErrorCode::PARAMETER;
         return Dso::ErrorCode::NONE;
 #if 0
-    } else if ( commandParts[ 0 ] == "test" ) { // simple example for another command
-        if ( commandParts.count() < 2 )
-            return Dso::ErrorCode::PARAMETER;
-        uint8_t test;
-        hexParse( commandParts[ 1 ], &test, 1 );
-        if ( verboseLevel > 2 )
-            qDebug( "  test: 0x%02x\n", test );
-        return Dso::ErrorCode::NONE;
+    } else if ( commandParts[ 0 ] == "test" ) {                // simple example for manual command "test xx"
+        if ( commandParts.count() < 2 )                        // command and one parameter needed
+            return Dso::ErrorCode::PARAMETER;                  // .. otherwise -> error
+        uint8_t val = 0;                                       // set initial value
+        unsigned num = hexParse( commandParts[ 1 ], &val, 1 ); // decode parameter as one hex byte into val
+        if ( num != 1 )                                        // parameter valid?
+            return Dso::ErrorCode::PARAMETER;                  // .. otherwise -> error
+        if ( verboseLevel > 2 )                                // verbose enough?
+            qDebug( "  test 0x%02x", val );                    // .. show the parameter
+        return Dso::ErrorCode::NONE;                           // ok, done
 #endif
     }
     return Dso::ErrorCode::UNSUPPORTED;

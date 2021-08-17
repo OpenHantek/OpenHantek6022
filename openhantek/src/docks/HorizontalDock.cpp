@@ -82,13 +82,13 @@ HorizontalDock::HorizontalDock( DsoSettingsScope *scope, const Dso::ControlSpeci
 
     // Connect signals and slots
     connect( samplerateSiSpinBox, SELECT< double >::OVERLOAD_OF( &QDoubleSpinBox::valueChanged ),
-             [this]( double samplerate ) { this->samplerateSelected( samplerate ); } );
+             [ this ]( double samplerate ) { this->samplerateSelected( samplerate ); } );
     connect( timebaseSiSpinBox, SELECT< double >::OVERLOAD_OF( &QDoubleSpinBox::valueChanged ),
-             [this]( double timebase ) { this->timebaseSelected( timebase ); } );
+             [ this ]( double timebase ) { this->timebaseSelected( timebase ); } );
     connect( formatComboBox, SELECT< int >::OVERLOAD_OF( &QComboBox::currentIndexChanged ),
-             [this]( int index ) { this->formatSelected( index ); } );
+             [ this ]( int index ) { this->formatSelected( index ); } );
     connect( calfreqComboBox, SELECT< int >::OVERLOAD_OF( &QComboBox::currentIndexChanged ),
-             [this]( int index ) { this->calfreqIndexSelected( index ); } );
+             [ this ]( int index ) { this->calfreqIndexSelected( index ); } );
 }
 
 
