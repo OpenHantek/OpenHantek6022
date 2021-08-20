@@ -4,7 +4,7 @@
 <context>
     <name></name>
     <message>
-        <location filename="../src/usb/scopedevice.cpp" line="75"/>
+        <location filename="../src/usb/scopedevice.cpp" line="76"/>
         <source>Couldn&apos;t open device: %1</source>
         <translation>无法打开设备：%1</translation>
     </message>

@@ -90,34 +90,6 @@ class ScopeDevice : public QObject {
     inline void setFindIteration( unsigned iteration ) { findIteration = iteration; }
     inline unsigned getFindIteration() const { return findIteration; }
 
-    /// \brief Bulk transfer to/from the oscilloscope.
-    /// \param endpoint Endpoint number, also sets the direction of the transfer.
-    /// \param data Buffer for the sent/received data.
-    /// \param length The length of the packet.
-    /// \param attempts The number of attempts, that are done on timeouts.
-    /// \param timeout The timeout in ms.
-    /// \return Number of transferred bytes on success, libusb error code on error.
-    int bulkTransfer( unsigned char endpoint, const unsigned char *data, unsigned int length, int attempts = HANTEK_ATTEMPTS,
-                      unsigned int timeout = HANTEK_TIMEOUT );
-
-    /// \brief Bulk write to the oscilloscope.
-    /// \param data Buffer for the sent/received data.
-    /// \param length The length of the packet.
-    /// \param attempts The number of attempts, that are done on timeouts.
-    /// \return Number of sent bytes on success, libusb error code on error.
-    inline int bulkWrite( const unsigned char *data, unsigned int length, int attempts = HANTEK_ATTEMPTS ) {
-        return bulkTransfer( HANTEK_EP_OUT, data, length, attempts );
-    }
-
-    /// \brief Bulk read from the oscilloscope.
-    /// \param data Buffer for the sent/received data.
-    /// \param length The length of the packet.
-    /// \param attempts The number of attempts, that are done on timeouts.
-    /// \return Number of received bytes on success, libusb error code on error.
-    template < class T > inline int bulkRead( const T *command, int attempts = HANTEK_ATTEMPTS ) {
-        return bulkTransfer( HANTEK_EP_IN, command->data(), command->size(), attempts );
-    }
-
     /// \brief Multi packet bulk read from the oscilloscope.
     /// \param data Buffer for the sent/received data.
     /// \param length The length of data contained in the packets.
@@ -200,6 +172,34 @@ class ScopeDevice : public QObject {
     unsigned inPacketLength;  ///< Packet length for the IN endpoint
 
   private:
+    /// \brief Bulk transfer to/from the oscilloscope.
+    /// \param endpoint Endpoint number, also sets the direction of the transfer.
+    /// \param data Buffer for the sent/received data.
+    /// \param length The length of the packet.
+    /// \param attempts The number of attempts, that are done on timeouts.
+    /// \param timeout The timeout in ms.
+    /// \return Number of transferred bytes on success, libusb error code on error.
+    int bulkTransfer( unsigned char endpoint, const unsigned char *data, unsigned int length, int attempts = HANTEK_ATTEMPTS,
+                      unsigned int timeout = HANTEK_TIMEOUT );
+
+    /// \brief Bulk write to the oscilloscope.
+    /// \param data Buffer for the sent/received data.
+    /// \param length The length of the packet.
+    /// \param attempts The number of attempts, that are done on timeouts.
+    /// \return Number of sent bytes on success, libusb error code on error.
+    inline int bulkWrite( const unsigned char *data, unsigned int length, int attempts = HANTEK_ATTEMPTS ) {
+        return bulkTransfer( HANTEK_EP_OUT, data, length, attempts );
+    }
+
+    /// \brief Bulk read from the oscilloscope.
+    /// \param data Buffer for the sent/received data.
+    /// \param length The length of the packet.
+    /// \param attempts The number of attempts, that are done on timeouts.
+    /// \return Number of received bytes on success, libusb error code on error.
+    template < class T > inline int bulkRead( const T *command, int attempts = HANTEK_ATTEMPTS ) {
+        return bulkTransfer( HANTEK_EP_IN, command->data(), command->size(), attempts );
+    }
+
     bool realHW = true;
     bool stopTransfer = false;
     bool disconnected = true;
@@ -208,3 +208,5 @@ class ScopeDevice : public QObject {
   signals:
     void deviceDisconnected(); ///< The device has been disconnected
 };
+
+extern unsigned verboseLevel;

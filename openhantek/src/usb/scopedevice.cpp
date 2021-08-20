@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0+
 
 #include <QCoreApplication>
+#include <QDebug>
 #include <QList>
 #include <iostream>
 
@@ -196,10 +197,11 @@ int ScopeDevice::bulkReadMulti( unsigned char *data, unsigned length, bool captu
     if ( !handle || disconnected )
         return LIBUSB_ERROR_NO_DEVICE;
     int retCode = 0;
-    // printf("USBDevice::bulkReadMulti( %d )\n", length );
-    if ( captureSmallBlocks ) {
+    if ( verboseLevel > 6 )
+        qDebug() << "      ScopeDevice::bulkReadMulti()" << length;
+    if ( captureSmallBlocks ) { // used in roll mode
         // slow data is read in smaller chunks to enable quick screen update
-        const unsigned packetLength = 512 * 78; // 100 blocks for one screen width of 40000
+        const unsigned packetLength = 512 * 78; // ~200 samples on screen (200x oversampling)
         retCode = int( packetLength );
         unsigned int packet;
         received = 0;
@@ -210,8 +212,11 @@ int ScopeDevice::bulkReadMulti( unsigned char *data, unsigned length, bool captu
                                     attempts, HANTEK_TIMEOUT_MULTI * 10 );
             if ( retCode > 0 )
                 received += unsigned( retCode );
+            if ( verboseLevel > 6 )
+                qDebug() << "      ScopeDevice::bulkReadMulti() bulkTransfer retCode" << retCode;
         }
-        // printf( "total packets: %d, received: %d\n", packet, received );
+        if ( verboseLevel > 6 )
+            qDebug() << "      scopeDevice::bulkReadMulti() packet, received" << packet << received;
         if ( received > 0 )
             retCode = int( received );
         return retCode;
@@ -236,6 +241,8 @@ int ScopeDevice::controlTransfer( unsigned char type, unsigned char request, uns
         return LIBUSB_ERROR_NO_DEVICE;
 
     int errorCode = LIBUSB_ERROR_TIMEOUT;
+    if ( verboseLevel > 6 )
+        qDebug() << "      ScopeDevice::controlTransfer()" << type << request << length << value << index << attempts;
     // printf( "controlTransfer type %x request %x data[0] %d length %d value %d index %d attempts %d\n",
     //    type, request, data[0], length, value, index, attempts );
 

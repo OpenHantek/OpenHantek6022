@@ -68,6 +68,8 @@
 
 using namespace Hantek;
 
+// verboseLevel allows the fine granulated tracing of the program for easy testing and debugging
+unsigned verboseLevel = 0; // 0: quiet; 1,2: startup; 3,4: + user actions; 5,6: + data processing; 7 + USB
 
 /// \brief Initialize resources and translations and show the main window.
 int main( int argc, char *argv[] ) {
@@ -105,8 +107,6 @@ int main( int argc, char *argv[] ) {
     bool useGLSL120 = false;
     bool useGLSL150 = false;
     bool useLocale = true;
-    // verboseLevel allows the fine granulated tracing of the program for easy testing and debugging
-    unsigned verboseLevel = 0; // 0: quiet; 1,2: startup; 3,4: + user actions; 5,6: + data processing
     bool resetSettings = false;
     QString font = defaultFont;       // defined in viewsettings.h
     int fontSize = defaultFontSize;   // defined in viewsettings.h
@@ -414,12 +414,12 @@ int main( int argc, char *argv[] ) {
         qDebug() << startupTime.elapsed() << "ms:"
                  << "application closed, clean up";
 
-    std::cout << std::unitbuf; // enable automatic flushing
+    std::cerr << std::unitbuf; // enable automatic flushing
 
     // the stepwise text output gives some hints about the shutdown timing
     // not needed with appropriate verbose level
     if ( verboseLevel < 3 )
-        std::cout << "OpenHantek6022 "; // 1st part
+        std::cerr << "OpenHantek6022 "; // 1st part
 
     dsoControl.quitSampling(); // send USB control command, stop bulk transfer
 
@@ -430,21 +430,21 @@ int main( int argc, char *argv[] ) {
     capturing.requestInterruption();
     capturing.wait( waitForDso );
     if ( verboseLevel < 3 )
-        std::cout << "has "; // 2nd part
+        std::cerr << "has "; // 2nd part
 
     // now quit the data acquisition thread
     // wait 2 * record time (delay is ms) for dso to finish
     dsoControlThread.quit();
     dsoControlThread.wait( waitForDso );
     if ( verboseLevel < 3 )
-        std::cout << "stopped "; // 3rd part
+        std::cerr << "stopped "; // 3rd part
 
     // next stop the data processing
     postProcessing.stop();
     postProcessingThread.quit();
     postProcessingThread.wait( 10000 );
     if ( verboseLevel < 3 )
-        std::cout << "after "; // 4th part
+        std::cerr << "after "; // 4th part
 
     // finally shut down the libUSB communication
     if ( scopeDevice )
@@ -453,9 +453,9 @@ int main( int argc, char *argv[] ) {
         libusb_exit( context );
 
     if ( verboseLevel < 3 )
-        std::cout << openHantekMainWindow.elapsedTime.elapsed() / 1000 << " s\n"; // last part
+        std::cerr << openHantekMainWindow.elapsedTime.elapsed() / 1000 << " s\n"; // last part
     else
-        std::cout << "OpenHantek6022 has stopped after " << openHantekMainWindow.elapsedTime.elapsed() / 1000 << " s\n";
+        std::cerr << "OpenHantek6022 has stopped after " << openHantekMainWindow.elapsedTime.elapsed() / 1000 << " s\n";
 
     return appStatus;
 }

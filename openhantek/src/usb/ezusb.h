@@ -36,6 +36,5 @@ struct libusb_device_handle;
  */
 extern int ezusb_load_ram( libusb_device_handle *device, const char *path, int fx_type, int stage );
 
-/* Verbosity level (default 1). Can be increased or decreased with options v/q
- */
-extern int verbose;
+// Verbosity level set by command line option --verbose
+extern unsigned verboseLevel;
