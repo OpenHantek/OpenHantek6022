@@ -25,6 +25,7 @@ OpenHantek6022 is a free software for **Hantek DSO6022** USB digital signal osci
 * [Important!](#important-)
 * [Specifications, features, limitations and developer documentation](#specifications--features--limitations-and-developer-documentation)
 * [Contribute](#contribute)
+* [Donate](#donate)
 * [Other DSO open source software](#other-dso-open-source-software)
 * [Other related software](#other-related-software)
 * [History](#history)
@@ -182,6 +183,10 @@ We welcome any reported GitHub issue if you have a problem with this software. S
 [12]: https://github.com/probot/dco/blob/master/README.md
 [13]: http://llvm.org/docs/CodingStandards.html
 [14]: https://help.github.com/articles/using-pull-requests
+
+## Donate
+If you really enjoy this project and would like to donate, please give it to the [Free Software Foundation](https://www.fsf.org/).
+Without the FSF, we wouldn't have this [free software](https://www.gnu.org/philosophy/free-sw.html) that we can use today.
 
 ## Other DSO open source software
 * [Firmware used by OpenHantek and python bindings for 6022BE/BL](https://github.com/Ho-Ro/Hantek6022API)

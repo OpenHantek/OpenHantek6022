@@ -46,17 +46,17 @@ QString GlScope::getOpenGLversion() {
 
 // this static function will be called early from main to set up OpenGL
 void GlScope::useOpenGLSLversion( QString renderer ) {
-    QCoreApplication::setAttribute( Qt::AA_ShareOpenGLContexts, true );
+    // QCoreApplication::setAttribute( Qt::AA_ShareOpenGLContexts, true ); // commented out because too late
     QSurfaceFormat format;
     GLSLversion = renderer;
     format.setSamples( 4 ); // ignore antialiasing warning with some HW, Qt & OpenGL versions.
     format.setProfile( QSurfaceFormat::CoreProfile );
     if ( renderer == GLES100 ) {
         format.setRenderableType( QSurfaceFormat::OpenGLES );
-        QCoreApplication::setAttribute( Qt::AA_UseOpenGLES, true );
+        // QCoreApplication::setAttribute( Qt::AA_UseOpenGLES, true ); // commented out because too late
     } else {
         format.setRenderableType( QSurfaceFormat::OpenGL );
-        QCoreApplication::setAttribute( Qt::AA_UseOpenGLES, false );
+        // QCoreApplication::setAttribute( Qt::AA_UseOpenGLES, false ); // commented out because too late
     }
     QSurfaceFormat::setDefaultFormat( format );
 }
