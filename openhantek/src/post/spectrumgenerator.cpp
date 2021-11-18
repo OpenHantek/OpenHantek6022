@@ -173,7 +173,7 @@ void SpectrumGenerator::process( PPresult *result ) {
         }
 
         // Set sampling interval
-        channelData->spectrum.interval = 1.0 / channelData->voltage.interval / sampleCount;
+        channelData->spectrum.interval = 1.0 / channelData->voltage.interval / double( sampleCount );
 
         // Number of real/complex samples
         unsigned int dftLength = unsigned( sampleCount ) / 2;
@@ -215,7 +215,7 @@ void SpectrumGenerator::process( PPresult *result ) {
         for ( unsigned int position = 0; position < sampleCount; ++position ) {
             dc += *voltageIterator++;
         }
-        dc /= sampleCount;
+        dc /= double( sampleCount );
         channelData->dc = dc;
 
         // now strip DC bias, calculate rms of AC component and apply window for fft to AC component
@@ -226,7 +226,7 @@ void SpectrumGenerator::process( PPresult *result ) {
             ac2 += ac_sample * ac_sample;
             windowedValues[ position ] = lastWindowBuffer[ position ] * ac_sample;
         }
-        ac2 /= sampleCount;
+        ac2 /= double( sampleCount );
         channelData->ac = sqrt( ac2 );            // rms of AC component
         channelData->rms = sqrt( dc * dc + ac2 ); // total rms = U eff
         channelData->dB = 20.0 * log10( channelData->rms ) - postprocessing->spectrumReference;
