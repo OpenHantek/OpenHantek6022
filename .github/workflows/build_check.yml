@@ -19,8 +19,7 @@ jobs:
       # do not stop on 1st fail
       fail-fast: false
       matrix:
-        # use Ubuntu1804 until Debian "bullseye" becomes "stable"
-        os: [ubuntu-18.04, macos-10.15, windows-2019]
+        os: [ubuntu-20.04, macos-10.15, windows-2019]
 
     runs-on: ${{ matrix.os }}
 
