@@ -539,9 +539,7 @@ void DsoWidget::updateMarkerDetails() {
     bool timeUsed = false;
     bool freqUsed = false;
 
-    int index = 0;
-    cursorDataGrid->updateInfo( unsigned( index++ ), true, QString(), valueToString( time, UNIT_SECONDS, 3 ),
-                                valueToString( freq, UNIT_HERTZ, 3 ) );
+    int index = 1;
 
     for ( ChannelID channel = 0; channel < scope->voltage.size(); ++channel ) {
         if ( scope->voltage[ channel ].used ) {
@@ -622,6 +620,16 @@ void DsoWidget::updateMarkerDetails() {
         } else
             markerFrequencyLabel->setText( "" );
     }
+
+    QString markerMeasureTimeLabel;
+    QString markerMeasureFreqLabel;
+    if ( timeUsed ) {
+        markerMeasureTimeLabel = QString("Δt: %1").arg( valueToString( time, UNIT_SECONDS, 3 ) );
+    }
+    if ( freqUsed ) {
+        markerMeasureFreqLabel = QString("Δf: %1" ).arg(valueToString( freq, UNIT_HERTZ, 3 ) );
+    }
+    cursorDataGrid->updateInfo( unsigned( 0 ), true, QString(), markerMeasureTimeLabel, markerMeasureFreqLabel );
 }
 
 
