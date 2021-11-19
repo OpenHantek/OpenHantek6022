@@ -541,7 +541,7 @@ void DsoWidget::updateMarkerDetails() {
 
     int index = 0;
     cursorDataGrid->updateInfo( unsigned( index++ ), true, QString(), valueToString( time, UNIT_SECONDS, 3 ),
-                                valueToString( freq, UNIT_HERTZ, 3 ) );
+                                valueToString( 1 / time, UNIT_HERTZ, 3 ) );
 
     for ( ChannelID channel = 0; channel < scope->voltage.size(); ++channel ) {
         if ( scope->voltage[ channel ].used ) {
