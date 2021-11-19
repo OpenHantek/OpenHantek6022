@@ -720,7 +720,10 @@ void DsoWidget::updateTimebase( double newTimebase ) {
 
 /// \brief Handles magnitudeChanged signal from the spectrum dock.
 /// \param channel The channel whose magnitude was changed.
-void DsoWidget::updateSpectrumMagnitude( ChannelID channel ) { updateSpectrumDetails( channel ); }
+void DsoWidget::updateSpectrumMagnitude( ChannelID channel ) {
+    updateSpectrumDetails( channel );
+    updateMarkerDetails();
+}
 
 /// \brief Handles usedChanged signal from the spectrum dock.
 /// \param channel The channel whose used-state was changed.
@@ -793,6 +796,8 @@ void DsoWidget::updateVoltageGain( ChannelID channel ) {
         adaptTriggerLevelSlider( zoomSliders, channel );
     }
     updateVoltageDetails( channel );
+
+    updateMarkerDetails();
 }
 
 
