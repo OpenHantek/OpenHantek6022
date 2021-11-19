@@ -546,7 +546,7 @@ void GlScope::paintGL() {
         for ( ChannelID channel = 0; channel < scope->voltage.size(); ++channel ) {
             if ( scope->horizontal.format == Dso::GraphFormat::TY ) {
                 drawSpectrumChannelGraph( channel, graph, int( historyIndex ) );
-                if ( scope->histogram ) {
+                if ( scope->histogram && !graph.vaoHistogram.empty()) {
                     drawHistogramChannelGraph( channel, graph, int( historyIndex ) );
                 }
             }
