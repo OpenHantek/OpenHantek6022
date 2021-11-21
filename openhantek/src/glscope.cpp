@@ -841,7 +841,7 @@ void GlScope::drawVoltageChannelGraph( ChannelID channel, Graph &graph, int hist
 
 
 void GlScope::drawHistogramChannelGraph( ChannelID channel, Graph &graph, int historyIndex ) {
-    if ( !scope->voltage[ channel ].used )
+    if ( graph.vaoHistogram.empty() || !scope->voltage[ channel ].used )
         return;
 
     m_program->setUniformValue( colorLocation, view->colors->voltage[ channel ].darker( 100 + 10 * historyIndex ) );
