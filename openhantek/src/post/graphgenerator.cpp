@@ -112,7 +112,7 @@ void GraphGenerator::generateGraphsTYvoltage( PPresult *result ) {
 
         // sinc interpolation if there are too less samples on screen
         // https://ccrma.stanford.edu/~jos/resample/resample.pdf
-        if ( interpolationSinc && dotsOnScreen < 200 ) { // < 1 µs/div
+        if ( interpolationSinc && dotsOnScreen < view->screenWidth ) { // < 1 µs/div
             // we would need sincWidth, but we take what we get
             const unsigned int left = std::min( sincWidth, unsigned( leftmostSample ) );
             horizontalFactor /= oversample;                                     // distance between (resampled) dots

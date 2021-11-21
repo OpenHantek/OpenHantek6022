@@ -6,6 +6,7 @@
 #include <QFileDialog>
 #include <QGridLayout>
 #include <QLabel>
+#include <QScreen>
 #include <QSignalBlocker>
 #include <QTimer>
 
@@ -32,6 +33,11 @@ DsoWidget::DsoWidget( DsoSettingsScope *scope, DsoSettingsView *view, const Dso:
 
     if ( scope->verboseLevel > 1 )
         qDebug() << " DsoWidget::DsoWidget()";
+
+    // get the primary screen size for further use - e.g. graphgenerator.cpp
+    QSize screenSize = QGuiApplication::primaryScreen()->size();
+    view->screenHeight = unsigned( screenSize.height() );
+    view->screenWidth = unsigned( screenSize.width() );
 
     // Palette for this widget
     QPalette palette;
@@ -624,10 +630,10 @@ void DsoWidget::updateMarkerDetails() {
     QString markerMeasureTimeLabel;
     QString markerMeasureFreqLabel;
     if ( timeUsed ) {
-        markerMeasureTimeLabel = QString("Δt: %1").arg( valueToString( time, UNIT_SECONDS, 3 ) );
+        markerMeasureTimeLabel = QString( "Δt: %1" ).arg( valueToString( time, UNIT_SECONDS, 3 ) );
     }
     if ( freqUsed ) {
-        markerMeasureFreqLabel = QString("Δf: %1" ).arg(valueToString( freq, UNIT_HERTZ, 3 ) );
+        markerMeasureFreqLabel = QString( "Δf: %1" ).arg( valueToString( freq, UNIT_HERTZ, 3 ) );
     }
     cursorDataGrid->updateInfo( unsigned( 0 ), true, QString(), markerMeasureTimeLabel, markerMeasureFreqLabel );
 }

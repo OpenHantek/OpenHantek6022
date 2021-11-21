@@ -569,89 +569,89 @@
 <context>
     <name>DsoWidget</name>
     <message>
-        <location filename="../src/dsowidget.cpp" line="598"/>
-        <location filename="../src/dsowidget.cpp" line="600"/>
-        <location filename="../src/dsowidget.cpp" line="641"/>
-        <location filename="../src/dsowidget.cpp" line="686"/>
-        <location filename="../src/dsowidget.cpp" line="695"/>
-        <location filename="../src/dsowidget.cpp" line="716"/>
+        <location filename="../src/dsowidget.cpp" line="604"/>
+        <location filename="../src/dsowidget.cpp" line="606"/>
+        <location filename="../src/dsowidget.cpp" line="647"/>
+        <location filename="../src/dsowidget.cpp" line="692"/>
+        <location filename="../src/dsowidget.cpp" line="701"/>
+        <location filename="../src/dsowidget.cpp" line="722"/>
         <source>/div</source>
         <translation>/div</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="72"/>
+        <location filename="../src/dsowidget.cpp" line="78"/>
         <source>TR</source>
         <translation>TR</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="188"/>
+        <location filename="../src/dsowidget.cpp" line="194"/>
         <source>Markers</source>
         <translation>Marker</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="550"/>
-        <location filename="../src/dsowidget.cpp" line="566"/>
+        <location filename="../src/dsowidget.cpp" line="556"/>
+        <location filename="../src/dsowidget.cpp" line="572"/>
         <source>ON</source>
         <translation>EIN</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="551"/>
-        <location filename="../src/dsowidget.cpp" line="566"/>
+        <location filename="../src/dsowidget.cpp" line="557"/>
+        <location filename="../src/dsowidget.cpp" line="572"/>
         <source>OFF</source>
         <translation>AUS</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="588"/>
+        <location filename="../src/dsowidget.cpp" line="594"/>
         <source>Markers  </source>
         <translation>Merker  </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="589"/>
+        <location filename="../src/dsowidget.cpp" line="595"/>
         <source>Time: </source>
         <translation>Zeit: </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="590"/>
+        <location filename="../src/dsowidget.cpp" line="596"/>
         <source>Frequency: </source>
         <translation>Frequenz: </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="593"/>
+        <location filename="../src/dsowidget.cpp" line="599"/>
         <source>Zoom x%L1  </source>
         <translation>Zoom x%L1  </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="595"/>
+        <location filename="../src/dsowidget.cpp" line="601"/>
         <source>Zoom ---  </source>
         <translation>Zoom ---  </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="654"/>
+        <location filename="../src/dsowidget.cpp" line="660"/>
         <source>%L1%</source>
         <translation>%L1%</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="668"/>
+        <location filename="../src/dsowidget.cpp" line="674"/>
         <source>%1  %2  %3  %4  %5</source>
         <translation>%1  %2  %3  %4 %5</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="706"/>
+        <location filename="../src/dsowidget.cpp" line="712"/>
         <source>/s</source>
         <translation>/s</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="822"/>
+        <location filename="../src/dsowidget.cpp" line="833"/>
         <source> on screen</source>
         <translation> angezeigt</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="871"/>
+        <location filename="../src/dsowidget.cpp" line="882"/>
         <source>pp</source>
         <translation>pp</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="878"/>
+        <location filename="../src/dsowidget.cpp" line="889"/>
         <source>rms</source>
         <translation>rms</translation>
     </message>

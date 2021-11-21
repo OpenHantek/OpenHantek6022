@@ -53,6 +53,8 @@ struct DsoSettingsView {
     DsoSettingsColorValues *colors = &screen;
     int fontSize = defaultFontSize;
     bool styleFusion = false;
+    unsigned screenHeight = 0;
+    unsigned screenWidth = 0;
 
     unsigned digitalPhosphorDraws() const { return digitalPhosphor ? digitalPhosphorDepth : 1; }
 };
