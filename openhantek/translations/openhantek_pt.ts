@@ -177,7 +177,7 @@
         <translation type="vanished">Exportar imagens com cores de tela</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="139"/>
+        <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="148"/>
         <source>Screen and Print Colors</source>
         <translation>Cores de tela e impressão</translation>
     </message>
@@ -185,6 +185,26 @@
         <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="11"/>
         <source>Screen</source>
         <translation>Tela</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="132"/>
+        <source>Auto</source>
+        <translation>Automático</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="132"/>
+        <source>Light</source>
+        <translation>Luz</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="132"/>
+        <source>Dark</source>
+        <translation>Escuro</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="133"/>
+        <source>Theme (restart needed to apply the change)</source>
+        <translation>Tema (reinício necessário para aplicar a mudança)</translation>
     </message>
     <message>
         <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="13"/>
@@ -209,7 +229,7 @@
         <translation>Fusion style (reinício necessário para aplicar a mudança)</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="131"/>
+        <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="140"/>
         <source>Font size (restart needed to apply the change)</source>
         <translation>Tamanho da fonte (reinício necessário para aplicar a mudança)</translation>
     </message>
@@ -856,7 +876,7 @@
     <message>
         <location filename="../src/mainwindow.ui" line="14"/>
         <source>MainWindow</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="28"/>
@@ -881,47 +901,47 @@
     <message>
         <location filename="../src/mainwindow.ui" line="114"/>
         <source>Save settings &amp;as ..</source>
-        <translation type="unfinished"></translation>
+        <translation>Salvar configurações &amp;como ..</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="119"/>
         <source>&amp;Exit</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="130"/>
         <source>S&amp;ampling</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="149"/>
         <source>&amp;Phosphor</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="157"/>
         <source>&amp;Histogram</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="165"/>
         <source>&amp;Zoom</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="173"/>
         <source>&amp;Measure</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Medida</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="188"/>
         <source>&amp;User Manual</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="193"/>
         <source>&amp;About ..</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="198"/>
@@ -931,12 +951,12 @@
     <message>
         <location filename="../src/mainwindow.ui" line="206"/>
         <source>&amp;Manual command</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Comando Manual</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="211"/>
         <source>AC &amp;Modification</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Modificação AC</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="59"/>
@@ -950,12 +970,12 @@
     <message>
         <location filename="../src/mainwindow.ui" line="79"/>
         <source>toolBar</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="98"/>
         <source>&amp;Open settings ..</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Abrir configurações ..</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="101"/>
@@ -985,17 +1005,17 @@
     <message>
         <location filename="../src/mainwindow.ui" line="141"/>
         <source>&amp;Refresh</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="178"/>
         <source>Docking windows</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="183"/>
         <source>Toolbars</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Settings</source>
@@ -1004,7 +1024,7 @@
     <message>
         <location filename="../src/mainwindow.cpp" line="87"/>
         <source>OpenHantek6022 (%1) - Device %2 (FW%3)</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="90"/>
@@ -1014,12 +1034,12 @@
     <message>
         <location filename="../src/mainwindow.cpp" line="90"/>
         <source>OpenHantek6022 (%1) - </source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="96"/>
         <source>Screenshot</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="186"/>
@@ -1042,32 +1062,32 @@
     <message>
         <location filename="../src/mainwindow.cpp" line="111"/>
         <source>Screenshot ..</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="101"/>
         <source>Hardcopy</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="116"/>
         <source>Hardcopy ..</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="124"/>
         <source>Print screen ..</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="285"/>
         <source>Stop</source>
-        <translation type="unfinished"></translation>
+        <translation>Parar</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="289"/>
         <source>Start</source>
-        <translation type="unfinished"></translation>
+        <translation>Iniciar</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="290"/>
@@ -1127,32 +1147,32 @@
     <message>
         <location filename="../src/mainwindow.cpp" line="395"/>
         <source>Hide measurements</source>
-        <translation type="unfinished"></translation>
+        <translation>Esconder medidas</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="397"/>
         <source>Show measurements</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostrar medidas</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="439"/>
         <source>&lt;p&gt;Running since %1 seconds.&lt;/p&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;p&gt;Correndo desde %1 segundos.&lt;/p&gt;</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="470"/>
         <source>%1: %2</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="492"/>
         <source>yyyy-MM-dd hh:mm:ss</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="493"/>
         <source>yyyyMMdd_hhmmss</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="529"/>
@@ -1162,12 +1182,12 @@
     <message>
         <location filename="../src/mainwindow.cpp" line="529"/>
         <source>Portable Document Format (*.pdf)</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="530"/>
         <source>Save screenshot</source>
-        <translation type="unfinished"></translation>
+        <translation>Salvar screenshot</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="561"/>

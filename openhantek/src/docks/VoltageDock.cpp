@@ -85,6 +85,9 @@ VoltageDock::VoltageDock( DsoSettingsScope *scope, const Dso::ControlSpecificati
             QFrame *divider = new QFrame();
             divider->setLineWidth( 1 );
             divider->setFrameShape( QFrame::HLine );
+            QPalette palette = QPalette();
+            palette.setColor( QPalette::WindowText, QColor( 128, 128, 128 ) );
+            divider->setPalette( palette ); // reduce the contrast of the divider
             dockLayout->addWidget( divider, row++, 0, 1, 3 );
         }
 

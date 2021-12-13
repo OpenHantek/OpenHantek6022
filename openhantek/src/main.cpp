@@ -111,6 +111,7 @@ int main( int argc, char *argv[] ) {
     QString font = defaultFont;       // defined in viewsettings.h
     int fontSize = defaultFontSize;   // defined in viewsettings.h
     int condensed = defaultCondensed; // defined in viewsettings.h
+    int theme = 0;                    // set to auto
     bool styleFusion = false;
     { // do this early at program start ...
         // get font size settings:
@@ -121,9 +122,11 @@ int main( int argc, char *argv[] ) {
         QSettings storeSettings;
         storeSettings.beginGroup( "view" );
         if ( storeSettings.contains( "fontSize" ) )
-            fontSize = Dso::InterpolationMode( storeSettings.value( "fontSize" ).toInt() );
+            fontSize = storeSettings.value( "fontSize" ).toInt();
         if ( storeSettings.contains( "styleFusion" ) )
             styleFusion = storeSettings.value( "styleFusion" ).toBool();
+        if ( storeSettings.contains( "theme" ) ) //
+            theme = storeSettings.value( "theme" ).toInt();
         storeSettings.endGroup();
 
         QCoreApplication parserApp( argc, argv );
@@ -178,8 +181,8 @@ int main( int argc, char *argv[] ) {
     }
     QApplication openHantekApplication( argc, argv );
 
-    // Qt5 linux themes ("Breeze", "Windows" or "Fusion")
-    // Linux default:   "Breeze" (screen is taller compared to the other two themes)
+    // Qt5 linux styles ("Breeze", "Windows" or "Fusion")
+    // Linux default:   "Breeze" (screen is taller compared to the other two styles)
     // Windows default: "Windows"
     if ( styleFusion ) { // smaller widgets allow stacking of all four docks even on 1280x720 screen
         if ( verboseLevel )
@@ -187,6 +190,38 @@ int main( int argc, char *argv[] ) {
                      << "set \"Fusion\" style";
         openHantekApplication.setStyle( QStyleFactory::create( "Fusion" ) );
     }
+
+    // adapt the palette according to the user selected theme (Auto, Light, Dark)
+    QPalette palette = QPalette();
+    palette.setColor( QPalette::Link, QColor( 48, 128, 240 ) );        // hyperlink
+    palette.setColor( QPalette::LinkVisited, QColor( 48, 128, 240 ) ); // do not change the color
+
+    if ( Dso::Themes::THEME_LIGHT == Dso::Themes( theme ) ) {                 // Light theme
+        palette.setColor( QPalette::Window, QColor( 208, 208, 208 ) );        // general background color
+        palette.setColor( QPalette::WindowText, Qt::black );                  // general foreground color
+        palette.setColor( QPalette::Base, QColor( 240, 240, 240 ) );          // background for text entry
+        palette.setColor( QPalette::AlternateBase, QColor( 240, 240, 240 ) ); // same for alternating rows
+        palette.setColor( QPalette::Text, Qt::black );                        // used with base / alt base
+        palette.setColor( QPalette::ToolTipBase, Qt::white );
+        palette.setColor( QPalette::ToolTipText, Qt::black );
+        palette.setColor( QPalette::Button, QColor( 208, 208, 208 ) );
+        palette.setColor( QPalette::ButtonText, Qt::black );
+        palette.setColor( QPalette::Highlight, QColor( 48, 128, 240 ) );
+        palette.setColor( QPalette::HighlightedText, Qt::yellow );
+    } else if ( Dso::Themes::THEME_DARK == Dso::Themes( theme ) ) {        // Dark theme
+        palette.setColor( QPalette::Window, QColor( 48, 48, 48 ) );        // general background color
+        palette.setColor( QPalette::WindowText, Qt::white );               // general foreground color
+        palette.setColor( QPalette::Base, QColor( 24, 24, 24 ) );          // background for text entry
+        palette.setColor( QPalette::AlternateBase, QColor( 24, 24, 24 ) ); // same for alternating rows
+        palette.setColor( QPalette::Text, Qt::white );                     // used with base
+        palette.setColor( QPalette::ToolTipBase, Qt::black );
+        palette.setColor( QPalette::ToolTipText, Qt::white );
+        palette.setColor( QPalette::Button, QColor( 48, 48, 48 ) );
+        palette.setColor( QPalette::ButtonText, Qt::white );
+        palette.setColor( QPalette::Highlight, QColor( 24, 64, 120 ) );
+        palette.setColor( QPalette::HighlightedText, Qt::yellow );
+    }
+    openHantekApplication.setPalette( palette );
 
 #ifdef Q_OS_LINUX
     // try to set realtime priority to improve USB allocation
@@ -203,7 +238,7 @@ int main( int argc, char *argv[] ) {
     struct sched_param schedParam;
     schedParam.sched_priority = 9;                    // set RT priority level 10
     sched_setscheduler( 0, SCHED_FIFO, &schedParam ); // and RT FIFO scheduler
-    // but ignore any error if user has no realtime rights
+                                                      // but ignore any error if user has no realtime rights
 #endif
 
     //////// Load translations ////////
@@ -362,8 +397,9 @@ int main( int argc, char *argv[] ) {
     GlScope::useOpenGLSLversion( GLSLversion ); // prepare the OpenGL renderer
 
     //////// Prepare visual appearance ////////
-    // prepare the font size and style settings for the scope application
+    // prepare the font size, style and theme settings for the scope application
     settings.view.styleFusion = styleFusion;
+    settings.view.theme = theme;
     QFont appFont = openHantekApplication.font();
     if ( 0 == fontSize ) {                               // option -s0 -> use system font size
         fontSize = qBound( 6, appFont.pointSize(), 24 ); // values < 6 do not scale correctly

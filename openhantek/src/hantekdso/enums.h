@@ -59,6 +59,14 @@ enum InterpolationMode {
     INTERPOLATION_COUNT    ///< Total number of interpolation modes
 };
 
+/// \enum Themes
+/// \brief The different themes for display.
+enum Themes {
+    THEME_AUTO = 0, ///< Use the system theme
+    THEME_LIGHT,    ///< Force a light theme
+    THEME_DARK      ///< Force a dark theme
+};
+
 // QString channelModeString(ChannelMode mode);
 QString graphFormatString( GraphFormat format );
 QString couplingString( Coupling coupling );

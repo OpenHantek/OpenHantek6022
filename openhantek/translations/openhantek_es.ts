@@ -181,6 +181,21 @@
         <translation>Rejilla</translation>
     </message>
     <message>
+        <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="132"/>
+        <source>Auto</source>
+        <translation>Automático</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="132"/>
+        <source>Light</source>
+        <translation>Brillante</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="132"/>
+        <source>Dark</source>
+        <translation>Oscuro</translation>
+    </message>
+    <message>
         <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="32"/>
         <source>Markers</source>
         <translation>Marcadores</translation>
@@ -208,7 +223,12 @@
         <translation>Fusion style (se necesita reiniciar para aplicar el cambio)</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="131"/>
+        <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="133"/>
+        <source>Theme (restart needed to apply the change)</source>
+        <translation>Tema (se necesita reiniciar para aplicar el cambio)</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="140"/>
         <source>Font size (restart needed to apply the change)</source>
         <translation>Tamaño de la letra (se necesita reiniciar para aplicar el cambio)</translation>
     </message>
@@ -222,7 +242,7 @@
         <translation type="vanished">Exportar imágenes con los colores de la pantalla</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="139"/>
+        <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="148"/>
         <source>Screen and Print Colors</source>
         <translation>Pantalla y colores de impresión</translation>
     </message>

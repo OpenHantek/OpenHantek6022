@@ -57,4 +57,7 @@ class DsoConfigColorsPage : public QWidget {
     QLabel *fontSizeLabel;
     QSpinBox *fontSizeSpinBox;
     QCheckBox *styleFusionCheckBox;
+    QLabel *themeLabel;
+    QComboBox *themeComboBox;
+    QGridLayout *themeLayout;
 };

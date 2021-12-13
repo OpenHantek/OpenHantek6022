@@ -181,6 +181,21 @@
         <translation>Grille</translation>
     </message>
     <message>
+        <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="132"/>
+        <source>Auto</source>
+        <translation>Automatique</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="132"/>
+        <source>Light</source>
+        <translation>Lumière</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="132"/>
+        <source>Dark</source>
+        <translation>Sombre</translation>
+    </message>
+    <message>
         <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="32"/>
         <source>Markers</source>
         <translation>Repères</translation>
@@ -208,7 +223,12 @@
         <translation>Fusion style (redémarrage nécessaire pour appliquer la modification)</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="131"/>
+        <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="133"/>
+        <source>Theme (restart needed to apply the change)</source>
+        <translation>Thème (redémarrage nécessaire pour appliquer la modification)</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="140"/>
         <source>Font size (restart needed to apply the change)</source>
         <translation>Taille de la police (redémarrage nécessaire pour appliquer la modification)</translation>
     </message>
@@ -222,7 +242,7 @@
         <translation type="vanished">Exporter images avec couleurs de l&apos;écran</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="139"/>
+        <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="148"/>
         <source>Screen and Print Colors</source>
         <translation>Couleurs à l&apos;écran et à l&apos;impression</translation>
     </message>

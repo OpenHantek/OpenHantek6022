@@ -53,6 +53,7 @@ struct DsoSettingsView {
     DsoSettingsColorValues *colors = &screen;
     int fontSize = defaultFontSize;
     bool styleFusion = false;
+    int theme = 0;
     unsigned screenHeight = 0;
     unsigned screenWidth = 0;
 

@@ -128,6 +128,15 @@ DsoConfigColorsPage::DsoConfigColorsPage( DsoSettings *settings, QWidget *parent
     styleFusionCheckBox->setChecked( settings->view.styleFusion );
     colorsLayout->addWidget( styleFusionCheckBox, ++row, COL_LABEL );
 
+    QStringList themeStrings;
+    themeStrings << tr( "Auto" ) << tr( "Light" ) << tr( "Dark" );
+    themeLabel = new QLabel( tr( "Theme (restart needed to apply the change)" ) );
+    themeComboBox = new QComboBox();
+    themeComboBox->addItems( themeStrings );
+    themeComboBox->setCurrentIndex( settings->view.theme );
+    colorsLayout->addWidget( themeLabel, ++row, COL_LABEL );
+    colorsLayout->addWidget( themeComboBox, row, COL_LABEL + 1 );
+
     fontSizeLabel = new QLabel( tr( "Font size (restart needed to apply the change)" ) );
     fontSizeSpinBox = new QSpinBox();
     fontSizeSpinBox->setMinimum( 6 );
@@ -179,4 +188,6 @@ void DsoConfigColorsPage::saveSettings() {
 
     settings->view.styleFusion = styleFusionCheckBox->isChecked();
     QSettings().setValue( "view/styleFusion", settings->view.styleFusion );
+    settings->view.theme = themeComboBox->currentIndex();
+    QSettings().setValue( "view/theme", settings->view.theme );
 }

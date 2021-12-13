@@ -171,6 +171,26 @@
         <translation>Siatka</translation>
     </message>
     <message>
+        <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="132"/>
+        <source>Auto</source>
+        <translation>Automatyczna</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="132"/>
+        <source>Light</source>
+        <translation>Jasny</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="132"/>
+        <source>Dark</source>
+        <translation>Ciemny</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="133"/>
+        <source>Theme (restart needed to apply the change)</source>
+        <translation>Temat  (konieczne ponowne uruchomienie, aby zastosować zmianę)</translation>
+    </message>
+    <message>
         <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="32"/>
         <source>Markers</source>
         <translation>Markery</translation>
@@ -186,7 +206,7 @@
         <translation>Fusion style (konieczne ponowne uruchomienie, aby zastosować zmianę)</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="131"/>
+        <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="140"/>
         <source>Font size (restart needed to apply the change)</source>
         <translation>Rozmiar czcionki (konieczne ponowne uruchomienie, aby zastosować zmianę)</translation>
     </message>
@@ -200,7 +220,7 @@
         <translation type="vanished">Eksportuj obrazy z kolorami ekranu</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="139"/>
+        <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="148"/>
         <source>Screen and Print Colors</source>
         <translation>Kolory ekranu i druku</translation>
     </message>
