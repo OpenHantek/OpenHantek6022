@@ -193,33 +193,52 @@ int main( int argc, char *argv[] ) {
 
     // adapt the palette according to the user selected theme (Auto, Light, Dark)
     QPalette palette = QPalette();
-    palette.setColor( QPalette::Link, QColor( 48, 128, 240 ) );        // hyperlink
-    palette.setColor( QPalette::LinkVisited, QColor( 48, 128, 240 ) ); // do not change the color
+    palette.setColor( QPalette::LinkVisited, QPalette().color( QPalette::Link ) ); // do not change the link color
 
-    if ( Dso::Themes::THEME_LIGHT == Dso::Themes( theme ) ) {                 // Light theme
-        palette.setColor( QPalette::Window, QColor( 208, 208, 208 ) );        // general background color
-        palette.setColor( QPalette::WindowText, Qt::black );                  // general foreground color
-        palette.setColor( QPalette::Base, QColor( 240, 240, 240 ) );          // background for text entry
-        palette.setColor( QPalette::AlternateBase, QColor( 240, 240, 240 ) ); // same for alternating rows
-        palette.setColor( QPalette::Text, Qt::black );                        // used with base / alt base
-        palette.setColor( QPalette::ToolTipBase, Qt::white );
-        palette.setColor( QPalette::ToolTipText, Qt::black );
-        palette.setColor( QPalette::Button, QColor( 208, 208, 208 ) );
-        palette.setColor( QPalette::ButtonText, Qt::black );
-        palette.setColor( QPalette::Highlight, QColor( 48, 128, 240 ) );
-        palette.setColor( QPalette::HighlightedText, Qt::yellow );
-    } else if ( Dso::Themes::THEME_DARK == Dso::Themes( theme ) ) {        // Dark theme
-        palette.setColor( QPalette::Window, QColor( 48, 48, 48 ) );        // general background color
-        palette.setColor( QPalette::WindowText, Qt::white );               // general foreground color
-        palette.setColor( QPalette::Base, QColor( 24, 24, 24 ) );          // background for text entry
-        palette.setColor( QPalette::AlternateBase, QColor( 24, 24, 24 ) ); // same for alternating rows
-        palette.setColor( QPalette::Text, Qt::white );                     // used with base
-        palette.setColor( QPalette::ToolTipBase, Qt::black );
-        palette.setColor( QPalette::ToolTipText, Qt::white );
-        palette.setColor( QPalette::Button, QColor( 48, 48, 48 ) );
-        palette.setColor( QPalette::ButtonText, Qt::white );
-        palette.setColor( QPalette::Highlight, QColor( 24, 64, 120 ) );
-        palette.setColor( QPalette::HighlightedText, Qt::yellow );
+    if ( Dso::Themes::THEME_LIGHT == Dso::Themes( theme ) ) { // Colors from "Breeze" theme
+        palette.setColor( QPalette::WindowText, QColor( 35, 38, 39 ) );
+        palette.setColor( QPalette::Button, QColor( 239, 240, 241 ) );
+        palette.setColor( QPalette::Light, QColor( 255, 255, 255 ) );
+        palette.setColor( QPalette::Midlight, QColor( 246, 247, 247 ) );
+        palette.setColor( QPalette::Dark, QColor( 136, 142, 147 ) );
+        palette.setColor( QPalette::Mid, QColor( 196, 200, 204 ) );
+        palette.setColor( QPalette::Text, QColor( 35, 38, 39 ) );
+        palette.setColor( QPalette::BrightText, QColor( 255, 255, 255 ) );
+        palette.setColor( QPalette::ButtonText, QColor( 35, 38, 39 ) );
+        palette.setColor( QPalette::Base, QColor( 252, 252, 252 ) );
+        palette.setColor( QPalette::Window, QColor( 239, 240, 241 ) );
+        palette.setColor( QPalette::Shadow, QColor( 71, 74, 76 ) );
+        palette.setColor( QPalette::Highlight, QColor( 61, 174, 233 ) );
+        palette.setColor( QPalette::HighlightedText, QColor( 252, 252, 252 ) );
+        palette.setColor( QPalette::Link, QColor( 41, 128, 185 ) );
+        palette.setColor( QPalette::LinkVisited, QColor( 41, 128, 185 ) ); // was 127, 140, 141;
+        palette.setColor( QPalette::AlternateBase, QColor( 239, 240, 241 ) );
+        palette.setColor( QPalette::NoRole, QColor( 0, 0, 0 ) ); // #17
+        palette.setColor( QPalette::ToolTipBase, QColor( 35, 38, 39 ) );
+        palette.setColor( QPalette::ToolTipText, QColor( 252, 252, 252 ) );
+        palette.setColor( QPalette::PlaceholderText, QColor( 35, 38, 39 ) ); // #20
+    } else if ( Dso::Themes::THEME_DARK == Dso::Themes( theme ) ) {          // Colors from "Breeze Dark" theme
+        palette.setColor( QPalette::WindowText, QColor( 239, 240, 241 ) );   // #0
+        palette.setColor( QPalette::Button, QColor( 49, 54, 59 ) );
+        palette.setColor( QPalette::Light, QColor( 70, 77, 84 ) );
+        palette.setColor( QPalette::Midlight, QColor( 60, 66, 72 ) );
+        palette.setColor( QPalette::Dark, QColor( 29, 32, 35 ) );
+        palette.setColor( QPalette::Mid, QColor( 43, 48, 52 ) );
+        palette.setColor( QPalette::Text, QColor( 239, 240, 241 ) );
+        palette.setColor( QPalette::BrightText, QColor( 255, 255, 255 ) );
+        palette.setColor( QPalette::ButtonText, QColor( 239, 240, 241 ) );
+        palette.setColor( QPalette::Base, QColor( 35, 38, 41 ) );
+        palette.setColor( QPalette::Window, QColor( 49, 54, 59 ) );
+        palette.setColor( QPalette::Shadow, QColor( 21, 23, 25 ) );
+        palette.setColor( QPalette::Highlight, QColor( 61, 174, 233 ) );
+        palette.setColor( QPalette::HighlightedText, QColor( 239, 240, 241 ) );
+        palette.setColor( QPalette::Link, QColor( 41, 128, 185 ) );
+        palette.setColor( QPalette::LinkVisited, QColor( 41, 128, 185 ) ); // was 127, 140, 141;
+        palette.setColor( QPalette::AlternateBase, QColor( 49, 54, 59 ) );
+        palette.setColor( QPalette::NoRole, QColor( 0, 0, 0 ) ); // #17
+        palette.setColor( QPalette::ToolTipBase, QColor( 49, 54, 59 ) );
+        palette.setColor( QPalette::ToolTipText, QColor( 239, 240, 241 ) );
+        palette.setColor( QPalette::PlaceholderText, QColor( 239, 240, 241 ) ); // #20
     }
     openHantekApplication.setPalette( palette );
 
