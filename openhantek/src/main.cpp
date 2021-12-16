@@ -216,9 +216,11 @@ int main( int argc, char *argv[] ) {
         palette.setColor( QPalette::NoRole, QColor( 0, 0, 0 ) ); // #17
         palette.setColor( QPalette::ToolTipBase, QColor( 35, 38, 39 ) );
         palette.setColor( QPalette::ToolTipText, QColor( 252, 252, 252 ) );
-        palette.setColor( QPalette::PlaceholderText, QColor( 35, 38, 39 ) ); // #20
-    } else if ( Dso::Themes::THEME_DARK == Dso::Themes( theme ) ) {          // Colors from "Breeze Dark" theme
-        palette.setColor( QPalette::WindowText, QColor( 239, 240, 241 ) );   // #0
+#if ( QT_VERSION >= QT_VERSION_CHECK( 5, 12, 0 ) )
+        palette.setColor( QPalette::PlaceholderText, QColor( 35, 38, 39 ) ); // #20, introduced in Qt 5.12
+#endif
+    } else if ( Dso::Themes::THEME_DARK == Dso::Themes( theme ) ) {        // Colors from "Breeze Dark" theme
+        palette.setColor( QPalette::WindowText, QColor( 239, 240, 241 ) ); // #0
         palette.setColor( QPalette::Button, QColor( 49, 54, 59 ) );
         palette.setColor( QPalette::Light, QColor( 70, 77, 84 ) );
         palette.setColor( QPalette::Midlight, QColor( 60, 66, 72 ) );
@@ -238,7 +240,9 @@ int main( int argc, char *argv[] ) {
         palette.setColor( QPalette::NoRole, QColor( 0, 0, 0 ) ); // #17
         palette.setColor( QPalette::ToolTipBase, QColor( 49, 54, 59 ) );
         palette.setColor( QPalette::ToolTipText, QColor( 239, 240, 241 ) );
-        palette.setColor( QPalette::PlaceholderText, QColor( 239, 240, 241 ) ); // #20
+#if ( QT_VERSION >= QT_VERSION_CHECK( 5, 12, 0 ) )
+        palette.setColor( QPalette::PlaceholderText, QColor( 239, 240, 241 ) ); // #20, introduced in Qt 5.12
+#endif
     }
     openHantekApplication.setPalette( palette );
 
