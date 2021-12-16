@@ -1,3 +1,10 @@
+3.2.5
+2021-12-16
+Updating the development system to the latest Debian stable version (bullseye).
+Updates for Qt 5.15 (from bullseye).
+Many small GUI improvements / fixes (thanks ericfont).
+User selectable themes (auto/light/dark).
+
 3.2.4
 2021-07-14
 Possibility to select Fusion style in options menu (fits on 1280x720 screen)
