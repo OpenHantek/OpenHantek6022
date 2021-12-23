@@ -1,0 +1,53 @@
+; Installs WinUsb for Hantek 6022BE openht
+
+[Version]
+Signature = "$Windows NT$"
+Class     = USBDevice
+ClassGUID = {88BAE032-5A81-49f0-BC3D-A4FF138216D6}
+Provider = %ManufacturerName%
+CatalogFile=Hantek_6022BE_openht.cat
+DriverVer = 12/23/2021, 21.12.23.4
+PnpLockDown=1
+
+; ========== Manufacturer/Models sections ===========
+
+[Manufacturer]
+%ManufacturerName% = Standard,NTamd64,NTx86
+
+[Standard.NTamd64]
+%DeviceName% = USB_Install, USB\VID_04B5&PID_6022
+
+[Standard.NTx86]
+%DeviceName% = USB_Install, USB\VID_04B5&PID_6022
+
+; =================== Installation ===================
+
+[USB_Install]
+Include=winusb.inf
+Needs=WINUSB.NT
+
+[USB_Install.Services]
+Include=winusb.inf
+AddService=WinUsb,0x00000002,WinUsb_ServiceInstall
+
+[WinUsb_ServiceInstall]
+DisplayName     = %WinUsb_SvcDesc%
+ServiceType     = 1
+StartType       = 3
+ErrorControl    = 1
+ServiceBinary   = %12%\WinUSB.sys
+
+[USB_Install.HW]
+AddReg=Dev_AddReg
+
+[Dev_AddReg]
+; By default, USBDevice class uses iProduct descriptor to name the device
+; The following line (uncommented) forces using %DeviceName%
+HKR,,FriendlyName,,%DeviceName%
+HKR,,DeviceInterfaceGUIDs,0x10000,"{C4B9C054-04B5-6022-367C-22756B7032DB}"
+
+[Strings]
+ManufacturerName="Hantek"
+ClassName="Universal Serial Bus devices"
+WinUsb_SvcDesc="WinUSB Driver"
+DeviceName="Hantek 6022BE openht"

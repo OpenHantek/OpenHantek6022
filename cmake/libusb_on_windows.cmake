@@ -10,8 +10,24 @@ endif()
 
 # set file names for lib and associated inf/cat files
 set(LIBUSB_7Z "${CMAKE_CURRENT_LIST_DIR}/libusb-1.0.21-win.7z")
+# use "old" cat/inf files provided by VictorEEV
 set(HANTEK_6022B_CAT "${CMAKE_CURRENT_LIST_DIR}/Hantek_6022B.cat")
 set(HANTEK_6022B_INF "${CMAKE_CURRENT_LIST_DIR}/Hantek_6022B.inf")
+# use "new" cat/inf files provided by fgrieu (PR #251)
+set(INF_DIR "${CMAKE_CURRENT_LIST_DIR}/../utils/signed-windows-inf-files")
+set(HANTEK_6022BE_LOADER_CAT "${INF_DIR}/Hantek_6022BE_loader.cat")
+set(HANTEK_6022BE_LOADER_INF "${INF_DIR}/Hantek_6022BE_loader.inf")
+set(HANTEK_6022BE_OPENHT_CAT "${INF_DIR}/Hantek_6022BE_openht.cat")
+set(HANTEK_6022BE_OPENHT_INF "${INF_DIR}/Hantek_6022BE_openht.inf")
+set(HANTEK_6022BE_SIGROK_CAT "${INF_DIR}/Hantek_6022BE_sigrok.cat")
+set(HANTEK_6022BE_SIGROK_INF "${INF_DIR}/Hantek_6022BE_sigrok.inf")
+set(HANTEK_6022BL_LOADER_CAT "${INF_DIR}/Hantek_6022BL_loader.cat")
+set(HANTEK_6022BL_LOADER_INF "${INF_DIR}/Hantek_6022BL_loader.inf")
+set(HANTEK_6022BL_OPENHT_CAT "${INF_DIR}/Hantek_6022BL_openht.cat")
+set(HANTEK_6022BL_OPENHT_INF "${INF_DIR}/Hantek_6022BL_openht.inf")
+set(HANTEK_6022BL_SIGROK_CAT "${INF_DIR}/Hantek_6022BL_sigrok.cat")
+set(HANTEK_6022BL_SIGROK_INF "${INF_DIR}/Hantek_6022BL_sigrok.inf")
+set(README_INSTALL_TXT "${INF_DIR}/README_INSTALL.txt")
 set(LIBUSB_DIR "${CMAKE_BINARY_DIR}/libusb-1.0.21-win")
 
 execute_process(
@@ -37,6 +53,19 @@ add_custom_command(TARGET ${PROJECT_NAME}
         COMMAND ${CMAKE_COMMAND} -E copy_if_different "${LIBUSB_DIR}/${ARCH}/libusb-1.0.dll" $<TARGET_FILE_DIR:${PROJECT_NAME}>
         COMMAND ${CMAKE_COMMAND} -E copy_if_different "${HANTEK_6022B_CAT}" $<TARGET_FILE_DIR:${PROJECT_NAME}>
         COMMAND ${CMAKE_COMMAND} -E copy_if_different "${HANTEK_6022B_INF}" $<TARGET_FILE_DIR:${PROJECT_NAME}>
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${HANTEK_6022BE_LOADER_CAT}" $<TARGET_FILE_DIR:${PROJECT_NAME}>
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${HANTEK_6022BE_LOADER_INF}" $<TARGET_FILE_DIR:${PROJECT_NAME}>
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${HANTEK_6022BE_OPENHT_CAT}" $<TARGET_FILE_DIR:${PROJECT_NAME}>
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${HANTEK_6022BE_OPENHT_INF}" $<TARGET_FILE_DIR:${PROJECT_NAME}>
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${HANTEK_6022BE_SIGROK_CAT}" $<TARGET_FILE_DIR:${PROJECT_NAME}>
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${HANTEK_6022BE_SIGROK_INF}" $<TARGET_FILE_DIR:${PROJECT_NAME}>
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${HANTEK_6022BL_LOADER_CAT}" $<TARGET_FILE_DIR:${PROJECT_NAME}>
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${HANTEK_6022BL_LOADER_INF}" $<TARGET_FILE_DIR:${PROJECT_NAME}>
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${HANTEK_6022BL_OPENHT_CAT}" $<TARGET_FILE_DIR:${PROJECT_NAME}>
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${HANTEK_6022BL_OPENHT_INF}" $<TARGET_FILE_DIR:${PROJECT_NAME}>
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${HANTEK_6022BL_SIGROK_CAT}" $<TARGET_FILE_DIR:${PROJECT_NAME}>
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${HANTEK_6022BL_SIGROK_INF}" $<TARGET_FILE_DIR:${PROJECT_NAME}>
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${README_INSTALL_TXT}" $<TARGET_FILE_DIR:${PROJECT_NAME}>
         COMMENT "Copy libusb-1 dlls and inf/cat files for ${PROJECT_NAME}"
 )
 
