@@ -190,7 +190,7 @@ In `Roll` mode the latest sample values are always put at the end of the result 
 this rolls the displayed trace permanently to the left.
 The conversion uses either the factory calibration values from EEPROM or from a user supplied config file. 
 Read more about [calibration](https://github.com/Ho-Ro/Hantek6022API/blob/main/README.md#create-calibration-values-for-openhantek).
-* `searchTriggerPosition()`
+* `searchTriggeredPosition()`
     * Checks if the signal is triggered and calculates the starting point for a stable display.
     The time distance to the following opposite slope is measured and displayed as pulse width in the top row.
 * `provideTriggeredData()` handles the trigger mode:
@@ -223,12 +223,12 @@ becomes true again. The reused samples are emitted at lower speed (every 20 ms) 
     * which creates a third MATH channel as one of these data sample combinations: 
       `CH1 + CH2`, `CH1 - CH2`, `CH2 - CH1`, `CH1 * CH2`, `CH1 AC` or `CH2 AC`.
   * `SpectrumGenerator::process()`
-    * For each active channel:
+    * For each active channel:∘
       * Calculate the peak-to-peak, DC (average), AC (rms) and effective value ( sqrt( DC² + AC² ) ).
       * Apply a user selected window function and scale the result accordingly.
-      * Calculate the spectrum of the AC part of the signal scaled as dBV. fft: f(t) ⊶ F(ω)
+      * Calculate the spectrum of the AC part of the signal scaled as dBV. FFT: f(t) ∘⎯ F(ω)
       * Calculate the autocorrelation to get the frequency of the signal:
-        * Calculate power spectrum |F(ω)|² and do an ifft: F(ω) ∙ F(ω) ⊷ f(t) ⊗ f(t) (autocorrelation, i.e. convolution of f(t) with f(t))
+        * Calculate power spectrum |F(ω)|² and do an IFFT: F(ω) ∙ F(ω) ⎯∘ f(t) ⊗ f(t) (autocorrelation, i.e. convolution of f(t) with f(t))
         * This is quite inaccurate at high frequencies. In these cases the first peak value of the spectrum is used.
       * Calculate the THD (optional): `THD = sqrt( power_of_harmonics / power_of_fundamental )`
   * `GraphGenerator::process()`
@@ -240,7 +240,7 @@ becomes true again. The reused samples are emitted at lower speed (every 20 ms) 
     The procedure takes care of interpolating in *Step* or *Sinc* mode and it will also create the histogram if enabled.
     * `GraphGenerator::generateGraphsTYspectrum()` creates up to three (SP1, SP2, SPM) spectral traces.
   * Finally `PostProcessing` emits the signal `processingFinished()` that is connected to:
-    * `ExporterRegistry::input()` that takes care of exporting to CSV data.
+    * `ExporterRegistry::input()` that takes care of exporting to CSV or JSON data.
     * `MainWindow::showNewData()`.
       * which calls `DsoWidget::showNew()` that calls `GlScope::showData()` that calls `Graph::writeData()`.
 

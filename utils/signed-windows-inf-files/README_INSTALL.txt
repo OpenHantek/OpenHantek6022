@@ -17,7 +17,7 @@ The manufacturer's drivers can perhaps be desintalled from "add/remove programs"
 appear as "Windows Driver Package - ODM (Hantek6022...) USB".
 
 If other bindings appear in "Device Manager" and need to be removed, 
-ight-click on the device, perform "Uninstall device",
+right-click on the device, perform "Uninstall device",
 optionally (suggested) tick "Delete the driver software for this device",
 confirm.
 
