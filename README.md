@@ -146,15 +146,16 @@ The Raspberry Pi build uses OpenGL ES automatically, check also the [graphics dr
 
 ### USB access
 USB access for the device is required (unless using demo mode):
-* On Linux, you need to copy the file `utils/udev_rules/60-openhantek.rules` to `/etc/udev/rules.d/` or `/usr/lib/udev/rules.d/` and replug your device.
-If OpenHantek is installed from a `*.deb` or `*.rpm` package this file is installed automatically into `/usr/lib/udev/rules.d/`.
-
-### Windows USB access
-* **The original Hantek driver for Windows doesn't work!**
-You have to assign the correct WinUSB driver with one of these two solutions:
-1. [Use the tool *Zadig*](docs/build.md#microsoft-windows-usb-driver-install-with-zadig) and follow the good
-[step-by-step tutorial](docs/OpenHantek6022_zadig_Win10.pdf) provided by [DaPa](https://github.com/DaPa).
-2. [Install the signed WinUSB driver](file:///home/horo/projects/Measure/Hantek6022/OpenHantek6022/docs/build.md#signed-winusb-driver-for-hantek-6022bebl) provided by VictorEEV.
+* **_Linux/Unix_**
+You need to copy the file `utils/udev_rules/60-openhantek.rules` to `/etc/udev/rules.d/` or `/usr/lib/udev/rules.d/` and replug your device.
+Note: If OpenHantek is installed from a `*.deb` or `*.rpm` package this file is installed automatically into `/usr/lib/udev/rules.d/`.
+* **_Windows_**  
+Caution: **The original Hantek driver for Windows doesn't work!**
+You have to assign the correct WinUSB driver with _one_ of these three _alernatives_:
+  1. Run the [**Zadig**](docs/build.md#microsoft-windows-usb-driver-install-with-zadig) tool and follow the good [step-by-step tutorial](docs/OpenHantek6022_zadig_Win10.pdf) provided by [DaPa](https://github.com/DaPa).
+  2. Install the signed .inf file provided by VictorEEV. It's part of the openhantek_xxx_win_x64.zip [binary distribution](https://github.com/OpenHantek/OpenHantek6022/releases). Right-click on Hantek_6022B.inf and select "install" from the pull-down menu.
+  3. Install the individual signed .inf files provided by fgrieu. [Download as a zip](https://downgit.github.io/#/home?url=https://github.com/OpenHantek/OpenHantek6022/tree/main/utils/signed-windows-inf-files) (or individually with associated .cat from [utils/signed-windows-inf-files](https://github.com/OpenHantek/OpenHantek6022/tree/main/utils/signed-windows-inf-files)). Select the desired Hantek_6022Bx_xxxxxx.inf files (the 3 with the device name, or all 6) and select "install" from the pull-down menu.  
+Note: with alternative 3, the Device Manager will show (under "Universal Serial Bus devices") the name and state according to the firmware loaded (e.g. "Hantek 6022BE loader", "Hantek 6022BL openht"). The [PulseView/sigrok-cli](https://sigrok.org/) firmware is also recognized (e.g. "Hantek 6022BE sigrok").
 
 ## Important!
 The scope doesn't store the firmware permanently in flash or eeprom, it must be uploaded after each power-up and is kept in ram 'til power-down.
