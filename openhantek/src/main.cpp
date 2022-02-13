@@ -129,31 +129,67 @@ int main( int argc, char *argv[] ) {
             theme = storeSettings.value( "theme" ).toInt();
         storeSettings.endGroup();
 
+	// Pre-parse international flag so it can affect the command line help texts
+        QCoreApplication translationApp( argc, argv );
+	QCommandLineParser tp;
+        QCommandLineOption tintOption( { "i", "international" },
+                QCoreApplication::translate("main", "Show the international interface, do not translate" ) );
+        tp.addOption( tintOption );
+        tp.parse( translationApp.arguments() );
+        useLocale = !tp.isSet( tintOption );
+
         QCoreApplication parserApp( argc, argv );
         QCommandLineParser p;
+
+        //////// Load translations for command line help texts ////////
+        QTranslator qtTranslator;
+        QTranslator parserTranslator;
+
+        if ( useLocale && QLocale().name() != "en_US" ) { // somehow Qt on MacOS uses the german translation for en_US?!
+            if ( qtTranslator.load( "qt_" + QLocale().name(), QLibraryInfo::location( QLibraryInfo::TranslationsPath ) ) ) {
+                parserApp.installTranslator( &qtTranslator );
+            }
+            if ( parserTranslator.load( QLocale(), QLatin1String( "openhantek" ), QLatin1String( "_" ),
+                                            QLatin1String( ":/translations" ) ) ) {
+                parserApp.installTranslator( &parserTranslator );
+            }
+	}
+
         p.addHelpOption();
         p.addVersionOption();
-        QCommandLineOption demoModeOption( { "d", "demoMode" }, "Demo mode without scope HW" );
+        QCommandLineOption demoModeOption( { "d", "demoMode" },
+                QCoreApplication::translate("main", "Demo mode without scope HW" ) );
         p.addOption( demoModeOption );
-        QCommandLineOption useGlesOption( { "e", "useGLES" }, "Use OpenGL ES instead of OpenGL" );
+        QCommandLineOption useGlesOption( { "e", "useGLES" },
+                QCoreApplication::translate("main", "Use OpenGL ES instead of OpenGL" ) );
         p.addOption( useGlesOption );
-        QCommandLineOption useGLSL120Option( "useGLSL120", "Force OpenGL SL version 1.20" );
+        QCommandLineOption useGLSL120Option( "useGLSL120",
+                QCoreApplication::translate("main", "Force OpenGL SL version 1.20" ) );
         p.addOption( useGLSL120Option );
-        QCommandLineOption useGLSL150Option( "useGLSL150", "Force OpenGL SL version 1.50" );
+        QCommandLineOption useGLSL150Option( "useGLSL150",
+                QCoreApplication::translate("main", "Force OpenGL SL version 1.50" ) );
         p.addOption( useGLSL150Option );
-        QCommandLineOption intOption( { "i", "international" }, "Show the international interface, do not translate" );
+        QCommandLineOption intOption( { "i", "international" },
+                QCoreApplication::translate("main", "Show the international interface, do not translate" ) );
         p.addOption( intOption );
-        QCommandLineOption fontOption( { "f", "font" }, "Define the system font", "Font" );
+        QCommandLineOption fontOption( { "f", "font" },
+                QCoreApplication::translate("main", "Define the system font") ,
+                QCoreApplication::translate("main", "Font" ) );
         p.addOption( fontOption );
-        QCommandLineOption sizeOption(
-            { "s", "size" }, QString( "Set the font size (default = %1, 0: automatic from dpi)" ).arg( fontSize ), "Size" );
+        QCommandLineOption sizeOption( { "s", "size" },
+                QString( QCoreApplication::translate("main", "Set the font size (default = %1, 0: automatic from dpi)" ) ).arg( fontSize ),
+                QCoreApplication::translate("main", "Size" ) );
         p.addOption( sizeOption );
-        QCommandLineOption condensedOption(
-            { "c", "condensed" }, QString( "Set the font condensed value (default = %1)" ).arg( condensed ), "Condensed" );
+        QCommandLineOption condensedOption( { "c", "condensed" },
+                QString( QCoreApplication::translate("main", "Set the font condensed value (default = %1)" ) ).arg( condensed ),
+                QCoreApplication::translate("main", "Condensed" ) );
         p.addOption( condensedOption );
-        QCommandLineOption resetSettingsOption( "resetSettings", "Reset persistent settings, start with default" );
+        QCommandLineOption resetSettingsOption( "resetSettings",
+                QCoreApplication::translate("main", "Reset persistent settings, start with default" ) );
         p.addOption( resetSettingsOption );
-        QCommandLineOption verboseOption( "verbose", "Verbose tracing of program startup, ui and processing steps", "Level" );
+        QCommandLineOption verboseOption( "verbose",
+                QCoreApplication::translate("main", "Verbose tracing of program startup, ui and processing steps" ),
+                QCoreApplication::translate("main", "Level" ) );
         p.addOption( verboseOption );
         p.process( parserApp );
         demoMode = p.isSet( demoModeOption );
