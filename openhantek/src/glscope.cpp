@@ -257,7 +257,7 @@ void GlScope::wheelEvent( QWheelEvent *event ) {
             if ( event->modifiers() & Qt::CTRL ) {                           // zoom in (step > 0) / out (step < 0)
                 if ( ( step > 0 && dm <= 1 ) || ( step < 0 && dm <= 0.99 ) ) // smaller steps when zoom >= 10x
                     step *= 0.1;
-                if ( step < 0 or dm >= 5 * step ) { // step in and new zomm will be < 250x
+                if ( step < 0 || dm >= 5 * step ) { // step in and new zomm will be < 250x
                     m1 += step;
                     m2 -= step;
                 } else { // set highest zoom  -> 500x fix
