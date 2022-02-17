@@ -52,7 +52,8 @@ DsoWidget::DsoWidget( DsoSettingsScope *scope, DsoSettingsView *view, const Dso:
         mainScope->updateCursor( cursorIndex );
         zoomScope->updateCursor( cursorIndex );
     } );
-    connect( zoomScope, &GlScope::markerMoved, [ this ]( unsigned cursorIndex ) {
+    connect( zoomScope, &GlScope::markerMoved, [ this ]( unsigned cursorIndex, unsigned marker ) {
+        mainSliders.markerSlider->setValue( int( marker ), this->scope->getMarker( marker ) );
         mainScope->updateCursor( cursorIndex );
         zoomScope->updateCursor( cursorIndex );
     } );
@@ -552,11 +553,13 @@ void DsoWidget::updateMarkerDetails() {
             timeUsed = true; // at least one voltage channel used -> show marker time details
             QPointF p0 = scope->voltage[ channel ].cursor.pos[ 0 ];
             QPointF p1 = scope->voltage[ channel ].cursor.pos[ 1 ];
-            cursorDataGrid->updateInfo( unsigned( index ), true,
-                                        scope->voltage[ channel ].cursor.shape != DsoSettingsScopeCursor::NONE ? tr( "ON" )
-                                                                                                               : tr( "OFF" ),
-                                        valueToString( fabs( p1.x() - p0.x() ) * scope->horizontal.timebase, UNIT_SECONDS, 4 ),
-                                        valueToString( fabs( p1.y() - p0.y() ) * scope->gain( channel ), UNIT_VOLTS, 4 ) );
+            if ( scope->voltage[ channel ].cursor.shape != DsoSettingsScopeCursor::NONE ) {
+                cursorDataGrid->updateInfo( unsigned( index ), true, tr( "ON" ),
+                                            valueToString( fabs( p1.x() - p0.x() ) * scope->horizontal.timebase, UNIT_SECONDS, 4 ),
+                                            valueToString( fabs( p1.y() - p0.y() ) * scope->gain( channel ), UNIT_VOLTS, 4 ) );
+            } else {
+                cursorDataGrid->updateInfo( unsigned( index ), true, tr( "OFF" ), "", "" );
+            }
         } else {
             cursorDataGrid->updateInfo( unsigned( index ), false );
         }
@@ -567,11 +570,14 @@ void DsoWidget::updateMarkerDetails() {
             freqUsed = true; // at least one spec channel used -> show marker freq details
             QPointF p0 = scope->spectrum[ channel ].cursor.pos[ 0 ];
             QPointF p1 = scope->spectrum[ channel ].cursor.pos[ 1 ];
-            cursorDataGrid->updateInfo(
-                unsigned( index ), true,
-                scope->spectrum[ channel ].cursor.shape != DsoSettingsScopeCursor::NONE ? tr( "ON" ) : tr( "OFF" ),
-                valueToString( fabs( p1.x() - p0.x() ) * scope->horizontal.frequencybase, UNIT_HERTZ, 4 ),
-                valueToString( fabs( p1.y() - p0.y() ) * scope->spectrum[ channel ].magnitude, UNIT_DECIBEL, 4 ) );
+            if ( scope->spectrum[ channel ].cursor.shape != DsoSettingsScopeCursor::NONE ) {
+                cursorDataGrid->updateInfo(
+                    unsigned( index ), true, tr( "ON" ),
+                    valueToString( fabs( p1.x() - p0.x() ) * scope->horizontal.frequencybase, UNIT_HERTZ, 4 ),
+                    valueToString( fabs( p1.y() - p0.y() ) * scope->spectrum[ channel ].magnitude, UNIT_DECIBEL, 4 ) );
+            } else {
+                cursorDataGrid->updateInfo( unsigned( index ), true, tr( "OFF" ), "", "" );
+            }
         } else {
             cursorDataGrid->updateInfo( unsigned( index ), false );
         }
