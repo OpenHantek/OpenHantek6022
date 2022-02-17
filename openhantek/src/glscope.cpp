@@ -254,18 +254,27 @@ void GlScope::wheelEvent( QWheelEvent *event ) {
             if ( m1 > m2 )
                 std::swap( m1, m2 );
             double dm = m2 - m1;
-            if ( event->modifiers() & Qt::CTRL ) { // zoom in/out
-                if ( ( step > 0 && dm <= 1 ) || ( step < 0 && dm < 1 ) )
+            if ( event->modifiers() & Qt::CTRL ) {                           // zoom in (step > 0) / out (step < 0)
+                if ( ( step > 0 && dm <= 1 ) || ( step < 0 && dm <= 0.99 ) ) // smaller steps when zoom >= 10x
                     step *= 0.1;
-                if ( dm >= 3 * step ) {
+                if ( step < 0 or dm >= 5 * step ) { // step in and new zomm will be < 250x
                     m1 += step;
                     m2 -= step;
+                } else { // set highest zoom  -> 500x fix
+                    double mm = ( m1 + m2 ) / 2;
+                    m1 = mm - 0.01;
+                    m2 = mm + 0.01;
                 }
-            } else {
-                if ( step < 0 ) {                           // shift zoom range left ..
+            } else {                                        // move zoom window left/right (100 steps on original)
+                if ( step < 0 )                             // shift zoom range left ..
                     step = qMax( step, MARGIN_LEFT - m1 );  // .. until m1 == MARGIN_LEFT
-                } else {                                    // shift zoom range right ..
+                else                                        // shift zoom range right ..
                     step = qMin( step, MARGIN_RIGHT - m2 ); // .. until m2 == MARGIN_RIGHT
+                if ( event->modifiers() & Qt::SHIFT ) {     // shift -> smaller steps
+                    if ( m2 - m1 < .1 )                     // zoom > 100 ?
+                        step *= ( m2 - m1 );                // .. keep 10 steps per zoomed window
+                    else                                    // otherwise
+                        step *= 0.1;                        // .. 1000 steps on original window
                 }
                 m1 += step;
                 m2 += step;
@@ -571,8 +580,8 @@ void GlScope::resizeGL( int width, int height ) {
     gl->glViewport( 0, 0, GLint( width ), GLint( height ) );
 
     // Set axes to div-scale and apply correction for exact pixelization
-    float pixelizationWidthCorrection = float( width ) / ( width - 1 );
-    float pixelizationHeightCorrection = float( height ) / ( height - 1 );
+    float pixelizationWidthCorrection = float( width ) / float( width - 1 );
+    float pixelizationHeightCorrection = float( height ) / float( height - 1 );
 
     pmvMatrix.setToIdentity();
     pmvMatrix.ortho( -float( DIVS_TIME ) / 2.0f * pixelizationWidthCorrection,
@@ -590,8 +599,8 @@ void GlScope::resizeGL( int width, int height ) {
 // section 0:grid, 1:axes, 2:border
 void GlScope::draw4Cross( std::vector< QVector3D > &va, int section, float x, float y ) {
     const float d = 0.05f; // cross size
-    for ( int xSign : { -1, 1 } ) {
-        for ( int ySign : { -1, 1 } ) {
+    for ( float xSign : { -1.0f, 1.0f } ) {
+        for ( float ySign : { -1.0f, 1.0f } ) {
             gridDrawCounts[ section ] += 4;
             va.push_back( QVector3D( xSign * ( x - d ), ySign * y, 0 ) );
             va.push_back( QVector3D( xSign * ( x + d ), ySign * y, 0 ) );
@@ -638,10 +647,10 @@ void GlScope::generateGrid( int index, double value, bool pressed ) {
         for ( int dot = 1; dot < DIVS_VOLTAGE / 2 * DIVS_SUB; ++dot ) {
             float dotPosition = float( dot ) / DIVS_SUB;
             gridDrawCounts[ item ] += 4;
-            vaGrid.push_back( QVector3D( -vDiv, -dotPosition, 0 ) );
-            vaGrid.push_back( QVector3D( -vDiv, dotPosition, 0 ) );
-            vaGrid.push_back( QVector3D( vDiv, -dotPosition, 0 ) );
-            vaGrid.push_back( QVector3D( vDiv, dotPosition, 0 ) );
+            vaGrid.push_back( QVector3D( -float( vDiv ), -dotPosition, 0 ) );
+            vaGrid.push_back( QVector3D( -float( vDiv ), dotPosition, 0 ) );
+            vaGrid.push_back( QVector3D( float( vDiv ), -dotPosition, 0 ) );
+            vaGrid.push_back( QVector3D( float( vDiv ), dotPosition, 0 ) );
         }
     }
     // Draw horizontal dot lines
@@ -651,10 +660,10 @@ void GlScope::generateGrid( int index, double value, bool pressed ) {
                 continue; // Already done by vertical lines
             float dotPosition = float( dot ) / DIVS_SUB;
             gridDrawCounts[ item ] += 4;
-            vaGrid.push_back( QVector3D( -dotPosition, -hDiv, 0 ) );
-            vaGrid.push_back( QVector3D( dotPosition, -hDiv, 0 ) );
-            vaGrid.push_back( QVector3D( -dotPosition, hDiv, 0 ) );
-            vaGrid.push_back( QVector3D( dotPosition, hDiv, 0 ) );
+            vaGrid.push_back( QVector3D( -dotPosition, -float( hDiv ), 0 ) );
+            vaGrid.push_back( QVector3D( dotPosition, -float( hDiv ), 0 ) );
+            vaGrid.push_back( QVector3D( -dotPosition, float( hDiv ), 0 ) );
+            vaGrid.push_back( QVector3D( dotPosition, float( hDiv ), 0 ) );
         }
     }
 
@@ -700,7 +709,7 @@ void GlScope::generateGrid( int index, double value, bool pressed ) {
     // Draw vertical cross lines
     for ( int vDiv = 1; vDiv < DIVS_TIME / 2; ++vDiv ) {
         for ( int hDiv = 1; hDiv < DIVS_VOLTAGE / 2; ++hDiv ) {
-            draw4Cross( vaGrid, 1, vDiv, hDiv );
+            draw4Cross( vaGrid, 1, float( vDiv ), float( hDiv ) );
         }
     }
     // Draw horizontal cross lines
@@ -708,7 +717,7 @@ void GlScope::generateGrid( int index, double value, bool pressed ) {
         for ( int vDiv = 1; vDiv < DIVS_TIME / 2; ++vDiv ) {
             if ( vDiv % DIVS_SUB == 0 )
                 continue; // Already done by vertical lines
-            draw4Cross( vaGrid, 1, vDiv, hDiv );
+            draw4Cross( vaGrid, 1, float( vDiv ), float( hDiv ) );
         }
     }
 

@@ -538,39 +538,39 @@
 <context>
     <name>GlScope</name>
     <message>
-        <location filename="../src/glscope.cpp" line="302"/>
+        <location filename="../src/glscope.cpp" line="311"/>
         <source>System does not support OpenGL Shading Language (GLSL)</source>
         <translation>Il sistema non supporta il linguaggio di shading OpenGL (GLSL)</translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="306"/>
+        <location filename="../src/glscope.cpp" line="315"/>
         <source>OpenGL init called twice!</source>
         <translation>OpenGL init chiamato due volte!</translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="367"/>
+        <location filename="../src/glscope.cpp" line="376"/>
         <source>Try command line option &apos;--useGLES&apos;
 </source>
         <translation>Prova l&apos;opzione della command line &apos;--useGLES&apos;
 </translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="382"/>
-        <location filename="../src/glscope.cpp" line="389"/>
+        <location filename="../src/glscope.cpp" line="391"/>
+        <location filename="../src/glscope.cpp" line="398"/>
         <source>Failed to compile OpenGL shader programs.
 </source>
         <translation>Errore nella compilazione dei programmi shader OpenGL.
 </translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="397"/>
+        <location filename="../src/glscope.cpp" line="406"/>
         <source>Failed to link/bind OpenGL shader programs.
 </source>
         <translation>Errore nel collegare/legare i programmi shader OpenGL.
 </translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="406"/>
+        <location filename="../src/glscope.cpp" line="415"/>
         <source>Failed to locate shader variable.</source>
         <translation>Errore nel trovare la variabile shader.</translation>
     </message>

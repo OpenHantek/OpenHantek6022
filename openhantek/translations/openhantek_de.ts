@@ -692,12 +692,12 @@
 <context>
     <name>GlScope</name>
     <message>
-        <location filename="../src/glscope.cpp" line="302"/>
+        <location filename="../src/glscope.cpp" line="311"/>
         <source>System does not support OpenGL Shading Language (GLSL)</source>
         <translation>System unterstützt nicht OpenGL Shading Language (GLSL)</translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="306"/>
+        <location filename="../src/glscope.cpp" line="315"/>
         <source>OpenGL init called twice!</source>
         <translation>OpenGL init wurde doppelt aufgerufen!</translation>
     </message>
@@ -708,29 +708,29 @@
 </translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="367"/>
+        <location filename="../src/glscope.cpp" line="376"/>
         <source>Try command line option &apos;--useGLES&apos;
 </source>
         <translation>Probiere Kommandozeilenoption &apos;--useGLES&apos;
 </translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="382"/>
-        <location filename="../src/glscope.cpp" line="389"/>
+        <location filename="../src/glscope.cpp" line="391"/>
+        <location filename="../src/glscope.cpp" line="398"/>
         <source>Failed to compile OpenGL shader programs.
 </source>
         <translation>Fehler beim Übersetzen der OpenGL Shader-Programme.
 </translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="397"/>
+        <location filename="../src/glscope.cpp" line="406"/>
         <source>Failed to link/bind OpenGL shader programs.
 </source>
         <translation>Fehler beim Linken der OpenGL Shader-Programme.
 </translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="406"/>
+        <location filename="../src/glscope.cpp" line="415"/>
         <source>Failed to locate shader variable.</source>
         <translation>Kann Shader-Variable nicht lokalisieren.</translation>
     </message>
