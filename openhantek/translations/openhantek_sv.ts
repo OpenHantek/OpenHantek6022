@@ -395,89 +395,89 @@
 <context>
     <name>DsoWidget</name>
     <message>
-        <location filename="../src/dsowidget.cpp" line="78"/>
+        <location filename="../src/dsowidget.cpp" line="79"/>
         <source>TR</source>
         <translation>TR</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="194"/>
+        <location filename="../src/dsowidget.cpp" line="195"/>
         <source>Markers</source>
         <translation>Markörer</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="556"/>
-        <location filename="../src/dsowidget.cpp" line="572"/>
+        <location filename="../src/dsowidget.cpp" line="557"/>
+        <location filename="../src/dsowidget.cpp" line="575"/>
         <source>ON</source>
         <translation>PÅ</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="557"/>
-        <location filename="../src/dsowidget.cpp" line="572"/>
+        <location filename="../src/dsowidget.cpp" line="561"/>
+        <location filename="../src/dsowidget.cpp" line="579"/>
         <source>OFF</source>
         <translation>AV</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="594"/>
+        <location filename="../src/dsowidget.cpp" line="600"/>
         <source>Markers  </source>
         <translation>Markörer  </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="595"/>
+        <location filename="../src/dsowidget.cpp" line="601"/>
         <source>Time: </source>
         <translation>Tid: </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="596"/>
+        <location filename="../src/dsowidget.cpp" line="602"/>
         <source>Frequency: </source>
         <translation>Frekvens: </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="599"/>
+        <location filename="../src/dsowidget.cpp" line="605"/>
         <source>Zoom x%L1  </source>
         <translation>Zoom x%L1  </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="601"/>
+        <location filename="../src/dsowidget.cpp" line="607"/>
         <source>Zoom ---  </source>
         <translation>Zoom ---  </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="604"/>
-        <location filename="../src/dsowidget.cpp" line="606"/>
-        <location filename="../src/dsowidget.cpp" line="647"/>
-        <location filename="../src/dsowidget.cpp" line="692"/>
-        <location filename="../src/dsowidget.cpp" line="701"/>
-        <location filename="../src/dsowidget.cpp" line="722"/>
+        <location filename="../src/dsowidget.cpp" line="610"/>
+        <location filename="../src/dsowidget.cpp" line="612"/>
+        <location filename="../src/dsowidget.cpp" line="653"/>
+        <location filename="../src/dsowidget.cpp" line="698"/>
+        <location filename="../src/dsowidget.cpp" line="707"/>
+        <location filename="../src/dsowidget.cpp" line="728"/>
         <source>/div</source>
         <translation>/div</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="660"/>
+        <location filename="../src/dsowidget.cpp" line="666"/>
         <source>%L1%</source>
         <translation>%L1%</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="674"/>
+        <location filename="../src/dsowidget.cpp" line="680"/>
         <source>%1  %2  %3  %4  %5</source>
         <translation>%1  %2  %3  %4  %5</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="712"/>
+        <location filename="../src/dsowidget.cpp" line="718"/>
         <source>/s</source>
         <translation>/s</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="833"/>
+        <location filename="../src/dsowidget.cpp" line="839"/>
         <source> on screen</source>
         <translation> på skärm</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="882"/>
+        <location filename="../src/dsowidget.cpp" line="888"/>
         <source>pp</source>
         <translation>pp</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="889"/>
+        <location filename="../src/dsowidget.cpp" line="895"/>
         <source>rms</source>
         <translation>rms</translation>
     </message>
@@ -498,39 +498,39 @@
 <context>
     <name>GlScope</name>
     <message>
-        <location filename="../src/glscope.cpp" line="302"/>
+        <location filename="../src/glscope.cpp" line="311"/>
         <source>System does not support OpenGL Shading Language (GLSL)</source>
         <translation>Systemet har inte stöd för OpenGL Shading Language (GLSL)</translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="306"/>
+        <location filename="../src/glscope.cpp" line="315"/>
         <source>OpenGL init called twice!</source>
         <translation>OpenGL init anropad två gånger!</translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="367"/>
+        <location filename="../src/glscope.cpp" line="376"/>
         <source>Try command line option &apos;--useGLES&apos;
 </source>
         <translation>Prova kommandoradsflagga &apos;--useGLES&apos;
 </translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="382"/>
-        <location filename="../src/glscope.cpp" line="389"/>
+        <location filename="../src/glscope.cpp" line="391"/>
+        <location filename="../src/glscope.cpp" line="398"/>
         <source>Failed to compile OpenGL shader programs.
 </source>
         <translation>Misslyckades med att kompilera OpenGL-shaderprogram.
 </translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="397"/>
+        <location filename="../src/glscope.cpp" line="406"/>
         <source>Failed to link/bind OpenGL shader programs.
 </source>
         <translation>Misslyckades med att länka/binda OpenGL-shaderprogram.
 </translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="406"/>
+        <location filename="../src/glscope.cpp" line="415"/>
         <source>Failed to locate shader variable.</source>
         <translation>Misslyckades med att hitta shader-variabel.</translation>
     </message>
@@ -873,42 +873,47 @@
         <translation>Visa mätningar</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="439"/>
+        <location filename="../src/mainwindow.cpp" line="426"/>
+        <source>&lt;p&gt;Open source software for Hantek6022 USB oscilloscopes&lt;/p&gt;&lt;p&gt;Maintainer: Martin Homuth-Rosemann&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2010, 2011 Oliver Haag&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2012-%7 OpenHantek community&lt;br/&gt;&lt;a href=&apos;https://github.com/OpenHantek&apos;&gt;https://github.com/OpenHantek&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Open source firmware copyright &amp;copy; 2019-%7 Ho-Ro&lt;br/&gt;&lt;a href=&apos;https://github.com/Ho-Ro/Hantek6022API&apos;&gt;https://github.com/Ho-Ro/Hantek6022API&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Device: %1 (%2), FW%3&lt;/p&gt;&lt;p&gt;Graphic: %4 - GLSL version %5&lt;/p&gt;&lt;p&gt;Qt version: %6&lt;/p&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="440"/>
         <source>&lt;p&gt;Running since %1 seconds.&lt;/p&gt;</source>
         <translation>&lt;p&gt;Kör sedan %1 sekunder.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="470"/>
+        <location filename="../src/mainwindow.cpp" line="471"/>
         <source>%1: %2</source>
         <translation>%1: %2</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="492"/>
+        <location filename="../src/mainwindow.cpp" line="493"/>
         <source>yyyy-MM-dd hh:mm:ss</source>
         <translation>yyyy-MM-dd hh:mm:ss</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="493"/>
+        <location filename="../src/mainwindow.cpp" line="494"/>
         <source>yyyyMMdd_hhmmss</source>
         <translation>yyyyMMDd_hhmmss</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="529"/>
+        <location filename="../src/mainwindow.cpp" line="530"/>
         <source>Image (*.png *.jpg)</source>
         <translation>Bild (*.png *.jpg)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="529"/>
+        <location filename="../src/mainwindow.cpp" line="530"/>
         <source>Portable Document Format (*.pdf)</source>
         <translation>Portable Document Format (*.pdf)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="530"/>
+        <location filename="../src/mainwindow.cpp" line="531"/>
         <source>Save screenshot</source>
         <translation>Spara skärmbild</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="561"/>
+        <location filename="../src/mainwindow.cpp" line="562"/>
         <source>Print oscillograph</source>
         <translation>Skriv ut oscillograf</translation>
     </message>
@@ -1338,6 +1343,80 @@
         <location filename="../src/docks/VoltageDock.cpp" line="64"/>
         <source>x</source>
         <translation>x</translation>
+    </message>
+</context>
+<context>
+    <name>main</name>
+    <message>
+        <location filename="../src/main.cpp" line="136"/>
+        <location filename="../src/main.cpp" line="171"/>
+        <source>Show the international interface, do not translate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/main.cpp" line="161"/>
+        <source>Demo mode without scope HW</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/main.cpp" line="164"/>
+        <source>Use OpenGL ES instead of OpenGL</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/main.cpp" line="166"/>
+        <source>Force OpenGL SL version 1.20</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/main.cpp" line="168"/>
+        <source>Force OpenGL SL version 1.50</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/main.cpp" line="173"/>
+        <source>Define the system font</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/main.cpp" line="174"/>
+        <source>Font</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/main.cpp" line="178"/>
+        <source>Set the font size (default = %1, 0: automatic from dpi)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/main.cpp" line="180"/>
+        <source>Size</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/main.cpp" line="184"/>
+        <source>Set the font condensed value (default = %1)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/main.cpp" line="185"/>
+        <source>Condensed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/main.cpp" line="188"/>
+        <source>Reset persistent settings, start with default</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/main.cpp" line="191"/>
+        <source>Verbose tracing of program startup, ui and processing steps</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/main.cpp" line="192"/>
+        <source>Level</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>

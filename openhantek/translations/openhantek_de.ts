@@ -1233,6 +1233,15 @@
         <translation>Messwerte anzeigen</translation>
     </message>
     <message>
+        <source>&lt;p&gt;Open source software for Hantek6022 USB oscilloscopes&lt;/p&gt;&lt;p&gt;Maintainer: Martin Homuth-Rosemann&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2010, 2011 Oliver Haag&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2012-2022 OpenHantek community&lt;br/&gt;&lt;a href=&apos;https://github.com/OpenHantek&apos;&gt;https://github.com/OpenHantek&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Open source firmware copyright &amp;copy; 2019-2022 Ho-Ro&lt;br/&gt;&lt;a href=&apos;https://github.com/Ho-Ro/Hantek6022API&apos;&gt;https://github.com/Ho-Ro/Hantek6022API&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Device: %1 (%2), FW%3&lt;/p&gt;&lt;p&gt;Graphic: %4 - GLSL version %5&lt;/p&gt;&lt;p&gt;Qt version: %6&lt;/p&gt;</source>
+        <translation type="vanished">&lt;p&gt;Open-Source-Software für Hantek6022 USB-Oscilloskope&lt;/p&gt;&lt;p&gt;Betreuer: Martin Homuth-Rosemann&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2010, 2011 Oliver Haag&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2012-2022 OpenHantek community&lt;br/&gt;&lt;a href=&apos;https://github.com/OpenHantek&apos;&gt;https://github.com/OpenHantek&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Open-Source-Firmware Copyright &amp;copy; 2019-2022 Ho-Ro&lt;br/&gt;&lt;a href=&apos;https://github.com/Ho-Ro/Hantek6022API&apos;&gt;https://github.com/Ho-Ro/Hantek6022API&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Gerät: %1 (%2), FW%3&lt;/p&gt;&lt;p&gt;Graphik: %4 - GLSL-Version %5&lt;/p&gt;&lt;p&gt;Qt-Version: %6&lt;/p&gt;</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="426"/>
+        <source>&lt;p&gt;Open source software for Hantek6022 USB oscilloscopes&lt;/p&gt;&lt;p&gt;Maintainer: Martin Homuth-Rosemann&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2010, 2011 Oliver Haag&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2012-%7 OpenHantek community&lt;br/&gt;&lt;a href=&apos;https://github.com/OpenHantek&apos;&gt;https://github.com/OpenHantek&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Open source firmware copyright &amp;copy; 2019-%7 Ho-Ro&lt;br/&gt;&lt;a href=&apos;https://github.com/Ho-Ro/Hantek6022API&apos;&gt;https://github.com/Ho-Ro/Hantek6022API&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Device: %1 (%2), FW%3&lt;/p&gt;&lt;p&gt;Graphic: %4 - GLSL version %5&lt;/p&gt;&lt;p&gt;Qt version: %6&lt;/p&gt;</source>
+        <translation>&lt;p&gt;Open-Source-Software für Hantek6022 USB-Oscilloskope&lt;/p&gt;&lt;p&gt;Betreuer: Martin Homuth-Rosemann&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2010, 2011 Oliver Haag&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2012-%7 OpenHantek community&lt;br/&gt;&lt;a href=&apos;https://github.com/OpenHantek&apos;&gt;https://github.com/OpenHantek&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Open-Source-Firmware Copyright &amp;copy; 2019-%7 Ho-Ro&lt;br/&gt;&lt;a href=&apos;https://github.com/Ho-Ro/Hantek6022API&apos;&gt;https://github.com/Ho-Ro/Hantek6022API&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Gerät: %1 (%2), FW%3&lt;/p&gt;&lt;p&gt;Graphik: %4 - GLSL-Version %5&lt;/p&gt;&lt;p&gt;Qt-Version: %6&lt;/p&gt;</translation>
+    </message>
+    <message>
         <source>About OpenHantek6022 (%1)</source>
         <translation type="vanished">Über OpenHantek6022 (%1)</translation>
     </message>
@@ -1241,42 +1250,42 @@
         <translation type="vanished">&lt;p&gt;Open-Source-Software für Hantek6022 USB Oszilloskope&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2010, 2011 Oliver Haag&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2012-2020 OpenHantek community&lt;br/&gt;&lt;a href=&apos;https://github.com/OpenHantek&apos;&gt;https://github.com/OpenHantek&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Open-Source-Firmware - Copyright &amp;copy; 2019-2020 Ho-Ro&lt;br/&gt;&lt;a href=&apos;https://github.com/Ho-Ro/Hantek6022API&apos;&gt;https://github.com/Ho-Ro/Hantek6022API&lt;/a&gt;&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="439"/>
+        <location filename="../src/mainwindow.cpp" line="440"/>
         <source>&lt;p&gt;Running since %1 seconds.&lt;/p&gt;</source>
         <translation>&lt;p&gt;Laufzeit %1 Sekunden.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="470"/>
+        <location filename="../src/mainwindow.cpp" line="471"/>
         <source>%1: %2</source>
         <translation>%1: %2</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="492"/>
+        <location filename="../src/mainwindow.cpp" line="493"/>
         <source>yyyy-MM-dd hh:mm:ss</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="493"/>
+        <location filename="../src/mainwindow.cpp" line="494"/>
         <source>yyyyMMdd_hhmmss</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="529"/>
+        <location filename="../src/mainwindow.cpp" line="530"/>
         <source>Image (*.png *.jpg)</source>
         <translation>Bild (*.png *.jpg)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="529"/>
+        <location filename="../src/mainwindow.cpp" line="530"/>
         <source>Portable Document Format (*.pdf)</source>
         <translation>Portables Dokumentenformat (*.pdf)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="530"/>
+        <location filename="../src/mainwindow.cpp" line="531"/>
         <source>Save screenshot</source>
         <translation>Screenshot speichen</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="561"/>
+        <location filename="../src/mainwindow.cpp" line="562"/>
         <source>Print oscillograph</source>
         <translation>Oszillogramm drucken</translation>
     </message>
@@ -1974,6 +1983,80 @@
         <location filename="../src/docks/VoltageDock.cpp" line="64"/>
         <source>x</source>
         <translation></translation>
+    </message>
+</context>
+<context>
+    <name>main</name>
+    <message>
+        <location filename="../src/main.cpp" line="136"/>
+        <location filename="../src/main.cpp" line="171"/>
+        <source>Show the international interface, do not translate</source>
+        <translation>Internationale Version ohne Übersetzung</translation>
+    </message>
+    <message>
+        <location filename="../src/main.cpp" line="161"/>
+        <source>Demo mode without scope HW</source>
+        <translation>Demo-Modus ohne Hardware</translation>
+    </message>
+    <message>
+        <location filename="../src/main.cpp" line="164"/>
+        <source>Use OpenGL ES instead of OpenGL</source>
+        <translation>Benutze OpenGL ES anstelle von OpenGL</translation>
+    </message>
+    <message>
+        <location filename="../src/main.cpp" line="166"/>
+        <source>Force OpenGL SL version 1.20</source>
+        <translation>Erzwinge OpenGL SL Version 1.20</translation>
+    </message>
+    <message>
+        <location filename="../src/main.cpp" line="168"/>
+        <source>Force OpenGL SL version 1.50</source>
+        <translation>Erzwinge OpenGL SL Version 1.50</translation>
+    </message>
+    <message>
+        <location filename="../src/main.cpp" line="173"/>
+        <source>Define the system font</source>
+        <translation>Definiere die System-Schriftart</translation>
+    </message>
+    <message>
+        <location filename="../src/main.cpp" line="174"/>
+        <source>Font</source>
+        <translation>Schriftart</translation>
+    </message>
+    <message>
+        <location filename="../src/main.cpp" line="178"/>
+        <source>Set the font size (default = %1, 0: automatic from dpi)</source>
+        <translation>Wähle Schriftgröße (Standard = %1, 0: automatisch von Bildschirmauflösung)</translation>
+    </message>
+    <message>
+        <location filename="../src/main.cpp" line="180"/>
+        <source>Size</source>
+        <translation>Größe</translation>
+    </message>
+    <message>
+        <location filename="../src/main.cpp" line="184"/>
+        <source>Set the font condensed value (default = %1)</source>
+        <translation>Wähle schmalere Schrift (Standard : %1)</translation>
+    </message>
+    <message>
+        <location filename="../src/main.cpp" line="185"/>
+        <source>Condensed</source>
+        <translation>Schmaler</translation>
+    </message>
+    <message>
+        <location filename="../src/main.cpp" line="188"/>
+        <source>Reset persistent settings, start with default</source>
+        <translation>Zurücksetzen auf Standardwerte</translation>
+    </message>
+    <message>
+        <location filename="../src/main.cpp" line="191"/>
+        <source>Verbose tracing of program startup, ui and processing steps</source>
+        <translation>Zeige Hinweise während des Programmstarts und der Verarbeitungsschritte</translation>
+    </message>
+    <message>
+        <location filename="../src/main.cpp" line="192"/>
+        <source>Level</source>
+        <translation>Stufe</translation>
     </message>
 </context>
 </TS>
