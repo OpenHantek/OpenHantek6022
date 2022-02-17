@@ -2,7 +2,7 @@
 #
 # Add more languages here
 #
-set(TS_FILES translations/openhantek_de.ts translations/openhantek_es.ts translations/openhantek_fr.ts translations/openhantek_it.ts translations/openhantek_pl.ts translations/openhantek_pt.ts translations/openhantek_ru.ts translations/openhantek_zh.ts)
+set(TS_FILES translations/openhantek_de.ts translations/openhantek_es.ts translations/openhantek_fr.ts translations/openhantek_it.ts translations/openhantek_pl.ts translations/openhantek_pt.ts translations/openhantek_ru.ts translations/openhantek_sv.ts translations/openhantek_zh.ts)
 #
 ###################################
 
