@@ -15,6 +15,6 @@ class MathChannelGenerator : public Processor {
     void process( PPresult * ) override;
 
   private:
-    const unsigned physicalChannels;
+    const unsigned mathChannel;
     const DsoSettingsScope *scope;
 };

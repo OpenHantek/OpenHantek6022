@@ -8,7 +8,7 @@
 #include "scopesettings.h"
 
 MathChannelGenerator::MathChannelGenerator( const DsoSettingsScope *scope, unsigned physicalChannels )
-    : physicalChannels( physicalChannels ), scope( scope ) {
+    : mathChannel( physicalChannels ), scope( scope ) {
     if ( scope->verboseLevel > 1 )
         qDebug() << " MathChannelGenerator::MathChannelGenerator()";
 }
@@ -22,18 +22,18 @@ MathChannelGenerator::~MathChannelGenerator() {
 
 void MathChannelGenerator::process( PPresult *result ) {
     // Math channel enabled?
-    if ( !scope->voltage[ physicalChannels ].used && !scope->spectrum[ physicalChannels ].used )
+    if ( !scope->voltage[ mathChannel ].used && !scope->spectrum[ mathChannel ].used )
         return;
 
     if ( scope->verboseLevel > 4 )
         qDebug() << "    MathChannelGenerator::process()" << result->tag;
 
-    DataChannel *const channelData = result->modifiableData( physicalChannels );
+    DataChannel *const channelData = result->modifiableData( mathChannel );
     std::vector< double > &resultData = channelData->voltage.sample;
 
-    const double sign = scope->voltage[ physicalChannels ].inverted ? -1.0 : 1.0;
+    const double sign = scope->voltage[ mathChannel ].inverted ? -1.0 : 1.0;
 
-    if ( Dso::getMathMode( scope->voltage[ physicalChannels ] ) < Dso::MathMode::AC_CH1 ) { // binary operations
+    if ( Dso::getMathMode( scope->voltage[ mathChannel ] ) < Dso::MathMode::AC_CH1 ) { // binary operations
         if ( result->data( 0 )->voltage.sample.empty() || result->data( 1 )->voltage.sample.empty() )
             return;
         // Resize the sample vector
@@ -45,7 +45,7 @@ void MathChannelGenerator::process( PPresult *result ) {
         std::vector< double >::const_iterator ch2Iterator = result->data( 1 )->voltage.sample.begin();
         double ( *calculate )( double, double );
 
-        switch ( Dso::getMathMode( scope->voltage[ physicalChannels ] ) ) {
+        switch ( Dso::getMathMode( scope->voltage[ mathChannel ] ) ) {
         case Dso::MathMode::ADD_CH1_CH2:
             calculate = []( double val1, double val2 ) -> double { return val1 + val2; };
             break;
@@ -66,11 +66,13 @@ void MathChannelGenerator::process( PPresult *result ) {
         for ( auto it = resultData.begin(), end = resultData.end(); it != end; ++it ) {
             *it = sign * calculate( *ch1Iterator++, *ch2Iterator++ );
         }
-    } else { // unary operators (calculate "AC coupling")
+    } else { // unary operators (calculate "AC coupling" or DC value)
         unsigned src = 0;
-        if ( Dso::getMathMode( scope->voltage[ physicalChannels ] ) == Dso::MathMode::AC_CH1 )
+        if ( Dso::getMathMode( scope->voltage[ mathChannel ] ) == Dso::MathMode::AC_CH1 or
+             Dso::getMathMode( scope->voltage[ mathChannel ] ) == Dso::MathMode::DC_CH1 )
             src = 0;
-        else if ( Dso::getMathMode( scope->voltage[ physicalChannels ] ) == Dso::MathMode::AC_CH2 )
+        else if ( Dso::getMathMode( scope->voltage[ mathChannel ] ) == Dso::MathMode::AC_CH2 or
+                  Dso::getMathMode( scope->voltage[ mathChannel ] ) == Dso::MathMode::DC_CH2 )
             src = 1;
 
         // Resize the sample vector
@@ -84,12 +86,18 @@ void MathChannelGenerator::process( PPresult *result ) {
               srcIt != srcEnd; ++srcIt ) {
             average += *srcIt;
         }
-        average /= result->data( src )->voltage.sample.size();
+        average /= double( result->data( src )->voltage.sample.size() );
 
-        // ... and remove DC component to get AC
         auto srcIt = result->data( src )->voltage.sample.begin();
-        for ( auto dstIt = resultData.begin(), dstEnd = resultData.end(); dstIt != dstEnd; ++srcIt, ++dstIt ) {
-            *dstIt = sign * ( *srcIt - average );
-        }
+        if ( Dso::getMathMode( scope->voltage[ mathChannel ] ) == Dso::MathMode::AC_CH1 or
+             Dso::getMathMode( scope->voltage[ mathChannel ] ) == Dso::MathMode::AC_CH2 )
+            // ... and remove DC component to get AC
+            for ( auto dstIt = resultData.begin(), dstEnd = resultData.end(); dstIt != dstEnd; ++srcIt, ++dstIt )
+                *dstIt = sign * ( *srcIt - average );
+        else if ( Dso::getMathMode( scope->voltage[ mathChannel ] ) == Dso::MathMode::DC_CH1 or
+                  Dso::getMathMode( scope->voltage[ mathChannel ] ) == Dso::MathMode::DC_CH2 )
+            // ... and show DC component
+            for ( auto dstIt = resultData.begin(), dstEnd = resultData.end(); dstIt != dstEnd; ++srcIt, ++dstIt )
+                *dstIt = sign * average;
     }
 }

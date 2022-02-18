@@ -586,11 +586,6 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="666"/>
-        <source>%L1%</source>
-        <translation></translation>
-    </message>
-    <message>
         <location filename="../src/dsowidget.cpp" line="680"/>
         <source>%1  %2  %3  %4  %5</source>
         <translation></translation>
@@ -1443,72 +1438,82 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/post/postprocessingsettings.cpp" line="41"/>
-        <source>Rectangular</source>
+        <location filename="../src/post/postprocessingsettings.cpp" line="31"/>
+        <source>CH1 DC</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/post/postprocessingsettings.cpp" line="43"/>
-        <source>Hamming</source>
+        <location filename="../src/post/postprocessingsettings.cpp" line="33"/>
+        <source>CH2 DC</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="45"/>
-        <source>Hann</source>
+        <source>Rectangular</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="47"/>
-        <source>Cosine</source>
-        <translation>Coseno</translation>
+        <source>Hamming</source>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="49"/>
-        <source>Lanczos</source>
+        <source>Hann</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="51"/>
-        <source>Bartlett</source>
-        <translation></translation>
+        <source>Cosine</source>
+        <translation>Coseno</translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="53"/>
-        <source>Triangular</source>
+        <source>Lanczos</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="55"/>
-        <source>Gauss</source>
+        <source>Bartlett</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="57"/>
-        <source>Bartlett-Hann</source>
+        <source>Triangular</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="59"/>
-        <source>Blackman</source>
+        <source>Gauss</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../src/post/postprocessingsettings.cpp" line="61"/>
+        <source>Bartlett-Hann</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="63"/>
-        <source>Nuttall</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../src/post/postprocessingsettings.cpp" line="65"/>
-        <source>Blackman-Harris</source>
+        <source>Blackman</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="67"/>
-        <source>Blackman-Nuttall</source>
+        <source>Nuttall</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="69"/>
+        <source>Blackman-Harris</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../src/post/postprocessingsettings.cpp" line="71"/>
+        <source>Blackman-Nuttall</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../src/post/postprocessingsettings.cpp" line="73"/>
         <source>Flat top</source>
         <translation></translation>
     </message>

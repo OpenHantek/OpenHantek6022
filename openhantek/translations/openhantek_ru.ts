@@ -572,9 +572,8 @@
         <translation>Увел.---</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="666"/>
         <source>%L1%</source>
-        <translation>%L1%</translation>
+        <translation type="vanished">%L1%</translation>
     </message>
     <message>
         <location filename="../src/dsowidget.cpp" line="680"/>
@@ -1287,72 +1286,82 @@
         <translation>К2  AC</translation>
     </message>
     <message>
-        <location filename="../src/post/postprocessingsettings.cpp" line="41"/>
+        <location filename="../src/post/postprocessingsettings.cpp" line="31"/>
+        <source>CH1 DC</source>
+        <translation>К1  DC</translation>
+    </message>
+    <message>
+        <location filename="../src/post/postprocessingsettings.cpp" line="33"/>
+        <source>CH2 DC</source>
+        <translation>К2  DC</translation>
+    </message>
+    <message>
+        <location filename="../src/post/postprocessingsettings.cpp" line="45"/>
         <source>Rectangular</source>
         <translation>Прямоугольное</translation>
     </message>
     <message>
-        <location filename="../src/post/postprocessingsettings.cpp" line="43"/>
+        <location filename="../src/post/postprocessingsettings.cpp" line="47"/>
         <source>Hamming</source>
         <translation>Хэмминга</translation>
     </message>
     <message>
-        <location filename="../src/post/postprocessingsettings.cpp" line="45"/>
+        <location filename="../src/post/postprocessingsettings.cpp" line="49"/>
         <source>Hann</source>
         <translation>Ханна</translation>
     </message>
     <message>
-        <location filename="../src/post/postprocessingsettings.cpp" line="47"/>
+        <location filename="../src/post/postprocessingsettings.cpp" line="51"/>
         <source>Cosine</source>
         <translation>Косинус</translation>
     </message>
     <message>
-        <location filename="../src/post/postprocessingsettings.cpp" line="49"/>
+        <location filename="../src/post/postprocessingsettings.cpp" line="53"/>
         <source>Lanczos</source>
         <translation>Ланцоша</translation>
     </message>
     <message>
-        <location filename="../src/post/postprocessingsettings.cpp" line="51"/>
+        <location filename="../src/post/postprocessingsettings.cpp" line="55"/>
         <source>Bartlett</source>
         <translation>Барлетта</translation>
     </message>
     <message>
-        <location filename="../src/post/postprocessingsettings.cpp" line="53"/>
+        <location filename="../src/post/postprocessingsettings.cpp" line="57"/>
         <source>Triangular</source>
         <translation>Треугольное</translation>
     </message>
     <message>
-        <location filename="../src/post/postprocessingsettings.cpp" line="55"/>
+        <location filename="../src/post/postprocessingsettings.cpp" line="59"/>
         <source>Gauss</source>
         <translation>Гаусса</translation>
     </message>
     <message>
-        <location filename="../src/post/postprocessingsettings.cpp" line="57"/>
+        <location filename="../src/post/postprocessingsettings.cpp" line="61"/>
         <source>Bartlett-Hann</source>
         <translation>Барлетта-Ханна</translation>
     </message>
     <message>
-        <location filename="../src/post/postprocessingsettings.cpp" line="59"/>
+        <location filename="../src/post/postprocessingsettings.cpp" line="63"/>
         <source>Blackman</source>
         <translation>Блэкмана</translation>
     </message>
     <message>
-        <location filename="../src/post/postprocessingsettings.cpp" line="63"/>
+        <location filename="../src/post/postprocessingsettings.cpp" line="67"/>
         <source>Nuttall</source>
         <translation>Наталла</translation>
     </message>
     <message>
-        <location filename="../src/post/postprocessingsettings.cpp" line="65"/>
+        <location filename="../src/post/postprocessingsettings.cpp" line="69"/>
         <source>Blackman-Harris</source>
         <translation>Блэкмана-Харриса</translation>
     </message>
     <message>
-        <location filename="../src/post/postprocessingsettings.cpp" line="67"/>
+        <location filename="../src/post/postprocessingsettings.cpp" line="71"/>
         <source>Blackman-Nuttall</source>
         <translation>Блэкмана-Наталла</translation>
     </message>
     <message>
-        <location filename="../src/post/postprocessingsettings.cpp" line="69"/>
+        <location filename="../src/post/postprocessingsettings.cpp" line="73"/>
         <source>Flat top</source>
         <translation>С плоской вершиной</translation>
     </message>

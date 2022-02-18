@@ -6,8 +6,8 @@
 #include <QString>
 
 namespace Dso {
-
-Enum< Dso::MathMode, Dso::MathMode::ADD_CH1_CH2, Dso::MathMode::AC_CH2 > MathModeEnum;
+// both Enum definitions must match the "extern" declarations in "postprocessingsettings.h"
+Enum< Dso::MathMode, Dso::MathMode::ADD_CH1_CH2, Dso::MathMode::DC_CH2 > MathModeEnum;
 Enum< Dso::WindowFunction, Dso::WindowFunction::RECTANGULAR, Dso::WindowFunction::FLATTOP > WindowFunctionEnum;
 
 /// \brief Return string representation of the given math mode.
@@ -27,6 +27,10 @@ QString mathModeString( MathMode mode ) {
         return QCoreApplication::tr( "CH1 AC" );
     case MathMode::AC_CH2:
         return QCoreApplication::tr( "CH2 AC" );
+    case MathMode::DC_CH1:
+        return QCoreApplication::tr( "CH1 DC" );
+    case MathMode::DC_CH2:
+        return QCoreApplication::tr( "CH2 DC" );
     }
     return QString();
 }

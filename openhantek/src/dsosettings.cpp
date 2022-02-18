@@ -166,10 +166,14 @@ void DsoSettings::load() {
             scope.voltage[ channel ].gainStepIndex = storeSettings->value( "gainStepIndex" ).toUInt();
         if ( storeSettings->contains( "couplingOrMathIndex" ) ) {
             scope.voltage[ channel ].couplingOrMathIndex = storeSettings->value( "couplingOrMathIndex" ).toUInt();
-            if ( channel < deviceSpecification->channels )
+            if ( channel < deviceSpecification->channels ) {
                 if ( scope.voltage[ channel ].couplingOrMathIndex >= deviceSpecification->couplings.size() ||
                      ( !scope.hasACcoupling && !scope.hasACmodification ) )
                     scope.voltage[ channel ].couplingOrMathIndex = 0; // set to default if out of range
+            } else {
+                if ( scope.voltage[ channel ].couplingOrMathIndex > unsigned( Dso::LastMathMode ) )
+                    scope.voltage[ channel ].couplingOrMathIndex = 0;
+            }
         }
         if ( storeSettings->contains( "inverted" ) )
             scope.voltage[ channel ].inverted = storeSettings->value( "inverted" ).toBool();
@@ -209,9 +213,11 @@ void DsoSettings::load() {
         post.spectrumLimit = storeSettings->value( "spectrumLimit" ).toDouble();
     if ( storeSettings->contains( "spectrumReference" ) )
         post.spectrumReference = storeSettings->value( "spectrumReference" ).toDouble();
-    if ( storeSettings->contains( "spectrumWindow" ) )
+    if ( storeSettings->contains( "spectrumWindow" ) ) {
         post.spectrumWindow = Dso::WindowFunction( storeSettings->value( "spectrumWindow" ).toInt() );
-
+        if ( post.spectrumWindow > Dso::LastWindowFunction )
+            post.spectrumWindow = Dso::WindowFunction::HAMMING; // fall back to something useful
+    }
     // Analysis
     storeSettings->beginGroup( "analysis" );
     if ( storeSettings->contains( "dummyLoad" ) )
