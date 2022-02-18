@@ -68,10 +68,10 @@ void MathChannelGenerator::process( PPresult *result ) {
         }
     } else { // unary operators (calculate "AC coupling" or DC value)
         unsigned src = 0;
-        if ( Dso::getMathMode( scope->voltage[ mathChannel ] ) == Dso::MathMode::AC_CH1 or
+        if ( Dso::getMathMode( scope->voltage[ mathChannel ] ) == Dso::MathMode::AC_CH1 ||
              Dso::getMathMode( scope->voltage[ mathChannel ] ) == Dso::MathMode::DC_CH1 )
             src = 0;
-        else if ( Dso::getMathMode( scope->voltage[ mathChannel ] ) == Dso::MathMode::AC_CH2 or
+        else if ( Dso::getMathMode( scope->voltage[ mathChannel ] ) == Dso::MathMode::AC_CH2 ||
                   Dso::getMathMode( scope->voltage[ mathChannel ] ) == Dso::MathMode::DC_CH2 )
             src = 1;
 
@@ -89,12 +89,12 @@ void MathChannelGenerator::process( PPresult *result ) {
         average /= double( result->data( src )->voltage.sample.size() );
 
         auto srcIt = result->data( src )->voltage.sample.begin();
-        if ( Dso::getMathMode( scope->voltage[ mathChannel ] ) == Dso::MathMode::AC_CH1 or
+        if ( Dso::getMathMode( scope->voltage[ mathChannel ] ) == Dso::MathMode::AC_CH1 ||
              Dso::getMathMode( scope->voltage[ mathChannel ] ) == Dso::MathMode::AC_CH2 )
             // ... and remove DC component to get AC
             for ( auto dstIt = resultData.begin(), dstEnd = resultData.end(); dstIt != dstEnd; ++srcIt, ++dstIt )
                 *dstIt = sign * ( *srcIt - average );
-        else if ( Dso::getMathMode( scope->voltage[ mathChannel ] ) == Dso::MathMode::DC_CH1 or
+        else if ( Dso::getMathMode( scope->voltage[ mathChannel ] ) == Dso::MathMode::DC_CH1 ||
                   Dso::getMathMode( scope->voltage[ mathChannel ] ) == Dso::MathMode::DC_CH2 )
             // ... and show DC component
             for ( auto dstIt = resultData.begin(), dstEnd = resultData.end(); dstIt != dstEnd; ++srcIt, ++dstIt )
