@@ -536,9 +536,9 @@ void DsoWidget::updateMarkerDetails() {
     if ( m1 > m2 )
         std::swap( m1, m2 );
     double divs = m2 - m1;
-    // t = 0 at trigger position
-    double time0 = ( m1 - DIVS_TIME * scope->trigger.position ) * scope->horizontal.timebase;
-    double time1 = ( m2 - DIVS_TIME * scope->trigger.position ) * scope->horizontal.timebase;
+    // t = 0 at left screen margin
+    double time0 = m1 * scope->horizontal.timebase;
+    double time1 = m2 * scope->horizontal.timebase;
     double time = divs * scope->horizontal.timebase;
     double freq0 = m1 * scope->horizontal.frequencybase;
     double freq1 = m2 * scope->horizontal.frequencybase;
@@ -663,7 +663,7 @@ void DsoWidget::updateTriggerDetails() {
     tablePalette.setColor( QPalette::WindowText, view->colors->voltage[ unsigned( scope->trigger.source ) ] );
     settingsTriggerLabel->setPalette( tablePalette );
     QString levelString = valueToString( scope->voltage[ unsigned( scope->trigger.source ) ].trigger, UNIT_VOLTS, 3 );
-    QString pretriggerString = tr( "%L1%" ).arg( int( round( scope->trigger.position * 100 ) ) );
+    QString pretriggerString = valueToString( scope->trigger.position * scope->horizontal.timebase * DIVS_TIME, UNIT_SECONDS );
     QString pre = Dso::slopeString( scope->trigger.slope ); // trigger slope
     QString post = pre;                                     // opposite trigger slope
     if ( scope->trigger.slope == Dso::Slope::Positive )
@@ -836,7 +836,7 @@ void DsoWidget::updateVoltageUsed( ChannelID channel, bool used ) {
 
 /// \brief Change the record length.
 void DsoWidget::updateRecordLength( unsigned long size ) {
-    settingsSamplesOnScreen->setText( valueToString( size, UNIT_SAMPLES, -1 ) + tr( " on screen" ) );
+    settingsSamplesOnScreen->setText( valueToString( double( size ), UNIT_SAMPLES, -1 ) + tr( " on screen" ) );
 }
 
 

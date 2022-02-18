@@ -66,7 +66,7 @@ class HantekDsoControl : public QObject {
     explicit HantekDsoControl( ScopeDevice *scopeDevice, const DSOModel *model, unsigned verboseLevel );
 
     /// \brief Cleans up
-    ~HantekDsoControl();
+    ~HantekDsoControl() override;
 
     /// Call this to start the processing.
     /// This method will call itself periodically from there on.
@@ -78,7 +78,7 @@ class HantekDsoControl : public QObject {
     double getSamplerate() const { return controlsettings.samplerate.current; }
 
     static const unsigned SAMPLESIZE = 20000;
-    static const unsigned SAMPLESIZE_ROLL = 39 * 256;
+    static const unsigned SAMPLESIZE_ROLL = 40 * 256;
     unsigned getSamplesize() const {
         if ( controlsettings.trigger.mode == Dso::TriggerMode::ROLL )
             return SAMPLESIZE_ROLL;
