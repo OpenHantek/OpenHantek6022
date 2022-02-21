@@ -38,7 +38,7 @@ class DsoWidget : public QWidget {
     /// \param flags Flags for the window manager.
     DsoWidget( DsoSettingsScope *scope, DsoSettingsView *view, const Dso::ControlSpecification *spec, QWidget *parent = nullptr );
 
-    ~DsoWidget();
+    ~DsoWidget() override;
 
     // Data arrived
     void showNew( std::shared_ptr< PPresult > analysedData );
@@ -47,7 +47,7 @@ class DsoWidget : public QWidget {
     void restoreScreenColors();
 
   protected:
-    virtual void showEvent( QShowEvent *event );
+    virtual void showEvent( QShowEvent *event ) override;
     void setupSliders( Sliders &sliders );
     void adaptTriggerLevelSlider( DsoWidget::Sliders &sliders, ChannelID channel );
     void adaptTriggerPositionSlider();
@@ -95,7 +95,7 @@ class DsoWidget : public QWidget {
     std::vector< QLabel * > measurementRMSPowerLabel;  ///< RMS Power in Watts
     std::vector< QLabel * > measurementTHDLabel;       ///< THD of the signal in Watts
 
-    DataGrid *cursorDataGrid;
+    DataGrid *cursorDataGrid = nullptr;
 
     DsoSettingsScope *scope;
     DsoSettingsView *view;
@@ -111,6 +111,7 @@ class DsoWidget : public QWidget {
     double pulseWidth1 = 0.0;
     double pulseWidth2 = 0.0;
     void setColors();
+    std::vector< Unit > voltageUnits = { UNIT_VOLTS, UNIT_VOLTS, UNIT_VOLTS };
 
   public slots:
     // Horizontal axis

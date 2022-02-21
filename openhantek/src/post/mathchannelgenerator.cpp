@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0+
 
 #include <QDebug>
+#include <math.h>
 
 #include "enums.h"
 #include "mathchannelgenerator.h"
@@ -32,8 +33,9 @@ void MathChannelGenerator::process( PPresult *result ) {
     std::vector< double > &resultData = channelData->voltage.sample;
 
     const double sign = scope->voltage[ mathChannel ].inverted ? -1.0 : 1.0;
+    result->modifiableData( mathChannel )->voltageUnit = UNIT_VOLTS; // default unit unless set to V² by some functions
 
-    if ( Dso::getMathMode( scope->voltage[ mathChannel ] ) < Dso::MathMode::AC_CH1 ) { // binary operations
+    if ( Dso::getMathMode( scope->voltage[ mathChannel ] ) <= Dso::LastBinaryMathMode ) { // binary operations
         if ( result->data( 0 )->voltage.sample.empty() || result->data( 1 )->voltage.sample.empty() )
             return;
         // Resize the sample vector
@@ -57,6 +59,7 @@ void MathChannelGenerator::process( PPresult *result ) {
             break;
         case Dso::MathMode::MUL_CH1_CH2:
             // multiply e.g. voltage and current (measured with a 1 ohm shunt) to get momentary power
+            result->modifiableData( mathChannel )->voltageUnit = UNIT_VOLTSQUARE;
             calculate = []( double val1, double val2 ) -> double { return val1 * val2; };
             break;
         default:
@@ -66,38 +69,78 @@ void MathChannelGenerator::process( PPresult *result ) {
         for ( auto it = resultData.begin(), end = resultData.end(); it != end; ++it ) {
             *it = sign * calculate( *ch1Iterator++, *ch2Iterator++ );
         }
-    } else { // unary operators (calculate "AC coupling" or DC value)
-        unsigned src = 0;
-        if ( Dso::getMathMode( scope->voltage[ mathChannel ] ) == Dso::MathMode::AC_CH1 ||
-             Dso::getMathMode( scope->voltage[ mathChannel ] ) == Dso::MathMode::DC_CH1 )
-            src = 0;
-        else if ( Dso::getMathMode( scope->voltage[ mathChannel ] ) == Dso::MathMode::AC_CH2 ||
-                  Dso::getMathMode( scope->voltage[ mathChannel ] ) == Dso::MathMode::DC_CH2 )
-            src = 1;
+    } else {           // unary operators (calculate square, AC, DC, abs, sign, ...)
+        unsigned src = // alternating 0 and 1 for the unary math cfunctions
+            ( unsigned( Dso::getMathMode( scope->voltage[ mathChannel ] ) ) - unsigned( Dso::LastBinaryMathMode ) - 1 ) & 0x01;
 
         // Resize the sample vector
         resultData.resize( result->data( src )->voltage.sample.size() );
         // Set sampling interval
         channelData->voltage.interval = result->data( src )->voltage.interval;
 
-        // calculate DC component of channel...
-        double average = 0;
-        for ( auto srcIt = result->data( src )->voltage.sample.begin(), srcEnd = result->data( src )->voltage.sample.end();
-              srcIt != srcEnd; ++srcIt ) {
-            average += *srcIt;
-        }
-        average /= double( result->data( src )->voltage.sample.size() );
+        if ( Dso::getMathMode( scope->voltage[ mathChannel ] ) == Dso::MathMode::SQ_CH1 ||
+             Dso::getMathMode( scope->voltage[ mathChannel ] ) == Dso::MathMode::SQ_CH2 ) {
+            result->modifiableData( mathChannel )->voltageUnit = UNIT_VOLTSQUARE;
+            auto srcIt = result->data( src )->voltage.sample.begin();
+            for ( auto dstIt = resultData.begin(), dstEnd = resultData.end(); dstIt != dstEnd; ++srcIt, ++dstIt )
+                *dstIt = sign * ( *srcIt * *srcIt );
+        } else {
+            // calculate DC component of channel that's needed for some of the math functions...
+            double average = 0;
+            for ( auto srcIt = result->data( src )->voltage.sample.begin(), srcEnd = result->data( src )->voltage.sample.end();
+                  srcIt != srcEnd; ++srcIt ) {
+                average += *srcIt;
+            }
+            average /= double( result->data( src )->voltage.sample.size() );
 
-        auto srcIt = result->data( src )->voltage.sample.begin();
-        if ( Dso::getMathMode( scope->voltage[ mathChannel ] ) == Dso::MathMode::AC_CH1 ||
-             Dso::getMathMode( scope->voltage[ mathChannel ] ) == Dso::MathMode::AC_CH2 )
-            // ... and remove DC component to get AC
-            for ( auto dstIt = resultData.begin(), dstEnd = resultData.end(); dstIt != dstEnd; ++srcIt, ++dstIt )
-                *dstIt = sign * ( *srcIt - average );
-        else if ( Dso::getMathMode( scope->voltage[ mathChannel ] ) == Dso::MathMode::DC_CH1 ||
-                  Dso::getMathMode( scope->voltage[ mathChannel ] ) == Dso::MathMode::DC_CH2 )
-            // ... and show DC component
-            for ( auto dstIt = resultData.begin(), dstEnd = resultData.end(); dstIt != dstEnd; ++srcIt, ++dstIt )
-                *dstIt = sign * average;
+            // also needed for all math functions
+            auto srcIt = result->data( src )->voltage.sample.begin();
+
+            switch ( Dso::getMathMode( scope->voltage[ mathChannel ] ) ) {
+            case Dso::MathMode::AC_CH1:
+            case Dso::MathMode::AC_CH2:
+                // ... and remove DC component to get AC
+                for ( auto dstIt = resultData.begin(), dstEnd = resultData.end(); dstIt != dstEnd; ++srcIt, ++dstIt )
+                    *dstIt = sign * ( *srcIt - average );
+                break;
+            case Dso::MathMode::DC_CH1:
+            case Dso::MathMode::DC_CH2:
+                // ... and show DC component
+                for ( auto dstIt = resultData.begin(), dstEnd = resultData.end(); dstIt != dstEnd; ++srcIt, ++dstIt ) {
+                    *dstIt = sign * average;
+                }
+                break;
+            case Dso::MathMode::ABS_CH1:
+            case Dso::MathMode::ABS_CH2:
+                // absolute value of signal
+                for ( auto dstIt = resultData.begin(), dstEnd = resultData.end(); dstIt != dstEnd; ++srcIt, ++dstIt ) {
+                    *dstIt = sign * ( *srcIt < 0 ? -*srcIt : *srcIt );
+                }
+                break;
+            case Dso::MathMode::SIGN_CH1:
+            case Dso::MathMode::SIGN_CH2:
+                // positive: 1, zero: 0, negative -1
+                for ( auto dstIt = resultData.begin(), dstEnd = resultData.end(); dstIt != dstEnd; ++srcIt, ++dstIt ) {
+                    *dstIt = sign * ( *srcIt < 0 ? -1 : 1 );
+                }
+                break;
+            case Dso::MathMode::SIGN_AC_CH1:
+            case Dso::MathMode::SIGN_AC_CH2:
+                // same for AC part of signal
+                for ( auto dstIt = resultData.begin(), dstEnd = resultData.end(); dstIt != dstEnd; ++srcIt, ++dstIt ) {
+                    *dstIt = sign * ( *srcIt < average ? -1 : 1 );
+                }
+                break;
+            case Dso::MathMode::TRIG_CH1:
+            case Dso::MathMode::TRIG_CH2:
+                // above / below trigger level
+                for ( auto dstIt = resultData.begin(), dstEnd = resultData.end(); dstIt != dstEnd; ++srcIt, ++dstIt ) {
+                    *dstIt = sign * ( *srcIt < scope->voltage[ src ].trigger ? -1 : 1 );
+                }
+                break;
+            default:
+                break;
+            }
+        }
     }
 }

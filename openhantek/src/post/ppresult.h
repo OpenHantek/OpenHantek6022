@@ -6,6 +6,7 @@
 #include <QVector3D>
 
 #include "hantekprotocol/types.h"
+#include "utils/printutils.h"
 #include <vector>
 
 /// \brief Struct for a array of sample values.
@@ -28,6 +29,7 @@ struct DataChannel {
     double thd = 0.0;         ///< The THD value
     double pulseWidth1 = 0.0; ///< The width of the triggered pulse
     double pulseWidth2 = 0.0; ///< The width of the following pulse
+    Unit voltageUnit = UNIT_VOLTS;  ///< unless UNIT_VOLTSQUARE for some math functions
 };
 
 typedef std::vector< QVector3D > ChannelGraph;

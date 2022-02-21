@@ -244,8 +244,8 @@ DsoWidget::DsoWidget( DsoSettingsScope *scope, DsoSettingsView *view, const Dso:
     mainLayout->setColumnMinimumWidth( 4, mainSliders.triggerPositionSlider->postMargin() );
     mainLayout->setSpacing( 0 );
     int row = 0;
-    // display settings on top of scope
-    mainLayout->addLayout( settingsLayout, row, 1, 1, 5 );
+    // display settings on top of scope, full width also with cursor grid (7 columns)
+    mainLayout->addLayout( settingsLayout, row, 0, 1, 7 );
     ++row;
     // 5x5 box for mainScope & mainSliders & markerSlider
     mainLayout->addWidget( mainSliders.triggerPositionSlider, row, 2, 2, 3, Qt::AlignBottom );
@@ -278,8 +278,8 @@ DsoWidget::DsoWidget( DsoSettingsScope *scope, DsoSettingsView *view, const Dso:
     ++row; // end 5x4 box
     // Separator and embedded measurementLayout
     ++row;
-    // display channel measurements on bottom of scope
-    mainLayout->addLayout( measurementLayout, row, 1, 1, 5 );
+    // display channel measurements on bottom of scope, full width also with cursor grid (7 columns)
+    mainLayout->addLayout( measurementLayout, row, 0, 1, 7 );
 
     updateCursorGrid( view->cursorsVisible );
 
@@ -400,15 +400,17 @@ void DsoWidget::updateCursorGrid( bool enabled ) {
 
     switch ( view->cursorGridPosition ) {
     case Qt::LeftToolBarArea:
-        if ( mainLayout->itemAtPosition( 0, 0 ) == nullptr ) {
+        // keep space for settingsLayout on top and measurementLayout on bottom
+        if ( mainLayout->itemAtPosition( 2, 0 ) == nullptr ) {
             cursorDataGrid->setParent( nullptr );
-            mainLayout->addWidget( cursorDataGrid, 0, 0, mainLayout->rowCount(), 1 );
+            mainLayout->addWidget( cursorDataGrid, 2, 0, mainLayout->rowCount() - 5, 1 );
         }
         break;
     case Qt::RightToolBarArea:
-        if ( mainLayout->itemAtPosition( 0, 6 ) == nullptr ) {
+        // keep space for settingsLayout on top and measurementLayout on bottom
+        if ( mainLayout->itemAtPosition( 2, 6 ) == nullptr ) {
             cursorDataGrid->setParent( nullptr );
-            mainLayout->addWidget( cursorDataGrid, 0, 6, mainLayout->rowCount(), 1 );
+            mainLayout->addWidget( cursorDataGrid, 2, 6, mainLayout->rowCount() - 5, 1 );
         }
         break;
     default:
@@ -529,6 +531,8 @@ void DsoWidget::setMeasurementVisible( ChannelID channel ) {
 
 /// \brief Update the label about the marker measurements
 void DsoWidget::updateMarkerDetails() {
+    if ( nullptr == cursorDataGrid ) // not yet initialized
+        return;
     if ( scope->verboseLevel > 4 )
         qDebug() << "    DsoWidget::updateMarkerDetails()";
     double m1 = scope->horizontal.cursor.pos[ 0 ].x() + DIVS_TIME / 2; // zero at center -> zero at left margin
@@ -547,16 +551,16 @@ void DsoWidget::updateMarkerDetails() {
     bool freqUsed = false;
 
     int index = 1;
-
     for ( ChannelID channel = 0; channel < scope->voltage.size(); ++channel ) {
         if ( scope->voltage[ channel ].used ) {
             timeUsed = true; // at least one voltage channel used -> show marker time details
             QPointF p0 = scope->voltage[ channel ].cursor.pos[ 0 ];
             QPointF p1 = scope->voltage[ channel ].cursor.pos[ 1 ];
             if ( scope->voltage[ channel ].cursor.shape != DsoSettingsScopeCursor::NONE ) {
-                cursorDataGrid->updateInfo( unsigned( index ), true, tr( "ON" ),
-                                            valueToString( fabs( p1.x() - p0.x() ) * scope->horizontal.timebase, UNIT_SECONDS, 4 ),
-                                            valueToString( fabs( p1.y() - p0.y() ) * scope->gain( channel ), UNIT_VOLTS, 4 ) );
+                cursorDataGrid->updateInfo(
+                    unsigned( index ), true, tr( "ON" ),
+                    valueToString( fabs( p1.x() - p0.x() ) * scope->horizontal.timebase, UNIT_SECONDS, 4 ),
+                    valueToString( fabs( p1.y() - p0.y() ) * scope->gain( channel ), voltageUnits[ channel ], 4 ) );
             } else {
                 cursorDataGrid->updateInfo( unsigned( index ), true, tr( "OFF" ), "", "" );
             }
@@ -695,7 +699,8 @@ void DsoWidget::updateVoltageDetails( ChannelID channel ) {
     setMeasurementVisible( channel );
 
     if ( scope->voltage[ channel ].used )
-        measurementGainLabel[ channel ]->setText( valueToString( scope->gain( channel ), UNIT_VOLTS, 3 ) + tr( "/div" ) );
+        measurementGainLabel[ channel ]->setText( valueToString( scope->gain( channel ), voltageUnits[ channel ], 3 ) +
+                                                  tr( "/div" ) );
     else
         measurementGainLabel[ channel ]->setText( QString() );
 }
@@ -794,7 +799,10 @@ void DsoWidget::updateVoltageCoupling( ChannelID channel ) {
 
 /// \brief Handles modeChanged signal from the voltage dock.
 void DsoWidget::updateMathMode() {
-    measurementMiscLabel[ spec->channels ]->setText( Dso::mathModeString( Dso::getMathMode( scope->voltage[ spec->channels ] ) ) );
+    ChannelID mathChannel = spec->channels;
+    measurementMiscLabel[ mathChannel ]->setText( Dso::mathModeString( Dso::getMathMode( scope->voltage[ mathChannel ] ) ) );
+    voltageUnits[ mathChannel ] = Dso::mathModeUnit( Dso::getMathMode( scope->voltage[ mathChannel ] ) );
+    updateMarkerDetails();
 }
 
 
@@ -883,15 +891,19 @@ void DsoWidget::showNew( std::shared_ptr< PPresult > analysedData ) {
     updateTriggerDetails();
     for ( ChannelID channel = 0; channel < scope->voltage.size(); ++channel ) {
         if ( ( scope->voltage[ channel ].used || scope->spectrum[ channel ].used ) && analysedData.get()->data( channel ) ) {
+            voltageUnits[ channel ] = analysedData->data( channel )->voltageUnit; // V² for math multiply functions
+            Unit voltageUnit = voltageUnits[ channel ];
             // Vpp Amplitude string representation (3 significant digits)
-            measurementVppLabel[ channel ]->setText( valueToString( analysedData.get()->data( channel )->vpp, UNIT_VOLTS, 3 ) +
+            measurementVppLabel[ channel ]->setText( valueToString( analysedData.get()->data( channel )->vpp, voltageUnit, 3 ) +
                                                      tr( "pp" ) );
             // DC Amplitude string representation (3 significant digits)
-            measurementDCLabel[ channel ]->setText( valueToString( analysedData.get()->data( channel )->dc, UNIT_VOLTS, 3 ) + "=" );
+            measurementDCLabel[ channel ]->setText( valueToString( analysedData.get()->data( channel )->dc, voltageUnit, 3 ) +
+                                                    "=" );
             // AC Amplitude string representation (3 significant digits)
-            measurementACLabel[ channel ]->setText( valueToString( analysedData.get()->data( channel )->ac, UNIT_VOLTS, 3 ) + "~" );
+            measurementACLabel[ channel ]->setText( valueToString( analysedData.get()->data( channel )->ac, voltageUnit, 3 ) +
+                                                    "~" );
             // RMS Amplitude string representation (3 significant digits)
-            measurementRMSLabel[ channel ]->setText( valueToString( analysedData.get()->data( channel )->rms, UNIT_VOLTS, 3 ) +
+            measurementRMSLabel[ channel ]->setText( valueToString( analysedData.get()->data( channel )->rms, voltageUnit, 3 ) +
                                                      tr( "rms" ) );
             // dB Amplitude string representation (3 significant digits)
             measurementdBLabel[ channel ]->setText( valueToString( analysedData.get()->data( channel )->dB, UNIT_DECIBEL, 3 ) );

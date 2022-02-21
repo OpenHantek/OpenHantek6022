@@ -25,6 +25,19 @@ QString valueToString( double value, Unit unit, int precision ) {
             return QApplication::tr( "%L1 V" ).arg( value, 0, format,
                                                     ( precision <= 0 ) ? precision : qMax( 0, precision - 1 - logarithm ) );
     }
+    case UNIT_VOLTSQUARE: {
+        // Voltage string representation
+        int logarithm = int( floor( log10( fabs( value ) ) ) );
+        if ( fabs( value ) < 1e-3 )
+            return QApplication::tr( "%L1 µV²" )
+                .arg( value / 1e-6, 0, format, ( precision <= 0 ) ? precision : qBound( 0, precision - 7 - logarithm, precision ) );
+        else if ( fabs( value ) < 1.0 )
+            return QApplication::tr( "%L1 mV²" )
+                .arg( value / 1e-3, 0, format, ( precision <= 0 ) ? precision : ( precision - 4 - logarithm ) );
+        else
+            return QApplication::tr( "%L1 V²" )
+                .arg( value, 0, format, ( precision <= 0 ) ? precision : qMax( 0, precision - 1 - logarithm ) );
+    }
     case UNIT_WATTS: {
         // Watts string representation
         int logarithm = int( floor( log10( fabs( value ) ) ) );

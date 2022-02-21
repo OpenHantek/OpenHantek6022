@@ -9,7 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////
 /// \enum Unit utils/printutils.h
 /// \brief The various units supported by valueToString.
-enum Unit { UNIT_VOLTS, UNIT_DECIBEL, UNIT_SECONDS, UNIT_HERTZ, UNIT_SAMPLES, UNIT_COUNT, UNIT_WATTS };
+enum Unit { UNIT_VOLTS, UNIT_DECIBEL, UNIT_SECONDS, UNIT_HERTZ, UNIT_SAMPLES, UNIT_COUNT, UNIT_WATTS, UNIT_VOLTSQUARE };
 
 /// \brief Converts double to string containing value and (prefix+)unit
 /// (Counterpart to stringToValue).

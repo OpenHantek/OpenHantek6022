@@ -539,74 +539,74 @@
         <translation>Marcadores</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="557"/>
-        <location filename="../src/dsowidget.cpp" line="575"/>
-        <source>ON</source>
-        <translation></translation>
-    </message>
-    <message>
         <location filename="../src/dsowidget.cpp" line="561"/>
         <location filename="../src/dsowidget.cpp" line="579"/>
-        <source>OFF</source>
-        <translation></translation>
+        <source>ON</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="600"/>
+        <location filename="../src/dsowidget.cpp" line="565"/>
+        <location filename="../src/dsowidget.cpp" line="583"/>
+        <source>OFF</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/dsowidget.cpp" line="604"/>
         <source>Markers  </source>
         <translation>Marcadores  </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="601"/>
+        <location filename="../src/dsowidget.cpp" line="605"/>
         <source>Time: </source>
         <translation>Tiempo: </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="602"/>
+        <location filename="../src/dsowidget.cpp" line="606"/>
         <source>Frequency: </source>
         <translation>Frecuencia: </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="605"/>
+        <location filename="../src/dsowidget.cpp" line="609"/>
         <source>Zoom x%L1  </source>
-        <translation></translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="607"/>
+        <location filename="../src/dsowidget.cpp" line="611"/>
         <source>Zoom ---  </source>
-        <translation></translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="610"/>
-        <location filename="../src/dsowidget.cpp" line="612"/>
-        <location filename="../src/dsowidget.cpp" line="653"/>
-        <location filename="../src/dsowidget.cpp" line="698"/>
-        <location filename="../src/dsowidget.cpp" line="707"/>
-        <location filename="../src/dsowidget.cpp" line="728"/>
+        <location filename="../src/dsowidget.cpp" line="614"/>
+        <location filename="../src/dsowidget.cpp" line="616"/>
+        <location filename="../src/dsowidget.cpp" line="657"/>
+        <location filename="../src/dsowidget.cpp" line="703"/>
+        <location filename="../src/dsowidget.cpp" line="712"/>
+        <location filename="../src/dsowidget.cpp" line="733"/>
         <source>/div</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="680"/>
+        <location filename="../src/dsowidget.cpp" line="684"/>
         <source>%1  %2  %3  %4  %5</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="718"/>
+        <location filename="../src/dsowidget.cpp" line="723"/>
         <source>/s</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="839"/>
+        <location filename="../src/dsowidget.cpp" line="847"/>
         <source> on screen</source>
         <translation> en pantalla</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="888"/>
+        <location filename="../src/dsowidget.cpp" line="898"/>
         <source>pp</source>
         <translation>pp</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="895"/>
+        <location filename="../src/dsowidget.cpp" line="907"/>
         <source>rms</source>
         <translation>rms</translation>
     </message>
@@ -1259,96 +1259,111 @@
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="32"/>
+        <source>%L1 µV²</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/utils/printutils.cpp" line="35"/>
+        <source>%L1 mV²</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/utils/printutils.cpp" line="38"/>
+        <source>%L1 V²</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/utils/printutils.cpp" line="45"/>
         <source>%L1 µW</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="35"/>
+        <location filename="../src/utils/printutils.cpp" line="48"/>
         <source>%L1 mW</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="38"/>
+        <location filename="../src/utils/printutils.cpp" line="51"/>
         <source>%L1 W</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="43"/>
+        <location filename="../src/utils/printutils.cpp" line="56"/>
         <source>%L1 dB</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="50"/>
+        <location filename="../src/utils/printutils.cpp" line="63"/>
         <source>%L1 ps</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="55"/>
+        <location filename="../src/utils/printutils.cpp" line="68"/>
         <source>%L1 ns</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="59"/>
+        <location filename="../src/utils/printutils.cpp" line="72"/>
         <source>%L1 µs</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="63"/>
+        <location filename="../src/utils/printutils.cpp" line="76"/>
         <source>%L1 ms</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="67"/>
+        <location filename="../src/utils/printutils.cpp" line="80"/>
         <source>%L1 s</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="70"/>
+        <location filename="../src/utils/printutils.cpp" line="83"/>
         <source>%L1 min</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="74"/>
+        <location filename="../src/utils/printutils.cpp" line="87"/>
         <source>%L1 h</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="82"/>
+        <location filename="../src/utils/printutils.cpp" line="95"/>
         <source>%L1 Hz</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="85"/>
+        <location filename="../src/utils/printutils.cpp" line="98"/>
         <source>%L1 kHz</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="88"/>
+        <location filename="../src/utils/printutils.cpp" line="101"/>
         <source>%L1 MHz</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="91"/>
+        <location filename="../src/utils/printutils.cpp" line="104"/>
         <source>%L1 GHz</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="98"/>
+        <location filename="../src/utils/printutils.cpp" line="111"/>
         <source>%L1 S</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="101"/>
+        <location filename="../src/utils/printutils.cpp" line="114"/>
         <source>%L1 kS</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="104"/>
+        <location filename="../src/utils/printutils.cpp" line="117"/>
         <source>%L1 MS</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="107"/>
+        <location filename="../src/utils/printutils.cpp" line="120"/>
         <source>%L1 GS</source>
         <translation></translation>
     </message>
@@ -1408,114 +1423,98 @@
         <translation type="vanished">Otro error</translation>
     </message>
     <message>
-        <location filename="../src/post/postprocessingsettings.cpp" line="19"/>
+        <location filename="../src/post/postprocessingsettings.cpp" line="29"/>
         <source>CH1+CH2</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/post/postprocessingsettings.cpp" line="21"/>
+        <location filename="../src/post/postprocessingsettings.cpp" line="31"/>
         <source>CH1-CH2</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/post/postprocessingsettings.cpp" line="23"/>
+        <location filename="../src/post/postprocessingsettings.cpp" line="33"/>
         <source>CH2-CH1</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/post/postprocessingsettings.cpp" line="25"/>
+        <location filename="../src/post/postprocessingsettings.cpp" line="35"/>
         <source>CH1*CH2</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/post/postprocessingsettings.cpp" line="27"/>
+        <location filename="../src/post/postprocessingsettings.cpp" line="37"/>
+        <source>CH1 ^2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/post/postprocessingsettings.cpp" line="39"/>
+        <source>CH2 ^2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/post/postprocessingsettings.cpp" line="41"/>
         <source>CH1 AC</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/post/postprocessingsettings.cpp" line="29"/>
+        <location filename="../src/post/postprocessingsettings.cpp" line="43"/>
         <source>CH2 AC</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/post/postprocessingsettings.cpp" line="31"/>
+        <location filename="../src/post/postprocessingsettings.cpp" line="45"/>
         <source>CH1 DC</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/post/postprocessingsettings.cpp" line="33"/>
+        <location filename="../src/post/postprocessingsettings.cpp" line="47"/>
         <source>CH2 DC</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/post/postprocessingsettings.cpp" line="45"/>
-        <source>Rectangular</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../src/post/postprocessingsettings.cpp" line="47"/>
-        <source>Hamming</source>
-        <translation></translation>
-    </message>
-    <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="49"/>
-        <source>Hann</source>
-        <translation></translation>
+        <source>CH1 Abs</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="51"/>
-        <source>Cosine</source>
-        <translation>Coseno</translation>
+        <source>CH2 Abs</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="53"/>
-        <source>Lanczos</source>
-        <translation></translation>
+        <source>CH1 Sign</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="55"/>
-        <source>Bartlett</source>
-        <translation></translation>
+        <source>CH2 Sign</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="57"/>
-        <source>Triangular</source>
-        <translation></translation>
+        <source>CH1 AC Sign</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="59"/>
-        <source>Gauss</source>
-        <translation></translation>
+        <source>CH2 AC Sign</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="61"/>
-        <source>Bartlett-Hann</source>
-        <translation></translation>
+        <source>CH1 Trigger</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="63"/>
-        <source>Blackman</source>
-        <translation></translation>
+        <source>CH2 Trigger</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/post/postprocessingsettings.cpp" line="67"/>
-        <source>Nuttall</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../src/post/postprocessingsettings.cpp" line="69"/>
-        <source>Blackman-Harris</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../src/post/postprocessingsettings.cpp" line="71"/>
-        <source>Blackman-Nuttall</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../src/post/postprocessingsettings.cpp" line="73"/>
-        <source>Flat top</source>
-        <translation></translation>
+        <source>Cosine</source>
+        <translation type="vanished">Coseno</translation>
     </message>
     <message>
         <source>Use OpenGL ES instead of OpenGL</source>

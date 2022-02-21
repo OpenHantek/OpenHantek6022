@@ -112,7 +112,8 @@ VoltageDock::VoltageDock( DsoSettingsScope *scope, const Dso::ControlSpecificati
                      if ( channel < spec->channels ) {
                          // setCoupling(channel, (unsigned)index);
                          emit couplingChanged( channel, scope->coupling( channel, spec ) );
-                     } else {
+                     } else {                                                           // MATH function changed
+                         setAttn( channel, this->scope->voltage[ channel ].probeAttn ); // update unit
                          emit modeChanged( Dso::getMathMode( this->scope->voltage[ channel ] ) );
                      }
                  } );
@@ -189,8 +190,18 @@ void VoltageDock::setAttn( ChannelID channel, double attnValue ) {
     QSignalBlocker blocker( channelBlocks[ channel ].gainComboBox );
     int index = channelBlocks[ channel ].gainComboBox->currentIndex();
     gainStrings.clear();
-    for ( double gainStep : scope->gainSteps ) {
-        gainStrings << valueToString( gainStep * attnValue, UNIT_VOLTS, -1 ); // auto format
+    // change unit to V² for the multiplying math functions
+    if ( channel >= spec->channels && // MATH channel
+         ( ( scope->voltage[ spec->channels ].couplingOrMathIndex == unsigned( Dso::MathMode::MUL_CH1_CH2 ) ) ||
+           ( scope->voltage[ spec->channels ].couplingOrMathIndex == unsigned( Dso::MathMode::SQ_CH1 ) ) ||
+           ( scope->voltage[ spec->channels ].couplingOrMathIndex == unsigned( Dso::MathMode::SQ_CH2 ) ) ) ) {
+        for ( double gainStep : scope->gainSteps ) {
+            gainStrings << valueToString( gainStep * attnValue, UNIT_VOLTSQUARE, -1 ); // auto format V²
+        }
+    } else {
+        for ( double gainStep : scope->gainSteps ) {
+            gainStrings << valueToString( gainStep * attnValue, UNIT_VOLTS, -1 ); // auto format V
+        }
     }
     channelBlocks[ channel ].gainComboBox->clear();
     channelBlocks[ channel ].gainComboBox->addItems( gainStrings );
