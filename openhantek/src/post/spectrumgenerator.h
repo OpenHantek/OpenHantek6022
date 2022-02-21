@@ -8,6 +8,8 @@
 #include <QThread>
 #include <memory>
 
+#include <fftw3.h>
+
 #include "dsosamples.h"
 #include "postprocessingsettings.h"
 #include "ppresult.h"
@@ -33,6 +35,12 @@ class SpectrumGenerator : public Processor {
     unsigned int lastRecordLength = 0;                          ///< The record length of the previously analyzed data
     Dso::WindowFunction lastWindow = Dso::WindowFunction( -1 ); ///< The previously used dft window function
     double *lastWindowBuffer = nullptr;
+    fftw_plan fftPlan_R2HC = nullptr;
+    fftw_plan fftPlan_HC2R = nullptr;
     // Processor interface
     void process( PPresult *data ) override;
 };
+
+// reuse fft plans with new-array fft functions
+// takes one second during 1st run but gives faster transforms
+#define REUSE_FFTW_PLAN

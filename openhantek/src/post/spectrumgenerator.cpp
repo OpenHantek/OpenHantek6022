@@ -9,11 +9,12 @@
 
 #include "ppresult.h"
 #include "spectrumgenerator.h"
-#include <fftw3.h>
+
 
 #include "dsosettings.h"
 #include "utils/printutils.h"
 #include "viewconstants.h"
+
 
 /// \brief Analyzes the data from the dso.
 SpectrumGenerator::SpectrumGenerator( const DsoSettingsScope *scope, const DsoSettingsPostProcessing *postprocessing )
@@ -28,6 +29,16 @@ SpectrumGenerator::~SpectrumGenerator() {
         qDebug() << " SpectrumGenerator::~SpectrumGenerator()";
     if ( lastWindowBuffer )
         fftw_free( lastWindowBuffer );
+#ifdef REUSE_FFTW_PLAN
+    if ( fftPlan_R2HC ) {
+        fftw_destroy_plan( fftPlan_R2HC );
+        fftPlan_R2HC = nullptr;
+    }
+    if ( fftPlan_HC2R ) {
+        fftw_destroy_plan( fftPlan_HC2R );
+        fftPlan_HC2R = nullptr;
+    }
+#endif
 }
 
 
@@ -234,15 +245,20 @@ void SpectrumGenerator::process( PPresult *result ) {
         channelData->pulseWidth2 = result->pulseWidth2;
 
         // Do discrete real to half-complex transformation
-        /// \todo Check if record length is multiple of 2
-        /// \todo Reuse plan and use FFTW_MEASURE to get fastest algorithm
+        // Record length should be multiple of 2, 3, 5: done, is 10000 = 2^a * 5^b
 
-        fftw_plan fftPlan;
-        fftPlan = fftw_plan_r2r_1d( int( sampleCount ), windowedValues.get(), &channelData->spectrum.sample.front(), FFTW_R2HC,
-                                    FFTW_ESTIMATE );
-        fftw_execute( fftPlan );
-        fftw_destroy_plan( fftPlan );
 
+#ifdef REUSE_FFTW_PLAN
+        if ( nullptr == fftPlan_R2HC )
+            fftPlan_R2HC = fftw_plan_r2r_1d( int( sampleCount ), windowedValues.get(), &channelData->spectrum.sample.front(),
+                                             FFTW_R2HC, FFTW_MEASURE );
+        fftw_execute_r2r( fftPlan_R2HC, windowedValues.get(), &channelData->spectrum.sample.front() );
+#else
+        fftPlan_R2HC = fftw_plan_r2r_1d( int( sampleCount ), windowedValues.get(), &channelData->spectrum.sample.front(), FFTW_R2HC,
+                                         FFTW_ESTIMATE );
+        fftw_execute( fftPlan_R2HC );
+        fftw_destroy_plan( fftPlan_R2HC );
+#endif
         // Do an autocorrelation to get the frequency of the signal
         // fft: f(t) ⊶ F(ω); calculate power spectrum |F(ω)|²
         // ifft: F(ω) ∙ F(ω) ⊷ f(t) ⊗ f(t) (convolution of f(t) with f(t), i.e. autocorrelation)
@@ -283,10 +299,17 @@ void SpectrumGenerator::process( PPresult *result ) {
 
         // Do half-complex to real inverse transformation -> autocorrelation
         std::unique_ptr< double[] > correlation = std::unique_ptr< double[] >( new double[ sampleCount ] );
-        fftPlan = fftw_plan_r2r_1d( int( sampleCount ), powerSpectrum.get(), correlation.get(), FFTW_HC2R, FFTW_ESTIMATE );
-        fftw_execute( fftPlan );
-        fftw_destroy_plan( fftPlan );
 
+#ifdef REUSE_FFTW_PLAN
+        if ( nullptr == fftPlan_HC2R )
+            fftPlan_HC2R = fftw_plan_r2r_1d( int( sampleCount ), powerSpectrum.get(), correlation.get(), FFTW_HC2R, FFTW_MEASURE );
+        fftw_execute_r2r( fftPlan_HC2R, powerSpectrum.get(), correlation.get() );
+#else
+        fftw_plan fftPlan_HC2R =
+            fftw_plan_r2r_1d( int( sampleCount ), powerSpectrum.get(), correlation.get(), FFTW_HC2R, FFTW_ESTIMATE );
+        fftw_execute( fftPlan_HC2R );
+        fftw_destroy_plan( fftPlan_HC2R );
+#endif
         // Get the frequency from the correlation results
         unsigned int peakCorrPos = 0;
         double minCorr = 0;
