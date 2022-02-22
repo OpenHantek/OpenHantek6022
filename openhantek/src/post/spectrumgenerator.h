@@ -31,10 +31,14 @@ class SpectrumGenerator : public Processor {
 
   private:
     const DsoSettingsScope *scope;
-    const DsoSettingsPostProcessing *postprocessing;
+    const DsoSettingsPostProcessing *post;
     unsigned int lastRecordLength = 0;                          ///< The record length of the previously analyzed data
     Dso::WindowFunction lastWindow = Dso::WindowFunction( -1 ); ///< The previously used dft window function
-    double *lastWindowBuffer = nullptr;
+    double *windowBuffer = nullptr;
+    double *windowedValues = nullptr;
+    double *hcSpectrum = nullptr;
+    double *powerSpectrum = nullptr;
+    double *autoCorrelation = nullptr;
     fftw_plan fftPlan_R2HC = nullptr;
     fftw_plan fftPlan_HC2R = nullptr;
     // Processor interface

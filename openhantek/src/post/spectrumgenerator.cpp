@@ -17,8 +17,8 @@
 
 
 /// \brief Analyzes the data from the dso.
-SpectrumGenerator::SpectrumGenerator( const DsoSettingsScope *scope, const DsoSettingsPostProcessing *postprocessing )
-    : scope( scope ), postprocessing( postprocessing ) {
+SpectrumGenerator::SpectrumGenerator( const DsoSettingsScope *scope, const DsoSettingsPostProcessing *post )
+    : scope( scope ), post( post ) {
     if ( scope->verboseLevel > 1 )
         qDebug() << " SpectrumGenerator::SpectrumGenerator()";
 }
@@ -27,18 +27,18 @@ SpectrumGenerator::SpectrumGenerator( const DsoSettingsScope *scope, const DsoSe
 SpectrumGenerator::~SpectrumGenerator() {
     if ( scope->verboseLevel > 1 )
         qDebug() << " SpectrumGenerator::~SpectrumGenerator()";
-    if ( lastWindowBuffer )
-        fftw_free( lastWindowBuffer );
-#ifdef REUSE_FFTW_PLAN
-    if ( fftPlan_R2HC ) {
-        fftw_destroy_plan( fftPlan_R2HC );
-        fftPlan_R2HC = nullptr;
+    if ( windowBuffer )
+        fftw_free( windowBuffer );
+    if ( post->reuseFftPlan ) {
+        if ( fftPlan_R2HC ) {
+            fftw_destroy_plan( fftPlan_R2HC );
+            fftPlan_R2HC = nullptr;
+        }
+        if ( fftPlan_HC2R ) {
+            fftw_destroy_plan( fftPlan_HC2R );
+            fftPlan_HC2R = nullptr;
+        }
     }
-    if ( fftPlan_HC2R ) {
-        fftw_destroy_plan( fftPlan_HC2R );
-        fftPlan_HC2R = nullptr;
-    }
-#endif
 }
 
 
@@ -60,28 +60,27 @@ void SpectrumGenerator::process( PPresult *result ) {
         // Calculate new window
         // scale all windows to display 1 Veff as 0 dBu reference level.
         size_t sampleCount = channelData->voltage.sample.size();
-        if ( !lastWindowBuffer || lastWindow != postprocessing->spectrumWindow || lastRecordLength != sampleCount ) {
-            if ( lastWindowBuffer )
-                fftw_free( lastWindowBuffer );
-            lastWindowBuffer = fftw_alloc_real( sampleCount );
+        if ( !windowBuffer || lastWindow != post->spectrumWindow || lastRecordLength != sampleCount ) {
+            if ( windowBuffer )
+                fftw_free( windowBuffer );
+            windowBuffer = fftw_alloc_real( sampleCount );
             lastRecordLength = unsigned( sampleCount );
 
             unsigned int windowEnd = lastRecordLength - 1;
-            lastWindow = postprocessing->spectrumWindow;
+            lastWindow = post->spectrumWindow;
             double weight = 0.0; // calculate area under window fkt
-            switch ( postprocessing->spectrumWindow ) {
+            switch ( post->spectrumWindow ) {
             case Dso::WindowFunction::HAMMING:
                 for ( unsigned int windowPosition = 0; windowPosition < lastRecordLength; ++windowPosition )
-                    weight += *( lastWindowBuffer + windowPosition ) = 0.54 - 0.46 * cos( 2.0 * M_PI * windowPosition / windowEnd );
+                    weight += *( windowBuffer + windowPosition ) = 0.54 - 0.46 * cos( 2.0 * M_PI * windowPosition / windowEnd );
                 break;
             case Dso::WindowFunction::HANN:
                 for ( unsigned int windowPosition = 0; windowPosition < lastRecordLength; ++windowPosition )
-                    weight += *( lastWindowBuffer + windowPosition ) =
-                        0.5 * ( 1.0 - cos( 2.0 * M_PI * windowPosition / windowEnd ) );
+                    weight += *( windowBuffer + windowPosition ) = 0.5 * ( 1.0 - cos( 2.0 * M_PI * windowPosition / windowEnd ) );
                 break;
             case Dso::WindowFunction::COSINE:
                 for ( unsigned int windowPosition = 0; windowPosition < lastRecordLength; ++windowPosition )
-                    weight += *( lastWindowBuffer + windowPosition ) = sin( M_PI * windowPosition / windowEnd );
+                    weight += *( windowBuffer + windowPosition ) = sin( M_PI * windowPosition / windowEnd );
                 break;
             case Dso::WindowFunction::LANCZOS:
                 for ( unsigned int windowPosition = 0; windowPosition < lastRecordLength; ++windowPosition ) {
@@ -92,9 +91,9 @@ void SpectrumGenerator::process( PPresult *result ) {
 #endif
 
                     if ( sincParameter == 0 )
-                        weight += *( lastWindowBuffer + windowPosition ) = 1;
+                        weight += *( windowBuffer + windowPosition ) = 1;
                     else
-                        weight += *( lastWindowBuffer + windowPosition ) = sin( sincParameter ) / sincParameter;
+                        weight += *( windowBuffer + windowPosition ) = sin( sincParameter ) / sincParameter;
 #ifdef __GNUC__
 #pragma GCC diagnostic pop
 #endif
@@ -102,12 +101,12 @@ void SpectrumGenerator::process( PPresult *result ) {
                 break;
             case Dso::WindowFunction::BARTLETT:
                 for ( unsigned int windowPosition = 0; windowPosition < lastRecordLength; ++windowPosition )
-                    weight += *( lastWindowBuffer + windowPosition ) =
+                    weight += *( windowBuffer + windowPosition ) =
                         2.0 / windowEnd * ( windowEnd / 2 - std::abs( double( windowPosition - windowEnd / 2.0 ) ) );
                 break;
             case Dso::WindowFunction::TRIANGULAR:
                 for ( unsigned int windowPosition = 0; windowPosition < lastRecordLength; ++windowPosition )
-                    weight += *( lastWindowBuffer + windowPosition ) =
+                    weight += *( windowBuffer + windowPosition ) =
                         2.0 / lastRecordLength * ( lastRecordLength / 2 - std::abs( double( windowPosition - windowEnd / 2.0 ) ) );
                 break;
             case Dso::WindowFunction::GAUSS: {
@@ -115,21 +114,21 @@ void SpectrumGenerator::process( PPresult *result ) {
                 for ( unsigned int windowPosition = 0; windowPosition < lastRecordLength; ++windowPosition ) {
                     double w = ( double( windowPosition ) - lastRecordLength / 2.0 ) / ( sigma * lastRecordLength / 2.0 );
                     w *= w;
-                    weight += *( lastWindowBuffer + windowPosition ) = exp( -w );
+                    weight += *( windowBuffer + windowPosition ) = exp( -w );
                 }
             } break;
             case Dso::WindowFunction::BARTLETTHANN:
                 for ( unsigned int windowPosition = 0; windowPosition < lastRecordLength; ++windowPosition )
-                    weight += *( lastWindowBuffer + windowPosition ) =
-                        0.62 - 0.48 * std::abs( double( windowPosition / windowEnd - 0.5 ) ) -
-                        0.38 * cos( 2.0 * M_PI * windowPosition / windowEnd );
+                    weight += *( windowBuffer + windowPosition ) = 0.62 -
+                                                                   0.48 * std::abs( double( windowPosition / windowEnd - 0.5 ) ) -
+                                                                   0.38 * cos( 2.0 * M_PI * windowPosition / windowEnd );
                 break;
             case Dso::WindowFunction::BLACKMAN: {
                 double alpha = 0.16;
                 for ( unsigned int windowPosition = 0; windowPosition < lastRecordLength; ++windowPosition )
-                    weight += *( lastWindowBuffer + windowPosition ) = ( 1 - alpha ) / 2 -
-                                                                       0.5 * cos( 2.0 * M_PI * windowPosition / windowEnd ) +
-                                                                       alpha / 2 * cos( 4.0 * M_PI * windowPosition / windowEnd );
+                    weight += *( windowBuffer + windowPosition ) = ( 1 - alpha ) / 2 -
+                                                                   0.5 * cos( 2.0 * M_PI * windowPosition / windowEnd ) +
+                                                                   alpha / 2 * cos( 4.0 * M_PI * windowPosition / windowEnd );
             } break;
             // case Dso::WindowFunction::WINDOW_KAISER:
             //     TODO WINDOW_KAISER
@@ -140,35 +139,35 @@ void SpectrumGenerator::process( PPresult *result ) {
             //     break;
             case Dso::WindowFunction::NUTTALL:
                 for ( unsigned int windowPosition = 0; windowPosition < lastRecordLength; ++windowPosition )
-                    weight += *( lastWindowBuffer + windowPosition ) = 0.355768 -
-                                                                       0.487396 * cos( 2 * M_PI * windowPosition / windowEnd ) +
-                                                                       0.144232 * cos( 4 * M_PI * windowPosition / windowEnd ) -
-                                                                       0.012604 * cos( 6 * M_PI * windowPosition / windowEnd );
+                    weight += *( windowBuffer + windowPosition ) = 0.355768 -
+                                                                   0.487396 * cos( 2 * M_PI * windowPosition / windowEnd ) +
+                                                                   0.144232 * cos( 4 * M_PI * windowPosition / windowEnd ) -
+                                                                   0.012604 * cos( 6 * M_PI * windowPosition / windowEnd );
                 break;
             case Dso::WindowFunction::BLACKMANHARRIS:
                 for ( unsigned int windowPosition = 0; windowPosition < lastRecordLength; ++windowPosition )
-                    weight += *( lastWindowBuffer + windowPosition ) = 0.35875 -
-                                                                       0.48829 * cos( 2 * M_PI * windowPosition / windowEnd ) +
-                                                                       0.14128 * cos( 4 * M_PI * windowPosition / windowEnd ) -
-                                                                       0.01168 * cos( 6 * M_PI * windowPosition / windowEnd );
+                    weight += *( windowBuffer + windowPosition ) = 0.35875 -
+                                                                   0.48829 * cos( 2 * M_PI * windowPosition / windowEnd ) +
+                                                                   0.14128 * cos( 4 * M_PI * windowPosition / windowEnd ) -
+                                                                   0.01168 * cos( 6 * M_PI * windowPosition / windowEnd );
                 break;
             case Dso::WindowFunction::BLACKMANNUTTALL:
                 for ( unsigned int windowPosition = 0; windowPosition < lastRecordLength; ++windowPosition )
-                    weight += *( lastWindowBuffer + windowPosition ) = 0.3635819 -
-                                                                       0.4891775 * cos( 2 * M_PI * windowPosition / windowEnd ) +
-                                                                       0.1365995 * cos( 4 * M_PI * windowPosition / windowEnd ) -
-                                                                       0.0106411 * cos( 6 * M_PI * windowPosition / windowEnd );
+                    weight += *( windowBuffer + windowPosition ) = 0.3635819 -
+                                                                   0.4891775 * cos( 2 * M_PI * windowPosition / windowEnd ) +
+                                                                   0.1365995 * cos( 4 * M_PI * windowPosition / windowEnd ) -
+                                                                   0.0106411 * cos( 6 * M_PI * windowPosition / windowEnd );
                 break;
             case Dso::WindowFunction::FLATTOP: // wikipedia.de
                 for ( unsigned int windowPosition = 0; windowPosition < lastRecordLength; ++windowPosition )
-                    weight += *( lastWindowBuffer + windowPosition ) = 1.0 - 1.93 * cos( 2 * M_PI * windowPosition / windowEnd ) +
-                                                                       1.29 * cos( 4 * M_PI * windowPosition / windowEnd ) -
-                                                                       0.388 * cos( 6 * M_PI * windowPosition / windowEnd ) +
-                                                                       0.028 * cos( 8 * M_PI * windowPosition / windowEnd );
+                    weight += *( windowBuffer + windowPosition ) = 1.0 - 1.93 * cos( 2 * M_PI * windowPosition / windowEnd ) +
+                                                                   1.29 * cos( 4 * M_PI * windowPosition / windowEnd ) -
+                                                                   0.388 * cos( 6 * M_PI * windowPosition / windowEnd ) +
+                                                                   0.028 * cos( 8 * M_PI * windowPosition / windowEnd );
                 break;
             default: // Dso::WINDOW_RECTANGULAR
                 for ( unsigned int windowPosition = 0; windowPosition < lastRecordLength; ++windowPosition )
-                    weight += *( lastWindowBuffer + windowPosition ) = 1.0;
+                    weight += *( windowBuffer + windowPosition ) = 1.0;
             }
             // weight is the area below the window function
             weight = lastRecordLength / weight; // normalise all windows equal to the rectangular window
@@ -180,7 +179,7 @@ void SpectrumGenerator::process( PPresult *result ) {
             // printf( "window %u, weight %g\n", (unsigned)postprocessing->spectrumWindow, weight );
             // scale the windowed samples
             for ( unsigned int windowPosition = 0; windowPosition < lastRecordLength; ++windowPosition )
-                *( lastWindowBuffer + windowPosition ) *= weight;
+                *( windowBuffer + windowPosition ) *= weight;
         }
 
         // Set sampling interval
@@ -192,13 +191,11 @@ void SpectrumGenerator::process( PPresult *result ) {
         // Reallocate memory for samples if the sample count has changed
         channelData->spectrum.sample.resize( sampleCount );
 
-        // Create sample buffer and apply window
-        std::unique_ptr< double[] > windowedValues = std::unique_ptr< double[] >( new double[ sampleCount ] );
-
+        // Create sample buffer
+        windowedValues = fftw_alloc_real( sampleCount );
         // calculate the peak-to-peak value of the displayed part of trace
         double min = INT_MAX;
         double max = INT_MIN;
-        // TODO: adapt triggerPosition (left = tP - preTrig; right = left + dotsOnScreen)
         double horizontalFactor = result->data( channel )->voltage.interval / scope->horizontal.timebase;
         unsigned dotsOnScreen = unsigned( DIVS_TIME / horizontalFactor + 0.99 ); // round up
         unsigned preTrigSamples = unsigned( scope->trigger.position * dotsOnScreen );
@@ -235,33 +232,31 @@ void SpectrumGenerator::process( PPresult *result ) {
         for ( unsigned int position = 0; position < sampleCount; ++position ) {
             double ac_sample = *voltageIterator++ - dc;
             ac2 += ac_sample * ac_sample;
-            windowedValues[ position ] = lastWindowBuffer[ position ] * ac_sample;
+            windowedValues[ position ] = windowBuffer[ position ] * ac_sample;
         }
-        ac2 /= double( sampleCount );
+        ac2 /= double( sampleCount );             // AC²
         channelData->ac = sqrt( ac2 );            // rms of AC component
         channelData->rms = sqrt( dc * dc + ac2 ); // total rms = U eff
-        channelData->dB = 20.0 * log10( channelData->rms ) - postprocessing->spectrumReference;
+        channelData->dB = 20.0 * log10( channelData->rms ) - post->spectrumReference;
         channelData->pulseWidth1 = result->pulseWidth1;
         channelData->pulseWidth2 = result->pulseWidth2;
 
         // Do discrete real to half-complex transformation
         // Record length should be multiple of 2, 3, 5: done, is 10000 = 2^a * 5^b
-
-
-#ifdef REUSE_FFTW_PLAN
-        if ( nullptr == fftPlan_R2HC )
-            fftPlan_R2HC = fftw_plan_r2r_1d( int( sampleCount ), windowedValues.get(), &channelData->spectrum.sample.front(),
-                                             FFTW_R2HC, FFTW_MEASURE );
-        fftw_execute_r2r( fftPlan_R2HC, windowedValues.get(), &channelData->spectrum.sample.front() );
-#else
-        fftPlan_R2HC = fftw_plan_r2r_1d( int( sampleCount ), windowedValues.get(), &channelData->spectrum.sample.front(), FFTW_R2HC,
-                                         FFTW_ESTIMATE );
-        fftw_execute( fftPlan_R2HC );
-        fftw_destroy_plan( fftPlan_R2HC );
-#endif
+        hcSpectrum = fftw_alloc_real( sampleCount );
+        if ( post->reuseFftPlan ) {        // build one optimized plan and reuse it for all transformations
+            if ( nullptr == fftPlan_R2HC ) // not yet created, do it now (this takes some time)
+                fftPlan_R2HC = fftw_plan_r2r_1d( int( sampleCount ), windowedValues, hcSpectrum, FFTW_R2HC, FFTW_MEASURE );
+            fftw_execute_r2r( fftPlan_R2HC, windowedValues, hcSpectrum ); // but it will run faster
+        } else { // build a more generic plan, this takes much less time than the optimized plan
+            fftPlan_R2HC = fftw_plan_r2r_1d( int( sampleCount ), windowedValues, hcSpectrum, FFTW_R2HC, FFTW_ESTIMATE );
+            fftw_execute( fftPlan_R2HC );      // use it once
+            fftw_destroy_plan( fftPlan_R2HC ); // and destroy it
+            fftPlan_R2HC = nullptr;            // no plan available;
+        }
         // Do an autocorrelation to get the frequency of the signal
-        // fft: f(t) ⊶ F(ω); calculate power spectrum |F(ω)|²
-        // ifft: F(ω) ∙ F(ω) ⊷ f(t) ⊗ f(t) (convolution of f(t) with f(t), i.e. autocorrelation)
+        // fft: f(t) o-- F(ω); calculate power spectrum |F(ω)|²
+        // ifft: F(ω) ∙ F(ω) --o f(t) ⊗ f(t) (convolution of f(t) with f(t), i.e. autocorrelation)
         // HORO:
         // This is quite inaccurate at high frequencies due to the used algorithm:
         // as we do a autocorrelation the resolution at high frequencies is limited by voltagestep interval
@@ -269,47 +264,65 @@ void SpectrumGenerator::process( PPresult *result ) {
         // of either 6 or 5 or 4 samples -> 30 MHz / 6 = 5.0 MHz ; 30 / 5 = 6.0 ; 30 / 4 = 7.5
         // in these cases use spectrum instead if peak position is too small.
 
-        // create a copy of powerSpectrum because hc2r iDFT destroys spectrum input
+        // create powerSpectrum in spectrum.sample (display) and a copy of it in powerSpectrum (for iDFT)
+        // because hc2r iDFT destroys spectrum input
         const double norm = 1.0 / dftLength / dftLength;
-        std::unique_ptr< double[] > powerSpectrum = std::move( windowedValues );
+        powerSpectrum = windowedValues; // rename the fftw array, will be the input for the iDFT
+        windowedValues = nullptr;       // invalidate the old pointer
 
         unsigned int position;
-        // correct the (half-)complex values in spectrum (1st part real forward), (2nd part imag backwards) -> magnitude
-        auto fwd = channelData->spectrum.sample.begin();  // forward iterator
-        auto rev = channelData->spectrum.sample.rbegin(); // reverse iterator
-        // convert complex to magnitude square in place (*fwd) and into copy (powerSpectrum[])
-        *fwd = *fwd * *fwd;
-        powerSpectrum[ 0 ] = *fwd * norm;
+        // correct the (half-)complex values in hcSpectrum
+        // (1st part real forward), (2nd part imag backwards) -> magnitude
+        double const *fwd = hcSpectrum;                   // forward "iterator"
+        double const *rev = hcSpectrum + sampleCount - 1; // reverse "iterator"
+        double *powerIterator = powerSpectrum;
+        auto spectrumIterator = channelData->spectrum.sample.begin(); // this shall be displayed later
+        // convert half-complex to magnitude square into spectrum.sample and into powerSpectrum
+        *spectrumIterator = *fwd * *fwd;
+        *powerIterator++ = *spectrumIterator++ * norm;
         ++fwd; // spectrum[0] is only real
         for ( position = 1; position < dftLength; ++position ) {
-            *fwd = ( *fwd * *fwd + *rev * *rev );
-            powerSpectrum[ position ] = *fwd * norm;
+            *spectrumIterator = ( *fwd * *fwd + *rev * *rev );
+            *powerIterator++ = *spectrumIterator++ * norm;
             ++fwd;
-            ++rev;
+            --rev;
         }
-        *fwd = *fwd * *fwd;
-        powerSpectrum[ position ] = *fwd * norm;
-        ++fwd;
-        // Complex values, all zero for autocorrelation
-        for ( ++position; position < sampleCount; ++position ) {
-            powerSpectrum[ position ] = 0;
-        }
-        // skip mirrored 2nd half of result spectrum
+        *spectrumIterator = *fwd * *fwd;
+        *powerIterator++ = *spectrumIterator++ * norm;
+
+        // skip mirrored 2nd half (-1) of result spectrum
         channelData->spectrum.sample.resize( dftLength + 1 );
 
-        // Do half-complex to real inverse transformation -> autocorrelation
-        std::unique_ptr< double[] > correlation = std::unique_ptr< double[] >( new double[ sampleCount ] );
+        // Complex values, all zero for autocorrelation
+        for ( ++position; position < sampleCount; ++position ) {
+            *powerIterator++ = 0;
+        }
 
-#ifdef REUSE_FFTW_PLAN
-        if ( nullptr == fftPlan_HC2R )
-            fftPlan_HC2R = fftw_plan_r2r_1d( int( sampleCount ), powerSpectrum.get(), correlation.get(), FFTW_HC2R, FFTW_MEASURE );
-        fftw_execute_r2r( fftPlan_HC2R, powerSpectrum.get(), correlation.get() );
-#else
-        fftw_plan fftPlan_HC2R =
-            fftw_plan_r2r_1d( int( sampleCount ), powerSpectrum.get(), correlation.get(), FFTW_HC2R, FFTW_ESTIMATE );
-        fftw_execute( fftPlan_HC2R );
-        fftw_destroy_plan( fftPlan_HC2R );
-#endif
+        // free the memory of hcSpectrum
+        if ( hcSpectrum )
+            fftw_free( hcSpectrum );
+        hcSpectrum = nullptr;
+
+        // Do half-complex to real inverse transformation -> autocorrelation
+        // std::unique_ptr< double[] > correlation = std::unique_ptr< double[] >( new double[ sampleCount ] );
+        autoCorrelation = fftw_alloc_real( sampleCount );
+
+        if ( post->reuseFftPlan ) { // same as above for time -> spectrum
+            if ( nullptr == fftPlan_HC2R )
+                fftPlan_HC2R = fftw_plan_r2r_1d( int( sampleCount ), powerSpectrum, autoCorrelation, FFTW_HC2R, FFTW_MEASURE );
+            fftw_execute_r2r( fftPlan_HC2R, powerSpectrum, autoCorrelation );
+        } else {
+            fftw_plan fftPlan_HC2R =
+                fftw_plan_r2r_1d( int( sampleCount ), powerSpectrum, autoCorrelation, FFTW_HC2R, FFTW_ESTIMATE );
+            fftw_execute( fftPlan_HC2R );
+            fftw_destroy_plan( fftPlan_HC2R );
+            fftPlan_HC2R = nullptr;
+        }
+        // content was destroyed during iFFT, free the memory
+        if ( powerSpectrum )
+            fftw_free( powerSpectrum );
+        powerSpectrum = nullptr;
+
         // Get the frequency from the correlation results
         unsigned int peakCorrPos = 0;
         double minCorr = 0;
@@ -317,24 +330,26 @@ void SpectrumGenerator::process( PPresult *result ) {
         unsigned maxCorrPos = 0;
         // search from right to left for a max and remember this if a following min corr (<0) is found
         for ( position = unsigned( sampleCount ) / 2; position > 1; --position ) { // go down to get leftmost peak (= max freq)
-            if ( correlation[ position ] > maxCorr ) {                             // find (local) max
-                maxCorr = correlation[ position ];
+            if ( autoCorrelation[ position ] > maxCorr ) {                         // find (local) max
+                maxCorr = autoCorrelation[ position ];
                 maxCorrPos = position;
                 minCorr = 0; // reset minimum to start new min search
                 // printf( "max %d: %g\n", position, maxCorr );
-            } else if ( correlation[ position ] < minCorr ) { // search for local min
-                minCorr = correlation[ position ];
+            } else if ( autoCorrelation[ position ] < minCorr ) { // search for local min
+                minCorr = autoCorrelation[ position ];
                 maxCorr = 0; // reset max to start new max seach
                 peakCorrPos = maxCorrPos;
                 // printf( "min %d: %g\n", position, minCorr );
             }
         }
-        correlation.reset( nullptr );
+        if ( autoCorrelation )
+            fftw_free( autoCorrelation );
+        autoCorrelation = nullptr;
 
-        // Finally calculate the real spectrum (it's also used for frequency display)
+        // Finally calculate the real spectrum (it's also used for frequency calculation)
         // Convert values into dB (Relative to the reference level 0 dBV = 1V eff)
-        double offset = -postprocessing->spectrumReference - 20 * log10( dftLength );
-        double offsetLimit = postprocessing->spectrumLimit - postprocessing->spectrumReference;
+        double offset = -post->spectrumReference - 20 * log10( dftLength );
+        double offsetLimit = post->spectrumLimit - post->spectrumReference;
         double peakSpectrum = offsetLimit; // get a start value for peak search
         unsigned int peakFreqPos = 0;      // initial position of max spectrum peak
         position = 0;
@@ -366,6 +381,7 @@ void SpectrumGenerator::process( PPresult *result ) {
         } else { // otherwise fall back to correlation
             channelData->frequency = pC;
         }
+
         // calculate the total harmonic distortion of the signal (optional)
         // THD = sqrt( power_of_harmonics / power_of_fundamental )
         if ( scope->analysis.calculateTHD ) { // set in menu Oscilloscope/Settings/Analysis

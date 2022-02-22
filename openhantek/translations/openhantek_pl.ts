@@ -92,7 +92,12 @@
         <translation>Poziom odniesienia&lt;br/&gt;&amp;bull; 0 dBu = -2.2 dBV&lt;br/&gt;&amp;bull; 0 dBm (@600 &amp;Omega;) = -2.2 dBV&lt;br/&gt;&amp;bull; 0 dBm (@50 &amp;Omega;) = -13 dBV</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="56"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="45"/>
+        <source>Optimize FFT (slower startup, but lower CPU load)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="60"/>
         <source>Calculate power dissipation for load resistance&lt;br/&gt;(0 = off)</source>
         <translation>Obliczenie straty mocy dla rezystancji obciążenia&lt;br/&gt;(0 = aus)</translation>
     </message>
@@ -120,7 +125,7 @@
         <translation type="vanished">Minimalna wielkość</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="53"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="57"/>
         <source>Spectrum</source>
         <translation>Spektrum</translation>
     </message>
@@ -129,7 +134,7 @@
         <translation type="vanished">Obliczenie straty mocy dla rezystancji obciążenia&lt;br/&gt;0 = aus</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="65"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="70"/>
         <source>Calculate total harmonic distortion (THD)</source>
         <translation>Obliczenie całkowitego zniekształcenia harmonicznego (THD)</translation>
     </message>
@@ -138,12 +143,12 @@
         <translation type="vanished">Obliczenie straty mocy dla rezystancji obciążenia</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="61"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="65"/>
         <source>&lt;p&gt;&amp;Omega;&lt;/p&gt;</source>
         <translation>&lt;p&gt;&amp;Omega;&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="76"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="78"/>
         <source>Power</source>
         <translation>Zasilanie</translation>
     </message>

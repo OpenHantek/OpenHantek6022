@@ -42,6 +42,9 @@ DsoConfigAnalysisPage::DsoConfigAnalysisPage( DsoSettings *settings, QWidget *pa
     minimumMagnitudeLayout->addWidget( minimumMagnitudeSpinBox );
     minimumMagnitudeLayout->addWidget( minimumMagnitudeUnitLabel );
 
+    reuseFftPlanCheckBox = new QCheckBox( tr( "Optimize FFT (slower startup, but lower CPU load)" ) );
+    reuseFftPlanCheckBox->setChecked( settings->post.reuseFftPlan );
+
     spectrumLayout = new QGridLayout();
     spectrumLayout->addWidget( windowFunctionLabel, 0, 0 );
     spectrumLayout->addWidget( windowFunctionComboBox, 0, 1 );
@@ -49,6 +52,7 @@ DsoConfigAnalysisPage::DsoConfigAnalysisPage( DsoSettings *settings, QWidget *pa
     spectrumLayout->addLayout( referenceLevelLayout, 1, 1 );
     spectrumLayout->addWidget( minimumMagnitudeLabel, 2, 0 );
     spectrumLayout->addLayout( minimumMagnitudeLayout, 2, 1 );
+    spectrumLayout->addWidget( reuseFftPlanCheckBox, 3, 0 );
 
     spectrumGroup = new QGroupBox( tr( "Spectrum" ) );
     spectrumGroup->setLayout( spectrumLayout );
@@ -62,16 +66,14 @@ DsoConfigAnalysisPage::DsoConfigAnalysisPage( DsoSettings *settings, QWidget *pa
     dummyLoadLayout = new QHBoxLayout();
     dummyLoadLayout->addWidget( dummyLoadSpinBox );
     dummyLoadLayout->addWidget( dummyLoadUnitLabel );
-    thdLabel = new QLabel( tr( "Calculate total harmonic distortion (THD)" ) );
-    thdCheckBox = new QCheckBox();
+
+    thdCheckBox = new QCheckBox( tr( "Calculate total harmonic distortion (THD)" ) );
     thdCheckBox->setChecked( settings->scope.analysis.calculateTHD );
-    thdLayout = new QHBoxLayout();
-    thdLayout->addWidget( thdCheckBox );
+
     powerLayout = new QGridLayout();
     powerLayout->addWidget( dummyLoadLabel, 0, 0 );
     powerLayout->addLayout( dummyLoadLayout, 0, 1 );
-    powerLayout->addWidget( thdLabel, 1, 0 );
-    powerLayout->addLayout( thdLayout, 1, 1 );
+    powerLayout->addWidget( thdCheckBox, 1, 0 );
 
     powerGroup = new QGroupBox( tr( "Power" ) );
     powerGroup->setLayout( powerLayout );
@@ -92,4 +94,5 @@ void DsoConfigAnalysisPage::saveSettings() {
     settings->post.spectrumLimit = minimumMagnitudeSpinBox->value();
     settings->scope.analysis.dummyLoad = unsigned( dummyLoadSpinBox->value() );
     settings->scope.analysis.calculateTHD = thdCheckBox->isChecked();
+    settings->post.reuseFftPlan = reuseFftPlanCheckBox->isChecked();
 }

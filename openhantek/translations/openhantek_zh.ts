@@ -92,7 +92,12 @@
         <translation>参考电平&lt;br/&gt;&amp;bull; 0 dBu = -2.2 dBV&lt;br/&gt;&amp;bull; 0 dBm (@600 &amp;Omega;) = -2.2 dBV&lt;br/&gt;&amp;bull; 0 dBm (@50 &amp;Omega;) = -13 dBV</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="56"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="45"/>
+        <source>Optimize FFT (slower startup, but lower CPU load)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="60"/>
         <source>Calculate power dissipation for load resistance&lt;br/&gt;(0 = off)</source>
         <translation>计算负载电阻的功耗&lt;br/&gt;(0=关闭)</translation>
     </message>
@@ -120,22 +125,22 @@
         <translation type="vanished">&lt;b&gt;最小幅值&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="53"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="57"/>
         <source>Spectrum</source>
         <translation>频谱分析</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="61"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="65"/>
         <source>&lt;p&gt;&amp;Omega;&lt;/p&gt;</source>
         <translation>&lt;p&gt;&amp;Omega;&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="65"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="70"/>
         <source>Calculate total harmonic distortion (THD)</source>
         <translation>计算总谐波失真(THD)</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="76"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="78"/>
         <source>Power</source>
         <translation>功率谱</translation>
     </message>
