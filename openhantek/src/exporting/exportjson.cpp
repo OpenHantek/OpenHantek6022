@@ -65,8 +65,8 @@ void ExporterJSON::fillData( QTextStream &jsonStream, const ExporterData &dto ) 
         for ( ChannelID channel = 0; channel < dto.getChannelsCount(); ++channel )
             if ( voltageData[ channel ] != nullptr ) {
                 objInStream << indent << indent << '\"' << registry->settings->scope.voltage[ channel ].name << "\": ";
-                if ( row < voltageData[ channel ]->sample.size() )
-                    objInStream << voltageData[ channel ]->sample[ row ];
+                if ( row < voltageData[ channel ]->samples.size() )
+                    objInStream << voltageData[ channel ]->samples[ row ];
                 else
                     objInStream << "\": null";
                 objInStream << ",\n";
@@ -77,8 +77,8 @@ void ExporterJSON::fillData( QTextStream &jsonStream, const ExporterData &dto ) 
             for ( ChannelID channel = 0; channel < dto.getChannelsCount(); ++channel ) {
                 if ( spectrumData[ channel ] != nullptr ) {
                     objInStream << indent << indent << '\"' << registry->settings->scope.spectrum[ channel ].name << "\": ";
-                    if ( row < spectrumData[ channel ]->sample.size() )
-                        objInStream << spectrumData[ channel ]->sample[ row ];
+                    if ( row < spectrumData[ channel ]->samples.size() )
+                        objInStream << spectrumData[ channel ]->samples[ row ];
                     else
                         objInStream << "null";
                     objInStream << ",\n";

@@ -57,52 +57,57 @@
         <translation>巴特利特-汉宁(Bartlett-Hann)</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="10"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="9"/>
         <source>Blackman</source>
         <translation>布拉克曼(Blackman)</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="12"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="10"/>
         <source>Nuttall</source>
         <translation>纳托尔(Nuttall)</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="12"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="10"/>
         <source>Blackman-Harris</source>
         <translation>勃勒克曼-哈里斯(Blackman-Harris)</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="12"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="10"/>
         <source>Blackman-Nuttall</source>
         <translation>勃勒克曼-纳托尔(Blackman-Nuttall)</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="12"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="10"/>
+        <source>Kaiser</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="11"/>
         <source>Flat top</source>
         <translation>平顶</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="15"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="14"/>
         <source>Window function</source>
         <translation>FFT窗函数</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="20"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="19"/>
         <source>Reference level&lt;br/&gt;&amp;bull; 0 dBu = -2.2 dBV&lt;br/&gt;&amp;bull; 0 dBm (@600 &amp;Omega;) = -2.2 dBV&lt;br/&gt;&amp;bull; 0 dBm (@50 &amp;Omega;) = -13 dBV</source>
         <translation>参考电平&lt;br/&gt;&amp;bull; 0 dBu = -2.2 dBV&lt;br/&gt;&amp;bull; 0 dBm (@600 &amp;Omega;) = -2.2 dBV&lt;br/&gt;&amp;bull; 0 dBm (@50 &amp;Omega;) = -13 dBV</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="45"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="44"/>
         <source>Optimize FFT (slower startup, but lower CPU load)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="60"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="59"/>
         <source>Calculate power dissipation for load resistance&lt;br/&gt;(0 = off)</source>
         <translation>计算负载电阻的功耗&lt;br/&gt;(0=关闭)</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="34"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="33"/>
         <source>Minimum magnitude</source>
         <translation>最小幅值</translation>
     </message>
@@ -115,8 +120,8 @@
         <translation type="vanished">&lt;b&gt;参考电平&lt;/b&gt;&lt;br/&gt;0 dBu = -2,2 dBV&lt;br/&gt;0 dBm (@600 &amp;Omega;) = -2,2 dBV&lt;br/&gt;0 dBm (@50 &amp;Omega;) = -13 dBV</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="29"/>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="40"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="28"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="39"/>
         <source>dBV</source>
         <translation>dBV</translation>
     </message>
@@ -125,22 +130,22 @@
         <translation type="vanished">&lt;b&gt;最小幅值&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="57"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="56"/>
         <source>Spectrum</source>
         <translation>频谱分析</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="65"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="64"/>
         <source>&lt;p&gt;&amp;Omega;&lt;/p&gt;</source>
         <translation>&lt;p&gt;&amp;Omega;&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="70"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="69"/>
         <source>Calculate total harmonic distortion (THD)</source>
         <translation>计算总谐波失真(THD)</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="78"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="77"/>
         <source>Power</source>
         <translation>功率谱</translation>
     </message>

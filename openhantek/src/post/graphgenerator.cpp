@@ -72,10 +72,10 @@ void GraphGenerator::generateGraphsTYvoltage( PPresult *result ) {
     for ( ChannelID channel = 0; channel < scope->voltage.size(); ++channel ) {
         ChannelGraph &graphVoltage = result->vaChannelVoltage[ channel ];
         ChannelGraph &graphHistogram = result->vaChannelHistogram[ channel ];
-        const SampleValues &samples = useVoltSamplesOf( channel, result, scope );
+        const SampleValues &sampleValues = useVoltSamplesOf( channel, result, scope );
 
         // Check if this channel is used and available at the data analyzer
-        if ( samples.sample.empty() ) {
+        if ( sampleValues.samples.empty() ) {
             // Delete all vector arrays
             graphVoltage.clear();
             graphHistogram.clear();
@@ -83,7 +83,7 @@ void GraphGenerator::generateGraphsTYvoltage( PPresult *result ) {
         }
 
         // time distance between sampling points
-        double horizontalFactor = ( samples.interval / scope->horizontal.timebase );
+        double horizontalFactor = ( sampleValues.interval / scope->horizontal.timebase );
         // printf( "hF: %g\n", horizontalFactor );
         unsigned dotsOnScreen = unsigned( ceil( DIVS_TIME / horizontalFactor ) );
         unsigned preTrigSamples = unsigned( scope->trigger.position * dotsOnScreen );
@@ -107,8 +107,8 @@ void GraphGenerator::generateGraphsTYvoltage( PPresult *result ) {
         const double gain = scope->gain( channel );
         const double offset = scope->voltage[ channel ].offset;
 
-        auto sampleIterator = samples.sample.cbegin() + leftmostSample; // -> visible samples
-        auto sampleEnd = samples.sample.cend();
+        auto sampleIterator = sampleValues.samples.cbegin() + leftmostSample; // -> visible samples
+        auto sampleEnd = sampleValues.samples.cend();
 
         // sinc interpolation if there are too less samples on screen
         // https://ccrma.stanford.edu/~jos/resample/resample.pdf
@@ -120,7 +120,7 @@ void GraphGenerator::generateGraphsTYvoltage( PPresult *result ) {
             const unsigned int resampleSize = ( left + dotsOnScreen + sincWidth ) * oversample;
             resample.clear();                // invalidate old content
             resample.resize( resampleSize ); //  ... and init with zero because we accumulate the convolution
-            auto sampleIt = samples.sample.cbegin() + leftmostSample;
+            auto sampleIt = sampleValues.samples.cbegin() + leftmostSample;
             for ( unsigned int resamplePos = 0; resamplePos < resampleSize; resamplePos += oversample ) {
                 resample[ resamplePos ] += *sampleIt; // sinc( 0 ) sum up, do NOT assign
                 auto sincIt = sinc.cbegin();          // -> one half of sinc pulse without sinc(0)
@@ -191,26 +191,26 @@ void GraphGenerator::generateGraphsTYspectrum( PPresult *result ) {
     result->vaChannelSpectrum.resize( scope->spectrum.size() );
     for ( ChannelID channel = 0; channel < scope->voltage.size(); ++channel ) {
         ChannelGraph &graphSpectrum = result->vaChannelSpectrum[ channel ];
-        const SampleValues &samples = useSpecSamplesOf( channel, result, scope );
+        const SampleValues &sampleValues = useSpecSamplesOf( channel, result, scope );
 
         // Check if this channel is used and available at the data analyzer
-        if ( samples.sample.empty() ) {
+        if ( sampleValues.samples.empty() ) {
             // Delete all vector arrays
             graphSpectrum.clear();
             continue;
         }
         // Check if the sample count has changed
-        size_t sampleCount = samples.sample.size();
+        size_t sampleCount = sampleValues.samples.size();
         size_t neededSize = sampleCount * 2;
 
         // Set size directly to avoid reallocations
         graphSpectrum.reserve( neededSize );
 
         // What's the horizontal distance between sampling points?
-        double horizontalFactor = samples.interval / scope->horizontal.frequencybase;
+        double horizontalFactor = sampleValues.interval / scope->horizontal.frequencybase;
 
         // Fill vector array
-        std::vector< double >::const_iterator dataIterator = samples.sample.begin();
+        std::vector< double >::const_iterator dataIterator = sampleValues.samples.begin();
         const double magnitude = scope->spectrum[ channel ].magnitude;
         const double offset = scope->spectrum[ channel ].offset;
 
@@ -246,20 +246,20 @@ void GraphGenerator::generateGraphsXY( PPresult *result ) {
         const SampleValues &ySamples = useVoltSamplesOf( yChannel, result, scope );
 
         // The channels need to be active
-        if ( !xSamples.sample.size() || !ySamples.sample.size() ) {
+        if ( !xSamples.samples.size() || !ySamples.samples.size() ) {
             result->vaChannelVoltage[ xChannel ].clear();
             result->vaChannelVoltage[ yChannel ].clear();
             continue;
         }
 
         // Check if the sample count has changed
-        const size_t sampleCount = std::min( xSamples.sample.size(), ySamples.sample.size() );
+        const size_t sampleCount = std::min( xSamples.samples.size(), ySamples.samples.size() );
         ChannelGraph &graphXY = result->vaChannelVoltage[ yChannel ]; // color of y channel
         graphXY.reserve( sampleCount * 2 );
 
         // Fill vector array
-        std::vector< double >::const_iterator xIterator = xSamples.sample.begin();
-        std::vector< double >::const_iterator yIterator = ySamples.sample.begin();
+        std::vector< double >::const_iterator xIterator = xSamples.samples.begin();
+        std::vector< double >::const_iterator yIterator = ySamples.samples.begin();
         const double xGain = scope->gain( xChannel );
         const double yGain = scope->gain( yChannel );
         const double xOffset = ( scope->trigger.position - 0.5 ) * DIVS_TIME;

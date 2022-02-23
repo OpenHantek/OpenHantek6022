@@ -57,52 +57,57 @@
         <translation>Bartlett-Hann</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="10"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="9"/>
         <source>Blackman</source>
         <translation>Blackman</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="12"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="10"/>
         <source>Nuttall</source>
         <translation>Nuttall</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="12"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="10"/>
         <source>Blackman-Harris</source>
         <translation>Blackman-Harris</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="12"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="10"/>
         <source>Blackman-Nuttall</source>
         <translation>Blackman-Nuttall</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="12"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="10"/>
+        <source>Kaiser</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="11"/>
         <source>Flat top</source>
         <translation>Flat Top</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="15"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="14"/>
         <source>Window function</source>
         <translation>Fensterfunktion</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="20"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="19"/>
         <source>Reference level&lt;br/&gt;&amp;bull; 0 dBu = -2.2 dBV&lt;br/&gt;&amp;bull; 0 dBm (@600 &amp;Omega;) = -2.2 dBV&lt;br/&gt;&amp;bull; 0 dBm (@50 &amp;Omega;) = -13 dBV</source>
         <translation>Referenzpegel&lt;br/&gt;&amp;bull; 0 dBu = -2.2 dBV&lt;br/&gt;&amp;bull; 0 dBm (@600 &amp;Omega;) = -2.2 dBV&lt;br/&gt;&amp;bull; 0 dBm (@50 &amp;Omega;) = -13 dBV</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="45"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="44"/>
         <source>Optimize FFT (slower startup, but lower CPU load)</source>
         <translation>Optimierte FFT (langsamerer Start, dafür geringere CPU-Last)</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="60"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="59"/>
         <source>Calculate power dissipation for load resistance&lt;br/&gt;(0 = off)</source>
         <translation>Berechne Leistung für Lastwiderstand&lt;br/&gt;(0 = aus)</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="34"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="33"/>
         <source>Minimum magnitude</source>
         <translation>Minimaler Pegel</translation>
     </message>
@@ -115,8 +120,8 @@
         <translation type="vanished">&lt;b&gt;Referenzpegel&lt;/b&gt;&lt;br/&gt;0 dBu = -2,2 dBV&lt;br/&gt;0 dBm (@600 &amp;Omega;) = -2,2 dBV&lt;br/&gt;0 dBm (@50 &amp;Omega;) = -13 dBV</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="29"/>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="40"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="28"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="39"/>
         <source>dBV</source>
         <translation>dBV</translation>
     </message>
@@ -125,7 +130,7 @@
         <translation type="vanished">Minimaler Pegel</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="57"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="56"/>
         <source>Spectrum</source>
         <translation>Spektrum</translation>
     </message>
@@ -134,7 +139,7 @@
         <translation type="vanished">Berechne Leistung für Lastwiderstand&lt;br/&gt;0 = aus</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="70"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="69"/>
         <source>Calculate total harmonic distortion (THD)</source>
         <translation>Berechne die harmonische Gesamtverzerrung (THD)</translation>
     </message>
@@ -143,12 +148,12 @@
         <translation type="vanished">Berechne Leistung für Lastwiderstand</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="65"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="64"/>
         <source>&lt;p&gt;&amp;Omega;&lt;/p&gt;</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="78"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="77"/>
         <source>Power</source>
         <translation>Leistung</translation>
     </message>

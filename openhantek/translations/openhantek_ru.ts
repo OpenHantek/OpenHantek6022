@@ -57,53 +57,58 @@
         <translation>Барлетта-Ханна</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="10"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="9"/>
         <source>Blackman</source>
         <translation>Блэкмана</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="12"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="10"/>
         <source>Nuttall</source>
         <translation>Наталла</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="12"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="10"/>
         <source>Blackman-Harris</source>
         <translation>Блэкмана-Харриса</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="12"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="10"/>
         <source>Blackman-Nuttall</source>
         <translation>Блэкмана-Наталла</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="12"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="10"/>
+        <source>Kaiser</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="11"/>
         <source>Flat top</source>
         <translation>С плоской вершиной</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="15"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="14"/>
         <source>Window function</source>
         <translation>Окно функции</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="20"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="19"/>
         <source>Reference level&lt;br/&gt;&amp;bull; 0 dBu = -2.2 dBV&lt;br/&gt;&amp;bull; 0 dBm (@600 &amp;Omega;) = -2.2 dBV&lt;br/&gt;&amp;bull; 0 dBm (@50 &amp;Omega;) = -13 dBV</source>
         <translatorcomment>Опорный уровень</translatorcomment>
         <translation>Опорный уровень&lt;br/&gt;&amp;bull; 0 дБн = -2.2 дБВ&lt;br/&gt;&amp;bull; 0 дБм (@600 &amp;Omega;) = -2.2 дБВ&lt;br/&gt;&amp;bull; 0 дБм (@50 &amp;Omega;) = -13 дБВ</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="45"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="44"/>
         <source>Optimize FFT (slower startup, but lower CPU load)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="60"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="59"/>
         <source>Calculate power dissipation for load resistance&lt;br/&gt;(0 = off)</source>
         <translation>Рассчитать рассеиваемую мощность для сопротивления нагрузки&lt;br/&gt;(0 = выкл)</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="34"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="33"/>
         <source>Minimum magnitude</source>
         <translation>Минимальная величина</translation>
     </message>
@@ -116,8 +121,8 @@
         <translation type="vanished">&lt;b&gt;Опорный уровень&lt;/b&gt;&lt;br/&gt;0 дБн = -2,2 дБВ&lt;br/&gt;0 дБм (@600 &amp;Omega;) = -2,2 дБВ&lt;br/&gt;0 дБм (@50 &amp;Omega;) = -13 дБВ</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="29"/>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="40"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="28"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="39"/>
         <source>dBV</source>
         <translation>дБВ</translation>
     </message>
@@ -126,7 +131,7 @@
         <translation type="vanished">&lt;b&gt;Минимальная величина&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="57"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="56"/>
         <source>Spectrum</source>
         <translation>Спектр</translation>
     </message>
@@ -135,7 +140,7 @@
         <translation type="vanished">Рассчитать рассеиваемую мощность для сопротивления нагрузки&lt;br/&gt;0 = выкл</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="70"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="69"/>
         <source>Calculate total harmonic distortion (THD)</source>
         <translation>Рассчитать суммарное гармоническое искажение (THD)</translation>
     </message>
@@ -144,12 +149,12 @@
         <translation type="vanished">Рассчитать рассеиваемую мощность для сопротивления нагрузки</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="65"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="64"/>
         <source>&lt;p&gt;&amp;Omega;&lt;/p&gt;</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="78"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="77"/>
         <source>Power</source>
         <translation>Мощность</translation>
     </message>

@@ -6,10 +6,9 @@ DsoConfigAnalysisPage::DsoConfigAnalysisPage( DsoSettings *settings, QWidget *pa
     // Initialize lists for comboboxes
     QStringList windowFunctionStrings;
     windowFunctionStrings << tr( "Rectangular" ) << tr( "Hamming" ) << tr( "Hann" ) << tr( "Cosine" ) << tr( "Lanczos" )
-                          << tr( "Bartlett" ) << tr( "Triangular" ) << tr( "Gauss" ) << tr( "Bartlett-Hann" )
-                          << tr( "Blackman" )
-                          //<< tr("Kaiser")
-                          << tr( "Nuttall" ) << tr( "Blackman-Harris" ) << tr( "Blackman-Nuttall" ) << tr( "Flat top" );
+                          << tr( "Bartlett" ) << tr( "Triangular" ) << tr( "Gauss" ) << tr( "Bartlett-Hann" ) << tr( "Blackman" )
+                          << tr( "Kaiser" ) << tr( "Nuttall" ) << tr( "Blackman-Harris" ) << tr( "Blackman-Nuttall" )
+                          << tr( "Flat top" );
 
     // Initialize elements
     windowFunctionLabel = new QLabel( tr( "Window function" ) );

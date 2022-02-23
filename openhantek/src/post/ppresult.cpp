@@ -13,6 +13,6 @@ const DataChannel *PPresult::data( ChannelID channel ) const {
 
 DataChannel *PPresult::modifiableData( ChannelID channel ) { return &analyzedData[ channel ]; }
 
-unsigned int PPresult::sampleCount() const { return unsigned( analyzedData[ 0 ].voltage.sample.size() ); }
+unsigned int PPresult::sampleCount() const { return unsigned( analyzedData[ 0 ].voltage.samples.size() ); }
 
 unsigned int PPresult::channelCount() const { return unsigned( analyzedData.size() ); }

@@ -30,21 +30,21 @@ void MathChannelGenerator::process( PPresult *result ) {
         qDebug() << "    MathChannelGenerator::process()" << result->tag;
 
     DataChannel *const channelData = result->modifiableData( mathChannel );
-    std::vector< double > &resultData = channelData->voltage.sample;
+    std::vector< double > &resultData = channelData->voltage.samples;
 
     const double sign = scope->voltage[ mathChannel ].inverted ? -1.0 : 1.0;
     result->modifiableData( mathChannel )->voltageUnit = UNIT_VOLTS; // default unit unless set to V² by some functions
 
     if ( Dso::getMathMode( scope->voltage[ mathChannel ] ) <= Dso::LastBinaryMathMode ) { // binary operations
-        if ( result->data( 0 )->voltage.sample.empty() || result->data( 1 )->voltage.sample.empty() )
+        if ( result->data( 0 )->voltage.samples.empty() || result->data( 1 )->voltage.samples.empty() )
             return;
         // Resize the sample vector
-        resultData.resize( std::min( result->data( 0 )->voltage.sample.size(), result->data( 1 )->voltage.sample.size() ) );
+        resultData.resize( std::min( result->data( 0 )->voltage.samples.size(), result->data( 1 )->voltage.samples.size() ) );
         // Set sampling interval
         channelData->voltage.interval = result->data( 0 )->voltage.interval;
         // Calculate values and write them into the sample buffer
-        std::vector< double >::const_iterator ch1Iterator = result->data( 0 )->voltage.sample.begin();
-        std::vector< double >::const_iterator ch2Iterator = result->data( 1 )->voltage.sample.begin();
+        std::vector< double >::const_iterator ch1Iterator = result->data( 0 )->voltage.samples.begin();
+        std::vector< double >::const_iterator ch2Iterator = result->data( 1 )->voltage.samples.begin();
         double ( *calculate )( double, double );
 
         switch ( Dso::getMathMode( scope->voltage[ mathChannel ] ) ) {
@@ -74,27 +74,27 @@ void MathChannelGenerator::process( PPresult *result ) {
             ( unsigned( Dso::getMathMode( scope->voltage[ mathChannel ] ) ) - unsigned( Dso::LastBinaryMathMode ) - 1 ) & 0x01;
 
         // Resize the sample vector
-        resultData.resize( result->data( src )->voltage.sample.size() );
+        resultData.resize( result->data( src )->voltage.samples.size() );
         // Set sampling interval
         channelData->voltage.interval = result->data( src )->voltage.interval;
 
         if ( Dso::getMathMode( scope->voltage[ mathChannel ] ) == Dso::MathMode::SQ_CH1 ||
              Dso::getMathMode( scope->voltage[ mathChannel ] ) == Dso::MathMode::SQ_CH2 ) {
             result->modifiableData( mathChannel )->voltageUnit = UNIT_VOLTSQUARE;
-            auto srcIt = result->data( src )->voltage.sample.begin();
+            auto srcIt = result->data( src )->voltage.samples.begin();
             for ( auto dstIt = resultData.begin(), dstEnd = resultData.end(); dstIt != dstEnd; ++srcIt, ++dstIt )
                 *dstIt = sign * ( *srcIt * *srcIt );
         } else {
             // calculate DC component of channel that's needed for some of the math functions...
             double average = 0;
-            for ( auto srcIt = result->data( src )->voltage.sample.begin(), srcEnd = result->data( src )->voltage.sample.end();
+            for ( auto srcIt = result->data( src )->voltage.samples.begin(), srcEnd = result->data( src )->voltage.samples.end();
                   srcIt != srcEnd; ++srcIt ) {
                 average += *srcIt;
             }
-            average /= double( result->data( src )->voltage.sample.size() );
+            average /= double( result->data( src )->voltage.samples.size() );
 
             // also needed for all math functions
-            auto srcIt = result->data( src )->voltage.sample.begin();
+            auto srcIt = result->data( src )->voltage.samples.begin();
 
             switch ( Dso::getMathMode( scope->voltage[ mathChannel ] ) ) {
             case Dso::MathMode::AC_CH1:

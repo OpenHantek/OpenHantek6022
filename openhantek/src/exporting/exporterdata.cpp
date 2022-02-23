@@ -15,12 +15,12 @@ ExporterData::ExporterData( const std::shared_ptr< PPresult > &data, const DsoSe
         if ( data->data( channel ) ) {
             if ( scope.voltage[ channel ].used ) {
                 _voltageData[ channel ] = &( data->data( channel )->voltage );
-                _maxRow = qMax( _maxRow, _voltageData[ channel ]->sample.size() );
+                _maxRow = qMax( _maxRow, _voltageData[ channel ]->samples.size() );
                 _timeInterval = data->data( channel )->voltage.interval;
             }
             if ( scope.spectrum[ channel ].used ) {
                 _spectrumData[ channel ] = &( data->data( channel )->spectrum );
-                _maxRow = qMax( _maxRow, _spectrumData[ channel ]->sample.size() );
+                _maxRow = qMax( _maxRow, _spectrumData[ channel ]->samples.size() );
                 _freqInterval = data->data( channel )->spectrum.interval;
                 _isSpectrumUsed = true;
             }
