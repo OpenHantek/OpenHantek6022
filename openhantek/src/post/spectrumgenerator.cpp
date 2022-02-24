@@ -76,97 +76,104 @@ void SpectrumGenerator::process( PPresult *result ) {
             channelData->spectrum.samples.clear();
             continue;
         }
-        // Calculate new window
-        // scale all windows to display 1 Veff as 0 dBu reference level.
         int sampleCount = int( channelData->voltage.samples.size() );
 
         // persistent window function, (re)build in case of changes only
-
-
-        if ( lastWindowFunction != post->spectrumWindow || window.size() != size_t( sampleCount ) ) {
+        if ( previousWindowFunction != post->spectrumWindow || window.size() != size_t( sampleCount ) ) {
+            // Calculate new window vector
+            previousWindowFunction = post->spectrumWindow;
             window.resize( size_t( sampleCount ) );
-            int windowEnd = sampleCount - 1;
-            lastWindowFunction = post->spectrumWindow;
+
+            // Theory:
+            // Harris, Fredric J. (Jan 1978):
+            // "On the use of Windows for Harmonic Analysis with the Discrete Fourier Transform".
+            // Proceedings of the IEEE. 66 (1): 51–83. Bibcode:1978IEEEP..66...51H.
+            // CiteSeerX 10.1.1.649.9880. doi:10.1109/PROC.1978.10837. S2CID 426548.
+            // The fundamental 1978 paper on FFT windows by Harris, which specified many windows
+            // and introduced key metrics used to compare them.
+            // http://web.mit.edu/xiphmont/Public/windows.pdf
+
+            double N = sampleCount - 1; // most window functions work for 0 <= n <= N
+            // scale all windows to display 1 Veff as 0 dBu reference level.
             double area = 0.0; // calculate area under window fkt
-            auto wIt = window.begin();
+            auto pW = window.begin();
             switch ( post->spectrumWindow ) {
-            case Dso::WindowFunction::HAMMING:
-                for ( int wPos = 0; wPos < sampleCount; ++wPos )
-                    area += *wIt++ = 0.54 - 0.46 * cos( 2.0 * M_PI * wPos / windowEnd );
-                break;
             case Dso::WindowFunction::HANN:
-                for ( int wPos = 0; wPos < sampleCount; ++wPos )
-                    area += *wIt++ = 0.5 * ( 1.0 - cos( 2.0 * M_PI * wPos / windowEnd ) );
+                for ( int n = 0; n < sampleCount; ++n )
+                    area += *pW++ = 0.5 * ( 1.0 - cos( 2.0 * M_PI * n / N ) );
                 break;
-            case Dso::WindowFunction::COSINE:
-                for ( int wPos = 0; wPos < sampleCount; ++wPos )
-                    area += *wIt++ = sin( M_PI * wPos / windowEnd );
-                break;
-            case Dso::WindowFunction::LANCZOS:
-                for ( int wPos = 0; wPos < sampleCount; ++wPos ) {
-                    double sincParameter = ( 2.0 * wPos / windowEnd - 1.0 ) * M_PI;
-                    if ( bool( sincParameter ) )
-                        area += *wIt++ = sin( sincParameter ) / sincParameter;
-                    else
-                        area += *wIt++ = 1;
-                }
-                break;
-            case Dso::WindowFunction::BARTLETT:
-                for ( int wPos = 0; wPos < sampleCount; ++wPos )
-                    area += *wIt++ = 2.0 / windowEnd * ( windowEnd / 2 - std::abs( double( wPos - windowEnd / 2.0 ) ) );
-                break;
-            case Dso::WindowFunction::TRIANGULAR: {
-                for ( int wPos = 0; wPos < sampleCount; ++wPos )
-                    area += *wIt++ = 2.0 / sampleCount * ( sampleCount / 2 - std::abs( double( wPos - windowEnd / 2.0 ) ) );
+            case Dso::WindowFunction::HAMMING: {
+                double a0 = 0.54; // approximation of a0 = 25.0 / 46.0
+                for ( int n = 0; n < sampleCount; ++n )
+                    area += *pW++ = a0 - ( 1 - a0 ) * cos( 2.0 * M_PI * n / N );
                 break;
             }
-            case Dso::WindowFunction::GAUSS: {
-                const double sigma = 0.5;
-                for ( int wPos = 0; wPos < sampleCount; ++wPos ) {
-                    double w = ( double( wPos ) - sampleCount / 2.0 ) / ( sigma * sampleCount / 2.0 );
-                    w *= w;
-                    area += *wIt++ = exp( -w );
-                }
-            } break;
-            case Dso::WindowFunction::BARTLETTHANN:
-                for ( int wPos = 0; wPos < sampleCount; ++wPos )
-                    area += *wIt++ =
-                        0.62 - 0.48 * std::abs( double( wPos / windowEnd - 0.5 ) ) - 0.38 * cos( 2.0 * M_PI * wPos / windowEnd );
+            case Dso::WindowFunction::COSINE:
+                for ( int n = 0; n < sampleCount; ++n )
+                    area += *pW++ = sin( M_PI * n / N );
                 break;
+            case Dso::WindowFunction::LANCZOS:
+                for ( int n = 0; n < sampleCount; ++n ) {
+                    double sincParameter = ( 2.0 * n / N - 1.0 ) * M_PI;
+                    if ( bool( sincParameter ) )
+                        area += *pW++ = sin( sincParameter ) / sincParameter;
+                    else
+                        area += *pW++ = 1;
+                }
+                break;
+            case Dso::WindowFunction::TRIANGULAR: // same with N+1
+                for ( int n = 0; n < sampleCount; ++n )
+                    area += *pW++ = 2.0 / sampleCount * ( sampleCount / 2 - std::abs( n - N / 2.0 ) );
+                break;
+            case Dso::WindowFunction::BARTLETT: // the original triangle
+                for ( int n = 0; n < sampleCount; ++n )
+                    area += *pW++ = 2.0 / N * ( N / 2 - std::abs( n - N / 2.0 ) );
+                break;
+            case Dso::WindowFunction::BARTLETT_HANN:
+                for ( int n = 0; n < sampleCount; ++n )
+                    area += *pW++ = 0.62 - 0.48 * std::abs( n / N - 0.5 ) - 0.38 * cos( 2.0 * M_PI * n / N );
+                break;
+            case Dso::WindowFunction::GAUSS: {
+                const double sigma = 0.3;
+                for ( int n = 0; n < sampleCount; ++n ) {
+                    double w = ( n - N / 2.0 ) / ( sigma * N / 2.0 );
+                    w *= w;
+                    area += *pW++ = exp( -w / 2 );
+                }
+                break;
+            }
+            case Dso::WindowFunction::KAISER: {
+                const double beta = M_PI * 2.55; // β = πα
+                double bb = besseli0( beta );
+                for ( int n = 0; n < sampleCount; ++n )
+                    area += *pW++ = besseli0( beta * sqrt( 4.0 * n * ( N - n ) ) / ( N ) ) / bb;
+                break;
+            }
             case Dso::WindowFunction::BLACKMAN: {
                 const double alpha = 0.16;
-                for ( int wPos = 0; wPos < sampleCount; ++wPos )
-                    area += *wIt++ = ( 1 - alpha ) / 2 - 0.5 * cos( 2.0 * M_PI * wPos / windowEnd ) +
-                                     alpha / 2 * cos( 4.0 * M_PI * wPos / windowEnd );
-            } break;
-            case Dso::WindowFunction::KAISER: {
-                const double beta = M_PI * 3; // alpha = 3.0
-                double bb = besseli0( beta );
-                for ( int wPos = 0; wPos < sampleCount; ++wPos )
-                    area += *wIt++ = besseli0( beta * sqrt( 4.0 * wPos * ( windowEnd - wPos ) ) / ( windowEnd ) ) / bb;
+                for ( int n = 0; n < sampleCount; ++n )
+                    area += *pW++ = ( 1 - alpha ) / 2 - 0.5 * cos( 2.0 * M_PI * n / N ) + alpha / 2 * cos( 4.0 * M_PI * n / N );
                 break;
             }
             case Dso::WindowFunction::NUTTALL:
-                for ( int wPos = 0; wPos < sampleCount; ++wPos )
-                    area += *wIt++ = 0.355768 - 0.487396 * cos( 2 * M_PI * wPos / windowEnd ) +
-                                     0.144232 * cos( 4 * M_PI * wPos / windowEnd ) - 0.012604 * cos( 6 * M_PI * wPos / windowEnd );
+                for ( int n = 0; n < sampleCount; ++n )
+                    area += *pW++ = 0.355768 - 0.487396 * cos( 2 * M_PI * n / N ) + 0.144232 * cos( 4 * M_PI * n / N ) -
+                                    0.012604 * cos( 6 * M_PI * n / N );
                 break;
-            case Dso::WindowFunction::BLACKMANHARRIS:
-                for ( int wPos = 0; wPos < sampleCount; ++wPos )
-                    area += *wIt++ = 0.35875 - 0.48829 * cos( 2 * M_PI * wPos / windowEnd ) +
-                                     0.14128 * cos( 4 * M_PI * wPos / windowEnd ) - 0.01168 * cos( 6 * M_PI * wPos / windowEnd );
+            case Dso::WindowFunction::BLACKMAN_HARRIS:
+                for ( int n = 0; n < sampleCount; ++n )
+                    area += *pW++ = 0.35875 - 0.48829 * cos( 2 * M_PI * n / N ) + 0.14128 * cos( 4 * M_PI * n / N ) -
+                                    0.01168 * cos( 6 * M_PI * n / N );
                 break;
-            case Dso::WindowFunction::BLACKMANNUTTALL:
-                for ( int wPos = 0; wPos < sampleCount; ++wPos )
-                    area += *wIt++ = 0.3635819 - 0.4891775 * cos( 2 * M_PI * wPos / windowEnd ) +
-                                     0.1365995 * cos( 4 * M_PI * wPos / windowEnd ) -
-                                     0.0106411 * cos( 6 * M_PI * wPos / windowEnd );
+            case Dso::WindowFunction::BLACKMAN_NUTTALL:
+                for ( int n = 0; n < sampleCount; ++n )
+                    area += *pW++ = 0.3635819 - 0.4891775 * cos( 2 * M_PI * n / N ) + 0.1365995 * cos( 4 * M_PI * n / N ) -
+                                    0.0106411 * cos( 6 * M_PI * n / N );
                 break;
             case Dso::WindowFunction::FLATTOP: // wikipedia.de
-                for ( int wPos = 0; wPos < sampleCount; ++wPos )
-                    area += *wIt++ = 0.216 - 0.417 * cos( 2 * M_PI * wPos / windowEnd ) +
-                                     0.277 * cos( 4 * M_PI * wPos / windowEnd ) - 0.084 * cos( 6 * M_PI * wPos / windowEnd ) +
-                                     0.007 * cos( 8 * M_PI * wPos / windowEnd );
+                for ( int n = 0; n < sampleCount; ++n )
+                    area += *pW++ = 0.216 - 0.417 * cos( 2 * M_PI * n / N ) + 0.277 * cos( 4 * M_PI * n / N ) -
+                                    0.084 * cos( 6 * M_PI * n / N ) + 0.007 * cos( 8 * M_PI * n / N );
                 break;
             default: // Dso::WINDOW_RECTANGULAR
                 for ( auto &w : window )

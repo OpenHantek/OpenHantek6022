@@ -32,8 +32,8 @@ class SpectrumGenerator : public Processor {
   private:
     const DsoSettingsScope *scope;
     const DsoSettingsPostProcessing *post;
-    Dso::WindowFunction lastWindowFunction = Dso::WindowFunction( -1 ); ///< The previously used dft window function
-    std::vector< double > window;                                       ///< storage for the tapering window
+    Dso::WindowFunction previousWindowFunction = Dso::WindowFunction( -1 ); ///< The previously used dft window function
+    std::vector< double > window;                                           ///< storage for the tapering window
     fftw_plan fftPlan_R2HC = nullptr;
     fftw_plan fftPlan_HC2R = nullptr;
     // Processor interface

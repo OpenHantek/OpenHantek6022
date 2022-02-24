@@ -57,7 +57,7 @@
         <translation>巴特利特-汉宁(Bartlett-Hann)</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="9"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="10"/>
         <source>Blackman</source>
         <translation>布拉克曼(Blackman)</translation>
     </message>
@@ -77,7 +77,7 @@
         <translation>勃勒克曼-纳托尔(Blackman-Nuttall)</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="10"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="9"/>
         <source>Kaiser</source>
         <translation type="unfinished"></translation>
     </message>

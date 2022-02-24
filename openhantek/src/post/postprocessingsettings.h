@@ -44,21 +44,21 @@ template < class T > inline MathMode getMathMode( T &t ) { return MathMode( t.co
 /// These are needed for spectrum analysis and are applied to the sample values
 /// before calculating the DFT.
 enum class WindowFunction : int {
-    RECTANGULAR,     ///< Rectangular window (aka Dirichlet)
-    HAMMING,         ///< Hamming window
-    HANN,            ///< Hann window
-    COSINE,          ///< Cosine window (aka Sine)
-    LANCZOS,         ///< Lanczos window (aka Sinc)
-    BARTLETT,        ///< Bartlett window (Endpoints == 0)
-    TRIANGULAR,      ///< Triangular window (Endpoints != 0)
-    GAUSS,           ///< Gauss window (sigma = 0.4)
-    BARTLETTHANN,    ///< Bartlett-Hann window
-    BLACKMAN,        ///< Blackman window (alpha = 0.16)
-    KAISER,          ///< Kaiser window (alpha = 3.0)
-    NUTTALL,         ///< Nuttall window, cont. first deriv.
-    BLACKMANHARRIS,  ///< Blackman-Harris window
-    BLACKMANNUTTALL, ///< Blackman-Nuttall window
-    FLATTOP          ///< Flat top window
+    RECTANGULAR,      ///< Rectangular window (aka Dirichlet)
+    HANN,             ///< Hann window
+    HAMMING,          ///< Hamming window
+    COSINE,           ///< Cosine window (aka Sine)
+    LANCZOS,          ///< Lanczos window (aka Sinc)
+    TRIANGULAR,       ///< Triangular window (Endpoints != 0)
+    BARTLETT,         ///< Bartlett window (Endpoints == 0)
+    BARTLETT_HANN,    ///< Bartlett-Hann window
+    GAUSS,            ///< Gauss window (sigma = 0.3)
+    KAISER,           ///< Kaiser window (alpha = 3.0)
+    BLACKMAN,         ///< Blackman window (alpha = 0.16)
+    NUTTALL,          ///< Nuttall window, cont. first deriv.
+    BLACKMAN_HARRIS,  ///< Blackman-Harris window
+    BLACKMAN_NUTTALL, ///< Blackman-Nuttall window
+    FLATTOP           ///< Flat top window
 };
 // this "extern" declaration must match the Enum definition in "postprocessingsettings.cpp"
 extern Enum< Dso::WindowFunction, Dso::WindowFunction::RECTANGULAR, Dso::WindowFunction::FLATTOP > WindowFunctionEnum;
