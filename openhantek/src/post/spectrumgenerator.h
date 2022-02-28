@@ -39,7 +39,3 @@ class SpectrumGenerator : public Processor {
     // Processor interface
     void process( PPresult *data ) override;
 };
-
-// reuse fft plans with new-array fft functions
-// takes one second during 1st run but gives faster transforms
-#define REUSE_FFTW_PLAN

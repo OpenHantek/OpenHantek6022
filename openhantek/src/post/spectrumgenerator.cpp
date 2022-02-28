@@ -77,10 +77,14 @@ void SpectrumGenerator::process( PPresult *result ) {
             continue;
         }
         int sampleCount = int( channelData->voltage.samples.size() );
+        if ( scope->verboseLevel > 5 )
+            qDebug() << "     SpectrumGenerator::process()" << channel << "sampleCount:" << sampleCount;
 
         // persistent window function, (re)build in case of changes only
         if ( previousWindowFunction != post->spectrumWindow || window.size() != size_t( sampleCount ) ) {
             // Calculate new window vector
+            if ( scope->verboseLevel > 5 )
+                qDebug() << "     SpectrumGenerator::process() calculate new window";
             previousWindowFunction = post->spectrumWindow;
             window.resize( size_t( sampleCount ) );
 
@@ -143,7 +147,7 @@ void SpectrumGenerator::process( PPresult *result ) {
                 break;
             }
             case Dso::WindowFunction::KAISER: {
-                const double beta = M_PI * 2.55; // β = πα
+                const double beta = M_PI * 2.75; // β = πα
                 double bb = besseli0( beta );
                 for ( int n = 0; n < sampleCount; ++n )
                     area += *pW++ = besseli0( beta * sqrt( 4.0 * n * ( N - n ) ) / ( N ) ) / bb;
@@ -193,7 +197,7 @@ void SpectrumGenerator::process( PPresult *result ) {
         }
 
         // Allocate the sample buffer (16byte aligned)
-        fftWindowedValues = fftw_alloc_real( size_t( sampleCount ) );
+        fftWindowedValues = fftw_alloc_real( size_t( std::max( SAMPLESIZE, sampleCount ) ) );
         if ( nullptr == fftWindowedValues )
             break;
 
@@ -256,7 +260,7 @@ void SpectrumGenerator::process( PPresult *result ) {
 
         // Do discrete real to half-complex transformation
         // Record length should be multiple of 2, 3, 5: done, is 10000 = 2^a * 5^b
-        fftHcSpectrum = fftw_alloc_real( size_t( sampleCount ) );
+        fftHcSpectrum = fftw_alloc_real( size_t( std::max( SAMPLESIZE, sampleCount ) ) );
         if ( nullptr == fftHcSpectrum ) // error
             break;
         if ( post->reuseFftPlan ) {        // build one optimized plan and reuse it for all transformations

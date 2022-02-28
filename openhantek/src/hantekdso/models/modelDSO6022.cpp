@@ -195,7 +195,7 @@ void ModelDSO6022BL::applyRequirements( HantekDsoControl *dsoControl ) const { a
 // Voltcraft DSO-2020 USB Oscilloscope (HW is identical to 6022)
 // Scope starts up as model DS-2020 (VID/PID = 04b4/2020) but loads 6022BE firmware and looks like a 6022BE
 ModelDSO2020::ModelDSO2020()
-    : DSOModel( ID, 0x04b5, 0x6022, 0x04b4, 0x2020, 0x0208, "dso6022be", "DSO-2020", Dso::ControlSpecification( 2 ) ) {
+    : DSOModel( ID, 0x04b5, 0x6022, 0x04b4, 0x2020, 0x0210, "dso6022be", "DSO-2020", Dso::ControlSpecification( 2 ) ) {
     initSpecifications( specification );
 }
 

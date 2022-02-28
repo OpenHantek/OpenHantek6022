@@ -173,7 +173,7 @@ static void applyRequirements_( HantekDsoControl *dsoControl ) {
 //                  VID/PID active  VID/PID no FW   FW ver   FW name   Scope name
 //                  |------------|  |------------|  |----|  |-------|  |--------|
 ModelDSO6021::ModelDSO6021()
-    : DSOModel( ID, 0x04b5, 0x6021, 0x04b4, 0x6021, 0x0208, "dso6021", "DSO-6021", Dso::ControlSpecification( 2 ) ) {
+    : DSOModel( ID, 0x04b5, 0x6021, 0x04b4, 0x6021, 0x0210, "dso6021", "DSO-6021", Dso::ControlSpecification( 2 ) ) {
     initSpecifications( specification );
 }
 

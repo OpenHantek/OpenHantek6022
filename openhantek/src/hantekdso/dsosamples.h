@@ -19,3 +19,6 @@ struct DSOsamples {
     unsigned tag = 0;                          ///< track individual sample blocks (debug support)
     mutable QReadWriteLock lock;
 };
+
+const int SAMPLESIZE = 20000;
+const int SAMPLESIZE_ROLL = 40 * 256;

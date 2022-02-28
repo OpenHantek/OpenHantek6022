@@ -77,8 +77,6 @@ class HantekDsoControl : public QObject {
 
     double getSamplerate() const { return controlsettings.samplerate.current; }
 
-    static const unsigned SAMPLESIZE = 20000;
-    static const unsigned SAMPLESIZE_ROLL = 40 * 256;
     unsigned getSamplesize() const {
         if ( controlsettings.trigger.mode == Dso::TriggerMode::ROLL )
             return SAMPLESIZE_ROLL;
