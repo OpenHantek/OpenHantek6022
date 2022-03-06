@@ -21,9 +21,9 @@ OpenHantek6022 is a free software for **Hantek DSO6022** USB digital signal osci
 * [Building OpenHantek6022 from source](#building-openhantek6022-from-source)
 * [Install prebuilt binary packages](#install-prebuilt-binary-packages)
 * [Run OpenHantek6022](#run-openhantek6022)
-  + [Windows USB access](#windows-usb-access)
-* [Important!](#important-)
-* [Specifications, features, limitations and developer documentation](#specifications--features--limitations-and-developer-documentation)
+  + [USB access](#usb-access)
+* [Important!](#important)
+* [Specifications, features, limitations and developer documentation](#specifications-features-limitations-and-developer-documentation)
 * [Contribute](#contribute)
 * [Donate](#donate)
 * [Other DSO open source software](#other-dso-open-source-software)
@@ -133,6 +133,8 @@ On a Linux system start the program via the menu entry *OpenHantek (Digital Stor
 
 You can explore the look and feel of OpenHantek6022 without the need for real scope hardware by running it from the command line as: `OpenHantek --demoMode`.
 
+Note: To use the 6022BL in scope mode, make sure the "H/P" button is pressed before plugging in.
+
 ### OpenGL support
 OpenHantek6022 uses the *OpenGL* graphics library to display the data. It requires a graphics card that supports
 3D rendering and runs on legacy HW/SW that supports at least *OpenGL* 2.1+ or *OpenGL ES* 1.2+.
@@ -158,9 +160,9 @@ You have to assign the correct WinUSB driver with _one_ of these three _alternat
   2. Install the signed `.inf` file `Hantek_6022B.inf` for all devices [provided by VictorEEV](https://www.eevblog.com/forum/testgear/hantek-6022be-20mhz-usb-dso/msg3218116/#msg3218116). It's also part of the `openhantek_xxx_win_x64.zip` [binary distribution](https://github.com/OpenHantek/OpenHantek6022/releases). Right-click on `Hantek_6022B.inf` and select "install" from the pull-down menu.
   3. Run the [**Zadig**](docs/build.md#microsoft-windows-usb-driver-install-with-zadig) tool and follow the good [step-by-step tutorial](docs/OpenHantek6022_zadig_Win10.pdf) provided by [DaPa](https://github.com/DaPa).
 
-Note:  
-With alternative *i*, the Device Manager will show (under "Universal Serial Bus devices") the name and state according to the firmware loaded (e.g. `Hantek 6022BE loader`, `Hantek 6022BL openht`).  
-The [PulseView/sigrok-cli](https://sigrok.org/) firmware is also recognized (e.g. `Hantek 6022BE sigrok`).
+  Note:  
+  With alternative *i*, the Device Manager will show (under "Universal Serial Bus devices") the name and state according to the firmware loaded (e.g. `Hantek 6022BE loader`, `Hantek 6022BL openht`).  
+  The [PulseView/sigrok-cli](https://sigrok.org/) firmware is also recognized (e.g. `Hantek 6022BE sigrok`).
 
 ## Important!
 The scope doesn't store the firmware permanently in flash or eeprom, it must be uploaded after each power-up and is kept in ram 'til power-down.
@@ -170,7 +172,7 @@ The top line of the program must display the correct firmware version (FW0209).
 ## Specifications, features, limitations and developer documentation
 I use this project mainly to explore how DSP software can improve and extend the [limitations](docs/limitations.md)
 of this kind of low level hardware. It would have been easy to spend a few bucks more to buy a powerful scope - but it would be much less fun :)
-Please refer also to the [developer info](openhantek/developer_info.md).
+Please refer also to the [developer info](docs/developer_info.md).
 
 ## Contribute
 We welcome any reported GitHub issue if you have a problem with this software. Send us a pull request for enhancements and fixes. Some random notes:
