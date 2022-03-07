@@ -394,7 +394,10 @@ void SpectrumGenerator::process( PPresult *result ) {
         } else { // otherwise fall back to correlation
             channelData->frequency = pC;
         }
-
+        if ( scope->analysis.showNoteValue )
+            channelData->note = calculateNote( channelData->frequency );
+        else
+            channelData->note = "";
         // calculate the total harmonic distortion of the signal (optional)
         // THD = sqrt( power_of_harmonics / power_of_fundamental )
         if ( scope->analysis.calculateTHD ) { // set in menu Oscilloscope/Settings/Analysis
@@ -420,4 +423,23 @@ void SpectrumGenerator::process( PPresult *result ) {
     fftw_free( fftHcSpectrum );
     fftw_free( fftPowerSpectrum );
     fftw_free( fftAutoCorrelation );
+}
+
+
+QString SpectrumGenerator::calculateNote( double frequency ) {
+    QString note = "";
+    if ( frequency > 10 && frequency < 24000 ) { // audio frequencies
+        const std::vector< QString > notes = { "A", "A#", "B", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#" };
+        double f = fmod( 12 * log2( frequency / 440.0 ) + 120, 12.0 );
+        int n = int( floor( f + 0.5 ) );
+        f -= double( n );
+        if ( n == 12 )
+            n = 0;
+        int ct = int( round( 100.0 * f ) ); // deviation from pure tone in cent
+        if ( ct )
+            note = QString( "♪ %1%2%3" ).arg( notes[ size_t( n ) ] ).arg( f < 0 ? "" : "+" ).arg( ct );
+        else
+            note = QString( "♪ %1" ).arg( notes[ size_t( n ) ] ); // pure tone
+    }
+    return note;
 }

@@ -220,12 +220,16 @@ void DsoSettings::load() {
     }
     // Analysis
     storeSettings->beginGroup( "analysis" );
+    if ( storeSettings->contains( "calculateDummyLoad" ) )
+        scope.analysis.calculateDummyLoad = storeSettings->value( "calculateDummyLoad" ).toBool();
     if ( storeSettings->contains( "dummyLoad" ) )
         scope.analysis.dummyLoad = storeSettings->value( "dummyLoad" ).toUInt();
     if ( storeSettings->contains( "calculateTHD" ) )
         scope.analysis.calculateTHD = storeSettings->value( "calculateTHD" ).toBool();
     if ( storeSettings->contains( "reuseFftPlan" ) )
         post.reuseFftPlan = storeSettings->value( "reuseFftPlan" ).toBool();
+    if ( storeSettings->contains( "showNoteValue" ) )
+        scope.analysis.showNoteValue = storeSettings->value( "showNoteValue" ).toBool();
     storeSettings->endGroup(); // analysis
     storeSettings->endGroup(); // scope
 
@@ -392,9 +396,11 @@ void DsoSettings::save() {
 
     // Analysis
     storeSettings->beginGroup( "analysis" );
+    storeSettings->setValue( "calculateDummyLoad", scope.analysis.calculateDummyLoad );
     storeSettings->setValue( "dummyLoad", scope.analysis.dummyLoad );
     storeSettings->setValue( "calculateTHD", scope.analysis.calculateTHD );
     storeSettings->setValue( "reuseFftPlan", post.reuseFftPlan );
+    storeSettings->setValue( "showNoteValue", scope.analysis.showNoteValue );
     storeSettings->endGroup(); // analysis
     storeSettings->endGroup(); // scope
 

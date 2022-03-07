@@ -17,19 +17,20 @@ struct SampleValues {
 
 /// \brief Struct for the analyzed data.
 struct DataChannel {
-    SampleValues voltage;     ///< The time-domain voltage levels (V)
-    SampleValues spectrum;    ///< The frequency-domain power levels (dB)
-    bool valid = true;        ///< Not clipped, distorted, dropouts etc.
-    double vpp = 0.0;         ///< The peak-to-peak voltage of the _displayed_ part of trace
-    double rms = 0.0;         ///< The DC + AC rms value of the signal = sqrt( dc * dc + acc * ac )
-    double dc = 0.0;          ///< The DC bias of the signal
-    double ac = 0.0;          ///< The AC rms value of the signal
-    double dB = 0.0;          ///< The AC rms value as dB (dBV or other depending on config)
-    double frequency = 0.0;   ///< The frequency of the signal
-    double thd = 0.0;         ///< The THD value
-    double pulseWidth1 = 0.0; ///< The width of the triggered pulse
-    double pulseWidth2 = 0.0; ///< The width of the following pulse
-    Unit voltageUnit = UNIT_VOLTS;  ///< unless UNIT_VOLTSQUARE for some math functions
+    SampleValues voltage;          ///< The time-domain voltage levels (V)
+    SampleValues spectrum;         ///< The frequency-domain power levels (dB)
+    bool valid = true;             ///< Not clipped, distorted, dropouts etc.
+    double vpp = 0.0;              ///< The peak-to-peak voltage of the _displayed_ part of trace
+    double rms = 0.0;              ///< The DC + AC rms value of the signal = sqrt( dc * dc + acc * ac )
+    double dc = 0.0;               ///< The DC bias of the signal
+    double ac = 0.0;               ///< The AC rms value of the signal
+    double dB = 0.0;               ///< The AC rms value as dB (dBV or other depending on config)
+    double frequency = 0.0;        ///< The frequency of the signal
+    QString note = "";             ///< The note value of the frequency
+    double thd = 0.0;              ///< The THD value
+    double pulseWidth1 = 0.0;      ///< The width of the triggered pulse
+    double pulseWidth2 = 0.0;      ///< The width of the following pulse
+    Unit voltageUnit = UNIT_VOLTS; ///< unless UNIT_VOLTSQUARE for some math functions
 };
 
 typedef std::vector< QVector3D > ChannelGraph;

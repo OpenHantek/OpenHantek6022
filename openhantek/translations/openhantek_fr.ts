@@ -77,9 +77,19 @@
         <translation>Blackman-Nuttall</translation>
     </message>
     <message>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="77"/>
+        <source>Show note values for audio frequencies</source>
+        <translation>Montrer les valeurs des notes pour les fréquences audio</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="86"/>
+        <source>Analysis</source>
+        <translation>Analyser</translation>
+    </message>
+    <message>
         <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="9"/>
         <source>Kaiser</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="11"/>
@@ -102,9 +112,8 @@
         <translation>Optimiser la FFT (démarrage plus lent, mais charge CPU plus réduite)</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="59"/>
         <source>Calculate power dissipation for load resistance&lt;br/&gt;(0 = off)</source>
-        <translation>Calculer la puissance dissipée pour la résistance à la charge&lt;br/&gt;(0 = off)</translation>
+        <translation type="vanished">Calculer la puissance dissipée pour la résistance à la charge&lt;br/&gt;(0 = off)</translation>
     </message>
     <message>
         <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="33"/>
@@ -139,23 +148,23 @@
         <translation type="vanished">Calculer la puissance dissipée pour la résistance à la charge&lt;br/&gt;0 = off</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="69"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="74"/>
         <source>Calculate total harmonic distortion (THD)</source>
         <translation>Calculer la distorsion harmonique totale (THD)</translation>
     </message>
     <message>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="59"/>
         <source>Calculate power dissipation for load resistance</source>
-        <translation type="vanished">Calculer la puissance dissipée pour la résistance à la charge</translation>
+        <translation>Calculer la puissance dissipée pour la résistance à la charge</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="64"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="69"/>
         <source>&lt;p&gt;&amp;Omega;&lt;/p&gt;</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="77"/>
         <source>Power</source>
-        <translation>Puissance</translation>
+        <translation type="vanished">Puissance</translation>
     </message>
 </context>
 <context>
@@ -596,79 +605,79 @@
         <translation>D</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="195"/>
+        <location filename="../src/dsowidget.cpp" line="200"/>
         <source>Markers</source>
         <translation>Repères</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="614"/>
-        <location filename="../src/dsowidget.cpp" line="616"/>
-        <location filename="../src/dsowidget.cpp" line="657"/>
-        <location filename="../src/dsowidget.cpp" line="703"/>
-        <location filename="../src/dsowidget.cpp" line="712"/>
-        <location filename="../src/dsowidget.cpp" line="733"/>
+        <location filename="../src/dsowidget.cpp" line="622"/>
+        <location filename="../src/dsowidget.cpp" line="624"/>
+        <location filename="../src/dsowidget.cpp" line="665"/>
+        <location filename="../src/dsowidget.cpp" line="711"/>
+        <location filename="../src/dsowidget.cpp" line="720"/>
+        <location filename="../src/dsowidget.cpp" line="741"/>
         <source>/div</source>
         <translation>/div</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="604"/>
+        <location filename="../src/dsowidget.cpp" line="612"/>
         <source>Markers  </source>
         <translation>Repères  </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="561"/>
-        <location filename="../src/dsowidget.cpp" line="579"/>
+        <location filename="../src/dsowidget.cpp" line="569"/>
+        <location filename="../src/dsowidget.cpp" line="587"/>
         <source>ON</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="565"/>
-        <location filename="../src/dsowidget.cpp" line="583"/>
+        <location filename="../src/dsowidget.cpp" line="573"/>
+        <location filename="../src/dsowidget.cpp" line="591"/>
         <source>OFF</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="605"/>
+        <location filename="../src/dsowidget.cpp" line="613"/>
         <source>Time: </source>
         <translation>Temps : </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="606"/>
+        <location filename="../src/dsowidget.cpp" line="614"/>
         <source>Frequency: </source>
         <translation>Fréquence : </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="609"/>
+        <location filename="../src/dsowidget.cpp" line="617"/>
         <source>Zoom x%L1  </source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="611"/>
+        <location filename="../src/dsowidget.cpp" line="619"/>
         <source>Zoom ---  </source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="684"/>
+        <location filename="../src/dsowidget.cpp" line="692"/>
         <source>%1  %2  %3  %4  %5</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="723"/>
+        <location filename="../src/dsowidget.cpp" line="731"/>
         <source>/s</source>
         <translation>/s</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="847"/>
+        <location filename="../src/dsowidget.cpp" line="855"/>
         <source> on screen</source>
         <translation> à l&apos;écran</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="898"/>
+        <location filename="../src/dsowidget.cpp" line="905"/>
         <source>pp</source>
         <translation>pp</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="907"/>
+        <location filename="../src/dsowidget.cpp" line="914"/>
         <source>rms</source>
         <translation>rms</translation>
     </message>
@@ -1539,12 +1548,12 @@
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="37"/>
         <source>CH1 ^2</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="39"/>
         <source>CH2 ^2</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="41"/>

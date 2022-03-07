@@ -61,10 +61,12 @@ struct DsoSettingsScopeSpectrum : public DsoSettingsScopeChannel {
     double magnitude = 20.0; ///< The vertical resolution in dB/div
 };
 
-/// \brief Holds the settings for the power analysis.
+/// \brief Holds the settings for the power and frequency analysis.
 struct DsoSettingsScopeAnalysis {
-    unsigned dummyLoad = 0; ///< Dummy load in  Ohms
+    bool calculateDummyLoad = false;
+    unsigned dummyLoad = 50; ///< Dummy load in  Ohms
     bool calculateTHD = false;
+    bool showNoteValue = false;
 };
 
 /// \brief Holds the settings for the normal voltage graphs.

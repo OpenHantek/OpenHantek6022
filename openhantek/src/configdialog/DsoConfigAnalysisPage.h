@@ -47,11 +47,12 @@ class DsoConfigAnalysisPage : public QWidget {
     QHBoxLayout *minimumMagnitudeLayout;
 
     QCheckBox *reuseFftPlanCheckBox;
+    QCheckBox *showNoteCheckBox;
 
-    QGroupBox *powerGroup;
-    QGridLayout *powerLayout;
+    QGroupBox *analysisGroup;
+    QGridLayout *analysisLayout;
 
-    QLabel *dummyLoadLabel;
+    QCheckBox *dummyLoadCheckbox;
     QSpinBox *dummyLoadSpinBox;
     QLabel *dummyLoadUnitLabel;
     QHBoxLayout *dummyLoadLayout;

@@ -125,6 +125,7 @@ DsoWidget::DsoWidget( DsoSettingsScope *scope, DsoSettingsView *view, const Dso:
     measurementLayout->setColumnStretch( 9, 3 );       // Power
     measurementLayout->setColumnStretch( 10, 2 );      // THD
     measurementLayout->setColumnStretch( 11, 3 );      // f
+    measurementLayout->setColumnStretch( 12, 3 );      // note, cent
     for ( ChannelID channel = 0; channel < scope->voltage.size(); ++channel ) {
         QPalette voltagePalette = palette;
         QPalette spectrumPalette = palette;
@@ -167,6 +168,9 @@ DsoWidget::DsoWidget( DsoSettingsScope *scope, DsoSettingsView *view, const Dso:
         measurementFrequencyLabel.push_back( new QLabel() );
         measurementFrequencyLabel[ channel ]->setAlignment( Qt::AlignRight );
         measurementFrequencyLabel[ channel ]->setPalette( voltagePalette );
+        measurementNoteLabel.push_back( new QLabel() );
+        measurementNoteLabel[ channel ]->setAlignment( Qt::AlignCenter );
+        measurementNoteLabel[ channel ]->setPalette( voltagePalette );
         setMeasurementVisible( channel );
         int iii = 0;
         measurementLayout->addWidget( measurementNameLabel[ channel ], int( channel ), iii++ );
@@ -181,6 +185,7 @@ DsoWidget::DsoWidget( DsoSettingsScope *scope, DsoSettingsView *view, const Dso:
         measurementLayout->addWidget( measurementRMSPowerLabel[ channel ], int( channel ), iii++ );
         measurementLayout->addWidget( measurementTHDLabel[ channel ], int( channel ), iii++ );
         measurementLayout->addWidget( measurementFrequencyLabel[ channel ], int( channel ), iii++ );
+        measurementLayout->addWidget( measurementNoteLabel[ channel ], int( channel ), iii++ );
         if ( channel < spec->channels )
             updateVoltageCoupling( channel );
         else
@@ -378,6 +383,7 @@ void DsoWidget::setColors() {
         measurementRMSPowerLabel[ channel ]->setPalette( tablePalette );
         measurementTHDLabel[ channel ]->setPalette( tablePalette );
         measurementFrequencyLabel[ channel ]->setPalette( tablePalette );
+        measurementNoteLabel[ channel ]->setPalette( tablePalette );
     }
 
     tablePalette = palette();
@@ -504,6 +510,7 @@ void DsoWidget::setMeasurementVisible( ChannelID channel ) {
     measurementACLabel[ channel ]->setVisible( visible );
     measurementdBLabel[ channel ]->setVisible( visible );
     measurementFrequencyLabel[ channel ]->setVisible( visible );
+    measurementNoteLabel[ channel ]->setVisible( visible );
     measurementRMSPowerLabel[ channel ]->setVisible( visible );
     if ( !visible ) {
         measurementGainLabel[ channel ]->setText( QString() );
@@ -515,6 +522,7 @@ void DsoWidget::setMeasurementVisible( ChannelID channel ) {
         measurementRMSPowerLabel[ channel ]->setText( QString() );
         measurementTHDLabel[ channel ]->setText( QString() );
         measurementFrequencyLabel[ channel ]->setText( QString() );
+        measurementNoteLabel[ channel ]->setText( QString() );
     }
 
     measurementGainLabel[ channel ]->setVisible( scope->voltage[ channel ].used );
@@ -867,7 +875,6 @@ void DsoWidget::updateZoom( bool enabled ) {
     repaint();
 }
 
-
 /// \brief Prints analyzed data.
 void DsoWidget::showNew( std::shared_ptr< PPresult > analysedData ) {
     if ( scope->verboseLevel > 4 )
@@ -910,8 +917,16 @@ void DsoWidget::showNew( std::shared_ptr< PPresult > analysedData ) {
             // Frequency string representation (3 significant digits)
             measurementFrequencyLabel[ channel ]->setText(
                 valueToString( analysedData.get()->data( channel )->frequency, UNIT_HERTZ, 4 ) );
+            // Frequency note representation
+            if ( scope->analysis.showNoteValue ) {
+                measurementLayout->setColumnStretch( 12, 3 );
+                measurementNoteLabel[ channel ]->setText( analysedData.get()->data( channel )->note );
+            } else { // do not show this label
+                measurementNoteLabel[ channel ]->setText( "" );
+                measurementLayout->setColumnStretch( 12, 0 ); // Note
+            }
             // RMS Amplitude string representation (3 significant digits)
-            if ( scope->analysis.dummyLoad ) { // != 0 -> show
+            if ( scope->analysis.calculateDummyLoad && scope->analysis.dummyLoad > 0 ) {
                 measurementLayout->setColumnStretch( 9, 3 );
                 measurementRMSPowerLabel[ channel ]->setText(
                     valueToString( ( analysedData.get()->data( channel )->rms * analysedData.get()->data( channel )->rms ) /
