@@ -235,16 +235,83 @@ int ScopeDevice::bulkReadMulti( unsigned char *data, unsigned length, bool captu
 }
 
 
+// static QString hexString( unsigned char byte ) { return QString( "0x%1" ).arg( byte, 2, 16, QLatin1Char( '0' ) ); }
+
+static QString usbTypeString( int type ) {
+    QString t = "";
+    switch ( type & LIBUSB_REQUEST_TYPE_RESERVED ) {
+    case LIBUSB_REQUEST_TYPE_STANDARD:
+        t += "Standard";
+        break;
+    case LIBUSB_REQUEST_TYPE_CLASS:
+        t += "Class";
+        break;
+    case LIBUSB_REQUEST_TYPE_VENDOR:
+        t += "Vendor";
+        break;
+    case LIBUSB_REQUEST_TYPE_RESERVED:
+        t += "Reserved";
+        break;
+    }
+    switch ( type & LIBUSB_ENDPOINT_DIR_MASK ) {
+    case LIBUSB_ENDPOINT_OUT:
+        t += " Out";
+        break;
+    case LIBUSB_ENDPOINT_IN:
+        t += " In";
+        break;
+    }
+    return t;
+}
+
+static QString usbControlCode( uint8_t value ) {
+    QString code = "";
+    switch ( ControlCode( value ) ) {
+    case ControlCode::CONTROL_EEPROM: // = 0xa2
+        code = "EEPROM";
+        break;
+    case ControlCode::CONTROL_SETGAIN_CH1: // = 0xe0
+        code = "SETGAIN_CH1";
+        break;
+    case ControlCode::CONTROL_SETGAIN_CH2: // = 0xe1
+        code = "SETGAIN_CH2";
+        break;
+    case ControlCode::CONTROL_SETSAMPLERATE: // = 0xe2
+        code = "SETSAMPLERATE";
+        break;
+    case ControlCode::CONTROL_STARTSAMPLING: // = 0xe3
+        code = "STARTSAMPLING";
+        break;
+    case ControlCode::CONTROL_SETNUMCHANNELS: // = 0xe4
+        code = "SETNUMCHANNELS";
+        break;
+    case ControlCode::CONTROL_SETCOUPLING: // = 0xe5
+        code = "SETCOUPLING";
+        break;
+    case ControlCode::CONTROL_SETCALFREQ: // = 0xe6
+        code = "SETCALFREQ";
+        break;
+    }
+    return code;
+}
+
+
 int ScopeDevice::controlTransfer( unsigned char type, unsigned char request, unsigned char *data, unsigned int length, int value,
                                   int index, int attempts ) {
     if ( !handle || disconnected )
         return LIBUSB_ERROR_NO_DEVICE;
 
     int errorCode = LIBUSB_ERROR_TIMEOUT;
-    if ( verboseLevel > 6 )
-        qDebug() << "      ScopeDevice::controlTransfer()" << type << request << length << value << index << attempts;
-    // printf( "controlTransfer type %x request %x data[0] %d length %d value %d index %d attempts %d\n",
-    //    type, request, data[0], length, value, index, attempts );
+    if ( verboseLevel > 6 ) {
+        QDebug line = qDebug() << "      ScopeDevice::controlTransfer()" << usbTypeString( type ) << usbControlCode( request );
+        line << value << index << '{';
+        for ( unsigned iii = 0; iii < length; ++iii ) {
+            if ( length > 16 && 0 == iii % 16 )
+                line << "\n     ";
+            line << data[ iii ];
+        }
+        line << '}' << length << attempts;
+    }
 
     for ( int attempt = 0; ( attempt < attempts || attempts == -1 ) && errorCode == LIBUSB_ERROR_TIMEOUT; ++attempt )
         errorCode = libusb_control_transfer( handle, type, request, uint16_t( value ), uint16_t( index ), data, uint16_t( length ),

@@ -5,7 +5,7 @@
 
 namespace Dso {
 
-ControlSettings::ControlSettings( const ControlSamplerateLimits *limits, size_t channelCount ) : cmdGetLimits() {
+ControlSettings::ControlSettings( const ControlSamplerateLimits *limits, size_t channelCount ) : cmdGetCalibration() {
     samplerate.limits = limits;
     trigger.level.resize( channelCount );
     voltage.resize( channelCount );

@@ -43,7 +43,7 @@ ControlStartSampling::ControlStartSampling() : ControlCommand( ControlCode::CONT
 ControlStopSampling::ControlStopSampling() : ControlCommand( ControlCode::CONTROL_STARTSAMPLING, 1 ) { data()[ 0 ] = 0x00; }
 
 
-ControlGetLimits::ControlGetLimits() : ControlCommand( ControlCode::CONTROL_GETEEPROM, sizeof( CalibrationValues ) ) {
+ControlGetCalibration::ControlGetCalibration() : ControlCommand( ControlCode::CONTROL_EEPROM, sizeof( CalibrationValues ) ) {
     value = uint8_t( 8 ); // get calibration values from EEPROM offset 8
     data()[ 0 ] = 0x01;
 }

@@ -42,8 +42,8 @@ struct ControlStopSampling : public ControlCommand {
     ControlStopSampling();
 };
 
-struct ControlGetLimits : public ControlCommand {
-    ControlGetLimits();
+struct ControlGetCalibration : public ControlCommand {
+    ControlGetCalibration();
 };
 
 struct ControlSetCalFreq : public ControlCommand {

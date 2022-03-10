@@ -35,7 +35,7 @@ HantekDsoControl::HantekDsoControl( ScopeDevice *device, const DSOModel *model, 
         device->overwriteInPacketLength( unsigned( specification->fixedUSBinLength ) );
     // Apply special requirements by the devices model
     model->applyRequirements( this );
-    retrieveChannelLevelData();
+    getCalibrationFromEEPROM();
     stateMachineRunning = true;
 }
 
@@ -440,13 +440,13 @@ unsigned HantekDsoControl::getRecordLength() const {
 }
 
 
-Dso::ErrorCode HantekDsoControl::retrieveChannelLevelData() {
+Dso::ErrorCode HantekDsoControl::getCalibrationFromEEPROM() {
     // Get calibration data from EEPROM
     if ( verboseLevel > 2 )
-        qDebug() << "  HDC::retrieveChannelLevelData()";
+        qDebug() << "  HDC::getCalibrationFromEEPROM()";
     int errorCode = -1;
     if ( scopeDevice->isRealHW() && specification->hasCalibrationEEPROM )
-        errorCode = scopeDevice->controlRead( &controlsettings.cmdGetLimits );
+        errorCode = scopeDevice->controlRead( &controlsettings.cmdGetCalibration );
     if ( errorCode < 0 ) {
         // invalidate the calibration values.
         memset( controlsettings.calibrationValues, 0xFF, sizeof( CalibrationValues ) );
@@ -460,11 +460,31 @@ Dso::ErrorCode HantekDsoControl::retrieveChannelLevelData() {
             return Dso::ErrorCode::NONE;
         }
     }
-    memcpy( controlsettings.calibrationValues, controlsettings.cmdGetLimits.data(), sizeof( CalibrationValues ) );
-    if ( verboseLevel > 3 )
-        qDebug() << "   HDC::calibrationValues" << sizeof( CalibrationValues )
-                 << controlsettings.calibrationValues->off.ls.step[ 7 ][ 0 ] - 0x80
-                 << ( controlsettings.calibrationValues->fine.ls.step[ 7 ][ 0 ] - 0x80 ) / 250.0;
+    memcpy( controlsettings.calibrationValues, controlsettings.cmdGetCalibration.data(), sizeof( CalibrationValues ) );
+    if ( verboseLevel > 3 ) {
+        QDebug line = qDebug().noquote();
+        line << "   HDC::calibrationValues" << sizeof( CalibrationValues );
+        line = qDebug().noquote() << "   .off.ls: ";
+        for ( int g = 0; g < 8; ++g )
+            for ( int c = 0; c < 2; ++c )
+                line << QString::number( controlsettings.calibrationValues->off.ls.step[ g ][ c ], 16 );
+        line = qDebug().noquote() << "   .off.hs: ";
+        for ( int g = 0; g < 8; ++g )
+            for ( int c = 0; c < 2; ++c )
+                line << QString::number( controlsettings.calibrationValues->off.hs.step[ g ][ c ], 16 );
+        line = qDebug().noquote() << "   .gain:   ";
+        for ( int g = 0; g < 8; ++g )
+            for ( int c = 0; c < 2; ++c )
+                line << QString::number( controlsettings.calibrationValues->gain.step[ g ][ c ], 16 );
+        line = qDebug().noquote() << "   .fine.ls:";
+        for ( int g = 0; g < 8; ++g )
+            for ( int c = 0; c < 2; ++c )
+                line << QString::number( controlsettings.calibrationValues->fine.ls.step[ g ][ c ], 16 );
+        line = qDebug().noquote() << "   .fine.hs:";
+        for ( int g = 0; g < 8; ++g )
+            for ( int c = 0; c < 2; ++c )
+                line << QString::number( controlsettings.calibrationValues->fine.hs.step[ g ][ c ], 16 );
+    }
     return Dso::ErrorCode::NONE;
 }
 
