@@ -50,58 +50,6 @@ static void initSpecifications( Dso::ControlSpecification &specification ) {
     specification.voltageOffset[ 0 ] = { 0, 0, 0, 0, 0, 0, 0, 0 };
     specification.voltageOffset[ 1 ] = { 0, 0, 0, 0, 0, 0, 0, 0 };
 
-    // read the real calibration values from file
-    const char *ranges[] = { "20mV", "50mV", "100mV", "200mV", "500mV", "1000mV", "2000mV", "5000mV" };
-    const char *channels[] = { "ch0", "ch1" };
-    // printf( "read config file\n" );
-    const unsigned RANGES = 8;
-
-    QString Model = "modelDDS120";
-    QString Organisation = "OpenHantek";
-    // rename the previous *.conf to *.ini to use the ini file search also for Windows
-    QString calFileName = QDir::homePath() + "/.config/" + Organisation + "/" + Model;
-    QFile calFile( calFileName + ".conf" );
-    if ( calFile.exists() ) {
-        qDebug() << "Renamed old mode calibration file:";
-        qDebug() << calFileName + ".conf"
-                 << "->" << calFileName + ".ini";
-        calFileName += ".ini";
-        calFile.rename( calFileName );
-    }
-
-    QSettings settings( QSettings::IniFormat, QSettings::UserScope, Organisation, Model );
-    // Linux, Unix, macOS: "$HOME/.config/OpenHantek/modelDDS120.ini"
-    // Windows: "%APPDATA%\OpenHantek\modelDDS120.ini"
-
-    settings.beginGroup( "gain" );
-    for ( unsigned ch = 0; ch < 2; ch++ ) {
-        settings.beginGroup( channels[ ch ] );
-        for ( unsigned iii = 0; iii < RANGES; iii++ ) {
-            double calibration = settings.value( ranges[ iii ], 0.0 ).toDouble();
-            if ( bool( calibration ) )
-                specification.voltageScale[ ch ][ iii ] /= calibration;
-        }
-        settings.endGroup(); // channels
-    }
-    settings.endGroup(); // gain
-
-    settings.beginGroup( "offset" );
-    for ( unsigned ch = 0; ch < 2; ch++ ) {
-        settings.beginGroup( channels[ ch ] );
-        for ( unsigned iii = 0; iii < RANGES; iii++ ) {
-            // settings.setValue( ranges[ iii ], iii );
-            // set to 0x80 if no value from conf file
-            int offset = settings.value( ranges[ iii ], "255" ).toInt();
-            if ( offset != 255 ) // value exists in config file
-                specification.voltageOffset[ ch ][ iii ] = 0x80 - offset;
-            // printf( "%d-%d: %d %d\n", ch, iii, offset, specification.voltageOffset[ ch ][ iii ] );
-        }
-        settings.endGroup(); // channels
-    }
-    settings.endGroup(); // offset
-    QSettings::setDefaultFormat( QSettings::NativeFormat );
-
-
     specification.samplerate.single.base = 1e6;
     specification.samplerate.single.max = 30e6;
     specification.samplerate.single.recordLengths = { UINT_MAX };

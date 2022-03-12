@@ -355,6 +355,9 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
         configDialog->show();
     } );
 
+    connect( ui->actionCalibrateOffset, &QAction::toggled,
+             [ dsoControl ]( bool enabled ) { dsoControl->calibrateOffset( enabled ); } );
+
     connect( this->ui->actionPhosphor, &QAction::toggled, [ this ]( bool enabled ) {
         dsoSettings->view.digitalPhosphor = enabled;
 

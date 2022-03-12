@@ -31,7 +31,7 @@ void Capturing::run() {
 }
 
 
-double id2sr( uint8_t timediv ) {
+static double id2sr( uint8_t timediv ) {
     if ( timediv < 100 ) {   // 1, 2, ..., 48 MS/s
         if ( 11 == timediv ) // fix brain dead coding of sigrok DDS120 FW
             timediv = 10;    // 11 means 10 MS/s (see modelDDS120.cpp)
@@ -109,7 +109,7 @@ void Capturing::capture() {
             }
             QString name = "";
             if ( controlCommand->code >= 0xe0 && controlCommand->code <= 0xe6 )
-                name = hdc->controlNames[ controlCommand->code - 0xe0 ];
+                name = controlNames[ controlCommand->code - 0xe0 ];
             timestampDebug( QString( "Sending control command 0x%1 (%2): %3" )
                                 .arg( QString::number( controlCommand->code, 16 ), name,
                                       hexdecDump( controlCommand->data(), unsigned( controlCommand->size() ) ) ) );

@@ -7,6 +7,7 @@
 #include <stdint.h>
 
 #define HANTEK_GAIN_STEPS 8
+#define HANTEK_CHANNEL_NUMBER 2
 
 namespace Hantek {
 /// \enum UsedChannels
@@ -32,7 +33,7 @@ enum class UsedChannels : uint8_t {
 // 16 byte offset (hs) fractional part: CH0@20mV, CH1@20mV, CH0@50mV,...,CH1@5V
 
 struct Steps {
-    uint8_t step[ HANTEK_GAIN_STEPS ][ 2 ];
+    uint8_t step[ HANTEK_GAIN_STEPS ][ HANTEK_CHANNEL_NUMBER ];
 };
 
 struct Offsets {

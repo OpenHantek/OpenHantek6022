@@ -44,7 +44,9 @@ namespace Hantek {
 /// CONTROL_ACQUIIRE_HARD_DATA Request sample data (6022BE/BL)
 
 enum class ControlCode : uint8_t {
+    CONTROL_INTERNAL = 0xa0,
     CONTROL_EEPROM = 0xa2,
+    CONTROL_MEMORY = 0xa3,
     CONTROL_SETGAIN_CH1 = 0xe0,
     CONTROL_SETGAIN_CH2 = 0xe1,
     CONTROL_SETSAMPLERATE = 0xe2,

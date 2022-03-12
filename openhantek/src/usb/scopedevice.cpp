@@ -264,35 +264,18 @@ static QString usbTypeString( int type ) {
     return t;
 }
 
+
 static QString usbControlCode( uint8_t value ) {
-    QString code = "";
-    switch ( ControlCode( value ) ) {
-    case ControlCode::CONTROL_EEPROM: // = 0xa2
-        code = "EEPROM";
-        break;
-    case ControlCode::CONTROL_SETGAIN_CH1: // = 0xe0
-        code = "SETGAIN_CH1";
-        break;
-    case ControlCode::CONTROL_SETGAIN_CH2: // = 0xe1
-        code = "SETGAIN_CH2";
-        break;
-    case ControlCode::CONTROL_SETSAMPLERATE: // = 0xe2
-        code = "SETSAMPLERATE";
-        break;
-    case ControlCode::CONTROL_STARTSAMPLING: // = 0xe3
-        code = "STARTSAMPLING";
-        break;
-    case ControlCode::CONTROL_SETNUMCHANNELS: // = 0xe4
-        code = "SETNUMCHANNELS";
-        break;
-    case ControlCode::CONTROL_SETCOUPLING: // = 0xe5
-        code = "SETCOUPLING";
-        break;
-    case ControlCode::CONTROL_SETCALFREQ: // = 0xe6
-        code = "SETCALFREQ";
-        break;
-    }
-    return code;
+    if ( value >= 0xe0 && value <= 0xe6 )
+        return controlNames[ value - 0xe0 ];
+    else if ( value == uint8_t( ControlCode::CONTROL_INTERNAL ) )
+        return "INTERNAL";
+    else if ( value == uint8_t( ControlCode::CONTROL_EEPROM ) )
+        return "EEPROM";
+    else if ( value == uint8_t( ControlCode::CONTROL_MEMORY ) )
+        return "MEMORY";
+    else
+        return "0x" + QString::number( value, 16 );
 }
 
 

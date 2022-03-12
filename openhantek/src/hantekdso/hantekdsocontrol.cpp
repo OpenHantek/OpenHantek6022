@@ -11,7 +11,9 @@
 #include <QEventLoop>
 #include <QList>
 #include <QMutex>
+#include <QSettings>
 #include <QTimer>
+#include <QtCore>
 
 #include <stdio.h>
 
@@ -36,6 +38,40 @@ HantekDsoControl::HantekDsoControl( ScopeDevice *device, const DSOModel *model, 
     // Apply special requirements by the devices model
     model->applyRequirements( this );
     getCalibrationFromEEPROM();
+    // unique offset/gain calibration file "DSO-6022BE_NNNNNNNNNNNN_calibration.conf" in ".config/OpenHantek"
+    calibrationSettings = std::unique_ptr< QSettings >(
+        new QSettings( QCoreApplication::organizationName(),
+                       scopeDevice->getModel()->name + "_" + scopeDevice->getSerialNumber() + "_calibration" ) );
+    // load the offsets (persistent, saved at shutdown)
+    calibrationSettings->beginGroup( "offset" );
+    for ( int ch = 0; ch < HANTEK_CHANNEL_NUMBER; ++ch ) {
+        calibrationSettings->beginGroup( "ch" + QString::number( ch ) );
+        int index = 0;
+        for ( const auto &g : model->spec()->gain ) {
+            offsetCorrection[ index ][ ch ] =
+                calibrationSettings->value( ( QString::number( int( g.Vdiv * 1000 ) ) + "mv" ), 0 ).toDouble();
+            // qDebug().noquote() << "ch" + QString::number( ch ) << QString::number( int( g.Vdiv * 1000 ) ) + "mv"
+            //                   << offsetCorrection[ index ][ ch ];
+            ++index;
+        }
+        calibrationSettings->endGroup();
+    }
+    calibrationSettings->endGroup();
+    // load the gain (provided by user)
+    calibrationSettings->beginGroup( "gain" );
+    for ( int ch = 0; ch < 2; ++ch ) {
+        calibrationSettings->beginGroup( "ch" + QString::number( ch ) );
+        int index = 0;
+        for ( const auto &g : model->spec()->gain ) {
+            gainCorrection[ index ][ ch ] =
+                calibrationSettings->value( ( QString::number( int( g.Vdiv * 1000 ) ) + "mv" ), 1.0 ).toDouble();
+            // qDebug().noquote() << "ch" + QString::number( ch ) << QString::number( int( g.Vdiv * 1000 ) ) + "mv"
+            //                   << offsetCorrection[ index ][ ch ];
+            ++index;
+        }
+        calibrationSettings->endGroup();
+    }
+    calibrationSettings->endGroup(); // gain
     stateMachineRunning = true;
 }
 
@@ -47,6 +83,22 @@ HantekDsoControl::~HantekDsoControl() {
         ControlCommand *t = firstControlCommand->next;
         delete firstControlCommand;
         firstControlCommand = t;
+    }
+    // save the offset values
+    if ( calibrationHasChanged ) {
+        calibrationSettings->beginGroup( "offset" );
+        for ( int ch = 0; ch < HANTEK_CHANNEL_NUMBER; ++ch ) {
+            calibrationSettings->beginGroup( "ch" + QString::number( ch ) );
+            int index = 0;
+            for ( const auto &g : model->spec()->gain ) {
+                // qDebug() << QString::number( int( g.Vdiv * 1000 ) ) + "mv" << offsetCorrection[ index ][ ch ];
+                calibrationSettings->setValue( QString::number( int( g.Vdiv * 1000 ) ) + "mv",
+                                               round( 100.0 * offsetCorrection[ index ][ ch ] ) / 100.0 );
+                ++index;
+            }
+            calibrationSettings->endGroup();
+        }
+        calibrationSettings->endGroup();
     }
 }
 
@@ -538,6 +590,7 @@ void HantekDsoControl::convertRawDataToSamples() {
         const double voltageScale = specification->voltageScale[ channel ][ gainIndex ];
         const double probeAttn = controlsettings.voltage[ channel ].probeAttn;
         const double sign = controlsettings.voltage[ channel ].inverted ? -1.0 : 1.0;
+        double liveOffset = 0.0;
 
         // shift + individual offset for each channel and gain
         double gainCalibration = 1.0;
@@ -582,7 +635,21 @@ void HantekDsoControl::convertRawDataToSamples() {
                 sample += double( rawSample ) - voltageOffset;
             }
             sample /= rawOversampling;
+            if ( calibrateOffsetActive )
+                liveOffset -= sample;
+            else {
+                // qDebug() << channel << offsetCorrection[ gainIndex ][ channel ];
+                sample += offsetCorrection[ gainIndex ][ channel ];
+                sample *= gainCorrection[ gainIndex ][ channel ];
+            }
             result.data[ channel ][ index ] = sign * sample / voltageScale * gainCalibration * probeAttn;
+        }
+        liveOffset /= resultSamples;
+        if ( calibrateOffsetActive ) {
+            offsetCorrection[ gainIndex ][ channel ] = liveOffset;
+            if ( verboseLevel > 5 )
+                qDebug() << "     HDC::convertRawDataToSamples() offsetCorrection[" << gainIndex << "][" << channel
+                         << "] =" << liveOffset;
         }
     }
 }

@@ -57,4 +57,6 @@ struct ControlSetCoupling : public ControlCommand {
     uint8_t ch1Coupling, ch2Coupling;
 };
 
+extern const std::vector< QString > controlNames;
+
 } // namespace Hantek

@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0+
 
-#include <cstring>
+#include <QString>
 
 #include "controlStructs.h"
 #include "definitions.h"
@@ -68,5 +68,8 @@ void ControlSetCoupling::setCoupling( ChannelID channel, bool dc ) {
         ch2Coupling = dc ? 0x10 : 0x00;
     data()[ 0 ] = 0xFF & ( ch2Coupling | ch1Coupling );
 }
+
+const std::vector< QString > controlNames = { "SETGAIN_CH1",    "SETGAIN_CH2", "SETSAMPLERATE", "STARTSAMPLING",
+                                              "SETNUMCHANNELS", "SETCOUPLING", "SETCALFREQ" };
 
 } // namespace Hantek

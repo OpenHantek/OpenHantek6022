@@ -38,56 +38,6 @@ static void initSpecifications( Dso::ControlSpecification &specification ) {
     specification.voltageOffset[ 1 ] = { 0, 0, 0, 0, 0, 0, 0, 0 };
     // Gain and offset can be corrected by individual config values from file
 
-    // read the real calibration values from file
-    const char *ranges[] = { "20mV", "50mV", "100mV", "200mV", "500mV", "1000mV", "2000mV", "5000mV" };
-    const char *channels[] = { "ch0", "ch1" };
-    // printf( "read config file\n" );
-    const unsigned RANGES = 8;
-
-    QString Model = "modelDEMO";
-    QString Organisation = "OpenHantek";
-    // rename the previous *.conf to *.ini to use the ini file search also for Windows
-    QString calFileName = QDir::homePath() + "/.config/" + Organisation + "/" + Model;
-    QFile calFile( calFileName + ".conf" );
-    if ( calFile.exists() ) {
-        qDebug() << "Renamed old mode calibration file:";
-        qDebug() << calFileName + ".conf"
-                 << "->" << calFileName + ".ini";
-        calFileName += ".ini";
-        calFile.rename( calFileName );
-    }
-
-    QSettings settings( QSettings::IniFormat, QSettings::UserScope, Organisation, Model );
-    // Linux, Unix, macOS: "$HOME/.config/OpenHantek/modelDEMO.ini"
-    // Windows: "%APPDATA%\OpenHantek\modelDEMO.ini"
-
-    settings.beginGroup( "gain" );
-    for ( unsigned ch = 0; ch < 2; ch++ ) {
-        settings.beginGroup( channels[ ch ] );
-        for ( unsigned iii = 0; iii < RANGES; iii++ ) {
-            double gain = settings.value( ranges[ iii ], "0.0" ).toDouble();
-            // printf( "ch%d %s: gain = %g\n", ch, ranges[ iii ], gain );
-            if ( bool( gain ) )
-                specification.voltageScale[ ch ][ iii ] /= gain;
-        }
-        settings.endGroup(); // channels
-    }
-    settings.endGroup(); // gain
-
-    settings.beginGroup( "offset" );
-    for ( unsigned ch = 0; ch < 2; ch++ ) {
-        settings.beginGroup( channels[ ch ] );
-        for ( unsigned iii = 0; iii < RANGES; iii++ ) {
-            // set to 0x00 if no value from conf file
-            int offset = settings.value( ranges[ iii ], "255" ).toInt();
-            // printf( "ch%d %s: offset = %d\n", ch, ranges[ iii ], offset );
-            if ( offset != 255 ) // value exists in config file
-                specification.voltageOffset[ ch ][ iii ] = 0x80 - offset;
-        }
-        settings.endGroup(); // channels
-    }
-    settings.endGroup(); // offset
-
     // Possible raw sample rates with custom fw from https://github.com/Ho-Ro/Hantek6022API
     // 20k, 40k, 50k, 64k, 100k, 200k, 400k, 500k, 1M, 2M, 3M, 4M, 5M, 6M, 8M, 10M, 12M, 15M, 16M, 24M, 30M (, 48M)
     // 48M is unusable in 1 channel mode due to massive USB overrun

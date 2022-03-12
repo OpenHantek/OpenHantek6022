@@ -23,6 +23,7 @@
 #include <QMutex>
 #include <QReadLocker>
 #include <QReadWriteLock>
+#include <QSettings>
 #include <QStringList>
 #include <QThread>
 #include <QTimer>
@@ -146,10 +147,7 @@ class HantekDsoControl : public QObject {
     /// \return The calculated trigger point for the given data.
     static unsigned calculateTriggerPoint( unsigned value );
 
-    // void capture( HantekDsoControl *hdc );
-
     /// \brief Converts raw oscilloscope data to sample data
-    // void convertRawDataToSamples( const std::vector< unsigned char > &rawData );
     void convertRawDataToSamples();
 
     /// \brief Restore the samplerate/timebase targets after divider updates.
@@ -190,6 +188,11 @@ class HantekDsoControl : public QObject {
     DSOsamples result;
     unsigned expectedSampleCount = 0; ///< The expected total number of samples at
                                       /// the last check before sampling started
+    bool calibrateOffsetActive = false;
+    bool calibrationHasChanged = false;
+    std::unique_ptr< QSettings > calibrationSettings;
+    double offsetCorrection[ HANTEK_GAIN_STEPS ][ HANTEK_CHANNEL_NUMBER ];
+    double gainCorrection[ HANTEK_GAIN_STEPS ][ HANTEK_CHANNEL_NUMBER ];
     bool capturing = false;
     bool samplingStarted = false;
     bool stateMachineRunning = false;
@@ -203,12 +206,7 @@ class HantekDsoControl : public QObject {
         newTriggerParam = false;
         return changed;
     }
-
     Raw raw;
-
-    std::vector< QString > controlNames = { "SETGAIN_CH1",    "SETGAIN_CH2", "SETSAMPLERATE", "STARTSAMPLING",
-                                            "SETNUMCHANNELS", "SETCOUPLING", "SETCALFREQ" };
-
     unsigned debugLevel = 0;
 
 #define dprintf( level, fmt, ... )               \
@@ -307,6 +305,13 @@ class HantekDsoControl : public QObject {
 
     /// \brief Starts a new sampling block.
     void restartSampling();
+
+    /// \brief enable/disable offset calibration
+    void calibrateOffset( bool enable ) {
+        calibrateOffsetActive = enable;
+        if ( enable )
+            calibrationHasChanged = true;
+    }
 
   signals:
     void samplingStatusChanged( bool enabled );                ///< The oscilloscope started/stopped sampling/waiting for trigger

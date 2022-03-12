@@ -2,6 +2,9 @@
 <ui version="4.0">
  <class>MainWindow</class>
  <widget class="QMainWindow" name="MainWindow">
+  <property name="enabled">
+   <bool>true</bool>
+  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -51,6 +54,8 @@
      <string>&amp;Oscilloscope</string>
     </property>
     <addaction name="actionSettings"/>
+    <addaction name="separator"/>
+    <addaction name="actionCalibrateOffset"/>
     <addaction name="separator"/>
     <addaction name="actionManualCommand"/>
    </widget>
@@ -196,6 +201,14 @@
   <action name="actionSettings">
    <property name="text">
     <string>&amp;Settings ..</string>
+   </property>
+  </action>
+  <action name="actionCalibrateOffset">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Calibrate Offset</string>
    </property>
   </action>
   <action name="actionManualCommand">
