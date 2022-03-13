@@ -38,11 +38,13 @@ HantekDsoControl::HantekDsoControl( ScopeDevice *device, const DSOModel *model, 
     // Apply special requirements by the devices model
     model->applyRequirements( this );
     getCalibrationFromEEPROM();
-    // unique offset/gain calibration file "DSO-6022BE_NNNNNNNNNNNN_calibration.conf" in ".config/OpenHantek"
+    // unique offset/gain calibration file:
+    // Linux, Unix, macOS: "$HOME/.config/OpenHantek/DSO-6022BE_NNNNNNNNNNNN_calibration.ini"
+    // Windows: "%APPDATA%\OpenHantek\DSO-6022BE_NNNNNNNNNNNN_calibration.ini"
     calibrationSettings = std::unique_ptr< QSettings >(
-        new QSettings( QCoreApplication::organizationName(),
+        new QSettings( QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationName(),
                        scopeDevice->getModel()->name + "_" + scopeDevice->getSerialNumber() + "_calibration" ) );
-    // load the offsets (persistent, saved at shutdown)
+    // load the offsets (persistent, saved at shutdown as "*.ini" file,  )
     calibrationSettings->beginGroup( "offset" );
     for ( int ch = 0; ch < HANTEK_CHANNEL_NUMBER; ++ch ) {
         calibrationSettings->beginGroup( "ch" + QString::number( ch ) );
