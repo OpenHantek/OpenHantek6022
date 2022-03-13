@@ -50,10 +50,13 @@ HantekDsoControl::HantekDsoControl( ScopeDevice *device, const DSOModel *model, 
         calibrationSettings->beginGroup( "ch" + QString::number( ch ) );
         int index = 0;
         for ( const auto &g : model->spec()->gain ) {
-            offsetCorrection[ index ][ ch ] =
-                calibrationSettings->value( ( QString::number( int( g.Vdiv * 1000 ) ) + "mv" ), 0 ).toDouble();
-            // qDebug().noquote() << "ch" + QString::number( ch ) << QString::number( int( g.Vdiv * 1000 ) ) + "mv"
-            //                   << offsetCorrection[ index ][ ch ];
+            if ( calibrationSettings->contains( ( QString::number( int( g.Vdiv * 1000 ) ) + "mv" ) ) ) {
+                offsetCorrection[ index ][ ch ] =
+                    calibrationSettings->value( ( QString::number( int( g.Vdiv * 1000 ) ) + "mv" ) ).toDouble();
+                // qDebug().noquote() << "ch" + QString::number( ch ) << QString::number( int( g.Vdiv * 1000 ) ) + "mv"
+                //                   << offsetCorrection[ index ][ ch ];
+            } else // set default entry that the user can edit
+                calibrationSettings->setValue( QString::number( int( g.Vdiv * 1000 ) ) + "mv", 0 );
             ++index;
         }
         calibrationSettings->endGroup();
@@ -65,10 +68,13 @@ HantekDsoControl::HantekDsoControl( ScopeDevice *device, const DSOModel *model, 
         calibrationSettings->beginGroup( "ch" + QString::number( ch ) );
         int index = 0;
         for ( const auto &g : model->spec()->gain ) {
-            gainCorrection[ index ][ ch ] =
-                calibrationSettings->value( ( QString::number( int( g.Vdiv * 1000 ) ) + "mv" ), 1.0 ).toDouble();
-            // qDebug().noquote() << "ch" + QString::number( ch ) << QString::number( int( g.Vdiv * 1000 ) ) + "mv"
-            //                   << offsetCorrection[ index ][ ch ];
+            if ( calibrationSettings->contains( ( QString::number( int( g.Vdiv * 1000 ) ) + "mv" ) ) ) {
+                gainCorrection[ index ][ ch ] =
+                    calibrationSettings->value( ( QString::number( int( g.Vdiv * 1000 ) ) + "mv" ) ).toDouble();
+                // qDebug().noquote() << "ch" + QString::number( ch ) << QString::number( int( g.Vdiv * 1000 ) ) + "mv"
+                //                   << offsetCorrection[ index ][ ch ];
+            } else // set default entry that the user can adapt
+                calibrationSettings->setValue( QString::number( int( g.Vdiv * 1000 ) ) + "mv", 1.0 );
             ++index;
         }
         calibrationSettings->endGroup();
