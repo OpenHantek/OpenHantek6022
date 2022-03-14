@@ -127,7 +127,10 @@ class HantekDsoControl : public QObject {
     bool triggerModeNONE() { return controlsettings.trigger.mode == Dso::TriggerMode::ROLL; }
     unsigned getRecordLength() const;
     void setDownsampling( unsigned downsampling ) { downsamplingNumber = downsampling; }
+    bool replaceCalibrationEEPROM = false;
+    Dso::ErrorCode getCalibrationValues();
     Dso::ErrorCode getCalibrationFromEEPROM();
+    Dso::ErrorCode updateCalibrationValues();
 
     /// Get the number of samples that are expected returned by the scope.
     /// In rolling mode this is depends on the usb speed and packet size.

@@ -37,49 +37,9 @@ HantekDsoControl::HantekDsoControl( ScopeDevice *device, const DSOModel *model, 
         device->overwriteInPacketLength( unsigned( specification->fixedUSBinLength ) );
     // Apply special requirements by the devices model
     model->applyRequirements( this );
-    getCalibrationFromEEPROM();
-    // unique offset/gain calibration file:
-    // Linux, Unix, macOS: "$HOME/.config/OpenHantek/DSO-6022BE_NNNNNNNNNNNN_calibration.ini"
-    // Windows: "%APPDATA%\OpenHantek\DSO-6022BE_NNNNNNNNNNNN_calibration.ini"
-    calibrationSettings = std::unique_ptr< QSettings >(
-        new QSettings( QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationName(),
-                       scopeDevice->getModel()->name + "_" + scopeDevice->getSerialNumber() + "_calibration" ) );
-    // load the offsets (persistent, saved at shutdown as "*.ini" file,  )
-    calibrationSettings->beginGroup( "offset" );
-    for ( int ch = 0; ch < HANTEK_CHANNEL_NUMBER; ++ch ) {
-        calibrationSettings->beginGroup( "ch" + QString::number( ch ) );
-        int index = 0;
-        for ( const auto &g : model->spec()->gain ) {
-            if ( calibrationSettings->contains( ( QString::number( int( g.Vdiv * 1000 ) ) + "mv" ) ) ) {
-                offsetCorrection[ index ][ ch ] =
-                    calibrationSettings->value( ( QString::number( int( g.Vdiv * 1000 ) ) + "mv" ) ).toDouble();
-                // qDebug().noquote() << "ch" + QString::number( ch ) << QString::number( int( g.Vdiv * 1000 ) ) + "mv"
-                //                   << offsetCorrection[ index ][ ch ];
-            } else // set default entry that the user can edit
-                calibrationSettings->setValue( QString::number( int( g.Vdiv * 1000 ) ) + "mv", 0 );
-            ++index;
-        }
-        calibrationSettings->endGroup();
-    }
-    calibrationSettings->endGroup();
-    // load the gain (provided by user)
-    calibrationSettings->beginGroup( "gain" );
-    for ( int ch = 0; ch < 2; ++ch ) {
-        calibrationSettings->beginGroup( "ch" + QString::number( ch ) );
-        int index = 0;
-        for ( const auto &g : model->spec()->gain ) {
-            if ( calibrationSettings->contains( ( QString::number( int( g.Vdiv * 1000 ) ) + "mv" ) ) ) {
-                gainCorrection[ index ][ ch ] =
-                    calibrationSettings->value( ( QString::number( int( g.Vdiv * 1000 ) ) + "mv" ) ).toDouble();
-                // qDebug().noquote() << "ch" + QString::number( ch ) << QString::number( int( g.Vdiv * 1000 ) ) + "mv"
-                //                   << offsetCorrection[ index ][ ch ];
-            } else // set default entry that the user can adapt
-                calibrationSettings->setValue( QString::number( int( g.Vdiv * 1000 ) ) + "mv", 1.0 );
-            ++index;
-        }
-        calibrationSettings->endGroup();
-    }
-    calibrationSettings->endGroup(); // gain
+
+    getCalibrationValues();
+
     stateMachineRunning = true;
 }
 
@@ -92,22 +52,7 @@ HantekDsoControl::~HantekDsoControl() {
         delete firstControlCommand;
         firstControlCommand = t;
     }
-    // save the offset values
-    if ( calibrationHasChanged ) {
-        calibrationSettings->beginGroup( "offset" );
-        for ( int ch = 0; ch < HANTEK_CHANNEL_NUMBER; ++ch ) {
-            calibrationSettings->beginGroup( "ch" + QString::number( ch ) );
-            int index = 0;
-            for ( const auto &g : model->spec()->gain ) {
-                // qDebug() << QString::number( int( g.Vdiv * 1000 ) ) + "mv" << offsetCorrection[ index ][ ch ];
-                calibrationSettings->setValue( QString::number( int( g.Vdiv * 1000 ) ) + "mv",
-                                               round( 100.0 * offsetCorrection[ index ][ ch ] ) / 100.0 );
-                ++index;
-            }
-            calibrationSettings->endGroup();
-        }
-        calibrationSettings->endGroup();
-    }
+    updateCalibrationValues();
 }
 
 
@@ -497,6 +442,99 @@ unsigned HantekDsoControl::getRecordLength() const {
     if ( verboseLevel > 4 )
         qDebug() << "    HDC::getRecordLength() ->" << rawsize;
     return rawsize;
+}
+
+
+Dso::ErrorCode HantekDsoControl::getCalibrationValues() {
+    // Persistent storage: unique offset/gain calibration file:
+    // Linux, Unix, macOS: "$HOME/.config/OpenHantek/DSO-6022BE_NNNNNNNNNNNN_calibration.ini"
+    // Windows: "%APPDATA%\OpenHantek\DSO-6022BE_NNNNNNNNNNNN_calibration.ini"
+    QString calName = scopeDevice->getModel()->name + "_" + scopeDevice->getSerialNumber() + "_calibration";
+    if ( verboseLevel > 2 )
+        qDebug() << "  Calibration data:" << calName + ".ini";
+
+    calibrationSettings = std::unique_ptr< QSettings >(
+        new QSettings( QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationName(), calName ) );
+
+    // load the offsets (persistent, saved at shutdown as "*.ini" file,  )
+    calibrationSettings->beginGroup( "offset" );
+    for ( int ch = 0; ch < HANTEK_CHANNEL_NUMBER; ++ch ) {
+        calibrationSettings->beginGroup( "ch" + QString::number( ch ) );
+        int index = 0;
+        for ( const auto &g : model->spec()->gain ) {
+            offsetCorrection[ index ][ ch ] =
+                calibrationSettings->value( ( QString::number( int( g.Vdiv * 1000 ) ) + "mV" ), 0.0 ).toDouble();
+            ++index;
+        }
+        calibrationSettings->endGroup();
+    }
+    calibrationSettings->endGroup();
+
+    // load the gain (provided by user)
+    calibrationSettings->beginGroup( "gain" );
+    for ( int ch = 0; ch < 2; ++ch ) {
+        calibrationSettings->beginGroup( "ch" + QString::number( ch ) );
+        int index = 0;
+        for ( const auto &g : model->spec()->gain ) {
+            gainCorrection[ index ][ ch ] =
+                calibrationSettings->value( ( QString::number( int( g.Vdiv * 1000 ) ) + "mV" ), 1.0 ).toDouble();
+            ++index;
+        }
+        calibrationSettings->endGroup();
+    }
+    calibrationSettings->endGroup(); // gain
+
+    calibrationSettings->beginGroup( "eeprom" );
+    replaceCalibrationEEPROM = calibrationSettings->value( "replace_eeprom", false ).toBool();
+    calibrationSettings->endGroup(); // eeprom
+
+    if ( replaceCalibrationEEPROM ) // values created by python tool "calibrate_6022.py" replace the EEPROM content
+        memset( controlsettings.cmdGetCalibration.data(), 0xFF, sizeof( CalibrationValues ) );
+    else // enhance the intrinsic calibration values from EEPROM
+        getCalibrationFromEEPROM();
+
+    return Dso::ErrorCode::NONE;
+}
+
+
+Dso::ErrorCode HantekDsoControl::updateCalibrationValues() {
+    if ( calibrationHasChanged ) {
+        if ( verboseLevel > 2 )
+            qDebug() << "  Update calibration data";
+
+        calibrationSettings->beginGroup( "gain" );
+        for ( int ch = 0; ch < HANTEK_CHANNEL_NUMBER; ++ch ) {
+            calibrationSettings->beginGroup( "ch" + QString::number( ch ) );
+            int index = 0;
+            for ( const auto &g : model->spec()->gain ) {
+                // qDebug() << QString::number( int( g.Vdiv * 1000 ) ) + "mV" << gainCorrection[ index ][ ch ];
+                calibrationSettings->setValue( QString::number( int( g.Vdiv * 1000 ) ) + "mV",
+                                               round( 100.0 * gainCorrection[ index ][ ch ] ) / 100.0 );
+                ++index;
+            }
+            calibrationSettings->endGroup();
+        }
+        calibrationSettings->endGroup();
+
+        calibrationSettings->beginGroup( "offset" );
+        for ( int ch = 0; ch < HANTEK_CHANNEL_NUMBER; ++ch ) {
+            calibrationSettings->beginGroup( "ch" + QString::number( ch ) );
+            int index = 0;
+            for ( const auto &g : model->spec()->gain ) {
+                // qDebug() << QString::number( int( g.Vdiv * 1000 ) ) + "mV" << offsetCorrection[ index ][ ch ];
+                calibrationSettings->setValue( QString::number( int( g.Vdiv * 1000 ) ) + "mV",
+                                               round( 100.0 * offsetCorrection[ index ][ ch ] ) / 100.0 );
+                ++index;
+            }
+            calibrationSettings->endGroup();
+        }
+        calibrationSettings->endGroup();
+
+        calibrationSettings->beginGroup( "eeprom" );
+        calibrationSettings->setValue( "replace_eeprom", replaceCalibrationEEPROM );
+        calibrationSettings->endGroup(); // eeprom
+    }
+    return Dso::ErrorCode::NONE;
 }
 
 
