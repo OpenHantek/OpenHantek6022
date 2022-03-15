@@ -38,13 +38,8 @@ static void initSpecifications( Dso::ControlSpecification &specification ) {
     // Input divider: 100/1009 = 1% too low display
     // Amplifier gain: x1 (ok), x2 (ok), x5.1 (2% too high), x10.1 (1% too high)
     // Overall resulting gain: x1 1% too low, x2 1% to low, x5 1% to high, x10 ok
-    // The sample value for full screen (8 divs) with theoretical gain setting
-    // specification.voltageScale[ 0 ] = {40, 100, 200, 202, 198, 198, 396, 990};
-    // specification.voltageScale[ 1 ] = {40, 100, 200, 202, 198, 198, 396, 990};
     specification.voltageScale[ 0 ] = { 250, 250, 250, 126.25, 49.50, 24.75, 24.75, 24.75 };
     specification.voltageScale[ 1 ] = { 250, 250, 250, 126.25, 49.50, 24.75, 24.75, 24.75 };
-    specification.voltageOffset[ 0 ] = { 0, 0, 0, 0, 0, 0, 0, 0 };
-    specification.voltageOffset[ 1 ] = { 0, 0, 0, 0, 0, 0, 0, 0 };
     // Gain and offset can be corrected by individual config values from EEPROM or file
 
     // Possible raw sample rates with custom fw from https://github.com/Ho-Ro/Hantek6022API

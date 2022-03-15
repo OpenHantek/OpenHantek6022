@@ -208,7 +208,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>&amp;Calibrate Offset</string>
+    <string>Calibrate &amp;Offset</string>
    </property>
   </action>
   <action name="actionManualCommand">

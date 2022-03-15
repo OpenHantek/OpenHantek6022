@@ -44,11 +44,7 @@ static void initSpecifications( Dso::ControlSpecification &specification ) {
     // theoretical voltageScales x20: 500,  x10: 250,  x5: 125,  x2: 50,   x1: 25
     specification.voltageScale[ 0 ] = { 400, 400, 200, 96, 43, 21, 21, 21 };
     specification.voltageScale[ 1 ] = { 400, 400, 200, 96, 43, 21, 21, 21 };
-    // specification.voltageScale[ 0 ] = {64, 160, 160, 155, 170, 165, 330, 820};
-    // specification.voltageScale[ 1 ] = {64, 160, 160, 155, 170, 165, 330, 820};
-    // theoretical offset, will be corrected by individual config file
-    specification.voltageOffset[ 0 ] = { 0, 0, 0, 0, 0, 0, 0, 0 };
-    specification.voltageOffset[ 1 ] = { 0, 0, 0, 0, 0, 0, 0, 0 };
+    // Gain and offset can be corrected by individual config values from file (device has no calibration EEPROM)
 
     specification.samplerate.single.base = 1e6;
     specification.samplerate.single.max = 30e6;

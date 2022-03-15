@@ -34,9 +34,6 @@ static void initSpecifications( Dso::ControlSpecification &specification ) {
     // The sample value for full screen (8 divs) with theoretical gain setting
     specification.voltageScale[ 0 ] = { 250, 250, 250, 125, 50, 25, 25, 25 };
     specification.voltageScale[ 1 ] = { 250, 250, 250, 125, 50, 25, 25, 25 };
-    specification.voltageOffset[ 0 ] = { 0, 0, 0, 0, 0, 0, 0, 0 };
-    specification.voltageOffset[ 1 ] = { 0, 0, 0, 0, 0, 0, 0, 0 };
-    // Gain and offset can be corrected by individual config values from file
 
     // Possible raw sample rates with custom fw from https://github.com/Ho-Ro/Hantek6022API
     // 20k, 40k, 50k, 64k, 100k, 200k, 400k, 500k, 1M, 2M, 3M, 4M, 5M, 6M, 8M, 10M, 12M, 15M, 16M, 24M, 30M (, 48M)

@@ -42,8 +42,6 @@ static void initSpecifications( Dso::ControlSpecification &specification ) {
     // specification.voltageScale[ 1 ] = {40, 100, 200, 202, 198, 198, 396, 990};
     specification.voltageScale[ 0 ] = { 250, 250, 250, 126.25, 49.50, 24.75, 24.75, 24.75 };
     specification.voltageScale[ 1 ] = { 250, 250, 250, 126.25, 49.50, 24.75, 24.75, 24.75 };
-    specification.voltageOffset[ 0 ] = { 0, 0, 0, 0, 0, 0, 0, 0 };
-    specification.voltageOffset[ 1 ] = { 0, 0, 0, 0, 0, 0, 0, 0 };
     // Gain and offset can be corrected by individual config values from EEPROM or file
 
     // Possible raw sample rates with custom fw from https://github.com/Ho-Ro/Hantek6022API

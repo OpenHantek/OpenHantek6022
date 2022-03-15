@@ -56,8 +56,6 @@ struct ControlSpecification {
     /// The sample values for one div
     typedef std::vector< double > VoltageScale;
     std::vector< VoltageScale > voltageScale; // Per channel
-    typedef std::vector< double > VoltageOffset;
-    std::vector< VoltageOffset > voltageOffset; // Per channel
 
     /// Gain levels
     std::vector< ControlSpecificationGainLevel > gain;

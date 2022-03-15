@@ -640,27 +640,25 @@ void HantekDsoControl::convertRawDataToSamples() {
 
         // shift + individual offset for each channel and gain
         double gainCalibration = 1.0;
-        double voltageOffset = specification->voltageOffset[ channel ][ gainIndex ];
-        if ( !bool( voltageOffset ) ) { // no config file value
-            // get offset value from eeprom[ 8 .. 39 and (if available) 56 .. 87]
-            int offsetRaw;
-            int offsetFine;
-            if ( result.samplerate < 30e6 ) {
-                offsetRaw = controlsettings.calibrationValues->off.ls.step[ gainIndex ][ channel ];
-                offsetFine = controlsettings.calibrationValues->fine.ls.step[ gainIndex ][ channel ];
-            } else {
-                offsetRaw = controlsettings.calibrationValues->off.hs.step[ gainIndex ][ channel ];
-                offsetFine = controlsettings.calibrationValues->fine.hs.step[ gainIndex ][ channel ];
-            }
-            if ( offsetRaw && offsetRaw != 255 && offsetFine && offsetFine != 255 ) { // data valid
-                voltageOffset = offsetRaw + ( offsetFine - 0x80 ) / 250.0;
-            } else {                  // no offset correction
-                voltageOffset = 0x80; // ADC has "binary offset" format (0x80 = 0V)
-            }
-            int gain = controlsettings.calibrationValues->gain.step[ gainIndex ][ channel ];
-            if ( gain && gain != 255 ) { // data valid
-                gainCalibration = 1.0 + ( gain - 0x80 ) / 500.0;
-            }
+        double voltageOffset;
+        // get offset value from eeprom[ 8 .. 39 and (if available) 56 .. 87]
+        int offsetRaw;
+        int offsetFine;
+        if ( result.samplerate < 30e6 ) {
+            offsetRaw = controlsettings.calibrationValues->off.ls.step[ gainIndex ][ channel ];
+            offsetFine = controlsettings.calibrationValues->fine.ls.step[ gainIndex ][ channel ];
+        } else {
+            offsetRaw = controlsettings.calibrationValues->off.hs.step[ gainIndex ][ channel ];
+            offsetFine = controlsettings.calibrationValues->fine.hs.step[ gainIndex ][ channel ];
+        }
+        if ( offsetRaw && offsetRaw != 255 && offsetFine && offsetFine != 255 ) { // data valid
+            voltageOffset = offsetRaw + ( offsetFine - 0x80 ) / 250.0;
+        } else {                  // no offset correction
+            voltageOffset = 0x80; // ADC has "binary offset" format (0x80 = 0V)
+        }
+        int gain = controlsettings.calibrationValues->gain.step[ gainIndex ][ channel ];
+        if ( gain && gain != 255 ) { // data valid
+            gainCalibration = 1.0 + ( gain - 0x80 ) / 500.0;
         }
         // Convert data from the oscilloscope and write it into the channel sample buffer
         unsigned rawBufPos = 0;

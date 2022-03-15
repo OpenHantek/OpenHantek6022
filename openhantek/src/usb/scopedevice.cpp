@@ -299,6 +299,8 @@ int ScopeDevice::controlTransfer( unsigned char type, unsigned char request, uns
     for ( int attempt = 0; ( attempt < attempts || attempts == -1 ) && errorCode == LIBUSB_ERROR_TIMEOUT; ++attempt )
         errorCode = libusb_control_transfer( handle, type, request, uint16_t( value ), uint16_t( index ), data, uint16_t( length ),
                                              HANTEK_TIMEOUT );
+    if ( verboseLevel > 6 )
+        qDebug() << "      ScopeDevice::controlTransfer() =" << errorCode;
 
     if ( errorCode == LIBUSB_ERROR_NO_DEVICE )
         disconnectFromDevice();

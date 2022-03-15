@@ -999,8 +999,12 @@
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="211"/>
-        <source>&amp;Calibrate Offset</source>
+        <source>Calibrate &amp;Offset</source>
         <translation>Kalibriere &amp;Offset</translation>
+    </message>
+    <message>
+        <source>&amp;Calibrate Offset</source>
+        <translation type="vanished">Kalibriere &amp;Offset</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="219"/>

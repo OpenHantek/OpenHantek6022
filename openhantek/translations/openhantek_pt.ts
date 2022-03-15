@@ -972,7 +972,7 @@
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="211"/>
-        <source>&amp;Calibrate Offset</source>
+        <source>Calibrate &amp;Offset</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
