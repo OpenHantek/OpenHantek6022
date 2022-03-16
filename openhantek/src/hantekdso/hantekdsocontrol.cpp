@@ -52,7 +52,14 @@ HantekDsoControl::~HantekDsoControl() {
         delete firstControlCommand;
         firstControlCommand = t;
     }
-    updateCalibrationValues();
+}
+
+
+void HantekDsoControl::prepareForShutdown() {
+    if ( verboseLevel > 1 )
+        qDebug() << " HDC::prepareForShutdown()";
+    calibrateOffset( false );
+    updateCalibrationValues( scopeDevice->isRealHW() && specification->hasCalibrationEEPROM );
 }
 
 
@@ -497,7 +504,7 @@ Dso::ErrorCode HantekDsoControl::getCalibrationValues() {
 }
 
 
-Dso::ErrorCode HantekDsoControl::updateCalibrationValues() {
+Dso::ErrorCode HantekDsoControl::updateCalibrationValues( bool useEEPROM ) {
     if ( calibrationHasChanged ) {
         if ( verboseLevel > 2 )
             qDebug() << "  Update calibration data";
@@ -506,10 +513,12 @@ Dso::ErrorCode HantekDsoControl::updateCalibrationValues() {
         for ( int ch = 0; ch < HANTEK_CHANNEL_NUMBER; ++ch ) {
             calibrationSettings->beginGroup( "ch" + QString::number( ch ) );
             int index = 0;
+            double gain = 1.0;
             for ( const auto &g : model->spec()->gain ) {
-                // qDebug() << QString::number( int( g.Vdiv * 1000 ) ) + "mV" << gainCorrection[ index ][ ch ];
-                calibrationSettings->setValue( QString::number( int( g.Vdiv * 1000 ) ) + "mV",
-                                               round( 100.0 * gainCorrection[ index ][ ch ] ) / 100.0 );
+                if ( !useEEPROM )
+                    gain = round( 100.0 * gainCorrection[ index ][ ch ] ) / 100.0;
+                calibrationSettings->setValue( QString::number( int( g.Vdiv * 1000 ) ) + "mV", gain );
+                // qDebug() << QString::number( int( g.Vdiv * 1000 ) ) + "mV" << gain;
                 ++index;
             }
             calibrationSettings->endGroup();
@@ -520,10 +529,12 @@ Dso::ErrorCode HantekDsoControl::updateCalibrationValues() {
         for ( int ch = 0; ch < HANTEK_CHANNEL_NUMBER; ++ch ) {
             calibrationSettings->beginGroup( "ch" + QString::number( ch ) );
             int index = 0;
+            double offset = 0.0;
             for ( const auto &g : model->spec()->gain ) {
-                // qDebug() << QString::number( int( g.Vdiv * 1000 ) ) + "mV" << offsetCorrection[ index ][ ch ];
-                calibrationSettings->setValue( QString::number( int( g.Vdiv * 1000 ) ) + "mV",
-                                               round( 100.0 * offsetCorrection[ index ][ ch ] ) / 100.0 );
+                if ( !useEEPROM )
+                    offset = round( 100.0 * offsetCorrection[ index ][ ch ] ) / 100.0;
+                calibrationSettings->setValue( QString::number( int( g.Vdiv * 1000 ) ) + "mV", offset );
+                // qDebug() << QString::number( int( g.Vdiv * 1000 ) ) + "mV" << offset;
                 ++index;
             }
             calibrationSettings->endGroup();
@@ -531,8 +542,11 @@ Dso::ErrorCode HantekDsoControl::updateCalibrationValues() {
         calibrationSettings->endGroup();
 
         calibrationSettings->beginGroup( "eeprom" );
-        calibrationSettings->setValue( "replace_eeprom", replaceCalibrationEEPROM );
+        calibrationSettings->setValue( "replace_eeprom", !useEEPROM );
         calibrationSettings->endGroup(); // eeprom
+
+        if ( useEEPROM )
+            writeCalibrationToEEPROM();
     }
     return Dso::ErrorCode::NONE;
 }
@@ -587,6 +601,62 @@ Dso::ErrorCode HantekDsoControl::getCalibrationFromEEPROM() {
 }
 
 
+#define TRANS_TYPE_READ 0xc0
+#define TRANS_TYPE_WRITE 0x40
+#define EEPROM 0xa2
+
+Dso::ErrorCode HantekDsoControl::writeCalibrationToEEPROM() {
+    uint8_t type = TRANS_TYPE_WRITE;
+    uint8_t request = EEPROM;
+
+    int value = 8;
+    int index = 0;
+    typedef uint8_t *uint8_p;
+
+    // save raw offset values
+    int ret = scopeDevice->controlTransfer( type, request, uint8_p( &controlsettings.correctionValues->off ),
+                                            sizeof( CalibrationValues::off ), value, index );
+    if ( ret < 0 ) {
+        fprintf( stderr, "Unable to control transfer\n" );
+        perror( "libusb_control_transfer" );
+        return Dso::ErrorCode::CONNECTION;
+    }
+    // save gain values
+    value += int( sizeof( CalibrationValues::off ) );
+    ret = scopeDevice->controlTransfer( type, request, uint8_p( &controlsettings.correctionValues->gain ),
+                                        sizeof( CalibrationValues::gain ), value, index );
+    if ( ret < 0 ) {
+        fprintf( stderr, "Unable to control transfer\n" );
+        perror( "libusb_control_transfer" );
+        return Dso::ErrorCode::CONNECTION;
+    }
+
+    // save fine offset values
+    value += int( sizeof( CalibrationValues::gain ) );
+    ret = scopeDevice->controlTransfer( type, request, uint8_p( &controlsettings.correctionValues->fine ),
+                                        sizeof( CalibrationValues::fine ), value, index );
+    if ( ret < 0 ) {
+        fprintf( stderr, "Unable to control transfer\n" );
+        perror( "libusb_control_transfer" );
+        return Dso::ErrorCode::CONNECTION;
+    }
+
+    return Dso::ErrorCode::NONE;
+}
+
+
+void HantekDsoControl::calibrateOffset( bool enable ) {
+    if ( enable ) {
+        if ( !liveCalibrationActive )
+            memcpy( controlsettings.correctionValues, controlsettings.calibrationValues, sizeof( CalibrationValues ) );
+    } else {
+        if ( liveCalibrationActive )
+            calibrationHasChanged = true;
+    }
+    liveCalibrationActive = enable;
+}
+
+
 void HantekDsoControl::quitSampling() {
     if ( verboseLevel > 2 )
         qDebug() << "  HDC::quitSampling()";
@@ -604,6 +674,48 @@ void HantekDsoControl::quitSampling() {
         qWarning() << "controlWrite: stop sampling failed: " << libUsbErrorString( errorCode );
         emit communicationError();
     }
+}
+
+
+static double byteToGain( uint8_t gain ) {
+    if ( gain && gain != 255 ) // data valid
+        return 1.0 + ( gain - 0x80 ) / 500.0;
+    else
+        return 1.0;
+}
+
+
+static uint8_t gainToByte( double gain ) {
+    if ( gain >= 0.75 && gain <= 1.25 )
+        return uint8_t( round( 0x80 + 500 * ( gain - 1 ) ) );
+    else
+        return 0;
+}
+
+
+static double bytesToOffset( uint8_t offsetRaw, uint8_t offsetFine ) {
+    if ( offsetRaw && offsetRaw != 255 && offsetFine && offsetFine != 255 ) { // data valid
+        return offsetRaw + ( offsetFine - 0x80 ) / 250.0;
+    } else {         // no offset correction
+        return 0x80; // ADC has "binary offset" format (0x80 = 0V)
+    }
+}
+
+
+static uint8_t offsetToRaw( double offset ) {
+    if ( offset > 96 && offset < 140 )
+        return uint8_t( round( offset ) );
+    else
+        return 0;
+}
+
+
+static uint8_t offsetToFine( double offset ) {
+    if ( offset > 96 && offset < 140 ) {
+        offset -= round( offset );
+        return uint8_t( round( 0x80 + 250 * offset ) );
+    } else
+        return 0;
 }
 
 
@@ -636,14 +748,11 @@ void HantekDsoControl::convertRawDataToSamples() {
         const double voltageScale = specification->voltageScale[ channel ][ gainIndex ];
         const double probeAttn = controlsettings.voltage[ channel ].probeAttn;
         const double sign = controlsettings.voltage[ channel ].inverted ? -1.0 : 1.0;
-        double liveOffset = 0.0;
 
         // shift + individual offset for each channel and gain
-        double gainCalibration = 1.0;
-        double voltageOffset;
         // get offset value from eeprom[ 8 .. 39 and (if available) 56 .. 87]
-        int offsetRaw;
-        int offsetFine;
+        uint8_t offsetRaw;
+        uint8_t offsetFine;
         if ( result.samplerate < 30e6 ) {
             offsetRaw = controlsettings.calibrationValues->off.ls.step[ gainIndex ][ channel ];
             offsetFine = controlsettings.calibrationValues->fine.ls.step[ gainIndex ][ channel ];
@@ -651,15 +760,9 @@ void HantekDsoControl::convertRawDataToSamples() {
             offsetRaw = controlsettings.calibrationValues->off.hs.step[ gainIndex ][ channel ];
             offsetFine = controlsettings.calibrationValues->fine.hs.step[ gainIndex ][ channel ];
         }
-        if ( offsetRaw && offsetRaw != 255 && offsetFine && offsetFine != 255 ) { // data valid
-            voltageOffset = offsetRaw + ( offsetFine - 0x80 ) / 250.0;
-        } else {                  // no offset correction
-            voltageOffset = 0x80; // ADC has "binary offset" format (0x80 = 0V)
-        }
-        int gain = controlsettings.calibrationValues->gain.step[ gainIndex ][ channel ];
-        if ( gain && gain != 255 ) { // data valid
-            gainCalibration = 1.0 + ( gain - 0x80 ) / 500.0;
-        }
+        // calibration values from EEPROM
+        double offsetCalibration = bytesToOffset( offsetRaw, offsetFine );
+        double gainCalibration = byteToGain( controlsettings.calibrationValues->gain.step[ gainIndex ][ channel ] );
         // Convert data from the oscilloscope and write it into the channel sample buffer
         unsigned rawBufPos = 0;
         if ( raw.freeRun && raw.rollMode ) // show the "new" samples on the right screen side
@@ -667,6 +770,11 @@ void HantekDsoControl::convertRawDataToSamples() {
         result.data[ channel ].resize( resultSamples );
         rawBufPos += skipSamples * activeChannels; // skip first unstable samples
         result.clipped &= ~( 0x01 << channel );    // clear clipping flag
+
+        double gainCorr = gainCorrection[ gainIndex ][ channel ];
+        double offsetCorr = offsetCorrection[ gainIndex ][ channel ];
+        double liveOffset = 0.0;
+
         for ( unsigned index = 0; index < resultSamples;
               ++index, rawBufPos += activeChannels * rawOversampling ) { // advance either by one or two blocks
             if ( rawBufPos + rawOversampling * activeChannels > rawSampleCount * activeChannels )
@@ -676,21 +784,33 @@ void HantekDsoControl::convertRawDataToSamples() {
                 int rawSample = raw.data[ rawBufPos + channel + iii ]; // CH1/CH2/CH1/CH2 ...
                 if ( rawSample == 0x00 || rawSample == 0xFF )          // min or max -> clipped
                     result.clipped |= 0x01 << channel;
-                sample += double( rawSample ) - voltageOffset;
+                sample += double( rawSample ) - offsetCalibration;
             }
             sample /= rawOversampling;
-            if ( calibrateOffsetActive )
-                liveOffset -= sample;
-            else {
-                // qDebug() << channel << offsetCorrection[ gainIndex ][ channel ];
-                sample += offsetCorrection[ gainIndex ][ channel ];
-                sample *= gainCorrection[ gainIndex ][ channel ];
+            if ( liveCalibrationActive ) {
+                liveOffset += sample;
             }
+            // qDebug() << channel << offsetCorrection[ gainIndex ][ channel ];
+            sample -= offsetCorr;
+            sample *= gainCorr;
+
             result.data[ channel ][ index ] = sign * sample / voltageScale * gainCalibration * probeAttn;
         }
         liveOffset /= resultSamples;
-        if ( calibrateOffsetActive ) {
+        if ( liveCalibrationActive ) {
             offsetCorrection[ gainIndex ][ channel ] = liveOffset;
+            if ( result.samplerate < 30e6 ) {
+                controlsettings.correctionValues->off.ls.step[ gainIndex ][ channel ] =
+                    offsetToRaw( liveOffset + offsetCalibration );
+                controlsettings.correctionValues->fine.ls.step[ gainIndex ][ channel ] =
+                    offsetToFine( liveOffset + offsetCalibration );
+            } else {
+                controlsettings.correctionValues->off.hs.step[ gainIndex ][ channel ] =
+                    offsetToRaw( liveOffset + offsetCalibration );
+                controlsettings.correctionValues->fine.hs.step[ gainIndex ][ channel ] =
+                    offsetToFine( liveOffset + offsetCalibration );
+            }
+            controlsettings.correctionValues->gain.step[ gainIndex ][ channel ] = gainToByte( gainCorr * gainCalibration );
             if ( verboseLevel > 5 )
                 qDebug() << "     HDC::convertRawDataToSamples() offsetCorrection[" << gainIndex << "][" << channel
                          << "] =" << liveOffset;

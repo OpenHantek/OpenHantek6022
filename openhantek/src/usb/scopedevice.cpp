@@ -278,29 +278,27 @@ static QString usbControlCode( uint8_t value ) {
         return "0x" + QString::number( value, 16 );
 }
 
-
+// max control transfer (write) size is 64 bytes
 int ScopeDevice::controlTransfer( unsigned char type, unsigned char request, unsigned char *data, unsigned int length, int value,
                                   int index, int attempts ) {
     if ( !handle || disconnected )
         return LIBUSB_ERROR_NO_DEVICE;
 
     int errorCode = LIBUSB_ERROR_TIMEOUT;
-    if ( verboseLevel > 6 ) {
-        QDebug line = qDebug() << "      ScopeDevice::controlTransfer()" << usbTypeString( type ) << usbControlCode( request );
-        line << value << index << '{';
-        for ( unsigned iii = 0; iii < length; ++iii ) {
-            if ( length > 16 && 0 == iii % 16 )
-                line << "\n     ";
-            line << data[ iii ];
-        }
-        line << '}' << length << attempts;
-    }
-
     for ( int attempt = 0; ( attempt < attempts || attempts == -1 ) && errorCode == LIBUSB_ERROR_TIMEOUT; ++attempt )
         errorCode = libusb_control_transfer( handle, type, request, uint16_t( value ), uint16_t( index ), data, uint16_t( length ),
                                              HANTEK_TIMEOUT );
-    if ( verboseLevel > 6 )
-        qDebug() << "      ScopeDevice::controlTransfer() =" << errorCode;
+    if ( verboseLevel > 6 ) {
+        QDebug line = qDebug().noquote() << "      ScopeDevice::controlTransfer()" << usbTypeString( type )
+                                         << usbControlCode( request );
+        line << value << index << '{';
+        for ( unsigned iii = 0; iii < length; ++iii ) {
+            if ( length > 8 && 0 == iii % 16 )
+                line << "\n     ";
+            line << QString::number( data[ iii ], 16 );
+        }
+        line << "} =" << errorCode;
+    }
 
     if ( errorCode == LIBUSB_ERROR_NO_DEVICE )
         disconnectFromDevice();

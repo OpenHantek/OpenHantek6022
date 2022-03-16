@@ -62,6 +62,7 @@ struct ControlSettings {
     RecordLengthID recordLengthId = 1;             ///< The id in the record length array
     unsigned channelCount = 0;                     ///< Number of activated channels
     Hantek::CalibrationValues *calibrationValues;  ///< Calibration data for the channel offsets & gains
+    Hantek::CalibrationValues *correctionValues;   ///< Online correction data for the channel offsets
     Hantek::ControlGetCalibration cmdGetCalibration;
 };
 } // namespace Dso

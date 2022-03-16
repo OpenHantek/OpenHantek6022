@@ -513,7 +513,7 @@ int main( int argc, char *argv[] ) {
 
     // the stepwise text output gives some hints about the shutdown timing
     // not needed with appropriate verbose level
-    if ( verboseLevel < 3 )
+    if ( verboseLevel < 2 )
         std::cerr << "OpenHantek6022 "; // 1st part
 
     dsoControl.quitSampling(); // send USB control command, stop bulk transfer
@@ -524,22 +524,24 @@ int main( int argc, char *argv[] ) {
     waitForDso = qMax( waitForDso, 10000U ); // wait for at least 10 s
     capturing.requestInterruption();
     capturing.wait( waitForDso );
-    if ( verboseLevel < 3 )
+    if ( verboseLevel < 2 )
         std::cerr << "has "; // 2nd part
 
     // now quit the data acquisition thread
     // wait 2 * record time (delay is ms) for dso to finish
     dsoControlThread.quit();
     dsoControlThread.wait( waitForDso );
-    if ( verboseLevel < 3 )
+    if ( verboseLevel < 2 )
         std::cerr << "stopped "; // 3rd part
 
     // next stop the data processing
     postProcessing.stop();
     postProcessingThread.quit();
     postProcessingThread.wait( 10000 );
-    if ( verboseLevel < 3 )
+    if ( verboseLevel < 2 )
         std::cerr << "after "; // 4th part
+
+    dsoControl.prepareForShutdown();
 
     // finally shut down the libUSB communication
     if ( scopeDevice )
@@ -547,7 +549,7 @@ int main( int argc, char *argv[] ) {
     if ( context )
         libusb_exit( context );
 
-    if ( verboseLevel < 3 )
+    if ( verboseLevel < 2 )
         std::cerr << openHantekMainWindow.elapsedTime.elapsed() / 1000 << " s\n"; // last part
     else
         std::cerr << "OpenHantek6022 has stopped after " << openHantekMainWindow.elapsedTime.elapsed() / 1000 << " s\n";

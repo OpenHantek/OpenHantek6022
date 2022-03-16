@@ -10,8 +10,12 @@ ControlSettings::ControlSettings( const ControlSamplerateLimits *limits, size_t 
     trigger.level.resize( channelCount );
     voltage.resize( channelCount );
     calibrationValues = new Hantek::CalibrationValues;
+    correctionValues = new Hantek::CalibrationValues;
 }
 
-ControlSettings::~ControlSettings() { delete calibrationValues; }
+ControlSettings::~ControlSettings() {
+    delete calibrationValues;
+    delete correctionValues;
+}
 
 } // namespace Dso

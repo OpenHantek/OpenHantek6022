@@ -119,6 +119,9 @@ class HantekDsoControl : public QObject {
     /// \brief Stops the device.
     void quitSampling();
 
+    /// \brief Saves calibration settings e.g. to the scope's EEPROM
+    void prepareForShutdown();
+
   private:
     bool singleChannel = false;
     unsigned verboseLevel = 0;
@@ -130,7 +133,8 @@ class HantekDsoControl : public QObject {
     bool replaceCalibrationEEPROM = false;
     Dso::ErrorCode getCalibrationValues();
     Dso::ErrorCode getCalibrationFromEEPROM();
-    Dso::ErrorCode updateCalibrationValues();
+    Dso::ErrorCode updateCalibrationValues( bool useEEPROM = false );
+    Dso::ErrorCode writeCalibrationToEEPROM();
 
     /// Get the number of samples that are expected returned by the scope.
     /// In rolling mode this is depends on the usb speed and packet size.
@@ -191,7 +195,7 @@ class HantekDsoControl : public QObject {
     DSOsamples result;
     unsigned expectedSampleCount = 0; ///< The expected total number of samples at
                                       /// the last check before sampling started
-    bool calibrateOffsetActive = false;
+    bool liveCalibrationActive = false;
     bool calibrationHasChanged = false;
     std::unique_ptr< QSettings > calibrationSettings;
     double offsetCorrection[ HANTEK_GAIN_STEPS ][ HANTEK_CHANNEL_NUMBER ];
@@ -310,11 +314,7 @@ class HantekDsoControl : public QObject {
     void restartSampling();
 
     /// \brief enable/disable offset calibration
-    void calibrateOffset( bool enable ) {
-        calibrateOffsetActive = enable;
-        if ( enable )
-            calibrationHasChanged = true;
-    }
+    void calibrateOffset( bool enable );
 
   signals:
     void samplingStatusChanged( bool enabled );                ///< The oscilloscope started/stopped sampling/waiting for trigger
