@@ -507,7 +507,7 @@ Dso::ErrorCode HantekDsoControl::getCalibrationValues() {
 Dso::ErrorCode HantekDsoControl::updateCalibrationValues( bool useEEPROM ) {
     if ( calibrationHasChanged ) {
         if ( verboseLevel > 2 )
-            qDebug() << "  Update calibration data";
+            qDebug() << "  Write calibration data into" << ( useEEPROM ? "EEPROM" : "iniFile" );
 
         calibrationSettings->beginGroup( "gain" );
         for ( int ch = 0; ch < HANTEK_CHANNEL_NUMBER; ++ch ) {
@@ -647,13 +647,12 @@ Dso::ErrorCode HantekDsoControl::writeCalibrationToEEPROM() {
 
 void HantekDsoControl::calibrateOffset( bool enable ) {
     if ( enable ) {
-        if ( !liveCalibrationActive )
+        if ( !scope->liveCalibrationActive )
             memcpy( controlsettings.correctionValues, controlsettings.calibrationValues, sizeof( CalibrationValues ) );
     } else {
-        if ( liveCalibrationActive )
+        if ( scope->liveCalibrationActive )
             calibrationHasChanged = true;
     }
-    liveCalibrationActive = enable;
 }
 
 
@@ -775,6 +774,9 @@ void HantekDsoControl::convertRawDataToSamples() {
         double offsetCorr = offsetCorrection[ gainIndex ][ channel ];
         double liveOffset = 0.0;
 
+        int minValue = 0xFF;
+        int maxValue = 0x00;
+
         for ( unsigned index = 0; index < resultSamples;
               ++index, rawBufPos += activeChannels * rawOversampling ) { // advance either by one or two blocks
             if ( rawBufPos + rawOversampling * activeChannels > rawSampleCount * activeChannels )
@@ -784,10 +786,14 @@ void HantekDsoControl::convertRawDataToSamples() {
                 int rawSample = raw.data[ rawBufPos + channel + iii ]; // CH1/CH2/CH1/CH2 ...
                 if ( rawSample == 0x00 || rawSample == 0xFF )          // min or max -> clipped
                     result.clipped |= 0x01 << channel;
+                if ( rawSample > maxValue )
+                    maxValue = rawSample;
+                if ( rawSample < minValue )
+                    minValue = rawSample;
                 sample += double( rawSample ) - offsetCalibration;
             }
             sample /= rawOversampling;
-            if ( liveCalibrationActive ) {
+            if ( scope->liveCalibrationActive ) {
                 liveOffset += sample;
             }
             // qDebug() << channel << offsetCorrection[ gainIndex ][ channel ];
@@ -797,7 +803,12 @@ void HantekDsoControl::convertRawDataToSamples() {
             result.data[ channel ][ index ] = sign * sample / voltageScale * gainCalibration * probeAttn;
         }
         liveOffset /= resultSamples;
-        if ( liveCalibrationActive ) {
+
+        if ( maxValue - minValue > 10 || liveOffset > 20 ) { // big jitter/noise, offset too big
+            emit liveCalibrationError();                     // stop live calibration without storing something
+        }
+
+        if ( scope->liveCalibrationActive ) {
             offsetCorrection[ gainIndex ][ channel ] = liveOffset;
             if ( result.samplerate < 30e6 ) {
                 controlsettings.correctionValues->off.ls.step[ gainIndex ][ channel ] =
@@ -811,9 +822,6 @@ void HantekDsoControl::convertRawDataToSamples() {
                     offsetToFine( liveOffset + offsetCalibration );
             }
             controlsettings.correctionValues->gain.step[ gainIndex ][ channel ] = gainToByte( gainCorr * gainCalibration );
-            if ( verboseLevel > 5 )
-                qDebug() << "     HDC::convertRawDataToSamples() offsetCorrection[" << gainIndex << "][" << channel
-                         << "] =" << liveOffset;
         }
     }
 }

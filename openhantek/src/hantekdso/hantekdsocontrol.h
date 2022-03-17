@@ -195,7 +195,6 @@ class HantekDsoControl : public QObject {
     DSOsamples result;
     unsigned expectedSampleCount = 0; ///< The expected total number of samples at
                                       /// the last check before sampling started
-    bool liveCalibrationActive = false;
     bool calibrationHasChanged = false;
     std::unique_ptr< QSettings > calibrationSettings;
     double offsetCorrection[ HANTEK_GAIN_STEPS ][ HANTEK_CHANNEL_NUMBER ];
@@ -329,6 +328,8 @@ class HantekDsoControl : public QObject {
     void samplerateChanged( double samplerate ); ///< The samplerate has changed
 
     void communicationError() const;
+
+    void liveCalibrationError() const; // live calibration stopped due to noise or big offset
 };
 
 Q_DECLARE_METATYPE( DSOsamples * )

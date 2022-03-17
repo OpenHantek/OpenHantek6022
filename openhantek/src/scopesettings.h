@@ -94,6 +94,7 @@ struct DsoSettingsScope {
     bool histogram = false;
     bool hasACcoupling = false;
     bool hasACmodification = false;
+    bool liveCalibrationActive = false;
 
     double gain( unsigned channel ) const { return gainSteps[ voltage[ channel ].gainStepIndex ] * voltage[ channel ].probeAttn; }
 

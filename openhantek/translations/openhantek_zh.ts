@@ -592,59 +592,64 @@
         <translation type="vanished">放大 x%L1</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="622"/>
-        <location filename="../src/dsowidget.cpp" line="624"/>
-        <location filename="../src/dsowidget.cpp" line="665"/>
-        <location filename="../src/dsowidget.cpp" line="711"/>
-        <location filename="../src/dsowidget.cpp" line="720"/>
-        <location filename="../src/dsowidget.cpp" line="741"/>
+        <location filename="../src/dsowidget.cpp" line="621"/>
+        <location filename="../src/dsowidget.cpp" line="623"/>
+        <location filename="../src/dsowidget.cpp" line="664"/>
+        <location filename="../src/dsowidget.cpp" line="710"/>
+        <location filename="../src/dsowidget.cpp" line="719"/>
+        <location filename="../src/dsowidget.cpp" line="740"/>
         <source>/div</source>
         <translation>/div</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="79"/>
+        <location filename="../src/dsowidget.cpp" line="886"/>
+        <source>&lt;b&gt; OFFSET CALIBRATION &lt;/b&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/dsowidget.cpp" line="894"/>
         <source>TR</source>
         <translation>TR</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="200"/>
+        <location filename="../src/dsowidget.cpp" line="199"/>
         <source>Markers</source>
         <translation>光标</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="569"/>
-        <location filename="../src/dsowidget.cpp" line="587"/>
+        <location filename="../src/dsowidget.cpp" line="568"/>
+        <location filename="../src/dsowidget.cpp" line="586"/>
         <source>ON</source>
         <translation>ON</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="573"/>
-        <location filename="../src/dsowidget.cpp" line="591"/>
+        <location filename="../src/dsowidget.cpp" line="572"/>
+        <location filename="../src/dsowidget.cpp" line="590"/>
         <source>OFF</source>
         <translation>OFF</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="612"/>
+        <location filename="../src/dsowidget.cpp" line="611"/>
         <source>Markers  </source>
         <translation>光标  </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="613"/>
+        <location filename="../src/dsowidget.cpp" line="612"/>
         <source>Time: </source>
         <translation>时间: </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="614"/>
+        <location filename="../src/dsowidget.cpp" line="613"/>
         <source>Frequency: </source>
         <translation>频率： </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="617"/>
+        <location filename="../src/dsowidget.cpp" line="616"/>
         <source>Zoom x%L1  </source>
         <translation>放大 x%L1  </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="619"/>
+        <location filename="../src/dsowidget.cpp" line="618"/>
         <source>Zoom ---  </source>
         <translation>放大 ---  </translation>
     </message>
@@ -653,22 +658,22 @@
         <translation type="vanished">%L1%</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="692"/>
+        <location filename="../src/dsowidget.cpp" line="691"/>
         <source>%1  %2  %3  %4  %5</source>
         <translation>%1  %2  %3  %4  %5</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="855"/>
+        <location filename="../src/dsowidget.cpp" line="854"/>
         <source> on screen</source>
         <translation> on screen</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="905"/>
+        <location filename="../src/dsowidget.cpp" line="910"/>
         <source>pp</source>
         <translation>pp</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="914"/>
+        <location filename="../src/dsowidget.cpp" line="919"/>
         <source>rms</source>
         <translation>rms</translation>
     </message>
@@ -685,7 +690,7 @@
         <translation type="vanished">%1  %2  %3  %4</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="731"/>
+        <location filename="../src/dsowidget.cpp" line="730"/>
         <source>/s</source>
         <translation>/s</translation>
     </message>
@@ -1144,87 +1149,87 @@
         <translation>保存配置</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="365"/>
+        <location filename="../src/mainwindow.cpp" line="373"/>
         <source>Disable fading of previous graphs</source>
         <translation>禁用波形的淡出</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="367"/>
+        <location filename="../src/mainwindow.cpp" line="375"/>
         <source>Enable fading of previous graphs</source>
         <translation>使能波形的淡出</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="375"/>
+        <location filename="../src/mainwindow.cpp" line="383"/>
         <source>Hide histogram</source>
         <translation>隐藏直方图</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="377"/>
+        <location filename="../src/mainwindow.cpp" line="385"/>
         <source>Show histogram</source>
         <translation>显示直方图</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="386"/>
+        <location filename="../src/mainwindow.cpp" line="394"/>
         <source>Hide magnified scope</source>
         <translation>隐藏波形放大窗口</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="388"/>
+        <location filename="../src/mainwindow.cpp" line="396"/>
         <source>Show magnified scope</source>
         <translation>显示波形放大窗口</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="398"/>
+        <location filename="../src/mainwindow.cpp" line="406"/>
         <source>Hide measurements</source>
         <translation>隐藏测量窗口</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="400"/>
+        <location filename="../src/mainwindow.cpp" line="408"/>
         <source>Show measurements</source>
         <translation>显示测量窗口</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="429"/>
+        <location filename="../src/mainwindow.cpp" line="437"/>
         <source>&lt;p&gt;Open source software for Hantek6022 USB oscilloscopes&lt;/p&gt;&lt;p&gt;Maintainer: Martin Homuth-Rosemann&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2010, 2011 Oliver Haag&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2012-%7 OpenHantek community&lt;br/&gt;&lt;a href=&apos;https://github.com/OpenHantek&apos;&gt;https://github.com/OpenHantek&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Open source firmware copyright &amp;copy; 2019-%7 Ho-Ro&lt;br/&gt;&lt;a href=&apos;https://github.com/Ho-Ro/Hantek6022API&apos;&gt;https://github.com/Ho-Ro/Hantek6022API&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Device: %1 (%2), FW%3&lt;/p&gt;&lt;p&gt;Graphic: %4 - GLSL version %5&lt;/p&gt;&lt;p&gt;Qt version: %6&lt;/p&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="443"/>
+        <location filename="../src/mainwindow.cpp" line="451"/>
         <source>&lt;p&gt;Running since %1 seconds.&lt;/p&gt;</source>
         <translation>&lt;p&gt;已运行 %1 秒。&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="474"/>
+        <location filename="../src/mainwindow.cpp" line="482"/>
         <source>%1: %2</source>
         <translation>%1: %2</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="496"/>
+        <location filename="../src/mainwindow.cpp" line="504"/>
         <source>yyyy-MM-dd hh:mm:ss</source>
         <translation>yyyy-MM-dd hh:mm:ss</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="497"/>
+        <location filename="../src/mainwindow.cpp" line="505"/>
         <source>yyyyMMdd_hhmmss</source>
         <translation>yyyyMMdd_hhmmss</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="533"/>
+        <location filename="../src/mainwindow.cpp" line="541"/>
         <source>Image (*.png *.jpg)</source>
         <translation>图像文件 (*.png *.jpg)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="533"/>
+        <location filename="../src/mainwindow.cpp" line="541"/>
         <source>Portable Document Format (*.pdf)</source>
         <translation>便携式文件格式 (*.pdf)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="534"/>
+        <location filename="../src/mainwindow.cpp" line="542"/>
         <source>Save screenshot</source>
         <translation>保存截图文件</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="565"/>
+        <location filename="../src/mainwindow.cpp" line="573"/>
         <source>Print oscillograph</source>
         <translation>打印波形</translation>
     </message>

@@ -76,7 +76,6 @@ DsoWidget::DsoWidget( DsoSettingsScope *scope, DsoSettingsView *view, const Dso:
     settingsFrequencybaseLabel->setPalette( palette );
     swTriggerStatus = new QLabel();
     swTriggerStatus->setMinimumWidth( 20 );
-    swTriggerStatus->setText( tr( "TR" ) );
     swTriggerStatus->setAlignment( Qt::AlignCenter );
     swTriggerStatus->setAutoFillBackground( true );
     swTriggerStatus->setVisible( false );
@@ -688,7 +687,7 @@ void DsoWidget::updateTriggerDetails() {
         int dutyCyle = int( 0.5 + ( 100.0 * pulseWidth1 ) / ( pulseWidth1 + pulseWidth2 ) );
         pulseWidthString += " (" + QString::number( dutyCyle ) + "%)";
     }
-    if ( scope->trigger.mode != Dso::TriggerMode::ROLL ) {
+    if ( !scope->liveCalibrationActive && scope->trigger.mode != Dso::TriggerMode::ROLL ) {
         settingsTriggerLabel->setText( tr( "%1  %2  %3  %4  %5" )
                                            .arg( scope->voltage[ unsigned( scope->trigger.source ) ].name,
                                                  Dso::slopeString( scope->trigger.slope ), levelString, pretriggerString,
@@ -699,7 +698,7 @@ void DsoWidget::updateTriggerDetails() {
 }
 
 
-/// \brief Update the label about the trigger settings
+/// \brief Update the label about the voltage settings
 void DsoWidget::updateVoltageDetails( ChannelID channel ) {
     if ( channel >= scope->voltage.size() )
         return;
@@ -883,15 +882,21 @@ void DsoWidget::showNew( std::shared_ptr< PPresult > analysedData ) {
     zoomScope->showData( analysedData );
 
     QPalette triggerLabelPalette = palette();
-    if ( scope->trigger.mode == Dso::TriggerMode::ROLL ) {
-        triggerLabelPalette.setColor( QPalette::WindowText, view->colors->background );
-        triggerLabelPalette.setColor( QPalette::Window, view->colors->background );
+    if ( scope->liveCalibrationActive ) {
+        swTriggerStatus->setText( tr( "<b> OFFSET CALIBRATION </b>" ) );
+        triggerLabelPalette.setColor( QPalette::WindowText, Qt::black );
+        triggerLabelPalette.setColor( QPalette::Window, Qt::red );
+        swTriggerStatus->setPalette( triggerLabelPalette );
+        swTriggerStatus->setVisible( true );
+    } else if ( scope->trigger.mode == Dso::TriggerMode::ROLL ) {
+        swTriggerStatus->setVisible( false );
     } else {
+        swTriggerStatus->setText( tr( "TR" ) );
         triggerLabelPalette.setColor( QPalette::WindowText, Qt::black );
         triggerLabelPalette.setColor( QPalette::Window, analysedData->softwareTriggerTriggered ? Qt::green : Qt::red );
+        swTriggerStatus->setPalette( triggerLabelPalette );
+        swTriggerStatus->setVisible( true );
     }
-    swTriggerStatus->setPalette( triggerLabelPalette );
-    swTriggerStatus->setVisible( true );
     updateRecordLength( dotsOnScreen );
     pulseWidth1 = analysedData.get()->data( 0 )->pulseWidth1;
     pulseWidth2 = analysedData.get()->data( 0 )->pulseWidth2;

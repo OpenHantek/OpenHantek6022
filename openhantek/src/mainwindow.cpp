@@ -355,8 +355,16 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
         configDialog->show();
     } );
 
-    connect( ui->actionCalibrateOffset, &QAction::toggled,
-             [ dsoControl ]( bool enabled ) { dsoControl->calibrateOffset( enabled ); } );
+    connect( ui->actionCalibrateOffset, &QAction::toggled, [ dsoControl, scope ]( bool active ) {
+        dsoControl->calibrateOffset( active );
+        scope->liveCalibrationActive = active;
+    } );
+
+    // disable calibration e.g. if zero signal too noisy or offset too big
+    connect( dsoControl, &HantekDsoControl::liveCalibrationError, [ this, scope ]() {
+        scope->liveCalibrationActive = false;           // set incactive first to avoid ..
+        ui->actionCalibrateOffset->setChecked( false ); // .. calibration storage actions
+    } );
 
     connect( this->ui->actionPhosphor, &QAction::toggled, [ this ]( bool enabled ) {
         dsoSettings->view.digitalPhosphor = enabled;
