@@ -79,7 +79,7 @@
     <message>
         <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="77"/>
         <source>Show note values for audio frequencies</source>
-        <translation type="unfinished"></translation>
+        <translation>Показать значения нот для звуковых частот</translation>
     </message>
     <message>
         <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="86"/>
@@ -89,7 +89,7 @@
     <message>
         <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="9"/>
         <source>Kaiser</source>
-        <translation type="unfinished"></translation>
+        <translation>Кайзера</translation>
     </message>
     <message>
         <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="11"/>
@@ -110,7 +110,7 @@
     <message>
         <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="44"/>
         <source>Optimize FFT (slower startup, but lower CPU load)</source>
-        <translation type="unfinished"></translation>
+        <translation>Оптимизировать FFT (медленнее запуск, но ниже загрузка ЦП)</translation>
     </message>
     <message>
         <source>Calculate power dissipation for load resistance&lt;br/&gt;(0 = off)</source>
@@ -156,7 +156,7 @@
     <message>
         <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="59"/>
         <source>Calculate power dissipation for load resistance</source>
-        <translation>Рассчитать рассеиваемую мощность для сопротивления нагрузки</translation>
+        <translation>Рассчитать рассеиваемую мощность для резистивной нагрузки</translation>
     </message>
     <message>
         <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="69"/>
@@ -193,17 +193,17 @@
     <message>
         <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="132"/>
         <source>Auto</source>
-        <translation>Автоматика</translation>
+        <translation>Авто</translation>
     </message>
     <message>
         <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="132"/>
         <source>Light</source>
-        <translation>Светлый</translation>
+        <translation>Светлая</translation>
     </message>
     <message>
         <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="132"/>
         <source>Dark</source>
-        <translation>Темный</translation>
+        <translation>Тёмная</translation>
     </message>
     <message>
         <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="32"/>
@@ -292,7 +292,7 @@
     <message>
         <location filename="../src/configdialog/configdialog.cpp" line="96"/>
         <source>Analysis</source>
-        <translation>Анализировать</translation>
+        <translation>Анализ</translation>
     </message>
     <message>
         <source>Spectrum</source>
@@ -337,7 +337,7 @@
     <message>
         <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="18"/>
         <source>Minimal time between captured frames&lt;br/&gt;(Longer times reduce the CPU load)</source>
-        <translation>Минимальное время между захватами кадров&lt;br/&gt;(Больше времени - меньше загрузка процессора)</translation>
+        <translation>Минимальное время между захватами кадров&lt;br/&gt;(Больше времени - меньше загрузка ЦП)</translation>
     </message>
     <message>
         <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="30"/>
@@ -357,12 +357,12 @@
     <message>
         <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="8"/>
         <source>Step</source>
-        <translation>Лестница</translation>
+        <translation>Ступенчатая</translation>
     </message>
     <message>
         <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="8"/>
         <source>Sinc</source>
-        <translation>Sinc</translation>
+        <translation>Синх.</translation>
     </message>
     <message>
         <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="49"/>
@@ -544,11 +544,6 @@
         <translation>/дел</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="886"/>
-        <source>&lt;b&gt; OFFSET CALIBRATION &lt;/b&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../src/dsowidget.cpp" line="894"/>
         <source>TR</source>
         <translation> </translation>
@@ -613,6 +608,11 @@
         <location filename="../src/dsowidget.cpp" line="854"/>
         <source> on screen</source>
         <translation> на экране</translation>
+    </message>
+    <message>
+        <location filename="../src/dsowidget.cpp" line="886"/>
+        <source>&lt;b&gt; OFFSET CALIBRATION &lt;/b&gt;</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/dsowidget.cpp" line="910"/>
@@ -842,7 +842,7 @@
     <message>
         <location filename="../src/mainwindow.ui" line="211"/>
         <source>Calibrate &amp;Offset</source>
-        <translation type="unfinished"></translation>
+        <translation>Калибровка &amp;смещения</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="219"/>
@@ -1340,62 +1340,62 @@
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="41"/>
         <source>CH1 AC</source>
-        <translation>К1  AC</translation>
+        <translation>К1 AC</translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="43"/>
         <source>CH2 AC</source>
-        <translation>К2  AC</translation>
+        <translation>К2 AC</translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="45"/>
         <source>CH1 DC</source>
-        <translation>К1  DC</translation>
+        <translation>К1 DC</translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="47"/>
         <source>CH2 DC</source>
-        <translation>К2  DC</translation>
+        <translation>К2 DC</translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="49"/>
         <source>CH1 Abs</source>
-        <translation type="unfinished"></translation>
+        <translation>К1 Abs</translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="51"/>
         <source>CH2 Abs</source>
-        <translation type="unfinished"></translation>
+        <translation>К2 Abs</translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="53"/>
         <source>CH1 Sign</source>
-        <translation type="unfinished"></translation>
+        <translation>К1 Sign</translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="55"/>
         <source>CH2 Sign</source>
-        <translation type="unfinished"></translation>
+        <translation>К2 Sign</translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="57"/>
         <source>CH1 AC Sign</source>
-        <translation type="unfinished"></translation>
+        <translation>К1 AC Sign</translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="59"/>
         <source>CH2 AC Sign</source>
-        <translation type="unfinished"></translation>
+        <translation>К2 AC Sign</translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="61"/>
         <source>CH1 Trigger</source>
-        <translation type="unfinished"></translation>
+        <translation>К1 Триггер</translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="63"/>
         <source>CH2 Trigger</source>
-        <translation type="unfinished"></translation>
+        <translation>К2 Триггер</translation>
     </message>
     <message>
         <source>Rectangular</source>
@@ -1720,72 +1720,72 @@
         <location filename="../src/main.cpp" line="136"/>
         <location filename="../src/main.cpp" line="171"/>
         <source>Show the international interface, do not translate</source>
-        <translation type="unfinished"></translation>
+        <translation>Показывать международный интерфейс, не переводить</translation>
     </message>
     <message>
         <location filename="../src/main.cpp" line="161"/>
         <source>Demo mode without scope HW</source>
-        <translation type="unfinished"></translation>
+        <translation>Демо режим без аппаратуры осциллографа</translation>
     </message>
     <message>
         <location filename="../src/main.cpp" line="164"/>
         <source>Use OpenGL ES instead of OpenGL</source>
-        <translation type="unfinished"></translation>
+        <translation>Использовать OpenGL ES вместо OpenGL</translation>
     </message>
     <message>
         <location filename="../src/main.cpp" line="166"/>
         <source>Force OpenGL SL version 1.20</source>
-        <translation type="unfinished"></translation>
+        <translation>Принудительное использование OpenGL SL version 1.20</translation>
     </message>
     <message>
         <location filename="../src/main.cpp" line="168"/>
         <source>Force OpenGL SL version 1.50</source>
-        <translation type="unfinished"></translation>
+        <translation>Принудительное использование OpenGL SL version 1.50</translation>
     </message>
     <message>
         <location filename="../src/main.cpp" line="173"/>
         <source>Define the system font</source>
-        <translation type="unfinished"></translation>
+        <translation>Определить системный шрифт</translation>
     </message>
     <message>
         <location filename="../src/main.cpp" line="174"/>
         <source>Font</source>
-        <translation type="unfinished"></translation>
+        <translation>Шрифт</translation>
     </message>
     <message>
         <location filename="../src/main.cpp" line="178"/>
         <source>Set the font size (default = %1, 0: automatic from dpi)</source>
-        <translation type="unfinished"></translation>
+        <translation>Задать размер шрифта (по умолчанию = %1, 0: автоматически от dpi)</translation>
     </message>
     <message>
         <location filename="../src/main.cpp" line="180"/>
         <source>Size</source>
-        <translation type="unfinished"></translation>
+        <translation>Размер</translation>
     </message>
     <message>
         <location filename="../src/main.cpp" line="184"/>
         <source>Set the font condensed value (default = %1)</source>
-        <translation type="unfinished"></translation>
+        <translation>Задать значение сжатия шрифта (по умолчанию = %1)</translation>
     </message>
     <message>
         <location filename="../src/main.cpp" line="185"/>
         <source>Condensed</source>
-        <translation type="unfinished"></translation>
+        <translation>Сжатый</translation>
     </message>
     <message>
         <location filename="../src/main.cpp" line="188"/>
         <source>Reset persistent settings, start with default</source>
-        <translation type="unfinished"></translation>
+        <translation>Сбросить постоянные настройки, начать со значений по умолчанию</translation>
     </message>
     <message>
         <location filename="../src/main.cpp" line="191"/>
         <source>Verbose tracing of program startup, ui and processing steps</source>
-        <translation type="unfinished"></translation>
+        <translation>Подробная трассировка запуска программы, пользовательского интерфейса и этапов обработки</translation>
     </message>
     <message>
         <location filename="../src/main.cpp" line="192"/>
         <source>Level</source>
-        <translation type="unfinished"></translation>
+        <translation>Уровень</translation>
     </message>
 </context>
 </TS>

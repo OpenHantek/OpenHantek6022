@@ -620,7 +620,7 @@
     <message>
         <location filename="../src/dsowidget.cpp" line="886"/>
         <source>&lt;b&gt; OFFSET CALIBRATION &lt;/b&gt;</source>
-        <translation type="unfinished">&lt;b&gt; OFFSET-ABGLEICH &lt;/b&gt;</translation>
+        <translation>&lt;b&gt; OFFSET-ABGLEICH &lt;/b&gt;</translation>
     </message>
     <message>
         <location filename="../src/dsowidget.cpp" line="894"/>
