@@ -117,8 +117,9 @@ VoltageDock::VoltageDock( DsoSettingsScope *scope, const Dso::ControlSpecificati
                          emit modeChanged( Dso::getMathMode( this->scope->voltage[ channel ] ) );
                      }
                  } );
-        connect( b.usedCheckBox, &QAbstractButton::toggled, [ this, channel ]( bool checked ) {
+        connect( b.usedCheckBox, &QCheckBox::toggled, [ this, channel ]( bool checked ) {
             this->scope->voltage[ channel ].used = checked;
+            this->scope->voltage[ channel ].visible = checked;
             emit usedChanged( channel, checked );
         } );
     }
@@ -144,6 +145,7 @@ void VoltageDock::loadSettings( DsoSettingsScope *scope, const Dso::ControlSpeci
 
         setGain( channel, scope->voltage[ channel ].gainStepIndex );
         setUsed( channel, scope->voltage[ channel ].used );
+        scope->voltage[ channel ].visible = scope->voltage[ channel ].used;
         setAttn( channel, scope->voltage[ channel ].probeAttn );
         setInverted( channel, scope->voltage[ channel ].inverted );
     }

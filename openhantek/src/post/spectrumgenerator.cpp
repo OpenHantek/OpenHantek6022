@@ -231,8 +231,9 @@ void SpectrumGenerator::process( PPresult *result ) {
             if ( channelData->voltage.samples[ unsigned( position ) ] > max )
                 max = channelData->voltage.samples[ unsigned( position ) ];
         }
-        channelData->vpp = max - min;
-        // printf( "dots = %d, Vpp = %g\n", dots, channelData->vpp );
+        channelData->vmin = min;
+        channelData->vmax = max;
+        // channelData->vpp = max - min;
 
         // calculate the average value
         double dc = 0.0;
@@ -366,6 +367,8 @@ void SpectrumGenerator::process( PPresult *result ) {
         double peakSpectrum = offsetLimit; // get a start value for peak search
         int peakFreqPos = 0;               // initial position of max spectrum peak
         position = 0;
+        min = INT_MAX;
+        max = INT_MIN;
         for ( auto &oneSample : channelData->spectrum.samples ) {
             // spectrum is power spectrum, but show amplitude spectrum -> 10 * log...
             double value = 10 * log10( oneSample ) + offset;
@@ -378,8 +381,14 @@ void SpectrumGenerator::process( PPresult *result ) {
                 peakSpectrum = value;
                 peakFreqPos = position;
             }
+            if ( value < min )
+                min = value;
+            if ( value > max )
+                max = value;
             ++position;
         }
+        channelData->dBmin = min;
+        channelData->dBmax = max;
 
         // Calculate both peak frequencies (correlation and spectrum) in Hz
         double pF = channelData->spectrum.interval * peakFreqPos;

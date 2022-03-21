@@ -6,6 +6,7 @@
 #include <QColor>
 #include <QCoreApplication>
 #include <QDebug>
+#include <QGuiApplication>
 #include <QMatrix4x4>
 #include <QMessageBox>
 #include <QMouseEvent>
@@ -79,7 +80,7 @@ GlScope::GlScope( DsoSettingsScope *scope, DsoSettingsView *view, QWidget *paren
 }
 
 
-GlScope::~GlScope() { /* virtual destructor necessary */
+GlScope::~GlScope() { // virtual destructor necessary
     if ( scope->verboseLevel > 1 )
         qDebug() << " GLScope::~GLScope()";
 }
@@ -115,11 +116,32 @@ QPointF GlScope::posToPosition( QPointF pos ) {
 }
 
 
+void GlScope::rightMouseEvent( QMouseEvent *event ) {
+    if ( QRect( 0, 0, width(), height() ).contains( event->pos() ) ) {
+        if ( !rightMouseInside ) {                                            // enter scope frame
+            QGuiApplication::setOverrideCursor( QCursor( Qt::CrossCursor ) ); // switch to measure cursor
+        }
+        rightMouseInside = true;
+        rightMousePosition = event->pos();
+        generateGrid();
+        emit cursorMeasurement( posToPosition( event->pos() ), rightMouseInside );
+    } else {
+        if ( rightMouseInside ) {                     // leave scope frame
+            QGuiApplication::restoreOverrideCursor(); // back to normal cursor
+        }
+        rightMouseInside = false;
+        rightMousePosition = QPointF( 0, 0 );
+        generateGrid();
+        emit cursorMeasurement( rightMousePosition, rightMouseInside );
+    }
+}
+
+
 void GlScope::mousePressEvent( QMouseEvent *event ) {
-    if ( scope->verboseLevel > 2 )
-        qDebug() << "  GLS::mPE()" << event;
+    QPointF position = posToPosition( event->pos() );
+    if ( scope->verboseLevel > 3 )
+        qDebug() << "   GLS::mPE()" << event;
     if ( !( zoomed && selectedCursor == 0 ) && event->button() == Qt::LeftButton ) {
-        QPointF position = posToPosition( event->pos() );
         selectedMarker = NO_MARKER;
         DsoSettingsScopeCursor *cursor = cursorInfo[ selectedCursor ];
         // Capture nearest marker located within snap area (+/- 1% of full scale).
@@ -164,16 +186,17 @@ void GlScope::mousePressEvent( QMouseEvent *event ) {
             if ( selectedCursor == 0 )
                 emit markerMoved( selectedCursor, selectedMarker );
         }
-    }
+    } else if ( ( event->buttons() & Qt::RightButton ) )
+        rightMouseEvent( event );
     event->accept();
 }
 
 
 void GlScope::mouseMoveEvent( QMouseEvent *event ) {
-    if ( scope->verboseLevel > 2 )
-        qDebug() << "  GLS::mME()" << event;
+    QPointF position = posToPosition( event->pos() );
+    if ( scope->verboseLevel > 3 )
+        qDebug() << "   GLS::mME()" << event << position;
     if ( !( zoomed && selectedCursor == 0 ) && ( event->buttons() & Qt::LeftButton ) != 0 ) {
-        QPointF position = posToPosition( event->pos() );
         if ( selectedMarker == NO_MARKER ) {
             // qDebug() << "mouseMoveEvent";
             // User started draging outside the snap area of any marker:
@@ -187,14 +210,15 @@ void GlScope::mouseMoveEvent( QMouseEvent *event ) {
             cursorInfo[ selectedCursor ]->pos[ selectedMarker ] = position;
             emit markerMoved( selectedCursor, selectedMarker );
         }
-    }
+    } else if ( event->buttons() & Qt::RightButton )
+        rightMouseEvent( event );
     event->accept();
 }
 
 
 void GlScope::mouseReleaseEvent( QMouseEvent *event ) {
-    if ( scope->verboseLevel > 2 )
-        qDebug() << "  GLS::mRE()" << event;
+    if ( scope->verboseLevel > 3 )
+        qDebug() << "   GLS::mRE()" << event;
     if ( !( zoomed && selectedCursor == 0 ) && event->button() == Qt::LeftButton ) {
         QPointF position = posToPosition( event->pos() );
         if ( selectedMarker < 2 ) {
@@ -204,13 +228,21 @@ void GlScope::mouseReleaseEvent( QMouseEvent *event ) {
         }
         selectedMarker = NO_MARKER;
     }
+    if ( rightMouseInside ) {
+        rightMousePosition = QPointF( 0, 0 );
+        QGuiApplication::restoreOverrideCursor();
+        rightMouseInside = false;
+        generateGrid();
+        emit cursorMeasurement( rightMousePosition, false );
+    }
+    rightMouseInside = false;
     event->accept();
 }
 
 
 void GlScope::mouseDoubleClickEvent( QMouseEvent *event ) {
-    if ( scope->verboseLevel > 2 )
-        qDebug() << "  GLS::mDCE()" << event;
+    if ( scope->verboseLevel > 3 )
+        qDebug() << "   GLS::mDCE()" << event;
     if ( !( zoomed && selectedCursor == 0 ) && ( event->buttons() & Qt::LeftButton ) != 0 ) {
         // left double click positions two markers left and right of clicked pos with zoom=100
         QPointF position = posToPosition( event->pos() );
@@ -242,9 +274,8 @@ void GlScope::mouseDoubleClickEvent( QMouseEvent *event ) {
 
 
 void GlScope::wheelEvent( QWheelEvent *event ) {
-    if ( scope->verboseLevel > 2 )
-        qDebug() << "  GLS::wE()" << event;
-    static std::vector< int > zoomList = { 1, 2, 5, 10, 20, 50, 100, 200, 500 };
+    if ( scope->verboseLevel > 3 )
+        qDebug() << "   GLS::wE()" << event;
     if ( !( zoomed && selectedCursor == 0 ) ) {
         if ( selectedMarker == NO_MARKER ) {
             double step = event->angleDelta().y() / 1200.0; // one click = 0.1

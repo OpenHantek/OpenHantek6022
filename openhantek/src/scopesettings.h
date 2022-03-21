@@ -50,8 +50,9 @@ struct DsoSettingsScopeTrigger {
 
 /// \brief Base for DsoSettingsScopeSpectrum and DsoSettingsScopeVoltage
 struct DsoSettingsScopeChannel {
-    QString name;      ///< Name of this channel
-    bool used = false; ///< true if the channel is turned on
+    QString name;         ///< Name of this channel
+    bool used = false;    ///< true if the channel is used (either visible or input for math etc.)
+    bool visible = false; ///< true if the channel is turned on
     DsoSettingsScopeCursor cursor;
 };
 

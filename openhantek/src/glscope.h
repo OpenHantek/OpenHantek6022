@@ -85,8 +85,11 @@ class GlScope : public QOpenGLWidget {
     void drawHistogramChannelGraph( ChannelID channel, Graph &graph, int historyIndex );
     void drawSpectrumChannelGraph( ChannelID channel, Graph &graph, int historyIndex );
     QPointF posToPosition( QPointF pos );
+    void rightMouseEvent( QMouseEvent *event );
+
   signals:
     void markerMoved( unsigned cursorIndex, unsigned marker );
+    void cursorMeasurement( QPointF position, bool status = true );
 
   private:
     // User settings
@@ -110,6 +113,8 @@ class GlScope : public QOpenGLWidget {
     // Cursors
     std::vector< DsoSettingsScopeCursor * > cursorInfo;
     unsigned selectedCursor = 0;
+    bool rightMouseInside = false;
+    QPointF rightMousePosition = QPointF();
 
     // Grid
     QOpenGLBuffer m_grid;

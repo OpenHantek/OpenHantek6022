@@ -113,6 +113,8 @@ class DsoWidget : public QWidget {
     double pulseWidth2 = 0.0;
     void setColors();
     std::vector< Unit > voltageUnits = { UNIT_VOLTS, UNIT_VOLTS, UNIT_VOLTS };
+    bool cursorMeasurementValid = false;
+    QPointF cursorMeasurementPosition = QPointF();
 
   public slots:
     // Horizontal axis
@@ -158,4 +160,5 @@ class DsoWidget : public QWidget {
     void voltageOffsetChanged( ChannelID channel, double value ); ///< A graph offset has been changed
     void triggerPositionChanged( double value );                  ///< The pretrigger has been changed
     void triggerLevelChanged( ChannelID channel, double value );  ///< A trigger level has been changed
+    void reportCursorMeasurement( QString statusLine = QString(), int timeout = 0 );
 };

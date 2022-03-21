@@ -186,8 +186,15 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
             statusBar()->showMessage( tr( "Invalid command" ), 3000 );
     } );
 
-    // Connect general signals
-    connect( dsoControl, &HantekDsoControl::statusMessage, statusBar(), &QStatusBar::showMessage );
+    // Connect signals that display text in statusbar
+    connect( dsoControl, &HantekDsoControl::statusMessage, [ this ]( QString text, int timeout ) {
+        ui->actionManualCommand->setChecked( false );
+        statusBar()->showMessage( text, timeout );
+    } );
+    connect( dsoWidget, &DsoWidget::reportCursorMeasurement, [ this ]( QString text, int timeout ) {
+        ui->actionManualCommand->setChecked( false );
+        statusBar()->showMessage( text, timeout );
+    } );
 
     // Connect signals to DSO controller and widget
     connect( horizontalDock, &HorizontalDock::samplerateChanged, [ dsoControl, this ]() {
@@ -503,11 +510,9 @@ void MainWindow::screenShot( screenshotType_t screenshotType, bool autoSafe ) {
     QDateTime now = QDateTime::currentDateTime();
     QString docName = now.toString( tr( "yyyy-MM-dd hh:mm:ss" ) );
     QString fileName = now.toString( tr( "yyyyMMdd_hhmmss" ) );
-    commandEdit->setText( docName ); // show date in bottom line
-    commandEdit->setVisible( true );
+    statusBar()->showMessage( docName ); // show date in bottom line
     activeWindow->render( &screenshot ); // take the screenshot
-    commandEdit->clear();
-    commandEdit->setVisible( false );
+    statusBar()->clearMessage();         // remove bottom line
     dsoWidget->restoreScreenColors();
 
     int sw = screenshot.width();

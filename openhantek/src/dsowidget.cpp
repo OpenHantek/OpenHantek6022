@@ -47,6 +47,7 @@ DsoWidget::DsoWidget( DsoSettingsScope *scope, DsoSettingsView *view, const Dso:
     setupSliders( mainSliders );
     setupSliders( zoomSliders );
 
+    // movement of the two vertical markers "1" and "2"
     connect( mainScope, &GlScope::markerMoved, [ this ]( unsigned cursorIndex, unsigned marker ) {
         mainSliders.markerSlider->setValue( int( marker ), this->scope->getMarker( marker ) );
         mainScope->updateCursor( cursorIndex );
@@ -56,6 +57,20 @@ DsoWidget::DsoWidget( DsoSettingsScope *scope, DsoSettingsView *view, const Dso:
         mainSliders.markerSlider->setValue( int( marker ), this->scope->getMarker( marker ) );
         mainScope->updateCursor( cursorIndex );
         zoomScope->updateCursor( cursorIndex );
+    } );
+
+    // do cursor measurement when right button pressed/moved _inside_ window borders
+    connect( mainScope, &GlScope::cursorMeasurement, [ this ]( QPointF pos, bool status ) {
+        cursorMeasurementValid = status;
+        cursorMeasurementPosition = pos;
+        if ( !status )
+            emit reportCursorMeasurement();
+    } );
+    connect( zoomScope, &GlScope::cursorMeasurement, [ this ]( QPointF pos, bool status ) {
+        cursorMeasurementValid = status;
+        cursorMeasurementPosition = pos;
+        if ( !status )
+            emit reportCursorMeasurement();
     } );
 
     // The table for the settings at screen top
@@ -540,8 +555,8 @@ void DsoWidget::setMeasurementVisible( ChannelID channel ) {
 void DsoWidget::updateMarkerDetails() {
     if ( nullptr == cursorDataGrid ) // not yet initialized
         return;
-    if ( scope->verboseLevel > 4 )
-        qDebug() << "    DsoWidget::updateMarkerDetails()";
+    if ( scope->verboseLevel > 2 )
+        qDebug() << "  DsoWidget::updateMarkerDetails()";
     double m1 = scope->horizontal.cursor.pos[ 0 ].x() + DIVS_TIME / 2; // zero at center -> zero at left margin
     double m2 = scope->horizontal.cursor.pos[ 1 ].x() + DIVS_TIME / 2; // zero at center -> zero at left margin
     if ( m1 > m2 )
@@ -874,6 +889,7 @@ void DsoWidget::updateZoom( bool enabled ) {
     repaint();
 }
 
+
 /// \brief Prints analyzed data.
 void DsoWidget::showNew( std::shared_ptr< PPresult > analysedData ) {
     if ( scope->verboseLevel > 4 )
@@ -901,31 +917,55 @@ void DsoWidget::showNew( std::shared_ptr< PPresult > analysedData ) {
     pulseWidth1 = analysedData.get()->data( 0 )->pulseWidth1;
     pulseWidth2 = analysedData.get()->data( 0 )->pulseWidth2;
     updateTriggerDetails();
+
+    QString uStr;
+    QString mStr;
+    double uCursor = INT_MIN;
+    double mCursor = INT_MIN;
+    bool uVisible = false;
+    bool mVisible = false;
+
     for ( ChannelID channel = 0; channel < scope->voltage.size(); ++channel ) {
         if ( ( scope->voltage[ channel ].used || scope->spectrum[ channel ].used ) && analysedData.get()->data( channel ) ) {
-            voltageUnits[ channel ] = analysedData->data( channel )->voltageUnit; // V² for math multiply functions
+            const DataChannel *data = analysedData.get()->data( channel );
+            voltageUnits[ channel ] = data->voltageUnit; // V² for math multiply functions
             Unit voltageUnit = voltageUnits[ channel ];
+            if ( cursorMeasurementValid ) { // right mouse button pressed, measure at mouse position
+                // qDebug() << "visible" << channel << scope->voltage[ channel ].visible << scope->spectrum[ channel ].visible;
+                // voltage and spec magnitude at cursor position
+                uCursor = ( cursorMeasurementPosition.y() - scope->voltage[ channel ].offset ) * scope->gain( channel );
+                mCursor =
+                    ( cursorMeasurementPosition.y() - scope->spectrum[ channel ].offset ) * scope->spectrum[ channel ].magnitude;
+                // are u and m values inside or near (+- 20% of division) this visible trace?
+                if ( scope->voltage[ channel ].visible ) {
+                    uVisible = true;
+                    if ( uCursor > data->vmin - 0.2 * scope->gain( channel ) &&
+                         uCursor <= data->vmax + 0.2 * scope->gain( channel ) )
+                        uStr += "  " + scope->voltage[ channel ].name + ": " + valueToString( uCursor, voltageUnit, 3 );
+                }
+                if ( scope->spectrum[ channel ].visible ) {
+                    mVisible = true;
+                    if ( mCursor > data->dBmin - 0.2 * scope->spectrum[ channel ].magnitude &&
+                         mCursor <= data->dBmax + 0.2 * scope->spectrum[ channel ].magnitude )
+                        mStr += "  " + scope->spectrum[ channel ].name + ": " + valueToString( mCursor, UNIT_DECIBEL, 3 );
+                }
+            }
             // Vpp Amplitude string representation (3 significant digits)
-            measurementVppLabel[ channel ]->setText( valueToString( analysedData.get()->data( channel )->vpp, voltageUnit, 3 ) +
-                                                     tr( "pp" ) );
+            measurementVppLabel[ channel ]->setText( valueToString( data->vmax - data->vmin, voltageUnit, 3 ) + tr( "pp" ) );
             // DC Amplitude string representation (3 significant digits)
-            measurementDCLabel[ channel ]->setText( valueToString( analysedData.get()->data( channel )->dc, voltageUnit, 3 ) +
-                                                    "=" );
+            measurementDCLabel[ channel ]->setText( valueToString( data->dc, voltageUnit, 3 ) + "=" );
             // AC Amplitude string representation (3 significant digits)
-            measurementACLabel[ channel ]->setText( valueToString( analysedData.get()->data( channel )->ac, voltageUnit, 3 ) +
-                                                    "~" );
+            measurementACLabel[ channel ]->setText( valueToString( data->ac, voltageUnit, 3 ) + "~" );
             // RMS Amplitude string representation (3 significant digits)
-            measurementRMSLabel[ channel ]->setText( valueToString( analysedData.get()->data( channel )->rms, voltageUnit, 3 ) +
-                                                     tr( "rms" ) );
+            measurementRMSLabel[ channel ]->setText( valueToString( data->rms, voltageUnit, 3 ) + tr( "rms" ) );
             // dB Amplitude string representation (3 significant digits)
-            measurementdBLabel[ channel ]->setText( valueToString( analysedData.get()->data( channel )->dB, UNIT_DECIBEL, 3 ) );
+            measurementdBLabel[ channel ]->setText( valueToString( data->dB, UNIT_DECIBEL, 3 ) );
             // Frequency string representation (3 significant digits)
-            measurementFrequencyLabel[ channel ]->setText(
-                valueToString( analysedData.get()->data( channel )->frequency, UNIT_HERTZ, 4 ) );
+            measurementFrequencyLabel[ channel ]->setText( valueToString( data->frequency, UNIT_HERTZ, 4 ) );
             // Frequency note representation
             if ( scope->analysis.showNoteValue ) {
                 measurementLayout->setColumnStretch( 12, 3 );
-                measurementNoteLabel[ channel ]->setText( analysedData.get()->data( channel )->note );
+                measurementNoteLabel[ channel ]->setText( data->note );
             } else { // do not show this label
                 measurementNoteLabel[ channel ]->setText( "" );
                 measurementLayout->setColumnStretch( 12, 0 ); // Note
@@ -934,15 +974,13 @@ void DsoWidget::showNew( std::shared_ptr< PPresult > analysedData ) {
             if ( scope->analysis.calculateDummyLoad && scope->analysis.dummyLoad > 0 ) {
                 measurementLayout->setColumnStretch( 9, 3 );
                 measurementRMSPowerLabel[ channel ]->setText(
-                    valueToString( ( analysedData.get()->data( channel )->rms * analysedData.get()->data( channel )->rms ) /
-                                       scope->analysis.dummyLoad,
-                                   UNIT_WATTS, 3 ) );
+                    valueToString( ( data->rms * data->rms ) / scope->analysis.dummyLoad, UNIT_WATTS, 3 ) );
             } else { // do not show this label
                 measurementRMSPowerLabel[ channel ]->setText( "" );
                 measurementLayout->setColumnStretch( 9, 0 ); // Power
             }
             if ( scope->analysis.calculateTHD ) {
-                double thd = analysedData.get()->data( channel )->thd;
+                double thd = data->thd;
                 measurementLayout->setColumnStretch( 10, 2 );
                 if ( thd > 0 ) // display either xx.x% or xxx%
                     measurementTHDLabel[ channel ]->setText( QString( "%L1%" ).arg( thd * 100, 4, 'f', thd < 1 ? 1 : 0 ) );
@@ -952,17 +990,40 @@ void DsoWidget::showNew( std::shared_ptr< PPresult > analysedData ) {
                 measurementTHDLabel[ channel ]->setText( "" );
                 measurementLayout->setColumnStretch( 10, 0 ); // THD
             }
+        }
 
-            // Highlight clipped channel
-            QPalette validPalette;
-            if ( analysedData.get()->data( channel )->valid ) { // normal display
-                validPalette.setColor( QPalette::WindowText, view->colors->voltage[ channel ] );
-                validPalette.setColor( QPalette::Window, view->colors->background );
-            } else { // warning
-                validPalette.setColor( QPalette::WindowText, Qt::black );
-                validPalette.setColor( QPalette::Window, Qt::red );
-            }
-            measurementNameLabel[ channel ]->setPalette( validPalette );
+        // Highlight clipped channel
+        QPalette validPalette;
+        if ( analysedData.get()->data( channel )->valid ) { // normal display
+            validPalette.setColor( QPalette::WindowText, view->colors->voltage[ channel ] );
+            validPalette.setColor( QPalette::Window, view->colors->background );
+        } else { // warning
+            validPalette.setColor( QPalette::WindowText, Qt::black );
+            validPalette.setColor( QPalette::Window, Qt::red );
+        }
+        measurementNameLabel[ channel ]->setPalette( validPalette );
+    }
+
+    if ( cursorMeasurementValid ) {
+        QString measurement;
+        // show time if inside voltage trace or outside of all traces
+        if ( uVisible && ( !uStr.isEmpty() || ( uStr.isEmpty() && mStr.isEmpty() ) ) ) {
+            measurement += "t: " + valueToString( ( cursorMeasurementPosition.x() + DIVS_TIME / 2.0 ) * scope->horizontal.timebase,
+                                                  UNIT_SECONDS, 3 );
+            measurement += uStr;
+        }
+        // show frequency if inside spectrum trace or outside of all traces
+        if ( mVisible && ( !mStr.isEmpty() || ( uStr.isEmpty() && mStr.isEmpty() ) ) ) {
+            if ( !measurement.isEmpty() )
+                measurement += "  ";
+            measurement +=
+                "f: " + valueToString( ( cursorMeasurementPosition.x() + DIVS_TIME / 2.0 ) * scope->horizontal.frequencybase,
+                                       UNIT_HERTZ, 3 );
+            measurement += mStr;
+        }
+        if ( !measurement.isEmpty() ) {
+            // qDebug().noquote() << measurement;
+            emit reportCursorMeasurement( measurement );
         }
     }
 }
@@ -1116,6 +1177,8 @@ void DsoWidget::updateTriggerLevel( ChannelID channel, double value ) {
 /// \param marker The index of the slider.
 /// \param value The new marker position.
 void DsoWidget::updateMarker( unsigned marker, double value ) {
+    if ( scope->verboseLevel > 3 )
+        qDebug() << "   DsoWidget::updateMarker()" << marker << value;
     scope->setMarker( marker, value );
     adaptTriggerPositionSlider();
     updateMarkerDetails();

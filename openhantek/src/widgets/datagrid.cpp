@@ -21,7 +21,7 @@ DataGrid::DataGrid( QWidget *parent ) : QGroupBox( parent ) {
              [ this ]( unsigned index ) { emit itemSelected( index ); } );
 
     setLayout( cursorsLayout );
-    setFixedWidth( 180 );
+    setFixedWidth( 150 ); // do not waste too much screen space
 }
 
 DataGrid::CursorInfo::CursorInfo() {

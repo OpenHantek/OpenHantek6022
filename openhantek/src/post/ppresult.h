@@ -20,8 +20,11 @@ struct DataChannel {
     SampleValues voltage;          ///< The time-domain voltage levels (V)
     SampleValues spectrum;         ///< The frequency-domain power levels (dB)
     bool valid = true;             ///< Not clipped, distorted, dropouts etc.
-    double vpp = 0.0;              ///< The peak-to-peak voltage of the _displayed_ part of trace
+    double vmin = 0.0;             ///< The minimum sample value of _displayed_ part of trace
+    double vmax = 0.0;             ///< The maximum sample value of _displayed_ part of trace
     double rms = 0.0;              ///< The DC + AC rms value of the signal = sqrt( dc * dc + acc * ac )
+    double dBmin = 0.0;            ///< The minimum magnitude value
+    double dBmax = 0.0;            ///< The maximum magnitude value
     double dc = 0.0;               ///< The DC bias of the signal
     double ac = 0.0;               ///< The AC rms value of the signal
     double dB = 0.0;               ///< The AC rms value as dB (dBV or other depending on config)
