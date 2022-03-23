@@ -47,6 +47,7 @@ class GlScope : public QOpenGLWidget {
         updateCursor( index );
     }
     void generateGrid( int index = -1, double value = 0.0, bool pressed = false );
+    void setVisible( bool visible ) override;
 
   protected:
     /// \brief Initializes the scope widget.
@@ -84,12 +85,12 @@ class GlScope : public QOpenGLWidget {
     void drawVoltageChannelGraph( ChannelID channel, Graph &graph, int historyIndex );
     void drawHistogramChannelGraph( ChannelID channel, Graph &graph, int historyIndex );
     void drawSpectrumChannelGraph( ChannelID channel, Graph &graph, int historyIndex );
-    QPointF posToPosition( QPointF pos );
+    QPointF posToScopePos( QPointF pos );
     void rightMouseEvent( QMouseEvent *event );
 
   signals:
     void markerMoved( unsigned cursorIndex, unsigned marker );
-    void cursorMeasurement( QPointF position, bool status = true );
+    void cursorMeasurement( QPointF measurePosition = QPointF(), QPoint globalPosition = QPoint(), bool status = false );
 
   private:
     // User settings
@@ -114,7 +115,6 @@ class GlScope : public QOpenGLWidget {
     std::vector< DsoSettingsScopeCursor * > cursorInfo;
     unsigned selectedCursor = 0;
     bool rightMouseInside = false;
-    QPointF rightMousePosition = QPointF();
 
     // Grid
     QOpenGLBuffer m_grid;

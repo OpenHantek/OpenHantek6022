@@ -76,6 +76,7 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
     ui->actionOpen->setIcon( iconFont->icon( fa::folderopen, colorMap ) );
     ui->actionSave->setIcon( iconFont->icon( fa::save, colorMap ) );
     ui->actionSettings->setIcon( iconFont->icon( fa::gear, colorMap ) );
+    ui->actionCalibrateOffset->setIcon( iconFont->icon( fa::wrench, colorMap ) );
     ui->actionManualCommand->setIcon( iconFont->icon( fa::edit, colorMap ) );
     ui->actionUserManual->setIcon( iconFont->icon( fa::filepdfo, colorMap ) );
     ui->actionACmodification->setIcon( iconFont->icon( fa::filepdfo, colorMap ) );
@@ -166,32 +167,43 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
     dsoWidget = new DsoWidget( &dsoSettings->scope, &dsoSettings->view, spec );
     setCentralWidget( dsoWidget );
 
-    // Command field inside the status bar
-    commandEdit = new QLineEdit( this );
-    commandEdit->hide();
+    if ( dsoControl->getDevice()->isRealHW() ) { // enable online calibration and manual command input
+        // Command field inside the status bar
+        commandEdit = new QLineEdit( this );
+        commandEdit->hide();
 
-    statusBar()->addPermanentWidget( commandEdit, 1 );
+        statusBar()->addPermanentWidget( commandEdit, 1 );
+        connect( ui->actionCalibrateOffset, &QAction::toggled, [ dsoControl, scope ]( bool active ) {
+            dsoControl->calibrateOffset( active );
+            scope->liveCalibrationActive = active;
+        } );
 
-    connect( ui->actionManualCommand, &QAction::toggled, [ this ]( bool checked ) {
-        commandEdit->setVisible( checked );
-        if ( checked )
-            commandEdit->setFocus();
-    } );
+        // disable calibration e.g. if zero signal too noisy or offset too big
+        connect( dsoControl, &HantekDsoControl::liveCalibrationError, [ this, scope ]() {
+            scope->liveCalibrationActive = false;           // set incactive first to avoid ..
+            ui->actionCalibrateOffset->setChecked( false ); // .. calibration storage actions
+        } );
+        connect( ui->actionManualCommand, &QAction::toggled, [ this ]( bool checked ) {
+            commandEdit->setVisible( checked );
+            if ( checked )
+                commandEdit->setFocus();
+        } );
 
-    connect( commandEdit, &QLineEdit::returnPressed, [ this, dsoControl ]() {
-        Dso::ErrorCode errorCode = dsoControl->stringCommand( commandEdit->text() );
-        commandEdit->clear();
-        this->ui->actionManualCommand->setChecked( false );
-        if ( errorCode != Dso::ErrorCode::NONE )
-            statusBar()->showMessage( tr( "Invalid command" ), 3000 );
-    } );
+        connect( commandEdit, &QLineEdit::returnPressed, [ this, dsoControl ]() {
+            Dso::ErrorCode errorCode = dsoControl->stringCommand( commandEdit->text() );
+            commandEdit->clear();
+            this->ui->actionManualCommand->setChecked( false );
+            if ( errorCode != Dso::ErrorCode::NONE )
+                statusBar()->showMessage( tr( "Invalid command" ), 3000 );
+        } );
+
+    } else { // do not show these actions
+        ui->actionCalibrateOffset->setDisabled( true );
+        ui->actionManualCommand->setDisabled( true );
+    }
 
     // Connect signals that display text in statusbar
     connect( dsoControl, &HantekDsoControl::statusMessage, [ this ]( QString text, int timeout ) {
-        ui->actionManualCommand->setChecked( false );
-        statusBar()->showMessage( text, timeout );
-    } );
-    connect( dsoWidget, &DsoWidget::reportCursorMeasurement, [ this ]( QString text, int timeout ) {
         ui->actionManualCommand->setChecked( false );
         statusBar()->showMessage( text, timeout );
     } );
@@ -360,17 +372,6 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
         DsoConfigDialog *configDialog = new DsoConfigDialog( this->dsoSettings, this );
         configDialog->setModal( true );
         configDialog->show();
-    } );
-
-    connect( ui->actionCalibrateOffset, &QAction::toggled, [ dsoControl, scope ]( bool active ) {
-        dsoControl->calibrateOffset( active );
-        scope->liveCalibrationActive = active;
-    } );
-
-    // disable calibration e.g. if zero signal too noisy or offset too big
-    connect( dsoControl, &HantekDsoControl::liveCalibrationError, [ this, scope ]() {
-        scope->liveCalibrationActive = false;           // set incactive first to avoid ..
-        ui->actionCalibrateOffset->setChecked( false ); // .. calibration storage actions
     } );
 
     connect( this->ui->actionPhosphor, &QAction::toggled, [ this ]( bool enabled ) {

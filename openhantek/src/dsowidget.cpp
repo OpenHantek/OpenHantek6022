@@ -6,9 +6,11 @@
 #include <QFileDialog>
 #include <QGridLayout>
 #include <QLabel>
+#include <QPainter>
 #include <QScreen>
 #include <QSignalBlocker>
 #include <QTimer>
+#include <QToolTip>
 
 #include "dsowidget.h"
 
@@ -60,17 +62,19 @@ DsoWidget::DsoWidget( DsoSettingsScope *scope, DsoSettingsView *view, const Dso:
     } );
 
     // do cursor measurement when right button pressed/moved _inside_ window borders
-    connect( mainScope, &GlScope::cursorMeasurement, [ this ]( QPointF pos, bool status ) {
+    connect( mainScope, &GlScope::cursorMeasurement, [ this ]( QPointF mPos, QPoint gPos, bool status ) {
+        cursorMeasurementPosition = mPos;
+        cursorGlobalPosition = gPos;
         cursorMeasurementValid = status;
-        cursorMeasurementPosition = pos;
         if ( !status )
-            emit reportCursorMeasurement();
+            showCursorMessage(); // switch off
     } );
-    connect( zoomScope, &GlScope::cursorMeasurement, [ this ]( QPointF pos, bool status ) {
+    connect( zoomScope, &GlScope::cursorMeasurement, [ this ]( QPointF mPos, QPoint gPos, bool status ) {
+        cursorMeasurementPosition = mPos;
+        cursorGlobalPosition = gPos;
         cursorMeasurementValid = status;
-        cursorMeasurementPosition = pos;
         if ( !status )
-            emit reportCursorMeasurement();
+            showCursorMessage(); // switch off
     } );
 
     // The table for the settings at screen top
@@ -874,6 +878,8 @@ void DsoWidget::updateRecordLength( unsigned long size ) {
 void DsoWidget::updateZoom( bool enabled ) {
     if ( scope->verboseLevel > 2 )
         qDebug() << "  DsoWidget::updateZoom()" << enabled;
+    cursorMeasurementValid = false;
+    showCursorMessage(); // remove dangling tool tip
     mainLayout->setRowStretch( zoomScopeRow, enabled ? 1 : 0 );
     zoomScope->setVisible( enabled );
     zoomSliders.voltageOffsetSlider->setVisible( enabled );
@@ -941,13 +947,13 @@ void DsoWidget::showNew( std::shared_ptr< PPresult > analysedData ) {
                     uVisible = true;
                     if ( uCursor > data->vmin - 0.2 * scope->gain( channel ) &&
                          uCursor <= data->vmax + 0.2 * scope->gain( channel ) )
-                        uStr += "  " + scope->voltage[ channel ].name + ": " + valueToString( uCursor, voltageUnit, 3 );
+                        uStr += '\t' + scope->voltage[ channel ].name + ": " + valueToString( uCursor, voltageUnit, 3 );
                 }
                 if ( scope->spectrum[ channel ].visible ) {
                     mVisible = true;
                     if ( mCursor > data->dBmin - 0.2 * scope->spectrum[ channel ].magnitude &&
                          mCursor <= data->dBmax + 0.2 * scope->spectrum[ channel ].magnitude )
-                        mStr += "  " + scope->spectrum[ channel ].name + ": " + valueToString( mCursor, UNIT_DECIBEL, 3 );
+                        mStr += '\t' + scope->spectrum[ channel ].name + ": " + valueToString( mCursor, UNIT_DECIBEL, 3 );
                 }
             }
             // Vpp Amplitude string representation (3 significant digits)
@@ -1008,24 +1014,29 @@ void DsoWidget::showNew( std::shared_ptr< PPresult > analysedData ) {
         QString measurement;
         // show time if inside voltage trace or outside of all traces
         if ( uVisible && ( !uStr.isEmpty() || ( uStr.isEmpty() && mStr.isEmpty() ) ) ) {
-            measurement += "t: " + valueToString( ( cursorMeasurementPosition.x() + DIVS_TIME / 2.0 ) * scope->horizontal.timebase,
-                                                  UNIT_SECONDS, 3 );
-            measurement += uStr;
+            measurement +=
+                valueToString( ( cursorMeasurementPosition.x() + DIVS_TIME / 2.0 ) * scope->horizontal.timebase, UNIT_SECONDS, 3 );
+            measurement += '\t' + uStr;
         }
         // show frequency if inside spectrum trace or outside of all traces
         if ( mVisible && ( !mStr.isEmpty() || ( uStr.isEmpty() && mStr.isEmpty() ) ) ) {
             if ( !measurement.isEmpty() )
-                measurement += "  ";
-            measurement +=
-                "f: " + valueToString( ( cursorMeasurementPosition.x() + DIVS_TIME / 2.0 ) * scope->horizontal.frequencybase,
-                                       UNIT_HERTZ, 3 );
-            measurement += mStr;
+                measurement += '\n';
+            measurement += valueToString( ( cursorMeasurementPosition.x() + DIVS_TIME / 2.0 ) * scope->horizontal.frequencybase,
+                                          UNIT_HERTZ, 3 );
+            measurement += '\t' + mStr;
         }
         if ( !measurement.isEmpty() ) {
-            // qDebug().noquote() << measurement;
-            emit reportCursorMeasurement( measurement );
+            showCursorMessage( cursorGlobalPosition, measurement );
         }
     }
+}
+
+
+void DsoWidget::showCursorMessage( QPoint globalPos, QString message ) {
+    if ( scope->verboseLevel > 3 )
+        qDebug() << "   DsoWidget::showCursorMessage()" << globalPos << message;
+    QToolTip::showText( globalPos, message );
 }
 
 

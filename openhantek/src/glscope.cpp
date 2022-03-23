@@ -102,9 +102,20 @@ GlScope *GlScope::createZoomed( DsoSettingsScope *scope, DsoSettingsView *view, 
 }
 
 
-QPointF GlScope::posToPosition( QPointF pos ) {
-    QPointF position( double( pos.x() - width() / 2 ) * DIVS_TIME / double( width() ),
-                      double( height() / 2 - pos.y() ) * DIVS_VOLTAGE / double( height() ) );
+void GlScope::setVisible( bool visible ) {
+    if ( !visible && rightMouseInside ) { // clean up the display
+        QGuiApplication::restoreOverrideCursor();
+        emit cursorMeasurement();
+    }
+    rightMouseInside = false;
+    QWidget::setVisible( visible ); // ... and call the base class method
+}
+
+
+// convert widget position ([0..width()], [0..height()]) to scope-div values (x=[-5..5], y=[4..-4])
+QPointF GlScope::posToScopePos( QPointF pos ) {
+    QPointF position( ( pos.x() - double( width() ) / 2.0 ) * DIVS_TIME / double( width() ),
+                      ( double( height() ) / 2.0 - pos.y() ) * DIVS_VOLTAGE / double( height() ) );
     if ( zoomed ) {
         double m1 = scope->getMarker( 0 );
         double m2 = scope->getMarker( 1 );
@@ -117,28 +128,24 @@ QPointF GlScope::posToPosition( QPointF pos ) {
 
 
 void GlScope::rightMouseEvent( QMouseEvent *event ) {
-    if ( QRect( 0, 0, width(), height() ).contains( event->pos() ) ) {
+    if ( rect().contains( event->pos() ) ) {
         if ( !rightMouseInside ) {                                            // enter scope frame
             QGuiApplication::setOverrideCursor( QCursor( Qt::CrossCursor ) ); // switch to measure cursor
         }
         rightMouseInside = true;
-        rightMousePosition = event->pos();
-        generateGrid();
-        emit cursorMeasurement( posToPosition( event->pos() ), rightMouseInside );
+        emit cursorMeasurement( posToScopePos( event->pos() ), event->globalPos(), true );
     } else {
         if ( rightMouseInside ) {                     // leave scope frame
             QGuiApplication::restoreOverrideCursor(); // back to normal cursor
         }
         rightMouseInside = false;
-        rightMousePosition = QPointF( 0, 0 );
-        generateGrid();
-        emit cursorMeasurement( rightMousePosition, rightMouseInside );
+        emit cursorMeasurement();
     }
 }
 
 
 void GlScope::mousePressEvent( QMouseEvent *event ) {
-    QPointF position = posToPosition( event->pos() );
+    QPointF position = posToScopePos( event->pos() );
     if ( scope->verboseLevel > 3 )
         qDebug() << "   GLS::mPE()" << event;
     if ( !( zoomed && selectedCursor == 0 ) && event->button() == Qt::LeftButton ) {
@@ -193,7 +200,7 @@ void GlScope::mousePressEvent( QMouseEvent *event ) {
 
 
 void GlScope::mouseMoveEvent( QMouseEvent *event ) {
-    QPointF position = posToPosition( event->pos() );
+    QPointF position = posToScopePos( event->pos() );
     if ( scope->verboseLevel > 3 )
         qDebug() << "   GLS::mME()" << event << position;
     if ( !( zoomed && selectedCursor == 0 ) && ( event->buttons() & Qt::LeftButton ) != 0 ) {
@@ -220,7 +227,7 @@ void GlScope::mouseReleaseEvent( QMouseEvent *event ) {
     if ( scope->verboseLevel > 3 )
         qDebug() << "   GLS::mRE()" << event;
     if ( !( zoomed && selectedCursor == 0 ) && event->button() == Qt::LeftButton ) {
-        QPointF position = posToPosition( event->pos() );
+        QPointF position = posToScopePos( event->pos() );
         if ( selectedMarker < 2 ) {
             // qDebug() << "mouseReleaseEvent";
             cursorInfo[ selectedCursor ]->pos[ selectedMarker ] = position;
@@ -229,11 +236,8 @@ void GlScope::mouseReleaseEvent( QMouseEvent *event ) {
         selectedMarker = NO_MARKER;
     }
     if ( rightMouseInside ) {
-        rightMousePosition = QPointF( 0, 0 );
         QGuiApplication::restoreOverrideCursor();
-        rightMouseInside = false;
-        generateGrid();
-        emit cursorMeasurement( rightMousePosition, false );
+        emit cursorMeasurement();
     }
     rightMouseInside = false;
     event->accept();
@@ -245,7 +249,7 @@ void GlScope::mouseDoubleClickEvent( QMouseEvent *event ) {
         qDebug() << "   GLS::mDCE()" << event;
     if ( !( zoomed && selectedCursor == 0 ) && ( event->buttons() & Qt::LeftButton ) != 0 ) {
         // left double click positions two markers left and right of clicked pos with zoom=100
-        QPointF position = posToPosition( event->pos() );
+        QPointF position = posToScopePos( event->pos() );
         if ( selectedMarker == NO_MARKER ) {
             // User double clicked outside the snap area of any marker
             QPointF p = QPointF( 0.5, 0 );       // 10x zoom
@@ -407,7 +411,8 @@ void GlScope::initializeGL() {
         GLEShint = tr( "Try command line option '--useGLES'\n" ); // offer OpenGL ES as fall back solution
     QString OpenGLinfo = "Graphic: " + OpenGLversion;
     renderInfo = OpenGLinfo + " - GLSL version " + GLSLversion;
-    qDebug() << renderInfo.toLocal8Bit().data();
+    if ( !zoomed )
+        qDebug() << renderInfo.toLocal8Bit().data();
     if ( GLSL150 == GLSLversion ) { // use version 150 if supported by OpenGL version >= 3.2
         if ( !program->addShaderFromSourceCode( QOpenGLShader::Vertex, vertexShaderGLSL150 ) ||
              !program->addShaderFromSourceCode( QOpenGLShader::Fragment, fragmentShaderGLSL150 ) ) {
@@ -888,7 +893,7 @@ void GlScope::drawHistogramChannelGraph( ChannelID channel, Graph &graph, int hi
     Graph::VaoCount &h = graph.vaoHistogram[ channel ];
 
     QOpenGLVertexArrayObject::Binder b( h.first );
-    const GLenum dMode = ( view->interpolation == Dso::INTERPOLATION_OFF ) ? GL_POINTS : GL_LINES;
+    const GLenum dMode = GL_LINES; // display histogram with lines
     context()->functions()->glDrawArrays( dMode, 0, h.second );
 }
 

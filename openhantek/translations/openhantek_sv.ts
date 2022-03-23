@@ -418,64 +418,64 @@
 <context>
     <name>DsoWidget</name>
     <message>
-        <location filename="../src/dsowidget.cpp" line="910"/>
+        <location filename="../src/dsowidget.cpp" line="916"/>
         <source>TR</source>
         <translation>TR</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="214"/>
+        <location filename="../src/dsowidget.cpp" line="218"/>
         <source>Markers</source>
         <translation>Markörer</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="583"/>
-        <location filename="../src/dsowidget.cpp" line="601"/>
+        <location filename="../src/dsowidget.cpp" line="587"/>
+        <location filename="../src/dsowidget.cpp" line="605"/>
         <source>ON</source>
         <translation>PÅ</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="587"/>
-        <location filename="../src/dsowidget.cpp" line="605"/>
+        <location filename="../src/dsowidget.cpp" line="591"/>
+        <location filename="../src/dsowidget.cpp" line="609"/>
         <source>OFF</source>
         <translation>AV</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="626"/>
+        <location filename="../src/dsowidget.cpp" line="630"/>
         <source>Markers  </source>
         <translation>Markörer  </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="627"/>
+        <location filename="../src/dsowidget.cpp" line="631"/>
         <source>Time: </source>
         <translation>Tid: </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="628"/>
+        <location filename="../src/dsowidget.cpp" line="632"/>
         <source>Frequency: </source>
         <translation>Frekvens: </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="631"/>
+        <location filename="../src/dsowidget.cpp" line="635"/>
         <source>Zoom x%L1  </source>
         <translation>Zoom x%L1  </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="633"/>
+        <location filename="../src/dsowidget.cpp" line="637"/>
         <source>Zoom ---  </source>
         <translation>Zoom ---  </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="636"/>
-        <location filename="../src/dsowidget.cpp" line="638"/>
-        <location filename="../src/dsowidget.cpp" line="679"/>
-        <location filename="../src/dsowidget.cpp" line="725"/>
-        <location filename="../src/dsowidget.cpp" line="734"/>
-        <location filename="../src/dsowidget.cpp" line="755"/>
+        <location filename="../src/dsowidget.cpp" line="640"/>
+        <location filename="../src/dsowidget.cpp" line="642"/>
+        <location filename="../src/dsowidget.cpp" line="683"/>
+        <location filename="../src/dsowidget.cpp" line="729"/>
+        <location filename="../src/dsowidget.cpp" line="738"/>
+        <location filename="../src/dsowidget.cpp" line="759"/>
         <source>/div</source>
         <translation>/div</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="902"/>
+        <location filename="../src/dsowidget.cpp" line="908"/>
         <source>&lt;b&gt; OFFSET CALIBRATION &lt;/b&gt;</source>
         <translation type="unfinished"></translation>
     </message>
@@ -484,27 +484,27 @@
         <translation type="vanished">%L1%</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="706"/>
+        <location filename="../src/dsowidget.cpp" line="710"/>
         <source>%1  %2  %3  %4  %5</source>
         <translation>%1  %2  %3  %4  %5</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="745"/>
+        <location filename="../src/dsowidget.cpp" line="749"/>
         <source>/s</source>
         <translation>/s</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="869"/>
+        <location filename="../src/dsowidget.cpp" line="873"/>
         <source> on screen</source>
         <translation> på skärm</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="954"/>
+        <location filename="../src/dsowidget.cpp" line="960"/>
         <source>pp</source>
         <translation>pp</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="960"/>
+        <location filename="../src/dsowidget.cpp" line="966"/>
         <source>rms</source>
         <translation>rms</translation>
     </message>
@@ -525,39 +525,39 @@
 <context>
     <name>GlScope</name>
     <message>
-        <location filename="../src/glscope.cpp" line="342"/>
+        <location filename="../src/glscope.cpp" line="346"/>
         <source>System does not support OpenGL Shading Language (GLSL)</source>
         <translation>Systemet har inte stöd för OpenGL Shading Language (GLSL)</translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="346"/>
+        <location filename="../src/glscope.cpp" line="350"/>
         <source>OpenGL init called twice!</source>
         <translation>OpenGL init anropad två gånger!</translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="407"/>
+        <location filename="../src/glscope.cpp" line="411"/>
         <source>Try command line option &apos;--useGLES&apos;
 </source>
         <translation>Prova kommandoradsflagga &apos;--useGLES&apos;
 </translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="422"/>
-        <location filename="../src/glscope.cpp" line="429"/>
+        <location filename="../src/glscope.cpp" line="427"/>
+        <location filename="../src/glscope.cpp" line="434"/>
         <source>Failed to compile OpenGL shader programs.
 </source>
         <translation>Misslyckades med att kompilera OpenGL-shaderprogram.
 </translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="437"/>
+        <location filename="../src/glscope.cpp" line="442"/>
         <source>Failed to link/bind OpenGL shader programs.
 </source>
         <translation>Misslyckades med att länka/binda OpenGL-shaderprogram.
 </translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="446"/>
+        <location filename="../src/glscope.cpp" line="451"/>
         <source>Failed to locate shader variable.</source>
         <translation>Misslyckades med att hitta shader-variabel.</translation>
     </message>
@@ -784,168 +784,168 @@
         <translation>AC-&amp;modifiering</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="87"/>
+        <location filename="../src/mainwindow.cpp" line="88"/>
         <source>OpenHantek6022 (%1) - Device %2 (FW%3)</source>
         <translation>OpenHantek6022 (%1) - Enhet %2 (FW%3)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="90"/>
+        <location filename="../src/mainwindow.cpp" line="91"/>
         <source>OpenHantek6022 (%1) - </source>
         <translation>OpenHantek6022 (%1) -</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="90"/>
+        <location filename="../src/mainwindow.cpp" line="91"/>
         <source>Demo Mode</source>
         <translation>Demoläge</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="96"/>
+        <location filename="../src/mainwindow.cpp" line="97"/>
         <source>Screenshot</source>
         <translation>Skärmbild</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="101"/>
+        <location filename="../src/mainwindow.cpp" line="102"/>
         <source>Hardcopy</source>
         <translation>Hårdkopia</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="111"/>
+        <location filename="../src/mainwindow.cpp" line="112"/>
         <source>Screenshot ..</source>
         <translation>Skärmbild ..</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="116"/>
+        <location filename="../src/mainwindow.cpp" line="117"/>
         <source>Hardcopy ..</source>
         <translation>Hårdkopia ..</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="124"/>
+        <location filename="../src/mainwindow.cpp" line="125"/>
         <source>Print screen ..</source>
         <translation>Skriv ut skärm ..</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="186"/>
+        <location filename="../src/mainwindow.cpp" line="197"/>
         <source>Invalid command</source>
         <translation>Ogiltigt kommando</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="292"/>
+        <location filename="../src/mainwindow.cpp" line="304"/>
         <source>Stop</source>
         <translation>Stopp</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="293"/>
+        <location filename="../src/mainwindow.cpp" line="305"/>
         <source>Stop the oscilloscope</source>
         <translation>Stoppa oscilloskopet</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="296"/>
+        <location filename="../src/mainwindow.cpp" line="308"/>
         <source>Start</source>
         <translation>Start</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="297"/>
+        <location filename="../src/mainwindow.cpp" line="309"/>
         <source>Start the oscilloscope</source>
         <translation>Starta oscilloskopet</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="318"/>
+        <location filename="../src/mainwindow.cpp" line="330"/>
         <source>Open file</source>
         <translation>Öppna fil</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="318"/>
-        <location filename="../src/mainwindow.cpp" line="342"/>
+        <location filename="../src/mainwindow.cpp" line="330"/>
+        <location filename="../src/mainwindow.cpp" line="354"/>
         <source>Settings (*.conf)</source>
         <translation>Inställningar (*.conf)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="342"/>
+        <location filename="../src/mainwindow.cpp" line="354"/>
         <source>Save settings</source>
         <translation>Spara inställningar</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="380"/>
+        <location filename="../src/mainwindow.cpp" line="381"/>
         <source>Disable fading of previous graphs</source>
         <translation>Inaktivera uttoning av föregående grafer</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="382"/>
+        <location filename="../src/mainwindow.cpp" line="383"/>
         <source>Enable fading of previous graphs</source>
         <translation>Aktivera uttoning av föregående grafer</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="390"/>
+        <location filename="../src/mainwindow.cpp" line="391"/>
         <source>Hide histogram</source>
         <translation>Göm histogram</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="392"/>
+        <location filename="../src/mainwindow.cpp" line="393"/>
         <source>Show histogram</source>
         <translation>Visa histogram</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="401"/>
+        <location filename="../src/mainwindow.cpp" line="402"/>
         <source>Hide magnified scope</source>
         <translation>Göm förstorat oscilloskop</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="403"/>
+        <location filename="../src/mainwindow.cpp" line="404"/>
         <source>Show magnified scope</source>
         <translation>Visa förstorat oscilloskop</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="413"/>
+        <location filename="../src/mainwindow.cpp" line="414"/>
         <source>Hide measurements</source>
         <translation>Göm mätningar</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="415"/>
+        <location filename="../src/mainwindow.cpp" line="416"/>
         <source>Show measurements</source>
         <translation>Visa mätningar</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="444"/>
+        <location filename="../src/mainwindow.cpp" line="445"/>
         <source>&lt;p&gt;Open source software for Hantek6022 USB oscilloscopes&lt;/p&gt;&lt;p&gt;Maintainer: Martin Homuth-Rosemann&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2010, 2011 Oliver Haag&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2012-%7 OpenHantek community&lt;br/&gt;&lt;a href=&apos;https://github.com/OpenHantek&apos;&gt;https://github.com/OpenHantek&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Open source firmware copyright &amp;copy; 2019-%7 Ho-Ro&lt;br/&gt;&lt;a href=&apos;https://github.com/Ho-Ro/Hantek6022API&apos;&gt;https://github.com/Ho-Ro/Hantek6022API&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Device: %1 (%2), FW%3&lt;/p&gt;&lt;p&gt;Graphic: %4 - GLSL version %5&lt;/p&gt;&lt;p&gt;Qt version: %6&lt;/p&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="458"/>
+        <location filename="../src/mainwindow.cpp" line="459"/>
         <source>&lt;p&gt;Running since %1 seconds.&lt;/p&gt;</source>
         <translation>&lt;p&gt;Kör sedan %1 sekunder.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="489"/>
+        <location filename="../src/mainwindow.cpp" line="490"/>
         <source>%1: %2</source>
         <translation>%1: %2</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="511"/>
+        <location filename="../src/mainwindow.cpp" line="512"/>
         <source>yyyy-MM-dd hh:mm:ss</source>
         <translation>yyyy-MM-dd hh:mm:ss</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="512"/>
+        <location filename="../src/mainwindow.cpp" line="513"/>
         <source>yyyyMMdd_hhmmss</source>
         <translation>yyyyMMDd_hhmmss</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="546"/>
+        <location filename="../src/mainwindow.cpp" line="547"/>
         <source>Image (*.png *.jpg)</source>
         <translation>Bild (*.png *.jpg)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="546"/>
+        <location filename="../src/mainwindow.cpp" line="547"/>
         <source>Portable Document Format (*.pdf)</source>
         <translation>Portable Document Format (*.pdf)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="547"/>
+        <location filename="../src/mainwindow.cpp" line="548"/>
         <source>Save screenshot</source>
         <translation>Spara skärmbild</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="578"/>
+        <location filename="../src/mainwindow.cpp" line="579"/>
         <source>Print oscillograph</source>
         <translation>Skriv ut oscillograf</translation>
     </message>
