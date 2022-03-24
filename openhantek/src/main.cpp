@@ -51,7 +51,6 @@
 #include "exporting/exportjson.h"
 
 // GUI
-#include "iconfont/QtAwesome.h"
 #include "mainwindow.h"
 #include "selectdevice/selectsupporteddevice.h"
 
@@ -474,8 +473,6 @@ int main( int argc, char *argv[] ) {
                  << "set" << appFont;
     openHantekApplication.setFont( appFont );
     openHantekApplication.setFont( appFont, "QWidget" ); // on some systems the 2nd argument is required
-
-    iconFont->initFontAwesome();
 
     //////// Create main window ////////
     if ( verboseLevel )

@@ -99,7 +99,7 @@ class HantekDsoControl : public QObject {
     ///		<b>Syntax:</b><br />
     ///		<br />
     ///		%Control command:
-    ///		<pre>send control [<em>hex code</em>] [<em>hex data</em>]</pre>
+    ///		<pre>cc [<em>hex code</em>] [<em>hex data</em>]</pre>
     /// </p>
     /// \param command The command as string (Has to be parsed).
     /// \return See ::Dso::ErrorCode.

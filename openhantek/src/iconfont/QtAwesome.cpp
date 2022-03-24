@@ -14,8 +14,6 @@
 #include <QFile>
 #include <QFontDatabase>
 
-QtAwesome *iconFont = new QtAwesome();
-
 QtAwesomeIconPainter::~QtAwesomeIconPainter() {}
 
 QStringList QtAwesomeCharIconPainter::optionKeysForModeAndState( const QString &key, QIcon::Mode mode, QIcon::State state ) {
@@ -66,9 +64,9 @@ QVariant QtAwesomeCharIconPainter::optionValueForModeAndState( const QString &ba
 
 void QtAwesomeCharIconPainter::paint( QtAwesome *awesome, QPainter *painter, const QRect &rect, QIcon::Mode mode,
                                       QIcon::State state, const QVariantMap &options ) {
-    Q_UNUSED( mode );
-    Q_UNUSED( state );
-    Q_UNUSED( options );
+    Q_UNUSED( mode )
+    Q_UNUSED( state )
+    Q_UNUSED( options )
 
     painter->save();
 
@@ -83,7 +81,7 @@ void QtAwesomeCharIconPainter::paint( QtAwesome *awesome, QPainter *painter, con
     painter->setPen( color );
 
     // add some 'padding' around the icon
-    int drawSize = qRound( rect.height() * options.value( "scale-factor" ).toFloat() );
+    int drawSize = qRound( float( rect.height() ) * options.value( "scale-factor" ).toFloat() );
 
     painter->setFont( awesome->font( drawSize ) );
     painter->drawText( rect, text, QTextOption( Qt::AlignCenter | Qt::AlignVCenter ) );
@@ -111,8 +109,8 @@ QtAwesomeIconPainterIconEngine *QtAwesomeIconPainterIconEngine::clone() const {
 }
 
 void QtAwesomeIconPainterIconEngine::paint( QPainter *painter, const QRect &rect, QIcon::Mode mode, QIcon::State state ) {
-    Q_UNUSED( mode );
-    Q_UNUSED( state );
+    Q_UNUSED( mode )
+    Q_UNUSED( state )
     iconPainterRef_->paint( awesomeRef_, painter, rect, mode, state, options_ );
 }
 
@@ -951,7 +949,7 @@ bool QtAwesome::initFontAwesome() {
     // only load font-awesome once
     if ( fontAwesomeFontId < 0 ) {
         // load the font file
-        QFile res( ":/images/fontawesome-4.7.0.ttf" );
+        QFile res( ":/fonts/fontawesome-4.7.0.ttf" );
         if ( !res.open( QIODevice::ReadOnly ) ) {
             qDebug() << "Font awesome font could not be loaded!";
             return false;

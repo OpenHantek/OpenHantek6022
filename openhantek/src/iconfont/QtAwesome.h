@@ -30,7 +30,7 @@ class QtAwesome : public QObject {
 
   public:
     explicit QtAwesome( QObject *parent = nullptr );
-    virtual ~QtAwesome();
+    virtual ~QtAwesome() override;
 
     void init( const QString &fontname );
     bool initFontAwesome();
@@ -84,7 +84,7 @@ class QtAwesomeCharIconPainter : public QtAwesomeIconPainter {
 
   public:
     virtual void paint( QtAwesome *awesome, QPainter *painter, const QRect &rect, QIcon::Mode mode, QIcon::State state,
-                        const QVariantMap &options );
+                        const QVariantMap &options ) override;
 };
 
 
@@ -104,8 +104,8 @@ class QtAwesomeIconPainterIconEngine : public QIconEngine {
 
 #if ( QT_VERSION >= QT_VERSION_CHECK( 5, 6, 0 ) )
     QList< QSize > availableSizes( QIcon::Mode mode, QIcon::State state ) const override {
-        Q_UNUSED( mode );
-        Q_UNUSED( state );
+        Q_UNUSED( mode )
+        Q_UNUSED( state )
         QList< QSize > sizes = { QSize( 16, 16 ),   QSize( 32, 32 ),   QSize( 64, 64 ),
                                  QSize( 128, 128 ), QSize( 256, 256 ), QSize( 512, 512 ) };
         return sizes;
@@ -121,7 +121,6 @@ class QtAwesomeIconPainterIconEngine : public QIconEngine {
 
 Q_DECLARE_METATYPE( QtAwesomeAnimation * )
 
-extern QtAwesome *iconFont;
 
 //---------------------------------------------------------------------------------------
 

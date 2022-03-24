@@ -183,13 +183,15 @@ Dso::ErrorCode HantekDsoControl::setRecordTime( double duration ) {
 
 
 Dso::ErrorCode HantekDsoControl::setCalFreq( double calfreq ) {
-    unsigned int cf = unsigned( calfreq ) / 1000; // 1000, ..., 100000 -> 1, ..., 100
-    if ( cf == 0 ) {                              // 50, 60, 100, 200, 500 -> 105, 106, 110, 120, 150
-        cf = 100 + unsigned( calfreq ) / 10;
+    unsigned int cf;
+    if ( calfreq < 1000 ) { // 50, 60, 100, 200, 500 -> 105, 106, 110, 120, 150
+        cf = 100 + unsigned( round( calfreq / 10 ) );
         if ( 110 == cf ) // special case for sigrok FW (e.g. DDS120) 100Hz -> 0
             cf = 0;
     } else if ( calfreq <= 5500 && unsigned( calfreq ) % 1000 ) { // non integer multiples of 1 kHz
-        cf = 200 + unsigned( calfreq ) / 100;                     // in the range 1000 .. 5500 Hz
+        cf = 200 + unsigned( round( calfreq / 100 ) );            // in the range 1000 .. 5500 Hz
+    } else {
+        cf = unsigned( round( calfreq / 1000 ) ); // 1000, ..., 100000 -> 1, ..., 100
     }
     if ( verboseLevel > 2 )
         qDebug() << "  HDC::setCalFreq()" << calfreq << cf;
@@ -1093,10 +1095,11 @@ void HantekDsoControl::addCommand( ControlCommand *newCommand, bool pending ) {
 
 
 // sending control commands to the scope:
-// format: "send CC DD DD ..."
-// CC = control code, e.g. E6 (SETCALFREQ)
-// DD = data, e.g. 01 = 1kHz or 69 (= 105 dec) = 50 Hz
-// all CC and DD uint8_t values must consist of 2 hex encoded digits
+// format: "cc <CC> <DD> <DD> ..."
+// <CC> = control code, e.g. E6 (SETCALFREQ)
+// <DD> = data, e.g. 01 = 1kHz or 69 (= 105 dec) = 50 Hz
+// all <CC> and <DD> uint8_t values must consist of 2 hex encoded digits
+// come here with validated strings from mainwindow.cpp
 Dso::ErrorCode HantekDsoControl::stringCommand( const QString &commandString ) {
     if ( deviceNotConnected() )
         return Dso::ErrorCode::CONNECTION;
@@ -1107,7 +1110,7 @@ Dso::ErrorCode HantekDsoControl::stringCommand( const QString &commandString ) {
 #endif
     if ( commandParts.count() < 1 )
         return Dso::ErrorCode::PARAMETER;
-    if ( commandParts[ 0 ] == "send" ) {
+    if ( commandParts[ 0 ] == "cc" || commandParts[ 0 ] == "CC" ) {
         if ( commandParts.count() < 2 )
             return Dso::ErrorCode::PARAMETER;
 
@@ -1125,24 +1128,21 @@ Dso::ErrorCode HantekDsoControl::stringCommand( const QString &commandString ) {
         ControlCommand *c = modifyCommand< ControlCommand >( ControlCode( codeIndex ) );
         hexParse( data, c->data(), unsigned( c->size() ) );
         if ( verboseLevel > 2 )
-            qDebug() << "  send"
-                     << QString( "0x%1 (%2):%3" )
-                            .arg( QString::number( codeIndex, 16 ), name, decDump( c->data(), unsigned( c->size() ) ) );
+            qDebug().noquote() << "  " + commandParts[ 0 ]
+                               << QString( "0x%1 (%2) %3" )
+                                      .arg( QString::number( codeIndex, 16 ), name, decDump( c->data(), unsigned( c->size() ) ) );
         if ( int( c->size() ) != commandParts.count() - 2 )
             return Dso::ErrorCode::PARAMETER;
         return Dso::ErrorCode::NONE;
-#if 0
-    } else if ( commandParts[ 0 ] == "test" ) {                // simple example for manual command "test xx"
-        if ( commandParts.count() < 2 )                        // command and one parameter needed
-            return Dso::ErrorCode::PARAMETER;                  // .. otherwise -> error
-        uint8_t val = 0;                                       // set initial value
-        unsigned num = hexParse( commandParts[ 1 ], &val, 1 ); // decode parameter as one hex byte into val
-        if ( num != 1 )                                        // parameter valid?
-            return Dso::ErrorCode::PARAMETER;                  // .. otherwise -> error
-        if ( verboseLevel > 2 )                                // verbose enough?
-            qDebug( "  test 0x%02x", val );                    // .. show the parameter
-        return Dso::ErrorCode::NONE;                           // ok, done
-#endif
+    } else if ( commandParts[ 0 ] == "freq" ) {     // simple example for manual frequency command "freq nn"
+        if ( commandParts.count() < 2 )             // command and one parameter needed
+            return Dso::ErrorCode::PARAMETER;       // .. otherwise -> error
+        unsigned freq = commandParts[ 1 ].toUInt(); // decode parameter as one decimal value into freq
+        if ( !freq || freq > 100000 )               // parameter valid?
+            return Dso::ErrorCode::PARAMETER;       // .. otherwise -> error
+        if ( verboseLevel > 2 )                     // verbose enough?
+            qDebug( "  freq %d", freq );            // .. show the parameter
+        return setCalFreq( freq );                  // and call the scope function
     }
     return Dso::ErrorCode::UNSUPPORTED;
 }

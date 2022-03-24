@@ -29,6 +29,7 @@
 #include <QPalette>
 #include <QPrintDialog>
 #include <QPrinter>
+#include <QValidator>
 
 #include "OH_VERSION.h"
 
@@ -48,6 +49,11 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
         colorMap.insert( "color-active", QColor( 255, 255, 255 ) ); // white when selected
     }
     elapsedTime.start();
+
+    // Version 4.7.0 - see icons: https://fontawesome.com/v4/icons/
+    iconFont = new QtAwesome( this );
+    iconFont->initFontAwesome();
+
     ui->setupUi( this );
     iconPause = QIcon( iconPath + "pause.svg" );
     iconPlay = QIcon( iconPath + "play.svg" );
@@ -75,9 +81,10 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
     ui->actionMeasure->setShortcut( Qt::Key::Key_M );
     ui->actionOpen->setIcon( iconFont->icon( fa::folderopen, colorMap ) );
     ui->actionSave->setIcon( iconFont->icon( fa::save, colorMap ) );
-    ui->actionSettings->setIcon( iconFont->icon( fa::gear, colorMap ) );
+    ui->actionSave_as->setIcon( iconFont->icon( fa::save, colorMap ) );
+    ui->actionSettings->setIcon( iconFont->icon( fa::sliders, colorMap ) );
     ui->actionCalibrateOffset->setIcon( iconFont->icon( fa::wrench, colorMap ) );
-    ui->actionManualCommand->setIcon( iconFont->icon( fa::edit, colorMap ) );
+    ui->actionManualCommand->setIcon( iconFont->icon( fa::terminal, colorMap ) );
     ui->actionUserManual->setIcon( iconFont->icon( fa::filepdfo, colorMap ) );
     ui->actionACmodification->setIcon( iconFont->icon( fa::filepdfo, colorMap ) );
     ui->actionAbout->setIcon( iconFont->icon( fa::questioncircle, colorMap ) );
@@ -170,6 +177,9 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
     if ( dsoControl->getDevice()->isRealHW() ) { // enable online calibration and manual command input
         // Command field inside the status bar
         commandEdit = new QLineEdit( this );
+        // allowed commands are either control command "cc E0..E6 xx [xx ...]" or frequency command "freq nn"
+        QRegExpValidator *v = new QRegExpValidator( QRegExp( "(cc|CC) [eE][0-6]( [0-9a-fA-F]{1,2})+|freq \\d{1,6}" ), this );
+        commandEdit->setValidator( v );
         commandEdit->hide();
 
         statusBar()->addPermanentWidget( commandEdit, 1 );
