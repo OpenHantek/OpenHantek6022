@@ -565,7 +565,7 @@
 <context>
     <name>HantekDsoControl</name>
     <message>
-        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="568"/>
+        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="570"/>
         <source>Couldn&apos;t get calibration data from oscilloscope&apos;s EEPROM. Use a config file for calibration!</source>
         <translation>Kunde inte hämta kalibreringsdata från oscilloskopets EEPROM. Använd en konfigurationsfil för kalibrering!</translation>
     </message>

@@ -438,6 +438,8 @@ void HantekDsoControl::restartSampling() {
 void HantekDsoControl::enableSampling( bool enabled ) {
     if ( verboseLevel > 4 )
         qDebug() << "    HDC::enableSampling()" << enabled;
+    if ( enabled && controlsettings.trigger.mode == Dso::TriggerMode::SINGLE )
+        triggeredPositionRaw = 0; // invalidate previous result, wait for new trigger
     sampling = enabled;
     updateSamplerateLimits();
     emit samplingStatusChanged( enabled );
@@ -826,10 +828,11 @@ void HantekDsoControl::convertRawDataToSamples() {
             controlsettings.correctionValues->gain.step[ gainIndex ][ channel ] = gainToByte( gainCorr * gainCalibration );
         }
     }
-}
+} // convertRawDataToSamples()
 
 
 // search for trigger point from defined point, default startPos = 0;
+// return trigger position > 0 (0: no trigger found)
 unsigned HantekDsoControl::searchTriggerPoint( Dso::Slope dsoSlope, unsigned int startPos ) {
     int slope;
     if ( dsoSlope == Dso::Slope::Positive )
@@ -905,7 +908,7 @@ unsigned HantekDsoControl::searchTriggerPoint( Dso::Slope dsoSlope, unsigned int
         prev = samples[ i ];
     }
     return swTriggerStart;
-}
+} // searchTriggerPoint()
 
 
 unsigned HantekDsoControl::searchTriggeredPosition() {
@@ -927,40 +930,32 @@ unsigned HantekDsoControl::searchTriggeredPosition() {
     unsigned samplesDisplay = unsigned( round( timeDisplay * controlsettings.samplerate.current ) );
     if ( sampleCount < samplesDisplay ) // not enough samples to adjust for jitter.
         return result.triggeredPosition = 0;
+
     // search for trigger point in a range that leaves enough samples left and right of trigger for display
-    // find also the alternate slope after trigger point -> calculate pulse width.
-    if ( controlsettings.trigger.slope != Dso::Slope::Both ) {
-        triggeredPositionRaw = searchTriggerPoint( nextSlope = controlsettings.trigger.slope );
-        if ( triggeredPositionRaw ) { // triggered -> search also following other slope (calculate pulse width)
-            if ( unsigned int slopePos2 = searchTriggerPoint( mirrorSlope( nextSlope ), triggeredPositionRaw ) ) {
-                pulseWidth1 = ( slopePos2 - triggeredPositionRaw ) / sampleRate;
-                if ( unsigned int slopePos3 = searchTriggerPoint( nextSlope, slopePos2 ) ) {
-                    pulseWidth2 = ( slopePos3 - slopePos2 ) / sampleRate;
-                }
+    // find also up to two alternating slopes after trigger point -> calculate pulse widths and duty cycle.
+    if ( controlsettings.trigger.slope != Dso::Slope::Both ) // up or down
+        nextSlope = controlsettings.trigger.slope;           // use this slope
+
+    triggeredPositionRaw = searchTriggerPoint( nextSlope ); // get 1st slope position
+    if ( triggeredPositionRaw ) { // triggered -> search also following other slope (calculate pulse width)
+        if ( unsigned int slopePos2 = searchTriggerPoint( mirrorSlope( nextSlope ), triggeredPositionRaw ) ) {
+            pulseWidth1 = ( slopePos2 - triggeredPositionRaw ) / sampleRate;
+            if ( unsigned int slopePos3 = searchTriggerPoint( nextSlope, slopePos2 ) ) { // search 3rd slope
+                pulseWidth2 = ( slopePos3 - slopePos2 ) / sampleRate;
             }
         }
-    } else { // alternating trigger slope
-        triggeredPositionRaw = searchTriggerPoint( nextSlope );
-        if ( triggeredPositionRaw ) { // triggered -> change slope
-            Dso::Slope thirdSlope = nextSlope;
-            nextSlope = mirrorSlope( nextSlope );
-            if ( unsigned int slopePos2 = searchTriggerPoint( nextSlope, triggeredPositionRaw ) ) {
-                pulseWidth1 = ( slopePos2 - triggeredPositionRaw ) / sampleRate;
-                if ( unsigned int slopePos3 = searchTriggerPoint( thirdSlope, slopePos2 ) ) {
-                    pulseWidth2 = ( slopePos3 - slopePos2 ) / sampleRate;
-                }
-            }
-        }
+        if ( controlsettings.trigger.slope == Dso::Slope::Both ) // trigger found and alternating?
+            nextSlope = mirrorSlope( nextSlope );                // use opposite direction next time
     }
 
     result.triggeredPosition = triggeredPositionRaw; // align trace to trigger position
     result.pulseWidth1 = pulseWidth1;
     result.pulseWidth2 = pulseWidth2;
-    if ( verboseLevel > 5 )
+    if ( verboseLevel > 5 ) // HACK: This assumes that positive=0 and negative=1
         qDebug() << "     nextSlope:"
                  << "/\\"[ int( nextSlope ) ] << "triggeredPositionRaw:" << triggeredPositionRaw;
     return result.triggeredPosition;
-}
+} // searchTriggeredPosition()
 
 
 bool HantekDsoControl::provideTriggeredData() {
@@ -988,7 +983,7 @@ bool HantekDsoControl::provideTriggeredData() {
         result.liveTrigger = false;            // show red "TR" top left
     }
     return result.liveTrigger;
-}
+} // bool HantekDsoControl::provideTriggeredData()
 
 
 /// \brief Updates the interval of the periodic thread timer.
@@ -1017,7 +1012,7 @@ void HantekDsoControl::stateMachine() {
     static int delayDisplay = 0;       // timer for display
     static bool lastTriggered = false; // state of last frame
     static bool skipEven = true;       // even or odd frames were skipped
-    static unsigned lastTag = 0;
+    static unsigned lastTag = 2;       // update screen on 1st measure when started in single mode
 
     bool triggered = false;
     if ( verboseLevel > 4 )
@@ -1064,6 +1059,7 @@ void HantekDsoControl::stateMachine() {
     // Stop sampling if we're in single trigger mode and have a triggered trace (txh No13)
     if ( controlsettings.trigger.mode == Dso::TriggerMode::SINGLE && samplingStarted && triggeredPositionRaw > 0 ) {
         enableSampling( false );
+        ++lastTag; // skip the already sampled trace
     }
 
     // Sampling completed, restart it when necessary
