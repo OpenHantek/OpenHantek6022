@@ -876,7 +876,7 @@ unsigned HantekDsoControl::searchTriggerPoint( Dso::Slope dsoSlope, unsigned int
             bool triggerBefore = false;
             double mean = 0;
             unsigned iii = 0;
-            for ( unsigned int k = i - 1; k >= i - swTriggerSampleSet && k > 0; k-- ) {
+            for ( int k = (int)(i) - 1; k >= (int)(i) - (int)(swTriggerSampleSet) && k > 0; k-- ) {
                 mean += samples[ k ];
                 iii++;
             }
