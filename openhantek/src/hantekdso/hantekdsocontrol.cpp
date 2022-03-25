@@ -833,7 +833,7 @@ void HantekDsoControl::convertRawDataToSamples() {
 
 // search for trigger point from defined point, default startPos = 0;
 // return trigger position > 0 (0: no trigger found)
-unsigned HantekDsoControl::searchTriggerPoint( Dso::Slope dsoSlope, unsigned int startPos ) {
+int HantekDsoControl::searchTriggerPoint( Dso::Slope dsoSlope, int startPos ) {
     int slope;
     if ( dsoSlope == Dso::Slope::Positive )
         slope = 1;
@@ -844,7 +844,7 @@ unsigned HantekDsoControl::searchTriggerPoint( Dso::Slope dsoSlope, unsigned int
 
     unsigned channel = unsigned( controlsettings.trigger.source );
     const std::vector< double > &samples = result.data[ channel ];
-    unsigned sampleCount = unsigned( samples.size() ); ///< number of available samples
+    int sampleCount = int( samples.size() ); ///< number of available samples
     if ( verboseLevel > 5 )
         qDebug() << "     HDC::searchTriggerPoint()" << int( dsoSlope ) << startPos;
     if ( startPos >= sampleCount )
@@ -852,12 +852,10 @@ unsigned HantekDsoControl::searchTriggerPoint( Dso::Slope dsoSlope, unsigned int
     double level = controlsettings.trigger.level[ channel ];
     double timeDisplay = controlsettings.samplerate.target.duration; // time for full screen width
     double sampleRate = controlsettings.samplerate.current;
-    double samplesDisplay = timeDisplay * sampleRate;
+    int samplesDisplay = int( round( timeDisplay * sampleRate ) );
 
-    unsigned preTrigSamples =
-        startPos ? startPos : unsigned( controlsettings.trigger.position * samplesDisplay ); // samples left of trigger
-    unsigned postTrigSamples =
-        unsigned( sampleCount ) - ( unsigned( samplesDisplay ) - preTrigSamples ); // samples right of trigger
+    int preTrigSamples = startPos ? startPos : int( controlsettings.trigger.position * samplesDisplay ); // samples left of trigger
+    int postTrigSamples = sampleCount - ( int( samplesDisplay ) - preTrigSamples );                      // samples right of trigger
     // |-----------samples-----------| // available sample
     // |--disp--|                      // display size
     // |<<<<<T>>|--------------------| // >> = right = (disp-pre) i.e. right of trigger on screen
@@ -865,22 +863,22 @@ unsigned HantekDsoControl::searchTriggerPoint( Dso::Slope dsoSlope, unsigned int
     // |--(samp-(disp-pre))-------|>>|
     // |<<<<<|????????????????????|>>| // ?? = search for trigger in this range [left,right]
 
-    const unsigned swTriggerSampleSet = unsigned( pow( 20, controlsettings.trigger.smooth ) );
-    if ( postTrigSamples > sampleCount - 2 * ( swTriggerSampleSet + 1 ) )
+    const int swTriggerSampleSet = int( pow( 20, controlsettings.trigger.smooth ) );
+    if ( postTrigSamples > int( sampleCount ) - 2 * ( swTriggerSampleSet + 1 ) )
         postTrigSamples = sampleCount - 2 * ( swTriggerSampleSet + 1 );
     if ( verboseLevel > 5 )
         qDebug() << "     pre:" << preTrigSamples << "post:" << postTrigSamples;
 
     double prev = INT_MAX;
-    unsigned swTriggerStart = 0;
-    for ( unsigned int i = preTrigSamples; i < postTrigSamples; i++ ) {
-        if ( slope * samples[ i ] >= slope * level && slope * prev < slope * level ) { // trigger condition met
+    int swTriggerStart = 0;
+    for ( int i = preTrigSamples; i < postTrigSamples; i++ ) {
+        if ( slope * samples[ size_t( i ) ] >= slope * level && slope * prev < slope * level ) { // trigger condition met
             // check for the previous few SampleSet samples, if they are also above/below the trigger value
             bool triggerBefore = false;
             double mean = 0;
-            unsigned iii = 0;
-            for ( unsigned int k = i - 1; k >= i - swTriggerSampleSet && k > 0; k-- ) {
-                mean += samples[ k ];
+            int iii = 0;
+            for ( int k = i - 1; k >= i - swTriggerSampleSet && k >= 0; k-- ) {
+                mean += samples[ size_t( k ) ];
                 iii++;
             }
             if ( iii ) {
@@ -891,8 +889,8 @@ unsigned HantekDsoControl::searchTriggerPoint( Dso::Slope dsoSlope, unsigned int
             bool triggerAfter = false;
             mean = 0;
             iii = 0;
-            for ( unsigned int k = i + 1; k <= i + swTriggerSampleSet && k < sampleCount; k++ ) {
-                mean += samples[ k ];
+            for ( int k = i + 1; k <= i + swTriggerSampleSet && k < sampleCount; k++ ) {
+                mean += samples[ size_t( k ) ];
                 iii++;
             }
             if ( iii ) {
@@ -905,13 +903,13 @@ unsigned HantekDsoControl::searchTriggerPoint( Dso::Slope dsoSlope, unsigned int
                 break;
             }
         }
-        prev = samples[ i ];
+        prev = samples[ size_t( i ) ];
     }
     return swTriggerStart;
 } // searchTriggerPoint()
 
 
-unsigned HantekDsoControl::searchTriggeredPosition() {
+int HantekDsoControl::searchTriggeredPosition() {
     static Dso::Slope nextSlope = Dso::Slope::Positive; // for alternating slope mode X
     ChannelID channel = ChannelID( controlsettings.trigger.source );
     // Trigger channel not in use
@@ -938,9 +936,9 @@ unsigned HantekDsoControl::searchTriggeredPosition() {
 
     triggeredPositionRaw = searchTriggerPoint( nextSlope ); // get 1st slope position
     if ( triggeredPositionRaw ) { // triggered -> search also following other slope (calculate pulse width)
-        if ( unsigned int slopePos2 = searchTriggerPoint( mirrorSlope( nextSlope ), triggeredPositionRaw ) ) {
+        if ( int slopePos2 = searchTriggerPoint( mirrorSlope( nextSlope ), triggeredPositionRaw ) ) {
             pulseWidth1 = ( slopePos2 - triggeredPositionRaw ) / sampleRate;
-            if ( unsigned int slopePos3 = searchTriggerPoint( nextSlope, slopePos2 ) ) { // search 3rd slope
+            if ( int slopePos3 = searchTriggerPoint( nextSlope, slopePos2 ) ) { // search 3rd slope
                 pulseWidth2 = ( slopePos3 - slopePos2 ) / sampleRate;
             }
         }

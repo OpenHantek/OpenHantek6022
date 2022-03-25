@@ -57,10 +57,10 @@ class PPresult {
     /// sw trigger status
     bool softwareTriggerTriggered = false;
     /// skip samples at start of channel to get triggered trace on screen
-    unsigned triggeredPosition = 0; ///< Not triggered
-    double pulseWidth1 = 0.0;       ///< The width of the triggered pulse
-    double pulseWidth2 = 0.0;       ///< The width of the following pulse
-    unsigned tag;                   ///< track individual sample blocks (debug support)
+    int triggeredPosition = 0; ///< Not triggered
+    double pulseWidth1 = 0.0;  ///< The width of the triggered pulse
+    double pulseWidth2 = 0.0;  ///< The width of the following pulse
+    unsigned tag;              ///< track individual sample blocks (debug support)
 
     ChannelsGraphs vaChannelSpectrum;
     ChannelsGraphs vaChannelVoltage;

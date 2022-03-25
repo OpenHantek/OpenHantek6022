@@ -163,13 +163,13 @@ class HantekDsoControl : public QObject {
     /// \brief Update the minimum and maximum supported samplerate.
     void updateSamplerateLimits();
 
-    unsigned searchTriggerPoint( Dso::Slope dsoSlope, unsigned int startPos = 0 );
+    int searchTriggerPoint( Dso::Slope dsoSlope, int startPos = 0 );
 
     Dso::Slope mirrorSlope( Dso::Slope slope ) {
         return ( slope == Dso::Slope::Positive ? Dso::Slope::Negative : Dso::Slope::Positive );
     }
 
-    unsigned searchTriggeredPosition();
+    int searchTriggeredPosition();
 
     bool provideTriggeredData();
 
@@ -204,7 +204,7 @@ class HantekDsoControl : public QObject {
     bool stateMachineRunning = false;
     int acquireInterval = 0;
     int displayInterval = 0;
-    unsigned triggeredPositionRaw = 0; // not triggered
+    int triggeredPositionRaw = 0; // not triggered
     unsigned activeChannels = 2;
     bool newTriggerParam = false; // parameter changed -> new trigger search needed
     bool triggerChanged() {
