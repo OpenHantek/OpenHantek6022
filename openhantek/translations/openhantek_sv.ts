@@ -799,14 +799,22 @@
         <translation>Demoläge</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="104"/>
         <source>Screenshot</source>
-        <translation>Skärmbild</translation>
+        <translation type="vanished">Skärmbild</translation>
+    </message>
+    <message>
+        <source>Hardcopy</source>
+        <translation type="vanished">Hårdkopia</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="104"/>
+        <source>Quick Screenshot</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="109"/>
-        <source>Hardcopy</source>
-        <translation>Hårdkopia</translation>
+        <source>Quick Hardcopy</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="119"/>

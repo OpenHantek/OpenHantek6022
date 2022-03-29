@@ -1119,9 +1119,8 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="104"/>
         <source>Screenshot</source>
-        <translation>Capture d&apos;écran</translation>
+        <translation type="vanished">Capture d&apos;écran</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="119"/>
@@ -1129,9 +1128,18 @@
         <translation>Capture d&apos;écran ..</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="109"/>
         <source>Hardcopy</source>
-        <translation>Copie papier</translation>
+        <translation type="vanished">Copie papier</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="104"/>
+        <source>Quick Screenshot</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="109"/>
+        <source>Quick Hardcopy</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="124"/>

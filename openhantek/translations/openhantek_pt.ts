@@ -1070,8 +1070,13 @@
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="104"/>
-        <source>Screenshot</source>
-        <translation></translation>
+        <source>Quick Screenshot</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="109"/>
+        <source>Quick Hardcopy</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="207"/>
@@ -1094,11 +1099,6 @@
     <message>
         <location filename="../src/mainwindow.cpp" line="119"/>
         <source>Screenshot ..</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../src/mainwindow.cpp" line="109"/>
-        <source>Hardcopy</source>
         <translation></translation>
     </message>
     <message>

@@ -1166,9 +1166,8 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="104"/>
         <source>Screenshot</source>
-        <translation>Zrzut ekranu</translation>
+        <translation type="vanished">Zrzut ekranu</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="119"/>
@@ -1176,9 +1175,8 @@
         <translation>Zrzut ekranu ..</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="109"/>
         <source>Hardcopy</source>
-        <translation>Wydruk</translation>
+        <translation type="vanished">Wydruk</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="124"/>
@@ -1214,6 +1212,16 @@
     <message>
         <source>Settings (*.ini)</source>
         <translation type="vanished">Ustawienia (*.ini)</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="104"/>
+        <source>Quick Screenshot</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="109"/>
+        <source>Quick Hardcopy</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="364"/>

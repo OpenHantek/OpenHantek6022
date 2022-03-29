@@ -101,13 +101,13 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
     setDockOptions( dockOptions() | QMainWindow::GroupedDragging );
 #endif
     QAction *action;
-    action = new QAction( iconFont->icon( fa::camera, colorMap ), tr( "Screenshot" ), this );
-    action->setToolTip( "Make an immediate screenshot of the program window" );
+    action = new QAction( iconFont->icon( fa::camera, colorMap ), tr( "Quick Screenshot" ), this );
+    action->setToolTip( "Save an immediate screenshot of the program window to directory OpenHantek was run from" );
     connect( action, &QAction::triggered, [ this ]() { screenShot( SCREENSHOT, true ); } );
     ui->menuExport->addAction( action );
 
-    action = new QAction( iconFont->icon( fa::clone, colorMap ), tr( "Hardcopy" ), this );
-    action->setToolTip( "Make an immediate (printable) hardcopy of the display" );
+    action = new QAction( iconFont->icon( fa::clone, colorMap ), tr( "Quick Hardcopy" ), this );
+    action->setToolTip( "Save an immediate (printable) hardcopy of the display to directory OpenHantek was run from" );
     connect( action, &QAction::triggered, [ this ]() {
         dsoWidget->switchToPrintColors();
         QTimer::singleShot( 20, [ this ]() { screenShot( HARDCOPY, true ); } );
@@ -117,12 +117,12 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
     ui->menuExport->addSeparator();
 
     action = new QAction( iconFont->icon( fa::camera, colorMap ), tr( "Screenshot .." ), this );
-    action->setToolTip( "Make a screenshot of the program window" );
+    action->setToolTip( "Save a screenshot of the program window" );
     connect( action, &QAction::triggered, [ this ]() { screenShot( SCREENSHOT ); } );
     ui->menuExport->addAction( action );
 
     action = new QAction( iconFont->icon( fa::clone, colorMap ), tr( "Hardcopy .." ), this );
-    action->setToolTip( "Make a (printable) hardcopy of the display" );
+    action->setToolTip( "Save a (printable) hardcopy of the display" );
     connect( action, &QAction::triggered, [ this ]() {
         dsoWidget->switchToPrintColors();
         QTimer::singleShot( 20, [ this ]() { screenShot( HARDCOPY ); } );

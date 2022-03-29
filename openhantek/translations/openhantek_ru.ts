@@ -957,14 +957,12 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="104"/>
         <source>Screenshot</source>
-        <translation>Снимок экрана</translation>
+        <translation type="vanished">Снимок экрана</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="109"/>
         <source>Hardcopy</source>
-        <translation>Хардкопия</translation>
+        <translation type="vanished">Хардкопия</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="124"/>
@@ -1005,6 +1003,16 @@
     <message>
         <source>Settings (*.ini)</source>
         <translation type="vanished">Настройки (*.ini)</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="104"/>
+        <source>Quick Screenshot</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="109"/>
+        <source>Quick Hardcopy</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="364"/>

@@ -1071,9 +1071,8 @@
         <translation>OpenHantek6022 (%1) - </translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="104"/>
         <source>Screenshot</source>
-        <translation>截屏(当前窗口)</translation>
+        <translation type="vanished">截屏(当前窗口)</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="207"/>
@@ -1099,9 +1098,8 @@
         <translation>截屏另存为(当前窗口) ..</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="109"/>
         <source>Hardcopy</source>
-        <translation>截屏(波形区域)</translation>
+        <translation type="vanished">截屏(波形区域)</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="124"/>
@@ -1142,6 +1140,16 @@
     <message>
         <source>Settings (*.ini)</source>
         <translation type="vanished">配置文件 (*.ini)</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="104"/>
+        <source>Quick Screenshot</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="109"/>
+        <source>Quick Hardcopy</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="364"/>
