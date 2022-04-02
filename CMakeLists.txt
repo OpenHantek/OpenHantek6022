@@ -20,7 +20,7 @@ include(cmake/CPackInfos.cmake)
 
 if(MSVC)
   # NOMINMAX to avoid clash with std::min or std::max due to silly macros min and max
-  add_compile_options(/W4 /D_CRT_SECURE_NO_WARNINGS /DNOMINMAX)
+  add_compile_options(/W4 /D_CRT_SECURE_NO_WARNINGS)
 else()
   add_compile_options(-Wall -Wextra -pedantic)
 endif()

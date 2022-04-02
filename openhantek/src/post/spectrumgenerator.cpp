@@ -197,7 +197,7 @@ void SpectrumGenerator::process( PPresult *result ) {
         }
 
         // Allocate the sample buffer (16byte aligned)
-        fftWindowedValues = fftw_alloc_real( size_t( std::max( SAMPLESIZE, sampleCount ) ) );
+        fftWindowedValues = fftw_alloc_real( size_t( qMax( SAMPLESIZE, sampleCount ) ) );
         if ( nullptr == fftWindowedValues )
             break;
 
@@ -211,8 +211,8 @@ void SpectrumGenerator::process( PPresult *result ) {
         channelData->spectrum.samples.resize( size_t( sampleCount ) );
 
         // calculate the peak-to-peak value of the displayed part of trace
-        double min = INT_MAX;
-        double max = INT_MIN;
+        double mini = INT_MAX;
+        double maxi = INT_MIN;
         double horizontalFactor = result->data( channel )->voltage.interval / scope->horizontal.timebase;
         unsigned dotsOnScreen = unsigned( DIVS_TIME / horizontalFactor + 0.99 ); // round up
         unsigned preTrigSamples = unsigned( scope->trigger.position * dotsOnScreen );
@@ -226,14 +226,14 @@ void SpectrumGenerator::process( PPresult *result ) {
         for ( int position = left; // left side of trace
               position <= right;   // right side
               ++position ) {
-            if ( channelData->voltage.samples[ unsigned( position ) ] < min )
-                min = channelData->voltage.samples[ unsigned( position ) ];
-            if ( channelData->voltage.samples[ unsigned( position ) ] > max )
-                max = channelData->voltage.samples[ unsigned( position ) ];
+            if ( channelData->voltage.samples[ unsigned( position ) ] < mini )
+                mini = channelData->voltage.samples[ unsigned( position ) ];
+            if ( channelData->voltage.samples[ unsigned( position ) ] > maxi )
+                maxi = channelData->voltage.samples[ unsigned( position ) ];
         }
-        channelData->vmin = min;
-        channelData->vmax = max;
-        // channelData->vpp = max - min;
+        channelData->vmin = mini;
+        channelData->vmax = maxi;
+        // channelData->vpp = maxi - mini;
 
         // calculate the average value
         double dc = 0.0;
@@ -261,7 +261,7 @@ void SpectrumGenerator::process( PPresult *result ) {
 
         // Do discrete real to half-complex transformation
         // Record length should be multiple of 2, 3, 5: done, is 10000 = 2^a * 5^b
-        fftHcSpectrum = fftw_alloc_real( size_t( std::max( SAMPLESIZE, sampleCount ) ) );
+        fftHcSpectrum = fftw_alloc_real( size_t( qMax( SAMPLESIZE, sampleCount ) ) );
         if ( nullptr == fftHcSpectrum ) // error
             break;
         if ( post->reuseFftPlan ) {        // build one optimized plan and reuse it for all transformations
@@ -367,8 +367,8 @@ void SpectrumGenerator::process( PPresult *result ) {
         double peakSpectrum = offsetLimit; // get a start value for peak search
         int peakFreqPos = 0;               // initial position of max spectrum peak
         position = 0;
-        min = INT_MAX;
-        max = INT_MIN;
+        mini = INT_MAX;
+        maxi = INT_MIN;
         for ( auto &oneSample : channelData->spectrum.samples ) {
             // spectrum is power spectrum, but show amplitude spectrum -> 10 * log...
             double value = 10 * log10( oneSample ) + offset;
@@ -381,14 +381,14 @@ void SpectrumGenerator::process( PPresult *result ) {
                 peakSpectrum = value;
                 peakFreqPos = position;
             }
-            if ( value < min )
-                min = value;
-            if ( value > max )
-                max = value;
+            if ( value < mini )
+                mini = value;
+            if ( value > maxi )
+                maxi = value;
             ++position;
         }
-        channelData->dBmin = min;
-        channelData->dBmax = max;
+        channelData->dBmin = mini;
+        channelData->dBmax = maxi;
 
         // Calculate both peak frequencies (correlation and spectrum) in Hz
         double pF = channelData->spectrum.interval * peakFreqPos;
