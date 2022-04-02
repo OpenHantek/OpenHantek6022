@@ -28,8 +28,6 @@ VoltageDock::VoltageDock( DsoSettingsScope *scope, const Dso::ControlSpecificati
     if ( scope->verboseLevel > 1 )
         qDebug() << " VoltageDock::VoltageDock()";
 
-    const size_t MATH = 2;
-
     // Initialize lists for comboboxes
     for ( Dso::Coupling c : spec->couplings )
         if ( c == Dso::Coupling::DC || scope->hasACcoupling || scope->hasACmodification )
@@ -136,7 +134,7 @@ VoltageDock::VoltageDock( DsoSettingsScope *scope, const Dso::ControlSpecificati
                 if ( channel < this->spec->channels )
                     mask = channel + 1;
                 else
-                    mask = Dso::mathChannelsUsed( Dso::MathMode( this->scope->voltage[ MATH ].couplingOrMathIndex ) );
+                    mask = Dso::mathChannelsUsed( Dso::MathMode( this->scope->voltage[ 2 ].couplingOrMathIndex ) );
             }
             emit usedChannelChanged( channel, mask ); // channel bit mask 0b01, 0b10, 0b11
         } );

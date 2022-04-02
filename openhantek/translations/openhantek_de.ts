@@ -2312,27 +2312,27 @@
         <translation>Spannung</translation>
     </message>
     <message>
-        <location filename="../src/docks/VoltageDock.cpp" line="57"/>
+        <location filename="../src/docks/VoltageDock.cpp" line="55"/>
         <source>CH&amp;%1</source>
         <translation>CH&amp;%1</translation>
     </message>
     <message>
-        <location filename="../src/docks/VoltageDock.cpp" line="59"/>
+        <location filename="../src/docks/VoltageDock.cpp" line="57"/>
         <source>MA&amp;TH</source>
         <translation>MA&amp;TH</translation>
     </message>
     <message>
-        <location filename="../src/docks/VoltageDock.cpp" line="62"/>
+        <location filename="../src/docks/VoltageDock.cpp" line="60"/>
         <source>Voltage range per vertical screen division</source>
         <translation>Spannung pro vertikaler Teilung</translation>
     </message>
     <message>
-        <location filename="../src/docks/VoltageDock.cpp" line="74"/>
+        <location filename="../src/docks/VoltageDock.cpp" line="72"/>
         <source>Select DC or AC coupling</source>
         <translation>Wähle AC- oder DC-Kopplung</translation>
     </message>
     <message>
-        <location filename="../src/docks/VoltageDock.cpp" line="77"/>
+        <location filename="../src/docks/VoltageDock.cpp" line="75"/>
         <source>Select the mathematical operation for this channel</source>
         <translation>Berechnungen für diesen Kanal</translation>
     </message>
@@ -2341,17 +2341,17 @@
         <translation type="vanished">&amp;MATH</translation>
     </message>
     <message>
-        <location filename="../src/docks/VoltageDock.cpp" line="63"/>
+        <location filename="../src/docks/VoltageDock.cpp" line="61"/>
         <source>Invert</source>
         <translation>Invertiert</translation>
     </message>
     <message>
-        <location filename="../src/docks/VoltageDock.cpp" line="65"/>
+        <location filename="../src/docks/VoltageDock.cpp" line="63"/>
         <source>Set probe attenuation, scroll or type a value to select</source>
         <translation>Wähle Tastkopf-Abschwächung, Mausrad oder direkte Eingabe möglich</translation>
     </message>
     <message>
-        <location filename="../src/docks/VoltageDock.cpp" line="68"/>
+        <location filename="../src/docks/VoltageDock.cpp" line="66"/>
         <source>x</source>
         <translation></translation>
     </message>

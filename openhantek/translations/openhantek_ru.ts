@@ -1956,27 +1956,27 @@
         <translation>Напряжение</translation>
     </message>
     <message>
-        <location filename="../src/docks/VoltageDock.cpp" line="57"/>
+        <location filename="../src/docks/VoltageDock.cpp" line="55"/>
         <source>CH&amp;%1</source>
         <translation>Канал &amp;%1</translation>
     </message>
     <message>
-        <location filename="../src/docks/VoltageDock.cpp" line="59"/>
+        <location filename="../src/docks/VoltageDock.cpp" line="57"/>
         <source>MA&amp;TH</source>
         <translation>Ма&amp;тем.</translation>
     </message>
     <message>
-        <location filename="../src/docks/VoltageDock.cpp" line="62"/>
+        <location filename="../src/docks/VoltageDock.cpp" line="60"/>
         <source>Voltage range per vertical screen division</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/docks/VoltageDock.cpp" line="74"/>
+        <location filename="../src/docks/VoltageDock.cpp" line="72"/>
         <source>Select DC or AC coupling</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/docks/VoltageDock.cpp" line="77"/>
+        <location filename="../src/docks/VoltageDock.cpp" line="75"/>
         <source>Select the mathematical operation for this channel</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1985,17 +1985,17 @@
         <translation type="vanished">&amp;MATH</translation>
     </message>
     <message>
-        <location filename="../src/docks/VoltageDock.cpp" line="63"/>
+        <location filename="../src/docks/VoltageDock.cpp" line="61"/>
         <source>Invert</source>
         <translation>Инверсия</translation>
     </message>
     <message>
-        <location filename="../src/docks/VoltageDock.cpp" line="65"/>
+        <location filename="../src/docks/VoltageDock.cpp" line="63"/>
         <source>Set probe attenuation, scroll or type a value to select</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/docks/VoltageDock.cpp" line="68"/>
+        <location filename="../src/docks/VoltageDock.cpp" line="66"/>
         <source>x</source>
         <translation>x</translation>
     </message>
