@@ -17,7 +17,6 @@ class Capturing : public QThread {
     unsigned getRealSamples();
     unsigned getDemoSamples();
     void xferSamples();
-    // bool active = true;
     HantekDsoControl *hdc;
     unsigned channels = 0;
     double effectiveSamplerate = 0;

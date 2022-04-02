@@ -208,7 +208,7 @@ Dso::ErrorCode HantekDsoControl::setChannelUsed( ChannelID channel, bool used ) 
         qDebug() << "  HDC::setChannelUsed()" << channel << used;
     if ( deviceNotConnected() )
         return Dso::ErrorCode::CONNECTION;
-    if ( channel >= specification->channels )
+    if ( channel > specification->channels )
         return Dso::ErrorCode::PARAMETER;
     // Update settings
     controlsettings.voltage[ channel ].used = used;
@@ -231,6 +231,7 @@ Dso::ErrorCode HantekDsoControl::setChannelUsed( ChannelID channel, bool used ) 
     // Check if fast rate mode availability changed
     updateSamplerateLimits();
     restoreTargets();
+    requestRefresh(); // force new data conversion
     // sampleSetupChanged = true; // skip next raw samples block to avoid artefacts
     return Dso::ErrorCode::NONE;
 }
@@ -239,7 +240,7 @@ Dso::ErrorCode HantekDsoControl::setChannelUsed( ChannelID channel, bool used ) 
 Dso::ErrorCode HantekDsoControl::setChannelInverted( ChannelID channel, bool inverted ) {
     if ( deviceNotConnected() )
         return Dso::ErrorCode::CONNECTION;
-    if ( channel >= specification->channels )
+    if ( channel > specification->channels )
         return Dso::ErrorCode::PARAMETER;
     // Update settings
     if ( verboseLevel > 2 )
@@ -253,7 +254,7 @@ Dso::ErrorCode HantekDsoControl::setGain( ChannelID channel, double gain ) {
     if ( deviceNotConnected() )
         return Dso::ErrorCode::CONNECTION;
 
-    if ( channel >= specification->channels )
+    if ( channel > specification->channels )
         return Dso::ErrorCode::PARAMETER;
 
     if ( verboseLevel > 2 )
@@ -278,6 +279,8 @@ Dso::ErrorCode HantekDsoControl::setGain( ChannelID channel, double gain ) {
             restartSampling();
         }
         lastGain[ 1 ] = gainValue;
+    } else if ( channel == 2 ) {
+        // do nothing
     } else
         qDebug( "%s: Unsupported channel: %i\n", __func__, channel );
     controlsettings.voltage[ channel ].gain = gainID;
@@ -327,7 +330,7 @@ Dso::ErrorCode HantekDsoControl::setTriggerMode( Dso::TriggerMode mode ) {
     static Dso::TriggerMode lastMode;
     controlsettings.trigger.mode = mode;
     if ( Dso::TriggerMode::SINGLE != mode )
-        enableSampling( true );
+        enableSampling();
     // trigger mode changed NONE <-> !NONE
     if ( ( Dso::TriggerMode::ROLL == mode && Dso::TriggerMode::ROLL != lastMode ) ||
          ( Dso::TriggerMode::ROLL != mode && Dso::TriggerMode::ROLL == lastMode ) ) {
@@ -335,7 +338,7 @@ Dso::ErrorCode HantekDsoControl::setTriggerMode( Dso::TriggerMode mode ) {
         raw.freeRun = Dso::TriggerMode::ROLL == mode;
     }
     lastMode = mode;
-    newTriggerParam = true;
+    requestRefresh();
     return Dso::ErrorCode::NONE;
 }
 
@@ -346,7 +349,7 @@ Dso::ErrorCode HantekDsoControl::setTriggerSource( int channel ) {
     if ( verboseLevel > 2 )
         qDebug() << "  HDC::setTriggerSource()" << channel;
     controlsettings.trigger.source = channel;
-    newTriggerParam = true;
+    requestRefresh();
     return Dso::ErrorCode::NONE;
 }
 
@@ -357,7 +360,7 @@ Dso::ErrorCode HantekDsoControl::setTriggerSmooth( int smooth ) {
     if ( verboseLevel > 2 )
         qDebug() << "  HDC::setTriggerSmooth()" << smooth;
     controlsettings.trigger.smooth = smooth;
-    newTriggerParam = true;
+    requestRefresh();
     return Dso::ErrorCode::NONE;
 }
 
@@ -366,12 +369,12 @@ Dso::ErrorCode HantekDsoControl::setTriggerSmooth( int smooth ) {
 Dso::ErrorCode HantekDsoControl::setTriggerLevel( ChannelID channel, double level ) {
     if ( deviceNotConnected() )
         return Dso::ErrorCode::CONNECTION;
-    if ( channel >= specification->channels )
+    if ( channel > specification->channels )
         return Dso::ErrorCode::PARAMETER;
     if ( verboseLevel > 2 )
         qDebug() << "  HDC::setTriggerLevel()" << channel << level;
     controlsettings.trigger.level[ channel ] = level;
-    newTriggerParam = true;
+    requestRefresh();
     displayInterval = 0; // update screen immediately
     return Dso::ErrorCode::NONE;
 }
@@ -383,7 +386,7 @@ Dso::ErrorCode HantekDsoControl::setTriggerSlope( Dso::Slope slope ) {
     if ( verboseLevel > 2 )
         qDebug() << "  HDC::setTriggerSlope()" << int( slope );
     controlsettings.trigger.slope = slope;
-    newTriggerParam = true;
+    requestRefresh();
     return Dso::ErrorCode::NONE;
 }
 
@@ -395,7 +398,7 @@ Dso::ErrorCode HantekDsoControl::setTriggerPosition( double position ) {
     if ( verboseLevel > 2 )
         qDebug() << "  HDC::setTriggerPosition()" << position;
     controlsettings.trigger.position = position;
-    newTriggerParam = true;
+    requestRefresh();
     return Dso::ErrorCode::NONE;
 }
 
@@ -406,13 +409,14 @@ void HantekDsoControl::applySettings( DsoSettingsScope *dsoSettingsScope ) {
         qDebug() << " HDC::applySettings()";
     scope = dsoSettingsScope;
     bool mathUsed = dsoSettingsScope->anyUsed( specification->channels );
-    for ( ChannelID channel = 0; channel < specification->channels; ++channel ) {
+    for ( ChannelID channel = 0; channel <= specification->channels; ++channel ) {
         setProbe( channel, dsoSettingsScope->voltage[ channel ].probeAttn );
         setGain( channel, dsoSettingsScope->gain( channel ) );
         setTriggerLevel( channel, dsoSettingsScope->voltage[ channel ].trigger );
         setChannelUsed( channel, mathUsed | dsoSettingsScope->anyUsed( channel ) );
         setChannelInverted( channel, dsoSettingsScope->voltage[ channel ].inverted );
-        setCoupling( channel, Dso::Coupling( dsoSettingsScope->voltage[ channel ].couplingOrMathIndex ) );
+        if ( channel < specification->channels )
+            setCoupling( channel, Dso::Coupling( dsoSettingsScope->voltage[ channel ].couplingOrMathIndex ) );
     }
 
     setRecordTime( dsoSettingsScope->horizontal.timebase * DIVS_TIME );
@@ -442,7 +446,7 @@ void HantekDsoControl::enableSampling( bool enabled ) {
         triggeredPositionRaw = 0; // invalidate previous result, wait for new trigger
     sampling = enabled;
     updateSamplerateLimits();
-    emit samplingStatusChanged( enabled );
+    emit showSamplingStatus( enabled );
 }
 
 
@@ -740,8 +744,8 @@ void HantekDsoControl::convertRawDataToSamples() {
     result.tag = raw.tag;
     result.samplerate = raw.samplerate / raw.oversampling;
     // Prepare result buffers
-    result.data.resize( specification->channels );
-    for ( ChannelID channelCounter = 0; channelCounter < specification->channels; ++channelCounter )
+    result.data.resize( specification->channels + 1 ); // CH0, CH1, MATH
+    for ( ChannelID channelCounter = 0; channelCounter <= specification->channels; ++channelCounter )
         result.data[ channelCounter ].clear();
 
     // Convert channel data
@@ -831,6 +835,169 @@ void HantekDsoControl::convertRawDataToSamples() {
 } // convertRawDataToSamples()
 
 
+void HantekDsoControl::createMathChannel() {
+    const size_t CH1 = 0;
+    const size_t CH2 = 1;
+    const size_t MATH = 2;
+    const double sign = controlsettings.voltage[ MATH ].inverted ? -1.0 : 1.0;
+    QWriteLocker resultLocker( &result.lock );
+    std::vector< double > &mathChannel = result.data[ MATH ];
+    const size_t resultSamples = result.data[ CH1 ].size();
+    mathChannel.resize( resultSamples );
+    if ( Dso::getMathMode( scope->voltage[ MATH ] ) <= Dso::LastBinaryMathMode ) { // binary operations
+        if ( result.data[ CH1 ].empty() || result.data[ CH2 ].empty() )
+            return;
+
+        // Calculate values and write them into the sample buffer
+        std::vector< double >::const_iterator ch1Iterator = result.data[ CH1 ].begin();
+        std::vector< double >::const_iterator ch2Iterator = result.data[ CH2 ].begin();
+        // double ( *calculate )( double, double ) = nullptr;
+        if ( result.clipped & 0x03 ) // at least one channel has clipped
+            result.clipped |= 0x04;  // .. the math channel is not reliable
+        else
+            result.clipped &= ~0x04; // clear clipping
+
+        switch ( Dso::getMathMode( scope->voltage[ MATH ] ) ) {
+        case Dso::MathMode::ADD_CH1_CH2:
+            for ( auto it = mathChannel.begin(), end = mathChannel.end(); it != end; ++it, ++ch1Iterator, ++ch2Iterator ) {
+                *it = sign * ( *ch1Iterator + *ch2Iterator );
+            }
+            break;
+        case Dso::MathMode::SUB_CH2_FROM_CH1:
+            for ( auto it = mathChannel.begin(), end = mathChannel.end(); it != end; ++it, ++ch1Iterator, ++ch2Iterator ) {
+                *it = sign * ( *ch1Iterator - *ch2Iterator );
+            }
+            break;
+        case Dso::MathMode::SUB_CH1_FROM_CH2:
+            for ( auto it = mathChannel.begin(), end = mathChannel.end(); it != end; ++it, ++ch1Iterator, ++ch2Iterator ) {
+                *it = sign * ( *ch2Iterator - *ch1Iterator );
+            }
+            break;
+        case Dso::MathMode::MUL_CH1_CH2:
+            // multiply e.g. voltage and current (measured with a 1 ohm shunt) to get momentary power
+            for ( auto it = mathChannel.begin(), end = mathChannel.end(); it != end; ++it, ++ch1Iterator, ++ch2Iterator ) {
+                *it = sign * ( *ch1Iterator * *ch2Iterator );
+            }
+            break;
+        case Dso::MathMode::AND_CH1_CH2:
+            // logic values: above / below trigger level
+            for ( auto it = mathChannel.begin(), end = mathChannel.end(); it != end; ++it, ++ch1Iterator, ++ch2Iterator )
+                *it = ( ( *ch1Iterator >= scope->voltage[ CH1 ].trigger ) && ( *ch2Iterator >= scope->voltage[ CH2 ].trigger )
+                            ? 1.0
+                            : 0.0 );
+            break;
+        case Dso::MathMode::AND_NOT_CH1_CH2:
+            // logic values: above / below trigger level
+            for ( auto it = mathChannel.begin(), end = mathChannel.end(); it != end; ++it, ++ch1Iterator, ++ch2Iterator )
+                *it = ( !( *ch1Iterator >= scope->voltage[ CH1 ].trigger ) && ( *ch2Iterator >= scope->voltage[ CH2 ].trigger )
+                            ? 1.0
+                            : 0.0 );
+            break;
+        case Dso::MathMode::AND_CH1_NOT_CH2:
+            // logic values: above / below trigger level
+            for ( auto it = mathChannel.begin(), end = mathChannel.end(); it != end; ++it, ++ch1Iterator, ++ch2Iterator )
+                *it = ( ( *ch1Iterator >= this->scope->voltage[ CH1 ].trigger ) &&
+                                !( *ch2Iterator >= this->scope->voltage[ CH2 ].trigger )
+                            ? 1.0
+                            : 0.0 );
+            break;
+        case Dso::MathMode::AND_NOT_CH1_NOT_CH2:
+            // logic values: above / below trigger level
+            for ( auto it = mathChannel.begin(), end = mathChannel.end(); it != end; ++it, ++ch1Iterator, ++ch2Iterator )
+                *it = ( !( *ch1Iterator >= this->scope->voltage[ CH1 ].trigger ) &&
+                                !( *ch2Iterator >= this->scope->voltage[ CH2 ].trigger )
+                            ? 1.0
+                            : 0.0 );
+            break;
+        case Dso::MathMode::EQU_CH1_CH2:
+            // logic values: above / below trigger level
+            for ( auto it = mathChannel.begin(), end = mathChannel.end(); it != end; ++it, ++ch1Iterator, ++ch2Iterator )
+                *it = ( ( *ch1Iterator >= this->scope->voltage[ CH1 ].trigger ) ==
+                                ( *ch2Iterator >= this->scope->voltage[ CH2 ].trigger )
+                            ? 1.0
+                            : 0.0 );
+            break;
+        default:
+            for ( auto it = mathChannel.begin(), end = mathChannel.end(); it != end; ++it )
+                *it = 0.0;
+            break;
+        }
+    } else {           // unary operators (calculate square, AC, DC, abs, sign, ...)
+        unsigned src = // alternating 0 and 1 for the unary math cfunctions
+            ( unsigned( Dso::getMathMode( scope->voltage[ 2 ] ) ) - unsigned( Dso::LastBinaryMathMode ) - 1 ) & 0x01;
+        if ( result.data[ src ].empty() )
+            return;
+        if ( result.clipped & 0x01 << src ) // the input channel has clipped
+            result.clipped |= 0x04;         // .. the math channel is not reliable
+        else
+            result.clipped &= ~0x04; // clear clipping
+
+        if ( Dso::getMathMode( scope->voltage[ MATH ] ) == Dso::MathMode::SQ_CH1 ||
+             Dso::getMathMode( scope->voltage[ MATH ] ) == Dso::MathMode::SQ_CH2 ) {
+            auto srcIt = result.data[ src ].begin();
+            for ( auto dstIt = mathChannel.begin(), dstEnd = mathChannel.end(); dstIt != dstEnd; ++srcIt, ++dstIt )
+                *dstIt = sign * ( *srcIt * *srcIt );
+        } else {
+            // calculate DC component of channel that's needed for some of the math functions...
+            double average = 0;
+            for ( auto srcIt = result.data[ src ].begin(), srcEnd = result.data[ src ].end(); srcIt != srcEnd; ++srcIt ) {
+                average += *srcIt;
+            }
+            average /= double( result.data[ src ].size() );
+
+            // also needed for all math functions
+            auto srcIt = result.data[ src ].begin();
+
+            switch ( Dso::getMathMode( scope->voltage[ MATH ] ) ) {
+            case Dso::MathMode::AC_CH1:
+            case Dso::MathMode::AC_CH2:
+                // ... and remove DC component to get AC
+                for ( auto dstIt = mathChannel.begin(), dstEnd = mathChannel.end(); dstIt != dstEnd; ++srcIt, ++dstIt )
+                    *dstIt = sign * ( *srcIt - average );
+                break;
+            case Dso::MathMode::DC_CH1:
+            case Dso::MathMode::DC_CH2:
+                // ... and show DC component
+                for ( auto dstIt = mathChannel.begin(), dstEnd = mathChannel.end(); dstIt != dstEnd; ++srcIt, ++dstIt ) {
+                    *dstIt = sign * average;
+                }
+                break;
+            case Dso::MathMode::ABS_CH1:
+            case Dso::MathMode::ABS_CH2:
+                // absolute value of signal
+                for ( auto dstIt = mathChannel.begin(), dstEnd = mathChannel.end(); dstIt != dstEnd; ++srcIt, ++dstIt ) {
+                    *dstIt = sign * ( *srcIt < 0 ? -*srcIt : *srcIt );
+                }
+                break;
+            case Dso::MathMode::SIGN_CH1:
+            case Dso::MathMode::SIGN_CH2:
+                // positive: 1, zero: 0, negative -1
+                for ( auto dstIt = mathChannel.begin(), dstEnd = mathChannel.end(); dstIt != dstEnd; ++srcIt, ++dstIt ) {
+                    *dstIt = sign * ( *srcIt < 0 ? -1 : 1 );
+                }
+                break;
+            case Dso::MathMode::SIGN_AC_CH1:
+            case Dso::MathMode::SIGN_AC_CH2:
+                // same for AC part of signal
+                for ( auto dstIt = mathChannel.begin(), dstEnd = mathChannel.end(); dstIt != dstEnd; ++srcIt, ++dstIt ) {
+                    *dstIt = sign * ( *srcIt < average ? -1 : 1 );
+                }
+                break;
+            case Dso::MathMode::TRIG_CH1:
+            case Dso::MathMode::TRIG_CH2:
+                // above / below trigger level
+                for ( auto dstIt = mathChannel.begin(), dstEnd = mathChannel.end(); dstIt != dstEnd; ++srcIt, ++dstIt ) {
+                    *dstIt = ( *srcIt < scope->voltage[ src ].trigger ? 0 : 1 );
+                }
+                break;
+            default:
+                break;
+            }
+        }
+    }
+    result.mathVoltageUnit = mathModeUnit( Dso::getMathMode( scope->voltage[ MATH ] ) );
+}
+
 // search for trigger point from defined point, default startPos = 0;
 // return trigger position > 0 (0: no trigger found)
 int HantekDsoControl::searchTriggerPoint( Dso::Slope dsoSlope, int startPos ) {
@@ -845,59 +1012,73 @@ int HantekDsoControl::searchTriggerPoint( Dso::Slope dsoSlope, int startPos ) {
     unsigned channel = unsigned( controlsettings.trigger.source );
     const std::vector< double > &samples = result.data[ channel ];
     int sampleCount = int( samples.size() ); ///< number of available samples
-    if ( verboseLevel > 5 )
-        qDebug() << "     HDC::searchTriggerPoint()" << int( dsoSlope ) << startPos;
-    if ( startPos >= sampleCount )
+    if ( startPos < 0 || startPos >= sampleCount )
         return 0;
-    double level = controlsettings.trigger.level[ channel ];
-    double timeDisplay = controlsettings.samplerate.target.duration; // time for full screen width
-    double sampleRate = controlsettings.samplerate.current;
-    int samplesDisplay = int( round( timeDisplay * sampleRate ) );
-
-    int preTrigSamples = startPos ? startPos : int( controlsettings.trigger.position * samplesDisplay ); // samples left of trigger
-    int postTrigSamples = sampleCount - ( int( samplesDisplay ) - preTrigSamples );                      // samples right of trigger
+    double triggerLevel = controlsettings.trigger.level[ channel ];
+    if ( verboseLevel > 5 )
+        qDebug() << "     HDC::searchTriggerPoint()" << channel << triggerLevel << slope << startPos;
+    int samplesDisplay = int( round( controlsettings.samplerate.target.duration * controlsettings.samplerate.current ) );
+    int searchBegin;
+    int searchEnd;
+    if ( 0 == startPos ) {                                                      // search 1st trigger slope
+        searchBegin = int( controlsettings.trigger.position * samplesDisplay ); // samples left of trigger
+        searchEnd = sampleCount - ( int( samplesDisplay ) - searchBegin );      // samples right of trigger
+    } else {                                                                    // search next slopes for duty cycle
+        searchBegin = startPos;                                                 // search from start point ..
+        searchEnd = sampleCount;                                                // .. up to end of samples
+    }
+    // Two possible search scenarios:
+    // 1. search for the trigger slope that allows stable trace display (omit pre and post trigger area)
     // |-----------samples-----------| // available sample
     // |--disp--|                      // display size
     // |<<<<<T>>|--------------------| // >> = right = (disp-pre) i.e. right of trigger on screen
     // |<pre<|                         // << = left = pre
     // |--(samp-(disp-pre))-------|>>|
     // |<<<<<|????????????????????|>>| // ?? = search for trigger in this range [left,right]
+    // 2. search duty cycle slopes without need for stable display margins
+    // |<<<<<T???????????????????????| // ?? = search for other (duty cycle) slopes in this range
 
-    const int swTriggerSampleSet = int( pow( 20, controlsettings.trigger.smooth ) );
-    if ( postTrigSamples > int( sampleCount ) - 2 * ( swTriggerSampleSet + 1 ) )
-        postTrigSamples = sampleCount - 2 * ( swTriggerSampleSet + 1 );
+    const int triggerAverage = int( pow( 20, controlsettings.trigger.smooth ) ); // smooth 0,1,2 -> 1,20,400
+    if ( searchBegin < triggerAverage )
+        searchBegin = triggerAverage;
+    if ( searchEnd >= sampleCount - triggerAverage )
+        searchEnd = sampleCount - triggerAverage - 1;
     if ( verboseLevel > 5 )
-        qDebug() << "     pre:" << preTrigSamples << "post:" << postTrigSamples;
+        qDebug() << "     begin:" << searchBegin << "end:" << searchEnd;
 
     double prev = INT_MAX;
     int swTriggerStart = 0;
-    for ( int i = preTrigSamples; i < postTrigSamples; i++ ) {
-        if ( slope * samples[ size_t( i ) ] >= slope * level && slope * prev < slope * level ) { // trigger condition met
+    for ( int i = searchBegin; i < searchEnd; i++ ) {
+        if ( slope * samples[ size_t( i ) ] >= slope * triggerLevel &&
+             slope * prev < slope * triggerLevel ) { // trigger condition met
             // check for the previous few SampleSet samples, if they are also above/below the trigger value
+            // use different averaging sizes for HF, normal and LF signals
             bool triggerBefore = false;
             double mean = 0;
             int iii = 0;
-            for ( int k = i - 1; k >= i - swTriggerSampleSet && k >= 0; k-- ) {
+            for ( int k = i - 1; k >= i - triggerAverage && k >= 0; k-- ) {
                 mean += samples[ size_t( k ) ];
                 iii++;
             }
             if ( iii ) {
                 mean /= iii;
-                triggerBefore = slope * mean < slope * level;
+                triggerBefore = slope * mean < slope * triggerLevel;
             }
             // check for the next few SampleSet samples, if they are also above/below the trigger value
             bool triggerAfter = false;
-            mean = 0;
-            iii = 0;
-            for ( int k = i + 1; k <= i + swTriggerSampleSet && k < sampleCount; k++ ) {
-                mean += samples[ size_t( k ) ];
-                iii++;
+            if ( triggerBefore ) { // search right side only if left side condition is met
+                mean = 0;
+                iii = 0;
+                for ( int k = i + 1; k <= i + triggerAverage && k < sampleCount; k++ ) {
+                    mean += samples[ size_t( k ) ];
+                    iii++;
+                }
+                if ( iii ) {
+                    mean /= iii;
+                    triggerAfter = slope * mean > slope * triggerLevel;
+                }
             }
-            if ( iii ) {
-                mean /= iii;
-                triggerAfter = slope * mean > slope * level;
-            }
-            // if at least >Threshold samples before and after trig meet the condition, set trigger
+            // if at least triggerAverage samples before and after trig meet the condition, set trigger
             if ( triggerBefore && triggerAfter ) {
                 swTriggerStart = i;
                 break;
@@ -905,6 +1086,8 @@ int HantekDsoControl::searchTriggerPoint( Dso::Slope dsoSlope, int startPos ) {
         }
         prev = samples[ size_t( i ) ];
     }
+    if ( verboseLevel > 5 )
+        qDebug() << "     swT:" << swTriggerStart;
     return swTriggerStart;
 } // searchTriggerPoint()
 
@@ -913,9 +1096,8 @@ int HantekDsoControl::searchTriggeredPosition() {
     static Dso::Slope nextSlope = Dso::Slope::Positive; // for alternating slope mode X
     ChannelID channel = ChannelID( controlsettings.trigger.source );
     // Trigger channel not in use
-    if ( !controlsettings.voltage[ channel ].used || result.data.empty() ) {
+    if ( !scope->anyUsed( channel ) || result.data.empty() || result.data[ channel ].empty() )
         return result.triggeredPosition = 0;
-    }
     if ( verboseLevel > 4 )
         qDebug() << "    HDC::searchTriggeredPosition()" << result.tag;
     triggeredPositionRaw = 0;
@@ -1007,10 +1189,12 @@ void HantekDsoControl::updateInterval() {
 
 /// \brief State machine for the device communication
 void HantekDsoControl::stateMachine() {
-    static int delayDisplay = 0;       // timer for display
-    static bool lastTriggered = false; // state of last frame
-    static bool skipEven = true;       // even or odd frames were skipped
-    static unsigned lastTag = 2;       // update screen on 1st measure when started in single mode
+    static bool firstFreq = true;
+    static bool skipFirstSingle = true; // skip 1st triggered single trace to avoid old data
+    static int delayDisplay = 0;        // timer for display
+    static bool lastTriggered = false;  // state of last frame
+    static bool skipEven = true;        // even or odd frames were skipped
+    static unsigned lastTag;            // detect new raw data
 
     bool triggered = false;
     if ( verboseLevel > 4 )
@@ -1018,9 +1202,10 @@ void HantekDsoControl::stateMachine() {
 
     // we have a sample available ...
     // ... that is either a new sample or we are in free run mode or a new trigger search is needed
-    if ( samplingStarted && raw.valid && ( raw.tag != lastTag || raw.freeRun || triggerChanged() ) ) {
+    if ( samplingStarted && raw.valid && ( raw.tag != lastTag || raw.freeRun || refreshNeeded() ) ) {
         lastTag = raw.tag;
         convertRawDataToSamples(); // process samples, apply gain settings etc.
+        createMathChannel();
         QWriteLocker resultLocker( &result.lock );
         if ( !result.freeRunning ) {            // trigger mode != NONE
             searchTriggeredPosition();          // detect trigger point
@@ -1029,11 +1214,10 @@ void HantekDsoControl::stateMachine() {
             triggered = false;
             result.triggeredPosition = 0;
         }
-    } else { // start with correct calibration frequency
-        static bool firstTime = true;
-        if ( firstTime && scope ) {
+    } else { // TODO: check if this is needed anymore: start with correct calibration frequency
+        if ( firstFreq && scope ) {
             setCalFreq( scope->horizontal.calfreq );
-            firstTime = false;
+            firstFreq = false;
         }
     }
     delayDisplay += qMax( acquireInterval, 1 );
@@ -1055,15 +1239,20 @@ void HantekDsoControl::stateMachine() {
     lastTriggered = triggered; // save state
 
     // Stop sampling if we're in single trigger mode and have a triggered trace (txh No13)
-    if ( controlsettings.trigger.mode == Dso::TriggerMode::SINGLE && samplingStarted && triggeredPositionRaw > 0 ) {
-        enableSampling( false );
-        ++lastTag; // skip the already sampled trace
+    if ( isSampling() && controlsettings.trigger.mode == Dso::TriggerMode::SINGLE && triggeredPositionRaw > 0 ) {
+        if ( verboseLevel > 5 )
+            qDebug() << "     HDC::stateMachine() stop sampling" << raw.tag;
+        if ( skipFirstSingle ) { // skip the 1st measurement in single mode
+            skipFirstSingle = false;
+        } else {
+            while ( raw.tag == lastTag ) // skip the already sampled trace, get a new one when reactivated
+                ;
+            enableSampling( false );
+            samplingStarted = false;
+        }
     }
-
-    // Sampling completed, restart it when necessary
-    samplingStarted = false;
-
-    if ( isSampling() ) {
+    if ( isSampling() ) { // triggered by action "start sampling"
+        lastTag = raw.tag;
         // Sampling hasn't started, update the expected sample count
         expectedSampleCount = getSampleCount();
         timestampDebug( "Starting to capture" );

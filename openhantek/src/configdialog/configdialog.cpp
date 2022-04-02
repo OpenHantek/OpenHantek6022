@@ -40,12 +40,12 @@ DsoConfigDialog::DsoConfigDialog( DsoSettings *settings, QWidget *parent ) : QDi
     contentsWidget->setMinimumWidth( CONFIG_LIST_WIDTH );
     contentsWidget->setMinimumHeight( CONFIG_LIST_ITEMHEIGHT * 3 + 2 * ( contentsWidget->frameWidth() ) );
 
-    analysisPage = new DsoConfigAnalysisPage( settings );
-    colorsPage = new DsoConfigColorsPage( settings );
-    scopePage = new DsoConfigScopePage( settings );
     pagesWidget = new QStackedWidget;
+    scopePage = new DsoConfigScopePage( settings );
     pagesWidget->addWidget( scopePage );
+    analysisPage = new DsoConfigAnalysisPage( settings );
     pagesWidget->addWidget( analysisPage );
+    colorsPage = new DsoConfigColorsPage( settings );
     pagesWidget->addWidget( colorsPage );
 
     acceptButton = new QPushButton( tr( "&Ok" ) );
@@ -90,14 +90,17 @@ void DsoConfigDialog::createIcons() {
     QListWidgetItem *scopeButton = new QListWidgetItem( contentsWidget );
     scopeButton->setIcon( QIcon( ":config/scope.png" ) );
     scopeButton->setText( tr( "Scope" ) );
+    scopeButton->setToolTip( tr( "Timing, display settings, and HW configuration" ) );
 
-    QListWidgetItem *spectrumButton = new QListWidgetItem( contentsWidget );
-    spectrumButton->setIcon( QIcon( ":config/spectrum.png" ) );
-    spectrumButton->setText( tr( "Analysis" ) );
+    QListWidgetItem *analysisButton = new QListWidgetItem( contentsWidget );
+    analysisButton->setIcon( QIcon( ":config/spectrum.png" ) );
+    analysisButton->setText( tr( "Analysis" ) );
+    analysisButton->setToolTip( tr( "FFT settings, power and THD calculation, musical note detection" ) );
 
     QListWidgetItem *colorsButton = new QListWidgetItem( contentsWidget );
     colorsButton->setIcon( QIcon( ":config/colors.png" ) );
     colorsButton->setText( tr( "Colors" ) );
+    colorsButton->setToolTip( tr( "Screen and printer colors, theme and style settings" ) );
 
     connect( contentsWidget, &QListWidget::currentItemChanged, this, &DsoConfigDialog::changePage );
 }

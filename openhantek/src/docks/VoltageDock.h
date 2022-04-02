@@ -67,7 +67,7 @@ class VoltageDock : public QDockWidget {
     void loadSettings( DsoSettingsScope *scope, const Dso::ControlSpecification *spec );
 
   protected:
-    void closeEvent( QCloseEvent *event );
+    void closeEvent( QCloseEvent *event ) override;
 
     QGridLayout *dockLayout; ///< The main layout for the dock window
     QWidget *dockWidget;     ///< The main widget for the dock window
@@ -94,7 +94,7 @@ class VoltageDock : public QDockWidget {
     void couplingChanged( ChannelID channel, Dso::Coupling coupling ); ///< A coupling has been selected
     void gainChanged( ChannelID channel, double gain );                ///< A gain has been selected
     void modeChanged( Dso::MathMode mode );                            ///< The mode for the math channels has been changed
-    void usedChanged( ChannelID channel, bool used );                  ///< A channel has been enabled/disabled
+    void usedChannelChanged( ChannelID channel, unsigned used );       ///< A channel has been enabled/disabled
     void probeAttnChanged( ChannelID channel, double probeAttn );      ///< A channel probe attenuation has been changed
     void invertedChanged( ChannelID channel, bool inverted );          ///< A channel "inverted" has been toggled
 };

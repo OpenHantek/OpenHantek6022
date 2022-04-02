@@ -24,6 +24,8 @@ int ExporterJSON::faIcon() { return fa::filetexto; }
 
 QString ExporterJSON::name() { return tr( "Export &JSON .." ); }
 
+QString ExporterJSON::format() { return "JSON"; }
+
 ExporterInterface::Type ExporterJSON::type() { return Type::SnapshotExport; }
 
 bool ExporterJSON::samples( const std::shared_ptr< PPresult > newData ) {

@@ -40,7 +40,7 @@
 
 // Post processing
 #include "post/graphgenerator.h"
-#include "post/mathchannelgenerator.h"
+// #include "post/mathchannelgenerator.h"
 #include "post/postprocessing.h"
 #include "post/spectrumgenerator.h"
 
@@ -281,6 +281,9 @@ int main( int argc, char *argv[] ) {
     }
     openHantekApplication.setPalette( palette );
 
+    openHantekApplication.setStyleSheet( "QToolTip { border: 2px solid white; padding: 2px; border-radius: 5px; font-weight: bold; "
+                                         "color: white; background-color: black; }" );
+
 #ifdef Q_OS_LINUX
     // try to set realtime priority to improve USB allocation
     // this works if the user is member of a realtime group, e.g. audio:
@@ -404,11 +407,12 @@ int main( int argc, char *argv[] ) {
     PostProcessing postProcessing( settings.scope.countChannels(), verboseLevel );
 
     SpectrumGenerator spectrumGenerator( &settings.scope, &settings.post );
-    MathChannelGenerator mathchannelGenerator( &settings.scope, spec->channels );
+    // math channel is now calculated in HantekDsoControl
+    // MathChannelGenerator mathchannelGenerator( &settings.scope, spec->channels );
     GraphGenerator graphGenerator( &settings.scope, &settings.view );
 
     postProcessing.registerProcessor( &samplesToExportRaw );
-    postProcessing.registerProcessor( &mathchannelGenerator );
+    // postProcessing.registerProcessor( &mathchannelGenerator );
     postProcessing.registerProcessor( &spectrumGenerator );
     postProcessing.registerProcessor( &graphGenerator );
 
@@ -490,7 +494,7 @@ int main( int argc, char *argv[] ) {
     if ( verboseLevel )
         qDebug() << startupTime.elapsed() << "ms:"
                  << "start DSO control thread";
-    dsoControl.enableSampling( true );
+    dsoControl.enableSampling();
     postProcessingThread.start();
     dsoControlThread.start();
     Capturing capturing( &dsoControl );

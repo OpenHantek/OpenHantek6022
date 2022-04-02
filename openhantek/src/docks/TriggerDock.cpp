@@ -28,24 +28,29 @@ TriggerDock::TriggerDock( DsoSettingsScope *scope, const Dso::ControlSpecificati
     // Initialize lists for comboboxes
     for ( ChannelID channel = 0; channel < mSpec->channels; ++channel )
         sourceStandardStrings << tr( "CH%1" ).arg( channel + 1 );
+    sourceStandardStrings << tr( "MATH" );
     // add "smooth" source
     smoothStandardStrings << tr( "HF" ) << tr( "Normal" ) << tr( "LF" );
 
     // Initialize elements
     modeLabel = new QLabel( tr( "Mode" ) );
     modeComboBox = new QComboBox();
+    modeComboBox->setToolTip( tr( "Select the trigger mode" ) );
     for ( Dso::TriggerMode mode : mSpec->triggerModes )
         modeComboBox->addItem( Dso::triggerModeString( mode ) );
 
     slopeLabel = new QLabel( tr( "Slope" ) );
     slopeComboBox = new QComboBox();
+    slopeComboBox->setToolTip( tr( "Select positive, negative or both (alternating) slopes" ) );
     for ( Dso::Slope slope : Dso::SlopeEnum )
         slopeComboBox->addItem( Dso::slopeString( slope ) );
 
     sourceLabel = new QLabel( tr( "Source" ) );
     sourceComboBox = new QComboBox();
+    sourceComboBox->setToolTip( tr( "Select the trigger channel (CH1, CH2, or MATH)" ) );
     sourceComboBox->addItems( sourceStandardStrings );
     smoothComboBox = new QComboBox();
+    smoothComboBox->setToolTip( tr( "Trigger on fast, normal, or slow signals" ) );
     smoothComboBox->addItems( smoothStandardStrings );
 
     dockLayout = new QGridLayout();

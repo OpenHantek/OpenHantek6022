@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "utils/printutils.h"
 #include <QReadLocker>
 #include <QReadWriteLock>
 #include <QWriteLocker>
@@ -15,6 +16,7 @@ struct DSOsamples {
     int triggeredPosition = 0;                 ///< position for a triggered trace, 0 = not triggered
     double pulseWidth1 = 0.0;                  ///< width from trigger point to next opposite slope
     double pulseWidth2 = 0.0;                  ///< width from next opposite slope to third slope
+    Unit mathVoltageUnit = UNIT_VOLTS;         ///< unless UNIT_VOLTSQUARE for some math functions
     bool freeRunning = false;                  ///< trigger: NONE, half sample count
     unsigned tag = 0;                          ///< track individual sample blocks (debug support)
     mutable QReadWriteLock lock;

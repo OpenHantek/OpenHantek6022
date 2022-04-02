@@ -99,7 +99,7 @@ struct DsoSettingsScope {
 
     double gain( unsigned channel ) const { return gainSteps[ voltage[ channel ].gainStepIndex ] * voltage[ channel ].probeAttn; }
 
-    bool anyUsed( ChannelID channel ) { return voltage[ channel ].used | spectrum[ channel ].used; }
+    bool anyUsed( ChannelID channel ) const { return voltage[ channel ].used || spectrum[ channel ].used; }
 
     Dso::Coupling coupling( ChannelID channel, const Dso::ControlSpecification *deviceSpecification ) const {
         return deviceSpecification->couplings[ voltage[ channel ].couplingOrMathIndex ];

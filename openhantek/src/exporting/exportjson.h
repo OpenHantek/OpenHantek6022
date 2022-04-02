@@ -16,6 +16,7 @@ class ExporterJSON : public ExporterInterface {
     void create( ExporterRegistry *registry ) override;
     int faIcon() override;
     QString name() override;
+    QString format() override;
     Type type() override;
     bool samples( const std::shared_ptr< PPresult > newData ) override;
     bool save() override;

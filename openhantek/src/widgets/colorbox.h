@@ -11,7 +11,7 @@ class ColorBox : public QPushButton {
 
   public:
     ColorBox( QColor color, QWidget *parent = nullptr );
-    ~ColorBox();
+    ~ColorBox() override;
 
     const QColor getColor();
 

@@ -40,7 +40,7 @@ class SpectrumDock : public QDockWidget {
 
     /// \brief Enables/disables all channels.
     /// \param enabled True if the channel should be enabled, false otherwise.
-    void enableSpectrum( bool enabled );
+    void enableSpectrumDock( bool enabled );
 
     /// \brief Changes the frequencybase.
     /// \param frequencybase The frequencybase in hertz.
@@ -59,7 +59,7 @@ class SpectrumDock : public QDockWidget {
     void frequencybaseSelected( double frequencybase );
 
   protected:
-    void closeEvent( QCloseEvent *event );
+    void closeEvent( QCloseEvent *event ) override;
 
     QGridLayout *dockLayout; ///< The main layout for the dock window
     QWidget *dockWidget;     ///< The main widget for the dock window
@@ -80,6 +80,6 @@ class SpectrumDock : public QDockWidget {
 
   signals:
     void magnitudeChanged( ChannelID channel, double magnitude ); ///< A magnitude has been selected
-    void usedChanged( ChannelID channel, bool used );             ///< A spectrum has been enabled/disabled
+    void usedChannelChanged( ChannelID channel, unsigned used );  ///< A spectrum has been enabled/disabled
     void frequencybaseChanged( double frequencybase );            ///< The frequencybase has been changed
 };

@@ -152,9 +152,9 @@ class DsoWidget : public QWidget {
 
   private slots:
     // Sliders
-    void updateOffset( ChannelID channel, double value );
-    void updateTriggerPosition( int index, double value, bool mainView = true );
-    void updateTriggerLevel( ChannelID channel, double value );
+    void updateOffset( ChannelID channel, double value, bool pressed, QPoint globalPos );
+    void updateTriggerPosition( int index, double value, bool pressed, QPoint globalPos, bool mainView = true );
+    void updateTriggerLevel( ChannelID channel, double value, bool pressed, QPoint globalPos );
     void updateMarker( unsigned marker, double value );
 
   signals:

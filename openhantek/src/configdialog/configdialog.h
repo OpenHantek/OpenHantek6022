@@ -22,10 +22,10 @@ class DsoConfigDialog : public QDialog {
 
   public:
     DsoConfigDialog( DsoSettings *settings, QWidget *parent = nullptr );
-    ~DsoConfigDialog();
+    ~DsoConfigDialog() override;
 
   public slots:
-    void accept();
+    void accept() override;
     void apply();
 
     void changePage( QListWidgetItem *current, QListWidgetItem *previous );

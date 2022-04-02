@@ -69,25 +69,40 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
     shortcuts << QKeySequence( Qt::Key::Key_S ); // else put this shortcut at the end of the list
 #endif
     ui->actionSampling->setShortcuts( shortcuts );
+    ui->actionSampling->setToolTip( tr( "Start and stop the sampling" ) );
     ui->actionRefresh->setIcon( QIcon( iconPath + "refresh.svg" ) );
     ui->actionRefresh->setShortcut( Qt::Key::Key_R );
+    ui->actionRefresh->setToolTip( tr( "Refresh the screen trace for slow 'Roll' mode" ) );
     ui->actionPhosphor->setIcon( QIcon( iconPath + "phosphor.svg" ) );
     ui->actionPhosphor->setShortcut( Qt::Key::Key_P );
+    ui->actionPhosphor->setToolTip( tr( "Let the traces fade out slowly" ) );
     ui->actionHistogram->setIcon( QIcon( iconPath + "histogram.svg" ) );
     ui->actionHistogram->setShortcut( Qt::Key::Key_H );
+    ui->actionHistogram->setToolTip( tr( "Show a histogram of the voltage levels on the right side of the trace" ) );
     ui->actionZoom->setIcon( QIcon( iconPath + "zoom.svg" ) );
     ui->actionZoom->setShortcut( Qt::Key::Key_Z );
+    ui->actionZoom->setToolTip( tr( "Zoom the range between the markers '1' and '2'" ) );
     ui->actionMeasure->setIcon( QIcon( iconPath + "measure.svg" ) );
     ui->actionMeasure->setShortcut( Qt::Key::Key_M );
+    ui->actionMeasure->setToolTip( tr( "Enable cursor measurements" ) );
     ui->actionOpen->setIcon( iconFont->icon( fa::folderopen, colorMap ) );
+    ui->actionOpen->setToolTip( tr( "Load scope settings from a config file" ) );
     ui->actionSave->setIcon( iconFont->icon( fa::save, colorMap ) );
+    ui->actionSave->setToolTip( tr( "Save the scope settings to the default location" ) );
     ui->actionSave_as->setIcon( iconFont->icon( fa::save, colorMap ) );
+    ui->actionSave_as->setToolTip( tr( "Save the scope settings to a user defined file" ) );
     ui->actionSettings->setIcon( iconFont->icon( fa::sliders, colorMap ) );
+    ui->actionSettings->setToolTip( tr( "Define scope settings, analysis parameters and colors" ) );
     ui->actionCalibrateOffset->setIcon( iconFont->icon( fa::wrench, colorMap ) );
+    ui->actionCalibrateOffset->setToolTip( tr( "Short-circuit both inputs and slowly select all voltage gain settings" ) );
     ui->actionManualCommand->setIcon( iconFont->icon( fa::terminal, colorMap ) );
+    ui->actionManualCommand->setToolTip( tr( "Send low level commands directly to the scope: 'CC XX XX'" ) );
     ui->actionUserManual->setIcon( iconFont->icon( fa::filepdfo, colorMap ) );
+    ui->actionUserManual->setToolTip( tr( "Read the fine manual" ) );
     ui->actionACmodification->setIcon( iconFont->icon( fa::filepdfo, colorMap ) );
+    ui->actionACmodification->setToolTip( tr( "Documentation how to add HW for AC coupled inputs" ) );
     ui->actionAbout->setIcon( iconFont->icon( fa::questioncircle, colorMap ) );
+    ui->actionAbout->setToolTip( tr( "Show info about the scope's HW and SW" ) );
 
     // Window title
     setWindowIcon( QIcon( ":/images/OpenHantek.svg" ) );
@@ -101,13 +116,13 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
     setDockOptions( dockOptions() | QMainWindow::GroupedDragging );
 #endif
     QAction *action;
-    action = new QAction( iconFont->icon( fa::camera, colorMap ), tr( "Screenshot" ), this );
-    action->setToolTip( "Make an immediate screenshot of the program window" );
+    action = new QAction( iconFont->icon( fa::camera, colorMap ), tr( "&Screenshot" ), this );
+    action->setToolTip( tr( "Make an immediate screenshot of the program window and save it into the current directory" ) );
     connect( action, &QAction::triggered, [ this ]() { screenShot( SCREENSHOT, true ); } );
     ui->menuExport->addAction( action );
 
-    action = new QAction( iconFont->icon( fa::clone, colorMap ), tr( "Hardcopy" ), this );
-    action->setToolTip( "Make an immediate (printable) hardcopy of the display" );
+    action = new QAction( iconFont->icon( fa::clone, colorMap ), tr( "&Hardcopy" ), this );
+    action->setToolTip( tr( "Make an immediate (printable) hardcopy of the display and save it into the current directory" ) );
     connect( action, &QAction::triggered, [ this ]() {
         dsoWidget->switchToPrintColors();
         QTimer::singleShot( 20, [ this ]() { screenShot( HARDCOPY, true ); } );
@@ -116,21 +131,21 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
 
     ui->menuExport->addSeparator();
 
-    action = new QAction( iconFont->icon( fa::camera, colorMap ), tr( "Screenshot .." ), this );
-    action->setToolTip( "Make a screenshot of the program window" );
+    action = new QAction( iconFont->icon( fa::camera, colorMap ), tr( "Save screenshot as .." ), this );
+    action->setToolTip( tr( "Make a screenshot of the program window and define the storage location" ) );
     connect( action, &QAction::triggered, [ this ]() { screenShot( SCREENSHOT ); } );
     ui->menuExport->addAction( action );
 
-    action = new QAction( iconFont->icon( fa::clone, colorMap ), tr( "Hardcopy .." ), this );
-    action->setToolTip( "Make a (printable) hardcopy of the display" );
+    action = new QAction( iconFont->icon( fa::clone, colorMap ), tr( "Save Hardcopy as .." ), this );
+    action->setToolTip( tr( "Make a (printable) hardcopy of the display and define the storage location" ) );
     connect( action, &QAction::triggered, [ this ]() {
         dsoWidget->switchToPrintColors();
         QTimer::singleShot( 20, [ this ]() { screenShot( HARDCOPY ); } );
     } );
     ui->menuExport->addAction( action );
 
-    action = new QAction( iconFont->icon( fa::print, colorMap ), tr( "Print screen .." ), this );
-    action->setToolTip( "Send the hardcopy to the printer" );
+    action = new QAction( iconFont->icon( fa::print, colorMap ), tr( "&Print screen .." ), this );
+    action->setToolTip( tr( "Send the hardcopy to a printer" ) );
     connect( action, &QAction::triggered, [ this ]() {
         dsoWidget->switchToPrintColors();
         QTimer::singleShot( 20, [ this ]() { screenShot( PRINTER ); } );
@@ -141,6 +156,7 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
 
     for ( auto *exporter : *exporterRegistry ) {
         action = new QAction( iconFont->icon( exporter->faIcon(), colorMap ), exporter->name(), this );
+        action->setToolTip( tr( "Export captured data in %1 format for further processing" ).arg( exporter->format() ) );
         action->setCheckable( exporter->type() == ExporterInterface::Type::ContinuousExport );
         connect( action, &QAction::triggered, [ exporter, exporterRegistry ]( bool checked ) {
             exporterRegistry->setExporterEnabled( exporter,
@@ -148,6 +164,12 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
         } );
         ui->menuExport->addAction( action );
     }
+
+    ui->menuFile->setToolTipsVisible( true );
+    ui->menuExport->setToolTipsVisible( true );
+    ui->menuView->setToolTipsVisible( true );
+    ui->menuOscilloscope->setToolTipsVisible( true );
+    ui->menuHelp->setToolTipsVisible( true );
 
     DsoSettingsScope *scope = &( dsoSettings->scope );
     const Dso::ControlSpecification *spec = dsoControl->getModel()->spec();
@@ -241,7 +263,7 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
              [ dsoControl, this ]() { dsoControl->setCalFreq( dsoSettings->scope.horizontal.calfreq ); } );
     connect( horizontalDock, &HorizontalDock::formatChanged, [ = ]( Dso::GraphFormat format ) {
         ui->actionHistogram->setEnabled( format == Dso::GraphFormat::TY );
-        spectrumDock->enableSpectrum( format == Dso::GraphFormat::TY );
+        spectrumDock->enableSpectrumDock( format == Dso::GraphFormat::TY );
     } );
 
     connect( triggerDock, &TriggerDock::modeChanged, dsoControl, &HantekDsoControl::setTriggerMode );
@@ -261,53 +283,54 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
     connect( dsoWidget, &DsoWidget::triggerPositionChanged, dsoControl, &HantekDsoControl::setTriggerPosition );
     connect( dsoWidget, &DsoWidget::triggerLevelChanged, dsoControl, &HantekDsoControl::setTriggerLevel );
 
-    auto usedChanged = [ this, dsoControl, spec ]( ChannelID channel ) {
-        if ( channel >= dsoSettings->scope.voltage.size() )
+    auto usedChanged = [ this, dsoControl, spec ]( ChannelID channel, unsigned channelMask ) {
+        if ( channel > spec->channels )
             return;
-
-        bool mathUsed = dsoSettings->scope.anyUsed( spec->channels );
+        if ( dsoSettings->scope.verboseLevel > 2 )
+            qDebug().noquote() << "  MW::uC()" << channel << QString::number( channelMask, 2 );
+        bool mathUsed = 3 == channelMask; // dsoSettings->scope.anyUsed( spec->channels );
 
         // Normal channel, check if voltage/spectrum or math channel is used
         if ( channel < spec->channels )
-            dsoControl->setChannelUsed( channel, mathUsed | dsoSettings->scope.anyUsed( channel ) );
+            dsoControl->setChannelUsed( channel, mathUsed || dsoSettings->scope.anyUsed( channel ) );
         // Math channel, update all channels
         else if ( channel == spec->channels ) {
             for ( ChannelID c = 0; c < spec->channels; ++c )
-                dsoControl->setChannelUsed( c, mathUsed | dsoSettings->scope.anyUsed( c ) );
+                dsoControl->setChannelUsed( c, ( ( c + 1 ) & channelMask ) || dsoSettings->scope.anyUsed( c ) );
         }
     };
-    connect( voltageDock, &VoltageDock::usedChanged, usedChanged );
-    connect( spectrumDock, &SpectrumDock::usedChanged, usedChanged );
+    connect( voltageDock, &VoltageDock::usedChannelChanged, usedChanged );
+    connect( spectrumDock, &SpectrumDock::usedChannelChanged, usedChanged );
 
     connect( voltageDock, &VoltageDock::modeChanged, dsoWidget, &DsoWidget::updateMathMode );
     connect( voltageDock, &VoltageDock::gainChanged, [ dsoControl, spec ]( ChannelID channel, double gain ) {
-        if ( channel >= spec->channels )
+        if ( channel > spec->channels )
             return;
         dsoControl->setGain( channel, gain );
     } );
     connect( voltageDock, &VoltageDock::probeAttnChanged, [ dsoControl, spec ]( ChannelID channel, double probeAttn ) {
-        if ( channel >= spec->channels )
+        if ( channel > spec->channels )
             return;
         dsoControl->setProbe( channel, probeAttn );
     } );
     connect( voltageDock, &VoltageDock::invertedChanged, [ dsoControl, spec ]( ChannelID channel, bool inverted ) {
-        if ( channel >= spec->channels )
+        if ( channel > spec->channels )
             return;
         dsoControl->setChannelInverted( channel, inverted );
     } );
     connect( voltageDock, &VoltageDock::couplingChanged, dsoWidget, &DsoWidget::updateVoltageCoupling );
     connect( voltageDock, &VoltageDock::couplingChanged, [ dsoControl, spec ]( ChannelID channel, Dso::Coupling coupling ) {
-        if ( channel >= spec->channels )
+        if ( channel > spec->channels )
             return;
         dsoControl->setCoupling( channel, coupling );
     } );
     connect( voltageDock, &VoltageDock::gainChanged, dsoWidget, &DsoWidget::updateVoltageGain );
-    connect( voltageDock, &VoltageDock::usedChanged, dsoWidget, &DsoWidget::updateVoltageUsed );
-    connect( spectrumDock, &SpectrumDock::usedChanged, dsoWidget, &DsoWidget::updateSpectrumUsed );
+    connect( voltageDock, &VoltageDock::usedChannelChanged, dsoWidget, &DsoWidget::updateVoltageUsed );
+    connect( spectrumDock, &SpectrumDock::usedChannelChanged, dsoWidget, &DsoWidget::updateSpectrumUsed );
     connect( spectrumDock, &SpectrumDock::magnitudeChanged, dsoWidget, &DsoWidget::updateSpectrumMagnitude );
 
     // Started/stopped signals from oscilloscope
-    connect( dsoControl, &HantekDsoControl::samplingStatusChanged, this, [ this ]( bool enabled ) {
+    connect( dsoControl, &HantekDsoControl::showSamplingStatus, this, [ this ]( bool enabled ) {
         QSignalBlocker blocker( this->ui->actionSampling );
         if ( enabled ) {
             this->ui->actionSampling->setIcon( this->iconPause );

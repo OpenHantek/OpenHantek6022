@@ -40,6 +40,11 @@ class ExporterInterface {
     virtual QString name() = 0;
 
     /**
+     * @return Return this exporter's data format. Will be used in graphical interfaces.
+     */
+    virtual QString format() = 0;
+
+    /**
      * Exporters can save only a single sample set or save data continuously.
      */
     enum class Type { SnapshotExport, ContinuousExport };

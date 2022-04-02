@@ -23,6 +23,8 @@ int ExporterCSV::faIcon() { return fa::filetexto; }
 
 QString ExporterCSV::name() { return tr( "Export &CSV .." ); }
 
+QString ExporterCSV::format() { return "CSV"; }
+
 ExporterInterface::Type ExporterCSV::type() { return Type::SnapshotExport; }
 
 bool ExporterCSV::samples( const std::shared_ptr< PPresult > newData ) {

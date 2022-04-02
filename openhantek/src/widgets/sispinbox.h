@@ -17,13 +17,13 @@ class SiSpinBox : public QDoubleSpinBox {
   public:
     explicit SiSpinBox( QWidget *parent = nullptr );
     SiSpinBox( Unit unit, QWidget *parent = nullptr );
-    ~SiSpinBox();
+    ~SiSpinBox() override;
 
-    QValidator::State validate( QString &input, int &pos ) const;
-    double valueFromText( const QString &text ) const;
-    QString textFromValue( double val ) const;
-    void fixup( QString &input ) const;
-    void stepBy( int steps );
+    QValidator::State validate( QString &input, int &pos ) const override;
+    double valueFromText( const QString &text ) const override;
+    QString textFromValue( double val ) const override;
+    void fixup( QString &input ) const override;
+    void stepBy( int steps ) override;
     bool setUnit( Unit unit );
     void setUnitPostfix( const QString &postfix );
     void setSteps( const QList< double > &steps );

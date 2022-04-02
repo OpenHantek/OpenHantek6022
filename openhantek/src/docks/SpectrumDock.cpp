@@ -45,6 +45,7 @@ SpectrumDock::SpectrumDock( DsoSettingsScope *scope, QWidget *parent ) : QDockWi
     for ( channel = 0; channel < scope->voltage.size(); ++channel ) {
         ChannelBlock b;
         b.magnitudeComboBox = ( new QComboBox() );
+        b.magnitudeComboBox->setToolTip( tr( "Magnitude per vertical screen division" ) );
         QString name = scope->spectrum[ channel ].name;
         name.insert( int( channel ), '&' ); // &SP1, S&P2, SP&M
         b.usedCheckBox = ( new QCheckBox( name ) );
@@ -72,6 +73,7 @@ SpectrumDock::SpectrumDock( DsoSettingsScope *scope, QWidget *parent ) : QDockWi
     }
     frequencybaseLabel = new QLabel( tr( "Frequencybase" ) );
     frequencybaseSiSpinBox = new SiSpinBox( UNIT_HERTZ );
+    frequencybaseSiSpinBox->setToolTip( tr( "Frequency range per horizontal screen division" ) );
     frequencybaseSiSpinBox->setMinimum( 0.1 );
     frequencybaseSiSpinBox->setMaximum( 100e6 );
     dockLayout->addWidget( frequencybaseLabel, int( channel ), 0 );
@@ -136,12 +138,15 @@ unsigned SpectrumDock::setUsed( ChannelID channel, bool used ) {
     scope->spectrum[ channel ].visible = used;
     QSignalBlocker blocker( channelBlocks[ channel ].usedCheckBox );
     channelBlocks[ channel ].usedCheckBox->setChecked( used );
-    emit usedChanged( channel, used );
+    if ( used )
+        emit usedChannelChanged( channel, channel + 1 ); // channel bit mask 0b01, 0b10, 0b11
+    else
+        emit usedChannelChanged( channel, 0 );
     return channel;
 }
 
 
-void SpectrumDock::enableSpectrum( bool enabled ) {
+void SpectrumDock::enableSpectrumDock( bool enabled ) { // disable when using XY display
     if ( scope->verboseLevel > 2 )
         qDebug() << "  SDock::enableSpectrum()" << enabled;
     for ( unsigned channel = 0; channel < scope->voltage.size(); ++channel ) {
@@ -149,7 +154,7 @@ void SpectrumDock::enableSpectrum( bool enabled ) {
         channelBlocks[ channel ].usedCheckBox->setEnabled( enabled );
         channelBlocks[ channel ].usedCheckBox->setChecked( false );
         scope->spectrum[ channel ].used = false;
-        emit usedChanged( channel, false );
+        emit usedChannelChanged( channel, 0 );
     }
 }
 

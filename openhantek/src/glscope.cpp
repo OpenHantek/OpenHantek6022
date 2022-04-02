@@ -787,8 +787,8 @@ void GlScope::generateGrid( int index, double value, bool pressed ) {
         triggerLineColor = view->colors->voltage[ unsigned( index ) ];
         if ( index != int( scope->trigger.source ) )
             triggerLineColor = triggerLineColor.darker();
-        gridDrawCounts[ item ] += 2;
         float yPos = float( ( value / scope->gain( unsigned( index ) ) + scope->voltage[ unsigned( index ) ].offset ) );
+        gridDrawCounts[ item ] += 2;
         vaGrid.push_back( QVector3D( -DIVS_TIME / 2, yPos, 0 ) );
         vaGrid.push_back( QVector3D( DIVS_TIME / 2, yPos, 0 ) );
     }

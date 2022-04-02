@@ -51,7 +51,7 @@ class TriggerDock : public QDockWidget {
     void loadSettings( DsoSettingsScope *scope );
 
   protected:
-    void closeEvent( QCloseEvent *event );
+    void closeEvent( QCloseEvent *event ) override;
 
     QGridLayout *dockLayout;   ///< The main layout for the dock window
     QWidget *dockWidget;       ///< The main widget for the dock window

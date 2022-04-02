@@ -51,7 +51,7 @@ SiSpinBox::~SiSpinBox() {}
 /// \param pos The position of the cursor in the text box.
 /// \return Validity of the current text.
 QValidator::State SiSpinBox::validate( QString &input, int &pos ) const {
-    Q_UNUSED( pos );
+    Q_UNUSED( pos )
 
     bool ok;
     double value = stringToValue( input, unit, &ok );
@@ -186,6 +186,9 @@ void SiSpinBox::resetSteppedTo() { steppedTo = false; }
 // fix Dark mode background introduced with MacOS 10.24 (mojave)
 void SiSpinBox::setBackground() {
     QPalette palette;
-    QColor background = palette.color( QPalette::Window );
-    setStyleSheet( "background-color: " + background.name() );
+    setStyleSheet( "SiSpinBox {color: " + palette.color( QPalette::Text ).name() +
+                   "; background-color: " + palette.color( QPalette::Mid ).name() + " }" );
+    setStyleSheet( "QToolTip { color: " + palette.color( QPalette::ToolTipText ).name() +
+                   "; background-color: " + palette.color( QPalette::ToolTipBase ).name() + " }" );
+    // setStyleSheet( "QToolTip { color: white; background-color: black }" );
 }

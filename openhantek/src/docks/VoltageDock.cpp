@@ -28,6 +28,8 @@ VoltageDock::VoltageDock( DsoSettingsScope *scope, const Dso::ControlSpecificati
     if ( scope->verboseLevel > 1 )
         qDebug() << " VoltageDock::VoltageDock()";
 
+    const size_t MATH = 2;
+
     // Initialize lists for comboboxes
     for ( Dso::Coupling c : spec->couplings )
         if ( c == Dso::Coupling::DC || scope->hasACcoupling || scope->hasACmodification )
@@ -57,31 +59,34 @@ VoltageDock::VoltageDock( DsoSettingsScope *scope, const Dso::ControlSpecificati
             b.usedCheckBox = new QCheckBox( tr( "MA&TH" ) );
         b.miscComboBox = new QComboBox();
         b.gainComboBox = new QComboBox();
+        b.gainComboBox->setToolTip( tr( "Voltage range per vertical screen division" ) );
         b.invertCheckBox = new QCheckBox( tr( "Invert" ) );
         b.attnSpinBox = new QSpinBox();
+        b.attnSpinBox->setToolTip( tr( "Set probe attenuation, scroll or type a value to select" ) );
         b.attnSpinBox->setMinimum( ATTENUATION_MIN );
         b.attnSpinBox->setMaximum( ATTENUATION_MAX );
         b.attnSpinBox->setPrefix( tr( "x" ) );
 
         channelBlocks.push_back( std::move( b ) );
 
-        if ( channel < spec->channels )
+        if ( channel < spec->channels ) {
             b.miscComboBox->addItems( couplingStrings );
-        else
+            b.miscComboBox->setToolTip( tr( "Select DC or AC coupling" ) );
+        } else {
             b.miscComboBox->addItems( modeStrings );
-
+            b.miscComboBox->setToolTip( tr( "Select the mathematical operation for this channel" ) );
+        }
         b.gainComboBox->addItems( gainStrings );
 
-        dockLayout->setColumnStretch( 1, 1 ); // stretch ComboBox in 2nd (middle) column 1x
-        dockLayout->setColumnStretch( 2, 2 ); // stretch ComboBox in 3rd (last) column 2x
-        dockLayout->addWidget( b.usedCheckBox, row, 0 );
-        dockLayout->addWidget( b.gainComboBox, row++, 1, 1, 2 ); // fill 1 row, 2 col
-        dockLayout->addWidget( b.invertCheckBox, row, 0 );
-        dockLayout->addWidget( b.attnSpinBox, row, 1, 1, 1 );    // fill 1 row, 2 col
-        dockLayout->addWidget( b.miscComboBox, row++, 2, 1, 1 ); // fill 1 row, 2 col
-
-        // draw divider line
         if ( channel < spec->channels ) {
+            dockLayout->setColumnStretch( 1, 1 ); // stretch ComboBox in 2nd (middle) column 1x
+            dockLayout->setColumnStretch( 2, 2 ); // stretch ComboBox in 3rd (last) column 2x
+            dockLayout->addWidget( b.usedCheckBox, row, 0 );
+            dockLayout->addWidget( b.gainComboBox, row++, 1, 1, 2 ); // fill 1 row, 2 col
+            dockLayout->addWidget( b.invertCheckBox, row, 0 );
+            dockLayout->addWidget( b.attnSpinBox, row, 1, 1, 1 );    // fill 1 row, 2 col
+            dockLayout->addWidget( b.miscComboBox, row++, 2, 1, 1 ); // fill 1 row, 2 col
+            // draw divider line
             QFrame *divider = new QFrame();
             divider->setLineWidth( 1 );
             divider->setFrameShape( QFrame::HLine );
@@ -89,6 +94,10 @@ VoltageDock::VoltageDock( DsoSettingsScope *scope, const Dso::ControlSpecificati
             palette.setColor( QPalette::WindowText, QColor( 128, 128, 128 ) );
             divider->setPalette( palette ); // reduce the contrast of the divider
             dockLayout->addWidget( divider, row++, 0, 1, 3 );
+        } else { // MATH function, all in one row
+            dockLayout->addWidget( b.usedCheckBox, row, 0 );
+            dockLayout->addWidget( b.gainComboBox, row, 1 );
+            dockLayout->addWidget( b.miscComboBox, row, 2 );
         }
 
         connect( b.gainComboBox, SELECT< int >::OVERLOAD_OF( &QComboBox::currentIndexChanged ),
@@ -109,18 +118,27 @@ VoltageDock::VoltageDock( DsoSettingsScope *scope, const Dso::ControlSpecificati
         connect( b.miscComboBox, SELECT< int >::OVERLOAD_OF( &QComboBox::currentIndexChanged ),
                  [ this, channel, spec, scope ]( unsigned index ) {
                      this->scope->voltage[ channel ].couplingOrMathIndex = index;
-                     if ( channel < spec->channels ) {
+                     if ( channel < spec->channels ) { // CH1 & CH2
                          // setCoupling(channel, (unsigned)index);
                          emit couplingChanged( channel, scope->coupling( channel, spec ) );
-                     } else {                                                           // MATH function changed
-                         setAttn( channel, this->scope->voltage[ channel ].probeAttn ); // update unit
-                         emit modeChanged( Dso::getMathMode( this->scope->voltage[ channel ] ) );
+                     } else { // MATH function changed
+                         Dso::MathMode mathMode = Dso::getMathMode( this->scope->voltage[ channel ] );
+                         setAttn( channel, this->scope->voltage[ channel ].probeAttn );
+                         emit modeChanged( mathMode );
+                         emit usedChannelChanged( channel, Dso::mathChannelsUsed( mathMode ) );
                      }
                  } );
         connect( b.usedCheckBox, &QCheckBox::toggled, [ this, channel ]( bool checked ) {
             this->scope->voltage[ channel ].used = checked;
             this->scope->voltage[ channel ].visible = checked;
-            emit usedChanged( channel, checked );
+            unsigned mask = 0;
+            if ( checked ) {
+                if ( channel < this->spec->channels )
+                    mask = channel + 1;
+                else
+                    mask = Dso::mathChannelsUsed( Dso::MathMode( this->scope->voltage[ MATH ].couplingOrMathIndex ) );
+            }
+            emit usedChannelChanged( channel, mask ); // channel bit mask 0b01, 0b10, 0b11
         } );
     }
 
@@ -192,19 +210,17 @@ void VoltageDock::setAttn( ChannelID channel, double attnValue ) {
     QSignalBlocker blocker( channelBlocks[ channel ].gainComboBox );
     int index = channelBlocks[ channel ].gainComboBox->currentIndex();
     gainStrings.clear();
+
     // change unit to V² for the multiplying math functions
-    if ( channel >= spec->channels && // MATH channel
-         ( ( scope->voltage[ spec->channels ].couplingOrMathIndex == unsigned( Dso::MathMode::MUL_CH1_CH2 ) ) ||
-           ( scope->voltage[ spec->channels ].couplingOrMathIndex == unsigned( Dso::MathMode::SQ_CH1 ) ) ||
-           ( scope->voltage[ spec->channels ].couplingOrMathIndex == unsigned( Dso::MathMode::SQ_CH2 ) ) ) ) {
-        for ( double gainStep : scope->gainSteps ) {
-            gainStrings << valueToString( gainStep * attnValue, UNIT_VOLTSQUARE, -1 ); // auto format V²
-        }
-    } else {
-        for ( double gainStep : scope->gainSteps ) {
-            gainStrings << valueToString( gainStep * attnValue, UNIT_VOLTS, -1 ); // auto format V
-        }
-    }
+    if ( channel >= spec->channels ) // MATH channel
+        for ( double gainStep : scope->gainSteps )
+            gainStrings << valueToString(
+                gainStep * attnValue, Dso::mathModeUnit( Dso::MathMode( scope->voltage[ spec->channels ].couplingOrMathIndex ) ),
+                -1 ); // auto format V²
+    else
+        for ( double gainStep : scope->gainSteps )
+            gainStrings << valueToString( gainStep * attnValue, UNIT_VOLTS, -1 ); // auto format V²
+
     channelBlocks[ channel ].gainComboBox->clear();
     channelBlocks[ channel ].gainComboBox->addItems( gainStrings );
     channelBlocks[ channel ].gainComboBox->setCurrentIndex( index );

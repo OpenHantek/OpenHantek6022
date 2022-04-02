@@ -30,9 +30,9 @@ class LevelSlider : public QWidget {
 
   public:
     LevelSlider( Qt::ArrowType direction = Qt::RightArrow, QWidget *parent = nullptr );
-    ~LevelSlider();
+    ~LevelSlider() override;
 
-    QSize sizeHint() const;
+    QSize sizeHint() const override;
 
     int preMargin() const;
     int postMargin() const;
@@ -62,12 +62,12 @@ class LevelSlider : public QWidget {
     int setDirection( Qt::ArrowType direction );
 
   protected:
-    void mouseMoveEvent( QMouseEvent *event );
-    void mousePressEvent( QMouseEvent *event );
-    void mouseReleaseEvent( QMouseEvent *event );
+    void mouseMoveEvent( QMouseEvent *event ) override;
+    void mousePressEvent( QMouseEvent *event ) override;
+    void mouseReleaseEvent( QMouseEvent *event ) override;
 
-    void paintEvent( QPaintEvent *event );
-    void resizeEvent( QResizeEvent *event );
+    void paintEvent( QPaintEvent *event ) override;
+    void resizeEvent( QResizeEvent *event ) override;
 
     QRect calculateRect( int sliderId );
     int calculateWidth();
@@ -84,5 +84,6 @@ class LevelSlider : public QWidget {
     int _postMargin;          ///< The margin after the maximum slider position
 
   signals:
-    void valueChanged( int index, double value, bool pressed = false ); ///< The value of a slider has changed
+    void valueChanged( int index, double value, bool pressed = false,
+                       QPoint globalPos = QPoint() ); ///< The value of a slider has changed
 };

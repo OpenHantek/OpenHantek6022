@@ -9,6 +9,7 @@
 #include "controlspecification.h"
 #include "dsosamples.h"
 #include "errorcodes.h"
+#include "post/postprocessingsettings.h"
 #include "scopesettings.h"
 #include "utils/printutils.h"
 #include "viewconstants.h"
@@ -157,6 +158,9 @@ class HantekDsoControl : public QObject {
     /// \brief Converts raw oscilloscope data to sample data
     void convertRawDataToSamples();
 
+    /// \brief Calculates the math channel from physical channels CH0 and CH1
+    void createMathChannel();
+
     /// \brief Restore the samplerate/timebase targets after divider updates.
     void restoreTargets();
 
@@ -206,10 +210,11 @@ class HantekDsoControl : public QObject {
     int displayInterval = 0;
     int triggeredPositionRaw = 0; // not triggered
     unsigned activeChannels = 2;
-    bool newTriggerParam = false; // parameter changed -> new trigger search needed
-    bool triggerChanged() {
-        bool changed = newTriggerParam;
-        newTriggerParam = false;
+    bool refresh = false; // parameter changed -> new raw to result conversion and trigger search needed
+    void requestRefresh( bool active = true ) { refresh = active; }
+    bool refreshNeeded() {
+        bool changed = refresh;
+        refresh = false;
         return changed;
     }
     Raw raw;
@@ -225,7 +230,7 @@ class HantekDsoControl : public QObject {
     /// \brief If sampling is disabled, no samplesAvailable() signals are send anymore, no samples
     /// are fetched from the device and no processing takes place.
     /// \param enabled Enables/Disables sampling
-    void enableSampling( bool enabled );
+    void enableSampling( bool enabled = true );
 
     /// \brief Sets the samplerate of the oscilloscope.
     /// \param samplerate The samplerate that should be met (S/s), 0.0 to restore
@@ -316,7 +321,7 @@ class HantekDsoControl : public QObject {
     void calibrateOffset( bool enable );
 
   signals:
-    void samplingStatusChanged( bool enabled );                ///< The oscilloscope started/stopped sampling/waiting for trigger
+    void showSamplingStatus( bool enabled );                   ///< The oscilloscope started/stopped sampling/waiting for trigger
     void statusMessage( const QString &message, int timeout ); ///< Status message about the oscilloscope
     void samplesAvailable( const DSOsamples *samples );        ///< New sample data is available
 

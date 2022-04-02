@@ -39,6 +39,7 @@ void PostProcessing::convertData( const DSOsamples *source, PPresult *destinatio
         // printf( "PP CH%d: %d\n", channel+1, source->clipped );
         channelData->valid = !( source->clipped & ( 0x01 << channel ) );
     }
+    destination->modifiableData( 2 )->voltageUnit = source->mathVoltageUnit; // MATH channel unit
     destination->tag = source->tag;
 }
 

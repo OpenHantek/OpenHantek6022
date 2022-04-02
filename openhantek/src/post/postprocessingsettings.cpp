@@ -11,14 +11,24 @@ namespace Dso {
 Enum< Dso::MathMode, Dso::MathMode::ADD_CH1_CH2, Dso::MathMode::TRIG_CH2 > MathModeEnum;
 Enum< Dso::WindowFunction, Dso::WindowFunction::RECTANGULAR, Dso::WindowFunction::FLATTOP > WindowFunctionEnum;
 
-
 Unit mathModeUnit( MathMode mode ) {
     if ( mode == MathMode::MUL_CH1_CH2 || mode == MathMode::SQ_CH1 || mode == MathMode::SQ_CH2 )
         return UNIT_VOLTSQUARE;
+    else if ( mode == MathMode::AND_CH1_CH2 || mode == MathMode::AND_NOT_CH1_CH2 || mode == MathMode::AND_CH1_NOT_CH2 ||
+              mode == MathMode::AND_NOT_CH1_NOT_CH2 || mode == MathMode::EQU_CH1_CH2 || mode == MathMode::SIGN_AC_CH1 ||
+              mode == MathMode::SIGN_AC_CH2 || mode == MathMode::SIGN_CH1 || mode == MathMode::SIGN_CH2 ||
+              mode == MathMode::TRIG_CH2 || mode == MathMode::TRIG_CH1 || mode == MathMode::TRIG_CH2 )
+        return UNIT_NONE; // logic values 0 or 1
     else
         return UNIT_VOLTS;
 }
 
+unsigned mathChannelsUsed( MathMode mode ) {
+    if ( mode <= LastBinaryMathMode ) // use both channels
+        return 3;                     // 0b11
+    else                              // use alternating CH1 (0b01), CH2 (0b10), CH1, ...
+        return ( ( unsigned( mode ) - unsigned( LastBinaryMathMode ) - 1 ) & 1 ) + 1;
+}
 
 /// \brief Return string representation of the given math mode.
 /// \param mode The ::MathMode that should be returned as string.
@@ -26,17 +36,27 @@ Unit mathModeUnit( MathMode mode ) {
 QString mathModeString( MathMode mode ) {
     switch ( mode ) {
     case MathMode::ADD_CH1_CH2:
-        return QCoreApplication::tr( "CH1+CH2" );
+        return QCoreApplication::tr( "CH1 + CH2" );
     case MathMode::SUB_CH2_FROM_CH1:
-        return QCoreApplication::tr( "CH1-CH2" );
+        return QCoreApplication::tr( "CH1 - CH2" );
     case MathMode::SUB_CH1_FROM_CH2:
-        return QCoreApplication::tr( "CH2-CH1" );
+        return QCoreApplication::tr( "CH2 - CH1" );
     case MathMode::MUL_CH1_CH2:
-        return QCoreApplication::tr( "CH1*CH2" );
+        return QCoreApplication::tr( "CH1 * CH2" );
+    case MathMode::AND_CH1_CH2:
+        return QCoreApplication::tr( "CH1 & CH2" );
+    case MathMode::AND_NOT_CH1_NOT_CH2:
+        return QCoreApplication::tr( "/CH1 & /CH2" );
+    case MathMode::AND_NOT_CH1_CH2:
+        return QCoreApplication::tr( "/CH1 & CH2" );
+    case MathMode::AND_CH1_NOT_CH2:
+        return QCoreApplication::tr( "CH1 & /CH2" );
+    case MathMode::EQU_CH1_CH2:
+        return QCoreApplication::tr( "CH1 == CH2" );
     case MathMode::SQ_CH1:
-        return QCoreApplication::tr( "CH1 ^2" );
+        return QCoreApplication::tr( "CH1²" );
     case MathMode::SQ_CH2:
-        return QCoreApplication::tr( "CH2 ^2" );
+        return QCoreApplication::tr( "CH2²" );
     case MathMode::AC_CH1:
         return QCoreApplication::tr( "CH1 AC" );
     case MathMode::AC_CH2:

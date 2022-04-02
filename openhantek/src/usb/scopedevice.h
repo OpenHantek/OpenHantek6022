@@ -116,7 +116,7 @@ class ScopeDevice : public QObject {
     /// \param command Buffer for the sent/received data.
     /// \return Number of sent bytes on success, libusb error code on error.
     template < class T > inline int controlWrite( const T *command ) {
-        return controlTransfer( LIBUSB_REQUEST_TYPE_VENDOR | LIBUSB_ENDPOINT_OUT, uint8_t( command->code ),
+        return controlTransfer( uint8_t( LIBUSB_REQUEST_TYPE_VENDOR ) | uint8_t( LIBUSB_ENDPOINT_OUT ), uint8_t( command->code ),
                                 const_cast< unsigned char * >( command->data() ), unsigned( command->size() ), command->value, 0,
                                 HANTEK_ATTEMPTS );
     }
@@ -125,7 +125,7 @@ class ScopeDevice : public QObject {
     /// \param command Buffer for the sent/received data.
     /// \return Number of received bytes on success, libusb error code on error.
     template < class T > inline int controlRead( const T *command ) {
-        return controlTransfer( LIBUSB_REQUEST_TYPE_VENDOR | LIBUSB_ENDPOINT_IN, uint8_t( command->code ),
+        return controlTransfer( uint8_t( LIBUSB_REQUEST_TYPE_VENDOR ) | uint8_t( LIBUSB_ENDPOINT_IN ), uint8_t( command->code ),
                                 const_cast< unsigned char * >( command->data() ), unsigned( command->size() ), command->value, 0,
                                 HANTEK_ATTEMPTS );
     }

@@ -329,7 +329,7 @@ void LevelSlider::mouseMoveEvent( QMouseEvent *event ) {
         // Set to nearest possible position
         setValue( pressedSlider, floor( value / slider[ pressedSlider ]->step + 0.5 ) * slider[ pressedSlider ]->step );
 
-    emit valueChanged( pressedSlider, slider[ pressedSlider ]->value, true );
+    emit valueChanged( pressedSlider, slider[ pressedSlider ]->value, true, event->globalPos() );
     event->accept();
 }
 
@@ -349,7 +349,7 @@ void LevelSlider::mousePressEvent( QMouseEvent *event ) {
         }
     }
     if ( pressedSlider >= 0 )
-        emit valueChanged( pressedSlider, slider[ pressedSlider ]->value, true );
+        emit valueChanged( pressedSlider, slider[ pressedSlider ]->value, true, event->globalPos() );
 
     // Accept event if a slider was pressed
     event->setAccepted( pressedSlider >= 0 );
@@ -362,7 +362,7 @@ void LevelSlider::mouseReleaseEvent( QMouseEvent *event ) {
         event->ignore();
         return;
     }
-    emit valueChanged( pressedSlider, slider[ pressedSlider ]->value, false );
+    emit valueChanged( pressedSlider, slider[ pressedSlider ]->value, false, event->globalPos() );
     pressedSlider = -1;
 
     event->accept();
@@ -470,7 +470,7 @@ void LevelSlider::paintEvent( QPaintEvent *event ) {
 /// \brief Resize the widget and adapt the slider positions.
 /// \param event The resize event that should be handled.
 void LevelSlider::resizeEvent( QResizeEvent *event ) {
-    Q_UNUSED( event );
+    Q_UNUSED( event )
 
     for ( int sliderId = 0; sliderId < slider.count(); ++sliderId )
         calculateRect( sliderId );
