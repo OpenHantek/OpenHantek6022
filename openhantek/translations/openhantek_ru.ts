@@ -79,7 +79,7 @@
     <message>
         <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="77"/>
         <source>Show note values for audio frequencies</source>
-        <translation>Показать значения нот для звуковых частот</translation>
+        <translation>Показывать значения нот для звуковых частот</translation>
     </message>
     <message>
         <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="86"/>
@@ -151,17 +151,17 @@
     <message>
         <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="74"/>
         <source>Calculate total harmonic distortion (THD)</source>
-        <translation>Рассчитать суммарное гармоническое искажение (THD)</translation>
+        <translation>Расчёт суммарного коэффициента гармонических искажений (THD)</translation>
     </message>
     <message>
         <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="59"/>
         <source>Calculate power dissipation for load resistance</source>
-        <translation>Рассчитать рассеиваемую мощность для резистивной нагрузки</translation>
+        <translation>Рассчитывать рассеиваемую мощность для резистивной нагрузки</translation>
     </message>
     <message>
         <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="69"/>
         <source>&lt;p&gt;&amp;Omega;&lt;/p&gt;</source>
-        <translation></translation>
+        <translation>&lt;p&gt;&amp;Omega;&lt;/p&gt;</translation>
     </message>
     <message>
         <source>Power</source>
@@ -277,12 +277,12 @@
     <message>
         <location filename="../src/configdialog/configdialog.cpp" line="98"/>
         <source>FFT settings, power and THD calculation, musical note detection</source>
-        <translation type="unfinished"></translation>
+        <translation>Настройки FFT, расчёт мощности и THD, детекция музыкальных нот</translation>
     </message>
     <message>
         <location filename="../src/configdialog/configdialog.cpp" line="103"/>
         <source>Screen and printer colors, theme and style settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Цвета экрана и печати, настройки темы и стиля</translation>
     </message>
     <message>
         <location filename="../src/configdialog/configdialog.cpp" line="51"/>
@@ -302,7 +302,7 @@
     <message>
         <location filename="../src/configdialog/configdialog.cpp" line="93"/>
         <source>Timing, display settings, and HW configuration</source>
-        <translation type="unfinished"></translation>
+        <translation>Тайминги, настройки дисплея и аппаратной конфигурации</translation>
     </message>
     <message>
         <location filename="../src/configdialog/configdialog.cpp" line="97"/>
@@ -571,22 +571,22 @@
     <message>
         <location filename="../src/dsowidget.cpp" line="458"/>
         <source>Trace position, drag the channel name up or down</source>
-        <translation type="unfinished"></translation>
+        <translation>Развёртка канала, двигай название вверх или вниз</translation>
     </message>
     <message>
         <location filename="../src/dsowidget.cpp" line="479"/>
         <source>Trigger position, drag the arrow left or right</source>
-        <translation type="unfinished"></translation>
+        <translation>Позиция триггера, двигай указатель влево или вправо</translation>
     </message>
     <message>
         <location filename="../src/dsowidget.cpp" line="488"/>
         <source>Trigger level, drag the arrow up or down</source>
-        <translation type="unfinished"></translation>
+        <translation>Уровень триггера, двигай указатель вверх или вниз</translation>
     </message>
     <message>
         <location filename="../src/dsowidget.cpp" line="501"/>
         <source>Measure or zoom marker &apos;1&apos; and &apos;2&apos;, drag left or right</source>
-        <translation type="unfinished"></translation>
+        <translation>Измерь или увеличь маркер &apos;1&apos; и &apos;2&apos;, двигай влево или вправо</translation>
     </message>
     <message>
         <location filename="../src/dsowidget.cpp" line="595"/>
@@ -742,7 +742,7 @@
     <message>
         <location filename="../src/docks/HorizontalDock.cpp" line="38"/>
         <source>Effective samplerate, automatically selected from &apos;Timebase&apos; setting</source>
-        <translation type="unfinished"></translation>
+        <translation>Эффективная частота дискретизации, с автоподбором из настроек &apos;Время/Деление&apos;</translation>
     </message>
     <message>
         <location filename="../src/docks/HorizontalDock.cpp" line="41"/>
@@ -757,12 +757,12 @@
     <message>
         <location filename="../src/docks/HorizontalDock.cpp" line="47"/>
         <source>Time per horizontal screen division</source>
-        <translation type="unfinished"></translation>
+        <translation>Время на деление экрана по горизонтали</translation>
     </message>
     <message>
         <location filename="../src/docks/HorizontalDock.cpp" line="62"/>
         <source>Select the frequency of the calibration output, scroll for fast change</source>
-        <translation type="unfinished"></translation>
+        <translation>Выбор частоты сигнала на выходе калибровки, прокручивай для быстрой смены</translation>
     </message>
     <message>
         <source>Frequencybase</source>
@@ -776,7 +776,7 @@
     <message>
         <location filename="../src/docks/HorizontalDock.cpp" line="54"/>
         <source>Select signal over time or XY display</source>
-        <translation type="unfinished"></translation>
+        <translation>Выбор отображения сигнала во времени или по XY</translation>
     </message>
     <message>
         <location filename="../src/docks/HorizontalDock.cpp" line="58"/>
@@ -1059,132 +1059,132 @@
     <message>
         <location filename="../src/mainwindow.cpp" line="72"/>
         <source>Start and stop the sampling</source>
-        <translation type="unfinished"></translation>
+        <translation>Старт и стоп выборки</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="75"/>
         <source>Refresh the screen trace for slow &apos;Roll&apos; mode</source>
-        <translation type="unfinished"></translation>
+        <translation>Обновление развёртки экрана для медленного &apos;Скроллинг&apos; режима</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="78"/>
         <source>Let the traces fade out slowly</source>
-        <translation type="unfinished"></translation>
+        <translation>Позволить лучам развёртки гаснуть медленно</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="81"/>
         <source>Show a histogram of the voltage levels on the right side of the trace</source>
-        <translation type="unfinished"></translation>
+        <translation>Показывать гистограмму уровней напряжения на правой стороне развёртки</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="84"/>
         <source>Zoom the range between the markers &apos;1&apos; and &apos;2&apos;</source>
-        <translation type="unfinished"></translation>
+        <translation>Увеличение диапазона между маркерами &apos;1&apos; и &apos;2&apos;</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="87"/>
         <source>Enable cursor measurements</source>
-        <translation type="unfinished"></translation>
+        <translation>Включить измерения указателем</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="89"/>
         <source>Load scope settings from a config file</source>
-        <translation type="unfinished"></translation>
+        <translation>Загрузить настройки осциллографа из файла конфигурации</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="91"/>
         <source>Save the scope settings to the default location</source>
-        <translation type="unfinished"></translation>
+        <translation>Сохранить настройки осциллографа в папку по умолчанию</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="93"/>
         <source>Save the scope settings to a user defined file</source>
-        <translation type="unfinished"></translation>
+        <translation>Сохранить настройки осциллографа в определённый пользователем файл</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="95"/>
         <source>Define scope settings, analysis parameters and colors</source>
-        <translation type="unfinished"></translation>
+        <translation>Выставить настройки осциллографа, параметры анализа и цвета отображения</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="97"/>
         <source>Short-circuit both inputs and slowly select all voltage gain settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Замкните оба входа и медленно переберите все варианты усиления напряжения</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="99"/>
         <source>Send low level commands directly to the scope: &apos;CC XX XX&apos;</source>
-        <translation type="unfinished"></translation>
+        <translation>Отправить низкоуровневые комманды напрямую в осциллограф: &apos;CC XX XX&apos;</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="101"/>
         <source>Read the fine manual</source>
-        <translation type="unfinished"></translation>
+        <translation>Прочитать отличное руководство</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="103"/>
         <source>Documentation how to add HW for AC coupled inputs</source>
-        <translation type="unfinished"></translation>
+        <translation>Документация по аппаратной модифицикации входов под переменный ток</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="105"/>
         <source>Show info about the scope&apos;s HW and SW</source>
-        <translation type="unfinished"></translation>
+        <translation>Показать инфу о софте и железе осциллографа</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="119"/>
         <source>&amp;Screenshot</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Скриншот</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="120"/>
         <source>Make an immediate screenshot of the program window and save it into the current directory</source>
-        <translation type="unfinished"></translation>
+        <translation>Сделать мгновенный снимок окна программы и сохранить его в текущем каталоге</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="124"/>
         <source>&amp;Hardcopy</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Печатная копия</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="125"/>
         <source>Make an immediate (printable) hardcopy of the display and save it into the current directory</source>
-        <translation type="unfinished"></translation>
+        <translation>Сделать мгновенную (печатную) копию экрана и сохранить её в текущем каталоге</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="134"/>
         <source>Save screenshot as ..</source>
-        <translation type="unfinished"></translation>
+        <translation>Сохранить скриншот ..</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="135"/>
         <source>Make a screenshot of the program window and define the storage location</source>
-        <translation type="unfinished"></translation>
+        <translation>Сделать скриншот окна программы и выбрать куда его сохранить</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="139"/>
         <source>Save Hardcopy as ..</source>
-        <translation type="unfinished"></translation>
+        <translation>Сохранить печатную копию ..</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="140"/>
         <source>Make a (printable) hardcopy of the display and define the storage location</source>
-        <translation type="unfinished"></translation>
+        <translation>Сделать (печатную) копию экрана и выбрать куда её сохранить</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="147"/>
         <source>&amp;Print screen ..</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Печать экрана ..</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="148"/>
         <source>Send the hardcopy to a printer</source>
-        <translation type="unfinished"></translation>
+        <translation>Отправить печатную копию на принтер</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="159"/>
         <source>Export captured data in %1 format for further processing</source>
-        <translation type="unfinished"></translation>
+        <translation>Экспорт захваченных данных в формате %1 для дальнейшей обработки</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="387"/>
@@ -1536,37 +1536,37 @@
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="47"/>
         <source>CH1 &amp; CH2</source>
-        <translation type="unfinished"></translation>
+        <translation>К1 &amp; К2</translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="49"/>
         <source>/CH1 &amp; /CH2</source>
-        <translation type="unfinished"></translation>
+        <translation>/К1 &amp; /К2</translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="51"/>
         <source>/CH1 &amp; CH2</source>
-        <translation type="unfinished"></translation>
+        <translation>/К1 &amp; К2</translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="53"/>
         <source>CH1 &amp; /CH2</source>
-        <translation type="unfinished"></translation>
+        <translation>К1 &amp; /К2</translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="55"/>
         <source>CH1 == CH2</source>
-        <translation type="unfinished"></translation>
+        <translation>К1 == К2</translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="57"/>
         <source>CH1²</source>
-        <translation type="unfinished"></translation>
+        <translation>К1²</translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="59"/>
         <source>CH2²</source>
-        <translation type="unfinished"></translation>
+        <translation>К2²</translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="61"/>
@@ -1861,7 +1861,7 @@
     <message>
         <location filename="../src/docks/SpectrumDock.cpp" line="48"/>
         <source>Magnitude per vertical screen division</source>
-        <translation type="unfinished"></translation>
+        <translation>Величина на вертикальное деление экрана</translation>
     </message>
     <message>
         <location filename="../src/docks/SpectrumDock.cpp" line="74"/>
@@ -1871,7 +1871,7 @@
     <message>
         <location filename="../src/docks/SpectrumDock.cpp" line="76"/>
         <source>Frequency range per horizontal screen division</source>
-        <translation type="unfinished"></translation>
+        <translation>Диапазон частот на горизонтальное деление экрана</translation>
     </message>
 </context>
 <context>
@@ -1920,7 +1920,7 @@
     <message>
         <location filename="../src/docks/TriggerDock.cpp" line="38"/>
         <source>Select the trigger mode</source>
-        <translation type="unfinished"></translation>
+        <translation>Выбор режима триггера</translation>
     </message>
     <message>
         <location filename="../src/docks/TriggerDock.cpp" line="42"/>
@@ -1930,7 +1930,7 @@
     <message>
         <location filename="../src/docks/TriggerDock.cpp" line="44"/>
         <source>Select positive, negative or both (alternating) slopes</source>
-        <translation type="unfinished"></translation>
+        <translation>Выбор положительного, отрицательного, или оба (сменяющихся) наклона</translation>
     </message>
     <message>
         <location filename="../src/docks/TriggerDock.cpp" line="48"/>
@@ -1940,12 +1940,12 @@
     <message>
         <location filename="../src/docks/TriggerDock.cpp" line="50"/>
         <source>Select the trigger channel (CH1, CH2, or MATH)</source>
-        <translation type="unfinished"></translation>
+        <translation>Выбор канала триггера (К1, К2 или Матем.)</translation>
     </message>
     <message>
         <location filename="../src/docks/TriggerDock.cpp" line="53"/>
         <source>Trigger on fast, normal, or slow signals</source>
-        <translation type="unfinished"></translation>
+        <translation>Триггер для быстрых, нормальных, или медленных сигналов</translation>
     </message>
 </context>
 <context>
@@ -1968,17 +1968,17 @@
     <message>
         <location filename="../src/docks/VoltageDock.cpp" line="60"/>
         <source>Voltage range per vertical screen division</source>
-        <translation type="unfinished"></translation>
+        <translation>Диапазон напряжения на вертикальное деление экрана</translation>
     </message>
     <message>
         <location filename="../src/docks/VoltageDock.cpp" line="72"/>
         <source>Select DC or AC coupling</source>
-        <translation type="unfinished"></translation>
+        <translation>Выбор цепи под постоянный (DC) или переменный (AC) ток</translation>
     </message>
     <message>
         <location filename="../src/docks/VoltageDock.cpp" line="75"/>
         <source>Select the mathematical operation for this channel</source>
-        <translation type="unfinished"></translation>
+        <translation>Выбор математической операции для этого канала</translation>
     </message>
     <message>
         <source>&amp;MATH</source>
@@ -1992,7 +1992,7 @@
     <message>
         <location filename="../src/docks/VoltageDock.cpp" line="63"/>
         <source>Set probe attenuation, scroll or type a value to select</source>
-        <translation type="unfinished"></translation>
+        <translation>Настройка делителя щупа, для выбора прокрутите или введите значение</translation>
     </message>
     <message>
         <location filename="../src/docks/VoltageDock.cpp" line="66"/>
