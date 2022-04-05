@@ -7,7 +7,7 @@
 #include <QColor>
 #include <QDebug>
 
-DevicesListModel::DevicesListModel( FindDevices *findDevices, unsigned verboseLevel )
+DevicesListModel::DevicesListModel( FindDevices *findDevices, int verboseLevel )
     : findDevices( findDevices ), verboseLevel( verboseLevel ) {}
 
 int DevicesListModel::rowCount( const QModelIndex & ) const { return int( entries.size() ); }

@@ -77,12 +77,12 @@
         <translation>Blackman-Nuttall</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="77"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="78"/>
         <source>Show note values for audio frequencies</source>
         <translation>Montrer les valeurs des notes pour les fréquences audio</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="86"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="88"/>
         <source>Analysis</source>
         <translation>Analyser</translation>
     </message>
@@ -139,7 +139,7 @@
         <translation type="vanished">&lt;b&gt;Amplitude minimum&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="56"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="57"/>
         <source>Spectrum</source>
         <translation>Spectre</translation>
     </message>
@@ -148,17 +148,17 @@
         <translation type="vanished">Calculer la puissance dissipée pour la résistance à la charge&lt;br/&gt;0 = off</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="74"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="75"/>
         <source>Calculate total harmonic distortion (THD)</source>
         <translation>Calculer la distorsion harmonique totale (THD)</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="59"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="60"/>
         <source>Calculate power dissipation for load resistance</source>
         <translation>Calculer la puissance dissipée pour la résistance à la charge</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="69"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="70"/>
         <source>&lt;p&gt;&amp;Omega;&lt;/p&gt;</source>
         <translation></translation>
     </message>
@@ -274,12 +274,12 @@
         <translation>Réglages</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/configdialog.cpp" line="98"/>
+        <location filename="../src/configdialog/configdialog.cpp" line="100"/>
         <source>FFT settings, power and THD calculation, musical note detection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/configdialog/configdialog.cpp" line="103"/>
+        <location filename="../src/configdialog/configdialog.cpp" line="106"/>
         <source>Screen and printer colors, theme and style settings</source>
         <translation type="unfinished"></translation>
     </message>
@@ -308,17 +308,17 @@
         <translation>Oscilloscope</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/configdialog.cpp" line="93"/>
+        <location filename="../src/configdialog/configdialog.cpp" line="94"/>
         <source>Timing, display settings, and HW configuration</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/configdialog/configdialog.cpp" line="97"/>
+        <location filename="../src/configdialog/configdialog.cpp" line="98"/>
         <source>Analysis</source>
         <translation>Analyser</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/configdialog.cpp" line="102"/>
+        <location filename="../src/configdialog/configdialog.cpp" line="104"/>
         <source>Colors</source>
         <translation>Couleurs</translation>
     </message>
@@ -403,27 +403,27 @@
         <translation type="vanished">Fixer la base de temps la plus lente possible&lt;br/&gt;(&lt;b&gt;L&apos;interface graphique peut devenir très irresponsable !&lt;/b&gt;)</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="11"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="12"/>
         <source>Set slowest possible timebase</source>
         <translation>Fixer la base de temps la plus lente possible</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="18"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="19"/>
         <source>Minimal time between captured frames&lt;br/&gt;(Longer times reduce the CPU load)</source>
         <translation>Temps minimal entre les images capturées&lt;br/&gt;(Des durées plus longues réduisent la charge du CPU)</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="30"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="33"/>
         <source>Horizontal</source>
         <translation>Horizontal</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="38"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="41"/>
         <source>Interpolation</source>
         <translation>Interpolation</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="33"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="36"/>
         <source>Digital phosphor depth</source>
         <translation>Profondeur de phosphore numérique</translation>
     </message>
@@ -438,47 +438,52 @@
         <translation>Sinc</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="49"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="53"/>
         <source>Graph</source>
         <translation>Graphe</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="52"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="57"/>
         <source>Position</source>
         <translation>Position</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="54"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="59"/>
         <source>Left</source>
         <translation>Gauche</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="55"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="60"/>
         <source>Right</source>
         <translation>Droite</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="62"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="66"/>
         <source>Cursors</source>
         <translation>Curseurs</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="66"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="70"/>
         <source>Export zoomed screen in double height</source>
         <translation>Exporter l&apos;écran zoomé en double hauteur</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="71"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="75"/>
         <source>Export</source>
         <translation>Exporter</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="81"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="85"/>
         <source>Scope has hardware modification for AC coupling (restart needed to apply the change)</source>
         <translation>L&apos;oscilloscope a subi une modification hardware pour le couplage AC (redémarrage nécessaire pour appliquer la modification)</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="75"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="87"/>
+        <source>Show tooltips for user interface (restart needed to apply the change)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="79"/>
         <source>Save settings on exit</source>
         <translation>Enregistrer les réglages en quittant</translation>
     </message>
@@ -487,12 +492,12 @@
         <translation type="vanished">Taille de la police (redémarrage nécessaire pour appliquer la modification)</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="77"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="81"/>
         <source>Apply default settings after next restart</source>
         <translation>Appliquer les paramètres par défaut après le redémarrage</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="79"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="83"/>
         <source>Save settings now</source>
         <translation>Enregistrer les réglages maintenant</translation>
     </message>
@@ -509,7 +514,7 @@
         <translation type="vanished">Enregistrer les réglages maintenant</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="94"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="100"/>
         <source>Configuration</source>
         <translation>Configuration</translation>
     </message>
@@ -615,7 +620,7 @@
 <context>
     <name>DsoWidget</name>
     <message>
-        <location filename="../src/dsowidget.cpp" line="923"/>
+        <location filename="../src/dsowidget.cpp" line="927"/>
         <source>TR</source>
         <translation>D</translation>
     </message>
@@ -625,99 +630,99 @@
         <translation>Repères</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="648"/>
-        <location filename="../src/dsowidget.cpp" line="650"/>
-        <location filename="../src/dsowidget.cpp" line="691"/>
-        <location filename="../src/dsowidget.cpp" line="738"/>
-        <location filename="../src/dsowidget.cpp" line="747"/>
-        <location filename="../src/dsowidget.cpp" line="768"/>
+        <location filename="../src/dsowidget.cpp" line="652"/>
+        <location filename="../src/dsowidget.cpp" line="654"/>
+        <location filename="../src/dsowidget.cpp" line="695"/>
+        <location filename="../src/dsowidget.cpp" line="742"/>
+        <location filename="../src/dsowidget.cpp" line="751"/>
+        <location filename="../src/dsowidget.cpp" line="772"/>
         <source>/div</source>
         <translation>/div</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="638"/>
+        <location filename="../src/dsowidget.cpp" line="642"/>
         <source>Markers  </source>
         <translation>Repères  </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="458"/>
+        <location filename="../src/dsowidget.cpp" line="459"/>
         <source>Trace position, drag the channel name up or down</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="479"/>
+        <location filename="../src/dsowidget.cpp" line="481"/>
         <source>Trigger position, drag the arrow left or right</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="488"/>
+        <location filename="../src/dsowidget.cpp" line="491"/>
         <source>Trigger level, drag the arrow up or down</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="501"/>
+        <location filename="../src/dsowidget.cpp" line="505"/>
         <source>Measure or zoom marker &apos;1&apos; and &apos;2&apos;, drag left or right</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="595"/>
-        <location filename="../src/dsowidget.cpp" line="613"/>
+        <location filename="../src/dsowidget.cpp" line="599"/>
+        <location filename="../src/dsowidget.cpp" line="617"/>
         <source>ON</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="599"/>
-        <location filename="../src/dsowidget.cpp" line="617"/>
+        <location filename="../src/dsowidget.cpp" line="603"/>
+        <location filename="../src/dsowidget.cpp" line="621"/>
         <source>OFF</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="639"/>
+        <location filename="../src/dsowidget.cpp" line="643"/>
         <source>Time: </source>
         <translation>Temps : </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="640"/>
+        <location filename="../src/dsowidget.cpp" line="644"/>
         <source>Frequency: </source>
         <translation>Fréquence : </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="643"/>
+        <location filename="../src/dsowidget.cpp" line="647"/>
         <source>Zoom x%L1  </source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="645"/>
+        <location filename="../src/dsowidget.cpp" line="649"/>
         <source>Zoom ---  </source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="719"/>
+        <location filename="../src/dsowidget.cpp" line="723"/>
         <source>%1  %2  %3  %4  %5</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="758"/>
+        <location filename="../src/dsowidget.cpp" line="762"/>
         <source>/s</source>
         <translation>/s</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="880"/>
+        <location filename="../src/dsowidget.cpp" line="884"/>
         <source> on screen</source>
         <translation> à l&apos;écran</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="915"/>
+        <location filename="../src/dsowidget.cpp" line="919"/>
         <source>&lt;b&gt; OFFSET CALIBRATION &lt;/b&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="971"/>
+        <location filename="../src/dsowidget.cpp" line="975"/>
         <source>pp</source>
         <translation>pp</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="977"/>
+        <location filename="../src/dsowidget.cpp" line="981"/>
         <source>rms</source>
         <translation>rms</translation>
     </message>
@@ -806,27 +811,27 @@
         <translation>Taux d&apos;éch.</translation>
     </message>
     <message>
-        <location filename="../src/docks/HorizontalDock.cpp" line="38"/>
+        <location filename="../src/docks/HorizontalDock.cpp" line="39"/>
         <source>Effective samplerate, automatically selected from &apos;Timebase&apos; setting</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/docks/HorizontalDock.cpp" line="41"/>
+        <location filename="../src/docks/HorizontalDock.cpp" line="42"/>
         <source>/s</source>
         <translation>/s</translation>
     </message>
     <message>
-        <location filename="../src/docks/HorizontalDock.cpp" line="45"/>
+        <location filename="../src/docks/HorizontalDock.cpp" line="46"/>
         <source>Timebase</source>
         <translation>Base temps</translation>
     </message>
     <message>
-        <location filename="../src/docks/HorizontalDock.cpp" line="47"/>
+        <location filename="../src/docks/HorizontalDock.cpp" line="49"/>
         <source>Time per horizontal screen division</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/docks/HorizontalDock.cpp" line="62"/>
+        <location filename="../src/docks/HorizontalDock.cpp" line="66"/>
         <source>Select the frequency of the calibration output, scroll for fast change</source>
         <translation type="unfinished"></translation>
     </message>
@@ -835,17 +840,17 @@
         <translation type="vanished">Base fréq.</translation>
     </message>
     <message>
-        <location filename="../src/docks/HorizontalDock.cpp" line="52"/>
+        <location filename="../src/docks/HorizontalDock.cpp" line="54"/>
         <source>Format</source>
         <translation>Format</translation>
     </message>
     <message>
-        <location filename="../src/docks/HorizontalDock.cpp" line="54"/>
+        <location filename="../src/docks/HorizontalDock.cpp" line="57"/>
         <source>Select signal over time or XY display</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/docks/HorizontalDock.cpp" line="58"/>
+        <location filename="../src/docks/HorizontalDock.cpp" line="61"/>
         <source>Calibration out</source>
         <translation>Etalonnage</translation>
     </message>
@@ -949,92 +954,92 @@
         <translation>&amp;Affichage</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="54"/>
+        <location filename="../src/mainwindow.ui" line="53"/>
         <source>&amp;Oscilloscope</source>
         <translation>&amp;Oscilloscope</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="72"/>
+        <location filename="../src/mainwindow.ui" line="71"/>
         <source>&amp;Export</source>
         <translation>&amp;Exporter</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="103"/>
+        <location filename="../src/mainwindow.ui" line="101"/>
         <source>&amp;Open settings ..</source>
         <translation>&amp;Ouvrir une configuration ..</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="111"/>
+        <location filename="../src/mainwindow.ui" line="109"/>
         <source>&amp;Save settings</source>
         <translation>&amp;Enregistrer les réglages</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="119"/>
+        <location filename="../src/mainwindow.ui" line="117"/>
         <source>Save settings &amp;as ..</source>
         <translation>Enregistrer la configuration &amp;sous ..</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="124"/>
+        <location filename="../src/mainwindow.ui" line="122"/>
         <source>&amp;Exit</source>
         <translation>&amp;Quitter</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="135"/>
+        <location filename="../src/mainwindow.ui" line="133"/>
         <source>S&amp;ampling</source>
         <translation>E&amp;chantillonnage</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="146"/>
+        <location filename="../src/mainwindow.ui" line="144"/>
         <source>&amp;Refresh</source>
         <translation>&amp;Rafraichir</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="154"/>
+        <location filename="../src/mainwindow.ui" line="152"/>
         <source>&amp;Phosphor</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="162"/>
+        <location filename="../src/mainwindow.ui" line="160"/>
         <source>&amp;Histogram</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="170"/>
+        <location filename="../src/mainwindow.ui" line="168"/>
         <source>&amp;Zoom</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="178"/>
+        <location filename="../src/mainwindow.ui" line="176"/>
         <source>&amp;Measure</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="193"/>
+        <location filename="../src/mainwindow.ui" line="191"/>
         <source>&amp;User Manual</source>
         <translation>&amp;Manuel utilisateur</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="198"/>
+        <location filename="../src/mainwindow.ui" line="196"/>
         <source>&amp;About ..</source>
         <translation>&amp;A propos ..</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="203"/>
+        <location filename="../src/mainwindow.ui" line="201"/>
         <source>&amp;Settings ..</source>
         <translation>&amp;Réglages ..</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="211"/>
+        <location filename="../src/mainwindow.ui" line="209"/>
         <source>Calibrate &amp;Offset</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="219"/>
+        <location filename="../src/mainwindow.ui" line="217"/>
         <source>&amp;Manual command</source>
         <translation>&amp;Ligne de commande</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="224"/>
+        <location filename="../src/mainwindow.ui" line="222"/>
         <source>AC &amp;Modification</source>
         <translation>AC &amp;Modification</translation>
     </message>
@@ -1043,7 +1048,7 @@
         <translation type="vanished">&amp;Ligne de commande</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="64"/>
+        <location filename="../src/mainwindow.ui" line="63"/>
         <source>&amp;Help</source>
         <translation>A&amp;ide</translation>
     </message>
@@ -1052,7 +1057,7 @@
         <translation type="vanished">Exporter</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="84"/>
+        <location filename="../src/mainwindow.ui" line="83"/>
         <source>toolBar</source>
         <translation>Barre d&apos;outils</translation>
     </message>
@@ -1061,7 +1066,7 @@
         <translation type="vanished">&amp;Ouvrir une configuration...</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="106"/>
+        <location filename="../src/mainwindow.ui" line="104"/>
         <source>Ctrl+O</source>
         <translation>Ctrl+O</translation>
     </message>
@@ -1070,7 +1075,7 @@
         <translation type="vanished">&amp;Enregistrer la configuration</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="114"/>
+        <location filename="../src/mainwindow.ui" line="112"/>
         <source>Ctrl+S</source>
         <translation>Ctrl+E</translation>
     </message>
@@ -1091,7 +1096,7 @@
         <translation type="vanished">&amp;Quitter</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="127"/>
+        <location filename="../src/mainwindow.ui" line="125"/>
         <source>Ctrl+Q</source>
         <translation>Ctrl+Q</translation>
     </message>
@@ -1100,7 +1105,7 @@
         <translation type="vanished">Echantillonnage</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="138"/>
+        <location filename="../src/mainwindow.ui" line="136"/>
         <source>Space</source>
         <translation>Espace</translation>
     </message>
@@ -1121,12 +1126,12 @@
         <translation type="vanished">&amp;Mesures</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="183"/>
+        <location filename="../src/mainwindow.ui" line="181"/>
         <source>Docking windows</source>
         <translation>Fenêtres ancrables</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.ui" line="188"/>
+        <location filename="../src/mainwindow.ui" line="186"/>
         <source>Toolbars</source>
         <translation>Barres d&apos;outils</translation>
     </message>
@@ -1155,7 +1160,7 @@
         <translation type="vanished">&amp;Ligne de commande</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="110"/>
+        <location filename="../src/mainwindow.cpp" line="128"/>
         <source>OpenHantek6022 (%1) - Device %2 (FW%3)</source>
         <translation>OpenHantek6022 (%1) - %2 (FW%3)</translation>
     </message>
@@ -1164,12 +1169,12 @@
         <translation type="vanished">OpenHantek6022 (%1) - %2</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="113"/>
+        <location filename="../src/mainwindow.cpp" line="131"/>
         <source>Demo Mode</source>
         <translation>Mode Démo</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="113"/>
+        <location filename="../src/mainwindow.cpp" line="131"/>
         <source>OpenHantek6022 (%1) - </source>
         <translation></translation>
     </message>
@@ -1186,42 +1191,42 @@
         <translation type="vanished">Copie papier</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="72"/>
+        <location filename="../src/mainwindow.cpp" line="73"/>
         <source>Start and stop the sampling</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="75"/>
+        <location filename="../src/mainwindow.cpp" line="79"/>
         <source>Refresh the screen trace for slow &apos;Roll&apos; mode</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="78"/>
+        <location filename="../src/mainwindow.cpp" line="85"/>
         <source>Let the traces fade out slowly</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="81"/>
+        <location filename="../src/mainwindow.cpp" line="91"/>
         <source>Show a histogram of the voltage levels on the right side of the trace</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="87"/>
+        <location filename="../src/mainwindow.cpp" line="103"/>
         <source>Enable cursor measurements</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="91"/>
+        <location filename="../src/mainwindow.cpp" line="109"/>
         <source>Save the scope settings to the default location</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="93"/>
+        <location filename="../src/mainwindow.cpp" line="111"/>
         <source>Save the scope settings to a user defined file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="95"/>
+        <location filename="../src/mainwindow.cpp" line="113"/>
         <source>Define scope settings, analysis parameters and colors</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1230,47 +1235,47 @@
         <translation type="vanished">Copie papier ..</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="89"/>
+        <location filename="../src/mainwindow.cpp" line="107"/>
         <source>Load scope settings from a config file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="97"/>
+        <location filename="../src/mainwindow.cpp" line="115"/>
         <source>Short-circuit both inputs and slowly select all voltage gain settings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="99"/>
+        <location filename="../src/mainwindow.cpp" line="117"/>
         <source>Send low level commands directly to the scope: &apos;CC XX XX&apos;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="101"/>
+        <location filename="../src/mainwindow.cpp" line="119"/>
         <source>Read the fine manual</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="105"/>
+        <location filename="../src/mainwindow.cpp" line="123"/>
         <source>Show info about the scope&apos;s HW and SW</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="119"/>
+        <location filename="../src/mainwindow.cpp" line="137"/>
         <source>&amp;Screenshot</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="124"/>
+        <location filename="../src/mainwindow.cpp" line="142"/>
         <source>&amp;Hardcopy</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="134"/>
+        <location filename="../src/mainwindow.cpp" line="152"/>
         <source>Save screenshot as ..</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="139"/>
+        <location filename="../src/mainwindow.cpp" line="157"/>
         <source>Save Hardcopy as ..</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1279,88 +1284,88 @@
         <translation type="vanished">Imprimer l&apos;oscillographe ..</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="84"/>
+        <location filename="../src/mainwindow.cpp" line="97"/>
         <source>Zoom the range between the markers &apos;1&apos; and &apos;2&apos;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="103"/>
+        <location filename="../src/mainwindow.cpp" line="121"/>
         <source>Documentation how to add HW for AC coupled inputs</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="120"/>
+        <location filename="../src/mainwindow.cpp" line="138"/>
         <source>Make an immediate screenshot of the program window and save it into the current directory</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="125"/>
+        <location filename="../src/mainwindow.cpp" line="143"/>
         <source>Make an immediate (printable) hardcopy of the display and save it into the current directory</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="135"/>
+        <location filename="../src/mainwindow.cpp" line="153"/>
         <source>Make a screenshot of the program window and define the storage location</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="140"/>
+        <location filename="../src/mainwindow.cpp" line="158"/>
         <source>Make a (printable) hardcopy of the display and define the storage location</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="147"/>
+        <location filename="../src/mainwindow.cpp" line="165"/>
         <source>&amp;Print screen ..</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="148"/>
+        <location filename="../src/mainwindow.cpp" line="166"/>
         <source>Send the hardcopy to a printer</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="159"/>
+        <location filename="../src/mainwindow.cpp" line="177"/>
         <source>Export captured data in %1 format for further processing</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="229"/>
+        <location filename="../src/mainwindow.cpp" line="249"/>
         <source>Invalid command</source>
         <translation>Commande invalide</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="337"/>
+        <location filename="../src/mainwindow.cpp" line="357"/>
         <source>Stop</source>
         <translation>Arrêter</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="338"/>
+        <location filename="../src/mainwindow.cpp" line="358"/>
         <source>Stop the oscilloscope</source>
         <translation>Arrêter l&apos;oscilloscope</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="341"/>
+        <location filename="../src/mainwindow.cpp" line="361"/>
         <source>Start</source>
         <translation>Démarrer</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="342"/>
+        <location filename="../src/mainwindow.cpp" line="362"/>
         <source>Start the oscilloscope</source>
         <translation>Démarrer l&apos;oscilloscope</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="363"/>
+        <location filename="../src/mainwindow.cpp" line="383"/>
         <source>Open file</source>
         <translation>Ouvrir une configuration</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="363"/>
-        <location filename="../src/mainwindow.cpp" line="387"/>
+        <location filename="../src/mainwindow.cpp" line="383"/>
+        <location filename="../src/mainwindow.cpp" line="407"/>
         <source>Settings (*.conf)</source>
         <translation>Réglages (*.conf)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="478"/>
+        <location filename="../src/mainwindow.cpp" line="498"/>
         <source>&lt;p&gt;Open source software for Hantek6022 USB oscilloscopes&lt;/p&gt;&lt;p&gt;Maintainer: Martin Homuth-Rosemann&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2010, 2011 Oliver Haag&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2012-%7 OpenHantek community&lt;br/&gt;&lt;a href=&apos;https://github.com/OpenHantek&apos;&gt;https://github.com/OpenHantek&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Open source firmware copyright &amp;copy; 2019-%7 Ho-Ro&lt;br/&gt;&lt;a href=&apos;https://github.com/Ho-Ro/Hantek6022API&apos;&gt;https://github.com/Ho-Ro/Hantek6022API&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Device: %1 (%2), FW%3&lt;/p&gt;&lt;p&gt;Graphic: %4 - GLSL version %5&lt;/p&gt;&lt;p&gt;Qt version: %6&lt;/p&gt;</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1369,47 +1374,47 @@
         <translation type="vanished">Réglages (*.ini)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="387"/>
+        <location filename="../src/mainwindow.cpp" line="407"/>
         <source>Save settings</source>
         <translation>Enregistrer les réglages</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="414"/>
+        <location filename="../src/mainwindow.cpp" line="434"/>
         <source>Disable fading of previous graphs</source>
         <translation>Désactiver l&apos;estompage des graphes précédents</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="416"/>
+        <location filename="../src/mainwindow.cpp" line="436"/>
         <source>Enable fading of previous graphs</source>
         <translation>Activer l&apos;estompage des graphes précédents</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="424"/>
+        <location filename="../src/mainwindow.cpp" line="444"/>
         <source>Hide histogram</source>
         <translation>Cacher l’histogramme</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="426"/>
+        <location filename="../src/mainwindow.cpp" line="446"/>
         <source>Show histogram</source>
         <translation>Montrer l’histogramme</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="435"/>
+        <location filename="../src/mainwindow.cpp" line="455"/>
         <source>Hide magnified scope</source>
         <translation>Cacher la vue agrandie</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="437"/>
+        <location filename="../src/mainwindow.cpp" line="457"/>
         <source>Show magnified scope</source>
         <translation>Montrer la vue agrandie</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="447"/>
+        <location filename="../src/mainwindow.cpp" line="467"/>
         <source>Hide measurements</source>
         <translation>Cacher les mesures</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="449"/>
+        <location filename="../src/mainwindow.cpp" line="469"/>
         <source>Show measurements</source>
         <translation>Montrer les mesures</translation>
     </message>
@@ -1418,42 +1423,42 @@
         <translation type="vanished">A propos de OpenHantek6022 (%1)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="492"/>
+        <location filename="../src/mainwindow.cpp" line="512"/>
         <source>&lt;p&gt;Running since %1 seconds.&lt;/p&gt;</source>
         <translation>&lt;p&gt;En cours depuis %1 secondes.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="523"/>
+        <location filename="../src/mainwindow.cpp" line="543"/>
         <source>%1: %2</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="545"/>
+        <location filename="../src/mainwindow.cpp" line="565"/>
         <source>yyyy-MM-dd hh:mm:ss</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="546"/>
+        <location filename="../src/mainwindow.cpp" line="566"/>
         <source>yyyyMMdd_hhmmss</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="580"/>
+        <location filename="../src/mainwindow.cpp" line="600"/>
         <source>Portable Document Format (*.pdf)</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="581"/>
+        <location filename="../src/mainwindow.cpp" line="601"/>
         <source>Save screenshot</source>
         <translation>Enregistrer la capture d&apos;écran</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="612"/>
+        <location filename="../src/mainwindow.cpp" line="632"/>
         <source>Print oscillograph</source>
         <translation>Imprimer l&apos;oscillographe</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="580"/>
+        <location filename="../src/mainwindow.cpp" line="600"/>
         <source>Image (*.png *.jpg)</source>
         <translation>Image (*.png *.jpg)</translation>
     </message>
@@ -2152,17 +2157,17 @@
         <translation>Spectre</translation>
     </message>
     <message>
-        <location filename="../src/docks/SpectrumDock.cpp" line="48"/>
+        <location filename="../src/docks/SpectrumDock.cpp" line="49"/>
         <source>Magnitude per vertical screen division</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/docks/SpectrumDock.cpp" line="74"/>
+        <location filename="../src/docks/SpectrumDock.cpp" line="75"/>
         <source>Frequencybase</source>
         <translation>Base fréq.</translation>
     </message>
     <message>
-        <location filename="../src/docks/SpectrumDock.cpp" line="76"/>
+        <location filename="../src/docks/SpectrumDock.cpp" line="78"/>
         <source>Frequency range per horizontal screen division</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2209,32 +2214,32 @@
         <translation>Mode</translation>
     </message>
     <message>
-        <location filename="../src/docks/TriggerDock.cpp" line="38"/>
+        <location filename="../src/docks/TriggerDock.cpp" line="39"/>
         <source>Select the trigger mode</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/docks/TriggerDock.cpp" line="42"/>
+        <location filename="../src/docks/TriggerDock.cpp" line="43"/>
         <source>Slope</source>
         <translation>Pente</translation>
     </message>
     <message>
-        <location filename="../src/docks/TriggerDock.cpp" line="44"/>
+        <location filename="../src/docks/TriggerDock.cpp" line="46"/>
         <source>Select positive, negative or both (alternating) slopes</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/docks/TriggerDock.cpp" line="48"/>
+        <location filename="../src/docks/TriggerDock.cpp" line="50"/>
         <source>Source</source>
         <translation>Source</translation>
     </message>
     <message>
-        <location filename="../src/docks/TriggerDock.cpp" line="50"/>
+        <location filename="../src/docks/TriggerDock.cpp" line="53"/>
         <source>Select the trigger channel (CH1, CH2, or MATH)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/docks/TriggerDock.cpp" line="53"/>
+        <location filename="../src/docks/TriggerDock.cpp" line="57"/>
         <source>Trigger on fast, normal, or slow signals</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2257,22 +2262,22 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/docks/VoltageDock.cpp" line="60"/>
+        <location filename="../src/docks/VoltageDock.cpp" line="61"/>
         <source>Voltage range per vertical screen division</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/docks/VoltageDock.cpp" line="72"/>
+        <location filename="../src/docks/VoltageDock.cpp" line="75"/>
         <source>Select DC or AC coupling</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/docks/VoltageDock.cpp" line="75"/>
+        <location filename="../src/docks/VoltageDock.cpp" line="79"/>
         <source>Select the mathematical operation for this channel</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/docks/VoltageDock.cpp" line="63"/>
+        <location filename="../src/docks/VoltageDock.cpp" line="65"/>
         <source>Set probe attenuation, scroll or type a value to select</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2281,7 +2286,7 @@
         <translation type="vanished">&amp;MATH</translation>
     </message>
     <message>
-        <location filename="../src/docks/VoltageDock.cpp" line="61"/>
+        <location filename="../src/docks/VoltageDock.cpp" line="62"/>
         <source>Invert</source>
         <translation>Inverser</translation>
     </message>
@@ -2290,7 +2295,7 @@
         <translation type="vanished">x10</translation>
     </message>
     <message>
-        <location filename="../src/docks/VoltageDock.cpp" line="66"/>
+        <location filename="../src/docks/VoltageDock.cpp" line="68"/>
         <source>x</source>
         <translation></translation>
     </message>
@@ -2298,73 +2303,73 @@
 <context>
     <name>main</name>
     <message>
-        <location filename="../src/main.cpp" line="135"/>
-        <location filename="../src/main.cpp" line="170"/>
+        <location filename="../src/main.cpp" line="136"/>
+        <location filename="../src/main.cpp" line="171"/>
         <source>Show the international interface, do not translate</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="160"/>
+        <location filename="../src/main.cpp" line="161"/>
         <source>Demo mode without scope HW</source>
         <translation>Mode démo sans équipement</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="163"/>
+        <location filename="../src/main.cpp" line="164"/>
         <source>Use OpenGL ES instead of OpenGL</source>
         <translation>Utilisez OpenGL ES à la place de OpenGL</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="165"/>
+        <location filename="../src/main.cpp" line="166"/>
         <source>Force OpenGL SL version 1.20</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="167"/>
+        <location filename="../src/main.cpp" line="168"/>
         <source>Force OpenGL SL version 1.50</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="172"/>
+        <location filename="../src/main.cpp" line="173"/>
         <source>Define the system font</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="173"/>
+        <location filename="../src/main.cpp" line="174"/>
         <source>Font</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="177"/>
+        <location filename="../src/main.cpp" line="178"/>
         <source>Set the font size (default = %1, 0: automatic from dpi)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="179"/>
+        <location filename="../src/main.cpp" line="180"/>
         <source>Size</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="183"/>
+        <location filename="../src/main.cpp" line="184"/>
         <source>Set the font condensed value (default = %1)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="184"/>
+        <location filename="../src/main.cpp" line="185"/>
         <source>Condensed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="187"/>
+        <location filename="../src/main.cpp" line="188"/>
         <source>Reset persistent settings, start with default</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="190"/>
+        <location filename="../src/main.cpp" line="191"/>
         <source>Verbose tracing of program startup, ui and processing steps</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="191"/>
+        <location filename="../src/main.cpp" line="192"/>
         <source>Level</source>
         <translation type="unfinished"></translation>
     </message>

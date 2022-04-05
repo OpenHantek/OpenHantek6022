@@ -8,6 +8,7 @@ DsoConfigScopePage::DsoConfigScopePage( DsoSettings *settings, QWidget *parent )
     interpolationStrings << tr( "Off" ) << tr( "Linear" ) << tr( "Step" ) << tr( "Sinc" );
     QList< double > timebaseSteps = { 1.0, 2.0, 5.0, 10.0 };
 
+    // Horizontal group
     maxTimebaseLabel = new QLabel( tr( "Set slowest possible timebase" ) );
     maxTimebaseSiSpinBox = new SiSpinBox( UNIT_SECONDS );
     maxTimebaseSiSpinBox->setSteps( timebaseSteps );
@@ -22,11 +23,13 @@ DsoConfigScopePage::DsoConfigScopePage( DsoSettings *settings, QWidget *parent )
     acquireIntervalSiSpinBox->setMaximum( 100e-3 ); // up to 100 ms holdOff
     acquireIntervalSiSpinBox->setValue( settings->scope.horizontal.acquireInterval );
 
+    // Graph group
     horizontalLayout = new QGridLayout();
-    horizontalLayout->addWidget( maxTimebaseLabel, 0, 0 );
-    horizontalLayout->addWidget( maxTimebaseSiSpinBox, 0, 1 );
-    horizontalLayout->addWidget( acquireIntervalLabel, 1, 0 );
-    horizontalLayout->addWidget( acquireIntervalSiSpinBox, 1, 1 );
+    int row = 0;
+    horizontalLayout->addWidget( maxTimebaseLabel, row, 0 );
+    horizontalLayout->addWidget( maxTimebaseSiSpinBox, row, 1 );
+    horizontalLayout->addWidget( acquireIntervalLabel, ++row, 0 );
+    horizontalLayout->addWidget( acquireIntervalSiSpinBox, row, 1 );
     horizontalGroup = new QGroupBox( tr( "Horizontal" ) );
     horizontalGroup->setLayout( horizontalLayout );
 
@@ -41,24 +44,25 @@ DsoConfigScopePage::DsoConfigScopePage( DsoSettings *settings, QWidget *parent )
     interpolationComboBox->setCurrentIndex( settings->view.interpolation );
 
     graphLayout = new QGridLayout();
-    graphLayout->addWidget( digitalPhosphorDepthLabel, 2, 0 );
-    graphLayout->addWidget( digitalPhosphorDepthSpinBox, 2, 1 );
-    graphLayout->addWidget( interpolationLabel, 3, 0 );
-    graphLayout->addWidget( interpolationComboBox, 3, 1 );
+    row = 0;
+    graphLayout->addWidget( digitalPhosphorDepthLabel, row, 0 );
+    graphLayout->addWidget( digitalPhosphorDepthSpinBox, row, 1 );
+    graphLayout->addWidget( interpolationLabel, ++row, 0 );
+    graphLayout->addWidget( interpolationComboBox, row, 1 );
 
     graphGroup = new QGroupBox( tr( "Graph" ) );
     graphGroup->setLayout( graphLayout );
 
+    // Cursor measurement group
     cursorsLabel = new QLabel( tr( "Position" ) );
     cursorsComboBox = new QComboBox();
     cursorsComboBox->addItem( tr( "Left" ), Qt::LeftToolBarArea );
     cursorsComboBox->addItem( tr( "Right" ), Qt::RightToolBarArea );
     cursorsComboBox->setCurrentIndex( settings->view.cursorGridPosition == Qt::LeftToolBarArea ? 0 : 1 );
-
     cursorsLayout = new QGridLayout();
-    cursorsLayout->addWidget( cursorsLabel, 0, 0 );
-    cursorsLayout->addWidget( cursorsComboBox, 0, 1 );
-
+    row = 0;
+    cursorsLayout->addWidget( cursorsLabel, row, 0 );
+    cursorsLayout->addWidget( cursorsComboBox, row, 1 );
     cursorsGroup = new QGroupBox( tr( "Cursors" ) );
     cursorsGroup->setLayout( cursorsLayout );
 
@@ -66,8 +70,8 @@ DsoConfigScopePage::DsoConfigScopePage( DsoSettings *settings, QWidget *parent )
     zoomImageCheckBox = new QCheckBox( tr( "Export zoomed screen in double height" ) );
     zoomImageCheckBox->setChecked( settings->view.zoomImage );
     exportLayout = new QGridLayout();
-    exportLayout->addWidget( zoomImageCheckBox, 2, 0, 1, 2 );
-
+    row = 0;
+    exportLayout->addWidget( zoomImageCheckBox, row, 0, 1, 2 );
     exportGroup = new QGroupBox( tr( "Export" ) );
     exportGroup->setLayout( exportLayout );
 
@@ -80,20 +84,21 @@ DsoConfigScopePage::DsoConfigScopePage( DsoSettings *settings, QWidget *parent )
     hasACmodificationCheckBox =
         new QCheckBox( tr( "Scope has hardware modification for AC coupling (restart needed to apply the change)" ) );
     hasACmodificationCheckBox->setChecked( settings->scope.hasACmodification );
-
+    toolTipVisibleCheckBox = new QCheckBox( tr( "Show tooltips for user interface (restart needed to apply the change)" ) );
+    toolTipVisibleCheckBox->setChecked( settings->scope.toolTipVisible );
     configurationLayout = new QGridLayout();
-    configurationLayout->addWidget( saveOnExitCheckBox, 0, 0 );
-    configurationLayout->addWidget( saveNowButton, 0, 1 );
-    configurationLayout->addWidget( defaultSettingsCheckBox, 1, 0, 1, 2 );
+    row = 0;
+    configurationLayout->addWidget( saveOnExitCheckBox, row, 0 );
+    configurationLayout->addWidget( saveNowButton, row, 1 );
+    configurationLayout->addWidget( defaultSettingsCheckBox, ++row, 0, 1, 2 );
+    configurationLayout->addWidget( toolTipVisibleCheckBox, ++row, 0, 1, 2 );
     if ( settings->scope.hasACcoupling ) {
         hasACmodificationCheckBox->setChecked( true ); // check but do not show the box
     } else {
-        configurationLayout->addWidget( hasACmodificationCheckBox, 2, 0, 1, 2 ); // show it
+        configurationLayout->addWidget( hasACmodificationCheckBox, ++row, 0, 1, 2 ); // show it
     }
-
     configurationGroup = new QGroupBox( tr( "Configuration" ) );
     configurationGroup->setLayout( configurationLayout );
-
 
     mainLayout = new QVBoxLayout();
     mainLayout->addWidget( horizontalGroup );
@@ -110,6 +115,7 @@ DsoConfigScopePage::DsoConfigScopePage( DsoSettings *settings, QWidget *parent )
 /// \brief Saves the new settings.
 void DsoConfigScopePage::saveSettings() {
     settings->scope.hasACmodification = hasACmodificationCheckBox->isChecked();
+    settings->scope.toolTipVisible = toolTipVisibleCheckBox->isChecked();
     settings->scope.horizontal.maxTimebase = maxTimebaseSiSpinBox->value();
     settings->scope.horizontal.acquireInterval = acquireIntervalSiSpinBox->value();
     settings->view.interpolation = Dso::InterpolationMode( interpolationComboBox->currentIndex() );

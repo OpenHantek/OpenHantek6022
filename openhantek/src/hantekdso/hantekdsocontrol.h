@@ -65,7 +65,7 @@ class HantekDsoControl : public QObject {
      * if run() is called.
      * @param device The usb device. This object does not take ownership.
      */
-    explicit HantekDsoControl( ScopeDevice *scopeDevice, const DSOModel *model, unsigned verboseLevel );
+    explicit HantekDsoControl( ScopeDevice *scopeDevice, const DSOModel *model, int verboseLevel );
 
     /// \brief Cleans up
     ~HantekDsoControl() override;
@@ -125,7 +125,7 @@ class HantekDsoControl : public QObject {
 
   private:
     bool singleChannel = false;
-    unsigned verboseLevel = 0;
+    int verboseLevel = 0;
     void setSingleChannel( bool single ) { singleChannel = single; }
     bool isSingleChannel() const { return singleChannel; }
     bool triggerModeNONE() { return controlsettings.trigger.mode == Dso::TriggerMode::ROLL; }

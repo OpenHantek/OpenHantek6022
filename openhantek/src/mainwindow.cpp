@@ -69,22 +69,40 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
     shortcuts << QKeySequence( Qt::Key::Key_S ); // else put this shortcut at the end of the list
 #endif
     ui->actionSampling->setShortcuts( shortcuts );
-    ui->actionSampling->setToolTip( tr( "Start and stop the sampling" ) );
+    if ( dsoSettings->scope.toolTipVisible )
+        ui->actionSampling->setToolTip( tr( "Start and stop the sampling" ) );
+    else
+        ui->actionHistogram->setToolTip( QString() );
     ui->actionRefresh->setIcon( QIcon( iconPath + "refresh.svg" ) );
     ui->actionRefresh->setShortcut( Qt::Key::Key_R );
-    ui->actionRefresh->setToolTip( tr( "Refresh the screen trace for slow 'Roll' mode" ) );
+    if ( dsoSettings->scope.toolTipVisible )
+        ui->actionRefresh->setToolTip( tr( "Refresh the screen trace for slow 'Roll' mode" ) );
+    else
+        ui->actionHistogram->setToolTip( QString() );
     ui->actionPhosphor->setIcon( QIcon( iconPath + "phosphor.svg" ) );
     ui->actionPhosphor->setShortcut( Qt::Key::Key_P );
-    ui->actionPhosphor->setToolTip( tr( "Let the traces fade out slowly" ) );
+    if ( dsoSettings->scope.toolTipVisible )
+        ui->actionPhosphor->setToolTip( tr( "Let the traces fade out slowly" ) );
+    else
+        ui->actionHistogram->setToolTip( QString() );
     ui->actionHistogram->setIcon( QIcon( iconPath + "histogram.svg" ) );
     ui->actionHistogram->setShortcut( Qt::Key::Key_H );
-    ui->actionHistogram->setToolTip( tr( "Show a histogram of the voltage levels on the right side of the trace" ) );
+    if ( dsoSettings->scope.toolTipVisible )
+        ui->actionHistogram->setToolTip( tr( "Show a histogram of the voltage levels on the right side of the trace" ) );
+    else
+        ui->actionHistogram->setToolTip( QString() );
     ui->actionZoom->setIcon( QIcon( iconPath + "zoom.svg" ) );
     ui->actionZoom->setShortcut( Qt::Key::Key_Z );
-    ui->actionZoom->setToolTip( tr( "Zoom the range between the markers '1' and '2'" ) );
+    if ( dsoSettings->scope.toolTipVisible )
+        ui->actionZoom->setToolTip( tr( "Zoom the range between the markers '1' and '2'" ) );
+    else
+        ui->actionHistogram->setToolTip( QString() );
     ui->actionMeasure->setIcon( QIcon( iconPath + "measure.svg" ) );
     ui->actionMeasure->setShortcut( Qt::Key::Key_M );
-    ui->actionMeasure->setToolTip( tr( "Enable cursor measurements" ) );
+    if ( dsoSettings->scope.toolTipVisible )
+        ui->actionMeasure->setToolTip( tr( "Enable cursor measurements" ) );
+    else
+        ui->actionHistogram->setToolTip( QString() );
     ui->actionOpen->setIcon( iconFont->icon( fa::folderopen, colorMap ) );
     ui->actionOpen->setToolTip( tr( "Load scope settings from a config file" ) );
     ui->actionSave->setIcon( iconFont->icon( fa::save, colorMap ) );
@@ -165,11 +183,13 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
         ui->menuExport->addAction( action );
     }
 
-    ui->menuFile->setToolTipsVisible( true );
-    ui->menuExport->setToolTipsVisible( true );
-    ui->menuView->setToolTipsVisible( true );
-    ui->menuOscilloscope->setToolTipsVisible( true );
-    ui->menuHelp->setToolTipsVisible( true );
+    if ( dsoSettings->scope.toolTipVisible ) {
+        ui->menuFile->setToolTipsVisible( true );
+        ui->menuExport->setToolTipsVisible( true );
+        ui->menuView->setToolTipsVisible( true );
+        ui->menuOscilloscope->setToolTipsVisible( true );
+        ui->menuHelp->setToolTipsVisible( true );
+    }
 
     DsoSettingsScope *scope = &( dsoSettings->scope );
     const Dso::ControlSpecification *spec = dsoControl->getModel()->spec();
@@ -269,10 +289,10 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
     connect( triggerDock, &TriggerDock::modeChanged, dsoControl, &HantekDsoControl::setTriggerMode );
     connect( triggerDock, &TriggerDock::modeChanged, dsoWidget, &DsoWidget::updateTriggerMode );
     connect( triggerDock, &TriggerDock::modeChanged, [ this ]( Dso::TriggerMode mode ) {
-        ui->actionRefresh->setEnabled( Dso::TriggerMode::ROLL == mode && dsoSettings->scope.horizontal.samplerate < 10e3 );
+        ui->actionRefresh->setVisible( Dso::TriggerMode::ROLL == mode && dsoSettings->scope.horizontal.samplerate < 10e3 );
     } );
     connect( dsoControl, &HantekDsoControl::samplerateChanged, [ this ]( double samplerate ) {
-        ui->actionRefresh->setEnabled( Dso::TriggerMode::ROLL == dsoSettings->scope.trigger.mode && samplerate < 10e3 );
+        ui->actionRefresh->setVisible( Dso::TriggerMode::ROLL == dsoSettings->scope.trigger.mode && samplerate < 10e3 );
     } );
     connect( triggerDock, &TriggerDock::sourceChanged, dsoControl, &HantekDsoControl::setTriggerSource );
     connect( triggerDock, &TriggerDock::sourceChanged, dsoWidget, &DsoWidget::updateTriggerSource );

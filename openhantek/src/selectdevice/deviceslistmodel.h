@@ -13,7 +13,7 @@ class FindDevices;
  */
 class DevicesListModel : public QAbstractTableModel {
   public:
-    explicit DevicesListModel( FindDevices *findDevices, unsigned verboseLevel = 0 );
+    explicit DevicesListModel( FindDevices *findDevices, int verboseLevel = 0 );
     // QAbstractItemModel interface
     int rowCount( const QModelIndex &parent ) const override;
     int columnCount( const QModelIndex &parent ) const override;
@@ -24,5 +24,5 @@ class DevicesListModel : public QAbstractTableModel {
   private:
     std::vector< DeviceListEntry > entries;
     FindDevices *findDevices;
-    unsigned verboseLevel = 0;
+    int verboseLevel = 0;
 };

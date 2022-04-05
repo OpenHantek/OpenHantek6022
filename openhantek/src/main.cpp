@@ -68,7 +68,7 @@
 using namespace Hantek;
 
 // verboseLevel allows the fine granulated tracing of the program for easy testing and debugging
-unsigned verboseLevel = 0; // 0: quiet; 1,2: startup; 3,4: + user actions; 5,6: + data processing; 7 + USB
+int verboseLevel = 0; // 0: quiet; 1,2: startup; 3,4: + user actions; 5,6: + data processing; 7 + USB
 
 /// \brief Initialize resources and translations and show the main window.
 int main( int argc, char *argv[] ) {
@@ -110,22 +110,23 @@ int main( int argc, char *argv[] ) {
     QString font = defaultFont;       // defined in viewsettings.h
     int fontSize = defaultFontSize;   // defined in viewsettings.h
     int condensed = defaultCondensed; // defined in viewsettings.h
-    int theme = 0;                    // set to auto
-    bool styleFusion = false;
+    int theme = 0;                    // set to "auto"
+    int toolTipVisible = 1;           // start with tooltips
+    bool styleFusion = false;         // use system style
+
     { // do this early at program start ...
-        // get font size settings:
+        // get font size and other global program settings:
         // Linux, Unix: $HOME/.config/OpenHantek/OpenHantek6022.conf
         // macOS:       $HOME/Library/Preferences/org.openhantek.OpenHantek6022.plist
         // Windows:     HKEY_CURRENT_USER\Software\OpenHantek\OpenHantek6022"
         // more info:   https://doc.qt.io/qt-5/qsettings.html#platform-specific-notes
+        // use default value if setting is not available
         QSettings storeSettings;
         storeSettings.beginGroup( "view" );
-        if ( storeSettings.contains( "fontSize" ) )
-            fontSize = storeSettings.value( "fontSize" ).toInt();
-        if ( storeSettings.contains( "styleFusion" ) )
-            styleFusion = storeSettings.value( "styleFusion" ).toBool();
-        if ( storeSettings.contains( "theme" ) ) //
-            theme = storeSettings.value( "theme" ).toInt();
+        fontSize = storeSettings.value( "fontSize", defaultFontSize ).toInt();
+        styleFusion = storeSettings.value( "styleFusion", false ).toBool();
+        theme = storeSettings.value( "theme", 0 ).toInt();
+        toolTipVisible = storeSettings.value( "toolTipVisible", 1 ).toInt();
         storeSettings.endGroup();
 
         // Pre-parse international flag so it can affect the command line help texts
@@ -203,7 +204,7 @@ int main( int argc, char *argv[] ) {
         useGLSL150 = p.isSet( useGLSL150Option );
         useLocale = !p.isSet( intOption );
         if ( p.isSet( verboseOption ) )
-            verboseLevel = p.value( "verbose" ).toUInt();
+            verboseLevel = p.value( "verbose" ).toInt();
         resetSettings = p.isSet( resetSettingsOption );
     } // ... and forget the no more needed variables
 
@@ -460,6 +461,7 @@ int main( int argc, char *argv[] ) {
 
     //////// Prepare visual appearance ////////
     // prepare the font size, style and theme settings for the scope application
+    settings.scope.toolTipVisible = toolTipVisible; // show hints for beginners
     settings.view.styleFusion = styleFusion;
     settings.view.theme = theme;
     QFont appFont = openHantekApplication.font();

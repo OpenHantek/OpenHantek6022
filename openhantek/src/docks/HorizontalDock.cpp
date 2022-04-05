@@ -35,7 +35,8 @@ HorizontalDock::HorizontalDock( DsoSettingsScope *scope, const Dso::ControlSpeci
     // Initialize elements
     samplerateLabel = new QLabel( tr( "Samplerate" ) );
     samplerateSiSpinBox = new SiSpinBox( UNIT_SAMPLES );
-    samplerateSiSpinBox->setToolTip( tr( "Effective samplerate, automatically selected from 'Timebase' setting" ) );
+    if ( scope->toolTipVisible )
+        samplerateSiSpinBox->setToolTip( tr( "Effective samplerate, automatically selected from 'Timebase' setting" ) );
     samplerateSiSpinBox->setMinimum( 1 );
     samplerateSiSpinBox->setMaximum( 1e8 );
     samplerateSiSpinBox->setUnitPostfix( tr( "/s" ) );
@@ -44,14 +45,16 @@ HorizontalDock::HorizontalDock( DsoSettingsScope *scope, const Dso::ControlSpeci
 
     timebaseLabel = new QLabel( tr( "Timebase" ) );
     timebaseSiSpinBox = new SiSpinBox( UNIT_SECONDS );
-    timebaseSiSpinBox->setToolTip( tr( "Time per horizontal screen division" ) );
+    if ( scope->toolTipVisible )
+        timebaseSiSpinBox->setToolTip( tr( "Time per horizontal screen division" ) );
     timebaseSiSpinBox->setSteps( timebaseSteps );
     timebaseSiSpinBox->setMinimum( 1e-9 );
     timebaseSiSpinBox->setMaximum( 1e3 );
 
     formatLabel = new QLabel( tr( "Format" ) );
     formatComboBox = new QComboBox();
-    formatComboBox->setToolTip( tr( "Select signal over time or XY display" ) );
+    if ( scope->toolTipVisible )
+        formatComboBox->setToolTip( tr( "Select signal over time or XY display" ) );
     for ( Dso::GraphFormat format : Dso::GraphFormatEnum )
         formatComboBox->addItem( Dso::graphFormatString( format ) );
 
@@ -59,7 +62,8 @@ HorizontalDock::HorizontalDock( DsoSettingsScope *scope, const Dso::ControlSpeci
     calfreqSteps = spec->calfreqSteps;
     std::reverse( calfreqSteps.begin(), calfreqSteps.end() ); // put highest value on top of the list
     calfreqComboBox = new QComboBox();
-    calfreqComboBox->setToolTip( tr( "Select the frequency of the calibration output, scroll for fast change" ) );
+    if ( scope->toolTipVisible )
+        calfreqComboBox->setToolTip( tr( "Select the frequency of the calibration output, scroll for fast change" ) );
     for ( double calfreqStep : calfreqSteps )
         calfreqComboBox->addItem( valueToString( calfreqStep, UNIT_HERTZ, calfreqStep < 10e3 ? 2 : 0 ) );
 

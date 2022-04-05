@@ -57,10 +57,12 @@ VoltageDock::VoltageDock( DsoSettingsScope *scope, const Dso::ControlSpecificati
             b.usedCheckBox = new QCheckBox( tr( "MA&TH" ) );
         b.miscComboBox = new QComboBox();
         b.gainComboBox = new QComboBox();
-        b.gainComboBox->setToolTip( tr( "Voltage range per vertical screen division" ) );
+        if ( scope->toolTipVisible )
+            b.gainComboBox->setToolTip( tr( "Voltage range per vertical screen division" ) );
         b.invertCheckBox = new QCheckBox( tr( "Invert" ) );
         b.attnSpinBox = new QSpinBox();
-        b.attnSpinBox->setToolTip( tr( "Set probe attenuation, scroll or type a value to select" ) );
+        if ( scope->toolTipVisible )
+            b.attnSpinBox->setToolTip( tr( "Set probe attenuation, scroll or type a value to select" ) );
         b.attnSpinBox->setMinimum( ATTENUATION_MIN );
         b.attnSpinBox->setMaximum( ATTENUATION_MAX );
         b.attnSpinBox->setPrefix( tr( "x" ) );
@@ -69,10 +71,12 @@ VoltageDock::VoltageDock( DsoSettingsScope *scope, const Dso::ControlSpecificati
 
         if ( channel < spec->channels ) {
             b.miscComboBox->addItems( couplingStrings );
-            b.miscComboBox->setToolTip( tr( "Select DC or AC coupling" ) );
+            if ( scope->toolTipVisible )
+                b.miscComboBox->setToolTip( tr( "Select DC or AC coupling" ) );
         } else {
             b.miscComboBox->addItems( modeStrings );
-            b.miscComboBox->setToolTip( tr( "Select the mathematical operation for this channel" ) );
+            if ( scope->toolTipVisible )
+                b.miscComboBox->setToolTip( tr( "Select the mathematical operation for this channel" ) );
         }
         b.gainComboBox->addItems( gainStrings );
 

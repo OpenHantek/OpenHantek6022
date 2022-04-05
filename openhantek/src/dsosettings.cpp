@@ -307,6 +307,7 @@ void DsoSettings::save() {
         return;
     } else { // save fontSize as global setting
         QSettings().setValue( "view/fontSize", view.fontSize );
+        QSettings().setValue( "view/toolTipVisible", scope.toolTipVisible );
     }
     if ( scope.verboseLevel > 1 )
         qDebug() << " DsoSettings::save()" << deviceName << deviceID;
@@ -436,7 +437,6 @@ void DsoSettings::save() {
     storeSettings->setValue( "histogram", scope.histogram );
     storeSettings->setValue( "digitalPhosphor", view.digitalPhosphor );
     storeSettings->setValue( "interpolation", view.interpolation );
-    // storeSettings->setValue( "fontSize", view.fontSize );
     storeSettings->setValue( "printerColorImages", view.printerColorImages );
     storeSettings->setValue( "zoom", view.zoom );
     storeSettings->setValue( "cursorGridPosition", view.cursorGridPosition );

@@ -45,13 +45,14 @@ DsoConfigAnalysisPage::DsoConfigAnalysisPage( DsoSettings *settings, QWidget *pa
     reuseFftPlanCheckBox->setChecked( settings->post.reuseFftPlan );
 
     spectrumLayout = new QGridLayout();
-    spectrumLayout->addWidget( windowFunctionLabel, 0, 0 );
-    spectrumLayout->addWidget( windowFunctionComboBox, 0, 1 );
-    spectrumLayout->addWidget( referenceLevelLabel, 1, 0 );
-    spectrumLayout->addLayout( referenceLevelLayout, 1, 1 );
-    spectrumLayout->addWidget( minimumMagnitudeLabel, 2, 0 );
-    spectrumLayout->addLayout( minimumMagnitudeLayout, 2, 1 );
-    spectrumLayout->addWidget( reuseFftPlanCheckBox, 3, 0 );
+    int row = 0;
+    spectrumLayout->addWidget( windowFunctionLabel, row, 0 );
+    spectrumLayout->addWidget( windowFunctionComboBox, row, 1 );
+    spectrumLayout->addWidget( referenceLevelLabel, ++row, 0 );
+    spectrumLayout->addLayout( referenceLevelLayout, row, 1 );
+    spectrumLayout->addWidget( minimumMagnitudeLabel, ++row, 0 );
+    spectrumLayout->addLayout( minimumMagnitudeLayout, row, 1 );
+    spectrumLayout->addWidget( reuseFftPlanCheckBox, ++row, 0 );
 
     spectrumGroup = new QGroupBox( tr( "Spectrum" ) );
     spectrumGroup->setLayout( spectrumLayout );
@@ -78,10 +79,11 @@ DsoConfigAnalysisPage::DsoConfigAnalysisPage( DsoSettings *settings, QWidget *pa
     showNoteCheckBox->setChecked( settings->scope.analysis.showNoteValue );
 
     analysisLayout = new QGridLayout();
-    analysisLayout->addWidget( dummyLoadCheckbox, 0, 0 );
-    analysisLayout->addLayout( dummyLoadLayout, 0, 1 );
-    analysisLayout->addWidget( thdCheckBox, 1, 0 );
-    analysisLayout->addWidget( showNoteCheckBox, 2, 0 );
+    row = 0;
+    analysisLayout->addWidget( dummyLoadCheckbox, row, 0 );
+    analysisLayout->addLayout( dummyLoadLayout, row, 1 );
+    analysisLayout->addWidget( thdCheckBox, ++row, 0 );
+    analysisLayout->addWidget( showNoteCheckBox, ++row, 0 );
 
     analysisGroup = new QGroupBox( tr( "Analysis" ) );
     analysisGroup->setLayout( analysisLayout );

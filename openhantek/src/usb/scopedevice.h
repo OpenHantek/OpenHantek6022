@@ -209,4 +209,4 @@ class ScopeDevice : public QObject {
     void deviceDisconnected(); ///< The device has been disconnected
 };
 
-extern unsigned verboseLevel;
+extern int verboseLevel;

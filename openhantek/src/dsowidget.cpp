@@ -455,7 +455,8 @@ void DsoWidget::setupSliders( DsoWidget::Sliders &sliders ) {
         qDebug() << "  DsoWidget::setupSliders()";
     // The offset sliders for all possible channels
     sliders.voltageOffsetSlider = new LevelSlider( Qt::RightArrow );
-    sliders.voltageOffsetSlider->setToolTip( tr( "Trace position, drag the channel name up or down" ) );
+    if ( scope->toolTipVisible )
+        sliders.voltageOffsetSlider->setToolTip( tr( "Trace position, drag the channel name up or down" ) );
     for ( ChannelID channel = 0; channel < scope->voltage.size(); ++channel ) {
         sliders.voltageOffsetSlider->addSlider( scope->voltage[ channel ].name, int( channel ) );
         sliders.voltageOffsetSlider->setColor( ( channel ), view->colors->voltage[ channel ] );
@@ -476,7 +477,8 @@ void DsoWidget::setupSliders( DsoWidget::Sliders &sliders ) {
 
     // The triggerPosition slider
     sliders.triggerPositionSlider = new LevelSlider( Qt::DownArrow );
-    sliders.triggerPositionSlider->setToolTip( tr( "Trigger position, drag the arrow left or right" ) );
+    if ( scope->toolTipVisible )
+        sliders.triggerPositionSlider->setToolTip( tr( "Trigger position, drag the arrow left or right" ) );
     sliders.triggerPositionSlider->addSlider();
     sliders.triggerPositionSlider->setLimits( 0, 0.0, 1.0 );
     sliders.triggerPositionSlider->setStep( 0, 0.2 / double( DIVS_TIME ) );
@@ -485,7 +487,8 @@ void DsoWidget::setupSliders( DsoWidget::Sliders &sliders ) {
 
     // The sliders for the trigger levels
     sliders.triggerLevelSlider = new LevelSlider( Qt::LeftArrow );
-    sliders.triggerLevelSlider->setToolTip( tr( "Trigger level, drag the arrow up or down" ) );
+    if ( scope->toolTipVisible )
+        sliders.triggerLevelSlider->setToolTip( tr( "Trigger level, drag the arrow up or down" ) );
     for ( ChannelID channel = 0; channel < scope->voltage.size(); ++channel ) {
         sliders.triggerLevelSlider->addSlider( int( channel ) );
         sliders.triggerLevelSlider->setColor( channel, ( channel == ChannelID( scope->trigger.source ) )
@@ -498,7 +501,8 @@ void DsoWidget::setupSliders( DsoWidget::Sliders &sliders ) {
 
     // The marker slider
     sliders.markerSlider = new LevelSlider( Qt::UpArrow );
-    sliders.markerSlider->setToolTip( tr( "Measure or zoom marker '1' and '2', drag left or right" ) );
+    if ( scope->toolTipVisible )
+        sliders.markerSlider->setToolTip( tr( "Measure or zoom marker '1' and '2', drag left or right" ) );
     for ( int marker = 0; marker < 2; ++marker ) {
         sliders.markerSlider->addSlider( QString::number( marker + 1 ), marker );
         sliders.markerSlider->setLimits( marker, MARGIN_LEFT, MARGIN_RIGHT );

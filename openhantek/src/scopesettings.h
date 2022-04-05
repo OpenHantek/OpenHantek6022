@@ -91,7 +91,8 @@ struct DsoSettingsScope {
     DsoSettingsScopeTrigger trigger;                             ///< Settings for the trigger
     DsoSettingsScopeAnalysis analysis;                           ///< Settings for the analysis
 
-    unsigned verboseLevel = 0;
+    int verboseLevel = 0;
+    int toolTipVisible = 1; // show hints for beginners, can be disabled in settings dialog
     bool histogram = false;
     bool hasACcoupling = false;
     bool hasACmodification = false;

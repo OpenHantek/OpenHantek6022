@@ -45,7 +45,8 @@ SpectrumDock::SpectrumDock( DsoSettingsScope *scope, QWidget *parent ) : QDockWi
     for ( channel = 0; channel < scope->voltage.size(); ++channel ) {
         ChannelBlock b;
         b.magnitudeComboBox = ( new QComboBox() );
-        b.magnitudeComboBox->setToolTip( tr( "Magnitude per vertical screen division" ) );
+        if ( scope->toolTipVisible )
+            b.magnitudeComboBox->setToolTip( tr( "Magnitude per vertical screen division" ) );
         QString name = scope->spectrum[ channel ].name;
         name.insert( int( channel ), '&' ); // &SP1, S&P2, SP&M
         b.usedCheckBox = ( new QCheckBox( name ) );
@@ -73,7 +74,8 @@ SpectrumDock::SpectrumDock( DsoSettingsScope *scope, QWidget *parent ) : QDockWi
     }
     frequencybaseLabel = new QLabel( tr( "Frequencybase" ) );
     frequencybaseSiSpinBox = new SiSpinBox( UNIT_HERTZ );
-    frequencybaseSiSpinBox->setToolTip( tr( "Frequency range per horizontal screen division" ) );
+    if ( scope->toolTipVisible )
+        frequencybaseSiSpinBox->setToolTip( tr( "Frequency range per horizontal screen division" ) );
     frequencybaseSiSpinBox->setMinimum( 0.1 );
     frequencybaseSiSpinBox->setMaximum( 100e6 );
     dockLayout->addWidget( frequencybaseLabel, int( channel ), 0 );

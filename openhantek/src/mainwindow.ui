@@ -41,7 +41,6 @@
      <string>&amp;View</string>
     </property>
     <addaction name="actionSampling"/>
-    <addaction name="separator"/>
     <addaction name="actionRefresh"/>
     <addaction name="separator"/>
     <addaction name="actionPhosphor"/>
@@ -90,7 +89,6 @@
     <bool>false</bool>
    </attribute>
    <addaction name="actionSampling"/>
-   <addaction name="separator"/>
    <addaction name="actionRefresh"/>
    <addaction name="separator"/>
    <addaction name="actionPhosphor"/>

@@ -26,7 +26,7 @@ using namespace Hantek;
 using namespace Dso;
 
 
-HantekDsoControl::HantekDsoControl( ScopeDevice *device, const DSOModel *model, unsigned verboseLevel )
+HantekDsoControl::HantekDsoControl( ScopeDevice *device, const DSOModel *model, int verboseLevel )
     : verboseLevel( verboseLevel ), scopeDevice( device ), model( model ), specification( model->spec() ),
       controlsettings( &( specification->samplerate.single ), specification->channels ) {
     qRegisterMetaType< DSOsamples * >();

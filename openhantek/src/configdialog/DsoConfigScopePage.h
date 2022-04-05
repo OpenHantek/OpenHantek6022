@@ -59,6 +59,7 @@ class DsoConfigScopePage : public QWidget {
     QCheckBox *hasACmodificationCheckBox;
     QCheckBox *saveOnExitCheckBox;
     QCheckBox *defaultSettingsCheckBox;
+    QCheckBox *toolTipVisibleCheckBox;
     QPushButton *saveNowButton;
 
     QGroupBox *exportGroup;

@@ -90,17 +90,20 @@ void DsoConfigDialog::createIcons() {
     QListWidgetItem *scopeButton = new QListWidgetItem( contentsWidget );
     scopeButton->setIcon( QIcon( ":config/scope.png" ) );
     scopeButton->setText( tr( "Scope" ) );
-    scopeButton->setToolTip( tr( "Timing, display settings, and HW configuration" ) );
+    if ( settings->scope.toolTipVisible )
+        scopeButton->setToolTip( tr( "Timing, display settings, and HW configuration" ) );
 
     QListWidgetItem *analysisButton = new QListWidgetItem( contentsWidget );
     analysisButton->setIcon( QIcon( ":config/spectrum.png" ) );
     analysisButton->setText( tr( "Analysis" ) );
-    analysisButton->setToolTip( tr( "FFT settings, power and THD calculation, musical note detection" ) );
+    if ( settings->scope.toolTipVisible )
+        analysisButton->setToolTip( tr( "FFT settings, power and THD calculation, musical note detection" ) );
 
     QListWidgetItem *colorsButton = new QListWidgetItem( contentsWidget );
     colorsButton->setIcon( QIcon( ":config/colors.png" ) );
     colorsButton->setText( tr( "Colors" ) );
-    colorsButton->setToolTip( tr( "Screen and printer colors, theme and style settings" ) );
+    if ( settings->scope.toolTipVisible )
+        colorsButton->setToolTip( tr( "Screen and printer colors, theme and style settings" ) );
 
     connect( contentsWidget, &QListWidget::currentItemChanged, this, &DsoConfigDialog::changePage );
 }
