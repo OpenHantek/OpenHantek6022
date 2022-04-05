@@ -488,7 +488,7 @@
     <message>
         <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="87"/>
         <source>Show tooltips for user interface (restart needed to apply the change)</source>
-        <translation type="unfinished"></translation>
+        <translation>Zeige Tool-Tips für Bedienelemente (Neustart erforderlich für Änderung)</translation>
     </message>
     <message>
         <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="79"/>

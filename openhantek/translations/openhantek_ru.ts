@@ -417,7 +417,7 @@
     <message>
         <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="85"/>
         <source>Scope has hardware modification for AC coupling (restart needed to apply the change)</source>
-        <translation>Осциллограф аппаратно модифицирован под переменный ток (для активации требуется перезапуск)</translation>
+        <translation>Осциллограф аппаратно модифицирован под переменный ток (требуется перезапуск)</translation>
     </message>
     <message>
         <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="79"/>
@@ -441,7 +441,7 @@
     <message>
         <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="87"/>
         <source>Show tooltips for user interface (restart needed to apply the change)</source>
-        <translation type="unfinished"></translation>
+        <translation>Показывать всплывающие подсказки пользовательского интерфейса (для активации требуется перезапуск)</translation>
     </message>
     <message>
         <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="100"/>
