@@ -1,3 +1,10 @@
+# Please Help the Victims of the War!
+**Openhantek6022** is a project where people from all over the world collaborate peacefully, regardless of where they live.
+If you are lucky enough to live in peace, please [**donate**](https://www.icrc.org/en/donate/ukraine) 
+to the *International Committee of the Red Cross*.
+
+![blue-yellow](docs/images/blue-yellow.png)
+
 # OpenHantek6022
 [![Stability: Active](https://masterminds.github.io/stability/active.svg)](https://masterminds.github.io/stability/active.html)
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/OpenHantek/OpenHantek6022)](https://github.com/OpenHantek/OpenHantek6022/releases)
@@ -27,7 +34,8 @@ OpenHantek6022 is a free software for **Hantek DSO6022** USB digital signal osci
 * [Important!](#important)
 * [Specifications, Features, Limitations and Developer Documentation](#specifications-features-limitations-and-developer-documentation)
 * [Contribute](#contribute)
-* [Donate](#donate)
+* [Donate](#please-help-the-victims-of-the-war)
+<!-- * [Donate for FSF](#donate-for-fsf) -->
 * [Other DSO Open Source Software](#other-dso-open-source-software)
 * [Other Related Software](#other-related-software)
 * [History](#history)
@@ -206,9 +214,11 @@ We welcome any reported GitHub issue if you have a problem with this software. S
 [13]: http://llvm.org/docs/CodingStandards.html
 [14]: https://help.github.com/articles/using-pull-requests
 
-## Donate
+<!--
+## Donate for FSF
 If you really enjoy this project and would like to donate, please give it to the [Free Software Foundation](https://www.fsf.org/).
 Without the FSF, we wouldn't have this [free software](https://www.gnu.org/philosophy/free-sw.html) that we can use today.
+-->
 
 ## Other DSO Open Source Software
 * [Firmware used by OpenHantek and python bindings for 6022BE/BL](https://github.com/Ho-Ro/Hantek6022API)
