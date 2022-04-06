@@ -531,22 +531,22 @@
 <context>
     <name>DsoSettings</name>
     <message>
-        <location filename="../src/dsosettings.cpp" line="24"/>
+        <location filename="../src/dsosettings.cpp" line="28"/>
         <source>SP%1</source>
         <translation>Спектр %1</translation>
     </message>
     <message>
-        <location filename="../src/dsosettings.cpp" line="29"/>
+        <location filename="../src/dsosettings.cpp" line="33"/>
         <source>CH%1</source>
         <translation>Канал %1</translation>
     </message>
     <message>
-        <location filename="../src/dsosettings.cpp" line="40"/>
+        <location filename="../src/dsosettings.cpp" line="44"/>
         <source>SPM</source>
         <translation>Сп.Мат.</translation>
     </message>
     <message>
-        <location filename="../src/dsosettings.cpp" line="45"/>
+        <location filename="../src/dsosettings.cpp" line="49"/>
         <source>MATH</source>
         <translation>Матем.</translation>
     </message>
@@ -1048,14 +1048,14 @@
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="383"/>
-        <location filename="../src/mainwindow.cpp" line="407"/>
+        <location filename="../src/mainwindow.cpp" line="408"/>
         <source>Settings (*.conf)</source>
         <translation>Настройки (*.conf)</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="498"/>
         <source>&lt;p&gt;Open source software for Hantek6022 USB oscilloscopes&lt;/p&gt;&lt;p&gt;Maintainer: Martin Homuth-Rosemann&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2010, 2011 Oliver Haag&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2012-%7 OpenHantek community&lt;br/&gt;&lt;a href=&apos;https://github.com/OpenHantek&apos;&gt;https://github.com/OpenHantek&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Open source firmware copyright &amp;copy; 2019-%7 Ho-Ro&lt;br/&gt;&lt;a href=&apos;https://github.com/Ho-Ro/Hantek6022API&apos;&gt;https://github.com/Ho-Ro/Hantek6022API&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Device: %1 (%2), FW%3&lt;/p&gt;&lt;p&gt;Graphic: %4 - GLSL version %5&lt;/p&gt;&lt;p&gt;Qt version: %6&lt;/p&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;p&gt;Открытое программное обеспечение для USB осциллографов Hantek6022&lt;/p&gt;&lt;p&gt;Мейнтейнер: Мартин Хомут-Розманн&lt;/p&gt;&lt;p&gt;Авторские права &amp;copy; 2010, 2011 Оливер Хааг&lt;/p&gt;&lt;p&gt;Авторские права &amp;copy; 2012-%7 Сообщество OpenHantek &lt;br/&gt;&lt;a href=&apos;https://github.com/OpenHantek&apos;&gt;https://github.com/OpenHantek&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Авторские права на открытую микропрограмму &amp;copy; 2019-%7 Ho-Ro&lt;br/&gt;&lt;a href=&apos;https://github.com/Ho-Ro/Hantek6022API&apos;&gt;https://github.com/Ho-Ro/Hantek6022API&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Device: %1 (%2), FW%3&lt;/p&gt;&lt;p&gt;Graphic: %4 - GLSL version %5&lt;/p&gt;&lt;p&gt;Qt version: %6&lt;/p&gt;</translation>
     </message>
     <message>
         <source>Settings (*.ini)</source>
@@ -1192,7 +1192,7 @@
         <translation>Экспорт захваченных данных в формате %1 для дальнейшей обработки</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="407"/>
+        <location filename="../src/mainwindow.cpp" line="408"/>
         <source>Save settings</source>
         <translation>Сохранить настройки</translation>
     </message>
@@ -2008,73 +2008,83 @@
 <context>
     <name>main</name>
     <message>
-        <location filename="../src/main.cpp" line="136"/>
-        <location filename="../src/main.cpp" line="171"/>
+        <location filename="../src/main.cpp" line="137"/>
+        <location filename="../src/main.cpp" line="175"/>
         <source>Show the international interface, do not translate</source>
         <translation>Показывать международный интерфейс, не переводить</translation>
     </message>
     <message>
         <location filename="../src/main.cpp" line="161"/>
+        <source>Load config file</source>
+        <translation>Загрузить файла конфигурации</translation>
+    </message>
+    <message>
+        <location filename="../src/main.cpp" line="162"/>
+        <source>File</source>
+        <translation>Файл</translation>
+    </message>
+    <message>
+        <location filename="../src/main.cpp" line="165"/>
         <source>Demo mode without scope HW</source>
         <translation>Демо режим без аппаратуры осциллографа</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="164"/>
+        <location filename="../src/main.cpp" line="168"/>
         <source>Use OpenGL ES instead of OpenGL</source>
         <translation>Использовать OpenGL ES вместо OpenGL</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="166"/>
+        <location filename="../src/main.cpp" line="170"/>
         <source>Force OpenGL SL version 1.20</source>
         <translation>Принудительное использование OpenGL SL version 1.20</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="168"/>
+        <location filename="../src/main.cpp" line="172"/>
         <source>Force OpenGL SL version 1.50</source>
         <translation>Принудительное использование OpenGL SL version 1.50</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="173"/>
+        <location filename="../src/main.cpp" line="177"/>
         <source>Define the system font</source>
         <translation>Определить системный шрифт</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="174"/>
+        <location filename="../src/main.cpp" line="178"/>
         <source>Font</source>
         <translation>Шрифт</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="178"/>
+        <location filename="../src/main.cpp" line="182"/>
         <source>Set the font size (default = %1, 0: automatic from dpi)</source>
         <translation>Задать размер шрифта (по умолчанию = %1, 0: автоматически от dpi)</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="180"/>
+        <location filename="../src/main.cpp" line="184"/>
         <source>Size</source>
         <translation>Размер</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="184"/>
+        <location filename="../src/main.cpp" line="187"/>
         <source>Set the font condensed value (default = %1)</source>
         <translation>Задать значение сжатия шрифта (по умолчанию = %1)</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="185"/>
+        <location filename="../src/main.cpp" line="188"/>
         <source>Condensed</source>
         <translation>Сжатый</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="188"/>
+        <location filename="../src/main.cpp" line="191"/>
         <source>Reset persistent settings, start with default</source>
         <translation>Сбросить постоянные настройки, начать со значений по умолчанию</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="191"/>
+        <location filename="../src/main.cpp" line="194"/>
         <source>Verbose tracing of program startup, ui and processing steps</source>
         <translation>Подробная трассировка запуска программы, пользовательского интерфейса и этапов обработки</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="192"/>
+        <location filename="../src/main.cpp" line="195"/>
         <source>Level</source>
         <translation>Уровень</translation>
     </message>

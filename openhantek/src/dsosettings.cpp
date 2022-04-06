@@ -2,6 +2,7 @@
 
 #include <QApplication>
 #include <QColor>
+#include <QFileInfo>
 #include <QSettings>
 
 #include "dsosettings.h"
@@ -9,10 +10,13 @@
 
 /// \brief Set the number of channels.
 /// \param channels The new channel count, that will be applied to lists.
-DsoSettings::DsoSettings( const ScopeDevice *scopeDevice, bool resetSettings )
+DsoSettings::DsoSettings( const ScopeDevice *scopeDevice, int verboseLevel, bool resetSettings )
     : deviceName( scopeDevice->getModel()->name ), deviceID( scopeDevice->getSerialNumber() ),
-      deviceFW( scopeDevice->getFwVersion() ), deviceSpecification( scopeDevice->getModel()->spec() ),
+      deviceFW( scopeDevice->getFwVersion() ), deviceSpecification( scopeDevice->getModel()->spec() ), verboseLevel( verboseLevel ),
       resetSettings( resetSettings ) {
+    scope.verboseLevel = verboseLevel;
+    if ( verboseLevel > 1 )
+        qDebug() << " DsoSettings::DsoSettings()" << deviceName << deviceID << resetSettings;
     // Add new channels to the list
     int voltage_hue[] = { 60, 210, 0, 120 };   // yellow, lightblue, red, green
     int spectrum_hue[] = { 30, 240, 330, 90 }; // orange, blue, purple, green
@@ -63,22 +67,45 @@ DsoSettings::DsoSettings( const ScopeDevice *scopeDevice, bool resetSettings )
 }
 
 
-bool DsoSettings::setFilename( const QString &filename ) {
+// store the current settings to an explicitly named file
+bool DsoSettings::saveToFile( const QString &filename ) {
+    if ( verboseLevel > 1 )
+        qDebug() << " DsoSettings::saveFilename()" << filename;
     std::unique_ptr< QSettings > local = std::unique_ptr< QSettings >( new QSettings( filename, QSettings::IniFormat ) );
     if ( local->status() != QSettings::NoError ) {
-        qWarning() << "Could not change the settings file to " << filename;
+        qWarning() << "Could not save to config file " << filename;
         return false;
     }
-    storeSettings.swap( local );
+    storeSettings.swap( local ); // switch to requested filename
+    save();                      // store the settings
+    storeSettings.swap( local ); // and switch back to default persistent storage location (file, registry, ...)
     return true;
 }
 
 
+// load settings from a config file
+bool DsoSettings::loadFromFile( const QString &filename ) {
+    if ( verboseLevel > 1 )
+        qDebug() << " DsoSettings::loadFilename()" << filename;
+    if ( QFileInfo( filename ).isReadable() ) {
+        std::unique_ptr< QSettings > local = std::unique_ptr< QSettings >( new QSettings( filename, QSettings::IniFormat ) );
+        if ( local->status() == QSettings::NoError ) {
+            storeSettings.swap( local );
+            load();
+            storeSettings.swap( local );
+            return true;
+        }
+    }
+    qWarning() << "Could not load from config file " << filename;
+    return false;
+}
+
+
 // load the persistent scope settings
-// called by "DsoSettings::DsoSettings" and explicitely by "ui->actionOpen"
+// called by "DsoSettings::DsoSettings()" and "loadFromFile()"
 void DsoSettings::load() {
-    if ( scope.verboseLevel > 1 )
-        qDebug() << " DsoSettings::load()";
+    if ( verboseLevel > 1 )
+        qDebug() << " DsoSettings::load()" << storeSettings->fileName();
     // Start with default configuration?
     if ( resetSettings || storeSettings->value( "configuration/version", 0 ).toUInt() < CONFIG_VERSION ) {
         // incompatible change or config reset by user
@@ -297,23 +324,29 @@ void DsoSettings::load() {
 
 
 // save the persistent scope settings
-// called by "MainWindow::closeEvent" and explicitely by "ui->actionSave" and "ui->actionSave_as"
+// called by "DsoSettings::saveToFile()", "MainWindow::closeEvent" and explicitely by "ui->actionSave"
 void DsoSettings::save() {
     // Use default configuration after restart?
     if ( 0 == configVersion ) {
         storeSettings->clear();
-        if ( scope.verboseLevel > 1 )
-            qDebug() << " DsoSettings::save() storeSettings->clear()";
+        if ( verboseLevel > 1 )
+            qDebug() << " DsoSettings::save() storeSettings->clear() << storeSettings->fileName()";
         return;
     } else { // save fontSize as global setting
         QSettings().setValue( "view/fontSize", view.fontSize );
         QSettings().setValue( "view/toolTipVisible", scope.toolTipVisible );
     }
-    if ( scope.verboseLevel > 1 )
-        qDebug() << " DsoSettings::save()" << deviceName << deviceID;
+    if ( verboseLevel > 1 )
+        qDebug() << " DsoSettings::save()" << storeSettings->fileName();
     // now store individual device values
 
-    //  Device ID (helps to identify the connection of a "Save as" file with a specific device)
+    // Date and Time of last storage
+    storeSettings->beginGroup( "ConfigurationSaved" );
+    storeSettings->setValue( "Date", QDate::currentDate().toString( "yyyy-MM-dd" ) );
+    storeSettings->setValue( "Time", QTime::currentTime().toString( "HH:mm:ss" ) );
+    storeSettings->endGroup(); // ConfigurationSaved
+
+    // Device ID (helps to identify the connection of a "Save as" file with a specific device)
     storeSettings->beginGroup( "DeviceID" );
     storeSettings->setValue( "Model", deviceName );
     storeSettings->setValue( "SerialNumber", deviceID );

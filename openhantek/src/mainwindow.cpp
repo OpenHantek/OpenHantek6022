@@ -380,12 +380,13 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
     connect( this, &MainWindow::settingsLoaded, dsoWidget, &DsoWidget::updateSlidersSettings );
 
     connect( ui->actionOpen, &QAction::triggered, [ this, spec ]() {
-        QString fileName = QFileDialog::getOpenFileName( this, tr( "Open file" ), "", tr( "Settings (*.conf)" ), nullptr,
-                                                         QFileDialog::DontUseNativeDialog );
-        if ( !fileName.isEmpty() ) {
-            if ( dsoSettings->setFilename( fileName ) ) {
-                dsoSettings->load();
-            }
+        QString configFileName = QFileDialog::getOpenFileName( this, tr( "Open file" ), "", tr( "Settings (*.conf)" ), nullptr,
+                                                               QFileDialog::DontUseNativeDialog );
+        if ( !configFileName.isEmpty() ) {
+            dsoSettings->loadFromFile( configFileName );
+            restoreGeometry( dsoSettings->mainWindowGeometry );
+            restoreState( dsoSettings->mainWindowState );
+
             emit settingsLoaded( &dsoSettings->scope, spec );
 
             dsoWidget->updateTimebase( dsoSettings->scope.horizontal.timebase );
@@ -404,16 +405,15 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
     } );
 
     connect( ui->actionSave_as, &QAction::triggered, [ this ]() {
-        QString fileName = QFileDialog::getSaveFileName( this, tr( "Save settings" ), "", tr( "Settings (*.conf)" ), nullptr,
-                                                         QFileDialog::DontUseNativeDialog );
-        if ( fileName.isEmpty() )
+        QString configFileName = QFileDialog::getSaveFileName( this, tr( "Save settings" ), "", tr( "Settings (*.conf)" ), nullptr,
+                                                               QFileDialog::DontUseNativeDialog );
+        if ( configFileName.isEmpty() )
             return;
-        if ( !fileName.endsWith( ".conf" ) )
-            fileName.append( ".conf" );
+        if ( !configFileName.endsWith( ".conf" ) )
+            configFileName.append( ".conf" );
         dsoSettings->mainWindowGeometry = saveGeometry();
         dsoSettings->mainWindowState = saveState();
-        dsoSettings->setFilename( fileName );
-        dsoSettings->save();
+        dsoSettings->saveToFile( configFileName );
     } );
 
     connect( ui->actionExit, &QAction::triggered, this, &QWidget::close );

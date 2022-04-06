@@ -609,22 +609,22 @@
 <context>
     <name>DsoSettings</name>
     <message>
-        <location filename="../src/dsosettings.cpp" line="24"/>
+        <location filename="../src/dsosettings.cpp" line="28"/>
         <source>SP%1</source>
         <translation>SP%1</translation>
     </message>
     <message>
-        <location filename="../src/dsosettings.cpp" line="29"/>
+        <location filename="../src/dsosettings.cpp" line="33"/>
         <source>CH%1</source>
         <translation>CH%1</translation>
     </message>
     <message>
-        <location filename="../src/dsosettings.cpp" line="40"/>
+        <location filename="../src/dsosettings.cpp" line="44"/>
         <source>SPM</source>
         <translation>SPM</translation>
     </message>
     <message>
-        <location filename="../src/dsosettings.cpp" line="45"/>
+        <location filename="../src/dsosettings.cpp" line="49"/>
         <source>MATH</source>
         <translation>MATH</translation>
     </message>
@@ -1319,7 +1319,7 @@
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="383"/>
-        <location filename="../src/mainwindow.cpp" line="407"/>
+        <location filename="../src/mainwindow.cpp" line="408"/>
         <source>Settings (*.conf)</source>
         <translation>Einstellungen (*.conf)</translation>
     </message>
@@ -1417,7 +1417,7 @@
         <translation>Erzeuge eine Hardcopy und öffne den Druckdialog</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="407"/>
+        <location filename="../src/mainwindow.cpp" line="408"/>
         <source>Save settings</source>
         <translation>Einstellungen speichern</translation>
     </message>
@@ -2364,73 +2364,83 @@
 <context>
     <name>main</name>
     <message>
-        <location filename="../src/main.cpp" line="136"/>
-        <location filename="../src/main.cpp" line="171"/>
+        <location filename="../src/main.cpp" line="137"/>
+        <location filename="../src/main.cpp" line="175"/>
         <source>Show the international interface, do not translate</source>
         <translation>Internationale Version ohne Übersetzung</translation>
     </message>
     <message>
         <location filename="../src/main.cpp" line="161"/>
+        <source>Load config file</source>
+        <translation>Lade Konfigurationsdatei</translation>
+    </message>
+    <message>
+        <location filename="../src/main.cpp" line="162"/>
+        <source>File</source>
+        <translation>Datei</translation>
+    </message>
+    <message>
+        <location filename="../src/main.cpp" line="165"/>
         <source>Demo mode without scope HW</source>
         <translation>Demo-Modus ohne Hardware</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="164"/>
+        <location filename="../src/main.cpp" line="168"/>
         <source>Use OpenGL ES instead of OpenGL</source>
         <translation>Benutze OpenGL ES anstelle von OpenGL</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="166"/>
+        <location filename="../src/main.cpp" line="170"/>
         <source>Force OpenGL SL version 1.20</source>
         <translation>Erzwinge OpenGL SL Version 1.20</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="168"/>
+        <location filename="../src/main.cpp" line="172"/>
         <source>Force OpenGL SL version 1.50</source>
         <translation>Erzwinge OpenGL SL Version 1.50</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="173"/>
+        <location filename="../src/main.cpp" line="177"/>
         <source>Define the system font</source>
         <translation>Definiere die System-Schriftart</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="174"/>
+        <location filename="../src/main.cpp" line="178"/>
         <source>Font</source>
         <translation>Schriftart</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="178"/>
+        <location filename="../src/main.cpp" line="182"/>
         <source>Set the font size (default = %1, 0: automatic from dpi)</source>
         <translation>Wähle Schriftgröße (Standard = %1, 0: automatisch von Bildschirmauflösung)</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="180"/>
+        <location filename="../src/main.cpp" line="184"/>
         <source>Size</source>
         <translation>Größe</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="184"/>
+        <location filename="../src/main.cpp" line="187"/>
         <source>Set the font condensed value (default = %1)</source>
         <translation>Wähle schmalere Schrift (Standard : %1)</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="185"/>
+        <location filename="../src/main.cpp" line="188"/>
         <source>Condensed</source>
         <translation>Schmaler</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="188"/>
+        <location filename="../src/main.cpp" line="191"/>
         <source>Reset persistent settings, start with default</source>
         <translation>Zurücksetzen auf Standardwerte</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="191"/>
+        <location filename="../src/main.cpp" line="194"/>
         <source>Verbose tracing of program startup, ui and processing steps</source>
         <translation>Zeige Hinweise während des Programmstarts und der Verarbeitungsschritte</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="192"/>
+        <location filename="../src/main.cpp" line="195"/>
         <source>Level</source>
         <translation>Stufe</translation>
     </message>

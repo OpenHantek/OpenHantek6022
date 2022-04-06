@@ -113,6 +113,7 @@ int main( int argc, char *argv[] ) {
     int theme = 0;                    // set to "auto"
     int toolTipVisible = 1;           // start with tooltips
     bool styleFusion = false;         // use system style
+    QString configFileName = QString();
 
     { // do this early at program start ...
         // get font size and other global program settings:
@@ -157,6 +158,9 @@ int main( int argc, char *argv[] ) {
 
         p.addHelpOption();
         p.addVersionOption();
+        QCommandLineOption configFileOption( { "c", "config" }, QCoreApplication::translate( "main", "Load config file" ),
+                                             QCoreApplication::translate( "main", "File" ) );
+        p.addOption( configFileOption );
         QCommandLineOption demoModeOption( { "d", "demoMode" },
                                            QCoreApplication::translate( "main", "Demo mode without scope HW" ) );
         p.addOption( demoModeOption );
@@ -180,8 +184,7 @@ int main( int argc, char *argv[] ) {
             QCoreApplication::translate( "main", "Size" ) );
         p.addOption( sizeOption );
         QCommandLineOption condensedOption(
-            { "c", "condensed" },
-            QString( QCoreApplication::translate( "main", "Set the font condensed value (default = %1)" ) ).arg( condensed ),
+            "condensed", QCoreApplication::translate( "main", "Set the font condensed value (default = %1)" ).arg( condensed ),
             QCoreApplication::translate( "main", "Condensed" ) );
         p.addOption( condensedOption );
         QCommandLineOption resetSettingsOption(
@@ -192,6 +195,8 @@ int main( int argc, char *argv[] ) {
             QCoreApplication::translate( "main", "Level" ) );
         p.addOption( verboseOption );
         p.process( parserApp );
+        if ( p.isSet( configFileOption ) )
+            configFileName = p.value( "config" );
         demoMode = p.isSet( demoModeOption );
         if ( p.isSet( fontOption ) )
             font = p.value( "font" );
@@ -385,8 +390,10 @@ int main( int argc, char *argv[] ) {
     if ( verboseLevel )
         qDebug() << startupTime.elapsed() << "ms:"
                  << "create settings object";
-    DsoSettings settings( scopeDevice.get(), resetSettings );
-    settings.scope.verboseLevel = verboseLevel;
+    DsoSettings settings( scopeDevice.get(), verboseLevel, resetSettings );
+
+    if ( !configFileName.isEmpty() )
+        settings.loadFromFile( configFileName );
 
     //////// Create exporters ////////
     if ( verboseLevel )
