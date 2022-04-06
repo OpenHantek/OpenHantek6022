@@ -435,8 +435,8 @@ void SpectrumGenerator::process( PPresult *result ) {
 }
 
 
-QString SpectrumGenerator::calculateNote( double frequency ) {
-    QString note = "";
+const QString &SpectrumGenerator::calculateNote( double frequency ) {
+    note = "";
     if ( frequency > 10 && frequency < 24000 ) { // audio frequencies
         const std::vector< QString > notes = { "A", "A#", "B", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#" };
         double f = fmod( 12 * log2( frequency / 440.0 ) + 120, 12.0 );
@@ -444,9 +444,9 @@ QString SpectrumGenerator::calculateNote( double frequency ) {
         f -= double( n );
         if ( n == 12 )
             n = 0;
-        int ct = int( round( 100.0 * f ) ); // deviation from pure tone in cent
+        int ct = int( 100.0 * f ); // deviation from pure tone in cent
         if ( ct )
-            note = QString( "♪ %1%2%3" ).arg( notes[ size_t( n ) ] ).arg( f < 0 ? "" : "+" ).arg( ct );
+            note = QString( "♪ %1%2%3" ).arg( notes[ size_t( n ) ] ).arg( ct < 0 ? "" : "+" ).arg( ct );
         else
             note = QString( "♪ %1" ).arg( notes[ size_t( n ) ] ); // pure tone
     }

@@ -38,7 +38,7 @@ QString GlScope::getOpenGLversion() {
         context.create();
         context.makeCurrent( &surface );
         OpenGLversion = reinterpret_cast< const char * >( context.functions()->glGetString( GL_VERSION ) );
-        qDebug() << OpenGLversion;
+        // qDebug() << OpenGLversion;
         surface.destroy();
     }
     return OpenGLversion;

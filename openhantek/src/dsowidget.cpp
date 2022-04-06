@@ -1048,7 +1048,7 @@ void DsoWidget::showNew( std::shared_ptr< PPresult > analysedData ) {
 }
 
 
-void DsoWidget::showCursorMessage( QPoint globalPos, QString message ) {
+void DsoWidget::showCursorMessage( QPoint globalPos, const QString &message ) {
     if ( scope->verboseLevel > 3 )
         qDebug() << "   DsoWidget::showCursorMessage()" << globalPos << message;
     QToolTip::showText( globalPos, message );
