@@ -34,5 +34,5 @@ class SelectSupportedDevice : public QDialog {
     std::unique_ptr< Ui::SelectSupportedDevice > ui;
     UniqueUSBid selectedDevice = 0;
     bool demoModeClicked = false;
-    unsigned verboseLevel = 0;
+    int verboseLevel = 0;
 };

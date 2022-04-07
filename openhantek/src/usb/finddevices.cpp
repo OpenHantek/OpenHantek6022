@@ -19,7 +19,7 @@
 #include "modelregistry.h"
 
 
-FindDevices::FindDevices( libusb_context *context, unsigned verboseLevel ) : context( context ), verboseLevel( verboseLevel ) {
+FindDevices::FindDevices( libusb_context *context, int verboseLevel ) : context( context ), verboseLevel( verboseLevel ) {
     if ( verboseLevel > 1 )
         qDebug() << " FindDevices::FindDevices()";
 }

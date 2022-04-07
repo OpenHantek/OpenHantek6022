@@ -119,6 +119,9 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
     ui->actionUserManual->setToolTip( tr( "Read the fine manual" ) );
     ui->actionACmodification->setIcon( iconFont->icon( fa::filepdfo, colorMap ) );
     ui->actionACmodification->setToolTip( tr( "Documentation how to add HW for AC coupled inputs" ) );
+    ui->actionFrequencyGeneratorModification->setIcon( iconFont->icon( fa::filepdfo, colorMap ) );
+    ui->actionFrequencyGeneratorModification->setToolTip(
+        tr( "Documentation how to get jitter-free calibration frequency output" ) );
     ui->actionAbout->setIcon( iconFont->icon( fa::questioncircle, colorMap ) );
     ui->actionAbout->setToolTip( tr( "Show info about the scope's HW and SW" ) );
 
@@ -473,23 +476,24 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
     ui->actionMeasure->setChecked( dsoSettings->view.cursorsVisible );
 
     connect( ui->actionUserManual, &QAction::triggered, []() {
-        QString usrManualPath( USR_MANUAL_PATH );
-        QFile userManual( usrManualPath );
-        if ( userManual.exists() )
-            QDesktopServices::openUrl( QUrl( "file://" + usrManualPath ) );
+        if ( QFile( DOC_PATH USER_MANUAL_NAME ).exists() )
+            QDesktopServices::openUrl( QUrl( "file://" DOC_PATH USER_MANUAL_NAME ) );
         else
-            QDesktopServices::openUrl(
-                QUrl( "https://github.com/OpenHantek/OpenHantek6022/blob/main/docs/OpenHantek6022_User_Manual.pdf" ) );
+            QDesktopServices::openUrl( QUrl( DOC_URL USER_MANUAL_NAME ) );
     } );
 
     connect( ui->actionACmodification, &QAction::triggered, []() {
-        QString ACmodPath( AC_MODIFICATION_PATH );
-        QFile ACmod( ACmodPath );
-        if ( ACmod.exists() )
-            QDesktopServices::openUrl( QUrl( "file://" + ACmodPath ) );
+        if ( QFile( DOC_PATH AC_MODIFICATION_NAME ).exists() )
+            QDesktopServices::openUrl( QUrl( "file://" DOC_PATH AC_MODIFICATION_NAME ) );
         else
-            QDesktopServices::openUrl(
-                QUrl( "https://github.com/OpenHantek/OpenHantek6022/blob/main/docs/HANTEK6022_AC_Modification.pdf" ) );
+            QDesktopServices::openUrl( QUrl( DOC_URL AC_MODIFICATION_NAME ) );
+    } );
+
+    connect( ui->actionFrequencyGeneratorModification, &QAction::triggered, []() {
+        if ( QFile( DOC_PATH FREQUENCY_GENERATOR_MODIFICATION_NAME ).exists() )
+            QDesktopServices::openUrl( QUrl( "file://" DOC_PATH FREQUENCY_GENERATOR_MODIFICATION_NAME ) );
+        else
+            QDesktopServices::openUrl( QUrl( DOC_URL FREQUENCY_GENERATOR_MODIFICATION_NAME ) );
     } );
 
     connect( ui->actionAbout, &QAction::triggered, [ this ]() {

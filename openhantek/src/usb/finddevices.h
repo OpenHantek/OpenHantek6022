@@ -23,7 +23,7 @@ struct libusb_context;
 class FindDevices {
   public:
     typedef std::map< UniqueUSBid, std::unique_ptr< ScopeDevice > > DeviceList;
-    explicit FindDevices( libusb_context *context, unsigned verboseLevel = 0 );
+    explicit FindDevices( libusb_context *context, int verboseLevel = 0 );
     /// Updates the device list. To clear the list, just dispose this object
     /// \return If negative it represents a libusb error code otherwise the amount of updates
     int updateDeviceList();
@@ -39,5 +39,5 @@ class FindDevices {
     libusb_context *context; ///< The usb context used for this device
     DeviceList devices;
     unsigned findIteration = 0;
-    unsigned verboseLevel = 0;
+    int verboseLevel = 0;
 };

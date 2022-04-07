@@ -13,11 +13,15 @@
 
 #define MARKER_STEP ( DIVS_TIME / 100.0 )
 
+// manual and modification docs
+#define USER_MANUAL_NAME "OpenHantek6022_User_Manual.pdf"
+#define AC_MODIFICATION_NAME "HANTEK6022_AC_Modification.pdf"
+#define FREQUENCY_GENERATOR_MODIFICATION_NAME "HANTEK6022_Frequency_Generator_Modification.pdf"
 // where are the (local) documents?
 #ifdef __FreeBSD__
-#define USR_MANUAL_PATH "/usr/local/share/doc/openhantek/OpenHantek6022_User_Manual.pdf"
-#define AC_MODIFICATION_PATH "/usr/local/share/doc/openhantek/HANTEK6022_AC_Modification.pdf"
+#define DOC_PATH "/usr/local/share/doc/openhantek/"
 #else
-#define USR_MANUAL_PATH "/usr/share/doc/openhantek/OpenHantek6022_User_Manual.pdf"
-#define AC_MODIFICATION_PATH "/usr/share/doc/openhantek/HANTEK6022_AC_Modification.pdf"
+#define DOC_PATH "/usr/share/doc/openhantek/"
 #endif
+// GitHub doc location
+#define DOC_URL "https://github.com/OpenHantek/OpenHantek6022/blob/main/docs/"

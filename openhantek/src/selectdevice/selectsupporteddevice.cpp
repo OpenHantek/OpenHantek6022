@@ -27,13 +27,12 @@ SelectSupportedDevice::SelectSupportedDevice( QWidget *parent ) : QDialog( paren
         QCoreApplication::instance()->quit();
     } );
     connect( ui->buttonBox, &QDialogButtonBox::helpRequested, []() {
-        QString usrManualPath( USR_MANUAL_PATH );
-        QFile userManual( usrManualPath );
-        if ( userManual.exists() )
-            QDesktopServices::openUrl( QUrl( "file://" + usrManualPath ) );
+        QString userManualPath;
+        if ( QFile( DOC_PATH USER_MANUAL_NAME ).exists() )
+            userManualPath = QString( "file://" DOC_PATH USER_MANUAL_NAME );
         else
-            QDesktopServices::openUrl(
-                QUrl( "https://github.com/OpenHantek/OpenHantek6022/blob/main/docs/OpenHantek6022_User_Manual.pdf" ) );
+            userManualPath = QString( DOC_URL USER_MANUAL_NAME );
+        QDesktopServices::openUrl( QUrl( userManualPath ) );
     } );
     connect( ui->btnDemoMode, &QPushButton::clicked, [ this ]() { demoModeClicked = true; } );
 }
@@ -44,10 +43,16 @@ std::unique_ptr< ScopeDevice > SelectSupportedDevice::showSelectDeviceModal( lib
         std::unique_ptr< DevicesListModel >( new DevicesListModel( findDevices.get(), verboseLevel ) );
     ui->cmbDevices->setModel( model.get() );
 
-    QString messageDeviceReady =
-        tr( "<p><br/><b>The device is ready for use.</b></p><p>Please observe the "
-            "<a href='https://github.com/OpenHantek/OpenHantek6022/blob/main/docs/OpenHantek6022_User_Manual.pdf'>"
-            "user manual</a> for safe operation.</p>" );
+    QString userManualPath;
+    if ( QFile( DOC_PATH USER_MANUAL_NAME ).exists() )
+        userManualPath = QString( "file://" DOC_PATH USER_MANUAL_NAME );
+    else
+        userManualPath = QString( DOC_URL USER_MANUAL_NAME );
+
+    QString messageDeviceReady = tr( "<p><br/><b>The device is ready for use.</b></p><p>Please observe the "
+                                     "<a href='%1'>"
+                                     "user manual</a> for safe operation.</p>" )
+                                     .arg( userManualPath );
 
     QString messageNoDevices = tr( "<p>OpenHantek6022 is searching for compatible devices ...</p>"
                                    "<p><img align='right' height='200' src='qrc:///switch_6022BL.png'>"
