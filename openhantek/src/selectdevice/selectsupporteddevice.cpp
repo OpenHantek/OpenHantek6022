@@ -53,6 +53,9 @@ std::unique_ptr< ScopeDevice > SelectSupportedDevice::showSelectDeviceModal( lib
         std::unique_ptr< DevicesListModel >( new DevicesListModel( findDevices.get(), verboseLevel ) );
     ui->cmbDevices->setModel( model.get() );
 
+#ifdef Q_OS_WIN
+    const QString DocPath = QCoreApplication::applicationDirPath().append( "/documents/" );
+#endif
     QString userManualPath;
     if ( QFile( DocPath + UserManualName ).exists() )
         userManualPath = QString( "file://" ) + DocPath + UserManualName;

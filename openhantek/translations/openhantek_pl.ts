@@ -2136,17 +2136,17 @@
         <translation type="vanished">&lt;p&gt;&lt;br/&gt;&lt;b&gt;Urządzenie jest gotowe do użycia.&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Sprawdź proszę &lt;a href=&apos;https://github.com/OpenHantek/OpenHantek6022/blob/master/docs/OpenHantek6022_User_Manual.pdf&apos;&gt;Benutzerhandbuch&lt;/a&gt; dla bezpiecznego użycia.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="100"/>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="103"/>
         <source>&lt;p&gt;Upload in progress ...&lt;/p&gt;&lt;p&gt;&lt;b&gt;If the upload takes more than 30 s, please close this window &lt;br/&gt;and restart the program!&lt;/b&gt;&lt;/p&gt;</source>
         <translation>&lt;p&gt;Aktualizacja w toku...&lt;/p&gt;&lt;p&gt;&lt;b&gt;Jeśli przesyłanie trwa dłużej niż 30 sekund, zamknij to okno &lt;br/&gt;i zrestartuj program!&lt;/b&gt;&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="104"/>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="107"/>
         <source>&lt;p&gt;&lt;br/&gt;&lt;b&gt;Connection failed!&lt;/b&gt;&lt;/p&gt;</source>
         <translation>&lt;p&gt;&lt;br/&gt;&lt;b&gt;Połączenie nieudane!&lt;/b&gt;&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="67"/>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="70"/>
         <source>&lt;p&gt;OpenHantek6022 is searching for compatible devices ...&lt;/p&gt;&lt;p&gt;&lt;img align=&apos;right&apos; height=&apos;200&apos; src=&apos;qrc:///switch_6022BL.png&apos;&gt;Don&apos;t forget to switch your device into oscilloscope mode if it has multiple modes.&lt;/p&gt;</source>
         <translation>&lt;p&gt;OpenHantek6022 szuka kompatybilnych urządzeń ...&lt;/p&gt;&lt;p&gt;&lt;img align=&apos;right&apos; height=&apos;150&apos; src=&apos;qrc:///switch_6022BL.png&apos;&gt;Nie zapomnij przełączyć urządzenia w tryb oscyloskopu, jeśli ma wiele trybów.&lt;/p&gt;</translation>
     </message>
@@ -2155,22 +2155,22 @@
         <translation type="vanished">&lt;p&gt;&lt;br/&gt;&lt;b&gt;Urządzenie jest gotowe do użycia.&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Sprawdź proszę &lt;a href=&apos;https://github.com/OpenHantek/OpenHantek6022/blob/main/docs/OpenHantek6022_User_Manual.pdf&apos;&gt;Benutzerhandbuch&lt;/a&gt; dla bezpiecznego użycia.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="62"/>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="65"/>
         <source>&lt;p&gt;&lt;br/&gt;&lt;b&gt;The device is ready for use.&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Please observe the &lt;a href=&apos;%1&apos;&gt;user manual&lt;/a&gt; for safe operation.&lt;/p&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="71"/>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="74"/>
         <source>&lt;p&gt;Please make sure you have installed the windows usb driver correctly&lt;/p&gt;</source>
         <translation>&lt;p&gt;Upewnij się, że poprawnie zainstalowałeś sterownik USB dla systemu Windows.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="76"/>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="79"/>
         <source>&lt;p&gt;Please make sure you have copied the udev rules file to&lt;br/&gt;&lt;b&gt;%1&lt;/b&gt; or&lt;br/&gt;&lt;b&gt;%2&lt;/b&gt;&lt;br/&gt;for correct USB access permissions.&lt;/p&gt;</source>
         <translation>&lt;p&gt;Upewnij się, że skopiowałeś plik reguł udev do&lt;br/&gt;&lt;b&gt;%1&lt;/b&gt; lub&lt;br/&gt;&lt;b&gt;%2&lt;/b&gt;&lt;br/&gt;dla uzyskania prawidłowych uprawnień dostępu do USB.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="83"/>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="86"/>
         <source>&lt;p&gt;Visit the build and run instruction &lt;a href=&apos;https://github.com/OpenHantek/OpenHantek6022/blob/main/docs/build.md&apos;&gt;website&lt;/a&gt; for help.&lt;/p&gt;</source>
         <translation>&lt;p&gt;Odwiedź instrukcję kompilacji i uruchomienia &lt;a href=&apos;https://github.com/OpenHantek/OpenHantek6022/blob/main/docs/build.md&apos;&gt;&lt;/a&gt; dla uzyskania pomocy.&lt;/p&gt;</translation>
     </message>
@@ -2187,12 +2187,12 @@
         <translation type="vanished">&lt;p&gt;Odwiedź instrukcję kompilacji i uruchomienia &lt;a href=&apos;https://github.com/OpenHantek/OpenHantek6022/blob/master/docs/build.md&apos;&gt;&lt;/a&gt; dla uzyskania pomocy.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="85"/>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="88"/>
         <source>&lt;hr/&gt;&lt;p&gt;Even without a device you can explore the program&apos;s function. Just press the &lt;b&gt;Demo Mode&lt;/b&gt; button below.&lt;/p&gt;</source>
         <translation>&lt;hr/&gt;&lt;p&gt;Możesz eksplorować program nawet bez dostępu do urządzenia. Po prostu kliknij na &lt;b&gt;Tryb demo&lt;/b&gt; poniżej.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="169"/>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="172"/>
         <source>Can&apos;t initalize USB: %1</source>
         <translation>Nie można zainicjalizować USB: %1</translation>
     </message>
