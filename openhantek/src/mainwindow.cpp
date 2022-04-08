@@ -657,7 +657,8 @@ void MainWindow::screenShot( screenshotType_t screenshotType, bool autoSafe ) {
 bool MainWindow::openDocument( QString docName ) {
     QUrl url;
     if ( QFile( DocPath + docName ).exists() )
-        url = QUrl( DocPath + docName );
+        url = QUrl::fromLocalFile( QFileInfo( DocPath + docName ).absoluteFilePath() );
+    // url = QUrl::fromLocalFile( DocPath + docName );
     else
         url = QUrl( DocUrl + docName );
     if ( verboseLevel > 2 )
