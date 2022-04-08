@@ -10,32 +10,35 @@
 
 #include "devicelistentry.h"
 #include "deviceslistmodel.h"
+#include "documents.h"
 #include "dsomodel.h"
 #include "modelregistry.h"
 #include "usb/finddevices.h"
 #include "usb/uploadFirmware.h"
-#include "viewconstants.h"
+
 
 SelectSupportedDevice::SelectSupportedDevice( QWidget *parent ) : QDialog( parent ), ui( new Ui::SelectSupportedDevice ) {
     ui->setupUi( this );
     ui->buttonBox->button( QDialogButtonBox::Ok )->setEnabled( false );
     qRegisterMetaType< UniqueUSBid >( "UniqueUSBid" );
+
     connect( ui->buttonBox, &QDialogButtonBox::accepted, [ this ]() {
         if ( ui->cmbDevices->currentIndex() != -1 ) {
             selectedDevice = ui->cmbDevices->currentData( Qt::UserRole ).value< UniqueUSBid >();
         }
         QCoreApplication::instance()->quit();
     } );
+
     connect( ui->buttonBox, &QDialogButtonBox::helpRequested, []() {
-        QString userManualPath;
-        if ( QFile( DOC_PATH USER_MANUAL_NAME ).exists() )
-            userManualPath = QString( "file://" DOC_PATH USER_MANUAL_NAME );
+        if ( QFile( DocPath + UserManualName ).exists() )
+            QDesktopServices::openUrl( QUrl( QString( "file://" ) + DocPath + UserManualName ) );
         else
-            userManualPath = QString( DOC_URL USER_MANUAL_NAME );
-        QDesktopServices::openUrl( QUrl( userManualPath ) );
+            QDesktopServices::openUrl( QUrl( DocUrl + UserManualName ) );
     } );
+
     connect( ui->btnDemoMode, &QPushButton::clicked, [ this ]() { demoModeClicked = true; } );
 }
+
 
 std::unique_ptr< ScopeDevice > SelectSupportedDevice::showSelectDeviceModal( libusb_context *context, int verboseLevel ) {
     std::unique_ptr< FindDevices > findDevices = std::unique_ptr< FindDevices >( new FindDevices( context, verboseLevel ) );
@@ -44,10 +47,10 @@ std::unique_ptr< ScopeDevice > SelectSupportedDevice::showSelectDeviceModal( lib
     ui->cmbDevices->setModel( model.get() );
 
     QString userManualPath;
-    if ( QFile( DOC_PATH USER_MANUAL_NAME ).exists() )
-        userManualPath = QString( "file://" DOC_PATH USER_MANUAL_NAME );
+    if ( QFile( DocPath + UserManualName ).exists() )
+        userManualPath = QString( "file://" ) + DocPath + UserManualName;
     else
-        userManualPath = QString( DOC_URL USER_MANUAL_NAME );
+        userManualPath = DocUrl + UserManualName;
 
     QString messageDeviceReady = tr( "<p><br/><b>The device is ready for use.</b></p><p>Please observe the "
                                      "<a href='%1'>"

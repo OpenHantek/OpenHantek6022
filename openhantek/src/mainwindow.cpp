@@ -12,6 +12,7 @@
 
 #include "configdialog.h"
 #include "dockwindows.h"
+#include "documents.h"
 #include "dsomodel.h"
 #include "dsowidget.h"
 #include "exporting/exporterinterface.h"
@@ -110,16 +111,17 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
     ui->actionSave_as->setIcon( iconFont->icon( fa::save, colorMap ) );
     ui->actionSave_as->setToolTip( tr( "Save the scope settings to a user defined file" ) );
     ui->actionSettings->setIcon( iconFont->icon( fa::sliders, colorMap ) );
-    ui->actionSettings->setToolTip( tr( "Define scope settings, analysis parameters and colors" ) );
+    if ( dsoSettings->scope.toolTipVisible )
+        ui->actionSettings->setToolTip( tr( "Define scope settings, analysis parameters and colors" ) );
     ui->actionCalibrateOffset->setIcon( iconFont->icon( fa::wrench, colorMap ) );
     ui->actionCalibrateOffset->setToolTip( tr( "Short-circuit both inputs and slowly select all voltage gain settings" ) );
     ui->actionManualCommand->setIcon( iconFont->icon( fa::terminal, colorMap ) );
     ui->actionManualCommand->setToolTip( tr( "Send low level commands directly to the scope: 'CC XX XX'" ) );
-    ui->actionUserManual->setIcon( iconFont->icon( fa::filepdfo, colorMap ) );
+    ui->actionUserManual->setIcon( iconFont->icon( fa::book, colorMap ) );
     ui->actionUserManual->setToolTip( tr( "Read the fine manual" ) );
-    ui->actionACmodification->setIcon( iconFont->icon( fa::filepdfo, colorMap ) );
+    ui->actionACmodification->setIcon( iconFont->icon( fa::book, colorMap ) );
     ui->actionACmodification->setToolTip( tr( "Documentation how to add HW for AC coupled inputs" ) );
-    ui->actionFrequencyGeneratorModification->setIcon( iconFont->icon( fa::filepdfo, colorMap ) );
+    ui->actionFrequencyGeneratorModification->setIcon( iconFont->icon( fa::book, colorMap ) );
     ui->actionFrequencyGeneratorModification->setToolTip(
         tr( "Documentation how to get jitter-free calibration frequency output" ) );
     ui->actionAbout->setIcon( iconFont->icon( fa::questioncircle, colorMap ) );
@@ -190,9 +192,9 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
         ui->menuFile->setToolTipsVisible( true );
         ui->menuExport->setToolTipsVisible( true );
         ui->menuView->setToolTipsVisible( true );
-        ui->menuOscilloscope->setToolTipsVisible( true );
         ui->menuHelp->setToolTipsVisible( true );
     }
+    ui->menuOscilloscope->setToolTipsVisible( true );
 
     DsoSettingsScope *scope = &( dsoSettings->scope );
     const Dso::ControlSpecification *spec = dsoControl->getModel()->spec();
@@ -476,24 +478,24 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
     ui->actionMeasure->setChecked( dsoSettings->view.cursorsVisible );
 
     connect( ui->actionUserManual, &QAction::triggered, []() {
-        if ( QFile( DOC_PATH USER_MANUAL_NAME ).exists() )
-            QDesktopServices::openUrl( QUrl( "file://" DOC_PATH USER_MANUAL_NAME ) );
+        if ( QFile( DocPath + UserManualName ).exists() )
+            QDesktopServices::openUrl( QUrl( QString( "file://" ) + DocPath + UserManualName ) );
         else
-            QDesktopServices::openUrl( QUrl( DOC_URL USER_MANUAL_NAME ) );
+            QDesktopServices::openUrl( QUrl( DocUrl + UserManualName ) );
     } );
 
     connect( ui->actionACmodification, &QAction::triggered, []() {
-        if ( QFile( DOC_PATH AC_MODIFICATION_NAME ).exists() )
-            QDesktopServices::openUrl( QUrl( "file://" DOC_PATH AC_MODIFICATION_NAME ) );
+        if ( QFile( DocPath + ACModificationName ).exists() )
+            QDesktopServices::openUrl( QUrl( QString( "file://" ) + DocPath + ACModificationName ) );
         else
-            QDesktopServices::openUrl( QUrl( DOC_URL AC_MODIFICATION_NAME ) );
+            QDesktopServices::openUrl( QUrl( DocUrl + ACModificationName ) );
     } );
 
     connect( ui->actionFrequencyGeneratorModification, &QAction::triggered, []() {
-        if ( QFile( DOC_PATH FREQUENCY_GENERATOR_MODIFICATION_NAME ).exists() )
-            QDesktopServices::openUrl( QUrl( "file://" DOC_PATH FREQUENCY_GENERATOR_MODIFICATION_NAME ) );
+        if ( QFile( DocPath + FrequencyGeneratorModificationName ).exists() )
+            QDesktopServices::openUrl( QUrl( "file://" + DocPath + FrequencyGeneratorModificationName ) );
         else
-            QDesktopServices::openUrl( QUrl( DOC_URL FREQUENCY_GENERATOR_MODIFICATION_NAME ) );
+            QDesktopServices::openUrl( QUrl( DocUrl + FrequencyGeneratorModificationName ) );
     } );
 
     connect( ui->actionAbout, &QAction::triggered, [ this ]() {

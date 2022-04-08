@@ -1209,7 +1209,7 @@
         <translation type="vanished">Manuelles Kommando</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="131"/>
+        <location filename="../src/mainwindow.cpp" line="133"/>
         <source>OpenHantek6022 (%1) - Device %2 (FW%3)</source>
         <translation>OpenHantek6022 (%1) - Device %2 (FW%3)</translation>
     </message>
@@ -1218,17 +1218,17 @@
         <translation type="vanished">Screenshot ..</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="252"/>
+        <location filename="../src/mainwindow.cpp" line="254"/>
         <source>Invalid command</source>
         <translation>Ungültiger Befehl</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="361"/>
+        <location filename="../src/mainwindow.cpp" line="363"/>
         <source>Stop the oscilloscope</source>
         <translation>Das Oszilloskop anhalten</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="360"/>
+        <location filename="../src/mainwindow.cpp" line="362"/>
         <source>Stop</source>
         <translation>Stop</translation>
     </message>
@@ -1237,12 +1237,12 @@
         <translation type="vanished">OpenHantek6022 (%1) - Device %2</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="134"/>
+        <location filename="../src/mainwindow.cpp" line="136"/>
         <source>Demo Mode</source>
         <translation>Demo-Modus</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="134"/>
+        <location filename="../src/mainwindow.cpp" line="136"/>
         <source>OpenHantek6022 (%1) - </source>
         <translation></translation>
     </message>
@@ -1259,42 +1259,42 @@
         <translation type="vanished">Hardcopy</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="73"/>
+        <location filename="../src/mainwindow.cpp" line="74"/>
         <source>Start and stop the sampling</source>
         <translation>Start und Stop der Anzeige</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="79"/>
+        <location filename="../src/mainwindow.cpp" line="80"/>
         <source>Refresh the screen trace for slow &apos;Roll&apos; mode</source>
         <translation>Bildschirm im langsamen &apos;Roll&apos;-Modus neu aufbauen</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="85"/>
+        <location filename="../src/mainwindow.cpp" line="86"/>
         <source>Let the traces fade out slowly</source>
         <translation>Blendet die Kurven langsam aus</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="91"/>
+        <location filename="../src/mainwindow.cpp" line="92"/>
         <source>Show a histogram of the voltage levels on the right side of the trace</source>
         <translation>Zeigt ein Histogramm des Spannungsverlaufs an der rechten Seite</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="103"/>
+        <location filename="../src/mainwindow.cpp" line="104"/>
         <source>Enable cursor measurements</source>
         <translation>Wähle Cursor-Messungen</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="109"/>
+        <location filename="../src/mainwindow.cpp" line="110"/>
         <source>Save the scope settings to the default location</source>
         <translation>Speichern der Einstellungen am Standard-Ort</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="111"/>
+        <location filename="../src/mainwindow.cpp" line="112"/>
         <source>Save the scope settings to a user defined file</source>
         <translation>Speichern der Einstellungen in einer gewählten Datei</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="113"/>
+        <location filename="../src/mainwindow.cpp" line="115"/>
         <source>Define scope settings, analysis parameters and colors</source>
         <translation>Einstellungem, Analyse-Parameter und Farben</translation>
     </message>
@@ -1307,28 +1307,28 @@
         <translation type="vanished">Drucken ..</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="180"/>
+        <location filename="../src/mainwindow.cpp" line="182"/>
         <source>Export captured data in %1 format for further processing</source>
         <translation>Export der aufgenommenen Daten im %1-Format zur weiteren Verarbeitung</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="364"/>
+        <location filename="../src/mainwindow.cpp" line="366"/>
         <source>Start</source>
         <translation>Start</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="365"/>
+        <location filename="../src/mainwindow.cpp" line="367"/>
         <source>Start the oscilloscope</source>
         <translation>Startet das Oszilloskop</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="386"/>
+        <location filename="../src/mainwindow.cpp" line="388"/>
         <source>Open file</source>
         <translation>Datei öffnen</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="386"/>
-        <location filename="../src/mainwindow.cpp" line="411"/>
+        <location filename="../src/mainwindow.cpp" line="388"/>
+        <location filename="../src/mainwindow.cpp" line="413"/>
         <source>Settings (*.conf)</source>
         <translation>Einstellungen (*.conf)</translation>
     </message>
@@ -1337,27 +1337,27 @@
         <translation type="vanished">Einstellungen (*.ini)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="107"/>
+        <location filename="../src/mainwindow.cpp" line="108"/>
         <source>Load scope settings from a config file</source>
         <translation>Lade die Konfiguration aus einer Konfigurationsdatei</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="115"/>
+        <location filename="../src/mainwindow.cpp" line="117"/>
         <source>Short-circuit both inputs and slowly select all voltage gain settings</source>
         <translation>Beide Eingänge kurzschließen und langsam alle Spannungsverstärkungseinstellungen auswählen</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="117"/>
+        <location filename="../src/mainwindow.cpp" line="119"/>
         <source>Send low level commands directly to the scope: &apos;CC XX XX&apos;</source>
         <translation>Low-Level-Befehle direkt an das Oszilloskop senden: &apos;CC XX XX&apos;</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="119"/>
+        <location filename="../src/mainwindow.cpp" line="121"/>
         <source>Read the fine manual</source>
         <translation>Hier ist das schöne Handbuch</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="97"/>
+        <location filename="../src/mainwindow.cpp" line="98"/>
         <source>Zoom the range between the markers &apos;1&apos; and &apos;2&apos;</source>
         <translation>Bereich zwischen den Markern &apos;1&apos; und &apos;2&apos; zoomen</translation>
     </message>
@@ -1366,112 +1366,112 @@
         <translation type="vanished">Bildschirm neu aufbauen, sinnvoll im langsamen &apos;Roll&apos;-Modus</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="121"/>
+        <location filename="../src/mainwindow.cpp" line="123"/>
         <source>Documentation how to add HW for AC coupled inputs</source>
         <translation>Dokumentation über Umbau zur AC-Kopplung der Eingänge</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="124"/>
+        <location filename="../src/mainwindow.cpp" line="126"/>
         <source>Documentation how to get jitter-free calibration frequency output</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="126"/>
+        <location filename="../src/mainwindow.cpp" line="128"/>
         <source>Show info about the scope&apos;s HW and SW</source>
         <translation>Zeige Info über Hard- und Software</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="140"/>
+        <location filename="../src/mainwindow.cpp" line="142"/>
         <source>&amp;Screenshot</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="141"/>
+        <location filename="../src/mainwindow.cpp" line="143"/>
         <source>Make an immediate screenshot of the program window and save it into the current directory</source>
         <translation>Speichere einen Screenshot des Programmfensters im aktuellen Verzeichnis</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="145"/>
+        <location filename="../src/mainwindow.cpp" line="147"/>
         <source>&amp;Hardcopy</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="146"/>
+        <location filename="../src/mainwindow.cpp" line="148"/>
         <source>Make an immediate (printable) hardcopy of the display and save it into the current directory</source>
         <translation>Speichere eine (druckbare) Hardcopy des Programmfensters im aktuellen Verzeichnis</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="155"/>
+        <location filename="../src/mainwindow.cpp" line="157"/>
         <source>Save screenshot as ..</source>
         <translation>Screenshot speichen unter ..</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="156"/>
+        <location filename="../src/mainwindow.cpp" line="158"/>
         <source>Make a screenshot of the program window and define the storage location</source>
         <translation>Erzeuge einen Screenshot des Programmfensters und wähle den Speicherort</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="160"/>
+        <location filename="../src/mainwindow.cpp" line="162"/>
         <source>Save Hardcopy as ..</source>
         <translation>Hardcopy speichern unter ..</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="161"/>
+        <location filename="../src/mainwindow.cpp" line="163"/>
         <source>Make a (printable) hardcopy of the display and define the storage location</source>
         <translation>Erzeuge eine (druckbare) Hardcopy des Programmfensters und wähle den Speicherort</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="168"/>
+        <location filename="../src/mainwindow.cpp" line="170"/>
         <source>&amp;Print screen ..</source>
         <translation>Drucken ..</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="169"/>
+        <location filename="../src/mainwindow.cpp" line="171"/>
         <source>Send the hardcopy to a printer</source>
         <translation>Erzeuge eine Hardcopy und öffne den Druckdialog</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="411"/>
+        <location filename="../src/mainwindow.cpp" line="413"/>
         <source>Save settings</source>
         <translation>Einstellungen speichern</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="437"/>
+        <location filename="../src/mainwindow.cpp" line="439"/>
         <source>Disable fading of previous graphs</source>
         <translation>Nachleuchten von vorigen Graphen deaktivieren</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="439"/>
+        <location filename="../src/mainwindow.cpp" line="441"/>
         <source>Enable fading of previous graphs</source>
         <translation>Nachleuchten von vorigen Graphen aktivieren</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="447"/>
+        <location filename="../src/mainwindow.cpp" line="449"/>
         <source>Hide histogram</source>
         <translation>Histogramm ausblenden</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="449"/>
+        <location filename="../src/mainwindow.cpp" line="451"/>
         <source>Show histogram</source>
         <translation>Histogramm einblenden</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="458"/>
+        <location filename="../src/mainwindow.cpp" line="460"/>
         <source>Hide magnified scope</source>
         <translation>Vergrößerte Anzeige ausblenden</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="460"/>
+        <location filename="../src/mainwindow.cpp" line="462"/>
         <source>Show magnified scope</source>
         <translation>Vergrößerte Anzeige anzeigen</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="470"/>
+        <location filename="../src/mainwindow.cpp" line="472"/>
         <source>Hide measurements</source>
         <translation>Messwerte ausblenden</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="472"/>
+        <location filename="../src/mainwindow.cpp" line="474"/>
         <source>Show measurements</source>
         <translation>Messwerte anzeigen</translation>
     </message>
@@ -1480,7 +1480,7 @@
         <translation type="vanished">&lt;p&gt;Open-Source-Software für Hantek6022 USB-Oscilloskope&lt;/p&gt;&lt;p&gt;Betreuer: Martin Homuth-Rosemann&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2010, 2011 Oliver Haag&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2012-2022 OpenHantek community&lt;br/&gt;&lt;a href=&apos;https://github.com/OpenHantek&apos;&gt;https://github.com/OpenHantek&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Open-Source-Firmware Copyright &amp;copy; 2019-2022 Ho-Ro&lt;br/&gt;&lt;a href=&apos;https://github.com/Ho-Ro/Hantek6022API&apos;&gt;https://github.com/Ho-Ro/Hantek6022API&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Gerät: %1 (%2), FW%3&lt;/p&gt;&lt;p&gt;Graphik: %4 - GLSL-Version %5&lt;/p&gt;&lt;p&gt;Qt-Version: %6&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="502"/>
+        <location filename="../src/mainwindow.cpp" line="504"/>
         <source>&lt;p&gt;Open source software for Hantek6022 USB oscilloscopes&lt;/p&gt;&lt;p&gt;Maintainer: Martin Homuth-Rosemann&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2010, 2011 Oliver Haag&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2012-%7 OpenHantek community&lt;br/&gt;&lt;a href=&apos;https://github.com/OpenHantek&apos;&gt;https://github.com/OpenHantek&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Open source firmware copyright &amp;copy; 2019-%7 Ho-Ro&lt;br/&gt;&lt;a href=&apos;https://github.com/Ho-Ro/Hantek6022API&apos;&gt;https://github.com/Ho-Ro/Hantek6022API&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Device: %1 (%2), FW%3&lt;/p&gt;&lt;p&gt;Graphic: %4 - GLSL version %5&lt;/p&gt;&lt;p&gt;Qt version: %6&lt;/p&gt;</source>
         <translation>&lt;p&gt;Open-Source-Software für Hantek6022 USB-Oscilloskope&lt;/p&gt;&lt;p&gt;Betreuer: Martin Homuth-Rosemann&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2010, 2011 Oliver Haag&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2012-%7 OpenHantek community&lt;br/&gt;&lt;a href=&apos;https://github.com/OpenHantek&apos;&gt;https://github.com/OpenHantek&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Open-Source-Firmware Copyright &amp;copy; 2019-%7 Ho-Ro&lt;br/&gt;&lt;a href=&apos;https://github.com/Ho-Ro/Hantek6022API&apos;&gt;https://github.com/Ho-Ro/Hantek6022API&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Gerät: %1 (%2), FW%3&lt;/p&gt;&lt;p&gt;Graphik: %4 - GLSL-Version %5&lt;/p&gt;&lt;p&gt;Qt-Version: %6&lt;/p&gt;</translation>
     </message>
@@ -1493,42 +1493,42 @@
         <translation type="vanished">&lt;p&gt;Open-Source-Software für Hantek6022 USB Oszilloskope&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2010, 2011 Oliver Haag&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2012-2020 OpenHantek community&lt;br/&gt;&lt;a href=&apos;https://github.com/OpenHantek&apos;&gt;https://github.com/OpenHantek&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Open-Source-Firmware - Copyright &amp;copy; 2019-2020 Ho-Ro&lt;br/&gt;&lt;a href=&apos;https://github.com/Ho-Ro/Hantek6022API&apos;&gt;https://github.com/Ho-Ro/Hantek6022API&lt;/a&gt;&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="516"/>
+        <location filename="../src/mainwindow.cpp" line="518"/>
         <source>&lt;p&gt;Running since %1 seconds.&lt;/p&gt;</source>
         <translation>&lt;p&gt;Laufzeit %1 Sekunden.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="547"/>
+        <location filename="../src/mainwindow.cpp" line="549"/>
         <source>%1: %2</source>
         <translation>%1: %2</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="569"/>
+        <location filename="../src/mainwindow.cpp" line="571"/>
         <source>yyyy-MM-dd hh:mm:ss</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="570"/>
+        <location filename="../src/mainwindow.cpp" line="572"/>
         <source>yyyyMMdd_hhmmss</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="604"/>
+        <location filename="../src/mainwindow.cpp" line="606"/>
         <source>Image (*.png *.jpg)</source>
         <translation>Bild (*.png *.jpg)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="604"/>
+        <location filename="../src/mainwindow.cpp" line="606"/>
         <source>Portable Document Format (*.pdf)</source>
         <translation>Portables Dokumentenformat (*.pdf)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="605"/>
+        <location filename="../src/mainwindow.cpp" line="607"/>
         <source>Save screenshot</source>
         <translation>Screenshot speichen</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="636"/>
+        <location filename="../src/mainwindow.cpp" line="638"/>
         <source>Print oscillograph</source>
         <translation>Oszillogramm drucken</translation>
     </message>
@@ -2163,17 +2163,17 @@
         <translation type="vanished">&lt;p&gt;&lt;br/&gt;&lt;b&gt;Das Gerät ist bereit.&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Das &lt;a href=&apos;https://github.com/OpenHantek/OpenHantek6022/blob/master/docs/OpenHantek6022_User_Manual.pdf&apos;&gt;Benutzerhandbuch&lt;/a&gt; gibt Hinweise für den sicheren Gebrauch.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="90"/>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="93"/>
         <source>&lt;p&gt;Upload in progress ...&lt;/p&gt;&lt;p&gt;&lt;b&gt;If the upload takes more than 30 s, please close this window &lt;br/&gt;and restart the program!&lt;/b&gt;&lt;/p&gt;</source>
         <translation>&lt;p&gt;Firmware wird geladen...&lt;/p&gt;&lt;p&gt;&lt;b&gt;Sollte dies länger als 30 s dauern, bitte abbrechen &lt;br/&gt;und das Programm neu starten!&lt;/b&gt;&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="94"/>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="97"/>
         <source>&lt;p&gt;&lt;br/&gt;&lt;b&gt;Connection failed!&lt;/b&gt;&lt;/p&gt;</source>
         <translation>&lt;p&gt;&lt;br/&gt;&lt;b&gt;Verbindungsfehler!&lt;/b&gt;&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="57"/>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="60"/>
         <source>&lt;p&gt;OpenHantek6022 is searching for compatible devices ...&lt;/p&gt;&lt;p&gt;&lt;img align=&apos;right&apos; height=&apos;200&apos; src=&apos;qrc:///switch_6022BL.png&apos;&gt;Don&apos;t forget to switch your device into oscilloscope mode if it has multiple modes.&lt;/p&gt;</source>
         <translation>&lt;p&gt;OpenHantek6022 sucht nach kompatiblen Geräten ...&lt;/p&gt;&lt;p&gt;&lt;img align=&apos;right&apos; height=&apos;150&apos; src=&apos;qrc:///switch_6022BL.png&apos;&gt;Bitte das Gerät in den Oszilloskop-Modus schalten, falls es mehrere Funktionen besitzt.&lt;/p&gt;</translation>
     </message>
@@ -2182,22 +2182,22 @@
         <translation type="vanished">&lt;p&gt;&lt;br/&gt;&lt;b&gt;Das Gerät ist bereit.&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Das &lt;a href=&apos;https://github.com/OpenHantek/OpenHantek6022/blob/main/docs/OpenHantek6022_User_Manual.pdf&apos;&gt;Benutzerhandbuch&lt;/a&gt; gibt Hinweise für den sicheren Gebrauch.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="52"/>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="55"/>
         <source>&lt;p&gt;&lt;br/&gt;&lt;b&gt;The device is ready for use.&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Please observe the &lt;a href=&apos;%1&apos;&gt;user manual&lt;/a&gt; for safe operation.&lt;/p&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="61"/>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="64"/>
         <source>&lt;p&gt;Please make sure you have installed the windows usb driver correctly&lt;/p&gt;</source>
         <translation>&lt;p&gt;Bitte sicherstellen, dass der korrekte Windows-Treiber installiert ist.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="66"/>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="69"/>
         <source>&lt;p&gt;Please make sure you have copied the udev rules file to&lt;br/&gt;&lt;b&gt;%1&lt;/b&gt; or&lt;br/&gt;&lt;b&gt;%2&lt;/b&gt;&lt;br/&gt;for correct USB access permissions.&lt;/p&gt;</source>
         <translation>&lt;p&gt;Bitte sicherstellen, dass eine udev-Regel nach&lt;br/&gt;&lt;b&gt;%1&lt;/b&gt; oder&lt;br/&gt;&lt;b&gt;%2&lt;/b&gt;&lt;br/&gt;kopiert wurde um den USB-Zugriff zu ermöglichen.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="73"/>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="76"/>
         <source>&lt;p&gt;Visit the build and run instruction &lt;a href=&apos;https://github.com/OpenHantek/OpenHantek6022/blob/main/docs/build.md&apos;&gt;website&lt;/a&gt; for help.&lt;/p&gt;</source>
         <translation>&lt;p&gt;&lt;a href=&apos;https://github.com/OpenHantek/OpenHantek6022/blob/main/docs/build.md&apos;&gt;Informationen&lt;/a&gt; zur Erstellung des Programms.&lt;/p&gt;</translation>
     </message>
@@ -2214,12 +2214,12 @@
         <translation type="vanished">&lt;p&gt;&lt;a href=&apos;https://github.com/OpenHantek/OpenHantek6022/blob/master/docs/build.md&apos;&gt;Informationen&lt;/a&gt; zur Erstellung des Programms.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="75"/>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="78"/>
         <source>&lt;hr/&gt;&lt;p&gt;Even without a device you can explore the program&apos;s function. Just press the &lt;b&gt;Demo Mode&lt;/b&gt; button below.&lt;/p&gt;</source>
         <translation>&lt;hr/&gt;&lt;p&gt;Die Funktionen des Programms können auch ohne Gerät im &lt;b&gt;Demo-Modus&lt;/b&gt; erkundet werden.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="159"/>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="162"/>
         <source>Can&apos;t initalize USB: %1</source>
         <translation>Kann USB nicht initialisieren: %1</translation>
     </message>
