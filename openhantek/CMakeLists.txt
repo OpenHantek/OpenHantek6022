@@ -80,6 +80,7 @@ else()
     target_compile_options(${PROJECT_NAME} PRIVATE "$<$<CONFIG:RELEASE>:-fno-rtti>")
 endif()
 
+include(../cmake/docs_on_windows.cmake)
 include(../cmake/fftw_on_windows.cmake)
 include(../cmake/libusb_on_windows.cmake)
 

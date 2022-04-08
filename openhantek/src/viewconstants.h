@@ -17,11 +17,17 @@
 #define USER_MANUAL_NAME "OpenHantek6022_User_Manual.pdf"
 #define AC_MODIFICATION_NAME "HANTEK6022_AC_Modification.pdf"
 #define FREQUENCY_GENERATOR_MODIFICATION_NAME "HANTEK6022_Frequency_Generator_Modification.pdf"
+
 // where are the (local) documents?
-#ifdef __FreeBSD__
+#ifdef Q_OS_WIN
+#define DOC_PATH "./documents"
+#else
+#ifdef Q_OS_FREEBSD
 #define DOC_PATH "/usr/local/share/doc/openhantek/"
 #else
 #define DOC_PATH "/usr/share/doc/openhantek/"
 #endif
+#endif
+
 // GitHub doc location
 #define DOC_URL "https://github.com/OpenHantek/OpenHantek6022/blob/main/docs/"
