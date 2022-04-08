@@ -63,6 +63,8 @@ class MainWindow : public QMainWindow {
     screenshotType_t screenshotType;
     void screenShot( screenshotType_t screenshotType = SCREENSHOT, bool autoSave = false );
 
+    bool openDocument( QString docName );
+
   signals:
     void settingsLoaded( DsoSettingsScope *scope, const Dso::ControlSpecification *spec );
 };

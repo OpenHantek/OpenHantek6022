@@ -487,47 +487,12 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
     } );
     ui->actionMeasure->setChecked( dsoSettings->view.cursorsVisible );
 
-    connect( ui->actionUserManual, &QAction::triggered, []() {
-#ifdef Q_OS_WIN
-        const QString DocPath = QCoreApplication::applicationDirPath().append( "/documents/" );
-#endif
-        QUrl url;
-        if ( QFile( DocPath + UserManualName ).exists() )
-            url = QUrl( QString( "file://" ) + DocPath + UserManualName );
-        else
-            url = QUrl( DocUrl + UserManualName );
-        if ( verboseLevel > 2 )
-            qDebug() << " " << url;
-        QDesktopServices::openUrl( url );
-    } );
+    connect( ui->actionUserManual, &QAction::triggered, [ this ]() { openDocument( UserManualName ); } );
 
-    connect( ui->actionACmodification, &QAction::triggered, []() {
-#ifdef Q_OS_WIN
-        const QString DocPath = QCoreApplication::applicationDirPath().append( "/documents/" );
-#endif
-        QUrl url;
-        if ( QFile( DocPath + ACModificationName ).exists() )
-            url = QUrl( QString( "file://" ) + DocPath + ACModificationName );
-        else
-            url = QUrl( DocUrl + ACModificationName );
-        if ( verboseLevel > 2 )
-            qDebug() << " " << url;
-        QDesktopServices::openUrl( url );
-    } );
+    connect( ui->actionACmodification, &QAction::triggered, [ this ]() { openDocument( ACModificationName ); } );
 
-    connect( ui->actionFrequencyGeneratorModification, &QAction::triggered, []() {
-#ifdef Q_OS_WIN
-        const QString DocPath = QCoreApplication::applicationDirPath().append( "/documents/" );
-#endif
-        QUrl url;
-        if ( QFile( DocPath + FrequencyGeneratorModificationName ).exists() )
-            url = QUrl( "file://" + DocPath + FrequencyGeneratorModificationName );
-        else
-            url = QUrl( DocUrl + FrequencyGeneratorModificationName );
-        if ( verboseLevel > 2 )
-            qDebug() << " " << url;
-        QDesktopServices::openUrl( url );
-    } );
+    connect( ui->actionFrequencyGeneratorModification, &QAction::triggered,
+             [ this ]() { openDocument( FrequencyGeneratorModificationName ); } );
 
     connect( ui->actionAbout, &QAction::triggered, [ this ]() {
         QMessageBox::about(
@@ -686,6 +651,18 @@ void MainWindow::screenShot( screenshotType_t screenshotType, bool autoSafe ) {
     QPainter p( &printer );
     p.drawPixmap( ( pw - sw ) / 2, ( ph - sh ) / 2, screenshot ); // center the picture
     p.end();
+}
+
+
+bool MainWindow::openDocument( QString docName ) {
+    QUrl url;
+    if ( QFile( DocPath + docName ).exists() )
+        url = QUrl( DocPath + docName );
+    else
+        url = QUrl( DocUrl + docName );
+    if ( verboseLevel > 2 )
+        qDebug() << " " << url;
+    return QDesktopServices::openUrl( url );
 }
 
 

@@ -30,12 +30,9 @@ SelectSupportedDevice::SelectSupportedDevice( QWidget *parent ) : QDialog( paren
     } );
 
     connect( ui->buttonBox, &QDialogButtonBox::helpRequested, [ this ]() {
-#ifdef Q_OS_WIN
-        const QString DocPath = QCoreApplication::applicationDirPath().append( "/documents/" );
-#endif
         QUrl url;
         if ( QFile( DocPath + UserManualName ).exists() )
-            url = QUrl( QString( "file://" ) + DocPath + UserManualName );
+            url = QUrl( DocPath + UserManualName );
         else
             url = QUrl( DocUrl + UserManualName );
         if ( verboseLevel > 2 )
@@ -53,12 +50,9 @@ std::unique_ptr< ScopeDevice > SelectSupportedDevice::showSelectDeviceModal( lib
         std::unique_ptr< DevicesListModel >( new DevicesListModel( findDevices.get(), verboseLevel ) );
     ui->cmbDevices->setModel( model.get() );
 
-#ifdef Q_OS_WIN
-    const QString DocPath = QCoreApplication::applicationDirPath().append( "/documents/" );
-#endif
     QString userManualPath;
     if ( QFile( DocPath + UserManualName ).exists() )
-        userManualPath = QString( "file://" ) + DocPath + UserManualName;
+        userManualPath = DocPath + UserManualName;
     else
         userManualPath = DocUrl + UserManualName;
 
