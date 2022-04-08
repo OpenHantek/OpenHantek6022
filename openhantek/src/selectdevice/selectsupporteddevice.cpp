@@ -4,7 +4,7 @@
 
 #include <QDebug>
 #include <QDesktopServices>
-#include <QFile>
+#include <QFileInfo>
 #include <QTimer>
 #include <QUrl>
 
@@ -29,14 +29,13 @@ SelectSupportedDevice::SelectSupportedDevice( QWidget *parent ) : QDialog( paren
         QCoreApplication::instance()->quit();
     } );
 
-    connect( ui->buttonBox, &QDialogButtonBox::helpRequested, [ this ]() {
+    connect( ui->buttonBox, &QDialogButtonBox::helpRequested, []() {
         QUrl url;
         if ( QFile( DocPath + UserManualName ).exists() )
-            url = QUrl( DocPath + UserManualName );
+            url = QUrl::fromLocalFile( QFileInfo( DocPath + UserManualName ).absoluteFilePath() );
         else
             url = QUrl( DocUrl + UserManualName );
-        if ( verboseLevel > 2 )
-            qDebug() << " " << url;
+        qDebug() << "open" << url;
         QDesktopServices::openUrl( url );
     } );
 

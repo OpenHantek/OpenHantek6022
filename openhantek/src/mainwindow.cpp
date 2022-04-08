@@ -658,7 +658,6 @@ bool MainWindow::openDocument( QString docName ) {
     QUrl url;
     if ( QFile( DocPath + docName ).exists() )
         url = QUrl::fromLocalFile( QFileInfo( DocPath + docName ).absoluteFilePath() );
-    // url = QUrl::fromLocalFile( DocPath + docName );
     else
         url = QUrl( DocUrl + docName );
     if ( verboseLevel > 2 )
