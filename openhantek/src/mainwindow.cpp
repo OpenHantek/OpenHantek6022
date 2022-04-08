@@ -111,8 +111,7 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
     ui->actionSave_as->setIcon( iconFont->icon( fa::save, colorMap ) );
     ui->actionSave_as->setToolTip( tr( "Save the scope settings to a user defined file" ) );
     ui->actionSettings->setIcon( iconFont->icon( fa::sliders, colorMap ) );
-    if ( dsoSettings->scope.toolTipVisible )
-        ui->actionSettings->setToolTip( tr( "Define scope settings, analysis parameters and colors" ) );
+    ui->actionSettings->setToolTip( tr( "Define scope settings, analysis parameters and colors" ) );
     ui->actionCalibrateOffset->setIcon( iconFont->icon( fa::wrench, colorMap ) );
     ui->actionCalibrateOffset->setToolTip( tr( "Short-circuit both inputs and slowly select all voltage gain settings" ) );
     ui->actionManualCommand->setIcon( iconFont->icon( fa::terminal, colorMap ) );
@@ -192,9 +191,9 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
         ui->menuFile->setToolTipsVisible( true );
         ui->menuExport->setToolTipsVisible( true );
         ui->menuView->setToolTipsVisible( true );
+        ui->menuOscilloscope->setToolTipsVisible( true );
         ui->menuHelp->setToolTipsVisible( true );
     }
-    ui->menuOscilloscope->setToolTipsVisible( true );
 
     DsoSettingsScope *scope = &( dsoSettings->scope );
     const Dso::ControlSpecification *spec = dsoControl->getModel()->spec();
@@ -230,7 +229,13 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
         commandEdit->hide();
 
         statusBar()->addPermanentWidget( commandEdit, 1 );
-        connect( ui->actionCalibrateOffset, &QAction::toggled, [ dsoControl, scope ]( bool active ) {
+        connect( ui->actionCalibrateOffset, &QAction::toggled, [ this, dsoControl, scope ]( bool active ) {
+            if ( active )
+                active = ( QMessageBox::Apply ==
+                           QMessageBox::information( this, tr( "Calibrate Offset" ),
+                                                     tr( "Short-circuit both inputs and slowly select all voltage gain settings" ),
+                                                     QMessageBox::Apply | QMessageBox::Abort, QMessageBox::Abort ) );
+            ui->actionCalibrateOffset->setChecked( active );
             dsoControl->calibrateOffset( active );
             scope->liveCalibrationActive = active;
         } );
@@ -240,6 +245,7 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
             scope->liveCalibrationActive = false;           // set incactive first to avoid ..
             ui->actionCalibrateOffset->setChecked( false ); // .. calibration storage actions
         } );
+
         connect( ui->actionManualCommand, &QAction::toggled, [ this ]( bool checked ) {
             commandEdit->setVisible( checked );
             if ( checked )

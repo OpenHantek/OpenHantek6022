@@ -225,7 +225,7 @@
   </action>
   <action name="actionFrequencyGeneratorModification">
    <property name="text">
-    <string>Frequency &amp;Generator Modification</string>
+    <string>&amp;Frequency Generator Modification</string>
    </property>
   </action>
  </widget>
