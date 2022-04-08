@@ -9,7 +9,7 @@ set(DOCUMENTS "documents")
 # execute commands
 add_custom_command(TARGET ${PROJECT_NAME}
         POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E make_directory ${DOCS}
+        COMMAND ${CMAKE_COMMAND} -E make_directory "${PROJECT_NAME}/${DOCUMENTS}"
         COMMAND ${CMAKE_COMMAND} -E copy_if_different "${DOCS_DIR}/OpenHantek6022_User_Manual.pdf" "${PROJECT_NAME}/${DOCUMENTS}"
         COMMAND ${CMAKE_COMMAND} -E copy_if_different "${DOCS_DIR}/HANTEK6022_AC_Modification.pdf" "${PROJECT_NAME}/${DOCUMENTS}"
         COMMAND ${CMAKE_COMMAND} -E copy_if_different "${DOCS_DIR}/HANTEK6022_Frequency_Generator_Modification.pdf" "${PROJECT_NAME}/${DOCUMENTS}"
