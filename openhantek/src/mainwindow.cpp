@@ -227,14 +227,16 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
         QRegExpValidator *v = new QRegExpValidator( QRegExp( "(cc|CC) [eE][0-6]( [0-9a-fA-F]{1,2})+|freq \\d{1,6}" ), this );
         commandEdit->setValidator( v );
         commandEdit->hide();
-
         statusBar()->addPermanentWidget( commandEdit, 1 );
+
         connect( ui->actionCalibrateOffset, &QAction::toggled, [ this, dsoControl, scope ]( bool active ) {
             if ( active )
                 active = ( QMessageBox::Apply ==
                            QMessageBox::information( this, tr( "Calibrate Offset" ),
                                                      tr( "Short-circuit both inputs and slowly select all voltage gain settings" ),
                                                      QMessageBox::Apply | QMessageBox::Abort, QMessageBox::Abort ) );
+            if ( verboseLevel > 2 )
+                qDebug() << "  Calibrate offset" << active;
             ui->actionCalibrateOffset->setChecked( active );
             dsoControl->calibrateOffset( active );
             scope->liveCalibrationActive = active;
@@ -242,6 +244,8 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
 
         // disable calibration e.g. if zero signal too noisy or offset too big
         connect( dsoControl, &HantekDsoControl::liveCalibrationError, [ this, scope ]() {
+            if ( verboseLevel > 2 )
+                qDebug() << "  Calibrate Offset disabled";
             scope->liveCalibrationActive = false;           // set incactive first to avoid ..
             ui->actionCalibrateOffset->setChecked( false ); // .. calibration storage actions
         } );
@@ -484,24 +488,45 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
     ui->actionMeasure->setChecked( dsoSettings->view.cursorsVisible );
 
     connect( ui->actionUserManual, &QAction::triggered, []() {
+#ifdef Q_OS_WIN
+        const QString DocPath = QCoreApplication::applicationDirPath().append( "/documents/" );
+#endif
+        QUrl url;
         if ( QFile( DocPath + UserManualName ).exists() )
-            QDesktopServices::openUrl( QUrl( QString( "file://" ) + DocPath + UserManualName ) );
+            url = QUrl( QString( "file://" ) + DocPath + UserManualName );
         else
-            QDesktopServices::openUrl( QUrl( DocUrl + UserManualName ) );
+            url = QUrl( DocUrl + UserManualName );
+        if ( verboseLevel > 2 )
+            qDebug() << " " << url;
+        QDesktopServices::openUrl( url );
     } );
 
     connect( ui->actionACmodification, &QAction::triggered, []() {
+#ifdef Q_OS_WIN
+        const QString DocPath = QCoreApplication::applicationDirPath().append( "/documents/" );
+#endif
+        QUrl url;
         if ( QFile( DocPath + ACModificationName ).exists() )
-            QDesktopServices::openUrl( QUrl( QString( "file://" ) + DocPath + ACModificationName ) );
+            url = QUrl( QString( "file://" ) + DocPath + ACModificationName );
         else
-            QDesktopServices::openUrl( QUrl( DocUrl + ACModificationName ) );
+            url = QUrl( DocUrl + ACModificationName );
+        if ( verboseLevel > 2 )
+            qDebug() << " " << url;
+        QDesktopServices::openUrl( url );
     } );
 
     connect( ui->actionFrequencyGeneratorModification, &QAction::triggered, []() {
+#ifdef Q_OS_WIN
+        const QString DocPath = QCoreApplication::applicationDirPath().append( "/documents/" );
+#endif
+        QUrl url;
         if ( QFile( DocPath + FrequencyGeneratorModificationName ).exists() )
-            QDesktopServices::openUrl( QUrl( "file://" + DocPath + FrequencyGeneratorModificationName ) );
+            url = QUrl( "file://" + DocPath + FrequencyGeneratorModificationName );
         else
-            QDesktopServices::openUrl( QUrl( DocUrl + FrequencyGeneratorModificationName ) );
+            url = QUrl( DocUrl + FrequencyGeneratorModificationName );
+        if ( verboseLevel > 2 )
+            qDebug() << " " << url;
+        QDesktopServices::openUrl( url );
     } );
 
     connect( ui->actionAbout, &QAction::triggered, [ this ]() {

@@ -29,11 +29,18 @@ SelectSupportedDevice::SelectSupportedDevice( QWidget *parent ) : QDialog( paren
         QCoreApplication::instance()->quit();
     } );
 
-    connect( ui->buttonBox, &QDialogButtonBox::helpRequested, []() {
+    connect( ui->buttonBox, &QDialogButtonBox::helpRequested, [ this ]() {
+#ifdef Q_OS_WIN
+        const QString DocPath = QCoreApplication::applicationDirPath().append( "/documents/" );
+#endif
+        QUrl url;
         if ( QFile( DocPath + UserManualName ).exists() )
-            QDesktopServices::openUrl( QUrl( QString( "file://" ) + DocPath + UserManualName ) );
+            url = QUrl( QString( "file://" ) + DocPath + UserManualName );
         else
-            QDesktopServices::openUrl( QUrl( DocUrl + UserManualName ) );
+            url = QUrl( DocUrl + UserManualName );
+        if ( verboseLevel > 2 )
+            qDebug() << " " << url;
+        QDesktopServices::openUrl( url );
     } );
 
     connect( ui->btnDemoMode, &QPushButton::clicked, [ this ]() { demoModeClicked = true; } );
