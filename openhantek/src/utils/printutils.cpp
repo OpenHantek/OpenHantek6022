@@ -17,129 +17,127 @@ QString valueToString( double value, Unit unit, int precision ) {
         if ( bool( fabs( value ) ) ) {
             int logarithm = int( floor( log10( fabs( value ) ) ) );
             if ( fabs( value ) < 1e-3 )
-                return QApplication::tr( "%L1 µV" )
-                    .arg( value * 1e6, 0, format,
-                          ( precision <= 0 ) ? precision : qBound( 0, precision - 7 - logarithm, precision ) );
+                return QApplication::tr( "%1 µV" ).arg(
+                    value * 1e6, 0, format, ( precision <= 0 ) ? precision : qBound( 0, precision - 7 - logarithm, precision ) );
             else if ( fabs( value ) < 1.0 )
-                return QApplication::tr( "%L1 mV" )
-                    .arg( value * 1e3, 0, format, ( precision <= 0 ) ? precision : ( precision - 4 - logarithm ) );
+                return QApplication::tr( "%1 mV" ).arg( value * 1e3, 0, format,
+                                                        ( precision <= 0 ) ? precision : ( precision - 4 - logarithm ) );
             else
-                return QApplication::tr( "%L1 V" ).arg( value, 0, format,
-                                                        ( precision <= 0 ) ? precision : qMax( 0, precision - 1 - logarithm ) );
+                return QApplication::tr( "%1 V" ).arg( value, 0, format,
+                                                       ( precision <= 0 ) ? precision : qMax( 0, precision - 1 - logarithm ) );
         } else
-            return QApplication::tr( "%L1 V" ).arg( 0 );
+            return QApplication::tr( "%1 V" ).arg( 0 );
 
     case UNIT_VOLTSQUARE:
         // Voltage string representation
         if ( bool( fabs( value ) ) ) {
             int logarithm = int( floor( log10( fabs( value ) ) ) );
             if ( fabs( value ) < 1e-3 )
-                return QApplication::tr( "%L1 µV²" )
+                return QApplication::tr( "%1 µV²" )
                     .arg( value * 1e6, 0, format,
                           ( precision <= 0 ) ? precision : qBound( 0, precision - 7 - logarithm, precision ) );
             else if ( fabs( value ) < 1.0 )
-                return QApplication::tr( "%L1 mV²" )
+                return QApplication::tr( "%1 mV²" )
                     .arg( value * 1e3, 0, format, ( precision <= 0 ) ? precision : ( precision - 4 - logarithm ) );
             else
-                return QApplication::tr( "%L1 V²" )
-                    .arg( value, 0, format, ( precision <= 0 ) ? precision : qMax( 0, precision - 1 - logarithm ) );
+                return QApplication::tr( "%1 V²" ).arg( value, 0, format,
+                                                        ( precision <= 0 ) ? precision : qMax( 0, precision - 1 - logarithm ) );
         } else
-            return QApplication::tr( "%L1 V²" ).arg( 0 );
+            return QApplication::tr( "%1 V²" ).arg( 0 );
 
     case UNIT_WATTS:
         // Watts string representation
         if ( bool( fabs( value ) ) ) {
             int logarithm = int( floor( log10( fabs( value ) ) ) );
             if ( fabs( value ) < 1e-3 )
-                return QApplication::tr( "%L1 µW" )
-                    .arg( value * 1e6, 0, format,
-                          ( precision <= 0 ) ? precision : qBound( 0, precision - 7 - logarithm, precision ) );
+                return QApplication::tr( "%1 µW" ).arg(
+                    value * 1e6, 0, format, ( precision <= 0 ) ? precision : qBound( 0, precision - 7 - logarithm, precision ) );
             else if ( fabs( value ) < 1.0 )
-                return QApplication::tr( "%L1 mW" )
-                    .arg( value * 1e3, 0, format, ( precision <= 0 ) ? precision : ( precision - 4 - logarithm ) );
+                return QApplication::tr( "%1 mW" ).arg( value * 1e3, 0, format,
+                                                        ( precision <= 0 ) ? precision : ( precision - 4 - logarithm ) );
             else
-                return QApplication::tr( "%L1 W" ).arg( value, 0, format,
-                                                        ( precision <= 0 ) ? precision : qMax( 0, precision - 1 - logarithm ) );
+                return QApplication::tr( "%1 W" ).arg( value, 0, format,
+                                                       ( precision <= 0 ) ? precision : qMax( 0, precision - 1 - logarithm ) );
         } else
-            return QApplication::tr( "%L1 W" ).arg( 0 );
+            return QApplication::tr( "%1 W" ).arg( 0 );
 
     case UNIT_DECIBEL:
         // Power level string representation
-        return QApplication::tr( "%L1 dB" )
-            .arg( value, 0, format,
-                  ( precision <= 0 ) ? precision : qBound( 0, precision - 1 - int( floor( log10( fabs( value ) ) ) ), precision ) );
+        return QApplication::tr( "%1 dB" ).arg(
+            value, 0, format,
+            ( precision <= 0 ) ? precision : qBound( 0, precision - 1 - int( floor( log10( fabs( value ) ) ) ), precision ) );
 
     case UNIT_SECONDS:
         // Time string representation
         if ( bool( fabs( value ) ) ) {
             if ( fabs( value ) < 1e-9 )
-                return QApplication::tr( "%L1 ps" )
-                    .arg( value * 1e12, 0, format,
-                          ( precision <= 0 ) ? precision
-                                             : qBound( 0, precision - 13 - int( floor( log10( fabs( value ) ) ) ), precision ) );
+                return QApplication::tr( "%1 ps" ).arg(
+                    value * 1e12, 0, format,
+                    ( precision <= 0 ) ? precision
+                                       : qBound( 0, precision - 13 - int( floor( log10( fabs( value ) ) ) ), precision ) );
             else if ( fabs( value ) < 1e-6 )
-                return QApplication::tr( "%L1 ns" )
-                    .arg( value * 1e9, 0, format,
-                          ( precision <= 0 ) ? precision : ( precision - 10 - int( floor( log10( fabs( value ) ) ) ) ) );
+                return QApplication::tr( "%1 ns" ).arg(
+                    value * 1e9, 0, format,
+                    ( precision <= 0 ) ? precision : ( precision - 10 - int( floor( log10( fabs( value ) ) ) ) ) );
             else if ( fabs( value ) < 1e-3 )
-                return QApplication::tr( "%L1 µs" )
-                    .arg( value * 1e6, 0, format,
-                          ( precision <= 0 ) ? precision : ( precision - 7 - int( floor( log10( fabs( value ) ) ) ) ) );
+                return QApplication::tr( "%1 µs" ).arg(
+                    value * 1e6, 0, format,
+                    ( precision <= 0 ) ? precision : ( precision - 7 - int( floor( log10( fabs( value ) ) ) ) ) );
             else if ( fabs( value ) < 1.0 )
-                return QApplication::tr( "%L1 ms" )
-                    .arg( value * 1e3, 0, format,
-                          ( precision <= 0 ) ? precision : ( precision - 4 - int( floor( log10( fabs( value ) ) ) ) ) );
+                return QApplication::tr( "%1 ms" ).arg(
+                    value * 1e3, 0, format,
+                    ( precision <= 0 ) ? precision : ( precision - 4 - int( floor( log10( fabs( value ) ) ) ) ) );
             else if ( fabs( value ) < 60 )
-                return QApplication::tr( "%L1 s" ).arg(
+                return QApplication::tr( "%1 s" ).arg(
                     value, 0, format, ( precision <= 0 ) ? precision : ( precision - 1 - int( floor( log10( fabs( value ) ) ) ) ) );
             else if ( fabs( value ) < 3600 )
-                return QApplication::tr( "%L1 min" )
+                return QApplication::tr( "%1 min" )
                     .arg( value / 60, 0, format,
                           ( precision <= 0 ) ? precision : ( precision - 1 - int( floor( log10( value / 60 ) ) ) ) );
             else
-                return QApplication::tr( "%L1 h" ).arg(
+                return QApplication::tr( "%1 h" ).arg(
                     value / 3600, 0, format,
                     ( precision <= 0 ) ? precision : qMax( 0, precision - 1 - int( floor( log10( value / 3600 ) ) ) ) );
         } else
-            return QApplication::tr( "%L1 s" ).arg( 0 );
+            return QApplication::tr( "%1 s" ).arg( 0 );
 
     case UNIT_HERTZ:
         // Frequency string representation
         if ( bool( fabs( value ) ) ) {
             int logarithm = int( floor( log10( fabs( value ) ) ) );
             if ( fabs( value ) < 1e3 )
-                return QApplication::tr( "%L1 Hz" )
-                    .arg( value, 0, format, ( precision <= 0 ) ? precision : qBound( 0, precision - 1 - logarithm, precision ) );
+                return QApplication::tr( "%1 Hz" ).arg(
+                    value, 0, format, ( precision <= 0 ) ? precision : qBound( 0, precision - 1 - logarithm, precision ) );
             else if ( fabs( value ) < 1e6 )
-                return QApplication::tr( "%L1 kHz" )
+                return QApplication::tr( "%1 kHz" )
                     .arg( value * 1e-3, 0, format, ( precision <= 0 ) ? precision : precision + 2 - logarithm );
             else if ( fabs( value ) < 1e9 )
-                return QApplication::tr( "%L1 MHz" )
+                return QApplication::tr( "%1 MHz" )
                     .arg( value * 1e-6, 0, format, ( precision <= 0 ) ? precision : precision + 5 - logarithm );
             else
-                return QApplication::tr( "%L1 GHz" )
+                return QApplication::tr( "%1 GHz" )
                     .arg( value * 1e-9, 0, format, ( precision <= 0 ) ? precision : qMax( 0, precision + 8 - logarithm ) );
         } else
-            return QApplication::tr( "%L1 Hz" ).arg( 0 );
+            return QApplication::tr( "%1 Hz" ).arg( 0 );
 
     case UNIT_SAMPLES:
         // Sample count string representation
         if ( bool( fabs( value ) ) ) {
             int logarithm = int( floor( log10( fabs( value ) ) ) );
             if ( fabs( value ) < 1e3 )
-                return QApplication::tr( "%L1 S" ).arg(
+                return QApplication::tr( "%1 S" ).arg(
                     value, 0, format, ( precision <= 0 ) ? precision : qBound( 0, precision - 1 - logarithm, precision ) );
             else if ( fabs( value ) < 1e6 )
-                return QApplication::tr( "%L1 kS" )
-                    .arg( value * 1e-3, 0, format, ( precision <= 0 ) ? precision : precision + 2 - logarithm );
+                return QApplication::tr( "%1 kS" ).arg( value * 1e-3, 0, format,
+                                                        ( precision <= 0 ) ? precision : precision + 2 - logarithm );
             else if ( fabs( value ) < 1e9 )
-                return QApplication::tr( "%L1 MS" )
-                    .arg( value * 1e-6, 0, format, ( precision <= 0 ) ? precision : precision + 5 - logarithm );
+                return QApplication::tr( "%1 MS" ).arg( value * 1e-6, 0, format,
+                                                        ( precision <= 0 ) ? precision : precision + 5 - logarithm );
             else
-                return QApplication::tr( "%L1 GS" )
-                    .arg( value * 1e-9, 0, format, ( precision <= 0 ) ? precision : qMax( 0, precision + 8 - logarithm ) );
+                return QApplication::tr( "%1 GS" ).arg( value * 1e-9, 0, format,
+                                                        ( precision <= 0 ) ? precision : qMax( 0, precision + 8 - logarithm ) );
         } else
-            return QApplication::tr( "%L1 S" ).arg( 0 );
+            return QApplication::tr( "%1 S" ).arg( 0 );
 
     case UNIT_NONE:
         return QString::number(

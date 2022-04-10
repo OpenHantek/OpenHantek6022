@@ -286,7 +286,7 @@
     <message>
         <location filename="../src/configdialog/configdialog.cpp" line="51"/>
         <source>&amp;Ok</source>
-        <translation></translation>
+        <translation>&amp;Ok</translation>
     </message>
     <message>
         <location filename="../src/configdialog/configdialog.cpp" line="53"/>
@@ -668,13 +668,13 @@
         <location filename="../src/dsowidget.cpp" line="599"/>
         <location filename="../src/dsowidget.cpp" line="617"/>
         <source>ON</source>
-        <translation></translation>
+        <translation>ON</translation>
     </message>
     <message>
         <location filename="../src/dsowidget.cpp" line="603"/>
         <location filename="../src/dsowidget.cpp" line="621"/>
         <source>OFF</source>
-        <translation></translation>
+        <translation>OFF</translation>
     </message>
     <message>
         <location filename="../src/dsowidget.cpp" line="643"/>
@@ -689,12 +689,12 @@
     <message>
         <location filename="../src/dsowidget.cpp" line="647"/>
         <source>Zoom x%L1  </source>
-        <translation></translation>
+        <translation>Zoom ---  </translation>
     </message>
     <message>
         <location filename="../src/dsowidget.cpp" line="649"/>
         <source>Zoom ---  </source>
-        <translation></translation>
+        <translation>Zoom ---  </translation>
     </message>
     <message>
         <location filename="../src/dsowidget.cpp" line="723"/>
@@ -813,7 +813,7 @@
     <message>
         <location filename="../src/docks/HorizontalDock.cpp" line="39"/>
         <source>Effective samplerate, automatically selected from &apos;Timebase&apos; setting</source>
-        <translation type="unfinished"></translation>
+        <translation>Taux d&apos;échantillonnage effectif, automatiquement sélectionné à partir du paramètre &apos;Timebase&apos;</translation>
     </message>
     <message>
         <location filename="../src/docks/HorizontalDock.cpp" line="42"/>
@@ -828,12 +828,12 @@
     <message>
         <location filename="../src/docks/HorizontalDock.cpp" line="49"/>
         <source>Time per horizontal screen division</source>
-        <translation type="unfinished"></translation>
+        <translation>Temps par division horizontale de l&apos;écran</translation>
     </message>
     <message>
         <location filename="../src/docks/HorizontalDock.cpp" line="66"/>
         <source>Select the frequency of the calibration output, scroll for fast change</source>
-        <translation type="unfinished"></translation>
+        <translation>Sélectionnez la fréquence de la sortie d&apos;étalonnage, faites défiler pour un changement rapide.</translation>
     </message>
     <message>
         <source>Frequencybase</source>
@@ -847,7 +847,7 @@
     <message>
         <location filename="../src/docks/HorizontalDock.cpp" line="57"/>
         <source>Select signal over time or XY display</source>
-        <translation type="unfinished"></translation>
+        <translation>Sélectionnez le signal dans le temps ou l&apos;affichage XY</translation>
     </message>
     <message>
         <location filename="../src/docks/HorizontalDock.cpp" line="61"/>
@@ -1001,7 +1001,7 @@
     <message>
         <location filename="../src/mainwindow.ui" line="161"/>
         <source>&amp;Histogram</source>
-        <translation></translation>
+        <translation>&amp;Histogram</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="169"/>
@@ -1208,32 +1208,32 @@
     <message>
         <location filename="../src/mainwindow.cpp" line="86"/>
         <source>Let the traces fade out slowly</source>
-        <translation type="unfinished"></translation>
+        <translation>Laisser les traces s&apos;effacer lentement</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="92"/>
         <source>Show a histogram of the voltage levels on the right side of the trace</source>
-        <translation type="unfinished"></translation>
+        <translation>Affichez un histogramme des niveaux de tension sur le côté droit de la trace.</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="104"/>
         <source>Enable cursor measurements</source>
-        <translation type="unfinished"></translation>
+        <translation>Activer les mesures par curseur</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="110"/>
         <source>Save the scope settings to the default location</source>
-        <translation type="unfinished"></translation>
+        <translation>Enregistrer les paramètres de l&apos;oscilloscope dans l&apos;emplacement par défaut</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="112"/>
         <source>Save the scope settings to a user defined file</source>
-        <translation type="unfinished"></translation>
+        <translation>Sauvegarder les paramètres de l&apos;écran dans un fichier défini par l&apos;utilisateur</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="114"/>
         <source>Define scope settings, analysis parameters and colors</source>
-        <translation type="unfinished"></translation>
+        <translation>Définir les paramètres du scope, les paramètres d&apos;analyse et les couleurs</translation>
     </message>
     <message>
         <source>Hardcopy ..</source>
@@ -1242,48 +1242,48 @@
     <message>
         <location filename="../src/mainwindow.cpp" line="108"/>
         <source>Load scope settings from a config file</source>
-        <translation type="unfinished"></translation>
+        <translation>Charger les paramètres du scope à partir d&apos;un fichier de configuration</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="116"/>
         <location filename="../src/mainwindow.cpp" line="236"/>
         <source>Short-circuit both inputs and slowly select all voltage gain settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Court-circuitez les deux entrées et sélectionnez lentement tous les paramètres de gain de tension.</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="118"/>
         <source>Send low level commands directly to the scope: &apos;CC XX XX&apos;</source>
-        <translation type="unfinished"></translation>
+        <translation>Envoyer des commandes de bas niveau directement à l&apos;oscilloscope : &apos;CC XX XX&apos;</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="120"/>
         <source>Read the fine manual</source>
-        <translation type="unfinished"></translation>
+        <translation>Lire le manuel fin</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="127"/>
         <source>Show info about the scope&apos;s HW and SW</source>
-        <translation type="unfinished"></translation>
+        <translation>Afficher des informations sur le matériel et les logiciels de l&apos;oscilloscope.</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="141"/>
         <source>&amp;Screenshot</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Screenshot</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="146"/>
         <source>&amp;Hardcopy</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Copie papier</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="156"/>
         <source>Save screenshot as ..</source>
-        <translation type="unfinished"></translation>
+        <translation>Enregistrer la capture d&apos;écran sous ..</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="161"/>
         <source>Save Hardcopy as ..</source>
-        <translation type="unfinished"></translation>
+        <translation>Enregistrer la copie papier en tant que ..</translation>
     </message>
     <message>
         <source>Print screen ..</source>
@@ -1292,52 +1292,52 @@
     <message>
         <location filename="../src/mainwindow.cpp" line="98"/>
         <source>Zoom the range between the markers &apos;1&apos; and &apos;2&apos;</source>
-        <translation type="unfinished"></translation>
+        <translation>Zoomer la plage entre les marqueurs &apos;1&apos; et &apos;2&apos;</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="122"/>
         <source>Documentation how to add HW for AC coupled inputs</source>
-        <translation type="unfinished"></translation>
+        <translation>Documentation sur l&apos;ajout de HW pour les entrées couplées en AC</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="125"/>
         <source>Documentation how to get jitter-free calibration frequency output</source>
-        <translation type="unfinished"></translation>
+        <translation>Documentation sur la façon d&apos;obtenir une émission de fréquence d&apos;étalonnage sans gigue</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="142"/>
         <source>Make an immediate screenshot of the program window and save it into the current directory</source>
-        <translation type="unfinished"></translation>
+        <translation>Faire une copie d&apos;écran immédiate de la fenêtre du programme et la sauvegarder dans le répertoire courant</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="147"/>
         <source>Make an immediate (printable) hardcopy of the display and save it into the current directory</source>
-        <translation type="unfinished"></translation>
+        <translation>Faire une copie papier immédiate (imprimable) de l&apos;affichage et la sauvegarder dans le répertoire courant</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="157"/>
         <source>Make a screenshot of the program window and define the storage location</source>
-        <translation type="unfinished"></translation>
+        <translation>Faites une capture d&apos;écran de la fenêtre du programme et définissez l&apos;emplacement de stockage</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="162"/>
         <source>Make a (printable) hardcopy of the display and define the storage location</source>
-        <translation type="unfinished"></translation>
+        <translation>Faire une copie papier (imprimable) de l&apos;affichage et définir l&apos;emplacement de stockage</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="169"/>
         <source>&amp;Print screen ..</source>
-        <translation type="unfinished"></translation>
+        <translation>Im&amp;primer l&apos;oscillographe ..</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="170"/>
         <source>Send the hardcopy to a printer</source>
-        <translation type="unfinished"></translation>
+        <translation>Envoyer la copie papier à une imprimante</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="181"/>
         <source>Export captured data in %1 format for further processing</source>
-        <translation type="unfinished"></translation>
+        <translation>Exporter les données capturées au format %1 pour un traitement ultérieur</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="235"/>
@@ -1383,7 +1383,7 @@
     <message>
         <location filename="../src/mainwindow.cpp" line="500"/>
         <source>&lt;p&gt;Open source software for Hantek6022 USB oscilloscopes&lt;/p&gt;&lt;p&gt;Maintainer: Martin Homuth-Rosemann&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2010, 2011 Oliver Haag&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2012-%7 OpenHantek community&lt;br/&gt;&lt;a href=&apos;https://github.com/OpenHantek&apos;&gt;https://github.com/OpenHantek&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Open source firmware copyright &amp;copy; 2019-%7 Ho-Ro&lt;br/&gt;&lt;a href=&apos;https://github.com/Ho-Ro/Hantek6022API&apos;&gt;https://github.com/Ho-Ro/Hantek6022API&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Device: %1 (%2), FW%3&lt;/p&gt;&lt;p&gt;Graphic: %4 - GLSL version %5&lt;/p&gt;&lt;p&gt;Qt version: %6&lt;/p&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;p&gt;Logiciel open source pour les oscilloscopes USB Hantek6022&lt;/p&gt;&lt;p&gt;Maintainer: Martin Homuth-Rosemann&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2010, 2011 Oliver Haag&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2012-%7 OpenHantek community&lt;br/&gt;&lt;a href=&apos;https://github.com/OpenHantek&apos;&gt;https://github.com/OpenHantek&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Open source firmware copyright &amp;copy; 2019-%7 Ho-Ro&lt;br/&gt;&lt;a href=&apos;https://github.com/Ho-Ro/Hantek6022API&apos;&gt;https://github.com/Ho-Ro/Hantek6022API&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Device: %1 (%2), FW%3&lt;/p&gt;&lt;p&gt;Graphic: %4 - GLSL version %5&lt;/p&gt;&lt;p&gt;Qt version: %6&lt;/p&gt;</translation>
     </message>
     <message>
         <source>Settings (*.ini)</source>
@@ -1446,7 +1446,7 @@
     <message>
         <location filename="../src/mainwindow.cpp" line="545"/>
         <source>%1: %2</source>
-        <translation></translation>
+        <translation>%1: %2</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="567"/>
@@ -1545,139 +1545,167 @@
 <context>
     <name>QApplication</name>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="20"/>
-        <source>%L1 µV</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../src/utils/printutils.cpp" line="24"/>
-        <source>%L1 mV</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../src/utils/printutils.cpp" line="27"/>
-        <location filename="../src/utils/printutils.cpp" line="30"/>
-        <source>%L1 V</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../src/utils/printutils.cpp" line="37"/>
         <source>%L1 µV²</source>
-        <translation>%L1 µV²</translation>
+        <translation type="vanished">%L1 µV²</translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="41"/>
         <source>%L1 mV²</source>
-        <translation>%L1 mV²</translation>
+        <translation type="vanished">%L1 mV²</translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="44"/>
-        <location filename="../src/utils/printutils.cpp" line="47"/>
         <source>%L1 V²</source>
-        <translation>%L1 V²</translation>
+        <translation type="vanished">%L1 V²</translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="54"/>
-        <source>%L1 µW</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../src/utils/printutils.cpp" line="58"/>
-        <source>%L1 mW</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../src/utils/printutils.cpp" line="61"/>
-        <location filename="../src/utils/printutils.cpp" line="64"/>
-        <source>%L1 W</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../src/utils/printutils.cpp" line="68"/>
-        <source>%L1 dB</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../src/utils/printutils.cpp" line="76"/>
-        <source>%L1 ps</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../src/utils/printutils.cpp" line="81"/>
-        <source>%L1 ns</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../src/utils/printutils.cpp" line="85"/>
-        <source>%L1 µs</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../src/utils/printutils.cpp" line="89"/>
-        <source>%L1 ms</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../src/utils/printutils.cpp" line="93"/>
-        <location filename="../src/utils/printutils.cpp" line="104"/>
-        <source>%L1 s</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../src/utils/printutils.cpp" line="96"/>
-        <source>%L1 min</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../src/utils/printutils.cpp" line="100"/>
-        <source>%L1 h</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../src/utils/printutils.cpp" line="111"/>
-        <location filename="../src/utils/printutils.cpp" line="123"/>
-        <source>%L1 Hz</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../src/utils/printutils.cpp" line="114"/>
-        <source>%L1 kHz</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../src/utils/printutils.cpp" line="117"/>
-        <source>%L1 MHz</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../src/utils/printutils.cpp" line="120"/>
-        <source>%L1 GHz</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../src/utils/printutils.cpp" line="130"/>
-        <location filename="../src/utils/printutils.cpp" line="142"/>
         <source>%L1 S</source>
-        <translation>%L1 E</translation>
+        <translation type="vanished">%L1 E</translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="133"/>
         <source>%L1 kS</source>
-        <translation>%L1 kE</translation>
+        <translation type="vanished">%L1 kE</translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="136"/>
         <source>%L1 MS</source>
-        <translation>%L1 ME</translation>
+        <translation type="vanished">%L1 ME</translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="139"/>
         <source>%L1 GS</source>
-        <translation>%L1 GE</translation>
+        <translation type="vanished">%L1 GE</translation>
     </message>
     <message>
         <source>SPM</source>
         <translation type="vanished">SPM</translation>
+    </message>
+    <message>
+        <location filename="../src/utils/printutils.cpp" line="20"/>
+        <source>%1 µV</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/utils/printutils.cpp" line="23"/>
+        <source>%1 mV</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/utils/printutils.cpp" line="26"/>
+        <location filename="../src/utils/printutils.cpp" line="29"/>
+        <source>%1 V</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/utils/printutils.cpp" line="36"/>
+        <source>%1 µV²</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/utils/printutils.cpp" line="40"/>
+        <source>%1 mV²</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/utils/printutils.cpp" line="43"/>
+        <location filename="../src/utils/printutils.cpp" line="46"/>
+        <source>%1 V²</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/utils/printutils.cpp" line="53"/>
+        <source>%1 µW</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/utils/printutils.cpp" line="56"/>
+        <source>%1 mW</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/utils/printutils.cpp" line="59"/>
+        <location filename="../src/utils/printutils.cpp" line="62"/>
+        <source>%1 W</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/utils/printutils.cpp" line="66"/>
+        <source>%1 dB</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/utils/printutils.cpp" line="74"/>
+        <source>%1 ps</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/utils/printutils.cpp" line="79"/>
+        <source>%1 ns</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/utils/printutils.cpp" line="83"/>
+        <source>%1 µs</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/utils/printutils.cpp" line="87"/>
+        <source>%1 ms</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/utils/printutils.cpp" line="91"/>
+        <location filename="../src/utils/printutils.cpp" line="102"/>
+        <source>%1 s</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/utils/printutils.cpp" line="94"/>
+        <source>%1 min</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/utils/printutils.cpp" line="98"/>
+        <source>%1 h</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/utils/printutils.cpp" line="109"/>
+        <location filename="../src/utils/printutils.cpp" line="121"/>
+        <source>%1 Hz</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/utils/printutils.cpp" line="112"/>
+        <source>%1 kHz</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/utils/printutils.cpp" line="115"/>
+        <source>%1 MHz</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/utils/printutils.cpp" line="118"/>
+        <source>%1 GHz</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/utils/printutils.cpp" line="128"/>
+        <location filename="../src/utils/printutils.cpp" line="140"/>
+        <source>%1 S</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/utils/printutils.cpp" line="131"/>
+        <source>%1 kS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/utils/printutils.cpp" line="134"/>
+        <source>%1 MS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/utils/printutils.cpp" line="137"/>
+        <source>%1 GS</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1746,52 +1774,52 @@
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="39"/>
         <source>CH1 + CH2</source>
-        <translation type="unfinished"></translation>
+        <translation>CH1 + CH2</translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="41"/>
         <source>CH1 - CH2</source>
-        <translation type="unfinished"></translation>
+        <translation>CH1 - CH2</translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="43"/>
         <source>CH2 - CH1</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="47"/>
         <source>CH1 &amp; CH2</source>
-        <translation type="unfinished"></translation>
+        <translation>CH1 &amp; CH2</translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="49"/>
         <source>/CH1 &amp; /CH2</source>
-        <translation type="unfinished"></translation>
+        <translation>/CH1 &amp; /CH2</translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="51"/>
         <source>/CH1 &amp; CH2</source>
-        <translation type="unfinished"></translation>
+        <translation>/CH1 &amp; CH2</translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="53"/>
         <source>CH1 &amp; /CH2</source>
-        <translation type="unfinished"></translation>
+        <translation>CH1 &amp; /CH2</translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="55"/>
         <source>CH1 == CH2</source>
-        <translation type="unfinished"></translation>
+        <translation>CH1 == CH2</translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="57"/>
         <source>CH1²</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="59"/>
         <source>CH2²</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="61"/>
@@ -1816,42 +1844,42 @@
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="69"/>
         <source>CH1 Abs</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="71"/>
         <source>CH2 Abs</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="73"/>
         <source>CH1 Sign</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="75"/>
         <source>CH2 Sign</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="77"/>
         <source>CH1 AC Sign</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="79"/>
         <source>CH2 AC Sign</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="81"/>
         <source>CH1 Trigger</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="83"/>
         <source>CH2 Trigger</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Rectangular</source>
@@ -2179,7 +2207,7 @@
     <message>
         <location filename="../src/docks/SpectrumDock.cpp" line="49"/>
         <source>Magnitude per vertical screen division</source>
-        <translation type="unfinished"></translation>
+        <translation>Magnitude par division verticale de l&apos;écran</translation>
     </message>
     <message>
         <location filename="../src/docks/SpectrumDock.cpp" line="75"/>
@@ -2189,7 +2217,7 @@
     <message>
         <location filename="../src/docks/SpectrumDock.cpp" line="78"/>
         <source>Frequency range per horizontal screen division</source>
-        <translation type="unfinished"></translation>
+        <translation>Gamme de fréquences par division horizontale de l&apos;écran</translation>
     </message>
 </context>
 <context>
@@ -2236,7 +2264,7 @@
     <message>
         <location filename="../src/docks/TriggerDock.cpp" line="39"/>
         <source>Select the trigger mode</source>
-        <translation type="unfinished"></translation>
+        <translation>Sélectionnez le mode de déclenchement</translation>
     </message>
     <message>
         <location filename="../src/docks/TriggerDock.cpp" line="43"/>
@@ -2246,7 +2274,7 @@
     <message>
         <location filename="../src/docks/TriggerDock.cpp" line="46"/>
         <source>Select positive, negative or both (alternating) slopes</source>
-        <translation type="unfinished"></translation>
+        <translation>Sélection des pentes positives, négatives ou les deux (alternées)</translation>
     </message>
     <message>
         <location filename="../src/docks/TriggerDock.cpp" line="50"/>
@@ -2256,12 +2284,12 @@
     <message>
         <location filename="../src/docks/TriggerDock.cpp" line="53"/>
         <source>Select the trigger channel (CH1, CH2, or MATH)</source>
-        <translation type="unfinished"></translation>
+        <translation>Sélectionner le canal de déclenchement (CH1, CH2, ou MATH)</translation>
     </message>
     <message>
         <location filename="../src/docks/TriggerDock.cpp" line="57"/>
         <source>Trigger on fast, normal, or slow signals</source>
-        <translation type="unfinished"></translation>
+        <translation>Déclenchement sur des signaux rapides, normaux ou lents</translation>
     </message>
 </context>
 <context>
@@ -2284,22 +2312,22 @@
     <message>
         <location filename="../src/docks/VoltageDock.cpp" line="61"/>
         <source>Voltage range per vertical screen division</source>
-        <translation type="unfinished"></translation>
+        <translation>Plage de tension par division verticale de l&apos;écran</translation>
     </message>
     <message>
         <location filename="../src/docks/VoltageDock.cpp" line="75"/>
         <source>Select DC or AC coupling</source>
-        <translation type="unfinished"></translation>
+        <translation>Sélectionner le couplage DC ou AC</translation>
     </message>
     <message>
         <location filename="../src/docks/VoltageDock.cpp" line="79"/>
         <source>Select the mathematical operation for this channel</source>
-        <translation type="unfinished"></translation>
+        <translation>Sélectionnez l&apos;opération mathématique pour ce canal</translation>
     </message>
     <message>
         <location filename="../src/docks/VoltageDock.cpp" line="65"/>
         <source>Set probe attenuation, scroll or type a value to select</source>
-        <translation type="unfinished"></translation>
+        <translation>Réglez l&apos;atténuation de la sonde, faites défiler ou tapez une valeur pour la sélectionner</translation>
     </message>
     <message>
         <source>&amp;MATH</source>
@@ -2326,12 +2354,12 @@
         <location filename="../src/main.cpp" line="137"/>
         <location filename="../src/main.cpp" line="175"/>
         <source>Show the international interface, do not translate</source>
-        <translation type="unfinished"></translation>
+        <translation>Afficher l&apos;interface internationale, ne pas traduire</translation>
     </message>
     <message>
         <location filename="../src/main.cpp" line="161"/>
         <source>Load config file</source>
-        <translation type="unfinished"></translation>
+        <translation>Charger le fichier de configuration</translation>
     </message>
     <message>
         <location filename="../src/main.cpp" line="162"/>
@@ -2351,57 +2379,57 @@
     <message>
         <location filename="../src/main.cpp" line="170"/>
         <source>Force OpenGL SL version 1.20</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/main.cpp" line="172"/>
         <source>Force OpenGL SL version 1.50</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/main.cpp" line="177"/>
         <source>Define the system font</source>
-        <translation type="unfinished"></translation>
+        <translation>Définir la fonte du système</translation>
     </message>
     <message>
         <location filename="../src/main.cpp" line="178"/>
         <source>Font</source>
-        <translation type="unfinished"></translation>
+        <translation>Font</translation>
     </message>
     <message>
         <location filename="../src/main.cpp" line="182"/>
         <source>Set the font size (default = %1, 0: automatic from dpi)</source>
-        <translation type="unfinished"></translation>
+        <translation>Définir la taille de la fonte (par défaut = %1, 0 : automatique à partir des dpi)</translation>
     </message>
     <message>
         <location filename="../src/main.cpp" line="184"/>
         <source>Size</source>
-        <translation type="unfinished"></translation>
+        <translation>Taille</translation>
     </message>
     <message>
         <location filename="../src/main.cpp" line="187"/>
         <source>Set the font condensed value (default = %1)</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/main.cpp" line="188"/>
         <source>Condensed</source>
-        <translation type="unfinished"></translation>
+        <translation>Condensé</translation>
     </message>
     <message>
         <location filename="../src/main.cpp" line="191"/>
         <source>Reset persistent settings, start with default</source>
-        <translation type="unfinished"></translation>
+        <translation>Réinitialisation des paramètres persistants, démarrage par défaut</translation>
     </message>
     <message>
         <location filename="../src/main.cpp" line="194"/>
         <source>Verbose tracing of program startup, ui and processing steps</source>
-        <translation type="unfinished"></translation>
+        <translation>Traçage verbeux du démarrage du programme, de l&apos;interface utilisateur et des étapes de traitement</translation>
     </message>
     <message>
         <location filename="../src/main.cpp" line="195"/>
         <source>Level</source>
-        <translation type="unfinished"></translation>
+        <translation>Niveau</translation>
     </message>
 </context>
 </TS>

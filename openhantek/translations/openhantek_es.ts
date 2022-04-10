@@ -1473,135 +1473,147 @@
 <context>
     <name>QApplication</name>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="20"/>
-        <source>%L1 µV</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../src/utils/printutils.cpp" line="24"/>
-        <source>%L1 mV</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../src/utils/printutils.cpp" line="27"/>
-        <location filename="../src/utils/printutils.cpp" line="30"/>
-        <source>%L1 V</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../src/utils/printutils.cpp" line="37"/>
         <source>%L1 µV²</source>
-        <translation>%L1 µV²</translation>
+        <translation type="vanished">%L1 µV²</translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="41"/>
         <source>%L1 mV²</source>
-        <translation>%L1 mV²</translation>
+        <translation type="vanished">%L1 mV²</translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="44"/>
-        <location filename="../src/utils/printutils.cpp" line="47"/>
         <source>%L1 V²</source>
-        <translation>%L1 V²</translation>
+        <translation type="vanished">%L1 V²</translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="54"/>
-        <source>%L1 µW</source>
-        <translation></translation>
+        <location filename="../src/utils/printutils.cpp" line="20"/>
+        <source>%1 µV</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="58"/>
-        <source>%L1 mW</source>
-        <translation></translation>
+        <location filename="../src/utils/printutils.cpp" line="23"/>
+        <source>%1 mV</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="61"/>
-        <location filename="../src/utils/printutils.cpp" line="64"/>
-        <source>%L1 W</source>
-        <translation></translation>
+        <location filename="../src/utils/printutils.cpp" line="26"/>
+        <location filename="../src/utils/printutils.cpp" line="29"/>
+        <source>%1 V</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="68"/>
-        <source>%L1 dB</source>
-        <translation></translation>
+        <location filename="../src/utils/printutils.cpp" line="36"/>
+        <source>%1 µV²</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="76"/>
-        <source>%L1 ps</source>
-        <translation></translation>
+        <location filename="../src/utils/printutils.cpp" line="40"/>
+        <source>%1 mV²</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="81"/>
-        <source>%L1 ns</source>
-        <translation></translation>
+        <location filename="../src/utils/printutils.cpp" line="43"/>
+        <location filename="../src/utils/printutils.cpp" line="46"/>
+        <source>%1 V²</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="85"/>
-        <source>%L1 µs</source>
-        <translation></translation>
+        <location filename="../src/utils/printutils.cpp" line="53"/>
+        <source>%1 µW</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="89"/>
-        <source>%L1 ms</source>
-        <translation></translation>
+        <location filename="../src/utils/printutils.cpp" line="56"/>
+        <source>%1 mW</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="93"/>
-        <location filename="../src/utils/printutils.cpp" line="104"/>
-        <source>%L1 s</source>
-        <translation></translation>
+        <location filename="../src/utils/printutils.cpp" line="59"/>
+        <location filename="../src/utils/printutils.cpp" line="62"/>
+        <source>%1 W</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="96"/>
-        <source>%L1 min</source>
-        <translation></translation>
+        <location filename="../src/utils/printutils.cpp" line="66"/>
+        <source>%1 dB</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="100"/>
-        <source>%L1 h</source>
-        <translation></translation>
+        <location filename="../src/utils/printutils.cpp" line="74"/>
+        <source>%1 ps</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="111"/>
-        <location filename="../src/utils/printutils.cpp" line="123"/>
-        <source>%L1 Hz</source>
-        <translation></translation>
+        <location filename="../src/utils/printutils.cpp" line="79"/>
+        <source>%1 ns</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="114"/>
-        <source>%L1 kHz</source>
-        <translation></translation>
+        <location filename="../src/utils/printutils.cpp" line="83"/>
+        <source>%1 µs</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="117"/>
-        <source>%L1 MHz</source>
-        <translation></translation>
+        <location filename="../src/utils/printutils.cpp" line="87"/>
+        <source>%1 ms</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="120"/>
-        <source>%L1 GHz</source>
-        <translation></translation>
+        <location filename="../src/utils/printutils.cpp" line="91"/>
+        <location filename="../src/utils/printutils.cpp" line="102"/>
+        <source>%1 s</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="130"/>
-        <location filename="../src/utils/printutils.cpp" line="142"/>
-        <source>%L1 S</source>
-        <translation></translation>
+        <location filename="../src/utils/printutils.cpp" line="94"/>
+        <source>%1 min</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="133"/>
-        <source>%L1 kS</source>
-        <translation></translation>
+        <location filename="../src/utils/printutils.cpp" line="98"/>
+        <source>%1 h</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="136"/>
-        <source>%L1 MS</source>
-        <translation></translation>
+        <location filename="../src/utils/printutils.cpp" line="109"/>
+        <location filename="../src/utils/printutils.cpp" line="121"/>
+        <source>%1 Hz</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/utils/printutils.cpp" line="139"/>
-        <source>%L1 GS</source>
-        <translation></translation>
+        <location filename="../src/utils/printutils.cpp" line="112"/>
+        <source>%1 kHz</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/utils/printutils.cpp" line="115"/>
+        <source>%1 MHz</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/utils/printutils.cpp" line="118"/>
+        <source>%1 GHz</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/utils/printutils.cpp" line="128"/>
+        <location filename="../src/utils/printutils.cpp" line="140"/>
+        <source>%1 S</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/utils/printutils.cpp" line="131"/>
+        <source>%1 kS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/utils/printutils.cpp" line="134"/>
+        <source>%1 MS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/utils/printutils.cpp" line="137"/>
+        <source>%1 GS</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

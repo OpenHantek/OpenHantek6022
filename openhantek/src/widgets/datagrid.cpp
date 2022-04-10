@@ -22,7 +22,9 @@ DataGrid::DataGrid( QWidget *parent ) : QGroupBox( parent ) {
 
     setLayout( cursorsLayout );
     setFixedWidth( 150 ); // do not waste too much screen space
+    correctBackgroundColor();
 }
+
 
 DataGrid::CursorInfo::CursorInfo() {
     selector = new QPushButton();
@@ -33,6 +35,7 @@ DataGrid::CursorInfo::CursorInfo() {
     deltaYLabel = new QLabel();
     deltaYLabel->setAlignment( Qt::AlignRight );
 }
+
 
 void DataGrid::CursorInfo::configure( const QString &text, const QColor &bgColor, const QColor &fgColor ) {
     palette.setColor( QPalette::Window, bgColor );
@@ -70,6 +73,7 @@ void DataGrid::CursorInfo::configure( const QString &text, const QColor &bgColor
     deltaYLabel->setPalette( palette );
 }
 
+
 void DataGrid::setBackgroundColor( const QColor &bgColor ) {
     backgroundColor = bgColor;
     for ( auto it : items ) {
@@ -77,11 +81,24 @@ void DataGrid::setBackgroundColor( const QColor &bgColor ) {
     }
 }
 
+
+// fix Dark mode background introduced with MacOS 10.24 (mojave)
+void DataGrid::correctBackgroundColor() {
+    QPalette palette;
+    setStyleSheet( "DataGrid {color: " + palette.color( QPalette::Text ).name() +
+                   "; background-color: " + palette.color( QPalette::Mid ).name() + " }" );
+    setStyleSheet( "QToolTip { color: " + palette.color( QPalette::ToolTipText ).name() +
+                   "; background-color: " + palette.color( QPalette::ToolTipBase ).name() + " }" );
+    // setStyleSheet( "QToolTip { color: white; background-color: black }" );
+}
+
+
 void DataGrid::configureItem( unsigned index, const QColor &fgColor ) {
     if ( index < items.size() ) {
         items[ index ].configure( items[ index ].selector->text(), backgroundColor, fgColor );
     }
 }
+
 
 int DataGrid::addItem( const QString &text, const QColor &fgColor ) {
     int index = int( items.size() );
@@ -104,6 +121,7 @@ int DataGrid::addItem( const QString &text, const QColor &fgColor ) {
     return index;
 }
 
+
 void DataGrid::updateInfo( unsigned index, bool visible, const QString &strShape, const QString &strX, const QString &strY ) {
     if ( index >= items.size() )
         return;
@@ -119,6 +137,7 @@ void DataGrid::updateInfo( unsigned index, bool visible, const QString &strShape
         info.deltaYLabel->setText( QString() );
     }
 }
+
 
 void DataGrid::selectItem( unsigned index ) {
     if ( index >= items.size() )
