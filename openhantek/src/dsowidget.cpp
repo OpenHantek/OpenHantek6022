@@ -530,39 +530,41 @@ void DsoWidget::adaptTriggerLevelSlider( DsoWidget::Sliders &sliders, ChannelID 
 /// \brief Show/Hide a line of the measurement table.
 void DsoWidget::setMeasurementVisible( ChannelID channel ) {
     bool visible = scope->voltage[ channel ].used || scope->spectrum[ channel ].used;
-
-    measurementNameLabel[ channel ]->setVisible( visible );
-    measurementMiscLabel[ channel ]->setVisible( visible );
-    measurementGainLabel[ channel ]->setVisible( visible );
-    measurementVppLabel[ channel ]->setVisible( visible );
-    measurementRMSLabel[ channel ]->setVisible( visible );
-    measurementDCLabel[ channel ]->setVisible( visible );
-    measurementACLabel[ channel ]->setVisible( visible );
-    measurementdBLabel[ channel ]->setVisible( visible );
-    measurementFrequencyLabel[ channel ]->setVisible( visible );
-    measurementNoteLabel[ channel ]->setVisible( visible );
-    measurementRMSPowerLabel[ channel ]->setVisible( visible );
-    if ( !visible ) {
-        measurementGainLabel[ channel ]->setText( QString() );
-        measurementVppLabel[ channel ]->setText( QString() );
-        measurementDCLabel[ channel ]->setText( QString() );
-        measurementACLabel[ channel ]->setText( QString() );
-        measurementRMSLabel[ channel ]->setText( QString() );
-        measurementdBLabel[ channel ]->setText( QString() );
-        measurementRMSPowerLabel[ channel ]->setText( QString() );
-        measurementTHDLabel[ channel ]->setText( QString() );
-        measurementFrequencyLabel[ channel ]->setText( QString() );
-        measurementNoteLabel[ channel ]->setText( QString() );
-    }
-
-    measurementGainLabel[ channel ]->setVisible( scope->voltage[ channel ].used );
-    if ( !scope->voltage[ channel ].used ) {
-        measurementGainLabel[ channel ]->setText( QString() );
-    }
-
-    measurementMagnitudeLabel[ channel ]->setVisible( scope->spectrum[ channel ].used );
-    if ( !scope->spectrum[ channel ].used ) {
-        measurementMagnitudeLabel[ channel ]->setText( QString() );
+    if ( visible ) { // enable this line
+        measurementNameLabel[ channel ]->show();
+        measurementMiscLabel[ channel ]->show();
+        measurementGainLabel[ channel ]->show();
+        measurementMagnitudeLabel[ channel ]->show();
+        measurementVppLabel[ channel ]->show();
+        measurementRMSLabel[ channel ]->show();
+        measurementDCLabel[ channel ]->show();
+        measurementACLabel[ channel ]->show();
+        measurementdBLabel[ channel ]->show();
+        measurementFrequencyLabel[ channel ]->show();
+        measurementNoteLabel[ channel ]->show();
+        measurementRMSPowerLabel[ channel ]->show();
+        if ( scope->voltage[ channel ].used )
+            measurementGainLabel[ channel ]->show();
+        else
+            measurementGainLabel[ channel ]->setText( QString() );
+        if ( scope->spectrum[ channel ].used )
+            measurementMagnitudeLabel[ channel ]->show();
+        else
+            measurementMagnitudeLabel[ channel ]->setText( QString() );
+    } else { // do not show the line
+        measurementNameLabel[ channel ]->hide();
+        measurementMiscLabel[ channel ]->hide();
+        measurementGainLabel[ channel ]->hide();
+        measurementMagnitudeLabel[ channel ]->hide();
+        measurementVppLabel[ channel ]->hide();
+        measurementDCLabel[ channel ]->hide();
+        measurementACLabel[ channel ]->hide();
+        measurementRMSLabel[ channel ]->hide();
+        measurementdBLabel[ channel ]->hide();
+        measurementRMSPowerLabel[ channel ]->hide();
+        measurementTHDLabel[ channel ]->hide();
+        measurementFrequencyLabel[ channel ]->hide();
+        measurementNoteLabel[ channel ]->hide();
     }
 }
 

@@ -554,17 +554,17 @@
 <context>
     <name>DsoWidget</name>
     <message>
-        <location filename="../src/dsowidget.cpp" line="652"/>
         <location filename="../src/dsowidget.cpp" line="654"/>
-        <location filename="../src/dsowidget.cpp" line="695"/>
-        <location filename="../src/dsowidget.cpp" line="742"/>
-        <location filename="../src/dsowidget.cpp" line="751"/>
-        <location filename="../src/dsowidget.cpp" line="772"/>
+        <location filename="../src/dsowidget.cpp" line="656"/>
+        <location filename="../src/dsowidget.cpp" line="697"/>
+        <location filename="../src/dsowidget.cpp" line="744"/>
+        <location filename="../src/dsowidget.cpp" line="753"/>
+        <location filename="../src/dsowidget.cpp" line="774"/>
         <source>/div</source>
         <translation>/дел</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="927"/>
+        <location filename="../src/dsowidget.cpp" line="929"/>
         <source>TR</source>
         <translation> </translation>
     </message>
@@ -594,39 +594,39 @@
         <translation>Измерь или увеличь маркер &apos;1&apos; и &apos;2&apos;, двигай влево или вправо</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="599"/>
-        <location filename="../src/dsowidget.cpp" line="617"/>
+        <location filename="../src/dsowidget.cpp" line="601"/>
+        <location filename="../src/dsowidget.cpp" line="619"/>
         <source>ON</source>
         <translation>ВКЛ</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="603"/>
-        <location filename="../src/dsowidget.cpp" line="621"/>
+        <location filename="../src/dsowidget.cpp" line="605"/>
+        <location filename="../src/dsowidget.cpp" line="623"/>
         <source>OFF</source>
         <translation>ВЫКЛ</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="642"/>
+        <location filename="../src/dsowidget.cpp" line="644"/>
         <source>Markers  </source>
         <translation>Маркеры  </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="643"/>
+        <location filename="../src/dsowidget.cpp" line="645"/>
         <source>Time: </source>
         <translation>t: </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="644"/>
+        <location filename="../src/dsowidget.cpp" line="646"/>
         <source>Frequency: </source>
         <translation>f: </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="647"/>
+        <location filename="../src/dsowidget.cpp" line="649"/>
         <source>Zoom x%L1  </source>
         <translation>Увел.x%L1</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="649"/>
+        <location filename="../src/dsowidget.cpp" line="651"/>
         <source>Zoom ---  </source>
         <translation>Увел.---</translation>
     </message>
@@ -635,32 +635,32 @@
         <translation type="vanished">%L1%</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="723"/>
+        <location filename="../src/dsowidget.cpp" line="725"/>
         <source>%1  %2  %3  %4  %5</source>
         <translation>%1  %2  %3  %4  %5</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="762"/>
+        <location filename="../src/dsowidget.cpp" line="764"/>
         <source>/s</source>
         <translation>/с</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="884"/>
+        <location filename="../src/dsowidget.cpp" line="886"/>
         <source> on screen</source>
         <translation> на экране</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="919"/>
+        <location filename="../src/dsowidget.cpp" line="921"/>
         <source>&lt;b&gt; OFFSET CALIBRATION &lt;/b&gt;</source>
         <translation>&lt;b&gt; КАЛИБРОВКА СМЕЩЕНИЯ &lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="975"/>
+        <location filename="../src/dsowidget.cpp" line="977"/>
         <source>pp</source>
         <translation>пп</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="981"/>
+        <location filename="../src/dsowidget.cpp" line="983"/>
         <source>rms</source>
         <translation>скз</translation>
     </message>

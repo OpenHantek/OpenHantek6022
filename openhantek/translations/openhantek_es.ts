@@ -593,84 +593,84 @@
         <translation>Medición o zoom del marcador &apos;1&apos; y &apos;2&apos;, arrastre a la izquierda o a la derecha</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="599"/>
-        <location filename="../src/dsowidget.cpp" line="617"/>
+        <location filename="../src/dsowidget.cpp" line="601"/>
+        <location filename="../src/dsowidget.cpp" line="619"/>
         <source>ON</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="603"/>
-        <location filename="../src/dsowidget.cpp" line="621"/>
+        <location filename="../src/dsowidget.cpp" line="605"/>
+        <location filename="../src/dsowidget.cpp" line="623"/>
         <source>OFF</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="642"/>
+        <location filename="../src/dsowidget.cpp" line="644"/>
         <source>Markers  </source>
         <translation>Marcadores  </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="643"/>
+        <location filename="../src/dsowidget.cpp" line="645"/>
         <source>Time: </source>
         <translation>Tiempo: </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="644"/>
+        <location filename="../src/dsowidget.cpp" line="646"/>
         <source>Frequency: </source>
         <translation>Frecuencia: </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="647"/>
+        <location filename="../src/dsowidget.cpp" line="649"/>
         <source>Zoom x%L1  </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="649"/>
+        <location filename="../src/dsowidget.cpp" line="651"/>
         <source>Zoom ---  </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="652"/>
         <location filename="../src/dsowidget.cpp" line="654"/>
-        <location filename="../src/dsowidget.cpp" line="695"/>
-        <location filename="../src/dsowidget.cpp" line="742"/>
-        <location filename="../src/dsowidget.cpp" line="751"/>
-        <location filename="../src/dsowidget.cpp" line="772"/>
+        <location filename="../src/dsowidget.cpp" line="656"/>
+        <location filename="../src/dsowidget.cpp" line="697"/>
+        <location filename="../src/dsowidget.cpp" line="744"/>
+        <location filename="../src/dsowidget.cpp" line="753"/>
+        <location filename="../src/dsowidget.cpp" line="774"/>
         <source>/div</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="723"/>
+        <location filename="../src/dsowidget.cpp" line="725"/>
         <source>%1  %2  %3  %4  %5</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="762"/>
+        <location filename="../src/dsowidget.cpp" line="764"/>
         <source>/s</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="884"/>
+        <location filename="../src/dsowidget.cpp" line="886"/>
         <source> on screen</source>
         <translation> en pantalla</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="919"/>
+        <location filename="../src/dsowidget.cpp" line="921"/>
         <source>&lt;b&gt; OFFSET CALIBRATION &lt;/b&gt;</source>
         <translation>&lt;b&gt;CALIBRAR OFFSET&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="927"/>
+        <location filename="../src/dsowidget.cpp" line="929"/>
         <source>TR</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="975"/>
+        <location filename="../src/dsowidget.cpp" line="977"/>
         <source>pp</source>
         <translation>pp</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="981"/>
+        <location filename="../src/dsowidget.cpp" line="983"/>
         <source>rms</source>
         <translation>rms</translation>
     </message>

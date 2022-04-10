@@ -620,7 +620,7 @@
 <context>
     <name>DsoWidget</name>
     <message>
-        <location filename="../src/dsowidget.cpp" line="927"/>
+        <location filename="../src/dsowidget.cpp" line="929"/>
         <source>TR</source>
         <translation>D</translation>
     </message>
@@ -630,17 +630,17 @@
         <translation>Repères</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="652"/>
         <location filename="../src/dsowidget.cpp" line="654"/>
-        <location filename="../src/dsowidget.cpp" line="695"/>
-        <location filename="../src/dsowidget.cpp" line="742"/>
-        <location filename="../src/dsowidget.cpp" line="751"/>
-        <location filename="../src/dsowidget.cpp" line="772"/>
+        <location filename="../src/dsowidget.cpp" line="656"/>
+        <location filename="../src/dsowidget.cpp" line="697"/>
+        <location filename="../src/dsowidget.cpp" line="744"/>
+        <location filename="../src/dsowidget.cpp" line="753"/>
+        <location filename="../src/dsowidget.cpp" line="774"/>
         <source>/div</source>
         <translation>/div</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="642"/>
+        <location filename="../src/dsowidget.cpp" line="644"/>
         <source>Markers  </source>
         <translation>Repères  </translation>
     </message>
@@ -665,64 +665,64 @@
         <translation>Marqueur de mesure ou de zoom &apos;1&apos; et &apos;2&apos;, glisser vers la gauche ou la droite</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="599"/>
-        <location filename="../src/dsowidget.cpp" line="617"/>
+        <location filename="../src/dsowidget.cpp" line="601"/>
+        <location filename="../src/dsowidget.cpp" line="619"/>
         <source>ON</source>
         <translation>ON</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="603"/>
-        <location filename="../src/dsowidget.cpp" line="621"/>
+        <location filename="../src/dsowidget.cpp" line="605"/>
+        <location filename="../src/dsowidget.cpp" line="623"/>
         <source>OFF</source>
         <translation>OFF</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="643"/>
+        <location filename="../src/dsowidget.cpp" line="645"/>
         <source>Time: </source>
         <translation>Temps : </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="644"/>
+        <location filename="../src/dsowidget.cpp" line="646"/>
         <source>Frequency: </source>
         <translation>Fréquence : </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="647"/>
+        <location filename="../src/dsowidget.cpp" line="649"/>
         <source>Zoom x%L1  </source>
         <translation>Zoom ---  </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="649"/>
+        <location filename="../src/dsowidget.cpp" line="651"/>
         <source>Zoom ---  </source>
         <translation>Zoom ---  </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="723"/>
+        <location filename="../src/dsowidget.cpp" line="725"/>
         <source>%1  %2  %3  %4  %5</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="762"/>
+        <location filename="../src/dsowidget.cpp" line="764"/>
         <source>/s</source>
         <translation>/s</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="884"/>
+        <location filename="../src/dsowidget.cpp" line="886"/>
         <source> on screen</source>
         <translation> à l&apos;écran</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="919"/>
+        <location filename="../src/dsowidget.cpp" line="921"/>
         <source>&lt;b&gt; OFFSET CALIBRATION &lt;/b&gt;</source>
         <translation>&lt;b&gt;CALIBRER OFFSET&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="975"/>
+        <location filename="../src/dsowidget.cpp" line="977"/>
         <source>pp</source>
         <translation>pp</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="981"/>
+        <location filename="../src/dsowidget.cpp" line="983"/>
         <source>rms</source>
         <translation>rms</translation>
     </message>
