@@ -632,84 +632,86 @@
 <context>
     <name>DsoWidget</name>
     <message>
-        <location filename="../src/dsowidget.cpp" line="654"/>
-        <location filename="../src/dsowidget.cpp" line="656"/>
-        <location filename="../src/dsowidget.cpp" line="697"/>
-        <location filename="../src/dsowidget.cpp" line="744"/>
+        <location filename="../src/dsowidget.cpp" line="633"/>
+        <location filename="../src/dsowidget.cpp" line="635"/>
+        <location filename="../src/dsowidget.cpp" line="676"/>
+        <location filename="../src/dsowidget.cpp" line="723"/>
+        <location filename="../src/dsowidget.cpp" line="732"/>
         <location filename="../src/dsowidget.cpp" line="753"/>
-        <location filename="../src/dsowidget.cpp" line="774"/>
         <source>/div</source>
         <translation>/div</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="921"/>
+        <location filename="../src/dsowidget.cpp" line="899"/>
         <source>&lt;b&gt; OFFSET CALIBRATION &lt;/b&gt;</source>
         <translation>&lt;b&gt; OFFSET-ABGLEICH &lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="929"/>
+        <location filename="../src/dsowidget.cpp" line="907"/>
         <source>TR</source>
         <translation>TR</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="218"/>
+        <location filename="../src/dsowidget.cpp" line="194"/>
         <source>Markers</source>
         <translation>Marker</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="459"/>
+        <location filename="../src/dsowidget.cpp" line="437"/>
         <source>Trace position, drag the channel name up or down</source>
         <translation>Kurven-Position, das Namensfeld nach oben oder unten ziehen</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="481"/>
+        <location filename="../src/dsowidget.cpp" line="459"/>
         <source>Trigger position, drag the arrow left or right</source>
         <translation>Trigger-Position, Pfeil nach links oder rechts ziehen</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="491"/>
+        <location filename="../src/dsowidget.cpp" line="469"/>
         <source>Trigger level, drag the arrow up or down</source>
         <translation>Trigger-Pegel, Pfeil nach oben oder unten ziehen</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="505"/>
+        <location filename="../src/dsowidget.cpp" line="483"/>
         <source>Measure or zoom marker &apos;1&apos; and &apos;2&apos;, drag left or right</source>
         <translation>Mess- oder Zoom-Marker &apos;1&apos; und &apos;2&apos;, nach links oder rechts ziehen</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="601"/>
-        <location filename="../src/dsowidget.cpp" line="619"/>
+        <location filename="../src/dsowidget.cpp" line="579"/>
+        <location filename="../src/dsowidget.cpp" line="597"/>
         <source>ON</source>
         <translation>EIN</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="605"/>
-        <location filename="../src/dsowidget.cpp" line="623"/>
+        <location filename="../src/dsowidget.cpp" line="583"/>
+        <location filename="../src/dsowidget.cpp" line="601"/>
         <source>OFF</source>
         <translation>AUS</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="644"/>
+        <location filename="../src/dsowidget.cpp" line="622"/>
         <source>Markers  </source>
         <translation>Merker  </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="645"/>
+        <location filename="../src/dsowidget.cpp" line="628"/>
+        <source>Zoom x%1  </source>
+        <translation></translation>
+    </message>
+    <message>
         <source>Time: </source>
-        <translation>Zeit: </translation>
+        <translation type="vanished">Zeit: </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="646"/>
         <source>Frequency: </source>
-        <translation>Frequenz: </translation>
+        <translation type="vanished">Frequenz: </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="649"/>
         <source>Zoom x%L1  </source>
-        <translation>Zoom x%L1  </translation>
+        <translation type="vanished">Zoom x%L1  </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="651"/>
+        <location filename="../src/dsowidget.cpp" line="631"/>
         <source>Zoom ---  </source>
         <translation>Zoom ---  </translation>
     </message>
@@ -718,17 +720,17 @@
         <translation type="vanished">%L1%</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="725"/>
+        <location filename="../src/dsowidget.cpp" line="704"/>
         <source>%1  %2  %3  %4  %5</source>
         <translation>%1  %2  %3  %4 %5</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="764"/>
+        <location filename="../src/dsowidget.cpp" line="743"/>
         <source>/s</source>
         <translation>/s</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="886"/>
+        <location filename="../src/dsowidget.cpp" line="865"/>
         <source> on screen</source>
         <translation> angezeigt</translation>
     </message>
@@ -737,12 +739,12 @@
         <translation type="vanished">&lt;b&gt;OFFSET-ABGLEICH&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="977"/>
+        <location filename="../src/dsowidget.cpp" line="955"/>
         <source>pp</source>
         <translation>pp</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="983"/>
+        <location filename="../src/dsowidget.cpp" line="961"/>
         <source>rms</source>
         <translation>rms</translation>
     </message>
@@ -817,7 +819,7 @@
         <translation type="vanished">Konnte Kanalpegeldaten des Oszilloskops nicht lesen</translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="574"/>
+        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="577"/>
         <source>Couldn&apos;t get calibration data from oscilloscope&apos;s EEPROM. Use a config file for calibration!</source>
         <translation>Konnte Kalibrierdaten des Oszilloskops nicht lesen, benutze eine config-Datei für die Kalibrierung!</translation>
     </message>
@@ -1428,7 +1430,7 @@
     <message>
         <location filename="../src/mainwindow.cpp" line="169"/>
         <source>&amp;Print screen ..</source>
-        <translation>Drucken ..</translation>
+        <translation>&amp;Drucken ..</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="170"/>
@@ -1724,133 +1726,133 @@
     <message>
         <location filename="../src/utils/printutils.cpp" line="20"/>
         <source>%1 µV</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="23"/>
         <source>%1 mV</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="26"/>
         <location filename="../src/utils/printutils.cpp" line="29"/>
         <source>%1 V</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="36"/>
         <source>%1 µV²</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="40"/>
         <source>%1 mV²</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="43"/>
         <location filename="../src/utils/printutils.cpp" line="46"/>
         <source>%1 V²</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="53"/>
         <source>%1 µW</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="56"/>
         <source>%1 mW</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="59"/>
         <location filename="../src/utils/printutils.cpp" line="62"/>
         <source>%1 W</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="66"/>
         <source>%1 dB</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="74"/>
         <source>%1 ps</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="79"/>
         <source>%1 ns</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="83"/>
         <source>%1 µs</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="87"/>
         <source>%1 ms</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="91"/>
         <location filename="../src/utils/printutils.cpp" line="102"/>
         <source>%1 s</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="94"/>
         <source>%1 min</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="98"/>
         <source>%1 h</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="109"/>
         <location filename="../src/utils/printutils.cpp" line="121"/>
         <source>%1 Hz</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="112"/>
         <source>%1 kHz</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="115"/>
         <source>%1 MHz</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="118"/>
         <source>%1 GHz</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="128"/>
         <location filename="../src/utils/printutils.cpp" line="140"/>
         <source>%1 S</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="131"/>
         <source>%1 kS</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="134"/>
         <source>%1 MS</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="137"/>
         <source>%1 GS</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>

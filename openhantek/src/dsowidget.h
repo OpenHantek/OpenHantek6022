@@ -111,6 +111,9 @@ class DsoWidget : public QWidget {
     unsigned int dotsOnScreen;
     double pulseWidth1 = 0.0;
     double pulseWidth2 = 0.0;
+    double zoomFactor = 1.0;
+    int mainScopeRow = 0;
+    int zoomScopeRow = 0;
     void setColors();
     std::vector< Unit > voltageUnits = { UNIT_VOLTS, UNIT_VOLTS, UNIT_VOLTS };
     bool cursorMeasurementValid = false;

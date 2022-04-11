@@ -26,8 +26,6 @@
 #include "widgets/datagrid.h"
 #include "widgets/levelslider.h"
 
-static int zoomScopeRow = 0;
-
 
 DsoWidget::DsoWidget( DsoSettingsScope *scope, DsoSettingsView *view, const Dso::ControlSpecification *spec, QWidget *parent )
     : QWidget( parent ), scope( scope ), view( view ), spec( spec ), mainScope( GlScope::createNormal( scope, view ) ),
@@ -82,52 +80,42 @@ DsoWidget::DsoWidget( DsoSettingsScope *scope, DsoSettingsView *view, const Dso:
     settingsTriggerLabel->setMinimumWidth( 320 );
     settingsTriggerLabel->setIndent( 5 );
     settingsSamplesOnScreen = new QLabel();
-    settingsSamplesOnScreen->setAlignment( Qt::AlignRight );
     settingsSamplesOnScreen->setPalette( palette );
     settingsSamplerateLabel = new QLabel();
-    settingsSamplerateLabel->setAlignment( Qt::AlignRight );
     settingsSamplerateLabel->setPalette( palette );
     settingsTimebaseLabel = new QLabel();
-    settingsTimebaseLabel->setAlignment( Qt::AlignRight );
     settingsTimebaseLabel->setPalette( palette );
     settingsFrequencybaseLabel = new QLabel();
-    settingsFrequencybaseLabel->setAlignment( Qt::AlignRight );
     settingsFrequencybaseLabel->setPalette( palette );
     swTriggerStatus = new QLabel();
     swTriggerStatus->setMinimumWidth( 20 );
-    swTriggerStatus->setAlignment( Qt::AlignCenter );
     swTriggerStatus->setAutoFillBackground( true );
     swTriggerStatus->setVisible( false );
     settingsLayout = new QHBoxLayout();
-    settingsLayout->addWidget( swTriggerStatus );
+    settingsLayout->addWidget( swTriggerStatus, 0, Qt::AlignCenter );
     settingsLayout->addWidget( settingsTriggerLabel );
-    settingsLayout->addWidget( settingsSamplesOnScreen, 1 );
-    settingsLayout->addWidget( settingsSamplerateLabel, 1 );
-    settingsLayout->addWidget( settingsTimebaseLabel, 1 );
-    settingsLayout->addWidget( settingsFrequencybaseLabel, 1 );
+    settingsLayout->addWidget( settingsSamplesOnScreen, 1, Qt::AlignRight );
+    settingsLayout->addWidget( settingsSamplerateLabel, 1, Qt::AlignRight );
+    settingsLayout->addWidget( settingsTimebaseLabel, 1, Qt::AlignRight );
+    settingsLayout->addWidget( settingsFrequencybaseLabel, 1, Qt::AlignRight );
 
     // The table for the marker details
     markerInfoLabel = new QLabel();
-    markerInfoLabel->setAlignment( Qt::AlignLeft );
     markerInfoLabel->setPalette( palette );
     markerTimeLabel = new QLabel();
-    markerTimeLabel->setAlignment( Qt::AlignLeft );
     markerTimeLabel->setPalette( palette );
     markerFrequencyLabel = new QLabel();
-    markerFrequencyLabel->setAlignment( Qt::AlignLeft );
     markerFrequencyLabel->setPalette( palette );
     markerTimebaseLabel = new QLabel();
-    markerTimebaseLabel->setAlignment( Qt::AlignRight );
     markerTimebaseLabel->setPalette( palette );
     markerFrequencybaseLabel = new QLabel();
-    markerFrequencybaseLabel->setAlignment( Qt::AlignRight );
     markerFrequencybaseLabel->setPalette( palette );
     markerLayout = new QHBoxLayout();
-    markerLayout->addWidget( markerInfoLabel );
-    markerLayout->addWidget( markerTimeLabel, 1 );
-    markerLayout->addWidget( markerFrequencyLabel, 1 );
-    markerLayout->addWidget( markerTimebaseLabel, 1 );
-    markerLayout->addWidget( markerFrequencybaseLabel, 1 );
+    markerLayout->addWidget( markerInfoLabel, 0, Qt::AlignLeft );
+    markerLayout->addWidget( markerTimeLabel, 1, Qt::AlignLeft );
+    markerLayout->addWidget( markerFrequencyLabel, 1, Qt::AlignLeft );
+    markerLayout->addWidget( markerTimebaseLabel, 1, Qt::AlignRight );
+    markerLayout->addWidget( markerFrequencybaseLabel, 1, Qt::AlignRight );
 
     // The table for the measurements at screen bottom
     measurementLayout = new QGridLayout();
@@ -150,60 +138,48 @@ DsoWidget::DsoWidget( DsoSettingsScope *scope, DsoSettingsView *view, const Dso:
         voltagePalette.setColor( QPalette::WindowText, view->colors->voltage[ channel ] );
         spectrumPalette.setColor( QPalette::WindowText, view->colors->spectrum[ channel ] );
         measurementNameLabel.push_back( new QLabel( scope->voltage[ channel ].name ) );
-        measurementNameLabel[ channel ]->setAlignment( Qt::AlignLeft );
         measurementNameLabel[ channel ]->setPalette( voltagePalette );
         measurementNameLabel[ channel ]->setAutoFillBackground( true );
         measurementMiscLabel.push_back( new QLabel() );
-        measurementMiscLabel[ channel ]->setAlignment( Qt::AlignHCenter );
         measurementMiscLabel[ channel ]->setPalette( voltagePalette );
         measurementGainLabel.push_back( new QLabel() );
-        measurementGainLabel[ channel ]->setAlignment( Qt::AlignRight );
         measurementGainLabel[ channel ]->setPalette( voltagePalette );
         measurementMagnitudeLabel.push_back( new QLabel() );
-        measurementMagnitudeLabel[ channel ]->setAlignment( Qt::AlignRight );
         measurementMagnitudeLabel[ channel ]->setPalette( spectrumPalette );
         measurementVppLabel.push_back( new QLabel() );
-        measurementVppLabel[ channel ]->setAlignment( Qt::AlignRight );
         measurementVppLabel[ channel ]->setPalette( voltagePalette );
         measurementDCLabel.push_back( new QLabel() );
-        measurementDCLabel[ channel ]->setAlignment( Qt::AlignRight );
         measurementDCLabel[ channel ]->setPalette( voltagePalette );
         measurementACLabel.push_back( new QLabel() );
-        measurementACLabel[ channel ]->setAlignment( Qt::AlignRight );
         measurementACLabel[ channel ]->setPalette( voltagePalette );
         measurementRMSLabel.push_back( new QLabel() );
-        measurementRMSLabel[ channel ]->setAlignment( Qt::AlignRight );
         measurementRMSLabel[ channel ]->setPalette( voltagePalette );
         measurementdBLabel.push_back( new QLabel() );
-        measurementdBLabel[ channel ]->setAlignment( Qt::AlignRight );
         measurementdBLabel[ channel ]->setPalette( voltagePalette );
         measurementRMSPowerLabel.push_back( new QLabel() );
-        measurementRMSPowerLabel[ channel ]->setAlignment( Qt::AlignRight );
         measurementRMSPowerLabel[ channel ]->setPalette( voltagePalette );
         measurementTHDLabel.push_back( new QLabel() );
-        measurementTHDLabel[ channel ]->setAlignment( Qt::AlignRight );
         measurementTHDLabel[ channel ]->setPalette( voltagePalette );
         measurementFrequencyLabel.push_back( new QLabel() );
-        measurementFrequencyLabel[ channel ]->setAlignment( Qt::AlignRight );
         measurementFrequencyLabel[ channel ]->setPalette( voltagePalette );
         measurementNoteLabel.push_back( new QLabel() );
-        measurementNoteLabel[ channel ]->setAlignment( Qt::AlignCenter );
+        measurementNoteLabel[ channel ]->setIndent( view->fontSize ); // provide about 1 char margin
         measurementNoteLabel[ channel ]->setPalette( voltagePalette );
         setMeasurementVisible( channel );
-        int iii = 0;
-        measurementLayout->addWidget( measurementNameLabel[ channel ], int( channel ), iii++ );
-        measurementLayout->addWidget( measurementMiscLabel[ channel ], int( channel ), iii++ );
-        measurementLayout->addWidget( measurementGainLabel[ channel ], int( channel ), iii++ );
-        measurementLayout->addWidget( measurementMagnitudeLabel[ channel ], int( channel ), iii++ );
-        measurementLayout->addWidget( measurementVppLabel[ channel ], int( channel ), iii++ );
-        measurementLayout->addWidget( measurementDCLabel[ channel ], int( channel ), iii++ );
-        measurementLayout->addWidget( measurementACLabel[ channel ], int( channel ), iii++ );
-        measurementLayout->addWidget( measurementRMSLabel[ channel ], int( channel ), iii++ );
-        measurementLayout->addWidget( measurementdBLabel[ channel ], int( channel ), iii++ );
-        measurementLayout->addWidget( measurementRMSPowerLabel[ channel ], int( channel ), iii++ );
-        measurementLayout->addWidget( measurementTHDLabel[ channel ], int( channel ), iii++ );
-        measurementLayout->addWidget( measurementFrequencyLabel[ channel ], int( channel ), iii++ );
-        measurementLayout->addWidget( measurementNoteLabel[ channel ], int( channel ), iii++ );
+        int col = 0;
+        measurementLayout->addWidget( measurementNameLabel[ channel ], int( channel ), col++, Qt::AlignLeft );
+        measurementLayout->addWidget( measurementMiscLabel[ channel ], int( channel ), col++, Qt::AlignCenter );
+        measurementLayout->addWidget( measurementGainLabel[ channel ], int( channel ), col++, Qt::AlignRight );
+        measurementLayout->addWidget( measurementMagnitudeLabel[ channel ], int( channel ), col++, Qt::AlignRight );
+        measurementLayout->addWidget( measurementVppLabel[ channel ], int( channel ), col++, Qt::AlignRight );
+        measurementLayout->addWidget( measurementDCLabel[ channel ], int( channel ), col++, Qt::AlignRight );
+        measurementLayout->addWidget( measurementACLabel[ channel ], int( channel ), col++, Qt::AlignRight );
+        measurementLayout->addWidget( measurementRMSLabel[ channel ], int( channel ), col++, Qt::AlignRight );
+        measurementLayout->addWidget( measurementdBLabel[ channel ], int( channel ), col++, Qt::AlignRight );
+        measurementLayout->addWidget( measurementRMSPowerLabel[ channel ], int( channel ), col++, Qt::AlignRight );
+        measurementLayout->addWidget( measurementTHDLabel[ channel ], int( channel ), col++, Qt::AlignRight );
+        measurementLayout->addWidget( measurementFrequencyLabel[ channel ], int( channel ), col++, Qt::AlignRight );
+        measurementLayout->addWidget( measurementNoteLabel[ channel ], int( channel ), col++, Qt::AlignLeft );
         if ( channel < spec->channels )
             updateVoltageCoupling( channel );
         else
@@ -260,7 +236,6 @@ DsoWidget::DsoWidget( DsoSettingsScope *scope, DsoSettingsView *view, const Dso:
 
     // The layout for the widgets
     mainLayout = new QGridLayout();
-    mainLayout->setColumnStretch( 3, 1 ); // Scopes increase their size
     // Bars around the scope, needed because the slider-drawing-area is outside
     // the scope at min/max
     mainLayout->setColumnMinimumWidth( 2, mainSliders.triggerPositionSlider->preMargin() );
@@ -269,41 +244,40 @@ DsoWidget::DsoWidget( DsoSettingsScope *scope, DsoSettingsView *view, const Dso:
     int row = 0;
     // display settings on top of scope, full width also with cursor grid (7 columns)
     mainLayout->addLayout( settingsLayout, row, 0, 1, 7 );
-    ++row;
+    ++row; // = 1
     // 5x5 box for mainScope & mainSliders & markerSlider
     mainLayout->addWidget( mainSliders.triggerPositionSlider, row, 2, 2, 3, Qt::AlignBottom );
-    ++row;
+    ++row; // = 2
     mainLayout->setRowMinimumHeight( row, mainSliders.voltageOffsetSlider->preMargin() );
     mainLayout->addWidget( mainSliders.voltageOffsetSlider, row, 1, 3, 2, Qt::AlignRight );
     mainLayout->addWidget( mainSliders.triggerLevelSlider, row, 4, 3, 2, Qt::AlignLeft );
-    ++row;
-    mainLayout->setRowStretch( row, 1 ); // the scope gets max space
-    mainLayout->addWidget( mainScope, row, 3 );
-    ++row;
+    mainScopeRow = ++row; // = 3
+    const int scopeCol = 3;
+    mainLayout->setColumnStretch( scopeCol, 1 );  // Scopes increase their size
+    mainLayout->setRowStretch( mainScopeRow, 1 ); // the scope gets max space
+    mainLayout->addWidget( mainScope, mainScopeRow, scopeCol );
+    ++row; // = 4
     mainLayout->setRowMinimumHeight( row, mainSliders.voltageOffsetSlider->postMargin() );
     mainLayout->addWidget( mainSliders.markerSlider, row, 2, 2, 3, Qt::AlignTop );
-    row += 2; // end 5x5 box
-    // Separators and markerLayout
-    ++row;
-    mainLayout->addLayout( markerLayout, row, 1, 1, 5 );
-    ++row;
-    ++row;
+    row += 2; // = 6, end 5x5 box
+    // markerLayout
+    mainLayout->addLayout( markerLayout, row, scopeCol, 1, 3 );
+    ++row; // = 7
     // 5x4 box for zoomScope & zoomSliders
     mainLayout->addWidget( zoomSliders.triggerPositionSlider, row, 2, 2, 3, Qt::AlignBottom );
-    ++row;
+    ++row; // = 8
     mainLayout->setRowMinimumHeight( row, zoomSliders.voltageOffsetSlider->preMargin() );
     mainLayout->addWidget( zoomSliders.voltageOffsetSlider, row, 1, 3, 2, Qt::AlignRight );
     mainLayout->addWidget( zoomSliders.triggerLevelSlider, row, 4, 3, 2, Qt::AlignLeft );
-    ++row;
-    mainLayout->addWidget( zoomScope, zoomScopeRow = row, 3 );
-    ++row;
+    zoomScopeRow = ++row; // = 9
+    mainLayout->addWidget( zoomScope, zoomScopeRow, scopeCol );
+    ++row; // = 10
     mainLayout->setRowMinimumHeight( row, zoomSliders.voltageOffsetSlider->postMargin() );
-    ++row; // end 5x4 box
-    // Separator and embedded measurementLayout
-    ++row;
+    // end 5x4 box
+    // embedded measurementLayout
+    const int measurementRow = ++row; // = 11
     // display channel measurements on bottom of scope, full width also with cursor grid (7 columns)
-    mainLayout->addLayout( measurementLayout, row, 0, 1, 7 );
-
+    mainLayout->addLayout( measurementLayout, measurementRow, 0, 1, -1 );
     updateCursorGrid( view->cursorsVisible );
 
     // The widget itself
@@ -425,20 +399,24 @@ void DsoWidget::updateCursorGrid( bool enabled ) {
         zoomScope->cursorSelected( 0 );
         return;
     }
-
+    // left or right of main and zoom, from mainScope down to (excluding) measurementLayout
+    const int rows = mainLayout->rowCount() - mainScopeRow - 1;
+    const int leftColumn = 0;
+    const int rightColumn = mainLayout->columnCount() - 1;
     switch ( view->cursorGridPosition ) {
     case Qt::LeftToolBarArea:
         // keep space for settingsLayout on top and measurementLayout on bottom
-        if ( mainLayout->itemAtPosition( 2, 0 ) == nullptr ) {
+        if ( mainLayout->itemAtPosition( mainScopeRow, leftColumn ) == nullptr ) {
             cursorDataGrid->setParent( nullptr );
-            mainLayout->addWidget( cursorDataGrid, 2, 0, mainLayout->rowCount() - 5, 1 );
+            mainLayout->addWidget( cursorDataGrid, mainScopeRow, leftColumn, rows, 1 );
         }
         break;
     case Qt::RightToolBarArea:
         // keep space for settingsLayout on top and measurementLayout on bottom
-        if ( mainLayout->itemAtPosition( 2, 6 ) == nullptr ) {
+        if ( mainLayout->itemAtPosition( mainScopeRow, rightColumn ) == nullptr ) {
             cursorDataGrid->setParent( nullptr );
-            mainLayout->addWidget( cursorDataGrid, 2, 6, mainLayout->rowCount() - 5, 1 );
+            // right of main and zoom, from mainScope down to (excluding) measurementLayout
+            mainLayout->addWidget( cursorDataGrid, mainScopeRow, rightColumn, rows, 1 );
         }
         break;
     default:
@@ -642,15 +620,16 @@ void DsoWidget::updateMarkerDetails() {
         markerTimebaseLabel->setVisible( view->zoom );
         markerFrequencybaseLabel->setVisible( view->zoom );
         QString mInfo( tr( "Markers  " ) );
-        QString mTime( tr( "Time: " ) );
-        QString mFreq( tr( "Frequency: " ) );
+        QString mTime( " t: " );
+        QString mFreq( " f: " );
         if ( view->zoom ) {
-            if ( divs != 0.0 )
-                mInfo = tr( "Zoom x%L1  " ).arg( DIVS_TIME / divs, -1, 'g', 3 );
-            else // avoid div by zero
+            if ( divs != 0.0 ) {
+                zoomFactor = DIVS_TIME / divs;
+                mInfo = tr( "Zoom x%1  " ).arg( zoomFactor, -1, 'g', 3 );
+            } else { // avoid div by zero
+                zoomFactor = 1000;
                 mInfo = tr( "Zoom ---  " );
-            mTime = " t: ";
-            mFreq = " f: ";
+            }
             markerTimebaseLabel->setText( "  " + valueToString( time / DIVS_TIME, UNIT_SECONDS, 3 ) + tr( "/div" ) );
             markerTimebaseLabel->setVisible( timeUsed );
             markerFrequencybaseLabel->setText( "  " + valueToString( freq / DIVS_TIME, UNIT_HERTZ, 3 ) + tr( "/div" ) );
@@ -708,7 +687,7 @@ void DsoWidget::updateTriggerDetails() {
     settingsTriggerLabel->setPalette( tablePalette );
     QString levelString = valueToString( scope->voltage[ unsigned( scope->trigger.source ) ].trigger,
                                          voltageUnits[ size_t( scope->trigger.source ) ], 3 );
-    QString pretriggerString = valueToString( scope->trigger.position * scope->horizontal.timebase * DIVS_TIME, UNIT_SECONDS );
+    QString pretriggerString = valueToString( scope->trigger.position * scope->horizontal.timebase * DIVS_TIME, UNIT_SECONDS, 3 );
     QString pre = Dso::slopeString( scope->trigger.slope ); // trigger slope
     QString post = pre;                                     // opposite trigger slope
     if ( scope->trigger.slope == Dso::Slope::Positive )
@@ -904,7 +883,6 @@ void DsoWidget::updateZoom( bool enabled ) {
     markerLayout->setStretch( 4, enabled ? 1 : 0 );
     markerFrequencybaseLabel->setVisible( enabled );
     updateMarkerDetails();
-
     repaint();
 }
 
@@ -1006,7 +984,7 @@ void DsoWidget::showNew( std::shared_ptr< PPresult > analysedData ) {
                 double thd = data->thd;
                 measurementLayout->setColumnStretch( 10, 2 );
                 if ( thd > 0 ) // display either xx.x% or xxx%
-                    measurementTHDLabel[ channel ]->setText( QString( "%L1%" ).arg( thd * 100, 4, 'f', thd < 1 ? 1 : 0 ) );
+                    measurementTHDLabel[ channel ]->setText( QString( "%1%" ).arg( thd * 100, 4, 'f', thd < 1 ? 1 : 0 ) );
                 else // invalid, blank label
                     measurementTHDLabel[ channel ]->setText( "" );
             } else { // do not show this label
@@ -1168,10 +1146,13 @@ void DsoWidget::updateTriggerPosition( int index, double value, bool pressed, QP
     if ( scope->verboseLevel > 2 )
         qDebug() << "  DsoWidget::updateTriggerPosition()" << index << scope->trigger.position << pressed << globalPos;
     emit triggerPositionChanged( scope->trigger.position );
-    if ( pressed )
-        showCursorMessage( globalPos,
-                           valueToString( scope->trigger.position * scope->horizontal.timebase * DIVS_TIME, UNIT_SECONDS, 3 ) );
-    else
+    if ( pressed ) {
+        int resolution = 3;
+        if ( !mainView )
+            resolution += int( log10( zoomFactor ) );
+        showCursorMessage( globalPos, valueToString( scope->trigger.position * scope->horizontal.timebase * DIVS_TIME, UNIT_SECONDS,
+                                                     resolution ) );
+    } else
         showCursorMessage();
 }
 

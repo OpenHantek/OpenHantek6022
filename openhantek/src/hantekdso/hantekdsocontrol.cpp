@@ -29,9 +29,12 @@ using namespace Dso;
 HantekDsoControl::HantekDsoControl( ScopeDevice *device, const DSOModel *model, int verboseLevel )
     : verboseLevel( verboseLevel ), scopeDevice( device ), model( model ), specification( model->spec() ),
       controlsettings( &( specification->samplerate.single ), specification->channels ) {
-    qRegisterMetaType< DSOsamples * >();
+
     if ( verboseLevel > 1 )
         qDebug() << " HantekDsoControl::HantekDsoControl()";
+
+    qRegisterMetaType< DSOsamples * >();
+    qRegisterMetaType< QList< double > >();
 
     if ( device && specification->fixedUSBinLength )
         device->overwriteInPacketLength( unsigned( specification->fixedUSBinLength ) );

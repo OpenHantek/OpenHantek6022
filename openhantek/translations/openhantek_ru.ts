@@ -554,79 +554,81 @@
 <context>
     <name>DsoWidget</name>
     <message>
-        <location filename="../src/dsowidget.cpp" line="654"/>
-        <location filename="../src/dsowidget.cpp" line="656"/>
-        <location filename="../src/dsowidget.cpp" line="697"/>
-        <location filename="../src/dsowidget.cpp" line="744"/>
+        <location filename="../src/dsowidget.cpp" line="633"/>
+        <location filename="../src/dsowidget.cpp" line="635"/>
+        <location filename="../src/dsowidget.cpp" line="676"/>
+        <location filename="../src/dsowidget.cpp" line="723"/>
+        <location filename="../src/dsowidget.cpp" line="732"/>
         <location filename="../src/dsowidget.cpp" line="753"/>
-        <location filename="../src/dsowidget.cpp" line="774"/>
         <source>/div</source>
         <translation>/дел</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="929"/>
+        <location filename="../src/dsowidget.cpp" line="907"/>
         <source>TR</source>
         <translation> </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="218"/>
+        <location filename="../src/dsowidget.cpp" line="194"/>
         <source>Markers</source>
         <translation>Маркеры</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="459"/>
+        <location filename="../src/dsowidget.cpp" line="437"/>
         <source>Trace position, drag the channel name up or down</source>
         <translation>Развёртка канала, двигай название вверх или вниз</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="481"/>
+        <location filename="../src/dsowidget.cpp" line="459"/>
         <source>Trigger position, drag the arrow left or right</source>
         <translation>Позиция триггера, двигай указатель влево или вправо</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="491"/>
+        <location filename="../src/dsowidget.cpp" line="469"/>
         <source>Trigger level, drag the arrow up or down</source>
         <translation>Уровень триггера, двигай указатель вверх или вниз</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="505"/>
+        <location filename="../src/dsowidget.cpp" line="483"/>
         <source>Measure or zoom marker &apos;1&apos; and &apos;2&apos;, drag left or right</source>
         <translation>Измерь или увеличь маркер &apos;1&apos; и &apos;2&apos;, двигай влево или вправо</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="601"/>
-        <location filename="../src/dsowidget.cpp" line="619"/>
+        <location filename="../src/dsowidget.cpp" line="579"/>
+        <location filename="../src/dsowidget.cpp" line="597"/>
         <source>ON</source>
         <translation>ВКЛ</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="605"/>
-        <location filename="../src/dsowidget.cpp" line="623"/>
+        <location filename="../src/dsowidget.cpp" line="583"/>
+        <location filename="../src/dsowidget.cpp" line="601"/>
         <source>OFF</source>
         <translation>ВЫКЛ</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="644"/>
+        <location filename="../src/dsowidget.cpp" line="622"/>
         <source>Markers  </source>
         <translation>Маркеры  </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="645"/>
+        <location filename="../src/dsowidget.cpp" line="628"/>
+        <source>Zoom x%1  </source>
+        <translation>Увел.x%1  </translation>
+    </message>
+    <message>
         <source>Time: </source>
-        <translation>t: </translation>
+        <translation type="vanished">t: </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="646"/>
         <source>Frequency: </source>
-        <translation>f: </translation>
+        <translation type="vanished">f: </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="649"/>
         <source>Zoom x%L1  </source>
-        <translation>Увел.x%L1</translation>
+        <translation type="vanished">Увел.x%L1</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="651"/>
+        <location filename="../src/dsowidget.cpp" line="631"/>
         <source>Zoom ---  </source>
         <translation>Увел.---</translation>
     </message>
@@ -635,32 +637,32 @@
         <translation type="vanished">%L1%</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="725"/>
+        <location filename="../src/dsowidget.cpp" line="704"/>
         <source>%1  %2  %3  %4  %5</source>
         <translation>%1  %2  %3  %4  %5</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="764"/>
+        <location filename="../src/dsowidget.cpp" line="743"/>
         <source>/s</source>
         <translation>/с</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="886"/>
+        <location filename="../src/dsowidget.cpp" line="865"/>
         <source> on screen</source>
         <translation> на экране</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="921"/>
+        <location filename="../src/dsowidget.cpp" line="899"/>
         <source>&lt;b&gt; OFFSET CALIBRATION &lt;/b&gt;</source>
         <translation>&lt;b&gt; КАЛИБРОВКА СМЕЩЕНИЯ &lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="977"/>
+        <location filename="../src/dsowidget.cpp" line="955"/>
         <source>pp</source>
         <translation>пп</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="983"/>
+        <location filename="../src/dsowidget.cpp" line="961"/>
         <source>rms</source>
         <translation>скз</translation>
     </message>
@@ -727,7 +729,7 @@
 <context>
     <name>HantekDsoControl</name>
     <message>
-        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="574"/>
+        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="577"/>
         <source>Couldn&apos;t get calibration data from oscilloscope&apos;s EEPROM. Use a config file for calibration!</source>
         <translation>Не удалось получить данные калибровки из EEPROM осциллографа. Используйте файл конфигурации для калибровки!</translation>
     </message>
@@ -1410,133 +1412,133 @@
     <message>
         <location filename="../src/utils/printutils.cpp" line="20"/>
         <source>%1 µV</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 мкВ</translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="23"/>
         <source>%1 mV</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 мВ</translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="26"/>
         <location filename="../src/utils/printutils.cpp" line="29"/>
         <source>%1 V</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 В</translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="36"/>
         <source>%1 µV²</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 мкВ²</translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="40"/>
         <source>%1 mV²</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 мВ²</translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="43"/>
         <location filename="../src/utils/printutils.cpp" line="46"/>
         <source>%1 V²</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 В²</translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="53"/>
         <source>%1 µW</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 мкВт</translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="56"/>
         <source>%1 mW</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 мВт</translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="59"/>
         <location filename="../src/utils/printutils.cpp" line="62"/>
         <source>%1 W</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 Вт</translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="66"/>
         <source>%1 dB</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 дБ</translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="74"/>
         <source>%1 ps</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 пс</translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="79"/>
         <source>%1 ns</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 нс</translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="83"/>
         <source>%1 µs</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 мкс</translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="87"/>
         <source>%1 ms</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 мс</translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="91"/>
         <location filename="../src/utils/printutils.cpp" line="102"/>
         <source>%1 s</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 мс</translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="94"/>
         <source>%1 min</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 мин</translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="98"/>
         <source>%1 h</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 ч</translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="109"/>
         <location filename="../src/utils/printutils.cpp" line="121"/>
         <source>%1 Hz</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 Гц</translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="112"/>
         <source>%1 kHz</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 кГц</translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="115"/>
         <source>%1 MHz</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 МГц</translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="118"/>
         <source>%1 GHz</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 ГГц</translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="128"/>
         <location filename="../src/utils/printutils.cpp" line="140"/>
         <source>%1 S</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 С</translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="131"/>
         <source>%1 kS</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 кС</translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="134"/>
         <source>%1 MS</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 МС</translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="137"/>
         <source>%1 GS</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 ГС</translation>
     </message>
 </context>
 <context>
@@ -1936,7 +1938,7 @@
     <message>
         <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="58"/>
         <source>&lt;p&gt;&lt;br/&gt;&lt;b&gt;The device is ready for use.&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Please observe the &lt;a href=&apos;%1&apos;&gt;user manual&lt;/a&gt; for safe operation.&lt;/p&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;p&gt;&lt;br/&gt;&lt;b&gt;Устройство готово к работе.&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Пожалуйста изучите &lt;a href=&apos;%1&apos;&gt;руководство пользователя&lt;/a&gt; для безопасной эксплуатации устройства.&lt;/p&gt;</translation>
     </message>
     <message>
         <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="67"/>

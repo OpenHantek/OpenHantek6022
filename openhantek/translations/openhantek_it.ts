@@ -478,109 +478,107 @@
 <context>
     <name>DsoWidget</name>
     <message>
-        <location filename="../src/dsowidget.cpp" line="218"/>
+        <location filename="../src/dsowidget.cpp" line="194"/>
         <source>Markers</source>
         <translation>Marcatori</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="654"/>
-        <location filename="../src/dsowidget.cpp" line="656"/>
-        <location filename="../src/dsowidget.cpp" line="697"/>
-        <location filename="../src/dsowidget.cpp" line="744"/>
+        <location filename="../src/dsowidget.cpp" line="628"/>
+        <source>Zoom x%1  </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/dsowidget.cpp" line="633"/>
+        <location filename="../src/dsowidget.cpp" line="635"/>
+        <location filename="../src/dsowidget.cpp" line="676"/>
+        <location filename="../src/dsowidget.cpp" line="723"/>
+        <location filename="../src/dsowidget.cpp" line="732"/>
         <location filename="../src/dsowidget.cpp" line="753"/>
-        <location filename="../src/dsowidget.cpp" line="774"/>
         <source>/div</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="644"/>
+        <location filename="../src/dsowidget.cpp" line="622"/>
         <source>Markers  </source>
         <translation>Marcatori  </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="459"/>
+        <location filename="../src/dsowidget.cpp" line="437"/>
         <source>Trace position, drag the channel name up or down</source>
         <translation>Posizione della traccia, trascinare il nome del canale su o giù</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="481"/>
+        <location filename="../src/dsowidget.cpp" line="459"/>
         <source>Trigger position, drag the arrow left or right</source>
         <translation>Posizione di trigger, trascinare la freccia a sinistra o a destra</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="491"/>
+        <location filename="../src/dsowidget.cpp" line="469"/>
         <source>Trigger level, drag the arrow up or down</source>
         <translation>Livello di trigger, trascinare la freccia su o giù</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="505"/>
+        <location filename="../src/dsowidget.cpp" line="483"/>
         <source>Measure or zoom marker &apos;1&apos; and &apos;2&apos;, drag left or right</source>
         <translation>Misura o zoom marker &apos;1&apos; e &apos;2&apos;, trascinare a sinistra o a destra</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="601"/>
-        <location filename="../src/dsowidget.cpp" line="619"/>
+        <location filename="../src/dsowidget.cpp" line="579"/>
+        <location filename="../src/dsowidget.cpp" line="597"/>
         <source>ON</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="605"/>
-        <location filename="../src/dsowidget.cpp" line="623"/>
+        <location filename="../src/dsowidget.cpp" line="583"/>
+        <location filename="../src/dsowidget.cpp" line="601"/>
         <source>OFF</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="645"/>
         <source>Time: </source>
-        <translation>Tempo: </translation>
+        <translation type="vanished">Tempo: </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="646"/>
         <source>Frequency: </source>
-        <translation>Frequenza: </translation>
+        <translation type="vanished">Frequenza: </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="649"/>
-        <source>Zoom x%L1  </source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/dsowidget.cpp" line="651"/>
+        <location filename="../src/dsowidget.cpp" line="631"/>
         <source>Zoom ---  </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="725"/>
+        <location filename="../src/dsowidget.cpp" line="704"/>
         <source>%1  %2  %3  %4  %5</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="764"/>
+        <location filename="../src/dsowidget.cpp" line="743"/>
         <source>/s</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="886"/>
+        <location filename="../src/dsowidget.cpp" line="865"/>
         <source> on screen</source>
         <translation> sullo schermo</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="921"/>
+        <location filename="../src/dsowidget.cpp" line="899"/>
         <source>&lt;b&gt; OFFSET CALIBRATION &lt;/b&gt;</source>
         <translation>&lt;b&gt;Calibrare Offset&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="929"/>
+        <location filename="../src/dsowidget.cpp" line="907"/>
         <source>TR</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="977"/>
+        <location filename="../src/dsowidget.cpp" line="955"/>
         <source>pp</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="983"/>
+        <location filename="../src/dsowidget.cpp" line="961"/>
         <source>rms</source>
         <translation></translation>
     </message>
@@ -641,7 +639,7 @@
 <context>
     <name>HantekDsoControl</name>
     <message>
-        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="574"/>
+        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="577"/>
         <source>Couldn&apos;t get calibration data from oscilloscope&apos;s EEPROM. Use a config file for calibration!</source>
         <translation>Impossibile ottenere i dati di calibrazione dall&apos;EEPROM dell&apos;oscilloscopio. Utilizzare un file di configurazione per la calibrazione!</translation>
     </message>

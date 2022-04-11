@@ -79,7 +79,7 @@
     <message>
         <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="60"/>
         <source>Calculate power dissipation for load resistance</source>
-        <translation>Beräkna effektförlust för belastningsmotstånd.</translation>
+        <translation>Beräkna effektförlust för belastningsmotstånd</translation>
     </message>
     <message>
         <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="78"/>
@@ -233,7 +233,7 @@
     <message>
         <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="133"/>
         <source>Theme (restart needed to apply the change)</source>
-        <translation>Tema (omstart krävs för att få effekt) </translation>
+        <translation>Tema (omstart krävs för att få effekt)</translation>
     </message>
     <message>
         <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="140"/>
@@ -438,84 +438,86 @@
 <context>
     <name>DsoWidget</name>
     <message>
-        <location filename="../src/dsowidget.cpp" line="929"/>
+        <location filename="../src/dsowidget.cpp" line="907"/>
         <source>TR</source>
         <translation>TR</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="218"/>
+        <location filename="../src/dsowidget.cpp" line="194"/>
         <source>Markers</source>
         <translation>Markörer</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="459"/>
+        <location filename="../src/dsowidget.cpp" line="437"/>
         <source>Trace position, drag the channel name up or down</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="481"/>
+        <location filename="../src/dsowidget.cpp" line="459"/>
         <source>Trigger position, drag the arrow left or right</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="491"/>
+        <location filename="../src/dsowidget.cpp" line="469"/>
         <source>Trigger level, drag the arrow up or down</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="505"/>
+        <location filename="../src/dsowidget.cpp" line="483"/>
         <source>Measure or zoom marker &apos;1&apos; and &apos;2&apos;, drag left or right</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="601"/>
-        <location filename="../src/dsowidget.cpp" line="619"/>
+        <location filename="../src/dsowidget.cpp" line="579"/>
+        <location filename="../src/dsowidget.cpp" line="597"/>
         <source>ON</source>
         <translation>PÅ</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="605"/>
-        <location filename="../src/dsowidget.cpp" line="623"/>
+        <location filename="../src/dsowidget.cpp" line="583"/>
+        <location filename="../src/dsowidget.cpp" line="601"/>
         <source>OFF</source>
         <translation>AV</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="644"/>
+        <location filename="../src/dsowidget.cpp" line="622"/>
         <source>Markers  </source>
         <translation>Markörer  </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="645"/>
+        <location filename="../src/dsowidget.cpp" line="628"/>
+        <source>Zoom x%1  </source>
+        <translation></translation>
+    </message>
+    <message>
         <source>Time: </source>
-        <translation>Tid: </translation>
+        <translation type="vanished">Tid: </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="646"/>
         <source>Frequency: </source>
-        <translation>Frekvens: </translation>
+        <translation type="vanished">Frekvens: </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="649"/>
         <source>Zoom x%L1  </source>
-        <translation>Zoom x%L1  </translation>
+        <translation type="vanished">Zoom x%L1  </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="651"/>
+        <location filename="../src/dsowidget.cpp" line="631"/>
         <source>Zoom ---  </source>
         <translation>Zoom ---  </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="654"/>
-        <location filename="../src/dsowidget.cpp" line="656"/>
-        <location filename="../src/dsowidget.cpp" line="697"/>
-        <location filename="../src/dsowidget.cpp" line="744"/>
+        <location filename="../src/dsowidget.cpp" line="633"/>
+        <location filename="../src/dsowidget.cpp" line="635"/>
+        <location filename="../src/dsowidget.cpp" line="676"/>
+        <location filename="../src/dsowidget.cpp" line="723"/>
+        <location filename="../src/dsowidget.cpp" line="732"/>
         <location filename="../src/dsowidget.cpp" line="753"/>
-        <location filename="../src/dsowidget.cpp" line="774"/>
         <source>/div</source>
         <translation>/div</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="921"/>
+        <location filename="../src/dsowidget.cpp" line="899"/>
         <source>&lt;b&gt; OFFSET CALIBRATION &lt;/b&gt;</source>
         <translation type="unfinished"></translation>
     </message>
@@ -524,27 +526,27 @@
         <translation type="vanished">%L1%</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="725"/>
+        <location filename="../src/dsowidget.cpp" line="704"/>
         <source>%1  %2  %3  %4  %5</source>
         <translation>%1  %2  %3  %4  %5</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="764"/>
+        <location filename="../src/dsowidget.cpp" line="743"/>
         <source>/s</source>
         <translation>/s</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="886"/>
+        <location filename="../src/dsowidget.cpp" line="865"/>
         <source> on screen</source>
         <translation> på skärm</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="977"/>
+        <location filename="../src/dsowidget.cpp" line="955"/>
         <source>pp</source>
         <translation>pp</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="983"/>
+        <location filename="../src/dsowidget.cpp" line="961"/>
         <source>rms</source>
         <translation>rms</translation>
     </message>
@@ -605,7 +607,7 @@
 <context>
     <name>HantekDsoControl</name>
     <message>
-        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="574"/>
+        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="577"/>
         <source>Couldn&apos;t get calibration data from oscilloscope&apos;s EEPROM. Use a config file for calibration!</source>
         <translation>Kunde inte hämta kalibreringsdata från oscilloskopets EEPROM. Använd en konfigurationsfil för kalibrering!</translation>
     </message>
@@ -1244,133 +1246,133 @@
     <message>
         <location filename="../src/utils/printutils.cpp" line="20"/>
         <source>%1 µV</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="23"/>
         <source>%1 mV</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="26"/>
         <location filename="../src/utils/printutils.cpp" line="29"/>
         <source>%1 V</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="36"/>
         <source>%1 µV²</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="40"/>
         <source>%1 mV²</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="43"/>
         <location filename="../src/utils/printutils.cpp" line="46"/>
         <source>%1 V²</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="53"/>
         <source>%1 µW</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="56"/>
         <source>%1 mW</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="59"/>
         <location filename="../src/utils/printutils.cpp" line="62"/>
         <source>%1 W</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="66"/>
         <source>%1 dB</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="74"/>
         <source>%1 ps</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="79"/>
         <source>%1 ns</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="83"/>
         <source>%1 µs</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="87"/>
         <source>%1 ms</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="91"/>
         <location filename="../src/utils/printutils.cpp" line="102"/>
         <source>%1 s</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="94"/>
         <source>%1 min</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="98"/>
         <source>%1 h</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="109"/>
         <location filename="../src/utils/printutils.cpp" line="121"/>
         <source>%1 Hz</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="112"/>
         <source>%1 kHz</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="115"/>
         <source>%1 MHz</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="118"/>
         <source>%1 GHz</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="128"/>
         <location filename="../src/utils/printutils.cpp" line="140"/>
         <source>%1 S</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="131"/>
         <source>%1 kS</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="134"/>
         <source>%1 MS</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="137"/>
         <source>%1 GS</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -1414,57 +1416,57 @@
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="39"/>
         <source>CH1 + CH2</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="41"/>
         <source>CH1 - CH2</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="43"/>
         <source>CH2 - CH1</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="45"/>
         <source>CH1 * CH2</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="47"/>
         <source>CH1 &amp; CH2</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="49"/>
         <source>/CH1 &amp; /CH2</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="51"/>
         <source>/CH1 &amp; CH2</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="53"/>
         <source>CH1 &amp; /CH2</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="55"/>
         <source>CH1 == CH2</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="57"/>
         <source>CH1²</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="59"/>
         <source>CH2²</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="61"/>
@@ -1489,42 +1491,42 @@
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="69"/>
         <source>CH1 Abs</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="71"/>
         <source>CH2 Abs</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="73"/>
         <source>CH1 Sign</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="75"/>
         <source>CH2 Sign</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="77"/>
         <source>CH1 AC Sign</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="79"/>
         <source>CH2 AC Sign</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="81"/>
         <source>CH1 Trigger</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/post/postprocessingsettings.cpp" line="83"/>
         <source>CH2 Trigger</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Rectangular</source>
@@ -1671,7 +1673,7 @@
     <message>
         <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="58"/>
         <source>&lt;p&gt;&lt;br/&gt;&lt;b&gt;The device is ready for use.&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Please observe the &lt;a href=&apos;%1&apos;&gt;user manual&lt;/a&gt; for safe operation.&lt;/p&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;p&gt;&lt;br/&gt;&lt;b&gt;Enheten är redo att användas.&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Se &lt;a href=&apos;%1&apos;&gt;användarmanualen&lt;/a&gt; för säker användning.&lt;/p&gt;</translation>
     </message>
     <message>
         <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="63"/>
