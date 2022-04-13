@@ -10,7 +10,7 @@
 #include <QSpinBox>
 
 #include "hantekdso/controlspecification.h"
-#include "post/postprocessingsettings.h"
+#include "hantekdso/mathmodes.h"
 #include "scopesettings.h"
 
 #define ATTENUATION_MIN 1    ///< Minimum probe attenuation

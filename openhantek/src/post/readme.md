@@ -2,7 +2,6 @@
 This directory contains post processing algorithms, namely
 
 * SpectrumGenerator: calculates signal frequency by auto correlation, applies window and calculates DFT spectrum,
-* MathChannelGenerator: Creates a math channel on top of the pysical channels
 * GraphGenerator: Applies all user settings (gain, offset, trigger point) and produces vertices,
 
 # Dependency

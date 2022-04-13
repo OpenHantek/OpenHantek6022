@@ -1,15 +1,14 @@
 // SPDX-License-Identifier: GPL-2.0+
 
-#include "postprocessingsettings.h"
+#include "mathmodesettings.h"
 
 #include <QCoreApplication>
 #include <QString>
 
 namespace Dso {
 
-// both Enum definitions must match the "extern" declarations in "postprocessingsettings.h"
+// Enum definition must match the "extern" declarations in "mathmodesettings.h"
 Enum< Dso::MathMode, Dso::MathMode::ADD_CH1_CH2, Dso::MathMode::TRIG_CH2 > MathModeEnum;
-Enum< Dso::WindowFunction, Dso::WindowFunction::RECTANGULAR, Dso::WindowFunction::FLATTOP > WindowFunctionEnum;
 
 Unit mathModeUnit( MathMode mode ) {
     if ( mode == MathMode::MUL_CH1_CH2 || mode == MathMode::SQ_CH1 || mode == MathMode::SQ_CH2 )
@@ -53,6 +52,14 @@ QString mathModeString( MathMode mode ) {
         return QCoreApplication::tr( "CH1 & /CH2" );
     case MathMode::EQU_CH1_CH2:
         return QCoreApplication::tr( "CH1 == CH2" );
+    case MathMode::LP10_CH1:
+        return QCoreApplication::tr( "CH1 LP10" );
+    case MathMode::LP10_CH2:
+        return QCoreApplication::tr( "CH2 LP10" );
+    case MathMode::LP100_CH1:
+        return QCoreApplication::tr( "CH1 LP100" );
+    case MathMode::LP100_CH2:
+        return QCoreApplication::tr( "CH2 LP100" );
     case MathMode::SQ_CH1:
         return QCoreApplication::tr( "CH1²" );
     case MathMode::SQ_CH2:

@@ -30,6 +30,7 @@
 #include <QPalette>
 #include <QPrintDialog>
 #include <QPrinter>
+#include <QTimer>
 #include <QValidator>
 
 #include "OH_VERSION.h"
@@ -245,7 +246,7 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
         // disable calibration e.g. if zero signal too noisy or offset too big
         connect( dsoControl, &HantekDsoControl::liveCalibrationError, [ this, scope ]() {
             if ( verboseLevel > 2 )
-                qDebug() << "  Calibrate Offset disabled";
+                qDebug() << "  Live calibration error";
             scope->liveCalibrationActive = false;           // set incactive first to avoid ..
             ui->actionCalibrateOffset->setChecked( false ); // .. calibration storage actions
         } );

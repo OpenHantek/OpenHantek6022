@@ -6,6 +6,7 @@
 #include <QDebug>
 #include <QMutex>
 #include <QTimer>
+#include <QToolTip>
 
 #include "ppresult.h"
 #include "spectrumgenerator.h"
@@ -17,8 +18,8 @@
 
 
 /// \brief Analyzes the data from the dso.
-SpectrumGenerator::SpectrumGenerator( const DsoSettingsScope *scope, const DsoSettingsPostProcessing *post )
-    : scope( scope ), post( post ) {
+SpectrumGenerator::SpectrumGenerator( const DsoSettingsScope *scope, const DsoSettingsAnalysis *analysis )
+    : scope( scope ), analysis( analysis ) {
     if ( scope->verboseLevel > 1 )
         qDebug() << " SpectrumGenerator::SpectrumGenerator()";
 }
@@ -27,7 +28,7 @@ SpectrumGenerator::SpectrumGenerator( const DsoSettingsScope *scope, const DsoSe
 SpectrumGenerator::~SpectrumGenerator() {
     if ( scope->verboseLevel > 1 )
         qDebug() << " SpectrumGenerator::~SpectrumGenerator()";
-    if ( post->reuseFftPlan ) {
+    if ( analysis->reuseFftPlan ) {
         if ( fftPlan_R2HC ) {
             fftw_destroy_plan( fftPlan_R2HC );
             fftPlan_R2HC = nullptr;
@@ -81,11 +82,11 @@ void SpectrumGenerator::process( PPresult *result ) {
             qDebug() << "     SpectrumGenerator::process()" << channel << "sampleCount:" << sampleCount;
 
         // persistent window function, (re)build in case of changes only
-        if ( previousWindowFunction != post->spectrumWindow || window.size() != size_t( sampleCount ) ) {
+        if ( previousWindowFunction != analysis->spectrumWindow || window.size() != size_t( sampleCount ) ) {
             // Calculate new window vector
             if ( scope->verboseLevel > 5 )
                 qDebug() << "     SpectrumGenerator::process() calculate new window";
-            previousWindowFunction = post->spectrumWindow;
+            previousWindowFunction = analysis->spectrumWindow;
             window.resize( size_t( sampleCount ) );
 
             // Theory:
@@ -101,7 +102,7 @@ void SpectrumGenerator::process( PPresult *result ) {
             // scale all windows to display 1 Veff as 0 dBu reference level.
             double area = 0.0; // calculate area under window fkt
             auto pW = window.begin();
-            switch ( post->spectrumWindow ) {
+            switch ( analysis->spectrumWindow ) {
             case Dso::WindowFunction::HANN:
                 for ( int n = 0; n < sampleCount; ++n )
                     area += *pW++ = 0.5 * ( 1.0 - cos( 2.0 * M_PI * n / N ) );
@@ -255,7 +256,7 @@ void SpectrumGenerator::process( PPresult *result ) {
         ac2 /= double( sampleCount );             // AC²
         channelData->ac = sqrt( ac2 );            // rms of AC component
         channelData->rms = sqrt( dc * dc + ac2 ); // total rms = U eff
-        channelData->dB = 20.0 * log10( channelData->rms ) - post->spectrumReference;
+        channelData->dB = 20.0 * log10( channelData->rms ) - analysis->spectrumReference;
         channelData->pulseWidth1 = result->pulseWidth1;
         channelData->pulseWidth2 = result->pulseWidth2;
 
@@ -264,7 +265,7 @@ void SpectrumGenerator::process( PPresult *result ) {
         fftHcSpectrum = fftw_alloc_real( size_t( std::max( SAMPLESIZE, sampleCount ) ) );
         if ( nullptr == fftHcSpectrum ) // error
             break;
-        if ( post->reuseFftPlan ) {        // build one optimized plan and reuse it for all transformations
+        if ( analysis->reuseFftPlan ) {    // build one optimized plan and reuse it for all transformations
             if ( nullptr == fftPlan_R2HC ) // not yet created, do it now (this takes some time)
                 fftPlan_R2HC = fftw_plan_r2r_1d( sampleCount, fftWindowedValues, fftHcSpectrum, FFTW_R2HC, FFTW_MEASURE );
             fftw_execute_r2r( fftPlan_R2HC, fftWindowedValues, fftHcSpectrum ); // but it will run faster
@@ -323,7 +324,7 @@ void SpectrumGenerator::process( PPresult *result ) {
         fftHcSpectrum = nullptr;
 
         // Do half-complex to real inverse transformation -> autocorrelation
-        if ( post->reuseFftPlan ) { // same as above for time -> spectrum
+        if ( analysis->reuseFftPlan ) { // same as above for time -> spectrum
             if ( nullptr == fftPlan_HC2R )
                 fftPlan_HC2R = fftw_plan_r2r_1d( sampleCount, fftPowerSpectrum, fftAutoCorrelation, FFTW_HC2R, FFTW_MEASURE );
             fftw_execute_r2r( fftPlan_HC2R, fftPowerSpectrum, fftAutoCorrelation );
@@ -362,8 +363,8 @@ void SpectrumGenerator::process( PPresult *result ) {
 
         // Finally calculate the real spectrum (it's also used for frequency calculation)
         // Convert values into dB (Relative to the reference level 0 dBV = 1V eff)
-        double offset = -post->spectrumReference - 20 * log10( dftLength );
-        double offsetLimit = post->spectrumLimit - post->spectrumReference;
+        double offset = -analysis->spectrumReference - 20 * log10( dftLength );
+        double offsetLimit = analysis->spectrumLimit - analysis->spectrumReference;
         double peakSpectrum = offsetLimit; // get a start value for peak search
         int peakFreqPos = 0;               // initial position of max spectrum peak
         position = 0;

@@ -7,6 +7,7 @@
 
 #include "dsosettings.h"
 #include "dsowidget.h"
+#include "hantekdso/mathmodes.h"
 
 /// \brief Set the number of channels.
 /// \param channels The new channel count, that will be applied to lists.
@@ -237,13 +238,13 @@ void DsoSettings::load() {
 
     // Post processing
     if ( storeSettings->contains( "spectrumLimit" ) )
-        post.spectrumLimit = storeSettings->value( "spectrumLimit" ).toDouble();
+        analysis.spectrumLimit = storeSettings->value( "spectrumLimit" ).toDouble();
     if ( storeSettings->contains( "spectrumReference" ) )
-        post.spectrumReference = storeSettings->value( "spectrumReference" ).toDouble();
+        analysis.spectrumReference = storeSettings->value( "spectrumReference" ).toDouble();
     if ( storeSettings->contains( "spectrumWindow" ) ) {
-        post.spectrumWindow = Dso::WindowFunction( storeSettings->value( "spectrumWindow" ).toInt() );
-        if ( post.spectrumWindow > Dso::LastWindowFunction )
-            post.spectrumWindow = Dso::WindowFunction::HAMMING; // fall back to something useful
+        analysis.spectrumWindow = Dso::WindowFunction( storeSettings->value( "spectrumWindow" ).toInt() );
+        if ( analysis.spectrumWindow > Dso::LastWindowFunction )
+            analysis.spectrumWindow = Dso::WindowFunction::HAMMING; // fall back to something useful
     }
     // Analysis
     storeSettings->beginGroup( "analysis" );
@@ -254,7 +255,7 @@ void DsoSettings::load() {
     if ( storeSettings->contains( "calculateTHD" ) )
         scope.analysis.calculateTHD = storeSettings->value( "calculateTHD" ).toBool();
     if ( storeSettings->contains( "reuseFftPlan" ) )
-        post.reuseFftPlan = storeSettings->value( "reuseFftPlan" ).toBool();
+        analysis.reuseFftPlan = storeSettings->value( "reuseFftPlan" ).toBool();
     if ( storeSettings->contains( "showNoteValue" ) )
         scope.analysis.showNoteValue = storeSettings->value( "showNoteValue" ).toBool();
     storeSettings->endGroup(); // analysis
@@ -424,16 +425,16 @@ void DsoSettings::save() {
     }
 
     // Post processing
-    storeSettings->setValue( "spectrumLimit", post.spectrumLimit );
-    storeSettings->setValue( "spectrumReference", post.spectrumReference );
-    storeSettings->setValue( "spectrumWindow", unsigned( post.spectrumWindow ) );
+    storeSettings->setValue( "spectrumLimit", analysis.spectrumLimit );
+    storeSettings->setValue( "spectrumReference", analysis.spectrumReference );
+    storeSettings->setValue( "spectrumWindow", unsigned( analysis.spectrumWindow ) );
 
     // Analysis
     storeSettings->beginGroup( "analysis" );
     storeSettings->setValue( "calculateDummyLoad", scope.analysis.calculateDummyLoad );
     storeSettings->setValue( "dummyLoad", scope.analysis.dummyLoad );
     storeSettings->setValue( "calculateTHD", scope.analysis.calculateTHD );
-    storeSettings->setValue( "reuseFftPlan", post.reuseFftPlan );
+    storeSettings->setValue( "reuseFftPlan", analysis.reuseFftPlan );
     storeSettings->setValue( "showNoteValue", scope.analysis.showNoteValue );
     storeSettings->endGroup(); // analysis
     storeSettings->endGroup(); // scope

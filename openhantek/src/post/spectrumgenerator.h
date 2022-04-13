@@ -10,8 +10,8 @@
 
 #include <fftw3.h>
 
+#include "analysissettings.h"
 #include "dsosamples.h"
-#include "postprocessingsettings.h"
 #include "ppresult.h"
 #include "utils/printutils.h"
 
@@ -26,12 +26,12 @@ struct DsoSettingsScope;
 class SpectrumGenerator : public Processor {
 
   public:
-    SpectrumGenerator( const DsoSettingsScope *scope, const DsoSettingsPostProcessing *postprocessing );
+    SpectrumGenerator( const DsoSettingsScope *scope, const DsoSettingsAnalysis *postprocessing );
     ~SpectrumGenerator() override;
 
   private:
     const DsoSettingsScope *scope;
-    const DsoSettingsPostProcessing *post;
+    const DsoSettingsAnalysis *analysis;
     Dso::WindowFunction previousWindowFunction = Dso::WindowFunction( -1 ); ///< The previously used dft window function
     std::vector< double > window;                                           ///< storage for the tapering window
     fftw_plan fftPlan_R2HC = nullptr;

@@ -10,8 +10,9 @@
 
 #include "dockwindows.h"
 #include "hantekdso/enums.h"
+#include "hantekdso/mathmodes.h"
 #include "hantekprotocol/types.h"
-#include "post/postprocessingsettings.h"
+#include "post/analysissettings.h"
 
 
 void SetupDockWidget( QDockWidget *dockWindow, QWidget *dockWidget, QLayout *layout ) {

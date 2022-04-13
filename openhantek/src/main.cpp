@@ -414,7 +414,7 @@ int main( int argc, char *argv[] ) {
     postProcessingThread.setObjectName( "postProcessingThread" );
     PostProcessing postProcessing( settings.scope.countChannels(), verboseLevel );
 
-    SpectrumGenerator spectrumGenerator( &settings.scope, &settings.post );
+    SpectrumGenerator spectrumGenerator( &settings.scope, &settings.analysis );
     // math channel is now calculated in HantekDsoControl
     // MathChannelGenerator mathchannelGenerator( &settings.scope, spec->channels );
     GraphGenerator graphGenerator( &settings.scope, &settings.view );

@@ -9,7 +9,6 @@
 #include "controlspecification.h"
 #include "dsosamples.h"
 #include "errorcodes.h"
-#include "post/postprocessingsettings.h"
 #include "scopesettings.h"
 #include "utils/printutils.h"
 #include "viewconstants.h"
@@ -21,14 +20,8 @@
 
 #include <vector>
 
-#include <QMutex>
-#include <QReadLocker>
-#include <QReadWriteLock>
 #include <QSettings>
-#include <QStringList>
 #include <QThread>
-#include <QTimer>
-#include <QWriteLocker>
 
 class Capturing;
 class ScopeDevice;
@@ -138,7 +131,7 @@ class HantekDsoControl : public QObject {
     Dso::ErrorCode writeCalibrationToEEPROM();
 
     /// Get the number of samples that are expected returned by the scope.
-    /// In rolling mode this is depends on the usb speed and packet size.
+    /// In rolling mode this depends on the usb speed and packet size.
     /// \return The total number of samples the scope should return.
     unsigned getSampleCount() const { return isSingleChannel() ? getRecordLength() : getRecordLength() * specification->channels; }
 
@@ -150,15 +143,11 @@ class HantekDsoControl : public QObject {
 
     void updateInterval();
 
-    /// \brief Calculates the trigger point from the CommandGetCaptureState data.
-    /// \param value The data value that contains the trigger point.
-    /// \return The calculated trigger point for the given data.
-    static unsigned calculateTriggerPoint( unsigned value );
-
     /// \brief Converts raw oscilloscope data to sample data
     void convertRawDataToSamples();
 
     /// \brief Calculates the math channel from physical channels CH0 and CH1
+    /// separated in "mathchannel.cpp"
     void createMathChannel();
 
     /// \brief Restore the samplerate/timebase targets after divider updates.
@@ -167,6 +156,7 @@ class HantekDsoControl : public QObject {
     /// \brief Update the minimum and maximum supported samplerate.
     void updateSamplerateLimits();
 
+    /// trigger functions are separated in "triggering.cpp"
     int searchTriggerPoint( Dso::Slope dsoSlope, int startPos = 0 );
 
     Dso::Slope mirrorSlope( Dso::Slope slope ) {

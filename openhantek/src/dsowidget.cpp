@@ -14,14 +14,11 @@
 
 #include "dsowidget.h"
 
-#include "post/graphgenerator.h"
-#include "post/postprocessingsettings.h"
-#include "post/ppresult.h"
-
-#include "utils/printutils.h"
+#include "hantekdso/mathmodes.h"
 
 #include "glscope.h"
 #include "scopesettings.h"
+#include "utils/printutils.h"
 #include "viewconstants.h"
 #include "widgets/datagrid.h"
 #include "widgets/levelslider.h"
@@ -514,13 +511,14 @@ void DsoWidget::setMeasurementVisible( ChannelID channel ) {
         measurementGainLabel[ channel ]->show();
         measurementMagnitudeLabel[ channel ]->show();
         measurementVppLabel[ channel ]->show();
-        measurementRMSLabel[ channel ]->show();
         measurementDCLabel[ channel ]->show();
         measurementACLabel[ channel ]->show();
+        measurementRMSLabel[ channel ]->show();
         measurementdBLabel[ channel ]->show();
+        measurementRMSPowerLabel[ channel ]->show();
+        measurementTHDLabel[ channel ]->show();
         measurementFrequencyLabel[ channel ]->show();
         measurementNoteLabel[ channel ]->show();
-        measurementRMSPowerLabel[ channel ]->show();
         if ( scope->voltage[ channel ].used )
             measurementGainLabel[ channel ]->show();
         else

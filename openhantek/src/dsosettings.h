@@ -11,8 +11,7 @@ const unsigned CONFIG_VERSION = 2;
 #include <QString>
 #include <memory>
 
-//#include "exporting/exportsettings.h"
-#include "post/postprocessingsettings.h"
+#include "post/analysissettings.h"
 #include "scopesettings.h"
 #include "usb/scopedevice.h"
 #include "viewsettings.h"
@@ -28,13 +27,13 @@ class DsoSettings {
 
     DsoSettingsScope scope;                  ///< All oscilloscope related settings
     DsoSettingsView view;                    ///< All view related settings
-    DsoSettingsPostProcessing post;          ///< All post processing related settings
-    bool exportProcessedSamples = true;      ///< General options of the program
+    DsoSettingsAnalysis analysis;            ///< All post processing analysis related settings
+    bool exportProcessedSamples = true;      ///< Used for exporting
     bool alwaysSave = true;                  ///< Always save the settings on exit
     unsigned configVersion = CONFIG_VERSION; ///< Handle incompatible changes
-    const QString deviceName;
-    const QString deviceID;
-    const unsigned deviceFW;
+    const QString deviceName;                ///< the human readable device name, e.g. DSO-6022BE
+    const QString deviceID;                  ///< The unique serial number of EzUSB
+    const unsigned deviceFW;                 ///< The FW version number (BCD)
 
     QByteArray mainWindowGeometry; ///< Geometry of the main window
     QByteArray mainWindowState;    ///< State of docking windows and toolbars

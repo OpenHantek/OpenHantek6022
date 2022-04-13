@@ -3,18 +3,18 @@
 #include "DsoConfigAnalysisPage.h"
 
 DsoConfigAnalysisPage::DsoConfigAnalysisPage( DsoSettings *settings, QWidget *parent ) : QWidget( parent ), settings( settings ) {
+
     // Initialize lists for comboboxes
     QStringList windowFunctionStrings;
-    windowFunctionStrings << tr( "Rectangular" ) << tr( "Hann" ) << tr( "Hamming" ) << tr( "Cosine" ) << tr( "Lanczos" )
-                          << tr( "Triangular" ) << tr( "Bartlett" ) << tr( "Bartlett-Hann" ) << tr( "Gauss" ) << tr( "Kaiser" )
-                          << tr( "Blackman" ) << tr( "Nuttall" ) << tr( "Blackman-Harris" ) << tr( "Blackman-Nuttall" )
-                          << tr( "Flat top" );
+    for ( auto wf : Dso::WindowFunctionEnum ) {
+        windowFunctionStrings.append( Dso::windowFunctionString( wf ) );
+    }
 
     // Initialize elements
     windowFunctionLabel = new QLabel( tr( "Window function" ) );
     windowFunctionComboBox = new QComboBox();
     windowFunctionComboBox->addItems( windowFunctionStrings );
-    windowFunctionComboBox->setCurrentIndex( int( settings->post.spectrumWindow ) );
+    windowFunctionComboBox->setCurrentIndex( int( settings->analysis.spectrumWindow ) );
 
     referenceLevelLabel = new QLabel( tr( "Reference level<br/>"
                                           "&bull; 0 dBu = -2.2 dBV<br/>"
@@ -24,7 +24,7 @@ DsoConfigAnalysisPage::DsoConfigAnalysisPage( DsoSettings *settings, QWidget *pa
     referenceLevelSpinBox->setDecimals( 1 );
     referenceLevelSpinBox->setMinimum( -100.0 );
     referenceLevelSpinBox->setMaximum( 100.0 );
-    referenceLevelSpinBox->setValue( settings->post.spectrumReference );
+    referenceLevelSpinBox->setValue( settings->analysis.spectrumReference );
     referenceLevelUnitLabel = new QLabel( tr( "dBV" ) );
     referenceLevelLayout = new QHBoxLayout();
     referenceLevelLayout->addWidget( referenceLevelSpinBox );
@@ -35,14 +35,14 @@ DsoConfigAnalysisPage::DsoConfigAnalysisPage( DsoSettings *settings, QWidget *pa
     minimumMagnitudeSpinBox->setDecimals( 1 );
     minimumMagnitudeSpinBox->setMinimum( -100.0 );
     minimumMagnitudeSpinBox->setMaximum( 100.0 );
-    minimumMagnitudeSpinBox->setValue( settings->post.spectrumLimit );
+    minimumMagnitudeSpinBox->setValue( settings->analysis.spectrumLimit );
     minimumMagnitudeUnitLabel = new QLabel( tr( "dBV" ) );
     minimumMagnitudeLayout = new QHBoxLayout();
     minimumMagnitudeLayout->addWidget( minimumMagnitudeSpinBox );
     minimumMagnitudeLayout->addWidget( minimumMagnitudeUnitLabel );
 
     reuseFftPlanCheckBox = new QCheckBox( tr( "Optimize FFT (slower startup, but lower CPU load)" ) );
-    reuseFftPlanCheckBox->setChecked( settings->post.reuseFftPlan );
+    reuseFftPlanCheckBox->setChecked( settings->analysis.reuseFftPlan );
 
     spectrumLayout = new QGridLayout();
     int row = 0;
@@ -99,12 +99,12 @@ DsoConfigAnalysisPage::DsoConfigAnalysisPage( DsoSettings *settings, QWidget *pa
 
 /// \brief Saves the new settings.
 void DsoConfigAnalysisPage::saveSettings() {
-    settings->post.spectrumWindow = Dso::WindowFunction( windowFunctionComboBox->currentIndex() );
-    settings->post.spectrumReference = referenceLevelSpinBox->value();
-    settings->post.spectrumLimit = minimumMagnitudeSpinBox->value();
+    settings->analysis.spectrumWindow = Dso::WindowFunction( windowFunctionComboBox->currentIndex() );
+    settings->analysis.spectrumReference = referenceLevelSpinBox->value();
+    settings->analysis.spectrumLimit = minimumMagnitudeSpinBox->value();
     settings->scope.analysis.calculateDummyLoad = dummyLoadCheckbox->isChecked();
     settings->scope.analysis.dummyLoad = unsigned( dummyLoadSpinBox->value() );
     settings->scope.analysis.calculateTHD = thdCheckBox->isChecked();
-    settings->post.reuseFftPlan = reuseFftPlanCheckBox->isChecked();
+    settings->analysis.reuseFftPlan = reuseFftPlanCheckBox->isChecked();
     settings->scope.analysis.showNoteValue = showNoteCheckBox->isChecked();
 }
