@@ -108,7 +108,6 @@ class DsoWidget : public QWidget {
   private:
     double samplerate;
     double timebase;
-    unsigned int dotsOnScreen;
     double pulseWidth1 = 0.0;
     double pulseWidth2 = 0.0;
     double zoomFactor = 1.0;
@@ -144,7 +143,7 @@ class DsoWidget : public QWidget {
     void updateVoltageUsed( ChannelID channel, bool used );
 
     // Menus
-    void updateRecordLength( unsigned long size );
+    void updateRecordLength( int size );
 
     // Scope control
     void updateZoom( bool enabled );

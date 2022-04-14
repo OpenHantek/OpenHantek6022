@@ -24,9 +24,9 @@ struct DsoSettingsScopeHorizontal {
     double frequencybase = 1e3;                     ///< Frequencybase in Hz/div
     DsoSettingsScopeCursor cursor;
 
-    unsigned int recordLength = 0; ///< Sample count
-    double timebase = 1e-3;        ///< Timebase in s/div
-    double maxTimebase = 1;        ///< Allow very slow timebases 0.1 ... 10.0 s/div
+    int recordLength = 0;   ///< Sample count
+    double timebase = 1e-3; ///< Timebase in s/div
+    double maxTimebase = 1; ///< Allow very slow timebases 0.1 ... 10.0 s/div
 #ifdef Q_PROCESSOR_ARM
     // RPi: Not more often than every 10 ms
     double acquireInterval = 0.010; ///< Minimal time between captured frames
@@ -35,7 +35,8 @@ struct DsoSettingsScopeHorizontal {
     double acquireInterval = 0.001; ///< Minimal time between captured frames
 #endif
     double samplerate = 1e6; ///< The samplerate of the oscilloscope in S
-    double calfreq = 1e3;    ///< The frequency of the calibration output
+    int dotsOnScreen = 0;
+    double calfreq = 1e3; ///< The frequency of the calibration output
 };
 
 /// \brief Holds the settings for the trigger.

@@ -9,6 +9,7 @@
 #include "controlspecification.h"
 #include "dsosamples.h"
 #include "errorcodes.h"
+#include "mathchannel.h"
 #include "scopesettings.h"
 #include "utils/printutils.h"
 #include "viewconstants.h"
@@ -117,6 +118,7 @@ class HantekDsoControl : public QObject {
     void prepareForShutdown();
 
   private:
+    MathChannel *mathChannel = nullptr;
     bool singleChannel = false;
     int verboseLevel = 0;
     void setSingleChannel( bool single ) { singleChannel = single; }
@@ -145,10 +147,6 @@ class HantekDsoControl : public QObject {
 
     /// \brief Converts raw oscilloscope data to sample data
     void convertRawDataToSamples();
-
-    /// \brief Calculates the math channel from physical channels CH0 and CH1
-    /// separated in "mathchannel.cpp"
-    void createMathChannel();
 
     /// \brief Restore the samplerate/timebase targets after divider updates.
     void restoreTargets();

@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: GPL-2.0+
 
+#include "hantekdsocontrol.h"
 #include <QDebug>
 #include <cmath>
-#include "hantekdsocontrol.h"
 
 // search for trigger point from defined point, default startPos = 0;
 // return trigger position > 0 (0: no trigger found)
@@ -252,4 +252,3 @@ Dso::ErrorCode HantekDsoControl::setTriggerPosition( double position ) {
     requestRefresh();
     return Dso::ErrorCode::NONE;
 }
-

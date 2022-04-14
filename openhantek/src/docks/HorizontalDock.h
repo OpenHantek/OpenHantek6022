@@ -42,7 +42,7 @@ class HorizontalDock : public QDockWidget {
     double setTimebase( double timebase );
     /// \brief Changes the record length if the new value is supported.
     /// \param recordLength The record length in samples.
-    void setRecordLength( unsigned int recordLength );
+    void setRecordLength( int recordLength );
     /// \brief Changes the format if the new value is supported.
     /// \param format The format for the horizontal axis.
     /// \return Index of format-value, -1 on error.
@@ -95,9 +95,9 @@ class HorizontalDock : public QDockWidget {
     double samplerateRequest = 0;
 
   signals:
-    void samplerateChanged( double samplerate );            ///< The samplerate has been changed
-    void timebaseChanged( double timebase );                ///< The timebase has been changed
-    void recordLengthChanged( unsigned long recordLength ); ///< The recordd length has been changed
-    void formatChanged( Dso::GraphFormat format );          ///< The viewing format has been changed
-    void calfreqChanged( double calfreq );                  ///< The timebase has been changed
+    void samplerateChanged( double samplerate );   ///< The samplerate has been changed
+    void timebaseChanged( double timebase );       ///< The timebase has been changed
+    void recordLengthChanged( int recordLength );  ///< The recordd length has been changed
+    void formatChanged( Dso::GraphFormat format ); ///< The viewing format has been changed
+    void calfreqChanged( double calfreq );         ///< The timebase has been changed
 };

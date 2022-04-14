@@ -1,15 +1,20 @@
 // SPDX-License-Identifier: GPL-2.0+
 
 #include <QCoreApplication>
+#include <QDebug>
 
 #include "hantekdsocontrol.h"
+#include "mathchannel.h"
 #include "mathmodes.h"
+#include <cmath>
 
-void HantekDsoControl::createMathChannel() {
+MathChannel::MathChannel( const DsoSettingsScope *scope ) : scope( scope ) {}
+
+void MathChannel::calculate( DSOsamples &result ) {
     const size_t CH1 = 0;
     const size_t CH2 = 1;
     const size_t MATH = 2;
-    const double sign = controlsettings.voltage[ MATH ].inverted ? -1.0 : 1.0;
+    const double sign = scope->voltage[ MATH ].inverted ? -1.0 : 1.0;
     QWriteLocker resultLocker( &result.lock );
     std::vector< double > &mathChannel = result.data[ MATH ];
     const size_t resultSamples = result.data[ CH1 ].size();
@@ -67,24 +72,21 @@ void HantekDsoControl::createMathChannel() {
         case Dso::MathMode::AND_CH1_NOT_CH2:
             // logic values: above / below trigger level
             for ( auto it = mathChannel.begin(), end = mathChannel.end(); it != end; ++it, ++ch1Iterator, ++ch2Iterator )
-                *it = ( ( *ch1Iterator >= this->scope->voltage[ CH1 ].trigger ) &&
-                                !( *ch2Iterator >= this->scope->voltage[ CH2 ].trigger )
+                *it = ( ( *ch1Iterator >= scope->voltage[ CH1 ].trigger ) && !( *ch2Iterator >= scope->voltage[ CH2 ].trigger )
                             ? 1.0
                             : 0.0 );
             break;
         case Dso::MathMode::AND_NOT_CH1_NOT_CH2:
             // logic values: above / below trigger level
             for ( auto it = mathChannel.begin(), end = mathChannel.end(); it != end; ++it, ++ch1Iterator, ++ch2Iterator )
-                *it = ( !( *ch1Iterator >= this->scope->voltage[ CH1 ].trigger ) &&
-                                !( *ch2Iterator >= this->scope->voltage[ CH2 ].trigger )
+                *it = ( !( *ch1Iterator >= scope->voltage[ CH1 ].trigger ) && !( *ch2Iterator >= scope->voltage[ CH2 ].trigger )
                             ? 1.0
                             : 0.0 );
             break;
         case Dso::MathMode::EQU_CH1_CH2:
             // logic values: above / below trigger level
             for ( auto it = mathChannel.begin(), end = mathChannel.end(); it != end; ++it, ++ch1Iterator, ++ch2Iterator )
-                *it = ( ( *ch1Iterator >= this->scope->voltage[ CH1 ].trigger ) ==
-                                ( *ch2Iterator >= this->scope->voltage[ CH2 ].trigger )
+                *it = ( ( *ch1Iterator >= scope->voltage[ CH1 ].trigger ) == ( *ch2Iterator >= scope->voltage[ CH2 ].trigger )
                             ? 1.0
                             : 0.0 );
             break;
@@ -121,32 +123,33 @@ void HantekDsoControl::createMathChannel() {
             auto srcIt = result.data[ src ].begin();
 
             switch ( mathMode ) {
-            // Low pass filter, tau = 10 or 100 samples
             case Dso::MathMode::LP10_CH1:
             case Dso::MathMode::LP10_CH2:
             case Dso::MathMode::LP100_CH1:
             case Dso::MathMode::LP100_CH2: {
-                // do a phase correct but non-causal lp filtering
-                // set IIR filter coefficients
-                double a;
+                // zero-phase (non-causal) bidirectional low-pass filtering
+                // Steven W. Smith: The Scientist and Engineer's Guide to Digital Signal Processing, ch. 19
+                // set IIR filter coefficients a0 and b1 for tau = 10 or 100 samples (10000 samples on screen)
+                // for less on-screen-samples adapt the values according equation 19-4
+                double normalScreenSamples = double( result.data[ MATH ].size() ) / 2; // normally 10000
+                double a0, b1;
                 if ( mathMode == Dso::MathMode::LP10_CH1 || mathMode == Dso::MathMode::LP10_CH2 )
-                    a = 0.1;
+                    b1 = exp( -normalScreenSamples / scope->horizontal.dotsOnScreen / 10 ); // eq. 19-4
                 else
-                    a = 0.01;
-                const double b = 1 - a;
-
+                    b1 = exp( -normalScreenSamples / scope->horizontal.dotsOnScreen / 100 ); // eq. 19-4
+                a0 = 1 - b1;
                 // filter from left to right
                 double y = average;
                 for ( auto dstIt = mathChannel.begin(), dstEnd = mathChannel.end(); dstIt != dstEnd; ++srcIt, ++dstIt ) {
-                    *dstIt = y / 2;
-                    y = a * *srcIt + b * y;
+                    *dstIt = y / 2; // 50% contribution
+                    y = a0 * *srcIt + b1 * y;
                 }
                 // add the filter result from right to left
-                y = average;
                 auto srcIt = result.data[ src ].rbegin();
+                y = average;
                 for ( auto dstIt = mathChannel.rbegin(), dstEnd = mathChannel.rend(); dstIt != dstEnd; ++srcIt, ++dstIt ) {
-                    *dstIt += y / 2;
-                    y = a * *srcIt + b * y;
+                    *dstIt += y / 2; // the 2nd 50%
+                    y = a0 * *srcIt + b1 * y;
                 }
             } break;
             case Dso::MathMode::AC_CH1:
@@ -197,93 +200,3 @@ void HantekDsoControl::createMathChannel() {
     }
     result.mathVoltageUnit = mathModeUnit( mathMode );
 }
-
-
-namespace Dso {
-
-// Enum definition must match the "extern" declarations in "mathmodes.h"
-Enum< Dso::MathMode, Dso::MathMode::ADD_CH1_CH2, Dso::MathMode::TRIG_CH2 > MathModeEnum;
-
-Unit mathModeUnit( MathMode mode ) {
-    if ( mode == MathMode::MUL_CH1_CH2 || mode == MathMode::SQ_CH1 || mode == MathMode::SQ_CH2 )
-        return UNIT_VOLTSQUARE;
-    else if ( mode == MathMode::AND_CH1_CH2 || mode == MathMode::AND_NOT_CH1_CH2 || mode == MathMode::AND_CH1_NOT_CH2 ||
-              mode == MathMode::AND_NOT_CH1_NOT_CH2 || mode == MathMode::EQU_CH1_CH2 || mode == MathMode::SIGN_AC_CH1 ||
-              mode == MathMode::SIGN_AC_CH2 || mode == MathMode::SIGN_CH1 || mode == MathMode::SIGN_CH2 ||
-              mode == MathMode::TRIG_CH2 || mode == MathMode::TRIG_CH1 || mode == MathMode::TRIG_CH2 )
-        return UNIT_NONE; // logic values 0 or 1
-    else
-        return UNIT_VOLTS;
-}
-
-unsigned mathChannelsUsed( MathMode mode ) {
-    if ( mode <= LastBinaryMathMode ) // use both channels
-        return 3;                     // 0b11
-    else                              // use alternating CH1 (0b01), CH2 (0b10), CH1, ...
-        return ( ( unsigned( mode ) - unsigned( LastBinaryMathMode ) - 1 ) & 1 ) + 1;
-}
-
-/// \brief Return string representation of the given math mode.
-/// \param mode The ::MathMode that should be returned as string.
-/// \return The string that should be used in labels etc.
-QString mathModeString( MathMode mode ) {
-    switch ( mode ) {
-    case MathMode::ADD_CH1_CH2:
-        return QCoreApplication::tr( "CH1 + CH2" );
-    case MathMode::SUB_CH2_FROM_CH1:
-        return QCoreApplication::tr( "CH1 - CH2" );
-    case MathMode::SUB_CH1_FROM_CH2:
-        return QCoreApplication::tr( "CH2 - CH1" );
-    case MathMode::MUL_CH1_CH2:
-        return QCoreApplication::tr( "CH1 * CH2" );
-    case MathMode::AND_CH1_CH2:
-        return QCoreApplication::tr( "CH1 & CH2" );
-    case MathMode::AND_NOT_CH1_NOT_CH2:
-        return QCoreApplication::tr( "/CH1 & /CH2" );
-    case MathMode::AND_NOT_CH1_CH2:
-        return QCoreApplication::tr( "/CH1 & CH2" );
-    case MathMode::AND_CH1_NOT_CH2:
-        return QCoreApplication::tr( "CH1 & /CH2" );
-    case MathMode::EQU_CH1_CH2:
-        return QCoreApplication::tr( "CH1 == CH2" );
-    case MathMode::LP10_CH1:
-        return QCoreApplication::tr( "CH1 LP10" );
-    case MathMode::LP10_CH2:
-        return QCoreApplication::tr( "CH2 LP10" );
-    case MathMode::LP100_CH1:
-        return QCoreApplication::tr( "CH1 LP100" );
-    case MathMode::LP100_CH2:
-        return QCoreApplication::tr( "CH2 LP100" );
-    case MathMode::SQ_CH1:
-        return QCoreApplication::tr( "CH1²" );
-    case MathMode::SQ_CH2:
-        return QCoreApplication::tr( "CH2²" );
-    case MathMode::AC_CH1:
-        return QCoreApplication::tr( "CH1 AC" );
-    case MathMode::AC_CH2:
-        return QCoreApplication::tr( "CH2 AC" );
-    case MathMode::DC_CH1:
-        return QCoreApplication::tr( "CH1 DC" );
-    case MathMode::DC_CH2:
-        return QCoreApplication::tr( "CH2 DC" );
-    case MathMode::ABS_CH1:
-        return QCoreApplication::tr( "CH1 Abs" );
-    case MathMode::ABS_CH2:
-        return QCoreApplication::tr( "CH2 Abs" );
-    case MathMode::SIGN_CH1:
-        return QCoreApplication::tr( "CH1 Sign" );
-    case MathMode::SIGN_CH2:
-        return QCoreApplication::tr( "CH2 Sign" );
-    case MathMode::SIGN_AC_CH1:
-        return QCoreApplication::tr( "CH1 AC Sign" );
-    case MathMode::SIGN_AC_CH2:
-        return QCoreApplication::tr( "CH2 AC Sign" );
-    case MathMode::TRIG_CH1:
-        return QCoreApplication::tr( "CH1 Trigger" );
-    case MathMode::TRIG_CH2:
-        return QCoreApplication::tr( "CH2 Trigger" );
-    }
-    return QString();
-}
-
-} // namespace Dso

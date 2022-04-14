@@ -139,7 +139,7 @@ void DsoSettings::load() {
     if ( storeSettings->contains( "acquireInterval" ) )
         scope.horizontal.acquireInterval = storeSettings->value( "acquireInterval" ).toDouble();
     if ( storeSettings->contains( "recordLength" ) )
-        scope.horizontal.recordLength = storeSettings->value( "recordLength" ).toUInt();
+        scope.horizontal.recordLength = storeSettings->value( "recordLength" ).toInt();
     if ( storeSettings->contains( "samplerate" ) )
         scope.horizontal.samplerate = storeSettings->value( "samplerate" ).toDouble();
     if ( storeSettings->contains( "calfreq" ) )

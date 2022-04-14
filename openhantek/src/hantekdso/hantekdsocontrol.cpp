@@ -9,6 +9,7 @@
 
 #include "hantekdsocontrol.h"
 #include "hantekprotocol/controlStructs.h"
+#include "mathchannel.h"
 #include "scopesettings.h"
 #include "usb/scopedevice.h"
 
@@ -45,6 +46,8 @@ HantekDsoControl::~HantekDsoControl() {
         delete firstControlCommand;
         firstControlCommand = t;
     }
+    if ( mathChannel )
+        delete mathChannel;
 }
 
 
@@ -337,6 +340,8 @@ void HantekDsoControl::applySettings( DsoSettingsScope *dsoSettingsScope ) {
     setTriggerSlope( dsoSettingsScope->trigger.slope );
     setTriggerSource( dsoSettingsScope->trigger.source );
     setTriggerSmooth( dsoSettingsScope->trigger.smooth );
+    if ( mathChannel == nullptr )
+        mathChannel = new MathChannel( scope );
 }
 
 
@@ -785,7 +790,7 @@ void HantekDsoControl::stateMachine() {
     if ( samplingStarted && raw.valid && ( raw.tag != lastTag || raw.freeRun || refreshNeeded() ) ) {
         lastTag = raw.tag;
         convertRawDataToSamples(); // process samples, apply gain settings etc.
-        createMathChannel();       // extra file "mathchannel.cpp"
+        mathChannel->calculate( result );
         QWriteLocker resultLocker( &result.lock );
         if ( !result.freeRunning ) { // trigger mode != NONE
             // trigger functions below are in separate file "triggering.cpp"
