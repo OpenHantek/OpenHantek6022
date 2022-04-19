@@ -22,7 +22,6 @@ DataGrid::DataGrid( QWidget *parent ) : QGroupBox( parent ) {
 
     setLayout( cursorsLayout );
     setFixedWidth( 150 ); // do not waste too much screen space
-    correctBackgroundColor();
 }
 
 
@@ -79,17 +78,7 @@ void DataGrid::setBackgroundColor( const QColor &bgColor ) {
     for ( auto it : items ) {
         it.configure( it.selector->text(), bgColor, it.palette.color( QPalette::WindowText ) );
     }
-}
-
-
-// fix Dark mode background introduced with MacOS 10.24 (mojave)
-void DataGrid::correctBackgroundColor() {
-    QPalette palette;
-    setStyleSheet( "DataGrid {color: " + palette.color( QPalette::Text ).name() +
-                   "; background-color: " + palette.color( QPalette::Mid ).name() + " }" );
-    setStyleSheet( "QToolTip { color: " + palette.color( QPalette::ToolTipText ).name() +
-                   "; background-color: " + palette.color( QPalette::ToolTipBase ).name() + " }" );
-    // setStyleSheet( "QToolTip { color: white; background-color: black }" );
+    setStyleSheet( "DataGrid {background-color: " + backgroundColor.name() + " }" );
 }
 
 

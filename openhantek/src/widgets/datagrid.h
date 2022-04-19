@@ -41,7 +41,6 @@ class DataGrid : public QGroupBox {
     void selectItem( unsigned index );
 
   private:
-    void correctBackgroundColor();
     QColor backgroundColor;
     QButtonGroup *cursorsSelectorGroup;
     QGridLayout *cursorsLayout;
