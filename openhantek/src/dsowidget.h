@@ -119,6 +119,7 @@ class DsoWidget : public QWidget {
     QPoint cursorGlobalPosition = QPoint();
     QPointF cursorMeasurementPosition = QPointF();
     void showCursorMessage( QPoint globalPos = QPoint(), const QString &message = QString() );
+    void updateItem( int index, bool switchOn = false );
 
   public slots:
     // Horizontal axis

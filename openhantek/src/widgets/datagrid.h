@@ -19,7 +19,7 @@ class DataGrid : public QGroupBox {
     struct CursorInfo {
         QPalette palette;      ///< The widget's palette
         QPushButton *selector; ///< The name of the channel
-        QPushButton *shape;    ///< The cursor shape
+        QPushButton *onOff;    ///< Switch cursor on/off
         QLabel *deltaXLabel;   ///< The horizontal distance between cursors
         QLabel *deltaYLabel;   ///< The vertical distance between cursors
 
@@ -30,12 +30,12 @@ class DataGrid : public QGroupBox {
     int addItem( const QString &text, const QColor &fgColor );
     void setBackgroundColor( const QColor &bgColor );
     void configureItem( unsigned index, const QColor &fgColor );
-    void updateInfo( unsigned index, bool visible, const QString &strShape = QString(), const QString &strX = QString(),
+    void updateInfo( unsigned index, bool visible, const QString &strOnOff = QString(), const QString &strX = QString(),
                      const QString &strY = QString() );
 
   signals:
-    void itemSelected( unsigned index );
-    void itemUpdated( unsigned index );
+    void itemSelected( int index );
+    void itemUpdated( int index );
 
   public slots:
     void selectItem( unsigned index );

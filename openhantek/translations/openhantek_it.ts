@@ -10,6 +10,19 @@
     </message>
 </context>
 <context>
+    <name>DataGrid</name>
+    <message>
+        <location filename="../src/widgets/datagrid.cpp" line="31"/>
+        <source>Select the active cursor</source>
+        <translation>Seleziona il cursore attivo</translation>
+    </message>
+    <message>
+        <location filename="../src/widgets/datagrid.cpp" line="33"/>
+        <source>Show cursor and measurement</source>
+        <translation>Mostra il cursore e la misura</translation>
+    </message>
+</context>
+<context>
     <name>DsoConfigAnalysisPage</name>
     <message>
         <source>Rectangular</source>
@@ -411,59 +424,59 @@
 <context>
     <name>DsoWidget</name>
     <message>
-        <location filename="../src/dsowidget.cpp" line="191"/>
+        <location filename="../src/dsowidget.cpp" line="192"/>
         <source>Markers</source>
         <translation>Marcatori</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="626"/>
+        <location filename="../src/dsowidget.cpp" line="630"/>
         <source>Zoom x%1  </source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="631"/>
-        <location filename="../src/dsowidget.cpp" line="633"/>
-        <location filename="../src/dsowidget.cpp" line="674"/>
-        <location filename="../src/dsowidget.cpp" line="721"/>
-        <location filename="../src/dsowidget.cpp" line="730"/>
-        <location filename="../src/dsowidget.cpp" line="751"/>
+        <location filename="../src/dsowidget.cpp" line="635"/>
+        <location filename="../src/dsowidget.cpp" line="637"/>
+        <location filename="../src/dsowidget.cpp" line="678"/>
+        <location filename="../src/dsowidget.cpp" line="725"/>
+        <location filename="../src/dsowidget.cpp" line="734"/>
+        <location filename="../src/dsowidget.cpp" line="755"/>
         <source>/div</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="620"/>
+        <location filename="../src/dsowidget.cpp" line="624"/>
         <source>Markers  </source>
         <translation>Marcatori  </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="434"/>
+        <location filename="../src/dsowidget.cpp" line="438"/>
         <source>Trace position, drag the channel name up or down</source>
         <translation>Posizione della traccia, trascinare il nome del canale su o giù</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="456"/>
+        <location filename="../src/dsowidget.cpp" line="460"/>
         <source>Trigger position, drag the arrow left or right</source>
         <translation>Posizione di trigger, trascinare la freccia a sinistra o a destra</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="466"/>
+        <location filename="../src/dsowidget.cpp" line="470"/>
         <source>Trigger level, drag the arrow up or down</source>
         <translation>Livello di trigger, trascinare la freccia su o giù</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="480"/>
+        <location filename="../src/dsowidget.cpp" line="484"/>
         <source>Measure or zoom marker &apos;1&apos; and &apos;2&apos;, drag left or right</source>
         <translation>Misura o zoom marker &apos;1&apos; e &apos;2&apos;, trascinare a sinistra o a destra</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="577"/>
-        <location filename="../src/dsowidget.cpp" line="595"/>
+        <location filename="../src/dsowidget.cpp" line="581"/>
+        <location filename="../src/dsowidget.cpp" line="599"/>
         <source>ON</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="581"/>
-        <location filename="../src/dsowidget.cpp" line="599"/>
+        <location filename="../src/dsowidget.cpp" line="585"/>
+        <location filename="../src/dsowidget.cpp" line="603"/>
         <source>OFF</source>
         <translation></translation>
     </message>
@@ -476,42 +489,42 @@
         <translation type="vanished">Frequenza: </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="629"/>
+        <location filename="../src/dsowidget.cpp" line="633"/>
         <source>Zoom ---  </source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="702"/>
+        <location filename="../src/dsowidget.cpp" line="706"/>
         <source>%1  %2  %3  %4  %5</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="741"/>
+        <location filename="../src/dsowidget.cpp" line="745"/>
         <source>/s</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="863"/>
+        <location filename="../src/dsowidget.cpp" line="867"/>
         <source> on screen</source>
         <translation> sullo schermo</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="897"/>
+        <location filename="../src/dsowidget.cpp" line="901"/>
         <source>&lt;b&gt; OFFSET CALIBRATION &lt;/b&gt;</source>
         <translation>&lt;b&gt;Calibrare Offset&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="905"/>
+        <location filename="../src/dsowidget.cpp" line="909"/>
         <source>TR</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="953"/>
+        <location filename="../src/dsowidget.cpp" line="957"/>
         <source>pp</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="959"/>
+        <location filename="../src/dsowidget.cpp" line="963"/>
         <source>rms</source>
         <translation></translation>
     </message>
@@ -572,7 +585,7 @@
 <context>
     <name>HantekDsoControl</name>
     <message>
-        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="490"/>
+        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="576"/>
         <source>Couldn&apos;t get calibration data from oscilloscope&apos;s EEPROM. Use a config file for calibration!</source>
         <translation>Impossibile ottenere i dati di calibrazione dall&apos;EEPROM dell&apos;oscilloscopio. Utilizzare un file di configurazione per la calibrazione!</translation>
     </message>
@@ -592,7 +605,7 @@
     <message>
         <location filename="../src/docks/HorizontalDock.cpp" line="39"/>
         <source>Effective samplerate, automatically selected from &apos;Timebase&apos; setting</source>
-        <translation type="unfinished"></translation>
+        <translation>Campionamento effettivo, selezionato automaticamente dall&apos;impostazione &apos;Timebase&apos;</translation>
     </message>
     <message>
         <location filename="../src/docks/HorizontalDock.cpp" line="42"/>
@@ -607,7 +620,7 @@
     <message>
         <location filename="../src/docks/HorizontalDock.cpp" line="49"/>
         <source>Time per horizontal screen division</source>
-        <translation type="unfinished"></translation>
+        <translation>Tempo per divisione orizzontale dello schermo</translation>
     </message>
     <message>
         <location filename="../src/docks/HorizontalDock.cpp" line="54"/>
@@ -617,7 +630,7 @@
     <message>
         <location filename="../src/docks/HorizontalDock.cpp" line="57"/>
         <source>Select signal over time or XY display</source>
-        <translation type="unfinished"></translation>
+        <translation>Selezionare il segnale nel tempo o la visualizzazione XY</translation>
     </message>
     <message>
         <location filename="../src/docks/HorizontalDock.cpp" line="61"/>
@@ -627,7 +640,7 @@
     <message>
         <location filename="../src/docks/HorizontalDock.cpp" line="66"/>
         <source>Select the frequency of the calibration output, scroll for fast change</source>
-        <translation type="unfinished"></translation>
+        <translation>Selezionare la frequenza della calibrazione, scorrere per il cambiamento veloce</translation>
     </message>
 </context>
 <context>
@@ -1666,7 +1679,7 @@
     <message>
         <location filename="../src/docks/SpectrumDock.cpp" line="49"/>
         <source>Magnitude per vertical screen division</source>
-        <translation type="unfinished"></translation>
+        <translation>Magnitudine per divisione verticale dello schermo</translation>
     </message>
     <message>
         <location filename="../src/docks/SpectrumDock.cpp" line="75"/>
@@ -1676,7 +1689,7 @@
     <message>
         <location filename="../src/docks/SpectrumDock.cpp" line="78"/>
         <source>Frequency range per horizontal screen division</source>
-        <translation type="unfinished"></translation>
+        <translation>Frequenza per divisione orizzontale dello schermo</translation>
     </message>
 </context>
 <context>
@@ -1719,7 +1732,7 @@
     <message>
         <location filename="../src/docks/TriggerDock.cpp" line="39"/>
         <source>Select the trigger mode</source>
-        <translation type="unfinished"></translation>
+        <translation>Selezionare la modalità di trigger</translation>
     </message>
     <message>
         <location filename="../src/docks/TriggerDock.cpp" line="43"/>
@@ -1729,7 +1742,7 @@
     <message>
         <location filename="../src/docks/TriggerDock.cpp" line="46"/>
         <source>Select positive, negative or both (alternating) slopes</source>
-        <translation type="unfinished"></translation>
+        <translation>Selezionare le pendenze positive, negative o entrambe (alternate)</translation>
     </message>
     <message>
         <location filename="../src/docks/TriggerDock.cpp" line="50"/>
@@ -1739,12 +1752,12 @@
     <message>
         <location filename="../src/docks/TriggerDock.cpp" line="53"/>
         <source>Select the trigger channel (CH1, CH2, or MATH)</source>
-        <translation type="unfinished"></translation>
+        <translation>Selezionare il canale di trigger (CH1, CH2 o MATH)</translation>
     </message>
     <message>
         <location filename="../src/docks/TriggerDock.cpp" line="57"/>
         <source>Trigger on fast, normal, or slow signals</source>
-        <translation type="unfinished"></translation>
+        <translation>Innescare su segnali veloci, normali o lenti</translation>
     </message>
 </context>
 <context>
@@ -1767,17 +1780,17 @@
     <message>
         <location filename="../src/docks/VoltageDock.cpp" line="61"/>
         <source>Voltage range per vertical screen division</source>
-        <translation type="unfinished"></translation>
+        <translation>Tensione per divisione verticale dello schermo</translation>
     </message>
     <message>
         <location filename="../src/docks/VoltageDock.cpp" line="75"/>
         <source>Select DC or AC coupling</source>
-        <translation type="unfinished"></translation>
+        <translation>Selezionare l&apos;accoppiamento DC o AC</translation>
     </message>
     <message>
         <location filename="../src/docks/VoltageDock.cpp" line="79"/>
         <source>Select the mathematical operation for this channel</source>
-        <translation type="unfinished"></translation>
+        <translation>Selezionare l&apos;operazione matematica per questo canale</translation>
     </message>
     <message>
         <location filename="../src/docks/VoltageDock.cpp" line="62"/>
@@ -1787,7 +1800,7 @@
     <message>
         <location filename="../src/docks/VoltageDock.cpp" line="65"/>
         <source>Set probe attenuation, scroll or type a value to select</source>
-        <translation type="unfinished"></translation>
+        <translation>Impostare l&apos;attenuazione della sonda, scorrere o digitare un valore da selezionare</translation>
     </message>
     <message>
         <location filename="../src/docks/VoltageDock.cpp" line="68"/>

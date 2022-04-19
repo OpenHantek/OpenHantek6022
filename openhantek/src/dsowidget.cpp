@@ -45,12 +45,12 @@ DsoWidget::DsoWidget( DsoSettingsScope *scope, DsoSettingsView *view, const Dso:
     setupSliders( zoomSliders );
 
     // movement of the two vertical markers "1" and "2"
-    connect( mainScope, &GlScope::markerMoved, [ this ]( unsigned cursorIndex, unsigned marker ) {
-        mainSliders.markerSlider->setValue( int( marker ), this->scope->getMarker( marker ) );
+    connect( mainScope, &GlScope::markerMoved, [ this ]( int cursorIndex, int marker ) {
+        mainSliders.markerSlider->setValue( marker, this->scope->getMarker( marker ) );
         mainScope->updateCursor( cursorIndex );
         zoomScope->updateCursor( cursorIndex );
     } );
-    connect( zoomScope, &GlScope::markerMoved, [ this ]( unsigned cursorIndex, unsigned marker ) {
+    connect( zoomScope, &GlScope::markerMoved, [ this ]( int cursorIndex, int marker ) {
         mainSliders.markerSlider->setValue( int( marker ), this->scope->getMarker( marker ) );
         mainScope->updateCursor( cursorIndex );
         zoomScope->updateCursor( cursorIndex );
@@ -188,6 +188,7 @@ DsoWidget::DsoWidget( DsoSettingsScope *scope, DsoSettingsView *view, const Dso:
     // Cursors
     cursorDataGrid = new DataGrid( this );
     cursorDataGrid->setBackgroundColor( view->colors->background );
+
     cursorDataGrid->addItem( tr( "Markers" ), view->colors->text );
     for ( ChannelID channel = 0; channel < scope->voltage.size(); ++channel ) {
         cursorDataGrid->addItem( scope->voltage[ channel ].name, view->colors->voltage[ channel ] );
@@ -197,37 +198,13 @@ DsoWidget::DsoWidget( DsoSettingsScope *scope, DsoSettingsView *view, const Dso:
     }
     cursorDataGrid->selectItem( 0 );
 
-    connect( cursorDataGrid, &DataGrid::itemSelected, [ this ]( unsigned index ) {
+    connect( cursorDataGrid, &DataGrid::itemSelected, [ this ]( int index ) {
         mainScope->cursorSelected( index );
         zoomScope->cursorSelected( index );
+        updateItem( index, true );
     } );
-    connect( cursorDataGrid, &DataGrid::itemUpdated, [ this, scope ]( unsigned index ) {
-        unsigned channelCount = scope->countChannels();
-        if ( 0 < index && index < channelCount + 1 ) {
-            ChannelID channel = index - 1;
-            if ( scope->voltage[ channel ].used ) {
-                unsigned shape = scope->voltage[ channel ].cursor.shape;
-                if ( shape == DsoSettingsScopeCursor::NONE ) {
-                    scope->voltage[ channel ].cursor.shape = DsoSettingsScopeCursor::RECTANGULAR;
-                } else {
-                    scope->voltage[ channel ].cursor.shape = DsoSettingsScopeCursor::NONE;
-                }
-            }
-        } else if ( channelCount < index && index < 2 * channelCount + 1 ) {
-            ChannelID channel = index - channelCount - 1;
-            if ( scope->spectrum[ channel ].used ) {
-                unsigned shape = scope->spectrum[ channel ].cursor.shape;
-                if ( shape == DsoSettingsScopeCursor::NONE ) {
-                    scope->spectrum[ channel ].cursor.shape = DsoSettingsScopeCursor::RECTANGULAR;
-                } else {
-                    scope->spectrum[ channel ].cursor.shape = DsoSettingsScopeCursor::NONE;
-                }
-            }
-        }
-        updateMarkerDetails();
-        mainScope->updateCursor( index );
-        zoomScope->updateCursor( index );
-    } );
+
+    connect( cursorDataGrid, &DataGrid::itemUpdated, [ this ]( int index ) { updateItem( index ); } );
 
     scope->horizontal.cursor.shape = DsoSettingsScopeCursor::VERTICAL;
 
@@ -422,6 +399,33 @@ void DsoWidget::updateCursorGrid( bool enabled ) {
         }
         break;
     }
+}
+
+
+void DsoWidget::updateItem( int index, bool switchOn ) {
+    int channelCount = int( scope->countChannels() );
+    if ( 0 < index && index < channelCount + 1 ) {
+        ChannelID channel = ChannelID( index - 1 );
+        if ( scope->voltage[ channel ].used ) {
+            if ( switchOn || scope->voltage[ channel ].cursor.shape == DsoSettingsScopeCursor::NONE ) {
+                scope->voltage[ channel ].cursor.shape = DsoSettingsScopeCursor::RECTANGULAR;
+            } else {
+                scope->voltage[ channel ].cursor.shape = DsoSettingsScopeCursor::NONE;
+            }
+        }
+    } else if ( channelCount < index && index < 2 * channelCount + 1 ) {
+        ChannelID channel = ChannelID( index - channelCount - 1 );
+        if ( scope->spectrum[ channel ].used ) {
+            if ( switchOn || scope->spectrum[ channel ].cursor.shape == DsoSettingsScopeCursor::NONE ) {
+                scope->spectrum[ channel ].cursor.shape = DsoSettingsScopeCursor::RECTANGULAR;
+            } else {
+                scope->spectrum[ channel ].cursor.shape = DsoSettingsScopeCursor::NONE;
+            }
+        }
+    }
+    updateMarkerDetails();
+    mainScope->updateCursor( index );
+    zoomScope->updateCursor( index );
 }
 
 

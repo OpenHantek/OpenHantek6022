@@ -190,5 +190,4 @@ void SiSpinBox::setBackground() {
                    "; background-color: " + palette.color( QPalette::Mid ).name() + " }" );
     setStyleSheet( "QToolTip { color: " + palette.color( QPalette::ToolTipText ).name() +
                    "; background-color: " + palette.color( QPalette::ToolTipBase ).name() + " }" );
-    // setStyleSheet( "QToolTip { color: white; background-color: black }" );
 }

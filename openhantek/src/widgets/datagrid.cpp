@@ -18,7 +18,7 @@ DataGrid::DataGrid( QWidget *parent ) : QGroupBox( parent ) {
 #else
     connect( cursorsSelectorGroup, static_cast< void ( QButtonGroup::* )( int ) >( &QButtonGroup::buttonPressed ),
 #endif
-             [ this ]( unsigned index ) { emit itemSelected( index ); } );
+             [ this ]( int index ) { emit itemSelected( index ); } );
 
     setLayout( cursorsLayout );
     setFixedWidth( 150 ); // do not waste too much screen space
@@ -28,7 +28,9 @@ DataGrid::DataGrid( QWidget *parent ) : QGroupBox( parent ) {
 DataGrid::CursorInfo::CursorInfo() {
     selector = new QPushButton();
     selector->setCheckable( true );
-    shape = new QPushButton();
+    selector->setToolTip( tr( "Select the active cursor" ) );
+    onOff = new QPushButton();
+    onOff->setToolTip( tr( "Show cursor and measurement" ) );
     deltaXLabel = new QLabel();
     deltaXLabel->setAlignment( Qt::AlignRight );
     deltaYLabel = new QLabel();
@@ -59,14 +61,23 @@ void DataGrid::CursorInfo::configure( const QString &text, const QColor &bgColor
     )" )
             .arg( bgColor.name( QColor::HexArgb ), fgColor.name( QColor::HexArgb ), fgColor.darker().name( QColor::HexArgb ) ) );
 
-    shape->setStyleSheet( QString( R"(
+    onOff->setStyleSheet(
+        QString( R"(
         QPushButton {
             color: %2;
             background-color: %1;
-            border: none
+            border: 1px solid %2;
+        }
+        QPushButton:checked {
+            color: %1;
+            background-color: %2;
+        }
+        QPushButton:disabled {
+            color: %3;
+            border: none;
         }
     )" )
-                              .arg( bgColor.name( QColor::HexArgb ), fgColor.name( QColor::HexArgb ) ) );
+            .arg( bgColor.name( QColor::HexArgb ), fgColor.name( QColor::HexArgb ), fgColor.darker().name( QColor::HexArgb ) ) );
 
     deltaXLabel->setPalette( palette );
     deltaYLabel->setPalette( palette );
@@ -97,10 +108,11 @@ int DataGrid::addItem( const QString &text, const QColor &fgColor ) {
     info.configure( text, backgroundColor, fgColor );
     cursorsSelectorGroup->addButton( info.selector, index );
 
-    connect( info.shape, &QPushButton::clicked, [ this, index ]() { emit itemUpdated( unsigned( index ) ); } );
+    connect( info.onOff, &QPushButton::clicked, [ this, index ]() { emit itemUpdated( index ); } );
 
     cursorsLayout->addWidget( info.selector, 3 * index, 0 );
-    cursorsLayout->addWidget( info.shape, 3 * index, 1 );
+    if ( index ) // no ON/OFF button for markers
+        cursorsLayout->addWidget( info.onOff, 3 * index, 1 );
     cursorsLayout->addWidget( info.deltaXLabel, 3 * index + 1, 0 );
     cursorsLayout->addWidget( info.deltaYLabel, 3 * index + 1, 1 );
     cursorsLayout->setRowMinimumHeight( 3 * index + 2, 10 );
@@ -111,17 +123,18 @@ int DataGrid::addItem( const QString &text, const QColor &fgColor ) {
 }
 
 
-void DataGrid::updateInfo( unsigned index, bool visible, const QString &strShape, const QString &strX, const QString &strY ) {
+void DataGrid::updateInfo( unsigned index, bool visible, const QString &strOnOff, const QString &strX, const QString &strY ) {
     if ( index >= items.size() )
         return;
     CursorInfo &info = items.at( index );
     info.selector->setEnabled( visible );
+    info.onOff->setEnabled( visible );
     if ( visible ) {
-        info.shape->setText( strShape );
+        info.onOff->setText( strOnOff );
         info.deltaXLabel->setText( strX );
         info.deltaYLabel->setText( strY );
     } else {
-        info.shape->setText( QString() );
+        info.onOff->setText( QString() );
         info.deltaXLabel->setText( QString() );
         info.deltaYLabel->setText( QString() );
     }

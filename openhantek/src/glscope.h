@@ -41,8 +41,8 @@ class GlScope : public QOpenGLWidget {
      * @param data
      */
     void showData( std::shared_ptr< PPresult > newData );
-    void updateCursor( unsigned index = 0 );
-    void cursorSelected( unsigned index ) {
+    void updateCursor( int index = 0 );
+    void cursorSelected( int index ) {
         selectedCursor = index;
         updateCursor( index );
     }
@@ -79,8 +79,8 @@ class GlScope : public QOpenGLWidget {
     void drawGrid();
     /// Draw vertical lines at marker positions
     void drawMarkers();
-    void generateVertices( unsigned marker, const DsoSettingsScopeCursor &cursor );
-    void drawVertices( QOpenGLFunctions *gl, unsigned marker, QColor color );
+    void generateVertices( int marker, const DsoSettingsScopeCursor &cursor );
+    void drawVertices( QOpenGLFunctions *gl, int marker, QColor color );
 
     void drawVoltageChannelGraph( ChannelID channel, Graph &graph, int historyIndex );
     void drawHistogramChannelGraph( ChannelID channel, Graph &graph, int historyIndex );
@@ -89,7 +89,7 @@ class GlScope : public QOpenGLWidget {
     void rightMouseEvent( QMouseEvent *event );
 
   signals:
-    void markerMoved( unsigned cursorIndex, unsigned marker );
+    void markerMoved( int cursorIndex, int marker );
     void cursorMeasurement( QPointF measurePosition = QPointF(), QPoint globalPosition = QPoint(), bool status = false );
 
   private:
@@ -99,21 +99,21 @@ class GlScope : public QOpenGLWidget {
     bool zoomed = false;
 
     // Marker
-    const unsigned NO_MARKER = UINT_MAX;
+    const int NO_MARKER = INT_MAX;
 #pragma pack( push, 1 )
     struct Vertices {
         QVector3D a, b, c, d;
     };
 #pragma pack( pop )
-    const unsigned VERTICES_ARRAY_SIZE = sizeof( Vertices ) / sizeof( QVector3D );
+    const int VERTICES_ARRAY_SIZE = sizeof( Vertices ) / sizeof( QVector3D );
     std::vector< Vertices > vaMarker;
-    unsigned selectedMarker = NO_MARKER;
+    int selectedMarker = NO_MARKER;
     QOpenGLBuffer m_marker;
     QOpenGLVertexArrayObject m_vaoMarker;
 
     // Cursors
     std::vector< DsoSettingsScopeCursor * > cursorInfo;
-    unsigned selectedCursor = 0;
+    int selectedCursor = 0;
     bool rightMouseInside = false;
 
     // Grid

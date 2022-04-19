@@ -107,9 +107,9 @@ struct DsoSettingsScope {
         return deviceSpecification->couplings[ voltage[ channel ].couplingOrMathIndex ];
     }
     // Channels, including math channels
-    unsigned countChannels() const { return unsigned( voltage.size() ); }
+    int countChannels() const { return int( voltage.size() ); }
 
-    double getMarker( unsigned int marker ) const {
+    double getMarker( int marker ) const {
         double x = qBound( MARGIN_LEFT, marker < 2 ? horizontal.cursor.pos[ marker ].x() : 0.0, MARGIN_RIGHT );
         return x;
     }
