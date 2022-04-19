@@ -28,9 +28,7 @@ DataGrid::DataGrid( QWidget *parent ) : QGroupBox( parent ) {
 DataGrid::CursorInfo::CursorInfo() {
     selector = new QPushButton();
     selector->setCheckable( true );
-    selector->setToolTip( tr( "Select the active cursor" ) );
     onOff = new QPushButton();
-    onOff->setToolTip( tr( "Show cursor and measurement" ) );
     deltaXLabel = new QLabel();
     deltaXLabel->setAlignment( Qt::AlignRight );
     deltaYLabel = new QLabel();
@@ -130,10 +128,16 @@ void DataGrid::updateInfo( unsigned index, bool visible, const QString &strOnOff
     info.selector->setEnabled( visible );
     info.onOff->setEnabled( visible );
     if ( visible ) {
+        if ( toolTipsVisible ) {
+            info.selector->setToolTip( tr( "Select the active cursor" ) );
+            info.onOff->setToolTip( tr( "Show cursor and measurement" ) );
+        }
         info.onOff->setText( strOnOff );
         info.deltaXLabel->setText( strX );
         info.deltaYLabel->setText( strY );
     } else {
+        info.selector->setToolTip( QString() );
+        info.onOff->setToolTip( QString() );
         info.onOff->setText( QString() );
         info.deltaXLabel->setText( QString() );
         info.deltaYLabel->setText( QString() );
@@ -146,3 +150,6 @@ void DataGrid::selectItem( unsigned index ) {
         return;
     items[ index ].selector->setChecked( true );
 }
+
+
+void DataGrid::setToolTipsVisible( bool visible ) { toolTipsVisible = visible; }

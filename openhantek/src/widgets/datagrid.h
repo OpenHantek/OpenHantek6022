@@ -28,6 +28,7 @@ class DataGrid : public QGroupBox {
     };
 
     int addItem( const QString &text, const QColor &fgColor );
+    void setToolTipsVisible( bool visible = true );
     void setBackgroundColor( const QColor &bgColor );
     void configureItem( unsigned index, const QColor &fgColor );
     void updateInfo( unsigned index, bool visible, const QString &strOnOff = QString(), const QString &strX = QString(),
@@ -42,6 +43,7 @@ class DataGrid : public QGroupBox {
 
   private:
     QColor backgroundColor;
+    bool toolTipsVisible = false;
     QButtonGroup *cursorsSelectorGroup;
     QGridLayout *cursorsLayout;
     std::vector< CursorInfo > items;

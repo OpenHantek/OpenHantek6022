@@ -12,12 +12,12 @@
 <context>
     <name>DataGrid</name>
     <message>
-        <location filename="../src/widgets/datagrid.cpp" line="31"/>
+        <location filename="../src/widgets/datagrid.cpp" line="132"/>
         <source>Select the active cursor</source>
         <translation>Seleziona il cursore attivo</translation>
     </message>
     <message>
-        <location filename="../src/widgets/datagrid.cpp" line="33"/>
+        <location filename="../src/widgets/datagrid.cpp" line="133"/>
         <source>Show cursor and measurement</source>
         <translation>Mostra il cursore e la misura</translation>
     </message>
@@ -424,59 +424,59 @@
 <context>
     <name>DsoWidget</name>
     <message>
-        <location filename="../src/dsowidget.cpp" line="192"/>
+        <location filename="../src/dsowidget.cpp" line="193"/>
         <source>Markers</source>
         <translation>Marcatori</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="630"/>
+        <location filename="../src/dsowidget.cpp" line="631"/>
         <source>Zoom x%1  </source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="635"/>
-        <location filename="../src/dsowidget.cpp" line="637"/>
-        <location filename="../src/dsowidget.cpp" line="678"/>
-        <location filename="../src/dsowidget.cpp" line="725"/>
-        <location filename="../src/dsowidget.cpp" line="734"/>
-        <location filename="../src/dsowidget.cpp" line="755"/>
+        <location filename="../src/dsowidget.cpp" line="636"/>
+        <location filename="../src/dsowidget.cpp" line="638"/>
+        <location filename="../src/dsowidget.cpp" line="679"/>
+        <location filename="../src/dsowidget.cpp" line="726"/>
+        <location filename="../src/dsowidget.cpp" line="735"/>
+        <location filename="../src/dsowidget.cpp" line="756"/>
         <source>/div</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="624"/>
+        <location filename="../src/dsowidget.cpp" line="625"/>
         <source>Markers  </source>
         <translation>Marcatori  </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="438"/>
+        <location filename="../src/dsowidget.cpp" line="439"/>
         <source>Trace position, drag the channel name up or down</source>
         <translation>Posizione della traccia, trascinare il nome del canale su o giù</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="460"/>
+        <location filename="../src/dsowidget.cpp" line="461"/>
         <source>Trigger position, drag the arrow left or right</source>
         <translation>Posizione di trigger, trascinare la freccia a sinistra o a destra</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="470"/>
+        <location filename="../src/dsowidget.cpp" line="471"/>
         <source>Trigger level, drag the arrow up or down</source>
         <translation>Livello di trigger, trascinare la freccia su o giù</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="484"/>
+        <location filename="../src/dsowidget.cpp" line="485"/>
         <source>Measure or zoom marker &apos;1&apos; and &apos;2&apos;, drag left or right</source>
         <translation>Misura o zoom marker &apos;1&apos; e &apos;2&apos;, trascinare a sinistra o a destra</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="581"/>
-        <location filename="../src/dsowidget.cpp" line="599"/>
+        <location filename="../src/dsowidget.cpp" line="582"/>
+        <location filename="../src/dsowidget.cpp" line="600"/>
         <source>ON</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="585"/>
-        <location filename="../src/dsowidget.cpp" line="603"/>
+        <location filename="../src/dsowidget.cpp" line="586"/>
+        <location filename="../src/dsowidget.cpp" line="604"/>
         <source>OFF</source>
         <translation></translation>
     </message>
@@ -489,42 +489,42 @@
         <translation type="vanished">Frequenza: </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="633"/>
+        <location filename="../src/dsowidget.cpp" line="634"/>
         <source>Zoom ---  </source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="706"/>
+        <location filename="../src/dsowidget.cpp" line="707"/>
         <source>%1  %2  %3  %4  %5</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="745"/>
+        <location filename="../src/dsowidget.cpp" line="746"/>
         <source>/s</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="867"/>
+        <location filename="../src/dsowidget.cpp" line="868"/>
         <source> on screen</source>
         <translation> sullo schermo</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="901"/>
+        <location filename="../src/dsowidget.cpp" line="902"/>
         <source>&lt;b&gt; OFFSET CALIBRATION &lt;/b&gt;</source>
         <translation>&lt;b&gt;Calibrare Offset&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="909"/>
+        <location filename="../src/dsowidget.cpp" line="910"/>
         <source>TR</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="957"/>
+        <location filename="../src/dsowidget.cpp" line="958"/>
         <source>pp</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="963"/>
+        <location filename="../src/dsowidget.cpp" line="964"/>
         <source>rms</source>
         <translation></translation>
     </message>

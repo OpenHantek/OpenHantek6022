@@ -188,6 +188,7 @@ DsoWidget::DsoWidget( DsoSettingsScope *scope, DsoSettingsView *view, const Dso:
     // Cursors
     cursorDataGrid = new DataGrid( this );
     cursorDataGrid->setBackgroundColor( view->colors->background );
+    cursorDataGrid->setToolTipsVisible( scope->toolTipVisible );
 
     cursorDataGrid->addItem( tr( "Markers" ), view->colors->text );
     for ( ChannelID channel = 0; channel < scope->voltage.size(); ++channel ) {
