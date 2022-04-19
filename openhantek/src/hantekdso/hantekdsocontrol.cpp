@@ -48,6 +48,8 @@ HantekDsoControl::~HantekDsoControl() {
     }
     if ( mathChannel )
         delete mathChannel;
+    if ( triggering )
+        delete triggering;
 }
 
 
@@ -317,6 +319,88 @@ Dso::ErrorCode HantekDsoControl::setCoupling( ChannelID channel, Dso::Coupling c
 }
 
 
+Dso::ErrorCode HantekDsoControl::setTriggerMode( Dso::TriggerMode mode ) {
+    if ( deviceNotConnected() )
+        return Dso::ErrorCode::CONNECTION;
+
+    if ( verboseLevel > 2 )
+        qDebug() << "  HDC::setTriggerMode()" << int( mode );
+    static Dso::TriggerMode lastMode;
+    controlsettings.trigger.mode = mode;
+    if ( Dso::TriggerMode::SINGLE != mode )
+        enableSampling();
+    // trigger mode changed NONE <-> !NONE
+    if ( ( Dso::TriggerMode::ROLL == mode && Dso::TriggerMode::ROLL != lastMode ) ||
+         ( Dso::TriggerMode::ROLL != mode && Dso::TriggerMode::ROLL == lastMode ) ) {
+        restartSampling(); // invalidate old samples
+        raw.freeRun = Dso::TriggerMode::ROLL == mode;
+    }
+    lastMode = mode;
+    requestRefresh();
+    return Dso::ErrorCode::NONE;
+}
+
+
+Dso::ErrorCode HantekDsoControl::setTriggerSource( int channel ) {
+    if ( deviceNotConnected() )
+        return Dso::ErrorCode::CONNECTION;
+    if ( verboseLevel > 2 )
+        qDebug() << "  HDC::setTriggerSource()" << channel;
+    controlsettings.trigger.source = channel;
+    requestRefresh();
+    return Dso::ErrorCode::NONE;
+}
+
+
+Dso::ErrorCode HantekDsoControl::setTriggerSmooth( int smooth ) {
+    if ( deviceNotConnected() )
+        return Dso::ErrorCode::CONNECTION;
+    if ( verboseLevel > 2 )
+        qDebug() << "  HDC::setTriggerSmooth()" << smooth;
+    controlsettings.trigger.smooth = smooth;
+    requestRefresh();
+    return Dso::ErrorCode::NONE;
+}
+
+
+// trigger level in Volt
+Dso::ErrorCode HantekDsoControl::setTriggerLevel( ChannelID channel, double level ) {
+    if ( deviceNotConnected() )
+        return Dso::ErrorCode::CONNECTION;
+    if ( channel > specification->channels )
+        return Dso::ErrorCode::PARAMETER;
+    if ( verboseLevel > 2 )
+        qDebug() << "  HDC::setTriggerLevel()" << channel << level;
+    controlsettings.trigger.level[ channel ] = level;
+    requestRefresh();
+    displayInterval = 0; // update screen immediately
+    return Dso::ErrorCode::NONE;
+}
+
+
+Dso::ErrorCode HantekDsoControl::setTriggerSlope( Dso::Slope slope ) {
+    if ( deviceNotConnected() )
+        return Dso::ErrorCode::CONNECTION;
+    if ( verboseLevel > 2 )
+        qDebug() << "  HDC::setTriggerSlope()" << int( slope );
+    controlsettings.trigger.slope = slope;
+    requestRefresh();
+    return Dso::ErrorCode::NONE;
+}
+
+
+// set trigger position (0.0 - 1.0)
+Dso::ErrorCode HantekDsoControl::setTriggerPosition( double position ) {
+    if ( deviceNotConnected() )
+        return Dso::ErrorCode::CONNECTION;
+    if ( verboseLevel > 2 )
+        qDebug() << "  HDC::setTriggerPosition()" << position;
+    controlsettings.trigger.position = position;
+    requestRefresh();
+    return Dso::ErrorCode::NONE;
+}
+
+
 // Initialize the device with the current settings.
 void HantekDsoControl::applySettings( DsoSettingsScope *dsoSettingsScope ) {
     if ( verboseLevel > 1 )
@@ -342,6 +426,8 @@ void HantekDsoControl::applySettings( DsoSettingsScope *dsoSettingsScope ) {
     setTriggerSmooth( dsoSettingsScope->trigger.smooth );
     if ( mathChannel == nullptr )
         mathChannel = new MathChannel( scope );
+    if ( triggering == nullptr )
+        triggering = new Triggering( scope, controlsettings );
 }
 
 
@@ -359,7 +445,7 @@ void HantekDsoControl::enableSampling( bool enabled ) {
     if ( verboseLevel > 4 )
         qDebug() << "    HDC::enableSampling()" << enabled;
     if ( enabled && controlsettings.trigger.mode == Dso::TriggerMode::SINGLE )
-        triggeredPositionRaw = 0; // invalidate previous result, wait for new trigger
+        triggering->resetTriggeredPositionRaw(); // invalidate previous result, wait for new trigger
     sampling = enabled;
     updateSamplerateLimits();
     emit showSamplingStatus( enabled );
@@ -794,8 +880,8 @@ void HantekDsoControl::stateMachine() {
         QWriteLocker resultLocker( &result.lock );
         if ( !result.freeRunning ) { // trigger mode != NONE
             // trigger functions below are in separate file "triggering.cpp"
-            searchTriggeredPosition();          // detect trigger point
-            triggered = provideTriggeredData(); // present either free running or last triggered trace
+            triggering->searchTriggeredPosition( result );          // detect trigger point
+            triggered = triggering->provideTriggeredData( result ); // present either free running or last triggered trace
         } else { // free running display (uses half sample size -> double display speed for slow sample rates)
             triggered = false;
             result.triggeredPosition = 0;
@@ -825,7 +911,7 @@ void HantekDsoControl::stateMachine() {
     lastTriggered = triggered; // save state
 
     // Stop sampling if we're in single trigger mode and have a triggered trace (txh No13)
-    if ( isSampling() && controlsettings.trigger.mode == Dso::TriggerMode::SINGLE && triggeredPositionRaw > 0 ) {
+    if ( isSampling() && controlsettings.trigger.mode == Dso::TriggerMode::SINGLE && triggering->getTriggeredPositionRaw() ) {
         if ( verboseLevel > 5 )
             qDebug() << "     HDC::stateMachine() stop sampling" << raw.tag;
         if ( skipFirstSingle ) { // skip the 1st measurement in single mode

@@ -1,12 +1,21 @@
 // SPDX-License-Identifier: GPL-2.0+
 
+#include "triggering.h"
 #include "hantekdsocontrol.h"
 #include <QDebug>
 #include <cmath>
 
+
+Triggering::Triggering( const DsoSettingsScope *scope, const Dso::ControlSettings &controlsettings )
+    : scope( scope ), controlsettings( controlsettings ) {
+    if ( scope->verboseLevel > 1 )
+        qDebug() << " Triggering::Triggering()";
+}
+
+
 // search for trigger point from defined point, default startPos = 0;
 // return trigger position > 0 (0: no trigger found)
-int HantekDsoControl::searchTriggerPoint( Dso::Slope dsoSlope, int startPos ) {
+int Triggering::searchTriggerPoint( DSOsamples &result, Dso::Slope dsoSlope, int startPos ) {
     int slope;
     if ( dsoSlope == Dso::Slope::Positive )
         slope = 1;
@@ -21,8 +30,8 @@ int HantekDsoControl::searchTriggerPoint( Dso::Slope dsoSlope, int startPos ) {
     if ( startPos < 0 || startPos >= sampleCount )
         return 0;
     double triggerLevel = controlsettings.trigger.level[ channel ];
-    if ( verboseLevel > 5 )
-        qDebug() << "     HDC::searchTriggerPoint()" << channel << triggerLevel << slope << startPos;
+    if ( scope->verboseLevel > 5 )
+        qDebug() << "     Triggering::searchTriggerPoint()" << channel << triggerLevel << slope << startPos;
     int samplesDisplay = int( round( controlsettings.samplerate.target.duration * controlsettings.samplerate.current ) );
     int searchBegin;
     int searchEnd;
@@ -49,7 +58,7 @@ int HantekDsoControl::searchTriggerPoint( Dso::Slope dsoSlope, int startPos ) {
         searchBegin = triggerAverage;
     if ( searchEnd >= sampleCount - triggerAverage )
         searchEnd = sampleCount - triggerAverage - 1;
-    if ( verboseLevel > 5 )
+    if ( scope->verboseLevel > 5 )
         qDebug() << "     begin:" << searchBegin << "end:" << searchEnd;
 
     double prev = INT_MAX;
@@ -92,20 +101,20 @@ int HantekDsoControl::searchTriggerPoint( Dso::Slope dsoSlope, int startPos ) {
         }
         prev = samples[ size_t( i ) ];
     }
-    if ( verboseLevel > 5 )
+    if ( scope->verboseLevel > 5 )
         qDebug() << "     swT:" << swTriggerStart;
     return swTriggerStart;
-} // searchTriggerPoint()
+} // Triggering::searchTriggerPoint()
 
 
-int HantekDsoControl::searchTriggeredPosition() {
+int Triggering::searchTriggeredPosition( DSOsamples &result ) {
     static Dso::Slope nextSlope = Dso::Slope::Positive; // for alternating slope mode X
     ChannelID channel = ChannelID( controlsettings.trigger.source );
     // Trigger channel not in use
     if ( !scope->anyUsed( channel ) || result.data.empty() || result.data[ channel ].empty() )
         return result.triggeredPosition = 0;
-    if ( verboseLevel > 4 )
-        qDebug() << "    HDC::searchTriggeredPosition()" << result.tag;
+    if ( scope->verboseLevel > 4 )
+        qDebug() << "    Triggering::searchTriggeredPosition()" << result.tag;
     triggeredPositionRaw = 0;
     double pulseWidth1 = 0.0;
     double pulseWidth2 = 0.0;
@@ -116,17 +125,16 @@ int HantekDsoControl::searchTriggeredPosition() {
     unsigned samplesDisplay = unsigned( round( timeDisplay * controlsettings.samplerate.current ) );
     if ( sampleCount < samplesDisplay ) // not enough samples to adjust for jitter.
         return result.triggeredPosition = 0;
-
     // search for trigger point in a range that leaves enough samples left and right of trigger for display
     // find also up to two alternating slopes after trigger point -> calculate pulse widths and duty cycle.
     if ( controlsettings.trigger.slope != Dso::Slope::Both ) // up or down
         nextSlope = controlsettings.trigger.slope;           // use this slope
 
-    triggeredPositionRaw = searchTriggerPoint( nextSlope ); // get 1st slope position
+    triggeredPositionRaw = searchTriggerPoint( result, nextSlope ); // get 1st slope position
     if ( triggeredPositionRaw ) { // triggered -> search also following other slope (calculate pulse width)
-        if ( int slopePos2 = searchTriggerPoint( mirrorSlope( nextSlope ), triggeredPositionRaw ) ) {
+        if ( int slopePos2 = searchTriggerPoint( result, mirrorSlope( nextSlope ), triggeredPositionRaw ) ) {
             pulseWidth1 = ( slopePos2 - triggeredPositionRaw ) / sampleRate;
-            if ( int slopePos3 = searchTriggerPoint( nextSlope, slopePos2 ) ) { // search 3rd slope
+            if ( int slopePos3 = searchTriggerPoint( result, nextSlope, slopePos2 ) ) { // search 3rd slope
                 pulseWidth2 = ( slopePos3 - slopePos2 ) / sampleRate;
             }
         }
@@ -137,16 +145,16 @@ int HantekDsoControl::searchTriggeredPosition() {
     result.triggeredPosition = triggeredPositionRaw; // align trace to trigger position
     result.pulseWidth1 = pulseWidth1;
     result.pulseWidth2 = pulseWidth2;
-    if ( verboseLevel > 5 ) // HACK: This assumes that positive=0 and negative=1
+    if ( scope->verboseLevel > 5 ) // HACK: This assumes that positive=0 and negative=1
         qDebug() << "     nextSlope:"
                  << "/\\"[ int( nextSlope ) ] << "triggeredPositionRaw:" << triggeredPositionRaw;
     return result.triggeredPosition;
-} // searchTriggeredPosition()
+} // Triggering::searchTriggeredPosition()
 
 
-bool HantekDsoControl::provideTriggeredData() {
-    if ( verboseLevel > 4 )
-        qDebug() << "    HDC::provideTriggeredData()" << result.tag;
+bool Triggering::provideTriggeredData( DSOsamples &result ) {
+    if ( scope->verboseLevel > 4 )
+        qDebug() << "    Triggering::provideTriggeredData()" << result.tag;
     static DSOsamples triggeredResult; // storage for last triggered trace samples
     if ( result.triggeredPosition ) {  // live trace has triggered
         // Use this trace and save it also
@@ -169,86 +177,4 @@ bool HantekDsoControl::provideTriggeredData() {
         result.liveTrigger = false;            // show red "TR" top left
     }
     return result.liveTrigger;
-} // bool HantekDsoControl::provideTriggeredData()
-
-
-Dso::ErrorCode HantekDsoControl::setTriggerMode( Dso::TriggerMode mode ) {
-    if ( deviceNotConnected() )
-        return Dso::ErrorCode::CONNECTION;
-
-    if ( verboseLevel > 2 )
-        qDebug() << "  HDC::setTriggerMode()" << int( mode );
-    static Dso::TriggerMode lastMode;
-    controlsettings.trigger.mode = mode;
-    if ( Dso::TriggerMode::SINGLE != mode )
-        enableSampling();
-    // trigger mode changed NONE <-> !NONE
-    if ( ( Dso::TriggerMode::ROLL == mode && Dso::TriggerMode::ROLL != lastMode ) ||
-         ( Dso::TriggerMode::ROLL != mode && Dso::TriggerMode::ROLL == lastMode ) ) {
-        restartSampling(); // invalidate old samples
-        raw.freeRun = Dso::TriggerMode::ROLL == mode;
-    }
-    lastMode = mode;
-    requestRefresh();
-    return Dso::ErrorCode::NONE;
-}
-
-
-Dso::ErrorCode HantekDsoControl::setTriggerSource( int channel ) {
-    if ( deviceNotConnected() )
-        return Dso::ErrorCode::CONNECTION;
-    if ( verboseLevel > 2 )
-        qDebug() << "  HDC::setTriggerSource()" << channel;
-    controlsettings.trigger.source = channel;
-    requestRefresh();
-    return Dso::ErrorCode::NONE;
-}
-
-
-Dso::ErrorCode HantekDsoControl::setTriggerSmooth( int smooth ) {
-    if ( deviceNotConnected() )
-        return Dso::ErrorCode::CONNECTION;
-    if ( verboseLevel > 2 )
-        qDebug() << "  HDC::setTriggerSmooth()" << smooth;
-    controlsettings.trigger.smooth = smooth;
-    requestRefresh();
-    return Dso::ErrorCode::NONE;
-}
-
-
-// trigger level in Volt
-Dso::ErrorCode HantekDsoControl::setTriggerLevel( ChannelID channel, double level ) {
-    if ( deviceNotConnected() )
-        return Dso::ErrorCode::CONNECTION;
-    if ( channel > specification->channels )
-        return Dso::ErrorCode::PARAMETER;
-    if ( verboseLevel > 2 )
-        qDebug() << "  HDC::setTriggerLevel()" << channel << level;
-    controlsettings.trigger.level[ channel ] = level;
-    requestRefresh();
-    displayInterval = 0; // update screen immediately
-    return Dso::ErrorCode::NONE;
-}
-
-
-Dso::ErrorCode HantekDsoControl::setTriggerSlope( Dso::Slope slope ) {
-    if ( deviceNotConnected() )
-        return Dso::ErrorCode::CONNECTION;
-    if ( verboseLevel > 2 )
-        qDebug() << "  HDC::setTriggerSlope()" << int( slope );
-    controlsettings.trigger.slope = slope;
-    requestRefresh();
-    return Dso::ErrorCode::NONE;
-}
-
-
-// set trigger position (0.0 - 1.0)
-Dso::ErrorCode HantekDsoControl::setTriggerPosition( double position ) {
-    if ( deviceNotConnected() )
-        return Dso::ErrorCode::CONNECTION;
-    if ( verboseLevel > 2 )
-        qDebug() << "  HDC::setTriggerPosition()" << position;
-    controlsettings.trigger.position = position;
-    requestRefresh();
-    return Dso::ErrorCode::NONE;
-}
+} // bool Triggering::provideTriggeredData()

@@ -11,6 +11,7 @@
 #include "errorcodes.h"
 #include "mathchannel.h"
 #include "scopesettings.h"
+#include "triggering.h"
 #include "utils/printutils.h"
 #include "viewconstants.h"
 
@@ -119,6 +120,7 @@ class HantekDsoControl : public QObject {
 
   private:
     MathChannel *mathChannel = nullptr;
+    Triggering *triggering = nullptr;
     bool singleChannel = false;
     int verboseLevel = 0;
     void setSingleChannel( bool single ) { singleChannel = single; }
@@ -154,17 +156,6 @@ class HantekDsoControl : public QObject {
     /// \brief Update the minimum and maximum supported samplerate.
     void updateSamplerateLimits();
 
-    /// trigger functions are separated in "triggering.cpp"
-    int searchTriggerPoint( Dso::Slope dsoSlope, int startPos = 0 );
-
-    Dso::Slope mirrorSlope( Dso::Slope slope ) {
-        return ( slope == Dso::Slope::Positive ? Dso::Slope::Negative : Dso::Slope::Positive );
-    }
-
-    int searchTriggeredPosition();
-
-    bool provideTriggeredData();
-
     void controlSetSamplerate( uint8_t sampleIndex );
 
     /// Pointers to control commands
@@ -196,7 +187,6 @@ class HantekDsoControl : public QObject {
     bool stateMachineRunning = false;
     int acquireInterval = 0;
     int displayInterval = 0;
-    int triggeredPositionRaw = 0; // not triggered
     unsigned activeChannels = 2;
     bool refresh = false; // parameter changed -> new raw to result conversion and trigger search needed
     void requestRefresh( bool active = true ) { refresh = active; }

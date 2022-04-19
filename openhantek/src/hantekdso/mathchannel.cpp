@@ -8,7 +8,12 @@
 #include "mathmodes.h"
 #include <cmath>
 
-MathChannel::MathChannel( const DsoSettingsScope *scope ) : scope( scope ) {}
+
+MathChannel::MathChannel( const DsoSettingsScope *scope ) : scope( scope ) {
+    if ( scope->verboseLevel > 1 )
+        qDebug() << " MathChannel::MathChannel()";
+}
+
 
 void MathChannel::calculate( DSOsamples &result ) {
     const size_t CH1 = 0;
