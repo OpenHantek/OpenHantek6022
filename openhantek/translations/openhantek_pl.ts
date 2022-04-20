@@ -12,12 +12,12 @@
 <context>
     <name>DataGrid</name>
     <message>
-        <location filename="../src/widgets/datagrid.cpp" line="132"/>
+        <location filename="../src/widgets/datagrid.cpp" line="134"/>
         <source>Select the active cursor</source>
         <translation>Wybierz aktywny kursor</translation>
     </message>
     <message>
-        <location filename="../src/widgets/datagrid.cpp" line="133"/>
+        <location filename="../src/widgets/datagrid.cpp" line="135"/>
         <source>Show cursor and measurement</source>
         <translation>Pokaż kursor i pomiar</translation>
     </message>
@@ -622,22 +622,22 @@
 <context>
     <name>DsoWidget</name>
     <message>
-        <location filename="../src/dsowidget.cpp" line="636"/>
-        <location filename="../src/dsowidget.cpp" line="638"/>
-        <location filename="../src/dsowidget.cpp" line="679"/>
-        <location filename="../src/dsowidget.cpp" line="726"/>
-        <location filename="../src/dsowidget.cpp" line="735"/>
-        <location filename="../src/dsowidget.cpp" line="756"/>
+        <location filename="../src/dsowidget.cpp" line="637"/>
+        <location filename="../src/dsowidget.cpp" line="639"/>
+        <location filename="../src/dsowidget.cpp" line="680"/>
+        <location filename="../src/dsowidget.cpp" line="727"/>
+        <location filename="../src/dsowidget.cpp" line="736"/>
+        <location filename="../src/dsowidget.cpp" line="757"/>
         <source>/div</source>
         <translation>/div</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="902"/>
+        <location filename="../src/dsowidget.cpp" line="915"/>
         <source>&lt;b&gt; OFFSET CALIBRATION &lt;/b&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="910"/>
+        <location filename="../src/dsowidget.cpp" line="923"/>
         <source>TR</source>
         <translation>TR</translation>
     </message>
@@ -647,44 +647,44 @@
         <translation>Markery</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="439"/>
+        <location filename="../src/dsowidget.cpp" line="440"/>
         <source>Trace position, drag the channel name up or down</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="461"/>
+        <location filename="../src/dsowidget.cpp" line="462"/>
         <source>Trigger position, drag the arrow left or right</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="471"/>
+        <location filename="../src/dsowidget.cpp" line="472"/>
         <source>Trigger level, drag the arrow up or down</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="485"/>
+        <location filename="../src/dsowidget.cpp" line="486"/>
         <source>Measure or zoom marker &apos;1&apos; and &apos;2&apos;, drag left or right</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="582"/>
-        <location filename="../src/dsowidget.cpp" line="600"/>
+        <location filename="../src/dsowidget.cpp" line="583"/>
+        <location filename="../src/dsowidget.cpp" line="601"/>
         <source>ON</source>
         <translation>ON</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="586"/>
-        <location filename="../src/dsowidget.cpp" line="604"/>
+        <location filename="../src/dsowidget.cpp" line="587"/>
+        <location filename="../src/dsowidget.cpp" line="605"/>
         <source>OFF</source>
         <translation>OFF</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="625"/>
+        <location filename="../src/dsowidget.cpp" line="626"/>
         <source>Markers  </source>
         <translation>Markery  </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="631"/>
+        <location filename="../src/dsowidget.cpp" line="632"/>
         <source>Zoom x%1  </source>
         <translation type="unfinished"></translation>
     </message>
@@ -701,7 +701,7 @@
         <translation type="vanished">Powiększenie x%L1  </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="634"/>
+        <location filename="../src/dsowidget.cpp" line="635"/>
         <source>Zoom ---  </source>
         <translation>Powiększenie ---  </translation>
     </message>
@@ -710,27 +710,27 @@
         <translation type="vanished">%L1%</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="707"/>
+        <location filename="../src/dsowidget.cpp" line="708"/>
         <source>%1  %2  %3  %4  %5</source>
         <translation>%1  %2  %3  %4 %5</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="746"/>
+        <location filename="../src/dsowidget.cpp" line="747"/>
         <source>/s</source>
         <translation>/s</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="868"/>
+        <location filename="../src/dsowidget.cpp" line="874"/>
         <source> on screen</source>
         <translation> na ekranie</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="958"/>
+        <location filename="../src/dsowidget.cpp" line="971"/>
         <source>pp</source>
         <translation>pp</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="964"/>
+        <location filename="../src/dsowidget.cpp" line="977"/>
         <source>rms</source>
         <translation>rms</translation>
     </message>

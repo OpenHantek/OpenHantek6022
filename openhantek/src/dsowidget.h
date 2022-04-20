@@ -118,6 +118,8 @@ class DsoWidget : public QWidget {
     bool cursorMeasurementValid = false;
     QPoint cursorGlobalPosition = QPoint();
     QPointF cursorMeasurementPosition = QPointF();
+    ChannelID selectedCursor = 0;
+    void switchToMarker();
     void showCursorMessage( QPoint globalPos = QPoint(), const QString &message = QString() );
     void updateItem( int index, bool switchOn = false );
 

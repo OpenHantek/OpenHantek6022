@@ -200,8 +200,8 @@ DsoWidget::DsoWidget( DsoSettingsScope *scope, DsoSettingsView *view, const Dso:
     cursorDataGrid->selectItem( 0 );
 
     connect( cursorDataGrid, &DataGrid::itemSelected, [ this ]( int index ) {
-        mainScope->cursorSelected( index );
-        zoomScope->cursorSelected( index );
+        mainScope->selectCursor( index );
+        zoomScope->selectCursor( index );
         updateItem( index, true );
     } );
 
@@ -370,8 +370,8 @@ void DsoWidget::updateCursorGrid( bool enabled ) {
     if ( !enabled ) {
         cursorDataGrid->selectItem( 0 );
         cursorDataGrid->setParent( nullptr );
-        mainScope->cursorSelected( 0 );
-        zoomScope->cursorSelected( 0 );
+        mainScope->selectCursor( 0 );
+        zoomScope->selectCursor( 0 );
         return;
     }
     // left or right of main and zoom, from mainScope down to (excluding) measurementLayout
@@ -404,6 +404,7 @@ void DsoWidget::updateCursorGrid( bool enabled ) {
 
 
 void DsoWidget::updateItem( int index, bool switchOn ) {
+    selectedCursor = ChannelID( index );
     int channelCount = int( scope->countChannels() );
     if ( 0 < index && index < channelCount + 1 ) {
         ChannelID channel = ChannelID( index - 1 );
@@ -765,6 +766,7 @@ void DsoWidget::updateSpectrumMagnitude( ChannelID channel ) {
     updateMarkerDetails();
 }
 
+
 /// \brief Handles usedChanged signal from the spectrum dock.
 /// \param channel The channel whose used-state was changed.
 /// \param used The new used-state for the channel.
@@ -783,6 +785,8 @@ void DsoWidget::updateSpectrumUsed( ChannelID channel, bool used ) {
 
     updateSpectrumDetails( channel );
     updateMarkerDetails();
+    if ( !used && selectedCursor == channel + ChannelID( scope->countChannels() ) + 1 )
+        switchToMarker(); // active spectrum cursor no longer valid
 }
 
 
@@ -860,12 +864,21 @@ void DsoWidget::updateVoltageUsed( ChannelID channel, bool used ) {
     setMeasurementVisible( channel );
     updateVoltageDetails( channel );
     updateMarkerDetails();
+    if ( !used && selectedCursor == channel + 1 )
+        switchToMarker(); // active voltage cursor no longer valid
 }
 
 
 /// \brief Change the record length.
 void DsoWidget::updateRecordLength( int size ) {
     settingsSamplesOnScreen->setText( valueToString( double( size ), UNIT_SAMPLES, -1 ) + tr( " on screen" ) );
+}
+
+
+void DsoWidget::switchToMarker() {
+    cursorDataGrid->selectItem( 0 ); // select marker button
+    mainScope->selectCursor( 0 );    // and announce it to main ..
+    zoomScope->selectCursor( 0 );    // .. and zoom scope
 }
 
 

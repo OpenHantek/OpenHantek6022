@@ -547,6 +547,12 @@ void GlScope::generateVertices( int marker, const DsoSettingsScopeCursor &cursor
 }
 
 
+void GlScope::selectCursor( int index ) {
+    selectedCursor = index;
+    updateCursor( index );
+}
+
+
 void GlScope::updateCursor( int index ) {
     if ( index > 0 ) {
         generateVertices( index, *cursorInfo[ size_t( index ) ] );

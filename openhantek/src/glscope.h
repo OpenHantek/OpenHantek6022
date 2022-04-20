@@ -41,11 +41,8 @@ class GlScope : public QOpenGLWidget {
      * @param data
      */
     void showData( std::shared_ptr< PPresult > newData );
+    void selectCursor( int index );
     void updateCursor( int index = 0 );
-    void cursorSelected( int index ) {
-        selectedCursor = index;
-        updateCursor( index );
-    }
     void generateGrid( int index = -1, double value = 0.0, bool pressed = false );
     void setVisible( bool visible ) override;
 

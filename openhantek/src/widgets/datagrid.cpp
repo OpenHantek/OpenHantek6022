@@ -51,9 +51,11 @@ void DataGrid::CursorInfo::configure( const QString &text, const QColor &bgColor
         QPushButton:checked {
             color: %1;
             background-color: %2;
+            border: 1px solid %1;
         }
         QPushButton:disabled {
             color: %3;
+            background-color: %1;
             border: 1px dotted %2;
         }
     )" )
