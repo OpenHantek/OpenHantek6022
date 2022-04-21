@@ -2,7 +2,7 @@
 
 #include "postprocessing.h"
 
-PostProcessing::PostProcessing( unsigned channelCount, int verboseLevel )
+PostProcessing::PostProcessing( ChannelID channelCount, int verboseLevel )
     : channelCount( channelCount ), verboseLevel( verboseLevel ) {
     qRegisterMetaType< std::shared_ptr< PPresult > >();
 }

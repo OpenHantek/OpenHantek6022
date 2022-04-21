@@ -38,11 +38,11 @@ DsoConfigColorsPage::DsoConfigColorsPage( DsoSettings *settings, QWidget *parent
     printTextColorBox = new ColorBox( colorSettings.print.text );
 
     // Graph category
-    screenChannelLabel = new QLabel( tr( "Channel" ) );
+    screenChannelLabel = new QLabel( tr( "Voltage" ) );
     screenChannelLabel->setAlignment( Qt::AlignHCenter );
     screenSpectrumLabel = new QLabel( tr( "Spectrum" ) );
     screenSpectrumLabel->setAlignment( Qt::AlignHCenter );
-    printChannelLabel = new QLabel( tr( "Channel" ) );
+    printChannelLabel = new QLabel( tr( "Voltage" ) );
     printChannelLabel->setAlignment( Qt::AlignHCenter );
     printSpectrumLabel = new QLabel( tr( "Spectrum" ) );
     printSpectrumLabel->setAlignment( Qt::AlignHCenter );

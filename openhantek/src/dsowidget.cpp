@@ -202,10 +202,10 @@ DsoWidget::DsoWidget( DsoSettingsScope *scope, DsoSettingsView *view, const Dso:
     connect( cursorDataGrid, &DataGrid::itemSelected, [ this ]( int index ) {
         mainScope->selectCursor( index );
         zoomScope->selectCursor( index );
-        updateItem( index, true );
+        updateItem( ChannelID( index ), true );
     } );
 
-    connect( cursorDataGrid, &DataGrid::itemUpdated, [ this ]( int index ) { updateItem( index ); } );
+    connect( cursorDataGrid, &DataGrid::itemUpdated, [ this ]( int index ) { updateItem( ChannelID( index ) ); } );
 
     scope->horizontal.cursor.shape = DsoSettingsScopeCursor::VERTICAL;
 
@@ -228,8 +228,8 @@ DsoWidget::DsoWidget( DsoSettingsScope *scope, DsoSettingsView *view, const Dso:
     mainLayout->addWidget( mainSliders.triggerLevelSlider, row, 4, 3, 2, Qt::AlignLeft );
     mainScopeRow = ++row; // = 3
     const int scopeCol = 3;
-    mainLayout->setColumnStretch( scopeCol, 1 );  // Scopes increase their size
-    mainLayout->setRowStretch( mainScopeRow, 1 ); // the scope gets max space
+    mainLayout->setColumnStretch( scopeCol, 1 );  // Scopes increase their horizontal size
+    mainLayout->setRowStretch( mainScopeRow, 1 ); // the scope gets max vertical space unless zoomed
     mainLayout->addWidget( mainScope, mainScopeRow, scopeCol );
     ++row; // = 4
     mainLayout->setRowMinimumHeight( row, mainSliders.voltageOffsetSlider->postMargin() );
@@ -245,6 +245,8 @@ DsoWidget::DsoWidget( DsoSettingsScope *scope, DsoSettingsView *view, const Dso:
     mainLayout->addWidget( zoomSliders.voltageOffsetSlider, row, 1, 3, 2, Qt::AlignRight );
     mainLayout->addWidget( zoomSliders.triggerLevelSlider, row, 4, 3, 2, Qt::AlignLeft );
     zoomScopeRow = ++row; // = 9
+    // zoom scope consumes no space unless enabled in DW::updateZoom() below
+    mainLayout->setRowStretch( zoomScopeRow, 0 );
     mainLayout->addWidget( zoomScope, zoomScopeRow, scopeCol );
     ++row; // = 10
     mainLayout->setRowMinimumHeight( row, zoomSliders.voltageOffsetSlider->postMargin() );
@@ -321,6 +323,8 @@ void DsoWidget::restoreScreenColors() {
 void DsoWidget::setColors() {
     if ( scope->verboseLevel > 2 )
         qDebug() << "  DsoWidget::setColors()";
+    cursorDataGrid->setBackgroundColor( view->colors->background ); // switch cursor measurement
+    cursorDataGrid->configureItem( 0, view->colors->text );         // and marker colors
     // Palette for this widget
     QPalette paletteNow;
     paletteNow.setColor( QPalette::Window, view->colors->background );
@@ -403,9 +407,9 @@ void DsoWidget::updateCursorGrid( bool enabled ) {
 }
 
 
-void DsoWidget::updateItem( int index, bool switchOn ) {
-    selectedCursor = ChannelID( index );
-    int channelCount = int( scope->countChannels() );
+void DsoWidget::updateItem( ChannelID index, bool switchOn ) {
+    selectedCursor = index;
+    ChannelID channelCount = scope->countChannels();
     if ( 0 < index && index < channelCount + 1 ) {
         ChannelID channel = ChannelID( index - 1 );
         if ( scope->voltage[ channel ].used ) {
@@ -426,8 +430,8 @@ void DsoWidget::updateItem( int index, bool switchOn ) {
         }
     }
     updateMarkerDetails();
-    mainScope->updateCursor( index );
-    zoomScope->updateCursor( index );
+    mainScope->updateCursor( int( index ) );
+    zoomScope->updateCursor( int( index ) );
 }
 
 
@@ -742,7 +746,7 @@ void DsoWidget::updateFrequencybase( double frequencybase ) {
 /// \param samplerate The samplerate set in the oscilloscope.
 void DsoWidget::updateSamplerate( double newSamplerate ) {
     samplerate = newSamplerate;
-    scope->horizontal.dotsOnScreen = int( samplerate * timebase * DIVS_TIME + 0.99 );
+    scope->horizontal.dotsOnScreen = int( ceil( samplerate * timebase * DIVS_TIME ) );
     // printf( "DsoWidget::updateSamplerate( %g ) -> %d\n", samplerate, scope->horizontal.dotsOnScreen );
     settingsSamplerateLabel->setText( valueToString( samplerate, UNIT_SAMPLES, -1 ) + tr( "/s" ) );
 }
@@ -752,7 +756,7 @@ void DsoWidget::updateSamplerate( double newSamplerate ) {
 /// \param timebase The timebase used for displaying the trace.
 void DsoWidget::updateTimebase( double newTimebase ) {
     timebase = newTimebase;
-    scope->horizontal.dotsOnScreen = int( samplerate * timebase * DIVS_TIME + 0.99 );
+    scope->horizontal.dotsOnScreen = int( ceil( samplerate * timebase * DIVS_TIME ) );
     // printf( "DsoWidget::updateTimebase( %g ) -> %d\n", timebase, scope->horizontal.dotsOnScreen );
     settingsTimebaseLabel->setText( valueToString( timebase, UNIT_SECONDS, -1 ) + tr( "/div" ) );
     updateMarkerDetails();
@@ -773,7 +777,7 @@ void DsoWidget::updateSpectrumMagnitude( ChannelID channel ) {
 void DsoWidget::updateSpectrumUsed( ChannelID channel, bool used ) {
     if ( scope->verboseLevel > 2 )
         qDebug() << "  DsoWidget::updateSpectrumUsed()" << channel << used;
-    if ( channel >= unsigned( scope->voltage.size() ) )
+    if ( channel >= scope->voltage.size() )
         return;
     bool spectrumUsed = false;
     for ( size_t ch = 0; ch < scope->voltage.size(); ++ch )
@@ -785,7 +789,7 @@ void DsoWidget::updateSpectrumUsed( ChannelID channel, bool used ) {
 
     updateSpectrumDetails( channel );
     updateMarkerDetails();
-    if ( !used && selectedCursor == channel + ChannelID( scope->countChannels() ) + 1 )
+    if ( !used && selectedCursor == channel + scope->countChannels() + 1 )
         switchToMarker(); // active spectrum cursor no longer valid
 }
 
@@ -818,7 +822,7 @@ void DsoWidget::updateTriggerSource() {
 /// \brief Handles couplingChanged signal from the voltage dock.
 /// \param channel The channel whose coupling was changed.
 void DsoWidget::updateVoltageCoupling( ChannelID channel ) {
-    if ( channel >= unsigned( scope->voltage.size() ) )
+    if ( channel >= scope->voltage.size() )
         return;
     measurementMiscLabel[ channel ]->setText( Dso::couplingString( scope->coupling( channel, spec ) ) );
 }
@@ -836,7 +840,7 @@ void DsoWidget::updateMathMode() {
 /// \brief Handles gainChanged signal from the voltage dock.
 /// \param channel The channel whose gain was changed.
 void DsoWidget::updateVoltageGain( ChannelID channel ) {
-    if ( channel >= unsigned( scope->voltage.size() ) )
+    if ( channel >= scope->voltage.size() )
         return;
     adaptTriggerLevelSlider( mainSliders, channel );
     adaptTriggerLevelSlider( zoomSliders, channel );
@@ -852,7 +856,7 @@ void DsoWidget::updateVoltageGain( ChannelID channel ) {
 void DsoWidget::updateVoltageUsed( ChannelID channel, bool used ) {
     if ( scope->verboseLevel > 2 )
         qDebug() << "  DsoWidget::updateVoltageUsed()" << channel << used;
-    if ( channel >= unsigned( scope->voltage.size() ) )
+    if ( channel >= scope->voltage.size() )
         return;
 
     mainSliders.voltageOffsetSlider->setIndexVisible( channel, used );
@@ -888,7 +892,8 @@ void DsoWidget::updateZoom( bool enabled ) {
         qDebug() << "  DsoWidget::updateZoom()" << enabled;
     cursorMeasurementValid = false;
     showCursorMessage(); // remove dangling tool tip
-    mainLayout->setRowStretch( zoomScopeRow, enabled ? 1 : 0 );
+    // zoomed scope height in regards to main scope height if enabled, otherwise no space used
+    mainLayout->setRowStretch( zoomScopeRow, enabled ? view->zoomHeightFactor : 0 );
     zoomScope->setVisible( enabled );
     zoomSliders.voltageOffsetSlider->setVisible( enabled );
     zoomSliders.triggerPositionSlider->setVisible( enabled );

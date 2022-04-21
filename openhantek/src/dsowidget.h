@@ -121,7 +121,7 @@ class DsoWidget : public QWidget {
     ChannelID selectedCursor = 0;
     void switchToMarker();
     void showCursorMessage( QPoint globalPos = QPoint(), const QString &message = QString() );
-    void updateItem( int index, bool switchOn = false );
+    void updateItem( ChannelID index, bool switchOn = false );
 
   public slots:
     // Horizontal axis

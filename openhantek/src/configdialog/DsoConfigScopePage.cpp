@@ -66,14 +66,21 @@ DsoConfigScopePage::DsoConfigScopePage( DsoSettings *settings, QWidget *parent )
     cursorsGroup = new QGroupBox( tr( "Cursors" ) );
     cursorsGroup->setLayout( cursorsLayout );
 
-    // Export group
+    // Zoom group
     zoomImageCheckBox = new QCheckBox( tr( "Export zoomed screen in double height" ) );
     zoomImageCheckBox->setChecked( settings->view.zoomImage );
-    exportLayout = new QGridLayout();
+    zoomHeightLabel = new QLabel( tr( "Zoom area height" ) );
+    zoomHeightSpinBox = new QSpinBox();
+    zoomHeightSpinBox->setRange( 1, 20 );
+    zoomHeightSpinBox->setValue( settings->view.zoomHeightFactor );
+    zoomLayout = new QGridLayout();
     row = 0;
-    exportLayout->addWidget( zoomImageCheckBox, row, 0, 1, 2 );
-    exportGroup = new QGroupBox( tr( "Export" ) );
-    exportGroup->setLayout( exportLayout );
+    zoomLayout->addWidget( zoomHeightLabel, row, 0 );
+    zoomLayout->addWidget( zoomHeightSpinBox, row, 1 );
+    ++row;
+    zoomLayout->addWidget( zoomImageCheckBox, row, 0 );
+    zoomGroup = new QGroupBox( tr( "Zoom" ) );
+    zoomGroup->setLayout( zoomLayout );
 
     // Configuration group
     saveOnExitCheckBox = new QCheckBox( tr( "Save settings on exit" ) );
@@ -103,7 +110,7 @@ DsoConfigScopePage::DsoConfigScopePage( DsoSettings *settings, QWidget *parent )
     mainLayout = new QVBoxLayout();
     mainLayout->addWidget( horizontalGroup );
     mainLayout->addWidget( graphGroup );
-    mainLayout->addWidget( exportGroup );
+    mainLayout->addWidget( zoomGroup );
     mainLayout->addWidget( cursorsGroup );
     mainLayout->addWidget( configurationGroup );
     mainLayout->addStretch( 1 );
@@ -125,4 +132,5 @@ void DsoConfigScopePage::saveSettings() {
     if ( defaultSettingsCheckBox->isChecked() )
         settings->configVersion = 0;
     settings->view.zoomImage = zoomImageCheckBox->isChecked();
+    settings->view.zoomHeightFactor = zoomHeightSpinBox->value();
 }

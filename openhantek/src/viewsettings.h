@@ -46,6 +46,7 @@ struct DsoSettingsView {
     unsigned digitalPhosphorDepth = 8;                                ///< Number of channels shown at one time
     Dso::InterpolationMode interpolation = Dso::INTERPOLATION_LINEAR; ///< Interpolation mode for the graph
     bool printerColorImages = true;                                   ///< Exports images with screen colors
+    int zoomHeightFactor = 4;                                         ///< Zoom scope window height
     bool zoomImage = true;                                            ///< Export zoomed images with double height
     bool zoom = false;                                                ///< true if the magnified scope is enabled
     Qt::ToolBarArea cursorGridPosition = Qt::RightToolBarArea;

@@ -62,7 +62,9 @@ class DsoConfigScopePage : public QWidget {
     QCheckBox *toolTipVisibleCheckBox;
     QPushButton *saveNowButton;
 
-    QGroupBox *exportGroup;
-    QGridLayout *exportLayout;
+    QGroupBox *zoomGroup;
+    QGridLayout *zoomLayout;
     QCheckBox *zoomImageCheckBox;
+    QSpinBox *zoomHeightSpinBox;
+    QLabel *zoomHeightLabel;
 };

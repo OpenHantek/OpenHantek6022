@@ -21,7 +21,7 @@ class PostProcessing : public QObject {
     Q_OBJECT
 
   public:
-    explicit PostProcessing( unsigned channelCount, int verboseLevel = 0 );
+    explicit PostProcessing( ChannelID channelCount, int verboseLevel = 0 );
     /**
      * Adds a new processor that is called when a new input arrived. The order of the processors is
      * imporant. The first added processor will be called first. This class does not take ownership

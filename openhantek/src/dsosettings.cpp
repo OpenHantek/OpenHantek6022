@@ -311,6 +311,10 @@ void DsoSettings::load() {
         view.printerColorImages = storeSettings->value( "printerColorImages" ).toBool();
     if ( storeSettings->contains( "zoom" ) )
         view.zoom = storeSettings->value( "zoom" ).toBool();
+    if ( storeSettings->contains( "zoomHeightFactor" ) )
+        view.zoomHeightFactor = storeSettings->value( "zoomHeightFactor" ).toInt();
+    if ( storeSettings->contains( "zoomImage" ) )
+        view.zoomImage = storeSettings->value( "zoomImage" ).toBool();
     if ( storeSettings->contains( "cursorGridPosition" ) )
         view.cursorGridPosition = Qt::ToolBarArea( storeSettings->value( "cursorGridPosition" ).toUInt() );
     if ( storeSettings->contains( "cursorsVisible" ) )
@@ -366,7 +370,7 @@ void DsoSettings::save() {
     storeSettings->setValue( "format", scope.horizontal.format );
     storeSettings->setValue( "frequencybase", scope.horizontal.frequencybase );
     for ( int marker = 0; marker < 2; ++marker )
-        storeSettings->setValue( QString( "marker%1" ).arg( marker ), scope.getMarker( unsigned( marker ) ) );
+        storeSettings->setValue( QString( "marker%1" ).arg( marker ), scope.getMarker( marker ) );
     storeSettings->setValue( "timebase", scope.horizontal.timebase );
     storeSettings->setValue( "maxTimebase", scope.horizontal.maxTimebase );
     storeSettings->setValue( "acquireInterval", scope.horizontal.acquireInterval );
@@ -473,6 +477,8 @@ void DsoSettings::save() {
     storeSettings->setValue( "interpolation", view.interpolation );
     storeSettings->setValue( "printerColorImages", view.printerColorImages );
     storeSettings->setValue( "zoom", view.zoom );
+    storeSettings->setValue( "zoomHeightFactor", view.zoomHeightFactor );
+    storeSettings->setValue( "zoomImage", view.zoomImage );
     storeSettings->setValue( "cursorGridPosition", view.cursorGridPosition );
     storeSettings->setValue( "cursorsVisible", view.cursorsVisible );
     storeSettings->endGroup(); // view
