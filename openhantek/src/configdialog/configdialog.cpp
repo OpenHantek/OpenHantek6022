@@ -11,6 +11,7 @@
 #include <QListWidget>
 #include <QListWidgetItem>
 #include <QPushButton>
+#include <QShortcut>
 #include <QStackedWidget>
 #include <QVBoxLayout>
 
@@ -52,6 +53,7 @@ DsoConfigDialog::DsoConfigDialog( DsoSettings *settings, QWidget *parent ) : QDi
     acceptButton->setDefault( true );
     applyButton = new QPushButton( tr( "&Apply" ) );
     rejectButton = new QPushButton( tr( "&Cancel" ) );
+    rejectShortcut = new QShortcut( QKeySequence( "Ctrl+Q" ), rejectButton );
 
     createIcons();
     contentsWidget->setCurrentRow( 0 );
@@ -78,6 +80,7 @@ DsoConfigDialog::DsoConfigDialog( DsoSettings *settings, QWidget *parent ) : QDi
     connect( acceptButton, &QAbstractButton::clicked, this, &DsoConfigDialog::accept );
     connect( applyButton, &QAbstractButton::clicked, this, &DsoConfigDialog::apply );
     connect( rejectButton, &QAbstractButton::clicked, this, &QDialog::reject );
+    connect( rejectShortcut, &QShortcut::activated, this, &QDialog::reject );
 }
 
 

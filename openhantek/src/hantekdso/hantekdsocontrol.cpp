@@ -46,10 +46,6 @@ HantekDsoControl::~HantekDsoControl() {
         delete firstControlCommand;
         firstControlCommand = t;
     }
-    if ( mathChannel )
-        delete mathChannel;
-    if ( triggering )
-        delete triggering;
 }
 
 
@@ -424,10 +420,8 @@ void HantekDsoControl::applySettings( DsoSettingsScope *dsoSettingsScope ) {
     setTriggerSlope( dsoSettingsScope->trigger.slope );
     setTriggerSource( dsoSettingsScope->trigger.source );
     setTriggerSmooth( dsoSettingsScope->trigger.smooth );
-    if ( mathChannel == nullptr )
-        mathChannel = new MathChannel( scope );
-    if ( triggering == nullptr )
-        triggering = new Triggering( scope, controlsettings );
+    mathChannel = std::unique_ptr< MathChannel >( new MathChannel( scope ) );
+    triggering = std::unique_ptr< Triggering >( new Triggering( scope, controlsettings ) );
 }
 
 

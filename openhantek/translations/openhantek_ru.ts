@@ -272,42 +272,42 @@
 <context>
     <name>DsoConfigDialog</name>
     <message>
-        <location filename="../src/configdialog/configdialog.cpp" line="32"/>
+        <location filename="../src/configdialog/configdialog.cpp" line="33"/>
         <source>Settings</source>
         <translation>Настройки</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/configdialog.cpp" line="100"/>
+        <location filename="../src/configdialog/configdialog.cpp" line="103"/>
         <source>FFT settings, power and THD calculation, musical note detection</source>
         <translation>Настройки FFT, расчёт мощности и THD, детекция музыкальных нот</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/configdialog.cpp" line="106"/>
+        <location filename="../src/configdialog/configdialog.cpp" line="109"/>
         <source>Screen and printer colors, theme and style settings</source>
         <translation>Цвета экрана и печати, настройки темы и стиля</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/configdialog.cpp" line="51"/>
+        <location filename="../src/configdialog/configdialog.cpp" line="52"/>
         <source>&amp;Ok</source>
         <translation>&amp;Ok</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/configdialog.cpp" line="53"/>
+        <location filename="../src/configdialog/configdialog.cpp" line="54"/>
         <source>&amp;Apply</source>
         <translation>&amp;Применить</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/configdialog.cpp" line="54"/>
+        <location filename="../src/configdialog/configdialog.cpp" line="55"/>
         <source>&amp;Cancel</source>
         <translation>&amp;Отмена</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/configdialog.cpp" line="94"/>
+        <location filename="../src/configdialog/configdialog.cpp" line="97"/>
         <source>Timing, display settings, and HW configuration</source>
         <translation>Тайминги, настройки дисплея и аппаратной конфигурации</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/configdialog.cpp" line="98"/>
+        <location filename="../src/configdialog/configdialog.cpp" line="101"/>
         <source>Analysis</source>
         <translation>Анализ</translation>
     </message>
@@ -320,12 +320,12 @@
         <translation type="vanished">Файл</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/configdialog.cpp" line="104"/>
+        <location filename="../src/configdialog/configdialog.cpp" line="107"/>
         <source>Colors</source>
         <translation>Цвета</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/configdialog.cpp" line="92"/>
+        <location filename="../src/configdialog/configdialog.cpp" line="95"/>
         <source>Scope</source>
         <translation>Осциллограф</translation>
     </message>
@@ -408,8 +408,12 @@
     </message>
     <message>
         <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="70"/>
+        <source>Export 1:1 zoomed screen in double height</source>
+        <translation>Экспорт 1:1 увеличенного экрана с двойной высотой</translation>
+    </message>
+    <message>
         <source>Export zoomed screen in double height</source>
-        <translation>Экспорт увеличенного экрана с двойной высотой</translation>
+        <translation type="vanished">Экспорт увеличенного экрана с двойной высотой</translation>
     </message>
     <message>
         <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="72"/>
@@ -417,7 +421,7 @@
         <translation>Высота области масштабирования</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="82"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="83"/>
         <source>Zoom</source>
         <translation>Увеличение</translation>
     </message>
@@ -426,12 +430,12 @@
         <translation type="vanished">Экспорт</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="92"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="95"/>
         <source>Scope has hardware modification for AC coupling (restart needed to apply the change)</source>
         <translation>Осциллограф аппаратно модифицирован под переменный ток (для активации требуется перезапуск)</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="86"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="89"/>
         <source>Save settings on exit</source>
         <translation>Сохранять настройки при выходе</translation>
     </message>
@@ -440,22 +444,22 @@
         <translation type="vanished">Размер шрифта  (для активации требуется перезапуск)</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="88"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="91"/>
         <source>Apply default settings after next restart</source>
         <translation>Применить настройки по умолчанию после перезапуска</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="90"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="93"/>
         <source>Save settings now</source>
         <translation>Сохранить текущие настройки</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="94"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="97"/>
         <source>Show tooltips for user interface (restart needed to apply the change)</source>
         <translation>Показывать всплывающие подсказки пользовательского интерфейса (для активации требуется перезапуск)</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="107"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="110"/>
         <source>Configuration</source>
         <translation>Конфигурация</translation>
     </message>
@@ -565,64 +569,64 @@
 <context>
     <name>DsoWidget</name>
     <message>
-        <location filename="../src/dsowidget.cpp" line="641"/>
-        <location filename="../src/dsowidget.cpp" line="643"/>
-        <location filename="../src/dsowidget.cpp" line="684"/>
-        <location filename="../src/dsowidget.cpp" line="731"/>
-        <location filename="../src/dsowidget.cpp" line="740"/>
-        <location filename="../src/dsowidget.cpp" line="761"/>
+        <location filename="../src/dsowidget.cpp" line="642"/>
+        <location filename="../src/dsowidget.cpp" line="644"/>
+        <location filename="../src/dsowidget.cpp" line="685"/>
+        <location filename="../src/dsowidget.cpp" line="732"/>
+        <location filename="../src/dsowidget.cpp" line="741"/>
+        <location filename="../src/dsowidget.cpp" line="762"/>
         <source>/div</source>
         <translation>/дел</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="928"/>
+        <location filename="../src/dsowidget.cpp" line="943"/>
         <source>TR</source>
         <translation>ТР</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="193"/>
+        <location filename="../src/dsowidget.cpp" line="194"/>
         <source>Markers</source>
         <translation>Маркеры</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="444"/>
+        <location filename="../src/dsowidget.cpp" line="445"/>
         <source>Trace position, drag the channel name up or down</source>
         <translation>Развёртка канала, двигай название вверх или вниз</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="466"/>
+        <location filename="../src/dsowidget.cpp" line="467"/>
         <source>Trigger position, drag the arrow left or right</source>
         <translation>Позиция триггера, двигай указатель влево или вправо</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="476"/>
+        <location filename="../src/dsowidget.cpp" line="477"/>
         <source>Trigger level, drag the arrow up or down</source>
         <translation>Уровень триггера, двигай указатель вверх или вниз</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="490"/>
+        <location filename="../src/dsowidget.cpp" line="491"/>
         <source>Measure or zoom marker &apos;1&apos; and &apos;2&apos;, drag left or right</source>
         <translation>Измерь или увеличь маркер &apos;1&apos; и &apos;2&apos;, двигай влево или вправо</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="587"/>
-        <location filename="../src/dsowidget.cpp" line="605"/>
+        <location filename="../src/dsowidget.cpp" line="588"/>
+        <location filename="../src/dsowidget.cpp" line="606"/>
         <source>ON</source>
         <translation>ВКЛ</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="591"/>
-        <location filename="../src/dsowidget.cpp" line="609"/>
+        <location filename="../src/dsowidget.cpp" line="592"/>
+        <location filename="../src/dsowidget.cpp" line="610"/>
         <source>OFF</source>
         <translation>ВЫКЛ</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="630"/>
+        <location filename="../src/dsowidget.cpp" line="631"/>
         <source>Markers  </source>
         <translation>Маркеры  </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="636"/>
+        <location filename="../src/dsowidget.cpp" line="637"/>
         <source>Zoom x%1  </source>
         <translation>Увел.x%1  </translation>
     </message>
@@ -639,7 +643,7 @@
         <translation type="vanished">Увел.x%L1</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="639"/>
+        <location filename="../src/dsowidget.cpp" line="640"/>
         <source>Zoom ---  </source>
         <translation>Увел.---  </translation>
     </message>
@@ -648,32 +652,32 @@
         <translation type="vanished">%L1%</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="712"/>
+        <location filename="../src/dsowidget.cpp" line="713"/>
         <source>%1  %2  %3  %4  %5</source>
         <translation>%1  %2  %3  %4  %5</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="751"/>
+        <location filename="../src/dsowidget.cpp" line="752"/>
         <source>/s</source>
         <translation>/с</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="878"/>
+        <location filename="../src/dsowidget.cpp" line="879"/>
         <source> on screen</source>
         <translation> на экране</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="920"/>
+        <location filename="../src/dsowidget.cpp" line="935"/>
         <source>&lt;b&gt; OFFSET CALIBRATION &lt;/b&gt;</source>
         <translation>&lt;b&gt; КАЛИБРОВКА СМЕЩЕНИЯ &lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="976"/>
+        <location filename="../src/dsowidget.cpp" line="991"/>
         <source>pp</source>
         <translation>пп</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="982"/>
+        <location filename="../src/dsowidget.cpp" line="997"/>
         <source>rms</source>
         <translation>скз</translation>
     </message>
@@ -694,12 +698,12 @@
 <context>
     <name>GlScope</name>
     <message>
-        <location filename="../src/glscope.cpp" line="346"/>
+        <location filename="../src/glscope.cpp" line="345"/>
         <source>System does not support OpenGL Shading Language (GLSL)</source>
         <translation>Система не поддерживает язык шейдеров OpenGL (GLSL)</translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="350"/>
+        <location filename="../src/glscope.cpp" line="349"/>
         <source>OpenGL init called twice!</source>
         <translation>OpenGL инициализация вызывается дважды!</translation>
     </message>
@@ -710,29 +714,29 @@
 </translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="411"/>
+        <location filename="../src/glscope.cpp" line="410"/>
         <source>Try command line option &apos;--useGLES&apos;
 </source>
         <translation>Попробуйте опцию командной строки &apos;--useGLES&apos;
 </translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="427"/>
-        <location filename="../src/glscope.cpp" line="434"/>
+        <location filename="../src/glscope.cpp" line="426"/>
+        <location filename="../src/glscope.cpp" line="433"/>
         <source>Failed to compile OpenGL shader programs.
 </source>
         <translation>Не удалось скомпилировать шейдерные программы OpenGL.
 </translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="442"/>
+        <location filename="../src/glscope.cpp" line="441"/>
         <source>Failed to link/bind OpenGL shader programs.
 </source>
         <translation>Не удалось связать/привязать шейдерные программы OpenGL.
 </translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="451"/>
+        <location filename="../src/glscope.cpp" line="450"/>
         <source>Failed to locate shader variable.</source>
         <translation>Не удалось найти переменную шейдера.</translation>
     </message>
@@ -740,7 +744,7 @@
 <context>
     <name>HantekDsoControl</name>
     <message>
-        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="576"/>
+        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="570"/>
         <source>Couldn&apos;t get calibration data from oscilloscope&apos;s EEPROM. Use a config file for calibration!</source>
         <translation>Не удалось получить данные калибровки из EEPROM осциллографа. Используйте файл конфигурации для калибровки!</translation>
     </message>
@@ -1298,22 +1302,22 @@
         <translation>yyyyMMdd_hhmmss</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="603"/>
+        <location filename="../src/mainwindow.cpp" line="604"/>
         <source>Image (*.png *.jpg)</source>
         <translation>Изображение (*.png *.jpg)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="603"/>
+        <location filename="../src/mainwindow.cpp" line="604"/>
         <source>Portable Document Format (*.pdf)</source>
         <translation>Portable Document Format (*.pdf)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="604"/>
+        <location filename="../src/mainwindow.cpp" line="605"/>
         <source>Save screenshot</source>
         <translation>Сохранить снимок экрана</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="635"/>
+        <location filename="../src/mainwindow.cpp" line="636"/>
         <source>Print oscillograph</source>
         <translation>Печать осциллограммы</translation>
     </message>

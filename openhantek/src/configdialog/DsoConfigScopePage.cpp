@@ -67,7 +67,7 @@ DsoConfigScopePage::DsoConfigScopePage( DsoSettings *settings, QWidget *parent )
     cursorsGroup->setLayout( cursorsLayout );
 
     // Zoom group
-    zoomImageCheckBox = new QCheckBox( tr( "Export zoomed screen in double height" ) );
+    zoomImageCheckBox = new QCheckBox( tr( "Export 1:1 zoomed screen in double height" ) );
     zoomImageCheckBox->setChecked( settings->view.zoomImage );
     zoomHeightLabel = new QLabel( tr( "Zoom area height" ) );
     zoomHeightSpinBox = new QSpinBox();
@@ -79,8 +79,11 @@ DsoConfigScopePage::DsoConfigScopePage( DsoSettings *settings, QWidget *parent )
     zoomLayout->addWidget( zoomHeightSpinBox, row, 1 );
     ++row;
     zoomLayout->addWidget( zoomImageCheckBox, row, 0 );
+    zoomImageCheckBox->setVisible( 1 == settings->view.zoomHeightFactor );
     zoomGroup = new QGroupBox( tr( "Zoom" ) );
     zoomGroup->setLayout( zoomLayout );
+    connect( zoomHeightSpinBox, QOverload< int >::of( &QSpinBox::valueChanged ),
+             [ this ]( int value ) { this->zoomImageCheckBox->setVisible( 1 == value ); } );
 
     // Configuration group
     saveOnExitCheckBox = new QCheckBox( tr( "Save settings on exit" ) );

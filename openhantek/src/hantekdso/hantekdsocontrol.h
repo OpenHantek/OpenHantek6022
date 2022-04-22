@@ -119,8 +119,8 @@ class HantekDsoControl : public QObject {
     void prepareForShutdown();
 
   private:
-    MathChannel *mathChannel = nullptr;
-    Triggering *triggering = nullptr;
+    std::unique_ptr< MathChannel > mathChannel;
+    std::unique_ptr< Triggering > triggering;
     bool singleChannel = false;
     int verboseLevel = 0;
     void setSingleChannel( bool single ) { singleChannel = single; }

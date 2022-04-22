@@ -280,41 +280,40 @@ void GlScope::mouseDoubleClickEvent( QMouseEvent *event ) {
 void GlScope::wheelEvent( QWheelEvent *event ) {
     if ( scope->verboseLevel > 3 )
         qDebug() << "   GLS::wE()" << event;
-    if ( !( zoomed && selectedCursor == 0 ) ) {
-        if ( selectedMarker == NO_MARKER ) {
-            double step = event->angleDelta().y() / 1200.0; // one click = 0.1
-            // qDebug() << "wheeelEvent" << selectedCursor << event->globalPos() << step;
-            double &m1 = cursorInfo[ size_t( selectedCursor ) ]->pos[ 0 ].rx();
-            double &m2 = cursorInfo[ size_t( selectedCursor ) ]->pos[ 1 ].rx();
-            if ( m1 > m2 )
-                std::swap( m1, m2 );
-            double dm = m2 - m1;
-            if ( event->modifiers() & Qt::CTRL ) {                           // zoom in (step > 0) / out (step < 0)
-                if ( ( step > 0 && dm <= 1 ) || ( step < 0 && dm <= 0.99 ) ) // smaller steps when zoom >= 10x
-                    step *= 0.1;
-                if ( step < 0 || dm >= 5 * step ) { // step in and new zomm will be < 250x
-                    m1 += step;
-                    m2 -= step;
-                } else { // set highest zoom  -> 500x fix
-                    double mm = ( m1 + m2 ) / 2;
-                    m1 = mm - 0.01;
-                    m2 = mm + 0.01;
-                }
-            } else {                                        // move zoom window left/right (100 steps on original)
-                if ( step < 0 )                             // shift zoom range left ..
-                    step = qMax( step, MARGIN_LEFT - m1 );  // .. until m1 == MARGIN_LEFT
-                else                                        // shift zoom range right ..
-                    step = qMin( step, MARGIN_RIGHT - m2 ); // .. until m2 == MARGIN_RIGHT
-                if ( event->modifiers() & Qt::SHIFT ) {     // shift -> smaller steps
-                    if ( m2 - m1 < .1 )                     // zoom > 100 ?
-                        step *= ( m2 - m1 );                // .. keep 10 steps per zoomed window
-                    else                                    // otherwise
-                        step *= 0.1;                        // .. 1000 steps on original window
-                }
+    // qDebug() << "wheeelEvent" << zoomed << selectedCursor << event->globalPosition();
+    if ( selectedMarker == NO_MARKER ) {
+        double step = event->angleDelta().y() / 1200.0; // one click = 0.1
+        double &m1 = cursorInfo[ size_t( selectedCursor ) ]->pos[ 0 ].rx();
+        double &m2 = cursorInfo[ size_t( selectedCursor ) ]->pos[ 1 ].rx();
+        if ( m1 > m2 )
+            std::swap( m1, m2 );
+        double dm = m2 - m1;
+        if ( event->modifiers() & Qt::CTRL ) {                           // zoom in (step > 0) / out (step < 0)
+            if ( ( step > 0 && dm <= 1 ) || ( step < 0 && dm <= 0.99 ) ) // smaller steps when zoom >= 10x
+                step *= 0.1;
+            if ( step < 0 || dm >= 5 * step ) { // step in and new zomm will be < 250x
                 m1 += step;
-                m2 += step;
+                m2 -= step;
+            } else { // set highest zoom  -> 500x fix
+                double mm = ( m1 + m2 ) / 2;
+                m1 = mm - 0.01;
+                m2 = mm + 0.01;
             }
+        } else {                                        // move zoom window left/right (100 steps on original)
+            if ( step < 0 )                             // shift zoom range left ..
+                step = qMax( step, MARGIN_LEFT - m1 );  // .. until m1 == MARGIN_LEFT
+            else                                        // shift zoom range right ..
+                step = qMin( step, MARGIN_RIGHT - m2 ); // .. until m2 == MARGIN_RIGHT
+            if ( event->modifiers() & Qt::SHIFT ) {     // shift -> smaller steps
+                if ( m2 - m1 < .1 )                     // zoom > 100 ?
+                    step *= ( m2 - m1 );                // .. keep 10 steps per zoomed window
+                else                                    // otherwise
+                    step *= 0.1;                        // .. 1000 steps on original window
+            }
+            m1 += step;
+            m2 += step;
         }
+
         emit markerMoved( selectedCursor, 0 );
         emit markerMoved( selectedCursor, 1 );
         selectedMarker = NO_MARKER;

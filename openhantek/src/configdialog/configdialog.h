@@ -11,6 +11,7 @@ class QHBoxLayout;
 class QListWidget;
 class QListWidgetItem;
 class QPushButton;
+class QShortcut;
 class QStackedWidget;
 class QVBoxLayout;
 
@@ -47,4 +48,5 @@ class DsoConfigDialog : public QDialog {
     DsoConfigColorsPage *colorsPage;
 
     QPushButton *acceptButton, *applyButton, *rejectButton;
+    QShortcut *rejectShortcut;
 };

@@ -9,7 +9,7 @@
 
 class Triggering {
   public:
-    Triggering( const DsoSettingsScope *scope, const Dso::ControlSettings &controlsettings );
+    explicit Triggering( const DsoSettingsScope *scope, const Dso::ControlSettings &controlsettings );
     int searchTriggeredPosition( DSOsamples &result );
     bool provideTriggeredData( DSOsamples &result );
     int getTriggeredPositionRaw() { return triggeredPositionRaw; }

@@ -11,6 +11,7 @@
 #include <QSignalBlocker>
 #include <QTimer>
 #include <QToolTip>
+#include <QWheelEvent>
 
 #include "dsowidget.h"
 
@@ -905,6 +906,20 @@ void DsoWidget::updateZoom( bool enabled ) {
     markerFrequencybaseLabel->setVisible( enabled );
     updateMarkerDetails();
     repaint();
+}
+
+// increase / decrease zoomed window when scrolling in the black scope border (outside the glscope)
+void DsoWidget::wheelEvent( QWheelEvent *event ) {
+    if ( view->zoom ) {
+        if ( event->angleDelta().y() > 0 && view->zoomHeightFactor < 20 ) {
+            ++view->zoomHeightFactor;
+            updateZoom( true );
+        } else if ( event->angleDelta().y() < 0 && view->zoomHeightFactor > 1 ) {
+            --view->zoomHeightFactor;
+            updateZoom( true );
+        }
+    }
+    event->accept();
 }
 
 

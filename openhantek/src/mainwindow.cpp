@@ -574,7 +574,8 @@ void MainWindow::screenShot( screenshotType_t screenshotType, bool autoSafe ) {
 
     int sw = screenshot.width();
     int sh = screenshot.height();
-    if ( screenshotType != SCREENSHOT && dsoSettings->view.zoom && dsoSettings->view.zoomImage ) {
+    if ( screenshotType != SCREENSHOT && dsoSettings->view.zoom && dsoSettings->view.zoomImage &&
+         dsoSettings->view.zoomHeightFactor == 1 ) {
         screenshot = screenshot.scaled( sw, sh *= 2 ); // make double height
     }
 

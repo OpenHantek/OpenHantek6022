@@ -267,32 +267,32 @@
 <context>
     <name>DsoConfigDialog</name>
     <message>
-        <location filename="../src/configdialog/configdialog.cpp" line="32"/>
+        <location filename="../src/configdialog/configdialog.cpp" line="33"/>
         <source>Settings</source>
         <translation>Réglages</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/configdialog.cpp" line="100"/>
+        <location filename="../src/configdialog/configdialog.cpp" line="103"/>
         <source>FFT settings, power and THD calculation, musical note detection</source>
         <translation>Paramètres FFT, calcul de la puissance et du THD, détection des notes de musique</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/configdialog.cpp" line="106"/>
+        <location filename="../src/configdialog/configdialog.cpp" line="109"/>
         <source>Screen and printer colors, theme and style settings</source>
         <translation>Couleurs de l&apos;écran et de l&apos;imprimante, réglages du thème et du style</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/configdialog.cpp" line="51"/>
+        <location filename="../src/configdialog/configdialog.cpp" line="52"/>
         <source>&amp;Ok</source>
         <translation>&amp;Ok</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/configdialog.cpp" line="53"/>
+        <location filename="../src/configdialog/configdialog.cpp" line="54"/>
         <source>&amp;Apply</source>
         <translation>&amp;Appliquer</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/configdialog.cpp" line="54"/>
+        <location filename="../src/configdialog/configdialog.cpp" line="55"/>
         <source>&amp;Cancel</source>
         <translation>A&amp;nnuler</translation>
     </message>
@@ -301,22 +301,22 @@
         <translation type="vanished">Spectre</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/configdialog.cpp" line="92"/>
+        <location filename="../src/configdialog/configdialog.cpp" line="95"/>
         <source>Scope</source>
         <translation>Oscilloscope</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/configdialog.cpp" line="94"/>
+        <location filename="../src/configdialog/configdialog.cpp" line="97"/>
         <source>Timing, display settings, and HW configuration</source>
         <translation>Timing, paramètres d&apos;affichage et configuration HW</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/configdialog.cpp" line="98"/>
+        <location filename="../src/configdialog/configdialog.cpp" line="101"/>
         <source>Analysis</source>
         <translation>Analyser</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/configdialog.cpp" line="104"/>
+        <location filename="../src/configdialog/configdialog.cpp" line="107"/>
         <source>Colors</source>
         <translation>Couleurs</translation>
     </message>
@@ -462,8 +462,12 @@
     </message>
     <message>
         <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="70"/>
+        <source>Export 1:1 zoomed screen in double height</source>
+        <translation>Exporter l&apos;écran zoomé 1:1 en double hauteur</translation>
+    </message>
+    <message>
         <source>Export zoomed screen in double height</source>
-        <translation>Exporter l&apos;écran zoomé en double hauteur</translation>
+        <translation type="vanished">Exporter l&apos;écran zoomé en double hauteur</translation>
     </message>
     <message>
         <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="72"/>
@@ -471,7 +475,7 @@
         <translation>Hauteur de la zone de zoom</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="82"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="83"/>
         <source>Zoom</source>
         <translation>Zoom</translation>
     </message>
@@ -480,17 +484,17 @@
         <translation type="vanished">Exporter</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="92"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="95"/>
         <source>Scope has hardware modification for AC coupling (restart needed to apply the change)</source>
         <translation>L&apos;oscilloscope a subi une modification hardware pour le couplage AC (redémarrage nécessaire pour appliquer la modification)</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="94"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="97"/>
         <source>Show tooltips for user interface (restart needed to apply the change)</source>
         <translation>Afficher des infobulles pour l&apos;interface utilisateur (redémarrage nécessaire pour appliquer le changement)</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="86"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="89"/>
         <source>Save settings on exit</source>
         <translation>Enregistrer les réglages en quittant</translation>
     </message>
@@ -499,12 +503,12 @@
         <translation type="vanished">Taille de la police (redémarrage nécessaire pour appliquer la modification)</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="88"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="91"/>
         <source>Apply default settings after next restart</source>
         <translation>Appliquer les paramètres par défaut après le redémarrage</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="90"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="93"/>
         <source>Save settings now</source>
         <translation>Enregistrer les réglages maintenant</translation>
     </message>
@@ -521,7 +525,7 @@
         <translation type="vanished">Enregistrer les réglages maintenant</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="107"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="110"/>
         <source>Configuration</source>
         <translation>Configuration</translation>
     </message>
@@ -627,64 +631,64 @@
 <context>
     <name>DsoWidget</name>
     <message>
-        <location filename="../src/dsowidget.cpp" line="928"/>
+        <location filename="../src/dsowidget.cpp" line="943"/>
         <source>TR</source>
         <translation>D</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="193"/>
+        <location filename="../src/dsowidget.cpp" line="194"/>
         <source>Markers</source>
         <translation>Repères</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="636"/>
+        <location filename="../src/dsowidget.cpp" line="637"/>
         <source>Zoom x%1  </source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="641"/>
-        <location filename="../src/dsowidget.cpp" line="643"/>
-        <location filename="../src/dsowidget.cpp" line="684"/>
-        <location filename="../src/dsowidget.cpp" line="731"/>
-        <location filename="../src/dsowidget.cpp" line="740"/>
-        <location filename="../src/dsowidget.cpp" line="761"/>
+        <location filename="../src/dsowidget.cpp" line="642"/>
+        <location filename="../src/dsowidget.cpp" line="644"/>
+        <location filename="../src/dsowidget.cpp" line="685"/>
+        <location filename="../src/dsowidget.cpp" line="732"/>
+        <location filename="../src/dsowidget.cpp" line="741"/>
+        <location filename="../src/dsowidget.cpp" line="762"/>
         <source>/div</source>
         <translation>/div</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="630"/>
+        <location filename="../src/dsowidget.cpp" line="631"/>
         <source>Markers  </source>
         <translation>Repères  </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="444"/>
+        <location filename="../src/dsowidget.cpp" line="445"/>
         <source>Trace position, drag the channel name up or down</source>
         <translation>Position de la trace, faire glisser le nom du canal vers le haut ou vers le bas</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="466"/>
+        <location filename="../src/dsowidget.cpp" line="467"/>
         <source>Trigger position, drag the arrow left or right</source>
         <translation>Position du déclencheur, faites glisser la flèche vers la gauche ou la droite</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="476"/>
+        <location filename="../src/dsowidget.cpp" line="477"/>
         <source>Trigger level, drag the arrow up or down</source>
         <translation>Niveau de déclenchement, faites glisser la flèche vers le haut ou le bas</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="490"/>
+        <location filename="../src/dsowidget.cpp" line="491"/>
         <source>Measure or zoom marker &apos;1&apos; and &apos;2&apos;, drag left or right</source>
         <translation>Marqueur de mesure ou de zoom &apos;1&apos; et &apos;2&apos;, glisser vers la gauche ou la droite</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="587"/>
-        <location filename="../src/dsowidget.cpp" line="605"/>
+        <location filename="../src/dsowidget.cpp" line="588"/>
+        <location filename="../src/dsowidget.cpp" line="606"/>
         <source>ON</source>
         <translation>ON</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="591"/>
-        <location filename="../src/dsowidget.cpp" line="609"/>
+        <location filename="../src/dsowidget.cpp" line="592"/>
+        <location filename="../src/dsowidget.cpp" line="610"/>
         <source>OFF</source>
         <translation>OFF</translation>
     </message>
@@ -701,37 +705,37 @@
         <translation type="vanished">Zoom ---  </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="639"/>
+        <location filename="../src/dsowidget.cpp" line="640"/>
         <source>Zoom ---  </source>
         <translation>Zoom ---  </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="712"/>
+        <location filename="../src/dsowidget.cpp" line="713"/>
         <source>%1  %2  %3  %4  %5</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="751"/>
+        <location filename="../src/dsowidget.cpp" line="752"/>
         <source>/s</source>
         <translation>/s</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="878"/>
+        <location filename="../src/dsowidget.cpp" line="879"/>
         <source> on screen</source>
         <translation> à l&apos;écran</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="920"/>
+        <location filename="../src/dsowidget.cpp" line="935"/>
         <source>&lt;b&gt; OFFSET CALIBRATION &lt;/b&gt;</source>
         <translation>&lt;b&gt;CALIBRER OFFSET&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="976"/>
+        <location filename="../src/dsowidget.cpp" line="991"/>
         <source>pp</source>
         <translation>pp</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="982"/>
+        <location filename="../src/dsowidget.cpp" line="997"/>
         <source>rms</source>
         <translation>rms</translation>
     </message>
@@ -752,12 +756,12 @@
 <context>
     <name>GlScope</name>
     <message>
-        <location filename="../src/glscope.cpp" line="346"/>
+        <location filename="../src/glscope.cpp" line="345"/>
         <source>System does not support OpenGL Shading Language (GLSL)</source>
         <translation>Le système ne supporte pas OpenGL Shading Language (GLSL)</translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="350"/>
+        <location filename="../src/glscope.cpp" line="349"/>
         <source>OpenGL init called twice!</source>
         <translation>Double initialisation d&apos;OpenGL !</translation>
     </message>
@@ -768,29 +772,29 @@
 </translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="411"/>
+        <location filename="../src/glscope.cpp" line="410"/>
         <source>Try command line option &apos;--useGLES&apos;
 </source>
         <translation>Essayez l&apos;option de ligne de commande &apos;--useGLES&apos;
 </translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="427"/>
-        <location filename="../src/glscope.cpp" line="434"/>
+        <location filename="../src/glscope.cpp" line="426"/>
+        <location filename="../src/glscope.cpp" line="433"/>
         <source>Failed to compile OpenGL shader programs.
 </source>
         <translation>Echec de compilation des programmes d&apos;ombrage OpenGL.
 </translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="442"/>
+        <location filename="../src/glscope.cpp" line="441"/>
         <source>Failed to link/bind OpenGL shader programs.
 </source>
         <translation>Echec de création des liens des programmes d&apos;ombrage OpenGL.
 </translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="451"/>
+        <location filename="../src/glscope.cpp" line="450"/>
         <source>Failed to locate shader variable.</source>
         <translation>Echec de localisation des variables d&apos;ombrage.</translation>
     </message>
@@ -802,7 +806,7 @@
         <translation type="vanished">Impossible d&apos;obtenir les données de niveau du canal depuis l&apos;oscilloscope</translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="576"/>
+        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="570"/>
         <source>Couldn&apos;t get calibration data from oscilloscope&apos;s EEPROM. Use a config file for calibration!</source>
         <translation>Impossible d&apos;obtenir les données de niveau du canal depuis l&apos;oscilloscope. Utilisez un fichier de configuration pour la calibration !</translation>
     </message>
@@ -1468,22 +1472,22 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="603"/>
+        <location filename="../src/mainwindow.cpp" line="604"/>
         <source>Portable Document Format (*.pdf)</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="604"/>
+        <location filename="../src/mainwindow.cpp" line="605"/>
         <source>Save screenshot</source>
         <translation>Enregistrer la capture d&apos;écran</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="635"/>
+        <location filename="../src/mainwindow.cpp" line="636"/>
         <source>Print oscillograph</source>
         <translation>Imprimer l&apos;oscillographe</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="603"/>
+        <location filename="../src/mainwindow.cpp" line="604"/>
         <source>Image (*.png *.jpg)</source>
         <translation>Image (*.png *.jpg)</translation>
     </message>
@@ -1843,12 +1847,12 @@
     <message>
         <location filename="../src/hantekdso/mathmodes.cpp" line="60"/>
         <source>CH1²</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/hantekdso/mathmodes.cpp" line="62"/>
         <source>CH2²</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/hantekdso/mathmodes.cpp" line="64"/>

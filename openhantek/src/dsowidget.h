@@ -151,6 +151,7 @@ class DsoWidget : public QWidget {
     // Scope control
     void updateZoom( bool enabled );
     void updateCursorGrid( bool enabled );
+    void wheelEvent( QWheelEvent *event ) override;
 
     // Scope control
     void updateSlidersSettings();

@@ -6,9 +6,10 @@
 #include "scopesettings.h"
 
 class MathChannel {
-public:
-    MathChannel( const DsoSettingsScope *scope );
+  public:
+    explicit MathChannel( const DsoSettingsScope *scope );
     void calculate( DSOsamples &result );
-private:
+
+  private:
     const DsoSettingsScope *scope;
 };
