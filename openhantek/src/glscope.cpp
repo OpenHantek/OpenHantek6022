@@ -843,7 +843,7 @@ void GlScope::drawVertices( QOpenGLFunctions *gl, int marker, QColor color ) {
     m_program->setUniformValue( colorLocation, ( marker == selectedCursor ) ? color : color.darker() );
     gl->glDrawArrays( GL_LINE_LOOP, GLint( marker * VERTICES_ARRAY_SIZE ), GLint( VERTICES_ARRAY_SIZE ) );
     if ( cursorInfo[ size_t( marker ) ]->shape == DsoSettingsScopeCursor::RECTANGULAR ) {
-        color.setAlphaF( 0.25 );
+        color.setAlphaF( 0.5 ); // increase this value if you encounter hardcopy/print artefacts (?)
         m_program->setUniformValue( colorLocation, color.darker() );
         gl->glDrawArrays( GL_TRIANGLE_FAN, GLint( marker * VERTICES_ARRAY_SIZE ), GLint( VERTICES_ARRAY_SIZE ) );
     }

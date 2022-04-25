@@ -207,7 +207,7 @@
         <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="41"/>
         <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="45"/>
         <source>Voltage</source>
-        <translation type="unfinished">电压</translation>
+        <translation>电压</translation>
     </message>
     <message>
         <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="132"/>
@@ -466,16 +466,16 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="72"/>
+        <source>Zoom area height factor</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Export zoomed screen in double height</source>
         <translation type="vanished">以双倍高度导出放大后的屏幕</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="72"/>
-        <source>Zoom area height</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="83"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="82"/>
         <source>Zoom</source>
         <translation type="unfinished"></translation>
     </message>
@@ -484,17 +484,17 @@
         <translation type="vanished">导出</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="95"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="92"/>
         <source>Scope has hardware modification for AC coupling (restart needed to apply the change)</source>
         <translation>示波器已经经过硬件修改支持AC耦合(需要重启)</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="97"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="94"/>
         <source>Show tooltips for user interface (restart needed to apply the change)</source>
         <translation>显示用户界面的工具提示（应用变化需要重新启动）</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="89"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="86"/>
         <source>Save settings on exit</source>
         <translation>退出时保存配置</translation>
     </message>
@@ -503,12 +503,12 @@
         <translation type="vanished">字体大小(需要重启)</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="91"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="88"/>
         <source>Apply default settings after next restart</source>
         <translation>下次重启恢复默认配置</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="93"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="90"/>
         <source>Save settings now</source>
         <translation>马上保存配置</translation>
     </message>
@@ -525,7 +525,7 @@
         <translation type="vanished">马上保存配置</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="110"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="107"/>
         <source>Configuration</source>
         <translation>配置</translation>
     </message>
@@ -623,22 +623,22 @@
         <translation type="vanished">放大 x%L1</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="642"/>
-        <location filename="../src/dsowidget.cpp" line="644"/>
-        <location filename="../src/dsowidget.cpp" line="685"/>
-        <location filename="../src/dsowidget.cpp" line="732"/>
-        <location filename="../src/dsowidget.cpp" line="741"/>
-        <location filename="../src/dsowidget.cpp" line="762"/>
+        <location filename="../src/dsowidget.cpp" line="646"/>
+        <location filename="../src/dsowidget.cpp" line="648"/>
+        <location filename="../src/dsowidget.cpp" line="689"/>
+        <location filename="../src/dsowidget.cpp" line="736"/>
+        <location filename="../src/dsowidget.cpp" line="745"/>
+        <location filename="../src/dsowidget.cpp" line="766"/>
         <source>/div</source>
         <translation>/div</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="935"/>
+        <location filename="../src/dsowidget.cpp" line="940"/>
         <source>&lt;b&gt; OFFSET CALIBRATION &lt;/b&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="943"/>
+        <location filename="../src/dsowidget.cpp" line="948"/>
         <source>TR</source>
         <translation>TR</translation>
     </message>
@@ -648,44 +648,44 @@
         <translation>光标</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="445"/>
+        <location filename="../src/dsowidget.cpp" line="449"/>
         <source>Trace position, drag the channel name up or down</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="467"/>
+        <location filename="../src/dsowidget.cpp" line="471"/>
         <source>Trigger position, drag the arrow left or right</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="477"/>
+        <location filename="../src/dsowidget.cpp" line="481"/>
         <source>Trigger level, drag the arrow up or down</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="491"/>
+        <location filename="../src/dsowidget.cpp" line="495"/>
         <source>Measure or zoom marker &apos;1&apos; and &apos;2&apos;, drag left or right</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="588"/>
-        <location filename="../src/dsowidget.cpp" line="606"/>
+        <location filename="../src/dsowidget.cpp" line="592"/>
+        <location filename="../src/dsowidget.cpp" line="610"/>
         <source>ON</source>
         <translation>ON</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="592"/>
-        <location filename="../src/dsowidget.cpp" line="610"/>
+        <location filename="../src/dsowidget.cpp" line="596"/>
+        <location filename="../src/dsowidget.cpp" line="614"/>
         <source>OFF</source>
         <translation>OFF</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="631"/>
+        <location filename="../src/dsowidget.cpp" line="635"/>
         <source>Markers  </source>
         <translation>光标  </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="637"/>
+        <location filename="../src/dsowidget.cpp" line="641"/>
         <source>Zoom x%1  </source>
         <translation type="unfinished"></translation>
     </message>
@@ -702,7 +702,7 @@
         <translation type="vanished">放大 x%L1  </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="640"/>
+        <location filename="../src/dsowidget.cpp" line="644"/>
         <source>Zoom ---  </source>
         <translation>放大 ---  </translation>
     </message>
@@ -711,22 +711,22 @@
         <translation type="vanished">%L1%</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="713"/>
+        <location filename="../src/dsowidget.cpp" line="717"/>
         <source>%1  %2  %3  %4  %5</source>
         <translation>%1  %2  %3  %4  %5</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="879"/>
+        <location filename="../src/dsowidget.cpp" line="883"/>
         <source> on screen</source>
         <translation> on screen</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="991"/>
+        <location filename="../src/dsowidget.cpp" line="996"/>
         <source>pp</source>
         <translation>pp</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="997"/>
+        <location filename="../src/dsowidget.cpp" line="1002"/>
         <source>rms</source>
         <translation>rms</translation>
     </message>
@@ -743,7 +743,7 @@
         <translation type="vanished">%1  %2  %3  %4</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="752"/>
+        <location filename="../src/dsowidget.cpp" line="756"/>
         <source>/s</source>
         <translation>/s</translation>
     </message>

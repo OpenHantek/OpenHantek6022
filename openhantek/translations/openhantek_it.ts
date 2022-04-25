@@ -351,16 +351,20 @@
         <translation>Esportazione dello schermo ingrandito 1:1 in doppia altezza</translation>
     </message>
     <message>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="72"/>
+        <source>Zoom area height factor</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Export zoomed screen in double height</source>
         <translation type="vanished">Esportazione dello schermo ingrandito in doppia altezza</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="72"/>
         <source>Zoom area height</source>
-        <translation>Altezza dell&apos;area zoom</translation>
+        <translation type="vanished">Altezza dell&apos;area zoom</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="83"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="82"/>
         <source>Zoom</source>
         <translation>Zoom</translation>
     </message>
@@ -369,17 +373,17 @@
         <translation type="vanished">Esportazione</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="95"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="92"/>
         <source>Scope has hardware modification for AC coupling (restart needed to apply the change)</source>
         <translation>L&apos;oscilloscopio ha una modifica hardware per l&apos;accoppiamento AC (è necessario riavviare per applicare la modifica)</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="97"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="94"/>
         <source>Show tooltips for user interface (restart needed to apply the change)</source>
         <translation>Mostra tooltips per l&apos;interfaccia utente (riavvio necessario per applicare la modifica)</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="89"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="86"/>
         <source>Save settings on exit</source>
         <translation>Salvare le impostazioni all&apos;uscita</translation>
     </message>
@@ -388,12 +392,12 @@
         <translation type="vanished">Dimensione dei caratteri (è necessario riavviare per applicare la modifica)</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="91"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="88"/>
         <source>Apply default settings after next restart</source>
         <translation>Applicare le configurazioni predefinite dopo il prossimo riavvio</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="93"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="90"/>
         <source>Save settings now</source>
         <translation>Salvare ora le impostazioni</translation>
     </message>
@@ -410,7 +414,7 @@
         <translation type="vanished">Salvare ora le impostazioni predefinite</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="110"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="107"/>
         <source>Configuration</source>
         <translation>Configurazione</translation>
     </message>
@@ -446,54 +450,54 @@
         <translation>Marcatori</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="637"/>
+        <location filename="../src/dsowidget.cpp" line="641"/>
         <source>Zoom x%1  </source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="642"/>
-        <location filename="../src/dsowidget.cpp" line="644"/>
-        <location filename="../src/dsowidget.cpp" line="685"/>
-        <location filename="../src/dsowidget.cpp" line="732"/>
-        <location filename="../src/dsowidget.cpp" line="741"/>
-        <location filename="../src/dsowidget.cpp" line="762"/>
+        <location filename="../src/dsowidget.cpp" line="646"/>
+        <location filename="../src/dsowidget.cpp" line="648"/>
+        <location filename="../src/dsowidget.cpp" line="689"/>
+        <location filename="../src/dsowidget.cpp" line="736"/>
+        <location filename="../src/dsowidget.cpp" line="745"/>
+        <location filename="../src/dsowidget.cpp" line="766"/>
         <source>/div</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="631"/>
+        <location filename="../src/dsowidget.cpp" line="635"/>
         <source>Markers  </source>
         <translation>Marcatori  </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="445"/>
+        <location filename="../src/dsowidget.cpp" line="449"/>
         <source>Trace position, drag the channel name up or down</source>
         <translation>Posizione della traccia, trascinare il nome del canale su o giù</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="467"/>
+        <location filename="../src/dsowidget.cpp" line="471"/>
         <source>Trigger position, drag the arrow left or right</source>
         <translation>Posizione di trigger, trascinare la freccia a sinistra o a destra</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="477"/>
+        <location filename="../src/dsowidget.cpp" line="481"/>
         <source>Trigger level, drag the arrow up or down</source>
         <translation>Livello di trigger, trascinare la freccia su o giù</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="491"/>
+        <location filename="../src/dsowidget.cpp" line="495"/>
         <source>Measure or zoom marker &apos;1&apos; and &apos;2&apos;, drag left or right</source>
         <translation>Misura o zoom marker &apos;1&apos; e &apos;2&apos;, trascinare a sinistra o a destra</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="588"/>
-        <location filename="../src/dsowidget.cpp" line="606"/>
+        <location filename="../src/dsowidget.cpp" line="592"/>
+        <location filename="../src/dsowidget.cpp" line="610"/>
         <source>ON</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="592"/>
-        <location filename="../src/dsowidget.cpp" line="610"/>
+        <location filename="../src/dsowidget.cpp" line="596"/>
+        <location filename="../src/dsowidget.cpp" line="614"/>
         <source>OFF</source>
         <translation></translation>
     </message>
@@ -506,42 +510,42 @@
         <translation type="vanished">Frequenza: </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="640"/>
+        <location filename="../src/dsowidget.cpp" line="644"/>
         <source>Zoom ---  </source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="713"/>
+        <location filename="../src/dsowidget.cpp" line="717"/>
         <source>%1  %2  %3  %4  %5</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="752"/>
+        <location filename="../src/dsowidget.cpp" line="756"/>
         <source>/s</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="879"/>
+        <location filename="../src/dsowidget.cpp" line="883"/>
         <source> on screen</source>
         <translation> sullo schermo</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="935"/>
+        <location filename="../src/dsowidget.cpp" line="940"/>
         <source>&lt;b&gt; OFFSET CALIBRATION &lt;/b&gt;</source>
         <translation>&lt;b&gt;Calibrare Offset&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="943"/>
+        <location filename="../src/dsowidget.cpp" line="948"/>
         <source>TR</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="991"/>
+        <location filename="../src/dsowidget.cpp" line="996"/>
         <source>pp</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="997"/>
+        <location filename="../src/dsowidget.cpp" line="1002"/>
         <source>rms</source>
         <translation></translation>
     </message>

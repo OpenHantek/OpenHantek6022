@@ -50,10 +50,10 @@ DsoSettings::DsoSettings( const ScopeDevice *scopeDevice, int verboseLevel, bool
     newVoltage.name = tr( "MATH" );
     scope.voltage.push_back( newVoltage );
 
-    view.screen.voltage.push_back( QColor::fromHsv( 300, 0xff, 0xff ) ); // purple
-    view.screen.spectrum.push_back( QColor::fromHsv( 320, 0xff, 0xff ) );
-    view.print.voltage.push_back( QColor::fromHsv( 300, 0xff, 0xff ) );
-    view.print.spectrum.push_back( QColor::fromHsv( 320, 0xff, 0xff ) );
+    view.screen.voltage.push_back( QColor::fromHsv( 300, 0xff, 0xff ) );  // purple (V=100%)
+    view.screen.spectrum.push_back( QColor::fromHsv( 300, 0xff, 0xc0 ) ); // brightness V=75%
+    view.print.voltage.push_back( QColor::fromHsv( 300, 0xff, 0xc0 ) );   // brightness V=75%
+    view.print.spectrum.push_back( QColor::fromHsv( 300, 0xff, 0x80 ) );  // brightness V=50%
 
     // create an unique storage for this device based on device name and serial number
     // individual device settings location:
@@ -311,8 +311,8 @@ void DsoSettings::load() {
         view.printerColorImages = storeSettings->value( "printerColorImages" ).toBool();
     if ( storeSettings->contains( "zoom" ) )
         view.zoom = storeSettings->value( "zoom" ).toBool();
-    if ( storeSettings->contains( "zoomHeightFactor" ) )
-        view.zoomHeightFactor = storeSettings->value( "zoomHeightFactor" ).toInt();
+    if ( storeSettings->contains( "zoomHeightIndex" ) )
+        view.zoomHeightIndex = storeSettings->value( "zoomHeightIndex" ).toInt();
     if ( storeSettings->contains( "zoomImage" ) )
         view.zoomImage = storeSettings->value( "zoomImage" ).toBool();
     if ( storeSettings->contains( "cursorGridPosition" ) )
@@ -477,7 +477,7 @@ void DsoSettings::save() {
     storeSettings->setValue( "interpolation", view.interpolation );
     storeSettings->setValue( "printerColorImages", view.printerColorImages );
     storeSettings->setValue( "zoom", view.zoom );
-    storeSettings->setValue( "zoomHeightFactor", view.zoomHeightFactor );
+    storeSettings->setValue( "zoomHeightIndex", view.zoomHeightIndex );
     storeSettings->setValue( "zoomImage", view.zoomImage );
     storeSettings->setValue( "cursorGridPosition", view.cursorGridPosition );
     storeSettings->setValue( "cursorsVisible", view.cursorsVisible );

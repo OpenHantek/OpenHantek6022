@@ -324,6 +324,7 @@ void DsoWidget::restoreScreenColors() {
 void DsoWidget::setColors() {
     if ( scope->verboseLevel > 2 )
         qDebug() << "  DsoWidget::setColors()";
+    ChannelID numChannels = ChannelID( scope->voltage.size() );
     cursorDataGrid->setBackgroundColor( view->colors->background ); // switch cursor measurement
     cursorDataGrid->configureItem( 0, view->colors->text );         // and marker colors
     // Palette for this widget
@@ -340,7 +341,7 @@ void DsoWidget::setColors() {
     markerTimebaseLabel->setPalette( paletteNow );
     markerFrequencybaseLabel->setPalette( paletteNow );
     QPalette tablePalette = paletteNow;
-    for ( ChannelID channel = 0; channel < scope->voltage.size(); ++channel ) {
+    for ( ChannelID channel = 0; channel < numChannels; ++channel ) {
         tablePalette.setColor( QPalette::WindowText, view->colors->spectrum[ channel ] );
         measurementMagnitudeLabel[ channel ]->setPalette( tablePalette );
         tablePalette.setColor( QPalette::WindowText, view->colors->voltage[ channel ] );
@@ -349,8 +350,8 @@ void DsoWidget::setColors() {
         measurementGainLabel[ channel ]->setPalette( tablePalette );
         mainSliders.voltageOffsetSlider->setColor( ( channel ), view->colors->voltage[ channel ] );
         zoomSliders.voltageOffsetSlider->setColor( ( channel ), view->colors->voltage[ channel ] );
-        mainSliders.voltageOffsetSlider->setColor( unsigned( scope->voltage.size() ) + channel, view->colors->spectrum[ channel ] );
-        zoomSliders.voltageOffsetSlider->setColor( unsigned( scope->voltage.size() ) + channel, view->colors->spectrum[ channel ] );
+        mainSliders.voltageOffsetSlider->setColor( channel + numChannels, view->colors->spectrum[ channel ] );
+        zoomSliders.voltageOffsetSlider->setColor( channel + numChannels, view->colors->spectrum[ channel ] );
         measurementVppLabel[ channel ]->setPalette( tablePalette );
         measurementDCLabel[ channel ]->setPalette( tablePalette );
         measurementACLabel[ channel ]->setPalette( tablePalette );
@@ -360,6 +361,9 @@ void DsoWidget::setColors() {
         measurementTHDLabel[ channel ]->setPalette( tablePalette );
         measurementFrequencyLabel[ channel ]->setPalette( tablePalette );
         measurementNoteLabel[ channel ]->setPalette( tablePalette );
+        cursorDataGrid->configureItem( channel + 1, view->colors->voltage[ channel ] ); // and voltage colors
+        cursorDataGrid->configureItem( channel + numChannels + 1,
+                                       view->colors->spectrum[ channel ] ); // and spectrum colors
     }
 
     tablePalette = palette();
@@ -894,7 +898,7 @@ void DsoWidget::updateZoom( bool enabled ) {
     cursorMeasurementValid = false;
     showCursorMessage(); // remove dangling tool tip
     // zoomed scope height in regards to main scope height if enabled, otherwise no space used
-    mainLayout->setRowStretch( zoomScopeRow, enabled ? view->zoomHeightFactor : 0 );
+    mainLayout->setRowStretch( zoomScopeRow, enabled ? int( pow( 2, view->zoomHeightIndex ) ) : 0 );
     zoomScope->setVisible( enabled );
     zoomSliders.voltageOffsetSlider->setVisible( enabled );
     zoomSliders.triggerPositionSlider->setVisible( enabled );
@@ -908,14 +912,15 @@ void DsoWidget::updateZoom( bool enabled ) {
     repaint();
 }
 
+
 // increase / decrease zoomed window when scrolling in the black scope border (outside the glscope)
 void DsoWidget::wheelEvent( QWheelEvent *event ) {
     if ( view->zoom ) {
-        if ( event->angleDelta().y() > 0 && view->zoomHeightFactor < 20 ) {
-            ++view->zoomHeightFactor;
+        if ( event->angleDelta().y() > 0 && view->zoomHeightIndex < 4 ) {
+            ++view->zoomHeightIndex;
             updateZoom( true );
-        } else if ( event->angleDelta().y() < 0 && view->zoomHeightFactor > 1 ) {
-            --view->zoomHeightFactor;
+        } else if ( event->angleDelta().y() < 0 && view->zoomHeightIndex > 0 ) {
+            --view->zoomHeightIndex;
             updateZoom( true );
         }
     }

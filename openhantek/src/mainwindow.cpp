@@ -74,19 +74,19 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
     if ( dsoSettings->scope.toolTipVisible )
         ui->actionSampling->setToolTip( tr( "Start and stop the sampling" ) );
     else
-        ui->actionHistogram->setToolTip( QString() );
+        ui->actionSampling->setToolTip( QString() );
     ui->actionRefresh->setIcon( QIcon( iconPath + "refresh.svg" ) );
     ui->actionRefresh->setShortcut( Qt::Key::Key_R );
     if ( dsoSettings->scope.toolTipVisible )
         ui->actionRefresh->setToolTip( tr( "Refresh the screen trace for slow 'Roll' mode" ) );
     else
-        ui->actionHistogram->setToolTip( QString() );
+        ui->actionRefresh->setToolTip( QString() );
     ui->actionPhosphor->setIcon( QIcon( iconPath + "phosphor.svg" ) );
     ui->actionPhosphor->setShortcut( Qt::Key::Key_P );
     if ( dsoSettings->scope.toolTipVisible )
         ui->actionPhosphor->setToolTip( tr( "Let the traces fade out slowly" ) );
     else
-        ui->actionHistogram->setToolTip( QString() );
+        ui->actionPhosphor->setToolTip( QString() );
     ui->actionHistogram->setIcon( QIcon( iconPath + "histogram.svg" ) );
     ui->actionHistogram->setShortcut( Qt::Key::Key_H );
     if ( dsoSettings->scope.toolTipVisible )
@@ -98,13 +98,13 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
     if ( dsoSettings->scope.toolTipVisible )
         ui->actionZoom->setToolTip( tr( "Zoom the range between the markers '1' and '2'" ) );
     else
-        ui->actionHistogram->setToolTip( QString() );
+        ui->actionZoom->setToolTip( QString() );
     ui->actionMeasure->setIcon( QIcon( iconPath + "measure.svg" ) );
     ui->actionMeasure->setShortcut( Qt::Key::Key_M );
     if ( dsoSettings->scope.toolTipVisible )
         ui->actionMeasure->setToolTip( tr( "Enable cursor measurements" ) );
     else
-        ui->actionHistogram->setToolTip( QString() );
+        ui->actionMeasure->setToolTip( QString() );
     ui->actionOpen->setIcon( iconFont->icon( fa::folderopen, colorMap ) );
     ui->actionOpen->setToolTip( tr( "Load scope settings from a config file" ) );
     ui->actionSave->setIcon( iconFont->icon( fa::save, colorMap ) );
@@ -575,7 +575,7 @@ void MainWindow::screenShot( screenshotType_t screenshotType, bool autoSafe ) {
     int sw = screenshot.width();
     int sh = screenshot.height();
     if ( screenshotType != SCREENSHOT && dsoSettings->view.zoom && dsoSettings->view.zoomImage &&
-         dsoSettings->view.zoomHeightFactor == 1 ) {
+         dsoSettings->view.zoomHeightIndex == 0 ) {
         screenshot = screenshot.scaled( sw, sh *= 2 ); // make double height
     }
 
