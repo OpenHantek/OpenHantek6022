@@ -97,7 +97,7 @@ Every commit triggers a workflow on
 [GitHub Actions](https://github.com/OpenHantek/OpenHantek6022/actions/workflows/build_check.yml)
 that builds and packages OpenHantek6022 for:
 * Linux (`*.deb`, `*.rpm`, `*.tar.gz`)
-* macOS (`*.dmg`, `*.tar.gz`)
+* macOS (`*.tar.gz`), currently no `*.dmg` due to a regression caused by incompatible changes on macos side.
 * Windows (`*.zip`)
 
 [![GitHub CI](https://github.com/OpenHantek/OpenHantek6022/actions/workflows/build_check.yml/badge.svg)](https://github.com/OpenHantek/OpenHantek6022/actions/workflows/build_check.yml)
