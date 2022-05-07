@@ -98,12 +98,12 @@ jobs:
         fi
 
 
-    - name: Upload macOS Artifacts
-      if: startsWith(matrix.os, 'macos')
-      uses: actions/upload-artifact@v2
-      with:
-        name: openhantek_osx_x86_64_${{github.run_number}}
-        path: ${{github.workspace}}/build/packages/*
+    # - name: Upload macOS Artifacts
+    #  if: startsWith(matrix.os, 'macos')
+    #  uses: actions/upload-artifact@v2
+    #  with:
+    #    name: openhantek_osx_x86_64_${{github.run_number}}
+    #    path: ${{github.workspace}}/build/packages/*
 
 
     # --- Windows steps ---
@@ -147,8 +147,10 @@ jobs:
 
     # --- Tagged Commit -> Upload Release ---
 
-    - name: Upload Linux / macOS / Windows Release Assets
-      if: startsWith(github.ref, 'refs/tags/')
+    - name: Upload Linux / Windows Release Assets
+      if: |
+        startsWith(github.ref, 'refs/tags/') &&
+        ( startsWith(matrix.os, 'ubuntu') || startsWith(matrix.os, 'windows') )
       uses: softprops/action-gh-release@v1
       with:
         prerelease: true

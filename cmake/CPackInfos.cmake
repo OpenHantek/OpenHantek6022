@@ -1,6 +1,6 @@
 # This file configures CPack.
 # A tgz, deb and rpm file is created for Linux (tgz and deb tested on debian stretch and buster).
-# A tar.gz and dmg file is created for macOS (not tested).
+# A tar.gz file is created for macOS (not tested).
 # A zip file is created on Windows (not tested).
 
 find_package(Git QUIET)
