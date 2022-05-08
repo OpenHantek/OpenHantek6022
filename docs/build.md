@@ -158,6 +158,14 @@ After you've installed the requirements run the following commands inside the to
       --hide-extension "OpenHantek.app" --app-drop-link 600 185 --eula ../../LICENSE OpenHantek.dmg OpenHantek.app
     #
 
+The bundle build doesn't work at the moment due to a regression [(#296)](https://github.com/OpenHantek/OpenHantek6022/issues/296) caused by incompatible changes on macOS side.
+@bgallois describes a [similar issue](https://github.com/FastTrackOrg/FastTrack/issues/51) and provides a [workaround](https://github.com/FastTrackOrg/FastTrack/issues/51#issuecomment-1115088550).
+Due to a missing Mac on my end, I disabled the option:
+
+    option(BUILD_MACOSX_BUNDLE "Build MacOS app bundle" OFF)
+
+I will not investigate further and leave it to a volunteer to get the package build working again.
+
 ----
 
 ### [Windows](#windows)
