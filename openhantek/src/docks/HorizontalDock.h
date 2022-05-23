@@ -63,9 +63,10 @@ class HorizontalDock : public QDockWidget {
     /// \brief Loads settings into GUI
     /// \param scope Settings to load
     void loadSettings( DsoSettingsScope *scope );
+    void triggerModeChanged( Dso::TriggerMode mode );
 
   protected:
-    void closeEvent( QCloseEvent *event );
+    void closeEvent( QCloseEvent *event ) override;
     QGridLayout *dockLayout;        ///< The main layout for the dock window
     QWidget *dockWidget;            ///< The main widget for the dock window
     QLabel *samplerateLabel;        ///< The label for the samplerate spinbox

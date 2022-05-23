@@ -49,6 +49,7 @@ class TriggerDock : public QDockWidget {
     /// \brief Loads settings into GUI
     /// \param scope Settings to load
     void loadSettings( DsoSettingsScope *scope );
+    void timebaseChanged( double timebase );
 
   protected:
     void closeEvent( QCloseEvent *event ) override;

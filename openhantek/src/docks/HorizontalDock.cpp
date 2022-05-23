@@ -109,6 +109,14 @@ void HorizontalDock::loadSettings( DsoSettingsScope *scope ) {
 }
 
 
+void HorizontalDock::triggerModeChanged( Dso::TriggerMode mode ) {
+    if ( mode == Dso::TriggerMode::ROLL )
+        timebaseSiSpinBox->setMinimum( 0.2 );
+    else
+        timebaseSiSpinBox->setMinimum( 1e-9 );
+}
+
+
 /// \brief Don't close the dock, just hide it.
 /// \param event The close event that should be handled.
 void HorizontalDock::closeEvent( QCloseEvent *event ) {

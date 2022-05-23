@@ -99,11 +99,26 @@ void TriggerDock::loadSettings( DsoSettingsScope *scope ) {
     if ( scope->verboseLevel > 2 )
         qDebug() << "  TDock::loadSettings()";
     // Set values
+    if ( scope->trigger.mode != Dso::TriggerMode::ROLL && scope->horizontal.timebase < 0.2 ) // remove ROLL mode
+        modeComboBox->setMaxCount( int( mSpec->triggerModes.size() ) - 1 );
     setMode( scope->trigger.mode );
     setSlope( scope->trigger.slope );
     setSource( scope->trigger.source );
     setSmooth( scope->trigger.smooth );
 }
+
+
+void TriggerDock::timebaseChanged( double timebase ) { // provide ROLL mode only if samplerate > 100 ms/div
+    if ( scope->trigger.mode == Dso::TriggerMode::ROLL )
+        return;
+    if ( timebase > 0.1 && modeComboBox->count() == int( mSpec->triggerModes.size() ) - 1 ) { // add ROLL mode
+        modeComboBox->setMaxCount( int( mSpec->triggerModes.size() ) );
+        modeComboBox->addItem( Dso::triggerModeString( Dso::TriggerMode( mSpec->triggerModes.size() - 1 ) ) );
+    } else if ( timebase <= 0.1 ) { // remove ROLL mode
+        modeComboBox->setMaxCount( int( mSpec->triggerModes.size() ) - 1 );
+    }
+}
+
 
 /// \brief Don't close the dock, just hide it
 /// \param event The close event that should be handled.

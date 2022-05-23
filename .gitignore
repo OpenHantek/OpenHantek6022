@@ -5,6 +5,7 @@
 *~
 *.orig
 *.new
+*.old
 *.diff
 CMakeLists.txt.user
 build*

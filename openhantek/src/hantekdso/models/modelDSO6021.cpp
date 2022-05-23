@@ -89,10 +89,10 @@ static void initSpecifications( Dso::ControlSpecification &specification ) {
     specification.hasACcoupling = true;
 
     specification.triggerModes = {
-        Dso::TriggerMode::ROLL,
         Dso::TriggerMode::AUTO,
         Dso::TriggerMode::NORMAL,
         Dso::TriggerMode::SINGLE,
+        Dso::TriggerMode::ROLL,
     };
     specification.fixedUSBinLength = 512;
 

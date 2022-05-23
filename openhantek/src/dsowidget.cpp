@@ -800,7 +800,11 @@ void DsoWidget::updateSpectrumUsed( ChannelID channel, bool used ) {
 
 
 /// \brief Handles modeChanged signal from the trigger dock.
-void DsoWidget::updateTriggerMode() { updateTriggerDetails(); }
+void DsoWidget::updateTriggerMode() {
+    updateTriggerDetails();
+    mainSliders.triggerPositionSlider->setVisible( scope->trigger.mode != Dso::TriggerMode::ROLL );
+    zoomSliders.triggerPositionSlider->setVisible( zoomScope->isVisible() && scope->trigger.mode != Dso::TriggerMode::ROLL );
+}
 
 
 /// \brief Handles slopeChanged signal from the trigger dock.

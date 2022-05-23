@@ -81,10 +81,10 @@ static void initSpecifications( Dso::ControlSpecification &specification ) {
     specification.couplings = { Dso::Coupling::DC, Dso::Coupling::AC };
     specification.hasACcoupling = true; // DDS120 has AC coupling
     specification.triggerModes = {
-        Dso::TriggerMode::ROLL,
         Dso::TriggerMode::AUTO,
         Dso::TriggerMode::NORMAL,
         Dso::TriggerMode::SINGLE,
+        Dso::TriggerMode::ROLL,
     };
     specification.fixedUSBinLength = 0;
     // use calibration frequency steps of modified sigrok FW (<= 20 kHz)

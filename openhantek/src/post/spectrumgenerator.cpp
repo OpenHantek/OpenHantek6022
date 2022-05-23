@@ -409,7 +409,7 @@ void SpectrumGenerator::process( PPresult *result ) {
         else
             channelData->note = "";
         // calculate the total harmonic distortion of the signal (optional)
-        // THD = sqrt( power_of_harmonics / power_of_fundamental )
+        // according IEEE method: THD = sqrt( power_of_harmonics / power_of_fundamental )
         if ( scope->analysis.calculateTHD ) { // set in menu Oscilloscope/Settings/Analysis
             channelData->thd = -1;            // invalid unless calculation is ok
             double f1 = channelData->frequency / channelData->spectrum.interval;

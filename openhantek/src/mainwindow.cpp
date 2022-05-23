@@ -281,6 +281,7 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
         dsoControl->setSamplerate( dsoSettings->scope.horizontal.samplerate );
         this->dsoWidget->updateSamplerate( dsoSettings->scope.horizontal.samplerate );
     } );
+    connect( horizontalDock, &HorizontalDock::timebaseChanged, triggerDock, &TriggerDock::timebaseChanged );
     connect( horizontalDock, &HorizontalDock::timebaseChanged, [ dsoControl, this ]() {
         dsoControl->setRecordTime( dsoSettings->scope.horizontal.timebase * DIVS_TIME );
         this->dsoWidget->updateTimebase( dsoSettings->scope.horizontal.timebase );
@@ -304,6 +305,7 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
 
     connect( triggerDock, &TriggerDock::modeChanged, dsoControl, &HantekDsoControl::setTriggerMode );
     connect( triggerDock, &TriggerDock::modeChanged, dsoWidget, &DsoWidget::updateTriggerMode );
+    connect( triggerDock, &TriggerDock::modeChanged, horizontalDock, &HorizontalDock::triggerModeChanged );
     connect( triggerDock, &TriggerDock::modeChanged, [ this ]( Dso::TriggerMode mode ) {
         ui->actionRefresh->setVisible( Dso::TriggerMode::ROLL == mode && dsoSettings->scope.horizontal.samplerate < 10e3 );
     } );

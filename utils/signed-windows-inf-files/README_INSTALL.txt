@@ -22,11 +22,11 @@ optionally (suggested) tick "Delete the driver software for this device",
 confirm.
 
 USBDeview ( https://www.nirsoft.net/utils/usb_devices_view.html ) has an
-"Unisntall sected device" option, that does not delete the driver software.
+"Uninstall selected device" option, that does not delete the driver software.
 
 ---
 To install: Select the desired .inf files, e.g. for a 6022BE:
-  Hantek_6022BE_loader.inf  Hantek_6022BE_openht.inf   Hantek_6022BE_sigrok .inf
+  Hantek_6022BE_loader.inf  Hantek_6022BE_openht.inf   Hantek_6022BE_sigrok.inf
 and right-click to install. This is fast. No reboot or wait is necessary.
 
 Note: Leave the .inf and matching signed .cat files together.
@@ -36,3 +36,18 @@ Public domin. Use at your own risk.
 Only insurance is that these files, as created, are not deliberately malicious.
 
   fgrieu - 2021-12-23
+  Ho-Ro - 2022-05-22 (fixed typos)
+
+---
+One user reported that a reboot was required after installation for the device to work properly.
+https://github.com/OpenHantek/OpenHantek6022/issues/302
+Ok, I've had success. Here are the steps I took:
+1 Insert USB
+2 Uninstall device and remove drivers
+3 Re-insert USB
+4 Install Hantek_6022BE_loader.inf
+5 Install Hantek_6022BE_openht.inf
+6 Restart PC
+7 Launch OpenHantek
+
+  Ho-Ro - 2022-05-22

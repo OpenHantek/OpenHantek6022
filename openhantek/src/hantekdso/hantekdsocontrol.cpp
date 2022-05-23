@@ -152,7 +152,7 @@ Dso::ErrorCode HantekDsoControl::setRecordTime( double duration ) {
         srLimit = ( specification->samplerate.single ).max;
     else
         srLimit = ( specification->samplerate.multi ).max;
-    // For now - we go for the SAMPLESIZE (= 20000) size sampling, defined in hantekdsocontrol.h
+    // For now - we go for the SAMPLESIZE (= 20000) size sampling, defined in dsosamples.h
     // Find highest samplerate using less equal half of these samples to obtain our duration.
     uint8_t sampleIndex = 0;
     for ( uint8_t iii = 0; iii < specification->fixedSampleRates.size(); ++iii ) {
