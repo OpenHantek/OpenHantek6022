@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: GPL-2.0+
+// SPDX-License-Identifier: GPL-2.0-or-later
 
 // #define TIMESTAMPDEBUG
 
@@ -876,7 +876,7 @@ void HantekDsoControl::stateMachine() {
             // trigger functions below are in separate file "triggering.cpp"
             triggering->searchTriggeredPosition( result );          // detect trigger point
             triggered = triggering->provideTriggeredData( result ); // present either free running or last triggered trace
-        } else { // free running display (uses half sample size -> double display speed for slow sample rates)
+        } else {                                                    // free running display
             triggered = false;
             result.triggeredPosition = 0;
         }
@@ -911,10 +911,10 @@ void HantekDsoControl::stateMachine() {
         if ( skipFirstSingle ) { // skip the 1st measurement in single mode
             skipFirstSingle = false;
         } else {
-            while ( raw.tag == lastTag ) // skip the already sampled trace, get a new one when reactivated
-                ;
+            // while ( raw.tag == lastTag )
+            //     ;
             enableSampling( false );
-            samplingStarted = false;
+            // samplingStarted = false;
         }
     }
     if ( isSampling() ) { // triggered by action "start sampling"
