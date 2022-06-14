@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: GPL-2.0+
+// SPDX-License-Identifier: GPL-2.0-or-later
 
 // increment this value after incompatible config changes
 const unsigned CONFIG_VERSION = 2;

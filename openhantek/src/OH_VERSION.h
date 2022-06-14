@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: GPL-2.0-or-later
+
 // define OH_VERSION as the version that is shown on top of the program
 // if defined in this file it will tag the commit automatically
 // via .git/hooks/post-commit (see below)

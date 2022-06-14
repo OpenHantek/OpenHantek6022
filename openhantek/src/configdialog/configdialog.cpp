@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: GPL-2.0+
+// SPDX-License-Identifier: GPL-2.0-or-later
 
 
 #define CONFIG_LIST_WIDTH 128      ///< The width of the page selection widget

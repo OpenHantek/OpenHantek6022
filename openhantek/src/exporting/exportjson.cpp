@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: GPL-2.0+
+// SPDX-License-Identifier: GPL-2.0-or-later
 // Sandro Sobczyński <sandro.sobczynski@gmail.com>
 
 #include "exportjson.h"
