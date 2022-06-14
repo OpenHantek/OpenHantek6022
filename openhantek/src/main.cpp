@@ -225,7 +225,10 @@ int main( int argc, char *argv[] ) {
     // Qt5 linux styles ("Breeze", "Windows" or "Fusion")
     // Linux default:   "Breeze" (screen is taller compared to the other two styles)
     // Windows default: "Windows"
-    if ( styleFusion ) { // smaller widgets allow stacking of all four docks even on 1280x720 screen
+    // kvantum style disturbs UI, fall back to Fusion style with dark default theme
+    bool isKvantum = openHantekApplication.style()->objectName().startsWith( "kvantum" );
+    if ( styleFusion || isKvantum ) {
+        // smaller "Fusion" widgets allow stacking of all four docks even on 1280x720 screen
         if ( verboseLevel )
             qDebug() << startupTime.elapsed() << "ms:"
                      << "set \"Fusion\" style";
@@ -260,8 +263,8 @@ int main( int argc, char *argv[] ) {
 #if ( QT_VERSION >= QT_VERSION_CHECK( 5, 12, 0 ) )
         palette.setColor( QPalette::PlaceholderText, QColor( 35, 38, 39 ) ); // #20, introduced in Qt 5.12
 #endif
-    } else if ( Dso::Themes::THEME_DARK == Dso::Themes( theme ) ) {        // Colors from "Breeze Dark" theme
-        palette.setColor( QPalette::WindowText, QColor( 239, 240, 241 ) ); // #0
+    } else if ( Dso::Themes::THEME_DARK == Dso::Themes( theme ) || isKvantum ) { // Colors from "Breeze Dark" theme
+        palette.setColor( QPalette::WindowText, QColor( 239, 240, 241 ) );       // #0
         palette.setColor( QPalette::Button, QColor( 49, 54, 59 ) );
         palette.setColor( QPalette::Light, QColor( 70, 77, 84 ) );
         palette.setColor( QPalette::Midlight, QColor( 60, 66, 72 ) );
