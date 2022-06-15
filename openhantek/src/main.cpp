@@ -506,7 +506,7 @@ int main( int argc, char *argv[] ) {
     if ( verboseLevel )
         qDebug() << startupTime.elapsed() << "ms:"
                  << "start DSO control thread";
-    dsoControl.enableSampling();
+    dsoControl.enableSamplingUI();
     postProcessingThread.start();
     dsoControlThread.start();
     Capturing capturing( &dsoControl );

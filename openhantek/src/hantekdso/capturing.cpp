@@ -19,12 +19,12 @@ void Capturing::run() {
             return;                  // stop this thread
         }
         if ( hdc->scope ) { // device is initialized
-            if ( hdc->sampling ) {
+            if ( hdc->samplingUI ) {
                 capture();
                 // add user defined hold-off time to lower CPU load
                 QThread::msleep( unsigned( 1000 * hdc->scope->horizontal.acquireInterval ) );
             } else {
-                QThread::msleep( unsigned( hdc->displayInterval ) );
+                QThread::msleep( unsigned( hdc->displayInterval ) ); // run slowly
             }
         }
     }
@@ -139,7 +139,8 @@ void Capturing::capture() {
     dp->resize( rawSamplesize, 0x80 );
     if ( tag && freeRun ) // in free run mode transfer settings immediately
         xferSamples();
-    ++tag;
+    if ( 0 == ++tag )
+        ++tag; // skip tag==0
     if ( hdc->scopeDevice->isRealHW() ) {
         received = getRealSamples();
     } else {

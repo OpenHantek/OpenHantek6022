@@ -81,7 +81,7 @@ class HantekDsoControl : public QObject {
             return SAMPLESIZE;
     }
 
-    bool isSampling() const { return sampling; }
+    bool isSamplingUI() const { return samplingUI; }
 
     /// Return the associated usb device.
     const ScopeDevice *getDevice() const { return scopeDevice; }
@@ -165,7 +165,7 @@ class HantekDsoControl : public QObject {
     // Communication with device
     ScopeDevice *scopeDevice;  ///< The USB device for the oscilloscope
     bool deviceNotConnected(); ///< USB status, always false for demo device
-    bool sampling = false;     ///< true, if the oscilloscope is taking samples
+    bool samplingUI = false;   ///< true, if the oscilloscope is taking samples
 
     // Device setup
     const DSOModel *model;                          ///< The attached scope model
@@ -208,7 +208,7 @@ class HantekDsoControl : public QObject {
     /// \brief If sampling is disabled, no samplesAvailable() signals are send anymore, no samples
     /// are fetched from the device and no processing takes place.
     /// \param enabled Enables/Disables sampling
-    void enableSampling( bool enabled = true );
+    void enableSamplingUI( bool enabled = true );
 
     /// \brief Sets the samplerate of the oscilloscope.
     /// \param samplerate The samplerate that should be met (S/s), 0.0 to restore

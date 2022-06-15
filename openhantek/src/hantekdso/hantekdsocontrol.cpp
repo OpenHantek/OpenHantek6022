@@ -324,7 +324,7 @@ Dso::ErrorCode HantekDsoControl::setTriggerMode( Dso::TriggerMode mode ) {
     static Dso::TriggerMode lastMode;
     controlsettings.trigger.mode = mode;
     if ( Dso::TriggerMode::SINGLE != mode )
-        enableSampling();
+        enableSamplingUI();
     // trigger mode changed NONE <-> !NONE
     if ( ( Dso::TriggerMode::ROLL == mode && Dso::TriggerMode::ROLL != lastMode ) ||
          ( Dso::TriggerMode::ROLL != mode && Dso::TriggerMode::ROLL == lastMode ) ) {
@@ -435,12 +435,12 @@ void HantekDsoControl::restartSampling() {
 
 
 /// \brief Start sampling process.
-void HantekDsoControl::enableSampling( bool enabled ) {
+void HantekDsoControl::enableSamplingUI( bool enabled ) {
     if ( verboseLevel > 4 )
         qDebug() << "    HDC::enableSampling()" << enabled;
     if ( enabled && controlsettings.trigger.mode == Dso::TriggerMode::SINGLE )
         triggering->resetTriggeredPositionRaw(); // invalidate previous result, wait for new trigger
-    sampling = enabled;
+    samplingUI = enabled;
     updateSamplerateLimits();
     emit showSamplingStatus( enabled );
 }
@@ -663,7 +663,7 @@ void HantekDsoControl::calibrateOffset( bool enable ) {
 void HantekDsoControl::quitSampling() {
     if ( verboseLevel > 2 )
         qDebug() << "  HDC::quitSampling()";
-    enableSampling( false );
+    enableSamplingUI( false );
     capturing = false;
     scopeDevice->stopSampling();
     if ( scopeDevice->isDemoDevice() )
@@ -854,12 +854,6 @@ void HantekDsoControl::updateInterval() {
 
 /// \brief State machine for the device communication
 void HantekDsoControl::stateMachine() {
-    static bool firstFreq = true;
-    static bool skipFirstSingle = true; // skip 1st triggered single trace to avoid old data
-    static int delayDisplay = 0;        // timer for display
-    static bool lastTriggered = false;  // state of last frame
-    static bool skipEven = true;        // even or odd frames were skipped
-    static unsigned lastTag;            // detect new raw data
 
     bool triggered = false;
     if ( verboseLevel > 4 )
@@ -867,6 +861,7 @@ void HantekDsoControl::stateMachine() {
 
     // we have a sample available ...
     // ... that is either a new sample or we are in free run mode or a new trigger search is needed
+    static unsigned lastTag = UINT32_MAX; // detect new raw data
     if ( samplingStarted && raw.valid && ( raw.tag != lastTag || raw.freeRun || refreshNeeded() ) ) {
         lastTag = raw.tag;
         convertRawDataToSamples(); // process samples, apply gain settings etc.
@@ -881,12 +876,16 @@ void HantekDsoControl::stateMachine() {
             result.triggeredPosition = 0;
         }
     } else { // TODO: check if this is needed anymore: start with correct calibration frequency
+        static bool firstFreq = true;
         if ( firstFreq && scope ) {
             setCalFreq( scope->horizontal.calfreq );
             firstFreq = false;
         }
     }
-    delayDisplay += qMax( acquireInterval, 1 );
+    static int delayDisplay = 0;                // timer for display
+    static bool lastTriggered = false;          // state of last frame
+    static bool skipEven = true;                // even or odd frames were skipped
+    delayDisplay += qMax( acquireInterval, 1 ); // count up with every state machine loop
     // always run the display (slowly at t=displayInterval) to allow user interaction
     // ... but update immediately if new triggered data is available after untriggered
     // skip an even number of frames when slope == Dso::Slope::Both
@@ -901,29 +900,29 @@ void HantekDsoControl::stateMachine() {
     } else {
         skipEven = !skipEven;
     }
-
     lastTriggered = triggered; // save state
 
+    static bool skipFirstSingle = true; // skip 1st triggered single trace to avoid old data
     // Stop sampling if we're in single trigger mode and have a triggered trace (txh No13)
-    if ( isSampling() && controlsettings.trigger.mode == Dso::TriggerMode::SINGLE && triggering->getTriggeredPositionRaw() ) {
+    if ( isSamplingUI() && controlsettings.trigger.mode == Dso::TriggerMode::SINGLE && triggering->getTriggeredPositionRaw() ) {
         if ( verboseLevel > 5 )
             qDebug() << "     HDC::stateMachine() stop sampling" << raw.tag;
         if ( skipFirstSingle ) { // skip the 1st measurement in single mode
             skipFirstSingle = false;
         } else {
-            // while ( raw.tag == lastTag )
-            //     ;
-            enableSampling( false );
-            // samplingStarted = false;
+            enableSamplingUI( false ); // update UI sample indicator run/stop
+            samplingStarted = false;
         }
     }
-    if ( isSampling() ) { // triggered by action "start sampling"
+
+    if ( isSamplingUI() ) { // triggered by action "start sampling" and call to enableSampling()
         lastTag = raw.tag;
         // Sampling hasn't started, update the expected sample count
         expectedSampleCount = getSampleCount();
         timestampDebug( "Starting to capture" );
         samplingStarted = true;
     }
+
     updateInterval(); // calculate new acquire timing
     if ( stateMachineRunning ) {
 #if ( QT_VERSION >= QT_VERSION_CHECK( 5, 4, 0 ) )

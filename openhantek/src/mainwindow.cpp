@@ -381,8 +381,8 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
         }
         this->ui->actionSampling->setChecked( enabled );
     } );
-    connect( this->ui->actionSampling, &QAction::triggered, dsoControl, &HantekDsoControl::enableSampling );
-    this->ui->actionSampling->setChecked( dsoControl->isSampling() );
+    connect( this->ui->actionSampling, &QAction::triggered, dsoControl, &HantekDsoControl::enableSamplingUI );
+    this->ui->actionSampling->setChecked( dsoControl->isSamplingUI() );
 
     connect( this->ui->actionRefresh, &QAction::triggered, dsoControl, &HantekDsoControl::restartSampling );
 
