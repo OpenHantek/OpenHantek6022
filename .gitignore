@@ -16,3 +16,4 @@ firmware/hex
 *.autosave
 ui_*.h
 *.sh
+.DS_Store

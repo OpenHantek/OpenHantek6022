@@ -43,7 +43,7 @@ if(WIN32 AND MINGW)
 endif()
 
 # Enable MacOSX bundle magic in the next line
-option(BUILD_MACOSX_BUNDLE "Build MacOS app bundle" OFF)
+option(BUILD_MACOSX_BUNDLE "Build MacOS app bundle" ON)
 #
 if( APPLE AND BUILD_MACOSX_BUNDLE )
     set( EXECTYPE MACOSX_BUNDLE )
