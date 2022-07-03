@@ -164,10 +164,8 @@ jobs:
 
     # --- Tagged Commit -> Upload Release ---
 
-    - name: Upload Linux / Windows Release Assets
-      if: |
-        startsWith(github.ref, 'refs/tags/') &&
-        ( startsWith(matrix.os, 'ubuntu') || startsWith(matrix.os, 'windows') )
+    - name: Upload Linux / macOS / Windows Release Assets
+      if: startsWith(github.ref, 'refs/tags/')
       uses: softprops/action-gh-release@v1
       with:
         prerelease: true
