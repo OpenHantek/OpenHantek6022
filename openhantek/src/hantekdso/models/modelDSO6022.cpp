@@ -119,7 +119,7 @@ static void applyRequirements_( HantekDsoControl *dsoControl ) {
 //                  VID/PID active  VID/PID no FW   FW ver    FW name     Scope name
 //                  |------------|  |------------|  |----|  |---------|  |----------|
 ModelDSO6022BE::ModelDSO6022BE()
-    : DSOModel( ID, 0x04b5, 0x6022, 0x04b4, 0x6022, 0x0208, "dso6022be", "DSO-6022BE", Dso::ControlSpecification( 2 ) ) {
+    : DSOModel( ID, 0x04b5, 0x6022, 0x04b4, 0x6022, 0x0210, "dso6022be", "DSO-6022BE", Dso::ControlSpecification( 2 ) ) {
     initSpecifications( specification );
 }
 
@@ -128,7 +128,7 @@ void ModelDSO6022BE::applyRequirements( HantekDsoControl *dsoControl ) const { a
 
 // Hantek DSO-6022BL (scope or logic analyzer)
 ModelDSO6022BL::ModelDSO6022BL()
-    : DSOModel( ID, 0x04b5, 0x602a, 0x04b4, 0x602a, 0x0208, "dso6022bl", "DSO-6022BL", Dso::ControlSpecification( 2 ) ) {
+    : DSOModel( ID, 0x04b5, 0x602a, 0x04b4, 0x602a, 0x0210, "dso6022bl", "DSO-6022BL", Dso::ControlSpecification( 2 ) ) {
     initSpecifications( specification );
 }
 
@@ -157,7 +157,7 @@ static ModelSaleae modelInstance_Saleae;
 
 // LCSOFT without EEPROM reports EzUSB VID/PID
 ModelEzUSB::ModelEzUSB()
-    : DSOModel( ID, 0x04b5, 0x6022, 0x04b4, 0x8613, 0x0208, "dso6022be", "LCsoft-EzUSB", Dso::ControlSpecification( 2 ) ) {
+    : DSOModel( ID, 0x04b5, 0x6022, 0x04b4, 0x8613, 0x0210, "dso6022be", "LCsoft-EzUSB", Dso::ControlSpecification( 2 ) ) {
     initSpecifications( specification );
     specification.hasCalibrationEEPROM = false; // (big) EEPROM, disabled by address jumper
 }
@@ -167,7 +167,7 @@ void ModelEzUSB::applyRequirements( HantekDsoControl *dsoControl ) const { apply
 
 // Saleae VID/PID in EEPROM
 ModelSaleae::ModelSaleae()
-    : DSOModel( ID, 0x04b5, 0x6022, 0x0925, 0x3881, 0x0208, "dso6022be", "LCsoft-Saleae", Dso::ControlSpecification( 2 ) ) {
+    : DSOModel( ID, 0x04b5, 0x6022, 0x0925, 0x3881, 0x0210, "dso6022be", "LCsoft-Saleae", Dso::ControlSpecification( 2 ) ) {
     initSpecifications( specification );
     specification.hasCalibrationEEPROM = false; // we have a big EEPROM
 }
