@@ -468,7 +468,7 @@
     <message>
         <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="72"/>
         <source>Zoom area height factor</source>
-        <translation type="unfinished"></translation>
+        <translation>Facteur de hauteur de la zone de zoom</translation>
     </message>
     <message>
         <source>Export zoomed screen in double height</source>
@@ -1831,22 +1831,22 @@
     <message>
         <location filename="../src/hantekdso/mathmodes.cpp" line="52"/>
         <source>CH1 LP10</source>
-        <translation type="unfinished"></translation>
+        <translation>CH1 LP10</translation>
     </message>
     <message>
         <location filename="../src/hantekdso/mathmodes.cpp" line="54"/>
         <source>CH2 LP10</source>
-        <translation type="unfinished"></translation>
+        <translation>CH2 LP10</translation>
     </message>
     <message>
         <location filename="../src/hantekdso/mathmodes.cpp" line="56"/>
         <source>CH1 LP100</source>
-        <translation type="unfinished"></translation>
+        <translation>CH1 LP100</translation>
     </message>
     <message>
         <location filename="../src/hantekdso/mathmodes.cpp" line="58"/>
         <source>CH2 LP100</source>
-        <translation type="unfinished"></translation>
+        <translation>CH2 LP100</translation>
     </message>
     <message>
         <location filename="../src/hantekdso/mathmodes.cpp" line="60"/>
@@ -1861,62 +1861,62 @@
     <message>
         <location filename="../src/hantekdso/mathmodes.cpp" line="64"/>
         <source>CH1 AC</source>
-        <translation type="unfinished"></translation>
+        <translation>CH1 AC</translation>
     </message>
     <message>
         <location filename="../src/hantekdso/mathmodes.cpp" line="66"/>
         <source>CH2 AC</source>
-        <translation type="unfinished"></translation>
+        <translation>CH2 AC</translation>
     </message>
     <message>
         <location filename="../src/hantekdso/mathmodes.cpp" line="68"/>
         <source>CH1 DC</source>
-        <translation type="unfinished"></translation>
+        <translation>CH1 DC</translation>
     </message>
     <message>
         <location filename="../src/hantekdso/mathmodes.cpp" line="70"/>
         <source>CH2 DC</source>
-        <translation type="unfinished"></translation>
+        <translation>CH2 DC</translation>
     </message>
     <message>
         <location filename="../src/hantekdso/mathmodes.cpp" line="72"/>
         <source>CH1 Abs</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/hantekdso/mathmodes.cpp" line="74"/>
         <source>CH2 Abs</source>
-        <translation type="unfinished"></translation>
+        <translation>CH2 Abs</translation>
     </message>
     <message>
         <location filename="../src/hantekdso/mathmodes.cpp" line="76"/>
         <source>CH1 Sign</source>
-        <translation type="unfinished"></translation>
+        <translation>CH1 Sign</translation>
     </message>
     <message>
         <location filename="../src/hantekdso/mathmodes.cpp" line="78"/>
         <source>CH2 Sign</source>
-        <translation type="unfinished"></translation>
+        <translation>CH2 Sign</translation>
     </message>
     <message>
         <location filename="../src/hantekdso/mathmodes.cpp" line="80"/>
         <source>CH1 AC Sign</source>
-        <translation type="unfinished"></translation>
+        <translation>CH1 AC Sign</translation>
     </message>
     <message>
         <location filename="../src/hantekdso/mathmodes.cpp" line="82"/>
         <source>CH2 AC Sign</source>
-        <translation type="unfinished"></translation>
+        <translation>CH2 AC Sign</translation>
     </message>
     <message>
         <location filename="../src/hantekdso/mathmodes.cpp" line="84"/>
         <source>CH1 Trigger</source>
-        <translation type="unfinished"></translation>
+        <translation>CH1 Trigger</translation>
     </message>
     <message>
         <location filename="../src/hantekdso/mathmodes.cpp" line="86"/>
         <source>CH2 Trigger</source>
-        <translation type="unfinished"></translation>
+        <translation>CH2 Trigger</translation>
     </message>
     <message>
         <location filename="../src/post/analysissettings.cpp" line="19"/>

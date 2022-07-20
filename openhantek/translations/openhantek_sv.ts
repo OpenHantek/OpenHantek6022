@@ -254,12 +254,12 @@
     <message>
         <location filename="../src/configdialog/configdialog.cpp" line="103"/>
         <source>FFT settings, power and THD calculation, musical note detection</source>
-        <translation type="unfinished"></translation>
+        <translation>FFT-inställningar, beräkning av effekt och THD, notering av musikaliska noter</translation>
     </message>
     <message>
         <location filename="../src/configdialog/configdialog.cpp" line="109"/>
         <source>Screen and printer colors, theme and style settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Skärm- och skrivarfärger, tema- och stilinställningar</translation>
     </message>
     <message>
         <location filename="../src/configdialog/configdialog.cpp" line="52"/>
@@ -284,7 +284,7 @@
     <message>
         <location filename="../src/configdialog/configdialog.cpp" line="97"/>
         <source>Timing, display settings, and HW configuration</source>
-        <translation type="unfinished"></translation>
+        <translation>Timing, visningsinställningar och HW-konfiguration</translation>
     </message>
     <message>
         <location filename="../src/configdialog/configdialog.cpp" line="101"/>
@@ -377,7 +377,7 @@
     <message>
         <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="72"/>
         <source>Zoom area height factor</source>
-        <translation type="unfinished"></translation>
+        <translation>Faktor för zoomområdets höjd</translation>
     </message>
     <message>
         <source>Export zoomed screen in double height</source>

@@ -416,7 +416,7 @@
     <message>
         <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="72"/>
         <source>Zoom area height factor</source>
-        <translation type="unfinished"></translation>
+        <translation>Factor de altura del área de zoom</translation>
     </message>
     <message>
         <source>Export zoomed screen in double height</source>
