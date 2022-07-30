@@ -19,7 +19,7 @@ jobs:
       # do not stop on 1st fail
       fail-fast: false
       matrix:
-        os: [ubuntu-20.04, macos-12, windows-2019]
+        os: [ubuntu-20.04, macos-11, windows-2019]
 
     runs-on: ${{ matrix.os }}
 
@@ -77,6 +77,8 @@ jobs:
         mkdir build;brew update;
         brew install qt5 fftw binutils create-dmg;
         export Qt5_DIR=$(brew --prefix qt5);
+        mkdir -p /usr/local/opt/qt5/lib/libgcc_s.1.1.dylib.framework;
+        ln -sf /usr/local/opt/gcc/lib/gcc/11/libgcc_s.1.1.dylib /usr/local/opt/qt5/lib/libgcc_s.1.1.dylib.framework/libgcc_s.1.1.dylib;
         cd build;
         cp ../CHANGELOG changelog;
         cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_PREFIX_PATH=${Qt5_DIR}
@@ -94,7 +96,6 @@ jobs:
         export Qt5_DIR=$(brew --prefix qt5);
         export PATH=${Qt5_DIR}/bin:${PATH};
         cd openhantek ; macdeployqt OpenHantek.app -always-overwrite -verbose=1;
-        cp /usr/local/opt/gcc/lib/gcc/11/libgcc_s.1.1.dylib OpenHantek.app/Contents/Frameworks/;
         python ../../utils/macdeployqtfix/macdeployqtfix.py
         --quiet OpenHantek.app/Contents/MacOS/OpenHantek ${Qt5_DIR};
         create-dmg --volname OpenHantek --volicon ../../openhantek/res/images/openhantek.icns
