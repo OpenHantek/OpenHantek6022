@@ -37,14 +37,15 @@ jobs:
 
     - name: Install Ubuntu Build Requirements
       if: startsWith(matrix.os, 'ubuntu')
-      run:
-        git submodule update --init --recursive;
-        mkdir build;
-        sudo apt update;
-        sudo apt -y upgrade;
-        sudo apt install g++ make cmake fakeroot rpm qttools5-dev libfftw3-dev binutils-dev libusb-1.0-0-dev libqt5opengl5-dev mesa-common-dev libgl1-mesa-dev libgles2-mesa-dev;
-        cd build;
-        cp ../CHANGELOG changelog;
+      run: |
+        git submodule update --init --recursive
+        mkdir build
+        sudo apt update
+        sudo apt -y upgrade
+        sudo apt install g++ make cmake fakeroot rpm qttools5-dev libfftw3-dev binutils-dev \
+          libusb-1.0-0-dev libqt5opengl5-dev mesa-common-dev libgl1-mesa-dev libgles2-mesa-dev
+        cd build
+        cp ../CHANGELOG changelog
         cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE
 
 
@@ -53,9 +54,9 @@ jobs:
       # 2-core CPU, 7 GB of RAM memory, 14 GB of SSD disk space
       working-directory: ${{github.workspace}}/build
       if: startsWith(matrix.os, 'ubuntu')
-      run:
-        make -j8;
-        fakeroot make -j8 package;
+      run: |
+        make -j8
+        fakeroot make -j8 package
         ls -l packages
 
 
@@ -72,15 +73,18 @@ jobs:
 
     - name: Install macOS Build Requirements
       if: startsWith(matrix.os, 'macos')
-      run:
-        git submodule update --init --recursive;
-        mkdir build;brew update;
-        brew install qt5 fftw binutils create-dmg;
-        export Qt5_DIR=$(brew --prefix qt5);
-        mkdir -p /usr/local/opt/qt5/lib/libgcc_s.1.1.dylib.framework;
-        ln -sf /usr/local/opt/gcc/lib/gcc/11/libgcc_s.1.1.dylib /usr/local/opt/qt5/lib/libgcc_s.1.1.dylib.framework/libgcc_s.1.1.dylib;
-        cd build;
-        cp ../CHANGELOG changelog;
+      run: |
+        git submodule update --init --recursive
+        mkdir build
+        brew update
+        brew install qt5 fftw binutils create-dmg
+        export Qt5_DIR=$(brew --prefix qt5)
+        # the next two commands (hack from @warpme) fix #314
+        mkdir -p /usr/local/opt/qt5/lib/libgcc_s.1.1.dylib.framework
+        ln -sf /usr/local/opt/gcc/lib/gcc/11/libgcc_s.1.1.dylib \
+          /usr/local/opt/qt5/lib/libgcc_s.1.1.dylib.framework/libgcc_s.1.1.dylib
+        cd build
+        cp ../CHANGELOG changelog
         cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_PREFIX_PATH=${Qt5_DIR}
 
 
@@ -96,7 +100,7 @@ jobs:
           export Qt5_DIR=$(brew --prefix qt5)
           export PATH=${Qt5_DIR}/bin:${PATH}
           cd openhantek
-          macdeployqt OpenHantek.app -always-overwrite -verbose=2
+          macdeployqt OpenHantek.app -always-overwrite -verbose=1
           python ../../utils/macdeployqtfix/macdeployqtfix.py \
             --quiet OpenHantek.app/Contents/MacOS/OpenHantek ${Qt5_DIR}
           create-dmg --volname OpenHantek --volicon ../../openhantek/res/images/openhantek.icns \
@@ -136,9 +140,9 @@ jobs:
 
     - name: Setup Windows Build
       if: startsWith(matrix.os, 'windows')
-      run:
-        md build &
-        call "%VCINSTALLDIR%/Auxiliary/Build/vcvars64.bat" &
+      run: |
+        md build
+        call "%VCINSTALLDIR%/Auxiliary/Build/vcvars64.bat"
         cmake -G "Visual Studio 16 2019" -A x64 -DCMAKE_PREFIX_PATH=%Qt5_DIR% -DCMAKE_BUILD_TYPE=Release -Bbuild
 
 
@@ -148,14 +152,14 @@ jobs:
       working-directory: ${{github.workspace}}/build
       if: startsWith(matrix.os, 'windows')
       shell: bash
-      run:
-        cmake --build . --parallel 8 --config Release --target package;
-        ZIP=$(basename packages/openhantek_*_win_x64.zip);
-        rm -f packages/openhantek_*_win_x64.*;
-        cd openhantek/Release;
-        7z a ../../packages/$ZIP *;
-        cd ../..;
-        ls -l packages;
+      run: |
+        cmake --build . --parallel 8 --config Release --target package
+        ZIP=$(basename packages/openhantek_*_win_x64.zip)
+        rm -f packages/openhantek_*_win_x64.*
+        cd openhantek/Release
+        7z a ../../packages/$ZIP *
+        cd ../..
+        ls -l packages
 
 
     - name: Upload Windows Artifacts
