@@ -140,9 +140,9 @@ jobs:
 
     - name: Setup Windows Build
       if: startsWith(matrix.os, 'windows')
-      run: |
-        md build
-        call "%VCINSTALLDIR%/Auxiliary/Build/vcvars64.bat"
+      run:
+        md build &
+        call "%VCINSTALLDIR%/Auxiliary/Build/vcvars64.bat" &
         cmake -G "Visual Studio 16 2019" -A x64 -DCMAKE_PREFIX_PATH=%Qt5_DIR% -DCMAKE_BUILD_TYPE=Release -Bbuild
 
 
