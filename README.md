@@ -98,7 +98,7 @@ Every commit triggers a workflow on
 that builds and packages OpenHantek6022 for:
 * Linux (`*.deb`, `*.rpm`, `*.tar.gz`)
 * Windows (`*.zip`)
-* macOS - currently only build but no package upload due to a regression caused by incompatible changes on macos side.
+* macOS - (`*.dmg`, `*.tar.gz`)
 
 [![GitHub CI](https://github.com/OpenHantek/OpenHantek6022/actions/workflows/build_check.yml/badge.svg)](https://github.com/OpenHantek/OpenHantek6022/actions/workflows/build_check.yml)
 This status badge here (and on top) show the build status.
@@ -125,7 +125,7 @@ To make building for Linux even easier, I provide two shell scripts:
 If you make small changes to the local source code, it is sufficient to call `make -j4` or `fakeroot make -j4 package` in the `build` directory.
 
 ## Install Prebuilt Binary Packages
-* Download Linux (built on Ubuntu 1804 LTS), Raspberry Pi (Debian stable), FreeBSD (12.1), macOS (Catalina 10.15) and Windows (Visual Studio 2019) packages for your convenience from the [Releases](https://github.com/OpenHantek/OpenHantek6022/releases) page.
+* Download Linux (Ubuntu 2004 LTS), Raspberry Pi (Debian stable), FreeBSD (12.1), macOS (Big Sur 11.6) and Windows (Visual Studio 2019) packages for your convenience from the [Releases](https://github.com/OpenHantek/OpenHantek6022/releases) page.
 * If you want to follow ongoing development, packages built from a fairly recent commit are available in the [unstable release](https://github.com/OpenHantek/OpenHantek6022/releases/tag/unstable).
 * For RPi4 see also [issue #28](https://github.com/OpenHantek/OpenHantek6022/issues/28).
 * These binary packages are built on stable operating system versions and require an up-to-date system.

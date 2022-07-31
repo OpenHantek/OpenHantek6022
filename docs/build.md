@@ -125,6 +125,10 @@ We recommend homebrew to install the required libraries.
     git submodule update --init --recursive
     brew update
     brew install libusb fftw qt5 cmake binutils create-dmg
+    # the next two commands (hack from @warpme) fix #314
+    mkdir -p /usr/local/opt/qt5/lib/libgcc_s.1.1.dylib.framework
+    ln -sf /usr/local/opt/gcc/lib/gcc/11/libgcc_s.1.1.dylib \
+      /usr/local/opt/qt5/lib/libgcc_s.1.1.dylib.framework/libgcc_s.1.1.dylib
 
 If you want to build an OSX bundle make sure the option in `openhantek/CMakeLists.txt` is set accordingly:
 
@@ -132,7 +136,8 @@ If you want to build an OSX bundle make sure the option in `openhantek/CMakeList
 
 After you've installed the requirements run the following commands inside the top directory of this package:
 
-    mkdir build
+    mkdir -p build
+    rm -rf build/*
     cd build
     cmake ..
     #
