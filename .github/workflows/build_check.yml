@@ -89,30 +89,33 @@ jobs:
       # 3-core CPU, 14 GB of RAM memory, 14 GB of SSD disk space
       working-directory: ${{github.workspace}}/build
       if: startsWith(matrix.os, 'macos')
-      run:
-        make -j12;
-        sudo make -j12 package;
+      run: |
+        make -j12
+        sudo make -j12 package
         if test -d openhantek/OpenHantek.app; then
-        export Qt5_DIR=$(brew --prefix qt5);
-        export PATH=${Qt5_DIR}/bin:${PATH};
-        cd openhantek ; macdeployqt OpenHantek.app -always-overwrite -verbose=1;
-        python ../../utils/macdeployqtfix/macdeployqtfix.py
-        --quiet OpenHantek.app/Contents/MacOS/OpenHantek ${Qt5_DIR};
-        create-dmg --volname OpenHantek --volicon ../../openhantek/res/images/openhantek.icns
-        --window-pos 200 120 --window-size 800 400 --icon-size 100 --icon "OpenHantek.app" 200 190
-        --skip-jenkins --hide-extension "OpenHantek.app" --app-drop-link 600 185
-        --eula ../../LICENSE OpenHantek.dmg OpenHantek.app;
-        cd ..;
-        else true;
-        fi;
+          export Qt5_DIR=$(brew --prefix qt5)
+          export PATH=${Qt5_DIR}/bin:${PATH}
+          cd openhantek
+          macdeployqt OpenHantek.app -always-overwrite -verbose=2
+          python ../../utils/macdeployqtfix/macdeployqtfix.py \
+            --quiet OpenHantek.app/Contents/MacOS/OpenHantek ${Qt5_DIR}
+          create-dmg --volname OpenHantek --volicon ../../openhantek/res/images/openhantek.icns \
+            --window-pos 200 120 --window-size 800 400 --icon-size 100 --icon "OpenHantek.app" 200 190 \
+            --skip-jenkins --hide-extension "OpenHantek.app" --app-drop-link 600 185 \
+            --eula ../../LICENSE OpenHantek.dmg OpenHantek.app
+          cd ..
+        else
+          true
+        fi
         if test -d openhantek/OpenHantek.app; then
-        cd openhantek ; sudo tar -czf ../packages/openhantek_*_osx_*.tar.gz OpenHantek.app;
-        if test -f OpenHantek.dmg; then
-        sudo mv OpenHantek.dmg ../packages/$(basename ../packages/openhantek_*_osx_*.tar.gz .tar.gz).dmg;
-        fi;
-        cd ..;
-        ls -l packages;
-        else true;
+          cd openhantek ; sudo tar -czf ../packages/openhantek_*_osx_*.tar.gz OpenHantek.app
+          if test -f OpenHantek.dmg; then
+            sudo mv OpenHantek.dmg ../packages/$(basename ../packages/openhantek_*_osx_*.tar.gz .tar.gz).dmg
+          fi
+          cd ..
+          ls -l packages
+        else
+          true
         fi
 
 
