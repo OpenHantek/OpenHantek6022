@@ -18,14 +18,14 @@
 #undef VERSION
 #define VERSION OH_VERSION
 #else
-#include "OH_COMMIT.h"
-#ifdef GIT_DESCRIBE
+#ifdef GIT_COMMIT_HASH
 #undef VERSION
-#define VERSION OH_COMMIT_DATE " - " GIT_DESCRIBE
+#define VERSION GIT_COMMIT_DATE "-" GIT_COMMIT_HASH
 #else
+#include "OH_COMMIT.h"
 #ifdef OH_BUILD
 #undef VERSION
-#define VERSION OH_COMMIT_DATE " - " OH_COMMIT_NUMBER
+#define VERSION OH_COMMIT_DATE "-" OH_COMMIT_NUMBER
 #endif
 #endif
 #endif
@@ -53,7 +53,7 @@ COMMIT=$(( $(git log main --pretty=oneline | wc -l) + 1 ))
 # define a string with commit date and number of this commit
 #
 echo "// Do not edit, will be re-created at each commit!" > ${OH_COMMIT_H}
-echo "#define OH_COMMIT_DATE \"$DATE - \"" >> ${OH_COMMIT_H}
+echo "#define OH_COMMIT_DATE \"$DATE\"" >> ${OH_COMMIT_H}
 echo "#define OH_COMMIT_NUMBER \"$COMMIT\"" >> ${OH_COMMIT_H}
 
 # and finally stage the change

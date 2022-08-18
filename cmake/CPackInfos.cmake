@@ -3,29 +3,31 @@
 # A tar.gz file is created for macOS (not tested).
 # A zip file is created on Windows (not tested).
 
+find_package(Git)
+
 if (GIT_EXECUTABLE AND EXISTS "${CMAKE_SOURCE_DIR}/.git")
     execute_process(
-        COMMAND ${GIT_EXECUTABLE} rev-parse --short HEAD
+        COMMAND ${GIT_EXECUTABLE} log -1 --format=%h
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
         RESULT_VARIABLE CMD_RESULT
-        OUTPUT_VARIABLE VCS_REVISION
+        OUTPUT_VARIABLE GIT_COMMIT_HASH
         OUTPUT_STRIP_TRAILING_WHITESPACE
         )
 endif()
-message( STATUS "VCS_REVISION: ${VCS_REVISION}" )
+message( STATUS "GIT_COMMIT_HASH: ${GIT_COMMIT_HASH}" )
 
 if(NOT DEFINED CMD_RESULT)
     set(VCS_BRANCH "main")
-    set(GIT_COMMIT_HASH "1")
-    set(VCS_REVISION "na")
+    set(GIT_COMMIT_HASH "na")
 else()
     execute_process(
-        COMMAND git log -1 --format=%h
+        COMMAND ${GIT_EXECUTABLE} log -1 --pretty=%cd --date=format:%Y%m%d
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-        OUTPUT_VARIABLE GIT_COMMIT_HASH
+        RESULT_VARIABLE CMD_RESULT
+        OUTPUT_VARIABLE GIT_COMMIT_DATE
         OUTPUT_STRIP_TRAILING_WHITESPACE
     )
-    # message( STATUS "GIT_COMMIT_HASH: ${GIT_COMMIT_HASH}" )
+    message( STATUS "GIT_COMMIT_DATE: ${GIT_COMMIT_DATE}" )
 
     execute_process(
         COMMAND ${GIT_EXECUTABLE} status
@@ -33,7 +35,7 @@ else()
         RESULT_VARIABLE CMD_RESULT
         OUTPUT_VARIABLE DESCRIBE_STATUS
         OUTPUT_STRIP_TRAILING_WHITESPACE
-      )
+    )
 
     string(REPLACE "\n" " " DESCRIBE_STATUS ${DESCRIBE_STATUS})
     string(REPLACE "\r" " " DESCRIBE_STATUS ${DESCRIBE_STATUS})
@@ -41,7 +43,7 @@ else()
     string(REPLACE " " ";" DESCRIBE_STATUS ${DESCRIBE_STATUS})
     list(GET DESCRIBE_STATUS 2 VCS_BRANCH)
 
-    # message(STATUS "Branch: ${VCS_BRANCH}") # /${VCS_REVISION}")
+    # message(STATUS "Branch: ${VCS_BRANCH}") # /${GIT_COMMIT_HASH}")
 
     execute_process(
         COMMAND ${GIT_EXECUTABLE} config --get remote.origin.url
@@ -133,7 +135,7 @@ message(STATUS "Architecture: ${CPACK_ARCH}")
 
 set(CPACK_PACKAGE_NAME "openhantek")
 string(TOLOWER ${CPACK_PACKAGE_NAME} CPACK_PACKAGE_NAME)
-set(CPACK_PACKAGE_VERSION "${DATE_VERSION}-${VCS_REVISION}")
+set(CPACK_PACKAGE_VERSION "${DATE_VERSION}-${GIT_COMMIT_HASH}")
 set(CPACK_PACKAGE_CONTACT "contact@openhantek.org")
 set(CPACK_PACKAGE_VENDOR "OpenHantek Community")
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Digital oscilloscope software for Hantek DSO6022 USB hardware")
