@@ -37,7 +37,7 @@ class ScopeDevice : public QObject {
     explicit ScopeDevice( DSOModel *model, libusb_device *device, unsigned findIteration = 0 );
     explicit ScopeDevice();
     ScopeDevice( const ScopeDevice & ) = delete;
-    ~ScopeDevice();
+    ~ScopeDevice() override;
     bool connectDevice( QString &errorMessage );
     void disconnectFromDevice();
 

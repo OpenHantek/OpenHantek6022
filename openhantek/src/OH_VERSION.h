@@ -9,7 +9,7 @@
 
 // next line shall define either OH_VERSION or LAST_OH_VERSION
 //
-#define OH_VERSION "3.3.1"
+#define LAST_OH_VERSION "3.3.1"
 
 
 // do not edit below
@@ -18,10 +18,15 @@
 #undef VERSION
 #define VERSION OH_VERSION
 #else
-#include "OH_BUILD.h"
+#include "OH_COMMIT.h"
+#ifdef GIT_DESCRIBE
+#undef VERSION
+#define VERSION OH_COMMIT_DATE " - " GIT_DESCRIBE
+#else
 #ifdef OH_BUILD
 #undef VERSION
-#define VERSION OH_BUILD
+#define VERSION OH_COMMIT_DATE " - " OH_COMMIT_NUMBER
+#endif
 #endif
 #endif
 
@@ -35,7 +40,7 @@
 
 # this file will be updated automatically by every commit
 #
-OH_BUILD_H="$(git rev-parse --show-toplevel)"/openhantek/src/OH_BUILD.h
+OH_COMMIT_H="$(git rev-parse --show-toplevel)"/openhantek/src/OH_COMMIT.h
 
 # commit date
 #
@@ -47,12 +52,13 @@ COMMIT=$(( $(git log main --pretty=oneline | wc -l) + 1 ))
 
 # define a string with commit date and number of this commit
 #
-echo "// Do not edit, will be re-created at each commit!" > ${OH_BUILD_H}
-echo "#define OH_BUILD \"$DATE - commit $COMMIT\"" >> ${OH_BUILD_H}
+echo "// Do not edit, will be re-created at each commit!" > ${OH_COMMIT_H}
+echo "#define OH_COMMIT_DATE \"$DATE - \"" >> ${OH_COMMIT_H}
+echo "#define OH_COMMIT_NUMBER \"$COMMIT\"" >> ${OH_COMMIT_H}
 
 # and finally stage the change
 #
-git add ${OH_BUILD_H}
+git add ${OH_COMMIT_H}
 
 */
 

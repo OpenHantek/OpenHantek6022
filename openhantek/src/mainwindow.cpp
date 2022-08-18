@@ -498,22 +498,29 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
              [ this ]() { openDocument( FrequencyGeneratorModificationName ); } );
 
     connect( ui->actionAbout, &QAction::triggered, [ this ]() {
+        QString deviceSpec = this->dsoSettings->deviceName == "DEMO"
+                                 ? tr( "<p>Demo Mode</p>" )
+                                 : tr( "<p>Device: %1 (%2), FW%3</p>" )
+                                       .arg( this->dsoSettings->deviceName, this->dsoSettings->deviceID ) // device type, ser. num
+                                       .arg( this->dsoSettings->deviceFW, 4, 16,
+                                             QChar( '0' ) ); // FW version
         QMessageBox::about(
             this, QString( "OpenHantek6022 (%1)" ).arg( VERSION ),
             QString( tr( "<p>Open source software for Hantek6022 USB oscilloscopes</p>"
                          "<p>Maintainer: Martin Homuth-Rosemann</p>"
                          "<p>Copyright &copy; 2010, 2011 Oliver Haag</p>"
-                         "<p>Copyright &copy; 2012-%7 OpenHantek community<br/>"
+                         "<p>Copyright &copy; 2012-%1 OpenHantek community<br/>"
                          "<a href='https://github.com/OpenHantek'>https://github.com/OpenHantek</a></p>"
-                         "<p>Open source firmware copyright &copy; 2019-%7 Ho-Ro<br/>"
-                         "<a href='https://github.com/Ho-Ro/Hantek6022API'>https://github.com/Ho-Ro/Hantek6022API</a></p>"
-                         "<p>Device: %1 (%2), FW%3</p><p>Graphic: %4 - GLSL version %5</p>"
-                         "<p>Qt version: %6</p>" ) )
-                    .arg( this->dsoSettings->deviceName, this->dsoSettings->deviceID ) // device type, ser. num
-                    .arg( this->dsoSettings->deviceFW, 4, 16, QChar( '0' ) )           // FW version
-                    .arg( GlScope::getOpenGLversion(), GlScope::getGLSLversion() )     // graphic info
-                    .arg( QT_VERSION_STR )                                             // Qt version info
-                    .arg( QDate::currentDate().year() ) +                              // latest year
+                         "<p>Open source firmware copyright &copy; 2019-%1 Ho-Ro<br/>"
+                         "<a href='https://github.com/Ho-Ro/Hantek6022API'>https://github.com/Ho-Ro/Hantek6022API</a></p>" ) )
+                    .arg( QDate::currentDate().year() ) // latest year
+
+                + deviceSpec // "DEVICE (SERIALNUMBER) FW_VERSION" or "Demo Mode"
+
+                + tr( "<p>Graphic: %1 - GLSL version %2</p>"
+                      "<p>Qt version: %3</p>" )
+                      .arg( GlScope::getOpenGLversion(), GlScope::getGLSLversion() ) // graphic info
+                      .arg( QT_VERSION_STR ) +                                       // Qt version info
                 tr( "<p>Running since %1 seconds.</p>" ).arg( elapsedTime.elapsed() / 1000 ) );
     } );
 

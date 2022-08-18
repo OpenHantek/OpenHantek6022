@@ -216,8 +216,6 @@ int main( int argc, char *argv[] ) {
 
     if ( verboseLevel ) {
         qDebug() << startupTime.elapsed() << "ms:"
-                 << "OpenHantek6022 - version" << VERSION;
-        qDebug() << startupTime.elapsed() << "ms:"
                  << "create openHantekApplication";
     }
     QApplication openHantekApplication( argc, argv );

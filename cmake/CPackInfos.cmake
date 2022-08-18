@@ -3,8 +3,6 @@
 # A tar.gz file is created for macOS (not tested).
 # A zip file is created on Windows (not tested).
 
-find_package(Git QUIET)
-
 if (GIT_EXECUTABLE AND EXISTS "${CMAKE_SOURCE_DIR}/.git")
     execute_process(
         COMMAND ${GIT_EXECUTABLE} rev-parse --short HEAD
@@ -14,7 +12,7 @@ if (GIT_EXECUTABLE AND EXISTS "${CMAKE_SOURCE_DIR}/.git")
         OUTPUT_STRIP_TRAILING_WHITESPACE
         )
 endif()
-# message( STATUS "VCS_REVISION: ${VCS_REVISION}" )
+message( STATUS "VCS_REVISION: ${VCS_REVISION}" )
 
 if(NOT DEFINED CMD_RESULT)
     set(VCS_BRANCH "main")
@@ -39,7 +37,7 @@ else()
 
     string(REPLACE "\n" " " DESCRIBE_STATUS ${DESCRIBE_STATUS})
     string(REPLACE "\r" " " DESCRIBE_STATUS ${DESCRIBE_STATUS})
-    string(REPLACE "\rn" " " DESCRIBE_STATUS ${DESCRIBE_STATUS})
+    string(REPLACE "\r\n" " " DESCRIBE_STATUS ${DESCRIBE_STATUS})
     string(REPLACE " " ";" DESCRIBE_STATUS ${DESCRIBE_STATUS})
     list(GET DESCRIBE_STATUS 2 VCS_BRANCH)
 
@@ -149,7 +147,7 @@ set(CPACK_STRIP_FILES 1)
 
 include(CMakeDetermineSystem)
 
-# Linux DEB (tested on debian stretch and buster)
+# Linux DEB (tested on debian stable "bullseye")
 # Architecture for package and file name are automatically detected
 set(CPACK_DEBIAN_PACKAGE_SECTION "electronics")
 # do not detect depencencies and versions automatically
