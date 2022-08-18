@@ -44,9 +44,6 @@ if( ${CMAKE_VERSION} VERSION_LESS "3.12.0" ) # deprecated, but still used in old
     if ( DEFINED GIT_COMMIT_HASH )
         add_definitions( -DGIT_COMMIT_HASH="${GIT_COMMIT_HASH}" )
     endif()
-    if ( DEFINED GIT_DESCRIBE )
-        add_definitions( -DGIT_DESCRIBE="${GIT_DESCRIBE}" )
-    endif()
 else() # 'add_compile_definitions()' was introduced with CMake 3.12
     add_compile_definitions( _GLIBCXX_ASSERTIONS )
     add_compile_definitions( _USE_MATH_DEFINES )
@@ -55,9 +52,6 @@ else() # 'add_compile_definitions()' was introduced with CMake 3.12
     endif()
     if ( DEFINED GIT_COMMIT_HASH )
         add_compile_definitions( GIT_COMMIT_HASH="${GIT_COMMIT_HASH}" )
-    endif()
-    if ( DEFINED GIT_DESCRIBE )
-        add_compile_definitions( GIT_DESCRIBE="${GIT_DESCRIBE}" )
     endif()
 endif()
 
