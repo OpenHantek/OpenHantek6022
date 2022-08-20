@@ -5,7 +5,7 @@
 // via .git/hooks/post-commit (see below)
 // the hook will then renamed from OH_VERSION to LAST_OH_VERSION
 //
-// if OH_VERSION is undefined (for development commits) OH_BUILD will be shown by OpenHantek
+// if OH_VERSION is undefined VERSION ($COMMIT_DATE-$COMMIT_HASH) will be shown by OpenHantek
 
 // next line shall define either OH_VERSION or LAST_OH_VERSION
 //
@@ -14,53 +14,11 @@
 
 // do not edit below
 
-#ifdef OH_VERSION
+#if defined OH_VERSION
 #undef VERSION
 #define VERSION OH_VERSION
-#else
-#ifdef GIT_COMMIT_HASH
-#undef VERSION
-#define VERSION GIT_COMMIT_DATE "-" GIT_COMMIT_HASH
-#else
-#include "OH_COMMIT.h"
-#ifdef OH_BUILD
-#undef VERSION
-#define VERSION OH_COMMIT_DATE "-" OH_COMMIT_NUMBER
-#endif
-#endif
 #endif
 
-/* content of ".git/hooks/pre-commit":
-
-#!/bin/sh
-
-# this script is automatically run before committing
-# it provides version info (shown in top line of the program)
-# inspired by: https://gist.github.com/sg-s/2ddd0fe91f6037ffb1bce28be0e74d4e
-
-# this file will be updated automatically by every commit
-#
-OH_COMMIT_H="$(git rev-parse --show-toplevel)"/openhantek/src/OH_COMMIT.h
-
-# commit date
-#
-DATE=$(date +%Y%m%d)
-
-# number of this commit (i.e. number of previous commits + 1)
-#
-COMMIT=$(( $(git log main --pretty=oneline | wc -l) + 1 ))
-
-# define a string with commit date and number of this commit
-#
-echo "// Do not edit, will be re-created at each commit!" > ${OH_COMMIT_H}
-echo "#define OH_COMMIT_DATE \"$DATE\"" >> ${OH_COMMIT_H}
-echo "#define OH_COMMIT_NUMBER \"$COMMIT\"" >> ${OH_COMMIT_H}
-
-# and finally stage the change
-#
-git add ${OH_COMMIT_H}
-
-*/
 
 /* content of ".git/hooks/post-commit":
 
@@ -72,7 +30,8 @@ git add ${OH_COMMIT_H}
 
 # this file was updated during development (by script build/MK_NEW_VER)
 #
-OH_VERSION_H="$(git rev-parse --show-toplevel)"/openhantek/src/OH_VERSION.h
+OPENHANTEK="$(git rev-parse --show-toplevel)"
+OH_VERSION_H="$OPENHANTEK/openhantek/src/OH_VERSION.h"
 
 # check if the last commit changed the entry OH_VERSION in file ...OH_VERSION.h and extract the new version
 #
@@ -85,5 +44,8 @@ if [ "$OH_VERSION" != "" ]; then
     sed -i 's|^#define[[:blank:]]*OH_VERSION|#define LAST_OH_VERSION|g' $OH_VERSION_H
     echo "Created a new tag: $OH_VERSION"
 fi
+
+# update the build system with next build
+touch $OPENHANTEK/CMakeLists.txt
 
 */

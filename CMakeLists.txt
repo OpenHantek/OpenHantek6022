@@ -17,7 +17,6 @@ INCLUDE_DIRECTORIES(".")
 
 
 # Use CPack to make tgz/deb/rpm/zip installer packages
-# provides also variables GIT_COMMIT_HASH and GIT_COMMIT_DATE
 include(cmake/CPackInfos.cmake)
 
 
@@ -38,21 +37,9 @@ if( ${CMAKE_VERSION} VERSION_LESS "3.12.0" ) # deprecated, but still used in old
     # Enable C++ standard library hardening -> cheap range checks for C++ arrays, vectors, and strings.
     add_definitions( -D_GLIBCXX_ASSERTIONS )
     add_definitions( -D_USE_MATH_DEFINES )
-    if ( DEFINED GIT_COMMIT_DATE )
-        add_definitions( -DGIT_COMMIT_DATE="${GIT_COMMIT_DATE}" )
-    endif()
-    if ( DEFINED GIT_COMMIT_HASH )
-        add_definitions( -DGIT_COMMIT_HASH="${GIT_COMMIT_HASH}" )
-    endif()
 else() # 'add_compile_definitions()' was introduced with CMake 3.12
     add_compile_definitions( _GLIBCXX_ASSERTIONS )
     add_compile_definitions( _USE_MATH_DEFINES )
-    if ( DEFINED GIT_COMMIT_DATE )
-        add_compile_definitions( GIT_COMMIT_DATE="${GIT_COMMIT_DATE}" )
-    endif()
-    if ( DEFINED GIT_COMMIT_HASH )
-        add_compile_definitions( GIT_COMMIT_HASH="${GIT_COMMIT_HASH}" )
-    endif()
 endif()
 
 # show all compile options and definitions

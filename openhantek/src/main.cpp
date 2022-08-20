@@ -97,10 +97,6 @@ int main( int argc, char *argv[] ) {
     QCoreApplication::setAttribute( Qt::AA_EnableHighDpiScaling, true );
 #endif
 
-    qDebug() << ( QString( "%1 (%2)" ).arg( QCoreApplication::applicationName(), QCoreApplication::applicationVersion() ) )
-                    .toLocal8Bit()
-                    .data();
-
     bool demoMode = false;
     bool useGLES = false;
     bool useGLSL120 = false;
@@ -215,6 +211,7 @@ int main( int argc, char *argv[] ) {
 
 
     if ( verboseLevel ) {
+        qDebug() << "Version:" << VERSION << "- build:" << __DATE__ << __TIME__;
         qDebug() << startupTime.elapsed() << "ms:"
                  << "create openHantekApplication";
     }

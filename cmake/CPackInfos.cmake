@@ -17,18 +17,22 @@ endif()
 message( STATUS "GIT_COMMIT_HASH: ${GIT_COMMIT_HASH}" )
 
 if(NOT DEFINED CMD_RESULT)
+    # no git result, use build date
     set(VCS_BRANCH "main")
-    set(GIT_COMMIT_HASH "na")
+    set(GIT_COMMIT_HASH "unknown")
+    string(TIMESTAMP DATE_VERSION "%Y%m%d")
 else()
+    # get commit date as "YYYYMMDD"
     execute_process(
         COMMAND ${GIT_EXECUTABLE} log -1 --pretty=%cd --date=format:%Y%m%d
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
         RESULT_VARIABLE CMD_RESULT
-        OUTPUT_VARIABLE GIT_COMMIT_DATE
+        OUTPUT_VARIABLE DATE_VERSION
         OUTPUT_STRIP_TRAILING_WHITESPACE
     )
-    message( STATUS "GIT_COMMIT_DATE: ${GIT_COMMIT_DATE}" )
+    message( STATUS "DATE_VERSION: ${DATE_VERSION}" )
 
+    # get the git branch
     execute_process(
         COMMAND ${GIT_EXECUTABLE} status
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
@@ -36,15 +40,14 @@ else()
         OUTPUT_VARIABLE DESCRIBE_STATUS
         OUTPUT_STRIP_TRAILING_WHITESPACE
     )
-
     string(REPLACE "\n" " " DESCRIBE_STATUS ${DESCRIBE_STATUS})
     string(REPLACE "\r" " " DESCRIBE_STATUS ${DESCRIBE_STATUS})
     string(REPLACE "\r\n" " " DESCRIBE_STATUS ${DESCRIBE_STATUS})
     string(REPLACE " " ";" DESCRIBE_STATUS ${DESCRIBE_STATUS})
     list(GET DESCRIBE_STATUS 2 VCS_BRANCH)
-
     # message(STATUS "Branch: ${VCS_BRANCH}") # /${GIT_COMMIT_HASH}")
 
+    # get the remote URL
     execute_process(
         COMMAND ${GIT_EXECUTABLE} config --get remote.origin.url
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
@@ -54,12 +57,13 @@ else()
     )
     # message( STATUS "VCS_URL: ${VCS_URL}")
 
+    # create a changelog of the last 20 changes
     set(ENV{LANG} "en_US")
     if(GIT_VERSION_STRING VERSION_LESS 2.6)
         set(CHANGELOG "")
     else()
         execute_process(
-            COMMAND ${GIT_EXECUTABLE} log -n 10 "--date=format:%a %b %d %Y" "--pretty=format:* %ad %aN <%aE> %h - %s"
+            COMMAND ${GIT_EXECUTABLE} log -n 20 "--date=format:%a %b %d %Y" "--pretty=format:* %ad %aN <%aE> %h - %s"
             WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
             RESULT_VARIABLE CMD_RESULT
             OUTPUT_VARIABLE CHANGELOG
@@ -68,9 +72,6 @@ else()
     endif()
     file(WRITE "${CMAKE_BINARY_DIR}/changelog" "${CHANGELOG}")
 endif()
-
-string(TIMESTAMP DATE_VERSION "%Y%m%d")
-string(TIMESTAMP CURRENT_TIME "%Y%m%d_%H:%M")
 
 if (UNIX)
     execute_process(
