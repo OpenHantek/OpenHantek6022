@@ -10,9 +10,9 @@ endif()
 
 # set file names for lib and associated inf/cat files
 set(LIBUSB_7Z "${CMAKE_CURRENT_LIST_DIR}/libusb-1.0.21-win.7z")
-# use "old" cat/inf files provided by VictorEEV
-set(HANTEK_6022B_CAT "${CMAKE_CURRENT_LIST_DIR}/Hantek_6022B.cat")
-set(HANTEK_6022B_INF "${CMAKE_CURRENT_LIST_DIR}/Hantek_6022B.inf")
+# use updated cat/inf files provided by VictorEEV
+set(HANTEK_6022B_CAT "${CMAKE_CURRENT_LIST_DIR}/OpenHantek_driver/OpenHantek.cat")
+set(HANTEK_6022B_INF "${CMAKE_CURRENT_LIST_DIR}/OpenHantek_driver/OpenHantek.inf")
 # use "new" cat/inf files provided by fgrieu (PR #251)
 set(INF_DIR "${CMAKE_CURRENT_LIST_DIR}/../utils/signed-windows-inf-files")
 set(HANTEK_6022BE_LOADER_CAT "${INF_DIR}/Hantek_6022BE_loader.cat")

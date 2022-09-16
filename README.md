@@ -179,11 +179,13 @@ You have to assign the correct WinUSB driver with _one_ of these three _alternat
   1. Install the individual signed `.inf` files `Hantek_6022Bx_xxxxxx.inf` [provided by fgrieu](https://github.com/OpenHantek/OpenHantek6022/pull/251), part of `openhantek_xxx_win_x64.zip` [binary distribution](https://github.com/OpenHantek/OpenHantek6022/releases). 
   You can also download them as a [zip](https://downgit.github.io/#/home?url=https://github.com/OpenHantek/OpenHantek6022/tree/main/utils/signed-windows-inf-files)
   (or individually with associated `.cat` from [utils/signed-windows-inf-files](https://github.com/OpenHantek/OpenHantek6022/tree/main/utils/signed-windows-inf-files)). Select the desired `Hantek_6022Bx_xxxxxx.inf` files (the 3 with the device name "BE" or "BL", or all 6) and select "install" from the pull-down menu. 
-  2. Install the signed `.inf` file `Hantek_6022B.inf` for all devices [provided by VictorEEV](https://www.eevblog.com/forum/testgear/hantek-6022be-20mhz-usb-dso/msg3218116/#msg3218116). It's also part of the `openhantek_xxx_win_x64.zip` [binary distribution](https://github.com/OpenHantek/OpenHantek6022/releases). Right-click on `Hantek_6022B.inf` and select "install" from the pull-down menu.
+  2. Install the signed `.inf` file `OpenHantek.inf` for all devices [provided by VictorEEV](https://www.eevblog.com/forum/testgear/hantek-6022be-20mhz-usb-dso/msg4418107/#msg4418107).
+  It's also part of the `openhantek_xxx_win_x64.zip` [binary distribution](https://github.com/OpenHantek/OpenHantek6022/releases).
+  Right-click on `OpenHantek.inf` and select "install" from the pull-down menu.
   3. Run the [**Zadig**](docs/build.md#microsoft-windows-usb-driver-install-with-zadig) tool and follow the good [step-by-step tutorial](docs/OpenHantek6022_zadig_Win10.pdf) provided by [DaPa](https://github.com/DaPa).
 
  Note:  
- With alternative *i*, the Device Manager will show (under "Universal Serial Bus devices") the name and state according to the firmware loaded (e.g. `Hantek 6022BE loader`, `Hantek 6022BL openht`).  
+ With alternative *i*, the Device Manager will show (under "Universal Serial Bus devices") the name and state according to the firmware loaded (e.g. `Hantek 6022BE loader`, `Hantek 6022BL openht`).
  The [PulseView/sigrok-cli](https://sigrok.org/) firmware is also recognized (e.g. `Hantek 6022BE sigrok`).
 
 ## Important!
