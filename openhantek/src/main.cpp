@@ -221,12 +221,13 @@ int main( int argc, char *argv[] ) {
     // Linux default:   "Breeze" (screen is taller compared to the other two styles)
     // Windows default: "Windows"
     // kvantum style disturbs UI, fall back to Fusion style with dark default theme
-    bool isKvantum = openHantekApplication.style()->objectName().startsWith( "kvantum" );
+    bool isKvantum = openHantekApplication.style()->objectName().toLower().startsWith( "kvantum" );
     if ( styleFusion || isKvantum ) {
         // smaller "Fusion" widgets allow stacking of all four docks even on 1280x720 screen
-        if ( verboseLevel )
+        if ( verboseLevel ) {
             qDebug() << startupTime.elapsed() << "ms:"
-                     << "set \"Fusion\" style";
+                     << "set \"Fusion\" style, system style is" << openHantekApplication.style()->objectName();
+        }
         openHantekApplication.setStyle( QStyleFactory::create( "Fusion" ) );
     }
 
