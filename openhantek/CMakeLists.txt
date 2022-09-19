@@ -42,6 +42,8 @@ if(WIN32 AND MINGW)
     set(EXECTYPE WIN32)
 endif()
 
+option(USE_OPENHANTEK_DRIVER "Use OpenHantek Windows driver" ON)
+
 # Enable MacOSX bundle magic in the next line
 option(BUILD_MACOSX_BUNDLE "Build MacOS app bundle" ON)
 #
