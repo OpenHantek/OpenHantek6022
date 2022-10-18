@@ -36,6 +36,12 @@ If you detect that icons are not displayed correctly, please check if the Qt SVG
 The Linux systems mentioned above include this lib when you install according to the provided lists.
 However, an [alpine linux](https://alpinelinux.org/) user [reported](https://github.com/OpenHantek/OpenHantek6022/issues/42#issuecomment-564329632) that he had to install `qt5-qtsvg` separately.
 
+#### CI Build on GitHub Actions
+
+The local build and test is done on an up-to-date Debian stable; on every push a building process is run externally by [GitHub Actions](https://github.com/OpenHantek/OpenHantek6022/actions)
+who provides [these Ubuntu 2004 environments](https://github.com/actions/runner-images/blob/main/images/linux/Ubuntu2004-Readme.md).
+Please check also the file [build_check.yml](https://github.com/OpenHantek/OpenHantek6022/blob/main/.github/workflows/build_check.yml) for info about the building process.
+
 ----
 
 ### [RaspberryPi](#raspberrypi)
@@ -120,6 +126,8 @@ Make sure to be member of the group `openhantek`, e.g.:
 ----
 
 ### [macOS](#macos)
+Building should work on a recent macOS 11 version.
+
 We recommend homebrew to install the required libraries.
 
     git submodule update --init --recursive
@@ -163,14 +171,14 @@ After you've installed the requirements run the following commands inside the to
       --hide-extension "OpenHantek.app" --app-drop-link 600 185 --eula ../../LICENSE OpenHantek.dmg OpenHantek.app
     #
 
-The bundle build doesn't work at the moment due to a regression [(#296)](https://github.com/OpenHantek/OpenHantek6022/issues/296) caused by incompatible changes on macOS side.
-@bgallois describes a [similar issue](https://github.com/FastTrackOrg/FastTrack/issues/51) and provides a [workaround](https://github.com/FastTrackOrg/FastTrack/issues/51#issuecomment-1115088550).
-Due to a missing Mac on my end, I disabled the option:
+This code proposal is based on [the info from @warpme](https://github.com/OpenHantek/OpenHantek6022/issues/314#issuecomment-1200268722)
+about building on macOS 11.6.8 + Xcode 12.4 (12D4e).
 
-    option(BUILD_MACOSX_BUNDLE "Build MacOS app bundle" OFF)
+#### CI Build on GitHub Actions
 
-I will not investigate further and leave it to a volunteer to get the package build working again.
-
+As I do not use macOS for development the building is done externally by [GitHub Actions](https://github.com/OpenHantek/OpenHantek6022/actions)
+who provides [these macOS 11 environments](https://github.com/actions/runner-images/blob/main/images/macos/macos-11-Readme.md).
+Please check also the file [build_check.yml](https://github.com/OpenHantek/OpenHantek6022/blob/main/.github/workflows/build_check.yml) for info about the building process.
 ----
 
 ### [Windows](#windows)
@@ -190,17 +198,24 @@ Hints for Visual Studio 2015/2017/2019 users:
 
 As I do not use Windows for development the building is done externally by [GitHub Actions](https://github.com/OpenHantek/OpenHantek6022/actions)
 who provides [these Windows environments](https://github.com/actions/virtual-environments/blob/main/images/win/Windows2019-Readme.md).
-Please check also the file [build_check.yml](https://github.com/OpenHantek/OpenHantek6022/actions/workflows/build_check.yml) for info about the building process.
+Please check also the file [build_check.yml](https://github.com/OpenHantek/OpenHantek6022/blob/main/.github/workflows/build_check.yml) for info about the building process.
 Starting with the update to Visual Studio 2019 for the upcoming OpenHantek6022 version 3.2 only 64bit builds are provided.
 
-Previously the building was done externally at the CI provider [appveyor.com](https://www.appveyor.com)
-who provided [these Windows environments](https://www.appveyor.com/docs/windows-images-software/).
-Please check also the file [appveyor.yml](https://github.com/OpenHantek/OpenHantek6022/blob/main/appveyor.yml) for info about the building process.
+#### Signed WinUSB driver for Hantek 6022BE/BL
+
+- The signed `.inf` file `OpenHantek.inf` for all devices - [provided by VictorEEV](https://www.eevblog.com/forum/testgear/hantek-6022be-20mhz-usb-dso/msg4418107/#msg4418107)
+and [updated](https://github.com/OpenHantek/OpenHantek6022/pull/323) by [gitguest0](https://github.com/gitguest0) - 
+is available in the `openhantek_xxx_win_x64.zip` [binary distribution](https://github.com/OpenHantek/OpenHantek6022/releases) in directory `driver`.
+
+- Right-click on `OpenHantek.inf` and select "install" from the pull-down menu.
+
+- The Device Manager will show (under "Universal Serial Bus devices") the name and state according to the firmware loaded (e.g. `Hantek 6022BE - Loader`, `Hantek 6022BE - OpenHantek`).
+The [PulseView/sigrok-cli](https://sigrok.org/) firmware is also recognized (e.g. `Hantek 6022BE - Sigrok`).
 
 #### Microsoft Windows USB driver install (with Zadig)
 
-The device specific USB driver shipped with the vendor software is not going to work.
-You will need to install the WinUSB driver.
+It is highly recommended to use the `.inf` file, but it is also possible to alternatively use the [**Zadig**](docs/build.md#microsoft-windows-usb-driver-install-with-zadig) tool
+and follow the good [step-by-step tutorial](docs/OpenHantek6022_zadig_Win10.pdf) provided by [DaPa](https://github.com/DaPa).
 
 For installing the WinUSB driver you can use the [Zadig](http://zadig.akeo.ie/) executable. 
 There are two versions, one for Windows XP (zadig_xp.exe), and another one for all other (Vista or higher)
@@ -224,11 +239,4 @@ Some win user reports:
 * black2279's wiki entry 
 [USB Drivers Installation with Zadig for Hantek 6022 (Windows)](https://github.com/black2279/OpenHantek6022/wiki/USB-Drivers-Installation-with-Zadig-for-Hantek-6022-%28Windows%29)
 * raxis13's [success report](https://www.eevblog.com/forum/testgear/hantek-6022be-20mhz-usb-dso/msg2563869/#msg2563869)
-
-#### Signed WinUSB driver for Hantek 6022BE/BL
-
-User ViktorEEV provided a [signed WinUSB driver](https://www.eevblog.com/forum/testgear/hantek-6022be-20mhz-usb-dso/?action=dlattach;attach=1059770) on [EEVblog](https://www.eevblog.com/forum/testgear/hantek-6022be-20mhz-usb-dso/msg3218116/#msg3218116).
-The files `Hantek_6022B.cat` and `Hantek_6022B.inf` are included in the Windows package `OpenHantek-Win-*.zip`.
-Right-click on `Hantek_6022B.inf` and select `install`.
-Feedback (positive as well as negative) would be highly appreciated.
 

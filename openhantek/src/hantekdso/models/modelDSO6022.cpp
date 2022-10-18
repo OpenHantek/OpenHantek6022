@@ -8,6 +8,9 @@
 #include <QDir>
 #include <QSettings>
 
+#include "../res/firmware/dso602x_fw_version.h"
+
+
 #define VERBOSE 0
 
 using namespace Hantek;
@@ -111,10 +114,10 @@ static void applyRequirements_( HantekDsoControl *dsoControl ) {
 
 // Hantek DSO-6022BE (this is the base model)
 //
-//                  VID/PID active  VID/PID no FW   FW ver    FW name     Scope name
-//                  |------------|  |------------|  |----|  |---------|  |----------|
+//                  VID/PID active  VID/PID no FW   FW ver          FW name    Scope name
+//                  |------------|  |------------|  |------------|  |-------|  |--------|
 ModelDSO6022BE::ModelDSO6022BE()
-    : DSOModel( ID, 0x04b5, 0x6022, 0x04b4, 0x6022, 0x0210, "dso6022be", "DSO-6022BE", Dso::ControlSpecification( 2 ) ) {
+    : DSOModel( ID, 0x04b5, 0x6022, 0x04b4, 0x6022, DSO602x_FW_VER, "dso6022be", "DSO-6022BE", Dso::ControlSpecification( 2 ) ) {
     initSpecifications( specification );
 }
 
@@ -123,7 +126,7 @@ void ModelDSO6022BE::applyRequirements( HantekDsoControl *dsoControl ) const { a
 
 // Hantek DSO-6022BL (scope or logic analyzer)
 ModelDSO6022BL::ModelDSO6022BL()
-    : DSOModel( ID, 0x04b5, 0x602a, 0x04b4, 0x602a, 0x0210, "dso6022bl", "DSO-6022BL", Dso::ControlSpecification( 2 ) ) {
+    : DSOModel( ID, 0x04b5, 0x602a, 0x04b4, 0x602a, DSO602x_FW_VER, "dso6022bl", "DSO-6022BL", Dso::ControlSpecification( 2 ) ) {
     initSpecifications( specification );
 }
 
@@ -133,7 +136,7 @@ void ModelDSO6022BL::applyRequirements( HantekDsoControl *dsoControl ) const { a
 // Voltcraft DSO-2020 USB Oscilloscope (HW is identical to 6022)
 // Scope starts up as model DS-2020 (VID/PID = 04b4/2020) but loads 6022BE firmware and looks like a 6022BE
 ModelDSO2020::ModelDSO2020()
-    : DSOModel( ID, 0x04b5, 0x6022, 0x04b4, 0x2020, 0x0210, "dso6022be", "DSO-2020", Dso::ControlSpecification( 2 ) ) {
+    : DSOModel( ID, 0x04b5, 0x6022, 0x04b4, 0x2020, DSO602x_FW_VER, "dso6022be", "DSO-2020", Dso::ControlSpecification( 2 ) ) {
     initSpecifications( specification );
 }
 
@@ -152,7 +155,7 @@ static ModelSaleae modelInstance_Saleae;
 
 // LCSOFT without EEPROM reports EzUSB VID/PID
 ModelEzUSB::ModelEzUSB()
-    : DSOModel( ID, 0x04b5, 0x6022, 0x04b4, 0x8613, 0x0210, "dso6022be", "LCsoft-EzUSB", Dso::ControlSpecification( 2 ) ) {
+    : DSOModel( ID, 0x04b5, 0x6022, 0x04b4, 0x8613, DSO602x_FW_VER, "dso6022be", "LCsoft-EzUSB", Dso::ControlSpecification( 2 ) ) {
     initSpecifications( specification );
     specification.hasCalibrationEEPROM = false; // (big) EEPROM, disabled by address jumper
 }
@@ -162,7 +165,7 @@ void ModelEzUSB::applyRequirements( HantekDsoControl *dsoControl ) const { apply
 
 // Saleae VID/PID in EEPROM
 ModelSaleae::ModelSaleae()
-    : DSOModel( ID, 0x04b5, 0x6022, 0x0925, 0x3881, 0x0210, "dso6022be", "LCsoft-Saleae", Dso::ControlSpecification( 2 ) ) {
+    : DSOModel( ID, 0x04b5, 0x6022, 0x0925, 0x3881, DSO602x_FW_VER, "dso6022be", "LCsoft-Saleae", Dso::ControlSpecification( 2 ) ) {
     initSpecifications( specification );
     specification.hasCalibrationEEPROM = false; // we have a big EEPROM
 }
