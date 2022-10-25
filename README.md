@@ -71,8 +71,8 @@ OpenHantek6022 is a free software for **Hantek DSO6022** USB digital signal osci
 * Show the note values and deviation in cent (*twelve equal*, A = 440 Hz) for audio frequencies (optional, can be enabled in Oscilloscope/Settings/Analysis). Useful to tune e.g. your electrical guitar.
 * Math channel modes: CH1+CH2, CH1-CH2, CH2-CH1, CH1*CH2 and square, abs, sign, AC and DC part of CH1 or CH2.
 * Time base 10 ns/div .. 10 s/div.
-* Sample rates 100, 200, 500 S/s, 1, 2, 5, 10, 20, 50, 100, 200, 500 kS/s, 1, 2, 5, 10, 12, 15, 24, 30 MS/s (24 & 30 MS/s in CH1-only mode, 48 MS/s not supported due to unstable USB data streaming)
-* Hardware input gain automatically selected based on vertical sensitivity: 1x (up to ±5 V for 1, 2 or 5 V/div), 2x (up to ±2.5 V for 500 mV/div), 5x (up to ±1 V for 200 mV/div) and 10x (up to ±500 mV for 20 or 50 mV/div) 
+* Sample rates 100, 200, 500 S/s, 1, 2, 5, 10, 20, 50, 100, 200, 500 kS/s, 1, 2, 5, 10, 12, 15, 24, 30 MS/s (24 & 30 MS/s in CH1-only mode, 48 MS/s not supported due to unstable USB data streaming).
+* Hardware input gain automatically selected based on vertical sensitivity: 1x (up to ±5 V for 1, 2 or 5 V/div), 2x (up to ±2.5 V for 500 mV/div), 5x (up to ±1 V for 200 mV/div) and 10x (up to ±500 mV for 20 or 50 mV/div).
 * Downsampling (up to 200x) increases resolution and SNR.
 * Calibration output square wave signal frequency can be selected between 32 Hz .. 100 kHz in small steps (poor person's signal generator).
 * Trigger modes: *Normal*, *Auto* and *Single* with green/red status display (top left).
