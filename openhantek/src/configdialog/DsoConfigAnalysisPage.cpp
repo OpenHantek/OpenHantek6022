@@ -57,6 +57,19 @@ DsoConfigAnalysisPage::DsoConfigAnalysisPage( DsoSettings *settings, QWidget *pa
     spectrumGroup = new QGroupBox( tr( "Spectrum" ) );
     spectrumGroup->setLayout( spectrumLayout );
 
+    // Cursor measurement group
+    cursorsLabel = new QLabel( tr( "Position" ) );
+    cursorsComboBox = new QComboBox();
+    cursorsComboBox->addItem( tr( "Left" ), Qt::LeftToolBarArea );
+    cursorsComboBox->addItem( tr( "Right" ), Qt::RightToolBarArea );
+    cursorsComboBox->setCurrentIndex( settings->view.cursorGridPosition == Qt::LeftToolBarArea ? 0 : 1 );
+    cursorsLayout = new QGridLayout();
+    row = 0;
+    cursorsLayout->addWidget( cursorsLabel, row, 0 );
+    cursorsLayout->addWidget( cursorsComboBox, row, 1 );
+    cursorsGroup = new QGroupBox( tr( "Cursors" ) );
+    cursorsGroup->setLayout( cursorsLayout );
+
     dummyLoadCheckbox = new QCheckBox( tr( "Calculate power dissipation for load resistance" ) );
     dummyLoadSpinBox = new QSpinBox();
     dummyLoadSpinBox->setMinimum( 1 );
@@ -90,6 +103,7 @@ DsoConfigAnalysisPage::DsoConfigAnalysisPage( DsoSettings *settings, QWidget *pa
 
     mainLayout = new QVBoxLayout();
     mainLayout->addWidget( spectrumGroup );
+    mainLayout->addWidget( cursorsGroup );
     mainLayout->addWidget( analysisGroup );
     mainLayout->addStretch( 1 );
 
@@ -107,4 +121,5 @@ void DsoConfigAnalysisPage::saveSettings() {
     settings->scope.analysis.calculateTHD = thdCheckBox->isChecked();
     settings->analysis.reuseFftPlan = reuseFftPlanCheckBox->isChecked();
     settings->scope.analysis.showNoteValue = showNoteCheckBox->isChecked();
+    settings->view.cursorGridPosition = Qt::ToolBarArea( cursorsComboBox->currentData().toUInt() );
 }

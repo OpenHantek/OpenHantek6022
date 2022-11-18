@@ -49,11 +49,6 @@ class DsoConfigScopePage : public QWidget {
     QLabel *interpolationLabel;
     QComboBox *interpolationComboBox;
 
-    QGroupBox *cursorsGroup;
-    QGridLayout *cursorsLayout;
-    QLabel *cursorsLabel;
-    QComboBox *cursorsComboBox;
-
     QGroupBox *configurationGroup;
     QGridLayout *configurationLayout;
     QCheckBox *hasACmodificationCheckBox;

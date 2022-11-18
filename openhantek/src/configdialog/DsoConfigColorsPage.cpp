@@ -120,13 +120,21 @@ DsoConfigColorsPage::DsoConfigColorsPage( DsoSettings *settings, QWidget *parent
 
     colorsLayout->addWidget( horizontalLine, ++row, COL_LABEL, 1, COL_PRT_SPECTRUM - COL_LABEL + 1 );
 
-    screenColorCheckBox = new QCheckBox( tr( "Export hardcopy images or pdf files with printer colors" ) );
-    screenColorCheckBox->setChecked( settings->view.printerColorImages );
-    colorsLayout->addWidget( screenColorCheckBox, ++row, COL_LABEL );
-
     styleFusionCheckBox = new QCheckBox( tr( "Fusion style (restart needed to apply the change)" ) );
     styleFusionCheckBox->setChecked( settings->view.styleFusion );
     colorsLayout->addWidget( styleFusionCheckBox, ++row, COL_LABEL );
+
+    screenColorCheckBox = new QCheckBox( tr( "Export hardcopy images or pdf files with printer colors" ) );
+    screenColorCheckBox->setChecked( settings->view.printerColorImages );
+    colorsLayout->addWidget( screenColorCheckBox, row, COL_SCR_CHANNEL, 1, COL_PRT_SPECTRUM - COL_SCR_CHANNEL + 1 );
+
+    fontSizeLabel = new QLabel( tr( "Font size (restart needed to apply the change)" ) );
+    fontSizeSpinBox = new QSpinBox();
+    fontSizeSpinBox->setMinimum( 6 );
+    fontSizeSpinBox->setMaximum( 24 );
+    fontSizeSpinBox->setValue( settings->view.fontSize );
+    colorsLayout->addWidget( fontSizeLabel, ++row, COL_LABEL );
+    colorsLayout->addWidget( fontSizeSpinBox, row, COL_LABEL + 1 );
 
     QStringList themeStrings;
     themeStrings << tr( "Auto" ) << tr( "Light" ) << tr( "Dark" );
@@ -136,14 +144,6 @@ DsoConfigColorsPage::DsoConfigColorsPage( DsoSettings *settings, QWidget *parent
     themeComboBox->setCurrentIndex( settings->view.theme );
     colorsLayout->addWidget( themeLabel, ++row, COL_LABEL );
     colorsLayout->addWidget( themeComboBox, row, COL_LABEL + 1 );
-
-    fontSizeLabel = new QLabel( tr( "Font size (restart needed to apply the change)" ) );
-    fontSizeSpinBox = new QSpinBox();
-    fontSizeSpinBox->setMinimum( 6 );
-    fontSizeSpinBox->setMaximum( 24 );
-    fontSizeSpinBox->setValue( settings->view.fontSize );
-    colorsLayout->addWidget( fontSizeLabel, ++row, COL_LABEL );
-    colorsLayout->addWidget( fontSizeSpinBox, row, COL_LABEL + 1 );
 
     colorsGroup = new QGroupBox( tr( "Screen and Print Colors" ) );
     colorsGroup->setLayout( colorsLayout );

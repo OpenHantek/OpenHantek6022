@@ -52,6 +52,11 @@ class DsoConfigAnalysisPage : public QWidget {
     QGroupBox *analysisGroup;
     QGridLayout *analysisLayout;
 
+    QGroupBox *cursorsGroup;
+    QGridLayout *cursorsLayout;
+    QLabel *cursorsLabel;
+    QComboBox *cursorsComboBox;
+
     QCheckBox *dummyLoadCheckbox;
     QSpinBox *dummyLoadSpinBox;
     QLabel *dummyLoadUnitLabel;
