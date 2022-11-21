@@ -78,7 +78,7 @@ jobs:
       if: startsWith(matrix.os, 'ubuntu')
       uses: actions/upload-artifact@v3
       with:
-        name: openhantek_linux_amd64_${{ steps.config_git.outputs.git_describe }}
+        name: openhantek_${{ steps.config_git.outputs.git_describe }}_linux_amd64
         path: ${{github.workspace}}/build/packages/*
 
 
@@ -139,7 +139,7 @@ jobs:
       if: startsWith(matrix.os, 'macos')
       uses: actions/upload-artifact@v3
       with:
-        name: openhantek_osx_x86_64_${{ steps.config_git.outputs.git_describe }}
+        name: openhantek_${{ steps.config_git.outputs.git_describe }}_osx_x86_64
         path: ${{github.workspace}}/build/packages/*
 
 
@@ -178,7 +178,7 @@ jobs:
       if: startsWith(matrix.os, 'windows')
       uses: actions/upload-artifact@v3
       with:
-        name: openhantek_win_x64_${{ steps.config_git.outputs.git_describe }}
+        name: openhantek_${{ steps.config_git.outputs.git_describe }}_win_x64
         path: ${{github.workspace}}/build/packages/*.zip
 
 
