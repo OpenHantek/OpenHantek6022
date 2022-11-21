@@ -34,9 +34,6 @@ add_custom_target(format SOURCES ".clang-format"
 # here the translation magic happens
 include(translations/Translations.cmake)
 
-add_definitions(-DVERSION="${CPACK_PACKAGE_VERSION}")
-message( STATUS "VERSION: ${CPACK_PACKAGE_VERSION}" )
-
 set(EXECTYPE "")
 if(WIN32 AND MINGW)
     set(EXECTYPE WIN32)
@@ -53,7 +50,7 @@ if( APPLE AND BUILD_MACOSX_BUNDLE )
     set( MACOSX_BUNDLE_INFO_STRING "Digital oscilloscope software for Hantek DSO6022" )
     set( MACOSX_BUNDLE_GUI_IDENTIFIER "${PROJECT_NAME}" )
     set( MACOSX_BUNDLE_SHORT_VERSION_STRING ${VCS_REVISION} )
-    set( MACOSX_BUNDLE_BUNDLE_VERSION ${CPACK_PACKAGE_VERSION} )
+    set( MACOSX_BUNDLE_BUNDLE_VERSION ${VERSION} )
     string(TIMESTAMP THISYEAR "%Y")
     set( MACOSX_BUNDLE_COPYRIGHT "(C) 2012-${THISYEAR} OpenHantek community" )
     set( MACOSX_BUNDLE_ICON_FILE openhantek.icns )
