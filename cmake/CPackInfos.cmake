@@ -3,8 +3,6 @@
 # A tar.gz file is created for macOS (not tested).
 # A zip file is created on Windows (not tested).
 
-find_package(Git)
-
 if (GIT_EXECUTABLE AND EXISTS "${CMAKE_SOURCE_DIR}/.git")
     execute_process(
         COMMAND ${GIT_EXECUTABLE} log -1 --format=%h

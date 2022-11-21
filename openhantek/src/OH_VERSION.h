@@ -14,7 +14,10 @@
 
 // do not edit below
 
-#if defined OH_VERSION
+#ifdef GIT_DESCRIBE
+#undef VERSION
+#define VERSION GIT_DESCRIBE
+#elif defined OH_VERSION
 #undef VERSION
 #define VERSION OH_VERSION
 #endif

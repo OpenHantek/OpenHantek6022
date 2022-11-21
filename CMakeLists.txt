@@ -15,10 +15,20 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake/")
 
 INCLUDE_DIRECTORIES(".")
 
+find_package(Git)
 
 # Use CPack to make tgz/deb/rpm/zip installer packages
 include(cmake/CPackInfos.cmake)
 
+if (GIT_EXECUTABLE AND EXISTS "${CMAKE_SOURCE_DIR}/.git")
+    execute_process(
+        COMMAND ${GIT_EXECUTABLE} describe --dirty
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+        OUTPUT_VARIABLE GIT_DESCRIBE
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+        )
+    message( GIT_DESCRIBE )
+endif()
 
 if(MSVC)
   # NOMINMAX to avoid clash with std::min or std::max due to silly macros min and max
@@ -37,9 +47,15 @@ if( ${CMAKE_VERSION} VERSION_LESS "3.12.0" ) # deprecated, but still used in old
     # Enable C++ standard library hardening -> cheap range checks for C++ arrays, vectors, and strings.
     add_definitions( -D_GLIBCXX_ASSERTIONS )
     add_definitions( -D_USE_MATH_DEFINES )
+    if ( DEFINED GIT_DESCRIBE )
+        add_definitions( -DGIT_DESCRIBE="${GIT_DESCRIBE}" )
+    endif()
 else() # 'add_compile_definitions()' was introduced with CMake 3.12
     add_compile_definitions( _GLIBCXX_ASSERTIONS )
     add_compile_definitions( _USE_MATH_DEFINES )
+    if ( DEFINED GIT_DESCRIBE )
+        add_compile_definitions( GIT_DESCRIBE="${GIT_DESCRIBE}" )
+    endif()
 endif()
 
 # show all compile options and definitions
