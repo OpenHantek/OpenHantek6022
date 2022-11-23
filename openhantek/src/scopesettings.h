@@ -65,8 +65,10 @@ struct DsoSettingsScopeSpectrum : public DsoSettingsScopeChannel {
 
 /// \brief Holds the settings for the power and frequency analysis.
 struct DsoSettingsScopeAnalysis {
+    double spectrumReference = 0.0; ///< Reference level for spectrum in dBV
     bool calculateDummyLoad = false;
     unsigned dummyLoad = 50; ///< Dummy load in  Ohms
+    QString dBsuffix = "V";  // dBV is default
     bool calculateTHD = false;
     bool showNoteValue = false;
 };

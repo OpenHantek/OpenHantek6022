@@ -239,8 +239,6 @@ void DsoSettings::load() {
     // Post processing
     if ( storeSettings->contains( "spectrumLimit" ) )
         analysis.spectrumLimit = storeSettings->value( "spectrumLimit" ).toDouble();
-    if ( storeSettings->contains( "spectrumReference" ) )
-        analysis.spectrumReference = storeSettings->value( "spectrumReference" ).toDouble();
     if ( storeSettings->contains( "spectrumWindow" ) ) {
         analysis.spectrumWindow = Dso::WindowFunction( storeSettings->value( "spectrumWindow" ).toInt() );
         if ( analysis.spectrumWindow > Dso::LastWindowFunction )
@@ -248,6 +246,10 @@ void DsoSettings::load() {
     }
     // Analysis
     storeSettings->beginGroup( "analysis" );
+    if ( storeSettings->contains( "spectrumReference" ) )
+        scope.analysis.spectrumReference = storeSettings->value( "spectrumReference" ).toDouble();
+    if ( storeSettings->contains( "dBsuffix" ) )
+        scope.analysis.dBsuffix = storeSettings->value( "dBsuffix" ).toString();
     if ( storeSettings->contains( "calculateDummyLoad" ) )
         scope.analysis.calculateDummyLoad = storeSettings->value( "calculateDummyLoad" ).toBool();
     if ( storeSettings->contains( "dummyLoad" ) )
@@ -430,11 +432,12 @@ void DsoSettings::save() {
 
     // Post processing
     storeSettings->setValue( "spectrumLimit", analysis.spectrumLimit );
-    storeSettings->setValue( "spectrumReference", analysis.spectrumReference );
     storeSettings->setValue( "spectrumWindow", unsigned( analysis.spectrumWindow ) );
 
     // Analysis
     storeSettings->beginGroup( "analysis" );
+    storeSettings->setValue( "spectrumReference", scope.analysis.spectrumReference );
+    storeSettings->setValue( "dBsuffix", scope.analysis.dBsuffix );
     storeSettings->setValue( "calculateDummyLoad", scope.analysis.calculateDummyLoad );
     storeSettings->setValue( "dummyLoad", scope.analysis.dummyLoad );
     storeSettings->setValue( "calculateTHD", scope.analysis.calculateTHD );

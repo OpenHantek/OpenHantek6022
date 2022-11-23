@@ -609,7 +609,8 @@ void DsoWidget::updateMarkerDetails() {
                 cursorDataGrid->updateInfo(
                     unsigned( index ), true, tr( "ON" ),
                     valueToString( fabs( p1.x() - p0.x() ) * scope->horizontal.frequencybase, UNIT_HERTZ, 4 ),
-                    valueToString( fabs( p1.y() - p0.y() ) * scope->spectrum[ channel ].magnitude, UNIT_DECIBEL, 4 ) );
+                    valueToString( fabs( p1.y() - p0.y() ) * scope->spectrum[ channel ].magnitude, UNIT_DECIBEL, 4 ) +
+                        scope->analysis.dBsuffix );
             } else {
                 cursorDataGrid->updateInfo( unsigned( index ), true, tr( "OFF" ), "", "" );
             }
@@ -993,7 +994,8 @@ void DsoWidget::showNew( std::shared_ptr< PPresult > analysedData ) {
                     mVisible = true;
                     if ( mCursor > data->dBmin - 0.2 * scope->spectrum[ channel ].magnitude &&
                          mCursor <= data->dBmax + 0.2 * scope->spectrum[ channel ].magnitude )
-                        mStr += '\t' + scope->spectrum[ channel ].name + ": " + valueToString( mCursor, UNIT_DECIBEL, 3 );
+                        mStr += '\t' + scope->spectrum[ channel ].name + ": " + valueToString( mCursor, UNIT_DECIBEL, 3 ) +
+                                scope->analysis.dBsuffix;
                 }
             }
             // Vpp Amplitude string representation (3 significant digits)
@@ -1005,7 +1007,7 @@ void DsoWidget::showNew( std::shared_ptr< PPresult > analysedData ) {
             // RMS Amplitude string representation (3 significant digits)
             measurementRMSLabel[ channel ]->setText( valueToString( data->rms, voltageUnit, 3 ) + tr( "rms" ) );
             // dB Amplitude string representation (3 significant digits)
-            measurementdBLabel[ channel ]->setText( valueToString( data->dB, UNIT_DECIBEL, 3 ) );
+            measurementdBLabel[ channel ]->setText( valueToString( data->dB, UNIT_DECIBEL, 3 ) + scope->analysis.dBsuffix );
             // Frequency string representation (3 significant digits)
             measurementFrequencyLabel[ channel ]->setText( valueToString( data->frequency, UNIT_HERTZ, 4 ) );
             // Frequency note representation

@@ -256,7 +256,7 @@ void SpectrumGenerator::process( PPresult *result ) {
         ac2 /= double( sampleCount );             // AC²
         channelData->ac = sqrt( ac2 );            // rms of AC component
         channelData->rms = sqrt( dc * dc + ac2 ); // total rms = U eff
-        channelData->dB = 20.0 * log10( channelData->rms ) - analysis->spectrumReference;
+        channelData->dB = 20.0 * log10( channelData->rms ) - scope->analysis.spectrumReference;
         channelData->pulseWidth1 = result->pulseWidth1;
         channelData->pulseWidth2 = result->pulseWidth2;
 
@@ -363,10 +363,10 @@ void SpectrumGenerator::process( PPresult *result ) {
 
         // Finally calculate the real spectrum (it's also used for frequency calculation)
         // Convert values into dB (Relative to the reference level 0 dBV = 1V eff)
-        double offset = -analysis->spectrumReference - 20 * log10( dftLength );
-        double offsetLimit = analysis->spectrumLimit - analysis->spectrumReference;
-        double peakSpectrum = offsetLimit; // get a start value for peak search
-        int peakFreqPos = 0;               // initial position of max spectrum peak
+        double offset = -scope->analysis.spectrumReference - 20 * log10( dftLength );
+        double offsetLimit = analysis->spectrumLimit; // - scope->analysis.spectrumReference;
+        double peakSpectrum = offsetLimit;            // get a start value for peak search
+        int peakFreqPos = 0;                          // initial position of max spectrum peak
         position = 0;
         min = INT_MAX;
         max = INT_MIN;

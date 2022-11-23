@@ -3,7 +3,6 @@
 #pragma once
 
 #include "utils/enumclass.h"
-#include "utils/printutils.h"
 
 #include <QMetaType>
 
@@ -43,7 +42,6 @@ Q_DECLARE_METATYPE( Dso::WindowFunction )
 
 struct DsoSettingsAnalysis {
     Dso::WindowFunction spectrumWindow = Dso::WindowFunction::HAMMING; ///< Window function for DFT
-    double spectrumReference = 0.0;                                    ///< Reference level for spectrum in dBu
     double spectrumLimit = -60.0;                                      ///< Minimum magnitude of the spectrum (Avoids peaks)
     bool reuseFftPlan = false;                                         ///< Optimize FFT plan and reuse it
 };

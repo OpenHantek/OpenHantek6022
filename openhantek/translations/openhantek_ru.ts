@@ -77,12 +77,12 @@
         <translation type="vanished">Блэкмана-Наталла</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="91"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="124"/>
         <source>Show note values for audio frequencies</source>
         <translation>Показывать значения нот для звуковых частот</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="101"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="134"/>
         <source>Analysis</source>
         <translation>Анализ</translation>
     </message>
@@ -95,18 +95,17 @@
         <translation type="vanished">С плоской вершиной</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="14"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="17"/>
         <source>Window function</source>
         <translation>Окно функции</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="19"/>
         <source>Reference level&lt;br/&gt;&amp;bull; 0 dBu = -2.2 dBV&lt;br/&gt;&amp;bull; 0 dBm (@600 &amp;Omega;) = -2.2 dBV&lt;br/&gt;&amp;bull; 0 dBm (@50 &amp;Omega;) = -13 dBV</source>
         <translatorcomment>Опорный уровень</translatorcomment>
-        <translation>Опорный уровень&lt;br/&gt;&amp;bull; 0 дБн = -2.2 дБВ&lt;br/&gt;&amp;bull; 0 дБм (@600 &amp;Omega;) = -2.2 дБВ&lt;br/&gt;&amp;bull; 0 дБм (@50 &amp;Omega;) = -13 дБВ</translation>
+        <translation type="vanished">Опорный уровень&lt;br/&gt;&amp;bull; 0 дБн = -2.2 дБВ&lt;br/&gt;&amp;bull; 0 дБм (@600 &amp;Omega;) = -2.2 дБВ&lt;br/&gt;&amp;bull; 0 дБм (@50 &amp;Omega;) = -13 дБВ</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="44"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="33"/>
         <source>Optimize FFT (slower startup, but lower CPU load)</source>
         <translation>Оптимизировать FFT (медленнее запуск, но ниже загрузка ЦП)</translation>
     </message>
@@ -115,7 +114,7 @@
         <translation type="vanished">Рассчитать рассеиваемую мощность для сопротивления нагрузки&lt;br/&gt;(0 = выкл)</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="33"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="22"/>
         <source>Minimum magnitude</source>
         <translation>Минимальная величина</translation>
     </message>
@@ -128,8 +127,7 @@
         <translation type="vanished">&lt;b&gt;Опорный уровень&lt;/b&gt;&lt;br/&gt;0 дБн = -2,2 дБВ&lt;br/&gt;0 дБм (@600 &amp;Omega;) = -2,2 дБВ&lt;br/&gt;0 дБм (@50 &amp;Omega;) = -13 дБВ</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="28"/>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="39"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="65"/>
         <source>dBV</source>
         <translation>дБВ</translation>
     </message>
@@ -138,7 +136,7 @@
         <translation type="vanished">&lt;b&gt;Минимальная величина&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="57"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="43"/>
         <source>Spectrum</source>
         <translation>Спектр</translation>
     </message>
@@ -147,37 +145,67 @@
         <translation type="vanished">Рассчитать рассеиваемую мощность для сопротивления нагрузки&lt;br/&gt;0 = выкл</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="88"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="121"/>
         <source>Calculate total harmonic distortion (THD)</source>
         <translation>Расчёт суммарного коэффициента гармонических искажений (THD)</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="73"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="110"/>
         <source>Calculate power dissipation for load resistance</source>
         <translation>Рассчитывать рассеиваемую мощность для резистивной нагрузки</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="61"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="47"/>
         <source>Position</source>
         <translation>Положение</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="63"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="49"/>
         <source>Left</source>
         <translation>Слева</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="64"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="50"/>
         <source>Right</source>
         <translation>Справа</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="70"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="56"/>
         <source>Cursors</source>
         <translation>Курсоры</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="83"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="71"/>
+        <source>0 dBV</source>
+        <translation>0 дБВ</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="73"/>
+        <source>0 dBu</source>
+        <translation>0 дБu</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="75"/>
+        <source>0 dBm</source>
+        <translation>0 дБм</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="106"/>
+        <source>Set Reference Level</source>
+        <translation>Установите опорный уровень</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="74"/>
+        <source>&lt;p&gt;= -2.2 dBV (1 mW @ 600 &amp;Omega;)&lt;/p&gt;</source>
+        <translation>&lt;p&gt;= -2,2 дБВ (1 мВт @ 600 &amp;Omega;)&lt;/p&gt;</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="76"/>
+        <source>&lt;p&gt;= -13 dBV (1 mW @ 50 &amp;Omega;)&lt;/p&gt;</source>
+        <translation>&lt;p&gt;= -13 дБВ (1 мВт @ 50 &amp;Omega;)&lt;/p&gt;</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="116"/>
         <source>&lt;p&gt;&amp;Omega;&lt;/p&gt;</source>
         <translation>&lt;p&gt;&amp;Omega;&lt;/p&gt;</translation>
     </message>
@@ -589,17 +617,17 @@
 <context>
     <name>DsoWidget</name>
     <message>
-        <location filename="../src/dsowidget.cpp" line="646"/>
-        <location filename="../src/dsowidget.cpp" line="648"/>
-        <location filename="../src/dsowidget.cpp" line="689"/>
-        <location filename="../src/dsowidget.cpp" line="736"/>
-        <location filename="../src/dsowidget.cpp" line="745"/>
-        <location filename="../src/dsowidget.cpp" line="766"/>
+        <location filename="../src/dsowidget.cpp" line="647"/>
+        <location filename="../src/dsowidget.cpp" line="649"/>
+        <location filename="../src/dsowidget.cpp" line="690"/>
+        <location filename="../src/dsowidget.cpp" line="737"/>
+        <location filename="../src/dsowidget.cpp" line="746"/>
+        <location filename="../src/dsowidget.cpp" line="767"/>
         <source>/div</source>
         <translation>/дел</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="952"/>
+        <location filename="../src/dsowidget.cpp" line="953"/>
         <source>TR</source>
         <translation>ТР</translation>
     </message>
@@ -636,17 +664,17 @@
     </message>
     <message>
         <location filename="../src/dsowidget.cpp" line="596"/>
-        <location filename="../src/dsowidget.cpp" line="614"/>
+        <location filename="../src/dsowidget.cpp" line="615"/>
         <source>OFF</source>
         <translation>ВЫКЛ</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="635"/>
+        <location filename="../src/dsowidget.cpp" line="636"/>
         <source>Markers  </source>
         <translation>Маркеры  </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="641"/>
+        <location filename="../src/dsowidget.cpp" line="642"/>
         <source>Zoom x%1  </source>
         <translation>Увел.x%1  </translation>
     </message>
@@ -663,7 +691,7 @@
         <translation type="vanished">Увел.x%L1</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="644"/>
+        <location filename="../src/dsowidget.cpp" line="645"/>
         <source>Zoom ---  </source>
         <translation>Увел.---  </translation>
     </message>
@@ -672,32 +700,32 @@
         <translation type="vanished">%L1%</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="717"/>
+        <location filename="../src/dsowidget.cpp" line="718"/>
         <source>%1  %2  %3  %4  %5</source>
         <translation>%1  %2  %3  %4  %5</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="756"/>
+        <location filename="../src/dsowidget.cpp" line="757"/>
         <source>/s</source>
         <translation>/с</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="887"/>
+        <location filename="../src/dsowidget.cpp" line="888"/>
         <source> on screen</source>
         <translation> на экране</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="944"/>
+        <location filename="../src/dsowidget.cpp" line="945"/>
         <source>&lt;b&gt; OFFSET CALIBRATION &lt;/b&gt;</source>
         <translation>&lt;b&gt; КАЛИБРОВКА СМЕЩЕНИЯ &lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="1000"/>
+        <location filename="../src/dsowidget.cpp" line="1002"/>
         <source>pp</source>
         <translation>пп</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="1006"/>
+        <location filename="../src/dsowidget.cpp" line="1008"/>
         <source>rms</source>
         <translation>скз</translation>
     </message>
