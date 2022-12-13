@@ -346,13 +346,13 @@ int main( int argc, char *argv[] ) {
                      << "show splash screen";
         scopeDevice = SelectSupportedDevice().showSelectDeviceModal( context, verboseLevel );
         if ( scopeDevice && scopeDevice->isDemoDevice() ) {
-            demoMode = true;
             libusb_exit( context ); // stop all USB activities
             context = nullptr;
         } else {
             QString errorMessage;
             if ( scopeDevice == nullptr || !scopeDevice->connectDevice( errorMessage ) ) {
                 libusb_exit( context ); // clean USB
+                context = nullptr;
                 if ( !errorMessage.isEmpty() )
                     qCritical() << errorMessage;
                 return -1;

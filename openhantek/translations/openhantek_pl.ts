@@ -866,7 +866,7 @@
         <translation type="vanished">Nie można uzyskać danych o poziomie kanału z oscyloskopu</translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="570"/>
+        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="569"/>
         <source>Couldn&apos;t get calibration data from oscilloscope&apos;s EEPROM. Use a config file for calibration!</source>
         <translation>Nie można pobrać danych kalibracyjnych z pamięci EEPROM oscyloskopu. Użyj pliku konfiguracyjnego do kalibracji!</translation>
     </message>

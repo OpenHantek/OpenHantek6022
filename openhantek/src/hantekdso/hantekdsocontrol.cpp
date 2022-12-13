@@ -138,7 +138,6 @@ Dso::ErrorCode HantekDsoControl::setRecordTime( double duration ) {
         return Dso::ErrorCode::CONNECTION;
 
     if ( duration == 0.0 ) {
-        duration = controlsettings.samplerate.target.duration;
         return Dso::ErrorCode::NONE;
     } else {
         controlsettings.samplerate.target.duration = duration;
