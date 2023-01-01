@@ -46,7 +46,7 @@ jobs:
       run: |
         git config user.email "Ho-Ro@users.noreply.github.com"
         git config user.name "Ho-Ro"
-        git fetch --tags || true
+        git fetch --prune --unshallow --tags || true
         git submodule update --init --recursive
         echo "git_describe=$(git describe)"
         echo "git_describe=$(git describe)" >> $GITHUB_OUTPUT
