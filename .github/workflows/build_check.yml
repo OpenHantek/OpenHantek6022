@@ -19,11 +19,12 @@ jobs:
       # do not stop on 1st fail
       fail-fast: false
       matrix:
-        # GitHub runner macos build is broken:
+        # GitHub runner macos build is broken: https://github.com/actions/runner-images/issues/577
         #   Could not symlink bin/2to3-3.11 Target /usr/local/bin/2to3-3.11 already exists.
         #   Could not symlink bin/2to3 Target /usr/local/bin/2to3 already exists.
-        # os: [ubuntu-20.04, macos-11, windows-2019]
-        os: [ubuntu-20.04, windows-2019]
+        # hack fix: https://github.com/actions/setup-python/issues/577#issuecomment-1365231822
+        os: [ubuntu-20.04, macos-11, windows-2019]
+        # os: [ubuntu-20.04, windows-2019]
 
     runs-on: ${{ matrix.os }}
 
@@ -45,7 +46,7 @@ jobs:
       run: |
         git config user.email "Ho-Ro@users.noreply.github.com"
         git config user.name "Ho-Ro"
-        git fetch --prune --unshallow --tags
+        git fetch --tags || true
         git submodule update --init --recursive
         echo "git_describe=$(git describe)"
         echo "git_describe=$(git describe)" >> $GITHUB_OUTPUT
@@ -93,7 +94,7 @@ jobs:
       run: |
         mkdir build
         brew update
-        brew install qt5 fftw binutils create-dmg
+        brew install qt5 fftw binutils create-dmg || true
         export Qt5_DIR=$(brew --prefix qt5)
         # the next two commands (hack from @warpme) fix #314
         mkdir -p /usr/local/opt/qt5/lib/libgcc_s.1.1.dylib.framework
