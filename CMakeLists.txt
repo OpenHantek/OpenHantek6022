@@ -19,7 +19,7 @@ find_package(Git)
 
 if (GIT_EXECUTABLE AND EXISTS "${CMAKE_SOURCE_DIR}/.git")
     execute_process(
-        COMMAND ${GIT_EXECUTABLE} describe --dirty
+        COMMAND ${GIT_EXECUTABLE} describe --tags --dirty
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
         OUTPUT_VARIABLE VERSION
         OUTPUT_STRIP_TRAILING_WHITESPACE

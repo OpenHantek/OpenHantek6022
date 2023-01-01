@@ -24,7 +24,6 @@ jobs:
         #   Could not symlink bin/2to3 Target /usr/local/bin/2to3 already exists.
         # hack fix: https://github.com/actions/setup-python/issues/577#issuecomment-1365231822
         os: [ubuntu-20.04, macos-11, windows-2019]
-        # os: [ubuntu-20.04, windows-2019]
 
     runs-on: ${{ matrix.os }}
 
