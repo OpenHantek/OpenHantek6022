@@ -19,7 +19,11 @@ jobs:
       # do not stop on 1st fail
       fail-fast: false
       matrix:
-        os: [ubuntu-20.04, macos-11, windows-2019]
+        # GitHub runner macos build is broken:
+        #   Could not symlink bin/2to3-3.11 Target /usr/local/bin/2to3-3.11 already exists.
+        #   Could not symlink bin/2to3 Target /usr/local/bin/2to3 already exists.
+        # os: [ubuntu-20.04, macos-11, windows-2019]
+        os: [ubuntu-20.04, windows-2019]
 
     runs-on: ${{ matrix.os }}
 
@@ -89,8 +93,6 @@ jobs:
       run: |
         mkdir build
         brew update
-        brew link --overwrite python@3.10
-        brew link --overwrite python@3.11
         brew install qt5 fftw binutils create-dmg
         export Qt5_DIR=$(brew --prefix qt5)
         # the next two commands (hack from @warpme) fix #314
