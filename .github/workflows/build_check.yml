@@ -87,10 +87,10 @@ jobs:
     - name: Install macOS Build Requirements
       if: startsWith(matrix.os, 'macos')
       run: |
-        rm /usr/local/bin/2to3
-        rm /usr/local/bin/2to3-3.11
         mkdir build
         brew update
+        brew link --overwrite python@3.10
+        brew link --overwrite python@3.11
         brew install qt5 fftw binutils create-dmg
         export Qt5_DIR=$(brew --prefix qt5)
         # the next two commands (hack from @warpme) fix #314
