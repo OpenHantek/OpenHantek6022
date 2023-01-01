@@ -87,6 +87,8 @@ jobs:
     - name: Install macOS Build Requirements
       if: startsWith(matrix.os, 'macos')
       run: |
+        rm /usr/local/bin/2to3
+        rm /usr/local/bin/2to3-3.11
         mkdir build
         brew update
         brew install qt5 fftw binutils create-dmg
