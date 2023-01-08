@@ -1,18 +1,30 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 
-// define OH_VERSION as the version that is shown on top of the program
+// set OH_VERSION to define a release
 // if defined in this file it will tag the commit automatically
 // via .git/hooks/post-commit (see below)
 // the hook will then renamed from OH_VERSION to LAST_OH_VERSION
 //
-// if OH_VERSION is undefined VERSION ($COMMIT_DATE-$COMMIT_HASH) will be shown by OpenHantek
+
 
 // next line shall define either OH_VERSION or LAST_OH_VERSION
 //
-#define OH_VERSION "3.3.2"
+#define OH_VERSION "3.3.2.1"
 
 
 // do not edit below
+
+// VERSION (git describe --tags --dirty) will be shown by OpenHantek
+// if VERSION is not defined then use OH_VERSION
+// if this is also not defined fall back to build date
+
+#ifndef VERSION
+#ifdef OH_VERSION
+#define VERSION OH_VERSION
+#else
+#define VERSION __DATE__
+#endif
+#endif
 
 /* content of ".git/hooks/post-commit":
 

@@ -3,17 +3,6 @@
 # A tar.gz file is created for macOS (not tested).
 # A zip file is created on Windows (not tested).
 
-if (GIT_EXECUTABLE AND EXISTS "${CMAKE_SOURCE_DIR}/.git")
-    execute_process(
-        COMMAND ${GIT_EXECUTABLE} log -1 --format=%h
-        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-        RESULT_VARIABLE CMD_RESULT
-        OUTPUT_VARIABLE GIT_COMMIT_HASH
-        OUTPUT_STRIP_TRAILING_WHITESPACE
-        )
-endif()
-message( STATUS "GIT_COMMIT_HASH: ${GIT_COMMIT_HASH}" )
-
 # create a changelog of the last 20 changes
 set(ENV{LANG} "en_US")
 execute_process(
@@ -137,5 +126,3 @@ set(CMAKE_INSTALL_SYSTEM_RUNTIME_DESTINATION ".")
 include(InstallRequiredSystemLibraries)
 
 cpack_add_install_type(Full DISPLAY_NAME "All")
-
-set(VERSION ${CPACK_PACKAGE_VERSION})

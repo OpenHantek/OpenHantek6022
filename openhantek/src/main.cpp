@@ -59,11 +59,7 @@
 
 #include "models/modelDEMO.h"
 
-#ifndef VERSION
-#error "You need to run the cmake buildsystem!"
-#endif
 #include "OH_VERSION.h"
-
 
 using namespace Hantek;
 

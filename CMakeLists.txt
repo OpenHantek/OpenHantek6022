@@ -24,8 +24,8 @@ if (GIT_EXECUTABLE AND EXISTS "${CMAKE_SOURCE_DIR}/.git")
         OUTPUT_VARIABLE VERSION
         OUTPUT_STRIP_TRAILING_WHITESPACE
     )
-message( STATUS "VERSION: ${VERSION}" )
 endif()
+message(STATUS "VERSION: ${VERSION}")
 
 # Use CPack to make tgz/deb/rpm/zip installer packages
 include(cmake/CPackInfos.cmake)
@@ -48,7 +48,7 @@ if( ${CMAKE_VERSION} VERSION_LESS "3.12.0" ) # deprecated, but still used in old
     add_definitions( -D_GLIBCXX_ASSERTIONS )
     add_definitions( -D_USE_MATH_DEFINES )
     if ( DEFINED VERSION )
-        add_definitions( -VERSION="${VERSION}" )
+        add_definitions( -DVERSION="${VERSION}" )
     endif()
 else() # 'add_compile_definitions()' was introduced with CMake 3.12
     add_compile_definitions( _GLIBCXX_ASSERTIONS )
