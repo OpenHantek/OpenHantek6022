@@ -183,7 +183,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: openhantek_${{ steps.config_git.outputs.git_describe }}_win_x64
-        path: ${{github.workspace}}/build/packages/*.zip
+        path: ./build/packages/*.zip
 
 
     # --- Tagged Commit -> Upload Release ---
@@ -191,10 +191,11 @@ jobs:
     - name: Upload Linux / macOS / Windows Release Assets
       if: startsWith(github.ref, 'refs/tags/')
       # HACK: https://github.com/softprops/action-gh-release/issues/280
-      uses: softprops/action-gh-release@v0.1.13
+      #       use '.' instead of ${{github.workspace}}
+      uses: softprops/action-gh-release@v1
       with:
         prerelease: true
-        files: ${{github.workspace}}/build/packages/*
+        files: ./build/packages/*
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
