@@ -170,9 +170,10 @@ jobs:
       shell: bash
       run: |
         cmake --build . --parallel 8 --config Release --target package
-        ls -l packages
+        # this ZIP package contains only OpenHantek.exe, just get the name
         ZIP=$(basename packages/openhantek_*_win_x64.zip)
         rm -f packages/openhantek_*_win_x64.*
+        # zip the content of Release
         cd openhantek/Release
         7z a ../../packages/$ZIP *
         cd ../..
