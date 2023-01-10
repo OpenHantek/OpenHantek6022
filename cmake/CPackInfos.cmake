@@ -72,12 +72,14 @@ elseif(WIN32)
     endif()
 endif()
 
-message(STATUS "Package: ${CPACK_GENERATOR}")
-message(STATUS "Architecture: ${CPACK_ARCH}")
-
 set(CPACK_PACKAGE_NAME "openhantek")
 string(TOLOWER ${CPACK_PACKAGE_NAME} CPACK_PACKAGE_NAME)
 set(CPACK_PACKAGE_VERSION "${VERSION}")
+
+message(STATUS "CPACK_GENERATOR: ${CPACK_GENERATOR}")
+message(STATUS "CPACK_ARCH: ${CPACK_ARCH}")
+message(STATUS "CPACK_PACKAGE_VERSION: ${CPACK_PACKAGE_VERSION}")
+
 set(CPACK_PACKAGE_CONTACT "contact@openhantek.org")
 set(CPACK_PACKAGE_VENDOR "OpenHantek Community")
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Digital oscilloscope software for Hantek DSO6022 USB hardware")

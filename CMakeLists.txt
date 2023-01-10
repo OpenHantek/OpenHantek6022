@@ -20,9 +20,9 @@ find_package(Git)
 if (GIT_EXECUTABLE AND EXISTS "${CMAKE_SOURCE_DIR}/.git")
     execute_process(
         # delete the unstable tag ...
-        COMMAND ${GIT_EXECUTABLE} tag -d unstable
+        # COMMAND ${GIT_EXECUTABLE} tag -d unstable
         # ... to get the real versioned tag
-        COMMAND ${GIT_EXECUTABLE} describe --tags --dirty
+        COMMAND ${GIT_EXECUTABLE} describe --dirty
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
         OUTPUT_VARIABLE VERSION
         OUTPUT_STRIP_TRAILING_WHITESPACE

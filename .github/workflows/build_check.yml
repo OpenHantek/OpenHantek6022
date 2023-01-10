@@ -170,6 +170,7 @@ jobs:
       shell: bash
       run: |
         cmake --build . --parallel 8 --config Release --target package
+        ls -l packages
         ZIP=$(basename packages/openhantek_*_win_x64.zip)
         rm -f packages/openhantek_*_win_x64.*
         cd openhantek/Release
