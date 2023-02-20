@@ -8,9 +8,7 @@ on: [push]
 env:
   # CMake build type (Release, Debug, RelWithDebInfo, etc.)
   BUILD_TYPE: Release
-  # MSVC specific, needed by packaging etc.
-  VCINSTALLDIR: "C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC"
-
+  QT5_PATH: /mingw64/qt5-static
 
 
 jobs:
@@ -23,7 +21,7 @@ jobs:
         #   Could not symlink bin/2to3-3.11 Target /usr/local/bin/2to3-3.11 already exists.
         #   Could not symlink bin/2to3 Target /usr/local/bin/2to3 already exists.
         # hack fix: https://github.com/actions/setup-python/issues/577#issuecomment-1365231822
-        os: [ubuntu-20.04, macos-11, windows-2019]
+        os: [ubuntu-20.04, macos-11, windows-2022]
 
     runs-on: ${{ matrix.os }}
 
@@ -149,36 +147,39 @@ jobs:
 
     # --- Windows steps ---
 
-    - name: Install Qt for Windows
+    - name: Install MSYS2 Packages
       if: startsWith(matrix.os, 'windows')
-      uses: jurplel/install-qt-action@v3
+      uses: msys2/setup-msys2@v2
+      with:
+        update: true
+        install: >-
+          mingw-w64-x86_64-make
+          mingw-w64-x86_64-cmake
+          mingw-w64-x86_64-gcc
+          mingw-w64-x86_64-qt5-static
+          mingw-w64-x86_64-fftw
+          mingw-w64-x86_64-libusb
 
-
-    - name: Setup Windows Build
+    - name: Start Windows Build
       if: startsWith(matrix.os, 'windows')
-      run:
-        md build &
-        call "%VCINSTALLDIR%/Auxiliary/Build/vcvars64.bat" &
-        cmake -G "Visual Studio 16 2019" -A x64 -DCMAKE_PREFIX_PATH=%Qt5_DIR% -DCMAKE_BUILD_TYPE=Release -Bbuild
+      shell: msys2 {0}
+      run: |
+        cmake -G "MinGW Makefiles" -D CMAKE_PREFIX_PATH=$QT5_PATH -D CMAKE_BUILD_TYPE=$BUILD_TYPE -B build
+        cmake --build build --parallel 8 --config $BUILD_TYPE --target package
 
-
-    - name: Windows Build
+    - name: Create Windows Package
       # GitHub hosts Windows runners on Standard_DS2_v2 virtual machines in Microsoft Azure:
       # 2-core CPU, 7 GB of RAM memory, 14 GB of SSD disk space
       working-directory: ${{github.workspace}}/build
       if: startsWith(matrix.os, 'windows')
       shell: bash
       run: |
-        cmake --build . --parallel 8 --config Release --target package
         # this ZIP package contains only OpenHantek.exe, just get the name
         ZIP=$(basename packages/openhantek_*_win_x64.zip)
         rm -f packages/openhantek_*_win_x64.*
-        # zip the content of Release
-        cd openhantek/Release
-        7z a ../../packages/$ZIP *
-        cd ../..
-        ls -l packages
-
+        cd openhantek
+        7z a ../packages/$ZIP *.exe driver
+        ls -l ../packages
 
     - name: Upload Windows Artifacts
       if: startsWith(matrix.os, 'windows')
