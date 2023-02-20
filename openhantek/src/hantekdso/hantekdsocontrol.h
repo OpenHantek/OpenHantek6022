@@ -2,7 +2,12 @@
 
 #pragma once
 
-#define NOMINMAX // disable windows.h min/max global methods
+#ifdef Q_OS_WIN
+#ifndef NOMINMAX
+#define NOMINMAX 1 // disable windows.h min/max global methods
+#endif
+#endif
+
 #include <limits>
 
 #include "controlsettings.h"
