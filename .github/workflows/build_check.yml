@@ -178,7 +178,7 @@ jobs:
         ZIP=$(basename packages/openhantek_*_win_x64.zip)
         rm -f packages/openhantek_*_win_x64.*
         cd openhantek
-        7z a ../packages/$ZIP *.exe driver
+        7z a ../packages/$ZIP *.exe driver documents
         ls -l ../packages
 
     - name: Upload Windows Artifacts
