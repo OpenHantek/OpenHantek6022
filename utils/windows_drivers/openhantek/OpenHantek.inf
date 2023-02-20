@@ -4,18 +4,18 @@ Class = USBDevice
 ClassGuid = {88BAE032-5A81-49F0-BC3D-A4FF138216D6}
 Provider = "Windows"
 CatalogFile = OpenHantek.cat
-DriverVer = 08/01/2022, 1.0.0.0
+DriverVer = 01/01/2023, 1.0.0.0
 
 [Manufacturer]
 "Hantek" = Device, NTamd64
 
 [Device.NTamd64]
-"Hantek 6022BE - Loader" = Install, USB\VID_04B4&PID_6022
-"Hantek 6022BE - OpenHantek" = Install, USB\VID_04B5&PID_6022
-"Hantek 6022BE - Sigrok" = Install, USB\VID_1D50&PID_608E&REV_0000
-"Hantek 6022BL - Loader" = Install, USB\VID_04B4&PID_602A
-"Hantek 6022BL - OpenHantek" = Install, USB\VID_04B5&PID_602A
-"Hantek 6022BL - Sigrok" = Install, USB\VID_1D50&PID_608E&REV_0003
+"Hantek DSO-6022BE" = Install, USB\VID_04B4&PID_6022
+"Hantek DSO-6022BE" = Install, USB\VID_04B5&PID_6022
+"Hantek DSO-6022BL" = Install, USB\VID_04B4&PID_602A
+"Hantek DSO-6022BL" = Install, USB\VID_04B5&PID_602A
+"Voltcraft DSO-2020" = Install, USB\VID_04B4&PID_2020
+"Sigrok Hantek 6XXX" = Install, USB\VID_1D50&PID_608E
 
 [Install]
 Include = WinUSB.inf

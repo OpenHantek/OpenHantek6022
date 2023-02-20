@@ -33,12 +33,7 @@ message(STATUS "VERSION: ${VERSION}")
 # Use CPack to make tgz/deb/rpm/zip installer packages
 include(cmake/CPackInfos.cmake)
 
-if(MSVC)
-  # NOMINMAX to avoid clash with std::min or std::max due to silly macros min and max
-  add_compile_options(/W4 /D_CRT_SECURE_NO_WARNINGS /DNOMINMAX)
-else()
-  add_compile_options(-Wall -Wextra -pedantic)
-endif()
+add_compile_options(-Wall -Wextra -pedantic)
 
 # Silence nasty warnings "parameter passing for argument of type ... changed in GCC 7.1"
 if(CMAKE_COMPILER_IS_GNUCXX)
