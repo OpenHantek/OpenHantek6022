@@ -1790,8 +1790,8 @@
     </message>
     <message>
         <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="63"/>
-        <source>&lt;p&gt;OpenHantek6022 is searching for compatible devices ...&lt;/p&gt;&lt;p&gt;&lt;img align=&apos;right&apos; height=&apos;200&apos; src=&apos;qrc:///switch_6022BL.png&apos;&gt;Don&apos;t forget to switch your device into oscilloscope mode if it has multiple modes.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;OpenHantek6022 söker efter kompatibla enheter ...&lt;/p&gt;&lt;p&gt;&lt;img align=&apos;right&apos; height=&apos;200&apos; src=&apos;qrc:///switch_6022BL.png&apos;&gt;Glöm inte att slå om din enhet till oscilloskopsläge om den har flera lägen.&lt;/p&gt;</translation>
+        <source>&lt;p&gt;OpenHantek6022 is searching for compatible devices ...&lt;/p&gt;&lt;p&gt;&lt;img align=&apos;right&apos; height=&apos;200&apos; src=&apos;:/switch_6022BL.png&apos;&gt;Don&apos;t forget to switch your device into oscilloscope mode if it has multiple modes.&lt;/p&gt;</source>
+        <translation>&lt;p&gt;OpenHantek6022 söker efter kompatibla enheter ...&lt;/p&gt;&lt;p&gt;&lt;img align=&apos;right&apos; height=&apos;200&apos; src=&apos;:/switch_6022BL.png&apos;&gt;Glöm inte att slå om din enhet till oscilloskopsläge om den har flera lägen.&lt;/p&gt;</translation>
     </message>
     <message>
         <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="67"/>
