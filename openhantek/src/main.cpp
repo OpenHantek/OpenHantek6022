@@ -328,7 +328,11 @@ int main( int argc, char *argv[] ) {
         if ( verboseLevel )
             qDebug() << startupTime.elapsed() << "ms:"
                      << "init libusb";
+#if ( LIBUSB_API_VERSION >= 0x0100010A )
+        int error = libusb_init_context( &context, NULL, 0 );
+#else
         int error = libusb_init( &context );
+#endif
         if ( error ) {
             SelectSupportedDevice().showLibUSBFailedDialogModel( error );
             return -1;
