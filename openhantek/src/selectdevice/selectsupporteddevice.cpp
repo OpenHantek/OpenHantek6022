@@ -61,7 +61,7 @@ std::unique_ptr< ScopeDevice > SelectSupportedDevice::showSelectDeviceModal( lib
                                      .arg( userManualPath );
 
     QString messageNoDevices = tr( "<p>OpenHantek6022 is searching for compatible devices ...</p>"
-                                   "<p><img align='right' height='200' src='qrc:///switch_6022BL.png'>"
+                                   "<p><img align='right' height='150' src=':/switch_6022BL.png'>"
                                    "Don't forget to switch your device into oscilloscope mode if it has multiple modes.</p>" );
 #if defined( Q_OS_WIN )
     messageNoDevices += tr( "<p>Please make sure you have installed the windows usb driver correctly</p>" );

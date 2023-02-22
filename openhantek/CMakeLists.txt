@@ -5,12 +5,14 @@ project(OpenHantek CXX)
 if (WIN32)
     set(CMAKE_FIND_LIBRARY_SUFFIXES ".a")
     set(CMAKE_EXE_LINKER_FLAGS "-s")
+    set(EXECTYPE WIN32)
 endif()
 
 find_package(Qt5Widgets REQUIRED)
 find_package(Qt5PrintSupport REQUIRED)
 find_package(Qt5OpenGL REQUIRED)
 find_package(OpenGL)
+
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
@@ -29,7 +31,7 @@ file(GLOB_RECURSE HEADERS "src/*.h")
 file(GLOB_RECURSE UI "src/*.ui")
 file(GLOB_RECURSE QRC "res/*.qrc")
 
-if(WIN32)
+if (WIN32)
     file(GLOB_RECURSE RC "res/*.rc")
 endif()
 
@@ -38,11 +40,6 @@ add_custom_target(format SOURCES ".clang-format"
 
 # here the translation magic happens
 include(translations/Translations.cmake)
-
-set(EXECTYPE "")
-if(WIN32 AND MINGW)
-    set(EXECTYPE WIN32)
-endif()
 
 # Enable MacOSX bundle magic in the next line
 option(BUILD_MACOSX_BUNDLE "Build MacOS app bundle" ON)
@@ -87,10 +84,8 @@ find_package(FFTW REQUIRED)
 target_include_directories(${PROJECT_NAME} PRIVATE ${FFTW_INCLUDE_DIRS})
 target_link_libraries(${PROJECT_NAME} ${FFTW_LIBRARIES})
 
-if (NOT WIN32)
-    find_package(Threads REQUIRED)
-    target_link_libraries(${PROJECT_NAME} ${CMAKE_THREAD_LIBS_INIT})
-endif()
+find_package(Threads REQUIRED)
+target_link_libraries(${PROJECT_NAME} ${CMAKE_THREAD_LIBS_INIT})
 
 if (WIN32)
     include(../cmake/windows_driver.cmake)
