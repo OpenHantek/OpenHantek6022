@@ -47,7 +47,7 @@ class PPresult {
     /// \brief Returns the analyzed data (RO).
     /// \param channel Channel, whose data should be returned.
     const DataChannel *data( ChannelID channel ) const;
-    /// \brief Returns the analyzed data (RW). The data structure can be modifed.
+    /// \brief Returns the analyzed data (RW). The data structure can be modified.
     /// \param channel Channel, whose data should be returned.
     DataChannel *modifiableData( ChannelID channel );
     /// \return The maximum sample count of the last analyzed data. This assumes there is at least one channel.

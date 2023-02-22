@@ -13,7 +13,7 @@ The `utils/udev_rules/60-openhantek.rules` file needs the usb vendor/device id t
 
 ## The hantek protocol
 The hantek protocol itself is encoded in the `src/hantekprotocol` files.
-If your device needs other or slighly altered packets, you would need to modify those files.
+If your device needs other or slightly altered packets, you would need to modify those files.
 
 ## Add your model information
 You will only need to touch files within `openhantek/src/hantekdso/models`.

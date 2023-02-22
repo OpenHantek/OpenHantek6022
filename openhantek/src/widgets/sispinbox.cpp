@@ -110,7 +110,7 @@ void SiSpinBox::stepBy( int doStep ) {
             if ( remainingSteps > 0 ) // Shouldn't happen, but double may have rounding errors
                 --remainingSteps;
             stepId = stepsFully * stepsCount + remainingSteps;
-            // We need to do one step less down if we are inbetween two of them since
+            // We need to do one step less down if we are in between two of them since
             // our step is lower than the value
             if ( doStep < 0 && steps[ remainingSteps ] < stepMultiple )
                 ++stepId;

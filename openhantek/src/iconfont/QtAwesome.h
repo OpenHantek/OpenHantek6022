@@ -58,7 +58,7 @@ class QtAwesome : public QObject {
 
     QHash< QString, QtAwesomeIconPainter * > painterMap_; ///< A map of custom painters
     QVariantMap defaultOptions_;                          ///< The default icon options
-    QtAwesomeIconPainter *fontIconPainter_;               ///< A special painter fo painting codepoints
+    QtAwesomeIconPainter *fontIconPainter_;               ///< A special painter of painting codepoints
 };
 
 

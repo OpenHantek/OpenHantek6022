@@ -27,7 +27,7 @@ class ExporterRegistry : public QObject {
     explicit ExporterRegistry( const Dso::ControlSpecification *deviceSpecification, DsoSettings *settings,
                                QObject *parent = nullptr );
 
-    // Sample input. This will proably be performed in the post processing
+    // Sample input. This will probably be performed in the post processing
     // thread context. Do not open GUI dialogs or interrupt the control flow.
     void addRawSamples( PPresult *data );
     void input( std::shared_ptr< PPresult > data );

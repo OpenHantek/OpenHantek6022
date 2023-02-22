@@ -18,7 +18,7 @@ a configuration interface and an OpenGL renderer.
 
 ### Core structure
 
-The raw device communcation takes place in the *src/usb* directory, especially via the `USBDevice` class.
+The raw device communication takes place in the *src/usb* directory, especially via the `USBDevice` class.
 To find suitable devices, the `FindDevices` class in the same folder is used. Firmware upload is realized
 via the `ezusb` helper methods and the `UploadFirmware` class.
 
@@ -52,11 +52,11 @@ and the graphical part.
 
 All OpenGL rendering takes place in the `GlScope` class. A helper class `GlScopeGraph` contains exactly one
 data sample snapshot including all channels for voltage and spectrum and a pointer to the respective GPU buffer.
-`GlScope` works normally for **OpenGL 3.2+** and OpenGL ES 2.0+ but if it detects **OpenGL 2.1+** and OpenGL ES 1.2+ on older platforms it switches to a legacy implementation. If both OpenGL and OpenGL Es are present, OpenGL will be prefered, but can be overwritten by the user via a command flag.
+`GlScope` works normally for **OpenGL 3.2+** and OpenGL ES 2.0+ but if it detects **OpenGL 2.1+** and OpenGL ES 1.2+ on older platforms it switches to a legacy implementation. If both OpenGL and OpenGL Es are present, OpenGL will be preferred, but can be overwritten by the user via a command flag.
 
 ### Export
 
-All export related funtionality is within *src/exporting*.
+All export related functionality is within *src/exporting*.
 
 The following exporters are implemented:
 
@@ -299,4 +299,4 @@ are the main storage for all persistent scope (program) parameters, see `DsoSett
 
 GUI input either in the docks or by moving sliders changes the `DsoSettings` parameters directly
 and the `ControlSettings` parameters (that live in another thread `dsoControlThread` ) via signal/slot mechanism.
-The (big) class `HantekDsoControl` has a member `const DsoSettingsScope *scope` that gives direct read acces to the (persistent) scope settings.
+The (big) class `HantekDsoControl` has a member `const DsoSettingsScope *scope` that gives direct read access to the (persistent) scope settings.

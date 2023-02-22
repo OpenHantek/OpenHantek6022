@@ -206,7 +206,7 @@ void GlScope::mouseMoveEvent( QMouseEvent *event ) {
     if ( !( zoomed && selectedCursor == 0 ) && ( event->buttons() & Qt::LeftButton ) != 0 ) {
         if ( selectedMarker == NO_MARKER ) {
             // qDebug() << "mouseMoveEvent";
-            // User started draging outside the snap area of any marker:
+            // User started dragging outside the snap area of any marker:
             // move all markers to current position and select last marker in the array.
             for ( int marker = 0; marker < 2; ++marker ) {
                 cursorInfo[ size_t( selectedCursor ) ]->pos[ marker ] = position;

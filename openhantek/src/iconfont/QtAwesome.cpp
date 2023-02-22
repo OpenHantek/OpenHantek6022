@@ -970,7 +970,7 @@ bool QtAwesome::initFontAwesome() {
         return false;
     }
 
-    // intialize the map
+    // initialize the map
     QHash< QString, int > &m = namedCodepoints_;
     for ( unsigned i = 0; i < sizeof( faNameIconArray ) / sizeof( FANameIcon ); ++i ) {
         m.insert( faNameIconArray[ i ].name, faNameIconArray[ i ].icon );
@@ -1023,7 +1023,7 @@ QIcon QtAwesome::icon( int character, const QVariantMap &options ) {
 
 /// Creates an icon with the given name
 ///
-/// You can use the icon names as defined on http://fortawesome.github.io/Font-Awesome/design.html  withour the 'icon-'
+/// You can use the icon names as defined on http://fortawesome.github.io/Font-Awesome/design.html  without the 'icon-'
 /// prefix
 /// @param name the name of the icon
 /// @param options extra option to pass to the icon renderer
@@ -1046,7 +1046,7 @@ QIcon QtAwesome::icon( const QString &name, const QVariantMap &options ) {
 }
 
 /// Create a dynamic icon by simlpy supplying a painter object
-/// The ownership of the painter is NOT transfered.
+/// The ownership of the painter is NOT transferred.
 /// @param painter a dynamic painter that is going to paint the icon
 /// @param optionmap the options to pass to the painter
 QIcon QtAwesome::icon( QtAwesomeIconPainter *painter, const QVariantMap &optionMap ) {
@@ -1067,7 +1067,7 @@ void QtAwesome::give( const QString &name, QtAwesomeIconPainter *painter ) {
     painterMap_.insert( name, painter );
 }
 
-/// Creates/Gets the icon font with a given size in pixels. This can be usefull to use a label for displaying icons
+/// Creates/Gets the icon font with a given size in pixels. This can be useful to use a label for displaying icons
 /// Example:
 ///
 ///    QLabel* label = new QLabel( QChar( icon_group ) );

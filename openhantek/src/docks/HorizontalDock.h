@@ -73,7 +73,7 @@ class HorizontalDock : public QDockWidget {
     QLabel *timebaseLabel;          ///< The label for the timebase spinbox
     QLabel *formatLabel;            ///< The label for the format combobox
     QLabel *calfreqLabel;           ///< The label for the calibration frequency spinbox
-    SiSpinBox *samplerateSiSpinBox; ///< Selects the samplerate for aquisitions
+    SiSpinBox *samplerateSiSpinBox; ///< Selects the samplerate for acquisitions
     SiSpinBox *timebaseSiSpinBox;   ///< Selects the timebase for voltage graphs
     QComboBox *formatComboBox;      ///< Selects the way the sampled data is
                                     ///  interpreted and shown

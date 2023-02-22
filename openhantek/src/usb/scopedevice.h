@@ -49,7 +49,7 @@ class ScopeDevice : public QObject {
     bool isRealHW() const { return realHW; }
     bool isDemoDevice() const { return !realHW; }
 
-    /// \brief Stop a long running (interruptable) bulk transfer
+    /// \brief Stop a long running (interruptible) bulk transfer
     void stopSampling() { stopTransfer = true; }
 
     bool hasStopped() {
@@ -93,7 +93,7 @@ class ScopeDevice : public QObject {
     /// \brief Multi packet bulk read from the oscilloscope.
     /// \param data Buffer for the sent/received data.
     /// \param length The length of data contained in the packets.
-    /// \param captureSmallBlocks Capture many small blocks instread of one big block (faster gui update)
+    /// \param captureSmallBlocks Capture many small blocks instead of one big block (faster gui update)
     /// \param received The amount of already captured samples
     /// \param attempts The number of attempts, that are done on timeouts.
     /// \return Number of received bytes on success, libusb error code on error.

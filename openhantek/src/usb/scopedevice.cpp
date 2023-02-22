@@ -36,7 +36,7 @@ UniqueUSBid ScopeDevice::computeUSBdeviceID( libusb_device *device ) {
     struct libusb_device_descriptor descriptor;
     libusb_get_device_descriptor( device, &descriptor );
     // collect values and arrange them
-    UniqueUSBid uid = libusb_get_bus_number( device ) & 0x0F; // typically no more than 15 busses
+    UniqueUSBid uid = libusb_get_bus_number( device ) & 0x0F; // typically no more than 15 buses
     const int treeSize = 7;                                   // port tree max size is 7
     uint8_t ports[ treeSize ];
     int nPorts = libusb_get_port_numbers( device, ports, sizeof( ports ) );

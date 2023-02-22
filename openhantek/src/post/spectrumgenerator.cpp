@@ -61,7 +61,7 @@ void SpectrumGenerator::process( PPresult *result ) {
         qDebug() << "    SpectrumGenerator::process()" << result->tag;
 
     // we use correctly aligned input and output data structures for fft
-    // we use "fftw_alloc_real()" and "fftw_free()" to handle these arays dynamically
+    // we use "fftw_alloc_real()" and "fftw_free()" to handle these arrays dynamically
     // these pointers are used during "process()"
     double *fftWindowedValues = nullptr;
     double *fftHcSpectrum = nullptr;
@@ -353,7 +353,7 @@ void SpectrumGenerator::process( PPresult *result ) {
                 // printf( "max %d: %g\n", position, maxCorr );
             } else if ( fftAutoCorrelation[ position ] < minCorr ) { // search for local min
                 minCorr = fftAutoCorrelation[ position ];
-                maxCorr = 0; // reset max to start new max seach
+                maxCorr = 0; // reset max to start new max search
                 peakCorrPos = maxCorrPos;
                 // printf( "min %d: %g\n", position, minCorr );
             }

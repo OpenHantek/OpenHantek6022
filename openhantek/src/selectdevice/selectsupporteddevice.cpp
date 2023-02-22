@@ -162,7 +162,7 @@ std::unique_ptr< ScopeDevice > SelectSupportedDevice::showSelectDeviceModal( lib
 
 void SelectSupportedDevice::showLibUSBFailedDialogModel( int error ) {
     ui->buttonBox->button( QDialogButtonBox::Ok )->setEnabled( false );
-    ui->labelReadyState->setText( tr( "Can't initalize USB: %1" ).arg( libUsbErrorString( error ) ) );
+    ui->labelReadyState->setText( tr( "Can't initialize USB: %1" ).arg( libUsbErrorString( error ) ) );
     show();
     QCoreApplication::instance()->exec();
     close();

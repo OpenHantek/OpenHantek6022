@@ -254,7 +254,7 @@ Dso::ErrorCode HantekDsoControl::setGain( ChannelID channel, double gain ) {
         qDebug() << "  HDC::setGain()" << channel << gain;
     static uint8_t lastGain[ 2 ] = { 0xFF, 0xFF };
     gain /= controlsettings.voltage[ channel ].probeAttn; // gain needs to be scaled by probe attenuation
-    // Find lowest gain voltage thats at least as high as the requested
+    // Find lowest gain voltage that's at least as high as the requested
     uint8_t gainID;
     for ( gainID = 0; gainID < specification->gain.size() - 1; ++gainID )
         if ( specification->gain[ gainID ].Vdiv >= gain )
@@ -832,7 +832,7 @@ void HantekDsoControl::convertRawDataToSamples() {
 
 /// \brief Updates the interval of the periodic thread timer.
 void HantekDsoControl::updateInterval() {
-    // Check the current oscilloscope state everytime 25% of the time
+    // Check the current oscilloscope state every time 25% of the time
     //  the buffer should be refilled (-> acquireInterval in ms)
     // Use real 100% rate for demo device
     int sampleInterval = int( getSamplesize() * 1000.0 / controlsettings.samplerate.current );

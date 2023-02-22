@@ -331,7 +331,7 @@ void DsoSettings::load() {
 
 
 // save the persistent scope settings
-// called by "DsoSettings::saveToFile()", "MainWindow::closeEvent" and explicitely by "ui->actionSave"
+// called by "DsoSettings::saveToFile()", "MainWindow::closeEvent" and explicitly by "ui->actionSave"
 void DsoSettings::save() {
     // Use default configuration after restart?
     if ( 0 == configVersion ) {
