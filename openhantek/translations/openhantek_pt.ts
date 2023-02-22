@@ -2200,6 +2200,11 @@
         <translation>&lt;p&gt;Visita a instrução de compilação e execução &lt;a href=&apos;https://github.com/OpenHantek/OpenHantek6022/blob/main/docs/build.md&apos;&gt;website&lt;/a&gt; para ajuda.&lt;/p&gt;</translation>
     </message>
     <message>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="165"/>
+        <source>Can&apos;t initialize USB: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>&lt;p&gt;Please make sure you have copied the udev rules file to&lt;br/&gt;&lt;b&gt;%1&lt;/b&gt; or&lt;br/&gt;&lt;b&gt;%2&lt;/b&gt; for correct USB access permissions.&lt;/p&gt;</source>
         <translation type="vanished">&lt;p&gt;Por favor, tenha certeza de que você copiou o arquivo de regras do udev para&lt;br/&gt;&lt;b&gt;%1&lt;/b&gt; ou&lt;br/&gt;&lt;b&gt;%2&lt;/b&gt; obter as permissões de acesso USB corretas.&lt;/p&gt;</translation>
     </message>
@@ -2217,9 +2222,8 @@
         <translation>&lt;hr/&gt;&lt;p&gt;Even sem um dispositivo você pode explorar a função do programa, basta pressionar o botão &lt;b&gt;Demo Mode&lt;/b&gt; button.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="165"/>
         <source>Can&apos;t initalize USB: %1</source>
-        <translation>Não é possível initalizar o USB: %1</translation>
+        <translation type="vanished">Não é possível initalizar o USB: %1</translation>
     </message>
 </context>
 <context>

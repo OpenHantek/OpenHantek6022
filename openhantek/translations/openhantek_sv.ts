@@ -1825,8 +1825,12 @@
     </message>
     <message>
         <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="165"/>
+        <source>Can&apos;t initialize USB: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Can&apos;t initalize USB: %1</source>
-        <translation>Kan inte initiera USB: %1</translation>
+        <translation type="vanished">Kan inte initiera USB: %1</translation>
     </message>
 </context>
 <context>

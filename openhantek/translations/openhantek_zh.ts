@@ -2262,6 +2262,11 @@
         <translation>&lt;p&gt;访问构建和运行指导 &lt;a href=&apos;https://github.com/OpenHantek/OpenHantek6022/blob/main/docs/build.md&apos;&gt;网站&lt;/a&gt; 获取进一步的帮助。&lt;/p&gt;</translation>
     </message>
     <message>
+        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="165"/>
+        <source>Can&apos;t initialize USB: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>&lt;p&gt;Please make sure you have copied the udev rules file to&lt;br/&gt;&lt;b&gt;%1&lt;/b&gt; or&lt;br/&gt;&lt;b&gt;%2&lt;/b&gt; for correct USB access permissions.&lt;/p&gt;</source>
         <translation type="vanished">&lt;p&gt;请确保你已经将udev规则文件拷贝至&lt;br/&gt;&lt;b&gt;%1&lt;/b&gt; 或&lt;br/&gt;&lt;b&gt;%2&lt;/b&gt; 以获取USB读写权限。&lt;/p&gt;</translation>
     </message>
@@ -2279,9 +2284,8 @@
         <translation>&lt;hr/&gt;&lt;p&gt;即使没有真实设备，您仍然可以探索此程序的功能。请点击下方的 &lt;b&gt;演示模式&lt;/b&gt; 按钮。&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="165"/>
         <source>Can&apos;t initalize USB: %1</source>
-        <translation>无法初始化 USB: %1</translation>
+        <translation type="vanished">无法初始化 USB: %1</translation>
     </message>
 </context>
 <context>

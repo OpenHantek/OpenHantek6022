@@ -49,7 +49,7 @@ class ScopeDevice : public QObject {
     bool isRealHW() const { return realHW; }
     bool isDemoDevice() const { return !realHW; }
 
-    /// \brief Stop a long running (interruptable) bulk transfer
+    /// \brief Stop a long running (interruptible) bulk transfer
     void stopSampling() { stopTransfer = true; }
 
     bool hasStopped() {
