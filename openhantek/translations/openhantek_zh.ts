@@ -2234,8 +2234,8 @@
     </message>
     <message>
         <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="63"/>
-        <source>&lt;p&gt;OpenHantek6022 is searching for compatible devices ...&lt;/p&gt;&lt;p&gt;&lt;img align=&apos;right&apos; height=&apos;200&apos; src=&apos;:/switch_6022BL.png&apos;&gt;Don&apos;t forget to switch your device into oscilloscope mode if it has multiple modes.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;OpenHantek6022正在搜索支持的设备...&lt;/p&gt;&lt;p&gt;&lt;img align=&apos;right&apos; height=&apos;200&apos; src=&apos;:/switch_6022BL.png&apos;&gt;如果您的设备有多种模式，请不要忘记将其切换为示波器模式。&lt;/p&gt;</translation>
+        <source>&lt;p&gt;OpenHantek6022 is searching for compatible devices ...&lt;/p&gt;&lt;p&gt;&lt;img align=&apos;right&apos; height=&apos;150&apos; src=&apos;:/switch_6022BL.png&apos;&gt;Don&apos;t forget to switch your device into oscilloscope mode if it has multiple modes.&lt;/p&gt;</source>
+        <translation>&lt;p&gt;OpenHantek6022正在搜索支持的设备...&lt;/p&gt;&lt;p&gt;&lt;img align=&apos;right&apos; height=&apos;150&apos; src=&apos;:/switch_6022BL.png&apos;&gt;如果您的设备有多种模式，请不要忘记将其切换为示波器模式。&lt;/p&gt;</translation>
     </message>
     <message>
         <source>&lt;p&gt;&lt;br/&gt;&lt;b&gt;The device is ready for use.&lt;/b&gt;&lt;/p&gt;&lt;p&gt;Please observe the &lt;a href=&apos;https://github.com/OpenHantek/OpenHantek6022/blob/main/docs/OpenHantek6022_User_Manual.pdf&apos;&gt;user manual&lt;/a&gt; for safe operation.&lt;/p&gt;</source>

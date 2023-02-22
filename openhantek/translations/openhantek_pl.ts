@@ -2334,7 +2334,7 @@
     </message>
     <message>
         <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="63"/>
-        <source>&lt;p&gt;OpenHantek6022 is searching for compatible devices ...&lt;/p&gt;&lt;p&gt;&lt;img align=&apos;right&apos; height=&apos;200&apos; src=&apos;:/switch_6022BL.png&apos;&gt;Don&apos;t forget to switch your device into oscilloscope mode if it has multiple modes.&lt;/p&gt;</source>
+        <source>&lt;p&gt;OpenHantek6022 is searching for compatible devices ...&lt;/p&gt;&lt;p&gt;&lt;img align=&apos;right&apos; height=&apos;150&apos; src=&apos;:/switch_6022BL.png&apos;&gt;Don&apos;t forget to switch your device into oscilloscope mode if it has multiple modes.&lt;/p&gt;</source>
         <translation>&lt;p&gt;OpenHantek6022 szuka kompatybilnych urządzeń ...&lt;/p&gt;&lt;p&gt;&lt;img align=&apos;right&apos; height=&apos;150&apos; src=&apos;:/switch_6022BL.png&apos;&gt;Nie zapomnij przełączyć urządzenia w tryb oscyloskopu, jeśli ma wiele trybów.&lt;/p&gt;</translation>
     </message>
     <message>
