@@ -6,7 +6,7 @@
     <message>
         <location filename="../src/usb/scopedevice.cpp" line="76"/>
         <source>Couldn&apos;t open device: %1</source>
-        <translation>No se pudo abrir dispositivo: %1</translation>
+        <translation>No se pudo abrir el dispositivo: %1</translation>
     </message>
 </context>
 <context>
@@ -72,7 +72,7 @@
     <message>
         <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="65"/>
         <source>dBV</source>
-        <translation></translation>
+        <translation>dBV</translation>
     </message>
     <message>
         <source>&lt;b&gt;Minimum magnitude&lt;/b&gt;</source>
@@ -120,27 +120,27 @@
     <message>
         <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="71"/>
         <source>0 dBV</source>
-        <translation></translation>
+        <translation>0 dBV</translation>
     </message>
     <message>
         <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="73"/>
         <source>0 dBu</source>
-        <translation></translation>
+        <translation>0 dBu</translation>
     </message>
     <message>
         <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="74"/>
         <source>&lt;p&gt;= -2.2 dBV (1 mW @ 600 &amp;Omega;)&lt;/p&gt;</source>
-        <translation></translation>
+        <translation>&lt;p&gt;= -2.2 dBV (1 mW @ 600 &amp;Omega;)&lt;/p&gt;</translation>
     </message>
     <message>
         <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="75"/>
         <source>0 dBm</source>
-        <translation></translation>
+        <translation>0 dBm</translation>
     </message>
     <message>
         <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="76"/>
         <source>&lt;p&gt;= -13 dBV (1 mW @ 50 &amp;Omega;)&lt;/p&gt;</source>
-        <translation></translation>
+        <translation>&lt;p&gt;= -13 dBV (1 mW @ 50 &amp;Omega;)&lt;/p&gt;</translation>
     </message>
     <message>
         <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="106"/>
@@ -150,7 +150,7 @@
     <message>
         <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="116"/>
         <source>&lt;p&gt;&amp;Omega;&lt;/p&gt;</source>
-        <translation></translation>
+        <translation>&lt;p&gt;&amp;Omega;&lt;/p&gt;</translation>
     </message>
     <message>
         <source>Power</source>
@@ -193,7 +193,7 @@
         <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="41"/>
         <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="45"/>
         <source>Voltage</source>
-        <translation>Voltaje</translation>
+        <translation>Tensión</translation>
     </message>
     <message>
         <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="140"/>
@@ -233,7 +233,7 @@
     <message>
         <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="123"/>
         <source>Fusion style (restart needed to apply the change)</source>
-        <translation>Fusion style (se necesita reiniciar para aplicar el cambio)</translation>
+        <translation>Estilo Fusion (se necesita reiniciar para aplicar el cambio)</translation>
     </message>
     <message>
         <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="141"/>
@@ -424,7 +424,7 @@
     <message>
         <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="8"/>
         <source>Step</source>
-        <translation>Escaleras</translation>
+        <translation>Escalón</translation>
     </message>
     <message>
         <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="8"/>
@@ -558,22 +558,22 @@
     <message>
         <location filename="../src/dsosettings.cpp" line="29"/>
         <source>SP%1</source>
-        <translation></translation>
+        <translation>SP%1</translation>
     </message>
     <message>
         <location filename="../src/dsosettings.cpp" line="34"/>
         <source>CH%1</source>
-        <translation></translation>
+        <translation>CH%1</translation>
     </message>
     <message>
         <location filename="../src/dsosettings.cpp" line="45"/>
         <source>SPM</source>
-        <translation></translation>
+        <translation>SPM</translation>
     </message>
     <message>
         <location filename="../src/dsosettings.cpp" line="50"/>
         <source>MATH</source>
-        <translation></translation>
+        <translation>MATH</translation>
     </message>
 </context>
 <context>
@@ -607,13 +607,13 @@
         <location filename="../src/dsowidget.cpp" line="592"/>
         <location filename="../src/dsowidget.cpp" line="610"/>
         <source>ON</source>
-        <translation></translation>
+        <translation>ON</translation>
     </message>
     <message>
         <location filename="../src/dsowidget.cpp" line="596"/>
         <location filename="../src/dsowidget.cpp" line="615"/>
         <source>OFF</source>
-        <translation></translation>
+        <translation>OFF</translation>
     </message>
     <message>
         <location filename="../src/dsowidget.cpp" line="636"/>
@@ -631,12 +631,12 @@
     <message>
         <location filename="../src/dsowidget.cpp" line="642"/>
         <source>Zoom x%1  </source>
-        <translation></translation>
+        <translation>Zoom x%1  </translation>
     </message>
     <message>
         <location filename="../src/dsowidget.cpp" line="645"/>
         <source>Zoom ---  </source>
-        <translation></translation>
+        <translation>Zoom ---  </translation>
     </message>
     <message>
         <location filename="../src/dsowidget.cpp" line="647"/>
@@ -646,17 +646,17 @@
         <location filename="../src/dsowidget.cpp" line="746"/>
         <location filename="../src/dsowidget.cpp" line="767"/>
         <source>/div</source>
-        <translation></translation>
+        <translation>/div</translation>
     </message>
     <message>
         <location filename="../src/dsowidget.cpp" line="718"/>
         <source>%1  %2  %3  %4  %5</source>
-        <translation></translation>
+        <translation>%1  %2  %3  %4  %5</translation>
     </message>
     <message>
         <location filename="../src/dsowidget.cpp" line="757"/>
         <source>/s</source>
-        <translation></translation>
+        <translation>/s</translation>
     </message>
     <message>
         <location filename="../src/dsowidget.cpp" line="888"/>
@@ -671,7 +671,7 @@
     <message>
         <location filename="../src/dsowidget.cpp" line="953"/>
         <source>TR</source>
-        <translation></translation>
+        <translation>TR</translation>
     </message>
     <message>
         <location filename="../src/dsowidget.cpp" line="1002"/>
@@ -694,7 +694,7 @@
     <message>
         <location filename="../src/exporting/exporterregistry.cpp" line="76"/>
         <source>No data exported</source>
-        <translation>Ningún dato exportado</translation>
+        <translation>Datos no exportados</translation>
     </message>
 </context>
 <context>
@@ -702,12 +702,12 @@
     <message>
         <location filename="../src/glscope.cpp" line="345"/>
         <source>System does not support OpenGL Shading Language (GLSL)</source>
-        <translation>El sistema no tiene OpenGL Shading Language (GLSL)</translation>
+        <translation>El sistema no admite OpenGL Shading Language (GLSL)</translation>
     </message>
     <message>
         <location filename="../src/glscope.cpp" line="349"/>
         <source>OpenGL init called twice!</source>
-        <translation>¡OpenGL init se ha llamado dos veces!</translation>
+        <translation>¡Se ha llamado dos veces a OpenGL init!</translation>
     </message>
     <message>
         <source>Try command line option &apos;--useGLSL120&apos; or &apos;--useGLES&apos;
@@ -727,20 +727,20 @@
         <location filename="../src/glscope.cpp" line="433"/>
         <source>Failed to compile OpenGL shader programs.
 </source>
-        <translation>Ha fallado al compilar programas OpenGL shader.
+        <translation>No se pudo compilar los programas shader de OpenGL.
 </translation>
     </message>
     <message>
         <location filename="../src/glscope.cpp" line="441"/>
         <source>Failed to link/bind OpenGL shader programs.
 </source>
-        <translation>Ha fallado al enlazar programas OpenGL shader.
+        <translation>No se pudo enlazar/unir los programas shader de OpenGL.
 </translation>
     </message>
     <message>
         <location filename="../src/glscope.cpp" line="450"/>
         <source>Failed to locate shader variable.</source>
-        <translation>Ha fallado al localizar la variable shader.</translation>
+        <translation>No se pudo localizar la variable shader.</translation>
     </message>
 </context>
 <context>
@@ -894,7 +894,7 @@
     <message>
         <location filename="../src/mainwindow.ui" line="17"/>
         <source>MainWindow</source>
-        <translation></translation>
+        <translation>Ventana Principal</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="31"/>
@@ -1026,7 +1026,7 @@
     <message>
         <location filename="../src/mainwindow.ui" line="105"/>
         <source>Ctrl+O</source>
-        <translation></translation>
+        <translation>Ctrl+O</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="426"/>
@@ -1036,7 +1036,7 @@
     <message>
         <location filename="../src/mainwindow.ui" line="113"/>
         <source>Ctrl+S</source>
-        <translation></translation>
+        <translation>Ctrl+S</translation>
     </message>
     <message>
         <source>Save settings as ..</source>
@@ -1049,7 +1049,7 @@
     <message>
         <location filename="../src/mainwindow.ui" line="126"/>
         <source>Ctrl+Q</source>
-        <translation></translation>
+        <translation>Ctrl+Q</translation>
     </message>
     <message>
         <source>Sampling</source>
@@ -1058,7 +1058,7 @@
     <message>
         <location filename="../src/mainwindow.ui" line="137"/>
         <source>Space</source>
-        <translation></translation>
+        <translation>Espacio</translation>
     </message>
     <message>
         <source>Digital phosphor</source>
@@ -1150,7 +1150,7 @@
         <location filename="../src/mainwindow.cpp" line="93"/>
         <source>Show a histogram of the voltage levels on the right side of the trace</source>
         <translatorcomment>Usar &quot;trazo&quot; para traducir trace no es muy utilizado con osciloscopios, creo que lo mejor es usar &quot;señal&quot;</translatorcomment>
-        <translation>Mostrar un histograma de los niveles de voltaje en el lado derecho de la señal</translation>
+        <translation>Mostrar un histograma de los niveles de tensión en el lado derecho de la señal</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="105"/>
@@ -1185,7 +1185,7 @@
         <location filename="../src/mainwindow.cpp" line="117"/>
         <location filename="../src/mainwindow.cpp" line="237"/>
         <source>Short-circuit both inputs and slowly select all voltage gain settings</source>
-        <translation>Cortocircuitar ambas entradas y seleccionar lentamente todas las configuraciones de ganancia de voltaje</translation>
+        <translation>Cortocircuitar ambas entradas y seleccionar lentamente todas las configuraciones de ganancia de tensión</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="119"/>
@@ -1291,12 +1291,12 @@
     <message>
         <location filename="../src/mainwindow.cpp" line="375"/>
         <source>Stop</source>
-        <translation>Parar</translation>
+        <translation>Detener</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="376"/>
         <source>Stop the oscilloscope</source>
-        <translation>Parar el osciloscopio</translation>
+        <translation>Detener el osciloscopio</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="379"/>
@@ -1327,17 +1327,17 @@
     <message>
         <location filename="../src/mainwindow.cpp" line="503"/>
         <source>&lt;p&gt;Device: %1 (%2), FW%3&lt;/p&gt;</source>
-        <translation></translation>
+        <translation>&lt;p&gt;Dispositivo: %1 (%2), FW%3&lt;/p&gt;</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="509"/>
         <source>&lt;p&gt;Open source software for Hantek6022 USB oscilloscopes&lt;/p&gt;&lt;p&gt;Maintainer: Martin Homuth-Rosemann&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2010, 2011 Oliver Haag&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2012-%1 OpenHantek community&lt;br/&gt;&lt;a href=&apos;https://github.com/OpenHantek&apos;&gt;https://github.com/OpenHantek&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Open source firmware copyright &amp;copy; 2019-%1 Ho-Ro&lt;br/&gt;&lt;a href=&apos;https://github.com/Ho-Ro/Hantek6022API&apos;&gt;https://github.com/Ho-Ro/Hantek6022API&lt;/a&gt;&lt;/p&gt;</source>
-        <translation>&lt;p&gt;Software de código abierto para osciloscopios USB Hantek6022&lt;/p&gt;&lt;p&gt;Mantenedor: Martin Homuth-Rosemann&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2010, 2011 Oliver Haag&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2012-%1 OpenHantek community&lt;br/&gt;&lt;a href=&apos;https://github.com/OpenHantek&apos;&gt;https://github.com/OpenHantek&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Derechos de autor de firmware de código abierto &amp;copia; 2019-%1 Ho-Ro&lt;br/&gt;&lt;a href=&apos;https://github.com/Ho-Ro/Hantek6022API&apos;&gt;https://github.com/Ho-Ro/Hantek6022API&lt;/a&gt;</translation>
+        <translation>&lt;p&gt;Software de código abierto para osciloscopios USB Hantek6022&lt;/p&gt;&lt;p&gt;Mantenedor: Martin Homuth-Rosemann&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2010, 2011 Oliver Haag&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2012-%1 OpenHantek community&lt;br/&gt;&lt;a href=&apos;https://github.com/OpenHantek&apos;&gt;https://github.com/OpenHantek&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Derechos de autor de firmware de código abierto &amp;copy; 2019-%1 Ho-Ro&lt;br/&gt;&lt;a href=&apos;https://github.com/Ho-Ro/Hantek6022API&apos;&gt;https://github.com/Ho-Ro/Hantek6022API&lt;/a&gt;</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.cpp" line="520"/>
         <source>&lt;p&gt;Graphic: %1 - GLSL version %2&lt;/p&gt;&lt;p&gt;Qt version: %3&lt;/p&gt;</source>
-        <translation></translation>
+        <translation>&lt;p&gt;Gráficos: %1 - Versión de GLSL %2&lt;/p&gt;&lt;p&gt;Versión de Qt: %3&lt;/p&gt;</translation>
     </message>
     <message>
         <source>&lt;p&gt;Open source software for Hantek6022 USB oscilloscopes&lt;/p&gt;&lt;p&gt;Maintainer: Martin Homuth-Rosemann&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2010, 2011 Oliver Haag&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2012-%7 OpenHantek community&lt;br/&gt;&lt;a href=&apos;https://github.com/OpenHantek&apos;&gt;https://github.com/OpenHantek&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Open source firmware copyright &amp;copy; 2019-%7 Ho-Ro&lt;br/&gt;&lt;a href=&apos;https://github.com/Ho-Ro/Hantek6022API&apos;&gt;https://github.com/Ho-Ro/Hantek6022API&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Device: %1 (%2), FW%3&lt;/p&gt;&lt;p&gt;Graphic: %4 - GLSL version %5&lt;/p&gt;&lt;p&gt;Qt version: %6&lt;/p&gt;</source>
@@ -1927,7 +1927,7 @@
     </message>
     <message>
         <source>Voltage</source>
-        <translation type="vanished">Voltaje</translation>
+        <translation type="vanished">Tensión</translation>
     </message>
     <message>
         <source>Spectrum</source>
@@ -1971,7 +1971,7 @@
     <message>
         <location filename="../src/hantekdso/enums.cpp" line="52"/>
         <source>Roll</source>
-        <translation>Rodar</translation>
+        <translation>Deslizar</translation>
     </message>
     <message>
         <location filename="../src/hantekdso/enums.cpp" line="50"/>
@@ -2117,7 +2117,7 @@
     <message>
         <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="165"/>
         <source>Can&apos;t initialize USB: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>No se puede inicializar USB: %1</translation>
     </message>
     <message>
         <source>&lt;p&gt;Please make sure you have copied the udev rules file to&lt;br/&gt;&lt;b&gt;%1&lt;/b&gt; or&lt;br/&gt;&lt;b&gt;%2&lt;/b&gt; for correct USB access permissions.&lt;/p&gt;</source>
@@ -2218,7 +2218,7 @@
     <message>
         <location filename="../src/docks/TriggerDock.cpp" line="46"/>
         <source>Select positive, negative or both (alternating) slopes</source>
-        <translation>Seleccionar flancos de subida, de bajada o ambos (alternando)</translation>
+        <translation>Seleccionar flanco ascendente, descendente o ambos (alternando)</translation>
     </message>
     <message>
         <location filename="../src/docks/TriggerDock.cpp" line="50"/>
@@ -2241,7 +2241,7 @@
     <message>
         <location filename="../src/docks/VoltageDock.cpp" line="26"/>
         <source>Voltage</source>
-        <translation>Voltaje</translation>
+        <translation>Tensión</translation>
     </message>
     <message>
         <location filename="../src/docks/VoltageDock.cpp" line="55"/>
@@ -2256,7 +2256,7 @@
     <message>
         <location filename="../src/docks/VoltageDock.cpp" line="61"/>
         <source>Voltage range per vertical screen division</source>
-        <translation>Rango de voltaje por división de pantalla vertical</translation>
+        <translation>Rango de tensión por división de pantalla vertical</translation>
     </message>
     <message>
         <location filename="../src/docks/VoltageDock.cpp" line="75"/>
