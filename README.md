@@ -146,7 +146,7 @@ The precompiled packages are only randomly tested - if at all - and the installa
 * To install the downloaded `*.deb` package, open a terminal window, go to the package directory and enter the command (as root) `apt install ./openhantek_..._amd64.deb`.
 This command will automatically install all dependencies of the program as well.
 * For installation of `*.rpm` packages follow similar rules, e.g. `dnf install ./openhantek-...-1.x86_64.rpm`.
-* The `*.tar.gz` achives contain the same files as the `*.deb` and `*.rpm` packages for quick testing - do not use for a permanent installation. Do not report any issues about the `*.tar.gz`!
+* The `*.tar.gz` achives contain the same files as the `*.deb` and `*.rpm` packages for quick testing (`tar -xf ./openhantek_..._x86_64.tar.gz --directory=/`) - do not use for a permanent installation. Do not report any issues about the `*.tar.gz`!
 * Get macOS packages from [macports](https://www.macports.org/ports.php?by=name&substr=openhantek) - thx [ra1nb0w](https://github.com/ra1nb0w).
 * Get [Fedora rpm packages](https://pkgs.org/download/openhantek) - thx [Vascom](https://github.com/Vascom).
 * Download [(untested) builds from last commit(s)](https://github.com/OpenHantek/OpenHantek6022/actions/workflows/build_check.yml). Select the preferred `workflow run` and go to `Artifacts`.
