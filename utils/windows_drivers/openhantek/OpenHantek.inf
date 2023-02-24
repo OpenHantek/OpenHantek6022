@@ -10,12 +10,14 @@ DriverVer = 01/01/2023, 1.0.0.0
 "Hantek" = Device, NTamd64
 
 [Device.NTamd64]
+"Cypress FX2" = Install, USB\VID_04B4&PID_8613
 "Hantek DSO-6022BE" = Install, USB\VID_04B4&PID_6022
 "Hantek DSO-6022BE" = Install, USB\VID_04B5&PID_6022
 "Hantek DSO-6022BL" = Install, USB\VID_04B4&PID_602A
 "Hantek DSO-6022BL" = Install, USB\VID_04B5&PID_602A
 "Voltcraft DSO-2020" = Install, USB\VID_04B4&PID_2020
-"Sigrok Hantek 6XXX" = Install, USB\VID_1D50&PID_608E
+"Hantek 6XXX Sigrok" = Install, USB\VID_1D50&PID_608E
+"Saleae Logic Analyzer" = Install, USB\VID_0925&PID_3881
 
 [Install]
 Include = WinUSB.inf
