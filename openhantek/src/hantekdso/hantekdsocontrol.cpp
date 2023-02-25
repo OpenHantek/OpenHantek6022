@@ -800,7 +800,7 @@ void HantekDsoControl::convertRawDataToSamples() {
                 liveOffset += sample;
             }
             // qDebug() << channel << offsetCorrection[ gainIndex ][ channel ];
-            sample -= offsetCorr;
+            sample += offsetCorr;
             sample *= gainCorr;
 
             result.data[ channel ][ index ] = sign * sample / voltageScale * gainCalibration * probeAttn;
