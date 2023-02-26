@@ -29,6 +29,7 @@ If applicable, add screenshots or a video to help explain your problem.
  - OpenHantek version: [use always the latest commit, e.g. *release v2.03, commit 1a2b3c4, ...*]
  - OS: [e.g. *linux, macOS, windows, ...*]
  - Distribution, version: [e.g. *debian stable amd64, ...*]
+ - Screen resolution, screen setup (e.g. multimonitor, etc.)
  - Video hardware: [e.g. *Intel Xeon ... Integrated Graphics*]
  - OpenGL version: [e.g. *OpenGL 4.5, Mesa 19.0.3*]
  - Qt version: [e.g. *Qt 5.11.x*]
