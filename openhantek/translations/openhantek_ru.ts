@@ -427,7 +427,7 @@
     <message>
         <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="8"/>
         <source>Sinc</source>
-        <translation>Синх.</translation>
+        <translation>Sinc</translation>
     </message>
     <message>
         <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="53"/>
@@ -572,7 +572,7 @@
     </message>
     <message>
         <source>&lt;b&gt;Window function&lt;/b&gt;</source>
-        <translation type="vanished">&lt;b&gt;Окно функции&lt;/b&gt;</translation>
+        <translation type="vanished">&lt;b&gt;Оконная функция&lt;/b&gt;</translation>
     </message>
     <message>
         <source>&lt;b&gt;Reference level&lt;/b&gt;&lt;br/&gt;0 dBu = -2.2 dBV&lt;br/&gt;0 dBm (@600 &amp;Omega;) = -2.2 dBV&lt;br/&gt;0 dBm (@50 &amp;Omega;) = -13 dBV</source>
