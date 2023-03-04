@@ -587,6 +587,12 @@ void MainWindow::screenShot( screenshotType_t screenshotType, bool autoSafe ) {
     int sh = screenshot.height();
     if ( dsoSettings->scope.verboseLevel > 3 )
         qDebug() << "   screenshot size:" << sw << "x" << sh;
+    if ( dsoSettings->view.exportScaleValue > 1 ) {
+        int scale = dsoSettings->view.exportScaleValue;
+        screenshot = screenshot.scaled( sw *= scale, sh *= scale ); // upscale, e.g. for HiDPI downscaled screen
+        if ( dsoSettings->scope.verboseLevel > 3 )
+            qDebug() << "   screenshot size scaled:" << sw << "x" << sh;
+    }
     if ( screenshotType != SCREENSHOT && dsoSettings->view.zoom && dsoSettings->view.zoomImage &&
          dsoSettings->view.zoomHeightIndex == 0 ) {
         screenshot = screenshot.scaled( sw, sh *= 2 ); // make double height

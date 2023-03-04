@@ -62,4 +62,6 @@ class DsoConfigScopePage : public QWidget {
     QCheckBox *zoomImageCheckBox;
     QComboBox *zoomHeightComboBox;
     QLabel *zoomHeightLabel;
+    QSpinBox *exportScaleSpinBox;
+    QLabel *exportScaleLabel;
 };

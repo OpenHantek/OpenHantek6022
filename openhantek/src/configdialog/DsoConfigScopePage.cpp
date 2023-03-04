@@ -60,12 +60,20 @@ DsoConfigScopePage::DsoConfigScopePage( DsoSettings *settings, QWidget *parent )
     zoomHeightComboBox = new QComboBox();
     zoomHeightComboBox->addItems( { "1", "2", "4", "8", "16" } );
     zoomHeightComboBox->setCurrentIndex( settings->view.zoomHeightIndex );
+    exportScaleLabel = new QLabel( tr( "Upscale exported images" ) );
+    exportScaleSpinBox = new QSpinBox();
+    exportScaleSpinBox->setMinimum( 1 );
+    exportScaleSpinBox->setMaximum( 16 );
+    exportScaleSpinBox->setValue( settings->view.exportScaleValue );
     zoomLayout = new QGridLayout();
     row = 0;
     zoomLayout->addWidget( zoomHeightLabel, row, 0 );
     zoomLayout->addWidget( zoomHeightComboBox, row, 1 );
     ++row;
     zoomLayout->addWidget( zoomImageCheckBox, row, 0 );
+    ++row;
+    zoomLayout->addWidget( exportScaleLabel, row, 0 );
+    zoomLayout->addWidget( exportScaleSpinBox, row, 1 );
     zoomGroup = new QGroupBox( tr( "Zoom" ) );
     zoomGroup->setLayout( zoomLayout );
 
@@ -118,4 +126,5 @@ void DsoConfigScopePage::saveSettings() {
         settings->configVersion = 0;
     settings->view.zoomImage = zoomImageCheckBox->isChecked();
     settings->view.zoomHeightIndex = zoomHeightComboBox->currentIndex();
+    settings->view.exportScaleValue = exportScaleSpinBox->value();
 }

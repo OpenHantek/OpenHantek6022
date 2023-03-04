@@ -49,6 +49,7 @@ struct DsoSettingsView {
     int zoomHeightIndex = 2;                                          ///< Zoom scope window height
     bool zoomImage = true;                                            ///< Export zoomed images with double height
     bool zoom = false;                                                ///< true if the magnified scope is enabled
+    int exportScaleValue = 1;
     Qt::ToolBarArea cursorGridPosition = Qt::RightToolBarArea;
     bool cursorsVisible = false;
     DsoSettingsColorValues *colors = &screen;

@@ -317,6 +317,8 @@ void DsoSettings::load() {
         view.zoomHeightIndex = storeSettings->value( "zoomHeightIndex" ).toInt();
     if ( storeSettings->contains( "zoomImage" ) )
         view.zoomImage = storeSettings->value( "zoomImage" ).toBool();
+    if ( storeSettings->contains( "exportScaleValue" ) )
+        view.exportScaleValue = storeSettings->value( "exportScaleValue" ).toInt();
     if ( storeSettings->contains( "cursorGridPosition" ) )
         view.cursorGridPosition = Qt::ToolBarArea( storeSettings->value( "cursorGridPosition" ).toUInt() );
     if ( storeSettings->contains( "cursorsVisible" ) )
@@ -482,6 +484,7 @@ void DsoSettings::save() {
     storeSettings->setValue( "zoom", view.zoom );
     storeSettings->setValue( "zoomHeightIndex", view.zoomHeightIndex );
     storeSettings->setValue( "zoomImage", view.zoomImage );
+    storeSettings->setValue( "exportScaleValue", view.exportScaleValue );
     storeSettings->setValue( "cursorGridPosition", view.cursorGridPosition );
     storeSettings->setValue( "cursorsVisible", view.cursorsVisible );
     storeSettings->endGroup(); // view
