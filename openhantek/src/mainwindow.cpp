@@ -575,28 +575,32 @@ void MainWindow::screenShot( screenshotType_t screenshotType, bool autoSafe ) {
         qDebug() << "  MainWindow::screenShot()" << screenshotType << autoSafe;
     auto activeWindow = screenshotType == SCREENSHOT ? qApp->activeWindow() : dsoWidget;
     QPixmap screenshot( activeWindow->size() );
-    QDateTime now = QDateTime::currentDateTime();
-    QString docName = now.toString( tr( "yyyy-MM-dd hh:mm:ss" ) );
-    QString fileName = now.toString( tr( "yyyyMMdd_hhmmss" ) );
-    statusBar()->showMessage( docName ); // show date in bottom line
-    activeWindow->render( &screenshot ); // take the screenshot
-    statusBar()->clearMessage();         // remove bottom line
-    dsoWidget->restoreScreenColors();
-
     int sw = screenshot.width();
     int sh = screenshot.height();
     if ( dsoSettings->scope.verboseLevel > 3 )
         qDebug() << "   screenshot size:" << sw << "x" << sh;
-    if ( dsoSettings->view.exportScaleValue > 1 ) {
-        int scale = dsoSettings->view.exportScaleValue;
-        screenshot = screenshot.scaled( sw *= scale, sh *= scale ); // upscale, e.g. for HiDPI downscaled screen
+
+    int exportScale = dsoSettings->view.exportScaleValue;
+    screenshot.setDevicePixelRatio( exportScale );
+    if ( exportScale > 1 ) {
+        screenshot = screenshot.scaled( sw *= exportScale, sh *= exportScale ); // upscale, e.g. for HiDPI downscaled screen
         if ( dsoSettings->scope.verboseLevel > 3 )
             qDebug() << "   screenshot size scaled:" << sw << "x" << sh;
     }
+
+    QDateTime now = QDateTime::currentDateTime();
+    QString docName = now.toString( tr( "yyyy-MM-dd hh:mm:ss" ) );
+    QString fileName = now.toString( tr( "yyyyMMdd_hhmmss" ) );
+    statusBar()->showMessage( docName ); // show date in bottom line
+
     if ( screenshotType != SCREENSHOT && dsoSettings->view.zoom && dsoSettings->view.zoomImage &&
          dsoSettings->view.zoomHeightIndex == 0 ) {
         screenshot = screenshot.scaled( sw, sh *= 2 ); // make double height
     }
+
+    activeWindow->render( &screenshot ); // take the screenshot
+    statusBar()->clearMessage();         // remove bottom line
+    dsoWidget->restoreScreenColors();
 
     // here we have a screeshot, now handle the different destinations.
     QPrinter printer( QPrinter::HighResolution );
