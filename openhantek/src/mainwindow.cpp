@@ -574,16 +574,16 @@ void MainWindow::screenShot( screenshotType_t screenshotType, bool autoSafe ) {
     if ( dsoSettings->scope.verboseLevel > 2 )
         qDebug() << "  MainWindow::screenShot()" << screenshotType << autoSafe;
     auto activeWindow = screenshotType == SCREENSHOT ? qApp->activeWindow() : dsoWidget;
-    QPixmap screenshot( activeWindow->size() );
+    QPixmap screenshot( activeWindow->size() ); // prepare a pixmap with the correct size
     int sw = screenshot.width();
     int sh = screenshot.height();
     if ( dsoSettings->scope.verboseLevel > 3 )
         qDebug() << "   screenshot size:" << sw << "x" << sh;
 
     int exportScale = dsoSettings->view.exportScaleValue;
-    screenshot.setDevicePixelRatio( exportScale );
-    if ( exportScale > 1 ) {
-        screenshot = screenshot.scaled( sw *= exportScale, sh *= exportScale ); // upscale, e.g. for HiDPI downscaled screen
+    if ( exportScale > 1 ) { // upscale - e.g. for HiDPI downscaled screen
+        screenshot.setDevicePixelRatio( exportScale );
+        screenshot = screenshot.scaled( sw *= exportScale, sh *= exportScale );
         if ( dsoSettings->scope.verboseLevel > 3 )
             qDebug() << "   screenshot size scaled:" << sw << "x" << sh;
     }
@@ -595,12 +595,12 @@ void MainWindow::screenShot( screenshotType_t screenshotType, bool autoSafe ) {
 
     if ( screenshotType != SCREENSHOT && dsoSettings->view.zoom && dsoSettings->view.zoomImage &&
          dsoSettings->view.zoomHeightIndex == 0 ) {
-        screenshot = screenshot.scaled( sw, sh *= 2 ); // make double height
+        screenshot = screenshot.scaled( sw, sh *= 2 ); // make double height for 1:1 zoomed screen
     }
 
     activeWindow->render( &screenshot ); // take the screenshot
     statusBar()->clearMessage();         // remove bottom line
-    dsoWidget->restoreScreenColors();
+    dsoWidget->restoreScreenColors();    // switch back to normal colors (for HARDCOPY/PRINTER)
 
     // here we have a screeshot, now handle the different destinations.
     QPrinter printer( QPrinter::HighResolution );
