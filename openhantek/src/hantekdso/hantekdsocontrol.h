@@ -134,7 +134,7 @@ class HantekDsoControl : public QObject {
     unsigned getRecordLength() const;
     void setDownsampling( unsigned downsampling ) { downsamplingNumber = downsampling; }
     bool replaceCalibrationEEPROM = false;
-    Dso::ErrorCode getCalibrationValues();
+    Dso::ErrorCode getCalibrationFromIniFile();
     Dso::ErrorCode getCalibrationFromEEPROM();
     Dso::ErrorCode updateCalibrationValues( bool useEEPROM = false );
     Dso::ErrorCode writeCalibrationToEEPROM();
@@ -202,6 +202,7 @@ class HantekDsoControl : public QObject {
     }
     Raw raw;
     unsigned debugLevel = 0;
+    uint8_t channelOffset[ 2 ] = { 0x80, 0x80 };
 
 #define dprintf( level, fmt, ... )               \
     do {                                         \

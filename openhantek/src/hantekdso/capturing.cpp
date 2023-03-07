@@ -91,8 +91,10 @@ void Capturing::capture() {
                 effectiveSamplerate = hdc->specification->fixedSampleRates[ sampleIndex ].samplerate;
                 if ( !realSlow && effectiveSamplerate < 10e3 &&
                      hdc->scope->trigger.mode == Dso::TriggerMode::ROLL ) { // switch to real slow rolling
-                    for ( auto it = data.begin(); it != data.end(); ++it )
-                        *it = 0x80; // fill with "zeros"
+                    for ( auto it = data.begin(); it != data.end(); ) {
+                        *it++ = hdc->channelOffset[ 0 ]; // fill ch0 with "zeros"
+                        *it++ = hdc->channelOffset[ 1 ]; // fill ch1 with "zeros"
+                    }
                     QWriteLocker locker( &hdc->raw.lock );
                     hdc->raw.rollMode = false;
                     swap( data, hdc->raw.data ); // "clear screen"
@@ -149,8 +151,10 @@ void Capturing::capture() {
     if ( received != rawSamplesize ) {
         // qDebug() << "retval != rawSamplesize" << received << rawSamplesize;
         auto end = dp->end();
-        for ( auto it = dp->begin(); it != end; ++it )
-            *it = 0x80; // fill with "zeros"
+        for ( auto it = dp->begin(); it != end; ) {
+            *it++ = hdc->channelOffset[ 0 ]; // fill ch0 with "zeros"
+            *it++ = hdc->channelOffset[ 1 ]; // fill ch1 with "zeros"
+        }
         valid = false;
         hdc->raw.rollMode = false;
     } else {

@@ -32,7 +32,7 @@ HantekDsoControl::HantekDsoControl( ScopeDevice *device, const DSOModel *model, 
     // Apply special requirements by the devices model
     model->applyRequirements( this );
 
-    getCalibrationValues();
+    getCalibrationFromIniFile();
 
     stateMachineRunning = true;
 }
@@ -455,7 +455,7 @@ unsigned HantekDsoControl::getRecordLength() const {
 }
 
 
-Dso::ErrorCode HantekDsoControl::getCalibrationValues() {
+Dso::ErrorCode HantekDsoControl::getCalibrationFromIniFile() {
     // Persistent storage: unique offset/gain calibration file:
     // Linux, Unix, macOS: "$HOME/.config/OpenHantek/DSO-6022BE_NNNNNNNNNNNN_calibration.ini"
     // Windows: "%APPDATA%\OpenHantek\DSO-6022BE_NNNNNNNNNNNN_calibration.ini"
@@ -763,6 +763,7 @@ void HantekDsoControl::convertRawDataToSamples() {
             offsetFine = controlsettings.calibrationValues->fine.hs.step[ gainIndex ][ channel ];
         }
         // calibration values from EEPROM
+        channelOffset[ channel ] = offsetRaw;
         double offsetCalibration = bytesToOffset( offsetRaw, offsetFine );
         double gainCalibration = byteToGain( controlsettings.calibrationValues->gain.step[ gainIndex ][ channel ] );
         // Convert data from the oscilloscope and write it into the channel sample buffer
