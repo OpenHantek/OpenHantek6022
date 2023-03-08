@@ -18,14 +18,14 @@ struct libusb_context;
  * message. The method returns as soon as the user closes the dialog.
  *
  * An example to get a user selected device:
- * std::unique_ptr<USBDevice> device = SelectDevice().showSelectDeviceModal(context);
+ * std::unique_ptr<USBDevice> device = SelectDevice().showSelectDeviceModal(context, ...);
  */
 class SelectSupportedDevice : public QDialog {
     Q_OBJECT
 
   public:
     explicit SelectSupportedDevice( QWidget *parent = nullptr );
-    std::unique_ptr< ScopeDevice > showSelectDeviceModal( libusb_context *context, int verboseLevel );
+    std::unique_ptr< ScopeDevice > showSelectDeviceModal( libusb_context *context, int verboseLevel, bool autoConnect = true );
     void showLibUSBFailedDialogModel( int error );
 
   private:

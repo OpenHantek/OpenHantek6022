@@ -94,6 +94,7 @@ int main( int argc, char *argv[] ) {
 #endif
 
     bool demoMode = false;
+    bool autoConnect = true;
     bool useGLES = false;
     bool useGLSL120 = false;
     bool useGLSL150 = false;
@@ -158,6 +159,9 @@ int main( int argc, char *argv[] ) {
         p.addOption( demoModeOption );
         QCommandLineOption useGlesOption( { "e", "useGLES" },
                                           QCoreApplication::translate( "main", "Use OpenGL ES instead of OpenGL" ) );
+        QCommandLineOption noAutoConnectOption( "noAutoConnect",
+                                                QCoreApplication::translate( "main", "Do not connect automatically" ) );
+        p.addOption( noAutoConnectOption );
         p.addOption( useGlesOption );
         QCommandLineOption useGLSL120Option( "useGLSL120", QCoreApplication::translate( "main", "Force OpenGL SL version 1.20" ) );
         p.addOption( useGLSL120Option );
@@ -190,6 +194,7 @@ int main( int argc, char *argv[] ) {
         if ( p.isSet( configFileOption ) )
             configFileName = p.value( "config" );
         demoMode = p.isSet( demoModeOption );
+        autoConnect = !p.isSet( noAutoConnectOption );
         if ( p.isSet( fontOption ) )
             font = p.value( "font" );
         if ( p.isSet( sizeOption ) )
@@ -344,7 +349,7 @@ int main( int argc, char *argv[] ) {
         if ( verboseLevel )
             qDebug() << startupTime.elapsed() << "ms:"
                      << "show splash screen";
-        scopeDevice = SelectSupportedDevice().showSelectDeviceModal( context, verboseLevel );
+        scopeDevice = SelectSupportedDevice().showSelectDeviceModal( context, verboseLevel, autoConnect );
         if ( scopeDevice && scopeDevice->isDemoDevice() ) {
             libusb_exit( context ); // stop all USB activities
             context = nullptr;

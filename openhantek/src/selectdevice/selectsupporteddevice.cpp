@@ -43,7 +43,8 @@ SelectSupportedDevice::SelectSupportedDevice( QWidget *parent ) : QDialog( paren
 }
 
 
-std::unique_ptr< ScopeDevice > SelectSupportedDevice::showSelectDeviceModal( libusb_context *context, int verboseLevel ) {
+std::unique_ptr< ScopeDevice > SelectSupportedDevice::showSelectDeviceModal( libusb_context *context, int verboseLevel,
+                                                                             bool autoConnect ) {
     std::unique_ptr< FindDevices > findDevices = std::unique_ptr< FindDevices >( new FindDevices( context, verboseLevel ) );
     std::unique_ptr< DevicesListModel > model =
         std::unique_ptr< DevicesListModel >( new DevicesListModel( findDevices.get(), verboseLevel ) );
@@ -107,7 +108,7 @@ std::unique_ptr< ScopeDevice > SelectSupportedDevice::showSelectDeviceModal( lib
 
     QTimer timer;
     timer.setInterval( 1000 );
-    connect( &timer, &QTimer::timeout, [ this, &model, &findDevices, &messageDeviceReady, &messageNoDevices ]() {
+    connect( &timer, &QTimer::timeout, [ this, &model, &findDevices, &messageDeviceReady, &messageNoDevices, autoConnect ]() {
         static int supportedDevices = -1; // max number of devices that can connect or need firmware
         static int readyDevices = -1;
         if ( findDevices->updateDeviceList() ) { // searching...
@@ -121,7 +122,7 @@ std::unique_ptr< ScopeDevice > SelectSupportedDevice::showSelectDeviceModal( lib
                 ++devices; // count devices that can connect
         }
         // printf( "%d, %d, %d devices\n", model->rowCount( QModelIndex() ), supportedDevices, devices );
-        if ( 1 == devices && 1 == supportedDevices ) { // only one device ready, start it without user action
+        if ( autoConnect && 1 == devices && 1 == supportedDevices ) { // only one device ready, start it without user action
             int mIndex = 0;
             for ( mIndex = 0; mIndex < model->rowCount( QModelIndex() ); ++mIndex ) {
                 if ( ui->cmbDevices->itemData( mIndex, Qt::UserRole + 1 ).toBool() ) // can connect
