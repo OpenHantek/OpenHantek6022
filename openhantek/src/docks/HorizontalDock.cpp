@@ -64,7 +64,7 @@ HorizontalDock::HorizontalDock( DsoSettingsScope *scope, const Dso::ControlSpeci
     calfreqComboBox = new QComboBox();
     if ( scope->toolTipVisible )
         calfreqComboBox->setToolTip( tr( "Select the frequency of the calibration output, scroll for fast change" ) );
-    for ( double calfreqStep : calfreqSteps )
+    for ( double calfreqStep : qAsConst( calfreqSteps ) )
         calfreqComboBox->addItem( valueToString( calfreqStep, UNIT_HERTZ, calfreqStep < 10e3 ? 2 : 0 ) );
 
     dockLayout = new QGridLayout();
@@ -89,13 +89,13 @@ HorizontalDock::HorizontalDock( DsoSettingsScope *scope, const Dso::ControlSpeci
     loadSettings( scope );
 
     // Connect signals and slots
-    connect( samplerateSiSpinBox, SELECT< double >::OVERLOAD_OF( &QDoubleSpinBox::valueChanged ),
+    connect( samplerateSiSpinBox, SELECT< double >::OVERLOAD_OF( &QDoubleSpinBox::valueChanged ), this,
              [ this ]( double samplerate ) { this->samplerateSelected( samplerate ); } );
-    connect( timebaseSiSpinBox, SELECT< double >::OVERLOAD_OF( &QDoubleSpinBox::valueChanged ),
+    connect( timebaseSiSpinBox, SELECT< double >::OVERLOAD_OF( &QDoubleSpinBox::valueChanged ), this,
              [ this ]( double timebase ) { this->timebaseSelected( timebase ); } );
-    connect( formatComboBox, SELECT< int >::OVERLOAD_OF( &QComboBox::currentIndexChanged ),
+    connect( formatComboBox, SELECT< int >::OVERLOAD_OF( &QComboBox::currentIndexChanged ), this,
              [ this ]( int index ) { this->formatSelected( index ); } );
-    connect( calfreqComboBox, SELECT< int >::OVERLOAD_OF( &QComboBox::currentIndexChanged ),
+    connect( calfreqComboBox, SELECT< int >::OVERLOAD_OF( &QComboBox::currentIndexChanged ), this,
              [ this ]( int index ) { this->calfreqIndexSelected( index ); } );
 }
 

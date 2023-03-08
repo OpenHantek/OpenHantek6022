@@ -59,13 +59,13 @@ SpectrumDock::SpectrumDock( DsoSettingsScope *scope, QWidget *parent ) : QDockWi
         b.magnitudeComboBox->addItems( magnitudeStrings );
 
         // Connect signals and slots
-        connect( b.usedCheckBox, &QCheckBox::toggled, [ this, channel ]( bool checked ) {
+        connect( b.usedCheckBox, &QCheckBox::toggled, this, [ this, channel ]( bool checked ) {
             if ( channel < this->scope->voltage.size() ) {
                 setUsed( channel, checked );
             }
         } );
 
-        connect( b.magnitudeComboBox, SELECT< int >::OVERLOAD_OF( &QComboBox::currentIndexChanged ),
+        connect( b.magnitudeComboBox, SELECT< int >::OVERLOAD_OF( &QComboBox::currentIndexChanged ), this,
                  [ this, channel ]( unsigned index ) {
                      if ( channel < this->scope->voltage.size() ) {
                          this->setMagnitude( channel, this->magnitudeSteps.at( index ) );
@@ -80,7 +80,7 @@ SpectrumDock::SpectrumDock( DsoSettingsScope *scope, QWidget *parent ) : QDockWi
     frequencybaseSiSpinBox->setMaximum( 100e6 );
     dockLayout->addWidget( frequencybaseLabel, int( channel ), 0 );
     dockLayout->addWidget( frequencybaseSiSpinBox, int( channel ), 1 );
-    connect( frequencybaseSiSpinBox, SELECT< double >::OVERLOAD_OF( &QDoubleSpinBox::valueChanged ),
+    connect( frequencybaseSiSpinBox, SELECT< double >::OVERLOAD_OF( &QDoubleSpinBox::valueChanged ), this,
              [ this ]() { this->frequencybaseSelected( this->frequencybaseSiSpinBox->value() ); } );
 
     // Load settings into GUI

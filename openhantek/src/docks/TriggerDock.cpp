@@ -77,22 +77,26 @@ TriggerDock::TriggerDock( DsoSettingsScope *scope, const Dso::ControlSpecificati
     loadSettings( scope );
 
     // Connect signals and slots
-    connect( modeComboBox, static_cast< void ( QComboBox::* )( int ) >( &QComboBox::currentIndexChanged ), [ this ]( int index ) {
-        this->scope->trigger.mode = mSpec->triggerModes[ unsigned( index ) ];
-        emit modeChanged( this->scope->trigger.mode );
-    } );
-    connect( slopeComboBox, static_cast< void ( QComboBox::* )( int ) >( &QComboBox::currentIndexChanged ), [ this ]( int index ) {
-        this->scope->trigger.slope = Dso::Slope( index );
-        emit slopeChanged( this->scope->trigger.slope );
-    } );
-    connect( sourceComboBox, static_cast< void ( QComboBox::* )( int ) >( &QComboBox::currentIndexChanged ), [ this ]( int index ) {
-        this->scope->trigger.source = index;
-        emit sourceChanged( index );
-    } );
-    connect( smoothComboBox, static_cast< void ( QComboBox::* )( int ) >( &QComboBox::currentIndexChanged ), [ this ]( int index ) {
-        this->scope->trigger.smooth = index;
-        emit smoothChanged( index );
-    } );
+    connect( modeComboBox, static_cast< void ( QComboBox::* )( int ) >( &QComboBox::currentIndexChanged ), this,
+             [ this ]( int index ) {
+                 this->scope->trigger.mode = mSpec->triggerModes[ unsigned( index ) ];
+                 emit modeChanged( this->scope->trigger.mode );
+             } );
+    connect( slopeComboBox, static_cast< void ( QComboBox::* )( int ) >( &QComboBox::currentIndexChanged ), this,
+             [ this ]( int index ) {
+                 this->scope->trigger.slope = Dso::Slope( index );
+                 emit slopeChanged( this->scope->trigger.slope );
+             } );
+    connect( sourceComboBox, static_cast< void ( QComboBox::* )( int ) >( &QComboBox::currentIndexChanged ), this,
+             [ this ]( int index ) {
+                 this->scope->trigger.source = index;
+                 emit sourceChanged( index );
+             } );
+    connect( smoothComboBox, static_cast< void ( QComboBox::* )( int ) >( &QComboBox::currentIndexChanged ), this,
+             [ this ]( int index ) {
+                 this->scope->trigger.smooth = index;
+                 emit smoothChanged( index );
+             } );
 }
 
 void TriggerDock::loadSettings( DsoSettingsScope *scope ) {

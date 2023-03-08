@@ -22,7 +22,7 @@ SelectSupportedDevice::SelectSupportedDevice( QWidget *parent ) : QDialog( paren
     ui->buttonBox->button( QDialogButtonBox::Ok )->setEnabled( false );
     qRegisterMetaType< UniqueUSBid >( "UniqueUSBid" );
 
-    connect( ui->buttonBox, &QDialogButtonBox::accepted, [ this ]() {
+    connect( ui->buttonBox, &QDialogButtonBox::accepted, this, [ this ]() {
         if ( ui->cmbDevices->currentIndex() != -1 ) {
             selectedDevice = ui->cmbDevices->currentData( Qt::UserRole ).value< UniqueUSBid >();
         }
@@ -39,7 +39,7 @@ SelectSupportedDevice::SelectSupportedDevice( QWidget *parent ) : QDialog( paren
         QDesktopServices::openUrl( url );
     } );
 
-    connect( ui->btnDemoMode, &QPushButton::clicked, [ this ]() { demoModeClicked = true; } );
+    connect( ui->btnDemoMode, &QPushButton::clicked, this, [ this ]() { demoModeClicked = true; } );
 }
 
 
@@ -82,7 +82,7 @@ std::unique_ptr< ScopeDevice > SelectSupportedDevice::showSelectDeviceModal( lib
     messageNoDevices += tr( "<hr/><p>Even without a device you can explore the program's function. "
                             "Just press the <b>Demo Mode</b> button below.</p>" );
 
-    connect( ui->cmbDevices, static_cast< void ( QComboBox::* )( int ) >( &QComboBox::currentIndexChanged ),
+    connect( ui->cmbDevices, static_cast< void ( QComboBox::* )( int ) >( &QComboBox::currentIndexChanged ), this,
              [ this, &messageDeviceReady ]( int index ) {
                  if ( index == -1 ) {
                      ui->buttonBox->button( QDialogButtonBox::Ok )->setEnabled( false );
@@ -108,7 +108,7 @@ std::unique_ptr< ScopeDevice > SelectSupportedDevice::showSelectDeviceModal( lib
 
     QTimer timer;
     timer.setInterval( 1000 );
-    connect( &timer, &QTimer::timeout, [ this, &model, &findDevices, &messageDeviceReady, &messageNoDevices, autoConnect ]() {
+    connect( &timer, &QTimer::timeout, this, [ this, &model, &findDevices, &messageDeviceReady, &messageNoDevices, autoConnect ]() {
         static int supportedDevices = -1; // max number of devices that can connect or need firmware
         static int readyDevices = -1;
         if ( findDevices->updateDeviceList() ) { // searching...
@@ -122,15 +122,15 @@ std::unique_ptr< ScopeDevice > SelectSupportedDevice::showSelectDeviceModal( lib
                 ++devices; // count devices that can connect
         }
         // printf( "%d, %d, %d devices\n", model->rowCount( QModelIndex() ), supportedDevices, devices );
-        if ( autoConnect && 1 == devices && 1 == supportedDevices ) { // only one device ready, start it without user action
+        if ( 1 == devices && 1 == supportedDevices ) { // only one device ready, start it without user action
             int mIndex = 0;
             for ( mIndex = 0; mIndex < model->rowCount( QModelIndex() ); ++mIndex ) {
                 if ( ui->cmbDevices->itemData( mIndex, Qt::UserRole + 1 ).toBool() ) // can connect
                     break;
             }
             ui->cmbDevices->setCurrentIndex( mIndex );
-            if ( ui->buttonBox->button( QDialogButtonBox::Ok )->isEnabled() ) { // if scope is ready to run
-                ui->buttonBox->button( QDialogButtonBox::Ok )->click();         // start it without user activity
+            if ( autoConnect && ui->buttonBox->button( QDialogButtonBox::Ok )->isEnabled() ) { // if scope is ready to run
+                ui->buttonBox->button( QDialogButtonBox::Ok )->click();                        // start it without user activity
             }
         } else if ( devices && model->rowCount( QModelIndex() ) ) {
             // more than 1 devices ready
@@ -145,6 +145,7 @@ std::unique_ptr< ScopeDevice > SelectSupportedDevice::showSelectDeviceModal( lib
                 ui->cmbDevices->setCurrentIndex( mIndex );
             }
         } else { // no devices found (not yet)
+            ui->buttonBox->button( QDialogButtonBox::Ok )->setEnabled( false );
             ui->labelReadyState->setText( messageNoDevices );
         }
     } );
@@ -162,8 +163,8 @@ std::unique_ptr< ScopeDevice > SelectSupportedDevice::showSelectDeviceModal( lib
 
 
 void SelectSupportedDevice::showLibUSBFailedDialogModel( int error ) {
-    ui->buttonBox->button( QDialogButtonBox::Ok )->setEnabled( false );
     ui->labelReadyState->setText( tr( "Can't initialize USB: %1" ).arg( libUsbErrorString( error ) ) );
+    ui->buttonBox->button( QDialogButtonBox::Ok )->setEnabled( false );
     show();
     QCoreApplication::instance()->exec();
     close();

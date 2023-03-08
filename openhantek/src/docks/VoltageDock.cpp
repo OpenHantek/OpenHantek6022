@@ -102,22 +102,23 @@ VoltageDock::VoltageDock( DsoSettingsScope *scope, const Dso::ControlSpecificati
             dockLayout->addWidget( b.miscComboBox, row, 2 );
         }
 
-        connect( b.gainComboBox, SELECT< int >::OVERLOAD_OF( &QComboBox::currentIndexChanged ),
+        connect( b.gainComboBox, SELECT< int >::OVERLOAD_OF( &QComboBox::currentIndexChanged ), this,
                  [ this, channel ]( unsigned index ) {
                      this->scope->voltage[ channel ].gainStepIndex = index;
                      emit gainChanged( channel, this->scope->gain( channel ) );
                  } );
-        connect( b.attnSpinBox, SELECT< int >::OVERLOAD_OF( &QSpinBox::valueChanged ), [ this, channel ]( unsigned attnValue ) {
-            this->scope->voltage[ channel ].probeAttn = attnValue;
-            setAttn( channel, attnValue );
-            emit probeAttnChanged( channel, attnValue ); // make sure to set the probe first, since this will influence the gain
-            emit gainChanged( channel, this->scope->gain( channel ) );
-        } );
-        connect( b.invertCheckBox, &QAbstractButton::toggled, [ this, channel ]( bool checked ) {
+        connect(
+            b.attnSpinBox, SELECT< int >::OVERLOAD_OF( &QSpinBox::valueChanged ), this, [ this, channel ]( unsigned attnValue ) {
+                this->scope->voltage[ channel ].probeAttn = attnValue;
+                setAttn( channel, attnValue );
+                emit probeAttnChanged( channel, attnValue ); // make sure to set the probe first, since this will influence the gain
+                emit gainChanged( channel, this->scope->gain( channel ) );
+            } );
+        connect( b.invertCheckBox, &QAbstractButton::toggled, this, [ this, channel ]( bool checked ) {
             this->scope->voltage[ channel ].inverted = checked;
             emit invertedChanged( channel, checked );
         } );
-        connect( b.miscComboBox, SELECT< int >::OVERLOAD_OF( &QComboBox::currentIndexChanged ),
+        connect( b.miscComboBox, SELECT< int >::OVERLOAD_OF( &QComboBox::currentIndexChanged ), this,
                  [ this, channel, spec, scope ]( unsigned index ) {
                      this->scope->voltage[ channel ].couplingOrMathIndex = index;
                      if ( channel < spec->channels ) { // CH1 & CH2
@@ -130,7 +131,7 @@ VoltageDock::VoltageDock( DsoSettingsScope *scope, const Dso::ControlSpecificati
                          emit usedChannelChanged( channel, Dso::mathChannelsUsed( mathMode ) );
                      }
                  } );
-        connect( b.usedCheckBox, &QCheckBox::toggled, [ this, channel ]( bool checked ) {
+        connect( b.usedCheckBox, &QCheckBox::toggled, this, [ this, channel ]( bool checked ) {
             this->scope->voltage[ channel ].used = checked;
             this->scope->voltage[ channel ].visible = checked;
             unsigned mask = 0;
