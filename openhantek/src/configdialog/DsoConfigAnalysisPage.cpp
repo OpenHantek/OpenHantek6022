@@ -10,10 +10,7 @@ DsoConfigAnalysisPage::DsoConfigAnalysisPage( DsoSettings *settings, QWidget *pa
     for ( auto wf : Dso::WindowFunctionEnum ) {
         windowFunctionStrings.append( Dso::windowFunctionString( wf ) );
     }
-
     // Initialize elements
-    dBsuffix = settings->scope.analysis.dBsuffix;
-
     windowFunctionLabel = new QLabel( tr( "Window function" ) );
     windowFunctionComboBox = new QComboBox();
     windowFunctionComboBox->addItems( windowFunctionStrings );
@@ -25,7 +22,7 @@ DsoConfigAnalysisPage::DsoConfigAnalysisPage( DsoSettings *settings, QWidget *pa
     minimumMagnitudeSpinBox->setMinimum( -100.0 );
     minimumMagnitudeSpinBox->setMaximum( 100.0 );
     minimumMagnitudeSpinBox->setValue( settings->analysis.spectrumLimit );
-    minimumMagnitudeUnitLabel = new QLabel( QString( "dB" ) + dBsuffix );
+    minimumMagnitudeUnitLabel = new QLabel( tr( "dB" ) + settings->scope.analysis.dBsuffix() );
     minimumMagnitudeLayout = new QHBoxLayout();
     minimumMagnitudeLayout->addWidget( minimumMagnitudeSpinBox );
     minimumMagnitudeLayout->addWidget( minimumMagnitudeUnitLabel );
@@ -69,7 +66,7 @@ DsoConfigAnalysisPage::DsoConfigAnalysisPage( DsoSettings *settings, QWidget *pa
 
     referenceLevelButtonLayout = new QGridLayout();
     dBVButton = new QPushButton( tr( "0 dBV" ) );
-    dBVLabel = new QLabel();
+    dBVLabel = new QLabel( tr( "<p>= 1 Vrms</p>" ) );
     dBuButton = new QPushButton( tr( "0 dBu" ) );
     dBuLabel = new QLabel( tr( "<p>= -2.2 dBV (1 mW @ 600 &Omega;)</p>" ) );
     dBmButton = new QPushButton( tr( "0 dBm" ) );
@@ -84,20 +81,17 @@ DsoConfigAnalysisPage::DsoConfigAnalysisPage( DsoSettings *settings, QWidget *pa
     connect( dBVButton, &QPushButton::clicked, referenceLevelSpinBox, [ this ]() {
         referenceLevelSpinBox->setValue( 0.0 ); // set 0 dBV = 0 dBV
         dummyLoadSpinBox->setValue( 50 );       // set RF load 50 Ohm
-        dBsuffix = "V";
-        minimumMagnitudeUnitLabel->setText( QString( "dB" ) + dBsuffix );
+        minimumMagnitudeUnitLabel->setText( tr( "dB" ) + this->settings->scope.analysis.dBsuffix( 0 ) );
     } );
     connect( dBuButton, &QPushButton::clicked, referenceLevelSpinBox, [ this ]() {
         referenceLevelSpinBox->setValue( -2.2 ); // set 0 dBu = -2.2 dBV
         dummyLoadSpinBox->setValue( 600 );       // set telco load 600 Ohm
-        dBsuffix = "u";
-        minimumMagnitudeUnitLabel->setText( QString( "dB" ) + dBsuffix );
+        minimumMagnitudeUnitLabel->setText( tr( "dB" ) + this->settings->scope.analysis.dBsuffix( 1 ) );
     } );
     connect( dBmButton, &QPushButton::clicked, referenceLevelSpinBox, [ this ]() {
         referenceLevelSpinBox->setValue( -13.0 ); // set 0 dBm = -13 dBV
         dummyLoadSpinBox->setValue( 50 );         // set RF load 50 Ohm
-        dBsuffix = "m";
-        minimumMagnitudeUnitLabel->setText( QString( "dB" ) + dBsuffix );
+        minimumMagnitudeUnitLabel->setText( tr( "dB" ) + this->settings->scope.analysis.dBsuffix( 2 ) );
     } );
 
     referenceLayout = new QGridLayout();
@@ -149,7 +143,6 @@ DsoConfigAnalysisPage::DsoConfigAnalysisPage( DsoSettings *settings, QWidget *pa
 /// \brief Saves the new settings.
 void DsoConfigAnalysisPage::saveSettings() {
     settings->scope.analysis.spectrumReference = referenceLevelSpinBox->value();
-    settings->scope.analysis.dBsuffix = dBsuffix;
     settings->analysis.spectrumWindow = Dso::WindowFunction( windowFunctionComboBox->currentIndex() );
     settings->analysis.spectrumLimit = minimumMagnitudeSpinBox->value();
     settings->analysis.reuseFftPlan = reuseFftPlanCheckBox->isChecked();

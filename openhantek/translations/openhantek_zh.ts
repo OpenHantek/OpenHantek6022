@@ -4,9 +4,8 @@
 <context>
     <name></name>
     <message>
-        <location filename="../src/usb/scopedevice.cpp" line="76"/>
         <source>Couldn&apos;t open device: %1</source>
-        <translation>无法打开设备：%1</translation>
+        <translation type="vanished">无法打开设备：%1</translation>
     </message>
 </context>
 <context>
@@ -77,17 +76,17 @@
         <translation type="vanished">勃勒克曼-纳托尔(Blackman-Nuttall)</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="110"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="104"/>
         <source>Calculate power dissipation for load resistance</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="124"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="118"/>
         <source>Show note values for audio frequencies</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="134"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="128"/>
         <source>Analysis</source>
         <translation>分析</translation>
     </message>
@@ -96,7 +95,7 @@
         <translation type="vanished">平顶</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="17"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="14"/>
         <source>Window function</source>
         <translation>FFT窗函数</translation>
     </message>
@@ -105,7 +104,7 @@
         <translation type="vanished">参考电平&lt;br/&gt;&amp;bull; 0 dBu = -2.2 dBV&lt;br/&gt;&amp;bull; 0 dBm (@600 &amp;Omega;) = -2.2 dBV&lt;br/&gt;&amp;bull; 0 dBm (@50 &amp;Omega;) = -13 dBV</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="33"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="30"/>
         <source>Optimize FFT (slower startup, but lower CPU load)</source>
         <translation type="unfinished"></translation>
     </message>
@@ -114,7 +113,7 @@
         <translation type="vanished">计算负载电阻的功耗&lt;br/&gt;(0=关闭)</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="22"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="19"/>
         <source>Minimum magnitude</source>
         <translation>最小幅值</translation>
     </message>
@@ -127,7 +126,7 @@
         <translation type="vanished">&lt;b&gt;参考电平&lt;/b&gt;&lt;br/&gt;0 dBu = -2,2 dBV&lt;br/&gt;0 dBm (@600 &amp;Omega;) = -2,2 dBV&lt;br/&gt;0 dBm (@50 &amp;Omega;) = -13 dBV</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="65"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="62"/>
         <source>dBV</source>
         <translation>dBV</translation>
     </message>
@@ -136,67 +135,80 @@
         <translation type="vanished">&lt;b&gt;最小幅值&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="43"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="40"/>
         <source>Spectrum</source>
         <translation>频谱分析</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="47"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="44"/>
         <source>Position</source>
         <translation>位置</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="49"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="46"/>
         <source>Left</source>
         <translation>左</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="50"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="47"/>
         <source>Right</source>
         <translation>右</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="56"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="53"/>
         <source>Cursors</source>
         <translation>光标</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="71"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="68"/>
         <source>0 dBV</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="73"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="69"/>
+        <source>&lt;p&gt;= 1 Vrms&lt;/p&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="70"/>
         <source>0 dBu</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="75"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="72"/>
         <source>0 dBm</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="106"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="25"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="84"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="89"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="94"/>
+        <source>dB</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="100"/>
         <source>Set Reference Level</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="74"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="71"/>
         <source>&lt;p&gt;= -2.2 dBV (1 mW @ 600 &amp;Omega;)&lt;/p&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="76"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="73"/>
         <source>&lt;p&gt;= -13 dBV (1 mW @ 50 &amp;Omega;)&lt;/p&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="116"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="110"/>
         <source>&lt;p&gt;&amp;Omega;&lt;/p&gt;</source>
         <translation>&lt;p&gt;&amp;Omega;&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="121"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="115"/>
         <source>Calculate total harmonic distortion (THD)</source>
         <translation>计算总谐波失真(THD)</translation>
     </message>
@@ -666,28 +678,46 @@
     </message>
 </context>
 <context>
+    <name>DsoSettingsScopeAnalysis</name>
+    <message>
+        <location filename="../src/scopesettings.h" line="71"/>
+        <source>V</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/scopesettings.h" line="72"/>
+        <source>u</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../src/scopesettings.h" line="73"/>
+        <source>m</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>DsoWidget</name>
     <message>
         <source>Zoom x%L1</source>
         <translation type="vanished">放大 x%L1</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="647"/>
         <location filename="../src/dsowidget.cpp" line="649"/>
-        <location filename="../src/dsowidget.cpp" line="690"/>
-        <location filename="../src/dsowidget.cpp" line="737"/>
-        <location filename="../src/dsowidget.cpp" line="746"/>
-        <location filename="../src/dsowidget.cpp" line="767"/>
+        <location filename="../src/dsowidget.cpp" line="651"/>
+        <location filename="../src/dsowidget.cpp" line="692"/>
+        <location filename="../src/dsowidget.cpp" line="739"/>
+        <location filename="../src/dsowidget.cpp" line="748"/>
+        <location filename="../src/dsowidget.cpp" line="769"/>
         <source>/div</source>
         <translation>/div</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="945"/>
+        <location filename="../src/dsowidget.cpp" line="947"/>
         <source>&lt;b&gt; OFFSET CALIBRATION &lt;/b&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="953"/>
+        <location filename="../src/dsowidget.cpp" line="955"/>
         <source>TR</source>
         <translation>TR</translation>
     </message>
@@ -697,44 +727,44 @@
         <translation>光标</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="449"/>
+        <location filename="../src/dsowidget.cpp" line="451"/>
         <source>Trace position, drag the channel name up or down</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="471"/>
+        <location filename="../src/dsowidget.cpp" line="473"/>
         <source>Trigger position, drag the arrow left or right</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="481"/>
+        <location filename="../src/dsowidget.cpp" line="483"/>
         <source>Trigger level, drag the arrow up or down</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="495"/>
+        <location filename="../src/dsowidget.cpp" line="497"/>
         <source>Measure or zoom marker &apos;1&apos; and &apos;2&apos;, drag left or right</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="592"/>
-        <location filename="../src/dsowidget.cpp" line="610"/>
+        <location filename="../src/dsowidget.cpp" line="594"/>
+        <location filename="../src/dsowidget.cpp" line="612"/>
         <source>ON</source>
         <translation>ON</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="596"/>
-        <location filename="../src/dsowidget.cpp" line="615"/>
+        <location filename="../src/dsowidget.cpp" line="598"/>
+        <location filename="../src/dsowidget.cpp" line="617"/>
         <source>OFF</source>
         <translation>OFF</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="636"/>
+        <location filename="../src/dsowidget.cpp" line="638"/>
         <source>Markers  </source>
         <translation>光标  </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="642"/>
+        <location filename="../src/dsowidget.cpp" line="644"/>
         <source>Zoom x%1  </source>
         <translation type="unfinished"></translation>
     </message>
@@ -751,7 +781,7 @@
         <translation type="vanished">放大 x%L1  </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="645"/>
+        <location filename="../src/dsowidget.cpp" line="647"/>
         <source>Zoom ---  </source>
         <translation>放大 ---  </translation>
     </message>
@@ -760,22 +790,22 @@
         <translation type="vanished">%L1%</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="718"/>
+        <location filename="../src/dsowidget.cpp" line="720"/>
         <source>%1  %2  %3  %4  %5</source>
         <translation>%1  %2  %3  %4  %5</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="888"/>
+        <location filename="../src/dsowidget.cpp" line="890"/>
         <source> on screen</source>
         <translation> on screen</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="1002"/>
+        <location filename="../src/dsowidget.cpp" line="1004"/>
         <source>pp</source>
         <translation>pp</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="1008"/>
+        <location filename="../src/dsowidget.cpp" line="1010"/>
         <source>rms</source>
         <translation>rms</translation>
     </message>
@@ -792,7 +822,7 @@
         <translation type="vanished">%1  %2  %3  %4</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="757"/>
+        <location filename="../src/dsowidget.cpp" line="759"/>
         <source>/s</source>
         <translation>/s</translation>
     </message>
@@ -2158,6 +2188,14 @@
         <location filename="../src/selectdevice/deviceslistmodel.cpp" line="25"/>
         <source>Status</source>
         <translation>状态</translation>
+    </message>
+</context>
+<context>
+    <name>ScopeDevice</name>
+    <message>
+        <location filename="../src/usb/scopedevice.cpp" line="77"/>
+        <source>Couldn&apos;t open device: %1</source>
+        <translation type="unfinished">无法打开设备：%1</translation>
     </message>
 </context>
 <context>

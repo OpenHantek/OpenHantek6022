@@ -4,9 +4,8 @@
 <context>
     <name></name>
     <message>
-        <location filename="../src/usb/scopedevice.cpp" line="76"/>
         <source>Couldn&apos;t open device: %1</source>
-        <translation>Kunde inte öppna enhet: %1</translation>
+        <translation type="vanished">Kunde inte öppna enhet: %1</translation>
     </message>
 </context>
 <context>
@@ -77,17 +76,17 @@
         <translation type="vanished">Blackman-Nuttall</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="110"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="104"/>
         <source>Calculate power dissipation for load resistance</source>
         <translation>Beräkna effektförlust för belastningsmotstånd</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="124"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="118"/>
         <source>Show note values for audio frequencies</source>
         <translation>Visa notvärden för ljudfrekvenser</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="134"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="128"/>
         <source>Analysis</source>
         <translation>Analys</translation>
     </message>
@@ -96,7 +95,7 @@
         <translation type="vanished">Platt topp</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="17"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="14"/>
         <source>Window function</source>
         <translation>Fönsterfunktion</translation>
     </message>
@@ -105,86 +104,99 @@
         <translation type="vanished">Referensnivå&lt;br/&gt;&amp;bull; 0 dBu = -2.2 dBV&lt;br/&gt;&amp;bull; 0 dBm (@600 &amp;Omega;) = -2.2 dBV&lt;br/&gt;&amp;bull; 0 dBm (@50 &amp;Omega;) = -13 dBV</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="65"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="62"/>
         <source>dBV</source>
         <translation>dBV</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="22"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="19"/>
         <source>Minimum magnitude</source>
         <translation>Minimal magnitud</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="33"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="30"/>
         <source>Optimize FFT (slower startup, but lower CPU load)</source>
         <translation>Optimera FFT (långsammare start, men lägre CPU-belastning)</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="43"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="40"/>
         <source>Spectrum</source>
         <translation>Spektrum</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="47"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="44"/>
         <source>Position</source>
         <translation>Position</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="49"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="46"/>
         <source>Left</source>
         <translation>Vänster</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="50"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="47"/>
         <source>Right</source>
         <translation>Höger</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="56"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="53"/>
         <source>Cursors</source>
         <translation>Markörer</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="71"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="68"/>
         <source>0 dBV</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="69"/>
+        <source>&lt;p&gt;= 1 Vrms&lt;/p&gt;</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="70"/>
+        <source>0 dBu</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="72"/>
+        <source>0 dBm</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="25"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="84"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="89"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="94"/>
+        <source>dB</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="100"/>
+        <source>Set Reference Level</source>
+        <translation>Ställ in referensnivå</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="71"/>
+        <source>&lt;p&gt;= -2.2 dBV (1 mW @ 600 &amp;Omega;)&lt;/p&gt;</source>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="73"/>
-        <source>0 dBu</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="75"/>
-        <source>0 dBm</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="106"/>
-        <source>Set Reference Level</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="74"/>
-        <source>&lt;p&gt;= -2.2 dBV (1 mW @ 600 &amp;Omega;)&lt;/p&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="76"/>
         <source>&lt;p&gt;= -13 dBV (1 mW @ 50 &amp;Omega;)&lt;/p&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <source>Calculate power dissipation for load resistance&lt;br/&gt;(0 = off)</source>
         <translation type="vanished">Beräkna effektförlust för lastresistans&lt;br/&gt;(0 = av)</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="116"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="110"/>
         <source>&lt;p&gt;&amp;Omega;&lt;/p&gt;</source>
         <translation>&lt;p&gt;&amp;Omega;&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="121"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="115"/>
         <source>Calculate total harmonic distortion (THD)</source>
         <translation>Beräkna total harmonisk distortion (THD)</translation>
     </message>
@@ -400,7 +412,7 @@
     <message>
         <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="63"/>
         <source>Upscale exported images</source>
-        <translation type="unfinished"></translation>
+        <translation>Öka skalan på exporterade bilder</translation>
     </message>
     <message>
         <source>Position</source>
@@ -500,9 +512,27 @@
     </message>
 </context>
 <context>
+    <name>DsoSettingsScopeAnalysis</name>
+    <message>
+        <location filename="../src/scopesettings.h" line="71"/>
+        <source>V</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../src/scopesettings.h" line="72"/>
+        <source>u</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../src/scopesettings.h" line="73"/>
+        <source>m</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
     <name>DsoWidget</name>
     <message>
-        <location filename="../src/dsowidget.cpp" line="953"/>
+        <location filename="../src/dsowidget.cpp" line="955"/>
         <source>TR</source>
         <translation>TR</translation>
     </message>
@@ -512,44 +542,44 @@
         <translation>Markörer</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="449"/>
+        <location filename="../src/dsowidget.cpp" line="451"/>
         <source>Trace position, drag the channel name up or down</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="471"/>
+        <location filename="../src/dsowidget.cpp" line="473"/>
         <source>Trigger position, drag the arrow left or right</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="481"/>
+        <location filename="../src/dsowidget.cpp" line="483"/>
         <source>Trigger level, drag the arrow up or down</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="495"/>
+        <location filename="../src/dsowidget.cpp" line="497"/>
         <source>Measure or zoom marker &apos;1&apos; and &apos;2&apos;, drag left or right</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="592"/>
-        <location filename="../src/dsowidget.cpp" line="610"/>
+        <location filename="../src/dsowidget.cpp" line="594"/>
+        <location filename="../src/dsowidget.cpp" line="612"/>
         <source>ON</source>
         <translation>PÅ</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="596"/>
-        <location filename="../src/dsowidget.cpp" line="615"/>
+        <location filename="../src/dsowidget.cpp" line="598"/>
+        <location filename="../src/dsowidget.cpp" line="617"/>
         <source>OFF</source>
         <translation>AV</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="636"/>
+        <location filename="../src/dsowidget.cpp" line="638"/>
         <source>Markers  </source>
         <translation>Markörer  </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="642"/>
+        <location filename="../src/dsowidget.cpp" line="644"/>
         <source>Zoom x%1  </source>
         <translation></translation>
     </message>
@@ -566,22 +596,22 @@
         <translation type="vanished">Zoom x%L1  </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="645"/>
+        <location filename="../src/dsowidget.cpp" line="647"/>
         <source>Zoom ---  </source>
         <translation>Zoom ---  </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="647"/>
         <location filename="../src/dsowidget.cpp" line="649"/>
-        <location filename="../src/dsowidget.cpp" line="690"/>
-        <location filename="../src/dsowidget.cpp" line="737"/>
-        <location filename="../src/dsowidget.cpp" line="746"/>
-        <location filename="../src/dsowidget.cpp" line="767"/>
+        <location filename="../src/dsowidget.cpp" line="651"/>
+        <location filename="../src/dsowidget.cpp" line="692"/>
+        <location filename="../src/dsowidget.cpp" line="739"/>
+        <location filename="../src/dsowidget.cpp" line="748"/>
+        <location filename="../src/dsowidget.cpp" line="769"/>
         <source>/div</source>
         <translation>/div</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="945"/>
+        <location filename="../src/dsowidget.cpp" line="947"/>
         <source>&lt;b&gt; OFFSET CALIBRATION &lt;/b&gt;</source>
         <translation type="unfinished"></translation>
     </message>
@@ -590,27 +620,27 @@
         <translation type="vanished">%L1%</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="718"/>
+        <location filename="../src/dsowidget.cpp" line="720"/>
         <source>%1  %2  %3  %4  %5</source>
         <translation>%1  %2  %3  %4  %5</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="757"/>
+        <location filename="../src/dsowidget.cpp" line="759"/>
         <source>/s</source>
         <translation>/s</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="888"/>
+        <location filename="../src/dsowidget.cpp" line="890"/>
         <source> on screen</source>
         <translation> på skärm</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="1002"/>
+        <location filename="../src/dsowidget.cpp" line="1004"/>
         <source>pp</source>
         <translation>pp</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="1008"/>
+        <location filename="../src/dsowidget.cpp" line="1010"/>
         <source>rms</source>
         <translation>rms</translation>
     </message>
@@ -1373,7 +1403,7 @@
     <message>
         <location filename="../src/utils/printutils.cpp" line="66"/>
         <source>%1 dB</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/utils/printutils.cpp" line="74"/>
@@ -1495,77 +1525,77 @@
     <message>
         <location filename="../src/hantekdso/mathmodes.cpp" line="34"/>
         <source>CH1 + CH2</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/hantekdso/mathmodes.cpp" line="36"/>
         <source>CH1 - CH2</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/hantekdso/mathmodes.cpp" line="38"/>
         <source>CH2 - CH1</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/hantekdso/mathmodes.cpp" line="40"/>
         <source>CH1 * CH2</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/hantekdso/mathmodes.cpp" line="42"/>
         <source>CH1 &amp; CH2</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/hantekdso/mathmodes.cpp" line="44"/>
         <source>/CH1 &amp; /CH2</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/hantekdso/mathmodes.cpp" line="46"/>
         <source>/CH1 &amp; CH2</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/hantekdso/mathmodes.cpp" line="48"/>
         <source>CH1 &amp; /CH2</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/hantekdso/mathmodes.cpp" line="50"/>
         <source>CH1 == CH2</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/hantekdso/mathmodes.cpp" line="52"/>
         <source>CH1 LP10</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/hantekdso/mathmodes.cpp" line="54"/>
         <source>CH2 LP10</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/hantekdso/mathmodes.cpp" line="56"/>
         <source>CH1 LP100</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/hantekdso/mathmodes.cpp" line="58"/>
         <source>CH2 LP100</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/hantekdso/mathmodes.cpp" line="60"/>
         <source>CH1²</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/hantekdso/mathmodes.cpp" line="62"/>
         <source>CH2²</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/hantekdso/mathmodes.cpp" line="64"/>
@@ -1590,42 +1620,42 @@
     <message>
         <location filename="../src/hantekdso/mathmodes.cpp" line="72"/>
         <source>CH1 Abs</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/hantekdso/mathmodes.cpp" line="74"/>
         <source>CH2 Abs</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/hantekdso/mathmodes.cpp" line="76"/>
         <source>CH1 Sign</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/hantekdso/mathmodes.cpp" line="78"/>
         <source>CH2 Sign</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/hantekdso/mathmodes.cpp" line="80"/>
         <source>CH1 AC Sign</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/hantekdso/mathmodes.cpp" line="82"/>
         <source>CH2 AC Sign</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/hantekdso/mathmodes.cpp" line="84"/>
         <source>CH1 Trigger</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/hantekdso/mathmodes.cpp" line="86"/>
         <source>CH2 Trigger</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/post/analysissettings.cpp" line="19"/>
@@ -1762,6 +1792,14 @@
     </message>
 </context>
 <context>
+    <name>ScopeDevice</name>
+    <message>
+        <location filename="../src/usb/scopedevice.cpp" line="77"/>
+        <source>Couldn&apos;t open device: %1</source>
+        <translation>Kunde inte öppna enhet: %1</translation>
+    </message>
+</context>
+<context>
     <name>SelectSupportedDevice</name>
     <message>
         <location filename="../src/selectdevice/selectsupporteddevice.ui" line="14"/>
@@ -1831,7 +1869,7 @@
     <message>
         <location filename="../src/selectdevice/selectsupporteddevice.cpp" line="168"/>
         <source>Can&apos;t initialize USB: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Kan inte initialisera USB: %1</translation>
     </message>
     <message>
         <source>Can&apos;t initalize USB: %1</source>

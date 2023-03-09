@@ -248,8 +248,8 @@ void DsoSettings::load() {
     storeSettings->beginGroup( "analysis" );
     if ( storeSettings->contains( "spectrumReference" ) )
         scope.analysis.spectrumReference = storeSettings->value( "spectrumReference" ).toDouble();
-    if ( storeSettings->contains( "dBsuffix" ) )
-        scope.analysis.dBsuffix = storeSettings->value( "dBsuffix" ).toString();
+    if ( storeSettings->contains( "dBsuffixIndex" ) )
+        scope.analysis.dBsuffixIndex = storeSettings->value( "dBsuffixIndex" ).toInt();
     if ( storeSettings->contains( "calculateDummyLoad" ) )
         scope.analysis.calculateDummyLoad = storeSettings->value( "calculateDummyLoad" ).toBool();
     if ( storeSettings->contains( "dummyLoad" ) )
@@ -439,7 +439,7 @@ void DsoSettings::save() {
     // Analysis
     storeSettings->beginGroup( "analysis" );
     storeSettings->setValue( "spectrumReference", scope.analysis.spectrumReference );
-    storeSettings->setValue( "dBsuffix", scope.analysis.dBsuffix );
+    storeSettings->setValue( "dBsuffixIndex", scope.analysis.dBsuffixIndex );
     storeSettings->setValue( "calculateDummyLoad", scope.analysis.calculateDummyLoad );
     storeSettings->setValue( "dummyLoad", scope.analysis.dummyLoad );
     storeSettings->setValue( "calculateTHD", scope.analysis.calculateTHD );

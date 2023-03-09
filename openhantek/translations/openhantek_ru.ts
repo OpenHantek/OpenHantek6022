@@ -4,9 +4,8 @@
 <context>
     <name></name>
     <message>
-        <location filename="../src/usb/scopedevice.cpp" line="76"/>
         <source>Couldn&apos;t open device: %1</source>
-        <translation>Невозможно открыть устройство: %1</translation>
+        <translation type="vanished">Невозможно открыть устройство: %1</translation>
     </message>
 </context>
 <context>
@@ -77,12 +76,12 @@
         <translation type="vanished">Блэкмана-Наталла</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="124"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="118"/>
         <source>Show note values for audio frequencies</source>
         <translation>Показывать значения нот для звуковых частот</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="134"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="128"/>
         <source>Analysis</source>
         <translation>Анализ</translation>
     </message>
@@ -95,7 +94,7 @@
         <translation type="vanished">С плоской вершиной</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="17"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="14"/>
         <source>Window function</source>
         <translation>Оконная функция</translation>
     </message>
@@ -105,7 +104,7 @@
         <translation type="vanished">Опорный уровень&lt;br/&gt;&amp;bull; 0 дБн = -2.2 дБВ&lt;br/&gt;&amp;bull; 0 дБм (@600 &amp;Omega;) = -2.2 дБВ&lt;br/&gt;&amp;bull; 0 дБм (@50 &amp;Omega;) = -13 дБВ</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="33"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="30"/>
         <source>Optimize FFT (slower startup, but lower CPU load)</source>
         <translation>Оптимизировать FFT (медленнее запуск, но ниже загрузка ЦП)</translation>
     </message>
@@ -114,7 +113,7 @@
         <translation type="vanished">Рассчитать рассеиваемую мощность для сопротивления нагрузки&lt;br/&gt;(0 = выкл)</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="22"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="19"/>
         <source>Minimum magnitude</source>
         <translation>Минимальная величина</translation>
     </message>
@@ -127,7 +126,7 @@
         <translation type="vanished">&lt;b&gt;Опорный уровень&lt;/b&gt;&lt;br/&gt;0 дБн = -2,2 дБВ&lt;br/&gt;0 дБм (@600 &amp;Omega;) = -2,2 дБВ&lt;br/&gt;0 дБм (@50 &amp;Omega;) = -13 дБВ</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="65"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="62"/>
         <source>dBV</source>
         <translation>дБВ</translation>
     </message>
@@ -136,7 +135,7 @@
         <translation type="vanished">&lt;b&gt;Минимальная величина&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="43"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="40"/>
         <source>Spectrum</source>
         <translation>Спектр</translation>
     </message>
@@ -145,67 +144,92 @@
         <translation type="vanished">Рассчитать рассеиваемую мощность для сопротивления нагрузки&lt;br/&gt;0 = выкл</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="121"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="115"/>
         <source>Calculate total harmonic distortion (THD)</source>
         <translation>Расчёт суммарного коэффициента гармонических искажений (THD)</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="110"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="104"/>
         <source>Calculate power dissipation for load resistance</source>
         <translation>Рассчитывать рассеиваемую мощность для резистивной нагрузки</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="47"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="44"/>
         <source>Position</source>
         <translation>Положение</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="49"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="46"/>
         <source>Left</source>
         <translation>Слева</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="50"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="47"/>
         <source>Right</source>
         <translation>Справа</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="56"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="53"/>
         <source>Cursors</source>
         <translation>Курсоры</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="71"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="68"/>
         <source>0 dBV</source>
         <translation>0 дБВ</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="73"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="69"/>
+        <source>&lt;p&gt;= 1 Vrms&lt;/p&gt;</source>
+        <translation>&lt;p&gt;= 1 Вскз&lt;/p&gt;</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="70"/>
         <source>0 dBu</source>
         <translation>0 дБu</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="75"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="72"/>
         <source>0 dBm</source>
         <translation>0 дБм</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="106"/>
+        <source>V</source>
+        <translation type="vanished">В</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="25"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="84"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="89"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="94"/>
+        <source>dB</source>
+        <translation>дБ</translation>
+    </message>
+    <message>
+        <source>u</source>
+        <translation type="vanished">u</translation>
+    </message>
+    <message>
+        <source>m</source>
+        <translation type="vanished">м</translation>
+    </message>
+    <message>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="100"/>
         <source>Set Reference Level</source>
         <translation>Установите опорный уровень</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="74"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="71"/>
         <source>&lt;p&gt;= -2.2 dBV (1 mW @ 600 &amp;Omega;)&lt;/p&gt;</source>
         <translation>&lt;p&gt;= -2,2 дБВ (1 мВт @ 600 &amp;Omega;)&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="76"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="73"/>
         <source>&lt;p&gt;= -13 dBV (1 mW @ 50 &amp;Omega;)&lt;/p&gt;</source>
         <translation>&lt;p&gt;= -13 дБВ (1 мВт @ 50 &amp;Omega;)&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="116"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="110"/>
         <source>&lt;p&gt;&amp;Omega;&lt;/p&gt;</source>
         <translation>&lt;p&gt;&amp;Omega;&lt;/p&gt;</translation>
     </message>
@@ -620,19 +644,37 @@
     </message>
 </context>
 <context>
+    <name>DsoSettingsScopeAnalysis</name>
+    <message>
+        <location filename="../src/scopesettings.h" line="71"/>
+        <source>V</source>
+        <translation>В</translation>
+    </message>
+    <message>
+        <location filename="../src/scopesettings.h" line="72"/>
+        <source>u</source>
+        <translation>u</translation>
+    </message>
+    <message>
+        <location filename="../src/scopesettings.h" line="73"/>
+        <source>m</source>
+        <translation>м</translation>
+    </message>
+</context>
+<context>
     <name>DsoWidget</name>
     <message>
-        <location filename="../src/dsowidget.cpp" line="647"/>
         <location filename="../src/dsowidget.cpp" line="649"/>
-        <location filename="../src/dsowidget.cpp" line="690"/>
-        <location filename="../src/dsowidget.cpp" line="737"/>
-        <location filename="../src/dsowidget.cpp" line="746"/>
-        <location filename="../src/dsowidget.cpp" line="767"/>
+        <location filename="../src/dsowidget.cpp" line="651"/>
+        <location filename="../src/dsowidget.cpp" line="692"/>
+        <location filename="../src/dsowidget.cpp" line="739"/>
+        <location filename="../src/dsowidget.cpp" line="748"/>
+        <location filename="../src/dsowidget.cpp" line="769"/>
         <source>/div</source>
         <translation>/дел</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="953"/>
+        <location filename="../src/dsowidget.cpp" line="955"/>
         <source>TR</source>
         <translation>ТР</translation>
     </message>
@@ -642,44 +684,44 @@
         <translation>Маркеры</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="449"/>
+        <location filename="../src/dsowidget.cpp" line="451"/>
         <source>Trace position, drag the channel name up or down</source>
         <translation>Развёртка канала, двигай название вверх или вниз</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="471"/>
+        <location filename="../src/dsowidget.cpp" line="473"/>
         <source>Trigger position, drag the arrow left or right</source>
         <translation>Позиция триггера, двигай указатель влево или вправо</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="481"/>
+        <location filename="../src/dsowidget.cpp" line="483"/>
         <source>Trigger level, drag the arrow up or down</source>
         <translation>Уровень триггера, двигай указатель вверх или вниз</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="495"/>
+        <location filename="../src/dsowidget.cpp" line="497"/>
         <source>Measure or zoom marker &apos;1&apos; and &apos;2&apos;, drag left or right</source>
         <translation>Измерь или увеличь маркер &apos;1&apos; и &apos;2&apos;, двигай влево или вправо</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="592"/>
-        <location filename="../src/dsowidget.cpp" line="610"/>
+        <location filename="../src/dsowidget.cpp" line="594"/>
+        <location filename="../src/dsowidget.cpp" line="612"/>
         <source>ON</source>
         <translation>ВКЛ</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="596"/>
-        <location filename="../src/dsowidget.cpp" line="615"/>
+        <location filename="../src/dsowidget.cpp" line="598"/>
+        <location filename="../src/dsowidget.cpp" line="617"/>
         <source>OFF</source>
         <translation>ВЫКЛ</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="636"/>
+        <location filename="../src/dsowidget.cpp" line="638"/>
         <source>Markers  </source>
         <translation>Маркеры  </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="642"/>
+        <location filename="../src/dsowidget.cpp" line="644"/>
         <source>Zoom x%1  </source>
         <translation>Увел.x%1  </translation>
     </message>
@@ -696,7 +738,7 @@
         <translation type="vanished">Увел.x%L1</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="645"/>
+        <location filename="../src/dsowidget.cpp" line="647"/>
         <source>Zoom ---  </source>
         <translation>Увел.---  </translation>
     </message>
@@ -705,32 +747,32 @@
         <translation type="vanished">%L1%</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="718"/>
+        <location filename="../src/dsowidget.cpp" line="720"/>
         <source>%1  %2  %3  %4  %5</source>
         <translation>%1  %2  %3  %4  %5</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="757"/>
+        <location filename="../src/dsowidget.cpp" line="759"/>
         <source>/s</source>
         <translation>/с</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="888"/>
+        <location filename="../src/dsowidget.cpp" line="890"/>
         <source> on screen</source>
         <translation> на экране</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="945"/>
+        <location filename="../src/dsowidget.cpp" line="947"/>
         <source>&lt;b&gt; OFFSET CALIBRATION &lt;/b&gt;</source>
         <translation>&lt;b&gt; КАЛИБРОВКА СМЕЩЕНИЯ &lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="1002"/>
+        <location filename="../src/dsowidget.cpp" line="1004"/>
         <source>pp</source>
         <translation>пп</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="1008"/>
+        <location filename="../src/dsowidget.cpp" line="1010"/>
         <source>rms</source>
         <translation>скз</translation>
     </message>
@@ -2012,6 +2054,14 @@
     </message>
 </context>
 <context>
+    <name>ScopeDevice</name>
+    <message>
+        <location filename="../src/usb/scopedevice.cpp" line="77"/>
+        <source>Couldn&apos;t open device: %1</source>
+        <translation>Невозможно открыть устройство: %1</translation>
+    </message>
+</context>
+<context>
     <name>SelectSupportedDevice</name>
     <message>
         <location filename="../src/selectdevice/selectsupporteddevice.ui" line="14"/>
@@ -2206,6 +2256,13 @@
     </message>
 </context>
 <context>
+    <name>UploadFirmware</name>
+    <message>
+        <source>V</source>
+        <translation type="obsolete">В</translation>
+    </message>
+</context>
+<context>
     <name>VoltageDock</name>
     <message>
         <location filename="../src/docks/VoltageDock.cpp" line="26"/>
@@ -2344,6 +2401,13 @@
         <location filename="../src/main.cpp" line="191"/>
         <source>Level</source>
         <translation>Уровень</translation>
+    </message>
+</context>
+<context>
+    <name>scopesettings.h</name>
+    <message>
+        <source>V</source>
+        <translation type="obsolete">В</translation>
     </message>
 </context>
 </TS>

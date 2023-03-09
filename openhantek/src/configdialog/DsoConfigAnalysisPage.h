@@ -47,7 +47,6 @@ class DsoConfigAnalysisPage : public QWidget {
     QLabel *dBmLabel;
     QGridLayout *referenceLevelButtonLayout;
     QDoubleSpinBox *referenceLevelSpinBox;
-    QString dBsuffix = "V";
     QLabel *referenceLevelUnitLabel;
     QHBoxLayout *referenceLevelLayout;
 

@@ -46,26 +46,26 @@ DsoWidget::DsoWidget( DsoSettingsScope *scope, DsoSettingsView *view, const Dso:
     setupSliders( zoomSliders );
 
     // movement of the two vertical markers "1" and "2"
-    connect( mainScope, &GlScope::markerMoved, [ this ]( int cursorIndex, int marker ) {
+    connect( mainScope, &GlScope::markerMoved, mainScope, [ this ]( int cursorIndex, int marker ) {
         mainSliders.markerSlider->setValue( marker, this->scope->getMarker( marker ) );
         mainScope->updateCursor( cursorIndex );
         zoomScope->updateCursor( cursorIndex );
     } );
-    connect( zoomScope, &GlScope::markerMoved, [ this ]( int cursorIndex, int marker ) {
+    connect( zoomScope, &GlScope::markerMoved, mainScope, [ this ]( int cursorIndex, int marker ) {
         mainSliders.markerSlider->setValue( int( marker ), this->scope->getMarker( marker ) );
         mainScope->updateCursor( cursorIndex );
         zoomScope->updateCursor( cursorIndex );
     } );
 
     // do cursor measurement when right button pressed/moved _inside_ window borders
-    connect( mainScope, &GlScope::cursorMeasurement, [ this ]( QPointF mPos, QPoint gPos, bool status ) {
+    connect( mainScope, &GlScope::cursorMeasurement, this, [ this ]( QPointF mPos, QPoint gPos, bool status ) {
         cursorMeasurementPosition = mPos;
         cursorGlobalPosition = gPos;
         cursorMeasurementValid = status;
         if ( !status )
             showCursorMessage(); // switch off
     } );
-    connect( zoomScope, &GlScope::cursorMeasurement, [ this ]( QPointF mPos, QPoint gPos, bool status ) {
+    connect( zoomScope, &GlScope::cursorMeasurement, this, [ this ]( QPointF mPos, QPoint gPos, bool status ) {
         cursorMeasurementPosition = mPos;
         cursorGlobalPosition = gPos;
         cursorMeasurementValid = status;
@@ -200,13 +200,13 @@ DsoWidget::DsoWidget( DsoSettingsScope *scope, DsoSettingsView *view, const Dso:
     }
     cursorDataGrid->selectItem( 0 );
 
-    connect( cursorDataGrid, &DataGrid::itemSelected, [ this ]( int index ) {
+    connect( cursorDataGrid, &DataGrid::itemSelected, mainScope, [ this ]( int index ) {
         mainScope->selectCursor( index );
         zoomScope->selectCursor( index );
         updateItem( ChannelID( index ), true );
     } );
 
-    connect( cursorDataGrid, &DataGrid::itemUpdated, [ this ]( int index ) { updateItem( ChannelID( index ) ); } );
+    connect( cursorDataGrid, &DataGrid::itemUpdated, this, [ this ]( int index ) { updateItem( ChannelID( index ) ); } );
 
     scope->horizontal.cursor.shape = DsoSettingsScopeCursor::VERTICAL;
 
@@ -268,11 +268,11 @@ DsoWidget::DsoWidget( DsoSettingsScope *scope, DsoSettingsView *view, const Dso:
     connect( mainSliders.voltageOffsetSlider, &LevelSlider::valueChanged, this, &DsoWidget::updateOffset );
     connect( zoomSliders.voltageOffsetSlider, &LevelSlider::valueChanged, this, &DsoWidget::updateOffset );
 
-    connect( mainSliders.triggerPositionSlider, &LevelSlider::valueChanged,
+    connect( mainSliders.triggerPositionSlider, &LevelSlider::valueChanged, this,
              [ this ]( int index, double value, bool pressed, QPoint globalPos ) {
                  updateTriggerPosition( index, value, pressed, globalPos, true );
              } );
-    connect( zoomSliders.triggerPositionSlider, &LevelSlider::valueChanged,
+    connect( zoomSliders.triggerPositionSlider, &LevelSlider::valueChanged, this,
              [ this ]( int index, double value, bool pressed, QPoint globalPos ) {
                  updateTriggerPosition( index, value, pressed, globalPos, false );
              } );
@@ -281,14 +281,16 @@ DsoWidget::DsoWidget( DsoSettingsScope *scope, DsoSettingsView *view, const Dso:
     connect( zoomSliders.triggerLevelSlider, &LevelSlider::valueChanged, this, &DsoWidget::updateTriggerLevel );
 
     // show a horizontal level line as long as the trigger level slider is active
-    connect( mainSliders.triggerLevelSlider, &LevelSlider::valueChanged, [ this ]( int index, double value, bool pressed ) {
-        mainScope->generateGrid( index, value, pressed );
-        zoomScope->generateGrid( index, value, pressed );
-    } );
-    connect( zoomSliders.triggerLevelSlider, &LevelSlider::valueChanged, [ this ]( int index, double value, bool pressed ) {
-        mainScope->generateGrid( index, value, pressed );
-        zoomScope->generateGrid( index, value, pressed );
-    } );
+    connect( mainSliders.triggerLevelSlider, &LevelSlider::valueChanged, mainScope,
+             [ this ]( int index, double value, bool pressed ) {
+                 mainScope->generateGrid( index, value, pressed );
+                 zoomScope->generateGrid( index, value, pressed );
+             } );
+    connect( zoomSliders.triggerLevelSlider, &LevelSlider::valueChanged, mainScope,
+             [ this ]( int index, double value, bool pressed ) {
+                 mainScope->generateGrid( index, value, pressed );
+                 zoomScope->generateGrid( index, value, pressed );
+             } );
 
     connect( mainSliders.markerSlider, &LevelSlider::valueChanged, [ this ]( int index, double value ) {
         updateMarker( unsigned( index ), value );
@@ -610,7 +612,7 @@ void DsoWidget::updateMarkerDetails() {
                     unsigned( index ), true, tr( "ON" ),
                     valueToString( fabs( p1.x() - p0.x() ) * scope->horizontal.frequencybase, UNIT_HERTZ, 4 ),
                     valueToString( fabs( p1.y() - p0.y() ) * scope->spectrum[ channel ].magnitude, UNIT_DECIBEL, 4 ) +
-                        scope->analysis.dBsuffix );
+                        scope->analysis.dBsuffix() );
             } else {
                 cursorDataGrid->updateInfo( unsigned( index ), true, tr( "OFF" ), "", "" );
             }
@@ -995,7 +997,7 @@ void DsoWidget::showNew( std::shared_ptr< PPresult > analysedData ) {
                     if ( mCursor > data->dBmin - 0.2 * scope->spectrum[ channel ].magnitude &&
                          mCursor <= data->dBmax + 0.2 * scope->spectrum[ channel ].magnitude )
                         mStr += '\t' + scope->spectrum[ channel ].name + ": " + valueToString( mCursor, UNIT_DECIBEL, 3 ) +
-                                scope->analysis.dBsuffix;
+                                scope->analysis.dBsuffix();
                 }
             }
             // Vpp Amplitude string representation (3 significant digits)
@@ -1007,7 +1009,7 @@ void DsoWidget::showNew( std::shared_ptr< PPresult > analysedData ) {
             // RMS Amplitude string representation (3 significant digits)
             measurementRMSLabel[ channel ]->setText( valueToString( data->rms, voltageUnit, 3 ) + tr( "rms" ) );
             // dB Amplitude string representation (3 significant digits)
-            measurementdBLabel[ channel ]->setText( valueToString( data->dB, UNIT_DECIBEL, 3 ) + scope->analysis.dBsuffix );
+            measurementdBLabel[ channel ]->setText( valueToString( data->dB, UNIT_DECIBEL, 3 ) + scope->analysis.dBsuffix() );
             // Frequency string representation (3 significant digits)
             measurementFrequencyLabel[ channel ]->setText( valueToString( data->frequency, UNIT_HERTZ, 4 ) );
             // Frequency note representation
