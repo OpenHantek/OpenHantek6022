@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>600</width>
-    <height>400</height>
+    <height>320</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,42 +17,6 @@
    <item>
     <widget class="QFrame" name="frame">
      <layout class="QGridLayout" name="gridLayout">
-      <item row="0" column="0">
-       <widget class="QLabel" name="label">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="text">
-         <string>Devices:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QLabel" name="labelSupportedDevices">
-        <property name="text">
-         <string>...</string>
-        </property>
-        <property name="wordWrap">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="0" colspan="2">
-       <widget class="QLabel" name="labelReadyState">
-        <property name="text">
-         <string>...</string>
-        </property>
-        <property name="wordWrap">
-         <bool>true</bool>
-        </property>
-        <property name="openExternalLinks">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
       <item row="4" column="0" colspan="2">
        <spacer name="verticalSpacer">
         <property name="orientation">
@@ -69,10 +33,39 @@
       <item row="1" column="0" colspan="2">
        <widget class="QComboBox" name="cmbDevices"/>
       </item>
-      <item row="5" column="0" colspan="2">
-       <widget class="QPushButton" name="btnDemoMode">
+      <item row="3" column="0" colspan="2">
+       <widget class="QLabel" name="labelReadyState">
         <property name="text">
-         <string>Demo Mode</string>
+         <string>...</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+        <property name="openExternalLinks">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLabel" name="labelSupportedDevices">
+        <property name="text">
+         <string>...</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="label">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>Devices:</string>
         </property>
        </widget>
       </item>
@@ -122,22 +115,6 @@
     <hint type="destinationlabel">
      <x>286</x>
      <y>274</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>btnDemoMode</sender>
-   <signal>clicked()</signal>
-   <receiver>SelectSupportedDevice</receiver>
-   <slot>accept()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>232</x>
-     <y>332</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>-10</x>
-     <y>316</y>
     </hint>
    </hints>
   </connection>

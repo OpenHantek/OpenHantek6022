@@ -20,6 +20,8 @@
 SelectSupportedDevice::SelectSupportedDevice( QWidget *parent ) : QDialog( parent ), ui( new Ui::SelectSupportedDevice ) {
     ui->setupUi( this );
     ui->buttonBox->button( QDialogButtonBox::Ok )->setEnabled( false );
+    btnDemoMode = new QPushButton( tr( "Demo Mode" ) );
+    ui->buttonBox->addButton( btnDemoMode, QDialogButtonBox::AcceptRole );
     qRegisterMetaType< UniqueUSBid >( "UniqueUSBid" );
 
     connect( ui->buttonBox, &QDialogButtonBox::accepted, this, [ this ]() {
@@ -39,7 +41,7 @@ SelectSupportedDevice::SelectSupportedDevice( QWidget *parent ) : QDialog( paren
         QDesktopServices::openUrl( url );
     } );
 
-    connect( ui->btnDemoMode, &QPushButton::clicked, this, [ this ]() { demoModeClicked = true; } );
+    connect( btnDemoMode, &QPushButton::clicked, this, [ this ]() { demoModeClicked = true; } );
 }
 
 

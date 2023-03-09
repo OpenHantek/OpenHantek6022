@@ -35,4 +35,5 @@ class SelectSupportedDevice : public QDialog {
     UniqueUSBid selectedDevice = 0;
     bool demoModeClicked = false;
     int verboseLevel = 0;
+    QPushButton *btnDemoMode;
 };
