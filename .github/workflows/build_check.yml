@@ -107,7 +107,7 @@ jobs:
         make -j12
         sudo make -j12 package
         if test -d openhantek/OpenHantek.app; then
-          export PATH=${Qt5_DIR}/bin:${PATH}
+          export PATH=$(brew --prefix qt5)/bin:${PATH}
           cd openhantek
           macdeployqt OpenHantek.app -always-overwrite -verbose=1
           python ../../utils/macdeployqtfix/macdeployqtfix.py \
