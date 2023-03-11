@@ -76,12 +76,12 @@
         <translation type="vanished">Blackman-Nuttall</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="118"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="122"/>
         <source>Show note values for audio frequencies</source>
         <translation>Zeige Notenwerte für Audio-Frequenzen</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="128"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="132"/>
         <source>Analysis</source>
         <translation>Analyse</translation>
     </message>
@@ -143,12 +143,12 @@
         <translation type="vanished">Berechne Leistung für Lastwiderstand&lt;br/&gt;0 = aus</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="115"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="119"/>
         <source>Calculate total harmonic distortion (THD)</source>
         <translation>Berechne die harmonische Gesamtverzerrung (THD)</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="104"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="108"/>
         <source>Calculate power dissipation for load resistance</source>
         <translation>Berechne Leistung für Lastwiderstand</translation>
     </message>
@@ -173,17 +173,17 @@
         <translation>Cursor</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="68"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="69"/>
         <source>0 dBV</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="69"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="70"/>
         <source>&lt;p&gt;= 1 Vrms&lt;/p&gt;</source>
         <translation>&lt;p&gt;= 1 Vrms&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="70"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="71"/>
         <source>0 dBu</source>
         <translation></translation>
     </message>
@@ -196,35 +196,35 @@
         <translation type="vanished">Setze 0 dBu</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="71"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="72"/>
         <source>&lt;p&gt;= -2.2 dBV (1 mW @ 600 &amp;Omega;)&lt;/p&gt;</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="72"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="73"/>
         <source>0 dBm</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="73"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="74"/>
         <source>&lt;p&gt;= -13 dBV (1 mW @ 50 &amp;Omega;)&lt;/p&gt;</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="25"/>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="84"/>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="89"/>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="94"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="86"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="92"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="98"/>
         <source>dB</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="100"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="104"/>
         <source>Set Reference Level</source>
         <translation>Setze Referenzpegel</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="110"/>
+        <location filename="../src/configdialog/DsoConfigAnalysisPage.cpp" line="114"/>
         <source>&lt;p&gt;&amp;Omega;&lt;/p&gt;</source>
         <translation></translation>
     </message>

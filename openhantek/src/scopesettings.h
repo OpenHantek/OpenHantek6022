@@ -71,11 +71,15 @@ struct DsoSettingsScopeAnalysis {
     QString dBsuffixStrings[ 3 ] = { QCoreApplication::translate( "DsoSettingsScopeAnalysis", "V" ),
                                      QCoreApplication::translate( "DsoSettingsScopeAnalysis", "u" ),
                                      QCoreApplication::translate( "DsoSettingsScopeAnalysis", "m" ) };
-    int dBsuffixIndex = 0;               // dBV is default
-    QString dBsuffix( int index = -1 ) { // default is invalid -> keep old index
-        if ( index >= 0 && index < 3 )   // valid suffix index
-            dBsuffixIndex = index;       // set new index
+    int dBsuffixIndex = 0; // dBV is default
+    QString dBsuffix() {   // use current index
         return dBsuffixStrings[ dBsuffixIndex ];
+    };
+    QString dBsuffix( int index ) {
+        if ( index >= 0 && index < 3 )       // valid suffix index
+            return dBsuffixStrings[ index ]; // show this value
+        else
+            return QString();
     };
     bool calculateTHD = false;
     bool showNoteValue = false;

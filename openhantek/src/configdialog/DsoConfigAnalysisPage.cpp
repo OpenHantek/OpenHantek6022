@@ -64,6 +64,7 @@ DsoConfigAnalysisPage::DsoConfigAnalysisPage( DsoSettings *settings, QWidget *pa
     referenceLevelLayout->addWidget( referenceLevelSpinBox );
     referenceLevelLayout->addWidget( referenceLevelUnitLabel );
 
+    dBsuffixIndex = settings->scope.analysis.dBsuffixIndex;
     referenceLevelButtonLayout = new QGridLayout();
     dBVButton = new QPushButton( tr( "0 dBV" ) );
     dBVLabel = new QLabel( tr( "<p>= 1 Vrms</p>" ) );
@@ -81,17 +82,20 @@ DsoConfigAnalysisPage::DsoConfigAnalysisPage( DsoSettings *settings, QWidget *pa
     connect( dBVButton, &QPushButton::clicked, referenceLevelSpinBox, [ this ]() {
         referenceLevelSpinBox->setValue( 0.0 ); // set 0 dBV = 0 dBV
         dummyLoadSpinBox->setValue( 50 );       // set RF load 50 Ohm
-        minimumMagnitudeUnitLabel->setText( tr( "dB" ) + this->settings->scope.analysis.dBsuffix( 0 ) );
+        dBsuffixIndex = 0;
+        minimumMagnitudeUnitLabel->setText( tr( "dB" ) + this->settings->scope.analysis.dBsuffix( dBsuffixIndex ) );
     } );
     connect( dBuButton, &QPushButton::clicked, referenceLevelSpinBox, [ this ]() {
         referenceLevelSpinBox->setValue( -2.2 ); // set 0 dBu = -2.2 dBV
         dummyLoadSpinBox->setValue( 600 );       // set telco load 600 Ohm
-        minimumMagnitudeUnitLabel->setText( tr( "dB" ) + this->settings->scope.analysis.dBsuffix( 1 ) );
+        dBsuffixIndex = 1;
+        minimumMagnitudeUnitLabel->setText( tr( "dB" ) + this->settings->scope.analysis.dBsuffix( dBsuffixIndex ) );
     } );
     connect( dBmButton, &QPushButton::clicked, referenceLevelSpinBox, [ this ]() {
         referenceLevelSpinBox->setValue( -13.0 ); // set 0 dBm = -13 dBV
         dummyLoadSpinBox->setValue( 50 );         // set RF load 50 Ohm
-        minimumMagnitudeUnitLabel->setText( tr( "dB" ) + this->settings->scope.analysis.dBsuffix( 2 ) );
+        dBsuffixIndex = 2;
+        minimumMagnitudeUnitLabel->setText( tr( "dB" ) + this->settings->scope.analysis.dBsuffix( dBsuffixIndex ) );
     } );
 
     referenceLayout = new QGridLayout();
@@ -142,6 +146,7 @@ DsoConfigAnalysisPage::DsoConfigAnalysisPage( DsoSettings *settings, QWidget *pa
 
 /// \brief Saves the new settings.
 void DsoConfigAnalysisPage::saveSettings() {
+    settings->scope.analysis.dBsuffixIndex = dBsuffixIndex;
     settings->scope.analysis.spectrumReference = referenceLevelSpinBox->value();
     settings->analysis.spectrumWindow = Dso::WindowFunction( windowFunctionComboBox->currentIndex() );
     settings->analysis.spectrumLimit = minimumMagnitudeSpinBox->value();
