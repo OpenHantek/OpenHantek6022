@@ -24,6 +24,7 @@
 #include "dsosettings.h"
 
 #include <QDesktopServices>
+#include <QDir>
 #include <QFileDialog>
 #include <QLoggingCategory>
 #include <QMessageBox>
@@ -621,7 +622,8 @@ void MainWindow::screenShot( screenshotType_t screenshotType, bool autoSafe ) {
         QStringList filters;
         fileName += ".png";
         if ( autoSafe ) { // save under default name as PNG without asking
-            screenshot.save( fileName );
+            if ( !screenshot.save( fileName ) )
+                QMessageBox::critical( this, tr( "Error" ), QFileInfo{ fileName }.absoluteFilePath() );
             return;
         }
         filters << tr( "Image (*.png *.jpg)" ) << tr( "Portable Document Format (*.pdf)" );
@@ -633,7 +635,8 @@ void MainWindow::screenShot( screenshotType_t screenshotType, bool autoSafe ) {
 
         fileName = fileDialog.selectedFiles().first();
         if ( filters.indexOf( fileDialog.selectedNameFilter() ) == 0 ) { // save as image
-            screenshot.save( fileName );
+            if ( !screenshot.save( fileName ) )
+                QMessageBox::critical( this, tr( "Error" ), QFileInfo{ fileName }.absoluteFilePath() );
             return;
         }
 

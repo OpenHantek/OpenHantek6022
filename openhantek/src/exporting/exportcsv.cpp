@@ -10,6 +10,7 @@
 #include <QFile>
 #include <QFileDialog>
 #include <QLocale>
+#include <QMessageBox>
 #include <QTextStream>
 
 ExporterCSV::ExporterCSV() {}
@@ -40,10 +41,12 @@ QFile *ExporterCSV::getFile() {
     if ( fileDialog.exec() != QDialog::Accepted )
         return nullptr;
 
-    QFile *file = new QFile( fileDialog.selectedFiles().first() );
-    if ( !file->open( QIODevice::WriteOnly | QIODevice::Text ) )
+    QFile *csvFile = new QFile( fileDialog.selectedFiles().first() );
+    if ( !csvFile->open( QIODevice::WriteOnly | QIODevice::Text ) ) {
+        QMessageBox::critical( nullptr, tr( "Error" ), csvFile->fileName() );
         return nullptr;
-    return file;
+    }
+    return csvFile;
 }
 
 void ExporterCSV::fillHeaders( QTextStream &csvStream, const ExporterData &dto, const char *sep ) {

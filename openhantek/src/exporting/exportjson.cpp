@@ -11,6 +11,7 @@
 #include <QFile>
 #include <QFileDialog>
 #include <QLocale>
+#include <QMessageBox>
 #include <QTextStream>
 
 ExporterJSON::ExporterJSON() {}
@@ -42,8 +43,10 @@ QFile *ExporterJSON::getFile() {
         return nullptr;
 
     QFile *jsonFile = new QFile( fileDialog.selectedFiles().first() );
-    if ( !jsonFile->open( QIODevice::WriteOnly | QIODevice::Text ) )
+    if ( !jsonFile->open( QIODevice::WriteOnly | QIODevice::Text ) ) {
+        QMessageBox::critical( nullptr, tr( "Error" ), jsonFile->fileName() );
         return nullptr;
+    }
     return jsonFile;
 }
 
