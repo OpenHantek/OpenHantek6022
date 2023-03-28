@@ -43,7 +43,7 @@ QFile *ExporterCSV::getFile() {
 
     QFile *csvFile = new QFile( fileDialog.selectedFiles().first() );
     if ( !csvFile->open( QIODevice::WriteOnly | QIODevice::Text ) ) {
-        QMessageBox::critical( nullptr, tr( "Error" ), csvFile->fileName() );
+        QMessageBox::critical( nullptr, QCoreApplication::applicationName(), tr( "Write error\n%1" ).arg( csvFile->fileName() ) );
         return nullptr;
     }
     return csvFile;

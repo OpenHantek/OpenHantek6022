@@ -563,10 +563,10 @@ int main( int argc, char *argv[] ) {
     if ( context )
         libusb_exit( context );
 
-    if ( verboseLevel < 2 )
-        std::cerr << openHantekMainWindow.elapsedTime.elapsed() / 1000 << " s\n"; // last part
-    else
-        std::cerr << "OpenHantek6022 has stopped after " << openHantekMainWindow.elapsedTime.elapsed() / 1000 << " s\n";
+    if ( verboseLevel >= 2 )
+        std::cerr << "OpenHantek6022 has stopped after "; // part 1..4
+
+    std::cerr << openHantekMainWindow.elapsedTime.elapsed() / 1000 << " s\n"; // last part
 
     return appStatus;
 }

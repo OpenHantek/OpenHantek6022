@@ -700,7 +700,7 @@
     <message>
         <location filename="../src/docks/HorizontalDock.cpp" line="36"/>
         <source>Samplerate</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/docks/HorizontalDock.cpp" line="39"/>
@@ -715,7 +715,7 @@
     <message>
         <location filename="../src/docks/HorizontalDock.cpp" line="46"/>
         <source>Timebase</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/docks/HorizontalDock.cpp" line="49"/>
@@ -725,7 +725,7 @@
     <message>
         <location filename="../src/docks/HorizontalDock.cpp" line="54"/>
         <source>Format</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/docks/HorizontalDock.cpp" line="57"/>
@@ -735,7 +735,7 @@
     <message>
         <location filename="../src/docks/HorizontalDock.cpp" line="61"/>
         <source>Calibration out</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/docks/HorizontalDock.cpp" line="66"/>
@@ -779,8 +779,14 @@
     <message>
         <location filename="../src/exporting/exportjson.cpp" line="47"/>
         <location filename="../src/exporting/exportcsv.cpp" line="46"/>
+        <source>Write error
+%1</source>
+        <translation>Errore di scrittura
+%1</translation>
+    </message>
+    <message>
         <source>Error</source>
-        <translation>Errore</translation>
+        <translation type="vanished">Errore</translation>
     </message>
 </context>
 <context>
@@ -803,12 +809,12 @@
     <message>
         <location filename="../src/mainwindow.ui" line="53"/>
         <source>&amp;Oscilloscope</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="118"/>
         <source>Save settings &amp;as ..</source>
-        <translation type="unfinished"></translation>
+        <translation>Salv&amp;a le impostazioni come ..</translation>
     </message>
     <message>
         <location filename="../src/mainwindow.ui" line="123"/>
@@ -1213,28 +1219,34 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="626"/>
-        <location filename="../src/mainwindow.cpp" line="639"/>
-        <source>Error</source>
-        <translation>Errore</translation>
+        <location filename="../src/mainwindow.cpp" line="627"/>
+        <location filename="../src/mainwindow.cpp" line="641"/>
+        <source>Write error
+%1</source>
+        <translation>Errore di scrittura
+%1</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="629"/>
+        <source>Error</source>
+        <translation type="vanished">Errore</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="630"/>
         <source>Portable Document Format (*.pdf)</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="630"/>
+        <location filename="../src/mainwindow.cpp" line="631"/>
         <source>Save screenshot</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="662"/>
+        <location filename="../src/mainwindow.cpp" line="664"/>
         <source>Print oscillograph</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="629"/>
+        <location filename="../src/mainwindow.cpp" line="630"/>
         <source>Image (*.png *.jpg)</source>
         <translation></translation>
     </message>
@@ -1521,137 +1533,137 @@
     <message>
         <location filename="../src/hantekdso/mathmodes.cpp" line="34"/>
         <source>CH1 + CH2</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/hantekdso/mathmodes.cpp" line="36"/>
         <source>CH1 - CH2</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/hantekdso/mathmodes.cpp" line="38"/>
         <source>CH2 - CH1</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/hantekdso/mathmodes.cpp" line="40"/>
         <source>CH1 * CH2</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/hantekdso/mathmodes.cpp" line="42"/>
         <source>CH1 &amp; CH2</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/hantekdso/mathmodes.cpp" line="44"/>
         <source>/CH1 &amp; /CH2</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/hantekdso/mathmodes.cpp" line="46"/>
         <source>/CH1 &amp; CH2</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/hantekdso/mathmodes.cpp" line="48"/>
         <source>CH1 &amp; /CH2</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/hantekdso/mathmodes.cpp" line="50"/>
         <source>CH1 == CH2</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/hantekdso/mathmodes.cpp" line="52"/>
         <source>CH1 LP10</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/hantekdso/mathmodes.cpp" line="54"/>
         <source>CH2 LP10</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/hantekdso/mathmodes.cpp" line="56"/>
         <source>CH1 LP100</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/hantekdso/mathmodes.cpp" line="58"/>
         <source>CH2 LP100</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/hantekdso/mathmodes.cpp" line="60"/>
         <source>CH1²</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/hantekdso/mathmodes.cpp" line="62"/>
         <source>CH2²</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/hantekdso/mathmodes.cpp" line="64"/>
         <source>CH1 AC</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/hantekdso/mathmodes.cpp" line="66"/>
         <source>CH2 AC</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/hantekdso/mathmodes.cpp" line="68"/>
         <source>CH1 DC</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/hantekdso/mathmodes.cpp" line="70"/>
         <source>CH2 DC</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/hantekdso/mathmodes.cpp" line="72"/>
         <source>CH1 Abs</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/hantekdso/mathmodes.cpp" line="74"/>
         <source>CH2 Abs</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/hantekdso/mathmodes.cpp" line="76"/>
         <source>CH1 Sign</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/hantekdso/mathmodes.cpp" line="78"/>
         <source>CH2 Sign</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/hantekdso/mathmodes.cpp" line="80"/>
         <source>CH1 AC Sign</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/hantekdso/mathmodes.cpp" line="82"/>
         <source>CH2 AC Sign</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/hantekdso/mathmodes.cpp" line="84"/>
         <source>CH1 Trigger</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../src/hantekdso/mathmodes.cpp" line="86"/>
         <source>CH2 Trigger</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>

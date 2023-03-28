@@ -44,7 +44,7 @@ QFile *ExporterJSON::getFile() {
 
     QFile *jsonFile = new QFile( fileDialog.selectedFiles().first() );
     if ( !jsonFile->open( QIODevice::WriteOnly | QIODevice::Text ) ) {
-        QMessageBox::critical( nullptr, tr( "Error" ), jsonFile->fileName() );
+        QMessageBox::critical( nullptr, QCoreApplication::applicationName(), tr( "Write error\n%1" ).arg( jsonFile->fileName() ) );
         return nullptr;
     }
     return jsonFile;

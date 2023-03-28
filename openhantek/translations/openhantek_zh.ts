@@ -714,7 +714,7 @@
     <message>
         <location filename="../src/dsowidget.cpp" line="947"/>
         <source>&lt;b&gt; OFFSET CALIBRATION &lt;/b&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;b&gt;偏移量校准&lt;/b</translation>
     </message>
     <message>
         <location filename="../src/dsowidget.cpp" line="955"/>
@@ -729,22 +729,22 @@
     <message>
         <location filename="../src/dsowidget.cpp" line="451"/>
         <source>Trace position, drag the channel name up or down</source>
-        <translation type="unfinished"></translation>
+        <translation>追踪位置，向上或向下拖动通道名称</translation>
     </message>
     <message>
         <location filename="../src/dsowidget.cpp" line="473"/>
         <source>Trigger position, drag the arrow left or right</source>
-        <translation type="unfinished"></translation>
+        <translation>触发器位置，向左或向右拖动箭头</translation>
     </message>
     <message>
         <location filename="../src/dsowidget.cpp" line="483"/>
         <source>Trigger level, drag the arrow up or down</source>
-        <translation type="unfinished"></translation>
+        <translation>触发器水平，向上或向下拖动箭头</translation>
     </message>
     <message>
         <location filename="../src/dsowidget.cpp" line="497"/>
         <source>Measure or zoom marker &apos;1&apos; and &apos;2&apos;, drag left or right</source>
-        <translation type="unfinished"></translation>
+        <translation>测量或缩放标记&apos;1&apos;和&apos;2&apos;，向左或向右拖动</translation>
     </message>
     <message>
         <location filename="../src/dsowidget.cpp" line="594"/>
@@ -766,7 +766,7 @@
     <message>
         <location filename="../src/dsowidget.cpp" line="644"/>
         <source>Zoom x%1  </source>
-        <translation type="unfinished"></translation>
+        <translation>缩放x%1  </translation>
     </message>
     <message>
         <source>Time: </source>
@@ -1050,8 +1050,14 @@
     <message>
         <location filename="../src/exporting/exportjson.cpp" line="47"/>
         <location filename="../src/exporting/exportcsv.cpp" line="46"/>
+        <source>Write error
+%1</source>
+        <translation>写入错误
+%1</translation>
+    </message>
+    <message>
         <source>Error</source>
-        <translation>错误</translation>
+        <translation type="vanished">错误</translation>
     </message>
 </context>
 <context>
@@ -1524,28 +1530,34 @@
         <translation>yyyyMMdd_hhmmss</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="626"/>
-        <location filename="../src/mainwindow.cpp" line="639"/>
-        <source>Error</source>
-        <translation>错误</translation>
+        <location filename="../src/mainwindow.cpp" line="627"/>
+        <location filename="../src/mainwindow.cpp" line="641"/>
+        <source>Write error
+%1</source>
+        <translation>写入错误
+%1</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="629"/>
+        <source>Error</source>
+        <translation type="vanished">错误</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="630"/>
         <source>Image (*.png *.jpg)</source>
         <translation>图像文件 (*.png *.jpg)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="629"/>
+        <location filename="../src/mainwindow.cpp" line="630"/>
         <source>Portable Document Format (*.pdf)</source>
         <translation>便携式文件格式 (*.pdf)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="630"/>
+        <location filename="../src/mainwindow.cpp" line="631"/>
         <source>Save screenshot</source>
         <translation>保存截图文件</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="662"/>
+        <location filename="../src/mainwindow.cpp" line="664"/>
         <source>Print oscillograph</source>
         <translation>打印波形</translation>
     </message>

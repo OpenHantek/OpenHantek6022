@@ -544,22 +544,22 @@
     <message>
         <location filename="../src/dsowidget.cpp" line="451"/>
         <source>Trace position, drag the channel name up or down</source>
-        <translation type="unfinished"></translation>
+        <translation>Spårningsposition, dra kanalnamnet uppåt eller nedåt</translation>
     </message>
     <message>
         <location filename="../src/dsowidget.cpp" line="473"/>
         <source>Trigger position, drag the arrow left or right</source>
-        <translation type="unfinished"></translation>
+        <translation>Triggerposition, dra pilen till vänster eller höger</translation>
     </message>
     <message>
         <location filename="../src/dsowidget.cpp" line="483"/>
         <source>Trigger level, drag the arrow up or down</source>
-        <translation type="unfinished"></translation>
+        <translation>Triggernivå, dra pilen uppåt eller nedåt</translation>
     </message>
     <message>
         <location filename="../src/dsowidget.cpp" line="497"/>
         <source>Measure or zoom marker &apos;1&apos; and &apos;2&apos;, drag left or right</source>
-        <translation type="unfinished"></translation>
+        <translation>Mät- eller zoommarkör &quot;1&quot; och &quot;2&quot;, dra till vänster eller höger</translation>
     </message>
     <message>
         <location filename="../src/dsowidget.cpp" line="594"/>
@@ -779,8 +779,14 @@
     <message>
         <location filename="../src/exporting/exportjson.cpp" line="47"/>
         <location filename="../src/exporting/exportcsv.cpp" line="46"/>
+        <source>Write error
+%1</source>
+        <translation>Skrivfel
+%1</translation>
+    </message>
+    <message>
         <source>Error</source>
-        <translation>Fel</translation>
+        <translation type="vanished">Fel</translation>
     </message>
     <message>
         <location filename="../src/exporting/exportcsv.cpp" line="25"/>
@@ -1248,28 +1254,34 @@
         <translation>yyyyMMDd_hhmmss</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="626"/>
-        <location filename="../src/mainwindow.cpp" line="639"/>
-        <source>Error</source>
-        <translation>Fel</translation>
+        <location filename="../src/mainwindow.cpp" line="627"/>
+        <location filename="../src/mainwindow.cpp" line="641"/>
+        <source>Write error
+%1</source>
+        <translation>Skrivfel
+%1</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="629"/>
+        <source>Error</source>
+        <translation type="vanished">Fel</translation>
+    </message>
+    <message>
+        <location filename="../src/mainwindow.cpp" line="630"/>
         <source>Image (*.png *.jpg)</source>
         <translation>Bild (*.png *.jpg)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="629"/>
+        <location filename="../src/mainwindow.cpp" line="630"/>
         <source>Portable Document Format (*.pdf)</source>
         <translation>Portable Document Format (*.pdf)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="630"/>
+        <location filename="../src/mainwindow.cpp" line="631"/>
         <source>Save screenshot</source>
         <translation>Spara skärmbild</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="662"/>
+        <location filename="../src/mainwindow.cpp" line="664"/>
         <source>Print oscillograph</source>
         <translation>Skriv ut oscillograf</translation>
     </message>

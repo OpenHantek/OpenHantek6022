@@ -508,7 +508,7 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
                                        .arg( this->dsoSettings->deviceFW, 4, 16,
                                              QChar( '0' ) ); // FW version
         QMessageBox::about(
-            this, QString( "OpenHantek6022 (%1)" ).arg( VERSION ),
+            this, QString( "%1 (%2)" ).arg( QCoreApplication::applicationName(), VERSION ),
             QString( tr( "<p>Open source software for Hantek6022 USB oscilloscopes</p>"
                          "<p>Maintainer: Martin Homuth-Rosemann</p>"
                          "<p>Copyright &copy; 2010, 2011 Oliver Haag</p>"
@@ -623,7 +623,8 @@ void MainWindow::screenShot( screenshotType_t screenshotType, bool autoSafe ) {
         fileName += ".png";
         if ( autoSafe ) { // save under default name as PNG without asking
             if ( !screenshot.save( fileName ) )
-                QMessageBox::critical( this, tr( "Error" ), QFileInfo{ fileName }.absoluteFilePath() );
+                QMessageBox::critical( this, QCoreApplication::applicationName(),
+                                       tr( "Write error\n%1" ).arg( QFileInfo{ fileName }.absoluteFilePath() ) );
             return;
         }
         filters << tr( "Image (*.png *.jpg)" ) << tr( "Portable Document Format (*.pdf)" );
@@ -636,7 +637,8 @@ void MainWindow::screenShot( screenshotType_t screenshotType, bool autoSafe ) {
         fileName = fileDialog.selectedFiles().first();
         if ( filters.indexOf( fileDialog.selectedNameFilter() ) == 0 ) { // save as image
             if ( !screenshot.save( fileName ) )
-                QMessageBox::critical( this, tr( "Error" ), QFileInfo{ fileName }.absoluteFilePath() );
+                QMessageBox::critical( this, QCoreApplication::applicationName(),
+                                       tr( "Write error\n%1" ).arg( QFileInfo{ fileName }.absoluteFilePath() ) );
             return;
         }
 
