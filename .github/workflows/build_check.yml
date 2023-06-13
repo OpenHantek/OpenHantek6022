@@ -150,7 +150,6 @@ jobs:
         install: >-
           mingw-w64-x86_64-cmake
           mingw-w64-x86_64-gcc
-          mingw-w64-x86_64-qtbinpatcher
           mingw-w64-x86_64-qt5-static
           mingw-w64-x86_64-fftw
           mingw-w64-x86_64-libusb
