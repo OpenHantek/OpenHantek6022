@@ -23,7 +23,6 @@ HantekDsoControl::HantekDsoControl( ScopeDevice *device, const DSOModel *model, 
 
     if ( verboseLevel > 1 )
         qDebug() << " HantekDsoControl::HantekDsoControl()";
-
     qRegisterMetaType< DSOsamples * >();
     qRegisterMetaType< QList< double > >();
 
@@ -95,6 +94,8 @@ void HantekDsoControl::controlSetSamplerate( uint8_t sampleIndex ) {
     uint8_t id = specification->fixedSampleRates[ sampleIndex ].id;
     if ( verboseLevel > 2 )
         qDebug() << "  HDC::controlSetSamplerate()" << sampleIndex << "id:" << id;
+    if ( verboseLevel > 3 )
+        qDebug() << "   ThreadID:" << QThread::currentThreadId();
     modifyCommand< ControlSetSamplerate >( ControlCode::CONTROL_SETSAMPLERATE )->setSamplerate( id, sampleIndex );
     if ( sampleIndex != lastIndex ) { // samplerate has changed, start new sampling
         restartSampling();
@@ -134,6 +135,8 @@ Dso::ErrorCode HantekDsoControl::setSamplerate( double samplerate ) {
 Dso::ErrorCode HantekDsoControl::setRecordTime( double duration ) {
     if ( verboseLevel > 2 )
         qDebug() << "  HDC::setRecordTime()" << duration;
+    if ( verboseLevel > 3 )
+        qDebug() << "   ThreadID:" << QThread::currentThreadId();
     if ( deviceNotConnected() )
         return Dso::ErrorCode::CONNECTION;
 

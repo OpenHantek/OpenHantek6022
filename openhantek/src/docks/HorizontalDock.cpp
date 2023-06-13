@@ -8,6 +8,7 @@
 #include <QDockWidget>
 #include <QLabel>
 #include <QSignalBlocker>
+#include <QThread>
 
 #include <cmath>
 
@@ -128,6 +129,8 @@ void HorizontalDock::closeEvent( QCloseEvent *event ) {
 double HorizontalDock::setSamplerate( double samplerate ) {
     if ( scope->verboseLevel > 2 )
         qDebug() << "  HDock::setSamplerate()" << samplerate;
+    if ( scope->verboseLevel > 3 )
+        qDebug() << "   ThreadID:" << QThread::currentThreadId();
     samplerateRequest = samplerate;
     QSignalBlocker blocker( timebaseSiSpinBox );
     timebaseSiSpinBox->setMaximum( scope->horizontal.maxTimebase );
@@ -227,6 +230,8 @@ void HorizontalDock::samplerateSelected( double samplerate ) {
 void HorizontalDock::timebaseSelected( double timebase ) {
     if ( scope->verboseLevel > 2 )
         qDebug() << "  HDock::timebaseSelected()" << timebase;
+    if ( scope->verboseLevel > 3 )
+        qDebug() << "   ThreadID:" << QThread::currentThreadId();
     scope->horizontal.timebase = timebase;
     calculateSamplerateSteps( timebase );
     emit timebaseChanged( timebase );

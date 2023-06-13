@@ -4,11 +4,11 @@
 
 #include "hantekdsocontrol.h"
 
-class Capturing : public QThread {
+class CapturingThread : public QThread {
     Q_OBJECT
 
   public:
-    Capturing( HantekDsoControl *hdc );
+    CapturingThread( HantekDsoControl *hdc );
     void quitCapturing() { hdc->capturing = false; }
 
   private:

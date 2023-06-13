@@ -901,7 +901,7 @@
         <translation type="vanished">Nie można uzyskać danych o poziomie kanału z oscyloskopu</translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="569"/>
+        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="572"/>
         <source>Couldn&apos;t get calibration data from oscilloscope&apos;s EEPROM. Use a config file for calibration!</source>
         <translation>Nie można pobrać danych kalibracyjnych z pamięci EEPROM oscyloskopu. Użyj pliku konfiguracyjnego do kalibracji!</translation>
     </message>
@@ -909,37 +909,37 @@
 <context>
     <name>HorizontalDock</name>
     <message>
-        <location filename="../src/docks/HorizontalDock.cpp" line="30"/>
+        <location filename="../src/docks/HorizontalDock.cpp" line="31"/>
         <source>Horizontal</source>
         <translation>Poziom</translation>
     </message>
     <message>
-        <location filename="../src/docks/HorizontalDock.cpp" line="36"/>
+        <location filename="../src/docks/HorizontalDock.cpp" line="37"/>
         <source>Samplerate</source>
         <translation>Częstoliwość próbkowania</translation>
     </message>
     <message>
-        <location filename="../src/docks/HorizontalDock.cpp" line="39"/>
+        <location filename="../src/docks/HorizontalDock.cpp" line="40"/>
         <source>Effective samplerate, automatically selected from &apos;Timebase&apos; setting</source>
         <translation>Efektywna częstotliwość próbkowania, automatycznie wybierana z ustawienia &quot;Podstawa czasu&quot;</translation>
     </message>
     <message>
-        <location filename="../src/docks/HorizontalDock.cpp" line="42"/>
+        <location filename="../src/docks/HorizontalDock.cpp" line="43"/>
         <source>/s</source>
         <translation>/s</translation>
     </message>
     <message>
-        <location filename="../src/docks/HorizontalDock.cpp" line="46"/>
+        <location filename="../src/docks/HorizontalDock.cpp" line="47"/>
         <source>Timebase</source>
         <translation>Podstawa czasu</translation>
     </message>
     <message>
-        <location filename="../src/docks/HorizontalDock.cpp" line="49"/>
+        <location filename="../src/docks/HorizontalDock.cpp" line="50"/>
         <source>Time per horizontal screen division</source>
         <translation>Czas na podział ekranu w poziomie</translation>
     </message>
     <message>
-        <location filename="../src/docks/HorizontalDock.cpp" line="66"/>
+        <location filename="../src/docks/HorizontalDock.cpp" line="67"/>
         <source>Select the frequency of the calibration output, scroll for fast change</source>
         <translation>Wybór częstotliwości kalibracji, przewijanie w celu szybkiej zmiany</translation>
     </message>
@@ -948,17 +948,17 @@
         <translation type="vanished">Częstotliwość bazowa</translation>
     </message>
     <message>
-        <location filename="../src/docks/HorizontalDock.cpp" line="54"/>
+        <location filename="../src/docks/HorizontalDock.cpp" line="55"/>
         <source>Format</source>
         <translation>Format</translation>
     </message>
     <message>
-        <location filename="../src/docks/HorizontalDock.cpp" line="57"/>
+        <location filename="../src/docks/HorizontalDock.cpp" line="58"/>
         <source>Select signal over time or XY display</source>
         <translation>Wybór wyświetlania sygnału w czasie lub XY</translation>
     </message>
     <message>
-        <location filename="../src/docks/HorizontalDock.cpp" line="61"/>
+        <location filename="../src/docks/HorizontalDock.cpp" line="62"/>
         <source>Calibration out</source>
         <translation>Sygnał kalibracyjny</translation>
     </message>
@@ -2450,22 +2450,22 @@
 <context>
     <name>SpectrumDock</name>
     <message>
-        <location filename="../src/docks/SpectrumDock.cpp" line="28"/>
+        <location filename="../src/docks/SpectrumDock.cpp" line="29"/>
         <source>Spectrum</source>
         <translation>Spektrum</translation>
     </message>
     <message>
-        <location filename="../src/docks/SpectrumDock.cpp" line="49"/>
+        <location filename="../src/docks/SpectrumDock.cpp" line="50"/>
         <source>Magnitude per vertical screen division</source>
         <translation>Magnituda w pionowym podziale ekranu</translation>
     </message>
     <message>
-        <location filename="../src/docks/SpectrumDock.cpp" line="75"/>
+        <location filename="../src/docks/SpectrumDock.cpp" line="76"/>
         <source>Frequencybase</source>
         <translation>Częstotliwość bazowa</translation>
     </message>
     <message>
-        <location filename="../src/docks/SpectrumDock.cpp" line="78"/>
+        <location filename="../src/docks/SpectrumDock.cpp" line="79"/>
         <source>Frequency range per horizontal screen division</source>
         <translation>Zakres częstotliwości w poziomym podziale ekranu</translation>
     </message>

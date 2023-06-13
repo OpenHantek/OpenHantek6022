@@ -7,6 +7,7 @@
 #include <QDockWidget>
 #include <QLabel>
 #include <QSignalBlocker>
+#include <QThread>
 
 #include <cmath>
 
@@ -166,6 +167,8 @@ void SpectrumDock::enableSpectrumDock( bool enabled ) { // disable when using XY
 void SpectrumDock::setSamplerate( double samplerate ) {
     if ( scope->verboseLevel > 2 )
         qDebug() << "  SDock::setSamplerate()" << samplerate;
+    if ( scope->verboseLevel > 3 )
+        qDebug() << "   ThreadID:" << QThread::currentThreadId();
     double maxFreqBase = samplerate / DIVS_TIME / 2; // Nyquist frequency
     frequencybaseSiSpinBox->setMaximum( maxFreqBase );
     if ( frequencybaseSiSpinBox->value() > maxFreqBase )

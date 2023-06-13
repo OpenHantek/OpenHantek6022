@@ -1,8 +1,8 @@
-.bak
-.o
-.so
+*.o
+*.so
 .*~
 *~
+*.bak
 *.orig
 *.new
 *.old

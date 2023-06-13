@@ -30,7 +30,7 @@
 #include <QSettings>
 #include <QThread>
 
-class Capturing;
+class CapturingThread;
 class ScopeDevice;
 
 struct Raw {
@@ -54,7 +54,7 @@ struct Raw {
 /// TODO Please anyone, refactor this class into smaller pieces (Separation of Concerns!).
 class HantekDsoControl : public QObject {
     Q_OBJECT
-    friend Capturing;
+    friend CapturingThread;
 
   public:
     /**

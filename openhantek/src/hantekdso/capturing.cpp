@@ -8,10 +8,17 @@
 #include <cmath>
 
 
-Capturing::Capturing( HantekDsoControl *hdc ) : hdc( hdc ) { hdc->capturing = true; }
+CapturingThread::CapturingThread( HantekDsoControl *hdc ) : hdc( hdc ) {
+    if ( hdc->verboseLevel > 1 ) {
+        qDebug() << " CapturingThread::CapturingThread()";
+        if ( hdc->verboseLevel > 2 )
+            qDebug() << "  capturingThread ID: " << currentThreadId();
+    }
+    hdc->capturing = true;
+}
 
 
-void Capturing::run() {
+void CapturingThread::run() {
     forever {
         if ( !hdc->capturing || QThread::currentThread()->isInterruptionRequested() ) {
             hdc->quitSampling();     // stop the scope
@@ -41,7 +48,7 @@ static double id2sr( uint8_t timediv ) {
 }
 
 
-void Capturing::xferSamples() {
+void CapturingThread::xferSamples() {
     QWriteLocker locker( &hdc->raw.lock );
     if ( !freeRun )
         swap( data, hdc->raw.data );
@@ -58,7 +65,7 @@ void Capturing::xferSamples() {
 }
 
 
-void Capturing::capture() {
+void CapturingThread::capture() {
     if ( !hdc->samplingStarted )
         return;
     int errorCode;
@@ -165,7 +172,7 @@ void Capturing::capture() {
 }
 
 
-unsigned Capturing::getRealSamples() {
+unsigned CapturingThread::getRealSamples() {
     int errorCode;
     errorCode = hdc->scopeDevice->controlWrite( hdc->getCommand( ControlCode::CONTROL_STARTSAMPLING ) );
     if ( errorCode < 0 ) {
@@ -189,7 +196,7 @@ unsigned Capturing::getRealSamples() {
 }
 
 
-unsigned Capturing::getDemoSamples() {
+unsigned CapturingThread::getDemoSamples() {
     const uint8_t binaryOffset = 0x80; // ADC format: binary offset
     const int8_t V_zero = 0;           // ADC = 0V
     const int8_t V_plus_1 = 25;        // ADC = 1V

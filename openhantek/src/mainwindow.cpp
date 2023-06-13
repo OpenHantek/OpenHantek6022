@@ -219,7 +219,7 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
     restoreState( dsoSettings->mainWindowState );
 
     // Central oszilloscope widget
-    dsoWidget = new DsoWidget( &dsoSettings->scope, &dsoSettings->view, spec );
+    dsoWidget = new DsoWidget( &dsoSettings->scope, &dsoSettings->view, spec, this );
     setCentralWidget( dsoWidget );
 
     if ( dsoControl->getDevice()->isRealHW() ) { // enable online calibration and manual command input

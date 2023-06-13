@@ -701,7 +701,7 @@
 <context>
     <name>HantekDsoControl</name>
     <message>
-        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="569"/>
+        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="572"/>
         <source>Couldn&apos;t get calibration data from oscilloscope&apos;s EEPROM. Use a config file for calibration!</source>
         <translation>Kunde inte hämta kalibreringsdata från oscilloskopets EEPROM. Använd en konfigurationsfil för kalibrering!</translation>
     </message>
@@ -709,52 +709,52 @@
 <context>
     <name>HorizontalDock</name>
     <message>
-        <location filename="../src/docks/HorizontalDock.cpp" line="30"/>
+        <location filename="../src/docks/HorizontalDock.cpp" line="31"/>
         <source>Horizontal</source>
         <translation>Horisontell</translation>
     </message>
     <message>
-        <location filename="../src/docks/HorizontalDock.cpp" line="36"/>
+        <location filename="../src/docks/HorizontalDock.cpp" line="37"/>
         <source>Samplerate</source>
         <translation>Sampelhastighet</translation>
     </message>
     <message>
-        <location filename="../src/docks/HorizontalDock.cpp" line="39"/>
+        <location filename="../src/docks/HorizontalDock.cpp" line="40"/>
         <source>Effective samplerate, automatically selected from &apos;Timebase&apos; setting</source>
         <translation>Effektiv samplerate, automatiskt vald från inställningen &quot;Timebase&quot;</translation>
     </message>
     <message>
-        <location filename="../src/docks/HorizontalDock.cpp" line="42"/>
+        <location filename="../src/docks/HorizontalDock.cpp" line="43"/>
         <source>/s</source>
         <translation>/s</translation>
     </message>
     <message>
-        <location filename="../src/docks/HorizontalDock.cpp" line="46"/>
+        <location filename="../src/docks/HorizontalDock.cpp" line="47"/>
         <source>Timebase</source>
         <translation>Tidbas</translation>
     </message>
     <message>
-        <location filename="../src/docks/HorizontalDock.cpp" line="49"/>
+        <location filename="../src/docks/HorizontalDock.cpp" line="50"/>
         <source>Time per horizontal screen division</source>
         <translation>Tid per horisontell skärmdivision</translation>
     </message>
     <message>
-        <location filename="../src/docks/HorizontalDock.cpp" line="54"/>
+        <location filename="../src/docks/HorizontalDock.cpp" line="55"/>
         <source>Format</source>
         <translation>Format</translation>
     </message>
     <message>
-        <location filename="../src/docks/HorizontalDock.cpp" line="57"/>
+        <location filename="../src/docks/HorizontalDock.cpp" line="58"/>
         <source>Select signal over time or XY display</source>
         <translation>Välj signal över tid eller XY-display</translation>
     </message>
     <message>
-        <location filename="../src/docks/HorizontalDock.cpp" line="61"/>
+        <location filename="../src/docks/HorizontalDock.cpp" line="62"/>
         <source>Calibration out</source>
         <translation>Kalibrering ut</translation>
     </message>
     <message>
-        <location filename="../src/docks/HorizontalDock.cpp" line="66"/>
+        <location filename="../src/docks/HorizontalDock.cpp" line="67"/>
         <source>Select the frequency of the calibration output, scroll for fast change</source>
         <translation>Välj kalibreringsfrekvens, bläddra för snabb ändring</translation>
     </message>
@@ -1903,22 +1903,22 @@
 <context>
     <name>SpectrumDock</name>
     <message>
-        <location filename="../src/docks/SpectrumDock.cpp" line="28"/>
+        <location filename="../src/docks/SpectrumDock.cpp" line="29"/>
         <source>Spectrum</source>
         <translation>Spektrum</translation>
     </message>
     <message>
-        <location filename="../src/docks/SpectrumDock.cpp" line="49"/>
+        <location filename="../src/docks/SpectrumDock.cpp" line="50"/>
         <source>Magnitude per vertical screen division</source>
         <translation>Storlek per vertikal skärmdivision</translation>
     </message>
     <message>
-        <location filename="../src/docks/SpectrumDock.cpp" line="75"/>
+        <location filename="../src/docks/SpectrumDock.cpp" line="76"/>
         <source>Frequencybase</source>
         <translation>Frekvensbas</translation>
     </message>
     <message>
-        <location filename="../src/docks/SpectrumDock.cpp" line="78"/>
+        <location filename="../src/docks/SpectrumDock.cpp" line="79"/>
         <source>Frequency range per horizontal screen division</source>
         <translation>Frekvensområde per horisontell skärmdivision</translation>
     </message>

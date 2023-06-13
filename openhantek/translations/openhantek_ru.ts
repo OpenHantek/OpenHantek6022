@@ -839,7 +839,7 @@
 <context>
     <name>HantekDsoControl</name>
     <message>
-        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="569"/>
+        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="572"/>
         <source>Couldn&apos;t get calibration data from oscilloscope&apos;s EEPROM. Use a config file for calibration!</source>
         <translation>Не удалось получить данные калибровки из EEPROM осциллографа. Используйте файл конфигурации для калибровки!</translation>
     </message>
@@ -847,37 +847,37 @@
 <context>
     <name>HorizontalDock</name>
     <message>
-        <location filename="../src/docks/HorizontalDock.cpp" line="30"/>
+        <location filename="../src/docks/HorizontalDock.cpp" line="31"/>
         <source>Horizontal</source>
         <translation>Развёртка</translation>
     </message>
     <message>
-        <location filename="../src/docks/HorizontalDock.cpp" line="36"/>
+        <location filename="../src/docks/HorizontalDock.cpp" line="37"/>
         <source>Samplerate</source>
         <translation>Дискретизация</translation>
     </message>
     <message>
-        <location filename="../src/docks/HorizontalDock.cpp" line="39"/>
+        <location filename="../src/docks/HorizontalDock.cpp" line="40"/>
         <source>Effective samplerate, automatically selected from &apos;Timebase&apos; setting</source>
         <translation>Эффективная частота дискретизации, с автоподбором из настроек &apos;Время/Деление&apos;</translation>
     </message>
     <message>
-        <location filename="../src/docks/HorizontalDock.cpp" line="42"/>
+        <location filename="../src/docks/HorizontalDock.cpp" line="43"/>
         <source>/s</source>
         <translation>/с</translation>
     </message>
     <message>
-        <location filename="../src/docks/HorizontalDock.cpp" line="46"/>
+        <location filename="../src/docks/HorizontalDock.cpp" line="47"/>
         <source>Timebase</source>
         <translation>Время/Деление</translation>
     </message>
     <message>
-        <location filename="../src/docks/HorizontalDock.cpp" line="49"/>
+        <location filename="../src/docks/HorizontalDock.cpp" line="50"/>
         <source>Time per horizontal screen division</source>
         <translation>Время на деление экрана по горизонтали</translation>
     </message>
     <message>
-        <location filename="../src/docks/HorizontalDock.cpp" line="66"/>
+        <location filename="../src/docks/HorizontalDock.cpp" line="67"/>
         <source>Select the frequency of the calibration output, scroll for fast change</source>
         <translation>Выбор частоты сигнала на выходе калибровки, прокручивай для быстрой смены</translation>
     </message>
@@ -886,17 +886,17 @@
         <translation type="vanished">Частота/Деление</translation>
     </message>
     <message>
-        <location filename="../src/docks/HorizontalDock.cpp" line="54"/>
+        <location filename="../src/docks/HorizontalDock.cpp" line="55"/>
         <source>Format</source>
         <translation>Формат вывода</translation>
     </message>
     <message>
-        <location filename="../src/docks/HorizontalDock.cpp" line="57"/>
+        <location filename="../src/docks/HorizontalDock.cpp" line="58"/>
         <source>Select signal over time or XY display</source>
         <translation>Выбор отображения сигнала во времени или по XY</translation>
     </message>
     <message>
-        <location filename="../src/docks/HorizontalDock.cpp" line="61"/>
+        <location filename="../src/docks/HorizontalDock.cpp" line="62"/>
         <source>Calibration out</source>
         <translation>Выход калибровки</translation>
     </message>
@@ -2185,22 +2185,22 @@
 <context>
     <name>SpectrumDock</name>
     <message>
-        <location filename="../src/docks/SpectrumDock.cpp" line="28"/>
+        <location filename="../src/docks/SpectrumDock.cpp" line="29"/>
         <source>Spectrum</source>
         <translation>Спектр</translation>
     </message>
     <message>
-        <location filename="../src/docks/SpectrumDock.cpp" line="49"/>
+        <location filename="../src/docks/SpectrumDock.cpp" line="50"/>
         <source>Magnitude per vertical screen division</source>
         <translation>Величина на вертикальное деление экрана</translation>
     </message>
     <message>
-        <location filename="../src/docks/SpectrumDock.cpp" line="75"/>
+        <location filename="../src/docks/SpectrumDock.cpp" line="76"/>
         <source>Frequencybase</source>
         <translation>Частота/Деление</translation>
     </message>
     <message>
-        <location filename="../src/docks/SpectrumDock.cpp" line="78"/>
+        <location filename="../src/docks/SpectrumDock.cpp" line="79"/>
         <source>Frequency range per horizontal screen division</source>
         <translation>Диапазон частот на горизонтальное деление экрана</translation>
     </message>

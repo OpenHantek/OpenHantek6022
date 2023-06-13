@@ -373,6 +373,9 @@ int main( int argc, char *argv[] ) {
         qDebug() << startupTime.elapsed() << "ms:"
                  << "use device" << scopeDevice->getModel()->name << "serial number" << scopeDevice->getSerialNumber();
 
+    if ( verboseLevel > 2 )
+        qDebug() << "  main thread ID: " << QThread::currentThreadId();
+
     //////// Create DSO control object and move it to a separate thread ////////
     if ( verboseLevel )
         qDebug() << startupTime.elapsed() << "ms:"
@@ -383,7 +386,6 @@ int main( int argc, char *argv[] ) {
     dsoControl.moveToThread( &dsoControlThread );
     QObject::connect( &dsoControlThread, &QThread::started, &dsoControl, &HantekDsoControl::stateMachine );
     QObject::connect( &dsoControl, &HantekDsoControl::communicationError, QCoreApplication::instance(), &QCoreApplication::quit );
-
     if ( scopeDevice )
         QObject::connect( scopeDevice.get(), &ScopeDevice::deviceDisconnected, QCoreApplication::instance(),
                           &QCoreApplication::quit );
@@ -510,8 +512,8 @@ int main( int argc, char *argv[] ) {
     dsoControl.enableSamplingUI();
     postProcessingThread.start();
     dsoControlThread.start();
-    Capturing capturing( &dsoControl );
-    capturing.start();
+    CapturingThread capturingThread( &dsoControl ); // low level capture in separate thread
+    capturingThread.start();
 
     if ( verboseLevel )
         qDebug() << startupTime.elapsed() << "ms:"
@@ -536,8 +538,8 @@ int main( int argc, char *argv[] ) {
     // wait 2 * record time (delay is ms) for dso to finish
     unsigned waitForDso = unsigned( 2000 * dsoControl.getSamplesize() / dsoControl.getSamplerate() );
     waitForDso = qMax( waitForDso, 10000U ); // wait for at least 10 s
-    capturing.requestInterruption();
-    capturing.wait( waitForDso );
+    capturingThread.requestInterruption();
+    capturingThread.wait( waitForDso );
     if ( verboseLevel < 2 )
         std::cerr << "has "; // 2nd part
 
