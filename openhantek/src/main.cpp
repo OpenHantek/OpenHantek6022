@@ -3,7 +3,6 @@
 #include <QApplication>
 #include <QCommandLineParser>
 #include <QDebug>
-#include <QDesktopWidget>
 #include <QElapsedTimer>
 #include <QLibraryInfo>
 #include <QLocale>

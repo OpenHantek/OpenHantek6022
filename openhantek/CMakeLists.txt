@@ -13,13 +13,15 @@ find_package(Qt5PrintSupport REQUIRED)
 find_package(Qt5OpenGL REQUIRED)
 find_package(OpenGL)
 
+if (Qt5Widgets_VERSION VERSION_LESS 5.4.0)
+    message(FATAL_ERROR "Minimum supported Qt5 version is 5.4.0!")
+else()
+    message("-- Qt5 version is ${Qt5Widgets_VERSION}")
+endif()
+
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
-
-if (Qt5Widgets_VERSION VERSION_LESS 5.4.0)
-    message(FATAL_ERROR "Minimum supported Qt5 version is 5.4.0!")
-endif()
 
 # include directories
 set(CMAKE_INCLUDE_CURRENT_DIR ON)

@@ -103,7 +103,7 @@ class QtAwesomeIconPainterIconEngine : public QIconEngine {
     QPixmap pixmap( const QSize &size, QIcon::Mode mode, QIcon::State state ) override;
 
 #if ( QT_VERSION >= QT_VERSION_CHECK( 5, 6, 0 ) )
-    QList< QSize > availableSizes( QIcon::Mode mode, QIcon::State state ) const override {
+    QList< QSize > availableSizes( QIcon::Mode mode, QIcon::State state ) const {
         Q_UNUSED( mode )
         Q_UNUSED( state )
         QList< QSize > sizes = { QSize( 16, 16 ),   QSize( 32, 32 ),   QSize( 64, 64 ),

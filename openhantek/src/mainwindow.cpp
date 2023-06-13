@@ -226,7 +226,8 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
         // Command field inside the status bar
         commandEdit = new QLineEdit( this );
         // allowed commands are either control command "cc E0..E6 xx [xx ...]" or frequency command "freq nn"
-        QRegExpValidator *v = new QRegExpValidator( QRegExp( "(cc|CC) [eE][0-6]( [0-9a-fA-F]{1,2})+|freq \\d{1,6}" ), this );
+        QRegularExpressionValidator *v =
+            new QRegularExpressionValidator( QRegularExpression( "(cc|CC) [eE][0-6]( [0-9a-fA-F]{1,2})+|freq \\d{1,6}" ), this );
         commandEdit->setValidator( v );
         commandEdit->hide();
         statusBar()->addPermanentWidget( commandEdit, 1 );

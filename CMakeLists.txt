@@ -30,9 +30,6 @@ if (GIT_EXECUTABLE AND EXISTS "${CMAKE_SOURCE_DIR}/.git")
 endif()
 message(STATUS "VERSION: ${VERSION}")
 
-# Use CPack to make tgz/deb/rpm/zip installer packages
-include(cmake/CPackInfos.cmake)
-
 add_compile_options(-Wall -Wextra -pedantic)
 
 # Silence nasty warnings "parameter passing for argument of type ... changed in GCC 7.1"
@@ -78,4 +75,7 @@ add_custom_target(
     readme
     SOURCES CHANGELOG LICENSE README README.md ${MDFILES}
 )
+
+# Use CPack to make tgz/deb/rpm/zip installer packages
+include(cmake/CPackInfos.cmake)
 

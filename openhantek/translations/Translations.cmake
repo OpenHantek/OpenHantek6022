@@ -6,8 +6,7 @@ set(TS_FILES translations/openhantek_de.ts translations/openhantek_es.ts transla
 #
 ###################################
 
-
-# Find the QtWidgets library
+# Find the Qt linguist tool
 find_package(Qt5 REQUIRED COMPONENTS LinguistTools)
 
 # defines files with translatable strings.
