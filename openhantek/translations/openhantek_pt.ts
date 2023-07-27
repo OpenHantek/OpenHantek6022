@@ -256,7 +256,7 @@
         <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="41"/>
         <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="45"/>
         <source>Voltage</source>
-        <translation>Voltagem</translation>
+        <translation>Tensão</translation>
     </message>
     <message>
         <location filename="../src/configdialog/DsoConfigColorsPage.cpp" line="140"/>
@@ -1794,7 +1794,7 @@
     </message>
     <message>
         <source>Voltage</source>
-        <translation type="vanished">Voltagem</translation>
+        <translation type="vanished">Tensão</translation>
     </message>
     <message>
         <source>Spectrum</source>
@@ -2386,7 +2386,7 @@
     <message>
         <location filename="../src/docks/VoltageDock.cpp" line="26"/>
         <source>Voltage</source>
-        <translation>Voltagem</translation>
+        <translation>Tensão</translation>
     </message>
     <message>
         <location filename="../src/docks/VoltageDock.cpp" line="55"/>
