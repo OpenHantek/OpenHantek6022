@@ -286,8 +286,9 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
     connect( horizontalDock, &HorizontalDock::timebaseChanged, triggerDock, &TriggerDock::timebaseChanged );
     connect( horizontalDock, &HorizontalDock::timebaseChanged, dsoControl, [ dsoControl, this ]() {
         dsoControl->setRecordTime( dsoSettings->scope.horizontal.timebase * DIVS_TIME );
-        this->dsoWidget->updateTimebase( dsoSettings->scope.horizontal.timebase );
     } );
+    connect( horizontalDock, &HorizontalDock::timebaseChanged, this->dsoWidget,
+             [ this ]() { dsoWidget->updateTimebase( dsoSettings->scope.horizontal.timebase ); } );
     connect( spectrumDock, &SpectrumDock::frequencybaseChanged, this,
              [ this ]( double frequencybase ) { this->dsoWidget->updateFrequencybase( frequencybase ); } );
     connect( dsoControl, &HantekDsoControl::samplerateChanged, horizontalDock,
