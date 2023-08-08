@@ -1363,12 +1363,12 @@
         <translation>Ungültiger Befehl</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="381"/>
+        <location filename="../src/mainwindow.cpp" line="380"/>
         <source>Stop the oscilloscope</source>
         <translation>Das Oszilloskop anhalten</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="380"/>
+        <location filename="../src/mainwindow.cpp" line="379"/>
         <source>Stop</source>
         <translation>Stop</translation>
     </message>
@@ -1452,23 +1452,23 @@
         <translation>Export der aufgenommenen Daten im %1-Format zur weiteren Verarbeitung</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="384"/>
+        <location filename="../src/mainwindow.cpp" line="383"/>
         <source>Start</source>
         <translation>Start</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="385"/>
+        <location filename="../src/mainwindow.cpp" line="384"/>
         <source>Start the oscilloscope</source>
         <translation>Startet das Oszilloskop</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="406"/>
+        <location filename="../src/mainwindow.cpp" line="405"/>
         <source>Open file</source>
         <translation>Datei öffnen</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="406"/>
-        <location filename="../src/mainwindow.cpp" line="431"/>
+        <location filename="../src/mainwindow.cpp" line="405"/>
+        <location filename="../src/mainwindow.cpp" line="430"/>
         <source>Settings (*.conf)</source>
         <translation>Einstellungen (*.conf)</translation>
     </message>
@@ -1577,67 +1577,67 @@
         <translation>Kalibriere Offset</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="431"/>
+        <location filename="../src/mainwindow.cpp" line="430"/>
         <source>Save settings</source>
         <translation>Einstellungen speichern</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="457"/>
+        <location filename="../src/mainwindow.cpp" line="456"/>
         <source>Disable fading of previous graphs</source>
         <translation>Nachleuchten von vorigen Graphen deaktivieren</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="459"/>
+        <location filename="../src/mainwindow.cpp" line="458"/>
         <source>Enable fading of previous graphs</source>
         <translation>Nachleuchten von vorigen Graphen aktivieren</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="467"/>
+        <location filename="../src/mainwindow.cpp" line="466"/>
         <source>Hide histogram</source>
         <translation>Histogramm ausblenden</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="469"/>
+        <location filename="../src/mainwindow.cpp" line="468"/>
         <source>Show histogram</source>
         <translation>Histogramm einblenden</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="478"/>
+        <location filename="../src/mainwindow.cpp" line="477"/>
         <source>Hide magnified scope</source>
         <translation>Vergrößerte Anzeige ausblenden</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="480"/>
+        <location filename="../src/mainwindow.cpp" line="479"/>
         <source>Show magnified scope</source>
         <translation>Vergrößerte Anzeige anzeigen</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="490"/>
+        <location filename="../src/mainwindow.cpp" line="489"/>
         <source>Hide measurements</source>
         <translation>Messwerte ausblenden</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="492"/>
+        <location filename="../src/mainwindow.cpp" line="491"/>
         <source>Show measurements</source>
         <translation>Messwerte anzeigen</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="507"/>
+        <location filename="../src/mainwindow.cpp" line="506"/>
         <source>&lt;p&gt;Demo Mode&lt;/p&gt;</source>
         <translation>&lt;p&gt;Demo-Modus&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="508"/>
+        <location filename="../src/mainwindow.cpp" line="507"/>
         <source>&lt;p&gt;Device: %1 (%2), FW%3&lt;/p&gt;</source>
         <translation>&lt;p&gt;Device: %1 (%2), FW%3&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="514"/>
+        <location filename="../src/mainwindow.cpp" line="513"/>
         <source>&lt;p&gt;Open source software for Hantek6022 USB oscilloscopes&lt;/p&gt;&lt;p&gt;Maintainer: Martin Homuth-Rosemann&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2010, 2011 Oliver Haag&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2012-%1 OpenHantek community&lt;br/&gt;&lt;a href=&apos;https://github.com/OpenHantek&apos;&gt;https://github.com/OpenHantek&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Open source firmware copyright &amp;copy; 2019-%1 Ho-Ro&lt;br/&gt;&lt;a href=&apos;https://github.com/Ho-Ro/Hantek6022API&apos;&gt;https://github.com/Ho-Ro/Hantek6022API&lt;/a&gt;&lt;/p&gt;</source>
         <translation>&lt;p&gt;Open-Source-Software für Hantek6022 USB-Oscilloskope&lt;/p&gt;&lt;p&gt;Betreuer: Martin Homuth-Rosemann&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2010, 2011 Oliver Haag&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2012-%1 OpenHantek community&lt;br/&gt;&lt;a href=&apos;https://github.com/OpenHantek&apos;&gt;https://github.com/OpenHantek&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Open-Source-Firmware Copyright &amp;copy; 2019-%1 Ho-Ro&lt;br/&gt;&lt;a href=&apos;https://github.com/Ho-Ro/Hantek6022API&apos;&gt;https://github.com/Ho-Ro/Hantek6022API&lt;/a&gt;&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="525"/>
+        <location filename="../src/mainwindow.cpp" line="524"/>
         <source>&lt;p&gt;Graphic: %1 - GLSL version %2&lt;/p&gt;&lt;p&gt;Qt version: %3&lt;/p&gt;</source>
         <translation></translation>
     </message>
@@ -1662,50 +1662,50 @@
         <translation type="vanished">&lt;p&gt;Open-Source-Software für Hantek6022 USB Oszilloskope&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2010, 2011 Oliver Haag&lt;/p&gt;&lt;p&gt;Copyright &amp;copy; 2012-2020 OpenHantek community&lt;br/&gt;&lt;a href=&apos;https://github.com/OpenHantek&apos;&gt;https://github.com/OpenHantek&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Open-Source-Firmware - Copyright &amp;copy; 2019-2020 Ho-Ro&lt;br/&gt;&lt;a href=&apos;https://github.com/Ho-Ro/Hantek6022API&apos;&gt;https://github.com/Ho-Ro/Hantek6022API&lt;/a&gt;&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="529"/>
+        <location filename="../src/mainwindow.cpp" line="528"/>
         <source>&lt;p&gt;Running since %1 seconds.&lt;/p&gt;</source>
         <translation>&lt;p&gt;Laufzeit %1 Sekunden.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="560"/>
+        <location filename="../src/mainwindow.cpp" line="559"/>
         <source>%1: %2</source>
         <translation>%1: %2</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="595"/>
+        <location filename="../src/mainwindow.cpp" line="594"/>
         <source>yyyy-MM-dd hh:mm:ss</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="596"/>
+        <location filename="../src/mainwindow.cpp" line="595"/>
         <source>yyyyMMdd_hhmmss</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="629"/>
-        <location filename="../src/mainwindow.cpp" line="643"/>
+        <location filename="../src/mainwindow.cpp" line="628"/>
+        <location filename="../src/mainwindow.cpp" line="642"/>
         <source>Write error
 %1</source>
         <translation>Schreibfehler
 %1</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="632"/>
+        <location filename="../src/mainwindow.cpp" line="631"/>
         <source>Image (*.png *.jpg)</source>
         <translation>Bild (*.png *.jpg)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="632"/>
+        <location filename="../src/mainwindow.cpp" line="631"/>
         <source>Portable Document Format (*.pdf)</source>
         <translation>Portables Dokumentenformat (*.pdf)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="633"/>
+        <location filename="../src/mainwindow.cpp" line="632"/>
         <source>Save screenshot</source>
         <translation>Screenshot speichen</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="666"/>
+        <location filename="../src/mainwindow.cpp" line="665"/>
         <source>Print oscillograph</source>
         <translation>Oszillogramm drucken</translation>
     </message>

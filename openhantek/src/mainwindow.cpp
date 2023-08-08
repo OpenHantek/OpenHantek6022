@@ -279,18 +279,17 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
     } );
 
     // Connect signals to DSO controller and widget
-    connect( horizontalDock, &HorizontalDock::samplerateChanged, dsoControl, [ dsoControl, this ]() {
-        dsoControl->setSamplerate( dsoSettings->scope.horizontal.samplerate );
-        this->dsoWidget->updateSamplerate( dsoSettings->scope.horizontal.samplerate );
-    } );
+    connect( horizontalDock, &HorizontalDock::samplerateChanged, dsoControl,
+             [ dsoControl, this ]() { dsoControl->setSamplerate( dsoSettings->scope.horizontal.samplerate ); } );
+    connect( horizontalDock, &HorizontalDock::samplerateChanged, dsoWidget,
+             [ this ]() { dsoWidget->updateSamplerate( dsoSettings->scope.horizontal.samplerate ); } );
     connect( horizontalDock, &HorizontalDock::timebaseChanged, triggerDock, &TriggerDock::timebaseChanged );
-    connect( horizontalDock, &HorizontalDock::timebaseChanged, dsoControl, [ dsoControl, this ]() {
-        dsoControl->setRecordTime( dsoSettings->scope.horizontal.timebase * DIVS_TIME );
-    } );
-    connect( horizontalDock, &HorizontalDock::timebaseChanged, this->dsoWidget,
+    connect( horizontalDock, &HorizontalDock::timebaseChanged, dsoControl,
+             [ dsoControl, this ]() { dsoControl->setRecordTime( dsoSettings->scope.horizontal.timebase * DIVS_TIME ); } );
+    connect( horizontalDock, &HorizontalDock::timebaseChanged, dsoWidget,
              [ this ]() { dsoWidget->updateTimebase( dsoSettings->scope.horizontal.timebase ); } );
-    connect( spectrumDock, &SpectrumDock::frequencybaseChanged, this,
-             [ this ]( double frequencybase ) { this->dsoWidget->updateFrequencybase( frequencybase ); } );
+    connect( spectrumDock, &SpectrumDock::frequencybaseChanged, dsoWidget,
+             [ this ]( double frequencybase ) { dsoWidget->updateFrequencybase( frequencybase ); } );
     connect( dsoControl, &HantekDsoControl::samplerateChanged, horizontalDock,
              [ this, horizontalDock, spectrumDock ]( double samplerate ) {
                  // The timebase was set, let's adapt the samplerate accordingly
@@ -374,22 +373,22 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
 
     // Started/stopped signals from oscilloscope
     connect( dsoControl, &HantekDsoControl::showSamplingStatus, this, [ this ]( bool enabled ) {
-        QSignalBlocker blocker( this->ui->actionSampling );
+        QSignalBlocker blocker( ui->actionSampling );
         if ( enabled ) {
-            this->ui->actionSampling->setIcon( this->iconPause );
-            this->ui->actionSampling->setText( tr( "Stop" ) );
-            this->ui->actionSampling->setStatusTip( tr( "Stop the oscilloscope" ) );
+            ui->actionSampling->setIcon( iconPause );
+            ui->actionSampling->setText( tr( "Stop" ) );
+            ui->actionSampling->setStatusTip( tr( "Stop the oscilloscope" ) );
         } else {
-            this->ui->actionSampling->setIcon( this->iconPlay );
-            this->ui->actionSampling->setText( tr( "Start" ) );
-            this->ui->actionSampling->setStatusTip( tr( "Start the oscilloscope" ) );
+            ui->actionSampling->setIcon( iconPlay );
+            ui->actionSampling->setText( tr( "Start" ) );
+            ui->actionSampling->setStatusTip( tr( "Start the oscilloscope" ) );
         }
-        this->ui->actionSampling->setChecked( enabled );
+        ui->actionSampling->setChecked( enabled );
     } );
-    connect( this->ui->actionSampling, &QAction::triggered, dsoControl, &HantekDsoControl::enableSamplingUI );
-    this->ui->actionSampling->setChecked( dsoControl->isSamplingUI() );
+    connect( ui->actionSampling, &QAction::triggered, dsoControl, &HantekDsoControl::enableSamplingUI );
+    ui->actionSampling->setChecked( dsoControl->isSamplingUI() );
 
-    connect( this->ui->actionRefresh, &QAction::triggered, dsoControl, &HantekDsoControl::restartSampling );
+    connect( ui->actionRefresh, &QAction::triggered, dsoControl, &HantekDsoControl::restartSampling );
 
     connect( dsoControl, &HantekDsoControl::samplerateLimitsChanged, horizontalDock, &HorizontalDock::setSamplerateLimits );
     connect( dsoControl, &HantekDsoControl::samplerateSet, horizontalDock, &HorizontalDock::setSamplerateSteps );
@@ -415,8 +414,8 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
             dsoWidget->updateTimebase( dsoSettings->scope.horizontal.timebase );
 
             for ( ChannelID channel = 0; channel < spec->channels; ++channel ) {
-                this->dsoWidget->updateVoltageUsed( channel, dsoSettings->scope.voltage[ channel ].used );
-                this->dsoWidget->updateSpectrumUsed( channel, dsoSettings->scope.spectrum[ channel ].used );
+                dsoWidget->updateVoltageUsed( channel, dsoSettings->scope.voltage[ channel ].used );
+                dsoWidget->updateSpectrumUsed( channel, dsoSettings->scope.spectrum[ channel ].used );
             }
         }
     } );
@@ -445,28 +444,28 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
         dsoSettings->mainWindowGeometry = saveGeometry();
         dsoSettings->mainWindowState = saveState();
 
-        DsoConfigDialog *configDialog = new DsoConfigDialog( this->dsoSettings, this );
+        DsoConfigDialog *configDialog = new DsoConfigDialog( dsoSettings, this );
         configDialog->setModal( true );
         configDialog->show();
     } );
 
-    connect( this->ui->actionPhosphor, &QAction::toggled, this, [ this ]( bool enabled ) {
+    connect( ui->actionPhosphor, &QAction::toggled, this, [ this ]( bool enabled ) {
         dsoSettings->view.digitalPhosphor = enabled;
 
         if ( dsoSettings->view.digitalPhosphor )
-            this->ui->actionPhosphor->setStatusTip( tr( "Disable fading of previous graphs" ) );
+            ui->actionPhosphor->setStatusTip( tr( "Disable fading of previous graphs" ) );
         else
-            this->ui->actionPhosphor->setStatusTip( tr( "Enable fading of previous graphs" ) );
+            ui->actionPhosphor->setStatusTip( tr( "Enable fading of previous graphs" ) );
     } );
-    this->ui->actionPhosphor->setChecked( dsoSettings->view.digitalPhosphor );
+    ui->actionPhosphor->setChecked( dsoSettings->view.digitalPhosphor );
 
     connect( ui->actionHistogram, &QAction::toggled, this, [ this ]( bool enabled ) {
         dsoSettings->scope.histogram = enabled;
 
         if ( dsoSettings->scope.histogram )
-            this->ui->actionHistogram->setStatusTip( tr( "Hide histogram" ) );
+            ui->actionHistogram->setStatusTip( tr( "Hide histogram" ) );
         else
-            this->ui->actionHistogram->setStatusTip( tr( "Show histogram" ) );
+            ui->actionHistogram->setStatusTip( tr( "Show histogram" ) );
     } );
     ui->actionHistogram->setChecked( dsoSettings->scope.histogram );
     ui->actionHistogram->setEnabled( scope->horizontal.format == Dso::GraphFormat::TY );
@@ -475,11 +474,11 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
         dsoSettings->view.zoom = enabled;
 
         if ( dsoSettings->view.zoom )
-            this->ui->actionZoom->setStatusTip( tr( "Hide magnified scope" ) );
+            ui->actionZoom->setStatusTip( tr( "Hide magnified scope" ) );
         else
-            this->ui->actionZoom->setStatusTip( tr( "Show magnified scope" ) );
+            ui->actionZoom->setStatusTip( tr( "Show magnified scope" ) );
 
-        this->dsoWidget->updateZoom( enabled );
+        dsoWidget->updateZoom( enabled );
     } );
     ui->actionZoom->setChecked( dsoSettings->view.zoom );
 
@@ -487,11 +486,11 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
         dsoSettings->view.cursorsVisible = enabled;
 
         if ( dsoSettings->view.cursorsVisible )
-            this->ui->actionMeasure->setStatusTip( tr( "Hide measurements" ) );
+            ui->actionMeasure->setStatusTip( tr( "Hide measurements" ) );
         else
-            this->ui->actionMeasure->setStatusTip( tr( "Show measurements" ) );
+            ui->actionMeasure->setStatusTip( tr( "Show measurements" ) );
 
-        this->dsoWidget->updateCursorGrid( enabled );
+        dsoWidget->updateCursorGrid( enabled );
     } );
     ui->actionMeasure->setChecked( dsoSettings->view.cursorsVisible );
 
@@ -503,11 +502,11 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
              [ this ]() { openDocument( FrequencyGeneratorModificationName ); } );
 
     connect( ui->actionAbout, &QAction::triggered, this, [ this ]() {
-        QString deviceSpec = this->dsoSettings->deviceName == "DEMO"
+        QString deviceSpec = dsoSettings->deviceName == "DEMO"
                                  ? tr( "<p>Demo Mode</p>" )
                                  : tr( "<p>Device: %1 (%2), FW%3</p>" )
-                                       .arg( this->dsoSettings->deviceName, this->dsoSettings->deviceID ) // device type, ser. num
-                                       .arg( this->dsoSettings->deviceFW, 4, 16,
+                                       .arg( dsoSettings->deviceName, dsoSettings->deviceID ) // device type, ser. num
+                                       .arg( dsoSettings->deviceFW, 4, 16,
                                              QChar( '0' ) ); // FW version
         QMessageBox::about(
             this, QString( "%1 (%2)" ).arg( QCoreApplication::applicationName(), VERSION ),
