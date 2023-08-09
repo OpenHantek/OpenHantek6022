@@ -438,10 +438,12 @@ void HantekDsoControl::restartSampling() {
 
 /// \brief Start sampling process.
 void HantekDsoControl::enableSamplingUI( bool enabled ) {
-    if ( verboseLevel > 4 )
-        qDebug() << "    HDC::enableSampling()" << enabled;
+    if ( verboseLevel > 3 )
+        qDebug() << "   HDC::enableSampling()" << enabled;
     if ( enabled && controlsettings.trigger.mode == Dso::TriggerMode::SINGLE )
         triggering->resetTriggeredPositionRaw(); // invalidate previous result, wait for new trigger
+    else if ( controlsettings.trigger.mode == Dso::TriggerMode::ROLL )
+        samplingStarted = enabled; // start / stop roll mode sampling (almost) immediately
     samplingUI = enabled;
     updateSamplerateLimits();
     emit showSamplingStatus( enabled );
