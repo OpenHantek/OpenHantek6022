@@ -143,7 +143,7 @@ void GraphGenerator::generateGraphsTYvoltage( PPresult *result ) {
         graphVoltage.clear();   // remove all previous dots and fill in new trace as GL_LINE_STRIP
         graphHistogram.clear(); // remove all previous line and fill in new histo as GL_LINES
         unsigned bins[ int( binsPerDiv * DIVS_VOLTAGE ) ] = { 0 };
-        for ( unsigned int position = unsigned( leftmostPosition ); position < dotsOnScreen && sampleIterator < sampleEnd;
+        for ( unsigned int position = unsigned( leftmostPosition ); position < dotsOnScreen && sampleIterator < sampleEnd - 1;
               ++position ) {
             double x = double( MARGIN_LEFT + position * horizontalFactor );
             double y_1 = *sampleIterator++ / gain + offset;
