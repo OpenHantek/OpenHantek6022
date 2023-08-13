@@ -92,9 +92,11 @@ MYREPO = OWNER + '/' + REPO
 #######################
 #
 timeout = ( 10, 30 ) # (connect, response) seconds time out
-response = requests.get( API + MYREPO, headers=headers, timeout=timeout )
-if not response:
-	print( 'Authorizing error', response.status_code, responses[response.status_code] )
+url = API + MYREPO
+response = requests.get( url, headers=headers, timeout=timeout )
+#print( response.status_code, url )
+if response.status_code != 200:
+	print( 'Authorizing error', response.status_code, responses[response.status_code], url )
 	sys.exit( -1 )
 
 
@@ -117,11 +119,12 @@ if TAG and TAG != 'latest':
 # get the upload URL for this tag #
 ###################################
 #
-response = requests.get( API + RELEASES + TAG, headers=headers, timeout=timeout )
-if not response:
-	print( 'Communication error', response.status_code, responses[response.status_code] )
+url = API + RELEASES + TAG
+response = requests.get( url, headers=headers, timeout=timeout )
+#print( response.status_code, url )
+if response.status_code != 200:
+	print( 'Communication error', response.status_code, responses[response.status_code], url )
 	sys.exit( -1 )
-
 rj = response.json()
 
 
