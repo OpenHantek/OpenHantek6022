@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 
 #pragma once
-#include "iconfont/QtAwesome.h"
 #include "post/ppresult.h"
 #include <QElapsedTimer>
 #include <QLineEdit>
@@ -49,7 +48,6 @@ class MainWindow : public QMainWindow {
     QIcon iconPause;
     QIcon iconPlay;
     QLineEdit *commandEdit;
-    QtAwesome *iconFont;
 
     // Central widgets
     DsoWidget *dsoWidget;

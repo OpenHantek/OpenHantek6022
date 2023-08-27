@@ -4,7 +4,6 @@
 #include "exportjson.h"
 #include "dsosettings.h"
 #include "exporterregistry.h"
-#include "iconfont/QtAwesome.h"
 #include "post/ppresult.h"
 
 #include <QCoreApplication>
@@ -20,8 +19,6 @@ void ExporterJSON::create( ExporterRegistry *newRegistry ) {
     registry = newRegistry;
     data.reset();
 }
-
-int ExporterJSON::faIcon() { return fa::filetexto; }
 
 QString ExporterJSON::name() { return tr( "Export &JSON .." ); }
 

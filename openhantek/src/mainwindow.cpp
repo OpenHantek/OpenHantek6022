@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 
 #include "mainwindow.h"
-#include "iconfont/QtAwesome.h"
 #include "ui_mainwindow.h"
 
 #include "HorizontalDock.h"
@@ -28,6 +27,7 @@
 #include <QFileDialog>
 #include <QLoggingCategory>
 #include <QMessageBox>
+#include <QPainter>
 #include <QPalette>
 #include <QPrintDialog>
 #include <QPrinter>
@@ -50,12 +50,10 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
         iconPath += "darktheme/";                                   // select top window icons accordingly
         colorMap.insert( "color-off", QColor( 208, 208, 208 ) );    // light grey normal
         colorMap.insert( "color-active", QColor( 255, 255, 255 ) ); // white when selected
+    } else {
+        iconPath += "lighttheme/";
     }
     elapsedTime.start();
-
-    // Version 4.7.0 - see icons: https://fontawesome.com/v4/icons/
-    iconFont = new QtAwesome( this );
-    iconFont->initFontAwesome();
 
     ui->setupUi( this );
     iconPause = QIcon( iconPath + "pause.svg" );
@@ -106,26 +104,29 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
         ui->actionMeasure->setToolTip( tr( "Enable cursor measurements" ) );
     else
         ui->actionMeasure->setToolTip( QString() );
-    ui->actionOpen->setIcon( iconFont->icon( fa::folderopen, colorMap ) );
+    iconPath = QString( ":/images/actions/" );
+    ui->actionOpen->setIcon( QIcon( iconPath + "open.svg" ) );
     ui->actionOpen->setToolTip( tr( "Load scope settings from a config file" ) );
-    ui->actionSave->setIcon( iconFont->icon( fa::save, colorMap ) );
+    ui->actionSave->setIcon( QIcon( iconPath + "save.svg" ) );
     ui->actionSave->setToolTip( tr( "Save the scope settings to the default location" ) );
-    ui->actionSave_as->setIcon( iconFont->icon( fa::save, colorMap ) );
+    ui->actionSave_as->setIcon( QIcon( iconPath + "save_as.svg" ) );
     ui->actionSave_as->setToolTip( tr( "Save the scope settings to a user defined file" ) );
-    ui->actionSettings->setIcon( iconFont->icon( fa::sliders, colorMap ) );
+    ui->actionExit->setIcon( QIcon( iconPath + "exit.svg" ) );
+    ui->actionExit->setToolTip( tr( "Exit the application" ) );
+    ui->actionSettings->setIcon( QIcon( iconPath + "settings.svg" ) );
     ui->actionSettings->setToolTip( tr( "Define scope settings, analysis parameters and colors" ) );
-    ui->actionCalibrateOffset->setIcon( iconFont->icon( fa::wrench, colorMap ) );
+    ui->actionCalibrateOffset->setIcon( QIcon( iconPath + "offset.svg" ) );
     ui->actionCalibrateOffset->setToolTip( tr( "Short-circuit both inputs and slowly select all voltage gain settings" ) );
-    ui->actionManualCommand->setIcon( iconFont->icon( fa::terminal, colorMap ) );
+    ui->actionManualCommand->setIcon( QIcon( iconPath + "terminal.svg" ) );
     ui->actionManualCommand->setToolTip( tr( "Send low level commands directly to the scope: 'CC XX XX'" ) );
-    ui->actionUserManual->setIcon( iconFont->icon( fa::book, colorMap ) );
+    ui->actionUserManual->setIcon( QIcon( iconPath + "book.svg" ) );
     ui->actionUserManual->setToolTip( tr( "Read the fine manual" ) );
-    ui->actionACmodification->setIcon( iconFont->icon( fa::book, colorMap ) );
+    ui->actionACmodification->setIcon( QIcon( iconPath + "book.svg" ) );
     ui->actionACmodification->setToolTip( tr( "Documentation how to add HW for AC coupled inputs" ) );
-    ui->actionFrequencyGeneratorModification->setIcon( iconFont->icon( fa::book, colorMap ) );
+    ui->actionFrequencyGeneratorModification->setIcon( QIcon( iconPath + "book.svg" ) );
     ui->actionFrequencyGeneratorModification->setToolTip(
         tr( "Documentation how to get jitter-free calibration frequency output" ) );
-    ui->actionAbout->setIcon( iconFont->icon( fa::questioncircle, colorMap ) );
+    ui->actionAbout->setIcon( QIcon( iconPath + "about.svg" ) );
     ui->actionAbout->setToolTip( tr( "Show info about the scope's HW and SW" ) );
 
     // Window title
@@ -140,12 +141,12 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
     setDockOptions( dockOptions() | QMainWindow::GroupedDragging );
 #endif
     QAction *action;
-    action = new QAction( iconFont->icon( fa::camera, colorMap ), tr( "&Screenshot" ), this );
+    action = new QAction( QIcon( iconPath + "camera.svg" ), tr( "&Screenshot" ), this );
     action->setToolTip( tr( "Make an immediate screenshot of the program window and save it into the current directory" ) );
     connect( action, &QAction::triggered, this, [ this ]() { screenShot( SCREENSHOT, true ); } );
     ui->menuExport->addAction( action );
 
-    action = new QAction( iconFont->icon( fa::clone, colorMap ), tr( "&Hardcopy" ), this );
+    action = new QAction( QIcon( iconPath + "clone.svg" ), tr( "&Hardcopy" ), this );
     action->setToolTip( tr( "Make an immediate (printable) hardcopy of the display and save it into the current directory" ) );
     connect( action, &QAction::triggered, this, [ this ]() {
         dsoWidget->switchToPrintColors();
@@ -155,12 +156,12 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
 
     ui->menuExport->addSeparator();
 
-    action = new QAction( iconFont->icon( fa::camera, colorMap ), tr( "Save screenshot as .." ), this );
+    action = new QAction( QIcon( iconPath + "save_as.svg" ), tr( "Save screenshot as .." ), this );
     action->setToolTip( tr( "Make a screenshot of the program window and define the storage location" ) );
     connect( action, &QAction::triggered, this, [ this ]() { screenShot( SCREENSHOT ); } );
     ui->menuExport->addAction( action );
 
-    action = new QAction( iconFont->icon( fa::clone, colorMap ), tr( "Save Hardcopy as .." ), this );
+    action = new QAction( QIcon( iconPath + "save_as.svg" ), tr( "Save Hardcopy as .." ), this );
     action->setToolTip( tr( "Make a (printable) hardcopy of the display and define the storage location" ) );
     connect( action, &QAction::triggered, this, [ this ]() {
         dsoWidget->switchToPrintColors();
@@ -168,7 +169,7 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
     } );
     ui->menuExport->addAction( action );
 
-    action = new QAction( iconFont->icon( fa::print, colorMap ), tr( "&Print screen .." ), this );
+    action = new QAction( QIcon( iconPath + "print.svg" ), tr( "&Print screen .." ), this );
     action->setToolTip( tr( "Send the hardcopy to a printer" ) );
     connect( action, &QAction::triggered, this, [ this ]() {
         dsoWidget->switchToPrintColors();
@@ -179,7 +180,7 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
     ui->menuExport->addSeparator();
 
     for ( auto *exporter : *exporterRegistry ) {
-        action = new QAction( iconFont->icon( exporter->faIcon(), colorMap ), exporter->name(), this );
+        action = new QAction( QIcon( iconPath + "exporter.svg" ), exporter->name(), this );
         action->setToolTip( tr( "Export captured data in %1 format for further processing" ).arg( exporter->format() ) );
         action->setCheckable( exporter->type() == ExporterInterface::Type::ContinuousExport );
         connect( action, &QAction::triggered, exporterRegistry, [ exporter, exporterRegistry ]( bool checked ) {

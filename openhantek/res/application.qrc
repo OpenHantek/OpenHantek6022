@@ -2,13 +2,13 @@
     <qresource prefix="/">
         <file alias="switch_6022BL.png">images/switch_6022BL.png</file>
         <file>images/OpenHantek.svg</file>
-        <file>images/phosphor.svg</file>
-        <file>images/histogram.svg</file>
-        <file>images/measure.svg</file>
-        <file>images/pause.svg</file>
-        <file>images/play.svg</file>
-        <file>images/refresh.svg</file>
-        <file>images/zoom.svg</file>
+        <file>images/lighttheme/phosphor.svg</file>
+        <file>images/lighttheme//histogram.svg</file>
+        <file>images/lighttheme//measure.svg</file>
+        <file>images/lighttheme//pause.svg</file>
+        <file>images/lighttheme//play.svg</file>
+        <file>images/lighttheme//refresh.svg</file>
+        <file>images/lighttheme//zoom.svg</file>
         <file>images/darktheme/phosphor.svg</file>
         <file>images/darktheme/histogram.svg</file>
         <file>images/darktheme/measure.svg</file>
@@ -16,6 +16,19 @@
         <file>images/darktheme/play.svg</file>
         <file>images/darktheme/refresh.svg</file>
         <file>images/darktheme/zoom.svg</file>
+        <file>images/actions/open.svg</file>
+        <file>images/actions/save.svg</file>
+        <file>images/actions/save_as.svg</file>
+        <file>images/actions/exit.svg</file>
+        <file>images/actions/camera.svg</file>
+        <file>images/actions/clone.svg</file>
+        <file>images/actions/print.svg</file>
+        <file>images/actions/exporter.svg</file>
+        <file>images/actions/settings.svg</file>
+        <file>images/actions/offset.svg</file>
+        <file>images/actions/terminal.svg</file>
+        <file>images/actions/book.svg</file>
+        <file>images/actions/about.svg</file>
     </qresource>
     <qresource prefix="/actions"/>
 </RCC>

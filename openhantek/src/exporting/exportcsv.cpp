@@ -3,7 +3,6 @@
 #include "exportcsv.h"
 #include "dsosettings.h"
 #include "exporterregistry.h"
-#include "iconfont/QtAwesome.h"
 #include "post/ppresult.h"
 
 #include <QCoreApplication>
@@ -19,8 +18,6 @@ void ExporterCSV::create( ExporterRegistry *newRegistry ) {
     registry = newRegistry;
     data.reset();
 }
-
-int ExporterCSV::faIcon() { return fa::filetexto; }
 
 QString ExporterCSV::name() { return tr( "Export &CSV .." ); }
 

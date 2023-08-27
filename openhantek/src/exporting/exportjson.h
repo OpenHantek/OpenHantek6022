@@ -14,7 +14,6 @@ class ExporterJSON : public ExporterInterface {
   public:
     ExporterJSON();
     void create( ExporterRegistry *registry ) override;
-    int faIcon() override;
     QString name() override;
     QString format() override;
     Type type() override;
