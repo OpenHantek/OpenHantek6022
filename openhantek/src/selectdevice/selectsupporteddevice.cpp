@@ -78,9 +78,6 @@ std::unique_ptr< ScopeDevice > SelectSupportedDevice::showSelectDeviceModal( lib
                                 .arg( etcRules.fileName(), libRules.fileName() );
     }
 #endif
-    messageNoDevices +=
-        tr( "<p>Visit the build and run instruction "
-            "<a href='https://github.com/OpenHantek/OpenHantek6022/blob/main/docs/build.md'>website</a> for help.</p>" );
     messageNoDevices += tr( "<hr/><p>Even without a device you can explore the program's function. "
                             "Just press the <b>Demo Mode</b> button below.</p>" );
 

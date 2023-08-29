@@ -2,33 +2,50 @@
     <qresource prefix="/">
         <file alias="switch_6022BL.png">images/switch_6022BL.png</file>
         <file>images/OpenHantek.svg</file>
+        <file>images/lighttheme/histogram.svg</file>
+        <file>images/lighttheme/measure.svg</file>
+        <file>images/lighttheme/pause.svg</file>
         <file>images/lighttheme/phosphor.svg</file>
-        <file>images/lighttheme//histogram.svg</file>
-        <file>images/lighttheme//measure.svg</file>
-        <file>images/lighttheme//pause.svg</file>
-        <file>images/lighttheme//play.svg</file>
-        <file>images/lighttheme//refresh.svg</file>
-        <file>images/lighttheme//zoom.svg</file>
-        <file>images/darktheme/phosphor.svg</file>
+        <file>images/lighttheme/play.svg</file>
+        <file>images/lighttheme/refresh.svg</file>
+        <file>images/lighttheme/zoom.svg</file>
+
         <file>images/darktheme/histogram.svg</file>
         <file>images/darktheme/measure.svg</file>
         <file>images/darktheme/pause.svg</file>
+        <file>images/darktheme/phosphor.svg</file>
         <file>images/darktheme/play.svg</file>
         <file>images/darktheme/refresh.svg</file>
         <file>images/darktheme/zoom.svg</file>
-        <file>images/actions/open.svg</file>
-        <file>images/actions/save.svg</file>
-        <file>images/actions/save_as.svg</file>
-        <file>images/actions/exit.svg</file>
-        <file>images/actions/camera.svg</file>
-        <file>images/actions/clone.svg</file>
-        <file>images/actions/print.svg</file>
-        <file>images/actions/exporter.svg</file>
-        <file>images/actions/settings.svg</file>
-        <file>images/actions/offset.svg</file>
-        <file>images/actions/terminal.svg</file>
-        <file>images/actions/book.svg</file>
-        <file>images/actions/about.svg</file>
+
+        <file>images/lighttheme/about.svg</file>
+        <file>images/lighttheme/book.svg</file>
+        <file>images/lighttheme/camera.svg</file>
+        <file>images/lighttheme/clone.svg</file>
+        <file>images/lighttheme/exit.svg</file>
+        <file>images/lighttheme/exporter.svg</file>
+        <file>images/lighttheme/offset.svg</file>
+        <file>images/lighttheme/open.svg</file>
+        <file>images/lighttheme/print.svg</file>
+        <file>images/lighttheme/qt.svg</file>
+        <file>images/lighttheme/save.svg</file>
+        <file>images/lighttheme/save_as.svg</file>
+        <file>images/lighttheme/settings.svg</file>
+        <file>images/lighttheme/terminal.svg</file>
+
+        <file>images/darktheme/about.svg</file>
+        <file>images/darktheme/book.svg</file>
+        <file>images/darktheme/camera.svg</file>
+        <file>images/darktheme/clone.svg</file>
+        <file>images/darktheme/exit.svg</file>
+        <file>images/darktheme/exporter.svg</file>
+        <file>images/darktheme/offset.svg</file>
+        <file>images/darktheme/open.svg</file>
+        <file>images/darktheme/print.svg</file>
+        <file>images/darktheme/qt.svg</file>
+        <file>images/darktheme/save.svg</file>
+        <file>images/darktheme/save_as.svg</file>
+        <file>images/darktheme/settings.svg</file>
+        <file>images/darktheme/terminal.svg</file>
     </qresource>
-    <qresource prefix="/actions"/>
 </RCC>

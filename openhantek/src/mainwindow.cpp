@@ -104,7 +104,6 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
         ui->actionMeasure->setToolTip( tr( "Enable cursor measurements" ) );
     else
         ui->actionMeasure->setToolTip( QString() );
-    iconPath = QString( ":/images/actions/" );
     ui->actionOpen->setIcon( QIcon( iconPath + "open.svg" ) );
     ui->actionOpen->setToolTip( tr( "Load scope settings from a config file" ) );
     ui->actionSave->setIcon( QIcon( iconPath + "save.svg" ) );
@@ -128,6 +127,8 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
         tr( "Documentation how to get jitter-free calibration frequency output" ) );
     ui->actionAbout->setIcon( QIcon( iconPath + "about.svg" ) );
     ui->actionAbout->setToolTip( tr( "Show info about the scope's HW and SW" ) );
+    ui->actionAboutQt->setIcon( QIcon( iconPath + "qt.svg" ) );
+    ui->actionAboutQt->setToolTip( tr( "Show info about Qt" ) );
 
     // Window title
     setWindowIcon( QIcon( ":/images/OpenHantek.svg" ) );
@@ -156,12 +157,12 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
 
     ui->menuExport->addSeparator();
 
-    action = new QAction( QIcon( iconPath + "save_as.svg" ), tr( "Save screenshot as .." ), this );
+    action = new QAction( QIcon( iconPath + "save_as.svg" ), tr( "Save Screenshot As .." ), this );
     action->setToolTip( tr( "Make a screenshot of the program window and define the storage location" ) );
     connect( action, &QAction::triggered, this, [ this ]() { screenShot( SCREENSHOT ); } );
     ui->menuExport->addAction( action );
 
-    action = new QAction( QIcon( iconPath + "save_as.svg" ), tr( "Save Hardcopy as .." ), this );
+    action = new QAction( QIcon( iconPath + "save_as.svg" ), tr( "Save Hardcopy As .." ), this );
     action->setToolTip( tr( "Make a (printable) hardcopy of the display and define the storage location" ) );
     connect( action, &QAction::triggered, this, [ this ]() {
         dsoWidget->switchToPrintColors();
@@ -169,7 +170,7 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
     } );
     ui->menuExport->addAction( action );
 
-    action = new QAction( QIcon( iconPath + "print.svg" ), tr( "&Print screen .." ), this );
+    action = new QAction( QIcon( iconPath + "print.svg" ), tr( "&Print Screen .." ), this );
     action->setToolTip( tr( "Send the hardcopy to a printer" ) );
     connect( action, &QAction::triggered, this, [ this ]() {
         dsoWidget->switchToPrintColors();
@@ -269,8 +270,8 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
         } );
 
     } else { // do not show these actions
-        ui->actionCalibrateOffset->setDisabled( true );
-        ui->actionManualCommand->setDisabled( true );
+        ui->actionCalibrateOffset->setVisible( false );
+        ui->actionManualCommand->setVisible( false );
     }
 
     // Connect signals that display text in statusbar
@@ -529,6 +530,10 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
                 tr( "<p>Running since %1 seconds.</p>" ).arg( elapsedTime.elapsed() / 1000 ) );
     } );
 
+    connect( ui->actionAboutQt, &QAction::triggered, this, [ this ]() {
+        QMessageBox::aboutQt( this, QString( "%1 (%2)" ).arg( QCoreApplication::applicationName(), VERSION ) );
+    } );
+
     emit settingsLoaded( &dsoSettings->scope, spec ); // trigger the previously connected docks, widgets, etc.
 
     dsoWidget->updateTimebase( dsoSettings->scope.horizontal.timebase );
@@ -630,7 +635,7 @@ void MainWindow::screenShot( screenshotType_t screenshotType, bool autoSafe ) {
             return;
         }
         filters << tr( "Image (*.png *.jpg)" ) << tr( "Portable Document Format (*.pdf)" );
-        QFileDialog fileDialog( this, tr( "Save screenshot" ), fileName, filters.join( ";;" ) );
+        QFileDialog fileDialog( this, tr( "Save Screenshot" ), fileName, filters.join( ";;" ) );
         fileDialog.setOption( QFileDialog::DontUseNativeDialog );
         fileDialog.setAcceptMode( QFileDialog::AcceptSave );
         if ( fileDialog.exec() != QDialog::Accepted )
