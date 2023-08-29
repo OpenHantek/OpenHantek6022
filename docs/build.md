@@ -166,7 +166,7 @@ After you've installed the requirements run the following commands inside the to
     python ../../utils/macdeployqtfix/macdeployqtfix.py OpenHantek.app/Contents/MacOS/OpenHantek $(brew --prefix qt5)
     #
     # finally create OpenHantek.dmg from OpenHantek.app
-    create-dmg --volname OpenHantek --volicon ../../openhantek/res/images/openhantek.icns --window-pos 200 120 \
+    create-dmg --volname OpenHantek --volicon ../../openhantek/res/images/OpenHantek.icns --window-pos 200 120 \
       --window-size 800 400 --icon-size 100 --icon "OpenHantek.app" 200 190 --skip-jenkins \
       --hide-extension "OpenHantek.app" --app-drop-link 600 185 --eula ../../LICENSE OpenHantek.dmg OpenHantek.app
     #

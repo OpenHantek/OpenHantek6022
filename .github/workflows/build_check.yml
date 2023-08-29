@@ -112,7 +112,7 @@ jobs:
           macdeployqt OpenHantek.app -always-overwrite -verbose=1
           python ../../utils/macdeployqtfix/macdeployqtfix.py \
             --quiet OpenHantek.app/Contents/MacOS/OpenHantek $(brew --prefix qt5)
-          create-dmg --volname OpenHantek --volicon ../../openhantek/res/images/openhantek.icns \
+          create-dmg --volname OpenHantek --volicon ../../openhantek/res/images/OpenHantek.icns \
             --window-pos 200 120 --window-size 800 400 --icon-size 100 --icon "OpenHantek.app" 200 190 \
             --skip-jenkins --hide-extension "OpenHantek.app" --app-drop-link 600 185 \
             --eula ../../LICENSE OpenHantek.dmg OpenHantek.app
