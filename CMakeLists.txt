@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.5 FATAL_ERROR)
 project(OpenHantek)
 
+find_package(Git)
+
 if (GIT_EXECUTABLE AND EXISTS "${CMAKE_SOURCE_DIR}/.git")
     # show modified files
     execute_process(
@@ -30,8 +32,6 @@ ENDIF(NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake/")
 
 INCLUDE_DIRECTORIES(".")
-
-find_package(Git)
 
 add_compile_options(-Wall -Wextra -pedantic)
 
