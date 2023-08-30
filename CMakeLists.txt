@@ -28,7 +28,7 @@ if (GIT_EXECUTABLE AND EXISTS "${CMAKE_SOURCE_DIR}/.git")
             OUTPUT_VARIABLE VERSION
             OUTPUT_STRIP_TRAILING_WHITESPACE
         )
-        set( PACKAGE_VERSION "unstable-${VERSION}" ) # "unstable-x.y.z-p-gxxxxxxx"
+        set( PACKAGE_VERSION "${VERSION}-unstable" ) # "x.y.z-p-gxxxxxxx-unstable"
     endif()
 endif()
 
