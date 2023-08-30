@@ -1,6 +1,22 @@
 cmake_minimum_required(VERSION 3.5 FATAL_ERROR)
 project(OpenHantek)
 
+if (GIT_EXECUTABLE AND EXISTS "${CMAKE_SOURCE_DIR}/.git")
+    # show modified files
+    execute_process(
+        COMMAND ${GIT_EXECUTABLE} status --short
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    )
+    # get the git version
+    execute_process(
+        COMMAND ${GIT_EXECUTABLE} describe --tags
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+        OUTPUT_VARIABLE VERSION
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+    message(STATUS "VERSION: ${VERSION}")
+endif()
+
 set(OpenGL_GL_PREFERENCE GLVND)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
@@ -16,16 +32,6 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake/")
 INCLUDE_DIRECTORIES(".")
 
 find_package(Git)
-
-if (GIT_EXECUTABLE AND EXISTS "${CMAKE_SOURCE_DIR}/.git")
-    execute_process(
-        COMMAND ${GIT_EXECUTABLE} describe --tags
-        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-        OUTPUT_VARIABLE VERSION
-        OUTPUT_STRIP_TRAILING_WHITESPACE
-    )
-endif()
-message(STATUS "VERSION: ${VERSION}")
 
 add_compile_options(-Wall -Wextra -pedantic)
 

@@ -1,7 +1,0 @@
-<RCC>
-    <qresource prefix="/config">
-        <file alias="spectrum.png">images/config/spectrum.png</file>
-        <file alias="scope.png">images/config/scope.png</file>
-        <file alias="colors.png">images/config/colors.png</file>
-    </qresource>
-</RCC>
