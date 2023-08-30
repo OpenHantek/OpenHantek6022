@@ -11,13 +11,14 @@ if (GIT_EXECUTABLE AND EXISTS "${CMAKE_SOURCE_DIR}/.git")
     )
     # get the git version
     execute_process(
-        COMMAND ${GIT_EXECUTABLE} describe --tags
+        COMMAND ${GIT_EXECUTABLE} describe --tags --dirty
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
         OUTPUT_VARIABLE VERSION
         OUTPUT_STRIP_TRAILING_WHITESPACE
     )
-    message(STATUS "VERSION: ${VERSION}")
 endif()
+
+message(STATUS "VERSION: ${VERSION}")
 
 set(OpenGL_GL_PREFERENCE GLVND)
 

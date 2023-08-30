@@ -1,0 +1,4 @@
+*.inf	-text
+*.icns	-text
+*.svg	-text
+*.hex	-text
