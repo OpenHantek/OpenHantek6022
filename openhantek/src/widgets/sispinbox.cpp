@@ -187,7 +187,9 @@ void SiSpinBox::resetSteppedTo() { steppedTo = false; }
 void SiSpinBox::setBackground() {
     QPalette palette;
     setStyleSheet( "SiSpinBox {color: " + palette.color( QPalette::Text ).name() +
-                   "; background-color: " + palette.color( QPalette::Mid ).name() + " }" );
+                   "; background-color: " + palette.color( QPalette::Button ).name() + " }" );
+#if 0
     setStyleSheet( "QToolTip { color: " + palette.color( QPalette::ToolTipText ).name() +
                    "; background-color: " + palette.color( QPalette::ToolTipBase ).name() + " }" );
+#endif
 }

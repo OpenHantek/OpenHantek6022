@@ -286,8 +286,10 @@ int main( int argc, char *argv[] ) {
     }
     openHantekApplication.setPalette( palette );
 
+#if 0
     openHantekApplication.setStyleSheet( "QToolTip { border: 2px solid white; padding: 2px; border-radius: 5px; font-weight: bold; "
                                          "color: white; background-color: black; }" );
+#endif
 
 #ifdef Q_OS_LINUX
     // try to set realtime priority to improve USB allocation
