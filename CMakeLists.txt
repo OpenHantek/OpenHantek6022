@@ -16,9 +16,24 @@ if (GIT_EXECUTABLE AND EXISTS "${CMAKE_SOURCE_DIR}/.git")
         OUTPUT_VARIABLE VERSION
         OUTPUT_STRIP_TRAILING_WHITESPACE
     )
+    # unstable release?
+    string(FIND ${VERSION} "unstable" REGULAR)
+    if( ${REGULAR} ) # not unstable
+        set( PACKAGE_VERSION ${VERSION} ) # x.y.z
+    else() # unstable
+        # add commit hash to version
+        execute_process(
+            COMMAND ${GIT_EXECUTABLE} describe --long --dirty
+            WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+            OUTPUT_VARIABLE VERSION
+            OUTPUT_STRIP_TRAILING_WHITESPACE
+        )
+        set( PACKAGE_VERSION "unstable-${VERSION}" ) # "unstable-x.y.z-p-gxxxxxxx"
+    endif()
 endif()
 
-message(STATUS "VERSION: ${VERSION}")
+message(STATUS "VERSION:         ${VERSION}")
+message(STATUS "PACKAGE_VERSION: ${PACKAGE_VERSION}")
 
 set(OpenGL_GL_PREFERENCE GLVND)
 
