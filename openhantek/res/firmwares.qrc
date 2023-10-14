@@ -5,5 +5,6 @@
         <file>firmware/dso6022bl-firmware.hex</file>
         <file>firmware/dds120-firmware.hex</file>
         <file>firmware/mdso-firmware.hex</file>
+        <file>firmware/isds205b-firmware.hex</file>
     </qresource>
 </RCC>
