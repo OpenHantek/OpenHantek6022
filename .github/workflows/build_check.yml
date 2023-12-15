@@ -20,7 +20,7 @@ jobs:
         #   Could not symlink bin/2to3-3.11 Target /usr/local/bin/2to3-3.11 already exists.
         #   Could not symlink bin/2to3 Target /usr/local/bin/2to3 already exists.
         # hack fix: https://github.com/actions/setup-python/issues/577#issuecomment-1365231822
-        os: [ubuntu-22.04, macos-11, windows-2022]
+        os: [ubuntu-22.04, macos-12, windows-2022]
 
     runs-on: ${{ matrix.os }}
 
@@ -91,6 +91,7 @@ jobs:
         brew update
         brew install qt5 fftw binutils create-dmg || true
         # the next two commands (hack from @warpme) fix #314
+        ls -lR /usr/local/opt/gcc/lib/gcc
         mkdir -p /usr/local/opt/qt5/lib/libgcc_s.1.1.dylib.framework
         ln -sf /usr/local/opt/gcc/lib/gcc/11/libgcc_s.1.1.dylib \
           /usr/local/opt/qt5/lib/libgcc_s.1.1.dylib.framework/libgcc_s.1.1.dylib
