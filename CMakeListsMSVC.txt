@@ -22,7 +22,7 @@ if (GIT_EXECUTABLE AND EXISTS "${CMAKE_SOURCE_DIR}/.git")
         # delete the unstable tag ...
         # COMMAND ${GIT_EXECUTABLE} tag -d unstable
         # ... to get the real versioned tag
-        COMMAND ${GIT_EXECUTABLE} describe --dirty
+        COMMAND ${GIT_EXECUTABLE} describe
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
         OUTPUT_VARIABLE VERSION
         OUTPUT_STRIP_TRAILING_WHITESPACE
@@ -34,7 +34,7 @@ if (GIT_EXECUTABLE AND EXISTS "${CMAKE_SOURCE_DIR}/.git")
     else() # unstable
         # add commit hash to version
         execute_process(
-            COMMAND ${GIT_EXECUTABLE} describe --long --dirty
+            COMMAND ${GIT_EXECUTABLE} describe --long
             WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
             OUTPUT_VARIABLE VERSION
             OUTPUT_STRIP_TRAILING_WHITESPACE
