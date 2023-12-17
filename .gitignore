@@ -8,7 +8,7 @@
 *.old
 *.diff
 CMakeLists.txt.user
-build*
+build
 firmware/hex
 *.json
 *.kate-swp

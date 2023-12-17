@@ -1,0 +1,318 @@
+#
+# build.yml - GitHub build action for OpenHantek6022
+# Copyright (C) 2023- OpenHantek community
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program. If not, see <http://www.gnu.org/licenses/>.
+#
+
+
+name: Build
+# check if OH6022 builds on some recent operating systems
+# deploy Ubuntu / macOS / Windows binaries
+
+on: [push]
+
+
+env:
+  # CMake build type (Release, Debug, RelWithDebInfo, etc.)
+  BUILD_TYPE: Release
+
+
+# jobs:
+#   build_check:
+#     strategy:
+#       # do not stop on 1st fail
+#       fail-fast: false
+#       matrix:
+#         # GitHub runner macos build is broken: https://github.com/actions/runner-images/issues/577
+#         #   Could not symlink bin/2to3-3.11 Target /usr/local/bin/2to3-3.11 already exists.
+#         #   Could not symlink bin/2to3 Target /usr/local/bin/2to3 already exists.
+#         # hack fix: https://github.com/actions/setup-python/issues/577#issuecomment-1365231822
+#         os: [ubuntu-22.04, macos-12, windows-2022]
+#
+#     runs-on: ${{ matrix.os }}
+#
+#
+#     steps:
+
+
+jobs:
+
+  # --- Linux (Ubuntu) steps ---
+  linux-x86_64:
+    runs-on: ubuntu-latest
+    steps:
+
+    # --- Clone the latest commit ---
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    # --- Config git and get the version from "git describe" ---
+    - name: Config Git
+      id: config_git
+      shell: bash
+      run: |
+        git config user.email "Ho-Ro@users.noreply.github.com"
+        git config user.name "Ho-Ro"
+        git fetch --prune --unshallow --tags || true
+        git submodule update --init --recursive
+        echo "git_describe=$(git describe)"
+        echo "git_describe=$(git describe)" >> $GITHUB_OUTPUT
+
+    - name: Install Ubuntu Build Requirements
+      run: |
+        mkdir build
+        sudo apt update
+        #sudo apt -y upgrade
+        sudo apt install g++ make cmake fakeroot rpm qttools5-dev libfftw3-dev binutils-dev \
+          libusb-1.0-0-dev libqt5opengl5-dev mesa-common-dev libgl1-mesa-dev libgles2-mesa-dev
+
+    - name: Ubuntu Build
+      # GitHub hosts Linux runners on Standard_DS2_v2 virtual machines in Microsoft Azure:
+      # 2-core CPU, 7 GB of RAM memory, 14 GB of SSD disk space
+      working-directory: ${{github.workspace}}/build
+      run: |
+        cp ../CHANGELOG changelog
+        cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE
+        make -j8
+        fakeroot make -j8 package
+        ls -l packages
+
+    - name: Upload Ubuntu Artifacts
+      # *.deb *.rpm *.tgz
+      uses: actions/upload-artifact@v3
+      with:
+        name: openhantek_${{ steps.config_git.outputs.git_describe }}_linux_amd64
+        path: ${{github.workspace}}/build/packages/*
+
+    - name: Upload Linux Release Assets
+      if: startsWith(github.ref, 'refs/tags/')
+      uses: softprops/action-gh-release@v1
+      with:
+        prerelease: true
+        files: ./build/packages/*
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+
+  # --- macOS steps ---
+  macos-x86_64:
+    runs-on: macos-latest
+    steps:
+
+    # --- Clone the latest commit ---
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    # --- Config git and get the version from "git describe" ---
+    - name: Config Git
+      id: config_git
+      shell: bash
+      run: |
+        git config user.email "Ho-Ro@users.noreply.github.com"
+        git config user.name "Ho-Ro"
+        git fetch --prune --unshallow --tags || true
+        git submodule update --init --recursive
+        echo "git_describe=$(git describe)"
+        echo "git_describe=$(git describe)" >> $GITHUB_OUTPUT
+
+    - name: Install macOS Build Requirements
+      run: |
+        mkdir build
+        #brew update
+        brew install qt5 fftw binutils create-dmg || true
+        #ls -lR /usr/local/opt/gcc/lib/gcc
+        # the next two commands (hack from @warpme) fix #314
+        #mkdir -p /usr/local/opt/qt5/lib/libgcc_s.1.1.dylib.framework
+        #ln -sf /usr/local/opt/gcc/lib/gcc/11/libgcc_s.1.1.dylib \
+        #  /usr/local/opt/qt5/lib/libgcc_s.1.1.dylib.framework/libgcc_s.1.1.dylib
+        #ls -lR /usr/local/opt/qt5/lib/libgcc_s.1.1.dylib.framework
+
+    - name: macOS Build
+      # GitHub hosts macOS runners in GitHub's own macOS Cloud:
+      # 3-core CPU, 14 GB of RAM memory, 14 GB of SSD disk space
+      working-directory: ${{github.workspace}}/build
+      run: |
+        cp ../CHANGELOG changelog
+        cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_PREFIX_PATH=$(brew --prefix qt5)
+        make -j12
+        sudo make -j12 package
+        if test -d openhantek/OpenHantek.app; then
+          export PATH=$(brew --prefix qt5)/bin:${PATH}
+          cd openhantek
+          macdeployqt OpenHantek.app -always-overwrite -verbose=1
+          python ../../utils/macdeployqtfix/macdeployqtfix.py \
+            --quiet OpenHantek.app/Contents/MacOS/OpenHantek $(brew --prefix qt5)
+          create-dmg --volname OpenHantek --volicon ../../openhantek/res/images/OpenHantek.icns \
+            --window-pos 200 120 --window-size 800 400 --icon-size 100 --icon "OpenHantek.app" 200 190 \
+            --skip-jenkins --hide-extension "OpenHantek.app" --app-drop-link 600 185 \
+            --eula ../../LICENSE OpenHantek.dmg OpenHantek.app
+          cd ..
+        else
+          true
+        fi
+        if test -d openhantek/OpenHantek.app; then
+          cd openhantek ; sudo tar -czf ../packages/openhantek_*_osx_*.tar.gz OpenHantek.app
+          if test -f OpenHantek.dmg; then
+            sudo mv OpenHantek.dmg ../packages/$(basename ../packages/openhantek_*_osx_*.tar.gz .tar.gz).dmg
+          fi
+          cd ..
+          ls -l packages
+        else
+          true
+        fi
+
+    - name: Upload macOS Artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: openhantek_${{ steps.config_git.outputs.git_describe }}_osx_x86_64
+        path: ${{github.workspace}}/build/packages/*
+
+    - name: Upload macOS Release Assets
+      if: startsWith(github.ref, 'refs/tags/')
+      uses: softprops/action-gh-release@v1
+      with:
+        prerelease: true
+        files: ./build/packages/*
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+
+  # --- Windows steps ---
+  windows-mingw_w64:
+    runs-on: windows-2022
+    steps:
+
+    # --- Clone the latest commit ---
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    # --- Config git and get the version from "git describe" ---
+    - name: Config Git
+      id: config_git
+      shell: bash
+      run: |
+        git config user.email "Ho-Ro@users.noreply.github.com"
+        git config user.name "Ho-Ro"
+        git fetch --prune --unshallow --tags || true
+        git submodule update --init --recursive
+        echo "git_describe=$(git describe)"
+        echo "git_describe=$(git describe)" >> $GITHUB_OUTPUT
+
+    - name: Install MSYS2 Packages
+      uses: msys2/setup-msys2@v2
+      with:
+        update: true
+        install: >-
+          mingw-w64-x86_64-cmake
+          mingw-w64-x86_64-gcc
+          mingw-w64-x86_64-qt5-static
+          mingw-w64-x86_64-fftw
+          mingw-w64-x86_64-libusb
+
+    - name: Start Windows Build
+      shell: msys2 {0}
+      run: |
+        cmake -D CMAKE_PREFIX_PATH=/mingw64/qt5-static -D CMAKE_BUILD_TYPE=$BUILD_TYPE -B build
+        cmake --build build --parallel 8 --target package
+
+    - name: Create Windows Package
+      # GitHub hosts Windows runners on Standard_DS2_v2 virtual machines in Microsoft Azure:
+      # 2-core CPU, 7 GB of RAM memory, 14 GB of SSD disk space
+      working-directory: ${{github.workspace}}/build
+      shell: bash
+      run: |
+        # this ZIP package contains only OpenHantek.exe, just get the name
+        ZIP=$(basename packages/openhantek_*_mingw_x64.zip)
+        rm -f packages/openhantek_*_mingw_x64.*
+        cd openhantek
+        7z a ../packages/$ZIP *.exe driver documents
+        ls -l ../packages
+
+    - name: Upload Windows Artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: openhantek_${{ steps.config_git.outputs.git_describe }}_mingw_x64
+        path: ./build/packages/*.zip
+
+    - name: Upload Windows Release Assets
+      if: startsWith(github.ref, 'refs/tags/')
+      uses: softprops/action-gh-release@v1
+      with:
+        prerelease: true
+        files: ./build/packages/*
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+
+  # --- Windows MSVC steps ---
+  windows-msvc_x64:
+    runs-on: windows-2022
+    steps:
+
+    # --- Clone the latest commit ---
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    # --- Config git and get the version from "git describe" ---
+    - name: Config Git
+      id: config_git
+      shell: bash
+      run: |
+        git config user.email "Ho-Ro@users.noreply.github.com"
+        git config user.name "Ho-Ro"
+        git fetch --prune --unshallow --tags || true
+        git submodule update --init --recursive
+        echo "git_describe=$(git describe)"
+        echo "git_describe=$(git describe)" >> $GITHUB_OUTPUT
+
+    - name: Install Qt for Windows
+      uses: jurplel/install-qt-action@v3
+
+    - name: Setup Windows MSVC Build
+      run:
+        copy CMakeListsMSVC.txt CMakeLists.txt &
+        md build &
+        call "%VCINSTALLDIR%/Auxiliary/Build/vcvars64.bat" &
+        cmake -G "Visual Studio 17 2022" -A x64 -DCMAKE_PREFIX_PATH=%Qt5_DIR% -DCMAKE_BUILD_TYPE=Release -Bbuild
+
+    - name: Windows MSVC Build
+      # GitHub hosts Windows runners on Standard_DS2_v2 virtual machines in Microsoft Azure:
+      # 2-core CPU, 7 GB of RAM memory, 14 GB of SSD disk space
+      working-directory: ${{github.workspace}}/build
+      shell: bash
+      run: |
+        cmake --build . --parallel 8 --config Release --target package
+        ZIP=$(basename packages/openhantek_*_msvc_x64.zip)
+        rm -f packages/openhantek_*_msvc_x64.*
+        cd openhantek/Release
+        7z a ../../packages/$ZIP *
+        cd ../..
+        ls -l packages
+
+    - name: Upload Windows MSVC Artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: openhantek_${{ steps.config_git.outputs.git_describe }}_msvc_x64
+        path: ./build/packages/*.zip
+
+    - name: Upload Windows MSVC Release Assets
+      if: startsWith(github.ref, 'refs/tags/')
+      uses: softprops/action-gh-release@v1
+      with:
+        prerelease: true
+        files: ./build/packages/*
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+

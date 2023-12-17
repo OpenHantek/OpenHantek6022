@@ -66,28 +66,35 @@ ${QRC} ${RC} ${TRANSLATION_BIN_FILES} ${TRANSLATION_QRC} ${ICONS})
 target_link_libraries(${PROJECT_NAME} Qt5::Widgets Qt5::PrintSupport Qt5::OpenGL ${OPENGL_LIBRARIES} )
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_range_for)
 
-if (APPLE AND BUILD_MACOSX_BUNDLE)
-    # Use own template that defines NSPrincipalClass=NSApplication & NSHighResolutionCapable=True
-    set_target_properties( ${PROJECT_NAME} PROPERTIES
-        MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_LIST_DIR}/../cmake/OpenHantekBundleInfo.plist.in
-    )
+if(MSVC)
+    target_compile_options(${PROJECT_NAME} PRIVATE "/W4" "/wd4251" "/wd4127" "/wd4275" "/wd4200" "/nologo" "/J" "/Zi")
+    target_compile_options(${PROJECT_NAME} PRIVATE "$<$<CONFIG:DEBUG>:/MDd>")
+    include(../cmake/docs_on_windows.cmake)
+    include(../cmake/fftw_on_windows.cmake)
+    include(../cmake/libusb_on_windows.cmake)
+else()
+    if( APPLE AND BUILD_MACOSX_BUNDLE )
+        # Use own template that defines NSPrincipalClass=NSApplication & NSHighResolutionCapable=True
+        set_target_properties( ${PROJECT_NAME} PROPERTIES
+            MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_LIST_DIR}/../cmake/OpenHantekBundleInfo.plist.in
+        )
+    endif()
+    target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wno-long-long -pedantic)
+    target_compile_options(${PROJECT_NAME} PRIVATE "$<$<CONFIG:DEBUG>:-DDEBUG>")
+    target_compile_options(${PROJECT_NAME} PRIVATE "$<$<CONFIG:DEBUG>:-O0>")
+    target_compile_options(${PROJECT_NAME} PRIVATE "$<$<CONFIG:RELEASE>:-fno-rtti>")
+
+    find_package(libusb REQUIRED)
+    target_include_directories(${PROJECT_NAME} PRIVATE ${LIBUSB_INCLUDE_DIRS})
+    target_link_libraries(${PROJECT_NAME} ${LIBUSB_LIBRARIES})
+
+    find_package(FFTW REQUIRED)
+    target_include_directories(${PROJECT_NAME} PRIVATE ${FFTW_INCLUDE_DIRS})
+    target_link_libraries(${PROJECT_NAME} ${FFTW_LIBRARIES})
+
+    find_package(Threads REQUIRED)
+    target_link_libraries(${PROJECT_NAME} ${CMAKE_THREAD_LIBS_INIT})
 endif()
-
-target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wno-long-long -pedantic)
-target_compile_options(${PROJECT_NAME} PRIVATE "$<$<CONFIG:DEBUG>:-DDEBUG>")
-target_compile_options(${PROJECT_NAME} PRIVATE "$<$<CONFIG:DEBUG>:-O0>")
-target_compile_options(${PROJECT_NAME} PRIVATE "$<$<CONFIG:RELEASE>:-fno-rtti>")
-
-find_package(libusb REQUIRED)
-target_include_directories(${PROJECT_NAME} PRIVATE ${LIBUSB_INCLUDE_DIRS})
-target_link_libraries(${PROJECT_NAME} ${LIBUSB_LIBRARIES})
-
-find_package(FFTW REQUIRED)
-target_include_directories(${PROJECT_NAME} PRIVATE ${FFTW_INCLUDE_DIRS})
-target_link_libraries(${PROJECT_NAME} ${FFTW_LIBRARIES})
-
-find_package(Threads REQUIRED)
-target_link_libraries(${PROJECT_NAME} ${CMAKE_THREAD_LIBS_INIT})
 
 if (WIN32)
     include(../cmake/windows_driver.cmake)
