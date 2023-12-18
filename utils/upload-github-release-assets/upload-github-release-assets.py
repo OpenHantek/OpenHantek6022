@@ -3,7 +3,7 @@
 Upload local files (e.g. RPi installation packages) as assets to a GitHub release.
 It authorizes with the repo token and gets the upload_url for the relevant tag.
 Existing remote files with the same name will be deleted before uploading.
-Defaults to: OpenHantek/OpenHantek6022/releases/tags/unstable
+Defaults to: OpenHantek/OpenHantek6022/releases/tags/devdrop
 '''
 
 #########################
@@ -31,12 +31,12 @@ ap.add_argument( "-o", "--owner", default = OWNER,
 	help = f"specify the repository owner, default = '{OWNER}'" )
 ap.add_argument( "-r", "--repo", default = REPO,
 	help = f"specify the repository, default = '{REPO}'" )
-ap.add_argument( "-t", "--tag", default = 'unstable',
-	help = f"specify a tag, default = 'unstable'" )
+ap.add_argument( "-t", "--tag", default = 'devdrop',
+	help = f"specify a tag, default = 'devdrop'" )
 ap.add_argument( "-l", "--latest", action='store_true',
 	help = f"select 'latest' release, overide '-t' or '--tag'" )
-ap.add_argument( "-u", "--unstable", action='store_true',
-	help = f"select 'unstable' release, overide '-t' or '-l'" )
+ap.add_argument( "-d", "--devdrop", action='store_true',
+	help = f"select 'devdrop' release, overide '-t' or '-l'" )
 ap.add_argument( 'files', metavar='FILE', type=str, nargs='*',
 	help = f"file to be uploaded" )
 
@@ -49,8 +49,8 @@ TAG = options.tag
 if options.latest:
 	TAG = 'latest'
 
-if options.unstable:
-	TAG = 'unstable'
+if options.devdrop:
+	TAG = 'devdrop'
 
 files = options.files
 

@@ -15,7 +15,7 @@ to the *International Committee of the Red Cross*.
 [![Downloads of latest release](https://img.shields.io/github/downloads/OpenHantek/OpenHantek6022/latest/total?color=blue)](https://github.com/OpenHantek/OpenHantek6022/releases/latest)
 
 [![GitHub commits since latest release](https://img.shields.io/github/commits-since/OpenHantek/OpenHantek6022/latest?color=lightblue)](https://github.com/OpenHantek/OpenHantek6022/commits/main)
-[![Downloads of latest unstable](https://img.shields.io/github/downloads/OpenHantek/OpenHantek6022/unstable/total?color=lightblue)](https://github.com/OpenHantek/OpenHantek6022/releases/tag/unstable)
+[![Downloads of latest devdrop](https://img.shields.io/github/downloads/OpenHantek/OpenHantek6022/devdrop/total?color=lightblue)](https://github.com/OpenHantek/OpenHantek6022/releases/tag/devdrop)
 
 
 OpenHantek6022 is a free software for **Hantek DSO6022** USB digital signal oscilloscopes that is actively developed on
@@ -134,9 +134,9 @@ If you make small changes to the local source code, it is sufficient to call `ma
 ## Install Prebuilt Binary Packages
 * [![Downloads of latest release](https://img.shields.io/github/downloads/OpenHantek/OpenHantek6022/latest/total?color=blue)](https://github.com/OpenHantek/OpenHantek6022/releases/latest)
 Download Linux (Ubuntu 2004 LTS), Raspberry Pi (Debian stable), FreeBSD (12.1), macOS (Big Sur 11.6) and Windows (Visual Studio 2019) packages for your convenience from the [Releases](https://github.com/OpenHantek/OpenHantek6022/releases) page.
-* [![Downloads of latest unstable](https://img.shields.io/github/downloads/OpenHantek/OpenHantek6022/unstable/total?color=lightblue)](https://github.com/OpenHantek/OpenHantek6022/releases/tag/unstable)
+* [![Downloads of latest devdrop](https://img.shields.io/github/downloads/OpenHantek/OpenHantek6022/devdrop/total?color=lightblue)](https://github.com/OpenHantek/OpenHantek6022/releases/tag/devdrop)
 If you want to follow ongoing development, packages built from a fairly recent commit are available in the rolling
-[unstable release](https://github.com/OpenHantek/OpenHantek6022/releases/tag/unstable).
+[devdrop release](https://github.com/OpenHantek/OpenHantek6022/releases/tag/devdrop).
 *Unstable* does not mean that the program will crash, but that individual features or elements of the GUI may still change.
 * For RPi4 see also [issue #28](https://github.com/OpenHantek/OpenHantek6022/issues/28).
 * These binary packages are built on stable operating system versions and require an up-to-date system.
