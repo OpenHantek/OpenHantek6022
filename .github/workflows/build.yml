@@ -29,29 +29,14 @@ env:
   BUILD_TYPE: Release
 
 
-# jobs:
-#   build_check:
-#     strategy:
-#       # do not stop on 1st fail
-#       fail-fast: false
-#       matrix:
-#         # GitHub runner macos build is broken: https://github.com/actions/runner-images/issues/577
-#         #   Could not symlink bin/2to3-3.11 Target /usr/local/bin/2to3-3.11 already exists.
-#         #   Could not symlink bin/2to3 Target /usr/local/bin/2to3 already exists.
-#         # hack fix: https://github.com/actions/setup-python/issues/577#issuecomment-1365231822
-#         os: [ubuntu-22.04, macos-12, windows-2022]
-#
-#     runs-on: ${{ matrix.os }}
-#
-#
-#     steps:
-
-
 jobs:
 
-  # --- Linux (Ubuntu) steps ---
+# ----------------------------
+# --- Linux (Ubuntu) steps ---
+# ----------------------------
+#
   linux-x86_64:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
 
     # --- Clone the latest commit ---
@@ -74,7 +59,7 @@ jobs:
       run: |
         mkdir build
         sudo apt update
-        #sudo apt -y upgrade
+        # sudo apt -y upgrade
         sudo apt install g++ make cmake fakeroot rpm qttools5-dev libfftw3-dev binutils-dev \
           libusb-1.0-0-dev libqt5opengl5-dev mesa-common-dev libgl1-mesa-dev libgles2-mesa-dev
 
@@ -106,9 +91,12 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 
-  # --- macOS steps ---
+# -------------------
+# --- macOS steps ---
+# -------------------
+#
   macos-x86_64:
-    runs-on: macos-latest
+    runs-on: macos-12
     steps:
 
     # --- Clone the latest commit ---
@@ -189,7 +177,10 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 
-  # --- Windows steps ---
+# ---------------------------
+# --- Windows MINGW steps ---
+# ---------------------------
+#
   windows-mingw_w64:
     runs-on: windows-2022
     steps:
@@ -256,7 +247,10 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 
-  # --- Windows MSVC steps ---
+# --------------------------
+# --- Windows MSVC steps ---
+# --------------------------
+#
   windows-msvc_x64:
     runs-on: windows-2022
     steps:
@@ -282,7 +276,6 @@ jobs:
 
     - name: Setup Windows MSVC Build
       run:
-        copy CMakeListsMSVC.txt CMakeLists.txt &
         md build &
         call "%VCINSTALLDIR%/Auxiliary/Build/vcvars64.bat" &
         cmake -G "Visual Studio 17 2022" -A x64 -DCMAKE_PREFIX_PATH=%Qt5_DIR% -DCMAKE_BUILD_TYPE=Release -Bbuild

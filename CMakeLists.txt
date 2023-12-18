@@ -11,28 +11,41 @@ if (GIT_EXECUTABLE AND EXISTS "${CMAKE_SOURCE_DIR}/.git")
     )
     # get the git version
     execute_process(
-        COMMAND ${GIT_EXECUTABLE} describe --tags --dirty
+        COMMAND ${GIT_EXECUTABLE} describe --tags --long --dirty
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
         OUTPUT_VARIABLE VERSION
         OUTPUT_STRIP_TRAILING_WHITESPACE
     )
-    # unstable release?
-    string(FIND ${VERSION} "unstable" REGULAR)
-    if( ${REGULAR} ) # not unstable
-        set( PACKAGE_VERSION ${VERSION} ) # x.y.z
-    else() # unstable
-        # add commit hash to version
+    # devdrop or release?
+    string(FIND ${VERSION} "devdrop-0-g" DEVDROP_POS)
+    string(FIND ${VERSION} "-0-g" ZERO_POS)
+    if( ${DEVDROP_POS} EQUAL 0 ) # "devdrop-x.y.z-p-gxxxxxxx(-dirty)"
         execute_process(
             COMMAND ${GIT_EXECUTABLE} describe --long --dirty
             WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
             OUTPUT_VARIABLE VERSION
             OUTPUT_STRIP_TRAILING_WHITESPACE
         )
-        set( PACKAGE_VERSION "${VERSION}-unstable" ) # "x.y.z-p-gxxxxxxx-unstable"
+        set( VERSION "devdrop-${VERSION}" )
+    elseif( ${ZERO_POS} GREATER 0 ) # x.y.z(-dirty)
+        # message(STATUS "TAG")
+        execute_process(
+            COMMAND ${GIT_EXECUTABLE} describe --dirty
+            WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+            OUTPUT_VARIABLE VERSION
+            OUTPUT_STRIP_TRAILING_WHITESPACE
+        )
+    else() # "x.y.z-p-gxxxxxxx(-dirty)"
+        execute_process(
+            COMMAND ${GIT_EXECUTABLE} describe --long --dirty
+            WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+            OUTPUT_VARIABLE VERSION
+            OUTPUT_STRIP_TRAILING_WHITESPACE
+        )
     endif()
+    set( PACKAGE_VERSION ${VERSION} )
 endif()
 
-message(STATUS "VERSION:         ${VERSION}")
 message(STATUS "PACKAGE_VERSION: ${PACKAGE_VERSION}")
 
 set(OpenGL_GL_PREFERENCE GLVND)
@@ -49,7 +62,13 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake/")
 
 INCLUDE_DIRECTORIES(".")
 
-add_compile_options(-Wall -Wextra -pedantic)
+if(MSVC)
+  # NOMINMAX to avoid clash with std::min or std::max due to silly macros min and max
+  add_compile_options(/W4 /D_CRT_SECURE_NO_WARNINGS /DNOMINMAX)
+else()
+  add_compile_options(-Wall -Wextra -pedantic)
+endif()
+
 
 # Silence nasty warnings "parameter passing for argument of type ... changed in GCC 7.1"
 if(CMAKE_COMPILER_IS_GNUCXX)
