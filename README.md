@@ -6,7 +6,7 @@ to the *International Committee of the Red Cross*.
 ![blue-yellow](docs/images/blue-yellow.png)
 
 # OpenHantek6022
-[![GitHub CI](https://github.com/OpenHantek/OpenHantek6022/actions/workflows/build_check.yml/badge.svg)](https://github.com/OpenHantek/OpenHantek6022/actions/workflows/build_check.yml)
+[![GitHub CI](https://github.com/OpenHantek/OpenHantek6022/actions/workflows/build.yml/badge.svg)](https://github.com/OpenHantek/OpenHantek6022/actions/workflows/build.yml)
 [![Stability: Active](https://masterminds.github.io/stability/active.svg)](https://masterminds.github.io/stability/active.html)
 [![Downloads total](https://img.shields.io/github/downloads/OpenHantek/OpenHantek6022/total?color=blue)](https://github.com/OpenHantek/OpenHantek6022/releases)
 
@@ -107,7 +107,7 @@ that builds and packages OpenHantek6022 for:
 * Windows (`*.zip`)
 * macOS - (`*.dmg`, `*.tar.gz`)
 
-[![GitHub CI](https://github.com/OpenHantek/OpenHantek6022/actions/workflows/build_check.yml/badge.svg)](https://github.com/OpenHantek/OpenHantek6022/actions/workflows/build_check.yml)
+[![GitHub CI](https://github.com/OpenHantek/OpenHantek6022/actions/workflows/build.yml/badge.svg)](https://github.com/OpenHantek/OpenHantek6022/actions/workflows/build.yml)
 This status badge here (and on top) show the build status.
 
 ## Building OpenHantek6022 from source
