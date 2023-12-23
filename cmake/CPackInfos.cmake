@@ -99,14 +99,10 @@ set(CPACK_DEBIAN_PACKAGE_SECTION "electronics")
 # do not detect depencencies and versions automatically
 # set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
 # use deb stable packages without version explicitely to support also legacy installations
-# local build uses Debian stable (currently bullseye)
-# CI build (github actions or appveyor) uses Ubuntu 20.04 LTS as long as Debian "bullseye" is "stable"
+# local build uses Debian stable (currently bookworm)
+# CI build (github actions) uses Ubuntu 22.04 LTS as long as Debian "bookworm" is "stable"
 set(CPACK_DEBIAN_PACKAGE_DEPENDS "libc6, libfftw3-double3, libglu1-mesa, libglx0, libopengl0, libqt5opengl5, libqt5printsupport5, libusb-1.0-0")
 message( "-- Depends: ${CPACK_DEBIAN_PACKAGE_DEPENDS}" )
-# Debian buster Depends:   "libc6 (>= 2.14), libfftw3-double3 (>= 3.3.5), libgcc1 (>= 1:3.0), libglu1-mesa | libglu1, libglx0, libopengl0, libqt5core5a (>= 5.11.0~rc1), libqt5gui5 (>= 5.8.0), libqt5opengl5 (>= 5.0.2), libqt5printsupport5 (>= 5.10.0), libqt5widgets5 (>= 5.4.0), libstdc++6 (>= 5), libusb-1.0-0 (>= 2:1.0.16)"
-# Debian bullseye Depends: "libc6 (>= 2.29), libfftw3-double3 (>= 3.3.5), libgcc-s1 (>= 3.0), libqt5core5a (>= 5.15.1), libqt5gui5 (>= 5.14.1) | libqt5gui5-gles (>= 5.14.1), libqt5printsupport5 (>= 5.10.0), libqt5widgets5 (>= 5.15.1), libstdc++6 (>= 5), libusb-1.0-0 (>= 2:1.0.16)
-# Ubuntu 18.04 Depends:    "libc6 (>= 2.14), libfftw3-double3 (>= 3.3.5), libgcc1 (>= 1:3.0), libqt5core5a (>= 5.9.0~beta), libqt5gui5 (>= 5.8.0), libqt5printsupport5 (>= 5.2.0), libqt5widgets5 (>= 5.4.0), libstdc++6 (>= 5), libusb-1.0-0 (>= 2:1.0.16)"
-# Ubuntu 20.04 Depends:    "libc6 (>= 2.29), libfftw3-double3 (>= 3.3.5), libgcc-s1 (>= 3.0), libqt5core5a (>= 5.12.2), libqt5gui5 (>= 5.8.0) | libqt5gui5-gles (>= 5.8.0), libqt5printsupport5 (>= 5.10.0), libqt5widgets5 (>= 5.4.0), libstdc++6 (>= 5), libusb-1.0-0 (>= 2:1.0.16)
 
 set(CPACK_DEBIAN_FILE_NAME "DEB-DEFAULT")
 
@@ -119,11 +115,7 @@ set(CPACK_RPM_PACKAGE_DESCRIPTION ${CPACK_PACKAGE_DESCRIPTION})
 set(CPACK_RPM_FILE_NAME "RPM-DEFAULT")
 
 set(CPACK_INCLUDE_TOPLEVEL_DIRECTORY 0)
-if (CMAKE_SYSTEM_NAME MATCHES "Linux")
-    set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}_${CPACK_PACKAGE_VERSION}-1_${CPACK_TARGET}${CPACK_ARCH}")
-else()
-    set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}_${CPACK_PACKAGE_VERSION}_${CPACK_TARGET}${CPACK_ARCH}")
-endif()
+set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}_${CPACK_PACKAGE_VERSION}_${CPACK_TARGET}${CPACK_ARCH}")
 set(CPACK_PACKAGE_INSTALL_DIRECTORY ".")
 SET(CPACK_OUTPUT_FILE_PREFIX packages)
 
