@@ -143,13 +143,13 @@ if not assets:
 
 
 # get (and show) already uploaded assets
-print( f"{(RELEASES + TAG).ljust(50)}              updated   dl" )
+print( f"{(RELEASES + TAG).ljust(60)}              updated   dl" )
 already_uploaded_assets = {}
 for a in assets:
 	name = a['name']
 	url = a['url']
 	already_uploaded_assets[ name ] = url
-	print( f"{name.ljust(50)} {a['updated_at']} {a['download_count']:#4}" )
+	print( f"{name.ljust(60)} {a['updated_at']} {a['download_count']:#4}" )
 
 
 # check if we have any files to upload
