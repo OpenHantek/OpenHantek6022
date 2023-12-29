@@ -1,229 +1,1163 @@
-3.2.5
-2021-12-16
-Updating the development system to the latest Debian stable version (bullseye).
-Updates for Qt 5.15 (from bullseye).
-Many small GUI improvements / fixes (thanks ericfont).
-User selectable themes (auto/light/dark).
-
-3.2.4
-2021-07-14
-Possibility to select Fusion style in options menu (fits on 1280x720 screen)
-Select calibration frequency faster from ComboBox
-Chinese translation
-
-3.2.3
-2021-05-24
-Auto detect OpenGL version to better support (especially) Windows installs (fix #184)
-Correct initial sample rate value (fix #185)
-Well structured verbosity option to explore and debug program sequence 
-
-3.2.2
-2021-04-18
-New JSON exporter
-New complete Polish localisation
-CI switched from appveyor to GitHub Actions
-Minor localisation fixes
-
-3.2.1
-2021-04-05
-Two new interpolation modes: step and sinc
-Fix Windows issue with cyrillic user names
-
-3.2
-2021-02-28
-Simultaneous use of more than one device is possible
-Scope settings are saved individually based on serial number
-More calibration frequencies (poor man's function generator)
-CI appveyor Linux build system upgraded to Ubuntu 2004, Qt 5.12.8
-CI appveyor Windows build system upgraded to VS 16 2019, Qt 5.15
-No more 32bit binaries
-
-3.1.5
-2020-12-24
-Improvements for small displays (scope fits on screen height >= 720)
-Improvements for high-dpi displays (2K/4K)
-Command line options --font and --size
-Font size in menu Oscilloscope/Settings/Scope
-Hantek_6022B.inf/.cat files support "native" Windows install
-Better trace colors (apply default settings to use them)
-Minor stability improvements
-
-3.1.4
-2020-11-30
-Display THD (optional)
-Display power dissipation of load resistance (optional)
-HF/Normal/LF trigger
-Attenuation setting also for MATH
-Do not close the docks
-Reduce CPU load when display is stopped, faster shutdown
-
-3.1.3
-2020-09-30
-RPM build improvements
-New command line option --fontsize
-Display horizontal trigger level line when marker is moved
-Make smooth trigger setting persistent
-
-3.1.2
-2020-07-29
-Small improvements for FreeBSD
-Hide Windows console
-
-3.1.1
-2020-06-30
-Refresh button to restart roll mode trace
-Help menu link to AC modification howto
-Minor robustness improvements
-
-3.1.1-rc3
-2020-06-26
-Real roll mode for slow sample rates
-
-3.1.1-rc2
-2020-06-23
-Scroll wheel moves the markers
-Configuration menu parameter to use AC coupling HW modification
-
-3.1.1-rc1
-2020-06-20
-Slow timebases up to 10s/div
-Near real time screen updates with trigger mode NONE
-Screenshot and hardcopy are identical to the screen content
-Force OpenGL SL version (option --useGLSL120 or --useGLSL150)
-
-3.1.0
-2020-05-08
-Demo mode without scope hardware (option -d or --demoMode)
-Support for high-dpi displays
-Improved pdf readability
-Russian translation
-
-3.0.4
-2020-04-13
-Better marker setting/removing
-Fix sample rate spinbox handling
-Fix race condition when switching 1ch/2ch
-Persistent calibration out frequency
-FW 0206
-Updated DDS120 FW 0100 (supports more calibration out frequencies)
-Spanish translation
-
-3.0.3
-2020-03-17
-FW 0205
-Fix histogram issue when switching TY -> XY
-
-3.0.2
-2020-03-01
-Apply realtime prio and scheduler
-Histogram for TY voltage traces
-Variable probe gain setting
-French translation complete
-
-3.0.1
-2019-12-13
-More robust USB handling for all OSs
-Improve manipulation and export of frozen or single traces
-Export XY display
-Automatic icon selection for light/dark themes
-Eye candy
-Automatic start after FW upload
-
-3.0.0
-2019-11-15
-Major changes:
-Support for Sainsmart DDS120
-Support for Hantek6022 AC HW modification
-Update to FW 0203
-MacOSX bundle
-Measure duty cycle of triggered trace
-New versioning scheme
-
-v2.16
-2019-10-15
-Major changes from v2.16-rc1:
-Display measured width of triggered pulse in top line.
-Set OpenGL ES as default for Raspberry Pi.
-
-v2.16-rc1
-2019-10-11
-Major changes from v2.15:
-Fix #26 (array overrun during fast increasing of timebase setting)
-
-v2.15 - withdrawn due to #26
-2019-10-05
-Major changes from v2.14:
-Automatic translation (qt linguist),
-better automatic versioning (commit date & build number),
-Sinc interpolation for fast timebase settings,
-modification for FreeBSD compiling.
-
-v2.14
-2019-09-08
-Major changes from v2.13:
-Vpp measure, more oversampling, faster display refresh,
-alternating trigger, faster trigger (and new smooth trigger mode),
-add support for Voltcraft DSO-2020 USB oscilloscope.
-
-v2.13
-2019-08-09
-Major changes from v2.12:
-User manual, new icons.
-Calculate and display dB of AC value.
-
-v2.12
-2019-07-07
-Major changes from v2.11:
-Better frequency detection, Gauss window, 
-normalise all windows to 0 dBV display,
-new math mode CH1*CH2.
-
-v2.11
-2019-06-28
-Major changes from v2.10:
-New math mode, calculate AC part of CH1/CH2
-
-v2.10
-2019-06-10
-Major changes from v2.09:
-Use new FW 0202 that allows more and better structured sample rates,
-reload the correct FW version if the wrong version was loaded before.
-
-v2.09
-2019-05-25
-Major changes from v2.08:
-Add slower timebases 20, 50, 100 ms/div with increased samplesize.
-
-v2.08
-2019-05-24
-Major changes from v2.07:
-This release fixes the quite unstable spectrum display. The annoying amplitude jitter has gone.
-
-v2.07
-2019-05-22
-Major changes from v2.06:
-First complete free open source release.
-No longer dependent on nonfree Hantek firmware.
-
-v2.06
-2019-05-14
-Major changes from v2.05:
-Refactor triggering, move from postprocessing chain into earlier hantekdsocontrol.
-Last release with 2090,2150, 2250 and 5200 support.
-
-v2.05
-2019-05-10
-Major changes from v2.03:
-Increase sample size to 20000, better trigger modes
-
-v2.04 - removed due to issues with 10X probe display
-
-v2.03
-2019-05-05
-Major changes from v2.02:
-New checkbox for 10X probes.
-
-v2.02
-2019-04-26
-Major changes from v2.03:
-1st binary release after transfer to OpenHantek/OpenHantek6022
+2023-12-28 (b5e1aee): fix #390
+2023-12-23 (1c3a681): tool update
+2023-12-23 (c786a8f): minor packaging update
+2023-12-19 (c4c79ee): README typo fix; fix binary names
+2023-12-18 (e4767dc): doc update; tool update; clean up
+2023-12-18 (d00e32d): update build system, same setup for debian, macos, mingw, msvc
+2023-12-17 (49e0efe): remove dirty tag from MSVC
+2023-12-17 (814886e): add version to MSVC package
+2023-12-17 (d9a62fe): Add Qt binaries to MSVC package
+2023-12-17 (795b78f): Build MINGW and MSVC Windows packages
+2023-12-15 (5c44615): test for macos-12 build
+2023-08-30 (d5ef54e): change tooltip colors according to discussion #378
+2023-08-30 (62a1230): modify unstable package versioning
+2023-08-30 (af6dc75): unstable package names with git versioning
+2023-08-30 (0589b73): fix cmake for GH runner again
+2023-08-30 (a8506b3): fix cmake for GH runner
+2023-08-30 (6b56dad): remove font awesome files; refactor res; refactor cmake
+2023-08-29 (1b419e3): remove "dirty" from version
+2023-08-29 (385bdaa): use blue/yellow/orange OpenHantek icons also for MacOS
+2023-08-29 (6e00f96): add MacOS icon file
+2023-08-29 (4424108): Lighttheme and darktheme theme icons
+2023-08-27 (0806fe6): replace FA icons with SVGs
+2023-08-14 (af5978f): prepare next development round, reset stable version string
+2023-08-13 (28b1d24): stable release 3.3.3
+2023-08-13 (9e35952): stable release 3.3.3
+2023-08-13 (438269c): upversion to 3.3.3
+2023-08-10 (637dcf9): fix #376 "vector's iterator dereference out of range"
+2023-08-09 (8bc0b8b): due to low issue activity remove the automatic stale workflow
+2023-08-09 (b98f23d): fix #374 start / stop roll mode sampling (almost) immediately
+2023-08-08 (9a3d953): split 'samplerateChanged' event handler; remove useless 'this->'
+2023-08-08 (db08415): update translations
+2023-08-08 (db25fbd): merge fix for #363 and #365 - thank you @nseam
+2023-08-08 (875a8dc): Fixes #363, refs #365. Splitted HorizontalDock::timebaseChanged event handler from doing operations on dsoControl and dsoWidget in the same callback. Now there two callback and each uses the Widget it operates on.
+2023-07-27 (50bbaac): update github runner ubuntu version
+2023-07-27 (f3c01ff): update FW version (no functional change); include #370 manually
+2023-06-13 (a2d0692): fix window build
+2023-06-13 (bc0ca19): Refactoring of build system; small clean-up
+2023-06-13 (47712b4): Add thread debugging verbosity
+2023-04-02 (f24ec34): Add support for YiXingDianZiKeJi YX-DSO (MSDO)
+2023-04-02 (e151829): Prepare PR #361 of https://github.com/ef15c/OpenHantek6022
+2023-04-02 (8006348): Add workflow to mark stale issues and PRs
+2023-03-28 (383ecd0): small refactoring; update translations
+2023-03-27 (2ea8261): show error message when screenshot or export file write fails
+2023-03-24 (4c04649): MSDO calibration file update from real device.
+2023-03-24 (4f48cea): Add support for YiXingDianZiKeJi YX-DSO (MSDO)
+2023-03-11 (dfe0aaa): change dB suffix with "Ok" or "Apply"
+2023-03-10 (b717e52): more cleanup
+2023-03-09 (f261305): i18n for dB suffix "V", "u", "m"; silence more warnings
+2023-03-09 (507633c): fix mac build
+2023-03-09 (fe5af58): rearrange GH runner steps
+2023-03-09 (0935c91): move "Demo Mode" button to dialog button box at the window bottom
+2023-03-09 (21e70ee): fix build versioning
+2023-03-08 (27a16a9): new version 3.3.2.2
+2023-03-08 (7f6a3ac): silence more pedantic warnings - no fkt change
+2023-03-08 (42523f4): update user manual (--noAutoConnect)
+2023-03-08 (938caa4): new commad line option --noAutoConnect, wait for "Ok" click
+2023-03-08 (fdbe94a): reconfigure udev rule, separate conditions and actions (same function)
+2023-03-07 (ec5f7c9): add HiDPI export upscaling to user manual
+2023-03-07 (ba9a1d3): move cleared roll mode trace to zero line (fill buffer with raw offset)
+2023-03-05 (a08dc4b): fix #353, refactor, comments, thx @espindola and @Vascom
+2023-03-05 (1e7788b): next try for #353
+2023-03-04 (b8bdca1): check for #353 - configuration for export image upscale; translations
+2023-03-02 (7cd165a): silence warnings (add context argument to connect); add verbose output
+2023-02-26 (be30727): update bug report template (screen resolution)
+2023-02-25 (8169cd1): apply PR #351 - update openhantek windows driver - thx gitguest0
+2023-02-23 (de00004): Update Spanish translations from #349, thx @hasecilu
+2023-02-24 (fbc38d6): update openhantek windows driver
+2023-02-22 (f4d31c4): merge PR #348: Fix some typos
+2023-02-22 (79c2e1f): alternative spelling
+2023-02-22 (aa95ceb): alternative spelling
+2023-02-22 (e2f44a3): Fixed some typos
+2023-02-22 (e675658): PR #347: fix missing icon on startup dialog (win build)
+2023-02-22 (55b5d7b): set startup dialog image size to 150
+2023-02-21 (2a4f3c0): fix missing image on startup dialog
+2023-02-21 (cba4ac2): update win32 build configuration
+2023-02-21 (09313ee): update libusb init function to avoid deprecation warning
+2023-02-20 (2b5d09e): add documents directory to windows package
+2023-02-20 (551cb4f): silence nasty windows warnings
+2023-02-20 (dae18c4): Merge PR #346: switch windows build to mingw64 compiler
+2023-02-20 (294968c): prepare PR #346: switch windows build to mingw64 compiler
+2023-02-20 (e4a6472): update openhantek windows drivers
+2023-02-15 (4f898f1): adjust build_check for mingw64 compiler usage
+2023-02-15 (1d11253): switch windows build to mingw64 compiler
+2023-01-10 (00f7e87): cosmetics
+2023-01-10 (4d98b21): cleanup build system, win x32 build no more available
+2023-01-10 (abc6031): artefact versioning check
+2023-01-10 (66ac160): use the real git version a.b.c-nnn-gxxxxxxx for unstable releases
+2023-01-10 (c897e1f): this stupid windows path delimiter is a source of constant annoyance
+2023-01-10 (cef749f): fix GitHub wondows build
+2023-01-08 (de9d201): fix #340, fix #341, upversion to 3.3.2.1
+2023-01-01 (da618f0): New Year: New Version 3.3.2
+2023-01-01 (a012403): New Year: New Version 3.3.2
+2023-01-01 (00fd3db): next try for https://github.com/actions/runner-images/issues/577
+2023-01-01 (c006c7a): check GH runner fix https://github.com/actions/runner-images/issues/577
+2023-01-01 (377b135): New Year: New Version 3.3.2
+2023-01-01 (043aa59): GitHub runner macos build is broken
+2023-01-01 (78ae149): next try to fix the GH mac build
+2023-01-01 (626d1e4): fix GH mac build
+2023-01-01 (5e81d67): New Year - New Version 3.3.2
+2022-12-17 (a83f35f): Update documentation
+2022-12-13 (42b9645): Update user manual for upcoming version 3.3.2
+2022-11-23 (40f6adb): Add dBV, dBu and dBm buttons to Config/Analysis tab
+2022-11-21 (5187096): HACK: https://github.com/softprops/action-gh-release/issues/280
+2022-11-21 (249f1dd): unify artefact file name format: openhantek_a.b.c-NN-gHHHHHHH_TARGET.zip
+2022-11-21 (04e6c24): uses: @version is mandatory
+2022-11-21 (2a90c89): cmake and build cleanup
+2022-11-21 (5ebce03): define package version from git describe
+2022-11-21 (f6fd8ec): change versioning to x.y.z-nnn-gxxxxxxx
+2022-11-18 (037f0b7): kind of fix for #335 - rearrange the settings windows to make them smaller
+2022-10-25 (0ee289c): Merge branch 'jsiddall-patch-1': update README.md (gain and sample rate)
+2022-10-25 (ac808c9): add full stops at line ends
+2022-10-24 (00c4268): Update README.md
+2022-10-18 (02ba161): README and doc update (building); get FW version from dso602x_fw_version.h
+2022-09-19 (68e0ee1): Update documentation for Windows driver installation
+2022-09-19 (bf1a303): Merge branch 'gitguest0-main'
+2022-09-18 (72786d1): change windows driver usage
+2022-09-16 (b0da1cd): Updated windows driver OpenHantek.inf from VictorEEV
+2022-09-16 (339db31): style handling - more verbosity
+2022-08-20 (76f0a83): easy version info
+2022-08-18 (d90e7af): undo last change, git describe does not work with github runner
+2022-08-18 (f31caea): #define GIT_DESCRIBE
+2022-08-18 (9ff1ab1): change version info from git describe format to $DATE-$HASH
+2022-08-18 (c2bc52a): minor doc and text changes; change version info to git describe format
+2022-07-31 (b3afdec): documentation update - upversion to 3.3.1
+2022-07-31 (f0523cf): I don't like Windows :(
+2022-07-31 (44a8270): more formatting of GH runner yaml
+2022-07-31 (2ac1ce5): reformat yaml for GH runner
+2022-07-30 (906d4ab): test for #314 hack from warpme
+2022-07-20 (e9c16c4): i18n for OpenHantek.desktop
+2022-07-15 (6287350): Update minimal required FW version from 0208 to latest 0210
+2022-07-03 (e5f0e4a): upload also macos releases (finalize #296)
+2022-07-02 (a51b08e): Merge branch 'fix_296' (MacOS build broken) provided by dianlight - thx
+2022-06-16 (1c55b9e): Fix for bug #296
+2022-06-16 (d28856f): Upversion to bug fix release 3.3.0.1
+2022-06-15 (fae8b16): Next test for #308
+2022-06-14 (c0a7fac): Fix (hack) for #304
+2022-06-14 (fec2b92): Change SPDX-License-Identifier from "GPL-2.0+" to "GPL-2.0-or-later"
+2022-06-14 (ce28710): translation update
+2022-06-12 (45beac0): Check solution for #308
+2022-05-26 (b46ab64): Upversion to 3.3.0
+2022-05-23 (1659812): Roll mode only for slow sample rates, doc update
+2022-05-09 (9915903): Update user manual, release 3.3.0-rc3
+2022-05-08 (250c5a6): Disable macOS bundle build option in CMake, update documentation
+2022-05-07 (bcbe787): Do not upload macOS binaries and release assets
+2022-04-30 (22e6991): upversion to -rc2 with mac build
+2022-04-30 (6e068f9): README update (currently no *.dmg for macos)
+2022-04-29 (9dba24c): Now go back to macos-11 build
+2022-04-29 (9c6fc89): revert to macos-10.15 build
+2022-04-29 (7886e04): macos quick'n'dirty build fix
+2022-04-29 (9113b06): disable macos dmg build due to unexpected error
+2022-04-29 (f7252ca): check macos-11 build
+2022-04-29 (d48201a): Manual update, upversion to 3.3.0-rc1
+2022-04-25 (5d11ef6): Minor display improvements
+2022-04-22 (f7ee66f): increase / decrease zoomed window height with mouse wheel
+2022-04-21 (de118f0): Increased zoom window height with user-settable factor
+2022-04-20 (914c36a): Improve cursor measurement handling when deactivating channels
+2022-04-19 (cb94b60): Enable/disable cursor measurement tool tips
+2022-04-19 (a71d02b): Make cursor measurement more intuitive
+2022-04-19 (ba409a9): Separate the trigger functions in their own class "Triggering"
+2022-04-19 (7255c0e): Fix #292 - set background colour independent of theme and style
+2022-04-14 (cfff90d): Refactor class HantekDsoControl, extract separate class MathChannel
+2022-04-13 (6476ee5): Refactor hantekdsocontrol.cpp, new math mode low-pass filters, l10n update
+2022-04-11 (3405f5e): Complete Spanish translation from hasecilu, close PR #290; code refactor
+2022-04-10 (6678f8f): Remove bottom measurement lines for unused channels, do not occupy space
+2022-04-10 (06f119e): Do not localise numbers, do not use decimal separator - Fix #289
+2022-04-08 (6859a6e): Show local documents also for Windows - finally
+2022-04-08 (4f2a4e3): Test for Windows :(
+2022-04-08 (beae514): Simplify the document loading (DRY)
+2022-04-08 (767d9a4): Define path also for Windows
+2022-04-08 (e9447fd): Add verbose output for calibration and document loading
+2022-04-08 (724e439): Show message box when offset calibration menu entry is clicked
+2022-04-08 (5301506): Refactor manual and document loading, show some tooltips always
+2022-04-08 (5e80fa5): Include manual and documentation in windows zip package
+2022-04-08 (7300e9e): Next Windows doc install check
+2022-04-08 (1077129): Update windows doc install
+2022-04-08 (e82b183): Include manual and other documentation pdf files into windows package
+2022-04-07 (5be939a): Add documentation about HW frequency generator mod and fix #288
+2022-04-06 (8a7b4d3): Fix #285 - "Save as .." keeps the default settings location unchanged
+2022-04-06 (94eae3e): add some const-ness, silence debug message
+2022-04-05 (716923c): Translation update
+2022-04-05 (19a93a9): Close #284 - add config dialog: show/hide tooltips for user interface
+2022-04-05 (71606a9): My personal message about the moronic war against Ukraine
+2022-04-04 (a688267): Russian translation update - as always, thx to @spam-receiver
+2022-04-02 (5973a32): fix Windows MSVC stupidity again
+2022-04-02 (fe0393d): fix Windows MSVC stupidity :(
+2022-04-02 (2fb76ba): refactor MATH channel, can now trigger on MATH; more tool tips
+2022-03-25 (a2c57e7): Fix #278 - avoid crash with trigger position at left screen margin
+2022-03-25 (f7fca88): Refactor searchTriggerPosition(), correct trigger mode SINGLE handling
+2022-03-24 (64b5ced): Refactor icon handling, add more cal frequencies, add manual freq command
+2022-03-23 (89e97a2): Quick right mouse button measurement with on-screen-display
+2022-03-21 (a194c13): Display cursor measurements with right mouse press
+2022-03-17 (6ea32f7): Update translations
+2022-03-17 (75661d9): Show live calibration status, exit if noise or offset too big
+2022-03-16 (043d873): Write online (offset) calibration values into EEPROM
+2022-03-15 (500185a): Code clean up
+2022-03-14 (d65744e): Make persistent offset calibration compatible with "calibrate_6022.py"
+2022-03-13 (965d59e): Update documentation (how to do offset calibration)
+2022-03-13 (f0e0cca): Save (offset) calibration file as *.ini
+2022-03-12 (74aaa56): Implement online offset calibration
+2022-03-10 (8897591): Improve calibration data and control transfer verbosity
+2022-03-07 (ee8798c): show optional note value (+-cent) for audio frequencies, readme update
+2022-03-07 (ff6492f): Update FW0210 (no new scope functions)
+2022-02-28 (7ff6051): Windows build make stress again - MSVC defines silly min and max macros
+2022-02-28 (db69d5c): Use new FW0210 - no new functions for scope
+2022-02-24 (4126539): window function documentation update (Harris 1978)
+2022-02-23 (d661e64): new tapering window "Kaiser"; massive post processing refactoring
+2022-02-22 (2ec3a26): refactor spectrum generator, menu option to optimize and reuse FFT plans
+2022-02-21 (f66cc55): Use FFTW_MEASURE to get fastest algorithm and reuse fft plans afterwards
+2022-02-21 (a3a88f0): more math functions, correct V² unit, better measure screen layout
+2022-02-18 (ef608ad): fck! - to much python programming last weeks, msvc doesn't like logical or
+2022-02-18 (658d559): new math modes DC_CH1 and DC_CH2: display the DC offset of a channel
+2022-02-18 (90bffd5): display trigger position as time instead of percent of screen width
+2022-02-17 (941dc28): logical 'or' breaks msvc, accepted on gcc and clang
+2022-02-17 (3432ccf): include i18n options from sebras PR #270
+2022-02-17 (b98f503): Added swedish translation #269 from sebras plus remarks from haaninjo
+2022-02-17 (0b3f7c2): close #272, close #273 - measurement cursor handling and value display
+2022-02-17 (8508db9): smaller steps for marker and zoom window move with SHIFT-SCROLL
+2022-01-01 (27eb8c5): Merge branch 'fgrieu-readme-Windows-driver-tips' update README.md with Windows driver tips #254
+2022-01-01 (d4162a0): update README.md with Windows driver tips #254
+2021-12-24 (7c329c3): update README.md with Windows driver tips
+2021-12-23 (9916cf3): Merge branch 'fgrieu-signed-windows-inf-files'
+2021-12-23 (b10be56): Install PR #251 from fgrieu:signed-windows-inf-files
+2021-12-23 (d16e151): Add directory utils/signed-windows-inf-files/ with Windows inf files for Hantek 6022BE and Hantek 6022BL. Easy installation withotu Zadig (right-click on the inf files and install). Informative names in Device Manager, identifying device and common firmwares loader/openht/sigrok
+2021-12-16 (31c5ee2): Release version 3.2.5
+2021-12-16 (f916d11): fix for older Qt versions
+2021-12-14 (2099b3e): Use colors from Breeze/BreezeDark for user themes Light/Dark
+2021-12-13 (3750d1a): Close #248 -> User selectable themes Auto, Light, Dark from color menu
+2021-11-25 (af2578e): update user manual (regarding #246)
+2021-11-21 (71cc801): fix #243 (1st try)
+2021-11-21 (21ceb46): Merge pull request #245 from ericfont/fix-244-measurement-rect-vertical-scale
+2021-11-21 (ba6357b): Merge pull request #242 from ericfont/alternative-fix-240-exit-drawHistogramChannelGraph-if-vaoHistogram-empty
+2021-11-19 (e031aeb): fix #244 update marker info when change V or dB div
+2021-11-19 (e1ae07f): Fix #240 don't draw histogram if empty
+2021-11-19 (e7f7a5d): update translations (changed source code line numbers)
+2021-11-19 (0e1c7a0): Merge branch 'ericfont-measure-marker-time-freq-only-if-used'
+2021-11-18 (b72b8b5): cursorDataGrid time only if timeUsed and freq only if freqUsed.
+2021-11-18 (c55fe59): switch linux ci build from ubuntu 18.04 to 20.04 (sync with debian stable)
+2021-11-18 (68e2abe): avoid warnings
+2021-11-17 (8397358): Use FW built with latest sdcc version 4.0 from debian stable
+2021-08-21 (165f31e): revert FW to debian buster build (fixed part of #207, reported by @iss000)
+2021-08-20 (babc8ef): new verbose level for USB debugging (--verbose=7)
+2021-08-20 (3fc9afb): rebuild firmware with debian bullseye toolchain w/o code change
+2021-08-20 (415586b): fix #213; fix attribute warnings; propose donations for FSF
+2021-08-17 (ab90e2e): Update for debian bullseye (Qt 5.15.2), source format unification
+2021-07-31 (bb3c550): manual update (optional THD display in bottom line); typo correction
+2021-07-15 (d3a9969): Update Chinese translations - thx cdhigh
+2021-07-14 (7483fb2): Upversion to 3.2.4
+2021-06-23 (e622508): Possibility to select (smaller) Fusion style in options menu
+2021-06-22 (783c14a): fix #192 - command line option -b or --breeze selects Breeze theme
+2021-06-21 (ee18fae): Merge branch 'cdhigh-main' into main
+2021-06-21 (c95252d): Add Chinese translations
+2021-06-03 (e7acbeb): avoid more useless use of "this->"; more lambda connect()
+2021-06-02 (6bae713): remove useless use of "this->"
+2021-06-02 (a5bb3ea): change calibration frequency setting from SpinBox to ComboBox
+2021-05-28 (7a6e8d3): doc update; remove bashism
+2021-05-24 (ab9a649): Upversion to 3.2.3
+2021-05-22 (83584d2): tools update
+2021-05-21 (dd7554c): better verbosity structure
+2021-05-20 (3af5b2c): GH actions typo
+2021-05-20 (9cbd18d): fix GitHub actions Ubuntu build
+2021-05-20 (2b757ee): more verbosity
+2021-05-18 (92ba5a6): fix #185
+2021-04-29 (17cdb1f): more user debugging support with --verbose n
+2021-04-28 (e8e27c9): check for #185
+2021-04-28 (3b337aa): set ShareOpenGLContexts
+2021-04-28 (39b0517): auto detect OpenGL ES
+2021-04-28 (83547d1): win check (setAttribute GLES)
+2021-04-27 (b012292): typo
+2021-04-27 (fc75909): set robust OpenGL defaults
+2021-04-26 (62c54e6): Improve OpenGL robustness; refactor glscope.cpp; fix #184
+2021-04-24 (3f65bbf): test for #184
+2021-04-23 (0415321): new command line options; fast screenshot; doc update
+2021-04-18 (dcac3f7): Upversion to 3.2.2
+2021-04-18 (5f3bfcc): Upversion to 3.2.2
+2021-04-18 (17922ca): Merge branch 'h4570-json-exporter' into main
+2021-04-18 (4bd51bb): Merge branch 'json-exporter' of https://github.com/h4570/OpenHantek6022 into h4570-json-exporter
+2021-04-17 (405504d): added json translation
+2021-04-17 (53ad518): added json exporter
+2021-04-17 (b0f43a5): csv refactor
+2021-04-17 (a9b4c6a): doc update; versioning update
+2021-04-17 (a7ad857): Merge branch 'h4570-translation-pl' into main
+2021-04-17 (733af95): Merge branch 'translation-pl' of https://github.com/h4570/OpenHantek6022 into h4570-translation-pl
+2021-04-17 (5557350): polish translation
+2021-04-13 (fb6ac16): documentation update
+2021-04-12 (a00a0c1): minor build system tweaks; doc update
+2021-04-11 (7c737c2): unique naming structure for lin/mac/win artifacts/assets
+2021-04-09 (6a44d57): select correct win release assets
+2021-04-09 (5772dd5): cmake typo
+2021-04-09 (d2ca2a8): now lin/mac/win builds have finaly moved to gh actions
+2021-04-09 (b2c4ef3): cmake update
+2021-04-09 (66ee6e2): gh actions build also for win
+2021-04-09 (0249924): GitHub hosted runners do not support Qt on Windows
+2021-04-09 (6ec5412): win path correction
+2021-04-09 (b83add9): check qt5 install for gh win runner
+2021-04-08 (e158873): Update readme
+2021-04-08 (1a0d37c): clean up appveyor
+2021-04-08 (b4ae2b7): appveyor typo
+2021-04-08 (4ec3cd5): move Ubuntu / macOS builds to the faster GitHub hosted runners
+2021-04-08 (f0d4fd3): use correct build path for release upload
+2021-04-08 (d45faef): +upload release assets
+2021-04-08 (e785702): no qt support on win; add qt path for macos
+2021-04-08 (650e444): tab-typo
+2021-04-08 (bd7de33): cosmetic changes
+2021-04-08 (3694e97): macos needs sudo instead of fakeroot; +win test
+2021-04-08 (123e561): yaml syntax again...
+2021-04-08 (a362261): yaml syntax
+2021-04-08 (1051074): yaml typo
+2021-04-08 (4632e0e): build check also with macos
+2021-04-07 (7bcf4cf): doc update: CI tools
+2021-04-07 (ef4d164): rename github actions workflow, omit ubuntu-16.04 build
+2021-04-07 (bd582cb): CI update, packaging update, documentation update
+2021-04-06 (055efdc): check if it compiles with latest ubuntu LTS
+2021-04-06 (a7d371b): use ubuntu-16.04 to support older installations
+2021-04-06 (7bfeb9c): build on ubuntu-18.04 to support older installations
+2021-04-06 (28437a1): build packages with github.run_id
+2021-04-06 (680501f): define artifact name(s)
+2021-04-06 (d8d9ac2): typo?
+2021-04-06 (0cec2c4): next try for individual artifacts
+2021-04-06 (38b5404): check for individual artifacts
+2021-04-06 (852e839): yml typo
+2021-04-06 (df08bf6): github actions: upload artifacts
+2021-04-06 (0b618db): add github actions build status badge
+2021-04-06 (5c6f854): actions: check rpm build
+2021-04-06 (4b92245): Create cmake.yml
+2021-04-05 (82a7e1a): upversion to 3.2.1
+2021-03-30 (db23aae): check if #175 can be solved by 'toLocal8Bit()' instead of 'toUtf8()'
+2021-03-24 (d7d6c22): Merge PR #172 Fix silent const conversion
+2021-03-24 (f2b0e76): Fix silent const conversion
+2021-03-20 (ba57928): Merge PR #171: Define target context for lambda connection
+2021-03-20 (238f5d6): Define target context for lambda connection
+2021-03-18 (17a94ac): interpolate (sinc) also untriggered traces
+2021-03-17 (05288d0): documentation update
+2021-03-16 (73ae7bd): additinal interpolation mode "sinc" (if < 200 dots on screen)
+2021-03-15 (bf53b73): additional interpolation mode "step"; update master "readme.md"
+2021-03-12 (d370f14): New issue template for general topics
+2021-03-07 (7a22cf5): fix typo, thx @ryandesign
+2021-03-03 (8583e19): another fix for #159 (export CSV)
+2021-03-02 (530b7f7): test for #159
+2021-02-28 (4bec995): Upversion to 3.2
+2021-02-22 (bf1bdc2): more calibration frequencies (poor man's function generator)
+2021-02-21 (f598af0): use new FW functon to set the calibration pulse frequency
+2021-02-17 (cfa3ab1): fix warnings and obsolete Qt functions
+2021-02-17 (35bdaeb): source code cleaning
+2021-02-17 (723db57): no more W32 binaries from appveyor after update to Visual Studio 2019
+2021-02-17 (5d711b2): appveyor setup for 32bit build corrected
+2021-02-17 (cb099c0): fix appveyor win error
+2021-02-17 (64c7172): appveyor build for WIN: VS 14 2015 -> VS 16 2019, Qt 5.11 -> 5.15
+2021-02-16 (35e86c5): fix Visual Studio 2015 "error C2059: syntax error: '::'"
+2021-02-16 (7012aa0): store settings individually based on unique EzUSB HW serial number
+2021-02-15 (4962100): support clean selection of multiple connected devices
+2021-02-14 (77ba4ad): Merge branch 'DSO6021' - add new model DSO-6021 (DIY redesign)
+2021-02-14 (421cf13): FW upversion to 0208, AC mod doc update for DSO-6022BL
+2021-02-13 (7ef4e4b): add new model DSO6021 (DIY redesign of DSO6022BE)
+2021-02-12 (2645bb5): enables the simultaneous use of more than one device
+2021-02-10 (2956fb8): renamed the udev rules file, updated docs accordingly
+2021-02-03 (0de19a5): refactoring of font options and font setting, menu reformatting
+2021-02-01 (46bc3df): allow adjustment of scope font but use system font for splash screen
+2021-02-01 (afdb26a): Merge pull request #157 from dougep/alignment
+2021-02-01 (9688d7a): Fix incorrect vertical alignment on measurementMiscLabel
+2021-01-28 (7630cbe): fix #155 - linkfix to Martin Loren's hscope app
+2021-01-28 (ae1f048): fix #153 (package rpm is a build requirement on deb based systems)
+2021-01-28 (13b2f5f): fix #154 caused by different sample rate coding of sigrok DDS120 FW
+2021-01-10 (25baf50): fix #145 - Option for font condensed value (default: 87% = SemiCondensed)
+2021-01-09 (d61c9a8): Merge pull request #144 from dougep/macbuilddoc
+2021-01-09 (2848a59): Correct path in macOS build instructions
+2020-12-29 (4039924): ignore the demo device during USB scan
+2020-12-27 (5012dc3): ignore windows bogus usb vendor id (solve #138?)
+2020-12-24 (6147e86): Upversion to 3.1.5
+2020-12-23 (f812c99): Command line option -font <Name> sets the system font
+2020-12-21 (a09d803): show OpenGL error messages also on stderr
+2020-12-15 (e571428): font size in settings menu
+2020-12-15 (5ef84a9): option -f0: calculate font/widget size from screen dpi
+2020-12-14 (d16b3dc): Fusion style also for Windows and FreeBSD (2nd try)
+2020-12-12 (ab32378): Fusion style only for Linux - QStyleFactory
+2020-12-12 (6a77dbb): Fusion style also for Windows
+2020-12-11 (a3411b3): correct Hantek_6022B.inf with crlf
+2020-12-11 (c20703c): next try: remove Hantek_6022B.inf with lf only
+2020-12-11 (3c5b787): commit *.inf with eol=crlf
+2020-12-11 (edf765d): remove *.inf with eol=lf
+2020-12-11 (d03c20c): *.inf: do not change crlf -> lf on commit; info update
+2020-12-11 (310ae68): provide cat and inf file for Windows build
+2020-12-10 (9a96e10): Windows doc updates
+2020-12-08 (d2d2caa): provide setup and build scripts (for linux)
+2020-12-05 (995ae1a): layout improvement for bottom lines; better default colors
+2020-12-02 (71eac0c): undo the 48 MHz test hack; small readme.md update
+2020-12-02 (9bd4deb): HACK for user github.com/zen67: enable 48 MS/s (this speed may be instable)
+2020-11-30 (a51706c): Upversion to 3.1.4
+2020-11-30 (cadcafe): calculate THD (optional), fix #132; disable spectrum for XY mode
+2020-11-28 (5d69c6d): Update user manual with content of upcoming version 3.1.4
+2020-11-28 (6e317fe): fix #133 (mention all possible udev rule locations)
+2020-11-27 (596b05b): doc update
+2020-11-26 (bfbd2b4): documentation update
+2020-11-25 (0bc1745): update token
+2020-11-25 (7e043bf): appveyor: activate deploy
+2020-11-25 (f71908b): Update info about latest binary builds
+2020-11-25 (0896369): appveyor: +macOS
+2020-11-25 (2e9d53e): appveyor define all artifacts
+2020-11-25 (f0c124d): appveyor: enable git log
+2020-11-25 (dc031e9): complete appveyor script (?)
+2020-11-25 (b809e1c): new appveyor script (step by step)
+2020-11-25 (14b0b1f): ???
+2020-11-25 (c02d54a): next try ...
+2020-11-25 (41bee59): appveyor: use latest VS (2019)
+2020-11-25 (069d15c): next appveyor win/lin check
+2020-11-25 (a8bbf90): next appveyour win/lin try
+2020-11-25 (6052e34): appveyor test for win and linux
+2020-11-25 (5afce7b): disable doxygen (prepare for appveyor CI test)
+2020-11-24 (e5408ce): Mention the missing MacOS packages
+2020-11-24 (0f53092): No MacOS build until travis is fixed
+2020-11-22 (0c8dd64): 3rd try for #131
+2020-11-22 (5cf487b): next check for #131
+2020-11-22 (5d4c2a1): check for #131
+2020-11-22 (bed373e): calculate dB from rms instead of ac; R=0 turns off the power calculation
+2020-11-14 (22b60d8): Merge branch 'bmsorin-dummy_load'
+2020-11-14 (b48d853): bmsorin: add Dummy Load; moved R setting to Settings/Analysis/Power
+2020-11-14 (5edfa20): add Dummy Load
+2020-11-13 (163da3f): fix #128 - incompatible config file change due to new smooth mode
+2020-11-09 (a012419): HF/Normal/LF trigger, fixes #127
+2020-11-06 (cac2a1f): smaller math mode names
+2020-11-03 (d845b2e): Merge pull request #126 from GCarneiroA/voltage_dock_math_improve_attenuation_voltage
+2020-10-31 (8a12a46): Voltage dock math improves attenuation voltage to facilities view in graph.
+2020-10-20 (f52e97e): doc update: install also fakeroot as build tool (#125)
+2020-10-16 (fba3728): move (spectrum) frequencybase from horizontal dock to spectrum dock
+2020-10-16 (ff18205): reduce CPU load when display is stopped, speedup shutdown
+2020-10-16 (946e891): fix #124: dock windows (voltage, horizontal,trigger, spectrum) cannot be closed
+2020-10-06 (cad3d00): reduce CPU load when rendering unchanged data
+2020-10-05 (81864f6): fix #123 - change minimal holdOff time between capture blocks to lower CPU load
+2020-09-30 (16a52e8): upversion to 3.1.3
+2020-09-30 (df396e7): make smooth trigger setting persistent; clean redundant this->
+2020-09-15 (c56c662): display horizontal trigger level line when marker is moved, resolve #118
+2020-09-01 (fa9838d): fix #114, small font size update
+2020-08-27 (798d8c5): new command line option --fontsize; doc update
+2020-08-23 (2fdc850): fix #112; do not define extra CPACK_RPM_PACKAGE_REQUIRES
+2020-08-17 (7b46074): update version info
+2020-08-17 (94c1f15): omit debug output for #111; skip some useless setSamplerate() calls
+2020-08-17 (117c927): test version to narrow down strange Windows crash #111
+2020-07-29 (95ff65f): upversion, small improvements for FreeBSD and Windows
+2020-07-24 (77c3551): do not use Q_OS_... unless QtGlobals are defined (fix FreeBSD build)
+2020-07-24 (5eb3d53): restore 1CH / 2CH setting when leaving real slow mode
+2020-07-14 (af753af): next improvement for #108, use cmd.exe window as console if available
+2020-07-14 (8f68a8f): next try to fix #108
+2020-07-14 (10fee24): try to fix #108
+2020-07-14 (d73472c): use unique Qt globals to distinguish OS and target architecture
+2020-07-10 (e1da860): missing commit :(
+2020-07-10 (e2aa07d): remove Qt::WindowFlags (QT_DEPRECATED warning)
+2020-07-10 (341eb71): build "full-featured" *.tgz packages for Linux and FreeBSD
+2020-07-10 (4159e3d): silence QT_DEPRECATED warnings about sprintf
+2020-07-09 (a71bd67): fix #105 - correct ini file handling
+2020-07-08 (e5071af): FreeBSD build/installation update
+2020-07-03 (8772d08): fix #102; add build instructions for FreeBSD
+2020-07-01 (e99070e): fix #101 - #define libusb_setlocale( x ) (void)0
+2020-06-30 (f50f90b): Upversion to 3.1.1, doc update, robustness improvement
+2020-06-28 (4ffe158): add refresh button to restart roll mode sampling
+2020-06-26 (e0c6482): real roll mode for slow sample rates
+2020-06-23 (df55001): close #45; ctrl scroll wheel zooms, scroll wheel shifts zoom range
+2020-06-20 (1dad788): upversion to 3.1.1-rc; options to force OpenGL SL versions
+2020-06-16 (d592942): fix ABI change warnings; less travis output
+2020-06-16 (a029ce8): FW 0207 with new sample rates; timebase 10s/div
+2020-06-15 (fa73a8d): slow mode finetuning
+2020-06-14 (03816f7): improved marker and zoom setting
+2020-06-10 (4814528): restart slow sampling when samplerate changes
+2020-06-09 (db837c7): roll mode: small changes, sampling down to 5s/div
+2020-06-08 (f5b8f26): roll mode for >100ms/div and trigger mode NONE
+2020-06-07 (ae6a759): update/finetune capturing
+2020-06-05 (4836749): move capturing into own thread to unfreeze the gui
+2020-06-02 (1f1f5b0): trigger modus NONE for faster display of slow sample rates
+2020-05-25 (dd92714): clean up scope settings menu, add new configs
+2020-05-25 (650ea29): now with identical timing also for demo device
+2020-05-23 (6d872a4): fix #94
+2020-05-21 (f30eaee): use lambdas for screenshot()
+2020-05-20 (99ccfe8): new image/pdf export and print
+2020-05-18 (d927fc7): save screenshot also as pdf
+2020-05-17 (a883af2): better default colours for printer
+2020-05-17 (7796c80): update ru translation
+2020-05-15 (872cfd6): new export: screenshot (mainWindow or dsoWidget)
+2020-05-13 (9afed31): fix warnings, remove unused code
+2020-05-13 (1930f2f): fix translation of the strings in legacyexportdrawer.cpp
+2020-05-13 (5136b29): fix some more warnings
+2020-05-13 (0ce9690): fix warnings: default label in switch which covers all enum values
+2020-05-13 (9d19f7a): encapsulate demo mode handling into ScopeDevice
+2020-05-12 (f5a446c): more russian translation, thx @spam_receiver
+2020-05-12 (50bd7ea): fix #90 (russian translation '/s' -> '/c')
+2020-05-11 (7bd3a0f): move demo device code into class ScopeDevice
+2020-05-10 (094d993): travis ci: package change
+2020-05-10 (f93faac): travis ci os: change xenial -> bionic
+2020-05-10 (c2d8cac): refactor USB code, use better names
+2020-05-08 (6837839): provide a demo mode button
+2020-05-08 (a428056): upversion, documentation update
+2020-05-08 (90b83c1): finetuning display refresh rate
+2020-05-06 (4a7ed7f): tag as release candidate
+2020-05-06 (5dbb40f): russian translation, thx @spam-receiver
+2020-05-06 (edc9a26): demo mode w/o scope HW
+2020-05-04 (b0c86f4): Win: rm extra icon file
+2020-05-04 (af3aaef): Win: add icon
+2020-05-04 (0ebab7c): RPi info; add Win ico file
+2020-04-27 (95de064): ui fine tuning
+2020-04-25 (e114f90): fix #82 - WIN: change Start/Stop shortcut from <SPACE> to <S>.
+2020-04-24 (047598e): small gui improvement; remove unused code
+2020-04-24 (09d0f3a): support for unstable releases
+2020-04-22 (7cea076): revert appveyor win build (only *.zip)
+2020-04-22 (8cbf1ca): appveyor: define all artifacts
+2020-04-22 (f40ac26): next appveyor try
+2020-04-22 (130eaa5): add more win artifacts
+2020-04-22 (6522ce2): python script to upload assets to a release
+2020-04-20 (e315744): Merge branch 'DavidRisch-export_pdf_image'
+2020-04-20 (520a58e): Updated translation metadata
+2020-04-20 (941e025): Fixed drawing of pdfs
+2020-04-20 (83b9b02): Set file extension automatically for exporting pdfs/images
+2020-04-20 (a3e5144): apply global format (style: openhantek/.clang-format)
+2020-04-20 (d82c127): merged pr #78 from DavidRisch (high_dpi_support)
+2020-04-20 (6feb874): Merge branch 'high_dpi_support' of https://github.com/DavidRisch/OpenHantek6022 into high_dpi_support
+2020-04-20 (559e5a2): Prepare a clean merge of pull request #78
+2020-04-20 (af4c7c1): Revert "complete clang-format, no content change"
+2020-04-19 (8a71b07): merge 6440185 (levelslider size based on dpi) from DavidRisch
+2020-04-19 (58b2a6f): add commit abe5c00 from DavidRisch
+2020-04-19 (f1b0ab8): complete clang-format, no content change
+2020-04-19 (6440185): Increased size of needle in levelslider based on dpi scaling
+2020-04-19 (abe5c00): Increased spacing after channel name in measurementLayout
+2020-04-19 (08db397): Applied clang-format
+2020-04-14 (52c9236): fix ubuntu build (travis)
+2020-04-13 (2b112e7): upversion; manual update; fix travis build
+2020-04-13 (f753ce5): upversion; manual update
+2020-04-13 (29f38b8): upversion; manual update
+2020-04-11 (a933b52): fix #75
+2020-04-07 (be8142a): DDS120: 75Hz->60Hz
+2020-04-06 (476b78d): revert to sigrok based FW for DDS120
+2020-04-06 (b2c5492): DDS120 EEPROM contains no calibration data but factory fimware
+2020-04-05 (0e8583f): update DDS120 model file
+2020-04-05 (f51cd22): use own DDS120 FW from github.com/Ho-Ro/Hantek6022API; add ES translation
+2020-04-04 (0e50d59): fix 50kHz calibration frequency for DDS120
+2020-04-04 (18f58d5): fix calibration frequency for DDS120
+2020-04-03 (ac2db85): set debian package dependencies automatically
+2020-04-03 (1c881f2): doubleclick: left -> set two markers with zoom=100, right -> removes the markers
+2020-04-03 (3276bec): move calibration out frequencies into the model files
+2020-04-02 (2533724): fix a possible race condition when switching 1ch <-> 2ch
+2020-04-02 (c8a0bff): fix #70
+2020-04-02 (ee09651): doc update
+2020-04-01 (23786d2): fix #69
+2020-04-01 (b5524a4): fix #68 (DDS120 udev rules update)
+2020-03-31 (76793df): fix #66 (samplerate spinbox response)
+2020-03-30 (446fcd4): doc update; gui cosmetics
+2020-03-30 (26c1a49): make calibration frequency setting persistent
+2020-03-25 (43cd7f4): better comments about ADC to voltage scaling
+2020-03-24 (a6c3d8f): switch to latest FW0206 (no change for scope fkt.)
+2020-03-19 (1a7843e): fix #66 - wrong sample rate displayed in spinbox
+2020-03-17 (febf065): upversion, small histogram ui improvement
+2020-03-15 (94407ee): new firmware version 0205
+2020-03-15 (137f112): fix issue when switching to XY mode
+2020-03-04 (7f807c3): (small) FW update w/o function change
+2020-03-03 (6649449): fix #61 (change /usr/share/doc path to lower case)
+2020-03-01 (c3c1648): upversion to 3.0.2; apply realtime prio and scheduler
+2020-02-27 (a610bba): FW with unique FX2LP ser num (Cypress KBA212789)
+2020-02-07 (e19e707): suport older cmake versions
+2020-02-04 (2ae596f): histogram for pdf/png, minor improvements
+2020-01-31 (10e1c69): update documentation, 1st 3.0.2 release candidate
+2020-01-31 (359ecc8): manual merge from jm-o's changes
+2020-01-30 (f7d7109): Fix GUI refresh with settings loaded from a file Force .ini suffix when saving settings file Fix 2 minor french translation issues
+2020-01-28 (2f09f61): minor doc update, some clazy cleaning
+2020-01-28 (544caf4): use my fx2lib (updated toolchain)
+2020-01-27 (8cc50af): Merge pull request #52 from jm-o/FrenchTranslation
+2020-01-26 (2723deb): Usable histogram function with user interface and icon
+2020-01-25 (b177b79): 1st working histo
+2020-01-25 (d53c750): small clean-up
+2020-01-25 (3ac9734): Force .ini suffix on File save as
+2020-01-25 (e133057): Full French translation
+2020-01-22 (e69b847): rename settings.* -> dsosettings.*
+2020-01-22 (72563b3): probe attenuation documentation update
+2020-01-21 (6cee6f5): cosmetics for ProbeSupport
+2020-01-21 (95b0e74): Merge pull request #51 from jm-o/ProbeSupport
+2020-01-21 (2cc215c): Differential probe X1...X1000 support
+2020-01-15 (286018f): fix #49, more clean-up of source code
+2020-01-13 (1d6ce6b): fix for #49
+2020-01-12 (933cde9): fix #48
+2020-01-10 (4ca6e37): next warning clean-up
+2020-01-10 (bda3651): unhide class member (clear warnings)
+2020-01-10 (3737687): minor manual update
+2020-01-10 (6ce51e7): industrial cleaning, refactor most warnings
+2020-01-08 (cea93cc): clean up warnings
+2020-01-07 (383a917): cleanup desktop file and icon names
+2020-01-06 (5252850): how to install *.deb
+2020-01-06 (0726579): small manual update (how to start the program)
+2020-01-06 (d7d955d): provide scalable and 48x48 icon
+2020-01-05 (c0bd578): add menu entry file openhantek.desktop
+2019-12-18 (644c46c): correct y position for zoomed channel and trigger marker
+2019-12-17 (06d79ce): UniqueUSBid is now a truly unique value
+2019-12-14 (89d54ed): no serial number string in FW
+2019-12-14 (fa3c018): small FW fix without FW upversion (correct USB current)
+2019-12-13 (414988d): upversion, manual update
+2019-12-12 (26e18f0): light/dark switch for all icons
+2019-12-12 (9fb1073): add qt svg lib hint for build
+2019-12-11 (1b4c059): automatically select light and dark icons
+2019-12-10 (66dbf57): adjust samples only if triggered, else start with pos 0
+2019-12-10 (77037a7): fix #42, at least the part of @Ragnar770
+2019-12-09 (b0e7094): make grid more visible, add small crosses at intersections
+2019-12-06 (a7c9eb6): hide not yet implemented feature 'NewDeviceModelFromExisting'; clean up 'cppcheck' findings
+2019-12-04 (ed3839d): use gain 20x of DDS120, use 10MS/s
+2019-12-02 (c847d81): fix #39, better default gain/offset for DDS120
+2019-12-02 (17531d0): comment about libusb behaviour on different OSs
+2019-11-29 (c365d9b): start the scope automatically when ready
+2019-11-29 (0b77b94): try to solve #35 and #38 as well as stalled upload
+2019-11-25 (76f075c): xy mode: use color of y channel
+2019-11-25 (3a8b0c3): refactor/rename sliders and trigger flow
+2019-11-24 (4b92e47): bold info text
+2019-11-24 (64ec2b2): typo :(
+2019-11-24 (aa53873): usb code cleanup
+2019-11-24 (dcda947): correct pdf/png export of modified frozen traces
+2019-11-22 (38d28a5): changed to check #35 on FreeBSD
+2019-11-22 (fb23bd3): fix typo, detected on windows build
+2019-11-22 (8e3701f): fix #35 (report errors during FW upload), fix stalled FW upload
+2019-11-22 (f65a403): next step: trigger position refactor
+2019-11-19 (da9b82a): remove unused variable
+2019-11-19 (b13e314): fix #36; align trace to trigger on "frozen" trace
+2019-11-17 (9240317): export also XY pdf/png
+2019-11-15 (037731c): consistent marker handling; user manual update; upversion
+2019-11-12 (ec1196f): more logical marker status display
+2019-11-09 (ccdceeb): next CMake / MacOSX change
+2019-11-09 (c8a94cc): upversion - (pre-)release with fix for #33
+2019-11-09 (bcbf14f): fix (?) travis error for MacOSX bundle build
+2019-11-09 (5664ff4): fix #33 - regression was introduced by 3f6b16c
+2019-11-09 (d1535cb): restore lost translations
+2019-11-08 (473221e): display duty cycle of triggered trace in top line
+2019-11-06 (4c8529b): upversion to v2.17-rc7 for MacOSX bundle check
+2019-11-06 (99819bf): MacOSX bundle check
+2019-11-05 (ad9bc9a): new osx *.dmg creation
+2019-11-05 (ffc3fc1): minor corrections/improvement
+2019-11-05 (e83fa10): support AC modification for Hantek6022
+2019-11-03 (4a3a288): AC coupling for 6022 with HW mod and FW0204
+2019-10-27 (9a39170): move os specific directories into ./util
+2019-10-25 (53b8ced): sub-sample offset correction
+2019-10-24 (b694e6c): code clean up
+2019-10-24 (511fe7a): show trigger pulse width also in pdf/png export
+2019-10-23 (25561db): travis: deploy osx bundle
+2019-10-23 (7aecea3): travis: test osx bundle; update osx build instructions
+2019-10-23 (0bbd267): travis: typo
+2019-10-23 (712802e): travis: osx test
+2019-10-22 (2b105c1): build osx bundle and dmg; no change to program
+2019-10-22 (899ecc1): travis: correct path an rightas
+2019-10-22 (7ae7458): travis: syntax again :(
+2019-10-22 (2df54d8): travis: yaml syntax
+2019-10-22 (90a21f4): travis: correct yaml format
+2019-10-22 (48fd9f3): travis: create osx bundle and dmg
+2019-10-22 (822a152): travis: use macdeployqt and macdeployqtfix
+2019-10-22 (ccd9716): travis: fix app path
+2019-10-22 (cf4e967): travis: call macdeployqt with path
+2019-10-22 (86b487f): travis: deploy also qt - another tool needed :(
+2019-10-22 (771f538): travis: test for macosx bundler - include libs
+2019-10-21 (1aff1af): fr and it translation started; build macosx bundle
+2019-10-21 (87350d6): travis: deploy osx binary or bundle
+2019-10-21 (271464c): travis: tgz either the mac bin or the mac bundle
+2019-10-21 (df842c2): travis: correct the bundle path
+2019-10-21 (145f590): travis: syntax error
+2019-10-21 (91f9519): travis typo
+2019-10-21 (80fbcd9): travis: create bundle archive in package
+2019-10-21 (19bad8b): MacOSX: don't install bundle, it's already in build/openhantek
+2019-10-21 (fd2cbdc): travis / cmake: check macosx bundle build
+2019-10-21 (9aa12a3): travis: no brackets in yml, use test instead
+2019-10-21 (673d3ca): travis: comment some test steps
+2019-10-21 (23c779c): travis: next macosx bundle try
+2019-10-21 (017e274): travis: check if directories exist
+2019-10-21 (fe7c8ac): travis: debug the MacOSX bundle dir
+2019-10-21 (b477367): travis: need more info about macos build
+2019-10-21 (82503f7): travis test: set BUILD_MACOSX_BUNDLE = OFF
+2019-10-21 (3a60bb6): travis: check package build without need of release
+2019-10-21 (b5c425f): correct travis typo
+2019-10-21 (cf73426): set BUILD_MACOSX_BUNDLE = ON (check travis build)
+2019-10-21 (e282ed5): refine travis debug message
+2019-10-21 (a1b54e3): add debug message for travis build
+2019-10-20 (a9a4c4f): MacOS build test, no program change
+2019-10-20 (d033e4c): 1st setup for MacOS app bundle
+2019-10-20 (4800482): reduce CPU load for RPi; small FW change w/o impact on std HW
+2019-10-19 (8d3fa7c): tag as release candidate, use released FW 0203
+2019-10-19 (40c6f94): fix #30 - less aggressive sampling
+2019-10-19 (6363a88): cmake: detect correct architecture also on RPi; increase config robustness
+2019-10-18 (01cee35): add support for Sainsmart DDS120 with AC/DC switch
+2019-10-18 (54eb85b): Merge pull request #29 from msiegert/Sainsmart-DDS120
+2019-10-17 (3f6b16c): Add check if scope has CONTROL_SETCOUPLING controlCode before sending it
+2019-10-17 (548c787): fix ControlSetCoupling initialization
+2019-10-17 (63f3e25): Merge pull request #27 from msiegert/Sainsmart-DDS120
+2019-10-16 (da000e4): Add support for changing coupling for the DDS120
+2019-10-16 (a86df44): Merge branch 'Sainsmart-DDS120' of https://github.com/msiegert/OpenHantek6022 into Sainsmart-DDS120
+2019-10-16 (c998a9f): Added initial Sainsmart DDS120 support
+2019-10-16 (5ab0ac2): Added initial Sainsmart DDS120 support
+2019-10-15 (4d503e4): set OpenGL ES as default for Raspberry Pi
+2019-10-13 (4d4dce7): measure width of triggered pulse -> top line
+2019-10-11 (f71be40): add some badges from https://shields.io/
+2019-10-11 (40d6734): fix #26 - array overrun when increasing time base setting windows binary crashes, linux binary on my machine never showed this issue also some small trigger improvements Signed-off-by: Martin <Ho-Ro@users.noreply.github.com>
+2019-10-06 (9732a7b): display number of samples on screen instead of (const.) sample size
+2019-10-05 (1a1849e): Upversion to v2.15, manual update, added CHANGELOG
+2019-10-04 (c0913e3): fix windows build (M_PI is undefined on win)
+2019-10-04 (791cd87): remove a test file
+2019-09-30 (91a6f64): sinc resampling for fast sample rates
+2019-10-02 (028a92e): add 6022BL and 2020 models to the FreeBSD USB rulesfile
+2019-10-02 (f917e2d): Merge pull request #22 from tspspi/freebsdport
+2019-10-02 (62bd8ce): Added devd configuration file for FreeBSD
+2019-10-02 (21d38ae): Fixed crashing of application on FreeBSD
+2019-10-02 (0d6937e): Modified includes for libusb to be capable of locating headers on FreeBSD
+2019-09-26 (4325eb9): use iterator instead of array index
+2019-09-17 (db13f48): correct the nasty display of µ (my) in translations
+2019-09-17 (2cb1ce0): typo
+2019-09-17 (41eb049): better automatic versioning (commit date & build number)
+2019-09-12 (ca7341e): automatic preparation for translation, text clean-up
+2019-09-11 (0d0ee7e): add links to the user manual
+2019-09-09 (7a43b14): fix typo
+2019-09-09 (b95eb2f): update translate process and instructions
+2019-09-08 (f0ce71e): activate translation, de complete, pt in progress, fr empty
+2019-09-08 (dac3c13): only small cosmetical changes, upversion to 2.14
+2019-09-06 (94bd5ba): faster display refresh, update manual, cleanup
+2019-09-01 (feec028): update user manual, PNG/PDF export update (Vpp)
+2019-08-30 (0f8a136): add Voltcraft DSO-2020 USB Oscilloscope (https://gitlab.com/floatLab/openhantekdso2020)
+2019-08-30 (ca63361): make normal trigger more aggressive and add a "smooth" trigger source
+2019-08-30 (d7cc435): fix vpp regression
+2019-08-26 (8ee4583): add Vpp display, closes #19
+2019-08-25 (14b75d4): mode X: alternating trigger slope
+2019-08-23 (1b7f754): refactor software triggering
+2019-08-22 (52b4a60): add trigger slope X (both rising or falling), show a kind of eye diagram (with digital phosphor)
+2019-08-21 (0ab4635): fixes #18, thx No13
+2019-08-13 (77a4898): more oversampling
+2019-08-11 (e87ecd6): manual update
+2019-08-09 (8637482): clean up readme.md
+2019-08-09 (64bd029): update verion and documentation to v2.13
+2019-08-09 (5ff29fe): calculate and display dB of AC value
+2019-08-08 (8e2757d): icon change, about firmware
+2019-08-07 (c094bd4): update manual (new icons)
+2019-08-07 (84dea72): new config icons, rename config section files->file
+2019-08-04 (21bd45b): correct trigger position for pdf/png, better icons for zoom and measure
+2019-07-30 (673b8d9): doc update
+2019-07-26 (026fd60): eye candy
+2019-07-23 (1d225f9): new screen shots
+2019-07-22 (30ea669): User Manual update, doc update, + hint for timeout during upload
+2019-07-21 (fed4806): new User Manual, typo
+2019-07-19 (ff01faf): better default colours; avoid div by zero (markers)
+2019-07-09 (8426ea0): update windows libusb instructions (Zadig)
+2019-07-09 (63e63d4): update MacOSX and Win remarks in front page readme
+2019-07-07 (6923dde): no change, release as v2.12
+2019-07-07 (0155279): increase warning level, source clean-up
+2019-07-06 (08236f8): corrects a math error, more code cleanup
+2019-07-05 (ef07796): source code cosmetics
+2019-07-05 (8147b29): avoid that corr snaps on subharmonics
+2019-07-03 (e642773): better frequency detection
+2019-07-02 (4c6290a): spectrum: fixes Gauss window fkt; scales to 0 dBV
+2019-07-01 (99a0c93): normalise all windows to 0 dBu display
+2019-06-30 (845f6ec): scale spectrum and all window functions to display 0 dBu = 1 V eff
+2019-06-30 (8f62bdb): new math mode Ch1*Ch2, invert samples and not graph
+2019-06-28 (0a87778): new math mode AC, calculate AC part of Ch1 or Ch2
+2019-06-27 (7e53d5f): new MATH modes: calculate AC part of CH1 or CH2
+2019-06-23 (2946576): use oversamplig also at higher sample rates
+2019-06-15 (1c29066): omit very low sample rates to avoid long screen update delays
+2019-06-14 (67548d7): optimise timing
+2019-06-13 (a0266e1): cleanup and comments
+2019-06-12 (42943fc): 1st working downsample version
+2019-06-12 (77a7fb1): minor corrections
+2019-06-10 (b55f7f4): merge changes done via github.com web interface into local repo
+2019-06-10 (53bda4b): limit max timebase to 200ms/div
+2019-06-10 (474175e): use new firmware to get more structured sample rates
+2019-06-10 (863af90): upload FW using 1st stage loader built into EZ-USB HW, no need to use dso6022xx-loader.hex
+2019-06-10 (7ee0823): upload new FW if wrong FW version is uploaded to device (e.g. due to using the original Hantek SW before)
+2019-05-28 (d5f0f06): how to ensure the loading of the correct firmware version
+2019-05-25 (08d1aa2): add slower timebases 20, 50, 100 ms/div with increased samplesize
+2019-05-24 (2afe121): more code cleanup and reordering
+2019-05-24 (229f6e9): Correct spectrum display: use magnitude instead of real part. Limit max frequencybase according to samplerate
+2019-05-22 (d78d3e2): more compact voltage dock
+2019-05-21 (34ca924): fix trigger source setting for ch 1, remove all special related content
+2019-05-20 (d97fe6b): more cleanup and refactor
+2019-05-19 (17eacc9): move sw trigger from postprocessing into hantekdsocontrol, improve usb stability, more non 6022 cleanup
+2019-05-16 (fc0ff7a): remove (mostly) all non-6022 stuff, e.g. bulk commands and other models
+2019-05-12 (ed658a0): refactor trigger mechanism: trigger early in the processing chain
+2019-05-10 (61fa3c3): cleaned up and commented the sample size setting, use 20000 samples for analysis
+2019-05-10 (4af450c): trigger condition false also freezes spectrum, correct voltage display for probe
+2019-05-09 (0ffadc7): prevent artefacts when switching channel usage
+2019-05-09 (064c280): Add feature request template
+2019-05-09 (b5a981e): Create issue template
+2019-05-09 (50c65b8): +link "developer documentation"
+2019-05-08 (6426f90): clean fix for #5
+2019-05-06 (3fc2223): change for older cmake used by travis macOS build
+2019-05-06 (2aef54d): (ugly) fix for #5 - avoid assertion for vector size
+2019-05-05 (b0dc565): new secure appveyor key for OpenHantek repo
+2019-05-05 (770b8f7): no new functions, only cleaning and renaming
+2019-05-04 (1041f0c): fix for #3 (add option to set up probe divider)
+2019-05-02 (02b6bd4): do not select the highest sampling rate as default (can choosen manually)
+2019-05-02 (6476448): cleanup for #4 , chose lower default sampling rate
+2019-05-01 (670d0f1): fix issue #4 select samplerate without affecting timebase
+2019-04-29 (1f36495): link to black2279's wiki about windows install
+2019-04-28 (8a10c41): fix https://www.codefactor.io/repository/github/openhantek/openhantek6022/commit/847f1aa16692972c2635325e7cc9b9e2d2d8b0e7
+2019-04-28 (847f1aa): Win32 build: https://github.com/black2279/OpenHantek6022/commit/1f3b154e3c6ee49b384a4756e5b6147b10720ae8 https://github.com/black2279/OpenHantek6022/commit/05d00443f33c69016c4d4cefc9dea3259bf07f4d https://github.com/black2279/OpenHantek6022/commit/8a3955324a7982ca19ec69bf9f43b47d335db300
+2019-04-27 (7c0318f): "virtual" is redundant since function is already declared as "override"
+2019-04-27 (cde7807): cosmetical changes
+2019-04-26 (05e67eb): more URL updates, show build date in title
+2019-04-25 (650e29e): Fix URLs after repo transfer
+2019-04-22 (0badee2): fix issue #9 (wrong freq display in markers tool window)
+2019-04-22 (cb5474a): avoid interaction freeze when sampling is paused
+2019-04-19 (a3687ad): more documentation in build/doc/latex/refman.pdf
+2019-04-16 (9c80284): document CSV localisation
+2019-04-16 (4b6f11b): localisation for csv export
+2019-04-14 (9c9345f): calculate and display (and export) DC, AC and RMS value
+2019-04-13 (4c9a21f): better behaviour at 1st start (no conf file): active 1st ch, trigger AUTO
+2019-04-12 (1c6362a): show also the correct 'active' icon in readme.md
+2019-04-12 (5ca6294): stability changed from experimenal to active, more codefactor cleanup
+2019-04-12 (6252853): readme update: openhantek available in macports, codefactor cleanup
+2019-04-09 (31fca38): fixed 16 30 MS/s issue
+2019-04-09 (3e4750c): renamed README->readme to fix cmake regression
+2019-04-08 (6b7714c): use single or multi sample rate limit
+2019-04-08 (37cdf21): Merge branch 'master' into issue_16-30 Update the issue fix
+2019-04-03 (b681dd9): screenshot of latest version
+2019-04-02 (d516976): howto calibrate
+2019-04-02 (8070c2e): OpenHantek reads offset/gain calibration now from eeprom but will fall back to conf file if available
+2019-04-01 (6638cc3): Update hantekdsocontrol.cpp
+2019-03-31 (4256693): adapt the frontend gain according to the nominal resistor values
+2019-03-28 (52ef640): new 6022BL fw, fixes gain selection issue
+2019-03-26 (7aef39c): new FW based on sigrok, selectable calibration frequency
+2019-03-26 (ea3eaba): new FW based on sigrok, selectable calibration frequency
+2019-03-24 (d5a15c5): new 6022 FW
+2019-03-22 (3f8a931): fw update
+2019-03-22 (82a9a43): fixed timer bug in be firmware
+2019-03-22 (1f1b617): new BE / BL firmware (sigrok), fix upload
+2019-03-20 (6808ea5): use custom firmware for 6022BE and 6022BL from https://github.com/Ho-Ro/Hantek6022API
+2019-03-19 (7310866): another fix for #5
+2019-03-18 (e58f894): use also original Hantek6022API custom fw without bulk EP2 out
+2019-03-17 (d77b4ea): use new custom fw from https://github.com/Ho-Ro/Hantek6022API
+2019-03-15 (727950b): fix macOS issue with GLSL version 120, runtime check of OpenGL version and selecting shader language version 120 or 150 accordingly
+2019-03-15 (e5a8be4): fix issue #5 -> own ID for 6022BL = 0x602a, fast mode only  fast6022be
+2019-03-12 (dbd5ead): doc update
+2019-03-12 (cd772e2): avoid possible unsigned overflow
+2019-03-12 (85dbe7b): mention new features in readme.md
+2019-03-12 (d3e6c06): show warning when data were clipped
+2019-03-11 (cabdb00): started documentation
+2019-03-09 (279fb36): implemented trigger mode NORMAL in addition to AUTO
+2019-03-09 (47bb2e0): corrected regression for deb package build
+2019-03-08 (b7da4e8): better sw trigger, better frequency calculation
+2019-03-07 (665682e): changed frequency detection from auto correllation to spectrum
+2019-03-06 (ed6ea72): export DC and also AC voltage
+2019-03-05 (38efbdf): display DC and AC component of signal, use AC for DFT
+2019-03-04 (1501da0): changed usb descriptor from 100mA to the real value of 500mA
+2019-03-03 (f7744eb): fix libpng warning: iCCP: known incorrect sRGB profile
+2019-03-03 (8cf6625): appveyor: add Win to artifact name
+2019-03-03 (81768c0): next appveyor test
+2019-03-03 (23617bb): and another appveyor test...
+2019-03-03 (50982c5): next appveyor test
+2019-03-03 (f048665): actual screenshot
+2019-03-02 (782e1f6): next try for appveyor tag deployment
+2019-03-02 (82e8bfb): update docs
+2019-03-02 (e24482e): updates for github pages
+2019-03-02 (4bdcdf1): updates for github pages
+2019-03-02 (660558e): added github pages
+2019-03-02 (d1d8b05): Delete CNAME
+2019-03-02 (5993273): Set theme jekyll-theme-leap-day
+2019-03-01 (22c2928): different max sample rate single/dual channel
+2019-03-01 (94222bf): appveyor: automatic deploy of win binary after tagged pushes
+2019-03-01 (e4e849f): fixed broken time/div <-> sample rate dependency, update readme
+2019-02-28 (e5235df): small travis changes
+2019-02-28 (fe4489d): merged with github changes
+2019-02-28 (1dd616c): prepared for travis ci
+2019-02-28 (7427a7c): Update CPackInfos.cmake
+2019-02-28 (967b9e5): Update CPackInfos.cmake
+2019-02-28 (0bc0894): Update CPackInfos.cmake
+2019-02-27 (0dfd272): Merge pull request #1 from Ho-Ro/oh6022
+2019-02-27 (5c65c00): updated releases and binary section
+2019-02-26 (0395fa5): changed sample buffer size, updated readme.md to reflect my repo.
+2019-02-24 (946776d): Update readme.md
+2019-02-24 (d7f4642): Update readme.md
+2019-02-24 (b617305): Update readme.md
+2019-02-22 (4d38339): ugly hack: fast mode for 6022 TODO: refactor
+2019-02-15 (7f4718e): max 30MHz with 1 ch, TODO make sample rate only display not spinner
+2019-02-14 (97540df): Quit shortcut Ctrl-Q, GLSL 150 -> 120 according https://github.com/coozoo/openhantek/commit/01b42d3db2921a0aa83ea6808147ea6257de3f28
+2019-02-10 (1874a81): changed 200mV gain from 10x to 5x to avoid clipping of the visible trace.
+2019-02-10 (d73b440): reverted GL -> GLES default
+2019-02-10 (ea7aa42): + modelDSO6022.conf
+2019-02-10 (e930e9f): provide a sample file modelDSO6022.conf (with measured values for my device)
+2019-02-10 (b39d15d): use individual gain & offset calibration file ~/.config/OpenHantek/HT6022BE.conf
+2019-02-09 (6026be6): calibration values for my scope, changed voltage display from p-p to avg, set GLES as default
+2019-01-10 (24ef99f): Update maintenance status to unsupported
+2018-12-13 (55c6e9c): Possible fix for https://github.com/OpenHantek/openhantek/issues/265 (#269)
+2018-12-13 (4e22c25): travis: fix release uploading (#270)
+2019-02-25 (4924975): merge updated github content Merge branch 'master' of github.com:Ho-Ro/openhantek
+2019-02-24 (3229d33): Update readme.md
+2019-02-24 (9b285fd): Update readme.md
+2019-02-24 (d8e887f): Update readme.md
+2019-02-22 (a39831d): ugly hack: fast mode for 6022 TODO: refactor
+2019-02-15 (b729aac): max 30MHz with 1 ch, TODO make sample rate only display not spinner
+2019-02-14 (2c464d5): Quit shortcut Ctrl-Q, GLSL 150 -> 120 according https://github.com/coozoo/openhantek/commit/01b42d3db2921a0aa83ea6808147ea6257de3f28
+2019-02-10 (ba05dea): changed 200mV gain from 10x to 5x to avoid clipping of the visible trace.
+2019-02-10 (48ebdc5): reverted GL -> GLES default
+2019-02-10 (821ca7e): + modelDSO6022.conf
+2019-02-10 (7d508d6): provide a sample file modelDSO6022.conf (with measured values for my device)
+2019-02-10 (000f6ce): use individual gain & offset calibration file ~/.config/OpenHantek/HT6022BE.conf
+2019-02-09 (35f6c18): calibration values for my scope, changed voltage display from p-p to avg, set GLES as default
+2019-01-10 (eb33325): Update maintenance status to unsupported
+2018-12-13 (5954747): Possible fix for https://github.com/OpenHantek/openhantek/issues/265 (#269)
+2018-12-13 (6a15801): travis: fix release uploading (#270)
+2018-09-30 (b8b43ad): update travis.yml (#268)
+2018-09-29 (c7e56b4): fix Dark mode background introduced with MacOS 10.14 (mojave) (#264)
+2018-09-29 (84f258e): fix for libusb dereference crash / update appveyor links (#267)
+2018-09-29 (6fb6fbe):  update appveyor.yml (#266)
+2018-09-03 (b6afff0): Remove configuration from path to project .exe file for MSVC builds
+2018-07-22 (7862387): Fix the [no] downsampler border case for DSO 2250.
+2018-07-22 (ff3bb8f): Reset the device pointer before libusb_exit().
+2018-07-19 (9d0ebc7): Set cmake policy CMP0072 to choose OpenGL module
+2018-07-16 (57e0beb): Use actual data returned from the cmdGetLimits.
+2018-07-10 (9935f0a): Update hantekdsocontrol.cpp
+2018-07-10 (daa2dec): Update hantekdsocontrol.cpp
+2018-07-03 (ea7b5cb): Update readme.md
+2018-06-03 (a9f782e): Crossforwin (#227)
+2018-06-03 (2878471): added OpenSUSE specific build dependency packages
+2018-03-20 (0eff8d4): Cursor measurements (#177)
+2018-03-15 (52622ac): Correct license notice to latest version recommended by GNU.
+2018-03-06 (ad9b229): Fix #197
+2018-02-19 (abe1eb3): updated osx build instructions
+2018-02-17 (cb11dd7): fix segfault #183, improve SW trigger stability by less aggressive samplerate selection
+2018-02-19 (43a1bd6): Fixes a segfault on startup. The previous code assumed that ModelRegistry::instance would be initialized before being used by other static initializers. However, static initialization order is undefined. Plus, at least unter C++11 and according to 6.7[stmt.decl] p.4, this initialization of get():inst is thread-safe.
+2018-02-04 (7ed6776): Fix device selection dialog size.
+2018-01-20 (ba44a82): Use std::shared_ptr for GlScope::showNewData and call update(). DsoWidget is not responsible for this anymore.
+2018-01-20 (1c7190e): Introduce PostProcessingSettings. Remove utils/dsoStrings and add translation methods directly to the location where the relevant enums are declared. Remove union for math-channel/coupling value: Some compilers have issues here.
+2018-01-20 (9b32a46): Remove icons and use an icon font instead. Advantage: Color theme applicable, works in high dpi mode.
+2018-01-20 (57f5542): Exporting refactored: Plugin like structure with a central registry and GUI independence
+2018-01-20 (832fe65): Buildsystem: Add the fftw lib to the repository for windows users
+2018-01-20 (6dddef1): Fix segfaults in XY display
+2018-01-16 (16dc684): Readme: Add command line switch --useGLES explanation
+2018-01-16 (40e9b28): Command line switch to change between OpenGL and OpenGL ES. Add necessary dependencies to build.md doc
+2018-01-14 (dd5fde1): Add first part of a developer documentation
+2018-01-14 (7930108): Enforce constness/read-only access of specification through the code base.
+2018-01-14 (ab85a48): Introduce ModelRegistry as singleton. Supersedes the global list variable of supported models. A new model now only needs a h/cpp file and of course missing protocol commands
+2018-01-13 (eaf29e5): Update readme.md
+2018-01-13 (c193723): Use OpenGL 3.2 instead of 3.3 to make it work on MacOSX
+2018-01-13 (0f3e1d6): Update readme.md (#153)
+2018-01-12 (e110bb6): OpenGL3/ES does not have anti-aliasing hints as before. We need to set a multisampling value at the beginning. Remove antialiasing from config dialog therefore.
+2018-01-12 (a36eccc): Fix OpenGL problems
+2018-01-11 (f26fec8): Remove private fields of MainWindow that are not used. Adapt MainWindow and DsoWidget to changes.
+2018-01-11 (9c6b32e): Move all control command structs back to controlstructs. Move control functionality from usb device into hantekdsocontrol. Remove fixed HANTEK_CHANNELS definitions. We allow an arbitray number of channels, depending on the device.
+2018-01-11 (dcd2a3c): Some small changes to widgets
+2018-01-11 (5add000): Introduce new directory 'post' for post processing. Move all post processing funtionality there.
+2018-01-11 (84371ad): Move exporter to own directory. There will come another raw-sample exporter at some time. Move export settings there as well.
+2018-01-11 (8969a24): Add some readmes to some directories
+2018-01-11 (0e6d658): Firmware builder: Fix some issues
+2018-01-08 (3372305): Add sliders to the zoom view
+2018-01-08 (dc4cbc9): Easier device support: Models have even more limited interaction with dsocontrol now, only addCommand is called. The commands will be moved to the specification soon as well.
+2018-01-08 (ecbc22e): OpenGL: Don't use OpenGL functions directly, but use the Qt variants. We need to migrate to the OpenGL ES profile soon. Embedded systems like the Raspberry or Android devices do not support the OpenGL desktop profile at all and desktops may deprecate those as well.
+2018-01-08 (e8ac975): Readme: Use new images
+2018-01-07 (65f1202): drag markers by mouse press in the scope area
+2018-01-06 (4f3d56b): From Qt docs: int qRegisterMetaType(const char *typeName) ... is useful to register typedefs
+2018-01-06 (6fdba8a): Slider granularity enhancement, trigger level & position slider view fix
+2018-01-06 (86d3b6e): Rename trigger modes. 'Auto' is 'Wait/Force' now. 'Normal' is 'Hard-/Software'.  Only show supported trigger modes. 6022 do not support 'Wait/Force' for example.
+2018-01-06 (792ab9c): Add proper firmware for 6022BL. Fixes #124
+2018-01-06 (90dc57b): Use enum for scope.horizontal.samplerateSource. Remove softwaretriggersettings, use dsotriggersettings. Move more comments from cpp to header
+2018-01-05 (0fb7e43): GUI maintenance
+2018-01-04 (2f27486): Enumclasses (#136)
+2017-12-31 (73fe7c6): semicolon restored
+2017-12-31 (5395af6): minor bugfixes + SW trigger status display
+2017-12-26 (c7518c5): More swtrigger consts
+2017-12-26 (e6297cf): Make software triggering and fixed sample rates feel less hackish
+2017-12-25 (997a01e): Clean up signess. Fix crashes in the software trigger code (glgenerator). Remove headers where they are not used anymore (defines.h for instance)
+2017-12-24 (db4f8ba): Fix digital phosphor effect
+2017-12-24 (4a1617f): Rework device selection
+2017-12-23 (3ccfb5b): Enhance settings load/save
+2017-12-23 (cfb6bad): Update build.md
+2017-12-23 (afea087): Update build.md
+2017-12-22 (a96f3c6): Update build.md
+2017-12-21 (4691d38): Correct signess and compile errors structs vs class
+2017-12-21 (aa138ea): Make it easier to add more devices
+2017-12-22 (91e830e): Update _config.yml
+2017-12-22 (eccfd96): Fix docs for website generation
+2017-12-22 (8d620a7): Fix firmware upload. Fixes #113
+2017-12-22 (600b1dc): Register std::vector<unsigned> to the Qt metadata system to make it work with signal/slots. Fixes #101
+2017-12-22 (c9da580): Fix settings loader, change LevelSlider needle shape
+2017-12-21 (9676c16): Do not invert the offset when inverting a channel
+2017-12-20 (bf0ed67): Reformat after adding invert checkboxes
+2017-12-20 (8737282): Add checkbox to display inverted channels
+2017-12-21 (490026e): Hantek source: Split files further
+2017-12-21 (b1572fd): Move webpage from gh-pages branch to docs. Add some documentation. Shorten readme.md and link to articels instead.
+2017-12-21 (228136a): Add firmware/hex to gitignore
+2017-12-21 (3952771): Do not throw a runtime error if a record length is going to be selected that is not (yet) part of the available record lengths. Add the record length instead.
+2017-12-20 (4c0c874): Fix travis deploy
+2017-12-20 (21c134d): Add rpm generation to the cpack script.
+2017-12-20 (112cc8b): Update readme.md
+2017-12-20 (e6c6723): Firmware: Use cmake to build firmware and fail early in bash script
+2017-12-20 (7bf1956): Fix travis.yml
+2017-12-20 (f32ab1e): Travis: Use cmake of the updated travis ubuntu distribution. Use newer Qt from a ppa III
+2017-12-20 (a7641a2): Travis: Use cmake of the updated travis ubuntu distribution. Use newer Qt from a ppa II
+2017-12-20 (0405666): Travis: Use cmake of the updated travis ubuntu distribution. Use newer Qt from a ppa
+2017-12-20 (f3ea260): hantekdsocontrol: Modernize and make it more readable. Use const on all get methods. Use error enum consistently
+2017-12-20 (c8f3559): usbdevice: Use if/else instead of switch for getPacketSize and fail with a std::runtime_error if result is unexpected
+2017-12-20 (6570088): Fix some int signess warnings
+2017-12-20 (7713d06): Use QSignalBlocker instead of boolean flags in HorizontalDock
+2017-12-20 (ef0db03): Move fft window pointer from dataanalyzerresult to dataanalyzer. Use smart pointers for all in-between allocations
+2017-12-20 (311021d): Minimum Qt version is Qt5.4 now (10th Dec 2014)
+2017-12-18 (25e567f): Concentrate model implementation differences to hantekdsocontrol
+2017-12-18 (a496ceb): Settings refactored. MainWindow with less slots. Autoselect usb device if only one.
+2017-12-18 (fa0087a): ezusb: Remove c-only parts like defining booleans. This otherwise breaks the windows build
+2017-12-18 (cc3c632): Fix size_t vs int warning
+2017-12-18 (89e9b85): Add forgotten files
+2017-12-17 (85aa946): Move emitted signals from hantekdsocontrol constructor into startSampling to fix available record length and other missed signals. clang-format everything.
+2017-12-17 (2c49e9e): Add format (clang-format) as build target to cmake. Remove unnessesary #ifdef DEBUG: We have a smart timestampDebug macro now. Convert more Qt connect to Qt5 style
+2017-12-17 (8182254): Only use QMainWindow::GroupedDragging if Qt >= 5.6
+2017-12-17 (812e83f): Finish refactoring of data flow from USBDevice->HantekDSOControl->DataAnalyser->DSOWidget->GLGenerator. Less thread locks, no deadlocks by design
+2017-12-17 (7611820): Refactor exporter: All dialogs are created via factory methods before exporter is created
+2017-12-17 (94dfd10): Move widget files into subfolder
+2017-12-17 (c3d2f9f): Split settings files
+2017-12-17 (4672a44): Split config dialog and pages files
+2017-12-17 (81b09a4): Split dock window files
+2017-12-14 (5d72ea9): Show summary dialog with firmware update status instead of single confirmation box for every device.
+2017-12-14 (e461eff): Disable visual studio warning 'Declaration of a zero-sized array'
+2017-12-14 (cd4d510): Show active device in main window title. Dock windows need a parent. Fixes #75
+2017-12-11 (307fb7a): Make the build compatible to Qt < 5.4 again
+2017-12-11 (6564aec): Fix compile errors on windows
+2017-12-11 (1436e5d): Fixes macOS build on some systems: Fixes #63
+2017-12-10 (b7a65b8): Refactor: Split and reorganise files. Add firmware upload functionality.
+2017-12-08 (45521b4): Move timer to MainWindow class, add GL_WIDGET_CLASS adapter (switch between QGLWidget and QOpenGLWidget). Fixed stupid M$VC issue w/ _USE_MATH_DEFINES
+2017-12-08 (6f5146e): Update readme.md
+2017-12-07 (8cb6bc1): Update readme.md
+2017-12-03 (45c0176): Save / load layout of docking windows and toolbars into new [window] section of .ini file
+2017-12-05 (3fd7e44): Update readme.md
+2017-12-03 (e6ee659): Update readme.md
+2017-12-03 (5e7d9be): WinUSB driver files
+2017-11-30 (3bfdb59): Update CMakeLists.txt
+2017-11-26 (67afd83): Moved timebaseSteps to HorizontalDock, record length changed to 8K samples (6022BE only)
+2017-11-23 (93d8162): udev: use uaccess tag
+2017-11-27 (da3719f): Delete AUTHORS
+2017-11-27 (2876b8b): Delete ChangeLog
+2017-11-27 (94b4c26): Update CMakeLists.txt
+2017-11-23 (edce19c): readme: add missing libqt5opengl5-dev
+2017-08-09 (5913ecb): Update readme.md
+2017-08-09 (8d16b8d): Update readme.md
+2017-05-14 (9db3622): 1) Changed DSO6022 dropped sample count to 1040 (0x410) 2) Removed double-increment of math channel iterator, post-increment changed to pre-increment 3) CSV export in columns
+2017-08-01 (6ed0a5a): Color config dialog change + minor bugfixes (#64)
+2017-04-21 (0ce9ae3): Update credentials for travis-ci and appveyor automatic deployment
+2017-04-20 (ef80517): Update readme with information about used coding guidelines and clang-format
+2017-04-20 (bf24daf): Format code according to clang-format llvm style
+2017-04-20 (90696c4): support software triggering and others for 6022be (#59)
+2017-04-20 (4f02d08): Reduce travis tests to: g++5 for linux and clang for osx
+2017-04-20 (1603576): Use add_custom_command for copying win dlls to binary directory
+2017-04-20 (4f7b438): Fix binary install path for win dlls
+2017-04-20 (225d2d9): Add libusb windows lib for windows builds
+2017-04-20 (acf972a): Update cmake in travis-ci script
+2017-04-20 (d508aa0): Fix windows VS build: fftw lib name
+2017-04-19 (cdc7d07): Update appveyor.yml to use Visual Studio 2015 Use newer cmake features to tie compile flags to target Fix cast problems on the windows build, disable some compiler warnings, enable all other warnings. fftw needs an additional step to include the lib for VS + update to fftw-3.3.5
+2017-04-18 (5837e76): Fix utf8 problem with a character
+2017-04-18 (c75163c): Readme: Add section for alternatives. Add section for supported models
+2017-04-18 (38fb1df): Update dependencies in the readme file
+2017-04-18 (8b1ac30): Fix install locations
+2017-04-18 (98eb349): Repository compiles now without having a .git repository directory present or the git executable installed.
+2016-11-20 (85f4787): Update readme.rd info for OSX in cmake
+2016-07-10 (b1c05e4): Update control.cpp
+2016-07-10 (66dcfc4): Fix spectrum display
+2016-10-19 (a181f02): Merge pull request #35 from sanddorn/patch-1
+2016-08-21 (b0ba140): Add break in brew script
+2016-03-29 (586d8f5): Merge pull request #29 from wmanley/patch-1
+2016-03-29 (a5bb7cb): README: Spelling fixes
+2016-03-04 (342cac5): Merge pull request #28 from OpenHantek/davidgraeff-patch-1
+2016-03-04 (4c67f82): Update control.cpp
+2016-03-04 (0388b57): Merge pull request #27 from drothlis/fix-travis-missing-config
+2016-03-04 (aaae260): Fix travis build by removing unknown "file_glob" option
+2016-03-03 (fc04859): Some hantek6022 work integrated into src/hantek/
+2016-03-03 (5074707): Continous integration/delivery for windows with appveyor
+2016-03-03 (ac9e01e): Travis: Also generate deb package on linux
+2016-03-03 (e01e4b6): Buildsystem: Fix osx. Deploy package only when build with the clang compiler and only on the master branch.
+2016-03-03 (9a30ff6): Update readme.md
+2016-03-03 (a4fc980): Add another  screenshot
+2016-03-03 (ffeeee4): Buildsystem: Fix translations part of the build system. Use libusb1.0 only, there is a backend for windows now. Copy qt5 and fftw dlls to binary dir on windows automatically.
+2016-03-03 (fbbdad9): Travis: Another fix for the osx build
+2016-03-03 (dfa7f89): Compile translations into a ressource file and load them from there instead of messing around with installation paths.
+2016-03-03 (5de9f04): Travis: Sort dependencies, change build matrix. We build with clang on osx only and don't mess with the CC environment variables anymore. Add gtest dependency for a later unit test system. Incorporated changes from David Röthlisberger
+2016-03-03 (83f6a04): Use QString::toLatin1 instead of obsolete toAscii
+2016-03-03 (3622122): Add forgotten cmake files for translation and res directory
+2016-03-02 (6026fd6): Update readme.md
+2016-03-02 (7dd9813): Update readme.md
+2016-03-02 (d59e64c): Master branch uses cmake now for building
+2016-03-02 (eec3aa3): Merge pull request #21 from drothlis/firmware
+2016-03-02 (8c83d9c): readme: Update firmware installation instructions
+2016-03-02 (2e1c476): udev rules: Fix firmware filenames
+2016-03-02 (615d9d0): udev rules: Hard-code /usr/local/share/hantek location
+2016-03-02 (8a4d9f5): Move "extractfw" utility under firmware/
+2016-03-02 (6e35b6c): Commit firmware extracted from the Hantek Windows drivers
+2016-03-01 (b2a43a6): Update readme.md
+2016-02-29 (890492f): Merge pull request #20 from gjedeer/patch-1
+2016-02-29 (7f542ba): Fix installation instructions
+2016-02-05 (ae716da): Update readme.md
+2016-02-05 (1aaa1ee): Update readme.md
+2015-12-19 (48d6e64): Merge pull request #11 from cskau/nofloating_squashed
+2015-12-08 (831a7b0): Removes floating doubles of widgets and panels.
+2015-10-13 (1c1c21f): Update readme.md
+2015-10-12 (b6a8640): Move authors, changelog, readme, doc files to the repository root. Add .gitignore, add .editorconfig. Add macosx and clang compiler to travis-ci.
+2013-05-23 (f15390c): control: Add forceTrigger() to API.
+2013-04-07 (373e65b): sispinbox: fix stepBy to keep limit into accounts
+2013-04-06 (39d8e84): glscope: allow to toggle cursor visibility
+2015-09-22 (3802257): Make openhantek compile with Qt5 (drop Qt4 support)
+2015-10-09 (8eec0c4): Update readme.md
+2015-10-09 (daadbe4): Travis-CI: Add Qt5 OpenGL dependency
+2015-10-09 (8c81fd2): Travis-CI: Use new syntax (see http://docs.travis-ci.com/user/migrating-from-legacy)
+2015-10-09 (e2d2881): Update doxygen file
+2015-10-09 (3963273): Move travis.yml file to top folder
+2015-10-09 (c5c09d5): Add travis CI file
+2015-10-08 (427edec): Add screenshot to readme
+2015-10-08 (8777466): Delete mainpage.dox
+2015-10-08 (8dd9f05): Delete INSTALL
+2015-10-08 (da34a66): Delete NEWS
+2015-10-08 (8cc3781): Update and rename README to readme.md
+2015-10-08 (4b9821c): Delete roadmap.dox
+2013-04-11 (42ed8ef): DsoControl improvements
+2013-03-13 (a2b77fe): Documentation fix
+2013-03-13 (b6cbbae): Add libbfd dependencies
+2013-03-12 (4547928): Roll-mode support
+2012-12-04 (fba5d6e): Mac OS X fix
+2012-11-27 (6051268): DSO-2250 channel fix
+2012-11-26 (db76656): Roll mode bugfix
+2012-11-25 (d52c9b8): Record length and samplerate can be set
+2012-11-25 (8ee5d2f): Additional DSO-2090 product ID
+2012-11-21 (3be3f50): New portuguese translation
+2012-11-21 (6a145cc): New portuguese translation and automatic qm generation
+2012-11-21 (8efca78): Add UNIT_COUNT
+2012-11-21 (8b0c40c): Add missing SiSpinBox sources
+2012-11-21 (63d5261): DSO-2250 fix
+2012-11-05 (2ae4b43): New SiSpinBox
+2012-11-05 (0dd75a1): Small DSO-2250 fix
+2012-10-28 (4081ecc): More DSO-2250 fixes
+2012-10-16 (77f4c7b): Small fixes and performance improvements
+2012-10-06 (8c511e6): Ignore USB errors for bulkReadMulti after first packet
+2012-10-03 (840e89b): DSO-2250 uses different capture state for available data
+2012-10-02 (8b8ee5a): Fixes for DSO-2250 problems
+2012-09-27 (e081793): Set invalid instead of DSO-2090 command variants as default
+2012-09-21 (55bcdc0): Bugfixes
+2012-09-20 (dfda706): First DSO-2250 support attempt
+2012-08-31 (bff9d5a): Exact pixelation in GlScope and documentation updates
+2011-12-02 (5f0cf29): Some more Hantek::Control redesign
+2011-11-27 (9ba93c8): Bugfix in Hantek::Control::setOffset, thanks to tinosnitso for reporting
+2011-11-20 (15b7950): Update to udev-rules, thanks to Marc Petit-Huguenin for the patch
+2011-11-16 (6774e7c): Redesign of Hantek::Control
+2011-02-09 (ed72f34): Final extractfw 0.7.0 release, changed name to openhantek-extractfw and added fwget.sh script.
+2011-02-09 (08da739): Final 0.2.0 release, only updated version information and Doxygen pages
+2011-02-08 (8e15517): Renamed dsoextractfw to openhantek-extractfw
+2011-02-03 (328ba56): Input files as parameters instead of hardcoded strings
+2011-01-25 (33dd7c5): German translation updated
+2011-01-23 (847e63c): Properly using saved dock window and toolbar settings now
+2011-01-22 (d649f09): Fixed bug causing wrong misc field in measurement table
+2011-01-22 (0636ab1): Fixed DSO-2090 pretrigger bug and improved timing of sampling routine
+2011-01-22 (35299cf): Saving positions of docking windows and toolbars now and made it possible to set their visibility via the View menu
+2010-12-13 (ecc9e1d): Improved frequency detection routine
+2010-12-13 (3c06156): Implemented Triggermode Auto properly
+2010-12-02 (d0656b1): Added configuration file loading/saving and some settings to the dialog
+2010-11-21 (edecc80): Added missing file 90-hantek-dso.rules.in
+2010-11-17 (b746bfb): Added --with-firmware-dir configure option (thanks to Romuald Conty)
+2010-11-17 (e3f3cca): Corrected DSO-2100 USB vid/pid, thanks to Romuald Conty
+2010-11-17 (cb9c412): Silent make patch by Romuald Conty
+2010-11-17 (43d6970): Added configure.in patch by Romuald Conty, thanks :)
+2010-09-29 (9bcef88): Frequency detection using autocorrelation and spectrums in csv export
+2010-09-27 (b935f4e): Mostly DSO-5200 bugfixes, thanks to Ash
+2010-09-24 (f37ff58): Added roadmap to Doxygen pages
+2010-09-21 (5adddf4): Fixed 9-bit data conversion for normal mode
+2010-09-21 (87a2b63): Improved samplerate calculation routine and fixed some bugs
+2010-09-16 (a4f5dc7): Small bugfix and correct samplerates for DSO-2150
+2010-09-15 (cc62c4d): Added OSX support provided by Florian Schirmer
+2010-09-15 (cd5e7a3): Fixed small bugs and added csv export
+2010-08-31 (2e9e87f): Some bugfixes and additional functionality in debug mode
+2010-08-29 (104958b): Added DSO-5200 support and some smaller improvements
+2010-08-26 (299283a): Updated version information
+2010-08-26 (e78ab7b): Samplerate values are calculated now, so every samplerate supported by the hardware is possible
+2010-08-25 (5c0400d): Forgot updating changelog
+2010-08-25 (c077bc9): Removed Oleg from authors and renamed writeSRecords to writeIntelHex (S-Records is another format)
+2010-08-23 (22ac8cf): Updated export functionality and bulk command enum
+2010-08-22 (497e11b): Two bugfixes, export functionality updated, code simplifications and showing real samplerate above scope now
+2010-08-20 (45738d3): Checking for End of File Record now since the length doesn't always seem to be correct for the firmware files
+2010-08-18 (c3b8187): Implemented single trigger mode and fixed a bug
+2010-08-16 (a29b1fc): dsoextractfw: Fixed permission-problem when starting OpenHantek as user
+2010-08-16 (f97d466): Completed libusb 0.1 downward compatibility, added the basic stuff for the XY-mode and fixed a small bug
+2010-08-06 (926ac52): Small bugfix and documentation update
+2010-07-10 (6635033): Complete rewrite of the USB parts and some other improvements, see ChangeLog

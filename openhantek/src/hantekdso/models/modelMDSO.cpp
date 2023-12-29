@@ -15,11 +15,6 @@ using namespace Hantek;
 static ModelMDSO modelInstance_1D50;
 
 static void initSpecifications( Dso::ControlSpecification &specification ) {
-    // we drop 2K + 480 sample values due to unreliable start of stream
-    // 20000 samples at 100kS/s = 200 ms gives enough to fill
-    // the screen two times (for pre/post trigger) at 10ms/div = 100ms/screen
-    // SAMPLESIZE defined in hantekdsocontrol.h
-    // adapt accordingly in HantekDsoControl::convertRawDataToSamples()
 
     // HW gain, voltage steps in V/div (ranges 20,50,100,200,500,1000,2000,5000 mV)
     specification.gain = { { 10, 20e-3 }, { 10, 50e-3 }, { 10, 100e-3 }, { 5, 200e-3 },
@@ -28,14 +23,13 @@ static void initSpecifications( Dso::ControlSpecification &specification ) {
 
     // Define the scaling between ADC sample values and real input voltage
     // Everything is scaled on the full screen height (8 divs)
-    // The voltage/div setting:      20m   50m  100m  200m  500m    1V    2V    5V
-    // Equivalent input voltage:   0.16V  0.4V  0.8V  1.6V    4V    8V   16V   40V
-    // Theoretical gain setting:     x10   x10   x10   x5    x2     x1    x1    x1
-    // mV / digit:                     4     4     4     8    20    40    40    40
+    // The voltage/div setting:         20m  50m 100m 200m   500m     1V     2V     5V
+    // Equivalent input voltage:      0.16V 0.4V 0.8V 1.6V     4V     8V    16V    40V
+    // Theoretical gain setting:        x10  x10  x10   x5     x2     x1     x1     x1
+    // mV / digit:                        4    4    4    8     20     40     40     40
     specification.voltageScale[ 0 ] = { 250, 250, 250, 126.25, 49.50, 24.75, 24.75, 24.75 };
     specification.voltageScale[ 1 ] = { 250, 250, 250, 126.25, 49.50, 24.75, 24.75, 24.75 };
     // Gain and offset can be corrected by individual config values from file (device has no calibration EEPROM)
-
 
 
     specification.samplerate.single.base = 1e6;
@@ -91,10 +85,9 @@ static void applyRequirements_( HantekDsoControl *dsoControl ) {
     dsoControl->addCommand( new ControlSetCalFreq() );     // 0xE6
 }
 
-//                  VID/PID active  VID/PID no FW   FW ver  FW name  Scope name
-//                  |------------|  |------------|  |----|  |------|  |------|
-ModelMDSO::ModelMDSO()
-    : DSOModel( ID, 0x1d50, 0x608e, 0xd4a2, 0x5660, 0x0001, "mdso",   "MDSO",  Dso::ControlSpecification( 2 ) ) {
+//                                     VID/PID active  VID/PID no FW   FW ver  FW name Scope name
+//                                     |------------|  |------------|  |----|  |----|  |----|
+ModelMDSO::ModelMDSO() : DSOModel( ID, 0x1d50, 0x608e, 0xd4a2, 0x5660, 0x0001, "mdso", "MDSO", Dso::ControlSpecification( 2 ) ) {
     initSpecifications( specification );
 }
 
