@@ -41,11 +41,11 @@ jobs:
 
     # --- Clone the latest commit ---
     - name: Checkout
-      uses: actions/checkout@v4
-        with:
-          fetch-tags: true
-          submodules: recursive
-          fetch-depth: 0
+      uses: actions/checkout@v3
+      with:
+        fetch-tags: true
+        submodules: recursive
+        fetch-depth: 0
 
     # --- Config git and get the version from "git describe" ---
     - name: Config Git
