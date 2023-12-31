@@ -9,7 +9,7 @@
 
 // next line shall define either OH_VERSION or LAST_OH_VERSION
 //
-#define OH_VERSION "3.4-rc1"
+#define OH_VERSION  "3.4-rc1"
 
 
 // do not edit below

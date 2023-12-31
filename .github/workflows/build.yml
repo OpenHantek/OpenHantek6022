@@ -41,7 +41,11 @@ jobs:
 
     # --- Clone the latest commit ---
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
+        with:
+          fetch-tags: true
+          submodules: recursive
+          fetch-depth: 0
 
     # --- Config git and get the version from "git describe" ---
     - name: Config Git
@@ -50,8 +54,6 @@ jobs:
       run: |
         git config user.email "Ho-Ro@users.noreply.github.com"
         git config user.name "Ho-Ro"
-        git fetch --prune --unshallow --tags || true
-        git submodule update --init --recursive
         echo "git_describe=$(git describe)"
         echo "git_describe=$(git describe)" >> $GITHUB_OUTPUT
 
