@@ -2,6 +2,12 @@
 
 project(OpenHantek CXX)
 
+if(WIN32)
+    set(CMAKE_FIND_LIBRARY_SUFFIXES ".a")
+    set(CMAKE_EXE_LINKER_FLAGS "-s")
+    set(EXECTYPE WIN32)
+endif()
+
 find_package(Qt5Widgets REQUIRED)
 find_package(Qt5PrintSupport REQUIRED)
 find_package(Qt5OpenGL REQUIRED)
@@ -12,6 +18,8 @@ set(CMAKE_AUTORCC ON)
 
 if (Qt5Widgets_VERSION VERSION_LESS 5.4.0)
     message(FATAL_ERROR "Minimum supported Qt5 version is 5.4.0!")
+else()
+    message("-- Qt5 version is ${Qt5Widgets_VERSION}")
 endif()
 
 # include directories
@@ -33,11 +41,6 @@ add_custom_target(format SOURCES ".clang-format"
 
 # here the translation magic happens
 include(translations/Translations.cmake)
-
-set(EXECTYPE "")
-if(WIN32 AND MINGW)
-    set(EXECTYPE WIN32)
-endif()
 
 option(USE_OPENHANTEK_DRIVER "Use OpenHantek Windows driver" ON)
 
