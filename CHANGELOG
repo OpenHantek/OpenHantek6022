@@ -1,3 +1,4 @@
+2024-01-08 (1b56a17): use static fftw, usb and z libs
 2024-01-01 (e6d863d): next build system update
 2024-01-01 (7f9eb94): build system update
 2023-12-31 (3b12af2): prepare next release 3.4

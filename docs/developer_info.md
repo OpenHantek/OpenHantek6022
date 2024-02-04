@@ -190,6 +190,8 @@ In `Roll` mode the latest sample values are always put at the end of the result 
 this rolls the displayed trace permanently to the left.
 The conversion uses either the factory calibration values from EEPROM or from a user supplied config file. 
 Read more about [calibration](https://github.com/Ho-Ro/Hantek6022API/blob/main/README.md#create-calibration-values-for-openhantek).
+* `MathChannel::calculate()`
+   creates a MATH channel from the data samples of CH0 and/or CH1. This third channel can be displayed and also be used as a trigger source.
 * `searchTriggeredPosition()`
     * Checks if the signal is triggered and calculates the starting point for a stable display.
     The time distance to the following opposite slope is measured and displayed as pulse width in the top row.
@@ -219,9 +221,6 @@ becomes true again. The reused samples are emitted at lower speed (every 20 ms) 
 
 
 * PostProzessing calls all processors that were registered in `main.cpp`.
-  * `MathchannelGenerator::process()`
-    * which creates a third MATH channel as one of these data sample combinations: 
-      `CH1 + CH2`, `CH1 - CH2`, `CH2 - CH1`, `CH1 * CH2`, `CH1 AC` or `CH2 AC`.
   * `SpectrumGenerator::process()`
     * For each active channel:∘
       * Calculate the peak-to-peak, DC (average), AC (rms) and effective value ( sqrt( DC² + AC² ) ).
@@ -230,10 +229,12 @@ becomes true again. The reused samples are emitted at lower speed (every 20 ms) 
       * Calculate the autocorrelation to get the frequency of the signal:
         * Calculate power spectrum |F(ω)|² and do an IFFT: F(ω) ∙ F(ω) ⎯∘ f(t) ⊗ f(t) (autocorrelation, i.e. convolution of f(t) with f(t))
         * This is quite inaccurate at high frequencies. In these cases the first peak value of the spectrum is used.
+      * Calculate the power dissipation on a defined impedance that can be 1..1000 Ohm (optional).
       * Calculate the THD (optional): `THD = sqrt( power_of_harmonics / power_of_fundamental )`
+      * Detect the musical note plus deviation in cent of the signal (optional). Can be used e.g to tune an instrument.
   * `GraphGenerator::process()`
     * which works either in TY mode and creates two types of traces:
-      * voltage over time `GraphGenerator::generateGraphsTYvoltage()`
+      * voltage over time `GraphGenerator::generateGraphsTYvoltage()` plus optional histogram.
       * spectrum over frequency `GraphGenerator::generateGraphsTYspectrum()`
     * or in XY mode and creates a voltage over voltage trace `GraphGenerator::generateGraphsXY()`.
     * `GraphGenerator::generateGraphsTYvoltage()` creates up to three (CH1, CH2, MATH) voltage traces.
