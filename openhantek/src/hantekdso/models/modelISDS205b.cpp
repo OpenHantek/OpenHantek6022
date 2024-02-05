@@ -43,10 +43,11 @@ static void initSpecifications( Dso::ControlSpecification &specification ) {
     // The voltage/div setting:      20m   50m  100m  200m  500m    1V    2V    5V
     // Equivalent input voltage:   0.16V  0.4V  0.8V  1.6V    4V    8V   16V   40V
     // Theoretical gain setting:     x16   x16   x16  x4.9    x2  x1.1  x1.1  x1.1
-    // mV / digit:                     ?     ?     ?     ?     ?     ?     ?     ?
+           
+    // Theoretical values: 4096.  , 4096.  , 4096. , 125.44, 51.2 , 28.16, 28.16, 28.16
+    specification.voltageScale[ 0 ] = { 1330, 1330,1330, 85.36, 37.48, 21.78, 21.78, 21.78 }; //digit/V - Channel 1
+    specification.voltageScale[ 0 ] = { 1330, 1330,1330, 85.36, 37.48, 21.78, 21.78, 21.78 }; //digit/V - Channel 2
 
-    specification.voltageScale[ 0 ] = { 1276, 1276,1276, 90, 37, 21.5, 21.5, 21.5 };
-    specification.voltageScale[ 1 ] = { 1276, 1276,1276, 90, 37, 21.5, 21.5, 21.5 };
     // Gain and offset can be corrected by individual config values from EEPROM or file
 
     // Possible raw sample rates with custom fw from https://github.com/Ho-Ro/Hantek6022API
