@@ -1,4 +1,4 @@
-2024-02-19 (c7783c5): Merge branch 'main' of https://github.com/wakass/OpenHantek6022 into wakass-main
+2024-02-19 (b8fb40b): Instrustar 205X support (PR #394)
 2024-02-05 (0e2c641): Updated calibration values after measurement.
 2024-02-04 (211e9c8): doc update, add windows driver license info
 2024-01-08 (1b56a17): use static fftw, usb and z libs
