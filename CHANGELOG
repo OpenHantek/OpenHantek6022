@@ -1,3 +1,8 @@
+2024-02-23 (52fc328): Merge branch 'wakass-main' - Instrustar 205X support #394
+2024-02-23 (5531981): small fw update - functional change
+2024-02-19 (b8fb40b): Instrustar 205X support (PR #394)
+2024-02-05 (0e2c641): Updated calibration values after measurement.
+2024-02-04 (211e9c8): doc update, add windows driver license info
 2024-01-08 (1b56a17): use static fftw, usb and z libs
 2024-01-01 (e6d863d): next build system update
 2024-01-01 (7f9eb94): build system update
@@ -16,6 +21,8 @@
 2023-12-17 (d9a62fe): Add Qt binaries to MSVC package
 2023-12-17 (795b78f): Build MINGW and MSVC Windows packages
 2023-12-15 (5c44615): test for macos-12 build
+2023-10-14 (81eb42d): Instrustar 205B: Update samplerate table
+2023-10-14 (59d7aa3): Initial support for Instrustar 205A/B
 2023-08-30 (d5ef54e): change tooltip colors according to discussion #378
 2023-08-30 (62a1230): modify unstable package versioning
 2023-08-30 (af6dc75): unstable package names with git versioning
