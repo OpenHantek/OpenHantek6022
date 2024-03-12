@@ -53,7 +53,7 @@ OpenHantek6022 is a free software for **Hantek DSO6022** USB digital signal osci
  compared to the Hantek scopes (see [#69](https://github.com/OpenHantek/OpenHantek6022/issues/69#issuecomment-607341694)).
 
 * Demo mode is provided by the `-d` or `--demoMode` command line option.
-* Fully supported operating system: Linux; developed under debian stable (currently *bullseye*) for amd64 architecture.
+* Fully supported operating system: Linux; developed under debian stable (currently *bookworm*) for amd64 architecture.
 * Raspberry Pi packages (raspbian stable) are available on the [Releases](https://github.com/OpenHantek/OpenHantek6022/releases) page, check this [setup requirement](docs/build.md#raspberrypi).
 * Compiles under FreeBSD (packaging / installation: work in progress, thx [tspspi](https://github.com/tspspi)).
 * Other operating systems builds: [Windows](docs/images/screenshot_mainwindow_win.png) (mostly untested) & macOS (completely untested).
@@ -104,7 +104,7 @@ Every commit triggers a workflow on
 [GitHub Actions](https://github.com/OpenHantek/OpenHantek6022/actions/workflows/build_check.yml)
 that builds and packages OpenHantek6022 for:
 * Linux (`*.deb`, `*.rpm`, `*.tar.gz`)
-* Windows (`*.zip`)
+* Windows (`*_mingw_x64.zip`, `*_msvc_x64.zip`)
 * macOS - (`*.dmg`, `*.tar.gz`)
 
 [![GitHub CI](https://github.com/OpenHantek/OpenHantek6022/actions/workflows/build.yml/badge.svg)](https://github.com/OpenHantek/OpenHantek6022/actions/workflows/build.yml)
@@ -182,6 +182,9 @@ or closes immediately after startup), you can choose the less resource-hungry *O
 by starting OpenHantek from the command line as follows: `OpenHantek -e` or `OpenHantek --useGLES`.
 
 Especially on Windows, this option may be necessary to use the program.
+
+It has been reported that the MINGW binary build on some Windows systems had problems with the graphical display
+and led to a black screen without traces. In these cases, the switch to the MSVC binary build can help.
 
 The Raspberry Pi build uses OpenGL ES automatically, check also the [graphics driver setup](docs/build.md#raspberrypi).
 
