@@ -175,6 +175,7 @@ about building on macOS 11.6.8 + Xcode 12.4 (12D4e).
 As I do not use macOS for development the building is done externally by [GitHub Actions](https://github.com/OpenHantek/OpenHantek6022/actions)
 who provides [these macOS 11 environments](https://github.com/actions/runner-images/blob/main/images/macos/macos-11-Readme.md).
 Please check also the file [build_check.yml](https://github.com/OpenHantek/OpenHantek6022/blob/main/.github/workflows/build_check.yml) for info about the building process.
+
 ----
 
 ### [Windows](#windows)
@@ -186,6 +187,7 @@ will be closed as invalid!
 * Compile the software
 
 Hints for Visual Studio 2015/2017/2019 users:
+
 * Install the right Qt package that matches your Visual Studio installation.
 * Build for 64bit. 32bit builds theoretically work, but you are on your own then.
 * Use the **CMake GUI** to setup all required Qt include and library paths.
@@ -194,8 +196,8 @@ Hints for Visual Studio 2015/2017/2019 users:
 
 As I do not use Windows for development the building is done externally by [GitHub Actions](https://github.com/OpenHantek/OpenHantek6022/actions)
 who provides [these Windows environments](https://github.com/actions/virtual-environments/blob/main/images/win/Windows2019-Readme.md).
-Please check also the file [build_check.yml](https://github.com/OpenHantek/OpenHantek6022/blob/main/.github/workflows/build_check.yml) for info about the building process.
-Starting with the update to Visual Studio 2019 for the upcoming OpenHantek6022 version 3.2 only 64bit builds are provided.
+Please check also the file [build_check.yml](https://github.com/OpenHantek/OpenHantek6022/blob/main/.github/workflows/build_check.yml) for info about the building process with either MINGW or MSVC.
+Starting with the update to Visual Studio 2019 only 64bit builds are provided.
 
 #### Signed WinUSB driver for Hantek 6022BE/BL
 
