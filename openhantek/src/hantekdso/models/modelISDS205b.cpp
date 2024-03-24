@@ -46,7 +46,7 @@ static void initSpecifications( Dso::ControlSpecification &specification ) {
            
     // Theoretical values: 4096.  , 4096.  , 4096. , 125.44, 51.2 , 28.16, 28.16, 28.16
     specification.voltageScale[ 0 ] = { 1330, 1330,1330, 85.36, 37.48, 21.78, 21.78, 21.78 }; //digit/V - Channel 1
-    specification.voltageScale[ 0 ] = { 1330, 1330,1330, 85.36, 37.48, 21.78, 21.78, 21.78 }; //digit/V - Channel 2
+    specification.voltageScale[ 1 ] = { 1330, 1330,1330, 85.36, 37.48, 21.78, 21.78, 21.78 }; //digit/V - Channel 2
 
     // Gain and offset can be corrected by individual config values from EEPROM or file
 

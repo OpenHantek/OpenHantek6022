@@ -1,3 +1,7 @@
+2024-03-24 (fe3d032): Fix voltageScale to correct indices for ISDS205b
+2024-03-24 (09d0e28): Merge branch 'isds205b/channelCalFix' of https://github.com/wakass/OpenHantek6022 into wakass-isds205b/channelCalFix
+2024-03-24 (a207f5f): Fix voltageScale to correct indices
+2024-03-15 (b9d6560): README update, add solution Crostini graphics issue; build info update
 2024-03-12 (29dbcca): README update
 2024-03-05 (9c1e9e8): fix #399 - update macos build instructions, hack nedded no more
 2024-02-24 (3ac5c3a): fw refactoring - no functional change
