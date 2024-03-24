@@ -187,7 +187,8 @@ It has been reported that the MINGW binary build on some Windows systems had pro
 and led to a black screen without traces. In these cases, the switch to the MSVC binary build can help.
 
 Similar [issues](https://github.com/OpenHantek/OpenHantek6022/issues/350) with Linux on ChromeOS (Crostini) can be solved by setting the environment variable `LIBGL_ALWAYS_SOFTWARE=1` when using OpenHantek.
-This could also be a solution for the above MINGW issue, see e.g. #360 and #388 - not yet confirmed.
+This could also be a solution for the above MINGW issue, see e.g. [#360](https://github.com/OpenHantek/OpenHantek6022/issues/360)
+and [#388](https://github.com/OpenHantek/OpenHantek6022/issues/388) - not yet confirmed.
 
 The Raspberry Pi build uses OpenGL ES automatically, check also the [graphics driver setup](docs/build.md#raspberrypi).
 
