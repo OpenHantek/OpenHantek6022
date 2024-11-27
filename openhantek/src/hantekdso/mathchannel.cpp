@@ -95,6 +95,20 @@ void MathChannel::calculate( DSOsamples &result ) {
                             ? 1.0
                             : 0.0 );
             break;
+        case Dso::MathMode::GREAT_CH1_CH2:
+            // logic values: above / below trigger level
+            for ( auto it = mathChannel.begin(), end = mathChannel.end(); it != end; ++it, ++ch1Iterator, ++ch2Iterator )
+                *it = ( ( *ch1Iterator >= scope->voltage[ CH1 ].trigger ) > ( *ch2Iterator >= scope->voltage[ CH2 ].trigger )
+                            ? 1.0
+                            : 0.0 );
+            break;
+        case Dso::MathMode::GREAT_CH2_CH1:
+            // logic values: above / below trigger level
+            for ( auto it = mathChannel.begin(), end = mathChannel.end(); it != end; ++it, ++ch1Iterator, ++ch2Iterator )
+                *it = ( ( *ch2Iterator >= scope->voltage[ CH2 ].trigger ) > ( *ch1Iterator >= scope->voltage[ CH1 ].trigger )
+                            ? 1.0
+                            : 0.0 );
+            break;
         default:
             for ( auto it = mathChannel.begin(), end = mathChannel.end(); it != end; ++it )
                 *it = 0.0;
