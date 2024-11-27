@@ -52,7 +52,7 @@ QString mathModeString( MathMode mode ) {
     case MathMode::GREAT_CH1_CH2:
         return QCoreApplication::tr( "CH1 > CH2" );
     case MathMode::GREAT_CH2_CH1:
-        return QCoreApplication::tr( "CH2 < CH1" );
+        return QCoreApplication::tr( "CH2 > CH1" );
     case MathMode::LP10_CH1:
         return QCoreApplication::tr( "CH1 LP10" );
     case MathMode::LP10_CH2:
