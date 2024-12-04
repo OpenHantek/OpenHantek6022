@@ -30,7 +30,7 @@ which allows a clear installation and removal of the package:
 
     rm -f packages/*
     fakeroot make -j4 package
-    sudo apt install packages/openhantek_*_amd64.deb
+    sudo apt install ./packages/openhantek_*_amd64.deb
 
 If you detect that icons are not displayed correctly, please check if the Qt SVG library is installed on your system.
 The Linux systems mentioned above include this lib when you install according to the provided lists.
