@@ -48,6 +48,7 @@ class MainWindow : public QMainWindow {
     QIcon iconPause;
     QIcon iconPlay;
     QLineEdit *commandEdit;
+    QString lastSaveAsDir = "";
 
     // Central widgets
     DsoWidget *dsoWidget;

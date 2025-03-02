@@ -599,6 +599,7 @@ void MainWindow::screenShot( screenshotType_t screenshotType, bool autoSafe ) {
     QDateTime now = QDateTime::currentDateTime();
     QString docName = now.toString( tr( "yyyy-MM-dd hh:mm:ss" ) );
     QString fileName = now.toString( tr( "yyyyMMdd_hhmmss" ) );
+    fileName = QDir( lastSaveAsDir ).absoluteFilePath( fileName );
     statusBar()->showMessage( docName ); // show date in bottom line
 
     if ( screenshotType != SCREENSHOT && dsoSettings->view.zoom && dsoSettings->view.zoomImage &&
@@ -640,7 +641,7 @@ void MainWindow::screenShot( screenshotType_t screenshotType, bool autoSafe ) {
         fileDialog.setAcceptMode( QFileDialog::AcceptSave );
         if ( fileDialog.exec() != QDialog::Accepted )
             return;
-
+        lastSaveAsDir = fileDialog.directory().absolutePath();
         fileName = fileDialog.selectedFiles().first();
         if ( filters.indexOf( fileDialog.selectedNameFilter() ) == 0 ) { // save as image
             if ( !screenshot.save( fileName ) )
@@ -698,7 +699,7 @@ bool MainWindow::openDocument( QString docName ) {
     else
         url = QUrl( DocUrl + docName );
     if ( verboseLevel > 2 )
-        qDebug() << " " << url;
+        qDebug() << "  " << url;
     return QDesktopServices::openUrl( url );
 }
 

@@ -1557,15 +1557,15 @@
         <translation>yyyyMMdd_hhmmss</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="634"/>
-        <location filename="../src/mainwindow.cpp" line="648"/>
+        <location filename="../src/mainwindow.cpp" line="637"/>
+        <location filename="../src/mainwindow.cpp" line="651"/>
         <source>Write error
 %1</source>
         <translation>写入错误
 %1</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="638"/>
+        <location filename="../src/mainwindow.cpp" line="641"/>
         <source>Save Screenshot</source>
         <translation>保存截图文件</translation>
     </message>
@@ -1574,12 +1574,12 @@
         <translation type="vanished">错误</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="637"/>
+        <location filename="../src/mainwindow.cpp" line="640"/>
         <source>Image (*.png *.jpg)</source>
         <translation>图像文件 (*.png *.jpg)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="637"/>
+        <location filename="../src/mainwindow.cpp" line="640"/>
         <source>Portable Document Format (*.pdf)</source>
         <translation>便携式文件格式 (*.pdf)</translation>
     </message>
@@ -1588,7 +1588,7 @@
         <translation type="vanished">保存截图文件</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="671"/>
+        <location filename="../src/mainwindow.cpp" line="674"/>
         <source>Print oscillograph</source>
         <translation>打印波形</translation>
     </message>

@@ -1,3 +1,4 @@
+2024-03-24 (ffd1691): README: add hint for possible graphics issue solution for win systems
 2024-03-24 (d0f44f8): Fix voltageScale to correct indices for ISDS205b
 2024-03-24 (09d0e28): Merge branch 'isds205b/channelCalFix' of https://github.com/wakass/OpenHantek6022 into wakass-isds205b/channelCalFix
 2024-03-24 (a207f5f): Fix voltageScale to correct indices

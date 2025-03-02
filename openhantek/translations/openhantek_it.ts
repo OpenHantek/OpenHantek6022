@@ -1238,15 +1238,15 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="634"/>
-        <location filename="../src/mainwindow.cpp" line="648"/>
+        <location filename="../src/mainwindow.cpp" line="637"/>
+        <location filename="../src/mainwindow.cpp" line="651"/>
         <source>Write error
 %1</source>
         <translation>Errore di scrittura
 %1</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="638"/>
+        <location filename="../src/mainwindow.cpp" line="641"/>
         <source>Save Screenshot</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1255,17 +1255,17 @@
         <translation type="vanished">Errore</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="637"/>
+        <location filename="../src/mainwindow.cpp" line="640"/>
         <source>Portable Document Format (*.pdf)</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="671"/>
+        <location filename="../src/mainwindow.cpp" line="674"/>
         <source>Print oscillograph</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="637"/>
+        <location filename="../src/mainwindow.cpp" line="640"/>
         <source>Image (*.png *.jpg)</source>
         <translation></translation>
     </message>

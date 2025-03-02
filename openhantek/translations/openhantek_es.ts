@@ -1422,7 +1422,7 @@
         <translation>&lt;p&gt;Gráficos: %1 - Versión de GLSL %2&lt;/p&gt;&lt;p&gt;Versión de Qt: %3&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="638"/>
+        <location filename="../src/mainwindow.cpp" line="641"/>
         <source>Save Screenshot</source>
         <translation>Guardar captura de pantalla</translation>
     </message>
@@ -1503,20 +1503,20 @@
         <translation>yyyyMMdd_hhmmss</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="634"/>
-        <location filename="../src/mainwindow.cpp" line="648"/>
+        <location filename="../src/mainwindow.cpp" line="637"/>
+        <location filename="../src/mainwindow.cpp" line="651"/>
         <source>Write error
 %1</source>
         <translation>Escribir error
 %1</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="637"/>
+        <location filename="../src/mainwindow.cpp" line="640"/>
         <source>Image (*.png *.jpg)</source>
         <translation>Imagen (*.png *.jpg)</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="637"/>
+        <location filename="../src/mainwindow.cpp" line="640"/>
         <source>Portable Document Format (*.pdf)</source>
         <translation>Formato de Documento Portable (*.pdf)</translation>
     </message>
@@ -1525,7 +1525,7 @@
         <translation type="vanished">Guardar captura de pantalla</translation>
     </message>
     <message>
-        <location filename="../src/mainwindow.cpp" line="671"/>
+        <location filename="../src/mainwindow.cpp" line="674"/>
         <source>Print oscillograph</source>
         <translation>Imprimir oscilógrafo</translation>
     </message>
