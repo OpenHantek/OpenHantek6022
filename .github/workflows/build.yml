@@ -80,7 +80,7 @@ jobs:
 
     - name: Upload Ubuntu Artifacts
       # *.deb *.rpm *.tgz
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: openhantek_${{ steps.config_git.outputs.git_describe }}_linux_amd64
         path: ${{github.workspace}}/build/packages/*
@@ -170,7 +170,7 @@ jobs:
         fi
 
     - name: Upload macOS Artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: openhantek_${{ steps.config_git.outputs.git_describe }}_osx_x86_64
         path: ${{github.workspace}}/build/packages/*
@@ -244,7 +244,7 @@ jobs:
         ls -l ../packages
 
     - name: Upload Windows Artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: openhantek_${{ steps.config_git.outputs.git_describe }}_mingw_x64
         path: ./build/packages/*.zip
@@ -311,7 +311,7 @@ jobs:
         ls -l packages
 
     - name: Upload Windows MSVC Artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: openhantek_${{ steps.config_git.outputs.git_describe }}_msvc_x64
         path: ./build/packages/*.zip
