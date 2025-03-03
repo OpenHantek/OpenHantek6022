@@ -23,6 +23,8 @@ enum class MathMode : unsigned {
     AND_NOT_CH1_CH2,
     AND_CH1_NOT_CH2,
     EQU_CH1_CH2,
+    GREAT_CH1_CH2,
+    GREAT_CH2_CH1,
     // unary arithmetical functions
     LP10_CH1,
     LP10_CH2,
@@ -47,7 +49,7 @@ enum class MathMode : unsigned {
 // this "extern" declaration must match the Enum definition in "mathchannel.cpp"
 extern Enum< Dso::MathMode, Dso::MathMode::ADD_CH1_CH2, Dso::MathMode::TRIG_CH2 > MathModeEnum;
 
-const auto LastBinaryMathMode = MathMode::EQU_CH1_CH2;
+const auto LastBinaryMathMode = MathMode::GREAT_CH2_CH1;
 const auto LastMathMode = MathMode::TRIG_CH2;
 
 Unit mathModeUnit( MathMode mode );

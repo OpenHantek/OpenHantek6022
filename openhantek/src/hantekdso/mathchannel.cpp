@@ -95,6 +95,18 @@ void MathChannel::calculate( DSOsamples &result ) {
                             ? 1.0
                             : 0.0 );
             break;
+        case Dso::MathMode::GREAT_CH1_CH2:
+            for ( auto it = mathChannel.begin(), end = mathChannel.end(); it != end; ++it, ++ch1Iterator, ++ch2Iterator )
+                *it = ( ( *ch1Iterator ) > ( *ch2Iterator )
+                            ? 1.0
+                            : 0.0 );
+            break;
+        case Dso::MathMode::GREAT_CH2_CH1:
+            for ( auto it = mathChannel.begin(), end = mathChannel.end(); it != end; ++it, ++ch1Iterator, ++ch2Iterator )
+                *it = ( ( *ch2Iterator ) > ( *ch1Iterator )
+                            ? 1.0
+                            : 0.0 );
+            break;
         default:
             for ( auto it = mathChannel.begin(), end = mathChannel.end(); it != end; ++it )
                 *it = 0.0;
