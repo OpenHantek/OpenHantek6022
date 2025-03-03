@@ -99,8 +99,8 @@ jobs:
 # --- macOS steps ---
 # -------------------
 #
-  macos-arm64:
-    runs-on: macos-14
+  macos-x86_64:
+    runs-on: macos-13
     steps:
 
     # --- Clone the latest commit ---
@@ -152,9 +152,9 @@ jobs:
           true
         fi
         if test -d openhantek/OpenHantek.app; then
-          cd openhantek ; sudo tar -czf ../packages/openhantek_*_arm64_*.tar.gz OpenHantek.app
+          cd openhantek ; sudo tar -czf ../packages/openhantek_*_osx_*.tar.gz OpenHantek.app
           if test -f OpenHantek.dmg; then
-            sudo mv OpenHantek.dmg ../packages/$(basename ../packages/openhantek_*_arm64_*.tar.gz .tar.gz).dmg
+            sudo mv OpenHantek.dmg ../packages/$(basename ../packages/openhantek_*_osx_*.tar.gz .tar.gz).dmg
           fi
           cd ..
           ls -l packages
@@ -165,7 +165,7 @@ jobs:
     - name: Upload macOS Artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: openhantek_${{ steps.config_git.outputs.git_describe }}_osx_arm64
+        name: openhantek_${{ steps.config_git.outputs.git_describe }}_osx_x86_64
         path: ${{github.workspace}}/build/packages/*
 
     - name: Upload macOS Release Assets
