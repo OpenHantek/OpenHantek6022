@@ -95,92 +95,9 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 
-# -------------------------
-# --- macOS intel steps ---
-# -------------------------
-#
-  macos-intel:
-    runs-on: macos-13
-    steps:
-
-    # --- Clone the latest commit ---
-    - name: Checkout
-      uses: actions/checkout@v3
-      with:
-        fetch-tags: true
-        submodules: recursive
-        fetch-depth: 0
-
-    # --- Config git and get the version from "git describe" ---
-    - name: Config Git
-      id: config_git
-      shell: bash
-      run: |
-        git config user.email "Ho-Ro@users.noreply.github.com"
-        git config user.name "Ho-Ro"
-        git fetch --prune --tags || true
-        git submodule update --init --recursive
-        echo "git_describe=$(git describe)"
-        echo "git_describe=$(git describe)" >> $GITHUB_OUTPUT
-
-    - name: Install macOS Build Requirements
-      run: |
-        mkdir build
-        brew install qt@5 fftw binutils create-dmg || true
-
-    - name: macOS intel Build
-      # GitHub hosts macOS runners in GitHub's own macOS Cloud:
-      # 4-core CPU, 14 GB of RAM memory, 14 GB of SSD disk space
-      working-directory: ${{github.workspace}}/build
-      run: |
-        cp ../CHANGELOG changelog
-        cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_PREFIX_PATH=$(brew --prefix qt@5)
-        make -j12
-        sudo make -j12 package
-        if test -d openhantek/OpenHantek.app; then
-          export PATH=$(brew --prefix qt@5)/bin:${PATH}
-          cd openhantek
-          macdeployqt OpenHantek.app -always-overwrite -verbose=1
-          python ../../utils/macdeployqtfix/macdeployqtfix.py \
-            --quiet OpenHantek.app/Contents/MacOS/OpenHantek $(brew --prefix qt@5)
-          create-dmg --volname OpenHantek --volicon ../../openhantek/res/images/OpenHantek.icns \
-            --window-pos 200 120 --window-size 800 400 --icon-size 100 --icon "OpenHantek.app" 200 190 \
-            --skip-jenkins --hide-extension "OpenHantek.app" --app-drop-link 600 185 \
-            --eula ../../LICENSE OpenHantek.dmg OpenHantek.app
-          cd ..
-        else
-          true
-        fi
-        if test -d openhantek/OpenHantek.app; then
-          cd openhantek ; sudo tar -czf ../packages/openhantek_*_osx_intel_*.tar.gz OpenHantek.app
-          if test -f OpenHantek.dmg; then
-            sudo mv OpenHantek.dmg ../packages/$(basename ../packages/openhantek_*_osx_intel_*.tar.gz .tar.gz).dmg
-          fi
-          cd ..
-          ls -l packages
-        else
-          true
-        fi
-
-    - name: Upload macOS intel Artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: openhantek_${{ steps.config_git.outputs.git_describe }}_osx_intel
-        path: ${{github.workspace}}/build/packages/*
-
-    - name: Upload macOS intel Release Assets
-      if: startsWith(github.ref, 'refs/tags/')
-      uses: softprops/action-gh-release@v1
-      with:
-        prerelease: true
-        files: ./build/packages/*
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-
-# -------------------------
-# --- macOS arm64 steps ---
-# -------------------------
+# -------------------
+# --- macOS steps ---
+# -------------------
 #
   macos-arm64:
     runs-on: macos-14
@@ -211,9 +128,9 @@ jobs:
         mkdir build
         brew install qt@5 fftw binutils create-dmg || true
 
-    - name: macOS arm64 Build
+    - name: macOS Build
       # GitHub hosts macOS runners in GitHub's own macOS Cloud:
-      # 3-core M1 CPU, 7 GB of RAM memory, 14 GB of SSD disk space
+      # 3-core CPU, 14 GB of RAM memory, 14 GB of SSD disk space
       working-directory: ${{github.workspace}}/build
       run: |
         cp ../CHANGELOG changelog
@@ -235,9 +152,9 @@ jobs:
           true
         fi
         if test -d openhantek/OpenHantek.app; then
-          cd openhantek ; sudo tar -czf ../packages/openhantek_*_osx_arm64_*.tar.gz OpenHantek.app
+          cd openhantek ; sudo tar -czf ../packages/openhantek_*_arm64_*.tar.gz OpenHantek.app
           if test -f OpenHantek.dmg; then
-            sudo mv OpenHantek.dmg ../packages/$(basename ../packages/openhantek_*_osx_arm64_*.tar.gz .tar.gz).dmg
+            sudo mv OpenHantek.dmg ../packages/$(basename ../packages/openhantek_*_arm64_*.tar.gz .tar.gz).dmg
           fi
           cd ..
           ls -l packages
@@ -245,13 +162,13 @@ jobs:
           true
         fi
 
-    - name: Upload macOS arm64 Artifacts
+    - name: Upload macOS Artifacts
       uses: actions/upload-artifact@v4
       with:
         name: openhantek_${{ steps.config_git.outputs.git_describe }}_osx_arm64
         path: ${{github.workspace}}/build/packages/*
 
-    - name: Upload macOS arm64 Release Assets
+    - name: Upload macOS Release Assets
       if: startsWith(github.ref, 'refs/tags/')
       uses: softprops/action-gh-release@v1
       with:
