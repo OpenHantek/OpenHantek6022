@@ -1,3 +1,4 @@
+2025-03-03 (a399b92): update gizHub runner macos version
 2025-03-03 (3190b80): fix #419 - allow MATH scaling 20 mV .. 1000 V
 2025-03-02 (799cd67): replace deprecated upload-artifact@v3 with upload-artifact@v4
 2025-03-02 (68221da): fix #420 - remenber save as path for screenshots etc.

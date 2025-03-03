@@ -127,7 +127,7 @@ jobs:
       run: |
         mkdir build
         #brew update
-        brew install qt5 fftw binutils create-dmg || true
+        brew install qt@5 fftw binutils create-dmg || true
         #ls -lR /usr/local/opt/gcc/lib/gcc
         # the next two commands (hack from @warpme) fix #314
         #mkdir -p /usr/local/opt/qt5/lib/libgcc_s.1.1.dylib.framework
