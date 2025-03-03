@@ -126,14 +126,7 @@ jobs:
     - name: Install macOS Build Requirements
       run: |
         mkdir build
-        #brew update
         brew install qt@5 fftw binutils create-dmg || true
-        #ls -lR /usr/local/opt/gcc/lib/gcc
-        # the next two commands (hack from @warpme) fix #314
-        #mkdir -p /usr/local/opt/qt5/lib/libgcc_s.1.1.dylib.framework
-        #ln -sf /usr/local/opt/gcc/lib/gcc/11/libgcc_s.1.1.dylib \
-        #  /usr/local/opt/qt5/lib/libgcc_s.1.1.dylib.framework/libgcc_s.1.1.dylib
-        #ls -lR /usr/local/opt/qt5/lib/libgcc_s.1.1.dylib.framework
 
     - name: macOS Build
       # GitHub hosts macOS runners in GitHub's own macOS Cloud:
@@ -141,15 +134,15 @@ jobs:
       working-directory: ${{github.workspace}}/build
       run: |
         cp ../CHANGELOG changelog
-        cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_PREFIX_PATH=$(brew --prefix qt5)
+        cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_PREFIX_PATH=$(brew --prefix qt@5)
         make -j12
         sudo make -j12 package
         if test -d openhantek/OpenHantek.app; then
-          export PATH=$(brew --prefix qt5)/bin:${PATH}
+          export PATH=$(brew --prefix qt@5)/bin:${PATH}
           cd openhantek
           macdeployqt OpenHantek.app -always-overwrite -verbose=1
           python ../../utils/macdeployqtfix/macdeployqtfix.py \
-            --quiet OpenHantek.app/Contents/MacOS/OpenHantek $(brew --prefix qt5)
+            --quiet OpenHantek.app/Contents/MacOS/OpenHantek $(brew --prefix qt@5)
           create-dmg --volname OpenHantek --volicon ../../openhantek/res/images/OpenHantek.icns \
             --window-pos 200 120 --window-size 800 400 --icon-size 100 --icon "OpenHantek.app" 200 190 \
             --skip-jenkins --hide-extension "OpenHantek.app" --app-drop-link 600 185 \
