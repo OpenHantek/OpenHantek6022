@@ -1895,137 +1895,147 @@
 <context>
     <name>QCoreApplication</name>
     <message>
-        <location filename="../src/hantekdso/mathmodes.cpp" line="40"/>
+        <location filename="../src/hantekdso/mathmodes.cpp" line="41"/>
         <source>CH1 * CH2</source>
         <translation>CH1 x CH2</translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/mathmodes.cpp" line="34"/>
+        <location filename="../src/hantekdso/mathmodes.cpp" line="35"/>
         <source>CH1 + CH2</source>
         <translation>CH1 + CH2</translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/mathmodes.cpp" line="36"/>
+        <location filename="../src/hantekdso/mathmodes.cpp" line="37"/>
         <source>CH1 - CH2</source>
         <translation>CH1 - CH2</translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/mathmodes.cpp" line="38"/>
+        <location filename="../src/hantekdso/mathmodes.cpp" line="39"/>
         <source>CH2 - CH1</source>
         <translation>CH2 - CH1</translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/mathmodes.cpp" line="42"/>
+        <location filename="../src/hantekdso/mathmodes.cpp" line="43"/>
         <source>CH1 &amp; CH2</source>
         <translation>CH1 &amp; CH2</translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/mathmodes.cpp" line="44"/>
+        <location filename="../src/hantekdso/mathmodes.cpp" line="45"/>
         <source>/CH1 &amp; /CH2</source>
         <translation>/CH1 &amp; /CH2</translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/mathmodes.cpp" line="46"/>
+        <location filename="../src/hantekdso/mathmodes.cpp" line="47"/>
         <source>/CH1 &amp; CH2</source>
         <translation>/CH1 &amp; CH2</translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/mathmodes.cpp" line="48"/>
+        <location filename="../src/hantekdso/mathmodes.cpp" line="49"/>
         <source>CH1 &amp; /CH2</source>
         <translation>CH1 &amp; /CH2</translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/mathmodes.cpp" line="50"/>
+        <location filename="../src/hantekdso/mathmodes.cpp" line="51"/>
         <source>CH1 == CH2</source>
         <translation>CH1 == CH2</translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/mathmodes.cpp" line="52"/>
+        <location filename="../src/hantekdso/mathmodes.cpp" line="53"/>
+        <source>CH1 &gt; CH2</source>
+        <translation>CH1 &gt; CH2</translation>
+    </message>
+    <message>
+        <location filename="../src/hantekdso/mathmodes.cpp" line="55"/>
+        <source>CH2 &gt; CH1</source>
+        <translation>CH2 &gt; CH1</translation>
+    </message>
+    <message>
+        <location filename="../src/hantekdso/mathmodes.cpp" line="57"/>
         <source>CH1 LP10</source>
         <translation>CH1 LP10</translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/mathmodes.cpp" line="54"/>
+        <location filename="../src/hantekdso/mathmodes.cpp" line="59"/>
         <source>CH2 LP10</source>
         <translation>CH2 LP10</translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/mathmodes.cpp" line="56"/>
+        <location filename="../src/hantekdso/mathmodes.cpp" line="61"/>
         <source>CH1 LP100</source>
         <translation>CH1 LP100</translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/mathmodes.cpp" line="58"/>
+        <location filename="../src/hantekdso/mathmodes.cpp" line="63"/>
         <source>CH2 LP100</source>
         <translation>CH2 LP100</translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/mathmodes.cpp" line="60"/>
+        <location filename="../src/hantekdso/mathmodes.cpp" line="65"/>
         <source>CH1²</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/mathmodes.cpp" line="62"/>
+        <location filename="../src/hantekdso/mathmodes.cpp" line="67"/>
         <source>CH2²</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/mathmodes.cpp" line="64"/>
+        <location filename="../src/hantekdso/mathmodes.cpp" line="69"/>
         <source>CH1 AC</source>
         <translation>CH1 AC</translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/mathmodes.cpp" line="66"/>
+        <location filename="../src/hantekdso/mathmodes.cpp" line="71"/>
         <source>CH2 AC</source>
         <translation>CH2 AC</translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/mathmodes.cpp" line="68"/>
+        <location filename="../src/hantekdso/mathmodes.cpp" line="73"/>
         <source>CH1 DC</source>
         <translation>CH1 DC</translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/mathmodes.cpp" line="70"/>
+        <location filename="../src/hantekdso/mathmodes.cpp" line="75"/>
         <source>CH2 DC</source>
         <translation>CH2 DC</translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/mathmodes.cpp" line="72"/>
+        <location filename="../src/hantekdso/mathmodes.cpp" line="77"/>
         <source>CH1 Abs</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/mathmodes.cpp" line="74"/>
+        <location filename="../src/hantekdso/mathmodes.cpp" line="79"/>
         <source>CH2 Abs</source>
         <translation>CH2 Abs</translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/mathmodes.cpp" line="76"/>
+        <location filename="../src/hantekdso/mathmodes.cpp" line="81"/>
         <source>CH1 Sign</source>
         <translation>CH1 Sign</translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/mathmodes.cpp" line="78"/>
+        <location filename="../src/hantekdso/mathmodes.cpp" line="83"/>
         <source>CH2 Sign</source>
         <translation>CH2 Sign</translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/mathmodes.cpp" line="80"/>
+        <location filename="../src/hantekdso/mathmodes.cpp" line="85"/>
         <source>CH1 AC Sign</source>
         <translation>CH1 AC Sign</translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/mathmodes.cpp" line="82"/>
+        <location filename="../src/hantekdso/mathmodes.cpp" line="87"/>
         <source>CH2 AC Sign</source>
         <translation>CH2 AC Sign</translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/mathmodes.cpp" line="84"/>
+        <location filename="../src/hantekdso/mathmodes.cpp" line="89"/>
         <source>CH1 Trigger</source>
         <translation>CH1 Trigger</translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/mathmodes.cpp" line="86"/>
+        <location filename="../src/hantekdso/mathmodes.cpp" line="91"/>
         <source>CH2 Trigger</source>
         <translation>CH2 Trigger</translation>
     </message>

@@ -1,3 +1,6 @@
+2025-03-03 (7e384e4): Merge branch 'spacejoey86-greater_math_modes'
+2025-03-03 (7fd84d8): Merge branch 'greater_math_modes' of https://github.com/spacejoey86/OpenHantek6022 into spacejoey86-greater_math_modes
+2025-03-03 (37cc223): fix #416 - install debian package instruction
 2025-03-03 (9508003): cleanup runner script
 2025-03-03 (8ce1e82): cleanup macos build, fix more warnings
 2025-03-03 (764dfc9): fix macos warning
@@ -5,6 +8,9 @@
 2025-03-03 (3190b80): fix #419 - allow MATH scaling 20 mV .. 1000 V
 2025-03-02 (799cd67): replace deprecated upload-artifact@v3 with upload-artifact@v4
 2025-03-02 (68221da): fix #420 - remenber save as path for screenshots etc.
+2024-11-27 (e365b41): remove incorrect comment
+2024-11-27 (21c413c): update manual and fixes
+2024-11-27 (2a9f0c9): added greater than math modes
 2024-03-24 (ffd1691): README: add hint for possible graphics issue solution for win systems
 2024-03-24 (d0f44f8): Fix voltageScale to correct indices for ISDS205b
 2024-03-24 (09d0e28): Merge branch 'isds205b/channelCalFix' of https://github.com/wakass/OpenHantek6022 into wakass-isds205b/channelCalFix
