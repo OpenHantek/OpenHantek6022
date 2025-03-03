@@ -1,3 +1,4 @@
+2025-03-02 (799cd67): replace deprecated upload-artifact@v3 with upload-artifact@v4
 2025-03-02 (68221da): fix #420 - remenber save as path for screenshots etc.
 2024-03-24 (ffd1691): README: add hint for possible graphics issue solution for win systems
 2024-03-24 (d0f44f8): Fix voltageScale to correct indices for ISDS205b

@@ -98,13 +98,15 @@ struct DsoSettingsScopeVoltage : public DsoSettingsScopeChannel {
 
 /// \brief Holds the settings for the oscilloscope.
 struct DsoSettingsScope {
-    std::vector< double > gainSteps = { 2e-2, 5e-2, 1e-1, 2e-1,
-                                        5e-1, 1e0,  2e0,  5e0 }; ///< The selectable voltage gain steps in V/div
-    std::vector< DsoSettingsScopeSpectrum > spectrum;            ///< Spectrum analysis settings
-    std::vector< DsoSettingsScopeVoltage > voltage;              ///< Settings for the normal graphs
-    DsoSettingsScopeHorizontal horizontal;                       ///< Settings for the horizontal axis
-    DsoSettingsScopeTrigger trigger;                             ///< Settings for the trigger
-    DsoSettingsScopeAnalysis analysis;                           ///< Settings for the analysis
+    std::vector< double > gainSteps = { ///< The selectable voltage gain steps in V/div
+        2e-2, 5e-2, 1e-1, 2e-1, 5e-1, 1e0, 2e0, 5e0, 1e1 };
+    std::vector< double > mathGainSteps = { ///< The selectable voltage math gain steps in V/div
+        2e-2, 5e-2, 1e-1, 2e-1, 5e-1, 1e0, 2e0, 5e0, 1e1, 2e1, 5e1, 1e2, 2e2, 5e2, 1e3 };
+    std::vector< DsoSettingsScopeSpectrum > spectrum; ///< Spectrum analysis settings
+    std::vector< DsoSettingsScopeVoltage > voltage;   ///< Settings for the normal graphs
+    DsoSettingsScopeHorizontal horizontal;            ///< Settings for the horizontal axis
+    DsoSettingsScopeTrigger trigger;                  ///< Settings for the trigger
+    DsoSettingsScopeAnalysis analysis;                ///< Settings for the analysis
 
     int verboseLevel = 0;
     int toolTipVisible = 1; // show hints for beginners, can be disabled in settings dialog
@@ -113,7 +115,12 @@ struct DsoSettingsScope {
     bool hasACmodification = false;
     bool liveCalibrationActive = false;
 
-    double gain( unsigned channel ) const { return gainSteps[ voltage[ channel ].gainStepIndex ] * voltage[ channel ].probeAttn; }
+    double gain( unsigned channel ) const {
+        if ( channel < voltage.size() - 1 ) // Voltage channel
+            return gainSteps[ voltage[ channel ].gainStepIndex ] * voltage[ channel ].probeAttn;
+        else
+            return mathGainSteps[ voltage[ channel ].gainStepIndex ] * voltage[ channel ].probeAttn;
+    }
 
     bool anyUsed( ChannelID channel ) const { return voltage[ channel ].used || spectrum[ channel ].used; }
 

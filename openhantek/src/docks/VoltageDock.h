@@ -88,6 +88,7 @@ class VoltageDock : public QDockWidget {
     QStringList couplingStrings; ///< The strings for the couplings
     QStringList modeStrings;     ///< The strings for the math mode
     QStringList gainStrings;     ///< String representations for the gain steps
+    QStringList mathGainStrings; ///< String representations for the math gain steps
     QStringList attnStrings;     ///< String representations for the probe attn steps
 
   signals:
