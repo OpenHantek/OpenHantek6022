@@ -11,9 +11,9 @@ Unit mathModeUnit( MathMode mode ) {
         return UNIT_VOLTSQUARE;
     else if ( mode == MathMode::AND_CH1_CH2 || mode == MathMode::AND_NOT_CH1_CH2 || mode == MathMode::AND_CH1_NOT_CH2 ||
               mode == MathMode::AND_NOT_CH1_NOT_CH2 || mode == MathMode::EQU_CH1_CH2 || mode == MathMode::GREAT_CH1_CH2 ||
-              mode == MathMode::GREAT_CH2_CH1 || mode == MathMode::SIGN_AC_CH1 ||
-              mode == MathMode::SIGN_AC_CH2 || mode == MathMode::SIGN_CH1 || mode == MathMode::SIGN_CH2 ||
-              mode == MathMode::TRIG_CH2 || mode == MathMode::TRIG_CH1 || mode == MathMode::TRIG_CH2 )
+              mode == MathMode::GREAT_CH2_CH1 || mode == MathMode::SIGN_AC_CH1 || mode == MathMode::SIGN_AC_CH2 ||
+              mode == MathMode::SIGN_CH1 || mode == MathMode::SIGN_CH2 || mode == MathMode::TRIG_CH2 ||
+              mode == MathMode::TRIG_CH1 || mode == MathMode::TRIG_CH2 )
         return UNIT_NONE; // logic values 0 or 1
     else
         return UNIT_VOLTS;
@@ -48,11 +48,11 @@ QString mathModeString( MathMode mode ) {
     case MathMode::AND_CH1_NOT_CH2:
         return QCoreApplication::tr( "CH1 & /CH2" );
     case MathMode::EQU_CH1_CH2:
-        return QCoreApplication::tr( "CH1 == CH2" );
+        return QCoreApplication::tr( "CH1 ≡ CH2" );
     case MathMode::GREAT_CH1_CH2:
         return QCoreApplication::tr( "CH1 > CH2" );
     case MathMode::GREAT_CH2_CH1:
-        return QCoreApplication::tr( "CH2 > CH1" );
+        return QCoreApplication::tr( "CH1 < CH2" );
     case MathMode::LP10_CH1:
         return QCoreApplication::tr( "CH1 LP10" );
     case MathMode::LP10_CH2:

@@ -1873,9 +1873,8 @@
         <translation>К1 &amp; /К2</translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/mathmodes.cpp" line="51"/>
         <source>CH1 == CH2</source>
-        <translation>К1 == К2</translation>
+        <translation type="vanished">К1 == К2</translation>
     </message>
     <message>
         <location filename="../src/hantekdso/mathmodes.cpp" line="53"/>
@@ -1883,9 +1882,18 @@
         <translation>К1 &gt; К2</translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/mathmodes.cpp" line="55"/>
         <source>CH2 &gt; CH1</source>
-        <translation>К2 &gt; К1</translation>
+        <translation type="vanished">К2 &gt; К1</translation>
+    </message>
+    <message>
+        <location filename="../src/hantekdso/mathmodes.cpp" line="51"/>
+        <source>CH1 ≡ CH2</source>
+        <translation>K1 ≡ K2</translation>
+    </message>
+    <message>
+        <location filename="../src/hantekdso/mathmodes.cpp" line="55"/>
+        <source>CH1 &lt; CH2</source>
+        <translation>K1 &lt; K2</translation>
     </message>
     <message>
         <location filename="../src/hantekdso/mathmodes.cpp" line="57"/>

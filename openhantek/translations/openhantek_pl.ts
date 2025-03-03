@@ -2126,19 +2126,19 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/mathmodes.cpp" line="51"/>
-        <source>CH1 == CH2</source>
-        <translation></translation>
-    </message>
-    <message>
         <location filename="../src/hantekdso/mathmodes.cpp" line="53"/>
         <source>CH1 &gt; CH2</source>
         <translation></translation>
     </message>
     <message>
+        <location filename="../src/hantekdso/mathmodes.cpp" line="51"/>
+        <source>CH1 ≡ CH2</source>
+        <translation>CH1 ≡ CH2</translation>
+    </message>
+    <message>
         <location filename="../src/hantekdso/mathmodes.cpp" line="55"/>
-        <source>CH2 &gt; CH1</source>
-        <translation></translation>
+        <source>CH1 &lt; CH2</source>
+        <translation>CH1 &lt; CH2</translation>
     </message>
     <message>
         <location filename="../src/hantekdso/mathmodes.cpp" line="57"/>
