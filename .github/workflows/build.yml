@@ -54,7 +54,7 @@ jobs:
       run: |
         git config user.email "Ho-Ro@users.noreply.github.com"
         git config user.name "Ho-Ro"
-        git fetch --prune --tags || true
+        git fetch --tags --force || true
         git submodule update --init --recursive
         echo "git_describe=$(git describe)"
         echo "git_describe=$(git describe)" >> $GITHUB_OUTPUT
@@ -95,9 +95,9 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 
-# -------------------
-# --- macOS steps ---
-# -------------------
+# -------------------------
+# --- macOS intel steps ---
+# -------------------------
 #
   macos-intel:
     runs-on: macos-13
@@ -118,7 +118,7 @@ jobs:
       run: |
         git config user.email "Ho-Ro@users.noreply.github.com"
         git config user.name "Ho-Ro"
-        git fetch --prune --tags || true
+        git fetch --tags --force || true
         git submodule update --init --recursive
         echo "git_describe=$(git describe)"
         echo "git_describe=$(git describe)" >> $GITHUB_OUTPUT
@@ -153,7 +153,6 @@ jobs:
         fi
         if test -d openhantek/OpenHantek.app; then
           cd openhantek
-          ls -l
           sudo tar -czf ../packages/openhantek_*_osx_*.tar.gz OpenHantek.app
           if test -f OpenHantek.dmg; then
             sudo mv OpenHantek.dmg ../packages/$(basename ../packages/openhantek_*_osx_*.tar.gz .tar.gz).dmg
@@ -180,9 +179,9 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 
-# -------------------
+# -------------------------
 # --- macOS arm64 steps ---
-# -------------------
+# -------------------------
 #
   macos-arm64:
     runs-on: macos-14
@@ -203,7 +202,7 @@ jobs:
       run: |
         git config user.email "Ho-Ro@users.noreply.github.com"
         git config user.name "Ho-Ro"
-        git fetch --prune --tags || true
+        git fetch --tags --force || true
         git submodule update --init --recursive
         echo "git_describe=$(git describe)"
         echo "git_describe=$(git describe)" >> $GITHUB_OUTPUT
@@ -238,7 +237,6 @@ jobs:
         fi
         if test -d openhantek/OpenHantek.app; then
           cd openhantek
-          ls -l
           sudo tar -czf ../packages/openhantek_*_osx_*.tar.gz OpenHantek.app
           if test -f OpenHantek.dmg; then
             sudo mv OpenHantek.dmg ../packages/$(basename ../packages/openhantek_*_osx_*.tar.gz .tar.gz).dmg
@@ -288,7 +286,7 @@ jobs:
       run: |
         git config user.email "Ho-Ro@users.noreply.github.com"
         git config user.name "Ho-Ro"
-        git fetch --prune --tags || true
+        git fetch --tags --force || true
         git submodule update --init --recursive
         echo "git_describe=$(git describe)"
         echo "git_describe=$(git describe)" >> $GITHUB_OUTPUT
@@ -362,7 +360,7 @@ jobs:
       run: |
         git config user.email "Ho-Ro@users.noreply.github.com"
         git config user.name "Ho-Ro"
-        git fetch --prune --tags || true
+        git fetch --tags --force || true
         git submodule update --init --recursive
         echo "git_describe=$(git describe)"
         echo "git_describe=$(git describe)" >> $GITHUB_OUTPUT
