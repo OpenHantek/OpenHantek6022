@@ -292,14 +292,14 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
              [ this ]() { dsoWidget->updateTimebase( dsoSettings->scope.horizontal.timebase ); } );
     connect( spectrumDock, &SpectrumDock::frequencybaseChanged, dsoWidget,
              [ this ]( double frequencybase ) { dsoWidget->updateFrequencybase( frequencybase ); } );
-    connect( dsoControl, &HantekDsoControl::samplerateChanged, horizontalDock,
-             [ this, horizontalDock, spectrumDock ]( double samplerate ) {
+    connect( dsoControl, &HantekDsoControl::samplerateCalculated, horizontalDock,
+             [ this, horizontalDock, spectrumDock ]( double samplerate, unsigned oversample ) {
                  // The timebase was set, let's adapt the samplerate accordingly
-                 // printf( "mainwindow::samplerateChanged( %g )\n", samplerate );
                  dsoSettings->scope.horizontal.samplerate = samplerate;
                  horizontalDock->setSamplerate( samplerate );
                  spectrumDock->setSamplerate( samplerate ); // mind the Nyquest frequency
                  dsoWidget->updateSamplerate( samplerate );
+                 dsoWidget->updateOversample( oversample );
              } );
     connect( horizontalDock, &HorizontalDock::calfreqChanged, dsoControl,
              [ dsoControl, this ]() { dsoControl->setCalFreq( dsoSettings->scope.horizontal.calfreq ); } );
@@ -314,7 +314,7 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
     connect( triggerDock, &TriggerDock::modeChanged, this, [ this ]( Dso::TriggerMode mode ) {
         ui->actionRefresh->setVisible( Dso::TriggerMode::ROLL == mode && dsoSettings->scope.horizontal.samplerate < 10e3 );
     } );
-    connect( dsoControl, &HantekDsoControl::samplerateChanged, this, [ this ]( double samplerate ) {
+    connect( dsoControl, &HantekDsoControl::samplerateCalculated, this, [ this ]( double samplerate ) {
         ui->actionRefresh->setVisible( Dso::TriggerMode::ROLL == dsoSettings->scope.trigger.mode && samplerate < 10e3 );
     } );
     connect( triggerDock, &TriggerDock::sourceChanged, dsoControl, &HantekDsoControl::setTriggerSource );

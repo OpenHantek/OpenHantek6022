@@ -69,6 +69,7 @@ class DsoWidget : public QWidget {
     QLabel *settingsTriggerLabel;       ///< The trigger details
     QLabel *settingsSamplesOnScreen;    ///< The displayed dots on screen
     QLabel *settingsSamplerateLabel;    ///< The samplerate
+    QLabel *settingsOversampleLabel;    ///< The oversample factor
     QLabel *settingsTimebaseLabel;      ///< The timebase of the main scope
     QLabel *settingsFrequencybaseLabel; ///< The frequencybase of the main scope
 
@@ -107,6 +108,7 @@ class DsoWidget : public QWidget {
 
   private:
     double samplerate;
+    unsigned oversample = 1;
     double timebase;
     double pulseWidth1 = 0.0;
     double pulseWidth2 = 0.0;
@@ -128,6 +130,7 @@ class DsoWidget : public QWidget {
     // void horizontalFormatChanged(HorizontalFormat format);
     void updateFrequencybase( double frequencybase );
     void updateSamplerate( double samplerate );
+    void updateOversample( unsigned oversample );
     void updateTimebase( double timebase );
 
     // Trigger

@@ -37,9 +37,7 @@ VoltageDock::VoltageDock( DsoSettingsScope *scope, const Dso::ControlSpecificati
         modeStrings.append( Dso::mathModeString( e ) );
     }
 
-    for ( double gainStep : scope->gainSteps ) {
-        gainStrings << valueToString( gainStep, UNIT_VOLTS, 0 );
-    }
+    updateGainStrings();
     for ( double mathGainStep : scope->mathGainSteps ) {
         mathGainStrings << valueToString( mathGainStep, UNIT_VOLTS, 0 );
     }
@@ -64,6 +62,7 @@ VoltageDock::VoltageDock( DsoSettingsScope *scope, const Dso::ControlSpecificati
             b.gainComboBox->setToolTip( tr( "Voltage range per vertical screen division" ) );
         b.invertCheckBox = new QCheckBox( tr( "Invert" ) );
         b.attnSpinBox = new QSpinBox();
+        b.attnSpinBox->setStepType( QAbstractSpinBox::AdaptiveDecimalStepType );
         if ( scope->toolTipVisible )
             b.attnSpinBox->setToolTip( tr( "Set probe attenuation, scroll or type a value to select" ) );
         b.attnSpinBox->setMinimum( ATTENUATION_MIN );
@@ -227,9 +226,7 @@ void VoltageDock::setAttn( ChannelID channel, double attnValue ) {
     channelBlocks[ channel ].gainComboBox->clear();
     // change unit to V² for the multiplying math functions
     if ( channel < spec->channels ) { // Voltage channel
-        gainStrings.clear();
-        for ( double gainStep : scope->gainSteps )
-            gainStrings << valueToString( gainStep * attnValue, UNIT_VOLTS, -1 );
+        updateGainStrings( attnValue );
         channelBlocks[ channel ].gainComboBox->addItems( gainStrings );
     } else {
         mathGainStrings.clear();
@@ -271,4 +268,12 @@ void VoltageDock::setInverted( ChannelID channel, bool inverted ) {
         qDebug() << "  VDock::setInverted()" << channel << inverted;
     QSignalBlocker blocker( channelBlocks[ channel ].invertCheckBox );
     channelBlocks[ channel ].invertCheckBox->setChecked( inverted );
+}
+
+
+void VoltageDock::updateGainStrings( double attnValue ) {
+    gainStrings.clear();
+    for ( auto gainStep : spec->gain ) {
+        gainStrings << valueToString( gainStep.Vdiv * attnValue, UNIT_VOLTS, 0 );
+    }
 }

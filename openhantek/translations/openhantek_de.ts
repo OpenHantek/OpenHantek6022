@@ -754,71 +754,81 @@
 <context>
     <name>DsoWidget</name>
     <message>
-        <location filename="../src/dsowidget.cpp" line="649"/>
-        <location filename="../src/dsowidget.cpp" line="651"/>
-        <location filename="../src/dsowidget.cpp" line="692"/>
-        <location filename="../src/dsowidget.cpp" line="739"/>
-        <location filename="../src/dsowidget.cpp" line="748"/>
-        <location filename="../src/dsowidget.cpp" line="769"/>
+        <location filename="../src/dsowidget.cpp" line="652"/>
+        <location filename="../src/dsowidget.cpp" line="654"/>
+        <location filename="../src/dsowidget.cpp" line="695"/>
+        <location filename="../src/dsowidget.cpp" line="742"/>
+        <location filename="../src/dsowidget.cpp" line="751"/>
+        <location filename="../src/dsowidget.cpp" line="779"/>
         <source>/div</source>
         <translation>/div</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="947"/>
+        <location filename="../src/dsowidget.cpp" line="957"/>
         <source>&lt;b&gt; OFFSET CALIBRATION &lt;/b&gt;</source>
         <translation>&lt;b&gt; OFFSET-ABGLEICH &lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="955"/>
+        <location filename="../src/dsowidget.cpp" line="965"/>
         <source>TR</source>
         <translation>TR</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="194"/>
+        <location filename="../src/dsowidget.cpp" line="197"/>
         <source>Markers</source>
         <translation>Marker</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="451"/>
+        <location filename="../src/dsowidget.cpp" line="454"/>
         <source>Trace position, drag the channel name up or down</source>
         <translation>Kurven-Position, das Namensfeld nach oben oder unten ziehen</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="473"/>
+        <location filename="../src/dsowidget.cpp" line="476"/>
         <source>Trigger position, drag the arrow left or right</source>
         <translation>Trigger-Position, Pfeil nach links oder rechts ziehen</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="483"/>
+        <location filename="../src/dsowidget.cpp" line="486"/>
         <source>Trigger level, drag the arrow up or down</source>
         <translation>Trigger-Pegel, Pfeil nach oben oder unten ziehen</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="497"/>
+        <location filename="../src/dsowidget.cpp" line="500"/>
         <source>Measure or zoom marker &apos;1&apos; and &apos;2&apos;, drag left or right</source>
         <translation>Mess- oder Zoom-Marker &apos;1&apos; und &apos;2&apos;, nach links oder rechts ziehen</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="594"/>
-        <location filename="../src/dsowidget.cpp" line="612"/>
+        <location filename="../src/dsowidget.cpp" line="597"/>
+        <location filename="../src/dsowidget.cpp" line="615"/>
         <source>ON</source>
         <translation>EIN</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="598"/>
-        <location filename="../src/dsowidget.cpp" line="617"/>
+        <location filename="../src/dsowidget.cpp" line="601"/>
+        <location filename="../src/dsowidget.cpp" line="620"/>
         <source>OFF</source>
         <translation>AUS</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="638"/>
+        <location filename="../src/dsowidget.cpp" line="641"/>
         <source>Markers  </source>
         <translation>Merker  </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="644"/>
+        <location filename="../src/dsowidget.cpp" line="647"/>
         <source>Zoom x%1  </source>
         <translation></translation>
+    </message>
+    <message>
+        <location filename="../src/dsowidget.cpp" line="900"/>
+        <source>on screen</source>
+        <translation>angezeigt</translation>
+    </message>
+    <message>
+        <location filename="../src/dsowidget.cpp" line="769"/>
+        <source>%1x ovr </source>
+        <translation>%1x ovr </translation>
     </message>
     <message>
         <source>Time: </source>
@@ -833,7 +843,7 @@
         <translation type="vanished">Zoom x%L1  </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="647"/>
+        <location filename="../src/dsowidget.cpp" line="650"/>
         <source>Zoom ---  </source>
         <translation>Zoom ---  </translation>
     </message>
@@ -842,31 +852,30 @@
         <translation type="vanished">%L1%</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="720"/>
+        <location filename="../src/dsowidget.cpp" line="723"/>
         <source>%1  %2  %3  %4  %5</source>
         <translation>%1  %2  %3  %4 %5</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="759"/>
+        <location filename="../src/dsowidget.cpp" line="761"/>
         <source>/s</source>
         <translation>/s</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="890"/>
         <source> on screen</source>
-        <translation> angezeigt</translation>
+        <translation type="vanished"> angezeigt</translation>
     </message>
     <message>
         <source>&lt;b&gt;OFFSET CALIBRATION&lt;/b&gt;</source>
         <translation type="vanished">&lt;b&gt;OFFSET-ABGLEICH&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="1004"/>
+        <location filename="../src/dsowidget.cpp" line="1014"/>
         <source>pp</source>
         <translation>pp</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="1010"/>
+        <location filename="../src/dsowidget.cpp" line="1020"/>
         <source>rms</source>
         <translation>rms</translation>
     </message>
@@ -941,7 +950,7 @@
         <translation type="vanished">Konnte Kanalpegeldaten des Oszilloskops nicht lesen</translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="574"/>
+        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="576"/>
         <source>Couldn&apos;t get calibration data from oscilloscope&apos;s EEPROM. Use a config file for calibration!</source>
         <translation>Konnte Kalibrierdaten des Oszilloskops nicht lesen, benutze eine config-Datei für die Kalibrierung!</translation>
     </message>
@@ -2711,27 +2720,32 @@
         <translation>Spannung</translation>
     </message>
     <message>
-        <location filename="../src/docks/VoltageDock.cpp" line="58"/>
+        <location filename="../src/docks/VoltageDock.cpp" line="63"/>
         <source>CH&amp;%1</source>
         <translation>CH&amp;%1</translation>
     </message>
     <message>
-        <location filename="../src/docks/VoltageDock.cpp" line="60"/>
+        <location filename="../src/docks/VoltageDock.cpp" line="65"/>
         <source>MA&amp;TH</source>
         <translation>MA&amp;TH</translation>
     </message>
     <message>
-        <location filename="../src/docks/VoltageDock.cpp" line="64"/>
+        <location filename="../src/docks/VoltageDock.cpp" line="69"/>
         <source>Voltage range per vertical screen division</source>
         <translation>Spannung pro vertikaler Teilung</translation>
     </message>
     <message>
-        <location filename="../src/docks/VoltageDock.cpp" line="78"/>
+        <location filename="../src/docks/VoltageDock.cpp" line="77"/>
+        <source>x</source>
+        <translation>x</translation>
+    </message>
+    <message>
+        <location filename="../src/docks/VoltageDock.cpp" line="84"/>
         <source>Select DC or AC coupling</source>
         <translation>Wähle AC- oder DC-Kopplung</translation>
     </message>
     <message>
-        <location filename="../src/docks/VoltageDock.cpp" line="83"/>
+        <location filename="../src/docks/VoltageDock.cpp" line="89"/>
         <source>Select the mathematical operation for this channel</source>
         <translation>Berechnungen für diesen Kanal</translation>
     </message>
@@ -2740,19 +2754,14 @@
         <translation type="vanished">&amp;MATH</translation>
     </message>
     <message>
-        <location filename="../src/docks/VoltageDock.cpp" line="65"/>
+        <location filename="../src/docks/VoltageDock.cpp" line="70"/>
         <source>Invert</source>
         <translation>Invertiert</translation>
     </message>
     <message>
-        <location filename="../src/docks/VoltageDock.cpp" line="68"/>
+        <location filename="../src/docks/VoltageDock.cpp" line="74"/>
         <source>Set probe attenuation, scroll or type a value to select</source>
         <translation>Wähle Tastkopf-Abschwächung, Mausrad oder direkte Eingabe möglich</translation>
-    </message>
-    <message>
-        <location filename="../src/docks/VoltageDock.cpp" line="71"/>
-        <source>x</source>
-        <translation></translation>
     </message>
 </context>
 <context>

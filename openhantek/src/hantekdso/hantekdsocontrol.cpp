@@ -123,11 +123,12 @@ Dso::ErrorCode HantekDsoControl::setSamplerate( double samplerate ) {
             break;
     }
     controlSetSamplerate( sampleIndex );
-    setDownsampling( specification->fixedSampleRates[ sampleIndex ].oversampling );
+    unsigned oversample = specification->fixedSampleRates[ sampleIndex ].oversampling;
+    setDownsampling( oversample );
     controlsettings.samplerate.current = samplerate;
     if ( verboseLevel > 2 )
-        qDebug() << "  HDC::setSamplerate() emit samplerateChanged" << samplerate;
-    emit samplerateChanged( samplerate );
+        qDebug() << "  HDC::setSamplerate() emit samplerateCalculated" << samplerate << oversample;
+    emit samplerateCalculated( samplerate, oversample );
     return Dso::ErrorCode::NONE;
 }
 
@@ -168,12 +169,13 @@ Dso::ErrorCode HantekDsoControl::setRecordTime( double duration ) {
         }
     }
     controlSetSamplerate( sampleIndex );
-    setDownsampling( specification->fixedSampleRates[ sampleIndex ].oversampling );
+    unsigned oversampling = specification->fixedSampleRates[ sampleIndex ].oversampling;
+    setDownsampling( oversampling );
     double samplerate = specification->fixedSampleRates[ sampleIndex ].samplerate;
     controlsettings.samplerate.current = samplerate;
     if ( verboseLevel > 2 )
-        qDebug() << "  HDC::setRecordTime() emit samplerateChanged" << samplerate;
-    emit samplerateChanged( samplerate );
+        qDebug() << "  HDC::setRecordTime() emit samplerateChanged" << samplerate << oversampling;
+    emit samplerateCalculated( samplerate, oversampling );
     return Dso::ErrorCode::NONE;
 }
 

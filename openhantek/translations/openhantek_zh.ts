@@ -702,69 +702,79 @@
         <translation type="vanished">放大 x%L1</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="649"/>
-        <location filename="../src/dsowidget.cpp" line="651"/>
-        <location filename="../src/dsowidget.cpp" line="692"/>
-        <location filename="../src/dsowidget.cpp" line="739"/>
-        <location filename="../src/dsowidget.cpp" line="748"/>
-        <location filename="../src/dsowidget.cpp" line="769"/>
+        <location filename="../src/dsowidget.cpp" line="652"/>
+        <location filename="../src/dsowidget.cpp" line="654"/>
+        <location filename="../src/dsowidget.cpp" line="695"/>
+        <location filename="../src/dsowidget.cpp" line="742"/>
+        <location filename="../src/dsowidget.cpp" line="751"/>
+        <location filename="../src/dsowidget.cpp" line="779"/>
         <source>/div</source>
         <translation>/div</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="947"/>
+        <location filename="../src/dsowidget.cpp" line="769"/>
+        <source>%1x ovr </source>
+        <translation>%1x ovr </translation>
+    </message>
+    <message>
+        <location filename="../src/dsowidget.cpp" line="900"/>
+        <source>on screen</source>
+        <translation>on screen</translation>
+    </message>
+    <message>
+        <location filename="../src/dsowidget.cpp" line="957"/>
         <source>&lt;b&gt; OFFSET CALIBRATION &lt;/b&gt;</source>
         <translation>&lt;b&gt;偏移量校准&lt;/b</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="955"/>
+        <location filename="../src/dsowidget.cpp" line="965"/>
         <source>TR</source>
         <translation>TR</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="194"/>
+        <location filename="../src/dsowidget.cpp" line="197"/>
         <source>Markers</source>
         <translation>光标</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="451"/>
+        <location filename="../src/dsowidget.cpp" line="454"/>
         <source>Trace position, drag the channel name up or down</source>
         <translation>追踪位置，向上或向下拖动通道名称</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="473"/>
+        <location filename="../src/dsowidget.cpp" line="476"/>
         <source>Trigger position, drag the arrow left or right</source>
         <translation>触发器位置，向左或向右拖动箭头</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="483"/>
+        <location filename="../src/dsowidget.cpp" line="486"/>
         <source>Trigger level, drag the arrow up or down</source>
         <translation>触发器水平，向上或向下拖动箭头</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="497"/>
+        <location filename="../src/dsowidget.cpp" line="500"/>
         <source>Measure or zoom marker &apos;1&apos; and &apos;2&apos;, drag left or right</source>
         <translation>测量或缩放标记&apos;1&apos;和&apos;2&apos;，向左或向右拖动</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="594"/>
-        <location filename="../src/dsowidget.cpp" line="612"/>
+        <location filename="../src/dsowidget.cpp" line="597"/>
+        <location filename="../src/dsowidget.cpp" line="615"/>
         <source>ON</source>
         <translation>ON</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="598"/>
-        <location filename="../src/dsowidget.cpp" line="617"/>
+        <location filename="../src/dsowidget.cpp" line="601"/>
+        <location filename="../src/dsowidget.cpp" line="620"/>
         <source>OFF</source>
         <translation>OFF</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="638"/>
+        <location filename="../src/dsowidget.cpp" line="641"/>
         <source>Markers  </source>
         <translation>光标  </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="644"/>
+        <location filename="../src/dsowidget.cpp" line="647"/>
         <source>Zoom x%1  </source>
         <translation>缩放x%1  </translation>
     </message>
@@ -781,7 +791,7 @@
         <translation type="vanished">放大 x%L1  </translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="647"/>
+        <location filename="../src/dsowidget.cpp" line="650"/>
         <source>Zoom ---  </source>
         <translation>放大 ---  </translation>
     </message>
@@ -790,22 +800,21 @@
         <translation type="vanished">%L1%</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="720"/>
+        <location filename="../src/dsowidget.cpp" line="723"/>
         <source>%1  %2  %3  %4  %5</source>
         <translation>%1  %2  %3  %4  %5</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="890"/>
         <source> on screen</source>
-        <translation> on screen</translation>
+        <translation type="vanished"> on screen</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="1004"/>
+        <location filename="../src/dsowidget.cpp" line="1014"/>
         <source>pp</source>
         <translation>pp</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="1010"/>
+        <location filename="../src/dsowidget.cpp" line="1020"/>
         <source>rms</source>
         <translation>rms</translation>
     </message>
@@ -822,7 +831,7 @@
         <translation type="vanished">%1  %2  %3  %4</translation>
     </message>
     <message>
-        <location filename="../src/dsowidget.cpp" line="759"/>
+        <location filename="../src/dsowidget.cpp" line="761"/>
         <source>/s</source>
         <translation>/s</translation>
     </message>
@@ -897,7 +906,7 @@
         <translation type="vanished">获取示波器通道数据失败</translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="574"/>
+        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="576"/>
         <source>Couldn&apos;t get calibration data from oscilloscope&apos;s EEPROM. Use a config file for calibration!</source>
         <translation>从示波器EEPOM获取校准数据失败，请使用配置文件进行校准！</translation>
     </message>
@@ -2498,42 +2507,42 @@
         <translation>电压</translation>
     </message>
     <message>
-        <location filename="../src/docks/VoltageDock.cpp" line="58"/>
+        <location filename="../src/docks/VoltageDock.cpp" line="56"/>
         <source>CH&amp;%1</source>
         <translation>CH&amp;%1</translation>
     </message>
     <message>
-        <location filename="../src/docks/VoltageDock.cpp" line="60"/>
+        <location filename="../src/docks/VoltageDock.cpp" line="58"/>
         <source>MA&amp;TH</source>
         <translation>MA&amp;TH</translation>
     </message>
     <message>
-        <location filename="../src/docks/VoltageDock.cpp" line="64"/>
+        <location filename="../src/docks/VoltageDock.cpp" line="62"/>
         <source>Voltage range per vertical screen division</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/docks/VoltageDock.cpp" line="78"/>
+        <location filename="../src/docks/VoltageDock.cpp" line="77"/>
         <source>Select DC or AC coupling</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/docks/VoltageDock.cpp" line="83"/>
+        <location filename="../src/docks/VoltageDock.cpp" line="82"/>
         <source>Select the mathematical operation for this channel</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/docks/VoltageDock.cpp" line="65"/>
+        <location filename="../src/docks/VoltageDock.cpp" line="63"/>
         <source>Invert</source>
         <translation>反转</translation>
     </message>
     <message>
-        <location filename="../src/docks/VoltageDock.cpp" line="68"/>
+        <location filename="../src/docks/VoltageDock.cpp" line="67"/>
         <source>Set probe attenuation, scroll or type a value to select</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/docks/VoltageDock.cpp" line="71"/>
+        <location filename="../src/docks/VoltageDock.cpp" line="70"/>
         <source>x</source>
         <translation>x</translation>
     </message>

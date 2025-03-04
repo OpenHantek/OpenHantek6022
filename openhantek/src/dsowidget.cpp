@@ -81,6 +81,8 @@ DsoWidget::DsoWidget( DsoSettingsScope *scope, DsoSettingsView *view, const Dso:
     settingsSamplesOnScreen->setPalette( palette );
     settingsSamplerateLabel = new QLabel();
     settingsSamplerateLabel->setPalette( palette );
+    settingsOversampleLabel = new QLabel();
+    settingsOversampleLabel->setPalette( palette );
     settingsTimebaseLabel = new QLabel();
     settingsTimebaseLabel->setPalette( palette );
     settingsFrequencybaseLabel = new QLabel();
@@ -91,9 +93,10 @@ DsoWidget::DsoWidget( DsoSettingsScope *scope, DsoSettingsView *view, const Dso:
     swTriggerStatus->setVisible( false );
     settingsLayout = new QHBoxLayout();
     settingsLayout->addWidget( swTriggerStatus, 0, Qt::AlignCenter );
-    settingsLayout->addWidget( settingsTriggerLabel );
+    settingsLayout->addWidget( settingsTriggerLabel, 0, Qt::AlignLeft );
     settingsLayout->addWidget( settingsSamplesOnScreen, 1, Qt::AlignRight );
     settingsLayout->addWidget( settingsSamplerateLabel, 1, Qt::AlignRight );
+    settingsLayout->addWidget( settingsOversampleLabel, 1, Qt::AlignLeft );
     settingsLayout->addWidget( settingsTimebaseLabel, 1, Qt::AlignRight );
     settingsLayout->addWidget( settingsFrequencybaseLabel, 1, Qt::AlignRight );
 
@@ -736,7 +739,7 @@ void DsoWidget::updateVoltageDetails( ChannelID channel ) {
 
     if ( scope->voltage[ channel ].used )
         measurementGainLabel[ channel ]->setText( valueToString( scope->gain( channel ), voltageUnits[ channel ], 3 ) +
-                                                  tr( "/div" ) );
+                                                  tr( "/div" ) + " " );
     else
         measurementGainLabel[ channel ]->setText( QString() );
 }
@@ -755,8 +758,15 @@ void DsoWidget::updateFrequencybase( double frequencybase ) {
 void DsoWidget::updateSamplerate( double newSamplerate ) {
     samplerate = newSamplerate;
     scope->horizontal.dotsOnScreen = int( ceil( samplerate * timebase * DIVS_TIME ) );
-    // printf( "DsoWidget::updateSamplerate( %g ) -> %d\n", samplerate, scope->horizontal.dotsOnScreen );
-    settingsSamplerateLabel->setText( valueToString( samplerate, UNIT_SAMPLES, -1 ) + tr( "/s" ) );
+    settingsSamplerateLabel->setText( valueToString( samplerate, UNIT_SAMPLES, -1 ) + tr( "/s" ) + " " );
+}
+
+
+/// \brief Updates the oversample field after changing the oversampling.
+/// \param newOversample The oversampling set in the oscilloscope.
+void DsoWidget::updateOversample( unsigned newOversample ) {
+    oversample = newOversample;
+    settingsOversampleLabel->setText( tr( "%1x ovr " ).arg( oversample ) );
 }
 
 
@@ -766,7 +776,7 @@ void DsoWidget::updateTimebase( double newTimebase ) {
     timebase = newTimebase;
     scope->horizontal.dotsOnScreen = int( ceil( samplerate * timebase * DIVS_TIME ) );
     // printf( "DsoWidget::updateTimebase( %g ) -> %d\n", timebase, scope->horizontal.dotsOnScreen );
-    settingsTimebaseLabel->setText( valueToString( timebase, UNIT_SECONDS, -1 ) + tr( "/div" ) );
+    settingsTimebaseLabel->setText( valueToString( timebase, UNIT_SECONDS, -1 ) + tr( "/div" ) + " " );
     updateMarkerDetails();
 }
 
@@ -887,7 +897,7 @@ void DsoWidget::updateVoltageUsed( ChannelID channel, bool used ) {
 
 /// \brief Change the record length.
 void DsoWidget::updateRecordLength( int size ) {
-    settingsSamplesOnScreen->setText( valueToString( double( size ), UNIT_SAMPLES, -1 ) + tr( " on screen" ) );
+    settingsSamplesOnScreen->setText( valueToString( double( size ), UNIT_SAMPLES, -1 ) + " " + tr( "on screen" ) + " " );
 }
 
 
@@ -1091,6 +1101,7 @@ void DsoWidget::showEvent( QShowEvent *event ) {
     updateRecordLength( scope->horizontal.recordLength );
     updateFrequencybase( scope->horizontal.frequencybase );
     updateSamplerate( scope->horizontal.samplerate );
+    updateOversample( oversample );
     updateTimebase( scope->horizontal.timebase );
     updateZoom( view->zoom );
 

@@ -91,6 +91,9 @@ class VoltageDock : public QDockWidget {
     QStringList mathGainStrings; ///< String representations for the math gain steps
     QStringList attnStrings;     ///< String representations for the probe attn steps
 
+  private:
+    void updateGainStrings( double attnValue = 1 );
+
   signals:
     void couplingChanged( ChannelID channel, Dso::Coupling coupling ); ///< A coupling has been selected
     void gainChanged( ChannelID channel, double gain );                ///< A gain has been selected
