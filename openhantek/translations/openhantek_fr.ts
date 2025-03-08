@@ -486,6 +486,11 @@
         <translation>Améliorer les images exportées</translation>
     </message>
     <message>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="91"/>
+        <source>Use the international interface (restart needed to apply the change)</source>
+        <translation>Utiliser l&apos;interface internationale (redémarrage nécessaire pour appliquer la modification)</translation>
+    </message>
+    <message>
         <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="36"/>
         <source>Digital phosphor depth</source>
         <translation>Profondeur de phosphore numérique</translation>
@@ -590,7 +595,7 @@
         <translation type="vanished">Enregistrer les réglages maintenant</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="102"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="105"/>
         <source>Configuration</source>
         <translation>Configuration</translation>
     </message>
@@ -2505,37 +2510,37 @@
         <translation>Tension</translation>
     </message>
     <message>
-        <location filename="../src/docks/VoltageDock.cpp" line="63"/>
+        <location filename="../src/docks/VoltageDock.cpp" line="56"/>
         <source>CH&amp;%1</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/docks/VoltageDock.cpp" line="65"/>
+        <location filename="../src/docks/VoltageDock.cpp" line="58"/>
         <source>MA&amp;TH</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/docks/VoltageDock.cpp" line="69"/>
+        <location filename="../src/docks/VoltageDock.cpp" line="62"/>
         <source>Voltage range per vertical screen division</source>
         <translation>Plage de tension par division verticale de l&apos;écran</translation>
     </message>
     <message>
-        <location filename="../src/docks/VoltageDock.cpp" line="77"/>
+        <location filename="../src/docks/VoltageDock.cpp" line="70"/>
         <source>x</source>
         <translation>x</translation>
     </message>
     <message>
-        <location filename="../src/docks/VoltageDock.cpp" line="84"/>
+        <location filename="../src/docks/VoltageDock.cpp" line="77"/>
         <source>Select DC or AC coupling</source>
         <translation>Sélectionner le couplage DC ou AC</translation>
     </message>
     <message>
-        <location filename="../src/docks/VoltageDock.cpp" line="89"/>
+        <location filename="../src/docks/VoltageDock.cpp" line="82"/>
         <source>Select the mathematical operation for this channel</source>
         <translation>Sélectionnez l&apos;opération mathématique pour ce canal</translation>
     </message>
     <message>
-        <location filename="../src/docks/VoltageDock.cpp" line="74"/>
+        <location filename="../src/docks/VoltageDock.cpp" line="67"/>
         <source>Set probe attenuation, scroll or type a value to select</source>
         <translation>Réglez l&apos;atténuation de la sonde, faites défiler ou tapez une valeur pour la sélectionner</translation>
     </message>
@@ -2544,7 +2549,7 @@
         <translation type="vanished">&amp;MATH</translation>
     </message>
     <message>
-        <location filename="../src/docks/VoltageDock.cpp" line="70"/>
+        <location filename="../src/docks/VoltageDock.cpp" line="63"/>
         <source>Invert</source>
         <translation>Inverser</translation>
     </message>
@@ -2556,88 +2561,88 @@
 <context>
     <name>main</name>
     <message>
-        <location filename="../src/main.cpp" line="129"/>
-        <location filename="../src/main.cpp" line="170"/>
+        <location filename="../src/main.cpp" line="131"/>
+        <location filename="../src/main.cpp" line="173"/>
         <source>Show the international interface, do not translate</source>
         <translation>Afficher l&apos;interface internationale, ne pas traduire</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="153"/>
+        <location filename="../src/main.cpp" line="156"/>
         <source>Load config file</source>
         <translation>Charger le fichier de configuration</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="154"/>
+        <location filename="../src/main.cpp" line="157"/>
         <source>File</source>
         <translation>Fichier</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="157"/>
+        <location filename="../src/main.cpp" line="160"/>
         <source>Demo mode without scope HW</source>
         <translation>Mode démo sans équipement</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="160"/>
+        <location filename="../src/main.cpp" line="163"/>
         <source>Use OpenGL ES instead of OpenGL</source>
         <translation>Utilisez OpenGL ES à la place de OpenGL</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="162"/>
+        <location filename="../src/main.cpp" line="165"/>
         <source>Do not connect automatically</source>
         <translation>Ne pas connecter automatiquement</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="165"/>
+        <location filename="../src/main.cpp" line="168"/>
         <source>Force OpenGL SL version 1.20</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="167"/>
+        <location filename="../src/main.cpp" line="170"/>
         <source>Force OpenGL SL version 1.50</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="172"/>
+        <location filename="../src/main.cpp" line="175"/>
         <source>Define the system font</source>
         <translation>Définir la fonte du système</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="173"/>
+        <location filename="../src/main.cpp" line="176"/>
         <source>Font</source>
         <translation>Font</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="177"/>
+        <location filename="../src/main.cpp" line="180"/>
         <source>Set the font size (default = %1, 0: automatic from dpi)</source>
         <translation>Définir la taille de la fonte (par défaut = %1, 0 : automatique à partir des dpi)</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="179"/>
+        <location filename="../src/main.cpp" line="182"/>
         <source>Size</source>
         <translation>Taille</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="182"/>
+        <location filename="../src/main.cpp" line="185"/>
         <source>Set the font condensed value (default = %1)</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="183"/>
+        <location filename="../src/main.cpp" line="186"/>
         <source>Condensed</source>
         <translation>Condensé</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="186"/>
+        <location filename="../src/main.cpp" line="189"/>
         <source>Reset persistent settings, start with default</source>
         <translation>Réinitialisation des paramètres persistants, démarrage par défaut</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="189"/>
+        <location filename="../src/main.cpp" line="192"/>
         <source>Verbose tracing of program startup, ui and processing steps</source>
         <translation>Traçage verbeux du démarrage du programme, de l&apos;interface utilisateur et des étapes de traitement</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="190"/>
+        <location filename="../src/main.cpp" line="193"/>
         <source>Level</source>
         <translation>Niveau</translation>
     </message>

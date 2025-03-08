@@ -434,6 +434,11 @@
         <translation>Mejora de las imágenes exportadas</translation>
     </message>
     <message>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="91"/>
+        <source>Use the international interface (restart needed to apply the change)</source>
+        <translation>Utilizar la interfaz internacional (se necesita reiniciar para aplicar el cambio)</translation>
+    </message>
+    <message>
         <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="36"/>
         <source>Digital phosphor depth</source>
         <translation>Profundidad del fósforo digital</translation>
@@ -542,7 +547,7 @@
         <translation type="vanished">Guardar configuración predeterminada ahora</translation>
     </message>
     <message>
-        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="102"/>
+        <location filename="../src/configdialog/DsoConfigScopePage.cpp" line="105"/>
         <source>Configuration</source>
         <translation>Configuración</translation>
     </message>
@@ -2414,88 +2419,88 @@
 <context>
     <name>main</name>
     <message>
-        <location filename="../src/main.cpp" line="129"/>
-        <location filename="../src/main.cpp" line="170"/>
+        <location filename="../src/main.cpp" line="131"/>
+        <location filename="../src/main.cpp" line="173"/>
         <source>Show the international interface, do not translate</source>
         <translation>Mostrar la interfaz internacional, no traducir</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="153"/>
+        <location filename="../src/main.cpp" line="156"/>
         <source>Load config file</source>
         <translation>Cargar archivo de configuración</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="154"/>
+        <location filename="../src/main.cpp" line="157"/>
         <source>File</source>
         <translation>Archivo</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="157"/>
+        <location filename="../src/main.cpp" line="160"/>
         <source>Demo mode without scope HW</source>
         <translation>Modo de demostración sin osciloscopio HW</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="160"/>
+        <location filename="../src/main.cpp" line="163"/>
         <source>Use OpenGL ES instead of OpenGL</source>
         <translation>Usar OpenGL ES en vez de OpenGL</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="162"/>
+        <location filename="../src/main.cpp" line="165"/>
         <source>Do not connect automatically</source>
         <translation>No conectar automáticamente</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="165"/>
+        <location filename="../src/main.cpp" line="168"/>
         <source>Force OpenGL SL version 1.20</source>
         <translation>Forzar OpenGL SL versión 1.20</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="167"/>
+        <location filename="../src/main.cpp" line="170"/>
         <source>Force OpenGL SL version 1.50</source>
         <translation>Forzar OpenGL SL versión 1.50</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="172"/>
+        <location filename="../src/main.cpp" line="175"/>
         <source>Define the system font</source>
         <translation>Definir la fuente del sistema</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="173"/>
+        <location filename="../src/main.cpp" line="176"/>
         <source>Font</source>
         <translation>Fuente</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="177"/>
+        <location filename="../src/main.cpp" line="180"/>
         <source>Set the font size (default = %1, 0: automatic from dpi)</source>
         <translation>Establecer el tamaño de fuente (por defecto = %1, 0: automático de dpi)</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="179"/>
+        <location filename="../src/main.cpp" line="182"/>
         <source>Size</source>
         <translation>Tamaño</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="182"/>
+        <location filename="../src/main.cpp" line="185"/>
         <source>Set the font condensed value (default = %1)</source>
         <translation>Establecer el valor condensado de la fuente (por defecto = %1)</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="183"/>
+        <location filename="../src/main.cpp" line="186"/>
         <source>Condensed</source>
         <translation>Condensado</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="186"/>
+        <location filename="../src/main.cpp" line="189"/>
         <source>Reset persistent settings, start with default</source>
         <translation>Restablecer la configuración persistente, comenzar con la predeterminada</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="189"/>
+        <location filename="../src/main.cpp" line="192"/>
         <source>Verbose tracing of program startup, ui and processing steps</source>
         <translation>Seguimiento detallado del inicio del programa, la interfaz de usuario y los pasos de procesamiento</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="190"/>
+        <location filename="../src/main.cpp" line="193"/>
         <source>Level</source>
         <translation>Nivel</translation>
     </message>

@@ -344,6 +344,7 @@ void DsoSettings::save() {
     } else { // save fontSize as global setting
         QSettings().setValue( "view/fontSize", view.fontSize );
         QSettings().setValue( "view/toolTipVisible", scope.toolTipVisible );
+        QSettings().setValue( "view/doNotTranslate", scope.doNotTranslate );
     }
     if ( verboseLevel > 1 )
         qDebug() << " DsoSettings::save()" << storeSettings->fileName();

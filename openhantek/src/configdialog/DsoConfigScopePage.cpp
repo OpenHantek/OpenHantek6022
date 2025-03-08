@@ -88,12 +88,15 @@ DsoConfigScopePage::DsoConfigScopePage( DsoSettings *settings, QWidget *parent )
     hasACmodificationCheckBox->setChecked( settings->scope.hasACmodification );
     toolTipVisibleCheckBox = new QCheckBox( tr( "Show tooltips for user interface (restart needed to apply the change)" ) );
     toolTipVisibleCheckBox->setChecked( settings->scope.toolTipVisible );
+    doNotTranslateCheckBox = new QCheckBox( tr( "Use the international interface (restart needed to apply the change)" ) );
+    doNotTranslateCheckBox->setChecked( settings->scope.doNotTranslate );
     configurationLayout = new QGridLayout();
     row = 0;
     configurationLayout->addWidget( saveOnExitCheckBox, row, 0 );
     configurationLayout->addWidget( saveNowButton, row, 1 );
     configurationLayout->addWidget( defaultSettingsCheckBox, ++row, 0, 1, 2 );
     configurationLayout->addWidget( toolTipVisibleCheckBox, ++row, 0, 1, 2 );
+    configurationLayout->addWidget( doNotTranslateCheckBox, ++row, 0, 1, 2 );
     if ( settings->scope.hasACcoupling ) {
         hasACmodificationCheckBox->setChecked( true ); // check but do not show the box
     } else {
@@ -117,6 +120,7 @@ DsoConfigScopePage::DsoConfigScopePage( DsoSettings *settings, QWidget *parent )
 void DsoConfigScopePage::saveSettings() {
     settings->scope.hasACmodification = hasACmodificationCheckBox->isChecked();
     settings->scope.toolTipVisible = toolTipVisibleCheckBox->isChecked();
+    settings->scope.doNotTranslate = doNotTranslateCheckBox->isChecked();
     settings->scope.horizontal.maxTimebase = maxTimebaseSiSpinBox->value();
     settings->scope.horizontal.acquireInterval = acquireIntervalSiSpinBox->value();
     settings->view.interpolation = Dso::InterpolationMode( interpolationComboBox->currentIndex() );

@@ -55,6 +55,7 @@ class DsoConfigScopePage : public QWidget {
     QCheckBox *saveOnExitCheckBox;
     QCheckBox *defaultSettingsCheckBox;
     QCheckBox *toolTipVisibleCheckBox;
+    QCheckBox *doNotTranslateCheckBox;
     QPushButton *saveNowButton;
 
     QGroupBox *zoomGroup;

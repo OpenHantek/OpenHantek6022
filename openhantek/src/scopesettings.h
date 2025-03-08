@@ -110,6 +110,7 @@ struct DsoSettingsScope {
 
     int verboseLevel = 0;
     int toolTipVisible = 1; // show hints for beginners, can be disabled in settings dialog
+    bool doNotTranslate = false;
     bool histogram = false;
     bool hasACcoupling = false;
     bool hasACmodification = false;

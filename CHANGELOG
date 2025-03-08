@@ -1,3 +1,4 @@
+2025-03-04 (7b8942a): Show oversampling factor on top of screen
 2025-03-03 (3f42320): finetuning the build process - no OH6022 changes
 2025-03-03 (b174c4c): test for macos intel and arm64 build
 2025-03-03 (d3c654e): test for macos build

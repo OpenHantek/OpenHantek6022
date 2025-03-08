@@ -96,7 +96,7 @@ static void initSpecifications( Dso::ControlSpecification &specification ) {
 
     // calibration frequency (requires >= FW0209)
     specification.calfreqSteps = { 32,   40,   50,   60,   80,   100,  120,  160,  200,  250,  300,  400,  440,
-                                   500,  600,  660,  800,  1000, 1200, 1600, 2000, 2500, 3300, 4000, 5000, 6000,
+                                   500,  600,  660,  800,  1000, 1200, 1600, 2000, 2500, 3000, 4000, 5000, 6000,
                                    8000, 10e3, 12e3, 16e3, 20e3, 25e3, 30e3, 40e3, 50e3, 60e3, 80e3, 100e3 };
     specification.hasCalibrationEEPROM = true;
 }

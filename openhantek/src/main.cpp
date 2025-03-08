@@ -97,7 +97,8 @@ int main( int argc, char *argv[] ) {
     bool useGLES = false;
     bool useGLSL120 = false;
     bool useGLSL150 = false;
-    bool useLocale = true;
+    bool useLocale = true;       // the command line option
+    bool doNotTranslate = false; // the persistent option
     bool resetSettings = false;
     QString font = defaultFont;       // defined in viewsettings.h
     int fontSize = defaultFontSize;   // defined in viewsettings.h
@@ -120,6 +121,7 @@ int main( int argc, char *argv[] ) {
         styleFusion = storeSettings.value( "styleFusion", false ).toBool();
         theme = storeSettings.value( "theme", 0 ).toInt();
         toolTipVisible = storeSettings.value( "toolTipVisible", 1 ).toInt();
+        doNotTranslate = storeSettings.value( "doNotTranslate", false ).toBool();
         storeSettings.endGroup();
 
         // Pre-parse international flag so it can affect the command line help texts
@@ -138,7 +140,8 @@ int main( int argc, char *argv[] ) {
         QTranslator qtTranslator;
         QTranslator parserTranslator;
 
-        if ( useLocale && QLocale().name() != "en_US" ) { // somehow Qt on MacOS uses the german translation for en_US?!
+        if ( !doNotTranslate && useLocale &&
+             QLocale().name() != "en_US" ) { // somehow Qt on MacOS uses the german translation for en_US?!
             if ( qtTranslator.load( "qt_" + QLocale().name(), QLibraryInfo::location( QLibraryInfo::TranslationsPath ) ) ) {
                 parserApp.installTranslator( &qtTranslator );
             }
@@ -315,7 +318,8 @@ int main( int argc, char *argv[] ) {
                  << "load translations for locale" << QLocale().name();
     QTranslator qtTranslator;
     QTranslator openHantekTranslator;
-    if ( useLocale && QLocale().name() != "en_US" ) { // somehow Qt on MacOS uses the german translation for en_US?!
+    if ( !doNotTranslate && useLocale &&
+         QLocale().name() != "en_US" ) { // somehow Qt on MacOS uses the german translation for en_US?!
         if ( qtTranslator.load( "qt_" + QLocale().name(), QLibraryInfo::location( QLibraryInfo::TranslationsPath ) ) ) {
             openHantekApplication.installTranslator( &qtTranslator );
         }
@@ -343,7 +347,7 @@ int main( int argc, char *argv[] ) {
             SelectSupportedDevice().showLibUSBFailedDialogModel( error );
             return -1;
         }
-        if ( useLocale ) // localize USB error messages, supported: "en", "nl", "fr", "ru"
+        if ( !doNotTranslate && useLocale ) // localize USB error messages, supported: "en", "nl", "fr", "ru"
             libusb_setlocale( QLocale().name().toLocal8Bit().constData() );
 
         // SelectSupportedDevive returns a real device unless demoMode is true
@@ -476,6 +480,7 @@ int main( int argc, char *argv[] ) {
     //////// Prepare visual appearance ////////
     // prepare the font size, style and theme settings for the scope application
     settings.scope.toolTipVisible = toolTipVisible; // show hints for beginners
+    settings.scope.doNotTranslate = doNotTranslate;
     settings.view.styleFusion = styleFusion;
     settings.view.theme = theme;
     QFont appFont = openHantekApplication.font();
