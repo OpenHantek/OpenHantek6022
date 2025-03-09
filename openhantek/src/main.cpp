@@ -139,9 +139,8 @@ int main( int argc, char *argv[] ) {
         //////// Load translations for command line help texts ////////
         QTranslator qtTranslator;
         QTranslator parserTranslator;
-
-        if ( !doNotTranslate && useLocale &&
-             QLocale().name() != "en_US" ) { // somehow Qt on MacOS uses the german translation for en_US?!
+        // feedback from a mac user: "somehow Qt on MacOS uses the german translation for en_US?!"
+        if ( !doNotTranslate && useLocale && QLocale().name().left( 3 ) != "en_" ) { // l18n only in these cases
             if ( qtTranslator.load( "qt_" + QLocale().name(), QLibraryInfo::location( QLibraryInfo::TranslationsPath ) ) ) {
                 parserApp.installTranslator( &qtTranslator );
             }
