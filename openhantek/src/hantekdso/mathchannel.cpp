@@ -3,7 +3,6 @@
 #include <QCoreApplication>
 #include <QDebug>
 
-#include "hantekdsocontrol.h"
 #include "mathchannel.h"
 #include "mathmodes.h"
 #include <cmath>

@@ -4,6 +4,7 @@
 
 #include "controlStructs.h"
 #include "definitions.h"
+#include "controlcode.h"
 
 namespace Hantek {
 

@@ -74,15 +74,15 @@ void CapturingThread::capture() {
     while ( controlCommand ) {
         if ( controlCommand->pending ) {
             switch ( int( controlCommand->code ) ) {
-            case uint8_t( ControlCode::CONTROL_SETGAIN_CH1 ):
+            case uint8_t( Hantek::ControlCode::CONTROL_SETGAIN_CH1 ):
                 gainValue[ 0 ] = controlCommand->data()[ 0 ];
                 gainIndex[ 0 ] = controlCommand->data()[ 1 ];
                 break;
-            case uint8_t( ControlCode::CONTROL_SETGAIN_CH2 ):
+            case uint8_t( Hantek::ControlCode::CONTROL_SETGAIN_CH2 ):
                 gainValue[ 1 ] = controlCommand->data()[ 0 ];
                 gainIndex[ 1 ] = controlCommand->data()[ 1 ];
                 break;
-            case uint8_t( ControlCode::CONTROL_SETNUMCHANNELS ):
+            case uint8_t( Hantek::ControlCode::CONTROL_SETNUMCHANNELS ):
                 if ( realSlow ) { // force 2 channels for slow samplings where roll mode is possible
                     if ( *controlCommand->data() == channels )
                         controlCommand->pending = false;
@@ -91,7 +91,7 @@ void CapturingThread::capture() {
                 }
                 channels = *controlCommand->data();
                 break;
-            case uint8_t( ControlCode::CONTROL_SETSAMPLERATE ):
+            case uint8_t( Hantek::ControlCode::CONTROL_SETSAMPLERATE ):
                 samplerate = id2sr( controlCommand->data()[ 0 ] );
                 uint8_t sampleIndex = controlCommand->data()[ 1 ];
                 oversampling = uint8_t( hdc->specification->fixedSampleRates[ sampleIndex ].oversampling );
@@ -109,16 +109,16 @@ void CapturingThread::capture() {
                 realSlow = effectiveSamplerate < 10e3;
                 if ( realSlow ) {        // roll mode possible?
                     if ( channels != 2 ) // always switch to two channels
-                        hdc->modifyCommand< ControlSetNumChannels >( ControlCode::CONTROL_SETNUMCHANNELS )->setNumChannels( 2 );
+                        hdc->modifyCommand< Hantek::ControlSetNumChannels >( Hantek::ControlCode::CONTROL_SETNUMCHANNELS )->setNumChannels( 2 );
                 } else {
                     if ( channels == 2 && hdc->isSingleChannel() ) // switch back to real user setting
-                        hdc->modifyCommand< ControlSetNumChannels >( ControlCode::CONTROL_SETNUMCHANNELS )->setNumChannels( 1 );
+                        hdc->modifyCommand< Hantek::ControlSetNumChannels >( Hantek::ControlCode::CONTROL_SETNUMCHANNELS )->setNumChannels( 1 );
                 }
                 break;
             }
             QString name = "";
             if ( controlCommand->code >= 0xe0 && controlCommand->code <= 0xe6 )
-                name = controlNames[ controlCommand->code - 0xe0 ];
+                name = Hantek::controlNames[ controlCommand->code - 0xe0 ];
             timestampDebug( QString( "Sending control command 0x%1 (%2): %3" )
                                 .arg( QString::number( controlCommand->code, 16 ), name,
                                       hexdecDump( controlCommand->data(), unsigned( controlCommand->size() ) ) ) );
@@ -174,7 +174,7 @@ void CapturingThread::capture() {
 
 unsigned CapturingThread::getRealSamples() {
     int errorCode;
-    errorCode = hdc->scopeDevice->controlWrite( hdc->getCommand( ControlCode::CONTROL_STARTSAMPLING ) );
+    errorCode = hdc->scopeDevice->controlWrite( hdc->getCommand( Hantek::ControlCode::CONTROL_STARTSAMPLING ) );
     if ( errorCode < 0 ) {
         qWarning() << "controlWrite: Getting sample data failed: " << libUsbErrorString( errorCode );
         dp->clear();

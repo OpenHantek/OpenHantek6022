@@ -10,6 +10,7 @@
 CMakeLists.txt.user
 build
 firmware/hex
+.cache
 *.json
 *.kate-swp
 .directory

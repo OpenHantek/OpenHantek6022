@@ -6,17 +6,15 @@
 #include <QDebug>
 #include <QList>
 #include <QTemporaryFile>
-
-#include "ezusb.h"
-#include "utils/printutils.h"
 #include <algorithm>
+#include "models/modelDEMO.h"
+#include "modelregistry.h"
+
 #ifdef Q_OS_FREEBSD
 #include <libusb.h>
 #else
 #include <libusb-1.0/libusb.h>
 #endif
-
-#include "modelregistry.h"
 
 
 FindDevices::FindDevices( libusb_context *context, int verboseLevel ) : context( context ), verboseLevel( verboseLevel ) {

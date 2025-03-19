@@ -1,4 +1,4 @@
-2025-03-09 (e745ffa): try to fix #406, no UI translation now for LANG=en_* (not only en_US)
+2025-03-09 (f82859f): try to fix #406, no UI translation now for LANG=en_* (not only en_US)
 2025-03-08 (17d05f8): add persistent option "doNotTranslate" to bypass the localisation
 2025-03-04 (7b8942a): Show oversampling factor on top of screen
 2025-03-03 (3f42320): finetuning the build process - no OH6022 changes

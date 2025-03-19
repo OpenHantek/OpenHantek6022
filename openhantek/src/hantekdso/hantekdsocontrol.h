@@ -17,10 +17,8 @@
 #include "mathchannel.h"
 #include "scopesettings.h"
 #include "triggering.h"
-#include "utils/printutils.h"
-#include "viewconstants.h"
 
-#include "hantekprotocol/controlStructs.h"
+#include "hantekprotocol/controlcode.h"
 #include "hantekprotocol/definitions.h"
 
 #include "dsomodel.h"

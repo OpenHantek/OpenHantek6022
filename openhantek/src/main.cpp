@@ -28,7 +28,6 @@
 
 // Settings
 #include "dsosettings.h"
-#include "viewconstants.h"
 #include "viewsettings.h"
 
 // DSO core logic
@@ -39,7 +38,6 @@
 
 // Post processing
 #include "post/graphgenerator.h"
-// #include "post/mathchannelgenerator.h"
 #include "post/postprocessing.h"
 #include "post/spectrumgenerator.h"
 
@@ -55,8 +53,6 @@
 
 // OpenGL setup
 #include "glscope.h"
-
-#include "models/modelDEMO.h"
 
 #include "OH_VERSION.h"
 

@@ -2,10 +2,8 @@
 
 #pragma once
 
-#include "controlcode.h"
 #include "controlcommand.h"
 #include "types.h"
-#include "usb/usbdevicedefinitions.h"
 
 #include <inttypes.h>
 #include <memory>

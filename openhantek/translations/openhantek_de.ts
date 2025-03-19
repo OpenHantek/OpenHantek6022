@@ -2720,37 +2720,37 @@
 <context>
     <name>VoltageDock</name>
     <message>
-        <location filename="../src/docks/VoltageDock.cpp" line="26"/>
+        <location filename="../src/docks/VoltageDock.cpp" line="23"/>
         <source>Voltage</source>
         <translation>Spannung</translation>
     </message>
     <message>
-        <location filename="../src/docks/VoltageDock.cpp" line="56"/>
+        <location filename="../src/docks/VoltageDock.cpp" line="53"/>
         <source>CH&amp;%1</source>
         <translation>CH&amp;%1</translation>
     </message>
     <message>
-        <location filename="../src/docks/VoltageDock.cpp" line="58"/>
+        <location filename="../src/docks/VoltageDock.cpp" line="55"/>
         <source>MA&amp;TH</source>
         <translation>MA&amp;TH</translation>
     </message>
     <message>
-        <location filename="../src/docks/VoltageDock.cpp" line="62"/>
+        <location filename="../src/docks/VoltageDock.cpp" line="59"/>
         <source>Voltage range per vertical screen division</source>
         <translation>Spannung pro vertikaler Teilung</translation>
     </message>
     <message>
-        <location filename="../src/docks/VoltageDock.cpp" line="70"/>
+        <location filename="../src/docks/VoltageDock.cpp" line="67"/>
         <source>x</source>
         <translation>x</translation>
     </message>
     <message>
-        <location filename="../src/docks/VoltageDock.cpp" line="77"/>
+        <location filename="../src/docks/VoltageDock.cpp" line="74"/>
         <source>Select DC or AC coupling</source>
         <translation>Wähle AC- oder DC-Kopplung</translation>
     </message>
     <message>
-        <location filename="../src/docks/VoltageDock.cpp" line="82"/>
+        <location filename="../src/docks/VoltageDock.cpp" line="79"/>
         <source>Select the mathematical operation for this channel</source>
         <translation>Berechnungen für diesen Kanal</translation>
     </message>
@@ -2759,12 +2759,12 @@
         <translation type="vanished">&amp;MATH</translation>
     </message>
     <message>
-        <location filename="../src/docks/VoltageDock.cpp" line="63"/>
+        <location filename="../src/docks/VoltageDock.cpp" line="60"/>
         <source>Invert</source>
         <translation>Invertiert</translation>
     </message>
     <message>
-        <location filename="../src/docks/VoltageDock.cpp" line="67"/>
+        <location filename="../src/docks/VoltageDock.cpp" line="64"/>
         <source>Set probe attenuation, scroll or type a value to select</source>
         <translation>Wähle Tastkopf-Abschwächung, Mausrad oder direkte Eingabe möglich</translation>
     </message>
@@ -2772,88 +2772,88 @@
 <context>
     <name>main</name>
     <message>
-        <location filename="../src/main.cpp" line="131"/>
-        <location filename="../src/main.cpp" line="172"/>
+        <location filename="../src/main.cpp" line="127"/>
+        <location filename="../src/main.cpp" line="168"/>
         <source>Show the international interface, do not translate</source>
         <translation>Internationale Version ohne Übersetzung</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="155"/>
+        <location filename="../src/main.cpp" line="151"/>
         <source>Load config file</source>
         <translation>Lade Konfigurationsdatei</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="156"/>
+        <location filename="../src/main.cpp" line="152"/>
         <source>File</source>
         <translation>Datei</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="159"/>
+        <location filename="../src/main.cpp" line="155"/>
         <source>Demo mode without scope HW</source>
         <translation>Demo-Modus ohne Hardware</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="162"/>
+        <location filename="../src/main.cpp" line="158"/>
         <source>Use OpenGL ES instead of OpenGL</source>
         <translation>Benutze OpenGL ES anstelle von OpenGL</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="164"/>
+        <location filename="../src/main.cpp" line="160"/>
         <source>Do not connect automatically</source>
         <translation>Nicht automatisch verbinden</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="167"/>
+        <location filename="../src/main.cpp" line="163"/>
         <source>Force OpenGL SL version 1.20</source>
         <translation>Erzwinge OpenGL SL Version 1.20</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="169"/>
+        <location filename="../src/main.cpp" line="165"/>
         <source>Force OpenGL SL version 1.50</source>
         <translation>Erzwinge OpenGL SL Version 1.50</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="174"/>
+        <location filename="../src/main.cpp" line="170"/>
         <source>Define the system font</source>
         <translation>Definiere die System-Schriftart</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="175"/>
+        <location filename="../src/main.cpp" line="171"/>
         <source>Font</source>
         <translation>Schriftart</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="179"/>
+        <location filename="../src/main.cpp" line="175"/>
         <source>Set the font size (default = %1, 0: automatic from dpi)</source>
         <translation>Wähle Schriftgröße (Standard = %1, 0: automatisch von Bildschirmauflösung)</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="181"/>
+        <location filename="../src/main.cpp" line="177"/>
         <source>Size</source>
         <translation>Größe</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="184"/>
+        <location filename="../src/main.cpp" line="180"/>
         <source>Set the font condensed value (default = %1)</source>
         <translation>Wähle schmalere Schrift (Standard : %1)</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="185"/>
+        <location filename="../src/main.cpp" line="181"/>
         <source>Condensed</source>
         <translation>Schmaler</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="188"/>
+        <location filename="../src/main.cpp" line="184"/>
         <source>Reset persistent settings, start with default</source>
         <translation>Zurücksetzen auf Standardwerte</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="191"/>
+        <location filename="../src/main.cpp" line="187"/>
         <source>Verbose tracing of program startup, ui and processing steps</source>
         <translation>Zeige Hinweise während des Programmstarts und der Verarbeitungsschritte</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="192"/>
+        <location filename="../src/main.cpp" line="188"/>
         <source>Level</source>
         <translation>Stufe</translation>
     </message>

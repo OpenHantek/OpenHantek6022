@@ -9,9 +9,6 @@
 
 #include "VoltageDock.h"
 #include "dockwindows.h"
-
-#include "dsosettings.h"
-#include "sispinbox.h"
 #include "utils/printutils.h"
 
 

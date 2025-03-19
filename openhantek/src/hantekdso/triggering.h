@@ -4,7 +4,6 @@
 
 #include "controlsettings.h"
 #include "dsosamples.h"
-#include "errorcodes.h"
 #include "scopesettings.h"
 
 class Triggering {

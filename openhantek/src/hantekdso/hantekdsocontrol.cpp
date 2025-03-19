@@ -8,7 +8,6 @@
 #include <QtCore>
 
 #include "hantekdsocontrol.h"
-#include "hantekprotocol/controlStructs.h"
 #include "mathchannel.h"
 #include "scopesettings.h"
 #include "usb/scopedevice.h"

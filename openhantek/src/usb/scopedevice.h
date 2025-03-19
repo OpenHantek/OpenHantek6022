@@ -14,7 +14,7 @@
 #endif
 #include <memory>
 
-#include "models/modelDEMO.h"
+#include "dsomodel.h"
 #include "usbdevicedefinitions.h"
 
 class DSOModel;

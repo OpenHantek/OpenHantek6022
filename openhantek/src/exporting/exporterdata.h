@@ -2,7 +2,6 @@
 
 #pragma once
 
-#include "exporterregistry.h"
 #include "post/ppresult.h"
 #include "scopesettings.h"
 

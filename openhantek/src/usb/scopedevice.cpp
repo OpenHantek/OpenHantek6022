@@ -9,6 +9,8 @@
 
 #include "hantekdso/dsomodel.h"
 #include "hantekprotocol/controlStructs.h"
+#include "hantekprotocol/controlcode.h"
+#include "models/modelDEMO.h"
 
 #include <QCoreApplication>
 
