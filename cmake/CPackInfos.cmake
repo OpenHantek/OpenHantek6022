@@ -50,7 +50,7 @@ if (UNIX)
     )
     # install application starter and icons
     install(
-        FILES utils/applications/OpenHantek.desktop
+        FILES utils/applications/org.openhantek.OpenHantek.desktop
         DESTINATION share/applications
         )
     install(
