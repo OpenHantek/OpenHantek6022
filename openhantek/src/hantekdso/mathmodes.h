@@ -19,6 +19,7 @@ enum class MathMode : unsigned {
     MUL_CH1_CH2,
     // binary logical functions
     AND_CH1_CH2,
+    XOR_CH1_CH2,
     AND_NOT_CH1_NOT_CH2,
     AND_NOT_CH1_CH2,
     AND_CH1_NOT_CH2,
