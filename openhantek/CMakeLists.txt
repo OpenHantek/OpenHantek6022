@@ -8,18 +8,19 @@ if(WIN32)
     set(EXECTYPE WIN32)
 endif()
 
-find_package(Qt5Widgets REQUIRED)
-find_package(Qt5PrintSupport REQUIRED)
-find_package(Qt5OpenGL REQUIRED)
+
+find_package(Qt6PrintSupport REQUIRED)
+find_package(Qt6 REQUIRED COMPONENTS OpenGLWidgets)
 find_package(OpenGL)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
 
-if (Qt5Widgets_VERSION VERSION_LESS 5.4.0)
-    message(FATAL_ERROR "Minimum supported Qt5 version is 5.4.0!")
+# After Qt5 -> Qt6 transition use minimum Qt 6.2 LTS stadard
+if (Qt6Widgets_VERSION VERSION_LESS 6.2.0)
+    message(FATAL_ERROR "Minimum supported Qt6 version is 6.2.0!")
 else()
-    message("-- Qt5 version is ${Qt5Widgets_VERSION}")
+    message("-- Qt6 version is ${Qt6Widgets_VERSION}")
 endif()
 
 # include directories
@@ -64,7 +65,7 @@ endif()
 # make executable
 add_executable(${PROJECT_NAME} ${EXECTYPE} ${SRC} ${HEADERS} ${UI}
 ${QRC} ${RC} ${TRANSLATION_BIN_FILES} ${TRANSLATION_QRC} ${ICONS})
-target_link_libraries(${PROJECT_NAME} Qt5::Widgets Qt5::PrintSupport Qt5::OpenGL ${OPENGL_LIBRARIES} )
+target_link_libraries(${PROJECT_NAME} Qt6::Widgets Qt6::PrintSupport Qt6::OpenGL Qt6::OpenGLWidgets ${OPENGL_LIBRARIES} )
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_range_for)
 
 if(MSVC)

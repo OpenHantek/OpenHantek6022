@@ -224,7 +224,7 @@ unsigned CapturingThread::getDemoSamples() {
     unsigned block = 0;
     dp->resize( rawSamplesize, binaryOffset );
     auto end = dp->end();
-    unsigned packet = 0;
+    // unsigned packet = 0;
     // bool couplingAC1 = hdc->scope->coupling( 0, hdc->specification ) == Dso::Coupling::AC; // not yet used
     bool couplingAC2 = hdc->scope->coupling( 1, hdc->specification ) == Dso::Coupling::AC;
     for ( auto it = dp->begin(); it != end; ++it ) {
@@ -245,7 +245,7 @@ unsigned CapturingThread::getDemoSamples() {
             ++received;
         }
         if ( ( block += channels ) >= packetLength ) {
-            ++packet;
+            // ++packet;
             block = 0;
             hdc->raw.received = received;
             QThread::usleep( unsigned( 1e6 * packetLength / channels / samplerate ) );

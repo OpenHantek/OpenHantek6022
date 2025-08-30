@@ -99,9 +99,9 @@ set(CPACK_DEBIAN_PACKAGE_SECTION "electronics")
 # do not detect depencencies and versions automatically
 # set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
 # use deb stable packages without version explicitely to support also legacy installations
-# local build uses Debian stable (currently bookworm)
-# CI build (github actions) uses Ubuntu 22.04 LTS as long as Debian "bookworm" is "stable"
-set(CPACK_DEBIAN_PACKAGE_DEPENDS "libc6, libfftw3-double3, libglu1-mesa, libglx0, libopengl0, libqt5opengl5, libqt5printsupport5, libusb-1.0-0")
+# local build uses Debian stable (currently trixie)
+# CI build (github actions) uses Ubuntu 24.04 LTS as long as Debian "trixie" is "stable"
+set(CPACK_DEBIAN_PACKAGE_DEPENDS "libc6, libfftw3-double3, libglu1-mesa, libglx0, libopengl0, libqt6opengl6, libqt6openglwidgets6, libqt6printsupport6, libusb-1.0-0")
 message( "-- Depends: ${CPACK_DEBIAN_PACKAGE_DEPENDS}" )
 
 set(CPACK_DEBIAN_FILE_NAME "DEB-DEFAULT")

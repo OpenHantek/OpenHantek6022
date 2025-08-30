@@ -314,11 +314,11 @@ void LevelSlider::mouseMoveEvent( QMouseEvent *event ) {
     double value;
     if ( _direction == Qt::RightArrow || _direction == Qt::LeftArrow )
         value = slider[ pressedSlider ]->maximum - ( slider[ pressedSlider ]->maximum - slider[ pressedSlider ]->minimum ) *
-                                                       ( double( event->y() ) - _preMargin + 0.5 ) /
+                                                       ( double( event->position().y() ) - _preMargin + 0.5 ) /
                                                        ( height() - _preMargin - _postMargin - 1 );
     else
         value = slider[ pressedSlider ]->minimum + ( slider[ pressedSlider ]->maximum - slider[ pressedSlider ]->minimum ) *
-                                                       ( double( event->x() ) - _preMargin + 0.5 ) /
+                                                       ( double( event->position().x() ) - _preMargin + 0.5 ) /
                                                        ( width() - _preMargin - _postMargin - 1 );
 
     // Move the slider
@@ -329,7 +329,7 @@ void LevelSlider::mouseMoveEvent( QMouseEvent *event ) {
         // Set to nearest possible position
         setValue( pressedSlider, floor( value / slider[ pressedSlider ]->step + 0.5 ) * slider[ pressedSlider ]->step );
 
-    emit valueChanged( pressedSlider, slider[ pressedSlider ]->value, true, event->globalPos() );
+    emit valueChanged( pressedSlider, slider[ pressedSlider ]->value, true, event->globalPosition().toPoint() );
     event->accept();
 }
 
@@ -349,7 +349,7 @@ void LevelSlider::mousePressEvent( QMouseEvent *event ) {
         }
     }
     if ( pressedSlider >= 0 )
-        emit valueChanged( pressedSlider, slider[ pressedSlider ]->value, true, event->globalPos() );
+        emit valueChanged( pressedSlider, slider[ pressedSlider ]->value, true, event->globalPosition().toPoint() );
 
     // Accept event if a slider was pressed
     event->setAccepted( pressedSlider >= 0 );
@@ -362,7 +362,7 @@ void LevelSlider::mouseReleaseEvent( QMouseEvent *event ) {
         event->ignore();
         return;
     }
-    emit valueChanged( pressedSlider, slider[ pressedSlider ]->value, false, event->globalPos() );
+    emit valueChanged( pressedSlider, slider[ pressedSlider ]->value, false, event->globalPosition().toPoint() );
     pressedSlider = -1;
 
     event->accept();

@@ -853,12 +853,12 @@
 <context>
     <name>GlScope</name>
     <message>
-        <location filename="../src/glscope.cpp" line="345"/>
+        <location filename="../src/glscope.cpp" line="344"/>
         <source>System does not support OpenGL Shading Language (GLSL)</source>
         <translation>Le système ne supporte pas OpenGL Shading Language (GLSL)</translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="349"/>
+        <location filename="../src/glscope.cpp" line="348"/>
         <source>OpenGL init called twice!</source>
         <translation>Double initialisation d&apos;OpenGL !</translation>
     </message>
@@ -869,29 +869,29 @@
 </translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="410"/>
+        <location filename="../src/glscope.cpp" line="409"/>
         <source>Try command line option &apos;--useGLES&apos;
 </source>
         <translation>Essayez l&apos;option de ligne de commande &apos;--useGLES&apos;
 </translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="426"/>
-        <location filename="../src/glscope.cpp" line="433"/>
+        <location filename="../src/glscope.cpp" line="425"/>
+        <location filename="../src/glscope.cpp" line="432"/>
         <source>Failed to compile OpenGL shader programs.
 </source>
         <translation>Echec de compilation des programmes d&apos;ombrage OpenGL.
 </translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="441"/>
+        <location filename="../src/glscope.cpp" line="440"/>
         <source>Failed to link/bind OpenGL shader programs.
 </source>
         <translation>Echec de création des liens des programmes d&apos;ombrage OpenGL.
 </translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="450"/>
+        <location filename="../src/glscope.cpp" line="449"/>
         <source>Failed to locate shader variable.</source>
         <translation>Echec de localisation des variables d&apos;ombrage.</translation>
     </message>
@@ -903,7 +903,7 @@
         <translation type="vanished">Impossible d&apos;obtenir les données de niveau du canal depuis l&apos;oscilloscope</translation>
     </message>
     <message>
-        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="576"/>
+        <location filename="../src/hantekdso/hantekdsocontrol.cpp" line="575"/>
         <source>Couldn&apos;t get calibration data from oscilloscope&apos;s EEPROM. Use a config file for calibration!</source>
         <translation>Impossible d&apos;obtenir les données de niveau du canal depuis l&apos;oscilloscope. Utilisez un fichier de configuration pour la calibration !</translation>
     </message>
@@ -2274,7 +2274,7 @@
 <context>
     <name>ScopeDevice</name>
     <message>
-        <location filename="../src/usb/scopedevice.cpp" line="77"/>
+        <location filename="../src/usb/scopedevice.cpp" line="79"/>
         <source>Couldn&apos;t open device: %1</source>
         <translation>Impossible d&apos;ouvrir le périphérique : %1</translation>
     </message>
@@ -2561,88 +2561,88 @@
 <context>
     <name>main</name>
     <message>
-        <location filename="../src/main.cpp" line="127"/>
-        <location filename="../src/main.cpp" line="168"/>
+        <location filename="../src/main.cpp" line="123"/>
+        <location filename="../src/main.cpp" line="164"/>
         <source>Show the international interface, do not translate</source>
         <translation>Afficher l&apos;interface internationale, ne pas traduire</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="151"/>
+        <location filename="../src/main.cpp" line="147"/>
         <source>Load config file</source>
         <translation>Charger le fichier de configuration</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="152"/>
+        <location filename="../src/main.cpp" line="148"/>
         <source>File</source>
         <translation>Fichier</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="155"/>
+        <location filename="../src/main.cpp" line="151"/>
         <source>Demo mode without scope HW</source>
         <translation>Mode démo sans équipement</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="158"/>
+        <location filename="../src/main.cpp" line="154"/>
         <source>Use OpenGL ES instead of OpenGL</source>
         <translation>Utilisez OpenGL ES à la place de OpenGL</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="160"/>
+        <location filename="../src/main.cpp" line="156"/>
         <source>Do not connect automatically</source>
         <translation>Ne pas connecter automatiquement</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="163"/>
+        <location filename="../src/main.cpp" line="159"/>
         <source>Force OpenGL SL version 1.20</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="165"/>
+        <location filename="../src/main.cpp" line="161"/>
         <source>Force OpenGL SL version 1.50</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="170"/>
+        <location filename="../src/main.cpp" line="166"/>
         <source>Define the system font</source>
         <translation>Définir la fonte du système</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="171"/>
+        <location filename="../src/main.cpp" line="167"/>
         <source>Font</source>
         <translation>Font</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="175"/>
+        <location filename="../src/main.cpp" line="171"/>
         <source>Set the font size (default = %1, 0: automatic from dpi)</source>
         <translation>Définir la taille de la fonte (par défaut = %1, 0 : automatique à partir des dpi)</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="177"/>
+        <location filename="../src/main.cpp" line="173"/>
         <source>Size</source>
         <translation>Taille</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="180"/>
+        <location filename="../src/main.cpp" line="176"/>
         <source>Set the font condensed value (default = %1)</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="181"/>
+        <location filename="../src/main.cpp" line="177"/>
         <source>Condensed</source>
         <translation>Condensé</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="184"/>
+        <location filename="../src/main.cpp" line="180"/>
         <source>Reset persistent settings, start with default</source>
         <translation>Réinitialisation des paramètres persistants, démarrage par défaut</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="187"/>
+        <location filename="../src/main.cpp" line="183"/>
         <source>Verbose tracing of program startup, ui and processing steps</source>
         <translation>Traçage verbeux du démarrage du programme, de l&apos;interface utilisateur et des étapes de traitement</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="188"/>
+        <location filename="../src/main.cpp" line="184"/>
         <source>Level</source>
         <translation>Niveau</translation>
     </message>

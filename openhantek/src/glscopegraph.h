@@ -2,7 +2,6 @@
 
 #pragma once
 
-#include <memory>
 
 #include <QOpenGLBuffer>
 #include <QOpenGLFunctions>

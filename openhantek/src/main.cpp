@@ -83,10 +83,6 @@ int main( int argc, char *argv[] ) {
     QCoreApplication::setOrganizationDomain( "openhantek.org" );
     QCoreApplication::setApplicationName( "OpenHantek6022" );
     QCoreApplication::setApplicationVersion( VERSION );
-    QCoreApplication::setAttribute( Qt::AA_UseHighDpiPixmaps, true );
-#if ( QT_VERSION >= QT_VERSION_CHECK( 5, 6, 0 ) )
-    QCoreApplication::setAttribute( Qt::AA_EnableHighDpiScaling, true );
-#endif
 
     bool demoMode = false;
     bool autoConnect = true;
@@ -137,7 +133,7 @@ int main( int argc, char *argv[] ) {
         QTranslator parserTranslator;
         // feedback from a mac user: "somehow Qt on MacOS uses the german translation for en_US?!"
         if ( !doNotTranslate && useLocale && QLocale().name().left( 3 ) != "en_" ) { // l18n only in these cases
-            if ( qtTranslator.load( "qt_" + QLocale().name(), QLibraryInfo::location( QLibraryInfo::TranslationsPath ) ) ) {
+            if ( qtTranslator.load( "qt_" + QLocale().name(), QLibraryInfo::path( QLibraryInfo::TranslationsPath ) ) ) {
                 parserApp.installTranslator( &qtTranslator );
             }
             if ( parserTranslator.load( QLocale(), QLatin1String( "openhantek" ), QLatin1String( "_" ),
@@ -315,7 +311,7 @@ int main( int argc, char *argv[] ) {
     QTranslator openHantekTranslator;
     if ( !doNotTranslate && useLocale &&
          QLocale().name() != "en_US" ) { // somehow Qt on MacOS uses the german translation for en_US?!
-        if ( qtTranslator.load( "qt_" + QLocale().name(), QLibraryInfo::location( QLibraryInfo::TranslationsPath ) ) ) {
+        if ( qtTranslator.load( "qt_" + QLocale().name(), QLibraryInfo::path( QLibraryInfo::TranslationsPath ) ) ) {
             openHantekApplication.installTranslator( &qtTranslator );
         }
         if ( openHantekTranslator.load( QLocale(), QLatin1String( "openhantek" ), QLatin1String( "_" ),

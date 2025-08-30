@@ -13,7 +13,6 @@
 #include <QtGlobal>
 
 #include "glscopegraph.h"
-#include "hantekdso/enums.h"
 #include "hantekprotocol/types.h"
 
 struct DsoSettingsView;

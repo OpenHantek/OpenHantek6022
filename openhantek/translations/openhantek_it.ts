@@ -548,39 +548,39 @@
 <context>
     <name>GlScope</name>
     <message>
-        <location filename="../src/glscope.cpp" line="345"/>
+        <location filename="../src/glscope.cpp" line="344"/>
         <source>System does not support OpenGL Shading Language (GLSL)</source>
         <translation>Il sistema non supporta il linguaggio di shading OpenGL (GLSL)</translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="349"/>
+        <location filename="../src/glscope.cpp" line="348"/>
         <source>OpenGL init called twice!</source>
         <translation>OpenGL init chiamato due volte!</translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="410"/>
+        <location filename="../src/glscope.cpp" line="409"/>
         <source>Try command line option &apos;--useGLES&apos;
 </source>
         <translation>Prova l&apos;opzione &apos;--useGLES&apos; nella linea di comando
 </translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="426"/>
-        <location filename="../src/glscope.cpp" line="433"/>
+        <location filename="../src/glscope.cpp" line="425"/>
+        <location filename="../src/glscope.cpp" line="432"/>
         <source>Failed to compile OpenGL shader programs.
 </source>
         <translation>Compilazione dei programmi shader OpenGL fallita.
 </translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="441"/>
+        <location filename="../src/glscope.cpp" line="440"/>
         <source>Failed to link/bind OpenGL shader programs.
 </source>
         <translation>Bind/link dei programmi shader OpenGL fallito.
 </translation>
     </message>
     <message>
-        <location filename="../src/glscope.cpp" line="450"/>
+        <location filename="../src/glscope.cpp" line="449"/>
         <source>Failed to locate shader variable.</source>
         <translation>Localizzazione variabile shader fallita.</translation>
     </message>
@@ -679,8 +679,8 @@
         <translation>Javascript Object Notation (*.json)</translation>
     </message>
     <message>
-        <location filename="../src/exporting/exportcsv.cpp" line="43"/>
         <location filename="../src/exporting/exportjson.cpp" line="44"/>
+        <location filename="../src/exporting/exportcsv.cpp" line="43"/>
         <source>Write error
 %1</source>
         <translation>Errore di scrittura
@@ -1789,88 +1789,88 @@
 <context>
     <name>main</name>
     <message>
-        <location filename="../src/main.cpp" line="127"/>
-        <location filename="../src/main.cpp" line="168"/>
+        <location filename="../src/main.cpp" line="123"/>
+        <location filename="../src/main.cpp" line="164"/>
         <source>Show the international interface, do not translate</source>
         <translation>Mostra l&apos;interfaccia internazionale, non tradurre</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="151"/>
+        <location filename="../src/main.cpp" line="147"/>
         <source>Load config file</source>
         <translation>Carica file di configurazione</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="152"/>
+        <location filename="../src/main.cpp" line="148"/>
         <source>File</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="155"/>
+        <location filename="../src/main.cpp" line="151"/>
         <source>Demo mode without scope HW</source>
         <translation>Modalità demo senza HW</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="158"/>
+        <location filename="../src/main.cpp" line="154"/>
         <source>Use OpenGL ES instead of OpenGL</source>
         <translation>Usa OpenGL ES invece che OpenGL</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="160"/>
+        <location filename="../src/main.cpp" line="156"/>
         <source>Do not connect automatically</source>
         <translation>Non connettere automaticamente</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="163"/>
+        <location filename="../src/main.cpp" line="159"/>
         <source>Force OpenGL SL version 1.20</source>
         <translation>Forza OpenGL SL versione 1.20</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="165"/>
+        <location filename="../src/main.cpp" line="161"/>
         <source>Force OpenGL SL version 1.50</source>
         <translation>Forza OpenGL SL versione 1.50</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="170"/>
+        <location filename="../src/main.cpp" line="166"/>
         <source>Define the system font</source>
         <translation>Specifica font di sistema</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="171"/>
+        <location filename="../src/main.cpp" line="167"/>
         <source>Font</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="175"/>
+        <location filename="../src/main.cpp" line="171"/>
         <source>Set the font size (default = %1, 0: automatic from dpi)</source>
         <translation>Imposta dimensione font (default = %1, 0: automatico da dpi)</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="177"/>
+        <location filename="../src/main.cpp" line="173"/>
         <source>Size</source>
         <translation>Dimensione</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="180"/>
+        <location filename="../src/main.cpp" line="176"/>
         <source>Set the font condensed value (default = %1)</source>
         <translation>Imposta valore font compresso (default = %1)</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="181"/>
+        <location filename="../src/main.cpp" line="177"/>
         <source>Condensed</source>
         <translation>Compresso</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="184"/>
+        <location filename="../src/main.cpp" line="180"/>
         <source>Reset persistent settings, start with default</source>
         <translation>Azzera impostazioni persistenti, avvia con default</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="187"/>
+        <location filename="../src/main.cpp" line="183"/>
         <source>Verbose tracing of program startup, ui and processing steps</source>
         <translation>Avvia programma in modalità verbosa</translation>
     </message>
     <message>
-        <location filename="../src/main.cpp" line="188"/>
+        <location filename="../src/main.cpp" line="184"/>
         <source>Level</source>
         <translation>Livello</translation>
     </message>

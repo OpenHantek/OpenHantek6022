@@ -7,13 +7,13 @@ set(TS_FILES translations/openhantek_de.ts translations/openhantek_es.ts transla
 ###################################
 
 # Find the Qt linguist tool
-find_package(Qt5 REQUIRED COMPONENTS LinguistTools)
+find_package(Qt6 REQUIRED COMPONENTS LinguistTools)
 
 # defines files with translatable strings.
 set(INPUT ${SRC} ${HEADERS} ${UI})
 
 # prepares 'lupdate' to update ts files and also 'lcreate' to build qm files.
-qt5_create_translation(QM_FILES ${INPUT} ${TS_FILES})
+qt6_create_translation(QM_FILES ${INPUT} ${TS_FILES})
 
 # prepare the translations.qrc file and insert all available compiled translation files now.
 set(QRC_ITEMS "")
@@ -23,4 +23,4 @@ foreach(QM_FILE ${QM_FILES})
 endforeach()
 configure_file("${CMAKE_CURRENT_LIST_DIR}/translations.qrc.template" "${CMAKE_BINARY_DIR}/translations.qrc" @ONLY)
 
-QT5_ADD_RESOURCES(TRANSLATION_QRC "${CMAKE_BINARY_DIR}/translations.qrc")
+QT6_ADD_RESOURCES(TRANSLATION_QRC "${CMAKE_BINARY_DIR}/translations.qrc")

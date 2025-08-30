@@ -65,7 +65,7 @@ HorizontalDock::HorizontalDock( DsoSettingsScope *scope, const Dso::ControlSpeci
     calfreqComboBox = new QComboBox();
     if ( scope->toolTipVisible )
         calfreqComboBox->setToolTip( tr( "Select the frequency of the calibration output, scroll for fast change" ) );
-    for ( double calfreqStep : qAsConst( calfreqSteps ) )
+    for ( double calfreqStep : std::as_const( calfreqSteps ) )
         calfreqComboBox->addItem( valueToString( calfreqStep, UNIT_HERTZ, calfreqStep < 10e3 ? 2 : 0 ) );
 
     dockLayout = new QGridLayout();

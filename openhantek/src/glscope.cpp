@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 
 #include <cmath>
-#include <iostream>
 
 #include <QColor>
 #include <QCoreApplication>
@@ -133,7 +132,7 @@ void GlScope::rightMouseEvent( QMouseEvent *event ) {
             QGuiApplication::setOverrideCursor( QCursor( Qt::CrossCursor ) ); // switch to measure cursor
         }
         rightMouseInside = true;
-        emit cursorMeasurement( posToScopePos( event->pos() ), event->globalPos(), true );
+        emit cursorMeasurement( posToScopePos( event->pos() ), event->globalPosition().toPoint(), true );
     } else {
         if ( rightMouseInside ) {                     // leave scope frame
             QGuiApplication::restoreOverrideCursor(); // back to normal cursor
