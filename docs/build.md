@@ -1,12 +1,12 @@
 ### [Linux](#linux)
 For Debian (stretch and newer), Ubuntu 17.04+ and Mint 17+ and other deb based distributions install named requirements like this:
-> apt install g++ make cmake fakeroot qttools5-dev libfftw3-dev binutils-dev libusb-1.0-0-dev libqt5opengl5-dev mesa-common-dev libgl1-mesa-dev libgles2-mesa-dev
+> apt install g++ make cmake fakeroot rpm qt6-tools-dev libfftw3-dev binutils-dev libusb-1.0-0-dev libqt6opengl6 mesa-common-dev libgl1-mesa-dev libgles2-mesa-dev qt6-base-dev
 
 For distributions using dnf package manager (Fedora 21+) use this command:
-> dnf install make cmake fakeroot gcc-c++ qt5-qtbase-gui qt5-qttools-devel qt5-qttranslations fftw-devel binutils-devel libusb-devel mesa-libGL-devel mesa-libGLES-devel
+> dnf install make cmake fakeroot gcc-c++ qt6-qtbase-gui qt6-qttools-devel qt6-qttranslations fftw-devel binutils-devel libusb-devel mesa-libGL-devel mesa-libGLES-devel
 
 For OpenSUSE and related distributions use this command
-> zypper install make cmake fakeroot gcc-c++ libqt5-qtbase libqt5-qttools libqt5-qttranslations libusb-1_0 Mesa-libGL1 Mesa-libGLESv2 fftw3 
+> zypper install make cmake fakeroot gcc-c++ libqt6-qtbase libqt6-qttools libqt6-qttranslations libusb-1_0 Mesa-libGL1 Mesa-libGLESv2 fftw3 
 
 The script [`LinuxSetup_AsRoot`](../LinuxSetup_AsRoot) installs all build requirements automatically.
 
@@ -69,7 +69,7 @@ Setting `Original non-GL desktop driver` was reported to work also on *RPi4B+*.
 ### [FreeBSD](#freebsd)
 Install the build requirements
 
-    pkg install cmake qt5 fftw3 linux_libusb
+    pkg install cmake qt6 fftw3 linux_libusb
 
 After you've installed the requirements run the following commands inside the directory of this package:
 
@@ -132,7 +132,7 @@ We recommend homebrew to install the required libraries.
 
     git submodule update --init --recursive
     brew update
-    brew install libusb fftw qt5 cmake binutils create-dmg
+    brew install libusb fftw qt6 cmake binutils create-dmg
 
 If you want to build an OSX bundle make sure the option in `openhantek/CMakeLists.txt` is set accordingly:
 

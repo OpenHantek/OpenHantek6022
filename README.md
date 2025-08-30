@@ -1,10 +1,3 @@
-# Please Help the Victims of the War!
-**Openhantek6022** is a project where people from all over the world collaborate peacefully, regardless of where they live.
-If you are lucky enough to live in peace, please [**donate**](https://www.icrc.org/en/donate/ukraine) 
-to the *International Committee of the Red Cross*.
-
-![blue-yellow](docs/images/blue-yellow.png)
-
 # OpenHantek6022
 [![GitHub CI](https://github.com/OpenHantek/OpenHantek6022/actions/workflows/build.yml/badge.svg)](https://github.com/OpenHantek/OpenHantek6022/actions/workflows/build.yml)
 [![Stability: Active](https://masterminds.github.io/stability/active.svg)](https://masterminds.github.io/stability/active.html)
@@ -39,11 +32,11 @@ OpenHantek6022 is a free software for **Hantek DSO6022** USB digital signal osci
 * [Important!](#important)
 * [Specifications, Features, Limitations and Developer Documentation](#specifications-features-limitations-and-developer-documentation)
 * [Contribute](#contribute)
-* [Donate](#please-help-the-victims-of-the-war)
-<!-- * [Donate for FSF](#donate-for-fsf) -->
 * [Other DSO Open Source Software](#other-dso-open-source-software)
 * [Other Related Software](#other-related-software)
 * [History](#history)
+* [Donate](#please-help-the-victims-of-the-war)
+<!-- * [Donate for FSF](#donate-for-fsf) -->
 
 ## About OpenHantek6022
 * Supported devices:
@@ -118,8 +111,8 @@ The easiest way to get an up-to-date working code base is to clone the code from
 ````git clone https://github.com/OpenHantek/OpenHantek6022.git````
 
 and then build it locally, for this you will need the following software:
-* [CMake 3.5+](https://cmake.org/download/)
-* [Qt 5.4+](https://www1.qt.io/download-open-source/)
+* [CMake 3.10+](https://cmake.org/download/)
+* [Qt 6.2+](https://www1.qt.io/download-open-source/)
 * [FFTW 3+](http://www.fftw.org/) (prebuild files will be downloaded on windows)
 * [libusb-1.0](https://libusb.info/), version >= 1.0.16 (prebuild files will be used on windows)
 * A compiler that supports C++11 - tested with gcc, clang and msvc
@@ -133,7 +126,7 @@ If you make small changes to the local source code, it is sufficient to call `ma
 
 ## Install Prebuilt Binary Packages
 * [![Downloads of latest release](https://img.shields.io/github/downloads/OpenHantek/OpenHantek6022/latest/total?color=blue)](https://github.com/OpenHantek/OpenHantek6022/releases/latest)
-Download Linux (Ubuntu 2204 LTS), Raspberry Pi (Debian stable), FreeBSD (12.1), macOS (12.7) and Windows (MINGW / MSVC2022) packages for your convenience from the [Releases](https://github.com/OpenHantek/OpenHantek6022/releases) page.
+Download Linux (Ubuntu 2404 LTS), Raspberry Pi (Debian stable), FreeBSD (12.1), macOS (13) and Windows (MINGW / MSVC2022) packages for your convenience from the [Releases](https://github.com/OpenHantek/OpenHantek6022/releases) page.
 * [![Downloads of latest devdrop](https://img.shields.io/github/downloads/OpenHantek/OpenHantek6022/devdrop/total?color=lightblue)](https://github.com/OpenHantek/OpenHantek6022/releases/tag/devdrop)
 If you want to follow ongoing development, packages built from a fairly recent commit are available in the rolling
 [devdrop release](https://github.com/OpenHantek/OpenHantek6022/releases/tag/devdrop).
@@ -241,16 +234,9 @@ We welcome any reported GitHub issue if you have a problem with this software. S
 [13]: http://llvm.org/docs/CodingStandards.html
 [14]: https://help.github.com/articles/using-pull-requests
 
-<!--
-## Donate for FSF
-If you really enjoy this project and would like to donate, please give it to the [Free Software Foundation](https://www.fsf.org/).
-Without the FSF, we wouldn't have this [free software](https://www.gnu.org/philosophy/free-sw.html) that we can use today.
--->
-
 ## Other DSO Open Source Software
 * [Firmware used by OpenHantek and python bindings for 6022BE/BL](https://github.com/Ho-Ro/Hantek6022API)
 * [sigrok](http://www.sigrok.org)
-* [Software for the Hantek 6022BE/BL (win only)](http://pididu.com/wordpress/basicscope/)
 
 ## Other Related Software
 * [HScope for Android](https://www.martinloren.com/hscope/) A one-channel basic version is available free of charge (with in-app purchases).
@@ -258,4 +244,18 @@ Without the FSF, we wouldn't have this [free software](https://www.gnu.org/philo
 ## History
 The program was initially developed by [David Gräff and others](https://github.com/OpenHantek/openhantek/graphs/contributors)
 on [github.com/OpenHantek/openhantek](https://github.com/OpenHantek/openhantek),
-but David [stopped maintaining](https://github.com/OpenHantek/openhantek/issues/277) the programm in December 2018. 
+but David [stopped maintaining](https://github.com/OpenHantek/openhantek/issues/277) the programm in December 2018 and I took over. 
+
+<!--
+## Donate for FSF
+If you really enjoy this project and would like to donate, please give it to the [Free Software Foundation](https://www.fsf.org/).
+Without the FSF, we wouldn't have this [free software](https://www.gnu.org/philosophy/free-sw.html) that we can use today.
+-->
+
+# Please Help the Victims of the War!
+**Openhantek6022** is a project where people from all over the world collaborate peacefully, regardless of where they live.
+If you are lucky enough to live in peace, please [**donate**](https://www.icrc.org/en/donate/ukraine) 
+to the *International Committee of the Red Cross*.
+
+![blue-yellow](docs/images/blue-yellow.png)
+
