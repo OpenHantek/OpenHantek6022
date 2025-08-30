@@ -1,3 +1,4 @@
+2025-08-30 (a591a6e): update GitHub runner CI/CD script, update docs
 2025-08-30 (05ec4ee): Qt5 -> Qt6 transition
 2025-03-25 (982f746): Update italian translations
 2025-03-19 (c58e155): rename desktop file according Wayland requirement (RevDom.AppName.desktop)
