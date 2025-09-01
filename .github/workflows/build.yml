@@ -300,6 +300,8 @@ jobs:
           mingw-w64-x86_64-gcc
           mingw-w64-x86_64-qt6-static
           mingw-w64-x86_64-pcre2
+          mingw-w64-x86_64-libpng
+          mingw-w64-x86_64-libtiff
           mingw-w64-x86_64-fftw
           mingw-w64-x86_64-libusb
 
