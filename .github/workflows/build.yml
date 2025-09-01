@@ -291,6 +291,7 @@ jobs:
         echo "git_describe=$(git describe)"
         echo "git_describe=$(git describe)" >> $GITHUB_OUTPUT
 
+    # why are some qt6 dependency libs not installed automaticaly? pcre2, libpng, harfbuzz
     - name: Install MSYS2 Packages
       uses: msys2/setup-msys2@v2
       with:
@@ -302,6 +303,7 @@ jobs:
           mingw-w64-x86_64-pcre2
           mingw-w64-x86_64-libpng
           mingw-w64-x86_64-libtiff
+          mingw-w64-x86_64-harfbuzz
           mingw-w64-x86_64-fftw
           mingw-w64-x86_64-libusb
 
