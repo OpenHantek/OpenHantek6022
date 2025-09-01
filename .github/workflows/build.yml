@@ -263,78 +263,79 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 
-# # ---------------------------
-# # --- Windows MINGW steps ---
-# # ---------------------------
-# #
-#   windows-mingw_w64:
-#     runs-on: windows-2022
-#     steps:
+# ---------------------------
+# --- Windows MINGW steps ---
+# ---------------------------
+#
+  windows-mingw_w64:
+    runs-on: windows-2022
+    steps:
 
-#     # --- Clone the latest commit ---
-#     - name: Checkout
-#       uses: actions/checkout@v3
-#       with:
-#         fetch-tags: true
-#         submodules: recursive
-#         fetch-depth: 0
+    # --- Clone the latest commit ---
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        fetch-tags: true
+        submodules: recursive
+        fetch-depth: 0
 
-#     # --- Config git and get the version from "git describe" ---
-#     - name: Config Git
-#       id: config_git
-#       shell: bash
-#       run: |
-#         git config user.email "Ho-Ro@users.noreply.github.com"
-#         git config user.name "Ho-Ro"
-#         git fetch --tags --force || true
-#         git submodule update --init --recursive
-#         echo "git_describe=$(git describe)"
-#         echo "git_describe=$(git describe)" >> $GITHUB_OUTPUT
+    # --- Config git and get the version from "git describe" ---
+    - name: Config Git
+      id: config_git
+      shell: bash
+      run: |
+        git config user.email "Ho-Ro@users.noreply.github.com"
+        git config user.name "Ho-Ro"
+        git fetch --tags --force || true
+        git submodule update --init --recursive
+        echo "git_describe=$(git describe)"
+        echo "git_describe=$(git describe)" >> $GITHUB_OUTPUT
 
-#     - name: Install MSYS2 Packages
-#       uses: msys2/setup-msys2@v2
-#       with:
-#         update: true
-#         install: >-
-#           mingw-w64-x86_64-cmake
-#           mingw-w64-x86_64-gcc
-#           mingw-w64-x86_64-qt6-static
-#           mingw-w64-x86_64-fftw
-#           mingw-w64-x86_64-libusb
+    - name: Install MSYS2 Packages
+      uses: msys2/setup-msys2@v2
+      with:
+        update: true
+        install: >-
+          mingw-w64-x86_64-cmake
+          mingw-w64-x86_64-gcc
+          mingw-w64-x86_64-qt6-static
+          mingw-w64-x86_64-pcre2
+          mingw-w64-x86_64-fftw
+          mingw-w64-x86_64-libusb
 
-#     - name: Start Windows Build
-#       shell: msys2 {0}
-#       run: |
-#         cmake -D CMAKE_PREFIX_PATH=/mingw64/qt6-static -D CMAKE_BUILD_TYPE=$BUILD_TYPE -B build
-#         cmake --build build --parallel 8 --target package
+    - name: Start Windows Build
+      shell: msys2 {0}
+      run: |
+        cmake -D CMAKE_PREFIX_PATH=/mingw64/qt6-static -D CMAKE_BUILD_TYPE=$BUILD_TYPE -B build
+        cmake --build build --parallel 8 --target package
 
-#     - name: Create Windows Package
-#       # GitHub hosts Windows runners on Standard_DS2_v2 virtual machines in Microsoft Azure:
-#       # 2-core CPU, 7 GB of RAM memory, 14 GB of SSD disk space
-#       working-directory: ${{github.workspace}}/build
-#       shell: bash
-#       run: |
-#         # this ZIP package contains only OpenHantek.exe, just get the name
-#         ZIP=$(basename packages/openhantek_*_mingw_x64.zip)
-#         rm -f packages/openhantek_*_mingw_x64.*
-#         cd openhantek
-#         7z a ../packages/$ZIP *.exe driver documents
-#         ls -l ../packages
+    - name: Create Windows Package
+      # GitHub hosts Windows runners on Standard_DS2_v2 virtual machines in Microsoft Azure:
+      # 2-core CPU, 7 GB of RAM memory, 14 GB of SSD disk space
+      working-directory: ${{github.workspace}}/build
+      shell: bash
+      run: |
+        # this ZIP package contains only OpenHantek.exe, just get the name
+        ZIP=$(basename packages/openhantek_*_mingw_x64.zip)
+        rm -f packages/openhantek_*_mingw_x64.*
+        cd openhantek
+        7z a ../packages/$ZIP *.exe driver documents
+        ls -l ../packages
 
-#     - name: Upload Windows Artifacts
-#       uses: actions/upload-artifact@v4
-#       with:
-#         name: openhantek_${{ steps.config_git.outputs.git_describe }}_mingw_x64
-#         path: ./build/packages/*.zip
+    - name: Upload Windows Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: openhantek_${{ steps.config_git.outputs.git_describe }}_mingw_x64
+        path: ./build/packages/*.zip
 
-#     - name: Upload Windows Release Assets
-#       if: startsWith(github.ref, 'refs/tags/')
-#       uses: softprops/action-gh-release@v1
-#       with:
-#         prerelease: true
-#         files: ./build/packages/*
-#       env:
-#         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Upload Windows Release Assets
+      if: startsWith(github.ref, 'refs/tags/')
+      uses: softprops/action-gh-release@v1
+      with:
+        prerelease: true
+        files: ./build/packages/*
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 
 # --------------------------
