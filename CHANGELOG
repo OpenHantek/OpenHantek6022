@@ -1,3 +1,4 @@
+2025-08-30 (c2a6ef1): Fix GitHub runner Linux build – Temporarily disable Windows build
 2025-08-30 (a591a6e): update GitHub runner CI/CD script, update docs
 2025-08-30 (05ec4ee): Qt5 -> Qt6 transition
 2025-03-25 (982f746): Update italian translations
