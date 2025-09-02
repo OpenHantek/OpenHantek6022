@@ -9,10 +9,12 @@ Enum< Dso::MathMode, Dso::MathMode::ADD_CH1_CH2, Dso::MathMode::TRIG_CH2 > MathM
 Unit mathModeUnit( MathMode mode ) {
     if ( mode == MathMode::MUL_CH1_CH2 || mode == MathMode::SQ_CH1 || mode == MathMode::SQ_CH2 )
         return UNIT_VOLTSQUARE;
-    else if ( mode == MathMode::AND_CH1_CH2 || mode == MathMode::XOR_CH1_CH2 || mode == MathMode::AND_NOT_CH1_CH2 || mode == MathMode::AND_CH1_NOT_CH2 ||
-              mode == MathMode::AND_NOT_CH1_NOT_CH2 || mode == MathMode::EQU_CH1_CH2 || mode == MathMode::GREAT_CH1_CH2 ||
-              mode == MathMode::GREAT_CH2_CH1 || mode == MathMode::SIGN_AC_CH1 || mode == MathMode::SIGN_AC_CH2 ||
-              mode == MathMode::SIGN_CH1 || mode == MathMode::SIGN_CH2 || mode == MathMode::TRIG_CH2 ||
+    else if ( mode == MathMode::AND_CH1_CH2 || mode == MathMode::AND_NOT_CH1_CH2 ||
+              mode == MathMode::AND_CH1_NOT_CH2 || mode == MathMode::AND_NOT_CH1_NOT_CH2 ||
+              mode == MathMode::XOR_CH1_CH2 || mode == MathMode::EQU_CH1_CH2 ||
+              mode == MathMode::GREAT_CH1_CH2 || mode == MathMode::GREAT_CH2_CH1 ||
+              mode == MathMode::SIGN_AC_CH1 || mode == MathMode::SIGN_AC_CH2 ||
+              mode == MathMode::SIGN_CH1 || mode == MathMode::SIGN_CH2 ||
               mode == MathMode::TRIG_CH1 || mode == MathMode::TRIG_CH2 )
         return UNIT_NONE; // logic values 0 or 1
     else
@@ -41,14 +43,14 @@ QString mathModeString( MathMode mode ) {
         return QCoreApplication::tr( "CH1 * CH2" );
     case MathMode::AND_CH1_CH2:
         return QCoreApplication::tr( "CH1 & CH2" );
-    case MathMode::XOR_CH1_CH2:
-        return QCoreApplication::tr( "CH1 ^ CH2" );
     case MathMode::AND_NOT_CH1_NOT_CH2:
         return QCoreApplication::tr( "/CH1 & /CH2" );
     case MathMode::AND_NOT_CH1_CH2:
         return QCoreApplication::tr( "/CH1 & CH2" );
     case MathMode::AND_CH1_NOT_CH2:
         return QCoreApplication::tr( "CH1 & /CH2" );
+    case MathMode::XOR_CH1_CH2:
+        return QCoreApplication::tr( "CH1 ^ CH2" );
     case MathMode::EQU_CH1_CH2:
         return QCoreApplication::tr( "CH1 ≡ CH2" );
     case MathMode::GREAT_CH1_CH2:

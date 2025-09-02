@@ -66,13 +66,6 @@ void MathChannel::calculate( DSOsamples &result ) {
                             ? 1.0
                             : 0.0 );
             break;
-        case Dso::MathMode::XOR_CH1_CH2:
-            // logic values: above / below trigger level
-            for ( auto it = mathChannel.begin(), end = mathChannel.end(); it != end; ++it, ++ch1Iterator, ++ch2Iterator )
-                *it = ( ( *ch1Iterator >= scope->voltage[ CH1 ].trigger ) ^ ( *ch2Iterator >= scope->voltage[ CH2 ].trigger )
-                            ? 1.0
-                            : 0.0 );
-            break;
         case Dso::MathMode::AND_NOT_CH1_CH2:
             // logic values: above / below trigger level
             for ( auto it = mathChannel.begin(), end = mathChannel.end(); it != end; ++it, ++ch1Iterator, ++ch2Iterator )
@@ -91,6 +84,13 @@ void MathChannel::calculate( DSOsamples &result ) {
             // logic values: above / below trigger level
             for ( auto it = mathChannel.begin(), end = mathChannel.end(); it != end; ++it, ++ch1Iterator, ++ch2Iterator )
                 *it = ( !( *ch1Iterator >= scope->voltage[ CH1 ].trigger ) && !( *ch2Iterator >= scope->voltage[ CH2 ].trigger )
+                            ? 1.0
+                            : 0.0 );
+            break;
+        case Dso::MathMode::XOR_CH1_CH2:
+            // logic values: above / below trigger level
+            for ( auto it = mathChannel.begin(), end = mathChannel.end(); it != end; ++it, ++ch1Iterator, ++ch2Iterator )
+                *it = ( ( *ch1Iterator >= scope->voltage[ CH1 ].trigger ) ^ ( *ch2Iterator >= scope->voltage[ CH2 ].trigger )
                             ? 1.0
                             : 0.0 );
             break;
