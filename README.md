@@ -97,8 +97,8 @@ Every commit triggers a workflow on
 [GitHub Actions](https://github.com/OpenHantek/OpenHantek6022/actions/workflows/build_check.yml)
 that builds and packages OpenHantek6022 for:
 * Linux (`*.deb`, `*.rpm`, `*.tar.gz`)
-* Windows (`*_mingw_x64.zip`, `*_msvc_x64.zip`)
-* macOS - (`*.dmg`, `*.tar.gz`)
+* Windows (<!--`*_mingw_x64.zip`, -->`*_msvc_x64.zip`)
+* macOS - (`*_osx_arm64.dmg`, `*_osx_x86_64.dmg`, `*.tar.gz`)
 
 [![GitHub CI](https://github.com/OpenHantek/OpenHantek6022/actions/workflows/build.yml/badge.svg)](https://github.com/OpenHantek/OpenHantek6022/actions/workflows/build.yml)
 This status badge here (and on top) show the build status.
@@ -111,7 +111,7 @@ The easiest way to get an up-to-date working code base is to clone the code from
 ````git clone https://github.com/OpenHantek/OpenHantek6022.git````
 
 and then build it locally, for this you will need the following software:
-* [CMake 3.10+](https://cmake.org/download/)
+* [CMake 3.12+](https://cmake.org/download/)
 * [Qt 6.2+](https://www1.qt.io/download-open-source/)
 * [FFTW 3+](http://www.fftw.org/) (prebuild files will be downloaded on windows)
 * [libusb-1.0](https://libusb.info/), version >= 1.0.16 (prebuild files will be used on windows)

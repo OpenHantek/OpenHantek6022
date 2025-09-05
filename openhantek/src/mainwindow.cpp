@@ -526,7 +526,7 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
                 + tr( "<p>Graphic: %1 - GLSL version %2</p>"
                       "<p>Qt version: %3</p>" )
                       .arg( GlScope::getOpenGLversion(), GlScope::getGLSLversion(), // graphic info
-                            QT_VERSION_STR ) +                                      // Qt version info
+                            qVersion() ) +                                          // Qt lib version info
                 tr( "<p>Running since %1 seconds.</p>" ).arg( elapsedTime.elapsed() / 1000 ) );
     } );
 
