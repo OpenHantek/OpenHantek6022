@@ -517,9 +517,9 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
                          "<p>Copyright &copy; 2010, 2011 Oliver Haag</p>"
                          "<p>Copyright &copy; 2012-%1 OpenHantek community<br/>"
                          "<a href='https://github.com/OpenHantek'>https://github.com/OpenHantek</a></p>"
-                         "<p>Open source firmware copyright &copy; 2019-%1 Ho-Ro<br/>"
+                         "<p>Open source firmware copyright &copy; 2019-%1 Martin Homuth-Rosemann<br/>"
                          "<a href='https://github.com/Ho-Ro/Hantek6022API'>https://github.com/Ho-Ro/Hantek6022API</a></p>" ) )
-                    .arg( QDate::currentDate().year() ) // latest year
+                    .arg( QDate::currentDate().year() ) // latest year for (c)
 
                 + deviceSpec // "DEVICE (SERIALNUMBER) FW_VERSION" or "Demo Mode"
 

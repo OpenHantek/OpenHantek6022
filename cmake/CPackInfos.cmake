@@ -101,7 +101,7 @@ set(CPACK_DEBIAN_PACKAGE_SECTION "electronics")
 # use deb stable packages without version explicitely to support also legacy installations
 # local build uses Debian stable (currently trixie)
 # CI build (github actions) uses Ubuntu 24.04 LTS as long as Debian "trixie" is "stable"
-set(CPACK_DEBIAN_PACKAGE_DEPENDS "libc6, libfftw3-double3, libglu1-mesa, libglx0, libopengl0, libqt6opengl6, libqt6openglwidgets6, libqt6printsupport6, libusb-1.0-0")
+set(CPACK_DEBIAN_PACKAGE_DEPENDS "libfftw3-double3, libqt6core6, libqt6gui6, libqt6widgets6, libqt6opengl6, libqt6openglwidgets6, libqt6printsupport6, libusb-1.0")
 message( "-- Depends: ${CPACK_DEBIAN_PACKAGE_DEPENDS}" )
 
 set(CPACK_DEBIAN_FILE_NAME "DEB-DEFAULT")
