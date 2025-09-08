@@ -1,5 +1,5 @@
 # This file configures CPack.
-# A tgz, deb and rpm file is created for Linux (tgz and deb tested on debian stretch and buster).
+# A tgz, deb and rpm file is created for Linux (tgz and deb tested on debian trixie).
 # A tar.gz file is created for macOS (not tested).
 # A zip file is created on Windows (not tested).
 
@@ -39,7 +39,7 @@ if (UNIX)
             DESTINATION etc/devd
         )
     elseif(APPLE)
-        set(CPACK_TARGET "osx_")
+        set(CPACK_TARGET "macos_")
     endif()
 
     # install documentation
@@ -93,13 +93,13 @@ set(CPACK_STRIP_FILES 1)
 
 include(CMakeDetermineSystem)
 
-# Linux DEB (tested on debian stable "bullseye")
+# Linux DEB (tested on debian stable "trixie")
 # Architecture for package and file name are automatically detected
 set(CPACK_DEBIAN_PACKAGE_SECTION "electronics")
 # do not detect depencencies and versions automatically
 # set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
 # use deb stable packages without version explicitely to support also legacy installations
-# local build uses Debian stable (currently trixie)
+# local build uses Debian stable (currently "trixie")
 # CI build (github actions) uses Ubuntu 24.04 LTS as long as Debian "trixie" is "stable"
 set(CPACK_DEBIAN_PACKAGE_DEPENDS "libfftw3-double3, libqt6core6, libqt6gui6, libqt6widgets6, libqt6opengl6, libqt6openglwidgets6, libqt6printsupport6, libusb-1.0")
 message( "-- Depends: ${CPACK_DEBIAN_PACKAGE_DEPENDS}" )
