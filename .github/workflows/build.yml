@@ -101,8 +101,8 @@ jobs:
 # --- Linux (Ubuntu) arm64 steps ---
 # ----------------------------------
 #
-  linux-arm64
-    runs-on: ubuntu-24.04
+  linux-arm64:
+    runs-on: ubuntu-24.04-arm
     steps:
 
     # --- Clone the latest commit ---
