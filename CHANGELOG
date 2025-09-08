@@ -1,3 +1,8 @@
+2025-09-08 (b24c854): reorder GitHub runner script
+2025-09-08 (898f7d5): use the correct arm64 runner
+2025-09-08 (4ce0f0c): ad linux arm64 build
+2025-09-06 (16053ea): update build process for Qt6
+2025-09-05 (dfc4d4e): show Qt lib version, not Qt compile version; min CMake ver. 3.10 -> 3.12
 2025-09-02 (68439b7): reorder logical functions; update translations
 2025-06-22 (e15ed3a): Added XOR function to the MathChannel module.
 2025-09-01 (ef3f244): Back to GO, disable MinGW build until a volunteer fixes it for Qt6
