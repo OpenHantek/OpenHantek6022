@@ -208,8 +208,6 @@ jobs:
           export PATH=$(brew --prefix qt@6)/bin:${PATH}
           cd openhantek
           macdeployqt OpenHantek.app -always-overwrite -verbose=1
-          python ../../utils/macdeployqtfix/macdeployqtfix.py \
-            --quiet OpenHantek.app/Contents/MacOS/OpenHantek $(brew --prefix qt@6)
           create-dmg --volname OpenHantek --volicon ../../openhantek/res/images/OpenHantek.icns \
             --window-pos 200 120 --window-size 800 400 --icon-size 100 --icon "OpenHantek.app" 200 190 \
             --skip-jenkins --hide-extension "OpenHantek.app" --app-drop-link 600 185 \
@@ -292,8 +290,6 @@ jobs:
           export PATH=$(brew --prefix qt@6)/bin:${PATH}
           cd openhantek
           macdeployqt OpenHantek.app -always-overwrite -verbose=1
-          python ../../utils/macdeployqtfix/macdeployqtfix.py \
-            --quiet OpenHantek.app/Contents/MacOS/OpenHantek $(brew --prefix qt@6)
           create-dmg --volname OpenHantek --volicon ../../openhantek/res/images/OpenHantek.icns \
             --window-pos 200 120 --window-size 800 400 --icon-size 100 --icon "OpenHantek.app" 200 190 \
             --skip-jenkins --hide-extension "OpenHantek.app" --app-drop-link 600 185 \
