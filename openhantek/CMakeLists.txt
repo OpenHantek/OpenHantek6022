@@ -66,6 +66,10 @@ endif()
 add_executable(${PROJECT_NAME} ${EXECTYPE} ${SRC} ${HEADERS} ${UI}
 ${QRC} ${RC} ${TRANSLATION_BIN_FILES} ${TRANSLATION_QRC} ${ICONS})
 target_link_libraries(${PROJECT_NAME} Qt6::Widgets Qt6::PrintSupport Qt6::OpenGL Qt6::OpenGLWidgets ${OPENGL_LIBRARIES} )
+if( APPLE AND BUILD_MACOSX_BUNDLE )
+    find_package(Qt6 REQUIRED COMPONENTS DBus)
+    target_link_libraries(${PROJECT_NAME} Qt6::DBus )
+endif()
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_range_for)
 
 if(MSVC)
