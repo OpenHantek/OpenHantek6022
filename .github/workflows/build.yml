@@ -204,7 +204,6 @@ jobs:
         cp ../CHANGELOG changelog
         cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_PREFIX_PATH=$(brew --prefix qt@6)
         make -j16
-        sudo make -j16 package
         if test -d openhantek/OpenHantek.app; then
           export PATH=$(brew --prefix qt@6)/bin:${PATH}
           cd openhantek
@@ -216,6 +215,7 @@ jobs:
             --skip-jenkins --hide-extension "OpenHantek.app" --app-drop-link 600 185 \
             --eula ../../LICENSE OpenHantek.dmg OpenHantek.app
           cd ..
+          sudo make -j16 package
         else
           true
         fi
@@ -288,7 +288,6 @@ jobs:
         cp ../CHANGELOG changelog
         cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_PREFIX_PATH=$(brew --prefix qt@6)
         make -j12
-        sudo make -j12 package
         if test -d openhantek/OpenHantek.app; then
           export PATH=$(brew --prefix qt@6)/bin:${PATH}
           cd openhantek
@@ -300,6 +299,7 @@ jobs:
             --skip-jenkins --hide-extension "OpenHantek.app" --app-drop-link 600 185 \
             --eula ../../LICENSE OpenHantek.dmg OpenHantek.app
           cd ..
+          sudo make -j12 package
         else
           true
         fi
