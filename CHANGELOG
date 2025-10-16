@@ -1,3 +1,12 @@
+2025-10-16 (4a1a39f): Merge branch 'main' of https://github.com/heit0r/OpenHantek6022 into heit0r-main PR #443 - Adding minor changes in PT translation.
+2025-10-15 (3c021dc): (docs) Adding minor changes in PT translation.
+2025-10-10 (a54e26a): fix missing QtDBus on macOS
+2025-10-10 (f690e2b): remove macdeployqtfix from submodule
+2025-10-10 (e6bff86): remove macdeployqtfix
+2025-10-10 (90f1d5e): fix macOS 13+ missing from Launchpad
+2025-10-10 (fb2a0c3): fix macOS build
+2025-10-10 (bbcf986): Revert "The macOS build is currently not working"
+2025-09-08 (f3684a1): The macOS build is currently not working
 2025-09-08 (b24c854): reorder GitHub runner script
 2025-09-08 (898f7d5): use the correct arm64 runner
 2025-09-08 (4ce0f0c): ad linux arm64 build
