@@ -13,6 +13,7 @@
 // These values allow a quite narrow but readable display
 const QString defaultFont = "Arial";
 const int defaultFontSize = 10;
+const int defaultFontWeight = 800; // ExtraBold
 const int defaultCondensed = 87; // SemiCondensed = 87%
 
 ////////////////////////////////////////////////////////////////////////////////
