@@ -126,11 +126,10 @@ Make sure to be member of the group `openhantek`, e.g.:
 ----
 
 ### [macOS](#macos)
-Building should work on a recent macOS 11 version.
+Building should work on macOS 11 and newer, including Apple Silicon Macs.
 
 We recommend homebrew to install the required libraries.
 
-    git submodule update --init --recursive
     brew update
     brew install libusb fftw qt6 cmake binutils create-dmg
 
@@ -158,8 +157,13 @@ After you've installed the requirements run the following commands inside the to
     # deploy all necessary Qt dynlibs into the bundle
     macdeployqt OpenHantek.app -always-overwrite -verbose=2
     #
-    # find all other dependencies, and their dependencies, and their... (you got it!)
-    python ../../utils/macdeployqtfix/macdeployqtfix.py OpenHantek.app/Contents/MacOS/OpenHantek $(brew --prefix qt5)
+    # Re-sign the app after macdeployqt modifies the bundle
+    # Required on Apple Silicon, recommended on Intel Macs with macOS 11+
+    xattr -cr OpenHantek.app
+    codesign --force --deep --sign - OpenHantek.app
+    #
+    # Verify the signature (optional but recommended)
+    codesign --verify --deep --strict OpenHantek.app
     #
     # finally create OpenHantek.dmg from OpenHantek.app
     create-dmg --volname OpenHantek --volicon ../../openhantek/res/images/OpenHantek.icns --window-pos 200 120 \
@@ -168,7 +172,7 @@ After you've installed the requirements run the following commands inside the to
     #
 
 This code proposal is based on [the info from @warpme](https://github.com/OpenHantek/OpenHantek6022/issues/314#issuecomment-1200268722)
-about building on macOS 11.6.8 + Xcode 12.4 (12D4e).
+about building on macOS 11.6.8 + Xcode 12.4 (12D4e). Code signing steps added for Apple Silicon compatibility.
 
 #### CI Build on GitHub Actions
 
