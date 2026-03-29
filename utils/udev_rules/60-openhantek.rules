@@ -31,4 +31,7 @@ ATTRS{idVendor}=="04b5", ATTRS{idProduct}=="6021", TAG+="uaccess", TAG+="udev-ac
 ATTRS{idVendor}=="d4a2", ATTRS{idProduct}=="5660", TAG+="uaccess", TAG+="udev-acl", MODE="660", GROUP="plugdev"
 ATTRS{idVendor}=="1d50", ATTRS{idProduct}=="608e", TAG+="uaccess", TAG+="udev-acl", MODE="660", GROUP="plugdev"
 
+# RP2040 with FW
+ATTRS{idVendor}=="04b5", ATTRS{idProduct}=="2040", TAG+="uaccess", TAG+="udev-acl", MODE="660", GROUP="plugdev"
+
 LABEL="openhantek_rules_end"

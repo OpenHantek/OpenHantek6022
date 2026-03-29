@@ -77,6 +77,7 @@ bool ScopeDevice::connectDevice( QString &errorMessage ) {
         handle = nullptr;
         errorMessage =
             QCoreApplication::translate( "ScopeDevice", "Couldn't open device: %1" ).arg( libUsbErrorString( errorCode ) );
+            qDebug() << "  Couldn't open device: " << libUsbErrorString( errorCode );
         return false;
     }
     serialNumber = readUSBdescriptor( handle, descriptor.iSerialNumber );
