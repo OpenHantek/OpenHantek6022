@@ -39,7 +39,11 @@ class ScopeDevice : public QObject {
     ScopeDevice( const ScopeDevice & ) = delete;
     ~ScopeDevice() override;
     bool connectDevice( QString &errorMessage );
-    void disconnectFromDevice();
+    void disconnectFromDevice( bool expected = false );
+
+    /// Mark future disconnects as part of intentional shutdown/ownership cleanup.
+    void setExpectedDisconnect( bool expected = true ) { expectedDisconnect = expected; }
+    bool wasExpectedDisconnect() const { return expectedDisconnect; }
 
     /// \brief Check if the oscilloscope is connected.
     /// \return true, if a connection is up.
@@ -203,10 +207,11 @@ class ScopeDevice : public QObject {
     bool realHW = true;
     bool stopTransfer = false;
     bool disconnected = true;
+    bool expectedDisconnect = false;
     QString serialNumber = "0000";
 
   signals:
-    void deviceDisconnected(); ///< The device has been disconnected
+    void deviceDisconnected( bool expected ); ///< The device has been disconnected
 };
 
 extern int verboseLevel;

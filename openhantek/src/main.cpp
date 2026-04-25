@@ -34,6 +34,7 @@
 #include "capturing.h"
 #include "dsomodel.h"
 #include "hantekdsocontrol.h"
+#include "usb/devicereconnectionsupervisor.h"
 #include "usb/scopedevice.h"
 
 // Post processing
@@ -381,10 +382,16 @@ int main( int argc, char *argv[] ) {
     HantekDsoControl dsoControl( scopeDevice.get(), model, verboseLevel );
     dsoControl.moveToThread( &dsoControlThread );
     QObject::connect( &dsoControlThread, &QThread::started, &dsoControl, &HantekDsoControl::stateMachine );
-    QObject::connect( &dsoControl, &HantekDsoControl::communicationError, QCoreApplication::instance(), &QCoreApplication::quit );
-    if ( scopeDevice )
-        QObject::connect( scopeDevice.get(), &ScopeDevice::deviceDisconnected, QCoreApplication::instance(),
-                          &QCoreApplication::quit );
+    std::unique_ptr< DeviceReconnectionSupervisor > reconnectSupervisor;
+    if ( context && scopeDevice && scopeDevice->isRealHW() ) {
+        reconnectSupervisor = std::unique_ptr< DeviceReconnectionSupervisor >(
+            new DeviceReconnectionSupervisor( context, &dsoControl, scopeDevice, verboseLevel, &openHantekApplication ) );
+        QObject::connect( QCoreApplication::instance(), &QCoreApplication::aboutToQuit, reconnectSupervisor.get(),
+                          [ &reconnectSupervisor ]() { reconnectSupervisor->setClosing(); } );
+        QObject::connect( &dsoControl, &HantekDsoControl::communicationError, reconnectSupervisor.get(),
+                          [ &reconnectSupervisor ]() { reconnectSupervisor->handleDeviceDisconnected( false ); },
+                          Qt::QueuedConnection );
+    }
 
     const Dso::ControlSpecification *spec = model->spec();
 
@@ -495,6 +502,10 @@ int main( int argc, char *argv[] ) {
         qDebug() << startupTime.elapsed() << "ms:"
                  << "create main window";
     MainWindow openHantekMainWindow( &dsoControl, &settings, &exportRegistry );
+    if ( reconnectSupervisor ) {
+        QObject::connect( reconnectSupervisor.get(), &DeviceReconnectionSupervisor::connectionStateChanged, &openHantekMainWindow,
+                          &MainWindow::deviceConnectionStateChanged );
+    }
     QObject::connect( &postProcessing, &PostProcessing::processingFinished, &openHantekMainWindow, &MainWindow::showNewData );
     QObject::connect( &exportRegistry, &ExporterRegistry::exporterProgressChanged, &openHantekMainWindow,
                       &MainWindow::exporterProgressChanged );
@@ -523,6 +534,9 @@ int main( int argc, char *argv[] ) {
                  << "application closed, clean up";
 
     std::cerr << std::unitbuf; // enable automatic flushing
+
+    if ( reconnectSupervisor )
+        reconnectSupervisor->setClosing();
 
     // the stepwise text output gives some hints about the shutdown timing
     // not needed with appropriate verbose level

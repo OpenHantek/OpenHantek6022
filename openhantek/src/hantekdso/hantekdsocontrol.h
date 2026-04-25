@@ -26,6 +26,7 @@
 #include <vector>
 
 #include <QSettings>
+#include <QReadWriteLock>
 #include <QThread>
 
 class CapturingThread;
@@ -55,6 +56,8 @@ class HantekDsoControl : public QObject {
     friend CapturingThread;
 
   public:
+    enum class DeviceConnectionState { Connected, Parked, Rebinding };
+
     /**
      * Creates a dsoControl object. The actual event loop / timer is not started.
      * You can optionally create a thread and move the created object to the
@@ -87,7 +90,10 @@ class HantekDsoControl : public QObject {
     bool isSamplingUI() const { return samplingUI; }
 
     /// Return the associated usb device.
-    const ScopeDevice *getDevice() const { return scopeDevice; }
+    const ScopeDevice *getDevice() const;
+
+    /// Return true when USB commands may access the current device.
+    bool isDeviceAvailable() const;
 
     /// Return the associated scope model.
     const DSOModel *getModel() const { return model; }
@@ -167,6 +173,9 @@ class HantekDsoControl : public QObject {
 
     // Communication with device
     ScopeDevice *scopeDevice;  ///< The USB device for the oscilloscope
+    mutable QReadWriteLock scopeDeviceLock;
+    DeviceConnectionState deviceConnectionState = DeviceConnectionState::Connected;
+    bool resumeSamplingAfterReconnect = false;
     bool deviceNotConnected(); ///< USB status, always false for demo device
     bool samplingUI = false;   ///< true, if the oscilloscope is taking samples
 
@@ -294,7 +303,13 @@ class HantekDsoControl : public QObject {
 
     /// \brief Initializes the device with the current settings.
     /// \param scope The settings for the oscilloscope.
-    void applySettings( DsoSettingsScope *scope );
+    void applySettings( const DsoSettingsScope *scope );
+
+    /// Park the control object while the physical device is unavailable.
+    void parkForReconnect();
+
+    /// Rebind the control object to a freshly opened device.
+    void rebindDevice( ScopeDevice *newScopeDevice );
 
     /// \brief Starts a new sampling block.
     void restartSampling();
@@ -315,6 +330,8 @@ class HantekDsoControl : public QObject {
     void samplerateCalculated( double samplerate, unsigned oversampling ); ///< The samplerate was newly calculated
 
     void communicationError() const;
+
+    void deviceAvailabilityChanged( bool available );
 
     void liveCalibrationError() const; // live calibration stopped due to noise or big offset
 };

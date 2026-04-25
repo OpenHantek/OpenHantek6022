@@ -4,10 +4,12 @@
 #include "post/ppresult.h"
 #include <QElapsedTimer>
 #include <QLineEdit>
+#include <QList>
 #include <QMainWindow>
 #include <memory>
 
 #include "scopesettings.h"
+#include "usb/devicereconnectionsupervisor.h"
 
 class SpectrumGenerator;
 class HantekDsoControl;
@@ -18,6 +20,7 @@ class HorizontalDock;
 class TriggerDock;
 class SpectrumDock;
 class VoltageDock;
+class QAction;
 
 namespace Ui {
 class MainWindow;
@@ -39,6 +42,7 @@ class MainWindow : public QMainWindow {
     void showNewData( std::shared_ptr< PPresult > newData );
     void exporterStatusChanged( const QString &exporterName, const QString &status );
     void exporterProgressChanged();
+    void deviceConnectionStateChanged( DeviceConnectionState state, const QString &message );
 
   protected:
     void closeEvent( QCloseEvent *event ) override;
@@ -47,7 +51,7 @@ class MainWindow : public QMainWindow {
     Ui::MainWindow *ui;
     QIcon iconPause;
     QIcon iconPlay;
-    QLineEdit *commandEdit;
+    QLineEdit *commandEdit = nullptr;
     QString lastSaveAsDir = "";
 
     // Central widgets
@@ -63,6 +67,10 @@ class MainWindow : public QMainWindow {
     void screenShot( screenshotType_t screenshotType = SCREENSHOT, bool autoSave = false );
 
     bool openDocument( QString docName );
+    void setDeviceCommandUiEnabled( bool enabled );
+
+    QList< QWidget * > deviceCommandWidgets;
+    QList< QAction * > deviceCommandActions;
 
   signals:
     void settingsLoaded( DsoSettingsScope *scope, const Dso::ControlSpecification *spec );

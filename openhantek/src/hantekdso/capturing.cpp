@@ -68,6 +68,11 @@ void CapturingThread::xferSamples() {
 void CapturingThread::capture() {
     if ( !hdc->samplingStarted )
         return;
+    QReadLocker deviceLocker( &hdc->scopeDeviceLock );
+    ScopeDevice *device = hdc->scopeDevice;
+    if ( !device || hdc->deviceConnectionState != HantekDsoControl::DeviceConnectionState::Connected || !device->isConnected() )
+        return;
+
     int errorCode;
     // Send all pending control commands
     ControlCommand *controlCommand = hdc->firstControlCommand;
@@ -122,8 +127,8 @@ void CapturingThread::capture() {
             timestampDebug( QString( "Sending control command 0x%1 (%2): %3" )
                                 .arg( QString::number( controlCommand->code, 16 ), name,
                                       hexdecDump( controlCommand->data(), unsigned( controlCommand->size() ) ) ) );
-            if ( hdc->scopeDevice->isRealHW() ) { // do the USB communication with scope HW
-                errorCode = hdc->scopeDevice->controlWrite( controlCommand );
+            if ( device->isRealHW() ) { // do the USB communication with scope HW
+                errorCode = device->controlWrite( controlCommand );
                 if ( errorCode < 0 ) {
                     qWarning( "Sending control command %2x failed: %s", uint8_t( controlCommand->code ),
                               libUsbErrorString( errorCode ).toLocal8Bit().data() );
@@ -150,8 +155,8 @@ void CapturingThread::capture() {
         xferSamples();
     if ( 0 == ++tag )
         ++tag; // skip tag==0
-    if ( hdc->scopeDevice->isRealHW() ) {
-        received = getRealSamples();
+    if ( device->isRealHW() ) {
+        received = getRealSamples( device );
     } else {
         received = getDemoSamples();
     }
@@ -172,9 +177,9 @@ void CapturingThread::capture() {
 }
 
 
-unsigned CapturingThread::getRealSamples() {
+unsigned CapturingThread::getRealSamples( ScopeDevice *device ) {
     int errorCode;
-    errorCode = hdc->scopeDevice->controlWrite( hdc->getCommand( Hantek::ControlCode::CONTROL_STARTSAMPLING ) );
+    errorCode = device->controlWrite( hdc->getCommand( Hantek::ControlCode::CONTROL_STARTSAMPLING ) );
     if ( errorCode < 0 ) {
         qWarning() << "controlWrite: Getting sample data failed: " << libUsbErrorString( errorCode );
         dp->clear();
@@ -183,10 +188,10 @@ unsigned CapturingThread::getRealSamples() {
     // Save raw data to temporary buffer
     // timestampDebug( QString( "Request packet %1: %2 bytes" ).arg( tag ).arg( rawSamplesize ) );
     hdc->raw.received = 0;
-    int retval = hdc->scopeDevice->bulkReadMulti( dp->data(), rawSamplesize, realSlow, hdc->raw.received );
+    int retval = device->bulkReadMulti( dp->data(), rawSamplesize, realSlow, hdc->raw.received );
     if ( retval < 0 ) {
         if ( retval == LIBUSB_ERROR_NO_DEVICE )
-            hdc->scopeDevice->disconnectFromDevice();
+            device->disconnectFromDevice();
         qWarning() << "bulkReadMulti: Getting sample data failed: " << libUsbErrorString( retval );
         dp->clear();
         return 0;
@@ -249,7 +254,10 @@ unsigned CapturingThread::getDemoSamples() {
             block = 0;
             hdc->raw.received = received;
             QThread::usleep( unsigned( 1e6 * packetLength / channels / samplerate ) );
-            if ( !hdc->capturing || hdc->scopeDevice->hasStopped() )
+            if ( !hdc->capturing || !hdc->isDeviceAvailable() )
+                break;
+            QReadLocker deviceLocker( &hdc->scopeDeviceLock );
+            if ( hdc->scopeDevice && hdc->scopeDevice->hasStopped() )
                 break;
         }
     }

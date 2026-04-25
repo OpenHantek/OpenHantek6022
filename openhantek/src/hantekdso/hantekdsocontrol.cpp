@@ -37,7 +37,7 @@ HantekDsoControl::HantekDsoControl( ScopeDevice *device, const DSOModel *model, 
 
 
 HantekDsoControl::~HantekDsoControl() {
-    if ( scope->verboseLevel > 1 )
+    if ( scope && scope->verboseLevel > 1 )
         qDebug() << " HantekDsoControl::~HantekDsoControl()";
     while ( firstControlCommand ) {
         ControlCommand *t = firstControlCommand->next;
@@ -51,11 +51,30 @@ void HantekDsoControl::prepareForShutdown() {
     if ( verboseLevel > 1 )
         qDebug() << " HDC::prepareForShutdown()";
     calibrateOffset( false );
-    updateCalibrationValues( scopeDevice->isRealHW() && specification->hasCalibrationEEPROM );
+    bool canUseCalibrationEEPROM = false;
+    {
+        QReadLocker locker( &scopeDeviceLock );
+        canUseCalibrationEEPROM = scopeDevice && deviceConnectionState == DeviceConnectionState::Connected &&
+                                  scopeDevice->isConnected() && scopeDevice->isRealHW() &&
+                                  specification->hasCalibrationEEPROM;
+    }
+    updateCalibrationValues( canUseCalibrationEEPROM );
 }
 
 
-bool HantekDsoControl::deviceNotConnected() { return !scopeDevice->isConnected(); }
+const ScopeDevice *HantekDsoControl::getDevice() const {
+    QReadLocker locker( &scopeDeviceLock );
+    return scopeDevice;
+}
+
+
+bool HantekDsoControl::isDeviceAvailable() const {
+    QReadLocker locker( &scopeDeviceLock );
+    return scopeDevice && deviceConnectionState == DeviceConnectionState::Connected && scopeDevice->isConnected();
+}
+
+
+bool HantekDsoControl::deviceNotConnected() { return !isDeviceAvailable(); }
 
 
 void HantekDsoControl::restoreTargets() {
@@ -401,7 +420,7 @@ Dso::ErrorCode HantekDsoControl::setTriggerPosition( double position ) {
 
 
 // Initialize the device with the current settings.
-void HantekDsoControl::applySettings( DsoSettingsScope *dsoSettingsScope ) {
+void HantekDsoControl::applySettings( const DsoSettingsScope *dsoSettingsScope ) {
     if ( verboseLevel > 1 )
         qDebug() << " HDC::applySettings()";
     scope = dsoSettingsScope;
@@ -428,11 +447,68 @@ void HantekDsoControl::applySettings( DsoSettingsScope *dsoSettingsScope ) {
 }
 
 
+void HantekDsoControl::parkForReconnect() {
+    if ( verboseLevel > 1 )
+        qDebug() << " HDC::parkForReconnect()";
+
+    {
+        QWriteLocker locker( &scopeDeviceLock );
+        if ( deviceConnectionState == DeviceConnectionState::Parked )
+            return;
+
+        resumeSamplingAfterReconnect = samplingUI;
+        samplingUI = false;
+        samplingStarted = false;
+        deviceConnectionState = DeviceConnectionState::Parked;
+        if ( scopeDevice )
+            scopeDevice->stopSampling();
+    }
+
+    {
+        QWriteLocker rawLocker( &raw.lock );
+        raw.valid = false;
+        raw.rollMode = false;
+    }
+
+    emit showSamplingStatus( false );
+    emit deviceAvailabilityChanged( false );
+}
+
+
+void HantekDsoControl::rebindDevice( ScopeDevice *newScopeDevice ) {
+    if ( verboseLevel > 1 )
+        qDebug() << " HDC::rebindDevice()";
+
+    bool shouldResume = false;
+    {
+        QWriteLocker locker( &scopeDeviceLock );
+        deviceConnectionState = DeviceConnectionState::Rebinding;
+        scopeDevice = newScopeDevice;
+        if ( scopeDevice && specification->fixedUSBinLength )
+            scopeDevice->overwriteInPacketLength( unsigned( specification->fixedUSBinLength ) );
+        shouldResume = resumeSamplingAfterReconnect;
+        resumeSamplingAfterReconnect = false;
+        deviceConnectionState = DeviceConnectionState::Connected;
+    }
+
+    getCalibrationFromIniFile();
+    if ( scope )
+        applySettings( scope );
+
+    if ( shouldResume )
+        enableSamplingUI( true );
+
+    emit deviceAvailabilityChanged( true );
+}
+
+
 /// \brief Starts a new sampling block.
 void HantekDsoControl::restartSampling() {
     if ( verboseLevel > 4 )
         qDebug() << "    HDC::restartSampling()";
-    scopeDevice->stopSampling();
+    QReadLocker locker( &scopeDeviceLock );
+    if ( scopeDevice && deviceConnectionState == DeviceConnectionState::Connected )
+        scopeDevice->stopSampling();
     raw.rollMode = false;
 }
 
@@ -441,7 +517,7 @@ void HantekDsoControl::restartSampling() {
 void HantekDsoControl::enableSamplingUI( bool enabled ) {
     if ( verboseLevel > 3 )
         qDebug() << "   HDC::enableSampling()" << enabled;
-    if ( enabled && controlsettings.trigger.mode == Dso::TriggerMode::SINGLE )
+    if ( enabled && triggering && controlsettings.trigger.mode == Dso::TriggerMode::SINGLE )
         triggering->resetTriggeredPositionRaw(); // invalidate previous result, wait for new trigger
     else if ( controlsettings.trigger.mode == Dso::TriggerMode::ROLL )
         samplingStarted = enabled; // start / stop roll mode sampling (almost) immediately
@@ -465,7 +541,13 @@ Dso::ErrorCode HantekDsoControl::getCalibrationFromIniFile() {
     // Persistent storage: unique offset/gain calibration file:
     // Linux, Unix, macOS: "$HOME/.config/OpenHantek/DSO-6022BE_NNNNNNNNNNNN_calibration.ini"
     // Windows: "%APPDATA%\OpenHantek\DSO-6022BE_NNNNNNNNNNNN_calibration.ini"
-    QString calName = scopeDevice->getModel()->name + "_" + scopeDevice->getSerialNumber() + "_calibration";
+    QString calName;
+    {
+        QReadLocker locker( &scopeDeviceLock );
+        if ( !scopeDevice )
+            return Dso::ErrorCode::CONNECTION;
+        calName = scopeDevice->getModel()->name + "_" + scopeDevice->getSerialNumber() + "_calibration";
+    }
     if ( verboseLevel > 2 )
         qDebug() << "  Calibration data:" << calName + ".ini";
 
@@ -566,12 +648,17 @@ Dso::ErrorCode HantekDsoControl::getCalibrationFromEEPROM() {
     if ( verboseLevel > 2 )
         qDebug() << "  HDC::getCalibrationFromEEPROM()";
     int errorCode = -1;
-    if ( scopeDevice->isRealHW() && specification->hasCalibrationEEPROM )
-        errorCode = scopeDevice->controlRead( &controlsettings.cmdGetCalibration );
+    bool realHardware = false;
+    {
+        QReadLocker locker( &scopeDeviceLock );
+        realHardware = scopeDevice && deviceConnectionState == DeviceConnectionState::Connected && scopeDevice->isRealHW();
+        if ( realHardware && specification->hasCalibrationEEPROM )
+            errorCode = scopeDevice->controlRead( &controlsettings.cmdGetCalibration );
+    }
     if ( errorCode < 0 ) {
         // invalidate the calibration values.
         memset( controlsettings.calibrationValues, 0xFF, sizeof( CalibrationValues ) );
-        if ( scopeDevice->isRealHW() ) {
+        if ( realHardware ) {
             QString message = tr( "Couldn't get calibration data from oscilloscope's EEPROM. Use a config file for calibration!" );
             qWarning() << message;
             emit statusMessage( message, 0 );
@@ -615,6 +702,11 @@ Dso::ErrorCode HantekDsoControl::getCalibrationFromEEPROM() {
 #define EEPROM 0xa2
 
 Dso::ErrorCode HantekDsoControl::writeCalibrationToEEPROM() {
+    QReadLocker locker( &scopeDeviceLock );
+    if ( !scopeDevice || deviceConnectionState != DeviceConnectionState::Connected || !scopeDevice->isConnected() ||
+         !scopeDevice->isRealHW() )
+        return Dso::ErrorCode::CONNECTION;
+
     uint8_t type = TRANS_TYPE_WRITE;
     uint8_t request = EEPROM;
 
@@ -670,17 +762,23 @@ void HantekDsoControl::quitSampling() {
         qDebug() << "  HDC::quitSampling()";
     enableSamplingUI( false );
     capturing = false;
-    scopeDevice->stopSampling();
-    if ( scopeDevice->isDemoDevice() )
-        return;
     auto controlCommand = ControlStopSampling();
     timestampDebug( QString( "Sending control command 0x%1 (Stop Sampling): %2" )
                         .arg( QString::number( controlCommand.code, 16 ),
                               hexdecDump( controlCommand.data(), unsigned( controlCommand.size() ) ) ) );
-    int errorCode = scopeDevice->controlWrite( &controlCommand );
-    if ( errorCode < 0 ) {
-        qWarning() << "controlWrite: stop sampling failed: " << libUsbErrorString( errorCode );
-        emit communicationError();
+    {
+        QReadLocker locker( &scopeDeviceLock );
+        if ( !scopeDevice )
+            return;
+        scopeDevice->stopSampling();
+        if ( scopeDevice->isDemoDevice() || deviceConnectionState != DeviceConnectionState::Connected || !scopeDevice->isConnected() )
+            return;
+        int errorCode = scopeDevice->controlWrite( &controlCommand );
+        if ( errorCode < 0 ) {
+            qWarning() << "controlWrite: stop sampling failed: " << libUsbErrorString( errorCode );
+            emit communicationError();
+        }
+        return;
     }
 }
 

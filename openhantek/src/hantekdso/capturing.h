@@ -14,7 +14,7 @@ class CapturingThread : public QThread {
   private:
     void run() override;
     void capture();
-    unsigned getRealSamples();
+    unsigned getRealSamples( ScopeDevice *device );
     unsigned getDemoSamples();
     void xferSamples();
     HantekDsoControl *hdc;

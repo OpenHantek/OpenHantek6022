@@ -66,6 +66,12 @@ ScopeDevice::ScopeDevice() : model( new ModelDEMO ), device( nullptr ), uniqueUS
 
 
 bool ScopeDevice::connectDevice( QString &errorMessage ) {
+    if ( isDemoDevice() )
+        return true;
+    if ( !device ) {
+        errorMessage = QCoreApplication::translate( "ScopeDevice", "Couldn't open device: device is no longer available" );
+        return false;
+    }
     if ( needsFirmware() )
         return false;
     if ( isConnected() )
@@ -112,12 +118,10 @@ bool ScopeDevice::connectDevice( QString &errorMessage ) {
 
 
 ScopeDevice::~ScopeDevice() {
-    disconnectFromDevice();
-#if defined Q_OS_WIN
+    disconnectFromDevice( true );
     if ( device != nullptr )
         libusb_unref_device( device );
     device = nullptr;
-#endif
 }
 
 
@@ -144,7 +148,11 @@ int ScopeDevice::claimInterface( const libusb_interface_descriptor *interfaceDes
 }
 
 
-void ScopeDevice::disconnectFromDevice() {
+void ScopeDevice::disconnectFromDevice( bool expected ) {
+    expectedDisconnect |= expected;
+    if ( disconnected && !handle )
+        return;
+
     disconnected = true;
     if ( !device )
         return;
@@ -160,10 +168,7 @@ void ScopeDevice::disconnectFromDevice() {
     }
     handle = nullptr;
 
-#if !defined Q_OS_WIN
-    libusb_unref_device( device );
-#endif
-    emit deviceDisconnected();
+    emit deviceDisconnected( expectedDisconnect );
 }
 
 
