@@ -88,8 +88,7 @@ static void applyRequirements_( HantekDsoControl *dsoControl ) {
 
 ///                                        VID/PID active  VID/PID no FW         Scope name
 //                                         |------------|  |------------|         |------|
-ModelRP2040::ModelRP2040()
-    : DSOModel( ID, 0x04b5, 0x2040, 0x04b5, 0x2040, 0, "", "RP2040", Dso::ControlSpecification( 2 ) ) {
+ModelRP2040::ModelRP2040() : DSOModel( ID, 0x2e8a, 0x2041, 0x2e8a, 0x2041, 0, "", "RP2040", Dso::ControlSpecification( 2 ) ) {
     initSpecifications( specification );
 }
 
