@@ -16,10 +16,21 @@ if (GIT_EXECUTABLE AND EXISTS "${CMAKE_SOURCE_DIR}/.git")
         OUTPUT_VARIABLE VERSION
         OUTPUT_STRIP_TRAILING_WHITESPACE
     )
+    if (NOT VERSION) # e.g. a fork without tags - fall back to a generic version string
+        execute_process(
+            COMMAND ${GIT_EXECUTABLE} rev-parse --short HEAD
+            WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+            OUTPUT_VARIABLE GIT_HASH
+            OUTPUT_STRIP_TRAILING_WHITESPACE
+        )
+        set(VERSION "0.0.0-g${GIT_HASH}")
+        set(VERSION_FROM_FALLBACK TRUE)
+    endif()
     # devdrop or release?
     string(FIND ${VERSION} "devdrop-0-g" DEVDROP_POS)
     string(FIND ${VERSION} "-0-g" ZERO_POS)
-    if( ${DEVDROP_POS} EQUAL 0 ) # "x.y.z-p-gxxxxxxx(-dirty)-devdrop"
+    if( VERSION_FROM_FALLBACK ) # keep the fallback version, git describe would fail again
+    elseif( ${DEVDROP_POS} EQUAL 0 ) # "x.y.z-p-gxxxxxxx(-dirty)-devdrop"
         execute_process(
             COMMAND ${GIT_EXECUTABLE} describe --long --dirty
             WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
