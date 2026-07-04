@@ -12,6 +12,9 @@
 #include "hantekdso/controlspecification.h"
 #include "hantekdso/mathmodes.h"
 #include "scopesettings.h"
+#include "viewsettings.h"
+#include "widgets/scopebutton.h"
+#include "widgets/scopeknob.h"
 
 #define ATTENUATION_MIN 1    ///< Minimum probe attenuation
 #define ATTENUATION_MAX 1000 ///< Maximum probe attenuation
@@ -29,7 +32,7 @@ class VoltageDock : public QDockWidget {
     /// \param settings The target settings object.
     /// \param parent The parent widget.
     /// \param flags Flags for the window manager.
-    VoltageDock( DsoSettingsScope *scope, const Dso::ControlSpecification *spec, QWidget *parent );
+    VoltageDock( DsoSettingsScope *scope, const DsoSettingsView *view, const Dso::ControlSpecification *spec, QWidget *parent );
 
     /// \brief Sets the coupling for a channel.
     /// \param channel The channel, whose coupling should be set.
@@ -73,11 +76,13 @@ class VoltageDock : public QDockWidget {
     QWidget *dockWidget;     ///< The main widget for the dock window
 
     struct ChannelBlock {
-        QCheckBox *usedCheckBox;   ///< Enable/disable a specific channel
-        QComboBox *gainComboBox;   ///< Select the vertical gain for the channels
-        QComboBox *miscComboBox;   ///< Select coupling for real and mode for math channels
-        QCheckBox *invertCheckBox; ///< Select if the channels should be displayed inverted
-        QSpinBox *attnSpinBox;     ///< Enter the attenuation probe value
+        ScopeButton *usedCheckBox;       ///< Enable/disable a specific channel (lit panel key)
+        QLabel *gainLabel;               ///< Shows the current V/div setting like on a scope screen
+        ScopeKnob *scaleKnob;            ///< Rotary SCALE knob, clockwise zooms in (smaller V/div)
+        QComboBox *miscComboBox;         ///< Select the mode for math channels
+        ScopeButtonGroup *couplingGroup; ///< Select DC/AC coupling for real channels
+        ScopeButton *invertCheckBox;     ///< Select if the channels should be displayed inverted
+        ScopeCycleButton *attnButton;    ///< Cycles the probe attenuation x1 / x10 / x100
     };
 
     std::vector< ChannelBlock > channelBlocks;

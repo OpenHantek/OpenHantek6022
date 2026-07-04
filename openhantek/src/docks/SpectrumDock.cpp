@@ -26,7 +26,8 @@ template < typename... Args > struct SELECT {
 };
 
 
-SpectrumDock::SpectrumDock( DsoSettingsScope *scope, QWidget *parent ) : QDockWidget( tr( "Spectrum" ), parent ), scope( scope ) {
+SpectrumDock::SpectrumDock( DsoSettingsScope *scope, const DsoSettingsView *view, QWidget *parent )
+    : QDockWidget( tr( "Spectrum" ), parent ), scope( scope ) {
 
     if ( scope->verboseLevel > 1 )
         qDebug() << " SpectrumDock::SpectrumDock()";
@@ -50,7 +51,9 @@ SpectrumDock::SpectrumDock( DsoSettingsScope *scope, QWidget *parent ) : QDockWi
             b.magnitudeComboBox->setToolTip( tr( "Magnitude per vertical screen division" ) );
         QString name = scope->spectrum[ channel ].name;
         name.insert( int( channel ), '&' ); // &SP1, S&P2, SP&M
-        b.usedCheckBox = ( new QCheckBox( name ) );
+        b.usedCheckBox = new ScopeButton( name );
+        if ( channel < view->screen.spectrum.size() ) // light up the key in the spectrum trace color
+            b.usedCheckBox->setAccentColor( view->screen.spectrum[ channel ] );
 
         channelBlocks.push_back( b );
 
@@ -60,7 +63,7 @@ SpectrumDock::SpectrumDock( DsoSettingsScope *scope, QWidget *parent ) : QDockWi
         b.magnitudeComboBox->addItems( magnitudeStrings );
 
         // Connect signals and slots
-        connect( b.usedCheckBox, &QCheckBox::toggled, this, [ this, channel ]( bool checked ) {
+        connect( b.usedCheckBox, &QAbstractButton::clicked, this, [ this, channel ]( bool checked ) {
             if ( channel < this->scope->voltage.size() ) {
                 setUsed( channel, checked );
             }
@@ -79,10 +82,24 @@ SpectrumDock::SpectrumDock( DsoSettingsScope *scope, QWidget *parent ) : QDockWi
         frequencybaseSiSpinBox->setToolTip( tr( "Frequency range per horizontal screen division" ) );
     frequencybaseSiSpinBox->setMinimum( 0.1 );
     frequencybaseSiSpinBox->setMaximum( 100e6 );
+    frequencybaseKnob = new ScopeKnob();
+    if ( scope->toolTipVisible )
+        frequencybaseKnob->setToolTip( tr( "Frequency knob: turn (drag or scroll) clockwise to zoom in" ) );
     dockLayout->addWidget( frequencybaseLabel, int( channel ), 0 );
-    dockLayout->addWidget( frequencybaseSiSpinBox, int( channel ), 1 );
+    QHBoxLayout *frequencybaseLayout = new QHBoxLayout();
+    frequencybaseLayout->setSpacing( 4 );
+    frequencybaseLayout->addWidget( frequencybaseSiSpinBox, 1 );
+    frequencybaseLayout->addWidget( frequencybaseKnob );
+    dockLayout->addLayout( frequencybaseLayout, int( channel ), 1 );
     connect( frequencybaseSiSpinBox, SELECT< double >::OVERLOAD_OF( &QDoubleSpinBox::valueChanged ), this,
              [ this ]() { this->frequencybaseSelected( this->frequencybaseSiSpinBox->value() ); } );
+    // clockwise (positive detents) zooms in -> smaller frequencybase
+    connect( frequencybaseKnob, &ScopeKnob::stepped, this, [ this ]( int delta ) {
+        for ( ; delta > 0; --delta )
+            frequencybaseSiSpinBox->stepDown();
+        for ( ; delta < 0; ++delta )
+            frequencybaseSiSpinBox->stepUp();
+    } );
 
     // Load settings into GUI
     loadSettings( scope );

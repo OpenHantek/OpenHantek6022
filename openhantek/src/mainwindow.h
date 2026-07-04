@@ -6,6 +6,7 @@
 #include <QLineEdit>
 #include <QList>
 #include <QMainWindow>
+#include <functional>
 #include <memory>
 
 #include "scopesettings.h"
@@ -21,6 +22,9 @@ class TriggerDock;
 class SpectrumDock;
 class VoltageDock;
 class QAction;
+class QLabel;
+class QPlainTextEdit;
+class RemoteServer;
 
 namespace Ui {
 class MainWindow;
@@ -57,9 +61,46 @@ class MainWindow : public QMainWindow {
     // Central widgets
     DsoWidget *dsoWidget;
 
+    // Docking windows
+    VoltageDock *voltageDock = nullptr;
+    HorizontalDock *horizontalDock = nullptr;
+    TriggerDock *triggerDock = nullptr;
+    SpectrumDock *spectrumDock = nullptr;
+
+    // DSO control layer (lives in its own thread)
+    HantekDsoControl *dsoControl = nullptr;
+    const Dso::ControlSpecification *mSpec = nullptr;
+
     // Settings used for the whole program
     DsoSettings *dsoSettings;
     ExporterRegistry *exporterRegistry;
+
+    // Last processed acquisition, used for Autoset and remote measurements
+    std::shared_ptr< PPresult > lastResult;
+
+    // Remote control server (menu controlled, or started with --server PORT)
+    RemoteServer *remoteServer = nullptr;
+    QAction *actionRemoteServer = nullptr;
+    QLabel *remoteStatusLabel = nullptr;
+    QPlainTextEdit *remoteLogView = nullptr;
+    QStringList remoteLog;
+    quint16 remotePort = 5025;
+    void setRemoteServerEnabled( bool enabled );
+    void updateRemoteStatusLabel();
+    void appendRemoteLog( const QString &line );
+    void showRemoteLogDialog();
+
+    void autoSet();
+    void autoSetRun();
+    int autoSetRetries = 0;
+    void startSingleShot();
+    void applyFontSize( int fontSize );
+    void reloadSettings();
+    bool saveScreenshot( const QString &fileName );
+    QString executeRemoteCommand( const QString &line );
+    QString executeRemoteSetOrQuery( const QString &cmd, const QString &arg, DsoSettingsScope *scope,
+                                     const std::function< bool( const QString &, bool * ) > &onOff );
+    QString executeRemoteHorTrigOrQuery( const QString &cmd, const QString &arg, DsoSettingsScope *scope );
 
     // Taking screenshots
     enum screenshotType_t { SCREENSHOT, HARDCOPY, PRINTER };

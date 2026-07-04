@@ -102,6 +102,7 @@ int main( int argc, char *argv[] ) {
     int toolTipVisible = 1;             // start with tooltips
     bool styleFusion = false;           // use system style
     QString configFileName = QString();
+    quint16 remoteServerPort = 0; // remote control server disabled by default
 
     { // do this early at program start ...
         // get font size and other global program settings:
@@ -189,6 +190,10 @@ int main( int argc, char *argv[] ) {
         QCommandLineOption resetSettingsOption(
             "resetSettings", QCoreApplication::translate( "main", "Reset persistent settings, start with default" ) );
         p.addOption( resetSettingsOption );
+        QCommandLineOption serverOption(
+            "server", QCoreApplication::translate( "main", "Enable the remote control TCP server on localhost:Port" ),
+            QCoreApplication::translate( "main", "Port" ), "5025" );
+        p.addOption( serverOption );
         QCommandLineOption verboseOption(
             "verbose", QCoreApplication::translate( "main", "Verbose tracing of program startup, ui and processing steps" ),
             QCoreApplication::translate( "main", "Level" ) );
@@ -213,6 +218,8 @@ int main( int argc, char *argv[] ) {
         if ( p.isSet( verboseOption ) )
             verboseLevel = p.value( "verbose" ).toInt();
         resetSettings = p.isSet( resetSettingsOption );
+        if ( p.isSet( serverOption ) )
+            remoteServerPort = quint16( p.value( serverOption ).toUInt() );
     } // ... and forget the no more needed variables
 
 
@@ -411,6 +418,7 @@ int main( int argc, char *argv[] ) {
         qDebug() << startupTime.elapsed() << "ms:"
                  << "create settings object";
     DsoSettings settings( scopeDevice.get(), verboseLevel, resetSettings );
+    settings.remoteServerPort = remoteServerPort;
 
     if ( !configFileName.isEmpty() )
         settings.loadFromFile( configFileName );
@@ -509,6 +517,38 @@ int main( int argc, char *argv[] ) {
                  << "set" << appFont;
     openHantekApplication.setFont( appFont );
     openHantekApplication.setFont( appFont, "QWidget" ); // on some systems the 2nd argument is required
+
+    // Make the interactive controls comfortably big (touch/mouse friendly, like HW scope buttons).
+    // All sizes are in "em", they scale live with the user selected font size; colors
+    // are taken from the active palette so both light and dark themes keep working.
+    openHantekApplication.setStyleSheet(
+        "QComboBox, QAbstractSpinBox { min-height: 1.8em; padding: 0.1em 0.4em;"
+        " background: palette(button); color: palette(button-text);"
+        " border: 1px solid palette(mid); border-radius: 0.2em; }"
+        "QComboBox:focus, QAbstractSpinBox:focus { border: 1px solid palette(highlight); }"
+        "QComboBox QAbstractItemView { background: palette(base); color: palette(text);"
+        " selection-background-color: palette(highlight); }"
+        "QCheckBox::indicator, QRadioButton::indicator { width: 1.2em; height: 1.2em; }"
+        // the control docks form a fixed dark instrument front panel, independent of the app theme
+        "QDockWidget::title { padding: 0.35em; background: #17191d; color: #d8dade; font-weight: bold; }"
+        "QWidget#panelBody { background: #24272c; }"
+        "QWidget#panelBody QLabel { color: #d8dade; }"
+        "QWidget#panelBody QComboBox, QWidget#panelBody QAbstractSpinBox { background: #17191d; color: #e6e8eb;"
+        " border: 1px solid #3a3e44; }"
+        "QWidget#panelBody QComboBox QAbstractItemView { background: #17191d; color: #e6e8eb; }"
+        "QWidget#panelBody QPushButton { color: #d8dade; border: 1px solid #15171a; border-bottom: 2px solid #101214;"
+        " border-radius: 0.3em; min-height: 1.6em; min-width: 1.6em; font-weight: bold;"
+        " background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #4b5157, stop:0.08 #3e4349, stop:1 #2a2d32); }"
+        "QWidget#panelBody QPushButton:pressed { background: #202328; border-bottom-width: 1px; }"
+        "QFrame#channelCard { border: 1px solid #3a3e44; border-radius: 0.35em; margin: 0.1em 0;"
+        " background: #2a2d32; }"
+        "QToolBar QToolButton { min-width: 3.2em; padding: 0.2em 0.4em;"
+        " border: 1px solid transparent; border-radius: 0.25em; }"
+        "QToolBar QToolButton:hover { border-color: palette(highlight); }"
+        "QToolBar QToolButton:checked { background: palette(highlight); color: palette(highlighted-text);"
+        " border-color: palette(highlight); }"
+        "QToolButton#runStopButton:checked { background: #1e8f3e; border-color: #1e8f3e; color: white; }"
+        "QToolButton#autosetButton { border-color: #2f6fd0; }" );
 
     //////// Create main window ////////
     if ( verboseLevel )

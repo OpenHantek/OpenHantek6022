@@ -10,7 +10,7 @@ endif()
 
 
 find_package(Qt6PrintSupport REQUIRED)
-find_package(Qt6 REQUIRED COMPONENTS OpenGLWidgets)
+find_package(Qt6 REQUIRED COMPONENTS OpenGLWidgets Network)
 find_package(OpenGL)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
@@ -65,7 +65,7 @@ endif()
 # make executable
 add_executable(${PROJECT_NAME} ${EXECTYPE} ${SRC} ${HEADERS} ${UI}
 ${QRC} ${RC} ${TRANSLATION_BIN_FILES} ${TRANSLATION_QRC} ${ICONS})
-target_link_libraries(${PROJECT_NAME} Qt6::Widgets Qt6::PrintSupport Qt6::OpenGL Qt6::OpenGLWidgets ${OPENGL_LIBRARIES} )
+target_link_libraries(${PROJECT_NAME} Qt6::Widgets Qt6::PrintSupport Qt6::OpenGL Qt6::OpenGLWidgets Qt6::Network ${OPENGL_LIBRARIES} )
 if( APPLE AND BUILD_MACOSX_BUNDLE )
     find_package(Qt6 REQUIRED COMPONENTS DBus)
     target_link_libraries(${PROJECT_NAME} Qt6::DBus )

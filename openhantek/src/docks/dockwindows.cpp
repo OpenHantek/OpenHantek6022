@@ -20,7 +20,10 @@ void SetupDockWidget( QDockWidget *dockWindow, QWidget *dockWidget, QLayout *lay
     dockWindow->setAllowedAreas( Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea );
     dockWindow->setFeatures( QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable ); // do not close
     dockWidget->setLayout( layout );
+    dockWidget->setObjectName( "panelBody" ); // fixed dark instrument front panel styling
     dockWidget->setSizePolicy( QSizePolicy( QSizePolicy::Minimum, QSizePolicy::Fixed, QSizePolicy::DefaultType ) );
+    // keep the panel compact like a HW scope front panel, do not stretch the controls
+    dockWidget->setMaximumWidth( dockWidget->fontMetrics().height() * 22 );
     dockWindow->setWidget( dockWidget );
 }
 

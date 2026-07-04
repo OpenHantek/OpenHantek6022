@@ -6,6 +6,9 @@
 #include <QGridLayout>
 
 #include "scopesettings.h"
+#include "viewsettings.h"
+#include "widgets/scopebutton.h"
+#include "widgets/scopeknob.h"
 
 class QLabel;
 class QCheckBox;
@@ -24,7 +27,7 @@ class SpectrumDock : public QDockWidget {
     /// \param settings The target settings object.
     /// \param parent The parent widget.
     /// \param flags Flags for the window manager.
-    SpectrumDock( DsoSettingsScope *scope, QWidget *parent );
+    SpectrumDock( DsoSettingsScope *scope, const DsoSettingsView *view, QWidget *parent );
 
     /// \brief Sets the magnitude for a channel.
     /// \param channel The channel, whose magnitude should be set.
@@ -65,7 +68,7 @@ class SpectrumDock : public QDockWidget {
     QWidget *dockWidget;     ///< The main widget for the dock window
 
     struct ChannelBlock {
-        QCheckBox *usedCheckBox;      ///< Enable/disable a specific channel
+        ScopeButton *usedCheckBox;    ///< Enable/disable a specific channel (lit panel key)
         QComboBox *magnitudeComboBox; ///< Select the vertical magnitude for the spectrums
     };
 
@@ -77,6 +80,7 @@ class SpectrumDock : public QDockWidget {
     QStringList magnitudeStrings;         ///< String representations for the magnitude steps
     QLabel *frequencybaseLabel;           ///< The label for the frequencybase spinbox
     SiSpinBox *frequencybaseSiSpinBox;    ///< Selects the frequencybase for spectrum graphs
+    ScopeKnob *frequencybaseKnob;         ///< Rotary knob, clockwise zooms in (smaller Hz/div)
 
   signals:
     void magnitudeChanged( ChannelID channel, double magnitude ); ///< A magnitude has been selected
