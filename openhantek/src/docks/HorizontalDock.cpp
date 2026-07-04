@@ -52,12 +52,17 @@ HorizontalDock::HorizontalDock( DsoSettingsScope *scope, const Dso::ControlSpeci
     timebaseSiSpinBox->setMinimum( 1e-9 );
     timebaseSiSpinBox->setMaximum( 1e3 );
 
-    formatLabel = new QLabel( tr( "Format" ) );
-    formatComboBox = new QComboBox();
+    // rotary TIME knob stepping through the 1-2-5 timebase values
+    timebaseKnob = new ScopeKnob();
     if ( scope->toolTipVisible )
-        formatComboBox->setToolTip( tr( "Select signal over time or XY display" ) );
+        timebaseKnob->setToolTip( tr( "Time knob: turn (drag or scroll) clockwise to zoom in" ) );
+
+    formatLabel = new QLabel( tr( "Format" ) );
+    formatGroup = new ScopeButtonGroup();
+    if ( scope->toolTipVisible )
+        formatGroup->setToolTip( tr( "Select signal over time or XY display" ) );
     for ( Dso::GraphFormat format : Dso::GraphFormatEnum )
-        formatComboBox->addItem( Dso::graphFormatString( format ) );
+        formatGroup->addItem( Dso::graphFormatString( format ) );
 
     calfreqLabel = new QLabel( tr( "Calibration out" ) );
     calfreqSteps = spec->calfreqSteps;
@@ -75,11 +80,15 @@ HorizontalDock::HorizontalDock( DsoSettingsScope *scope, const Dso::ControlSpeci
 
     row = 0; // allows flexible shift up/down
     dockLayout->addWidget( timebaseLabel, row, 0 );
-    dockLayout->addWidget( timebaseSiSpinBox, row++, 1 );
+    QHBoxLayout *timebaseLayout = new QHBoxLayout(); // [ 1 ms ] (TIME knob) like on a front panel
+    timebaseLayout->setSpacing( 4 );
+    timebaseLayout->addWidget( timebaseSiSpinBox, 1 );
+    timebaseLayout->addWidget( timebaseKnob );
+    dockLayout->addLayout( timebaseLayout, row++, 1 );
     dockLayout->addWidget( samplerateLabel, row, 0 );
     dockLayout->addWidget( samplerateSiSpinBox, row++, 1 );
     dockLayout->addWidget( formatLabel, row, 0 );
-    dockLayout->addWidget( formatComboBox, row++, 1 );
+    dockLayout->addWidget( formatGroup, row++, 1 );
     dockLayout->addWidget( calfreqLabel, row, 0 );
     dockLayout->addWidget( calfreqComboBox, row++, 1 );
 
@@ -94,7 +103,14 @@ HorizontalDock::HorizontalDock( DsoSettingsScope *scope, const Dso::ControlSpeci
              [ this ]( double samplerate ) { this->samplerateSelected( samplerate ); } );
     connect( timebaseSiSpinBox, SELECT< double >::OVERLOAD_OF( &QDoubleSpinBox::valueChanged ), this,
              [ this ]( double timebase ) { this->timebaseSelected( timebase ); } );
-    connect( formatComboBox, SELECT< int >::OVERLOAD_OF( &QComboBox::currentIndexChanged ), this,
+    // clockwise (positive detents) zooms in -> faster timebase, like on a HW scope
+    connect( timebaseKnob, &ScopeKnob::stepped, this, [ this ]( int delta ) {
+        for ( ; delta > 0; --delta )
+            timebaseSiSpinBox->stepDown();
+        for ( ; delta < 0; ++delta )
+            timebaseSiSpinBox->stepUp();
+    } );
+    connect( formatGroup, &ScopeButtonGroup::currentIndexChanged, this,
              [ this ]( int index ) { this->formatSelected( index ); } );
     connect( calfreqComboBox, SELECT< int >::OVERLOAD_OF( &QComboBox::currentIndexChanged ), this,
              [ this ]( int index ) { this->calfreqIndexSelected( index ); } );
@@ -161,9 +177,8 @@ double HorizontalDock::setTimebase( double timebase ) {
 int HorizontalDock::setFormat( Dso::GraphFormat format ) {
     if ( scope->verboseLevel > 2 )
         qDebug() << "  HDock::setFormat()" << format;
-    QSignalBlocker blocker( formatComboBox );
     if ( format >= Dso::GraphFormat::TY && format <= Dso::GraphFormat::XY ) {
-        formatComboBox->setCurrentIndex( format );
+        formatGroup->setCurrentIndex( format ); // does not emit
         return format;
     }
     return -1;

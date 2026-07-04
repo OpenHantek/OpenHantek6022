@@ -9,10 +9,13 @@
 
 #include "hantekdso/controlspecification.h"
 #include "hantekdso/enums.h"
+#include "widgets/scopebutton.h"
+#include "widgets/scopeknob.h"
 
 class QLabel;
 class QCheckBox;
 class QComboBox;
+class QPushButton;
 
 class SiSpinBox;
 
@@ -75,8 +78,9 @@ class HorizontalDock : public QDockWidget {
     QLabel *calfreqLabel;           ///< The label for the calibration frequency spinbox
     SiSpinBox *samplerateSiSpinBox; ///< Selects the samplerate for acquisitions
     SiSpinBox *timebaseSiSpinBox;   ///< Selects the timebase for voltage graphs
-    QComboBox *formatComboBox;      ///< Selects the way the sampled data is
-                                    ///  interpreted and shown
+    ScopeKnob *timebaseKnob;        ///< Rotary TIME knob, clockwise zooms in (faster timebase)
+    ScopeButtonGroup *formatGroup;  ///< Selects the way the sampled data is
+                                    ///  interpreted and shown (T-Y / X-Y panel keys)
     QComboBox *calfreqComboBox;     ///< Selects the calibration frequency
 
     DsoSettingsScope *scope;         ///< The settings provided by the parent class

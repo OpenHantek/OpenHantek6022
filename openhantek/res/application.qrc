@@ -9,6 +9,8 @@
         <file>images/lighttheme/play.svg</file>
         <file>images/lighttheme/refresh.svg</file>
         <file>images/lighttheme/zoom.svg</file>
+        <file>images/lighttheme/autoset.svg</file>
+        <file>images/lighttheme/single.svg</file>
 
         <file>images/darktheme/histogram.svg</file>
         <file>images/darktheme/measure.svg</file>
@@ -17,6 +19,8 @@
         <file>images/darktheme/play.svg</file>
         <file>images/darktheme/refresh.svg</file>
         <file>images/darktheme/zoom.svg</file>
+        <file>images/darktheme/autoset.svg</file>
+        <file>images/darktheme/single.svg</file>
 
         <file>images/lighttheme/about.svg</file>
         <file>images/lighttheme/book.svg</file>

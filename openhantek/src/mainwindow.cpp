@@ -17,6 +17,7 @@
 #include "exporting/exporterinterface.h"
 #include "exporting/exporterregistry.h"
 #include "hantekdsocontrol.h"
+#include "remote/remoteserver.h"
 #include "usb/scopedevice.h"
 #include "viewconstants.h"
 
@@ -25,19 +26,28 @@
 #include <QDesktopServices>
 #include <QDir>
 #include <QFileDialog>
+#include <QFontDatabase>
+#include <QInputDialog>
+#include <QJsonArray>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QPlainTextEdit>
 #include <QLoggingCategory>
 #include <QMessageBox>
 #include <QPainter>
 #include <QPalette>
 #include <QPrintDialog>
 #include <QPrinter>
+#include <QSettings>
 #include <QTimer>
 #include <QValidator>
+#include <cmath>
 
 #include "OH_VERSION.h"
 
 MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, ExporterRegistry *exporterRegistry, QWidget *parent )
-    : QMainWindow( parent ), ui( new Ui::MainWindow ), dsoSettings( settings ), exporterRegistry( exporterRegistry ) {
+    : QMainWindow( parent ), ui( new Ui::MainWindow ), dsoControl( dsoControl ), dsoSettings( settings ),
+      exporterRegistry( exporterRegistry ) {
 
     if ( dsoSettings->scope.verboseLevel > 1 )
         qDebug() << " MainWindow::MainWindow()";
@@ -201,16 +211,17 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
 
     DsoSettingsScope *scope = &( dsoSettings->scope );
     const Dso::ControlSpecification *spec = dsoControl->getModel()->spec();
+    mSpec = spec;
 
     registerDockMetaTypes();
 
     // Docking windows
     // Create dock windows before the dso widget, they fix messed up settings
 
-    VoltageDock *voltageDock = new VoltageDock( scope, spec, this );
-    HorizontalDock *horizontalDock = new HorizontalDock( scope, spec, this );
-    TriggerDock *triggerDock = new TriggerDock( scope, spec, this );
-    SpectrumDock *spectrumDock = new SpectrumDock( scope, this );
+    voltageDock = new VoltageDock( scope, &dsoSettings->view, spec, this );
+    horizontalDock = new HorizontalDock( scope, spec, this );
+    triggerDock = new TriggerDock( scope, &dsoSettings->view, spec, this );
+    spectrumDock = new SpectrumDock( scope, &dsoSettings->view, this );
 
     addDockWidget( Qt::RightDockWidgetArea, voltageDock );
     addDockWidget( Qt::RightDockWidgetArea, horizontalDock );
@@ -297,7 +308,7 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
     connect( spectrumDock, &SpectrumDock::frequencybaseChanged, dsoWidget,
              [ this ]( double frequencybase ) { dsoWidget->updateFrequencybase( frequencybase ); } );
     connect( dsoControl, &HantekDsoControl::samplerateCalculated, horizontalDock,
-             [ this, horizontalDock, spectrumDock ]( double samplerate, unsigned oversample ) {
+             [ this ]( double samplerate, unsigned oversample ) {
                  // The timebase was set, let's adapt the samplerate accordingly
                  dsoSettings->scope.horizontal.samplerate = samplerate;
                  horizontalDock->setSamplerate( samplerate );
@@ -307,7 +318,7 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
              } );
     connect( horizontalDock, &HorizontalDock::calfreqChanged, dsoControl,
              [ dsoControl, this ]() { dsoControl->setCalFreq( dsoSettings->scope.horizontal.calfreq ); } );
-    connect( horizontalDock, &HorizontalDock::formatChanged, spectrumDock, [ = ]( Dso::GraphFormat format ) {
+    connect( horizontalDock, &HorizontalDock::formatChanged, spectrumDock, [ this ]( Dso::GraphFormat format ) {
         ui->actionHistogram->setEnabled( format == Dso::GraphFormat::TY );
         spectrumDock->enableSpectrumDock( format == Dso::GraphFormat::TY );
     } );
@@ -396,6 +407,72 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
 
     connect( ui->actionRefresh, &QAction::triggered, dsoControl, &HantekDsoControl::restartSampling );
 
+    // Vendor style acquisition buttons: Single shot and Autoset
+    QAction *actionSingle = new QAction( QIcon( iconPath + "single.svg" ), tr( "Single" ), this );
+    actionSingle->setShortcut( Qt::Key::Key_1 );
+    if ( dsoSettings->scope.toolTipVisible )
+        actionSingle->setToolTip( tr( "Arm a single shot capture: stop after the next trigger event" ) );
+    connect( actionSingle, &QAction::triggered, this, &MainWindow::startSingleShot );
+
+    QAction *actionAutoset = new QAction( QIcon( iconPath + "autoset.svg" ), tr( "Autoset" ), this );
+    actionAutoset->setShortcut( Qt::Key::Key_A );
+    if ( dsoSettings->scope.toolTipVisible )
+        actionAutoset->setToolTip( tr( "Automatically adjust voltage gain, timebase and trigger to the signal" ) );
+    connect( actionAutoset, &QAction::triggered, this, &MainWindow::autoSet );
+
+    ui->menuOscilloscope->insertAction( ui->actionCalibrateOffset, actionSingle );
+    ui->menuOscilloscope->insertAction( ui->actionCalibrateOffset, actionAutoset );
+    ui->menuOscilloscope->insertSeparator( ui->actionCalibrateOffset );
+    deviceCommandActions << actionSingle << actionAutoset;
+
+    // Arrange the toolbar like the front panel of a HW scope: display keys on the
+    // left, the run control group (Single / Autoset / Run-Stop) on the top right
+    addToolBar( Qt::TopToolBarArea, ui->toolBar );
+    ui->toolBar->setToolButtonStyle( Qt::ToolButtonTextUnderIcon );
+    ui->toolBar->clear();
+    ui->toolBar->addAction( ui->actionPhosphor );
+    ui->toolBar->addAction( ui->actionHistogram );
+    ui->toolBar->addAction( ui->actionZoom );
+    ui->toolBar->addAction( ui->actionMeasure );
+    QWidget *toolBarSpacer = new QWidget();
+    toolBarSpacer->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Preferred );
+    ui->toolBar->addWidget( toolBarSpacer );
+    ui->toolBar->addAction( ui->actionRefresh );
+    ui->toolBar->addAction( actionSingle );
+    ui->toolBar->addAction( actionAutoset );
+    ui->toolBar->addAction( ui->actionSampling );
+    if ( QWidget *runStopButton = ui->toolBar->widgetForAction( ui->actionSampling ) )
+        runStopButton->setObjectName( "runStopButton" ); // green key like the HW scope RUN/STOP
+    if ( QWidget *autosetButton = ui->toolBar->widgetForAction( actionAutoset ) )
+        autosetButton->setObjectName( "autosetButton" ); // accented key like the HW scope AUTO
+
+    // Live UI font size zoom
+    ui->menuView->addSeparator();
+    QAction *actionFontLarger = new QAction( tr( "Increase font size" ), this );
+    actionFontLarger->setShortcuts( { QKeySequence::ZoomIn, QKeySequence( Qt::CTRL | Qt::Key_Equal ) } );
+    connect( actionFontLarger, &QAction::triggered, this, [ this ]() { applyFontSize( dsoSettings->view.fontSize + 1 ); } );
+    ui->menuView->addAction( actionFontLarger );
+    QAction *actionFontSmaller = new QAction( tr( "Decrease font size" ), this );
+    actionFontSmaller->setShortcut( QKeySequence::ZoomOut );
+    connect( actionFontSmaller, &QAction::triggered, this, [ this ]() { applyFontSize( dsoSettings->view.fontSize - 1 ); } );
+    ui->menuView->addAction( actionFontSmaller );
+
+    // untangle stacked/hidden panels: put all four docks back into their default order
+    QAction *actionResetLayout = new QAction( tr( "Reset panel layout" ), this );
+    connect( actionResetLayout, &QAction::triggered, this, [ this ]() {
+        const std::initializer_list< QDockWidget * > docks = { voltageDock, horizontalDock, triggerDock, spectrumDock };
+        for ( QDockWidget *dock : docks ) {
+            dock->setFloating( false );
+            removeDockWidget( dock );
+        }
+        for ( QDockWidget *dock : docks ) {
+            addDockWidget( Qt::RightDockWidgetArea, dock );
+            dock->show();
+        }
+    } );
+    ui->menuView->addSeparator();
+    ui->menuView->addAction( actionResetLayout );
+
     connect( dsoControl, &HantekDsoControl::samplerateLimitsChanged, horizontalDock, &HorizontalDock::setSamplerateLimits );
     connect( dsoControl, &HantekDsoControl::samplerateSet, horizontalDock, &HorizontalDock::setSamplerateSteps );
 
@@ -407,7 +484,7 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
     connect( this, &MainWindow::settingsLoaded, dsoControl, &HantekDsoControl::applySettings );
     connect( this, &MainWindow::settingsLoaded, dsoWidget, &DsoWidget::updateSlidersSettings );
 
-    connect( ui->actionOpen, &QAction::triggered, this, [ this, spec ]() {
+    connect( ui->actionOpen, &QAction::triggered, this, [ this ]() {
         QString configFileName = QFileDialog::getOpenFileName( this, tr( "Open file" ), "", tr( "Settings (*.conf)" ), nullptr,
                                                                QFileDialog::DontUseNativeDialog );
         if ( !configFileName.isEmpty() ) {
@@ -415,14 +492,7 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
             restoreGeometry( dsoSettings->mainWindowGeometry );
             restoreState( dsoSettings->mainWindowState );
 
-            emit settingsLoaded( &dsoSettings->scope, spec );
-
-            dsoWidget->updateTimebase( dsoSettings->scope.horizontal.timebase );
-
-            for ( ChannelID channel = 0; channel < spec->channels; ++channel ) {
-                dsoWidget->updateVoltageUsed( channel, dsoSettings->scope.voltage[ channel ].used );
-                dsoWidget->updateSpectrumUsed( channel, dsoSettings->scope.spectrum[ channel ].used );
-            }
+            reloadSettings();
         }
     } );
 
@@ -538,11 +608,65 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
         QMessageBox::aboutQt( this, QString( "%1 (%2)" ).arg( QCoreApplication::applicationName(), VERSION ) );
     } );
 
-    emit settingsLoaded( &dsoSettings->scope, spec ); // trigger the previously connected docks, widgets, etc.
+    reloadSettings(); // trigger the previously connected docks, widgets, etc.
+
+    // Remote control (SCPI / MCP) server: menu, status bar display and command log
+    {
+        QSettings storeSettings;
+        storeSettings.beginGroup( "remote" );
+        remotePort = quint16( storeSettings.value( "port", 5025 ).toUInt() );
+        bool remoteEnabled = storeSettings.value( "enabled", false ).toBool();
+        storeSettings.endGroup();
+        if ( dsoSettings->remoteServerPort ) { // command line option --server PORT overrides
+            remotePort = dsoSettings->remoteServerPort;
+            remoteEnabled = true;
+        }
+
+        remoteStatusLabel = new QLabel( this );
+        statusBar()->addPermanentWidget( remoteStatusLabel );
+
+        QMenu *remoteMenu = new QMenu( tr( "&Remote" ), this );
+        menuBar()->insertMenu( ui->menuHelp->menuAction(), remoteMenu );
+        actionRemoteServer = new QAction( tr( "Enable MCP/SCPI server" ), this );
+        actionRemoteServer->setCheckable( true );
+        actionRemoteServer->setToolTip( tr( "Accept remote control connections on localhost (CLI, MCP for LLM)" ) );
+        remoteMenu->addAction( actionRemoteServer );
+        connect( actionRemoteServer, &QAction::toggled, this, [ this ]( bool enabled ) { setRemoteServerEnabled( enabled ); } );
+
+        QAction *portAction = new QAction( tr( "Set port .." ), this );
+        remoteMenu->addAction( portAction );
+        connect( portAction, &QAction::triggered, this, [ this ]() {
+            bool ok = false;
+            int port = QInputDialog::getInt( this, tr( "Remote server port" ), tr( "TCP port (localhost only)" ), remotePort,
+                                             1024, 65535, 1, &ok );
+            if ( !ok || quint16( port ) == remotePort )
+                return;
+            remotePort = quint16( port );
+            QSettings().setValue( "remote/port", remotePort );
+            if ( remoteServer )
+                setRemoteServerEnabled( true ); // restart on the new port
+            else
+                updateRemoteStatusLabel();
+        } );
+
+        QAction *logAction = new QAction( tr( "Show log .." ), this );
+        remoteMenu->addAction( logAction );
+        connect( logAction, &QAction::triggered, this, [ this ]() { showRemoteLogDialog(); } );
+
+        if ( remoteEnabled )
+            actionRemoteServer->setChecked( true ); // triggers setRemoteServerEnabled( true )
+        updateRemoteStatusLabel();
+    }
+}
+
+
+// Load the current settings into docks, dso control and dso widget
+void MainWindow::reloadSettings() {
+    emit settingsLoaded( &dsoSettings->scope, mSpec );
 
     dsoWidget->updateTimebase( dsoSettings->scope.horizontal.timebase );
 
-    for ( ChannelID channel = 0; channel < spec->channels; ++channel ) {
+    for ( ChannelID channel = 0; channel < mSpec->channels; ++channel ) {
         dsoWidget->updateVoltageUsed( channel, dsoSettings->scope.voltage[ channel ].used );
         dsoWidget->updateSpectrumUsed( channel, dsoSettings->scope.spectrum[ channel ].used );
     }
@@ -559,6 +683,7 @@ MainWindow::~MainWindow() {
 void MainWindow::showNewData( std::shared_ptr< PPresult > newData ) {
     if ( dsoSettings->scope.verboseLevel > 5 )
         qDebug() << "     MainWindow::showNewData()" << newData->tag;
+    lastResult = newData; // keep for Autoset and remote measurements
     dsoWidget->showNew( newData );
 }
 
@@ -574,6 +699,205 @@ void MainWindow::exporterProgressChanged() {
     if ( dsoSettings->scope.verboseLevel > 3 )
         qDebug() << "   MainWindow::exporterProgressChanged()";
     exporterRegistry->checkForWaitingExporters();
+}
+
+
+// Adjust gain, offset, timebase and trigger to the measured signal (like the "Auto" button of a HW scope).
+void MainWindow::autoSet() {
+    autoSetRetries = 5; // a clipped signal needs a new acquisition after zooming out, retry a few times
+    autoSetRun();
+}
+
+
+// One Autoset iteration based on the measurements of the last processed acquisition.
+void MainWindow::autoSetRun() {
+    if ( dsoSettings->scope.verboseLevel > 2 )
+        qDebug() << "  MainWindow::autoSetRun()" << autoSetRetries;
+    if ( !lastResult )
+        return;
+    bool anyClipped = false;
+    DsoSettingsScope *scope = &dsoSettings->scope;
+    int triggerSource = -1;
+    double maxVpp = 0.0;
+    for ( ChannelID channel = 0; channel < mSpec->channels; ++channel ) {
+        DsoSettingsScopeVoltage &voltage = scope->voltage[ channel ];
+        if ( !voltage.used )
+            continue;
+        const DataChannel *data = lastResult->data( channel );
+        if ( !data || data->voltage.samples.empty() )
+            continue;
+        const double vpp = data->vmax - data->vmin;
+        const double mid = ( data->vmax + data->vmin ) / 2.0;
+        // "valid == false" means the ADC clipped - the measured vpp underestimates the
+        // signal, so zoom out one step and let the next Autoset refine the result
+        unsigned gainIndex;
+        if ( !data->valid ) {
+            anyClipped = true;
+            gainIndex = qMin( unsigned( scope->gainSteps.size() ) - 1, voltage.gainStepIndex + 2 );
+        } else { // choose the smallest gain step so that vpp fits into 75% of the screen
+            gainIndex = unsigned( scope->gainSteps.size() ) - 1;
+            for ( unsigned index = 0; index < scope->gainSteps.size(); ++index ) {
+                if ( vpp <= scope->gainSteps[ index ] * voltage.probeAttn * ( DIVS_VOLTAGE - 2 ) ) {
+                    gainIndex = index;
+                    break;
+                }
+            }
+        }
+        voltage.gainStepIndex = gainIndex;
+        const double gain = scope->gainSteps[ gainIndex ] * voltage.probeAttn;
+        voltage.offset = qBound( -DIVS_VOLTAGE / 2, -mid / gain, DIVS_VOLTAGE / 2 ); // center the trace
+        voltage.trigger = mid;                                                       // trigger at the signal middle
+        if ( vpp > maxVpp ) {
+            maxVpp = vpp;
+            triggerSource = int( channel );
+        }
+    }
+    if ( triggerSource >= 0 ) {
+        const double frequency = lastResult->data( ChannelID( triggerSource ) )->frequency;
+        if ( frequency > 1.0 ) { // show ~4 periods, snapped to the 1-2-5 steps of the timebase
+            const double timebase = 4.0 / frequency / DIVS_TIME;
+            const double decade = pow( 10.0, floor( log10( timebase ) ) );
+            const double mantissa = timebase / decade;
+            const double snapped = mantissa < 1.5 ? 1.0 : mantissa < 3.5 ? 2.0 : mantissa < 7.5 ? 5.0 : 10.0;
+            scope->horizontal.timebase = qBound( 1e-9, snapped * decade, 0.1 );
+        }
+        scope->trigger.source = triggerSource;
+        scope->trigger.slope = Dso::Slope::Positive;
+        scope->trigger.position = 0.5;
+        if ( scope->trigger.mode != Dso::TriggerMode::NORMAL )
+            scope->trigger.mode = Dso::TriggerMode::AUTO;
+    }
+    reloadSettings();
+    // a clipped channel hides the real amplitude - re-run on a fresh acquisition after zooming out
+    if ( anyClipped && --autoSetRetries > 0 )
+        QTimer::singleShot( 600, this, &MainWindow::autoSetRun );
+}
+
+
+// Change the font size of the whole application at runtime and make it persistent
+void MainWindow::applyFontSize( int fontSize ) {
+    fontSize = qBound( 6, fontSize, 24 );
+    if ( fontSize == dsoSettings->view.fontSize )
+        return;
+    dsoSettings->view.fontSize = fontSize;
+    QFont appFont = QApplication::font();
+    appFont.setPointSize( fontSize );
+    QApplication::setFont( appFont );
+    QApplication::setFont( appFont, "QWidget" ); // on some systems the 2nd argument is required
+    QSettings().setValue( "view/fontSize", fontSize );
+    statusBar()->showMessage( tr( "Font size %1" ).arg( fontSize ), 2000 );
+}
+
+
+// Start or stop the remote control server and remember the state
+void MainWindow::setRemoteServerEnabled( bool enabled ) {
+    if ( remoteServer ) {
+        delete remoteServer;
+        remoteServer = nullptr;
+        appendRemoteLog( tr( "server stopped" ) );
+    }
+    if ( enabled ) {
+        remoteServer = new RemoteServer(
+            remotePort,
+            [ this ]( const QString &line ) {
+                appendRemoteLog( QStringLiteral( "→ " ) + line ); // →
+                const QString reply = executeRemoteCommand( line );
+                appendRemoteLog( QStringLiteral( "← " ) + ( reply.size() > 200 ? reply.left( 200 ) + "…" : reply ) );
+                return reply;
+            },
+            this );
+        if ( remoteServer->isListening() ) {
+            appendRemoteLog( tr( "server listening on 127.0.0.1:%1" ).arg( remoteServer->serverPort() ) );
+        } else {
+            appendRemoteLog( tr( "cannot listen on port %1 (already in use?)" ).arg( remotePort ) );
+            delete remoteServer;
+            remoteServer = nullptr;
+            QSignalBlocker blocker( actionRemoteServer );
+            actionRemoteServer->setChecked( false );
+        }
+    }
+    QSettings storeSettings;
+    storeSettings.setValue( "remote/enabled", remoteServer != nullptr );
+    storeSettings.setValue( "remote/port", remotePort );
+    updateRemoteStatusLabel();
+}
+
+
+// Show the server state in the status bar (green when listening)
+void MainWindow::updateRemoteStatusLabel() {
+    if ( !remoteStatusLabel )
+        return;
+    if ( remoteServer && remoteServer->isListening() ) {
+        remoteStatusLabel->setText( tr( "MCP ● 127.0.0.1:%1" ).arg( remoteServer->serverPort() ) );
+        remoteStatusLabel->setStyleSheet( "color: #1e8f3e; font-weight: bold;" );
+    } else {
+        remoteStatusLabel->setText( tr( "MCP ○ off" ) );
+        remoteStatusLabel->setStyleSheet( QString() );
+    }
+}
+
+
+// Add a timestamped line to the bounded remote log and to the open log window
+void MainWindow::appendRemoteLog( const QString &line ) {
+    const QString stamped = QTime::currentTime().toString( "HH:mm:ss.zzz " ) + line;
+    remoteLog << stamped;
+    while ( remoteLog.size() > 1000 )
+        remoteLog.removeFirst();
+    if ( remoteLogView )
+        remoteLogView->appendPlainText( stamped );
+}
+
+
+// Non modal window with the remote command log
+void MainWindow::showRemoteLogDialog() {
+    if ( remoteLogView ) { // already open, just raise it
+        remoteLogView->window()->raise();
+        remoteLogView->window()->activateWindow();
+        return;
+    }
+    QDialog *dialog = new QDialog( this );
+    dialog->setAttribute( Qt::WA_DeleteOnClose );
+    dialog->setWindowTitle( tr( "Remote control log" ) );
+    QVBoxLayout *layout = new QVBoxLayout( dialog );
+    remoteLogView = new QPlainTextEdit( dialog );
+    remoteLogView->setReadOnly( true );
+    remoteLogView->setFont( QFontDatabase::systemFont( QFontDatabase::FixedFont ) );
+    remoteLogView->setPlainText( remoteLog.join( '\n' ) );
+    layout->addWidget( remoteLogView );
+    QHBoxLayout *buttonLayout = new QHBoxLayout();
+    QPushButton *clearButton = new QPushButton( tr( "Clear" ), dialog );
+    QPushButton *closeButton = new QPushButton( tr( "Close" ), dialog );
+    buttonLayout->addWidget( clearButton );
+    buttonLayout->addStretch();
+    buttonLayout->addWidget( closeButton );
+    layout->addLayout( buttonLayout );
+    connect( clearButton, &QPushButton::clicked, this, [ this ]() {
+        remoteLog.clear();
+        if ( remoteLogView )
+            remoteLogView->clear();
+    } );
+    connect( closeButton, &QPushButton::clicked, dialog, &QDialog::close );
+    connect( dialog, &QObject::destroyed, this, [ this ]() { remoteLogView = nullptr; } );
+    dialog->resize( 640, 400 );
+    dialog->show();
+}
+
+
+// Save a screenshot of the program window into the given file (used by the remote server)
+bool MainWindow::saveScreenshot( const QString &fileName ) {
+    QPixmap screenshot( size() );
+    render( &screenshot );
+    return screenshot.save( fileName );
+}
+
+
+// Arm a single shot capture: stop after the next trigger event
+void MainWindow::startSingleShot() {
+    if ( dsoSettings->scope.verboseLevel > 2 )
+        qDebug() << "  MainWindow::startSingleShot()";
+    dsoSettings->scope.trigger.mode = Dso::TriggerMode::SINGLE;
+    reloadSettings();
+    QMetaObject::invokeMethod( dsoControl, "enableSamplingUI", Qt::QueuedConnection, Q_ARG( bool, true ) );
 }
 
 
@@ -733,6 +1057,278 @@ void MainWindow::screenShot( screenshotType_t screenshotType, bool autoSafe ) {
     QPainter p( &printer );
     p.drawPixmap( ( pw - sw ) / 2, ( ph - sh ) / 2, screenshot ); // center the picture
     p.end();
+}
+
+
+static QString triggerModeName( Dso::TriggerMode mode ) {
+    switch ( mode ) {
+    case Dso::TriggerMode::AUTO:
+        return "AUTO";
+    case Dso::TriggerMode::NORMAL:
+        return "NORMAL";
+    case Dso::TriggerMode::SINGLE:
+        return "SINGLE";
+    case Dso::TriggerMode::ROLL:
+        return "ROLL";
+    }
+    return "AUTO";
+}
+
+
+static QString slopeName( Dso::Slope slope ) {
+    return slope == Dso::Slope::Positive ? "POS" : slope == Dso::Slope::Negative ? "NEG" : "BOTH";
+}
+
+
+// Execute one line of the SCPI style remote protocol and return the reply ("OK ..." or "ERR ...").
+QString MainWindow::executeRemoteCommand( const QString &line ) {
+    if ( dsoSettings->scope.verboseLevel > 2 )
+        qDebug() << "  MainWindow::executeRemoteCommand()" << line;
+    DsoSettingsScope *scope = &dsoSettings->scope;
+    const QString cmd = line.section( ' ', 0, 0 ).toUpper();
+    const QString arg = line.section( ' ', 1 ).trimmed();
+    const auto onOff = []( const QString &value, bool *ok ) {
+        const QString v = value.toUpper();
+        *ok = true;
+        if ( v == "ON" || v == "1" || v == "TRUE" )
+            return true;
+        if ( v == "OFF" || v == "0" || v == "FALSE" )
+            return false;
+        *ok = false;
+        return false;
+    };
+
+    if ( cmd == "*IDN?" )
+        return QString( "OpenHantek6022,%1,%2" ).arg( VERSION, dsoSettings->deviceName );
+    if ( cmd == "RUN" || cmd == "STOP" ) {
+        QMetaObject::invokeMethod( dsoControl, "enableSamplingUI", Qt::QueuedConnection, Q_ARG( bool, cmd == "RUN" ) );
+        return "OK";
+    }
+    if ( cmd == "SINGLE" ) {
+        startSingleShot();
+        return "OK";
+    }
+    if ( cmd == "AUTOSET" ) {
+        if ( !lastResult )
+            return "ERR no acquisition data yet";
+        autoSet();
+        return "OK";
+    }
+    if ( cmd == "FORCETRIGGER" ) {
+        QMetaObject::invokeMethod( dsoControl, "restartSampling", Qt::QueuedConnection );
+        return "OK";
+    }
+    if ( cmd == "SCREENSHOT" ) {
+        QString fileName = arg;
+        if ( fileName.isEmpty() )
+            fileName = QDir::temp().absoluteFilePath(
+                "openhantek_" + QDateTime::currentDateTime().toString( "yyyyMMdd_hhmmss_zzz" ) + ".png" );
+        if ( !saveScreenshot( fileName ) )
+            return "ERR cannot write " + fileName;
+        return "OK " + QFileInfo( fileName ).absoluteFilePath();
+    }
+    if ( cmd == "FONTSIZE" ) {
+        applyFontSize( arg.toInt() );
+        return "OK";
+    }
+    return executeRemoteSetOrQuery( cmd, arg, scope, onOff );
+}
+
+
+// Handle the channel / horizontal / trigger set commands and the JSON queries of the remote protocol.
+QString MainWindow::executeRemoteSetOrQuery( const QString &cmd, const QString &arg, DsoSettingsScope *scope,
+                                             const std::function< bool( const QString &, bool * ) > &onOff ) {
+    bool ok = false;
+    if ( cmd.startsWith( "CH" ) ) { // CH<n>:ENABLE|GAIN|COUPLING|PROBE|INVERT|OFFSET
+        const int colon = cmd.indexOf( ':' );
+        if ( colon < 3 )
+            return "ERR syntax, expected CH<n>:<subcommand>";
+        unsigned channel = cmd.mid( 2, colon - 2 ).toUInt( &ok );
+        if ( !ok || channel < 1 || channel > mSpec->channels )
+            return QString( "ERR bad channel, valid: 1..%1" ).arg( mSpec->channels );
+        --channel; // 1 based on the wire, 0 based internally
+        DsoSettingsScopeVoltage &voltage = scope->voltage[ channel ];
+        const QString sub = cmd.mid( colon + 1 );
+        if ( sub == "ENABLE" ) {
+            const bool used = onOff( arg, &ok );
+            if ( !ok )
+                return "ERR expected ON or OFF";
+            voltage.used = used;
+            voltage.visible = used;
+        } else if ( sub == "GAIN" ) { // V/div, snapped to the nearest gain step
+            const double gain = arg.toDouble( &ok ) / voltage.probeAttn;
+            if ( !ok || gain <= 0 )
+                return "ERR expected gain in V/div";
+            unsigned gainIndex = 0;
+            for ( unsigned index = 1; index < scope->gainSteps.size(); ++index )
+                if ( fabs( log( scope->gainSteps[ index ] / gain ) ) < fabs( log( scope->gainSteps[ gainIndex ] / gain ) ) )
+                    gainIndex = index;
+            voltage.gainStepIndex = gainIndex;
+        } else if ( sub == "COUPLING" ) {
+            const QString coupling = arg.toUpper();
+            unsigned couplingIndex = mSpec->couplings.size();
+            for ( unsigned index = 0; index < mSpec->couplings.size(); ++index )
+                if ( ( mSpec->couplings[ index ] == Dso::Coupling::DC && coupling == "DC" ) ||
+                     ( mSpec->couplings[ index ] == Dso::Coupling::AC && coupling == "AC" ) )
+                    couplingIndex = index;
+            if ( couplingIndex >= mSpec->couplings.size() )
+                return "ERR expected AC or DC";
+            voltage.couplingOrMathIndex = couplingIndex;
+        } else if ( sub == "PROBE" ) {
+            const double attn = arg.toDouble( &ok );
+            if ( !ok || attn < 1 || attn > 1000 )
+                return "ERR expected probe attenuation 1..1000";
+            voltage.probeAttn = attn;
+        } else if ( sub == "INVERT" ) {
+            voltage.inverted = onOff( arg, &ok );
+            if ( !ok )
+                return "ERR expected ON or OFF";
+        } else if ( sub == "OFFSET" ) { // vertical offset in divs
+            const double offset = arg.toDouble( &ok );
+            if ( !ok )
+                return "ERR expected offset in divs";
+            voltage.offset = qBound( -DIVS_VOLTAGE / 2, offset, DIVS_VOLTAGE / 2 );
+        } else
+            return "ERR unknown channel subcommand " + sub;
+        reloadSettings();
+        return "OK";
+    }
+    return executeRemoteHorTrigOrQuery( cmd, arg, scope );
+}
+
+
+// Horizontal and trigger set commands plus the MEASURE? / CONFIG? JSON queries.
+QString MainWindow::executeRemoteHorTrigOrQuery( const QString &cmd, const QString &arg, DsoSettingsScope *scope ) {
+    bool ok = false;
+    if ( cmd == "TIMEBASE" ) { // s/div
+        const double timebase = arg.toDouble( &ok );
+        if ( !ok || timebase <= 0 )
+            return "ERR expected timebase in s/div";
+        scope->horizontal.timebase = qBound( 1e-9, timebase, scope->horizontal.maxTimebase );
+        reloadSettings();
+        return "OK";
+    }
+    if ( cmd == "TIMEBASE?" )
+        return QString( "OK %1" ).arg( scope->horizontal.timebase );
+    if ( cmd == "SAMPLERATE" ) { // S/s, handled by the control layer that snaps to the HW steps
+        const double samplerate = arg.toDouble( &ok );
+        if ( !ok || samplerate <= 0 )
+            return "ERR expected samplerate in S/s";
+        QMetaObject::invokeMethod( dsoControl, "setSamplerate", Qt::QueuedConnection, Q_ARG( double, samplerate ) );
+        return "OK";
+    }
+    if ( cmd == "SAMPLERATE?" )
+        return QString( "OK %1" ).arg( scope->horizontal.samplerate );
+    if ( cmd == "CALFREQ" ) {
+        const double calfreq = arg.toDouble( &ok );
+        if ( !ok || calfreq <= 0 )
+            return "ERR expected frequency in Hz";
+        scope->horizontal.calfreq = calfreq;
+        reloadSettings();
+        return "OK";
+    }
+    if ( cmd.startsWith( "TRIGGER:" ) ) {
+        const QString sub = cmd.mid( 8 );
+        const QString value = arg.toUpper();
+        if ( sub == "MODE" ) {
+            if ( value == "AUTO" )
+                scope->trigger.mode = Dso::TriggerMode::AUTO;
+            else if ( value == "NORMAL" )
+                scope->trigger.mode = Dso::TriggerMode::NORMAL;
+            else if ( value == "SINGLE" )
+                scope->trigger.mode = Dso::TriggerMode::SINGLE;
+            else if ( value == "ROLL" )
+                scope->trigger.mode = Dso::TriggerMode::ROLL;
+            else
+                return "ERR expected AUTO, NORMAL, SINGLE or ROLL";
+        } else if ( sub == "SOURCE" ) { // 1 based channel number, "CH1" also accepted
+            unsigned channel = value.startsWith( "CH" ) ? value.mid( 2 ).toUInt( &ok ) : value.toUInt( &ok );
+            if ( !ok || channel < 1 || channel > mSpec->channels )
+                return QString( "ERR bad channel, valid: 1..%1" ).arg( mSpec->channels );
+            scope->trigger.source = int( channel ) - 1;
+        } else if ( sub == "SLOPE" ) {
+            if ( value == "POS" || value == "RISING" )
+                scope->trigger.slope = Dso::Slope::Positive;
+            else if ( value == "NEG" || value == "FALLING" )
+                scope->trigger.slope = Dso::Slope::Negative;
+            else if ( value == "BOTH" )
+                scope->trigger.slope = Dso::Slope::Both;
+            else
+                return "ERR expected POS, NEG or BOTH";
+        } else if ( sub == "LEVEL" ) { // volts, applied to the current trigger source
+            const double level = arg.toDouble( &ok );
+            if ( !ok )
+                return "ERR expected level in V";
+            scope->voltage[ unsigned( scope->trigger.source ) ].trigger = level;
+        } else
+            return "ERR unknown trigger subcommand " + sub;
+        reloadSettings();
+        return "OK";
+    }
+    if ( cmd == "MEASURE?" || cmd == "MEAS?" ) {
+        if ( !lastResult )
+            return "ERR no acquisition data yet";
+        QJsonObject root;
+        root[ "samplerate" ] = scope->horizontal.samplerate;
+        root[ "timebase" ] = scope->horizontal.timebase;
+        QJsonArray channels;
+        for ( ChannelID channel = 0; channel < scope->countChannels(); ++channel ) {
+            const DataChannel *data = lastResult->data( channel );
+            if ( !data || !scope->voltage[ channel ].used )
+                continue;
+            QJsonObject json;
+            json[ "channel" ] = int( channel ) + 1;
+            json[ "name" ] = scope->voltage[ channel ].name;
+            json[ "vpp" ] = data->vmax - data->vmin;
+            json[ "vmax" ] = data->vmax;
+            json[ "vmin" ] = data->vmin;
+            json[ "dc" ] = data->dc;
+            json[ "ac_rms" ] = data->ac;
+            json[ "rms" ] = data->rms;
+            json[ "frequency" ] = data->frequency;
+            json[ "dB" ] = data->dB;
+            json[ "clipped" ] = !data->valid;
+            channels.append( json );
+        }
+        root[ "channels" ] = channels;
+        return "OK " + QString::fromUtf8( QJsonDocument( root ).toJson( QJsonDocument::Compact ) );
+    }
+    if ( cmd == "CONFIG?" ) {
+        QJsonObject root;
+        root[ "running" ] = dsoControl->isSamplingUI();
+        root[ "timebase" ] = scope->horizontal.timebase;
+        root[ "samplerate" ] = scope->horizontal.samplerate;
+        root[ "calfreq" ] = scope->horizontal.calfreq;
+        root[ "gain_steps" ] = [ scope ]() {
+            QJsonArray steps;
+            for ( double step : scope->gainSteps )
+                steps.append( step );
+            return steps;
+        }();
+        QJsonObject trigger;
+        trigger[ "mode" ] = triggerModeName( scope->trigger.mode );
+        trigger[ "source" ] = scope->trigger.source + 1;
+        trigger[ "slope" ] = slopeName( scope->trigger.slope );
+        trigger[ "level" ] = scope->voltage[ unsigned( scope->trigger.source ) ].trigger;
+        root[ "trigger" ] = trigger;
+        QJsonArray channels;
+        for ( ChannelID channel = 0; channel < mSpec->channels; ++channel ) {
+            const DsoSettingsScopeVoltage &voltage = scope->voltage[ channel ];
+            QJsonObject json;
+            json[ "channel" ] = int( channel ) + 1;
+            json[ "enabled" ] = voltage.used;
+            json[ "gain" ] = scope->gainSteps[ voltage.gainStepIndex ] * voltage.probeAttn; // V/div
+            json[ "coupling" ] = mSpec->couplings[ voltage.couplingOrMathIndex ] == Dso::Coupling::AC ? "AC" : "DC";
+            json[ "probe" ] = voltage.probeAttn;
+            json[ "inverted" ] = voltage.inverted;
+            json[ "offset" ] = voltage.offset;
+            json[ "trigger_level" ] = voltage.trigger;
+            channels.append( json );
+        }
+        root[ "channels" ] = channels;
+        return "OK " + QString::fromUtf8( QJsonDocument( root ).toJson( QJsonDocument::Compact ) );
+    }
+    return "ERR unknown command " + cmd;
 }
 
 

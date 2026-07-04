@@ -19,13 +19,14 @@
 #include "utils/printutils.h"
 
 
-TriggerDock::TriggerDock( DsoSettingsScope *scope, const Dso::ControlSpecification *spec, QWidget *parent )
+TriggerDock::TriggerDock( DsoSettingsScope *scope, const DsoSettingsView *view, const Dso::ControlSpecification *spec,
+                          QWidget *parent )
     : QDockWidget( tr( "Trigger" ), parent ), scope( scope ), mSpec( spec ) {
 
     if ( scope->verboseLevel > 1 )
         qDebug() << " TriggerDock::TriggerDock()";
 
-    // Initialize lists for comboboxes
+    // Initialize lists for the panel keys
     for ( ChannelID channel = 0; channel < mSpec->channels; ++channel )
         sourceStandardStrings << tr( "CH%1" ).arg( channel + 1 );
     sourceStandardStrings << tr( "MATH" );
@@ -34,28 +35,31 @@ TriggerDock::TriggerDock( DsoSettingsScope *scope, const Dso::ControlSpecificati
 
     // Initialize elements
     modeLabel = new QLabel( tr( "Mode" ) );
-    modeComboBox = new QComboBox();
+    modeGroup = new ScopeButtonGroup();
     if ( scope->toolTipVisible )
-        modeComboBox->setToolTip( tr( "Select the trigger mode" ) );
+        modeGroup->setToolTip( tr( "Select the trigger mode" ) );
     for ( Dso::TriggerMode mode : mSpec->triggerModes )
-        modeComboBox->addItem( Dso::triggerModeString( mode ) );
+        modeGroup->addItem( Dso::triggerModeString( mode ) );
 
     slopeLabel = new QLabel( tr( "Slope" ) );
-    slopeComboBox = new QComboBox();
+    slopeGroup = new ScopeButtonGroup();
     if ( scope->toolTipVisible )
-        slopeComboBox->setToolTip( tr( "Select positive, negative or both (alternating) slopes" ) );
+        slopeGroup->setToolTip( tr( "Select positive, negative or both (alternating) slopes" ) );
     for ( Dso::Slope slope : Dso::SlopeEnum )
-        slopeComboBox->addItem( Dso::slopeString( slope ) );
+        slopeGroup->addItem( Dso::slopeString( slope ) );
 
     sourceLabel = new QLabel( tr( "Source" ) );
-    sourceComboBox = new QComboBox();
+    sourceGroup = new ScopeButtonGroup();
     if ( scope->toolTipVisible )
-        sourceComboBox->setToolTip( tr( "Select the trigger channel (CH1, CH2, or MATH)" ) );
-    sourceComboBox->addItems( sourceStandardStrings );
-    smoothComboBox = new QComboBox();
+        sourceGroup->setToolTip( tr( "Select the trigger channel (CH1, CH2, or MATH)" ) );
+    for ( int source = 0; source < sourceStandardStrings.size(); ++source ) // light up in the channel trace color
+        sourceGroup->addItem( sourceStandardStrings[ source ],
+                              unsigned( source ) < view->screen.voltage.size() ? view->screen.voltage[ unsigned( source ) ]
+                                                                               : QColor() );
+    smoothButton = new ScopeCycleButton();
     if ( scope->toolTipVisible )
-        smoothComboBox->setToolTip( tr( "Trigger on fast, normal, or slow signals" ) );
-    smoothComboBox->addItems( smoothStandardStrings );
+        smoothButton->setToolTip( tr( "Trigger on fast, normal, or slow signals - click to cycle" ) );
+    smoothButton->addItems( smoothStandardStrings );
 
     dockLayout = new QGridLayout();
     dockLayout->setColumnMinimumWidth( 0, 50 );
@@ -63,12 +67,12 @@ TriggerDock::TriggerDock( DsoSettingsScope *scope, const Dso::ControlSpecificati
     dockLayout->setColumnStretch( 2, 2 ); // stretch 3rd (last) column 2x
     dockLayout->setSpacing( DOCK_LAYOUT_SPACING );
     dockLayout->addWidget( modeLabel, 0, 0 );
-    dockLayout->addWidget( modeComboBox, 0, 1, 1, 2 ); // fill 1 row, 2 col
+    dockLayout->addWidget( modeGroup, 0, 1, 1, 2 ); // fill 1 row, 2 col
     dockLayout->addWidget( sourceLabel, 1, 0 );
-    dockLayout->addWidget( sourceComboBox, 1, 1, 1, 2 ); // fill 1 row, 2 col
+    dockLayout->addWidget( sourceGroup, 1, 1, 1, 2 ); // fill 1 row, 2 col
     dockLayout->addWidget( slopeLabel, 2, 0 );
-    dockLayout->addWidget( slopeComboBox, 2, 1 );
-    dockLayout->addWidget( smoothComboBox, 2, 2 );
+    dockLayout->addWidget( slopeGroup, 2, 1 );
+    dockLayout->addWidget( smoothButton, 2, 2 );
 
     dockWidget = new QWidget();
     SetupDockWidget( this, dockWidget, dockLayout );
@@ -77,34 +81,30 @@ TriggerDock::TriggerDock( DsoSettingsScope *scope, const Dso::ControlSpecificati
     loadSettings( scope );
 
     // Connect signals and slots
-    connect( modeComboBox, static_cast< void ( QComboBox::* )( int ) >( &QComboBox::currentIndexChanged ), this,
-             [ this ]( int index ) {
-                 this->scope->trigger.mode = mSpec->triggerModes[ unsigned( index ) ];
-                 emit modeChanged( this->scope->trigger.mode );
-             } );
-    connect( slopeComboBox, static_cast< void ( QComboBox::* )( int ) >( &QComboBox::currentIndexChanged ), this,
-             [ this ]( int index ) {
-                 this->scope->trigger.slope = Dso::Slope( index );
-                 emit slopeChanged( this->scope->trigger.slope );
-             } );
-    connect( sourceComboBox, static_cast< void ( QComboBox::* )( int ) >( &QComboBox::currentIndexChanged ), this,
-             [ this ]( int index ) {
-                 this->scope->trigger.source = index;
-                 emit sourceChanged( index );
-             } );
-    connect( smoothComboBox, static_cast< void ( QComboBox::* )( int ) >( &QComboBox::currentIndexChanged ), this,
-             [ this ]( int index ) {
-                 this->scope->trigger.smooth = index;
-                 emit smoothChanged( index );
-             } );
+    connect( modeGroup, &ScopeButtonGroup::currentIndexChanged, this, [ this ]( int index ) {
+        this->scope->trigger.mode = mSpec->triggerModes[ unsigned( index ) ];
+        emit modeChanged( this->scope->trigger.mode );
+    } );
+    connect( slopeGroup, &ScopeButtonGroup::currentIndexChanged, this, [ this ]( int index ) {
+        this->scope->trigger.slope = Dso::Slope( index );
+        emit slopeChanged( this->scope->trigger.slope );
+    } );
+    connect( sourceGroup, &ScopeButtonGroup::currentIndexChanged, this, [ this ]( int index ) {
+        this->scope->trigger.source = index;
+        emit sourceChanged( index );
+    } );
+    connect( smoothButton, &ScopeCycleButton::currentIndexChanged, this, [ this ]( int index ) {
+        this->scope->trigger.smooth = index;
+        emit smoothChanged( index );
+    } );
 }
 
 void TriggerDock::loadSettings( DsoSettingsScope *scope ) {
     if ( scope->verboseLevel > 2 )
         qDebug() << "  TDock::loadSettings()";
     // Set values
-    if ( scope->trigger.mode != Dso::TriggerMode::ROLL && scope->horizontal.timebase < 0.2 ) // remove ROLL mode
-        modeComboBox->setMaxCount( int( mSpec->triggerModes.size() ) - 1 );
+    if ( scope->trigger.mode != Dso::TriggerMode::ROLL && scope->horizontal.timebase < 0.2 ) // disable ROLL mode
+        modeGroup->setItemEnabled( int( mSpec->triggerModes.size() ) - 1, false );
     setMode( scope->trigger.mode );
     setSlope( scope->trigger.slope );
     setSource( scope->trigger.source );
@@ -115,12 +115,7 @@ void TriggerDock::loadSettings( DsoSettingsScope *scope ) {
 void TriggerDock::timebaseChanged( double timebase ) { // provide ROLL mode only if samplerate > 100 ms/div
     if ( scope->trigger.mode == Dso::TriggerMode::ROLL )
         return;
-    if ( timebase > 0.1 && modeComboBox->count() == int( mSpec->triggerModes.size() ) - 1 ) { // add ROLL mode
-        modeComboBox->setMaxCount( int( mSpec->triggerModes.size() ) );
-        modeComboBox->addItem( Dso::triggerModeString( Dso::TriggerMode( mSpec->triggerModes.size() - 1 ) ) );
-    } else if ( timebase <= 0.1 ) { // remove ROLL mode
-        modeComboBox->setMaxCount( int( mSpec->triggerModes.size() ) - 1 );
-    }
+    modeGroup->setItemEnabled( int( mSpec->triggerModes.size() ) - 1, timebase > 0.1 );
 }
 
 
@@ -136,16 +131,14 @@ void TriggerDock::setMode( Dso::TriggerMode mode ) {
     if ( scope->verboseLevel > 2 )
         qDebug() << "  TDock::setMode()" << int( mode );
     int index = int( std::find( mSpec->triggerModes.begin(), mSpec->triggerModes.end(), mode ) - mSpec->triggerModes.begin() );
-    QSignalBlocker blocker( modeComboBox );
-    modeComboBox->setCurrentIndex( index );
+    modeGroup->setCurrentIndex( index ); // does not emit
     emit modeChanged( scope->trigger.mode );
 }
 
 void TriggerDock::setSlope( Dso::Slope slope ) {
     if ( scope->verboseLevel > 2 )
         qDebug() << "  TDock::setSlope()" << int( slope );
-    QSignalBlocker blocker( slopeComboBox );
-    slopeComboBox->setCurrentIndex( int( slope ) );
+    slopeGroup->setCurrentIndex( int( slope ) ); // does not emit
 }
 
 void TriggerDock::setSource( int id ) {
@@ -153,8 +146,7 @@ void TriggerDock::setSource( int id ) {
         qDebug() << "  TDock::setSource()" << id;
     if ( id >= sourceStandardStrings.count() )
         return;
-    QSignalBlocker blocker( sourceComboBox );
-    sourceComboBox->setCurrentIndex( id );
+    sourceGroup->setCurrentIndex( id ); // does not emit
 }
 
 void TriggerDock::setSmooth( int smooth ) {
@@ -162,6 +154,5 @@ void TriggerDock::setSmooth( int smooth ) {
         qDebug() << "  TDock::setSmooth()" << smooth;
     if ( int( smooth ) >= smoothStandardStrings.count() )
         return;
-    QSignalBlocker blocker( smoothComboBox );
-    smoothComboBox->setCurrentIndex( int( smooth ) );
+    smoothButton->setCurrentIndex( int( smooth ) ); // does not emit
 }

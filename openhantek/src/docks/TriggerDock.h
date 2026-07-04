@@ -9,6 +9,8 @@
 #include <QLabel>
 
 #include "hantekdso/enums.h"
+#include "viewsettings.h"
+#include "widgets/scopebutton.h"
 
 class SiSpinBox;
 struct DsoSettingsScope;
@@ -27,7 +29,8 @@ class TriggerDock : public QDockWidget {
     /// \param spec
     /// \param parent The parent widget.
     /// \param flags Flags for the window manager.
-    TriggerDock( DsoSettingsScope *scope, const Dso::ControlSpecification *mSpec, QWidget *parent );
+    TriggerDock( DsoSettingsScope *scope, const DsoSettingsView *view, const Dso::ControlSpecification *mSpec,
+                 QWidget *parent );
 
     /// \brief Changes the trigger mode if the new mode is supported.
     /// \param mode The trigger mode.
@@ -54,15 +57,15 @@ class TriggerDock : public QDockWidget {
   protected:
     void closeEvent( QCloseEvent *event ) override;
 
-    QGridLayout *dockLayout;   ///< The main layout for the dock window
-    QWidget *dockWidget;       ///< The main widget for the dock window
-    QLabel *modeLabel;         ///< The label for the trigger mode combobox
-    QLabel *sourceLabel;       ///< The label for the trigger source combobox
-    QLabel *slopeLabel;        ///< The label for the trigger slope combobox
-    QComboBox *modeComboBox;   ///< Select the triggering mode
-    QComboBox *sourceComboBox; ///< Select the source for triggering
-    QComboBox *smoothComboBox; ///< Select the filter for triggering
-    QComboBox *slopeComboBox;  ///< Select the slope that causes triggering
+    QGridLayout *dockLayout;      ///< The main layout for the dock window
+    QWidget *dockWidget;          ///< The main widget for the dock window
+    QLabel *modeLabel;            ///< The label for the trigger mode buttons
+    QLabel *sourceLabel;          ///< The label for the trigger source buttons
+    QLabel *slopeLabel;           ///< The label for the trigger slope buttons
+    ScopeButtonGroup *modeGroup;   ///< Select the triggering mode (panel keys)
+    ScopeButtonGroup *sourceGroup; ///< Select the source for triggering (panel keys)
+    ScopeCycleButton *smoothButton; ///< Cycles through the trigger filter settings on each click
+    ScopeButtonGroup *slopeGroup;  ///< Select the slope that causes triggering (panel keys)
 
     DsoSettingsScope *scope; ///< The settings provided by the parent class
     const Dso::ControlSpecification *mSpec;

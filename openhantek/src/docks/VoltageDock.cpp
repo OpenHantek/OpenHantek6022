@@ -19,7 +19,8 @@ template < typename... Args > struct SELECT {
 };
 
 
-VoltageDock::VoltageDock( DsoSettingsScope *scope, const Dso::ControlSpecification *spec, QWidget *parent )
+VoltageDock::VoltageDock( DsoSettingsScope *scope, const DsoSettingsView *view, const Dso::ControlSpecification *spec,
+                          QWidget *parent )
     : QDockWidget( tr( "Voltage" ), parent ), scope( scope ), spec( spec ) {
 
     if ( scope->verboseLevel > 1 )
@@ -49,89 +50,123 @@ VoltageDock::VoltageDock( DsoSettingsScope *scope, const Dso::ControlSpecificati
     for ( ChannelID channel = 0; channel < scope->voltage.size(); ++channel ) {
         ChannelBlock b;
 
+        QColor channelColor = channel < view->screen.voltage.size() ? view->screen.voltage[ channel ] : QColor();
         if ( channel < spec->channels )
-            b.usedCheckBox = new QCheckBox( tr( "CH&%1" ).arg( channel + 1 ) ); // define shortcut <ALT>1 / <ALT>2
+            b.usedCheckBox = new ScopeButton( tr( "CH&%1" ).arg( channel + 1 ) ); // define shortcut <ALT>1 / <ALT>2
         else
-            b.usedCheckBox = new QCheckBox( tr( "MA&TH" ) );
+            b.usedCheckBox = new ScopeButton( tr( "MA&TH" ) );
+        if ( channelColor.isValid() ) // light up the key in the channel trace color
+            b.usedCheckBox->setAccentColor( channelColor );
         b.miscComboBox = new QComboBox();
-        b.gainComboBox = new QComboBox();
+        b.couplingGroup = new ScopeButtonGroup();
+        b.couplingGroup->addItems( couplingStrings );
+        if ( couplingStrings.size() < 2 ) { // only DC available -> show it lit but not clickable
+            b.couplingGroup->setItemEnabled( 0, false );
+            b.couplingGroup->setToolTip( tr( "AC coupling needs a hardware modification, see Help menu" ) );
+        }
+        // scale "knob": big -/+ keys and a scope style V/div readout in the channel color
+        b.gainLabel = new QLabel();
+        b.gainLabel->setAlignment( Qt::AlignCenter );
+        QFont gainFont = b.gainLabel->font();
+        gainFont.setPointSizeF( gainFont.pointSizeF() * 1.25 );
+        gainFont.setBold( true );
+        b.gainLabel->setFont( gainFont );
+        if ( channelColor.isValid() )
+            b.gainLabel->setStyleSheet( QString( "color: %1;" ).arg( channelColor.name() ) );
         if ( scope->toolTipVisible )
-            b.gainComboBox->setToolTip( tr( "Voltage range per vertical screen division" ) );
-        b.invertCheckBox = new QCheckBox( tr( "Invert" ) );
-        b.attnSpinBox = new QSpinBox();
-        b.attnSpinBox->setStepType( QAbstractSpinBox::AdaptiveDecimalStepType );
+            b.gainLabel->setToolTip( tr( "Voltage range per vertical screen division" ) );
+        b.scaleKnob = new ScopeKnob();
+        if ( channelColor.isValid() )
+            b.scaleKnob->setAccentColor( channelColor );
         if ( scope->toolTipVisible )
-            b.attnSpinBox->setToolTip( tr( "Set probe attenuation, scroll or type a value to select" ) );
-        b.attnSpinBox->setMinimum( ATTENUATION_MIN );
-        b.attnSpinBox->setMaximum( ATTENUATION_MAX );
-        b.attnSpinBox->setPrefix( tr( "x" ) );
+            b.scaleKnob->setToolTip( tr( "Scale knob: turn (drag or scroll) clockwise to zoom in" ) );
+        b.invertCheckBox = new ScopeButton( tr( "Invert" ) );
+        b.attnButton = new ScopeCycleButton();
+        b.attnButton->addItems( { tr( "x1" ), tr( "x10" ), tr( "x100" ) } );
+        if ( scope->toolTipVisible )
+            b.attnButton->setToolTip( tr( "Probe attenuation - click to cycle x1, x10, x100" ) );
 
         channelBlocks.push_back( std::move( b ) );
 
         if ( channel < spec->channels ) {
-            b.miscComboBox->addItems( couplingStrings );
             if ( scope->toolTipVisible )
-                b.miscComboBox->setToolTip( tr( "Select DC or AC coupling" ) );
-            b.gainComboBox->addItems( gainStrings );
+                b.couplingGroup->setToolTip( tr( "Select DC or AC coupling" ) );
         } else {
             b.miscComboBox->addItems( modeStrings );
             if ( scope->toolTipVisible )
                 b.miscComboBox->setToolTip( tr( "Select the mathematical operation for this channel" ) );
-            b.gainComboBox->addItems( mathGainStrings );
         }
 
+        // one front panel "card" per channel, like the vertical section of a HW scope
+        QFrame *card = new QFrame();
+        card->setObjectName( "channelCard" );
+        QGridLayout *cardLayout = new QGridLayout( card );
+        cardLayout->setContentsMargins( 4, 4, 4, 4 );
+        cardLayout->setSpacing( 2 );
+        cardLayout->setColumnStretch( 0, 1 );
+        cardLayout->setColumnStretch( 1, 1 );
         if ( channel < spec->channels ) {
-            dockLayout->setColumnStretch( 1, 1 ); // stretch ComboBox in 2nd (middle) column 1x
-            dockLayout->setColumnStretch( 2, 2 ); // stretch ComboBox in 3rd (last) column 2x
-            dockLayout->addWidget( b.usedCheckBox, row, 0 );
-            dockLayout->addWidget( b.gainComboBox, row++, 1, 1, 2 ); // fill 1 row, 2 col
-            dockLayout->addWidget( b.invertCheckBox, row, 0 );
-            dockLayout->addWidget( b.attnSpinBox, row, 1, 1, 1 );    // fill 1 row, 2 col
-            dockLayout->addWidget( b.miscComboBox, row++, 2, 1, 1 ); // fill 1 row, 2 col
-            // draw divider line
-            QFrame *divider = new QFrame();
-            divider->setLineWidth( 1 );
-            divider->setFrameShape( QFrame::HLine );
-            QPalette palette = QPalette();
-            palette.setColor( QPalette::WindowText, QColor( 128, 128, 128 ) );
-            divider->setPalette( palette ); // reduce the contrast of the divider
-            dockLayout->addWidget( divider, row++, 0, 1, 3 );
-        } else { // MATH function, all in one row
-            dockLayout->addWidget( b.usedCheckBox, row, 0 );
-            dockLayout->addWidget( b.gainComboBox, row, 1 );
-            dockLayout->addWidget( b.miscComboBox, row, 2 );
+            // [CH key] [V/div readout] [SCALE knob spanning both rows]
+            cardLayout->addWidget( b.usedCheckBox, 0, 0 );
+            cardLayout->addWidget( b.gainLabel, 0, 1 );
+            cardLayout->addWidget( b.scaleKnob, 0, 2, 2, 1, Qt::AlignCenter );
+            // [coupling] [invert + probe]
+            cardLayout->addWidget( b.couplingGroup, 1, 0 );
+            QHBoxLayout *miscLayout = new QHBoxLayout();
+            miscLayout->setSpacing( 2 );
+            miscLayout->addWidget( b.invertCheckBox );
+            miscLayout->addWidget( b.attnButton );
+            cardLayout->addLayout( miscLayout, 1, 1 );
+        } else { // MATH channel
+            cardLayout->addWidget( b.usedCheckBox, 0, 0 );
+            cardLayout->addWidget( b.miscComboBox, 0, 1 );
+            cardLayout->addWidget( b.scaleKnob, 0, 2, 2, 1, Qt::AlignCenter );
+            cardLayout->addWidget( b.gainLabel, 1, 0, 1, 2 );
         }
+        dockLayout->addWidget( card, row++, 0, 1, 3 );
 
-        connect( b.gainComboBox, SELECT< int >::OVERLOAD_OF( &QComboBox::currentIndexChanged ), this,
-                 [ this, channel ]( unsigned index ) {
-                     this->scope->voltage[ channel ].gainStepIndex = index;
-                     emit gainChanged( channel, this->scope->gain( channel ) );
-                 } );
-        connect(
-            b.attnSpinBox, SELECT< int >::OVERLOAD_OF( &QSpinBox::valueChanged ), this, [ this, channel ]( unsigned attnValue ) {
-                this->scope->voltage[ channel ].probeAttn = attnValue;
-                setAttn( channel, attnValue );
-                emit probeAttnChanged( channel, attnValue ); // make sure to set the probe first, since this will influence the gain
-                emit gainChanged( channel, this->scope->gain( channel ) );
-            } );
-        connect( b.invertCheckBox, &QAbstractButton::toggled, this, [ this, channel ]( bool checked ) {
+        auto stepGain = [ this, channel, spec ]( int delta ) { // the scale "knob" was turned
+            DsoSettingsScopeVoltage &voltage = this->scope->voltage[ channel ];
+            const int count = channel < spec->channels ? int( this->scope->gainSteps.size() )
+                                                       : int( this->scope->mathGainSteps.size() );
+            const int index = qBound( 0, int( voltage.gainStepIndex ) + delta, count - 1 );
+            if ( index == int( voltage.gainStepIndex ) )
+                return;
+            voltage.gainStepIndex = unsigned( index );
+            setGain( channel, unsigned( index ) );
+            emit gainChanged( channel, this->scope->gain( channel ) );
+        };
+        // clockwise (positive detents) zooms in -> smaller V/div, like on a HW scope
+        connect( b.scaleKnob, &ScopeKnob::stepped, this, [ stepGain ]( int delta ) { stepGain( -delta ); } );
+        connect( b.attnButton, &ScopeCycleButton::currentIndexChanged, this, [ this, channel ]( int index ) {
+            const double attnValue = pow( 10.0, index ); // x1, x10, x100
+            this->scope->voltage[ channel ].probeAttn = attnValue;
+            setAttn( channel, attnValue );
+            emit probeAttnChanged( channel, attnValue ); // make sure to set the probe first, since this will influence the gain
+            emit gainChanged( channel, this->scope->gain( channel ) );
+        } );
+        connect( b.invertCheckBox, &QAbstractButton::clicked, this, [ this, channel ]( bool checked ) {
             this->scope->voltage[ channel ].inverted = checked;
             emit invertedChanged( channel, checked );
         } );
-        connect( b.miscComboBox, SELECT< int >::OVERLOAD_OF( &QComboBox::currentIndexChanged ), this,
-                 [ this, channel, spec, scope ]( unsigned index ) {
-                     this->scope->voltage[ channel ].couplingOrMathIndex = index;
-                     if ( channel < spec->channels ) { // CH1 & CH2
-                         // setCoupling(channel, (unsigned)index);
-                         emit couplingChanged( channel, scope->coupling( channel, spec ) );
-                     } else { // MATH function changed
-                         Dso::MathMode mathMode = Dso::getMathMode( this->scope->voltage[ channel ] );
-                         setAttn( channel, this->scope->voltage[ channel ].probeAttn );
-                         emit modeChanged( mathMode );
-                         emit usedChannelChanged( channel, Dso::mathChannelsUsed( mathMode ) );
-                     }
+        connect( b.couplingGroup, &ScopeButtonGroup::currentIndexChanged, this,
+                 [ this, channel, spec, scope ]( int index ) {
+                     if ( channel >= spec->channels )
+                         return;
+                     this->scope->voltage[ channel ].couplingOrMathIndex = unsigned( index );
+                     emit couplingChanged( channel, scope->coupling( channel, spec ) );
                  } );
-        connect( b.usedCheckBox, &QCheckBox::toggled, this, [ this, channel ]( bool checked ) {
+        connect( b.miscComboBox, SELECT< int >::OVERLOAD_OF( &QComboBox::currentIndexChanged ), this,
+                 [ this, channel, spec ]( unsigned index ) {
+                     if ( channel < spec->channels ) // CH1 & CH2 use the coupling button group instead
+                         return;
+                     this->scope->voltage[ channel ].couplingOrMathIndex = index;
+                     Dso::MathMode mathMode = Dso::getMathMode( this->scope->voltage[ channel ] );
+                     setAttn( channel, this->scope->voltage[ channel ].probeAttn );
+                     emit modeChanged( mathMode );
+                     emit usedChannelChanged( channel, Dso::mathChannelsUsed( mathMode ) );
+                 } );
+        connect( b.usedCheckBox, &QAbstractButton::clicked, this, [ this, channel ]( bool checked ) {
             this->scope->voltage[ channel ].used = checked;
             this->scope->voltage[ channel ].visible = checked;
             unsigned mask = 0;
@@ -188,8 +223,7 @@ void VoltageDock::setCoupling( ChannelID channel, unsigned couplingIndex ) {
         return;
     if ( scope->verboseLevel > 2 )
         qDebug() << "  VDock::setCoupling()" << channel << couplingStrings[ int( couplingIndex ) ];
-    QSignalBlocker blocker( channelBlocks[ channel ].miscComboBox );
-    channelBlocks[ channel ].miscComboBox->setCurrentIndex( int( couplingIndex ) );
+    channelBlocks[ channel ].couplingGroup->setCurrentIndex( int( couplingIndex ) ); // does not emit
 }
 
 
@@ -201,14 +235,14 @@ void VoltageDock::setGain( ChannelID channel, unsigned gainStepIndex ) {
             return;
         if ( scope->verboseLevel > 2 )
             qDebug() << "  VDock::setGain()" << channel << gainStrings[ int( gainStepIndex ) ];
+        channelBlocks[ channel ].gainLabel->setText( gainStrings[ int( gainStepIndex ) ] + tr( "/div" ) );
     } else {
         if ( gainStepIndex >= scope->mathGainSteps.size() )
             return;
         if ( scope->verboseLevel > 2 )
             qDebug() << "  VDock::setGain()" << channel << mathGainStrings[ int( gainStepIndex ) ];
+        channelBlocks[ channel ].gainLabel->setText( mathGainStrings[ int( gainStepIndex ) ] + tr( "/div" ) );
     }
-    QSignalBlocker blocker( channelBlocks[ channel ].gainComboBox );
-    channelBlocks[ channel ].gainComboBox->setCurrentIndex( int( gainStepIndex ) );
 }
 
 
@@ -217,14 +251,9 @@ void VoltageDock::setAttn( ChannelID channel, double attnValue ) {
         qDebug() << "  VDock::setAttn()" << channel << attnValue;
     if ( channel >= scope->voltage.size() )
         return;
-    QSignalBlocker blocker( channelBlocks[ channel ].gainComboBox );
-    int index = channelBlocks[ channel ].gainComboBox->currentIndex();
-
-    channelBlocks[ channel ].gainComboBox->clear();
     // change unit to V² for the multiplying math functions
     if ( channel < spec->channels ) { // Voltage channel
         updateGainStrings( attnValue );
-        channelBlocks[ channel ].gainComboBox->addItems( gainStrings );
     } else {
         mathGainStrings.clear();
         for ( double mathGainStep : scope->mathGainSteps )
@@ -232,11 +261,11 @@ void VoltageDock::setAttn( ChannelID channel, double attnValue ) {
                 mathGainStep * attnValue,
                 Dso::mathModeUnit( Dso::MathMode( scope->voltage[ spec->channels ].couplingOrMathIndex ) ),
                 -1 ); // auto format V or V²
-        channelBlocks[ channel ].gainComboBox->addItems( mathGainStrings );
     }
-    channelBlocks[ channel ].gainComboBox->setCurrentIndex( index );
     scope->voltage[ channel ].probeAttn = attnValue;
-    channelBlocks[ channel ].attnSpinBox->setValue( int( attnValue ) );
+    setGain( channel, scope->voltage[ channel ].gainStepIndex ); // refresh the V/div readout
+    // snap the display to the nearest probe step x1 / x10 / x100
+    channelBlocks[ channel ].attnButton->setCurrentIndex( qBound( 0, int( round( log10( attnValue ) ) ), 2 ) );
 }
 
 

@@ -38,6 +38,8 @@ class DsoSettings {
     QByteArray mainWindowGeometry; ///< Geometry of the main window
     QByteArray mainWindowState;    ///< State of docking windows and toolbars
 
+    quint16 remoteServerPort = 0; ///< Port of the remote control TCP server, 0 = disabled (not persistent)
+
     /// \brief Read the settings from the last session or another file.
     void load();
 
