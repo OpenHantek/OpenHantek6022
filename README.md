@@ -103,6 +103,17 @@ A [little HW modification](docs/HANTEK6022_Frequency_Generator_Modification.pdf)
 * All settings will be saved to a configuration file and loaded again.
 * French, German, Italien, Russian and Spanish localisation complete; Chinese, Polish and Swedish is updated regularily; Portuguese translation ongoing - [volunteers welcome](openhantek/translations/Translation_HowTo.md)!
 
+## Remote Control / MCP (LLM)
+
+This fork adds an SCPI style remote control TCP server (localhost only) plus a CLI tool
+and an MCP server so that LLMs (Claude Code, opencode, ...) can adjust gain / timebase /
+trigger, run Autoset and take screenshots.
+
+* Start it with `OpenHantek --server 5025` or via the menu *Remote -> Enable MCP/SCPI server*
+  (the status bar shows `MCP (*) 127.0.0.1:5025` while listening).
+* CLI: `mcp_server/ohctl`, MCP server: `mcp_server/openhantek_mcp.py`.
+* Protocol reference and Claude Code / opencode configuration: [mcp_server/README.md](mcp_server/README.md).
+
 ## AC Coupling
 A [little HW modification](docs/HANTEK6022_AC_Modification.pdf) adds AC coupling. OpenHantek6022 supports this feature since v2.17-rc5 / FW0204.
 

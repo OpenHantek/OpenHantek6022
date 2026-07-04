@@ -1,0 +1,142 @@
+#!/usr/bin/env python3
+"""ohctl - command line remote control for OpenHantek6022.
+
+Examples:
+    ohctl idn
+    ohctl ch 1 --gain 0.5 --coupling DC
+    ohctl timebase 0.001
+    ohctl trigger --mode NORMAL --source 1 --slope POS --level 1.2
+    ohctl autoset
+    ohctl screenshot /tmp/scope.png
+    ohctl measure
+"""
+
+import argparse
+import json
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from openhantek_client import OpenHantekClient, OpenHantekError  # noqa: E402
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser.add_argument("--host", default="127.0.0.1")
+    parser.add_argument("--port", type=int, default=5025)
+    sub = parser.add_subparsers(dest="cmd", required=True)
+
+    sub.add_parser("idn", help="identify the instrument")
+    sub.add_parser("run", help="start acquisition")
+    sub.add_parser("stop", help="stop acquisition")
+    sub.add_parser("single", help="arm a single shot capture")
+    sub.add_parser("autoset", help="auto adjust gain, timebase and trigger")
+    sub.add_parser("measure", help="print the channel measurements as JSON")
+    sub.add_parser("config", help="print the current configuration as JSON")
+
+    p = sub.add_parser("ch", help="channel settings")
+    p.add_argument("channel", type=int, choices=[1, 2])
+    p.add_argument("--enable", choices=["on", "off"])
+    p.add_argument("--gain", type=float, help="V/div, snapped to the instrument steps")
+    p.add_argument("--coupling", choices=["AC", "DC", "ac", "dc"])
+    p.add_argument("--probe", type=float, help="probe attenuation 1..1000")
+    p.add_argument("--invert", choices=["on", "off"])
+    p.add_argument("--offset", type=float, help="vertical offset in divs")
+
+    p = sub.add_parser("timebase", help="set the timebase in s/div")
+    p.add_argument("value", type=float)
+
+    p = sub.add_parser("samplerate", help="set the samplerate in S/s")
+    p.add_argument("value", type=float)
+
+    p = sub.add_parser("calfreq", help="set the calibration output frequency in Hz")
+    p.add_argument("value", type=float)
+
+    p = sub.add_parser("trigger", help="trigger settings")
+    p.add_argument("--mode", choices=["AUTO", "NORMAL", "SINGLE", "ROLL"])
+    p.add_argument("--source", type=int, choices=[1, 2])
+    p.add_argument("--slope", choices=["POS", "NEG", "BOTH"])
+    p.add_argument("--level", type=float, help="trigger level in V")
+
+    p = sub.add_parser("screenshot", help="save a screenshot (PNG)")
+    p.add_argument("path", nargs="?", default="", help="target file, default: temp file")
+
+    p = sub.add_parser("fontsize", help="set the UI font size (6..24)")
+    p.add_argument("size", type=int)
+
+    p = sub.add_parser("raw", help="send a raw protocol line")
+    p.add_argument("line", nargs="+")
+
+    args = parser.parse_args()
+    client = OpenHantekClient(args.host, args.port)
+
+    try:
+        replies = [client.command(line) for line in build_lines(args)]
+    except OpenHantekError as error:
+        print(f"error: {error}", file=sys.stderr)
+        return 1
+    except OSError as error:
+        print(f"error: cannot reach OpenHantek at {args.host}:{args.port} ({error})", file=sys.stderr)
+        print("hint: start it with: OpenHantek --server 5025", file=sys.stderr)
+        return 2
+
+    for reply in replies:
+        if reply.startswith("{"):
+            print(json.dumps(json.loads(reply), indent=2))
+        elif reply:
+            print(reply)
+    return 0
+
+
+def build_lines(args) -> list[str]:
+    simple = {"idn": "*IDN?", "run": "RUN", "stop": "STOP", "single": "SINGLE",
+              "autoset": "AUTOSET", "measure": "MEASURE?", "config": "CONFIG?"}
+    if args.cmd in simple:
+        return [simple[args.cmd]]
+    if args.cmd == "ch":
+        lines = []
+        if args.enable:
+            lines.append(f"CH{args.channel}:ENABLE {args.enable.upper()}")
+        if args.gain is not None:
+            lines.append(f"CH{args.channel}:GAIN {args.gain}")
+        if args.coupling:
+            lines.append(f"CH{args.channel}:COUPLING {args.coupling.upper()}")
+        if args.probe is not None:
+            lines.append(f"CH{args.channel}:PROBE {args.probe}")
+        if args.invert:
+            lines.append(f"CH{args.channel}:INVERT {args.invert.upper()}")
+        if args.offset is not None:
+            lines.append(f"CH{args.channel}:OFFSET {args.offset}")
+        if not lines:
+            raise SystemExit("ch: nothing to do, pass at least one option")
+        return lines
+    if args.cmd == "timebase":
+        return [f"TIMEBASE {args.value}"]
+    if args.cmd == "samplerate":
+        return [f"SAMPLERATE {args.value}"]
+    if args.cmd == "calfreq":
+        return [f"CALFREQ {args.value}"]
+    if args.cmd == "trigger":
+        lines = []
+        if args.mode:
+            lines.append(f"TRIGGER:MODE {args.mode}")
+        if args.source:
+            lines.append(f"TRIGGER:SOURCE {args.source}")
+        if args.slope:
+            lines.append(f"TRIGGER:SLOPE {args.slope}")
+        if args.level is not None:
+            lines.append(f"TRIGGER:LEVEL {args.level}")
+        if not lines:
+            raise SystemExit("trigger: nothing to do, pass at least one option")
+        return lines
+    if args.cmd == "screenshot":
+        return [f"SCREENSHOT {args.path}".strip()]
+    if args.cmd == "fontsize":
+        return [f"FONTSIZE {args.size}"]
+    if args.cmd == "raw":
+        return [" ".join(args.line)]
+    raise SystemExit(f"unknown command {args.cmd}")
+
+
+if __name__ == "__main__":
+    sys.exit(main())
