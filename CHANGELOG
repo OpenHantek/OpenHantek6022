@@ -1,3 +1,4 @@
+2026-05-03 (4abdcce): update README; new icon (thx MantsoftCR); update deb dependencies
 2026-04-29 (95f11e6): Add persistent font weight option
 2026-04-27 (e97c9a7): update translations
 2026-04-25 (cf3b0db): fix: reconnect scope after USB disconnect, close #467
