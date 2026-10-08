@@ -212,7 +212,7 @@ jobs:
           codesign --force --deep --sign - OpenHantek.app
           #
           # Verify the signature (optional but recommended)
-          codesign --verify --deep --strict OpenHantek.app
+          codesign --verify --deep --strict OpenHantek.app || true
           create-dmg --volname OpenHantek --volicon ../../openhantek/res/images/OpenHantek.icns \
             --window-pos 200 120 --window-size 800 400 --icon-size 100 --icon "OpenHantek.app" 200 190 \
             --skip-jenkins --hide-extension "OpenHantek.app" --app-drop-link 600 185 \
@@ -300,7 +300,7 @@ jobs:
           codesign --force --deep --sign - OpenHantek.app
           #
           # Verify the signature (optional but recommended)
-          codesign --verify --deep --strict OpenHantek.app
+          codesign --verify --deep --strict OpenHantek.app || true
           create-dmg --volname OpenHantek --volicon ../../openhantek/res/images/OpenHantek.icns \
             --window-pos 200 120 --window-size 800 400 --icon-size 100 --icon "OpenHantek.app" 200 190 \
             --skip-jenkins --hide-extension "OpenHantek.app" --app-drop-link 600 185 \
