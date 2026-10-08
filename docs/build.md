@@ -40,7 +40,7 @@ However, an [alpine linux](https://alpinelinux.org/) user [reported](https://git
 
 The local build and test is done on an up-to-date Debian stable; on every push a building process is run externally by [GitHub Actions](https://github.com/OpenHantek/OpenHantek6022/actions)
 who provides [these Ubuntu 2004 environments](https://github.com/actions/runner-images/blob/main/images/linux/Ubuntu2004-Readme.md).
-Please check also the file [build_check.yml](https://github.com/OpenHantek/OpenHantek6022/blob/main/.github/workflows/build_check.yml) for info about the building process.
+Please check also the file [build.yml](https://github.com/OpenHantek/OpenHantek6022/blob/main/.github/workflows/build.yml) for info about the building process.
 
 ----
 
@@ -179,7 +179,7 @@ Code signing steps added for Apple Silicon compatibility (hint from alwaysEpic).
 
 As I do not use macOS for development the building is done externally by [GitHub Actions](https://github.com/OpenHantek/OpenHantek6022/actions)
 who provides [these macOS 11 environments](https://github.com/actions/runner-images/blob/main/images/macos/macos-11-Readme.md).
-Please check also the file [build_check.yml](https://github.com/OpenHantek/OpenHantek6022/blob/main/.github/workflows/build_check.yml) for info about the building process.
+Please check also the file [build.yml](https://github.com/OpenHantek/OpenHantek6022/blob/main/.github/workflows/build.yml) for info about the building process.
 
 ----
 
@@ -201,8 +201,16 @@ Hints for Visual Studio 2015/2017/2019 users:
 
 As I do not use Windows for development the building is done externally by [GitHub Actions](https://github.com/OpenHantek/OpenHantek6022/actions)
 who provides [these Windows environments](https://github.com/actions/virtual-environments/blob/main/images/win/Windows2019-Readme.md).
-Please check also the file [build_check.yml](https://github.com/OpenHantek/OpenHantek6022/blob/main/.github/workflows/build_check.yml) for info about the building process with either MINGW or MSVC.
+Please check also the file [build.yml](https://github.com/OpenHantek/OpenHantek6022/blob/main/.github/workflows/build.yml) for info about the building process with either MINGW or MSVC.
 Starting with the update to Visual Studio 2019 only 64bit builds are provided.
+
+Two different Windows builds are produced, both packaged as a self-contained zip:
+
+* `*_msvc_x64.zip` - built with Visual Studio against a shared Qt6, the shipped
+  `*.dll` files have to stay next to `OpenHantek.exe`.
+* `*_mingw_x64.zip` - built with GCC/MSYS2 on the UCRT64 environment and
+  packaged with a portable Qt6 runtime next to the exe. Unpack and start
+  `OpenHantek.exe`.
 
 #### Signed WinUSB driver for Hantek 6022BE/BL
 

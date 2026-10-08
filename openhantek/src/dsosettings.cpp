@@ -6,7 +6,6 @@
 #include <QSettings>
 
 #include "dsosettings.h"
-#include "dsowidget.h"
 #include "hantekdso/mathmodes.h"
 
 /// \brief Set the number of channels.

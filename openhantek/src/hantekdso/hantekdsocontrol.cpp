@@ -697,7 +697,6 @@ Dso::ErrorCode HantekDsoControl::getCalibrationFromEEPROM() {
 }
 
 
-#define TRANS_TYPE_READ 0xc0
 #define TRANS_TYPE_WRITE 0x40
 #define EEPROM 0xa2
 

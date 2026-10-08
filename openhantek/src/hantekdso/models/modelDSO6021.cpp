@@ -10,9 +10,6 @@
 
 #include "../res/firmware/dso602x_fw_version.h"
 
-
-#define VERBOSE 0
-
 using namespace Hantek;
 
 // The model 6021 supports an upcoming DIY redesign of DSO6022BE with better analog front end

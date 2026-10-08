@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 
 #include "triggering.h"
-#include "hantekdsocontrol.h"
 #include <QDebug>
 #include <cmath>
 

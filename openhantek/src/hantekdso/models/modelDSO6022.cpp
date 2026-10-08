@@ -10,9 +10,6 @@
 
 #include "../res/firmware/dso602x_fw_version.h"
 
-
-#define VERBOSE 0
-
 using namespace Hantek;
 
 static ModelDSO6022BE modelInstance_6022be;

@@ -8,8 +8,6 @@
 #include <QDir>
 #include <QSettings>
 
-#define VERBOSE 0
-
 using namespace Hantek;
 
 static ModelMDSO modelInstance_1D50;
