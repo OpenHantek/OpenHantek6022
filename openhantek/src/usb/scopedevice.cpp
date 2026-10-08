@@ -12,8 +12,6 @@
 #include "hantekprotocol/controlcode.h"
 #include "models/modelDEMO.h"
 
-#include <QCoreApplication>
-
 // Returns a constant QString with a short description of the given error code,
 // this description is intended for displaying to the end user and will be
 // in the language set by libusb_setlocale().
@@ -55,14 +53,16 @@ UniqueUSBid ScopeDevice::computeUSBdeviceID( libusb_device *device ) {
 }
 
 
-ScopeDevice::ScopeDevice( DSOModel *model, libusb_device *device, unsigned findIteration )
-    : model( model ), device( device ), findIteration( findIteration ), uniqueUSBdeviceID( computeUSBdeviceID( device ) ) {
+ScopeDevice::ScopeDevice( DSOModel *model, libusb_device *device, unsigned findIteration, int verboseLevel )
+    : model( model ), device( device ), findIteration( findIteration ), verboseLevel( verboseLevel ),
+      uniqueUSBdeviceID( computeUSBdeviceID( device ) ) {
     libusb_ref_device( device );
     libusb_get_device_descriptor( device, &descriptor );
 }
 
 
-ScopeDevice::ScopeDevice() : model( new ModelDEMO ), device( nullptr ), uniqueUSBdeviceID( 0 ), realHW( false ) {}
+ScopeDevice::ScopeDevice( int verboseLevel )
+    : model( new ModelDEMO ), device( nullptr ), verboseLevel( verboseLevel ), uniqueUSBdeviceID( 0 ), realHW( false ) {}
 
 
 bool ScopeDevice::connectDevice( QString &errorMessage ) {

@@ -108,11 +108,11 @@ A [little HW modification](docs/HANTEK6022_AC_Modification.pdf) adds AC coupling
 
 ## Continuous Integration
 Every commit triggers a workflow on
-[GitHub Actions](https://github.com/OpenHantek/OpenHantek6022/actions/workflows/build_check.yml)
+[GitHub Actions](https://github.com/OpenHantek/OpenHantek6022/actions/workflows/build.yml)
 that builds and packages OpenHantek6022 for:
 
 * Linux (`*_amd64.deb`, `*_arm64.deb`, `*.rpm`, `*.tar.gz`)
-* Windows (<!--`*_mingw_x64.zip`, -->`*_msvc_x64.zip`)
+* Windows (`*_mingw_x64.zip`, `*_msvc_x64.zip`)
 * macOS - (`*_osx_arm64.dmg`, `*_osx_x86_64.dmg`, `*.tar.gz`)
 
 [![GitHub CI](https://github.com/OpenHantek/OpenHantek6022/actions/workflows/build.yml/badge.svg)](https://github.com/OpenHantek/OpenHantek6022/actions/workflows/build.yml)
@@ -162,7 +162,8 @@ Do not use for a permanent installation.
 Do not report any issues about the `*.tar.gz`!
 * Get macOS packages from [macports](https://www.macports.org/ports.php?by=name&substr=openhantek) - thx [ra1nb0w](https://github.com/ra1nb0w).
 * Get [Fedora rpm packages](https://pkgs.org/download/openhantek) - thx [Vascom](https://github.com/Vascom).
-* Download [(untested) builds from last commit(s)](https://github.com/OpenHantek/OpenHantek6022/actions/workflows/build_check.yml). Select the preferred `workflow run` and go to `Artifacts`.
+* Windows: unzip `*_msvc_x64.zip` or `*_mingw_x64.zip` and start `OpenHantek.exe`. Both archives are self-contained and need no installation; the MinGW one additionally ships the WinUSB driver files (`driver/`) and the [documentation](docs).
+* Download [(untested) builds from last commit(s)](https://github.com/OpenHantek/OpenHantek6022/actions/workflows/build.yml). Select the preferred `workflow run` and go to `Artifacts`.
 
 ## Run OpenHantek6022
 On a Linux system start the program via the menu entry *OpenHantek (Digital Storage Oscilloscope)* or from a terminal window as `OpenHantek`.

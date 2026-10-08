@@ -60,9 +60,6 @@
 
 using namespace Hantek;
 
-// verboseLevel allows the fine granulated tracing of the program for easy testing and debugging
-int verboseLevel = 0; // 0: quiet; 1,2: startup; 3,4: + user actions; 5,6: + data processing; 7 + USB
-
 /// \brief Initialize resources and translations and show the main window.
 int main( int argc, char *argv[] ) {
 
@@ -94,6 +91,9 @@ int main( int argc, char *argv[] ) {
     bool useLocale = true;       // the command line option
     bool doNotTranslate = false; // the persistent option
     bool resetSettings = false;
+    // verboseLevel allows the fine granulated tracing of the program for easy testing and debugging
+    // 0: quiet; 1,2: startup; 3,4: + user actions; 5,6: + data processing; 7 + USB
+    int verboseLevel = 0;
     QString font = defaultFont;         // defined in viewsettings.h
     int fontSize = defaultFontSize;     // defined in viewsettings.h
     int fontWeight = defaultFontWeight; // defined in viewsettings.h
@@ -372,7 +372,7 @@ int main( int argc, char *argv[] ) {
             }
         }
     } else {
-        scopeDevice = std::unique_ptr< ScopeDevice >( new ScopeDevice() );
+        scopeDevice = std::unique_ptr< ScopeDevice >( new ScopeDevice( verboseLevel ) );
     }
 
     // Here we have either a connected scope device or a demo device w/o hardware

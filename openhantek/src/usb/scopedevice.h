@@ -34,8 +34,8 @@ class ScopeDevice : public QObject {
     Q_OBJECT
 
   public:
-    explicit ScopeDevice( DSOModel *model, libusb_device *device, unsigned findIteration = 0 );
-    explicit ScopeDevice();
+    explicit ScopeDevice( DSOModel *model, libusb_device *device, unsigned findIteration = 0, int verboseLevel = 0 );
+    explicit ScopeDevice( int verboseLevel = 0 );
     ScopeDevice( const ScopeDevice & ) = delete;
     ~ScopeDevice() override;
     bool connectDevice( QString &errorMessage );
@@ -159,6 +159,9 @@ class ScopeDevice : public QObject {
      */
     inline void overwriteInPacketLength( unsigned len ) { inPacketLength = len; }
 
+    /// \brief Verbosity level (set by command line option --verbose) for USB trace output.
+    inline int getVerboseLevel() const { return verboseLevel; }
+
   protected:
     int claimInterface( const libusb_interface_descriptor *interfaceDescriptor );
 
@@ -170,6 +173,7 @@ class ScopeDevice : public QObject {
     libusb_device *device; ///< The USB handle for the oscilloscope
     libusb_device_handle *handle = nullptr;
     unsigned findIteration;
+    int verboseLevel = 0;
     const UniqueUSBid uniqueUSBdeviceID;
     int nInterface;
     unsigned outPacketLength; ///< Packet length for the OUT endpoint
@@ -213,5 +217,3 @@ class ScopeDevice : public QObject {
   signals:
     void deviceDisconnected( bool expected ); ///< The device has been disconnected
 };
-
-extern int verboseLevel;

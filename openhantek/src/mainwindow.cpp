@@ -7,7 +7,6 @@
 #include "SpectrumDock.h"
 #include "TriggerDock.h"
 #include "VoltageDock.h"
-#include "dockwindows.h"
 
 #include "configdialog.h"
 #include "dockwindows.h"
@@ -244,7 +243,7 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
                            QMessageBox::information( this, tr( "Calibrate Offset" ),
                                                      tr( "Short-circuit both inputs and slowly select all voltage gain settings" ),
                                                      QMessageBox::Apply | QMessageBox::Abort, QMessageBox::Abort ) );
-            if ( verboseLevel > 2 )
+            if ( scope->verboseLevel > 2 )
                 qDebug() << "  Calibrate offset" << active;
             ui->actionCalibrateOffset->setChecked( active );
             dsoControl->calibrateOffset( active );
@@ -253,7 +252,7 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
 
         // disable calibration e.g. if zero signal too noisy or offset too big
         connect( dsoControl, &HantekDsoControl::liveCalibrationError, this, [ this, scope ]() {
-            if ( verboseLevel > 2 )
+            if ( scope->verboseLevel > 2 )
                 qDebug() << "  Live calibration error";
             scope->liveCalibrationActive = false;           // set incactive first to avoid ..
             ui->actionCalibrateOffset->setChecked( false ); // .. calibration storage actions
@@ -742,7 +741,7 @@ bool MainWindow::openDocument( QString docName ) {
         url = QUrl::fromLocalFile( QFileInfo( DocPath + docName ).absoluteFilePath() );
     else
         url = QUrl( DocUrl + docName );
-    if ( verboseLevel > 2 )
+    if ( dsoSettings->scope.verboseLevel > 2 )
         qDebug() << "  " << url;
     return QDesktopServices::openUrl( url );
 }

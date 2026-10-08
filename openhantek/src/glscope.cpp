@@ -17,7 +17,6 @@
 
 #include "glscope.h"
 
-#include "post/graphgenerator.h"
 #include "post/ppresult.h"
 #include "scopesettings.h"
 #include "viewconstants.h"

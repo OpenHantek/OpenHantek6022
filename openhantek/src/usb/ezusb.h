@@ -33,8 +33,8 @@ struct libusb_device_handle;
  * caller having preloaded the second stage loader.
  *
  * The target processor is reset at the end of this upload.
+ *
+ * The verbosity level (set by command line option --verbose) is passed in and
+ * used for the trace output of this module only.
  */
-extern int ezusb_load_ram( libusb_device_handle *device, const char *path, int fx_type, int stage );
-
-// Verbosity level set by command line option --verbose
-extern int verboseLevel;
+extern int ezusb_load_ram( libusb_device_handle *device, const char *path, int fx_type, int stage, int verboseLevel );

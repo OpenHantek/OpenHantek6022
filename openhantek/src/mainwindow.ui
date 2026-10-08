@@ -179,16 +179,6 @@
     <string>&amp;Measure</string>
    </property>
   </action>
-  <action name="actionDocking_windows">
-   <property name="text">
-    <string>Docking windows</string>
-   </property>
-  </action>
-  <action name="actionToolbars">
-   <property name="text">
-    <string>Toolbars</string>
-   </property>
-  </action>
   <action name="actionUserManual">
    <property name="text">
     <string>&amp;User Manual</string>
