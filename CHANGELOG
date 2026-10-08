@@ -1,3 +1,6 @@
+2026-10-08 (77e886e): ci: make macOS codesign verification non-fatal on ad-hoc signing (#478)
+2026-10-08 (059be93): Merge pull request #477 from OpenHantek/topic/mingw-ucrt64-portable-and-cleanups
+2026-10-08 (112713e): refactor, CI, docs, cleanups: per-object verbosity, remove dead code/assets, update translations; re-enable MinGW on UCRT64, fix Windows packaging/docs, drop dead build_check links
 2026-10-08 (01e0991): cmake: handle the version robustly and re-run configure on git changes
 2026-05-03 (4abdcce): update README; new icon (thx MantsoftCR); update deb dependencies
 2026-04-29 (95f11e6): Add persistent font weight option
