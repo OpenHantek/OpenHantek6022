@@ -216,12 +216,17 @@ MainWindow::MainWindow( HantekDsoControl *dsoControl, DsoSettings *settings, Exp
     addDockWidget( Qt::RightDockWidgetArea, triggerDock );
     addDockWidget( Qt::RightDockWidgetArea, spectrumDock );
 
-    restoreGeometry( dsoSettings->mainWindowGeometry );
-    restoreState( dsoSettings->mainWindowState );
-
-    // Central oszilloscope widget
+    // The OpenGL widget must exist before restore. A maximized blob creates the
+    // native window here; adding the first QOpenGLWidget afterwards recreates
+    // that HWND (RasterSurface -> OpenGLSurface) and heap-corrupts on the AMD
+    // Windows driver (0xc0000374) at show().
     dsoWidget = new DsoWidget( &dsoSettings->scope, &dsoSettings->view, spec, this );
     setCentralWidget( dsoWidget );
+
+    if ( !dsoSettings->mainWindowGeometry.isEmpty() )
+        restoreGeometry( dsoSettings->mainWindowGeometry );
+    if ( !dsoSettings->mainWindowState.isEmpty() )
+        restoreState( dsoSettings->mainWindowState );
 
     deviceCommandWidgets = { voltageDock, horizontalDock, triggerDock, spectrumDock, dsoWidget };
     deviceCommandActions = { ui->actionOpen, ui->actionSampling, ui->actionRefresh, ui->actionCalibrateOffset,
